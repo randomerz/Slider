@@ -4,15 +4,25 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Start is called before the first frame update
+    //public Item currentHeldItem; // for rope puzzle
+
+    // Movement
+    public float moveSpeed = 5;
+
+    private Vector3 inputDir;
+
     void Start()
     {
         
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
-        
+        inputDir = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+    }
+
+    private void FixedUpdate()
+    {
+        transform.position += moveSpeed * inputDir * Time.deltaTime;
     }
 }
