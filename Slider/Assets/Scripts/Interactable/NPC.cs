@@ -1,11 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 public class NPC : MonoBehaviour
 {
-    public string dialogue;
-//    public TextMeshProUGUI nameText;
-//    public TextMeshProUGUI dialogueText;
+    public string characterName;
+
+    public NPC(string cName)
+    {
+        characterName = cName;
+    }
+
+    public int GetCurrentDialogueNumber()
+    {
+        return FindObjectOfType<NPCManager>().getVoiceLineNumber(characterName);
+    }
 }

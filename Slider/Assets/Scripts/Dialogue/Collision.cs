@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Collision : MonoBehaviour
 {
-    public GameObject DialogueManager;
+    public GameObject NPC;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

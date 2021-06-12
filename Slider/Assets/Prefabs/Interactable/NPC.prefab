@@ -110,10 +110,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4901399078541801942}
   - component: {fileID: 4901399078541801943}
-  - component: {fileID: 4901399078541801940}
   - component: {fileID: 4901399078541801941}
-  - component: {fileID: 4901399078541801937}
-  - component: {fileID: 4901399078541801770}
+  - component: {fileID: 8682080849272628221}
+  - component: {fileID: 9012243475253564374}
+  - component: {fileID: 666134167755614499}
   m_Layer: 0
   m_Name: NPC
   m_TagString: Untagged
@@ -187,19 +187,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4901399078541801940
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4901399078541801768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c35107e74e42e43689c493fa51c13bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogue: 
 --- !u!61 &4901399078541801941
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -226,7 +213,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &4901399078541801937
+--- !u!114 &8682080849272628221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4901399078541801768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c35107e74e42e43689c493fa51c13bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterName: 
+--- !u!114 &9012243475253564374
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -238,8 +238,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f31fc7df25d845acaf6e15abaff58e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DialogueManager: {fileID: 0}
---- !u!114 &4901399078541801770
+  NPC: {fileID: 4901399078541801768}
+--- !u!114 &666134167755614499
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -252,7 +252,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogue:
-    name: 
     dialogues: []
 --- !u!1 &4901399079179824408
 GameObject:
