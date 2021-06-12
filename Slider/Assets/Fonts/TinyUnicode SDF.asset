@@ -68,9 +68,9 @@ Material:
     - _OutlineWidth: 0
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
-    - _ScaleRatioA: 1
-    - _ScaleRatioB: 1
-    - _ScaleRatioC: 1
+    - _ScaleRatioA: 0.8
+    - _ScaleRatioB: 0.65
+    - _ScaleRatioC: 0.65
     - _ScaleX: 1
     - _ScaleY: 1
     - _ShaderFlags: 0
@@ -162,9 +162,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: TinyUnicode SDF
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: -1954280284
   material: {fileID: -5073963218194134624}
-  materialHashCode: 0
+  materialHashCode: 72936196
   m_Version: 1.1.0
   m_SourceFontFileGUID: 718f2dd256b7ba24989f223e33ba2239
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 718f2dd256b7ba24989f223e33ba2239, type: 3}
