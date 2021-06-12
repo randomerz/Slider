@@ -6,7 +6,12 @@ public class UIArtifact : MonoBehaviour
 {
     public ArtifactButton[] buttons;
     private ArtifactButton currentButton;
-    private List<ArtifactButton> adjacentButtons;
+    private List<ArtifactButton> adjacentButtons = new List<ArtifactButton>();
+
+    private void Awake()
+    {
+        
+    }
 
     void Start()
     {
@@ -21,7 +26,16 @@ public class UIArtifact : MonoBehaviour
 
     public void DeselectCurrentButton()
     {
+        if (currentButton == null)
+            return;
+
+        currentButton.SetPushedDown(false);
+        foreach (ArtifactButton b in adjacentButtons)
+        {
+            b.SetHighlighted(false);
+        }
         currentButton = null;
+        adjacentButtons.Clear();
     }
     
     public void SelectButton(ArtifactButton button)
@@ -32,34 +46,67 @@ public class UIArtifact : MonoBehaviour
         }
         else if (adjacentButtons.Contains(button)) // compare by id?
         {
-            // swap
+            Swap(currentButton, button);
+            DeselectCurrentButton();
         }
-        else if (currentButton == null)
+        else
         {
-            adjacentButtons = GetAdjacent(button);
-            if (adjacentButtons == null)
+            DeselectCurrentButton();
+
+            if (button.isEmpty)
             {
-                DeselectCurrentButton();
+                return;
+            }
+
+            adjacentButtons = GetAdjacent(button);
+            if (adjacentButtons.Count == 0)
+            {
+                return;
             }
             else
             {
+                Debug.Log("Selected button " + button.islandId);
                 currentButton = button;
+                button.SetPushedDown(true);
                 foreach (ArtifactButton b in adjacentButtons)
                 {
                     b.SetHighlighted(true);
                 }
             }
         }
-        else
-        {
-            // default deselect
-            DeselectCurrentButton();
-        }
+        //else
+        //{
+        //    // default deselect
+        //    DeselectCurrentButton();
+        //}
     }
 
+    // replaces adjacentButtons
     private List<ArtifactButton> GetAdjacent(ArtifactButton button)
     {
-        return null;
+        adjacentButtons.Clear();
+
+        Vector2 buttPos = new Vector2(button.xPos, button.yPos);
+        foreach (ArtifactButton b in buttons)
+        {
+            if (b.isEmpty && (buttPos - new Vector2(b.xPos, b.yPos)).magnitude == 1)
+            {
+                adjacentButtons.Add(b);
+            }
+        }
+
+        return adjacentButtons;
+    }
+
+    private void Swap(ArtifactButton buttonCurrent, ArtifactButton buttonEmpty)
+    {
+        int x = buttonCurrent.xPos;
+        int y = buttonCurrent.yPos;
+        Direction dir = DirectionUtil.V2D(new Vector2(buttonEmpty.xPos, buttonEmpty.yPos) - new Vector2(x, y));
+        EightPuzzle.MoveSlider(x, y, dir);
+
+        buttonCurrent.SetPosition(buttonEmpty.xPos, buttonEmpty.yPos);
+        buttonEmpty.SetPosition(x, y);
     }
 
     public static void AddButton(int num)

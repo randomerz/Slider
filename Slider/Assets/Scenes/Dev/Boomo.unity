@@ -140,8 +140,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &21987262
-RectTransform:
+--- !u!4 &21987262
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -154,11 +154,6 @@ RectTransform:
   m_Father: {fileID: 510984123}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &21987263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,7 +166,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d975a25a2b309ca4fba961e174c8285d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEmpty: 1
+  isEmpty: 0
+  islandId: 8
   xPos: 0
   yPos: 0
   floorTileGrid: {fileID: 0}
@@ -1023,7 +1019,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &340035582
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2030,7 +2026,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slideCooldown: 1
-  sliders: []
+  sliders:
+  - {fileID: 1083997289}
+  - {fileID: 2113407524}
+  - {fileID: 1287392400}
+  - {fileID: 1214342276}
+  - {fileID: 1939485052}
+  - {fileID: 1529931306}
+  - {fileID: 2067622900}
+  - {fileID: 21987263}
+  - {fileID: 1622121644}
 --- !u!1 &564803517
 GameObject:
   m_ObjectHideFlags: 0
@@ -3007,6 +3012,8 @@ GameObject:
   m_Component:
   - component: {fileID: 623400695}
   - component: {fileID: 623400696}
+  - component: {fileID: 623400697}
+  - component: {fileID: 623400698}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3043,6 +3050,53 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+--- !u!50 &623400697
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623400694}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 7
+--- !u!61 &623400698
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623400694}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &746834851
 GameObject:
   m_ObjectHideFlags: 0
@@ -10299,8 +10353,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1083997288
-RectTransform:
+--- !u!4 &1083997288
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -10313,11 +10367,6 @@ RectTransform:
   m_Father: {fileID: 510984123}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1083997289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10331,6 +10380,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEmpty: 0
+  islandId: 1
   xPos: 0
   yPos: 0
   floorTileGrid: {fileID: 0}
@@ -16634,6 +16684,10 @@ PrefabInstance:
       propertyPath: buttonManager
       value: 
       objectReference: {fileID: 340035585}
+    - target: {fileID: 4266256298353997437, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 5195518659922274881, guid: 6036f2fb5b0f09a4fbf91c7b5e62a7a8, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
 --- !u!224 &1177007128 stripped
@@ -16669,8 +16723,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1214342275
-RectTransform:
+--- !u!4 &1214342275
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -16683,11 +16737,6 @@ RectTransform:
   m_Father: {fileID: 510984123}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1214342276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16700,7 +16749,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d975a25a2b309ca4fba961e174c8285d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEmpty: 1
+  isEmpty: 0
+  islandId: 4
   xPos: 0
   yPos: 0
   floorTileGrid: {fileID: 0}
@@ -16722,8 +16772,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1287392399
-RectTransform:
+--- !u!4 &1287392399
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -16736,11 +16786,6 @@ RectTransform:
   m_Father: {fileID: 510984123}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1287392400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16753,7 +16798,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d975a25a2b309ca4fba961e174c8285d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEmpty: 1
+  isEmpty: 0
+  islandId: 3
   xPos: 0
   yPos: 0
   floorTileGrid: {fileID: 0}
@@ -17811,6 +17857,10 @@ PrefabInstance:
       propertyPath: buttonManager
       value: 
       objectReference: {fileID: 340035585}
+    - target: {fileID: 4266256298353997437, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 3326761212406999017, guid: 6036f2fb5b0f09a4fbf91c7b5e62a7a8, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
 --- !u!224 &1302088378 stripped
@@ -21036,6 +21086,10 @@ PrefabInstance:
       propertyPath: buttonManager
       value: 
       objectReference: {fileID: 340035585}
+    - target: {fileID: 4266256298353997437, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 7111786907620349360, guid: 6036f2fb5b0f09a4fbf91c7b5e62a7a8, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
 --- !u!224 &1380017855 stripped
@@ -21165,6 +21219,10 @@ PrefabInstance:
       propertyPath: buttonManager
       value: 
       objectReference: {fileID: 340035585}
+    - target: {fileID: 4266256298353997437, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5650927027719762411, guid: 6036f2fb5b0f09a4fbf91c7b5e62a7a8, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
 --- !u!224 &1408187092 stripped
@@ -27588,8 +27646,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1529931305
-RectTransform:
+--- !u!4 &1529931305
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -27602,11 +27660,6 @@ RectTransform:
   m_Father: {fileID: 510984123}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1529931306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27619,7 +27672,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d975a25a2b309ca4fba961e174c8285d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEmpty: 1
+  isEmpty: 0
+  islandId: 6
   xPos: 0
   yPos: 0
   floorTileGrid: {fileID: 0}
@@ -27739,6 +27793,10 @@ PrefabInstance:
       propertyPath: buttonManager
       value: 
       objectReference: {fileID: 340035585}
+    - target: {fileID: 4266256298353997437, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2368287299286445962, guid: 6036f2fb5b0f09a4fbf91c7b5e62a7a8, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
 --- !u!224 &1546586762 stripped
@@ -28048,7 +28106,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1609317499}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -28730,8 +28788,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1622121643
-RectTransform:
+--- !u!4 &1622121643
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -28744,11 +28802,6 @@ RectTransform:
   m_Father: {fileID: 510984123}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1622121644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28762,6 +28815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEmpty: 1
+  islandId: 9
   xPos: 0
   yPos: 0
   floorTileGrid: {fileID: 0}
@@ -28881,6 +28935,10 @@ PrefabInstance:
       propertyPath: buttonManager
       value: 
       objectReference: {fileID: 340035585}
+    - target: {fileID: 4266256298353997437, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 3456499416959404939, guid: 6036f2fb5b0f09a4fbf91c7b5e62a7a8, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
 --- !u!224 &1779223682 stripped
@@ -29014,6 +29072,10 @@ PrefabInstance:
       propertyPath: buttonManager
       value: 
       objectReference: {fileID: 340035585}
+    - target: {fileID: 4266256298353997437, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 3937335723690400312, guid: 6036f2fb5b0f09a4fbf91c7b5e62a7a8, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
 --- !u!224 &1788216859 stripped
@@ -29115,8 +29177,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1939485051
-RectTransform:
+--- !u!4 &1939485051
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -29129,11 +29191,6 @@ RectTransform:
   m_Father: {fileID: 510984123}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1939485052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29146,7 +29203,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d975a25a2b309ca4fba961e174c8285d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEmpty: 1
+  isEmpty: 0
+  islandId: 5
   xPos: 0
   yPos: 0
   floorTileGrid: {fileID: 0}
@@ -32356,6 +32414,10 @@ PrefabInstance:
       propertyPath: buttonManager
       value: 
       objectReference: {fileID: 340035585}
+    - target: {fileID: 4266256298353997437, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 2336292450102701158, guid: 6036f2fb5b0f09a4fbf91c7b5e62a7a8, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
 --- !u!224 &2001975869 stripped
@@ -36935,8 +36997,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &2067622899
-RectTransform:
+--- !u!4 &2067622899
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -36949,11 +37011,6 @@ RectTransform:
   m_Father: {fileID: 510984123}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2067622900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36966,7 +37023,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d975a25a2b309ca4fba961e174c8285d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEmpty: 1
+  isEmpty: 0
+  islandId: 7
   xPos: 0
   yPos: 0
   floorTileGrid: {fileID: 0}
@@ -37020,8 +37078,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &2113407523
-RectTransform:
+--- !u!4 &2113407523
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -37034,11 +37092,6 @@ RectTransform:
   m_Father: {fileID: 510984123}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2113407524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37051,7 +37104,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d975a25a2b309ca4fba961e174c8285d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEmpty: 1
+  isEmpty: 0
+  islandId: 2
   xPos: 0
   yPos: 0
   floorTileGrid: {fileID: 0}

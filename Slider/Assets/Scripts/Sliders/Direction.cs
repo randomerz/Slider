@@ -25,4 +25,17 @@ public class DirectionUtil : MonoBehaviour
         }
         return Vector2.zero;
     }
+
+    public static Direction V2D(Vector2 direction)
+    {
+        if (direction.x > 0)
+            return Direction.RIGHT;
+        else if (direction.y > 0)
+            return Direction.UP;
+        else if (direction.y > 0)
+            return Direction.LEFT;
+        else if (direction.y > 0)
+            return Direction.DOWN;
+        return 0;
+    }
 }
