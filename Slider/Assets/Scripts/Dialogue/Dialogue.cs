@@ -7,6 +7,6 @@ public class Dialogue
 {
     public string name;
 
-    [TextArea(3, 10)]
+    [TextArea(1, 4)]
     public string[] dialogues;
 }

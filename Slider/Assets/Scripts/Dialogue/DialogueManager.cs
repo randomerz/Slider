@@ -10,7 +10,7 @@ public class DialogueManager : MonoBehaviour
     private Queue<string> dialogues;
 
     //public variables
-    public TextMeshProUGUI nameText;
+    //public TextMeshProUGUI nameText;
     public TextMeshProUGUI dialogueText;
     //public Animator animator;
 
@@ -18,7 +18,7 @@ public class DialogueManager : MonoBehaviour
     void Start()
     {
         dialogues = new Queue<string>();
-        nameText.gameObject.SetActive(false);
+        //nameText.gameObject.SetActive(false);
         dialogueText.gameObject.SetActive(false);
     }
 
@@ -33,7 +33,7 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogue(Dialogue dialogue)
     {
         //animator.SetBool("IsOpen", true);
-        nameText.text = dialogue.name;
+        //nameText.text = dialogue.name;
         dialogues.Clear();
         foreach (string sentence in dialogue.dialogues)
         {
@@ -44,7 +44,7 @@ public class DialogueManager : MonoBehaviour
     // displayes the sentences, uses TypeSentence enumerator to print sentence letter by letter
     public void DisplaySentence()
     {
-        nameText.gameObject.SetActive(true);
+        //nameText.gameObject.SetActive(true);
         dialogueText.gameObject.SetActive(true);
         string sentence = dialogues.Dequeue();
         StartCoroutine(TypeSentence(sentence));
@@ -62,7 +62,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     // choses which dialogue to pick depending on the scenario of the world
-    void EndDialogue()
+    void WhichDialogue()
     {
         
     }
