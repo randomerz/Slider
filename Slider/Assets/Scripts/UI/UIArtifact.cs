@@ -8,20 +8,16 @@ public class UIArtifact : MonoBehaviour
     private ArtifactButton currentButton;
     private List<ArtifactButton> adjacentButtons = new List<ArtifactButton>();
 
+    private static UIArtifact _instance;
+    
     private void Awake()
     {
-        
+        _instance = this;
     }
 
-    void Start()
+    public static UIArtifact GetInstance()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return _instance;
     }
 
     public void DeselectCurrentButton()
@@ -109,8 +105,15 @@ public class UIArtifact : MonoBehaviour
         buttonEmpty.SetPosition(x, y);
     }
 
-    public static void AddButton(int num)
+    public static void AddButton(int islandId)
     {
-
+        foreach (ArtifactButton b in _instance.buttons)
+        {
+            if (b.islandId == islandId)
+            {
+                b.SetEmpty(false);
+                return;
+            }
+        }
     }
 }

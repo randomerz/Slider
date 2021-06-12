@@ -1,25 +1,13 @@
 fileFormatVersion: 2
-guid: b4f019f3f306d41b5a198fba8d41e63f
+guid: 212c8e84c5e9d2a43b00694bf844aced
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1515997999314860018
-    second: playersprite_0
+      213: -161256529261007864
+    second: Button24_0
   - first:
-      213: 8013488327420671196
-    second: playersprite_1
-  - first:
-      213: -5550576318493775922
-    second: playersprite_2
-  - first:
-      213: 4197072223555570845
-    second: playersprite_3
-  - first:
-      213: -5182112467929672547
-    second: playersprite_4
-  - first:
-      213: 4439449317070889542
-    second: playersprite_5
+      213: 5325387788926593336
+    second: Button24_1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -121,127 +109,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: playersprite_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2f77d55f528e90510800000000000000
-      internalID: 1515997999314860018
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: playersprite_1
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: cd4f5af2d21a53f60800000000000000
-      internalID: 8013488327420671196
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: playersprite_2
+      name: Button24_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 16
-        height: 16
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 3, y: 3, z: 3, w: 3}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec7ab7d1f3468f2b0800000000000000
-      internalID: -5550576318493775922
+      spriteID: 80c6faf7a0a13cdf0800000000000000
+      internalID: -161256529261007864
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: playersprite_3
+      name: Button24_1
       rect:
         serializedVersion: 2
-        x: 16
+        x: 24
         y: 0
-        width: 16
-        height: 16
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 3, y: 3, z: 3, w: 3}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d9c40b543fefe3a30800000000000000
-      internalID: 4197072223555570845
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: playersprite_4
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 0
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d94ddea9a207518b0800000000000000
-      internalID: -5182112467929672547
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: playersprite_5
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 0
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6426c56f1a71c9d30800000000000000
-      internalID: 4439449317070889542
+      spriteID: 8392c2a9af397e940800000000000000
+      internalID: 5325387788926593336
       vertices: []
       indices: 
       edges: []

@@ -55,4 +55,17 @@ public class ArtifactButton : MonoBehaviour
     {
         buttonAnimator.SetPushedDown(v);
     }
+
+    public void SetEmpty(bool v)
+    {
+        if (v)
+        {
+            buttonAnimator.sliderImage.sprite = emptySprite;
+        }
+        else
+        {
+            // animation?
+            buttonAnimator.sliderImage.sprite = islandSprite;
+        }
+    }
 }

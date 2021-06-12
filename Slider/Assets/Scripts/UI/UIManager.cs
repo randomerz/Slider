@@ -8,30 +8,23 @@ using System.Collections;
 public class UIManager : MonoBehaviour
 {
     public bool isGamePaused;
-    public bool isGameOver;
+    public bool isArtifactOpen;
 
     public GameObject pausePanel;
-    public UnityEngine.UI.Slider volumeSlider;
-    public GameObject gameOverPanel;
-    public TextMeshProUGUI timeText;
-
-    public Animator mainMenuAnimator;
-
-    private float oldTimeScale = 1f;
+    public GameObject artifactPanel;
+    public Slider sfxSlider;
+    public Slider musicSlider;
 
     private void Awake()
     {
-        volumeSlider.value = AudioManager.GetVolume();
+        sfxSlider.value = AudioManager.GetVolume();
+        musicSlider.value = AudioManager.GetVolume();
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (isGameOver)
-            {
-                return;
-            }
             if (isGamePaused)
             {
                 ResumeGame();
@@ -41,59 +34,59 @@ public class UIManager : MonoBehaviour
                 PauseGame();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.E))
+        {
+            if (isArtifactOpen)
+            {
+                ResumeGame();
+            }
+            else
+            {
+                OpenArtifact();
+            }
+        }
     }
 
     public void ResumeGame()
     {
         pausePanel.SetActive(false);
-        gameOverPanel.SetActive(false);
-        Time.timeScale = oldTimeScale;
+        artifactPanel.SetActive(false);
+        Time.timeScale = 1;
         isGamePaused = false;
+        isArtifactOpen = false;
     }
 
-    void PauseGame()
+    public void PauseGame()
     {
         pausePanel.SetActive(true);
-        oldTimeScale = Time.timeScale;
         Time.timeScale = 0f;
         isGamePaused = true;
     }
 
-    public void OpenGameOver(float secondsAlive)
+    public void OpenArtifact()
     {
-        gameOverPanel.SetActive(true);
-        oldTimeScale = Time.timeScale;
-        Time.timeScale = 0f;
-        isGameOver = true;
-
-        int mins = (int)(secondsAlive) / 60;
-        int secs = (int)(secondsAlive) % 60;
-        timeText.text = mins + ":" + secs.ToString("00");
+        if (Player.IsSafe())
+        {
+            artifactPanel.SetActive(true);
+            Time.timeScale = 0f;
+            isGamePaused = true;
+            isArtifactOpen = true;
+        }
+        else
+        {
+            // play error sound
+        }
     }
 
-    public void UpdateVolume(float value)
+    public void UpdateSFXVolume(float value)
     {
         AudioManager.SetVolume(value);
     }
 
-    public void StartMainMenuTransitionOut()
+    public void UpdateMusicVolume(float value)
     {
-        StartCoroutine(MainMenuTransitionOut());
-    }
-
-    private IEnumerator MainMenuTransitionOut()
-    {
-        mainMenuAnimator.SetBool("shouldExit", true);
-
-        yield return new WaitForSeconds(2);
-
-        LoadGameInit();
-    }
-
-    public void LoadGameInit()
-    {
-        ResumeGame();
-        SceneManager.LoadScene("GameInit");
+        AudioManager.SetVolume(value);
     }
 
     public void LoadGame()

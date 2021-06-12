@@ -16,9 +16,13 @@ public class TileSlider : MonoBehaviour
     public GameObject floorTileGrid;
     public GameObject wallTileGrid;
 
-    void Start()
+    void Awake()
     {
-        
+        SetEmpty(isEmpty);
+        Vector3 defaultPos = SLIDER_WIDTH * new Vector3(xPos, yPos);
+        transform.position = defaultPos;
+        floorTileGrid.transform.position = defaultPos;
+        wallTileGrid.transform.position = defaultPos;
     }
 
     void Update()
@@ -31,19 +35,34 @@ public class TileSlider : MonoBehaviour
         xPos = x;
         yPos = y;
         Vector3 newPos = SLIDER_WIDTH * new Vector3(x, y);
+        //Debug.Log("new position of tile " + islandId + ": " + newPos);
 
         if (!isEmpty)
         {
             // animations and style
+            if (Player.GetSliderUnderneath() == islandId)
+            {
+                // set relative pos;
+                Player.SetPosition(Player.GetPosition() - transform.position + newPos);
+            }
+            transform.position = newPos;
             floorTileGrid.transform.position = newPos;
             wallTileGrid.transform.position = newPos;
         }
         else
         {
+            transform.position = newPos;
             floorTileGrid.transform.position = newPos;
             wallTileGrid.transform.position = newPos;
         }
 
         transform.position = newPos;
+    }
+
+    public void SetEmpty(bool isEmpty)
+    {
+        this.isEmpty = isEmpty;
+        floorTileGrid.SetActive(!isEmpty);
+        wallTileGrid.SetActive(!isEmpty);
     }
 }

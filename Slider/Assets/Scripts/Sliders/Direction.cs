@@ -32,9 +32,9 @@ public class DirectionUtil : MonoBehaviour
             return Direction.RIGHT;
         else if (direction.y > 0)
             return Direction.UP;
-        else if (direction.y > 0)
+        else if (direction.x < 0)
             return Direction.LEFT;
-        else if (direction.y > 0)
+        else if (direction.y < 0)
             return Direction.DOWN;
         return 0;
     }
