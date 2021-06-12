@@ -23,6 +23,6 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position += moveSpeed * inputDir * Time.deltaTime;
+        transform.position += moveSpeed * inputDir.normalized * Time.deltaTime;
     }
 }
