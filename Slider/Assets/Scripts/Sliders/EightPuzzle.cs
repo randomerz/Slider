@@ -8,11 +8,11 @@ public class EightPuzzle : MonoBehaviour
     private float timeTillCanSlide;
     private bool canSlide;
 
-    private static Slider[,] grid = new Slider[3, 3];
+    private static TileSlider[,] grid = new TileSlider[3, 3];
     private static EightPuzzle _instance;
 
     // References
-    public Slider[] sliders;
+    public TileSlider[] sliders;
 
     private void Awake()
     {

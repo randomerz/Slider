@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slider : MonoBehaviour
+public class TileSlider : MonoBehaviour
 {
     public bool isEmpty;
 
+    public int islandId = -1;
     public int xPos;
     public int yPos;
 
