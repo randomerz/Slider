@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
 
     public GameObject pausePanel;
     public GameObject artifactPanel;
+    public Animator artifactAnimator;
     public Slider sfxSlider;
     public Slider musicSlider;
 
@@ -51,10 +52,21 @@ public class UIManager : MonoBehaviour
     public void ResumeGame()
     {
         pausePanel.SetActive(false);
-        artifactPanel.SetActive(false);
         Time.timeScale = 1;
         isGamePaused = false;
-        isArtifactOpen = false;
+
+        if (isArtifactOpen)
+        {
+            isArtifactOpen = false;
+            artifactAnimator.SetBool("isVisible", false);
+            StartCoroutine(CloseArtPanel());
+        }
+    }
+
+    private IEnumerator CloseArtPanel()
+    {
+        yield return new WaitForSeconds(0.34f);
+        artifactPanel.SetActive(false);
     }
 
     public void PauseGame()
@@ -72,6 +84,8 @@ public class UIManager : MonoBehaviour
             Time.timeScale = 0f;
             isGamePaused = true;
             isArtifactOpen = true;
+
+            artifactAnimator.SetBool("isVisible", true);
         }
         else
         {

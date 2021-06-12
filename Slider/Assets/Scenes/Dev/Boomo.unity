@@ -760,9 +760,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingLayerID: 529684183
+  m_SortingLayer: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 1515997999314860018, guid: b4f019f3f306d41b5a198fba8d41e63f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1306,6 +1306,8 @@ GameObject:
   - component: {fileID: 340035584}
   - component: {fileID: 340035583}
   - component: {fileID: 340035585}
+  - component: {fileID: 340035586}
+  - component: {fileID: 340035587}
   m_Layer: 5
   m_Name: ArtifactPanel
   m_TagString: Untagged
@@ -1402,6 +1404,37 @@ MonoBehaviour:
   - {fileID: 1380017856}
   - {fileID: 1408187093}
   - {fileID: 1302088379}
+--- !u!95 &340035586
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340035581}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4c4b0bf9f5b7d0c44ad5e49bb2aaff41, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!225 &340035587
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340035581}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &358816900
 GameObject:
   m_ObjectHideFlags: 0
@@ -10917,6 +10950,7 @@ MonoBehaviour:
   isArtifactOpen: 0
   pausePanel: {fileID: 611479655}
   artifactPanel: {fileID: 340035581}
+  artifactAnimator: {fileID: 340035586}
   sfxSlider: {fileID: 163040532}
   musicSlider: {fileID: 1861640356}
 --- !u!1 &866613216
