@@ -49,6 +49,31 @@ MonoBehaviour:
   islandId: -1
   xPos: 0
   yPos: 0
+  movementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -0
+      outSlope: -0
+      tangentMode: 0
+      weightedMode: 2
+      inWeight: 0
+      outWeight: 0.89385474
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2.0311942
+      outSlope: 2.0311942
+      tangentMode: 0
+      weightedMode: 1
+      inWeight: 0.19739294
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  sliderCollider: {fileID: 7649429769792356526}
   floorTileGrid: {fileID: 0}
   wallTileGrid: {fileID: 0}
 --- !u!61 &7649429769792356526
@@ -132,5 +157,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 16, y: 16}
+  m_Size: {x: 15, y: 15}
   m_EdgeRadius: 0

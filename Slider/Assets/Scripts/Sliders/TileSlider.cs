@@ -10,9 +10,13 @@ public class TileSlider : MonoBehaviour
     public int xPos;
     public int yPos;
 
+    public AnimationCurve movementCurve;
+    public float movementDuration = 1;
+
     private const int SLIDER_WIDTH = 17;
 
     [Header("References")]
+    public Collider2D sliderCollider;
     public GameObject floorTileGrid;
     public GameObject wallTileGrid;
 
@@ -21,8 +25,7 @@ public class TileSlider : MonoBehaviour
         SetEmpty(isEmpty);
         Vector3 defaultPos = SLIDER_WIDTH * new Vector3(xPos, yPos);
         transform.position = defaultPos;
-        floorTileGrid.transform.position = defaultPos;
-        wallTileGrid.transform.position = defaultPos;
+        SetTileMapPositions(defaultPos);
     }
 
     void Update()
@@ -46,14 +49,12 @@ public class TileSlider : MonoBehaviour
                 Player.SetPosition(Player.GetPosition() - transform.position + newPos);
             }
             transform.position = newPos;
-            floorTileGrid.transform.position = newPos;
-            wallTileGrid.transform.position = newPos;
+            SetTileMapPositions(newPos);
         }
         else
         {
             transform.position = newPos;
-            floorTileGrid.transform.position = newPos;
-            wallTileGrid.transform.position = newPos;
+            SetTileMapPositions(newPos);
         }
 
         transform.position = newPos;
@@ -64,5 +65,13 @@ public class TileSlider : MonoBehaviour
         this.isEmpty = isEmpty;
         floorTileGrid.SetActive(!isEmpty);
         wallTileGrid.SetActive(!isEmpty);
+        sliderCollider.isTrigger = !isEmpty;
+    }
+
+    private void SetTileMapPositions(Vector3 pos)
+    {
+        pos = pos + new Vector3(-0.5f, -0.5f);
+        floorTileGrid.transform.position = pos;
+        wallTileGrid.transform.position = pos;
     }
 }

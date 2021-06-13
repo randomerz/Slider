@@ -83,6 +83,11 @@ public class EightPuzzle : MonoBehaviour
         return true;
     }
 
+    public static bool GetCanSlide()
+    {
+        return _instance.canSlide;
+    }
+
     public static void AddSlider(int islandId)
     {
         foreach (TileSlider s in grid)
