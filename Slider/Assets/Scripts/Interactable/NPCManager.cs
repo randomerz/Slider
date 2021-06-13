@@ -6,6 +6,7 @@ public class NPCManager : MonoBehaviour
 {
     private Dictionary<GameObject, int> voicelines = new Dictionary<GameObject, int>();
     public GameObject[] npcs = new GameObject[8];
+    public static int currSliders = 8;
 
     void Start()
     {
@@ -19,63 +20,78 @@ public class NPCManager : MonoBehaviour
         voicelines.Add(npcs[7], 0);
     }
 
+    public void ChangeWorldState()
+    {
+        currSliders++;
+    }
+
     public int getVoiceLineNumber(string name)
     {
         //Debug.Log(name);
+        int counter = 0;
         foreach (KeyValuePair<GameObject, int> e in voicelines)
         {
             if (e.Key.GetComponent<NPC>().characterName == name)
             {
-
-                return e.Value;
-            } 
+                break;
+            }
+            counter++;
         }
-        return -1;
+        CheckWorldState(name);
+        return voicelines[npcs[counter]];
     }
 
     public void changeVoiceLine(string name, int val)
     {
+        int counter = 0;
         foreach (KeyValuePair<GameObject, int> e in voicelines)
         {
             if (e.Key.GetComponent<NPC>().characterName == name)
             {
-                voicelines[e.Key] = val;
+                voicelines[npcs[counter]] = val;
             }
+            counter++;
         }
     }
 
-    public int CheckWorldState(string Name)
+    public void CheckWorldState(string Name)
     {
+        Debug.Log("in method");
         switch(Name)
         {
             case "Pierre":
-                if (WorldManager.currSliders == 7 && (EightPuzzle.GetInstance()))
+                if (currSliders == 7 && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
                 {
-                    return 1;
-                }else if (WorldManager.currSliders == 8)
-                {
-                    return 2;
+                    voicelines[npcs[0]] = 1;
                 }
-                break;
-            case "Explorer":
+                else if (currSliders == 8)
+                {
+                    Debug.Log("Enter if statement");
+                    voicelines[npcs[0]] = 2;
+                }
+                else if (currSliders == 9)
+                {
+                    voicelines[npcs[0]] = 3;
+                }
                 break;
             case "Kevin":
                 break;
-            case "Fezziwig":
+            case "Felicia":
                 break;
-            case "Fish":
+            case "Sam":
+                break;
+            case "Archibald":
                 break;
             case "Romeo":
                 break;
             case "Juliet":
                 break;
-            case "Archibald":
+            case "Fezziwig":
                 break;
             case "Mayor":
             case "Chef":
                 break;
             default:
-                return -1;
                 break;
         }
     }

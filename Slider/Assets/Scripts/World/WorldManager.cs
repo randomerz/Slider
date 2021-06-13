@@ -4,10 +4,5 @@ using UnityEngine;
 
 public class WorldManager : MonoBehaviour
 {
-    public static int currSliders = 1;
-
-    public void ChangeWorldState()
-    {
-        currSliders++;
-    }
+    
 }

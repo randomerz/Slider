@@ -10,11 +10,6 @@ public class DialogueTrigger : MonoBehaviour
     //Call to dialogueManager function
     public void TriggerDialogue(GameObject npc)
     {
-        Debug.Log(npc.GetComponent<NPC>().characterName);
-        foreach (string str in dialogue.dialogues)
-        {
-            Debug.Log(str);
-        }
         npc.GetComponent<DialogueManager>().DisplayDialogues(dialogue, npc.GetComponent<NPC>().GetCurrentDialogueNumber());
     }
 }
