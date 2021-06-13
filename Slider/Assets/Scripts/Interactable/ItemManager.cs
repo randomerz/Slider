@@ -5,10 +5,12 @@ using UnityEngine;
 public class ItemManager : MonoBehaviour
 {
     public static GameObject[] items = new GameObject[10];
-    // Start is called before the first frame update
+
+    public GameObject digObj;
+
     void Start()
     {
-        items[9].SetActive(false);
+        digObj.SetActive(false);
     }
 
     public static void ActivateDigItem()

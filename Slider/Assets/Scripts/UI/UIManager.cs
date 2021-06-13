@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
 {
     public bool isGamePaused;
     public bool isArtifactOpen;
+    public static bool canOpenMenus = true;
 
     public GameObject pausePanel;
     public GameObject artifactPanel;
@@ -73,6 +74,9 @@ public class UIManager : MonoBehaviour
 
     public void PauseGame()
     {
+        if (!canOpenMenus)
+            return;
+
         pausePanel.SetActive(true);
         Time.timeScale = 0f;
         isGamePaused = true;
@@ -80,6 +84,9 @@ public class UIManager : MonoBehaviour
 
     public void OpenArtifact()
     {
+        if (!canOpenMenus)
+            return;
+
         if (Player.IsSafe())
         {
             artifactPanel.SetActive(true);
