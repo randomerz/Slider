@@ -95,7 +95,7 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Felicia":
-                if (currSliders == 6 && Item.hasBeenDug)
+                if (currSliders > 6 && currSliders < 9 && Item.hasBeenDug)
                 {
                     voicelines[npcs[2]] = 1;
                 }
