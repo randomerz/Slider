@@ -109,10 +109,13 @@ public class TileSlider : MonoBehaviour
     private IEnumerator StartCameraShakeEffect()
     {
         CameraShake.ShakeConstant(movementDuration + 0.1f, 0.15f);
+        AudioManager.Play("Slide Rumble");
 
         yield return new WaitForSeconds(movementDuration);
 
         CameraShake.Shake(0.5f, 1f);
+        AudioManager.Play("Slide Explosion");
+
     }
 
     public void SetEmpty(bool isEmpty)

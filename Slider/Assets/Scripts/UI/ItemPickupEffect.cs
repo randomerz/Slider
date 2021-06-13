@@ -35,7 +35,8 @@ public class ItemPickupEffect : MonoBehaviour
     {
         maskObject.SetActive(true);
         animator.SetBool("isVisible", true);
-        // play sound
+        AudioManager.Play("Item Pick Up");
+
         UIManager.canOpenMenus = false;
         Player.canMove = false;
 

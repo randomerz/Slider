@@ -99,7 +99,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            // play error sound
+            AudioManager.Play("Artifact Error");
         }
     }
 
