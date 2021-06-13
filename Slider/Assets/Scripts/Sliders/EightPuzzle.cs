@@ -164,6 +164,8 @@ public class EightPuzzle : MonoBehaviour
             }
         }
 
+        Player.SetPosition(GetSlider(playerIsland).transform.position + playerOffset);
+
         grid = newGrid;
     }
 

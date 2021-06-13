@@ -21,8 +21,11 @@ public class Collision : MonoBehaviour
         {
             if (!firstTimeFezziwigCheck && npc.GetComponent<NPC>().characterName == "Fezziwig")
             {
-                //ADD NEW THING HERE
                 firstTimeFezziwigCheck = true;
+
+                EightPuzzle.ShuffleBoard();
+                npc.GetComponent<DialogueManager>().FadeAwayDialogue();
+
                 return;
             }
             npc.GetComponent<DialogueManager>().FadeAwayDialogue();
