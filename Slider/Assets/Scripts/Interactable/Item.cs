@@ -14,7 +14,7 @@ public class Item : MonoBehaviour
     {
         //Debug.Log("Cutscene Triggered");
         ItemPickupEffect.StartCutscene(itemSpriteRenderer.sprite, iName);
-
+        DespwanItem(item);
         if (iName == "Coffee")
         {
             //Debug.Log("Coffee Works");
@@ -24,13 +24,13 @@ public class Item : MonoBehaviour
         {
             //Debug.Log("Dig Works");
             hasBeenDug = true;
+            ItemManager.ActivateNextItem();
         }
         else
         {
             FindObjectOfType<NPCManager>().ChangeWorldState();
             EightPuzzle.AddSlider(sliderId);
         }
-        DespwanItem(item);
         //Debug.Log("Current World State is " + NPCManager.currSliders);
     }
 

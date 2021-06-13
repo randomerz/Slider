@@ -89,6 +89,15 @@ public class EightPuzzle : MonoBehaviour
         grid[x + 1, y + 1] = grid[x2 + 1, y2 + 1];
         grid[x2 + 1, y2 + 1] = temp;
 
+        if (NPCManager.CheckQRCode())
+        {
+            ItemManager.ActivateDigItem();
+        }
+
+        if (NPCManager.CheckFinalPlacements())
+        {
+            ItemManager.ActivateNextItem();
+        }
         return true;
     }
 
