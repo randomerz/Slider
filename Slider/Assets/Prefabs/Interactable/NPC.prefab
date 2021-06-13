@@ -32,7 +32,7 @@ RectTransform:
   m_Children:
   - {fileID: 1390625316827531685}
   m_Father: {fileID: 1390625317364026276}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -234,50 +234,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &1390625317014462330
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1390625317014462328}
-  - component: {fileID: 1390625317014462329}
-  m_Layer: 0
-  m_Name: DialogueManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1390625317014462328
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1390625317014462330}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.10589, y: -3.7358303, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1390625317364026276}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1390625317014462329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1390625317014462330}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0705aac177f447588c533ffbb130e57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogueText: {fileID: 1390625318199793631}
 --- !u!1 &1390625317152906184
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,6 +248,7 @@ GameObject:
   - component: {fileID: 1390625316885116902}
   - component: {fileID: 1390625317152906190}
   - component: {fileID: 1390625317152906191}
+  - component: {fileID: 1982617995311935006}
   m_Layer: 0
   m_Name: NPC
   m_TagString: Untagged
@@ -310,7 +267,6 @@ Transform:
   m_LocalPosition: {x: 10.10589, y: 3.7358303, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1390625317014462328}
   - {fileID: 1390625316688445349}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -417,7 +373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f31fc7df25d845acaf6e15abaff58e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NPC: {fileID: 1390625317152906184}
+  npc: {fileID: 0}
 --- !u!114 &1390625317152906191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -432,4 +388,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogue:
     dialogues: []
-  npc: {fileID: 1390625316885116902}
+--- !u!114 &1982617995311935006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1390625317152906184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0705aac177f447588c533ffbb130e57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueText: {fileID: 0}

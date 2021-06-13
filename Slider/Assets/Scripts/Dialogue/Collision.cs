@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Collision : MonoBehaviour
 {
-    public GameObject NPC;
+    public GameObject npc;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        FindObjectOfType<DialogueTrigger>().TriggerDialogue();
+        npc.GetComponent<DialogueTrigger>().TriggerDialogue(npc);
     }
 }

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class NPCManager : MonoBehaviour
 {
-    private Dictionary<NPC, int> voicelines = new Dictionary<NPC, int>();
-    public NPC[] npcs = new NPC[8];
+    private Dictionary<GameObject, int> voicelines = new Dictionary<GameObject, int>();
+    public GameObject[] npcs = new GameObject[8];
 
-    private void Awake()
+   void Start()
     {
         voicelines.Add(npcs[0], 0);
         voicelines.Add(npcs[1], 0);
@@ -21,9 +21,10 @@ public class NPCManager : MonoBehaviour
 
     public int getVoiceLineNumber(string name)
     {
-        foreach (KeyValuePair<NPC, int> e in voicelines)
+        //Debug.Log(name);
+        foreach (KeyValuePair<GameObject, int> e in voicelines)
         {
-            if (e.Key.characterName == name)
+            if (e.Key.GetComponent<NPC>().characterName == name)
             {
                 return e.Value;
             } 
@@ -33,9 +34,9 @@ public class NPCManager : MonoBehaviour
 
     public void changeVoiceLine(string name)
     {
-        foreach (KeyValuePair<NPC, int> e in voicelines)
+        foreach (KeyValuePair<GameObject, int> e in voicelines)
         {
-            if (e.Key.characterName == name)
+            if (e.Key.GetComponent<NPC>().characterName == name)
             {
                 voicelines[e.Key] = e.Value + 1;
             }

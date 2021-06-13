@@ -30,6 +30,7 @@ public class DialogueManager : MonoBehaviour
     {
         dialogueText.gameObject.SetActive(true);
         string sentence = dialogues[state];
+        //Debug.Log(sentence);
         StartCoroutine(TypeSentence(sentence));
     }
 
