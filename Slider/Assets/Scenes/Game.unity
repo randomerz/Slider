@@ -24295,7 +24295,7 @@ PrefabInstance:
     - target: {fileID: 1390625317152906191, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: dialogue.dialogues.Array.data[0]
       value: "There is something about these ruins that I cannot quite piece together\u2026
-        a code, perhaps?"
+        a scannable code, perhaps?"
       objectReference: {fileID: 0}
     - target: {fileID: 1390625317152906191, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: dialogue.dialogues.Array.data[1]
@@ -108195,9 +108195,9 @@ Tilemap:
       e03: 0
       e10: -0.99999994
       e11: 0.000000059604645
-      e12: 0
+      e12: -0
       e13: 0
-      e20: 0
+      e20: -0
       e21: 0
       e22: 1
       e23: 0
