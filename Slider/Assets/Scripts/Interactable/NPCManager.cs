@@ -27,6 +27,7 @@ public class NPCManager : MonoBehaviour
     public void ChangeWorldState()
     {
         currSliders++;
+        ItemManager.ActivateDigItem();
     }
 
     public int getVoiceLineNumber(string name)
@@ -167,7 +168,7 @@ public class NPCManager : MonoBehaviour
         }
     }
 
-    public bool CheckQRCode()
+    public static bool CheckQRCode()
     {
         for (int x = 0; x < 3; x++)
         {
