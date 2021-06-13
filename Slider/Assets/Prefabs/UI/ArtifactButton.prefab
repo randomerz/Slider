@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 7803031415129755747}
   - component: {fileID: 3939992796814276472}
   - component: {fileID: 4833714464752738808}
+  - component: {fileID: 336505595520237690}
   m_Layer: 5
   m_Name: ArtifactButton
   m_TagString: Untagged
@@ -288,6 +289,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 336505595520237690}
+        m_TargetAssemblyTypeName: UIClick, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7803031415129755747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,6 +380,18 @@ MonoBehaviour:
   sliderImage: {fileID: 4266256298353997437}
   pushedDownFrame: {fileID: 6204213779163962951}
   highlightedFrame: {fileID: 5253961610290396656}
+--- !u!114 &336505595520237690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3315272701131278367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 218799d69c253b34ca4c489b41cd26db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5255975379809269057
 GameObject:
   m_ObjectHideFlags: 0
