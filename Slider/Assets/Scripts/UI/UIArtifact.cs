@@ -13,20 +13,6 @@ public class UIArtifact : MonoBehaviour
     private void Awake()
     {
         _instance = this;
-
-        // Swap tiles 8 & 9 so its solvable
-
-        foreach (ArtifactButton b in buttons)
-        {
-            if (b.islandId == 8)
-            {
-                b.SetPosition(0, 0);
-            }
-            if (b.islandId == 9)
-            {
-                b.SetPosition(-1, 0);
-            }
-        }
     }
 
     public static UIArtifact GetInstance()
@@ -123,6 +109,28 @@ public class UIArtifact : MonoBehaviour
 
         buttonCurrent.SetPosition(buttonEmpty.xPos, buttonEmpty.yPos);
         buttonEmpty.SetPosition(x, y);
+    }
+
+    public static void Swap89()
+    {
+        ArtifactButton b1 = null, b2 = null;
+        foreach (ArtifactButton b in _instance.buttons)
+        {
+            if (b.islandId == 8)
+            {
+                b1 = b;
+            }
+            if (b.islandId == 9)
+            {
+                b2 = b;
+            }
+        }
+
+        int x = b1.xPos;
+        int y = b1.yPos;
+
+        b1.SetPosition(b2.xPos, b2.yPos);
+        b2.SetPosition(x, y);
     }
 
     public static void AddButton(int islandId)

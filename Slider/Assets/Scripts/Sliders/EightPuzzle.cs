@@ -30,16 +30,18 @@ public class EightPuzzle : MonoBehaviour
 
 
         // Swap tiles 8 & 9 so its solvable
-        int x1 = -1;
-        int y1 = 0;
-        int x2 = 0;
-        int y2 = 0;
-        grid[x1 + 1, y1 + 1].SetPositionRaw(x2, y2);
-        grid[x2 + 1, y2 + 1].SetPositionRaw(x1, y1);
+        //int x1 = -1;
+        //int y1 = 0;
+        //int x2 = 0;
+        //int y2 = 0;
+        //grid[x1 + 1, y1 + 1].SetPositionRaw(x2, y2);
+        //grid[x2 + 1, y2 + 1].SetPositionRaw(x1, y1);
 
-        TileSlider temp = grid[x1 + 1, y1 + 1];
-        grid[x1 + 1, y1 + 1] = grid[x2 + 1, y2 + 1];
-        grid[x2 + 1, y2 + 1] = temp;
+        //TileSlider temp = grid[x1 + 1, y1 + 1];
+        //grid[x1 + 1, y1 + 1] = grid[x2 + 1, y2 + 1];
+        //grid[x2 + 1, y2 + 1] = temp;
+
+
     }
 
     public static EightPuzzle GetInstance()
@@ -126,8 +128,59 @@ public class EightPuzzle : MonoBehaviour
         return true;
     }
 
+    private static void Swap89()
+    {
+        TileSlider s1 = null, s2 = null;
+        foreach (TileSlider s in _instance.sliders)
+        {
+            if (s.islandId == 8)
+            {
+                s1 = s;
+            }
+            if (s.islandId == 9)
+            {
+                s2 = s;
+            }
+        }
+
+        int x1 = s1.xPos;
+        int y1 = s1.yPos;
+        int x2 = s2.xPos;
+        int y2 = s2.yPos;
+        grid[x1 + 1, y1 + 1].SetPosition(x2, y2);
+        grid[x2 + 1, y2 + 1].SetPosition(x1, y1);
+
+        TileSlider temp = grid[x1 + 1, y1 + 1];
+        grid[x1 + 1, y1 + 1] = grid[x2 + 1, y2 + 1];
+        grid[x2 + 1, y2 + 1] = temp;
+    }
+
     public static void AddSlider(int islandId)
     {
+        // before putting 8 in, make sure to put it in the correct spot so puzzle is solvable
+        if (islandId == 8)
+        {
+            int[,] puzzle = new int[3, 3];
+            for (int x = 0; x < 3; x++)
+            {
+                for (int y = 0; y < 3; y++)
+                {
+                    if (grid[x, y].islandId == 9)
+                        puzzle[x, y] = 0;
+                    else
+                        puzzle[x, y] = grid[x, y].islandId;
+                }
+            }
+
+            if (CheckInversions.IsSolvable(puzzle))
+                Debug.Log("Solvable");
+            else
+            {
+                // swap 8 and 9
+                Swap89();
+                UIArtifact.Swap89();
+            }
+        }
 
         foreach (TileSlider s in grid)
         {

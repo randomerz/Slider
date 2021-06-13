@@ -35,5 +35,7 @@ public class ItemManager : MonoBehaviour
     {
         currItemActive++;
         items[currItemActive].SetActive(true);
+
+        AudioManager.Play("Puzzle Complete");
     }
 }

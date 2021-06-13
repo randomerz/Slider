@@ -108,6 +108,7 @@ public class NPCManager : MonoBehaviour
                 if (currSliders == 7 && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
                 {
                     voicelines[npcs[3]] = 1;
+                    AudioManager.Play("Puzzle Complete");
                     fishOn = true;
                 }
                 else if (currSliders == 8)

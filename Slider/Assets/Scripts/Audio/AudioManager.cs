@@ -12,8 +12,8 @@ public class AudioManager : MonoBehaviour
     private Sound[] music;
     private static Sound[] _music;
 
-    private static float sfxVolume = 1; // [0..1]
-    private static float musicVolume = 1;
+    private static float sfxVolume = 0.5f; // [0..1]
+    private static float musicVolume = 0.5f;
 
     //[SerializeField]
     //private GameObject audioListenerObj;
@@ -59,6 +59,8 @@ public class AudioManager : MonoBehaviour
         }
 
         //menuLowPass = audioListenerObj.GetComponent<AudioLowPassFilter>();
+        SetSFXVolume(sfxVolume);
+        SetMusicVolume(musicVolume);
     }
 
     private void Start()
@@ -158,9 +160,9 @@ public class AudioManager : MonoBehaviour
         value = Mathf.Clamp(value, 0, 1);
         musicVolume = value;
 
-        if (_sounds == null)
+        if (_music == null)
             return;
-        foreach (Sound s in _sounds)
+        foreach (Sound s in _music)
         {
             if (s == null || s.source == null)
                 continue;
