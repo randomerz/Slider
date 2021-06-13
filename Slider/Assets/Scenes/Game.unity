@@ -18788,7 +18788,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 843071581}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -19025,7 +19025,7 @@ RectTransform:
   - {fileID: 1302088378}
   - {fileID: 188128596}
   m_Father: {fileID: 843071581}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -66012,7 +66012,7 @@ RectTransform:
   - {fileID: 1889027215}
   - {fileID: 831079336}
   m_Father: {fileID: 843071581}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -66092,7 +66092,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 843071581}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -68781,10 +68781,10 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 28202014}
+  - {fileID: 321189348}
   - {fileID: 340035582}
   - {fileID: 611479656}
   - {fileID: 615858870}
-  - {fileID: 321189348}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -68825,10 +68825,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blackPanel: {fileID: 28202010}
-  blackPanelCanvasGroup: {fileID: 0}
+  blackPanelCanvasGroup: {fileID: 28202011}
   fadeDuration: 1
   whitePanel: {fileID: 321189344}
-  whitePanelCanvasGroup: {fileID: 0}
+  whitePanelCanvasGroup: {fileID: 321189345}
   flashDuration: 1
 --- !u!1 &866613216
 GameObject:
