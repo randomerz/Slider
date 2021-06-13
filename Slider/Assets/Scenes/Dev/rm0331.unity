@@ -910,6 +910,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5991808453730892517, guid: f666e987e45e443e1b1b3a47a5630bc7, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1805245437082581397, guid: f666e987e45e443e1b1b3a47a5630bc7, type: 3}
       propertyPath: m_RootOrder
       value: 15
@@ -2007,10 +2011,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2751716942032489634, guid: f666e987e45e443e1b1b3a47a5630bc7, type: 3}
       propertyPath: m_Name
-      value: Dig
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: iName
       value: Dig
       objectReference: {fileID: 0}
     - target: {fileID: 8353254314762672909, guid: f666e987e45e443e1b1b3a47a5630bc7, type: 3}
