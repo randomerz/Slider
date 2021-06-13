@@ -80666,6 +80666,58 @@ PrefabInstance:
       propertyPath: itemText
       value: 
       objectReference: {fileID: 615858871}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.data[0].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.data[1].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.data[0].inSlope
+      value: -178.15567
+      objectReference: {fileID: 0}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.data[1].inSlope
+      value: 19.133331
+      objectReference: {fileID: 0}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.data[0].outSlope
+      value: -178.15567
+      objectReference: {fileID: 0}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.data[1].inWeight
+      value: 0.052141547
+      objectReference: {fileID: 0}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.data[1].outSlope
+      value: 19.133331
+      objectReference: {fileID: 0}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.data[0].outWeight
+      value: 0.005586592
+      objectReference: {fileID: 0}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.data[0].weightedMode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: soundDampenCurve.m_Curve.Array.data[1].weightedMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
 --- !u!1001 &471022900903346840

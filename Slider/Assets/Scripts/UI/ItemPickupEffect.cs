@@ -6,6 +6,9 @@ using TMPro;
 
 public class ItemPickupEffect : MonoBehaviour
 {
+    public AnimationCurve soundDampenCurve;
+    public float soundDampenLength = 2;
+
     public GameObject maskObject;
     public Animator animator;
     public TextMeshProUGUI itemText;
@@ -29,6 +32,7 @@ public class ItemPickupEffect : MonoBehaviour
         _instance.itemText.text = itemName + " Acquired!";
         _instance.itemImage.sprite = itemSprite;
         _instance.StartCoroutine(_instance.Cutscene());
+        _instance.StartCoroutine(_instance.DampenMusic());
     }
 
     private IEnumerator Cutscene()
@@ -57,5 +61,22 @@ public class ItemPickupEffect : MonoBehaviour
         UIManager.canOpenMenus = true;
         Player.canMove = true;
         playerSprite.sortingLayerName = "Entity";
+    }
+
+    private IEnumerator DampenMusic()
+    {
+        float t = 0;
+
+        float origVolume = AudioManager.GetMusicVolume();
+
+        while (t < soundDampenLength)
+        {
+            AudioManager.SetMusicVolume(origVolume * soundDampenCurve.Evaluate(t / soundDampenLength));
+
+            yield return null;
+            t += Time.deltaTime;
+        }
+
+        AudioManager.SetMusicVolume(origVolume);
     }
 }

@@ -144,13 +144,13 @@ public class EightPuzzle : MonoBehaviour
         TileSlider next = null;
 
         int playerIsland = Player.GetSliderUnderneath();
-        Vector3 playerOffset = GetSlider(playerIsland).transform.position - Player.GetPosition();
+        Vector3 playerOffset = Player.GetPosition() - GetSlider(playerIsland).transform.position;
 
         for (int x = 0; x < 3; x++)
         {
             for (int y = 0; y < 3; y++)
             {
-                Debug.Log(puzzle[x, y]);
+                //Debug.Log(puzzle[x, y]);
                 if (puzzle[x, y] == 0)
                     next = GetSlider(9);
                 else
