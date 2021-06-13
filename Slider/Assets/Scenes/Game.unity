@@ -10988,7 +10988,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541341, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a251bed476ecbe741969521e66693b15, type: 3}
@@ -110283,6 +110283,10 @@ PrefabInstance:
     - target: {fileID: 6285492530829541341, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_Name
       value: Quit Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 6285492530829541341, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a251bed476ecbe741969521e66693b15, type: 3}
