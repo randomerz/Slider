@@ -76,4 +76,34 @@ public class CameraShake : MonoBehaviour
 
         transform.position = _instance.baseTransform.position;
     }
+
+    public static void ShakeIncrease(float duration, float amount)
+    {
+        if (_instance == null || amount < curIntensity)
+            return;
+        _instance.StopAllCoroutines();
+        _instance.StartCoroutine(_instance.cIncreaseShake(duration, amount));
+    }
+
+    public IEnumerator cIncreaseShake(float duration, float amount)
+    {
+        float curTime = 0;
+        Vector3 origPos = transform.position;
+        curIntensity = amount;
+
+        while (curTime <= duration)
+        {
+            if (Time.timeScale == 0)
+                break;
+
+            curIntensity = Mathf.Lerp(0, amount, curTime / duration);
+            transform.position = _instance.baseTransform.position + Random.insideUnitSphere * curIntensity;
+
+            curTime += Time.deltaTime;
+
+            yield return null;
+        }
+
+        transform.position = _instance.baseTransform.position;
+    }
 }
