@@ -32,13 +32,13 @@ public class NPCManager : MonoBehaviour
         return -1;
     }
 
-    public void changeVoiceLine(string name)
+    public void changeVoiceLine(string name, int val)
     {
         foreach (KeyValuePair<GameObject, int> e in voicelines)
         {
             if (e.Key.GetComponent<NPC>().characterName == name)
             {
-                voicelines[e.Key] = e.Value + 1;
+                voicelines[e.Key] = val;
             }
         }
     }
