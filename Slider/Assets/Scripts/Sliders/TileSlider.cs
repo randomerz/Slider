@@ -21,6 +21,7 @@ public class TileSlider : MonoBehaviour
     public GameObject floorTileGrid;
     public GameObject wallTileGrid;
     public GameObject decorationsTileGrid;
+    public GameObject extraWallTileGrid;
 
     void Awake()
     {
@@ -124,6 +125,8 @@ public class TileSlider : MonoBehaviour
         floorTileGrid.SetActive(!isEmpty);
         wallTileGrid.SetActive(!isEmpty);
         decorationsTileGrid.SetActive(!isEmpty);
+        if (extraWallTileGrid != null)
+            extraWallTileGrid.SetActive(!isEmpty);
         sliderCollider.isTrigger = !isEmpty;
     }
 
@@ -133,5 +136,7 @@ public class TileSlider : MonoBehaviour
         floorTileGrid.transform.position = pos;
         wallTileGrid.transform.position = pos;
         decorationsTileGrid.transform.position = pos;
+        if (extraWallTileGrid != null)
+            extraWallTileGrid.transform.position = pos;
     }
 }
