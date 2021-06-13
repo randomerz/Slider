@@ -36,7 +36,7 @@ public class UIArtifact : MonoBehaviour
     
     public void SelectButton(ArtifactButton button)
     {
-        if (!EightPuzzle.GetCanSlide())
+        if (EightPuzzle.GetSlider(button.islandId).isMoving)
         {
             Debug.Log("on cooldown!");
             return;
@@ -67,7 +67,7 @@ public class UIArtifact : MonoBehaviour
             }
             else
             {
-                Debug.Log("Selected button " + button.islandId);
+                //Debug.Log("Selected button " + button.islandId);
                 currentButton = button;
                 button.SetPushedDown(true);
                 foreach (ArtifactButton b in adjacentButtons)

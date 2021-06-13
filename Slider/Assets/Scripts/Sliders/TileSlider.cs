@@ -12,6 +12,7 @@ public class TileSlider : MonoBehaviour
 
     public AnimationCurve movementCurve;
     public float movementDuration = 1;
+    public bool isMoving = false;
 
     private const int SLIDER_WIDTH = 17;
 
@@ -67,6 +68,7 @@ public class TileSlider : MonoBehaviour
     private IEnumerator StartMovingAnimation(Vector3 orig, Vector3 target, bool shouldMovePlayer, Vector3 playerOffset)
     {
         float t = 0;
+        isMoving = true;
 
         while (t < movementDuration)
         {
@@ -83,6 +85,8 @@ public class TileSlider : MonoBehaviour
             yield return null;
             t += Time.deltaTime;
         }
+
+        isMoving = false;
 
         if (shouldMovePlayer)
         {

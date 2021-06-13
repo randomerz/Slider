@@ -45,9 +45,21 @@ public class EightPuzzle : MonoBehaviour
         return grid;
     }
 
+    public static TileSlider GetSlider(int islandId)
+    {
+        foreach (TileSlider s in _instance.sliders)
+        {
+            if (s.islandId == islandId)
+            {
+                return s;
+            }
+        }
+        return null;
+    }
+
     public static bool MoveSlider(int x, int y, Direction dir)
     {
-        Debug.Log("trying to move slider at " + x + " " + y + " " + dir);
+        //Debug.Log("trying to move slider at " + x + " " + y + " " + dir);
         if (!CanMoveSlider(x, y, dir))
         {
             return false;
@@ -86,7 +98,7 @@ public class EightPuzzle : MonoBehaviour
         // tile in direction
         if (!grid[x + (int)d.x + 1, y + (int)d.y + 1].isEmpty)
         {
-            Debug.Log(grid[x + (int)d.x + 1, y + (int)d.y + 1].islandId + " is in the way");
+            //Debug.Log(grid[x + (int)d.x + 1, y + (int)d.y + 1].islandId + " is in the way");
             return false;
         }
 

@@ -146,6 +146,18 @@ TextureImporter:
   - first:
       213: -5070662694951774327
     second: Water12Frame4
+  - first:
+      213: -3331681168987335572
+    second: Water13Frame1
+  - first:
+      213: -8774825047357326479
+    second: Water13Frame2
+  - first:
+      213: -3684208998125197445
+    second: Water13Frame3
+  - first:
+      213: -4893719995621687681
+    second: Water13Frame4
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -1250,6 +1262,90 @@ TextureImporter:
       bones: []
       spriteID: 987139bf42361a9b0800000000000000
       internalID: -5070662694951774327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Water13Frame1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 432
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c64d6a9f0ad73c1d0800000000000000
+      internalID: -3331681168987335572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Water13Frame2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 336
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17bf0164c1f893680800000000000000
+      internalID: -8774825047357326479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Water13Frame3
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 240
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b77237c9f6f0fdcc0800000000000000
+      internalID: -3684208998125197445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Water13Frame4
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 144
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7e3ebe8793061cb0800000000000000
+      internalID: -4893719995621687681
       vertices: []
       indices: 
       edges: []

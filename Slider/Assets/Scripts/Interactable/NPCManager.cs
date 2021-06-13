@@ -7,6 +7,7 @@ public class NPCManager : MonoBehaviour
     private Dictionary<GameObject, int> voicelines = new Dictionary<GameObject, int>();
     public GameObject[] npcs = new GameObject[10];
     public static int currSliders = 1;
+    public static bool fishOn = false;
 
     void Start()
     {
@@ -61,7 +62,7 @@ public class NPCManager : MonoBehaviour
         switch(Name)
         {
             case "Pierre":
-                if (currSliders == 7 && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
+                if (currSliders == 7 && fishOn && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
                 {
                     voicelines[npcs[0]] = 1;
                 }
@@ -102,6 +103,7 @@ public class NPCManager : MonoBehaviour
                 if (currSliders == 7 && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
                 {
                     voicelines[npcs[3]] = 1;
+                    fishOn = true;
                 }
                 else if (currSliders == 8)
                 {
