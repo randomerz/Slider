@@ -29,6 +29,11 @@ public class EightPuzzle : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        //StartCoroutine(ShuffleBoardScene());
+    }
+
     public static EightPuzzle GetInstance()
     {
         return _instance;
@@ -172,23 +177,26 @@ public class EightPuzzle : MonoBehaviour
     private static int[,] GetShuffledBoard()
     {
         int[] p = { 1, 2, 3, 4, 0, 5, 6, 7, 8 };
-        int[,] puzzle = new int[3, 3];
+        //int[,] puzzle = new int[3, 3];
 
-        bool puzzleWorks = false;
+        //bool puzzleWorks = false;
 
-        while (!puzzleWorks)
-        {
-            p = ShuffleArray(p);
+        //while (!puzzleWorks)
+        //{
+        //    p = ShuffleArray(p);
 
-            for (int i = 0; i < p.Length; i++)
-            {
-                puzzle[i % 3, i / 3] = p[i];
-            }
+        //    for (int i = 0; i < p.Length; i++)
+        //    {
+        //        puzzle[i % 3, i / 3] = p[i];
+        //    }
 
-            puzzleWorks = CheckInversions.IsSolvable(puzzle);
-        }
+        //    puzzleWorks = CheckInversions.IsSolvable(puzzle);
+        //}
 
-        return puzzle;
+        //return puzzle;
+        return new int[3, 3] { { 1, 8, 2 },
+                               { 0, 4, 3 },
+                               { 7, 6, 5 } };
     }
 
     private static int[] ShuffleArray(int[] arr)
