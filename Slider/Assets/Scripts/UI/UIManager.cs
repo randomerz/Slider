@@ -19,8 +19,8 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        sfxSlider.value = AudioManager.GetVolume();
-        musicSlider.value = AudioManager.GetVolume();
+        sfxSlider.value = AudioManager.GetSFXVolume();
+        musicSlider.value = AudioManager.GetMusicVolume();
     }
 
     void Update()
@@ -105,12 +105,12 @@ public class UIManager : MonoBehaviour
 
     public void UpdateSFXVolume(float value)
     {
-        AudioManager.SetVolume(value);
+        AudioManager.SetSFXVolume(value);
     }
 
     public void UpdateMusicVolume(float value)
     {
-        AudioManager.SetVolume(value);
+        AudioManager.SetMusicVolume(value);
     }
 
     public void LoadGame()

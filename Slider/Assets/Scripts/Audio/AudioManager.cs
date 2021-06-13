@@ -8,12 +8,16 @@ public class AudioManager : MonoBehaviour
     [SerializeField]
     private Sound[] sounds;
     private static Sound[] _sounds;
-
-    private static float volume = 1; // [0..1]
-
     [SerializeField]
-    private GameObject audioListenerObj;
-    private static AudioLowPassFilter menuLowPass;
+    private Sound[] music;
+    private static Sound[] _music;
+
+    private static float sfxVolume = 1; // [0..1]
+    private static float musicVolume = 1;
+
+    //[SerializeField]
+    //private GameObject audioListenerObj;
+    //private static AudioLowPassFilter menuLowPass;
 
     public static AudioManager instance;
 
@@ -32,6 +36,7 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         _sounds = sounds;
+        _music = music;
 
         foreach (Sound s in _sounds)
         {
@@ -43,7 +48,17 @@ public class AudioManager : MonoBehaviour
             s.source.loop = s.loop;
         }
 
-        menuLowPass = audioListenerObj.GetComponent<AudioLowPassFilter>();
+        foreach (Sound s in _music)
+        {
+            s.source = gameObject.AddComponent<AudioSource>();
+            s.source.clip = s.clip;
+
+            s.source.volume = s.volume;
+            s.source.pitch = s.pitch;
+            s.source.loop = s.loop;
+        }
+
+        //menuLowPass = audioListenerObj.GetComponent<AudioLowPassFilter>();
     }
 
     private void Start()
@@ -56,6 +71,24 @@ public class AudioManager : MonoBehaviour
         if (_sounds == null)
             return;
         Sound s = Array.Find(_sounds, sound => sound.name == name);
+
+        if (s == null)
+        {
+            Debug.LogError("Sound: " + name + " not found!");
+            return;
+        }
+
+        if (s.doRandomPitch)
+            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
+
+        s.source.Play();
+    }
+
+    public static void PlayMusic(string name)
+    {
+        if (_music == null)
+            return;
+        Sound s = Array.Find(_music, sound => sound.name == name);
 
         if (s == null)
         {
@@ -87,10 +120,43 @@ public class AudioManager : MonoBehaviour
         s.source.Play();
     }
 
-    public static void SetVolume(float value)
+    public static void StopMusic(string name)
+    {
+        if (_music == null)
+            return;
+        Sound s = Array.Find(_music, sound => sound.name == name);
+
+        if (s == null)
+        {
+            Debug.LogError("Sound: " + name + " not found!");
+            return;
+        }
+
+        if (s.doRandomPitch)
+            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
+
+        s.source.Play();
+    }
+
+    public static void SetSFXVolume(float value)
     {
         value = Mathf.Clamp(value, 0, 1);
-        volume = value;
+        sfxVolume = value;
+
+        if (_sounds == null)
+            return;
+        foreach (Sound s in _sounds)
+        {
+            if (s == null || s.source == null)
+                continue;
+            s.source.volume = s.volume * value;
+        }
+    }
+
+    public static void SetMusicVolume(float value)
+    {
+        value = Mathf.Clamp(value, 0, 1);
+        musicVolume = value;
 
         if (_sounds == null)
             return;
@@ -117,13 +183,18 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public static float GetVolume()
+    public static float GetSFXVolume()
     {
-        return volume;
+        return sfxVolume;
     }
 
-    public static void SetLowPassEnabled(bool value)
+    public static float GetMusicVolume()
     {
-        menuLowPass.enabled = value;
+        return musicVolume;
     }
+
+    //public static void SetLowPassEnabled(bool value)
+    //{
+    //    menuLowPass.enabled = value;
+    //}
 }
