@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 
     // Movement
     public float moveSpeed = 5;
+    public static bool canMove = true;
 
     private Vector3 inputDir;
 
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour
     
     void Update()
     {
+
         inputDir = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
         playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
@@ -39,6 +41,9 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!canMove)
+            return;
+
         transform.position += moveSpeed * inputDir.normalized * Time.deltaTime;
     }
 

@@ -19,6 +19,7 @@ public class TileSlider : MonoBehaviour
     public Collider2D sliderCollider;
     public GameObject floorTileGrid;
     public GameObject wallTileGrid;
+    public GameObject decorationsTileGrid;
 
     void Awake()
     {
@@ -40,16 +41,19 @@ public class TileSlider : MonoBehaviour
         Vector3 newPos = SLIDER_WIDTH * new Vector3(x, y);
         //Debug.Log("new position of tile " + islandId + ": " + newPos);
 
+        StartCoroutine(StartCameraShakeEffect());
+
         if (!isEmpty)
         {
             // animations and style
-            if (Player.GetSliderUnderneath() == islandId)
-            {
-                // set relative pos;
-                Player.SetPosition(Player.GetPosition() - transform.position + newPos);
-            }
-            transform.position = newPos;
-            SetTileMapPositions(newPos);
+            //if (Player.GetSliderUnderneath() == islandId)
+            //{
+            //    // set relative pos;
+            //    Player.SetPosition(Player.GetPosition() - transform.position + newPos);
+            //}
+            //transform.position = newPos;
+            //SetTileMapPositions(newPos);
+            StartCoroutine(StartMovingAnimation(transform.position, newPos, Player.GetSliderUnderneath() == islandId, Player.GetPosition() - transform.position));
         }
         else
         {
@@ -60,11 +64,49 @@ public class TileSlider : MonoBehaviour
         transform.position = newPos;
     }
 
+    private IEnumerator StartMovingAnimation(Vector3 orig, Vector3 target, bool shouldMovePlayer, Vector3 playerOffset)
+    {
+        float t = 0;
+
+        while (t < movementDuration)
+        {
+            float x = movementCurve.Evaluate(t / movementDuration);
+            Vector3 pos = (1 - x) * orig + x * target;
+
+            if (shouldMovePlayer)
+            {
+                Player.SetPosition(playerOffset + pos);
+            }
+            transform.position = pos;
+            SetTileMapPositions(pos);
+
+            yield return null;
+            t += Time.deltaTime;
+        }
+
+        if (shouldMovePlayer)
+        {
+            Player.SetPosition(playerOffset + target);
+        }
+        transform.position = target;
+        SetTileMapPositions(target);
+    }
+
+    private IEnumerator StartCameraShakeEffect()
+    {
+        CameraShake.ShakeConstant(movementDuration + 0.1f, 0.15f);
+
+        yield return new WaitForSeconds(movementDuration);
+
+        CameraShake.Shake(0.5f, 1f);
+    }
+
     public void SetEmpty(bool isEmpty)
     {
         this.isEmpty = isEmpty;
         floorTileGrid.SetActive(!isEmpty);
         wallTileGrid.SetActive(!isEmpty);
+        decorationsTileGrid.SetActive(!isEmpty);
         sliderCollider.isTrigger = !isEmpty;
     }
 
@@ -73,5 +115,6 @@ public class TileSlider : MonoBehaviour
         pos = pos + new Vector3(-0.5f, -0.5f);
         floorTileGrid.transform.position = pos;
         wallTileGrid.transform.position = pos;
+        decorationsTileGrid.transform.position = pos;
     }
 }

@@ -38,6 +38,7 @@ public class UIArtifact : MonoBehaviour
     {
         if (!EightPuzzle.GetCanSlide())
         {
+            Debug.Log("on cooldown!");
             return;
         }
 
