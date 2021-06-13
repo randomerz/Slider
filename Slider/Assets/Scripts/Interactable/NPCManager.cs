@@ -12,6 +12,8 @@ public class NPCManager : MonoBehaviour
     public static bool hasBeenDug = false;
     public static bool firstTimeFezziwigCheck = false;
     public static bool firstTimeArchibaldCheck = false;
+    public static bool firstTimePierreCheck = false;
+    public static bool firstTimeKevinCheck = false;
 
     void Start()
     {
@@ -67,10 +69,15 @@ public class NPCManager : MonoBehaviour
         switch(Name)
         {
             case "Pierre":
-                if (currSliders == 7 && fishOn && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
+                if (!firstTimePierreCheck && currSliders == 7 && fishOn && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
                 {
                     voicelines[npcs[0]] = 1;
                     ItemManager.ActivateNextItem();
+                    firstTimePierreCheck = true;
+                }
+                else if (firstTimePierreCheck && currSliders == 7 && fishOn && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
+                {
+                    voicelines[npcs[0]] = 1;
                 }
                 else if (currSliders == 8)
                 {
@@ -82,10 +89,15 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Kevin":
-                if (currSliders == 4 && KnotBox.PuzzleComplete())
+                if (!firstTimeKevinCheck && currSliders == 4 && KnotBox.PuzzleComplete())
                 {
                     voicelines[npcs[1]] = 1;
                     ItemManager.ActivateNextItem();
+                    firstTimeKevinCheck = true;
+                }
+                else if (firstTimeKevinCheck && currSliders == 4 && KnotBox.PuzzleComplete())
+                {
+                    voicelines[npcs[1]] = 1;
                 }
                 else if (currSliders > 4 && currSliders < 9)
                 {
@@ -107,11 +119,15 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Sam":
-                if (currSliders == 7 && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
+                if (!fishOn && currSliders == 7 && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
                 {
                     voicelines[npcs[3]] = 1;
                     AudioManager.Play("Puzzle Complete");
                     fishOn = true;
+                }
+                else if (fishOn && currSliders == 7 && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
+                {
+                    voicelines[npcs[3]] = 1;
                 }
                 else if (currSliders == 8)
                 {
