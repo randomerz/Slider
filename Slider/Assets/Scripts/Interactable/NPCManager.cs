@@ -11,6 +11,7 @@ public class NPCManager : MonoBehaviour
     public static bool LoversOnFirstTime = false;
     public static bool hasBeenDug = false;
     public static bool firstTimeFezziwigCheck = false;
+    public static bool firstTimeArchibaldCheck = false;
 
     void Start()
     {
@@ -81,7 +82,7 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Kevin":
-                if (currSliders == 4 && (true))
+                if (currSliders == 4 && KnotBox.PuzzleComplete())
                 {
                     voicelines[npcs[1]] = 1;
                     ItemManager.ActivateNextItem();
@@ -122,10 +123,15 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Archibald":
-                if (currSliders == 3 && Item.coffeeHasBeenDrunk)
+                if (!firstTimeArchibaldCheck && currSliders == 3 && Item.coffeeHasBeenDrunk)
                 {
                     voicelines[npcs[4]] = 1;
                     ItemManager.ActivateNextItem();
+                    firstTimeArchibaldCheck = true;
+                }
+                else if (firstTimeArchibaldCheck && currSliders == 3 && Item.coffeeHasBeenDrunk)
+                {
+                    voicelines[npcs[4]] = 1;
                 }
                 else if (currSliders > 3 && currSliders < 9)
                 {
