@@ -6,7 +6,6 @@ public class ItemManager : MonoBehaviour
 {
     public static GameObject[] items = new GameObject[9];
     public GameObject[] itemsC = new GameObject[9];
-    public GameObject digObj;
     public static int currItemActive = 2;
 
     private static ItemManager _instance;
@@ -29,15 +28,6 @@ public class ItemManager : MonoBehaviour
                 continue;
             }
             items[x].SetActive(false);
-        }
-        digObj.SetActive(false);
-    }
-
-    public static void ActivateDigItem()
-    {
-        if (NPCManager.CheckQRCode())
-        {
-            _instance.digObj.SetActive(true);
         }
     }
 

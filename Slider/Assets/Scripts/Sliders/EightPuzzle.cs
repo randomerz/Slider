@@ -91,7 +91,7 @@ public class EightPuzzle : MonoBehaviour
 
         if (NPCManager.CheckQRCode())
         {
-            ItemManager.ActivateDigItem();
+            ItemManager.ActivateNextItem();
         }
 
         if (NPCManager.CheckFinalPlacements())

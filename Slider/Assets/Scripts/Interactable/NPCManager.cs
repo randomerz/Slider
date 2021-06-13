@@ -9,6 +9,7 @@ public class NPCManager : MonoBehaviour
     public static int currSliders = 1;
     public static bool fishOn = false;
     public static bool LoversOnFirstTime = false;
+    public static bool hasBeenDug = false;
 
     void Start()
     {
@@ -28,8 +29,6 @@ public class NPCManager : MonoBehaviour
     public void ChangeWorldState()
     {
         currSliders++;
-        //EightPuzzle.AddSlider(currSliders);
-        ItemManager.ActivateDigItem();
     }
 
     public int getVoiceLineNumber(string name)
@@ -186,6 +185,10 @@ public class NPCManager : MonoBehaviour
 
     public static bool CheckQRCode()
     {
+        if (hasBeenDug)
+        {
+            return false;
+        }
         for (int x = 0; x < 3; x++)
         {
             for (int y = 0; y < 3; y++)
@@ -194,6 +197,7 @@ public class NPCManager : MonoBehaviour
                 {
                     if (y != 2 && x != 2 && EightPuzzle.GetGrid()[x, y + 1].islandId == 3 && EightPuzzle.GetGrid()[x + 1, y].islandId == 2 && EightPuzzle.GetGrid()[x + 1, y + 1].islandId == 1)
                     {
+                        hasBeenDug = true;
                         return true;
                     }
                     else
@@ -230,14 +234,14 @@ public class NPCManager : MonoBehaviour
 
     public static bool CheckFinalPlacements()
     {
-        if (EightPuzzle.GetGrid()[0, 0].islandId == 1 && EightPuzzle.GetGrid()[0, 0].isEmpty &&
-            EightPuzzle.GetGrid()[1, 0].islandId == 5 && EightPuzzle.GetGrid()[1, 0].isEmpty &&
-            EightPuzzle.GetGrid()[2, 0].islandId == 3 && EightPuzzle.GetGrid()[2, 0].isEmpty &&
-            EightPuzzle.GetGrid()[0, 1].islandId == 8 && EightPuzzle.GetGrid()[0, 1].isEmpty &&
-            EightPuzzle.GetGrid()[2, 1].islandId == 7 && EightPuzzle.GetGrid()[2, 1].isEmpty &&
-            EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[0, 2].isEmpty &&
-            EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[1, 2].isEmpty &&
-            EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 2].isEmpty)
+        if (EightPuzzle.GetGrid()[0, 0].islandId == 1 && !EightPuzzle.GetGrid()[0, 0].isEmpty &&
+            EightPuzzle.GetGrid()[1, 0].islandId == 5 && !EightPuzzle.GetGrid()[1, 0].isEmpty &&
+            EightPuzzle.GetGrid()[2, 0].islandId == 3 && !EightPuzzle.GetGrid()[2, 0].isEmpty &&
+            EightPuzzle.GetGrid()[0, 1].islandId == 8 && !EightPuzzle.GetGrid()[0, 1].isEmpty &&
+            EightPuzzle.GetGrid()[2, 1].islandId == 7 && !EightPuzzle.GetGrid()[2, 1].isEmpty &&
+            EightPuzzle.GetGrid()[0, 2].islandId == 6 && !EightPuzzle.GetGrid()[0, 2].isEmpty &&
+            EightPuzzle.GetGrid()[1, 2].islandId == 2 && !EightPuzzle.GetGrid()[1, 2].isEmpty &&
+            EightPuzzle.GetGrid()[2, 2].islandId == 4 && !EightPuzzle.GetGrid()[2, 2].isEmpty)
         {
             return true;
         }
