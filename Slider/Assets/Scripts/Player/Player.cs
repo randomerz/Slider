@@ -8,7 +8,10 @@ public class Player : MonoBehaviour
 
     // Movement
     public float moveSpeed = 5;
+    public LayerMask knotMask;
+    public bool picked = false;
 
+    GameObject knotNode;
     private Vector3 inputDir;
 
     // References
@@ -27,6 +30,7 @@ public class Player : MonoBehaviour
         inputDir = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
         playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
+        PickUpNode();
         if (inputDir.x < 0)
         {
             playerSpriteRenderer.flipX = false;
@@ -35,11 +39,32 @@ public class Player : MonoBehaviour
         {
             playerSpriteRenderer.flipX = true;
         }
+        if (picked)
+        {
+            knotNode.transform.position = transform.position;
+        }
     }
 
     private void FixedUpdate()
     {
         transform.position += moveSpeed * inputDir.normalized * Time.deltaTime;
+
+    }
+
+    public void PickUpNode()
+    {
+        Collider2D[] nodes = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y), 2.0f, knotMask);
+        if (nodes.Length > 0  && Input.GetKey(KeyCode.E) && !picked)
+        {
+            knotNode = nodes[0].gameObject;
+            picked = true;
+            knotNode.GetComponent<Collider2D>().enabled = false;
+        } else if (picked && Input.GetKeyUp(KeyCode.E))
+        {
+            picked = false;
+            knotNode.GetComponent<Collider2D>().enabled = true;
+
+        }
     }
 
     public static bool IsSafe()
