@@ -23,7 +23,7 @@ public class TileSlider : MonoBehaviour
     public GameObject decorationsTileGrid;
     public GameObject extraWallTileGrid;
 
-    void Awake()
+    public void Awake()
     {
         SetEmpty(isEmpty);
         Vector3 defaultPos = SLIDER_WIDTH * new Vector3(xPos, yPos);

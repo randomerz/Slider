@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
     {
         sfxSlider.value = AudioManager.GetSFXVolume();
         musicSlider.value = AudioManager.GetMusicVolume();
+        artifactPanel.GetComponent<UIArtifact>().Awake();
     }
 
     void Update()

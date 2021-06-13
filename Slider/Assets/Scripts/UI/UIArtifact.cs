@@ -10,7 +10,7 @@ public class UIArtifact : MonoBehaviour
 
     private static UIArtifact _instance;
     
-    private void Awake()
+    public void Awake()
     {
         _instance = this;
     }
@@ -111,26 +111,16 @@ public class UIArtifact : MonoBehaviour
         buttonEmpty.SetPosition(x, y);
     }
 
-    public static void Swap89()
+    public static void SetButtonPos(int islandId, int x, int y)
     {
-        ArtifactButton b1 = null, b2 = null;
         foreach (ArtifactButton b in _instance.buttons)
         {
-            if (b.islandId == 8)
+            if (b.islandId == islandId)
             {
-                b1 = b;
-            }
-            if (b.islandId == 9)
-            {
-                b2 = b;
+                b.SetPosition(x, y);
+                return;
             }
         }
-
-        int x = b1.xPos;
-        int y = b1.yPos;
-
-        b1.SetPosition(b2.xPos, b2.yPos);
-        b2.SetPosition(x, y);
     }
 
     public static void AddButton(int islandId)
