@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour
     public Slider sfxSlider;
     public Slider musicSlider;
 
+    public static bool closeUI;
+
     private void Awake()
     {
         sfxSlider.value = AudioManager.GetSFXVolume();
@@ -26,6 +28,12 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        if (closeUI)
+        {
+            closeUI = false;
+            ResumeGame();
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isGamePaused)

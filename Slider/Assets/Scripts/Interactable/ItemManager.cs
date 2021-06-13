@@ -36,6 +36,12 @@ public class ItemManager : MonoBehaviour
         currItemActive++;
         items[currItemActive].SetActive(true);
 
+        if (currItemActive == 8)
+        {
+            items[currItemActive].transform.position = Player.GetPosition();
+            UIManager.closeUI = true;
+        }
+
         AudioManager.Play("Puzzle Complete");
     }
 }
