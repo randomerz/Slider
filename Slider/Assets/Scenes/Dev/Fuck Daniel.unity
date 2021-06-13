@@ -681,9 +681,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   movementDuration: 1
+  isMoving: 0
   sliderCollider: {fileID: 0}
   floorTileGrid: {fileID: 0}
   wallTileGrid: {fileID: 0}
+  decorationsTileGrid: {fileID: 0}
 --- !u!1 &41788030
 GameObject:
   m_ObjectHideFlags: 0
@@ -23104,9 +23106,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   movementDuration: 1
+  isMoving: 0
   sliderCollider: {fileID: 0}
   floorTileGrid: {fileID: 0}
   wallTileGrid: {fileID: 0}
+  decorationsTileGrid: {fileID: 0}
 --- !u!1 &1091819213
 GameObject:
   m_ObjectHideFlags: 0
@@ -29501,9 +29505,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   movementDuration: 1
+  isMoving: 0
   sliderCollider: {fileID: 0}
   floorTileGrid: {fileID: 0}
   wallTileGrid: {fileID: 0}
+  decorationsTileGrid: {fileID: 0}
 --- !u!1001 &1232238100
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29625,9 +29631,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   movementDuration: 1
+  isMoving: 0
   sliderCollider: {fileID: 0}
   floorTileGrid: {fileID: 0}
   wallTileGrid: {fileID: 0}
+  decorationsTileGrid: {fileID: 0}
 --- !u!1 &1288311823
 GameObject:
   m_ObjectHideFlags: 0
@@ -41524,9 +41532,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   movementDuration: 1
+  isMoving: 0
   sliderCollider: {fileID: 0}
   floorTileGrid: {fileID: 0}
   wallTileGrid: {fileID: 0}
+  decorationsTileGrid: {fileID: 0}
 --- !u!1001 &1546586761
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43348,9 +43358,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   movementDuration: 1
+  isMoving: 0
   sliderCollider: {fileID: 0}
   floorTileGrid: {fileID: 0}
   wallTileGrid: {fileID: 0}
+  decorationsTileGrid: {fileID: 0}
 --- !u!1001 &1655280516
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43424,6 +43436,9 @@ GameObject:
   - component: {fileID: 1680184097}
   - component: {fileID: 1680184099}
   - component: {fileID: 1680184098}
+  - component: {fileID: 1680184102}
+  - component: {fileID: 1680184101}
+  - component: {fileID: 1680184100}
   m_Layer: 0
   m_Name: WaterAlcoveWalls
   m_TagString: Untagged
@@ -57973,6 +57988,67 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!66 &1680184100
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680184096}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 0
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 746834855}
+    m_ColliderPaths: []
+  m_CompositePaths:
+    m_Paths: []
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+--- !u!50 &1680184101
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680184096}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 7
+--- !u!19719996 &1680184102
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680184096}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 1
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0.00001
 --- !u!1 &1732100672
 GameObject:
   m_ObjectHideFlags: 0
@@ -59455,9 +59531,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   movementDuration: 1
+  isMoving: 0
   sliderCollider: {fileID: 0}
   floorTileGrid: {fileID: 0}
   wallTileGrid: {fileID: 0}
+  decorationsTileGrid: {fileID: 0}
 --- !u!1 &1973502337
 GameObject:
   m_ObjectHideFlags: 0
@@ -68090,9 +68168,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   movementDuration: 1
+  isMoving: 0
   sliderCollider: {fileID: 0}
   floorTileGrid: {fileID: 0}
   wallTileGrid: {fileID: 0}
+  decorationsTileGrid: {fileID: 0}
 --- !u!1 &2072186407
 GameObject:
   m_ObjectHideFlags: 0
@@ -68184,9 +68264,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   movementDuration: 1
+  isMoving: 0
   sliderCollider: {fileID: 0}
   floorTileGrid: {fileID: 0}
   wallTileGrid: {fileID: 0}
+  decorationsTileGrid: {fileID: 0}
 --- !u!1001 &480679536187346718
 PrefabInstance:
   m_ObjectHideFlags: 0
