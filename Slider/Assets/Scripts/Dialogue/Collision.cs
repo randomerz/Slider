@@ -5,6 +5,7 @@ using UnityEngine;
 public class Collision : MonoBehaviour
 {
     public GameObject npc;
+    public bool firstTimeFezziwigCheck = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -18,9 +19,10 @@ public class Collision : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            if (npc.GetComponent<NPC>().characterName == "Fezziwig")
+            if (!firstTimeFezziwigCheck && npc.GetComponent<NPC>().characterName == "Fezziwig")
             {
                 //ADD NEW THING HERE
+                firstTimeFezziwigCheck = true;
                 return;
             }
             npc.GetComponent<DialogueManager>().FadeAwayDialogue();
