@@ -8,6 +8,13 @@ public class ItemManager : MonoBehaviour
 
     public GameObject digObj;
 
+    private static ItemManager _instance;
+
+    private void Awake()
+    {
+        _instance = this;
+    }
+
     void Start()
     {
         digObj.SetActive(false);
@@ -17,7 +24,7 @@ public class ItemManager : MonoBehaviour
     {
         if (NPCManager.CheckQRCode())
         {
-            items[0].SetActive(true);
+            _instance.digObj.SetActive(true);
         }
     }
 }

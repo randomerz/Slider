@@ -8,11 +8,17 @@ public class Collision : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        npc.GetComponent<DialogueTrigger>().TriggerDialogue(npc);
+        if (collision.tag == "Player")
+        {
+            npc.GetComponent<DialogueTrigger>().TriggerDialogue(npc);
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        npc.GetComponent<DialogueManager>().FadeAwayDialogue();
+        if (collision.tag == "Player")
+        {
+            npc.GetComponent<DialogueManager>().FadeAwayDialogue();
+        }
     }
 }

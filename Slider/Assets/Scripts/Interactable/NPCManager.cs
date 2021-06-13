@@ -27,6 +27,7 @@ public class NPCManager : MonoBehaviour
     public void ChangeWorldState()
     {
         currSliders++;
+        //EightPuzzle.AddSlider(currSliders);
         ItemManager.ActivateDigItem();
     }
 

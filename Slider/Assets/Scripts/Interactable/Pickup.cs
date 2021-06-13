@@ -8,6 +8,9 @@ public class Pickup : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        item.GetComponent<Item>().TriggerCutscene(item);
+        if (collision.tag == "Player")
+        {
+            item.GetComponent<Item>().TriggerCutscene(item);
+        }
     }
 }

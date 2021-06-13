@@ -27,7 +27,6 @@ public class EightPuzzle : MonoBehaviour
         {
             grid[s.xPos + 1, s.yPos + 1] = s;
         }
-        AddSlider(2);
     }
 
     public static EightPuzzle GetInstance()
@@ -107,11 +106,13 @@ public class EightPuzzle : MonoBehaviour
 
     public static void AddSlider(int islandId)
     {
+
         foreach (TileSlider s in grid)
         {
             if (s.islandId == islandId)
             {
                 s.SetEmpty(false);
+                UIArtifact.AddButton(islandId);
                 return;
             }
         }
