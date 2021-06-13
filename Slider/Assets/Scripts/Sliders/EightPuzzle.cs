@@ -35,6 +35,16 @@ public class EightPuzzle : MonoBehaviour
         return _instance;
     }
 
+    public static bool GetCanSlide()
+    {
+        return _instance.canSlide;
+    }
+
+    public static TileSlider[,] GetGrid()
+    {
+        return grid;
+    }
+
     public static bool MoveSlider(int x, int y, Direction dir)
     {
         Debug.Log("trying to move slider at " + x + " " + y + " " + dir);
@@ -81,11 +91,6 @@ public class EightPuzzle : MonoBehaviour
         }
 
         return true;
-    }
-
-    public static bool GetCanSlide()
-    {
-        return _instance.canSlide;
     }
 
     public static void AddSlider(int islandId)

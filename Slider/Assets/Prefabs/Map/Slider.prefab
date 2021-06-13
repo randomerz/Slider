@@ -55,24 +55,25 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: -0
-      outSlope: -0
+      inSlope: 0.29140925
+      outSlope: 0.29140925
       tangentMode: 0
       weightedMode: 2
       inWeight: 0
-      outWeight: 0.89385474
+      outWeight: 0.84171325
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2.0311942
-      outSlope: 2.0311942
+      inSlope: 9.473493
+      outSlope: 9.473493
       tangentMode: 0
       weightedMode: 1
-      inWeight: 0.19739294
+      inWeight: 0.046554923
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  movementDuration: 1
   sliderCollider: {fileID: 7649429769792356526}
   floorTileGrid: {fileID: 0}
   wallTileGrid: {fileID: 0}

@@ -57,6 +57,8 @@ public class UIManager : MonoBehaviour
 
         if (isArtifactOpen)
         {
+            Player.canMove = true;
+
             isArtifactOpen = false;
             artifactAnimator.SetBool("isVisible", false);
             StartCoroutine(CloseArtPanel());
@@ -81,9 +83,10 @@ public class UIManager : MonoBehaviour
         if (Player.IsSafe())
         {
             artifactPanel.SetActive(true);
-            Time.timeScale = 0f;
             isGamePaused = true;
             isArtifactOpen = true;
+
+            Player.canMove = false;
 
             artifactAnimator.SetBool("isVisible", true);
         }
