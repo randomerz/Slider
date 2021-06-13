@@ -90,7 +90,7 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Felicia":
-                if (currSliders == 6 && CheckQRCode())
+                if (currSliders == 6 && Item.hasBeenDug)
                 {
                     voicelines[npcs[2]] = 1;
                 }
@@ -115,7 +115,7 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Archibald":
-                if (currSliders == 3 && true)
+                if (currSliders == 3 && Item.coffeeHasBeenDrunk)
                 {
                     voicelines[npcs[4]] = 1;
                 }
