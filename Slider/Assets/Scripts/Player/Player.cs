@@ -58,17 +58,14 @@ public class Player : MonoBehaviour
 
     public void PickUpNode()
     {
-        Collider2D[] nodes = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y), 0.8f, knotMask);
-        if (nodes.Length > 0  && Input.GetKey(KeyCode.E) && !picked)
+        Collider2D[] nodes = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y), 0.5f, knotMask);
+        if (nodes.Length > 0  && Input.GetKeyDown(KeyCode.E) && !picked)
         {
             knotNode = nodes[0].gameObject;
-            Debug.Log(knotNode.name);
             picked = true;
-            knotNode.GetComponent<Collider2D>().enabled = false;
-        } else if (picked && Input.GetKeyUp(KeyCode.E))
+        } else if (picked && Input.GetKeyDown(KeyCode.E))
         {
             picked = false;
-            knotNode.GetComponent<Collider2D>().enabled = true;
 
         }
     }
