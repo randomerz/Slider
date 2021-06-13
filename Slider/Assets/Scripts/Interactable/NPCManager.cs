@@ -5,7 +5,7 @@ using UnityEngine;
 public class NPCManager : MonoBehaviour
 {
     private Dictionary<GameObject, int> voicelines = new Dictionary<GameObject, int>();
-    public GameObject[] npcs = new GameObject[10];
+    public GameObject[] npcs = new GameObject[11];
     public static int currSliders = 1;
     public static bool fishOn = false;
 
@@ -21,6 +21,7 @@ public class NPCManager : MonoBehaviour
         voicelines.Add(npcs[7], 0);
         voicelines.Add(npcs[8], 0);
         voicelines.Add(npcs[9], 0);
+        voicelines.Add(npcs[10], 0);
     }
 
     public void ChangeWorldState()
@@ -160,9 +161,6 @@ public class NPCManager : MonoBehaviour
                 {
                     voicelines[npcs[7]] = 1;
                 }
-                break;
-            case "Mayor":
-            case "Chef":
                 break;
             default:
                 break;
