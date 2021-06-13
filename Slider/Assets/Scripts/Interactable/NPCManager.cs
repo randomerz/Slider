@@ -7,7 +7,7 @@ public class NPCManager : MonoBehaviour
     private Dictionary<GameObject, int> voicelines = new Dictionary<GameObject, int>();
     public GameObject[] npcs = new GameObject[8];
 
-   void Start()
+    void Start()
     {
         voicelines.Add(npcs[0], 0);
         voicelines.Add(npcs[1], 0);
@@ -26,6 +26,7 @@ public class NPCManager : MonoBehaviour
         {
             if (e.Key.GetComponent<NPC>().characterName == name)
             {
+
                 return e.Value;
             } 
         }
@@ -43,4 +44,39 @@ public class NPCManager : MonoBehaviour
         }
     }
 
+    public int CheckWorldState(string Name)
+    {
+        switch(Name)
+        {
+            case "Pierre":
+                if (WorldManager.currSliders == 7 && (EightPuzzle.GetInstance()))
+                {
+                    return 1;
+                }else if (WorldManager.currSliders == 8)
+                {
+                    return 2;
+                }
+                break;
+            case "Explorer":
+                break;
+            case "Kevin":
+                break;
+            case "Fezziwig":
+                break;
+            case "Fish":
+                break;
+            case "Romeo":
+                break;
+            case "Juliet":
+                break;
+            case "Archibald":
+                break;
+            case "Mayor":
+            case "Chef":
+                break;
+            default:
+                return -1;
+                break;
+        }
+    }
 }
