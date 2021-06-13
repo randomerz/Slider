@@ -10,4 +10,9 @@ public class Collision : MonoBehaviour
     {
         npc.GetComponent<DialogueTrigger>().TriggerDialogue(npc);
     }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        npc.GetComponent<DialogueManager>().FadeAwayDialogue();
+    }
 }

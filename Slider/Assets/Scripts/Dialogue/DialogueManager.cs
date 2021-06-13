@@ -30,7 +30,6 @@ public class DialogueManager : MonoBehaviour
     {
         dialogueText.gameObject.SetActive(true);
         string sentence = dialogues[state];
-        //Debug.Log(sentence);
         StartCoroutine(TypeSentence(sentence));
     }
 
@@ -42,5 +41,10 @@ public class DialogueManager : MonoBehaviour
             dialogueText.text += letter;
             yield return null;
         }
+    }
+
+    public void FadeAwayDialogue()
+    {
+        dialogueText.gameObject.SetActive(false);
     }
 }
