@@ -18,6 +18,11 @@ public class Collision : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
+            if (npc.GetComponent<NPC>().characterName == "Fezziwig")
+            {
+                //ADD NEW THING HERE
+                return;
+            }
             npc.GetComponent<DialogueManager>().FadeAwayDialogue();
         }
     }
