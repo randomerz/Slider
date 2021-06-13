@@ -5,7 +5,6 @@ using UnityEngine;
 public class Collision : MonoBehaviour
 {
     public GameObject npc;
-    public bool firstTimeFezziwigCheck = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -19,13 +18,11 @@ public class Collision : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            if (!firstTimeFezziwigCheck && npc.GetComponent<NPC>().characterName == "Fezziwig")
+            if (!NPCManager.firstTimeFezziwigCheck && npc.GetComponent<NPC>().characterName == "Fezziwig")
             {
-                firstTimeFezziwigCheck = true;
-
+                NPCManager.firstTimeFezziwigCheck = true;
                 EightPuzzle.ShuffleBoard();
                 npc.GetComponent<DialogueManager>().FadeAwayDialogue();
-
                 return;
             }
             npc.GetComponent<DialogueManager>().FadeAwayDialogue();

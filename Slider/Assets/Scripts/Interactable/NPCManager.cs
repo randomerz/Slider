@@ -10,6 +10,7 @@ public class NPCManager : MonoBehaviour
     public static bool fishOn = false;
     public static bool LoversOnFirstTime = false;
     public static bool hasBeenDug = false;
+    public static bool firstTimeFezziwigCheck = false;
 
     void Start()
     {
@@ -174,9 +175,13 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Fezziwig":
-                if (currSliders == 9)
+                if (firstTimeFezziwigCheck)
                 {
                     voicelines[npcs[7]] = 1;
+                }
+                if (currSliders == 9)
+                {
+                    voicelines[npcs[7]] = 2;
                 }
                 break;
             default:
