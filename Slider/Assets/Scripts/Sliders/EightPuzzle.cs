@@ -40,8 +40,6 @@ public class EightPuzzle : MonoBehaviour
         //TileSlider temp = grid[x1 + 1, y1 + 1];
         //grid[x1 + 1, y1 + 1] = grid[x2 + 1, y2 + 1];
         //grid[x2 + 1, y2 + 1] = temp;
-
-
     }
 
     public static EightPuzzle GetInstance()

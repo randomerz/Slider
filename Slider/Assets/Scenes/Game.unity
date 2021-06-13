@@ -19477,7 +19477,7 @@ GameObject:
   - component: {fileID: 400979921}
   - component: {fileID: 400979920}
   m_Layer: 0
-  m_Name: Slider2Walls (1)
+  m_Name: Slider2WallsExtra
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19495,7 +19495,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 866613218}
-  m_RootOrder: 33
+  m_RootOrder: 32
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!66 &400979920
 CompositeCollider2D:
@@ -20279,6 +20279,10 @@ PrefabInstance:
       propertyPath: floorTileGrid
       value: 
       objectReference: {fileID: 289478585}
+    - target: {fileID: 7649429769792356525, guid: 8fa573d40fd12d04990e3a86e0e19d1a, type: 3}
+      propertyPath: extraWallTileGrid
+      value: 
+      objectReference: {fileID: 1623939808}
     - target: {fileID: 7649429769792356525, guid: 8fa573d40fd12d04990e3a86e0e19d1a, type: 3}
       propertyPath: decorationsTileGrid
       value: 
@@ -24424,7 +24428,7 @@ GameObject:
   - component: {fileID: 516764344}
   - component: {fileID: 516764343}
   m_Layer: 0
-  m_Name: Slider6Walls (1)
+  m_Name: Slider6WallsExtra
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24442,7 +24446,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 866613218}
-  m_RootOrder: 32
+  m_RootOrder: 34
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!66 &516764343
 CompositeCollider2D:
@@ -25348,7 +25352,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 4
-      m_TileSpriteIndex: 5
+      m_TileSpriteIndex: 21
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -25495,40 +25499,40 @@ Tilemap:
     m_Data: {fileID: -4087309676702264633, guid: 8430daea8e9e7044eb96828952d8c28a, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: -7678833108271904619, guid: 22ff30636c5afd34ab4e70b6fc77d410, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: 6842110584453081141, guid: 8430daea8e9e7044eb96828952d8c28a, type: 3}
   m_TileMatrixArray:
@@ -44092,9 +44096,9 @@ Transform:
   - {fileID: 267712699}
   - {fileID: 320964442}
   - {fileID: 670926583}
-  - {fileID: 516764342}
   - {fileID: 400979919}
   - {fileID: 1111453159}
+  - {fileID: 516764342}
   - {fileID: 1623939809}
   m_Father: {fileID: 2072186408}
   m_RootOrder: 1
@@ -52889,7 +52893,7 @@ GameObject:
   - component: {fileID: 1111453161}
   - component: {fileID: 1111453160}
   m_Layer: 0
-  m_Name: Slider4Walls (1)
+  m_Name: Slider4WallsExtra
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52907,7 +52911,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 866613218}
-  m_RootOrder: 34
+  m_RootOrder: 33
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!66 &1111453160
 CompositeCollider2D:
@@ -56065,6 +56069,10 @@ PrefabInstance:
       propertyPath: floorTileGrid
       value: 
       objectReference: {fileID: 1107264030}
+    - target: {fileID: 7649429769792356525, guid: 8fa573d40fd12d04990e3a86e0e19d1a, type: 3}
+      propertyPath: extraWallTileGrid
+      value: 
+      objectReference: {fileID: 400979918}
     - target: {fileID: 7649429769792356525, guid: 8fa573d40fd12d04990e3a86e0e19d1a, type: 3}
       propertyPath: decorationsTileGrid
       value: 
@@ -59482,6 +59490,10 @@ PrefabInstance:
       propertyPath: floorTileGrid
       value: 
       objectReference: {fileID: 1999824336}
+    - target: {fileID: 7649429769792356525, guid: 8fa573d40fd12d04990e3a86e0e19d1a, type: 3}
+      propertyPath: extraWallTileGrid
+      value: 
+      objectReference: {fileID: 1111453158}
     - target: {fileID: 7649429769792356525, guid: 8fa573d40fd12d04990e3a86e0e19d1a, type: 3}
       propertyPath: decorationsTileGrid
       value: 
@@ -66815,6 +66827,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1229688840}
     - target: {fileID: 7649429769792356525, guid: 8fa573d40fd12d04990e3a86e0e19d1a, type: 3}
+      propertyPath: extraWallTileGrid
+      value: 
+      objectReference: {fileID: 516764341}
+    - target: {fileID: 7649429769792356525, guid: 8fa573d40fd12d04990e3a86e0e19d1a, type: 3}
       propertyPath: decorationsTileGrid
       value: 
       objectReference: {fileID: 1884825623}
@@ -66897,7 +66913,7 @@ GameObject:
   - component: {fileID: 1623939811}
   - component: {fileID: 1623939810}
   m_Layer: 0
-  m_Name: Slider7Walls (1)
+  m_Name: Slider7WallsExtra
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
