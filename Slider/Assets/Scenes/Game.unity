@@ -93906,7 +93906,7 @@ PrefabInstance:
       objectReference: {fileID: 1647638048}
     - target: {fileID: 1390625317152906191, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: dialogue.dialogues.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1390625317152906191, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: dialogue.dialogues.Array.data[0]
@@ -93914,6 +93914,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1390625317152906191, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: dialogue.dialogues.Array.data[1]
+      value: Use the artifact to join what once was
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390625317152906191, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
+      propertyPath: dialogue.dialogues.Array.data[2]
       value: Congratulations! Now we are all joined together!
       objectReference: {fileID: 0}
     - target: {fileID: 1390625317364026276, guid: eb8cd11432469439eb214403b87b5b92, type: 3}

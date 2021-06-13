@@ -159,7 +159,7 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Romeo":
-                if (currSliders >= 5 &&  CheckLovers())
+                if (currSliders >= 5 && currSliders < 9 && CheckLovers())
                 {
                     voicelines[npcs[5]] = 1;
                     if (!LoversOnFirstTime)
@@ -177,7 +177,7 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Juliet":
-                if (currSliders >= 5 && CheckLovers())
+                if (currSliders >= 5 && currSliders < 9 && CheckLovers())
                 {
                     voicelines[npcs[6]] = 1;
                     if (!LoversOnFirstTime)
