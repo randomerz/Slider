@@ -65,6 +65,16 @@ public class TileSlider : MonoBehaviour
         transform.position = newPos;
     }
 
+    public void SetPositionRaw(int x, int y)
+    {
+        xPos = x;
+        yPos = y;
+        Vector3 newPos = SLIDER_WIDTH * new Vector3(x, y);
+        transform.position = newPos;
+        SetTileMapPositions(newPos);
+        transform.position = newPos;
+    }
+
     private IEnumerator StartMovingAnimation(Vector3 orig, Vector3 target, bool shouldMovePlayer, Vector3 playerOffset)
     {
         float t = 0;

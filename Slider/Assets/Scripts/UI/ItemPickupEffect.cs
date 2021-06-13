@@ -39,7 +39,7 @@ public class ItemPickupEffect : MonoBehaviour
         UIManager.canOpenMenus = false;
         Player.canMove = false;
 
-        playerSprite.sortingLayerName = "UI_Particle";
+        playerSprite.sortingLayerName = "ScreenEffects";
 
         yield return new WaitForSeconds(0.75f);
 

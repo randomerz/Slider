@@ -27,6 +27,19 @@ public class EightPuzzle : MonoBehaviour
         {
             grid[s.xPos + 1, s.yPos + 1] = s;
         }
+
+
+        // Swap tiles 8 & 9 so its solvable
+        int x1 = -1;
+        int y1 = 0;
+        int x2 = 0;
+        int y2 = 0;
+        grid[x1 + 1, y1 + 1].SetPositionRaw(x2, y2);
+        grid[x2 + 1, y2 + 1].SetPositionRaw(x1, y1);
+
+        TileSlider temp = grid[x1 + 1, y1 + 1];
+        grid[x1 + 1, y1 + 1] = grid[x2 + 1, y2 + 1];
+        grid[x2 + 1, y2 + 1] = temp;
     }
 
     public static EightPuzzle GetInstance()
