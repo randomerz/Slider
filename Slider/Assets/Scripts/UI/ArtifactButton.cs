@@ -58,6 +58,7 @@ public class ArtifactButton : MonoBehaviour
 
     public void SetEmpty(bool v)
     {
+        isEmpty = v;
         if (v)
         {
             buttonAnimator.sliderImage.sprite = emptySprite;

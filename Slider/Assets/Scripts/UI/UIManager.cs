@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
 {
     public bool isGamePaused;
     public bool isArtifactOpen;
+    public static bool canOpenMenus = true;
 
     public GameObject pausePanel;
     public GameObject artifactPanel;
@@ -18,8 +19,9 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        sfxSlider.value = AudioManager.GetVolume();
-        musicSlider.value = AudioManager.GetVolume();
+        sfxSlider.value = AudioManager.GetSFXVolume();
+        musicSlider.value = AudioManager.GetMusicVolume();
+        artifactPanel.GetComponent<UIArtifact>().Awake();
     }
 
     void Update()
@@ -36,7 +38,7 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (isArtifactOpen)
             {
@@ -57,6 +59,8 @@ public class UIManager : MonoBehaviour
 
         if (isArtifactOpen)
         {
+            Player.canMove = true;
+
             isArtifactOpen = false;
             artifactAnimator.SetBool("isVisible", false);
             StartCoroutine(CloseArtPanel());
@@ -71,6 +75,9 @@ public class UIManager : MonoBehaviour
 
     public void PauseGame()
     {
+        if (!canOpenMenus)
+            return;
+
         pausePanel.SetActive(true);
         Time.timeScale = 0f;
         isGamePaused = true;
@@ -78,29 +85,33 @@ public class UIManager : MonoBehaviour
 
     public void OpenArtifact()
     {
+        if (!canOpenMenus)
+            return;
+
         if (Player.IsSafe())
         {
             artifactPanel.SetActive(true);
-            Time.timeScale = 0f;
             isGamePaused = true;
             isArtifactOpen = true;
+
+            Player.canMove = false;
 
             artifactAnimator.SetBool("isVisible", true);
         }
         else
         {
-            // play error sound
+            AudioManager.Play("Artifact Error");
         }
     }
 
     public void UpdateSFXVolume(float value)
     {
-        AudioManager.SetVolume(value);
+        AudioManager.SetSFXVolume(value);
     }
 
     public void UpdateMusicVolume(float value)
     {
-        AudioManager.SetVolume(value);
+        AudioManager.SetMusicVolume(value);
     }
 
     public void LoadGame()

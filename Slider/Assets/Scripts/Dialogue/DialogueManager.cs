@@ -28,8 +28,10 @@ public class DialogueManager : MonoBehaviour
 
     public void DisplaySentence(int state)
     {
+        //Debug.Log(state);
         dialogueText.gameObject.SetActive(true);
         string sentence = dialogues[state];
+        StopAllCoroutines();
         StartCoroutine(TypeSentence(sentence));
     }
 
@@ -39,7 +41,12 @@ public class DialogueManager : MonoBehaviour
         foreach (char letter in sentence.ToCharArray())
         {
             dialogueText.text += letter;
-            yield return null;
+            yield return new WaitForSeconds(0.05f);
         }
+    }
+
+    public void FadeAwayDialogue()
+    {
+        dialogueText.gameObject.SetActive(false);
     }
 }

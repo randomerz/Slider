@@ -10,7 +10,7 @@ public class UIArtifact : MonoBehaviour
 
     private static UIArtifact _instance;
     
-    private void Awake()
+    public void Awake()
     {
         _instance = this;
     }
@@ -36,8 +36,9 @@ public class UIArtifact : MonoBehaviour
     
     public void SelectButton(ArtifactButton button)
     {
-        if (!EightPuzzle.GetCanSlide())
+        if (EightPuzzle.GetSlider(button.islandId).isMoving)
         {
+            Debug.Log("on cooldown!");
             return;
         }
 
@@ -66,7 +67,7 @@ public class UIArtifact : MonoBehaviour
             }
             else
             {
-                Debug.Log("Selected button " + button.islandId);
+                //Debug.Log("Selected button " + button.islandId);
                 currentButton = button;
                 button.SetPushedDown(true);
                 foreach (ArtifactButton b in adjacentButtons)
@@ -108,6 +109,18 @@ public class UIArtifact : MonoBehaviour
 
         buttonCurrent.SetPosition(buttonEmpty.xPos, buttonEmpty.yPos);
         buttonEmpty.SetPosition(x, y);
+    }
+
+    public static void SetButtonPos(int islandId, int x, int y)
+    {
+        foreach (ArtifactButton b in _instance.buttons)
+        {
+            if (b.islandId == islandId)
+            {
+                b.SetPosition(x, y);
+                return;
+            }
+        }
     }
 
     public static void AddButton(int islandId)
