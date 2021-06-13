@@ -36,6 +36,11 @@ public class UIArtifact : MonoBehaviour
     
     public void SelectButton(ArtifactButton button)
     {
+        if (!EightPuzzle.GetCanSlide())
+        {
+            return;
+        }
+
         if (currentButton == button)
         {
             DeselectCurrentButton();
