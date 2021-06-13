@@ -37,7 +37,7 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (isArtifactOpen)
             {
