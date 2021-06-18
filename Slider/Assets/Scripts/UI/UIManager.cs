@@ -122,6 +122,12 @@ public class UIManager : MonoBehaviour
         AudioManager.SetMusicVolume(value);
     }
 
+    public void ToggleBigText(bool value)
+    {
+        DialogueManager.highContrastMode = value;
+        DialogueManager.doubleSizeMode = value;
+    }
+
     public void LoadGame()
     {
         ResumeGame();
