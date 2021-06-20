@@ -85,7 +85,7 @@ public class ArtifactButton : MonoBehaviour
 
     public void SetComplete(bool value)
     {
-        if (!canComplete)
+        if (!canComplete || isEmpty)
             return;
 
         isComplete = value;
