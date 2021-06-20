@@ -81,6 +81,8 @@ public class EightPuzzle : MonoBehaviour
         grid[x + 1, y + 1] = grid[x2 + 1, y2 + 1];
         grid[x2 + 1, y2 + 1] = temp;
 
+        CheckCompletions();
+
         if (NPCManager.CheckQRCode())
         {
             ItemManager.ActivateNextItem();
@@ -89,6 +91,7 @@ public class EightPuzzle : MonoBehaviour
         if (NPCManager.CheckFinalPlacements())
         {
             ItemManager.ActivateNextItem();
+            CheckCompletions();
         }
         return true;
     }
@@ -131,7 +134,19 @@ public class EightPuzzle : MonoBehaviour
         }
     }
 
-
+    private static void CheckCompletions()
+    {
+        // ineffecient lol
+        UIArtifact.SetButtonComplete(1, grid[0, 0].islandId == 1);
+        UIArtifact.SetButtonComplete(5, grid[1, 0].islandId == 5);
+        UIArtifact.SetButtonComplete(3, grid[2, 0].islandId == 3);
+        UIArtifact.SetButtonComplete(8, grid[0, 1].islandId == 8);
+        UIArtifact.SetButtonComplete(9, grid[1, 1].islandId == 9);
+        UIArtifact.SetButtonComplete(7, grid[2, 1].islandId == 7);
+        UIArtifact.SetButtonComplete(6, grid[0, 2].islandId == 6);
+        UIArtifact.SetButtonComplete(2, grid[1, 2].islandId == 2);
+        UIArtifact.SetButtonComplete(4, grid[2, 2].islandId == 4);
+    }
 
     public static void ShuffleBoard()
     {
@@ -172,6 +187,9 @@ public class EightPuzzle : MonoBehaviour
         Player.SetPosition(GetSlider(playerIsland).transform.position + playerOffset);
 
         grid = newGrid;
+
+        ArtifactButton.canComplete = true;
+        CheckCompletions();
     }
 
     private static int[,] GetShuffledBoard()
@@ -194,9 +212,12 @@ public class EightPuzzle : MonoBehaviour
         //}
 
         //return puzzle;
-        return new int[3, 3] { { 1, 8, 2 },
-                               { 0, 4, 3 },
-                               { 7, 6, 5 } };
+        return new int[3, 3] { { 7, 0, 1 },
+                               { 6, 4, 8 },
+                               { 5, 3, 2 } };
+        //return new int[3, 3] { { 1, 8, 2 },
+        //                       { 0, 4, 3 },
+        //                       { 7, 6, 5 } };
     }
 
     private static int[] ShuffleArray(int[] arr)

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class ArtifactButton : MonoBehaviour
 {
+    public static bool canComplete = false;
+    public bool isComplete = false;
     public bool isEmpty = false;
 
     public int islandId = -1;
@@ -16,6 +18,7 @@ public class ArtifactButton : MonoBehaviour
 
     private TileSlider mySlider;
     private Sprite islandSprite;
+    public Sprite completedSprite;
     public Sprite emptySprite;
     public ArtifactButtonAnimator buttonAnimator;
     public UIArtifact buttonManager;
@@ -46,6 +49,11 @@ public class ArtifactButton : MonoBehaviour
         buttonManager.SelectButton(this);
     }
 
+    //public void UpdatePushedDown()
+    //{
+    //    buttonAnimator.UpdatePushedDown();
+    //}
+
     public void SetHighlighted(bool v)
     {
         buttonAnimator.SetHighlighted(v);
@@ -54,6 +62,11 @@ public class ArtifactButton : MonoBehaviour
     public void SetPushedDown(bool v)
     {
         buttonAnimator.SetPushedDown(v);
+    }
+
+    public void SetForcedPushedDown(bool v)
+    {
+        buttonAnimator.SetForcedPushedDown(v);
     }
 
     public void SetEmpty(bool v)
@@ -66,6 +79,22 @@ public class ArtifactButton : MonoBehaviour
         else
         {
             // animation?
+            buttonAnimator.sliderImage.sprite = islandSprite;
+        }
+    }
+
+    public void SetComplete(bool value)
+    {
+        if (!canComplete)
+            return;
+
+        isComplete = value;
+        if (isComplete)
+        {
+            buttonAnimator.sliderImage.sprite = completedSprite;
+        }
+        else
+        {
             buttonAnimator.sliderImage.sprite = islandSprite;
         }
     }

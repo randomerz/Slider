@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
 
     public GameObject pausePanel;
     public GameObject artifactPanel;
+    public UIArtifact uiArtifact;
     public Animator artifactAnimator;
     public Slider sfxSlider;
     public Slider musicSlider;
@@ -23,7 +24,8 @@ public class UIManager : MonoBehaviour
     {
         sfxSlider.value = AudioManager.GetSFXVolume();
         musicSlider.value = AudioManager.GetMusicVolume();
-        artifactPanel.GetComponent<UIArtifact>().Awake();
+        //artifactPanel.GetComponent<UIArtifact>().Awake();
+        uiArtifact.Awake();
     }
 
     void Update()
@@ -99,6 +101,7 @@ public class UIManager : MonoBehaviour
         if (Player.IsSafe())
         {
             artifactPanel.SetActive(true);
+            //UIArtifact.UpdatePushedDowns();
             isGamePaused = true;
             isArtifactOpen = true;
 

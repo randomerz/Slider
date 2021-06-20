@@ -10,7 +10,25 @@ public class ArtifactButtonAnimator : MonoBehaviour
     public Image highlightedFrame;
 
     private bool isPushedDown;
+    private bool isForcedPushedDown;
     private bool isHighlighted;
+
+    //public void UpdatePushedDown()
+    //{
+    //    if (isPushedDown)
+    //    {
+    //        sliderImage.rectTransform.anchoredPosition = new Vector3(0, -1);
+    //        highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, -1);
+    //        pushedDownFrame.gameObject.SetActive(true);
+    //    }
+    //    else
+    //    {
+    //        isPushedDown = false;
+    //        sliderImage.rectTransform.anchoredPosition = new Vector3(0, 0);
+    //        highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, 0);
+    //        pushedDownFrame.gameObject.SetActive(false);
+    //    }
+    //}
 
     public void SetPushedDown(bool value)
     {
@@ -21,13 +39,19 @@ public class ArtifactButtonAnimator : MonoBehaviour
             highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, -1);
             pushedDownFrame.gameObject.SetActive(true);
         }
-        else if (isPushedDown && !value)
+        else if (isPushedDown && !value && !isForcedPushedDown)
         {
             isPushedDown = false;
             sliderImage.rectTransform.anchoredPosition = new Vector3(0, 0);
             highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, 0);
             pushedDownFrame.gameObject.SetActive(false);
         }
+    }
+
+    public void SetForcedPushedDown(bool value)
+    {
+        isForcedPushedDown = value;
+        SetPushedDown(value);
     }
 
     public void SetHighlighted(bool value)

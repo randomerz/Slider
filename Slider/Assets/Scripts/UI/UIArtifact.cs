@@ -38,7 +38,7 @@ public class UIArtifact : MonoBehaviour
     {
         if (EightPuzzle.GetSlider(button.islandId).isMoving)
         {
-            Debug.Log("on cooldown!");
+            //Debug.Log("on cooldown!");
             return;
         }
 
@@ -108,7 +108,37 @@ public class UIArtifact : MonoBehaviour
         EightPuzzle.MoveSlider(x, y, dir);
 
         buttonCurrent.SetPosition(buttonEmpty.xPos, buttonEmpty.yPos);
+        StartCoroutine(SetForcePushedDown(buttonCurrent));
         buttonEmpty.SetPosition(x, y);
+    }
+
+    private IEnumerator SetForcePushedDown(ArtifactButton button)
+    {
+        button.SetForcedPushedDown(true);
+
+        yield return new WaitForSeconds(1);
+        
+        button.SetForcedPushedDown(false);
+    }
+
+    //public static void UpdatePushedDowns()
+    //{
+    //    foreach (ArtifactButton b in _instance.buttons)
+    //    {
+    //        b.UpdatePushedDown();
+    //    }
+    //}
+
+    public static void SetButtonComplete(int islandId, bool value)
+    {
+        foreach (ArtifactButton b in _instance.buttons)
+        {
+            if (b.islandId == islandId)
+            {
+                b.SetComplete(value);
+                return;
+            }
+        }
     }
 
     public static void SetButtonPos(int islandId, int x, int y)
