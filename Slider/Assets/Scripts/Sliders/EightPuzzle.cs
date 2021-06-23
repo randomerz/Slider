@@ -91,7 +91,6 @@ public class EightPuzzle : MonoBehaviour
         if (NPCManager.CheckFinalPlacements())
         {
             ItemManager.ActivateNextItem();
-            CheckCompletions();
         }
         return true;
     }
@@ -129,6 +128,11 @@ public class EightPuzzle : MonoBehaviour
             {
                 s.SetEmpty(false);
                 UIArtifact.AddButton(islandId);
+
+                if (islandId == 9)
+                {
+                    UIArtifact.SetButtonComplete(9, true);
+                }
                 return;
             }
         }

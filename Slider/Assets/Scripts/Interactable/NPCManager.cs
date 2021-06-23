@@ -262,7 +262,8 @@ public class NPCManager : MonoBehaviour
 
     public static bool CheckFinalPlacements()
     {
-        if (EightPuzzle.GetGrid()[0, 0].islandId == 1 && !EightPuzzle.GetGrid()[0, 0].isEmpty &&
+        if (firstTimeFezziwigCheck &&
+            EightPuzzle.GetGrid()[0, 0].islandId == 1 && !EightPuzzle.GetGrid()[0, 0].isEmpty &&
             EightPuzzle.GetGrid()[1, 0].islandId == 5 && !EightPuzzle.GetGrid()[1, 0].isEmpty &&
             EightPuzzle.GetGrid()[2, 0].islandId == 3 && !EightPuzzle.GetGrid()[2, 0].isEmpty &&
             EightPuzzle.GetGrid()[0, 1].islandId == 8 && !EightPuzzle.GetGrid()[0, 1].isEmpty &&
