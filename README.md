@@ -1,5 +1,5 @@
 # Slider
-GMTK Game Jam 2021
+GMTK Game Jam 2021 - Ranked #16 Overall out of 5,814 entries!
 
 ![Image](Slider/Assets/Sprites/title.png?raw=true "Title")
 
