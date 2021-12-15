@@ -1,7 +1,7 @@
 # Slider
 Unity 2020.3.2X
 
-![Image](Slider/Assets/Sprites/title.png?raw=true "Title")
+![Image](production/title.png?raw=true "Title")
 
 [Play on Itch](https://randomerz.itch.io/slider)
 
