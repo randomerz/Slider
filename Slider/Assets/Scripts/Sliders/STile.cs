@@ -11,11 +11,15 @@ public class STile : MonoBehaviour
 
     public bool hasAnchor;
     public STile linkTile;
+
+    private Vector2 movingDirection; // zero, right, up, left, down
     
     private const int STILE_WIDTH = 17;
     
     [Header("References")]
     public Collider2D sliderCollider;
+    public GameObject tileMapCollider;
+    public GameObject borderCollider;
     public GameObject stileTileMaps;
     //public GameObject floorTileGrid;
     //public GameObject wallTileGrid;
@@ -51,6 +55,17 @@ public class STile : MonoBehaviour
         sliderCollider.isTrigger = isTileActive;
     }
 
+    public void SetSliderCollider(bool isActive)
+    {
+        sliderCollider.enabled = isActive;
+        tileMapCollider.SetActive(isActive);
+    }
+
+    public void SetBorderCollider(bool isActive)
+    {
+        borderCollider.SetActive(isActive);
+    }
+
     public bool CanMove(int x, int y)
     {
         if (hasAnchor)
@@ -64,23 +79,22 @@ public class STile : MonoBehaviour
 
     // CanRotate() => no anchor and not linked
 
-        
-    public void SetPosition(int x, int y)
+    
+    // Use this one usually!
+    public void SetGridPosition(int x, int y)
     {
         this.x = x;
         this.y = y;
         Vector3 newPos = STILE_WIDTH * new Vector3(x, y);
-        //Debug.Log("new position of tile " + islandId + ": " + newPos);
 
         //StartCoroutine(StartCameraShakeEffect());
 
         if (isTileActive)
         {
-            // animations and style
+            // animations and style => physics on tile
+            Vector3 dr = newPos - transform.position;
+            UpdateTilePhysics(dr);
 
-            //StartCoroutine(StartMovingAnimation(transform.position, newPos, Player.GetSliderUnderneath() == islandId, Player.GetPosition() - transform.position));
-
-            // temp
             transform.position = newPos;
             SetTileMapPositions(newPos);
         }
@@ -91,7 +105,7 @@ public class STile : MonoBehaviour
         }
     }
 
-    public void SetPositionRaw(int x, int y)
+    public void SetGridPositionRaw(int x, int y)
     {
         this.x = x;
         this.y = y;
@@ -99,6 +113,47 @@ public class STile : MonoBehaviour
         transform.position = newPos;
         SetTileMapPositions(newPos);
     }
+
+
+
+    public void SetMovingDirection(Vector2 direction)
+    {
+        if (direction == Vector2.zero)
+        {
+            // stop moving
+            movingDirection = direction;
+        }
+        else
+        {
+            // start moving
+            movingDirection = direction;
+        }
+    }
+
+    public void SetMovingPosition(Vector2 position)
+    {
+        Vector3 newPos = STILE_WIDTH * new Vector3(position.x, position.y);
+
+        // physics
+        Vector3 dr = newPos - transform.position;
+        UpdateTilePhysics(dr);
+
+
+        transform.position = newPos;
+        SetTileMapPositions(newPos);
+    }
+
+    private void UpdateTilePhysics(Vector3 dr)
+    {
+        // if player is on stile, move them
+        //              THIS IS TEMPORARY, REPLACE WITH PROPPER CHECK ON ALL SLIDEABLES
+        int playerIsland = Player.GetStileUnderneath();
+        if (playerIsland == islandId)
+        {
+            Player.SetPosition(Player.GetPosition() + dr);
+        }
+    }
+
 
     private void SetTileMapPositions(Vector3 pos)
     {

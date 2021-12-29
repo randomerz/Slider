@@ -29,7 +29,7 @@ public class Item : MonoBehaviour
         else
         {
             FindObjectOfType<NPCManager>().ChangeWorldState();
-            EightPuzzle.AddSlider(sliderId);
+            SGrid.current.EnableStile(sliderId);
         }
         //Debug.Log("Current World State is " + NPCManager.currSliders);
     }

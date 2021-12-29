@@ -15,6 +15,18 @@ public class NPCManager : MonoBehaviour
     public static bool firstTimePierreCheck = false;
     public static bool firstTimeKevinCheck = false;
 
+    private void OnEnable()
+    {
+        SGridAnimator.OnSTileMove += CheckQRCodeOnMove;
+        SGridAnimator.OnSTileMove += CheckFinalPlacementsOnMove;
+    }
+
+    private void OnDisable()
+    {
+        SGridAnimator.OnSTileMove -= CheckQRCodeOnMove;
+        SGridAnimator.OnSTileMove -= CheckFinalPlacementsOnMove;
+    }
+
     void Start()
     {
         voicelines.Add(npcs[0], 0);
@@ -69,13 +81,13 @@ public class NPCManager : MonoBehaviour
         switch(Name)
         {
             case "Pierre":
-                if (!firstTimePierreCheck && currSliders == 7 && fishOn && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
+                if (!firstTimePierreCheck && currSliders == 7 && fishOn && (SGrid.GetGrid()[0, 2].islandId == 6 && SGrid.GetGrid()[1, 2].islandId == 2 && SGrid.GetGrid()[2, 2].islandId == 4 && SGrid.GetGrid()[2, 1].islandId == 7))
                 {
                     voicelines[npcs[0]] = 1;
                     ItemManager.ActivateNextItem();
                     firstTimePierreCheck = true;
                 }
-                else if (firstTimePierreCheck && currSliders == 7 && fishOn && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
+                else if (firstTimePierreCheck && currSliders == 7 && fishOn && (SGrid.GetGrid()[0, 2].islandId == 6 && SGrid.GetGrid()[1, 2].islandId == 2 && SGrid.GetGrid()[2, 2].islandId == 4 && SGrid.GetGrid()[2, 1].islandId == 7))
                 {
                     voicelines[npcs[0]] = 1;
                 }
@@ -119,13 +131,13 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Sam":
-                if (!fishOn && currSliders == 7 && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
+                if (!fishOn && currSliders == 7 && (SGrid.GetGrid()[0, 2].islandId == 6 && SGrid.GetGrid()[1, 2].islandId == 2 && SGrid.GetGrid()[2, 2].islandId == 4 && SGrid.GetGrid()[2, 1].islandId == 7))
                 {
                     voicelines[npcs[3]] = 1;
                     AudioManager.Play("Puzzle Complete");
                     fishOn = true;
                 }
-                else if (fishOn && currSliders == 7 && (EightPuzzle.GetGrid()[0, 2].islandId == 6 && EightPuzzle.GetGrid()[1, 2].islandId == 2 && EightPuzzle.GetGrid()[2, 2].islandId == 4 && EightPuzzle.GetGrid()[2, 1].islandId == 7))
+                else if (fishOn && currSliders == 7 && (SGrid.GetGrid()[0, 2].islandId == 6 && SGrid.GetGrid()[1, 2].islandId == 2 && SGrid.GetGrid()[2, 2].islandId == 4 && SGrid.GetGrid()[2, 1].islandId == 7))
                 {
                     voicelines[npcs[3]] = 1;
                 }
@@ -211,6 +223,14 @@ public class NPCManager : MonoBehaviour
         }
     }
 
+    private void CheckQRCodeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (CheckQRCode())
+        {
+            ItemManager.ActivateNextItem();
+        }
+    }
+
     public static bool CheckQRCode()
     {
         if (hasBeenDug)
@@ -221,9 +241,12 @@ public class NPCManager : MonoBehaviour
         {
             for (int y = 0; y < 3; y++)
             {
-                if (EightPuzzle.GetGrid()[x, y].islandId == 6 && !EightPuzzle.GetGrid()[x, y].isEmpty)
+                if (SGrid.GetGrid()[x, y].islandId == 6 && SGrid.GetGrid()[x, y].isTileActive)
                 {
-                    if (y != 2 && x != 2 && EightPuzzle.GetGrid()[x, y + 1].islandId == 3 && EightPuzzle.GetGrid()[x + 1, y].islandId == 2 && EightPuzzle.GetGrid()[x + 1, y + 1].islandId == 1)
+                    Debug.Log("Checking qr code");
+                    if (y != 2 && x != 2 && SGrid.GetGrid()[x, y + 1].islandId == 3 && 
+                                            SGrid.GetGrid()[x + 1, y].islandId == 2 && 
+                                            SGrid.GetGrid()[x + 1, y + 1].islandId == 1)
                     {
                         hasBeenDug = true;
                         return true;
@@ -244,9 +267,9 @@ public class NPCManager : MonoBehaviour
         {
             for (int y = 0; y < 3; y++)
             {
-                if (EightPuzzle.GetGrid()[x, y].islandId == 5 && !EightPuzzle.GetGrid()[x, y].isEmpty)
+                if (SGrid.GetGrid()[x, y].islandId == 5 && SGrid.GetGrid()[x, y].isTileActive)
                 {
-                    if (x != 0 && EightPuzzle.GetGrid()[x - 1, y].islandId == 1)
+                    if (x != 0 && SGrid.GetGrid()[x - 1, y].islandId == 1)
                     {
                         return true;
                     }
@@ -260,17 +283,26 @@ public class NPCManager : MonoBehaviour
         return false;
     }
 
+
+    private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (CheckFinalPlacements())
+        {
+            ItemManager.ActivateNextItem();
+        }
+    }
+
     public static bool CheckFinalPlacements()
     {
         if (firstTimeFezziwigCheck &&
-            EightPuzzle.GetGrid()[0, 0].islandId == 1 && !EightPuzzle.GetGrid()[0, 0].isEmpty &&
-            EightPuzzle.GetGrid()[1, 0].islandId == 5 && !EightPuzzle.GetGrid()[1, 0].isEmpty &&
-            EightPuzzle.GetGrid()[2, 0].islandId == 3 && !EightPuzzle.GetGrid()[2, 0].isEmpty &&
-            EightPuzzle.GetGrid()[0, 1].islandId == 8 && !EightPuzzle.GetGrid()[0, 1].isEmpty &&
-            EightPuzzle.GetGrid()[2, 1].islandId == 7 && !EightPuzzle.GetGrid()[2, 1].isEmpty &&
-            EightPuzzle.GetGrid()[0, 2].islandId == 6 && !EightPuzzle.GetGrid()[0, 2].isEmpty &&
-            EightPuzzle.GetGrid()[1, 2].islandId == 2 && !EightPuzzle.GetGrid()[1, 2].isEmpty &&
-            EightPuzzle.GetGrid()[2, 2].islandId == 4 && !EightPuzzle.GetGrid()[2, 2].isEmpty)
+            SGrid.GetGrid()[0, 0].islandId == 1 && SGrid.GetGrid()[0, 0].isTileActive &&
+            SGrid.GetGrid()[1, 0].islandId == 5 && SGrid.GetGrid()[1, 0].isTileActive &&
+            SGrid.GetGrid()[2, 0].islandId == 3 && SGrid.GetGrid()[2, 0].isTileActive &&
+            SGrid.GetGrid()[0, 1].islandId == 8 && SGrid.GetGrid()[0, 1].isTileActive &&
+            SGrid.GetGrid()[2, 1].islandId == 7 && SGrid.GetGrid()[2, 1].isTileActive &&
+            SGrid.GetGrid()[0, 2].islandId == 6 && SGrid.GetGrid()[0, 2].isTileActive &&
+            SGrid.GetGrid()[1, 2].islandId == 2 && SGrid.GetGrid()[1, 2].isTileActive &&
+            SGrid.GetGrid()[2, 2].islandId == 4 && SGrid.GetGrid()[2, 2].isTileActive)
         {
             return true;
         }

@@ -167,7 +167,7 @@ public class EightPuzzle : MonoBehaviour
         TileSlider[,] newGrid = new TileSlider[3, 3];
         TileSlider next = null;
 
-        int playerIsland = Player.GetSliderUnderneath();
+        int playerIsland = Player.GetStileUnderneath();
         Vector3 playerOffset = Player.GetPosition() - GetSlider(playerIsland).transform.position;
 
         for (int x = 0; x < 3; x++)
@@ -192,7 +192,7 @@ public class EightPuzzle : MonoBehaviour
 
         grid = newGrid;
 
-        ArtifactButton.canComplete = true;
+        ArtifactTileButton.canComplete = true;
         CheckCompletions();
     }
 

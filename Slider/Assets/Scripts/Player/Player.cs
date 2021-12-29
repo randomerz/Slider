@@ -76,15 +76,15 @@ public class Player : MonoBehaviour
         return hit != null;
     }
 
-    public static int GetSliderUnderneath()
+    public static int GetStileUnderneath()
     {
         Collider2D hit = Physics2D.OverlapPoint(_instance.transform.position, LayerMask.GetMask("Slider"));
-        if (hit == null || hit.GetComponent<TileSlider>() == null)
+        if (hit == null || hit.GetComponent<STile>() == null)
         {
-            Debug.LogWarning("Player isn't on top of a slider!");
+            //Debug.LogWarning("Player isn't on top of a slider!");
             return -1;
         }
-        return hit.GetComponent<TileSlider>().islandId;
+        return hit.GetComponent<STile>().islandId;
     }
 
     public static void SetPosition(Vector3 pos)

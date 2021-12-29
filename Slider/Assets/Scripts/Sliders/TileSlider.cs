@@ -55,7 +55,7 @@ public class TileSlider : MonoBehaviour
             //}
             //transform.position = newPos;
             //SetTileMapPositions(newPos);
-            StartCoroutine(StartMovingAnimation(transform.position, newPos, Player.GetSliderUnderneath() == islandId, Player.GetPosition() - transform.position));
+            StartCoroutine(StartMovingAnimation(transform.position, newPos, Player.GetStileUnderneath() == islandId, Player.GetPosition() - transform.position));
         }
         else
         {
