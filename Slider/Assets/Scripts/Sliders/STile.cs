@@ -19,7 +19,7 @@ public class STile : MonoBehaviour
     [Header("References")]
     public Collider2D sliderCollider;
     public GameObject tileMapCollider;
-    public GameObject borderCollider;
+    public GameObject[] borderColliders; // right top left bottom
     public GameObject stileTileMaps;
     //public GameObject floorTileGrid;
     //public GameObject wallTileGrid;
@@ -63,7 +63,10 @@ public class STile : MonoBehaviour
 
     public void SetBorderCollider(bool isActive)
     {
-        borderCollider.SetActive(isActive);
+        foreach (GameObject g in borderColliders)
+        {
+            g.SetActive(isActive);
+        }
     }
 
     public bool CanMove(int x, int y)

@@ -5,13 +5,20 @@ using UnityEngine;
 public class SMove
 {
     public List<Vector4Int> moves = new List<Vector4Int>(); // move tile at (x, y) to (z, w)
+
+    public Dictionary<Vector2Int, List<int>> borders = new Dictionary<Vector2Int, List<int>>();
+
+    public void GenerateBorders()
+    {
+        List<Vector2Int> positions = new List<Vector2Int>();
+    }
 }
 
 public class Vector4Int
 {
-    public int x;
+    public int x; // x, y is the original location
     public int y;
-    public int z;
+    public int z; // z, w is the target location
     public int w;
 
     public Vector4Int(int x, int y, int z, int w)
