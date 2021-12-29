@@ -87,8 +87,7 @@ public class SGrid : MonoBehaviour
     //        (0, 0) ->  3 . 2
     public static string GetGridString() // todo? GetAltGridString()
     {
-        string s = "[";
-
+        string s = "";
         for (int y = current.height - 1; y >= 0; y--)
         {
             for (int x = 0; x < current.width; x++)
@@ -99,8 +98,6 @@ public class SGrid : MonoBehaviour
                     s += "#";
             }
         }
-
-        s += "]";
 
         return s;
     }

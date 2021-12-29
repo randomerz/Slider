@@ -294,18 +294,6 @@ public class NPCManager : MonoBehaviour
 
     public static bool CheckFinalPlacements()
     {
-        if (firstTimeFezziwigCheck &&
-            SGrid.GetGrid()[0, 0].islandId == 1 && SGrid.GetGrid()[0, 0].isTileActive &&
-            SGrid.GetGrid()[1, 0].islandId == 5 && SGrid.GetGrid()[1, 0].isTileActive &&
-            SGrid.GetGrid()[2, 0].islandId == 3 && SGrid.GetGrid()[2, 0].isTileActive &&
-            SGrid.GetGrid()[0, 1].islandId == 8 && SGrid.GetGrid()[0, 1].isTileActive &&
-            SGrid.GetGrid()[2, 1].islandId == 7 && SGrid.GetGrid()[2, 1].isTileActive &&
-            SGrid.GetGrid()[0, 2].islandId == 6 && SGrid.GetGrid()[0, 2].isTileActive &&
-            SGrid.GetGrid()[1, 2].islandId == 2 && SGrid.GetGrid()[1, 2].isTileActive &&
-            SGrid.GetGrid()[2, 2].islandId == 4 && SGrid.GetGrid()[2, 2].isTileActive)
-        {
-            return true;
-        }
-        return false;
+        return firstTimeFezziwigCheck && (SGrid.GetGridString() == "1538#7624");
     }
 }
