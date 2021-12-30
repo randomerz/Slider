@@ -81,7 +81,7 @@ public class SGrid : MonoBehaviour
         return null;
     }
 
-    // Returns a string like: [123_6##_3#2]
+    // Returns a string like:   123_6##_3#2
     // for a grid like:  1 2 3
     //                   6 . .
     //        (0, 0) ->  3 . 2
@@ -97,6 +97,7 @@ public class SGrid : MonoBehaviour
                 else
                     s += "#";
             }
+            //s += "_";
         }
         return s;
     }
@@ -152,5 +153,60 @@ public class SGrid : MonoBehaviour
             }
         }
     }
+
+
+
+    // TODO: Move these methods somewhere else
     
+    public void SetGrid(int[,] puzzle)
+    {
+        if (puzzle.Length != grid.Length)
+        {
+            Debug.LogWarning("Tried to SetGrid(int[,]), but provided puzzle was of a different length!");
+        }
+
+        STile[,] newGrid = new STile[3, 3];
+        STile next = null;
+
+        int playerIsland = Player.GetStileUnderneath();
+        Vector3 playerOffset = Player.GetPosition() - GetStile(playerIsland).transform.position;
+
+        for (int x = 0; x < 3; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                //Debug.Log(puzzle[x, y]);
+                if (puzzle[x, y] == 0)
+                    next = GetStile(9);
+                else
+                    next = GetStile(puzzle[x, y]);
+
+                next.x = x;
+                next.y = y;
+                newGrid[x, y] = next;
+                next.Init();
+                UIArtifact.SetButtonPos(next.islandId, x, y);
+            }
+        }
+
+        Player.SetPosition(GetStile(playerIsland).transform.position + playerOffset);
+
+        grid = newGrid;
+
+        OnGridMove += CheckCompletions;
+    }
+
+    private static void CheckCompletions(object sender, SGrid.OnGridMoveArgs e)
+    {
+        // ineffecient lol
+        UIArtifact.SetButtonComplete(1, current.grid[0, 0].islandId == 1);
+        UIArtifact.SetButtonComplete(5, current.grid[1, 0].islandId == 5);
+        UIArtifact.SetButtonComplete(3, current.grid[2, 0].islandId == 3);
+        UIArtifact.SetButtonComplete(8, current.grid[0, 1].islandId == 8);
+        UIArtifact.SetButtonComplete(9, current.grid[1, 1].islandId == 9);
+        UIArtifact.SetButtonComplete(7, current.grid[2, 1].islandId == 7);
+        UIArtifact.SetButtonComplete(6, current.grid[0, 2].islandId == 6);
+        UIArtifact.SetButtonComplete(2, current.grid[1, 2].islandId == 2);
+        UIArtifact.SetButtonComplete(4, current.grid[2, 2].islandId == 4);
+    }
 }

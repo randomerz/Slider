@@ -28,6 +28,11 @@ public class STile : MonoBehaviour
 
     private void Awake()
     {
+        Init();
+    }
+
+    public void Init()
+    {
         SetTileActive(isTileActive);
         Vector3 defaultPos = STILE_WIDTH * new Vector3(x, y);
         transform.position = defaultPos;
