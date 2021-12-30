@@ -11,6 +11,11 @@ public class SMove
     public void GenerateBorders()
     {
         List<Vector2Int> positions = new List<Vector2Int>();
+
+        foreach (Vector4Int m in moves)
+        {
+            // special case if they are two away and you are sliding
+        }
     }
 }
 
