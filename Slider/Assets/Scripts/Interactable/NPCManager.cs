@@ -237,50 +237,14 @@ public class NPCManager : MonoBehaviour
         {
             return false;
         }
-        for (int x = 0; x < 3; x++)
-        {
-            for (int y = 0; y < 3; y++)
-            {
-                if (SGrid.GetGrid()[x, y].islandId == 6 && SGrid.GetGrid()[x, y].isTileActive)
-                {
-                    Debug.Log("Checking qr code");
-                    if (y != 2 && x != 2 && SGrid.GetGrid()[x, y + 1].islandId == 3 && 
-                                            SGrid.GetGrid()[x + 1, y].islandId == 2 && 
-                                            SGrid.GetGrid()[x + 1, y + 1].islandId == 1)
-                    {
-                        hasBeenDug = true;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-        }
-        return false;
+        Debug.Log("Checking qr code");
+        hasBeenDug = CheckGrid.subgrid(SGrid.GetGridString(), "6231");
+        return hasBeenDug;
     }
 
     public bool CheckLovers()
     {
-        for (int x = 0; x < 3; x++)
-        {
-            for (int y = 0; y < 3; y++)
-            {
-                if (SGrid.GetGrid()[x, y].islandId == 5 && SGrid.GetGrid()[x, y].isTileActive)
-                {
-                    if (x != 0 && SGrid.GetGrid()[x - 1, y].islandId == 1)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-        }
-        return false;
+        return CheckGrid.row(SGrid.GetGridString(), "15.") || CheckGrid.row(SGrid.GetGridString(), ".15");
     }
 
 
@@ -294,18 +258,6 @@ public class NPCManager : MonoBehaviour
 
     public static bool CheckFinalPlacements()
     {
-        if (firstTimeFezziwigCheck &&
-            SGrid.GetGrid()[0, 0].islandId == 1 && SGrid.GetGrid()[0, 0].isTileActive &&
-            SGrid.GetGrid()[1, 0].islandId == 5 && SGrid.GetGrid()[1, 0].isTileActive &&
-            SGrid.GetGrid()[2, 0].islandId == 3 && SGrid.GetGrid()[2, 0].isTileActive &&
-            SGrid.GetGrid()[0, 1].islandId == 8 && SGrid.GetGrid()[0, 1].isTileActive &&
-            SGrid.GetGrid()[2, 1].islandId == 7 && SGrid.GetGrid()[2, 1].isTileActive &&
-            SGrid.GetGrid()[0, 2].islandId == 6 && SGrid.GetGrid()[0, 2].isTileActive &&
-            SGrid.GetGrid()[1, 2].islandId == 2 && SGrid.GetGrid()[1, 2].isTileActive &&
-            SGrid.GetGrid()[2, 2].islandId == 4 && SGrid.GetGrid()[2, 2].isTileActive)
-        {
-            return true;
-        }
-        return false;
+        return firstTimeFezziwigCheck && (SGrid.GetGridString() == "1538#7624");
     }
 }
