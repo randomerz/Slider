@@ -1,22 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
-using UnityEngine;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 public static class CheckGrid
 {
-    public static Boolean contains(string gridString, string regex)
+    public static bool contains(string gridString, string regex)
     {
+
         return Regex.IsMatch(gridString, regex);
     }
-    public static Boolean row(string gridString, string row)
+    public static bool row(string gridString, string row)
     {
+        Debug.Log(gridString + "|" + row);
         return Regex.IsMatch(gridString, "^" + row) || Regex.IsMatch(gridString, "^.{3}" + row) || Regex.IsMatch(gridString, row + "$");
     }
-    public static Boolean column(string gridString, string column)
+    public static bool column(string gridString, string column)
     {
-        return Regex.IsMatch(gridString, "^" + column[0] + ".{2}" + column[1] + ".{2}" + column[2]) 
+        return Regex.IsMatch(gridString, "^" + column[0] + ".{2}" + column[1] + ".{2}" + column[2])
             || Regex.IsMatch(gridString, "^." + column[0] + ".{2}" + column[1] + ".{2}" + column[2])
             || Regex.IsMatch(gridString, "^.{2}" + column[0] + ".{2}" + column[1] + ".{2}" + column[2]);
     }
@@ -27,9 +29,11 @@ public static class CheckGrid
     /// <param name="gridString"></param>
     /// <param name="subgrid"></param>
     /// <returns></returns>
-    public static Boolean subgrid(string gridString, string subgrid)
+
+    public static bool subgrid(string gridString, string subgrid)
     {
-        return Regex.IsMatch(gridString, subgrid[0] + subgrid[1] + "." + subgrid[2] + subgrid[3]);
+        Debug.Log(gridString + "|" + subgrid);
+        return Regex.IsMatch(gridString, "" + subgrid[0] + subgrid[1] + "." + subgrid[2] + subgrid[3]);
     }
     // Start is called before the first frame update
 

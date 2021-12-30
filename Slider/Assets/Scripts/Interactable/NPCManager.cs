@@ -77,8 +77,8 @@ public class NPCManager : MonoBehaviour
     }
 
     public void CheckWorldState(string Name)
-    { 
-        switch(Name)
+    {
+        switch (Name)
         {
             case "Pierre":
                 if (!firstTimePierreCheck && currSliders == 7 && fishOn && (SGrid.GetGrid()[0, 2].islandId == 6 && SGrid.GetGrid()[1, 2].islandId == 2 && SGrid.GetGrid()[2, 2].islandId == 4 && SGrid.GetGrid()[2, 1].islandId == 7))
@@ -183,7 +183,8 @@ public class NPCManager : MonoBehaviour
                 else if (currSliders == 9)
                 {
                     voicelines[npcs[5]] = 2;
-                }else
+                }
+                else
                 {
                     voicelines[npcs[5]] = 0;
                 }
@@ -228,6 +229,7 @@ public class NPCManager : MonoBehaviour
         if (CheckQRCode())
         {
             ItemManager.ActivateNextItem();
+            Debug.Log("Activated QR work already");
         }
     }
 
@@ -238,7 +240,8 @@ public class NPCManager : MonoBehaviour
             return false;
         }
         Debug.Log("Checking qr code");
-        hasBeenDug = CheckGrid.subgrid(SGrid.GetGridString(), "6231");
+        hasBeenDug = CheckGrid.subgrid(SGrid.GetGridString(), "3162");
+
         return hasBeenDug;
     }
 
@@ -258,6 +261,6 @@ public class NPCManager : MonoBehaviour
 
     public static bool CheckFinalPlacements()
     {
-        return firstTimeFezziwigCheck && (SGrid.GetGridString() == "1538#7624");
+        return firstTimeFezziwigCheck && (SGrid.GetGridString() == "6248#7153");
     }
 }
