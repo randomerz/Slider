@@ -3873,7 +3873,11 @@ MonoBehaviour:
   linkTile: {fileID: 0}
   sliderCollider: {fileID: 7649429769792356526}
   tileMapCollider: {fileID: 1479630269152721008}
-  borderColliders: []
+  borderColliders:
+  - {fileID: 6581962075059848973}
+  - {fileID: 10815329210898457}
+  - {fileID: 6080016972589035013}
+  - {fileID: 5001208594554478671}
   stileTileMaps: {fileID: 6848225235959610882}
 --- !u!61 &7649429769792356526
 BoxCollider2D:

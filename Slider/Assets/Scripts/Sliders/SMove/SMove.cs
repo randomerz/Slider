@@ -6,16 +6,54 @@ public class SMove
 {
     public List<Vector4Int> moves = new List<Vector4Int>(); // move tile at (x, y) to (z, w)
 
+    public HashSet<Vector2Int> positions = new HashSet<Vector2Int>();
     public Dictionary<Vector2Int, List<int>> borders = new Dictionary<Vector2Int, List<int>>();
 
-    public void GenerateBorders()
+    public Dictionary<Vector2Int, List<int>> GenerateBorders()
     {
-        List<Vector2Int> positions = new List<Vector2Int>();
+        positions.Clear();
+        borders.Clear();
 
         foreach (Vector4Int m in moves)
         {
-            // special case if they are two away and you are sliding
+            // for the cases where its swapping more than two
+            for (int x = Mathf.Min(m.x, m.z); x <= Mathf.Max(m.x, m.z); x++)
+            {
+                for (int y = Mathf.Min(m.y, m.w); y <= Mathf.Max(m.y, m.w); y++)
+                {
+                    positions.Add(new Vector2Int(x, y));
+                }
+            }
         }
+
+        foreach (Vector2Int p in positions)
+        {
+            AddBorder(p, 0, p + Vector2Int.right);
+            AddBorder(p, 1, p + Vector2Int.up);
+            AddBorder(p, 2, p + Vector2Int.left);
+            AddBorder(p, 3, p + Vector2Int.down);
+        }
+
+        return borders;
+    }
+
+    private void AddBorder(Vector2Int pos1, int side, Vector2Int pos2)
+    {
+        if (!borders.ContainsKey(pos1))
+            borders.Add(pos1, new List<int>());
+        if (!borders.ContainsKey(pos2))
+            borders.Add(pos2, new List<int>());
+
+        // toggle sides
+        if (borders[pos1].Contains(side))
+            borders[pos1].Remove(side);
+        else
+            borders[pos1].Add(side);
+
+        if (borders[pos2].Contains((side + 2) % 4))
+            borders[pos2].Remove((side + 2) % 4);
+        else
+            borders[pos2].Add((side + 2) % 4);
     }
 }
 

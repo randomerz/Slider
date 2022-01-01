@@ -8,6 +8,7 @@ public class ArtifactTileButton : MonoBehaviour
 {
     public static bool canComplete = false;
     public bool isComplete = false;
+    public bool isForcedDown = false;
 
     public bool isTileActive = false;
     public int islandId = -1;
@@ -69,6 +70,7 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetForcedPushedDown(bool v)
     {
         buttonAnimator.SetForcedPushedDown(v);
+        isForcedDown = v;
     }
 
     public void SetTileActive(bool v)

@@ -229,7 +229,7 @@ public class NPCManager : MonoBehaviour
         if (CheckQRCode())
         {
             ItemManager.ActivateNextItem();
-            Debug.Log("Activated QR work already");
+            //Debug.Log("Activated QR work already");
         }
     }
 
@@ -239,7 +239,7 @@ public class NPCManager : MonoBehaviour
         {
             return false;
         }
-        Debug.Log("Checking qr code");
+        //Debug.Log("Checking qr code");
         hasBeenDug = CheckGrid.subgrid(SGrid.GetGridString(), "3162");
 
         return hasBeenDug;

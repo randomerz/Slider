@@ -38,10 +38,11 @@ public class UIArtifact : MonoBehaviour
     {
         // Check if on movement cooldown
         //if (SGrid.GetStile(button.islandId).isMoving)
-        //{
-        //    //Debug.Log("on cooldown!");
-        //    return;
-        //}
+        if (button.isForcedDown)
+        {
+            //Debug.Log("on cooldown!");
+            return;
+        }
 
         if (currentButton == button)
         {
@@ -89,10 +90,11 @@ public class UIArtifact : MonoBehaviour
     {
         adjacentButtons.Clear();
 
-        Vector2 buttPos = new Vector2(button.x, button.y);
+        //Vector2 buttPos = new Vector2(button.x, button.y);
         foreach (ArtifactTileButton b in buttons)
         {
-            if (!b.isTileActive && (buttPos - new Vector2(b.x, b.y)).magnitude == 1)
+            //if (!b.isTileActive && (buttPos - new Vector2(b.x, b.y)).magnitude == 1)
+            if (!b.isTileActive && (button.x == b.x || button.y == b.y))
             {
                 adjacentButtons.Add(b);
             }

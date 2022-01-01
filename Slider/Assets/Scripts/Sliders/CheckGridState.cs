@@ -32,7 +32,7 @@ public static class CheckGrid
 
     public static bool subgrid(string gridString, string subgrid)
     {
-        Debug.Log(gridString + "|" + subgrid);
+        //Debug.Log(gridString + "|" + subgrid);
         return Regex.IsMatch(gridString, "" + subgrid[0] + subgrid[1] + "." + subgrid[2] + subgrid[3]);
     }
     // Start is called before the first frame update
