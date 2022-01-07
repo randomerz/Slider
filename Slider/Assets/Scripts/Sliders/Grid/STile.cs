@@ -14,7 +14,7 @@ public class STile : MonoBehaviour
 
     private Vector2 movingDirection; // zero, right, up, left, down
     
-    private const int STILE_WIDTH = 17;
+    public const int STILE_WIDTH = 17;
 
     private int sliderColliderDisableCount; // each enable gives this +1, disable does -1
     

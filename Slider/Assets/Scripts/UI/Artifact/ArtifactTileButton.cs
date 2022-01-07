@@ -89,7 +89,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SetComplete(bool value)
     {
-        if (!canComplete || isTileActive)
+        if (!canComplete || !isTileActive)
             return;
 
         isComplete = value;

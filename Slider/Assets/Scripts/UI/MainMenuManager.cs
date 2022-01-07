@@ -8,6 +8,8 @@ public class MainMenuManager : MonoBehaviour
     public Animator titleAnimator;
     public Animator textAnimator;
 
+    public string sceneToLoad;
+
     private bool canPlay;
 
     void Start()
@@ -19,7 +21,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (Input.anyKey && canPlay)
         {
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene(sceneToLoad);
         }
     }
 

@@ -94,7 +94,7 @@ public class SMoveRotate : SMove
             moves.Add(new Vector4Int(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y));
         }
         Vector2Int first = points[0];
-        Vector2Int last = points[points.Count];
+        Vector2Int last = points[points.Count - 1];
         moves.Add(new Vector4Int(last.x, last.y, first.x, first.y));
     }
 }

@@ -35,6 +35,16 @@ public class SGrid : MonoBehaviour
         SetGrid(stiles, altStiles, bgGridTiles);
     }
 
+    private void OnEnable()
+    {
+
+    }
+
+    private void OnDisable()
+    {
+        OnGridMove -= CheckCompletions; // TEMPORARY
+    }
+
     void Start()
     {
         
@@ -210,6 +220,7 @@ public class SGrid : MonoBehaviour
         grid = newGrid;
 
         OnGridMove += CheckCompletions;
+        ArtifactTileButton.canComplete = true;
     }
 
     private static void CheckCompletions(object sender, SGrid.OnGridMoveArgs e)

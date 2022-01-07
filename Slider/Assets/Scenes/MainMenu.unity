@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 380634036804812840, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 380634037254267600, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_Name
       value: Player
@@ -321,6 +325,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   titleAnimator: {fileID: 2072728312}
   textAnimator: {fileID: 1814126339}
+  sceneToLoad: Village
 --- !u!1 &1814126334
 GameObject:
   m_ObjectHideFlags: 0

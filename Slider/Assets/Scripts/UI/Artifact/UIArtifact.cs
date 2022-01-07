@@ -141,7 +141,7 @@ public class UIArtifact : MonoBehaviour
     //        b.UpdatePushedDown();
     //    }
     //}
-
+    
     public static void SetButtonComplete(int islandId, bool value)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
@@ -166,6 +166,19 @@ public class UIArtifact : MonoBehaviour
         }
     }
 
+    private ArtifactTileButton GetButton(int x, int y)
+    {
+        foreach (ArtifactTileButton b in _instance.buttons)
+        {
+            if (b.x == x && b.y == y)
+            {
+                return b;
+            }
+        }
+
+        return null;
+    }
+
     public static void AddButton(int islandId)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
@@ -176,5 +189,34 @@ public class UIArtifact : MonoBehaviour
                 return;
             }
         }
+    }
+
+
+
+
+    // temporary
+    public void RotateTiles(int x, int y)
+    {
+        SMove rotate = new SMoveRotate(new List<Vector2Int> {
+                new Vector2Int(x, y),
+                new Vector2Int(x, y + 1),
+                new Vector2Int(x + 1, y + 1),
+                new Vector2Int(x + 1, y),
+            });
+        // todo: if can rotate
+        SGrid.current.Move(rotate);
+
+        ArtifactTileButton[] tb =
+        {
+            GetButton(x, y),
+            GetButton(x, y + 1),
+            GetButton(x + 1, y + 1),
+            GetButton(x + 1, y)
+        };
+
+        tb[0].SetPosition(x, y + 1);
+        tb[1].SetPosition(x + 1, y + 1);
+        tb[2].SetPosition(x + 1, y);
+        tb[3].SetPosition(x, y);
     }
 }

@@ -103,7 +103,7 @@ public class SGridAnimator : MonoBehaviour
         {
             if (Player.GetStileUnderneath() != grid[p.x, p.y].islandId)
             {
-                Debug.Log("disabling" +  p.x + " " + p.y);
+                //Debug.Log("disabling" +  p.x + " " + p.y);
                 grid[p.x, p.y].SetSliderCollider(false);
                 disabledColliders.Add(grid[p.x, p.y]);
             }
@@ -125,7 +125,7 @@ public class SGridAnimator : MonoBehaviour
         }
     }
 
-    private Vector2 GetMovingDirection(Vector2 start, Vector2 end)
+    private Vector2 GetMovingDirection(Vector2 start, Vector2 end) // include magnitude?
     {
         Vector2 dif = start - end;
         if (dif.x > 0)
