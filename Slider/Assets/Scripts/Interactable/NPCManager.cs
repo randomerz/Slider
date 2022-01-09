@@ -81,13 +81,13 @@ public class NPCManager : MonoBehaviour
         switch (Name)
         {
             case "Pierre":
-                if (!firstTimePierreCheck && currSliders == 7 && fishOn && (SGrid.GetGrid()[0, 2].islandId == 6 && SGrid.GetGrid()[1, 2].islandId == 2 && SGrid.GetGrid()[2, 2].islandId == 4 && SGrid.GetGrid()[2, 1].islandId == 7))
+                if (!firstTimePierreCheck && currSliders == 7 && fishOn && CheckGrid.contains(SGrid.GetGridString(), "624_..7_..."))
                 {
                     voicelines[npcs[0]] = 1;
                     ItemManager.ActivateNextItem();
                     firstTimePierreCheck = true;
                 }
-                else if (firstTimePierreCheck && currSliders == 7 && fishOn && (SGrid.GetGrid()[0, 2].islandId == 6 && SGrid.GetGrid()[1, 2].islandId == 2 && SGrid.GetGrid()[2, 2].islandId == 4 && SGrid.GetGrid()[2, 1].islandId == 7))
+                else if (firstTimePierreCheck && currSliders == 7 && fishOn && CheckGrid.contains(SGrid.GetGridString(), "624_..7_..."))
                 {
                     voicelines[npcs[0]] = 1;
                 }
@@ -131,13 +131,13 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Sam":
-                if (!fishOn && currSliders == 7 && (SGrid.GetGrid()[0, 2].islandId == 6 && SGrid.GetGrid()[1, 2].islandId == 2 && SGrid.GetGrid()[2, 2].islandId == 4 && SGrid.GetGrid()[2, 1].islandId == 7))
+                if (!fishOn && currSliders == 7 && CheckGrid.contains(SGrid.GetGridString(), "624_..7_..."))
                 {
                     voicelines[npcs[3]] = 1;
                     AudioManager.Play("Puzzle Complete");
                     fishOn = true;
                 }
-                else if (fishOn && currSliders == 7 && (SGrid.GetGrid()[0, 2].islandId == 6 && SGrid.GetGrid()[1, 2].islandId == 2 && SGrid.GetGrid()[2, 2].islandId == 4 && SGrid.GetGrid()[2, 1].islandId == 7))
+                else if (fishOn && currSliders == 7 && CheckGrid.contains(SGrid.GetGridString(), "624_..7_..."))
                 {
                     voicelines[npcs[3]] = 1;
                 }
@@ -261,6 +261,6 @@ public class NPCManager : MonoBehaviour
 
     public static bool CheckFinalPlacements()
     {
-        return firstTimeFezziwigCheck && (SGrid.GetGridString() == "6248#7153");
+        return firstTimeFezziwigCheck && (SGrid.GetGridString() == "624_8#7_153");
     }
 }

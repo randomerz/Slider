@@ -123,7 +123,10 @@ public class SGrid : MonoBehaviour
                 else
                     s += "#";
             }
-            //s += "_";
+            if (y != 0)
+            {
+                s += "_";
+            }
         }
         return s;
     }

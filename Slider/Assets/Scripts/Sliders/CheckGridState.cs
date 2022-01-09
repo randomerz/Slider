@@ -8,19 +8,27 @@ public static class CheckGrid
 {
     public static bool contains(string gridString, string regex)
     {
+        Debug.Log(gridString + "|con" + regex);
+        Debug.Log("bool is " + (Regex.IsMatch(gridString, regex)));
 
         return Regex.IsMatch(gridString, regex);
     }
     public static bool row(string gridString, string row)
     {
-        Debug.Log(gridString + "|" + row);
-        return Regex.IsMatch(gridString, "^" + row) || Regex.IsMatch(gridString, "^.{3}" + row) || Regex.IsMatch(gridString, row + "$");
+        Debug.Log(gridString + "|r" + row);
+        Debug.Log("bool is "+ (Regex.IsMatch(gridString, "_" + row) || Regex.IsMatch(gridString, row + "_")));
+
+        return Regex.IsMatch(gridString, "_" + row) || Regex.IsMatch(gridString, row + "_");
     }
     public static bool column(string gridString, string column)
     {
-        return Regex.IsMatch(gridString, "^" + column[0] + ".{2}" + column[1] + ".{2}" + column[2])
-            || Regex.IsMatch(gridString, "^." + column[0] + ".{2}" + column[1] + ".{2}" + column[2])
-            || Regex.IsMatch(gridString, "^.{2}" + column[0] + ".{2}" + column[1] + ".{2}" + column[2]);
+        Debug.Log(gridString + "|c" + column);
+        Debug.Log("bool is " + (Regex.IsMatch(gridString, "^" + column[0] + ".{3}" + column[1] + ".{3}" + column[2])
+            || Regex.IsMatch(gridString, "^." + column[0] + ".{3}" + column[1] + ".{3}" + column[2])
+            || Regex.IsMatch(gridString, "^.{2}" + column[0] + ".{3}" + column[1] + ".{3}" + column[2])));
+        return Regex.IsMatch(gridString, "^" + column[0] + ".{3}" + column[1] + ".{3}" + column[2])
+            || Regex.IsMatch(gridString, "^." + column[0] + ".{3}" + column[1] + ".{3}" + column[2])
+            || Regex.IsMatch(gridString, "^.{2}" + column[0] + ".{3}" + column[1] + ".{3}" + column[2]);
     }
 
     /// <summary>
@@ -32,8 +40,11 @@ public static class CheckGrid
 
     public static bool subgrid(string gridString, string subgrid)
     {
-        //Debug.Log(gridString + "|" + subgrid);
-        return Regex.IsMatch(gridString, "" + subgrid[0] + subgrid[1] + "." + subgrid[2] + subgrid[3]);
+        Debug.Log(gridString + "|sg" + subgrid);
+        Debug.Log("bool is " + (Regex.IsMatch(gridString, "" + subgrid[0] + subgrid[1] + "._" + subgrid[2] + subgrid[3])
+            || Regex.IsMatch(gridString, "" + subgrid[0] + subgrid[1] + "_." + subgrid[2] + subgrid[3])));
+        return Regex.IsMatch(gridString, "" + subgrid[0] + subgrid[1] + "._" + subgrid[2] + subgrid[3])
+            || Regex.IsMatch(gridString, "" + subgrid[0] + subgrid[1] + "_." + subgrid[2] + subgrid[3]);
     }
     // Start is called before the first frame update
 
