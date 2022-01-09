@@ -151,6 +151,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  knotMask:
+    serializedVersion: 2
+    m_Bits: 0
+  picked: 0
   playerSpriteRenderer: {fileID: 380634036804812840}
   playerAnimator: {fileID: 380634036804812841}
 --- !u!50 &380634037254267615
@@ -213,6 +217,7 @@ GameObject:
   - component: {fileID: 380634037666542967}
   - component: {fileID: 380634037666542962}
   - component: {fileID: 1369399787893420006}
+  - component: {fileID: -2145840239031781072}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -318,6 +323,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseTransform: {fileID: 8551080018860032359}
+--- !u!114 &-2145840239031781072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380634037666542966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 0}
+  ListenerNumber: -1
 --- !u!1 &1357893451848922036
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,6 +666,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b17f2aca8138f2143b83253aedfff7d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundDampenCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  soundDampenLength: 2
   maskObject: {fileID: 2097521197595210148}
   animator: {fileID: 2533058487123645026}
   itemText: {fileID: 0}
