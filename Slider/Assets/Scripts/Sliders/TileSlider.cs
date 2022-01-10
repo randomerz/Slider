@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TileSlider : MonoBehaviour
+public class TileSlider : MonoBehaviour // moved to STile.cs
 {
     public bool isEmpty;
 

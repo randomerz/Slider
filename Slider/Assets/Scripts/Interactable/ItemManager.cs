@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemManager : MonoBehaviour
+public class ItemManager : MonoBehaviour // to be replaced by VillageGrid.cs
 {
     public static GameObject[] items = new GameObject[9];
     public GameObject[] itemsC = new GameObject[9];

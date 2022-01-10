@@ -27,15 +27,15 @@ public class ItemPickupEffect : MonoBehaviour
 
     }
 
-    public static void StartCutscene(Sprite itemSprite, string itemName)
+    public static void StartCutscene(Sprite itemSprite, string itemName, System.Action onTextVisibleCallback=null)
     {
         _instance.itemText.text = itemName + " Acquired!";
         _instance.itemImage.sprite = itemSprite;
-        _instance.StartCoroutine(_instance.Cutscene());
+        _instance.StartCoroutine(_instance.Cutscene(onTextVisibleCallback));
         _instance.StartCoroutine(_instance.DampenMusic());
     }
 
-    private IEnumerator Cutscene()
+    private IEnumerator Cutscene(System.Action onTextVisibleCallback=null)
     {
         maskObject.SetActive(true);
         animator.SetBool("isVisible", true);
@@ -49,6 +49,10 @@ public class ItemPickupEffect : MonoBehaviour
         yield return new WaitForSeconds(0.75f);
 
         itemText.gameObject.SetActive(true);
+
+        if (onTextVisibleCallback != null) {
+            onTextVisibleCallback();
+        }
 
         yield return new WaitForSeconds(1.25f);
 

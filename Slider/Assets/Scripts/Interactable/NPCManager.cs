@@ -121,7 +121,7 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Felicia":
-                if (currSliders > 6 && currSliders < 9 && Item.hasBeenDug)
+                if (currSliders > 6 && currSliders < 9 && PlayerInventory.Contains("Dig"))
                 {
                     voicelines[npcs[2]] = 1;
                 }
@@ -151,13 +151,13 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Archibald":
-                if (!firstTimeArchibaldCheck && currSliders == 3 && Item.coffeeHasBeenDrunk)
+                if (!firstTimeArchibaldCheck && currSliders == 3 && PlayerInventory.Contains("Coffee"))
                 {
                     voicelines[npcs[4]] = 1;
                     ItemManager.ActivateNextItem();
                     firstTimeArchibaldCheck = true;
                 }
-                else if (firstTimeArchibaldCheck && currSliders == 3 && Item.coffeeHasBeenDrunk)
+                else if (firstTimeArchibaldCheck && currSliders == 3 && PlayerInventory.Contains("Coffee"))
                 {
                     voicelines[npcs[4]] = 1;
                 }

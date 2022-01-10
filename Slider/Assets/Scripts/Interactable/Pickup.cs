@@ -10,7 +10,7 @@ public class Pickup : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            item.GetComponent<Item>().TriggerCutscene(item);
+            item.GetComponent<Collectible>().DoPickUp();
         }
     }
 }

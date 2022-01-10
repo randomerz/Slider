@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EightPuzzle : MonoBehaviour
+public class EightPuzzle : MonoBehaviour // to be replaced by SGrid.cs
 {
     public float slideCooldown = 1;
     private float timeTillCanSlide;

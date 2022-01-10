@@ -12942,8 +12942,7 @@ PrefabInstance:
       propertyPath: itemText
       value: 
       objectReference: {fileID: 252238697}
-    m_RemovedComponents:
-    - {fileID: 380634037666542967, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
 --- !u!20 &1312090973 stripped
 Camera:
@@ -49463,7 +49462,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1769068891}
-  - component: {fileID: 1769068892}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -49488,23 +49486,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1769068892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1769068890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad3b86475d0dbba4e9ab5ccac0ee720c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fishSpawners:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1001 &1769382831
 PrefabInstance:
   m_ObjectHideFlags: 0

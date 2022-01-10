@@ -194,19 +194,19 @@ public class SGrid : MonoBehaviour
             Debug.LogWarning("Tried to SetGrid(int[,]), but provided puzzle was of a different length!");
         }
 
-        STile[,] newGrid = new STile[3, 3];
+        STile[,] newGrid = new STile[width, height];
         STile next = null;
 
         int playerIsland = Player.GetStileUnderneath();
         Vector3 playerOffset = Player.GetPosition() - GetStile(playerIsland).transform.position;
 
-        for (int x = 0; x < 3; x++)
+        for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y < 3; y++)
+            for (int y = 0; y < height; y++)
             {
                 //Debug.Log(puzzle[x, y]);
                 if (puzzle[x, y] == 0)
-                    next = GetStile(9);
+                    next = GetStile(width * height);
                 else
                     next = GetStile(puzzle[x, y]);
 
