@@ -20,6 +20,8 @@ public class SGrid : MonoBehaviour
     private STile[,] altGrid;
     private SGridBackground[,] bgGrid;
 
+    private int[,] targetGrid;
+
     // Set in inspector 
     [SerializeField] private int width;
     [SerializeField] private int height;
@@ -28,19 +30,19 @@ public class SGrid : MonoBehaviour
     [SerializeField] private SGridBackground[] bgGridTiles;
     [SerializeField] private SGridAnimator gridAnimator;
 
-    private void Awake()
+    protected void Awake()
     {
         currentSGrid = this;
 
         SetGrid(stiles, altStiles, bgGridTiles);
     }
 
-    private void OnEnable()
+    protected void OnEnable()
     {
 
     }
 
-    private void OnDisable()
+    protected void OnDisable()
     {
         OnGridMove -= CheckCompletions; // TEMPORARY
     }
@@ -61,6 +63,45 @@ public class SGrid : MonoBehaviour
         return currentSGrid.bgGrid;
     }
 
+    public void SetGrid(int[,] puzzle)
+    {
+        if (puzzle.Length != grid.Length)
+        {
+            Debug.LogWarning("Tried to SetGrid(int[,]), but provided puzzle was of a different length!");
+        }
+
+        STile[,] newGrid = new STile[width, height];
+        STile next = null;
+
+        int playerIsland = Player.GetStileUnderneath();
+        Vector3 playerOffset = Player.GetPosition() - GetStile(playerIsland).transform.position;
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                //Debug.Log(puzzle[x, y]);
+                if (puzzle[x, y] == 0)
+                    next = GetStile(width * height);
+                else
+                    next = GetStile(puzzle[x, y]);
+
+                next.x = x;
+                next.y = y;
+                newGrid[x, y] = next;
+                next.Init();
+                UIArtifact.SetButtonPos(next.islandId, x, y);
+            }
+        }
+
+        Player.SetPosition(GetStile(playerIsland).transform.position + playerOffset);
+
+        grid = newGrid;
+
+        OnGridMove += CheckCompletions;
+        ArtifactTileButton.canComplete = true;
+    }
+
     private void SetGrid(STile[] stiles, STile[] altStiles=null, SGridBackground[] bgGridTiles=null)
     {
         if (stiles.Length != width * height)
@@ -71,9 +112,11 @@ public class SGrid : MonoBehaviour
         }
 
         grid = new STile[width, height];
+        targetGrid = new int[width, height];
         foreach (STile t in stiles)
         {
             grid[t.x, t.y] = t;
+            targetGrid[t.x, t.y] = t.islandId;
         }
 
         if (altStiles != null && altStiles.Length == width * height)
@@ -93,18 +136,6 @@ public class SGrid : MonoBehaviour
                 bgGrid[i % width, i / width] = bgGridTiles[i];
             }
         }
-    }
-
-    public static STile GetStile(int islandId)
-    {
-        foreach (STile t in currentSGrid.stiles)
-        {
-            if (t.islandId == islandId)
-            {
-                return t;
-            }
-        }
-        return null;
     }
 
     // Returns a string like:   123_6##_3#2
@@ -129,6 +160,18 @@ public class SGrid : MonoBehaviour
             }
         }
         return s;
+    }
+
+    public static STile GetStile(int islandId)
+    {
+        foreach (STile t in currentSGrid.stiles)
+        {
+            if (t.islandId == islandId)
+            {
+                return t;
+            }
+        }
+        return null;
     }
 
     public bool CanMove(SMove move)
@@ -172,12 +215,6 @@ public class SGrid : MonoBehaviour
             {
                 s.SetTileActive(true);
                 UIArtifact.AddButton(islandId);
-
-                if (islandId == 9)
-                {
-                    Debug.Log("Found all 9 pieces!");
-                    UIArtifact.SetButtonComplete(9, true);
-                }
                 return;
             }
         }
@@ -185,58 +222,23 @@ public class SGrid : MonoBehaviour
 
 
 
-    // TODO: Move these methods somewhere else
-    
-    public void SetGrid(int[,] puzzle)
-    {
-        if (puzzle.Length != grid.Length)
-        {
-            Debug.LogWarning("Tried to SetGrid(int[,]), but provided puzzle was of a different length!");
-        }
-
-        STile[,] newGrid = new STile[width, height];
-        STile next = null;
-
-        int playerIsland = Player.GetStileUnderneath();
-        Vector3 playerOffset = Player.GetPosition() - GetStile(playerIsland).transform.position;
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                //Debug.Log(puzzle[x, y]);
-                if (puzzle[x, y] == 0)
-                    next = GetStile(width * height);
-                else
-                    next = GetStile(puzzle[x, y]);
-
-                next.x = x;
-                next.y = y;
-                newGrid[x, y] = next;
-                next.Init();
-                UIArtifact.SetButtonPos(next.islandId, x, y);
-            }
-        }
-
-        Player.SetPosition(GetStile(playerIsland).transform.position + playerOffset);
-
-        grid = newGrid;
-
-        OnGridMove += CheckCompletions;
-        ArtifactTileButton.canComplete = true;
-    }
-
-    private static void CheckCompletions(object sender, SGrid.OnGridMoveArgs e)
+    protected static void CheckCompletions(object sender, SGrid.OnGridMoveArgs e)
     {
         // ineffecient lol
-        UIArtifact.SetButtonComplete(1, current.grid[0, 0].islandId == 1);
-        UIArtifact.SetButtonComplete(5, current.grid[1, 0].islandId == 5);
-        UIArtifact.SetButtonComplete(3, current.grid[2, 0].islandId == 3);
-        UIArtifact.SetButtonComplete(8, current.grid[0, 1].islandId == 8);
-        UIArtifact.SetButtonComplete(9, current.grid[1, 1].islandId == 9);
-        UIArtifact.SetButtonComplete(7, current.grid[2, 1].islandId == 7);
-        UIArtifact.SetButtonComplete(6, current.grid[0, 2].islandId == 6);
-        UIArtifact.SetButtonComplete(2, current.grid[1, 2].islandId == 2);
-        UIArtifact.SetButtonComplete(4, current.grid[2, 2].islandId == 4);
+        for (int x = 0; x < current.width; x++) {
+            for (int y = 0; y < current.width; y++) {
+                int tid = current.targetGrid[x, y];
+                UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+            }
+        }
+        // UIArtifact.SetButtonComplete(1, current.grid[0, 0].islandId == 1);
+        // UIArtifact.SetButtonComplete(5, current.grid[1, 0].islandId == 5);
+        // UIArtifact.SetButtonComplete(3, current.grid[2, 0].islandId == 3);
+        // UIArtifact.SetButtonComplete(8, current.grid[0, 1].islandId == 8);
+        // UIArtifact.SetButtonComplete(9, current.grid[1, 1].islandId == 9);
+        // UIArtifact.SetButtonComplete(7, current.grid[2, 1].islandId == 7);
+        // UIArtifact.SetButtonComplete(6, current.grid[0, 2].islandId == 6);
+        // UIArtifact.SetButtonComplete(2, current.grid[1, 2].islandId == 2);
+        // UIArtifact.SetButtonComplete(4, current.grid[2, 2].islandId == 4);
     }
 }

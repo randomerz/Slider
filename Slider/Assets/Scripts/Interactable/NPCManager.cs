@@ -84,7 +84,8 @@ public class NPCManager : MonoBehaviour
                 if (!firstTimePierreCheck && currSliders == 7 && fishOn && CheckGrid.contains(SGrid.GetGridString(), "624_..7_..."))
                 {
                     voicelines[npcs[0]] = 1;
-                    ItemManager.ActivateNextItem();
+                    // ItemManager.ActivateNextItem();
+                    VillageGrid.instance.ActivateSliderCollectible(8);
                     firstTimePierreCheck = true;
                 }
                 else if (firstTimePierreCheck && currSliders == 7 && fishOn && CheckGrid.contains(SGrid.GetGridString(), "624_..7_..."))
@@ -104,7 +105,8 @@ public class NPCManager : MonoBehaviour
                 if (!firstTimeKevinCheck && currSliders == 4 && KnotBox.PuzzleComplete())
                 {
                     voicelines[npcs[1]] = 1;
-                    ItemManager.ActivateNextItem();
+                    // ItemManager.ActivateNextItem();
+                    VillageGrid.instance.ActivateSliderCollectible(5);
                     firstTimeKevinCheck = true;
                 }
                 else if (firstTimeKevinCheck && currSliders == 4 && KnotBox.PuzzleComplete())
@@ -154,7 +156,8 @@ public class NPCManager : MonoBehaviour
                 if (!firstTimeArchibaldCheck && currSliders == 3 && PlayerInventory.Contains("Coffee"))
                 {
                     voicelines[npcs[4]] = 1;
-                    ItemManager.ActivateNextItem();
+                    // ItemManager.ActivateNextItem();
+                    VillageGrid.instance.ActivateSliderCollectible(4);
                     firstTimeArchibaldCheck = true;
                 }
                 else if (firstTimeArchibaldCheck && currSliders == 3 && PlayerInventory.Contains("Coffee"))
@@ -176,7 +179,8 @@ public class NPCManager : MonoBehaviour
                     voicelines[npcs[5]] = 1;
                     if (!LoversOnFirstTime)
                     {
-                        ItemManager.ActivateNextItem();
+                        // ItemManager.ActivateNextItem();
+                        VillageGrid.instance.ActivateSliderCollectible(6);
                         LoversOnFirstTime = true;
                     }
                 }
@@ -195,7 +199,8 @@ public class NPCManager : MonoBehaviour
                     voicelines[npcs[6]] = 1;
                     if (!LoversOnFirstTime)
                     {
-                        ItemManager.ActivateNextItem();
+                        // ItemManager.ActivateNextItem();
+                        VillageGrid.instance.ActivateSliderCollectible(6);
                         LoversOnFirstTime = true;
                     }
 
@@ -228,7 +233,8 @@ public class NPCManager : MonoBehaviour
     {
         if (CheckQRCode())
         {
-            ItemManager.ActivateNextItem();
+            // ItemManager.ActivateNextItem();
+            VillageGrid.instance.ActivateSliderCollectible(7);
             //Debug.Log("Activated QR work already");
         }
     }
@@ -255,7 +261,8 @@ public class NPCManager : MonoBehaviour
     {
         if (CheckFinalPlacements())
         {
-            ItemManager.ActivateNextItem();
+            // ItemManager.ActivateNextItem();
+            VillageGrid.instance.ActivateSliderCollectible(9);
         }
     }
 
