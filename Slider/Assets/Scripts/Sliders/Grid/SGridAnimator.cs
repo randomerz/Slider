@@ -21,10 +21,10 @@ public class SGridAnimator : MonoBehaviour
 
     public void Move(SMove move)
     {
-        STile[,] grid = SGrid.GetGrid();
+        STile[,] grid = SGrid.current.GetGrid();
 
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
-        StartCoroutine(DisableBordersAndColliders(grid, SGrid.GetBGGrid(), move.positions, borders));
+        StartCoroutine(DisableBordersAndColliders(grid, SGrid.current.GetBGGrid(), move.positions, borders));
 
         foreach (Vector4Int m in move.moves)
         {

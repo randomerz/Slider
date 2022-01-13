@@ -28,7 +28,7 @@ public class ArtifactTileButton : MonoBehaviour
     {
         islandSprite = buttonAnimator.sliderImage.sprite;
 
-        myStile = SGrid.GetStile(islandId); // happens in SGrid.Awake()
+        myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
         SetTileActive(myStile.isTileActive);
         SetPosition(myStile.x, myStile.y);
 

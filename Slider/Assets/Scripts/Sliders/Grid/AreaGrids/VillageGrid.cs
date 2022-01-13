@@ -11,19 +11,21 @@ public class VillageGrid : SGrid
     public Collectible[] sliderCollectibles;
 
     private new void Awake() {
-        instance = this;
+        myArea = Area.Village;
 
         base.Awake();
+
+        instance = this;
     }
     
-    private new void OnEnable() {
+    private void OnEnable() {
         if (checkCompletion) {
             SGrid.OnGridMove += SGrid.CheckCompletions;
         }
         
     }
 
-    private new void OnDisable() {
+    private void OnDisable() {
         if (checkCompletion) {
             SGrid.OnGridMove -= SGrid.CheckCompletions;
         }
@@ -37,7 +39,34 @@ public class VillageGrid : SGrid
         }
     }
 
-    public void ActivateSliderCollectible(int sliderId) {
+    // public override void SetSGrid(SGrid other)
+    // {
+    //     Debug.Log("A");
+    //     base.SetSGrid(other);
+
+    //     // TODO: Update collectibles and quests and progress and stuff
+    //     VillageGrid vg = (VillageGrid)other;
+    //     for (int i = 0; i < sliderCollectibles.Length; i++) {
+    //         if (vg.sliderCollectibles[i] != null) {
+    //             sliderCollectibles[i].gameObject.SetActive(vg.sliderCollectibles[i].gameObject.activeSelf);
+    //         }
+    //     }
+    // }
+
+    public override void SaveGrid() 
+    {
+        base.SaveGrid();
+
+        // GameManager.saveSystem.SaveSGridData(Area.Village, this);
+        // GameManager.saveSystem.SaveMissions(new Dictionary<string, bool>());
+    }
+
+    public override void LoadGrid()
+    {
+        base.LoadGrid();
+    }
+
+    public void ActivateSliderCollectible(int sliderId) { // temporary?
         sliderCollectibles[sliderId - 1].gameObject.SetActive(true);
 
         if (sliderId == 9)

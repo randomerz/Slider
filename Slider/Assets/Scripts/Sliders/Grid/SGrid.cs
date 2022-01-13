@@ -4,11 +4,7 @@ using UnityEngine;
 
 public class SGrid : MonoBehaviour
 {
-    public static SGrid current {   // "SGrid.current" will return the current active SGrid
-        get         { return currentSGrid; }
-        private set { currentSGrid = value; }
-    }
-    private static SGrid currentSGrid;
+    public static SGrid current { get; private set; }
 
     public class OnGridMoveArgs : System.EventArgs
     {
@@ -20,47 +16,41 @@ public class SGrid : MonoBehaviour
     private STile[,] altGrid;
     private SGridBackground[,] bgGrid;
 
-    private int[,] targetGrid;
 
+    protected Area myArea;
     // Set in inspector 
-    [SerializeField] private int width;
-    [SerializeField] private int height;
+    public int width;
+    public int height;
     [SerializeField] private STile[] stiles;
     [SerializeField] private STile[] altStiles;
     [SerializeField] private SGridBackground[] bgGridTiles;
     [SerializeField] private SGridAnimator gridAnimator;
+    [SerializeField] protected string targetGrid; // format: 123456789 for  1 2 3
+                                                  //                        4 5 6
+                                                  //              (0, 0) -> 7 8 9
 
     protected void Awake()
     {
-        currentSGrid = this;
+        current = this;
 
-        SetGrid(stiles, altStiles, bgGridTiles);
-    }
-
-    protected void OnEnable()
-    {
-
-    }
-
-    protected void OnDisable()
-    {
-        OnGridMove -= CheckCompletions; // TEMPORARY
-    }
-
-    void Start()
-    {
-        
+        LoadGrid();
+        SetBGGrid(bgGridTiles);
     }
 
 
-    public static STile[,] GetGrid()
+    public STile[,] GetGrid()
     {
-        return currentSGrid.grid;
+        return grid;
     }
 
-    public static SGridBackground[,] GetBGGrid()
+    public STile[,] GetAltGrid()
     {
-        return currentSGrid.bgGrid;
+        return altGrid;
+    }
+
+    public SGridBackground[,] GetBGGrid()
+    {
+        return bgGrid;
     }
 
     public void SetGrid(int[,] puzzle)
@@ -102,7 +92,7 @@ public class SGrid : MonoBehaviour
         ArtifactTileButton.canComplete = true;
     }
 
-    private void SetGrid(STile[] stiles, STile[] altStiles=null, SGridBackground[] bgGridTiles=null)
+    private void SetGrid(STile[] stiles, STile[] altStiles=null)
     {
         if (stiles.Length != width * height)
         {
@@ -112,11 +102,9 @@ public class SGrid : MonoBehaviour
         }
 
         grid = new STile[width, height];
-        targetGrid = new int[width, height];
         foreach (STile t in stiles)
         {
             grid[t.x, t.y] = t;
-            targetGrid[t.x, t.y] = t.islandId;
         }
 
         if (altStiles != null && altStiles.Length == width * height)
@@ -127,16 +115,57 @@ public class SGrid : MonoBehaviour
                 altGrid[t.x, t.y] = t;
             }
         }
+    }
 
-        if (bgGridTiles != null && bgGridTiles.Length == width * height)
+    private void SetBGGrid(SGridBackground[] bgGridTiles) 
+    {
+        bgGrid = new SGridBackground[width, height];
+        for (int i = 0; i < bgGridTiles.Length; i++)
         {
-            bgGrid = new SGridBackground[width, height];
-            for (int i = 0; i < bgGridTiles.Length; i++)
-            {
-                bgGrid[i % width, i / width] = bgGridTiles[i];
-            }
+            bgGrid[i % width, i / width] = bgGridTiles[i];
         }
     }
+
+    // public virtual void SetSGrid(SGrid other) { 
+    //     // grid = other.grid;
+    //     // altGrid = other.altGrid;
+    //     // bgGrid = other.bgGrid;
+
+    //     // inGame grid[stored.x, stored.y] = inGame stile(stored.islandId)
+    //     STile[,] newGrid = new STile[width, height];
+    //     foreach (STile t in other.stiles)
+    //     {
+    //         STile currentSTile = GetStile(t.islandId); 
+    //         newGrid[t.x, t.y] = currentSTile;
+    //         Debug.Log(t.x + ", " + t.y + ": " + t.islandId);
+    //         currentSTile.SetSTile(t);
+    //     }
+    //     grid = newGrid;
+
+    //     if (altStiles != null && altStiles.Length == width * height)
+    //     {
+    //         STile[,] newAltGrid = new STile[width, height];
+    //         foreach (STile t in altStiles)
+    //         {
+    //             STile currentSTile = GetAltStile(t.islandId); 
+    //             newAltGrid[t.x, t.y] = currentSTile;
+    //             currentSTile.SetSTile(t);
+    //         }
+    //         altGrid = newAltGrid;
+    //     }
+
+    //     if (bgGridTiles != null && bgGridTiles.Length == width * height)
+    //     {
+    //         bgGrid = new SGridBackground[width, height];
+    //         for (int i = 0; i < bgGridTiles.Length; i++)
+    //         {
+    //             bgGrid[i % width, i / width] = bgGridTiles[i];
+    //         }
+    //     }
+
+
+    //     targetGrid = other.targetGrid;
+    // }
 
     // Returns a string like:   123_6##_3#2
     // for a grid like:  1 2 3
@@ -162,15 +191,21 @@ public class SGrid : MonoBehaviour
         return s;
     }
 
-    public static STile GetStile(int islandId)
+    public STile GetStile(int islandId)
     {
-        foreach (STile t in currentSGrid.stiles)
-        {
+        foreach (STile t in stiles)
             if (t.islandId == islandId)
-            {
                 return t;
-            }
-        }
+                
+        return null;
+    }
+
+    public STile GetAltStile(int islandId)
+    {
+        foreach (STile t in altStiles)
+            if (t.islandId == islandId)
+                return t;
+                
         return null;
     }
 
@@ -222,12 +257,59 @@ public class SGrid : MonoBehaviour
 
 
 
+    public virtual void SaveGrid() 
+    { 
+        Debug.Log("Saving data for " + myArea);
+        Debug.Log("this is: " + this);
+        GameManager.saveSystem.SaveSGridData(myArea, this);
+        GameManager.saveSystem.SaveMissions(new Dictionary<string, bool>());
+    }
+
+    public virtual void LoadGrid() 
+    { 
+        Debug.Log("Loading grid...");
+
+        SGridData sgridData = GameManager.saveSystem.GetSGridData(myArea);
+        Dictionary<string, bool> loadedMissions = GameManager.saveSystem.GetMissions(new List<string>());
+
+        if (sgridData == null) {
+            SetGrid(stiles, altStiles);
+            return;
+        }
+
+        Debug.Log("Loading saved data for " + myArea + "...");
+
+        STile[,] newGrid = new STile[width, height];
+        foreach (SGridData.STileData td in sgridData.grid) 
+        {
+            STile stile = GetStile(td.islandId); 
+            newGrid[td.x, td.y] = stile;
+            stile.SetSTile(td.isTileActive, td.x, td.y);
+        }
+        grid = newGrid;
+
+        if (altGrid != null && altGrid.Length == width * height) {
+            STile[,] newAltGrid = new STile[width, height];
+            foreach (SGridData.STileData td in sgridData.altGrid)
+            {
+                STile stile = GetStile(td.islandId); 
+                newAltGrid[td.x, td.y] = stile;
+                stile.SetSTile(td.isTileActive, td.x, td.y);
+            }
+            altGrid = newAltGrid;
+        }
+
+        // temporary ?
+        GameObject.Find("Player").transform.position = GameManager.saveSystem.GetPlayerPos(myArea);
+    }
+
     protected static void CheckCompletions(object sender, SGrid.OnGridMoveArgs e)
     {
         // ineffecient lol
         for (int x = 0; x < current.width; x++) {
             for (int y = 0; y < current.width; y++) {
-                int tid = current.targetGrid[x, y];
+                // int tid = current.targetGrid[x, y];
+                int tid = current.targetGrid[(current.height - y - 1) * current.width + x];
                 UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
             }
         }

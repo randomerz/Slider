@@ -10,7 +10,7 @@ public class STile : MonoBehaviour
     public int y = -1;
 
     public bool hasAnchor;
-    public STile linkTile;
+    public STile linkTile; // Probably should be a list, set in instpector
 
     private Vector2 movingDirection; // zero, right, up, left, down
     
@@ -49,6 +49,20 @@ public class STile : MonoBehaviour
         
     }
 
+
+    public void SetSTile(STile other) {
+        isTileActive = other.isTileActive;
+        x = other.x;
+        y = other.y;
+        Init();
+    }
+
+    public void SetSTile(bool isTileActive, int x, int y) {
+        this.isTileActive = isTileActive;
+        this.x = x;
+        this.y = y;
+        Init();
+    }
 
     public void SetTileActive(bool isTileActive)
     {
