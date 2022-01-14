@@ -82,19 +82,19 @@ MonoBehaviour:
   Properties:
     LiveUpdate:
       Value: 1
-      HasValue: 0
+      HasValue: 1
     LiveUpdatePort:
       Value: 0
       HasValue: 0
     Overlay:
       Value: 1
-      HasValue: 0
+      HasValue: 1
     Logging:
       Value: 0
       HasValue: 0
     SampleRate:
       Value: 48000
-      HasValue: 0
+      HasValue: 1
     BuildDirectory:
       Value: 
       HasValue: 0
@@ -381,7 +381,7 @@ MonoBehaviour:
   SharedLibraryUpdateStage: 0
   SharedLibraryTimeSinceStart: 0
   CurrentVersion: 131588
-  HideSetupWizard: 1
+  HideSetupWizard: 0
   LastEventReferenceScanVersion: 131588
   Platforms:
   - {fileID: -9106316238555667765}
