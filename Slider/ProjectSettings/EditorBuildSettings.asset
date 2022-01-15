@@ -10,11 +10,12 @@ EditorBuildSettings:
     guid: 56bd65cac9177cf4f9fc8785a3118519
   - enabled: 1
     path: Assets/Scenes/Village.unity
-    guid: 1baa2d81b4590474b98b9b6c0cc131b2
+    guid: 4a48f87ffd4977046b2a1a17150689af
   - enabled: 1
     path: Assets/Scenes/Dev/Boomo/ocean_testing.unity
     guid: 00cbd4a88d85bd3448db00402ef46fc6
   - enabled: 1
     path: Assets/Scenes/Dev/Boomo/Village dev.unity
     guid: 11a5d225eacba9b4aa62968fe0571801
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 84f1309155c25994fa9256899015a77a, type: 2}

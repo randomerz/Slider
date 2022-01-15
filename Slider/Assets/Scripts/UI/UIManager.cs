@@ -20,12 +20,26 @@ public class UIManager : MonoBehaviour
 
     public static bool closeUI;
 
+    private InputSettings controls;
+
     private void Awake()
     {
         sfxSlider.value = AudioManager.GetSFXVolume();
         musicSlider.value = AudioManager.GetMusicVolume();
         //artifactPanel.GetComponent<UIArtifact>().Awake();
         uiArtifact.Awake();
+        
+        controls = new InputSettings();
+        controls.UI.Pause.performed += context => OnPressPause();
+        controls.UI.OpenArtifact.performed += context => OnPressArtifact();
+    }
+
+    private void OnEnable() {
+        controls.Enable();
+    }
+    
+    private void OnDisable() {
+        controls.Disable();
     }
 
     void Update()
@@ -36,28 +50,52 @@ public class UIManager : MonoBehaviour
             ResumeGame();
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (isGamePaused)
-            {
-                ResumeGame();
-            }
-            else
-            {
-                PauseGame();
-            }
-        }
+        // if (Input.GetKeyDown(KeyCode.Escape))
+        // {
+        //     if (isGamePaused)
+        //     {
+        //         ResumeGame();
+        //     }
+        //     else
+        //     {
+        //         PauseGame();
+        //     }
+        // }
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        // if (Input.GetKeyDown(KeyCode.Tab))
+        // {
+        //     if (isArtifactOpen)
+        //     {
+        //         ResumeGame();
+        //     }
+        //     else
+        //     {
+        //         OpenArtifact();
+        //     }
+        // }
+    }
+
+    private void OnPressPause() 
+    {
+        if (isGamePaused)
         {
-            if (isArtifactOpen)
-            {
-                ResumeGame();
-            }
-            else
-            {
-                OpenArtifact();
-            }
+            ResumeGame();
+        }
+        else
+        {
+            PauseGame();
+        }
+    }
+
+    private void OnPressArtifact() 
+    {
+        if (isArtifactOpen)
+        {
+            ResumeGame();
+        }
+        else
+        {
+            OpenArtifact();
         }
     }
 
