@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -19,54 +20,81 @@ public class Player : MonoBehaviour
     public SpriteRenderer playerSpriteRenderer;
     public Animator playerAnimator;
 
+    private InputSettings controls;
     private static Player _instance;
 
     void Awake()
     {
         _instance = this;
+
+        controls = new InputSettings();
+        controls.Player.Action.performed += context => Action();
+        controls.Player.Move.performed += context => Move(context.ReadValue<Vector2>());
+    }
+
+    private void OnEnable() {
+        controls.Enable();
+    }
+
+    private void OnDisable() {
+        controls.Disable();
     }
     
     void Update()
     {
 
-        inputDir = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        // inputDir = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-        playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
-        PickUpNode();
-        if (inputDir.x < 0)
+        if (!canMove) 
         {
-            playerSpriteRenderer.flipX = false;
+            playerAnimator.SetBool("isRunning", false);
         }
-        else if (inputDir.x > 0)
+        else 
         {
-            playerSpriteRenderer.flipX = true;
-        }
-        if (picked)
-        {
-            knotNode.transform.position = transform.position;
+            playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
+            if (inputDir.x < 0)
+            {
+                playerSpriteRenderer.flipX = false;
+            }
+            else if (inputDir.x > 0)
+            {
+                playerSpriteRenderer.flipX = true;
+            }
+            if (picked)
+            {
+                knotNode.transform.position = transform.position;
+            }
         }
     }
 
     private void FixedUpdate()
     {
-        if (!canMove)
-            return;
+        if (canMove)
+        {
+            transform.position += moveSpeed * inputDir.normalized * Time.deltaTime;
+        }
+    }
 
-        transform.position += moveSpeed * inputDir.normalized * Time.deltaTime;
+    private void Move(Vector2 moveDir) 
+    {
+        inputDir = new Vector3(moveDir.x, moveDir.y);
+    }
 
+    private void Action() 
+    {
+        PickUpNode();
     }
 
     public void PickUpNode()
     {
         Collider2D[] nodes = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y), 0.5f, knotMask);
-        if (nodes.Length > 0  && Input.GetKeyDown(KeyCode.E) && !picked)
+        if (nodes.Length > 0  && !picked)
         {
             knotNode = nodes[0].gameObject;
             picked = true;
-        } else if (picked && Input.GetKeyDown(KeyCode.E))
+        } else if (picked)
         {
             picked = false;
-
         }
     }
 
