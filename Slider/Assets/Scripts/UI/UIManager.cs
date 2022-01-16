@@ -107,7 +107,7 @@ public class UIManager : MonoBehaviour
 
         if (isArtifactOpen)
         {
-            Player.canMove = true;
+            Player.SetCanMove(true);
 
             isArtifactOpen = false;
             artifactAnimator.SetBool("isVisible", false);
@@ -143,7 +143,7 @@ public class UIManager : MonoBehaviour
             isGamePaused = true;
             isArtifactOpen = true;
 
-            Player.canMove = false;
+            Player.SetCanMove(false);
 
             artifactAnimator.SetBool("isVisible", true);
         }
