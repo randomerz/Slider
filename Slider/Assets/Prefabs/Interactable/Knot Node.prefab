@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 597799788580550961}
   - component: {fileID: 597799788580550966}
   - component: {fileID: 6796601057065083639}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: Knot Node
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59ec98f46be488f40a665e0375116960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 597799788580550964}
   myCollider: {fileID: 597799788580550966}
   pickUpDuration: 0.5
   xPickUpMotion:

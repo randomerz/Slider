@@ -4,9 +4,12 @@ public class PlayerAction : MonoBehaviour
 {
     private Item pickedItem;
     private bool isPicking;
-    [SerializeField] private Transform itemLocation;
+    [SerializeField] private Transform itemPickupLocation;
+    [SerializeField] private GameObject itemDropIndicator;
+    private bool canDrop;
 
     [SerializeField] private LayerMask itemMask;
+    [SerializeField] private LayerMask dropCollidingMask;
     
     private InputSettings controls;
 
@@ -30,7 +33,22 @@ public class PlayerAction : MonoBehaviour
     {
         if (pickedItem != null && !isPicking) 
         {
-            pickedItem.gameObject.transform.position = itemLocation.position;
+            pickedItem.gameObject.transform.position = itemPickupLocation.position;
+            itemDropIndicator.transform.position = GetIndicatorLocation();
+            
+            // check raycast
+            Vector3 raycastDir = GetIndicatorLocation() - transform.position;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, raycastDir, 1.5f, dropCollidingMask);
+            if (hit) 
+            {
+                canDrop = false;
+                itemDropIndicator.SetActive(false);
+            }
+            else 
+            {
+                canDrop = true;
+                itemDropIndicator.SetActive(true);
+            }
         }
     }
 
@@ -41,7 +59,6 @@ public class PlayerAction : MonoBehaviour
 
     public void TryPick() 
     {
-        Debug.Log("im tryna pick");
         if (isPicking) 
         {
             return;
@@ -69,19 +86,34 @@ public class PlayerAction : MonoBehaviour
                     Debug.LogError("Picked something that isn't an Item!");
                 }
 
-                pickedItem.PickUpItem(itemLocation.transform, callback:FinishPicking);
+                pickedItem.PickUpItem(itemPickupLocation.transform, callback:FinishPicking);
             } 
         }
         else // pickedItem != null
         {
             // check if can drop
-            pickedItem.DropItem(transform.position);
-            pickedItem = null;
+            if (canDrop) 
+            {
+                pickedItem.DropItem(GetIndicatorLocation());
+                pickedItem = null;
+                itemDropIndicator.SetActive(false);
+            }
         }
     }
 
     private void FinishPicking() 
     {
         isPicking = false;
+        itemDropIndicator.SetActive(true);
+    }
+
+    private Vector3 GetIndicatorLocation() 
+    {
+        Vector3 moveDir = Player.GetLastMoveDir().normalized;
+        if (moveDir.x != 0 && moveDir.y != 0) 
+        {
+            moveDir = moveDir * 0.75f * Mathf.Sqrt(2);
+        }
+        return transform.position + moveDir;
     }
 }

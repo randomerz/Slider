@@ -8,11 +8,13 @@ public class Player : MonoBehaviour
     private static Player _instance;
 
     // Movement
-    public float moveSpeed = 5;
+    [SerializeField] private float moveSpeed = 5;
+    public float moveSpeedMultiplier = 1;
     private bool canMove = true;
 
 
     private InputSettings controls;
+    private Vector3 lastMoveDir;
     private Vector3 inputDir;
     
     // References
@@ -49,11 +51,11 @@ public class Player : MonoBehaviour
             playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
             if (inputDir.x < 0)
             {
-                playerSpriteRenderer.flipX = false;
+                playerSpriteRenderer.flipX = true;
             }
             else if (inputDir.x > 0)
             {
-                playerSpriteRenderer.flipX = true;
+                playerSpriteRenderer.flipX = false;
             }
         }
     }
@@ -62,13 +64,22 @@ public class Player : MonoBehaviour
     {
         if (canMove)
         {
-            transform.position += moveSpeed * inputDir.normalized * Time.deltaTime;
+            transform.position += moveSpeed * moveSpeedMultiplier * inputDir.normalized * Time.deltaTime;
         }
     }
 
     private void Move(Vector2 moveDir) 
     {
         inputDir = new Vector3(moveDir.x, moveDir.y);
+        if (moveDir.magnitude != 0) 
+        {
+            lastMoveDir = inputDir;
+        }
+    }
+
+    public static Vector3 GetLastMoveDir() 
+    {
+        return _instance.lastMoveDir;
     }
 
     public static void SetCanMove(bool value) {

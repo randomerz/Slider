@@ -35,6 +35,11 @@ public class SGrid : MonoBehaviour
 
         LoadGrid();
         SetBGGrid(bgGridTiles);
+
+        if (targetGrid.Length == 0)
+            Debug.LogWarning("Grid's target (end goal) is empty!");
+
+        OnGridMove += CheckCompletions;
     }
 
 
@@ -125,47 +130,6 @@ public class SGrid : MonoBehaviour
             bgGrid[i % width, i / width] = bgGridTiles[i];
         }
     }
-
-    // public virtual void SetSGrid(SGrid other) { 
-    //     // grid = other.grid;
-    //     // altGrid = other.altGrid;
-    //     // bgGrid = other.bgGrid;
-
-    //     // inGame grid[stored.x, stored.y] = inGame stile(stored.islandId)
-    //     STile[,] newGrid = new STile[width, height];
-    //     foreach (STile t in other.stiles)
-    //     {
-    //         STile currentSTile = GetStile(t.islandId); 
-    //         newGrid[t.x, t.y] = currentSTile;
-    //         Debug.Log(t.x + ", " + t.y + ": " + t.islandId);
-    //         currentSTile.SetSTile(t);
-    //     }
-    //     grid = newGrid;
-
-    //     if (altStiles != null && altStiles.Length == width * height)
-    //     {
-    //         STile[,] newAltGrid = new STile[width, height];
-    //         foreach (STile t in altStiles)
-    //         {
-    //             STile currentSTile = GetAltStile(t.islandId); 
-    //             newAltGrid[t.x, t.y] = currentSTile;
-    //             currentSTile.SetSTile(t);
-    //         }
-    //         altGrid = newAltGrid;
-    //     }
-
-    //     if (bgGridTiles != null && bgGridTiles.Length == width * height)
-    //     {
-    //         bgGrid = new SGridBackground[width, height];
-    //         for (int i = 0; i < bgGridTiles.Length; i++)
-    //         {
-    //             bgGrid[i % width, i / width] = bgGridTiles[i];
-    //         }
-    //     }
-
-
-    //     targetGrid = other.targetGrid;
-    // }
 
     // Returns a string like:   123_6##_3#2
     // for a grid like:  1 2 3
@@ -309,18 +273,17 @@ public class SGrid : MonoBehaviour
         for (int x = 0; x < current.width; x++) {
             for (int y = 0; y < current.width; y++) {
                 // int tid = current.targetGrid[x, y];
-                int tid = current.targetGrid[(current.height - y - 1) * current.width + x];
-                UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+                
+                string tids = current.targetGrid[(current.height - y - 1) * current.width + x].ToString();
+                if (tids == "*") 
+                {
+                    UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
+                }
+                else {
+                    int tid = int.Parse(tids);
+                    UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+                }
             }
         }
-        // UIArtifact.SetButtonComplete(1, current.grid[0, 0].islandId == 1);
-        // UIArtifact.SetButtonComplete(5, current.grid[1, 0].islandId == 5);
-        // UIArtifact.SetButtonComplete(3, current.grid[2, 0].islandId == 3);
-        // UIArtifact.SetButtonComplete(8, current.grid[0, 1].islandId == 8);
-        // UIArtifact.SetButtonComplete(9, current.grid[1, 1].islandId == 9);
-        // UIArtifact.SetButtonComplete(7, current.grid[2, 1].islandId == 7);
-        // UIArtifact.SetButtonComplete(6, current.grid[0, 2].islandId == 6);
-        // UIArtifact.SetButtonComplete(2, current.grid[1, 2].islandId == 2);
-        // UIArtifact.SetButtonComplete(4, current.grid[2, 2].islandId == 4);
     }
 }

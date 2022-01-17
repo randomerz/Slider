@@ -47,7 +47,9 @@ public class Collectible : MonoBehaviour
 
     public void ActivateSTile(int stileId) 
     {
-        FindObjectOfType<NPCManager>().ChangeWorldState();
+        if (FindObjectOfType<NPCManager>() != null) {
+            FindObjectOfType<NPCManager>().ChangeWorldState();
+        }
         SGrid.current.EnableStile(stileId);
     }
 
