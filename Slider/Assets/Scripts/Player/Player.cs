@@ -5,30 +5,25 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    //public Item currentHeldItem; // for rope puzzle
+    private static Player _instance;
 
     // Movement
     public float moveSpeed = 5;
-    public LayerMask knotMask;
-    public bool picked = false;
-    public static bool canMove = true;
+    private bool canMove = true;
 
-    GameObject knotNode;
-    private Vector3 inputDir;
-
-    // References
-    public SpriteRenderer playerSpriteRenderer;
-    public Animator playerAnimator;
 
     private InputSettings controls;
-    private static Player _instance;
+    private Vector3 inputDir;
+    
+    // References
+    [SerializeField] private SpriteRenderer playerSpriteRenderer;
+    [SerializeField] private Animator playerAnimator;
 
     void Awake()
     {
         _instance = this;
 
         controls = new InputSettings();
-        controls.Player.Action.performed += context => Action();
         controls.Player.Move.performed += context => Move(context.ReadValue<Vector2>());
     }
 
@@ -60,10 +55,6 @@ public class Player : MonoBehaviour
             {
                 playerSpriteRenderer.flipX = true;
             }
-            if (picked)
-            {
-                knotNode.transform.position = transform.position;
-            }
         }
     }
 
@@ -80,22 +71,8 @@ public class Player : MonoBehaviour
         inputDir = new Vector3(moveDir.x, moveDir.y);
     }
 
-    private void Action() 
-    {
-        PickUpNode();
-    }
-
-    public void PickUpNode()
-    {
-        Collider2D[] nodes = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y), 0.5f, knotMask);
-        if (nodes.Length > 0  && !picked)
-        {
-            knotNode = nodes[0].gameObject;
-            picked = true;
-        } else if (picked)
-        {
-            picked = false;
-        }
+    public static void SetCanMove(bool value) {
+        _instance.canMove = value;
     }
 
     public static bool IsSafe()

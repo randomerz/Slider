@@ -42,7 +42,7 @@ public class ItemPickupEffect : MonoBehaviour
         AudioManager.Play("Item Pick Up");
 
         UIManager.canOpenMenus = false;
-        Player.canMove = false;
+        Player.SetCanMove(false);
 
         playerSprite.sortingLayerName = "ScreenEffects";
 
@@ -63,7 +63,7 @@ public class ItemPickupEffect : MonoBehaviour
 
         maskObject.SetActive(false);
         UIManager.canOpenMenus = true;
-        Player.canMove = true;
+        Player.SetCanMove(true);
         playerSprite.sortingLayerName = "Entity";
     }
 
