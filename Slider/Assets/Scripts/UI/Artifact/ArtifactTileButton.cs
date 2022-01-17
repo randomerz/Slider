@@ -41,8 +41,11 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SetPosition(int x, int y)
     {
+        //Debug.Log("Current position: " + this.x + "," + this.y);
         this.x = x;
         this.y = y;
+        //Debug.Log("New position: " + this.x + "," + this.y);
+
         Vector3 pos = new Vector3(x - 1, y - 1) * UI_OFFSET;
         GetComponent<RectTransform>().anchoredPosition = pos;
     }
