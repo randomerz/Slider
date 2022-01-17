@@ -204,6 +204,13 @@ public class UIArtifact : MonoBehaviour
                 new Vector2Int(x + 1, y),
             };
 
+        List<ArtifactTileButton> tb = new List<ArtifactTileButton>{
+            GetButton(x, y),
+            GetButton(x, y + 1),
+            GetButton(x + 1, y + 1),
+            GetButton(x + 1, y)
+        };
+
         for (int i=3; i>=0; i--)
         {
             int curX = SMoveRotateArr[i].x;
@@ -214,24 +221,20 @@ public class UIArtifact : MonoBehaviour
             if (grid[curX, curY].hasAnchor)
             {
                 SMoveRotateArr.RemoveAt(i);
+                tb.RemoveAt(i);
             }
         }
 
         SMove rotate = new SMoveRotate(SMoveRotateArr);
         // todo: if can rotate
         SGrid.current.Move(rotate);
-
-        ArtifactTileButton[] tb =
+        
+        for (int i=0; i<tb.Count; i++)
         {
-            GetButton(x, y),
-            GetButton(x, y + 1),
-            GetButton(x + 1, y + 1),
-            GetButton(x + 1, y)
-        };
+            tb[i].SetPosition(tb[(i + 1) % tb.Count].x, tb[(i + 1) % tb.Count].y);
+        }
 
-        tb[0].SetPosition(x, y + 1);
-        tb[1].SetPosition(x + 1, y + 1);
-        tb[2].SetPosition(x + 1, y);
-        tb[3].SetPosition(x, y);
+
+
     }
 }
