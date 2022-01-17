@@ -231,7 +231,7 @@ public class UIArtifact : MonoBehaviour
         
         for (int i=0; i<tb.Count; i++)
         {
-            tb[i].SetPosition(tb[(i + 1) % tb.Count].x, tb[(i + 1) % tb.Count].y);
+            tb[i].SetPosition(SMoveRotateArr[(i+1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y);
         }
 
 
