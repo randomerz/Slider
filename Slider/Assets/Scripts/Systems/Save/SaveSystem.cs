@@ -11,7 +11,8 @@ public class SaveSystem
     private Dictionary<Area, SGridData> areaToSGridData = new Dictionary<Area, SGridData>();
     private Dictionary<string, bool> missionStatus = new Dictionary<string, bool>();
 
-    private Dictionary<Area, Vector3> playerPos = new Dictionary<Area, Vector3>(); // temporary
+    // private Dictionary<Area, Vector3> playerPos = new Dictionary<Area, Vector3>(); // temporary
+    // TODO: save player inventory
 
     public SaveSystem() {
 
@@ -24,12 +25,12 @@ public class SaveSystem
 
         if (!areaToSGridData.ContainsKey(area)) {
             areaToSGridData[area] = new SGridData(sgrid);
-            playerPos[area] = Player.GetPosition();
+            // playerPos[area] = Player.GetPosition();
             return;
         }
 
         areaToSGridData[area].UpdateGrid(sgrid);
-        playerPos[area] = Player.GetPosition();
+        // playerPos[area] = Player.GetPosition();
     }
 
     public SGridData GetSGridData(Area area) {
@@ -44,9 +45,9 @@ public class SaveSystem
         return areaToSGridData[area];
     }
 
-    public Vector3 GetPlayerPos(Area area) {
-        return playerPos[area];
-    }
+    // public Vector3 GetPlayerPos(Area area) {
+    //     return playerPos[area];
+    // }
 
     public void SaveMissions(Dictionary<string, bool> missions) {
         foreach (string s in missions.Keys) {

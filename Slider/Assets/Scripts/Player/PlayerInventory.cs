@@ -27,18 +27,21 @@ public class PlayerInventory : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks if the item is in the List, collectibles, by string name
+    /// Checks if the collectible is in the List, collectibles, by string name
     /// </summary>
     /// <param name="collectible">The collectible to check</param>
     /// <returns></returns>
     public static bool Contains(Collectible collectible) {
-        return Contains(collectible.cName);
+        return Contains(collectible.cName, collectible.GetArea());
     }
 
-    public static bool Contains(string collectibleName) {
+    public static bool Contains(string collectibleName, Area area=Area.None) {
         foreach (Collectible c in collectibles) {
-            if (c.cName == collectibleName)
+            if ((c.cName == collectibleName) && 
+                (area == Area.None || area == c.GetArea()))
+            {
                 return true;
+            }
         }
         return false;
     }

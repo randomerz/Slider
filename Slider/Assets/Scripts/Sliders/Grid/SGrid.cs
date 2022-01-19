@@ -186,6 +186,11 @@ public class SGrid : MonoBehaviour
         return true;
     }
 
+    public Area GetArea() 
+    {
+        return myArea;
+    }
+
     // Make sure to check if you CanMove() before moving
     public void Move(SMove move)
     {
@@ -242,6 +247,7 @@ public class SGrid : MonoBehaviour
 
         Debug.Log("Loading saved data for " + myArea + "...");
 
+        // setting grids... similar to initialization
         STile[,] newGrid = new STile[width, height];
         foreach (SGridData.STileData td in sgridData.grid) 
         {
@@ -263,7 +269,7 @@ public class SGrid : MonoBehaviour
         }
 
         // temporary ?
-        GameObject.Find("Player").transform.position = GameManager.saveSystem.GetPlayerPos(myArea);
+        // GameObject.Find("Player").transform.position = GameManager.saveSystem.GetPlayerPos(myArea);
     }
 
     protected static void CheckCompletions(object sender, SGrid.OnGridMoveArgs e)
