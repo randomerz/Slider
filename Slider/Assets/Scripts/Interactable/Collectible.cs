@@ -15,12 +15,6 @@ public class Collectible : MonoBehaviour
         //Debug.Log("Cutscene Triggered");
         ItemPickupEffect.StartCutscene(spriteRenderer.sprite, cName, DoOnCollect);
         DespwanCollectable(gameObject);
-
-        if (cName == "Dig")
-        {
-            Debug.Log("i have dug");
-            ItemManager.ActivateNextItem();
-        }
     }
 
     public void DoOnCollect() 

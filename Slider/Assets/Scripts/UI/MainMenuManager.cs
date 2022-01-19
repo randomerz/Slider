@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -15,13 +17,30 @@ public class MainMenuManager : MonoBehaviour
     void Start()
     {
         StartCoroutine(OpenCutscene());
+
+        // InputSystem.onAnyButtonPress.CallOnce(ctrl => Debug.Log($"{ctrl} pressed"));
+        InputSystem.onAnyButtonPress.CallOnce(ctrl => StartGame()); // this is really janky, we may want to switch to "press start"
     }
 
-    private void Update()
+    private void OnEnable() {
+        // Can't do onAnyButtonPress += StartGame;
+        // :|
+    }
+
+    private void OnDisable() {
+        
+    }
+
+
+    private void StartGame() 
     {
-        if (Input.anyKey && canPlay)
+        if (canPlay)
         {
             SceneManager.LoadScene(sceneToLoad);
+        }
+        else 
+        {
+            InputSystem.onAnyButtonPress.CallOnce(ctrl => StartGame());
         }
     }
 
