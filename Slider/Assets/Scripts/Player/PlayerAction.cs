@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerAction : MonoBehaviour 
 {
+    public static System.EventHandler<System.EventArgs> OnAction;
+
     private Item pickedItem;
     private bool isPicking;
     [SerializeField] private Transform itemPickupLocation;
@@ -55,6 +57,7 @@ public class PlayerAction : MonoBehaviour
     private void Action() 
     {
         TryPick();
+        OnAction?.Invoke(this, new System.EventArgs());
     }
 
     public void TryPick() 
@@ -115,5 +118,9 @@ public class PlayerAction : MonoBehaviour
             moveDir = moveDir * 0.75f * Mathf.Sqrt(2);
         }
         return transform.position + moveDir;
+    }
+
+    public bool HasItem() {
+        return pickedItem != null;
     }
 }

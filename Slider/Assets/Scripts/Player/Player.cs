@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     private Vector3 inputDir;
     
     // References
+    [SerializeField] private PlayerAction playerAction;
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
     [SerializeField] private Animator playerAnimator;
 
@@ -68,6 +69,15 @@ public class Player : MonoBehaviour
         }
     }
 
+
+
+    public static PlayerAction GetPlayerAction() 
+    {
+        return _instance.playerAction;
+    }
+
+
+
     private void Move(Vector2 moveDir) 
     {
         inputDir = new Vector3(moveDir.x, moveDir.y);
@@ -86,6 +96,20 @@ public class Player : MonoBehaviour
         _instance.canMove = value;
     }
 
+
+
+    public static void SetPosition(Vector3 pos)
+    {
+        _instance.transform.position = pos;
+    }
+
+    public static Vector3 GetPosition()
+    {
+        return _instance.transform.position;
+    }
+
+
+
     public static bool IsSafe()
     {
         Collider2D hit = Physics2D.OverlapPoint(_instance.transform.position, LayerMask.GetMask("SlideableArea"));
@@ -101,15 +125,5 @@ public class Player : MonoBehaviour
             return -1;
         }
         return hit.GetComponent<STile>().islandId;
-    }
-
-    public static void SetPosition(Vector3 pos)
-    {
-        _instance.transform.position = pos;
-    }
-
-    public static Vector3 GetPosition()
-    {
-        return _instance.transform.position;
     }
 }

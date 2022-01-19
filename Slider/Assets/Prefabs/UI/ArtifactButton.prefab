@@ -223,7 +223,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -4322285615285474566, guid: 6036f2fb5b0f09a4fbf91c7b5e62a7a8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -358,10 +358,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a22e65ab49b078e44864f39a9ef775bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEmpty: 0
+  isComplete: 0
+  isForcedDown: 0
+  isTileActive: 0
   islandId: -1
-  xPos: 0
-  yPos: 0
+  x: 0
+  y: 0
+  completedSprite: {fileID: 0}
   emptySprite: {fileID: 8628370737294462855, guid: 6036f2fb5b0f09a4fbf91c7b5e62a7a8, type: 3}
   buttonAnimator: {fileID: 4833714464752738808}
   buttonManager: {fileID: 0}

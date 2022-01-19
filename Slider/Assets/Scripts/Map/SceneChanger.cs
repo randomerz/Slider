@@ -7,23 +7,25 @@ using UnityEngine.InputSystem;
 public class SceneChanger : MonoBehaviour
 {
     public string sceneName;
+    public string sceneSpawnName;
 
     void Start()
     {
         
     }
 
-    void Update()
-    {
-        Keyboard kb = InputSystem.GetDevice<Keyboard>();
-        if (kb.pKey.wasPressedThisFrame) 
-        { // temporary
-            ChangeScenes();
-        }
-    }
+    // void Update()
+    // {
+    //     Keyboard kb = InputSystem.GetDevice<Keyboard>();
+    //     if (kb.pKey.wasPressedThisFrame) 
+    //     { // temporary
+    //         ChangeScenes();
+    //     }
+    // }
 
     public void ChangeScenes() {
         SGrid.current.SaveGrid();
+        SceneSpawns.nextSpawn = sceneSpawnName;
         SceneManager.LoadScene(sceneName);
     }
 }

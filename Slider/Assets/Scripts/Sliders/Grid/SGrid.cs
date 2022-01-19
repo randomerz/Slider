@@ -224,7 +224,6 @@ public class SGrid : MonoBehaviour
     public virtual void SaveGrid() 
     { 
         Debug.Log("Saving data for " + myArea);
-        Debug.Log("this is: " + this);
         GameManager.saveSystem.SaveSGridData(myArea, this);
         GameManager.saveSystem.SaveMissions(new Dictionary<string, bool>());
     }
