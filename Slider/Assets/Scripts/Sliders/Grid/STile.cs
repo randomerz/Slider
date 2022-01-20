@@ -166,6 +166,11 @@ public class STile : MonoBehaviour
         }
     }
 
+    public Vector2 GetMovingDirection()
+    {
+        return movingDirection;
+    }
+
     public void SetMovingPosition(Vector2 position)
     {
         Vector3 newPos = STILE_WIDTH * new Vector3(position.x, position.y);

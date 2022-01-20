@@ -25,7 +25,7 @@ public class SGrid : MonoBehaviour
     [SerializeField] private STile[] altStiles;
     [SerializeField] private SGridBackground[] bgGridTiles;
     [SerializeField] private SGridAnimator gridAnimator;
-    [SerializeField] protected string targetGrid; // format: 123456789 for  1 2 3
+    [SerializeField] protected string targetGrid = "*********"; // format: 123456789 for  1 2 3
                                                   //                        4 5 6
                                                   //              (0, 0) -> 7 8 9
 
@@ -278,7 +278,6 @@ public class SGrid : MonoBehaviour
         for (int x = 0; x < current.width; x++) {
             for (int y = 0; y < current.width; y++) {
                 // int tid = current.targetGrid[x, y];
-                
                 string tids = current.targetGrid[(current.height - y - 1) * current.width + x].ToString();
                 if (tids == "*") 
                 {
