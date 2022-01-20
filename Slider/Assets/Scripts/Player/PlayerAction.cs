@@ -19,6 +19,7 @@ public class PlayerAction : MonoBehaviour
     {
         controls = new InputSettings();
         controls.Player.Action.performed += context => Action();
+        controls.Player.CycleEquip.performed += context => CycleEquip();
     }
 
     private void OnEnable() 
@@ -33,8 +34,10 @@ public class PlayerAction : MonoBehaviour
 
     private void Update() 
     {
+        pickedItem = PlayerInventory.GetCurrentItem();
         if (pickedItem != null && !isPicking) 
         {
+
             pickedItem.gameObject.transform.position = itemPickupLocation.position;
             itemDropIndicator.transform.position = GetIndicatorLocation();
             
@@ -58,6 +61,11 @@ public class PlayerAction : MonoBehaviour
     {
         TryPick();
         OnAction?.Invoke(this, new System.EventArgs());
+    }
+
+    private void CycleEquip()
+    {
+        PlayerInventory.NextItem();
     }
 
     public void TryPick() 
@@ -89,7 +97,9 @@ public class PlayerAction : MonoBehaviour
                     Debug.LogError("Picked something that isn't an Item!");
                 }
 
+                PlayerInventory.AddItem(pickedItem);
                 pickedItem.PickUpItem(itemPickupLocation.transform, callback:FinishPicking);
+
             } 
         }
         else // pickedItem != null
@@ -97,7 +107,8 @@ public class PlayerAction : MonoBehaviour
             // check if can drop
             if (canDrop) 
             {
-                pickedItem.DropItem(GetIndicatorLocation());
+                PlayerInventory.RemoveItem();
+                pickedItem.DropItem(GetIndicatorLocation(), callback:pickedItem.dropCallback);
                 pickedItem = null;
                 itemDropIndicator.SetActive(false);
             }
@@ -123,4 +134,6 @@ public class PlayerAction : MonoBehaviour
     public bool HasItem() {
         return pickedItem != null;
     }
+
+
 }
