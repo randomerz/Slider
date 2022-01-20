@@ -21,14 +21,13 @@ public class Anchor : Item
 
     }
 
-    public override void DropItem(Vector3 dropLocation)
+    public override STile DropItem(Vector3 dropLocation)
     {
-        Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
-        if (hit == null || hit.GetComponent<STile>() == null)
+        STile hitTile = base.DropItem(dropLocation);
+        if (hitTile != null)
         {
-            return;
+            hitTile.hasAnchor = true;
         }
-        hit.GetComponent<STile>().hasAnchor = true;
-        base.DropItem(dropLocation);
+        return null;
     }
 }
