@@ -114,15 +114,16 @@ public class UIArtifact : MonoBehaviour
         if (SGrid.current.CanMove(swap))
         {
             SGrid.current.Move(swap);
+            buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
+            StartCoroutine(SetForcePushedDown(buttonCurrent));
+            buttonEmpty.SetPosition(x, y);
         }
         else
         {
             Debug.Log("Couldn't perform move!");
         }
 
-        buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
-        StartCoroutine(SetForcePushedDown(buttonCurrent));
-        buttonEmpty.SetPosition(x, y);
+
     }
 
     private IEnumerator SetForcePushedDown(ArtifactTileButton button)

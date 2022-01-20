@@ -20,23 +20,24 @@ public class Item : MonoBehaviour
     }
 
 
-    public void PickUpItem(Transform pickLocation, System.Action callback=null) // pickLocation may be moving
+    public virtual void PickUpItem(Transform pickLocation, System.Action callback=null) // pickLocation may be moving
     {
         StartCoroutine(AnimatePickUp(pickLocation, callback));
     }
 
-    public void DropItem(Vector3 dropLocation) 
+    public virtual void DropItem(Vector3 dropLocation) 
     {
         StartCoroutine(AnimateDrop(dropLocation));
     }
 
 
-    private IEnumerator AnimatePickUp(Transform target, System.Action callback=null)
+    protected IEnumerator AnimatePickUp(Transform target, System.Action callback=null)
     {
         float t = 0;
 
         Vector3 start = new Vector3(transform.position.x, transform.position.y);
-
+        Debug.Log(myCollider);
+        Debug.Log(spriteRenderer);
         while (t < pickUpDuration)
         {
             float x = xPickUpMotion.Evaluate(t / pickUpDuration);
@@ -56,7 +57,7 @@ public class Item : MonoBehaviour
         callback();
     }
 
-    private IEnumerator AnimateDrop(Vector3 target)
+    protected IEnumerator AnimateDrop(Vector3 target)
     {
         float t = pickUpDuration;
 
