@@ -159,12 +159,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1388225608706972969}
+  - component: {fileID: 3939992796814276472}
+  - component: {fileID: 4833714464752738808}
   - component: {fileID: 4368067403399459733}
   - component: {fileID: 173327934864171174}
   - component: {fileID: 7825969581245903107}
   - component: {fileID: 7803031415129755747}
-  - component: {fileID: 3939992796814276472}
-  - component: {fileID: 4833714464752738808}
   - component: {fileID: 336505595520237690}
   m_Layer: 5
   m_Name: ArtifactButton
@@ -195,6 +195,43 @@ RectTransform:
   m_AnchoredPosition: {x: -37, y: 37}
   m_SizeDelta: {x: 32, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3939992796814276472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3315272701131278367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a22e65ab49b078e44864f39a9ef775bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isComplete: 0
+  isForcedDown: 0
+  isTileActive: 0
+  islandId: -1
+  x: 0
+  y: 0
+  completedSprite: {fileID: 0}
+  emptySprite: {fileID: 8628370737294462855, guid: 6036f2fb5b0f09a4fbf91c7b5e62a7a8, type: 3}
+  buttonAnimator: {fileID: 4833714464752738808}
+  buttonManager: {fileID: 0}
+--- !u!114 &4833714464752738808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3315272701131278367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce50f0b817ace434eacd2ea5c1caf649, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sliderImage: {fileID: 4266256298353997437}
+  pushedDownFrame: {fileID: 6204213779163962951}
+  highlightedFrame: {fileID: 5253961610290396656}
 --- !u!222 &4368067403399459733
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -346,43 +383,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
---- !u!114 &3939992796814276472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3315272701131278367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a22e65ab49b078e44864f39a9ef775bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isComplete: 0
-  isForcedDown: 0
-  isTileActive: 0
-  islandId: -1
-  x: 0
-  y: 0
-  completedSprite: {fileID: 0}
-  emptySprite: {fileID: 8628370737294462855, guid: 6036f2fb5b0f09a4fbf91c7b5e62a7a8, type: 3}
-  buttonAnimator: {fileID: 4833714464752738808}
-  buttonManager: {fileID: 0}
---- !u!114 &4833714464752738808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3315272701131278367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce50f0b817ace434eacd2ea5c1caf649, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sliderImage: {fileID: 4266256298353997437}
-  pushedDownFrame: {fileID: 6204213779163962951}
-  highlightedFrame: {fileID: 5253961610290396656}
 --- !u!114 &336505595520237690
 MonoBehaviour:
   m_ObjectHideFlags: 0
