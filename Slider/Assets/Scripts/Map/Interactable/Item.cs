@@ -14,19 +14,30 @@ public class Item : MonoBehaviour
     [SerializeField] private AnimationCurve yPickUpMotion;
 
 
-    private void Awake() 
-    {
-        
-    }
 
+    public void Awake() 
+    {
+       
+    }
 
     public virtual void PickUpItem(Transform pickLocation, System.Action callback=null) // pickLocation may be moving
     {
         StartCoroutine(AnimatePickUp(pickLocation, callback));
     }
 
-    public virtual void DropItem(Vector3 dropLocation) 
+    public virtual STile DropItem(Vector3 dropLocation) 
     {
+        Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
+        if (hit == null || hit.GetComponent<STile>() == null)
+        {
+            gameObject.transform.parent = null;
+            //Debug.LogWarning("Player isn't on top of a slider!");
+            return null;
+        }
+        STile hitTile = hit.GetComponent<STile>();
+
+        gameObject.transform.parent = hitTile.transform.Find("Tile Maps/Decorations").transform;
+        return hitTile;
         StartCoroutine(AnimateDrop(dropLocation));
     }
 
