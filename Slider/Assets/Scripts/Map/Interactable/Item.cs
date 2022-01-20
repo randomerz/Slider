@@ -27,6 +27,7 @@ public class Item : MonoBehaviour
 
     public virtual STile DropItem(Vector3 dropLocation) 
     {
+        StartCoroutine(AnimateDrop(dropLocation));
         Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
         if (hit == null || hit.GetComponent<STile>() == null)
         {
@@ -38,7 +39,7 @@ public class Item : MonoBehaviour
 
         gameObject.transform.parent = hitTile.transform.Find("Tile Maps/Decorations").transform;
         return hitTile;
-        StartCoroutine(AnimateDrop(dropLocation));
+ 
     }
 
 
