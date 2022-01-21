@@ -5,6 +5,9 @@ using UnityEngine;
 public class Anchor : Item
 {
     // Start is called before the first frame update
+    [SerializeField] private float shakeAmount;
+    [SerializeField] private float shakeDuration;
+
     public void Start()
     {
         GetComponentInParent<STile>().hasAnchor = true;
@@ -21,14 +24,20 @@ public class Anchor : Item
 
     }
 
-    public override void DropItem(Vector3 dropLocation)
+    public override STile DropItem(Vector3 dropLocation, System.Action callback = null)
     {
-        Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
-        if (hit == null || hit.GetComponent<STile>() == null)
+        STile hitTile = base.DropItem(dropLocation, callback);
+        if (hitTile != null)
         {
-            return;
+            hitTile.hasAnchor = true;
         }
-        hit.GetComponent<STile>().hasAnchor = true;
-        base.DropItem(dropLocation);
+        return null;
     }
+
+    public override void dropCallback()
+    {
+        CameraShake.Shake(shakeDuration, shakeAmount);
+    }
+
+
 }

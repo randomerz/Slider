@@ -6,6 +6,7 @@ public class Item : MonoBehaviour
 
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Collider2D myCollider;
+    public bool canKeep = false;
 
     // animation
     
@@ -14,20 +15,32 @@ public class Item : MonoBehaviour
     [SerializeField] private AnimationCurve yPickUpMotion;
 
 
-    private void Awake() 
-    {
-        
-    }
 
+    public void Awake() 
+    {
+       
+    }
 
     public virtual void PickUpItem(Transform pickLocation, System.Action callback=null) // pickLocation may be moving
     {
         StartCoroutine(AnimatePickUp(pickLocation, callback));
     }
 
-    public virtual void DropItem(Vector3 dropLocation) 
+    public virtual STile DropItem(Vector3 dropLocation, System.Action callback=null) 
     {
-        StartCoroutine(AnimateDrop(dropLocation));
+        StartCoroutine(AnimateDrop(dropLocation, callback));
+        Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
+        if (hit == null || hit.GetComponent<STile>() == null)
+        {
+            gameObject.transform.parent = null;
+            //Debug.LogWarning("Player isn't on top of a slider!");
+            return null;
+        }
+
+        STile hitTile = hit.GetComponent<STile>();
+        gameObject.transform.parent = hitTile.transform.Find("Tile Maps/Decorations").transform;
+        return hitTile;
+ 
     }
 
 
@@ -57,7 +70,7 @@ public class Item : MonoBehaviour
         callback();
     }
 
-    protected IEnumerator AnimateDrop(Vector3 target)
+    protected IEnumerator AnimateDrop(Vector3 target, System.Action callback = null)
     {
         float t = pickUpDuration;
 
@@ -80,5 +93,11 @@ public class Item : MonoBehaviour
 
         transform.position = target;
         spriteRenderer.transform.position = target;
+        callback();
+
+    }
+    public virtual void dropCallback()
+    {
+
     }
 }
