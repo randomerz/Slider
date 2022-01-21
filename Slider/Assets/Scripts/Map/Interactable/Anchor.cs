@@ -37,6 +37,7 @@ public class Anchor : Item
     public override void dropCallback()
     {
         CameraShake.Shake(shakeDuration, shakeAmount);
+        AudioManager.Play("Slide Explosion");
     }
 
 

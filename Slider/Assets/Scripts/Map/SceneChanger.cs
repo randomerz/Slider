@@ -23,7 +23,8 @@ public class SceneChanger : MonoBehaviour
     //     }
     // }
 
-    public void ChangeScenes() {
+    public void ChangeScenes() 
+    {
         SGrid.current.SaveGrid();
         SceneSpawns.nextSpawn = sceneSpawnName;
         SceneManager.LoadScene(sceneName);

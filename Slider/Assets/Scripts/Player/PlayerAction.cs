@@ -55,6 +55,10 @@ public class PlayerAction : MonoBehaviour
                 itemDropIndicator.SetActive(true);
             }
         }
+        else if (pickedItem == null)
+        {
+            itemDropIndicator.SetActive(false);
+        }
     }
 
     private void Action() 
@@ -65,13 +69,18 @@ public class PlayerAction : MonoBehaviour
 
     private void CycleEquip()
     {
+        if (isPicking) 
+        {
+            return;
+        }
+        
         if (pickedItem == null || pickedItem.canKeep)
         {
             PlayerInventory.NextItem();
         }
         else
         {
-            //TODO: play sound effect showing you can't keep this item
+            AudioManager.Play("Artifact Error");
         }
     }
 
