@@ -4853,15 +4853,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1783b899c43164b36891be3d226137a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemsC:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!4 &401610081
 Transform:
   m_ObjectHideFlags: 0
@@ -10081,6 +10072,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Anchor
       objectReference: {fileID: 0}
+    - target: {fileID: 8919005992056777909, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -8009126054355477945, guid: a1b7d8cede3984d4daf9175e30049909, type: 3}
     m_RemovedComponents:
     - {fileID: 4015862400581203686, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
@@ -10103,6 +10098,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 521122186}
   myCollider: {fileID: 765801255}
+  canKeep: 1
   pickUpDuration: 0.5
   xPickUpMotion:
     serializedVersion: 2
@@ -10170,6 +10166,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  shakeAmount: 0.33
+  shakeDuration: 0.4
 --- !u!58 &765801255 stripped
 CircleCollider2D:
   m_CorrespondingSourceObject: {fileID: 4607457495645169289, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}

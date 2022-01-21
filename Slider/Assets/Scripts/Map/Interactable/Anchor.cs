@@ -5,6 +5,9 @@ using UnityEngine;
 public class Anchor : Item
 {
     // Start is called before the first frame update
+    [SerializeField] private float shakeAmount;
+    [SerializeField] private float shakeDuration;
+
     public void Start()
     {
         GetComponentInParent<STile>().hasAnchor = true;
@@ -21,13 +24,20 @@ public class Anchor : Item
 
     }
 
-    public override STile DropItem(Vector3 dropLocation)
+    public override STile DropItem(Vector3 dropLocation, System.Action callback = null)
     {
-        STile hitTile = base.DropItem(dropLocation);
+        STile hitTile = base.DropItem(dropLocation, callback);
         if (hitTile != null)
         {
             hitTile.hasAnchor = true;
         }
         return null;
     }
+
+    public override void dropCallback()
+    {
+        CameraShake.Shake(shakeDuration, shakeAmount);
+    }
+
+
 }
