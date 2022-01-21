@@ -4853,15 +4853,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1783b899c43164b36891be3d226137a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemsC:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!4 &401610081
 Transform:
   m_ObjectHideFlags: 0
@@ -10107,6 +10098,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 521122186}
   myCollider: {fileID: 765801255}
+  canKeep: 1
   pickUpDuration: 0.5
   xPickUpMotion:
     serializedVersion: 2
