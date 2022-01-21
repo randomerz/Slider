@@ -6,6 +6,7 @@ public class Item : MonoBehaviour
 
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Collider2D myCollider;
+    public bool canKeep;
 
     // animation
     

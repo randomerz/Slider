@@ -65,7 +65,14 @@ public class PlayerAction : MonoBehaviour
 
     private void CycleEquip()
     {
-        PlayerInventory.NextItem();
+        if (pickedItem == null || pickedItem.canKeep)
+        {
+            PlayerInventory.NextItem();
+        }
+        else
+        {
+            //TODO: play sound effect showing you can't keep this item
+        }
     }
 
     public void TryPick() 
