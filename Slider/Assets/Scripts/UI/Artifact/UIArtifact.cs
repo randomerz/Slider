@@ -196,7 +196,7 @@ public class UIArtifact : MonoBehaviour
 
 
     // temporary
-    public void RotateTiles(int x, int y)
+    public void RotateTiles(int x, int y, bool rotateCCW)
     {
         List<Vector2Int> SMoveRotateArr = new List<Vector2Int> { 
                 new Vector2Int(x, y),
@@ -211,6 +211,12 @@ public class UIArtifact : MonoBehaviour
             GetButton(x + 1, y + 1),
             GetButton(x + 1, y)
         };
+
+        if (rotateCCW) 
+        {
+            SMoveRotateArr.Reverse();
+            tb.Reverse();
+        }
 
         for (int i=3; i>=0; i--)
         {

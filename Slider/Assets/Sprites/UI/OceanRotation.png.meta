@@ -7,37 +7,40 @@ TextureImporter:
     second: OceanRotation_0
   - first:
       213: -1170451914540910902
-    second: OceanRotation_1
+    second: OceanRotation_2
   - first:
       213: 8182044782437943272
-    second: OceanRotation_1
+    second: OceanRotation_2
   - first:
       213: 2301418955204569341
-    second: OceanRotation_1
+    second: OceanRotation_2
   - first:
       213: 7948855656054229940
-    second: OceanRotation_1
+    second: OceanRotation_2
   - first:
       213: 1007840502902932897
-    second: OceanRotation_5
+    second: OceanRotation_7
   - first:
       213: 6807701829179581334
-    second: OceanRotation_1
+    second: OceanRotation_2
   - first:
       213: -1054311988014766066
-    second: OceanRotation_5
+    second: OceanRotation_7
   - first:
       213: -5458598972809746309
-    second: OceanRotation_1
+    second: OceanRotation_2
   - first:
       213: -877567984660129591
     second: OceanRotation_9
   - first:
       213: 3744890186231598618
-    second: OceanRotation_5
+    second: OceanRotation_7
   - first:
       213: 5138391067614182033
-    second: OceanRotation_1
+    second: OceanRotation_2
+  - first:
+      213: 7429107406889428964
+    second: OceanRotation_12
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -298,7 +301,7 @@ TextureImporter:
       name: OceanRotation_11
       rect:
         serializedVersion: 2
-        x: 297
+        x: 324
         y: 0
         width: 27
         height: 27
@@ -374,6 +377,27 @@ TextureImporter:
       bones: []
       spriteID: 9c8d318419042d3f0800000000000000
       internalID: -877567984660129591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OceanRotation_12
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 0
+        width: 27
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e72ed153dd791760800000000000000
+      internalID: 7429107406889428964
       vertices: []
       indices: 
       edges: []
