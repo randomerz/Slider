@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public class PlayerConditionals : MonoBehaviour
 {
+
     public UnityEvent onSuccess;
     
     public bool addToOnAction;

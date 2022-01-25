@@ -82,7 +82,7 @@ public class UIRotateParams : MonoBehaviour
 
     public void SelectArrow(bool ccw) 
     {
-        Debug.Log("selected ccw: " + ccw);
+        // Debug.Log("selected ccw: " + ccw);
         isCCW = ccw; 
 
         cwArrowSprite.sprite  = ccw ? unlitCWArrow : litCWArrow;

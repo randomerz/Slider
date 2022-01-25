@@ -9,7 +9,7 @@ public enum Area {
     Desert,
     Factory,
     Mountain,
-    Dungeon,
+    Military,
     MagiTech,
     Space
 }
