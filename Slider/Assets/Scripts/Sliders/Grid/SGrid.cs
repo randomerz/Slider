@@ -31,6 +31,7 @@ public class SGrid : MonoBehaviour
 
     protected void Awake()
     {
+
         current = this;
 
         LoadGrid();
@@ -229,16 +230,16 @@ public class SGrid : MonoBehaviour
     public virtual void SaveGrid() 
     { 
         Debug.Log("Saving data for " + myArea);
-        GameManager.saveSystem.SaveSGridData(myArea, this);
-        GameManager.saveSystem.SaveMissions(new Dictionary<string, bool>());
+        GameManager.GetSaveSystem().SaveSGridData(myArea, this);
+        GameManager.GetSaveSystem().SaveMissions(new Dictionary<string, bool>());
     }
 
     public virtual void LoadGrid() 
     { 
-        Debug.Log("Loading grid...");
+        // Debug.Log("Loading grid...");
 
-        SGridData sgridData = GameManager.saveSystem.GetSGridData(myArea);
-        Dictionary<string, bool> loadedMissions = GameManager.saveSystem.GetMissions(new List<string>());
+        SGridData sgridData = GameManager.GetSaveSystem().GetSGridData(myArea);
+        Dictionary<string, bool> loadedMissions = GameManager.GetSaveSystem().GetMissions(new List<string>());
 
         if (sgridData == null) {
             SetGrid(stiles, altStiles);

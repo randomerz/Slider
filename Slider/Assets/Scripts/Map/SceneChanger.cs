@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class SceneChanger : MonoBehaviour
 {
     public string sceneName;
-    public string sceneSpawnName;
+    public SceneSpawns.SpawnLocation sceneSpawnName;
 
     void Start()
     {

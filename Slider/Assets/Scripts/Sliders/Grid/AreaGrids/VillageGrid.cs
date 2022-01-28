@@ -13,14 +13,14 @@ public class VillageGrid : SGrid
     private new void Awake() {
         myArea = Area.Village;
 
-        base.Awake();
-
-        instance = this;
-
         foreach (Collectible c in collectibles) 
         {
             c.SetArea(myArea);
         }
+
+        base.Awake();
+
+        instance = this;
     }
     
     private void OnEnable() {
@@ -45,6 +45,9 @@ public class VillageGrid : SGrid
                 c.gameObject.SetActive(false);
             }
         }
+
+        AudioManager.PlayMusic("Connection");
+        UIEffects.FadeFromBlack();
     }
 
     public override void SaveGrid() 

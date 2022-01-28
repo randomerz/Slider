@@ -4,14 +4,52 @@ using UnityEngine;
 
 public class SceneSpawns : MonoBehaviour
 {
-    public static string nextSpawn;
+    public enum SpawnLocation 
+    {
+        Default,
 
-    [SerializeField] private string spawnName;
+        VillageAlcove,
+        VillageWaterfall,
+        VillageBeach,
+        
+        CavesSouth,
+        CavesWaterfall,
+        CavesBridge,
+        CavesMinecart,
+        CavesNorth,
+
+        OceanWest,
+        OceanJungleRiver,
+        OceanJungleBushes,
+        OceanEast,
+
+        JungleRiver,
+        JungleBushes,
+        JungleWestBridge,
+        JungleNorthBridge,
+        JungleEast,
+
+        // Desert
+
+        // don't forget FactoryMinecart
+
+        // Mountain
+
+        // Military
+
+        // MagiTech
+
+        // Space
+    }
+
+    public static SpawnLocation nextSpawn;
+
+    [SerializeField] private SpawnLocation spawnName;
     [SerializeField] private bool spawnInBoat;
 
     void Start()
     {
-        if (nextSpawn == spawnName) 
+        if (nextSpawn == spawnName && nextSpawn != SpawnLocation.Default) 
         {
             Player.SetPosition(transform.position);
         }

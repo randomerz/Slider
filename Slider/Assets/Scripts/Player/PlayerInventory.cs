@@ -12,7 +12,7 @@ public class PlayerInventory : MonoBehaviour
 
     private static PlayerInventory instance;
 
-    private static List<Collectible> collectibles = new List<Collectible>(); // separate Sliders + items?
+    private static List<Collectible.CollectibleData> collectibles = new List<Collectible.CollectibleData>(); // separate Sliders + items?
     private static List<Item> equipables = new List<Item>();
     private static IEnumerator<Item> itemIterator = equipables.GetEnumerator();
     private static Item currentItem = null;
@@ -24,8 +24,10 @@ public class PlayerInventory : MonoBehaviour
     }
 
 
-    public static void Add(Collectible collectible) {
-        collectibles.Add(collectible);
+    public static void AddCollectible(Collectible collectible) {
+        // Debug.Log("Adding " + collectible.GetArea() + " " + collectible.GetName());
+
+        collectibles.Add(collectible.GetCollectibleData());
         OnPlayerGetCollectible?.Invoke(instance, new InventoryEvent {collectible = collectible});
     }
 
@@ -66,6 +68,7 @@ public class PlayerInventory : MonoBehaviour
             currentItem = null;
         }
     }
+
     public static void RemoveItem()
     {
         if (currentItem != null)
@@ -78,20 +81,22 @@ public class PlayerInventory : MonoBehaviour
     {
         return currentItem;
     }
+
     /// <summary>
     /// Checks if the collectible is in the List, collectibles, by string name
     /// </summary>
     /// <param name="collectible">The collectible to check</param>
     /// <returns></returns>
     public static bool Contains(Collectible collectible) {
-        return Contains(collectible.cName, collectible.GetArea());
+        return Contains(collectible.GetName(), collectible.GetArea());
     }
 
     public static bool Contains(string collectibleName, Area area=Area.None) {
-        foreach (Collectible c in collectibles) {
-            if ((c.cName == collectibleName) && 
-                (area == Area.None || area == c.GetArea()))
+        foreach (Collectible.CollectibleData cd in collectibles) {
+            if ((cd.name == collectibleName) && 
+                (area == Area.None || area == cd.area))
             {
+                // Debug.Log("Found a match for " + area + " " + collectibleName);
                 return true;
             }
         }

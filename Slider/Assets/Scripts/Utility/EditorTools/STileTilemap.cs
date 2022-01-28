@@ -21,7 +21,7 @@ public class STileTilemap : MonoBehaviour
         Vector3 size = walls.size;
         for (int x = walls.cellBounds.min.x; x < walls.cellBounds.max.x; x++)
         {
-            for (int y = walls.cellBounds.min.x; y < walls.cellBounds.max.x; y++)
+            for (int y = walls.cellBounds.min.y; y < walls.cellBounds.max.y; y++)
             {
                 Vector3Int pos = new Vector3Int(x, y, 0);
 

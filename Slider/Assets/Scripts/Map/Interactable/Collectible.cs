@@ -5,8 +5,15 @@ using UnityEngine.Events;
 
 public class Collectible : MonoBehaviour
 {
-    public string cName;
-    private Area area;
+    [System.Serializable]
+    public class CollectibleData 
+    {
+        public string name;
+        public Area area;
+    }
+
+    [SerializeField] private CollectibleData cData;
+
     
     [SerializeField] private bool shouldDisableAtStart = false;
 
@@ -15,33 +22,43 @@ public class Collectible : MonoBehaviour
     
     private void Start() 
     {
-        if (area == Area.None)
-            area = SGrid.current.GetArea();
+        if (cData.area == Area.None)
+            cData.area = SGrid.current.GetArea();
         if (shouldDisableAtStart)
             gameObject.SetActive(false);
     }
 
+    public CollectibleData GetCollectibleData() 
+    {
+        return cData;
+    }
+
+    public string GetName() 
+    {
+        return cData.name;
+    }
+
     public void SetArea(Area a) 
     {
-        a = area;
+        a = cData.area;
     }
 
     public Area GetArea() 
     {
-        return area;
+        return cData.area;
     }
 
 
     public void DoPickUp()
     {
         //Debug.Log("Cutscene Triggered");
-        ItemPickupEffect.StartCutscene(spriteRenderer.sprite, cName, DoOnCollect);
+        ItemPickupEffect.StartCutscene(spriteRenderer.sprite, cData.name, DoOnCollect);
         DespwanCollectable(gameObject);
     }
 
     public void DoOnCollect() 
     {
-        PlayerInventory.Add(this);
+        PlayerInventory.AddCollectible(this);
         onCollect.Invoke();
     }
 

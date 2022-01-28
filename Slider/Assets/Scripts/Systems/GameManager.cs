@@ -6,8 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
 
-    // these are just globals :L
-    public static SaveSystem saveSystem { get; private set; }
+    private static SaveSystem saveSystem;
 
     private void Awake() {
         if (instance == null) {
@@ -20,5 +19,15 @@ public class GameManager : MonoBehaviour
             saveSystem = new SaveSystem();
 
         }
+    }
+
+    public static SaveSystem GetSaveSystem() 
+    {
+        if (saveSystem == null)
+        {
+            saveSystem = new SaveSystem();
+        }
+
+        return saveSystem;
     }
 }

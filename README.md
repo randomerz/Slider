@@ -1,5 +1,5 @@
 # Slider
-Unity 2020.3.2X
+Unity 2020.3.26f
 
 ![Image](production/title.png?raw=true "Title")
 

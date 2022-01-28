@@ -27,7 +27,7 @@ public class UIRotateParams : MonoBehaviour
     [Header("References")]
     public Image cwArrowSprite;
     public Image ccwArrowSprite;
-    public UIArtifact artifact;
+    public OceanArtifact artifact;
     public Canvas canvas;
 
     private void Start() 

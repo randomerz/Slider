@@ -13,7 +13,7 @@ public class ItemPickupEffect : MonoBehaviour
     public Animator animator;
     public TextMeshProUGUI itemText;
     public Image itemImage;
-    public SpriteRenderer playerSprite;
+    // public SpriteRenderer playerSprite;
 
     public static ItemPickupEffect _instance;
 
@@ -44,7 +44,7 @@ public class ItemPickupEffect : MonoBehaviour
         UIManager.canOpenMenus = false;
         Player.SetCanMove(false);
 
-        playerSprite.sortingLayerName = "ScreenEffects";
+        Player.GetSpriteRenderer().sortingLayerName = "ScreenEffects";
 
         yield return new WaitForSeconds(0.75f);
 
@@ -64,7 +64,7 @@ public class ItemPickupEffect : MonoBehaviour
         maskObject.SetActive(false);
         UIManager.canOpenMenus = true;
         Player.SetCanMove(true);
-        playerSprite.sortingLayerName = "Entity";
+        Player.GetSpriteRenderer().sortingLayerName = "Entity";
     }
 
     private IEnumerator DampenMusic()

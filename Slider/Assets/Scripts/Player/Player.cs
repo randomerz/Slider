@@ -43,12 +43,12 @@ public class Player : MonoBehaviour
 
         // inputDir = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-        if (!canMove) 
-        {
-            playerAnimator.SetBool("isRunning", false);
-        }
-        else 
-        {
+        // if (!canMove)    // its fun to spam left/right in the cutscene :)
+        // {
+        //     playerAnimator.SetBool("isRunning", false);
+        // }
+        // else 
+        // {
             playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
             if (inputDir.x < 0)
             {
@@ -58,7 +58,7 @@ public class Player : MonoBehaviour
             {
                 playerSpriteRenderer.flipX = false;
             }
-        }
+        // }
     }
 
     private void FixedUpdate()
@@ -74,6 +74,11 @@ public class Player : MonoBehaviour
     public static PlayerAction GetPlayerAction() 
     {
         return _instance.playerAction;
+    }
+
+    public static SpriteRenderer GetSpriteRenderer()
+    {
+        return _instance.playerSpriteRenderer;
     }
 
 

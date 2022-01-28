@@ -34,7 +34,7 @@ public class UIArtifact : MonoBehaviour
         adjacentButtons.Clear();
     }
     
-    public void SelectButton(ArtifactTileButton button)
+    public virtual void SelectButton(ArtifactTileButton button)
     {
         // Check if on movement cooldown
         //if (SGrid.GetStile(button.islandId).isMoving)
@@ -86,17 +86,44 @@ public class UIArtifact : MonoBehaviour
     }
 
     // replaces adjacentButtons
-    private List<ArtifactTileButton> GetAdjacent(ArtifactTileButton button)
+    protected List<ArtifactTileButton> GetAdjacent(ArtifactTileButton button)
     {
         adjacentButtons.Clear();
 
         //Vector2 buttPos = new Vector2(button.x, button.y);
-        foreach (ArtifactTileButton b in buttons)
+        // foreach (ArtifactTileButton b in buttons)
+        // {
+        //     //if (!b.isTileActive && (buttPos - new Vector2(b.x, b.y)).magnitude == 1)
+        //     if (!b.isTileActive && (button.x == b.x || button.y == b.y))
+        //     {
+        //         adjacentButtons.Add(b);
+        //     }
+        // }
+
+        Vector2Int[] dirs = {
+            Vector2Int.right,
+            Vector2Int.up,
+            Vector2Int.left,
+            Vector2Int.down
+        };
+
+        foreach (Vector2Int dir in dirs)
         {
-            //if (!b.isTileActive && (buttPos - new Vector2(b.x, b.y)).magnitude == 1)
-            if (!b.isTileActive && (button.x == b.x || button.y == b.y))
+            int i = 1;
+            bool didAdd = true;
+            ArtifactTileButton b;
+            while (didAdd && i < 99)
             {
-                adjacentButtons.Add(b);
+                didAdd = false;
+
+                b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
+                
+                if (b != null && !b.isTileActive) {
+                    adjacentButtons.Add(b);
+                    didAdd = true;
+                }
+                    
+                i += 1;
             }
         }
 
@@ -167,7 +194,7 @@ public class UIArtifact : MonoBehaviour
         }
     }
 
-    private ArtifactTileButton GetButton(int x, int y)
+    protected ArtifactTileButton GetButton(int x, int y)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
         {
@@ -190,58 +217,5 @@ public class UIArtifact : MonoBehaviour
                 return;
             }
         }
-    }
-
-
-
-
-    // temporary
-    public void RotateTiles(int x, int y, bool rotateCCW)
-    {
-        List<Vector2Int> SMoveRotateArr = new List<Vector2Int> { 
-                new Vector2Int(x, y),
-                new Vector2Int(x, y + 1),
-                new Vector2Int(x + 1, y + 1),
-                new Vector2Int(x + 1, y),
-            };
-
-        List<ArtifactTileButton> tb = new List<ArtifactTileButton>{
-            GetButton(x, y),
-            GetButton(x, y + 1),
-            GetButton(x + 1, y + 1),
-            GetButton(x + 1, y)
-        };
-
-        if (rotateCCW) 
-        {
-            SMoveRotateArr.Reverse();
-            tb.Reverse();
-        }
-
-        for (int i=3; i>=0; i--)
-        {
-            int curX = SMoveRotateArr[i].x;
-            int curY = SMoveRotateArr[i].y;
-
-            STile[,] grid = SGrid.current.GetGrid();
-
-            if (grid[curX, curY].hasAnchor)
-            {
-                SMoveRotateArr.RemoveAt(i);
-                tb.RemoveAt(i);
-            }
-        }
-
-        SMove rotate = new SMoveRotate(SMoveRotateArr);
-        // todo: if can rotate
-        SGrid.current.Move(rotate);
-        
-        for (int i=0; i<tb.Count; i++)
-        {
-            tb[i].SetPosition(SMoveRotateArr[(i+1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y);
-        }
-
-
-
     }
 }
