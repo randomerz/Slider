@@ -183,7 +183,6 @@ public class SGrid : MonoBehaviour
                 return false;
             }
         }
-
         return true;
     }
 
