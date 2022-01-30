@@ -49,8 +49,8 @@ public class Item : MonoBehaviour
         float t = 0;
 
         Vector3 start = new Vector3(transform.position.x, transform.position.y);
-        Debug.Log(myCollider);
-        Debug.Log(spriteRenderer);
+        // Debug.Log(myCollider);
+        // Debug.Log(spriteRenderer);
         while (t < pickUpDuration)
         {
             float x = xPickUpMotion.Evaluate(t / pickUpDuration);
