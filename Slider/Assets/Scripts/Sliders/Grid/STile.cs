@@ -107,9 +107,6 @@ public class STile : MonoBehaviour
         if (hasAnchor)
             return false;
 
-        if (linkTile != null)
-            return false;
-
         return true;
     }
 
