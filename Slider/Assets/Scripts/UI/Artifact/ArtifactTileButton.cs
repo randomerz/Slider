@@ -121,6 +121,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     private IEnumerator NewButtonFlicker() {
         buttonAnimator.sliderImage.sprite = islandSprite;
+        yield return new WaitForSeconds(.25f);
         for (int i = 0; i < 3; i++) 
         {
             yield return new WaitForSeconds(.25f);
