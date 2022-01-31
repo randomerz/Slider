@@ -15,16 +15,18 @@ public class ArtifactTileButton : MonoBehaviour
     public int x;
     public int y;
 
+    public bool flickerNext = false;
+    private bool startsActive;
+
     private const int UI_OFFSET = 37;
 
     private STile myStile;
     private Sprite islandSprite;
     public Sprite completedSprite;
     public Sprite emptySprite;
+    public Sprite blankSprite;
     public ArtifactTileButtonAnimator buttonAnimator;
     public UIArtifact buttonManager;
-    public bool flickerNext = false;
-    private bool startsActive;
 
     private void Start()
     {
@@ -84,7 +86,6 @@ public class ArtifactTileButton : MonoBehaviour
         isTileActive = v;
         if (v)
         {
-            Debug.Log(gameObject.name + " is active: " + gameObject.activeSelf);
             if (!startsActive)
             {
                 flickerNext = true;
@@ -114,19 +115,18 @@ public class ArtifactTileButton : MonoBehaviour
     }
 
     public void Flicker() {
+        flickerNext = false;
         StartCoroutine(NewButtonFlicker());
     }
 
     private IEnumerator NewButtonFlicker() {
-        flickerNext = false;
         buttonAnimator.sliderImage.sprite = islandSprite;
-        yield return new WaitForSeconds(.5f);
-        buttonAnimator.sliderImage.sprite = emptySprite;
-        yield return new WaitForSeconds(.5f);
-        buttonAnimator.sliderImage.sprite = islandSprite;
-        yield return new WaitForSeconds(.5f);
-        buttonAnimator.sliderImage.sprite = emptySprite;
-        yield return new WaitForSeconds(.5f);
-        buttonAnimator.sliderImage.sprite = islandSprite;
+        for (int i = 0; i < 3; i++) 
+        {
+            yield return new WaitForSeconds(.25f);
+            buttonAnimator.sliderImage.sprite = blankSprite;
+            yield return new WaitForSeconds(.25f);
+            buttonAnimator.sliderImage.sprite = islandSprite;
+        }
     }
 }
