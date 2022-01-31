@@ -8,17 +8,25 @@ public class UIArtifact : MonoBehaviour
     public ArtifactTileButton[] buttons;
     private ArtifactTileButton currentButton;
     private List<ArtifactTileButton> adjacentButtons = new List<ArtifactTileButton>();
+    private Queue<ArtifactTileButton> Queue;
 
     private static UIArtifact _instance;
     
     public void Awake()
     {
         _instance = this;
+        Queue = new Queue<ArtifactTileButton>();
     }
 
     public static UIArtifact GetInstance()
     {
         return _instance;
+    }
+
+    public void OnDisable()
+    {
+        Queue = new Queue<ArtifactTileButton>();
+        Debug.Log("Queue Cleared!");
     }
 
     public void DeselectCurrentButton()
@@ -39,13 +47,15 @@ public class UIArtifact : MonoBehaviour
     {
         // Check if on movement cooldown
         //if (SGrid.GetStile(button.islandId).isMoving)
-        if (button.isForcedDown)
+        if (currentButton != null && currentButton.isForcedDown && adjacentButtons.Contains(button))
         {
-            //Debug.Log("on cooldown!");
-            return;
+            //Debug.Log(currentButton.gameObject.name + " added to the queue!");
+            //Debug.Log(button.gameObject.name + " added to the Queue");
+            QueueAdd(currentButton, button);
+            DeselectCurrentButton();
         }
 
-        if (currentButton == button)
+        else if (currentButton == button)
         {
             DeselectCurrentButton();
         }
@@ -238,6 +248,7 @@ public class UIArtifact : MonoBehaviour
         yield return new WaitForSeconds(1);
         
         button.SetForcedPushedDown(false);
+        CheckQueue();
     }
 
     //public static void UpdatePushedDowns()
@@ -305,6 +316,23 @@ public class UIArtifact : MonoBehaviour
             {
                 b.Flicker();
             }
+        }
+    }
+
+    public void QueueAdd(ArtifactTileButton currentButton, ArtifactTileButton buttonEmpty)
+    {
+        Queue.Enqueue(currentButton);
+        Queue.Enqueue(buttonEmpty);
+    }
+
+    public void CheckQueue()
+    {
+        if (Queue.Count != 0)
+        {
+            ArtifactTileButton currentButton = Queue.Dequeue();
+            ArtifactTileButton emptyButton = Queue.Dequeue();
+            //Debug.Log("Swapping " + currentButton.gameObject.name + " with " + emptyButton.gameObject.name);
+            Swap(currentButton, emptyButton);
         }
     }
 }
