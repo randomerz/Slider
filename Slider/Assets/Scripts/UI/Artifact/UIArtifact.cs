@@ -218,4 +218,15 @@ public class UIArtifact : MonoBehaviour
             }
         }
     }
+
+    public void FlickerNewTiles()
+    {
+        foreach (ArtifactTileButton b in _instance.buttons)
+        {
+            if (b.flickerNext)
+            {
+                b.Flicker();
+            }
+        }
+    }
 }

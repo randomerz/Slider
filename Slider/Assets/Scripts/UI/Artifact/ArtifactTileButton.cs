@@ -23,12 +23,15 @@ public class ArtifactTileButton : MonoBehaviour
     public Sprite emptySprite;
     public ArtifactTileButtonAnimator buttonAnimator;
     public UIArtifact buttonManager;
+    public bool flickerNext = false;
+    private bool startsActive;
 
     private void Start()
     {
         islandSprite = buttonAnimator.sliderImage.sprite;
 
         myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
+        startsActive = myStile.isTileActive;
         SetTileActive(myStile.isTileActive);
         SetPosition(myStile.x, myStile.y);
 
@@ -81,7 +84,11 @@ public class ArtifactTileButton : MonoBehaviour
         isTileActive = v;
         if (v)
         {
-            // animation?
+            Debug.Log(gameObject.name + " is active: " + gameObject.activeSelf);
+            if (!startsActive)
+            {
+                flickerNext = true;
+            }
             buttonAnimator.sliderImage.sprite = islandSprite;
         }
         else
@@ -104,5 +111,22 @@ public class ArtifactTileButton : MonoBehaviour
         {
             buttonAnimator.sliderImage.sprite = islandSprite;
         }
+    }
+
+    public void Flicker() {
+        StartCoroutine(NewButtonFlicker());
+    }
+
+    private IEnumerator NewButtonFlicker() {
+        flickerNext = false;
+        buttonAnimator.sliderImage.sprite = islandSprite;
+        yield return new WaitForSeconds(.5f);
+        buttonAnimator.sliderImage.sprite = emptySprite;
+        yield return new WaitForSeconds(.5f);
+        buttonAnimator.sliderImage.sprite = islandSprite;
+        yield return new WaitForSeconds(.5f);
+        buttonAnimator.sliderImage.sprite = emptySprite;
+        yield return new WaitForSeconds(.5f);
+        buttonAnimator.sliderImage.sprite = islandSprite;
     }
 }

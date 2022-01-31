@@ -146,6 +146,7 @@ public class UIManager : MonoBehaviour
             Player.SetCanMove(false);
 
             artifactAnimator.SetBool("isVisible", true);
+            uiArtifact.FlickerNewTiles();
         }
         else
         {
