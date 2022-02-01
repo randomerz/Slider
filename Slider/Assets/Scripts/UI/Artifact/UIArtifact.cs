@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class UIArtifact : MonoBehaviour
 {
@@ -142,27 +143,104 @@ public class UIArtifact : MonoBehaviour
 
     private void Swap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
+        STile[,] arr = SGrid.current.GetGrid();
+
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
-        //Direction dir = DirectionUtil.V2D(new Vector2(buttonEmpty.x, buttonEmpty.y) - new Vector2(x, y));
-        //EightPuzzle.MoveSlider(x, y, dir);
+        if (arr[x, y].linkTile == null) 
+        {
+            //Direction dir = DirectionUtil.V2D(new Vector2(buttonEmpty.x, buttonEmpty.y) - new Vector2(x, y));
+            //EightPuzzle.MoveSlider(x, y, dir);
 
-        SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y);
-        if (SGrid.current.CanMove(swap))
-        {
-            SGrid.current.Move(swap);
-            buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
-            StartCoroutine(SetForcePushedDown(buttonCurrent));
-            buttonEmpty.SetPosition(x, y);
+            SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y);
+            
+            
+            if (SGrid.current.CanMove(swap))
+            {
+                SGrid.current.Move(swap);
+                buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
+                StartCoroutine(SetForcePushedDown(buttonCurrent));
+                buttonEmpty.SetPosition(x, y);
+            }
+            else
+            {
+                Debug.Log("Couldn't perform move!");
+            }
         }
-        else
+        else 
         {
-            Debug.Log("Couldn't perform move!");
+            int dx = buttonEmpty.x - x;
+            int dy = buttonEmpty.y - y;
+            int linkx = -1;
+            int linky = -1;
+            for (int i=0; i<SGrid.current.width; i++) 
+            {
+                for (int j=0; j<SGrid.current.height; j++) 
+                {
+                    if (arr[x,y].linkTile == arr[i,j]) 
+                    {
+                        
+                        linkx = i;
+                        linky = j;
+                    }
+                }
+            }
+            SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y);
+            SMove swap2 = new SMoveSwap(linkx, linky, linkx+dx, linky+dy);
+            Vector4Int movecoords = new Vector4Int(linkx, linky, linkx+dx, linky+dy);
+            if (SGrid.current.CanMove(swap) && (OpenPath(movecoords, SGrid.current.GetGrid()) || arr[linkx+dx,linky+dy] == arr[x,y])) 
+            {
+                ArtifactTileButton buttonCurrent2 = null;
+                ArtifactTileButton buttonEmpty2 = null;
+
+                buttonCurrent2 = GetButton(linkx, linky);
+                SGrid.current.Move(swap);
+                SGrid.current.Move(swap2);
+                buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
+                StartCoroutine(SetForcePushedDown(buttonCurrent));
+                buttonEmpty.SetPosition(x, y);
+               
+                buttonEmpty2 = GetButton(linkx+dx, linky+dy);
+                StartCoroutine(SetForcePushedDown(buttonCurrent2));
+                buttonCurrent2.SetPosition(linkx+dx, linky+dy);
+                buttonEmpty2.SetPosition(linkx, linky);
+
+
+            }
+            else 
+            {
+                Debug.Log("illegal");
+                AudioManager.Play("Artifact Error");
+            }
         }
 
 
     }
 
+    private bool OpenPath(Vector4Int move, STile[,] grid) {
+        List<Vector2Int> checkedCoords = new List<Vector2Int>(); 
+        int dx = move.z - move.x;
+        int dy = move.w - move.y;
+        Debug.Log(move.x+" "+move.y+" "+move.z+" "+move.w);
+        int toCheck = Math.Max(Math.Abs(dx), Math.Abs(dy));
+        if (dx == 0) {
+            int dir = dy / Math.Abs(dy);
+            for (int i=1; i <= toCheck; i++) {
+                if (grid[move.x, move.y+i*dir].isTileActive) {
+                    return false;
+                }  
+            }
+        }
+        else if (dy == 0) {
+            int dir = dx / Math.Abs(dx);
+            for (int i=1; i <= toCheck; i++) {
+                if (grid[move.x+i*dir, move.y].isTileActive) {
+                    return false;
+                }  
+            }
+        }
+        return true;
+    }
     private IEnumerator SetForcePushedDown(ArtifactTileButton button)
     {
         button.SetForcedPushedDown(true);
