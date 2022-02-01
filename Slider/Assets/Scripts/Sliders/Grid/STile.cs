@@ -31,7 +31,7 @@ public class STile : MonoBehaviour
     protected void Awake()
     {
         Init();
-        Debug.Log(STILE_WIDTH);
+        // Debug.Log(STILE_WIDTH);
     }
 
     public void Init()

@@ -27,7 +27,7 @@ public class UIArtifact : MonoBehaviour
 
 
     public void ButtonDragged(BaseEventData eventData) {
-        Debug.Log("dragging");
+        // Debug.Log("dragging");
         PointerEventData data = (PointerEventData) eventData;
 
         if (currentButton != null) 
@@ -293,7 +293,7 @@ public class UIArtifact : MonoBehaviour
         List<Vector2Int> checkedCoords = new List<Vector2Int>(); 
         int dx = move.z - move.x;
         int dy = move.w - move.y;
-        Debug.Log(move.x+" "+move.y+" "+move.z+" "+move.w);
+        // Debug.Log(move.x+" "+move.y+" "+move.z+" "+move.w);
         int toCheck = Math.Max(Math.Abs(dx), Math.Abs(dy));
         if (dx == 0) {
             int dir = dy / Math.Abs(dy);
