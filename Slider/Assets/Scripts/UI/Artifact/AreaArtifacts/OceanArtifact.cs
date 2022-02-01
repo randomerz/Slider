@@ -1,9 +1,22 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class OceanArtifact : UIArtifact
 {
-
+    public Queue<int> positionQueue;
+    public Queue<bool> CCWQueue;
+    public bool rotating = false;
+    public void Awake()
+    {
+        positionQueue = new Queue<int>();
+        CCWQueue = new Queue<bool>();
+    }
+    public void OnDisable()
+    {
+        positionQueue = new Queue<int>();
+        CCWQueue = new Queue<bool>();
+    }
     public override void SelectButton(ArtifactTileButton button) 
     {
         // do nothing
@@ -54,8 +67,34 @@ public class OceanArtifact : UIArtifact
         {
             tb[i].SetPosition(SMoveRotateArr[(i+1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y);
         }
+    }
 
+    public void AddQueue(int x, int y, bool CCW)
+    {
+        positionQueue.Enqueue(x);
+        positionQueue.Enqueue(y);
+        CCWQueue.Enqueue(CCW);
+        CheckQueue();
+    }
 
+    public void CheckQueue()
+    {
+        if (!rotating && CCWQueue.Count != 0)
+        {
+            RotateTiles(positionQueue.Dequeue(), positionQueue.Dequeue(), CCWQueue.Dequeue());
+            StartCoroutine(RotationWait());
+        }
+        else
+        {
+            return;
+        }
+    }
 
+    private IEnumerator RotationWait()
+    {
+        rotating = true;
+        yield return new WaitForSeconds(1.4f);
+        rotating = false;
+        CheckQueue();
     }
 }

@@ -96,7 +96,7 @@ public class UIRotateParams : MonoBehaviour
     {
         // OnHover();
 
-        artifact.RotateTiles(bottomLeftX, bottomLeftY, isCCW);
+        artifact.AddQueue(bottomLeftX, bottomLeftY, isCCW);
 
     }
 }
