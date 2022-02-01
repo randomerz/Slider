@@ -37,7 +37,7 @@ public class UIArtifact : MonoBehaviour
         }
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
-        if (!dragged.isTileActive)
+        if (!dragged.isTileActive || dragged.isForcedDown)
         {
             return;
         }
@@ -62,14 +62,14 @@ public class UIArtifact : MonoBehaviour
     }
     public void ButtonDragEnd(BaseEventData eventData) {
         PointerEventData data = (PointerEventData) eventData;
-        Debug.Log("Sent drag end");
+        //Debug.Log("Sent drag end");
         if (currentButton != null) 
         {
             return;
         }
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
-        if (!dragged.isTileActive)
+        if (!dragged.isTileActive || dragged.isForcedDown)
         {
             return;
         }
@@ -84,7 +84,7 @@ public class UIArtifact : MonoBehaviour
             return;
         }
         hovered.buttonAnimator.sliderImage.sprite = hovered.emptySprite;
-        Debug.Log("dragged" + dragged.islandId + "hovered" + hovered.islandId);
+        //Debug.Log("dragged" + dragged.islandId + "hovered" + hovered.islandId);
 
         foreach (ArtifactTileButton b in GetAdjacent(dragged)) {
             b.buttonAnimator.sliderImage.sprite = b.emptySprite;
