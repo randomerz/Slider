@@ -97,7 +97,6 @@ public class UIRotateParams : MonoBehaviour
         // OnHover();
 
         artifact.AddQueue(bottomLeftX, bottomLeftY, isCCW);
-        artifact.CheckQueue();
 
     }
 }
