@@ -48,7 +48,7 @@ public class ArtifactTileButton : MonoBehaviour
     {
         if (myStile.isTileActive)
         {
-            if (buttonAnimator.sliderImage.sprite == emptySprite || buttonAnimator.sliderImage.sprite == null)
+            if (buttonAnimator.sliderImage.sprite == emptySprite || buttonAnimator.sliderImage.sprite == blankSprite)
             {
                 buttonAnimator.sliderImage.sprite = islandSprite;
             }
