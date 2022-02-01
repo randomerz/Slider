@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using System;
 
 public class UIArtifact : MonoBehaviour
 {
+    // public Vector3 tempPosition = new Vector3(0,0,0);
     public ArtifactTileButton[] buttons;
     private ArtifactTileButton currentButton;
     private List<ArtifactTileButton> adjacentButtons = new List<ArtifactTileButton>();
@@ -21,6 +23,79 @@ public class UIArtifact : MonoBehaviour
         return _instance;
     }
 
+    // public void OnDrawGizmos() {
+    //     Gizmos.color = Color.yellow;
+    //     Gizmos.DrawSphere(tempPosition, 10);
+    // }
+    public void ButtonDragged(BaseEventData eventData) {
+        Debug.Log("dragging");
+        PointerEventData data = (PointerEventData) eventData;
+
+        if (currentButton != null) 
+        {
+            return;
+        }
+
+        ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
+        if (!dragged.isTileActive)
+        {
+            return;
+        }
+
+        ArtifactTileButton hovered = null;
+        if (data.pointerEnter != null && data.pointerEnter.name == "Image") 
+        {
+            hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton>();
+        }
+
+        
+        foreach (ArtifactTileButton b in GetAdjacent(dragged)) {
+            if(b == hovered) 
+            {
+                b.buttonAnimator.sliderImage.sprite = b.hoverSprite;
+            }
+            else 
+            {
+                b.buttonAnimator.sliderImage.sprite = b.emptySprite;
+            }
+        }
+    }
+    public void ButtonDragEnd(BaseEventData eventData) {
+        PointerEventData data = (PointerEventData) eventData;
+        Debug.Log("Sent drag end");
+        if (currentButton != null) 
+        {
+            return;
+        }
+
+        ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
+        if (!dragged.isTileActive)
+        {
+            return;
+        }
+
+        ArtifactTileButton hovered = null;
+        if (data.pointerEnter != null && data.pointerEnter.name == "Image") 
+        {
+            hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton>();
+        }
+        else 
+        {
+            return;
+        }
+        hovered.buttonAnimator.sliderImage.sprite = hovered.emptySprite;
+        Debug.Log("dragged" + dragged.islandId + "hovered" + hovered.islandId);
+
+        foreach (ArtifactTileButton b in GetAdjacent(dragged)) {
+            b.buttonAnimator.sliderImage.sprite = b.emptySprite;
+            if(b == hovered) 
+            {
+                Swap(dragged, hovered);
+
+            }
+
+        }
+    }
     public void DeselectCurrentButton()
     {
         if (currentButton == null)
