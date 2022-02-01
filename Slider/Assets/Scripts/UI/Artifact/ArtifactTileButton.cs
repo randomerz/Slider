@@ -24,6 +24,7 @@ public class ArtifactTileButton : MonoBehaviour
     private Sprite islandSprite;
     public Sprite completedSprite;
     public Sprite emptySprite;
+    public Sprite hoverSprite;
     public Sprite blankSprite;
     public ArtifactTileButtonAnimator buttonAnimator;
     public UIArtifact buttonManager;
