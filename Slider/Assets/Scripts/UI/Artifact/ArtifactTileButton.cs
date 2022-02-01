@@ -46,13 +46,12 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void OnDisable()
     {
-        if (isComplete)
+        if (myStile.isTileActive)
         {
-            buttonAnimator.sliderImage.sprite = completedSprite;
-        }
-        else if (myStile.isTileActive)
-        {
-            buttonAnimator.sliderImage.sprite = islandSprite;
+            if (buttonAnimator.sliderImage.sprite == emptySprite || buttonAnimator.sliderImage.sprite == null)
+            {
+                buttonAnimator.sliderImage.sprite = islandSprite;
+            }
         }
     }
 
