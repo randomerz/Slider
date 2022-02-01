@@ -8,14 +8,14 @@ public class UIArtifact : MonoBehaviour
     public ArtifactTileButton[] buttons;
     private ArtifactTileButton currentButton;
     private List<ArtifactTileButton> adjacentButtons = new List<ArtifactTileButton>();
-    private Queue<ArtifactTileButton> Queue;
+    private Queue<ArtifactTileButton> queue;
 
     private static UIArtifact _instance;
     
     public void Awake()
     {
         _instance = this;
-        Queue = new Queue<ArtifactTileButton>();
+        queue = new Queue<ArtifactTileButton>();
     }
 
     public static UIArtifact GetInstance()
@@ -25,7 +25,7 @@ public class UIArtifact : MonoBehaviour
 
     public void OnDisable()
     {
-        Queue = new Queue<ArtifactTileButton>();
+        queue = new Queue<ArtifactTileButton>();
         Debug.Log("Queue Cleared!");
     }
 
@@ -209,7 +209,7 @@ public class UIArtifact : MonoBehaviour
             }
             else 
             {
-                Debug.Log("illegal");
+                // Debug.Log("illegal");
                 AudioManager.Play("Artifact Error");
             }
         }
@@ -321,16 +321,16 @@ public class UIArtifact : MonoBehaviour
 
     public void QueueAdd(ArtifactTileButton currentButton, ArtifactTileButton buttonEmpty)
     {
-        Queue.Enqueue(currentButton);
-        Queue.Enqueue(buttonEmpty);
+        queue.Enqueue(currentButton);
+        queue.Enqueue(buttonEmpty);
     }
 
     public void CheckQueue()
     {
-        if (Queue.Count != 0)
+        if (queue.Count != 0)
         {
-            ArtifactTileButton currentButton = Queue.Dequeue();
-            ArtifactTileButton emptyButton = Queue.Dequeue();
+            ArtifactTileButton currentButton = queue.Dequeue();
+            ArtifactTileButton emptyButton = queue.Dequeue();
             //Debug.Log("Swapping " + currentButton.gameObject.name + " with " + emptyButton.gameObject.name);
             Swap(currentButton, emptyButton);
         }

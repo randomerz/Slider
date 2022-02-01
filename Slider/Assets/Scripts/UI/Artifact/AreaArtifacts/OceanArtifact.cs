@@ -7,16 +7,21 @@ public class OceanArtifact : UIArtifact
     public Queue<int> positionQueue;
     public Queue<bool> CCWQueue;
     public bool rotating = false;
-    public void Awake()
+
+    public new void Awake()
     {
+        base.Awake();
         positionQueue = new Queue<int>();
         CCWQueue = new Queue<bool>();
     }
-    public void OnDisable()
+
+    public new void OnDisable()
     {
+        base.OnDisable();
         positionQueue = new Queue<int>();
         CCWQueue = new Queue<bool>();
     }
+    
     public override void SelectButton(ArtifactTileButton button) 
     {
         // do nothing
@@ -77,7 +82,7 @@ public class OceanArtifact : UIArtifact
         CheckQueue();
     }
 
-    public void CheckQueue()
+    public new void CheckQueue()
     {
         if (!rotating && CCWQueue.Count != 0)
         {
@@ -93,7 +98,7 @@ public class OceanArtifact : UIArtifact
     private IEnumerator RotationWait()
     {
         rotating = true;
-        yield return new WaitForSeconds(1.4f);
+        yield return new WaitForSeconds(1f);
         rotating = false;
         CheckQueue();
     }
