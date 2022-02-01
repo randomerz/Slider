@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
 
     // Movement
     [SerializeField] private float moveSpeed = 5;
-    public float moveSpeedMultiplier = 1;
+    private float moveSpeedMultiplier = 1;
     private bool canMove = true;
 
 
@@ -130,5 +130,10 @@ public class Player : MonoBehaviour
             return -1;
         }
         return hit.GetComponent<STile>().islandId;
+    }
+
+    public static void setMoveSpeedMultiplier(float x)
+    {
+        _instance.moveSpeedMultiplier = x;
     }
 }
