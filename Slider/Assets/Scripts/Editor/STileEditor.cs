@@ -20,7 +20,7 @@ public class STileEditor : Editor
 
         if (GUILayout.Toggle(true, "Auto-Update position") && GUI.changed)
         {
-            _target.transform.position = new Vector3(_target.x, _target.y) * STile.STILE_WIDTH;
+            _target.transform.position = new Vector3(_target.x, _target.y) * _target.STILE_WIDTH;
         }
     }
 }
