@@ -43,6 +43,11 @@ public class Item : MonoBehaviour
  
     }
 
+    public virtual void OnEquip()
+    {
+        Player.setMoveSpeedMultiplier(1f);
+    }
+
 
     protected IEnumerator AnimatePickUp(Transform target, System.Action callback=null)
     {
