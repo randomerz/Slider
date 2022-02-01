@@ -28,13 +28,13 @@ public class Anchor : Item
         }
         base.PickUpItem(pickLocation, callback);
 
-        Player.setMoveSpeedMultiplier(.6f);
+        Player.setMoveSpeedMultiplier(0.75f);
 
     }
 
     public override void OnEquip()
     {
-        Player.setMoveSpeedMultiplier(0.6f);
+        Player.setMoveSpeedMultiplier(0.75f);
     }
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback = null)
