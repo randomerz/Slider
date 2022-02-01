@@ -15,6 +15,9 @@ public class ArtifactTileButton : MonoBehaviour
     public int x;
     public int y;
 
+    public bool flickerNext = false;
+    private bool startsActive;
+
     private const int UI_OFFSET = 37;
 
     private STile myStile;
@@ -22,6 +25,7 @@ public class ArtifactTileButton : MonoBehaviour
     public Sprite completedSprite;
     public Sprite emptySprite;
     public Sprite hoverSprite;
+    public Sprite blankSprite;
     public ArtifactTileButtonAnimator buttonAnimator;
     public UIArtifact buttonManager;
 
@@ -30,6 +34,7 @@ public class ArtifactTileButton : MonoBehaviour
         islandSprite = buttonAnimator.sliderImage.sprite;
 
         myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
+        startsActive = myStile.isTileActive;
         SetTileActive(myStile.isTileActive);
         SetPosition(myStile.x, myStile.y);
 
@@ -38,6 +43,17 @@ public class ArtifactTileButton : MonoBehaviour
         //    buttonAnimator.sliderImage.sprite = emptySprite;
         //}
         // update artifact button
+    }
+
+    public void OnDisable()
+    {
+        if (myStile.isTileActive)
+        {
+            if (buttonAnimator.sliderImage.sprite == emptySprite || buttonAnimator.sliderImage.sprite == blankSprite)
+            {
+                buttonAnimator.sliderImage.sprite = islandSprite;
+            }
+        }
     }
 
     public void SetPosition(int x, int y)
@@ -82,7 +98,10 @@ public class ArtifactTileButton : MonoBehaviour
         isTileActive = v;
         if (v)
         {
-            // animation?
+            if (!startsActive)
+            {
+                flickerNext = true;
+            }
             buttonAnimator.sliderImage.sprite = islandSprite;
         }
         else
@@ -103,6 +122,23 @@ public class ArtifactTileButton : MonoBehaviour
         }
         else
         {
+            buttonAnimator.sliderImage.sprite = islandSprite;
+        }
+    }
+
+    public void Flicker() {
+        flickerNext = false;
+        StartCoroutine(NewButtonFlicker());
+    }
+
+    private IEnumerator NewButtonFlicker() {
+        buttonAnimator.sliderImage.sprite = islandSprite;
+        yield return new WaitForSeconds(.25f);
+        for (int i = 0; i < 3; i++) 
+        {
+            yield return new WaitForSeconds(.25f);
+            buttonAnimator.sliderImage.sprite = blankSprite;
+            yield return new WaitForSeconds(.25f);
             buttonAnimator.sliderImage.sprite = islandSprite;
         }
     }

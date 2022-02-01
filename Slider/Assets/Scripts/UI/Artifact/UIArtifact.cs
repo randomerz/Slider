@@ -10,12 +10,14 @@ public class UIArtifact : MonoBehaviour
     public ArtifactTileButton[] buttons;
     private ArtifactTileButton currentButton;
     private List<ArtifactTileButton> adjacentButtons = new List<ArtifactTileButton>();
+    private Queue<ArtifactTileButton> queue;
 
     private static UIArtifact _instance;
     
     public void Awake()
     {
         _instance = this;
+        queue = new Queue<ArtifactTileButton>();
     }
 
     public static UIArtifact GetInstance()
@@ -23,10 +25,7 @@ public class UIArtifact : MonoBehaviour
         return _instance;
     }
 
-    // public void OnDrawGizmos() {
-    //     Gizmos.color = Color.yellow;
-    //     Gizmos.DrawSphere(tempPosition, 10);
-    // }
+
     public void ButtonDragged(BaseEventData eventData) {
         Debug.Log("dragging");
         PointerEventData data = (PointerEventData) eventData;
@@ -96,6 +95,12 @@ public class UIArtifact : MonoBehaviour
 
         }
     }
+    public void OnDisable()
+    {
+        queue = new Queue<ArtifactTileButton>();
+        Debug.Log("Queue Cleared!");
+    }
+
     public void DeselectCurrentButton()
     {
         if (currentButton == null)
@@ -114,13 +119,15 @@ public class UIArtifact : MonoBehaviour
     {
         // Check if on movement cooldown
         //if (SGrid.GetStile(button.islandId).isMoving)
-        if (button.isForcedDown)
+        if (currentButton != null && currentButton.isForcedDown && adjacentButtons.Contains(button))
         {
-            //Debug.Log("on cooldown!");
-            return;
+            //Debug.Log(currentButton.gameObject.name + " added to the queue!");
+            //Debug.Log(button.gameObject.name + " added to the Queue");
+            QueueAdd(currentButton, button);
+            DeselectCurrentButton();
         }
 
-        if (currentButton == button)
+        else if (currentButton == button)
         {
             DeselectCurrentButton();
         }
@@ -274,7 +281,7 @@ public class UIArtifact : MonoBehaviour
             }
             else 
             {
-                Debug.Log("illegal");
+                // Debug.Log("illegal");
                 AudioManager.Play("Artifact Error");
             }
         }
@@ -313,6 +320,7 @@ public class UIArtifact : MonoBehaviour
         yield return new WaitForSeconds(1);
         
         button.SetForcedPushedDown(false);
+        CheckQueue();
     }
 
     //public static void UpdatePushedDowns()
@@ -369,6 +377,34 @@ public class UIArtifact : MonoBehaviour
                 b.SetTileActive(true);
                 return;
             }
+        }
+    }
+
+    public void FlickerNewTiles()
+    {
+        foreach (ArtifactTileButton b in _instance.buttons)
+        {
+            if (b.flickerNext)
+            {
+                b.Flicker();
+            }
+        }
+    }
+
+    public void QueueAdd(ArtifactTileButton currentButton, ArtifactTileButton buttonEmpty)
+    {
+        queue.Enqueue(currentButton);
+        queue.Enqueue(buttonEmpty);
+    }
+
+    public void CheckQueue()
+    {
+        if (queue.Count != 0)
+        {
+            ArtifactTileButton currentButton = queue.Dequeue();
+            ArtifactTileButton emptyButton = queue.Dequeue();
+            //Debug.Log("Swapping " + currentButton.gameObject.name + " with " + emptyButton.gameObject.name);
+            Swap(currentButton, emptyButton);
         }
     }
 }
