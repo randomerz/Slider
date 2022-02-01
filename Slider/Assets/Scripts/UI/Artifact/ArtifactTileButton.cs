@@ -44,6 +44,18 @@ public class ArtifactTileButton : MonoBehaviour
         // update artifact button
     }
 
+    public void OnDisable()
+    {
+        if (isComplete)
+        {
+            buttonAnimator.sliderImage.sprite = completedSprite;
+        }
+        else if (myStile.isTileActive)
+        {
+            buttonAnimator.sliderImage.sprite = islandSprite;
+        }
+    }
+
     public void SetPosition(int x, int y)
     {
         //Debug.Log("Current position: " + this.x + "," + this.y);
