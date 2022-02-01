@@ -76,10 +76,13 @@ public class OceanArtifact : UIArtifact
 
     public void AddQueue(int x, int y, bool CCW)
     {
-        positionQueue.Enqueue(x);
-        positionQueue.Enqueue(y);
-        CCWQueue.Enqueue(CCW);
-        CheckQueue();
+        if (CCWQueue.Count == 0)
+        {
+            positionQueue.Enqueue(x);
+            positionQueue.Enqueue(y);
+            CCWQueue.Enqueue(CCW);
+            CheckQueue();
+        }
     }
 
     public new void CheckQueue()
