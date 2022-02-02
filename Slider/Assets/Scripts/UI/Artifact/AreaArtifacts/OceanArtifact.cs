@@ -25,6 +25,7 @@ public class OceanArtifact : UIArtifact
     public override void SelectButton(ArtifactTileButton button) 
     {
         // do nothing
+        Debug.Log("ocean does nothing!");
     }
     
     // temporary

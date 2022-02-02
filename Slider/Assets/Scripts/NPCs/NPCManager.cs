@@ -15,17 +15,6 @@ public class NPCManager : MonoBehaviour
     public static bool firstTimePierreCheck = false;
     public static bool firstTimeKevinCheck = false;
 
-    private void OnEnable()
-    {
-        SGridAnimator.OnSTileMove += CheckQRCodeOnMove;
-        SGridAnimator.OnSTileMove += CheckFinalPlacementsOnMove;
-    }
-
-    private void OnDisable()
-    {
-        SGridAnimator.OnSTileMove -= CheckQRCodeOnMove;
-        SGridAnimator.OnSTileMove -= CheckFinalPlacementsOnMove;
-    }
 
     void Start()
     {
@@ -174,7 +163,7 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Romeo":
-                if (currSliders >= 5 && currSliders < 9 && CheckLovers())
+                if (currSliders >= 5 && currSliders < 9)// && CheckLovers())
                 {
                     voicelines[npcs[5]] = 1;
                     if (!LoversOnFirstTime)
@@ -194,7 +183,7 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Juliet":
-                if (currSliders >= 5 && currSliders < 9 && CheckLovers())
+                if (currSliders >= 5 && currSliders < 9)// && CheckLovers())
                 {
                     voicelines[npcs[6]] = 1;
                     if (!LoversOnFirstTime)
@@ -227,47 +216,5 @@ public class NPCManager : MonoBehaviour
             default:
                 break;
         }
-    }
-
-    private void CheckQRCodeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (CheckQRCode())
-        {
-            // ItemManager.ActivateNextItem();
-            VillageGrid.instance.ActivateSliderCollectible(7);
-            //Debug.Log("Activated QR work already");
-        }
-    }
-
-    public static bool CheckQRCode()
-    {
-        if (hasBeenDug)
-        {
-            return false;
-        }
-        //Debug.Log("Checking qr code");
-        hasBeenDug = CheckGrid.subgrid(SGrid.GetGridString(), "3162");
-
-        return hasBeenDug;
-    }
-
-    public bool CheckLovers()
-    {
-        return CheckGrid.row(SGrid.GetGridString(), "15.") || CheckGrid.row(SGrid.GetGridString(), ".15");
-    }
-
-
-    private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (CheckFinalPlacements())
-        {
-            // ItemManager.ActivateNextItem();
-            VillageGrid.instance.ActivateSliderCollectible(9);
-        }
-    }
-
-    public static bool CheckFinalPlacements()
-    {
-        return firstTimeFezziwigCheck && (SGrid.GetGridString() == "624_8#7_153");
     }
 }

@@ -10,6 +10,11 @@ public class VillageGrid : SGrid
 
     public Collectible[] collectibles;
 
+
+    // bad
+    public static bool hasBeenDug = false;
+    public static bool firstTimeFezziwigCheck = false;
+
     private new void Awake() {
         myArea = Area.Village;
 
@@ -28,12 +33,17 @@ public class VillageGrid : SGrid
             SGrid.OnGridMove += SGrid.CheckCompletions;
         }
         
+        SGridAnimator.OnSTileMove += CheckQRCodeOnMove;
+        SGridAnimator.OnSTileMove += CheckFinalPlacementsOnMove;
     }
 
     private void OnDisable() {
         if (checkCompletion) {
             SGrid.OnGridMove -= SGrid.CheckCompletions;
         }
+        
+        SGridAnimator.OnSTileMove -= CheckQRCodeOnMove;
+        SGridAnimator.OnSTileMove -= CheckFinalPlacementsOnMove;
     }
 
     void Start()
@@ -87,5 +97,47 @@ public class VillageGrid : SGrid
 
         checkCompletion = true;
         SGrid.OnGridMove += SGrid.CheckCompletions;
+    }
+
+    private void CheckQRCodeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (CheckQRCode())
+        {
+            // ItemManager.ActivateNextItem();
+            VillageGrid.instance.ActivateSliderCollectible(7);
+            //Debug.Log("Activated QR work already");
+        }
+    }
+
+    public static bool CheckQRCode()
+    {
+        if (hasBeenDug)
+        {
+            return false;
+        }
+        //Debug.Log("Checking qr code");
+        hasBeenDug = CheckGrid.subgrid(SGrid.GetGridString(), "3162");
+
+        return hasBeenDug;
+    }
+
+    public bool CheckLovers()
+    {
+        return CheckGrid.row(SGrid.GetGridString(), "15.") || CheckGrid.row(SGrid.GetGridString(), ".15");
+    }
+
+
+    private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (CheckFinalPlacements())
+        {
+            // ItemManager.ActivateNextItem();
+            VillageGrid.instance.ActivateSliderCollectible(9);
+        }
+    }
+
+    public static bool CheckFinalPlacements()
+    {
+        return !PlayerInventory.Contains("Slider 9", Area.Village) && (SGrid.GetGridString() == "624_8#7_153");
     }
 }
