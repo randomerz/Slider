@@ -8,8 +8,11 @@ public class UIArtifact : MonoBehaviour
 {
     // public Vector3 tempPosition = new Vector3(0,0,0);
     public ArtifactTileButton[] buttons;
+    //L: The button the user has clicked on
     private ArtifactTileButton currentButton;
-    private List<ArtifactTileButton> adjacentButtons = new List<ArtifactTileButton>();
+    //L: The available buttons the player has to move to from currentButton
+    private List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
+    //queue is used for when the player makes multiple moves before a move has finished.
     private Queue<ArtifactTileButton> queue;
 
     private static UIArtifact _instance;
@@ -25,7 +28,7 @@ public class UIArtifact : MonoBehaviour
         return _instance;
     }
 
-
+    //L: Handles when the user attempts to drag and drop a button
     public void ButtonDragged(BaseEventData eventData) {
         // Debug.Log("dragging");
         PointerEventData data = (PointerEventData) eventData;
@@ -48,7 +51,7 @@ public class UIArtifact : MonoBehaviour
         }
 
         
-        foreach (ArtifactTileButton b in GetAdjacent(dragged)) {
+        foreach (ArtifactTileButton b in GetMoveOptions(dragged)) {
             if(b == hovered) 
             {
                 b.buttonAnimator.sliderImage.sprite = b.hoverSprite;
@@ -85,7 +88,7 @@ public class UIArtifact : MonoBehaviour
         hovered.buttonAnimator.sliderImage.sprite = hovered.emptySprite;
         //Debug.Log("dragged" + dragged.islandId + "hovered" + hovered.islandId);
 
-        foreach (ArtifactTileButton b in GetAdjacent(dragged)) {
+        foreach (ArtifactTileButton b in GetMoveOptions(dragged)) {
             b.buttonAnimator.sliderImage.sprite = b.emptySprite;
             if(b == hovered) 
             {
@@ -107,55 +110,62 @@ public class UIArtifact : MonoBehaviour
             return;
 
         currentButton.SetPushedDown(false);
-        foreach (ArtifactTileButton b in adjacentButtons)
+        foreach (ArtifactTileButton b in moveOptionButtons)
         {
             b.SetHighlighted(false);
         }
         currentButton = null;
-        adjacentButtons.Clear();
+        moveOptionButtons.Clear();
     }
     
     public virtual void SelectButton(ArtifactTileButton button)
     {
         // Check if on movement cooldown
         //if (SGrid.GetStile(button.islandId).isMoving)
-        if (currentButton != null && currentButton.isForcedDown && adjacentButtons.Contains(button))
-        {
-            //Debug.Log(currentButton.gameObject.name + " added to the queue!");
-            //Debug.Log(button.gameObject.name + " added to the Queue");
-            QueueAdd(currentButton, button);
-            DeselectCurrentButton();
-        }
 
-        else if (currentButton == button)
+        if (currentButton != null)
         {
-            DeselectCurrentButton();
-        }
-        else if (adjacentButtons.Contains(button)) // compare by id?
-        {
-            Swap(currentButton, button);
+            if (moveOptionButtons.Contains(button))
+            {
+                if (currentButton.isForcedDown)
+                {
+                    //L: Player makes a move while the tile is still moving, so add the button to the queue.
+                    QueueAdd(currentButton, button);
+
+                    //Debug.Log(currentButton.gameObject.name + " added to the queue!");
+                    //Debug.Log(button.gameObject.name + " added to the Queue");
+                } else
+                {
+                    //L: Player makes a move immediately
+                    Swap(currentButton, button);
+                }
+            }
+
             DeselectCurrentButton();
         }
         else
         {
-            DeselectCurrentButton();
+            //DeselectCurrentButton(); //L: I don't think this is necessary since currentButton is null and it will just do nothing
 
             if (!button.isTileActive)
             {
+                //L: Player tried to click an empty tile
                 return;
             }
 
-            adjacentButtons = GetAdjacent(button);
-            if (adjacentButtons.Count == 0)
+            moveOptionButtons = GetMoveOptions(button);
+            if (moveOptionButtons.Count == 0)
             {
+                //L: Player tried to click a locked tile (or tile that otherwise had no move options)
                 return;
             }
             else
             {
+                //L: Player clicked a tile with movement options
                 //Debug.Log("Selected button " + button.islandId);
                 currentButton = button;
                 button.SetPushedDown(true);
-                foreach (ArtifactTileButton b in adjacentButtons)
+                foreach (ArtifactTileButton b in moveOptionButtons)
                 {
                     b.SetHighlighted(true);
                 }
@@ -169,9 +179,9 @@ public class UIArtifact : MonoBehaviour
     }
 
     // replaces adjacentButtons
-    protected List<ArtifactTileButton> GetAdjacent(ArtifactTileButton button)
+    protected List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
-        adjacentButtons.Clear();
+        moveOptionButtons.Clear();
 
         //Vector2 buttPos = new Vector2(button.x, button.y);
         // foreach (ArtifactTileButton b in buttons)
@@ -192,34 +202,27 @@ public class UIArtifact : MonoBehaviour
 
         foreach (Vector2Int dir in dirs)
         {
+            ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
             int i = 1;
-            bool didAdd = true;
-            ArtifactTileButton b;
-            while (didAdd && i < 99)
+            while (b != null && !b.isTileActive)
             {
-                didAdd = false;
-
+                moveOptionButtons.Add(b);
                 b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
-                
-                if (b != null && !b.isTileActive) {
-                    adjacentButtons.Add(b);
-                    didAdd = true;
-                }
-                    
-                i += 1;
+
+                i++;
             }
         }
 
-        return adjacentButtons;
+        return moveOptionButtons;
     }
 
     private void Swap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        STile[,] arr = SGrid.current.GetGrid();
+        STile[,] currGrid = SGrid.current.GetGrid();
 
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
-        if (arr[x, y].linkTile == null) 
+        if (currGrid[x, y].linkTile == null) 
         {
             //Direction dir = DirectionUtil.V2D(new Vector2(buttonEmpty.x, buttonEmpty.y) - new Vector2(x, y));
             //EightPuzzle.MoveSlider(x, y, dir);
@@ -241,15 +244,23 @@ public class UIArtifact : MonoBehaviour
         }
         else 
         {
+            //L: Below is to handle the case for if you have linked tiles.
             int dx = buttonEmpty.x - x;
             int dy = buttonEmpty.y - y;
-            int linkx = -1;
-            int linky = -1;
+
+            //L: These aren't actually needed
+            //I'm just testing if getting the tile coords gives different results from the double for loop,
+            //and if it does, we can delete the loop entirely.
+            int oldLinkx = currGrid[x, y].x;    
+            int oldLinky = currGrid[x, y].y;
+            
+            int linkx = oldLinkx;
+            int linky = oldLinky;
             for (int i=0; i<SGrid.current.width; i++) 
             {
                 for (int j=0; j<SGrid.current.height; j++) 
                 {
-                    if (arr[x,y].linkTile == arr[i,j]) 
+                    if (currGrid[x,y].linkTile == currGrid[i,j]) 
                     {
                         
                         linkx = i;
@@ -257,21 +268,28 @@ public class UIArtifact : MonoBehaviour
                     }
                 }
             }
+            if (oldLinkx != linkx || oldLinky != linky)
+            {
+                Debug.LogError("We need dumb for loop for links :(");
+            }
+            
             SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y);
             SMove swap2 = new SMoveSwap(linkx, linky, linkx+dx, linky+dy);
             Vector4Int movecoords = new Vector4Int(linkx, linky, linkx+dx, linky+dy);
-            if (SGrid.current.CanMove(swap) && (OpenPath(movecoords, SGrid.current.GetGrid()) || arr[linkx+dx,linky+dy] == arr[x,y])) 
+            if (SGrid.current.CanMove(swap) && (OpenPath(movecoords, SGrid.current.GetGrid()) || currGrid[linkx+dx,linky+dy] == currGrid[x,y])) 
             {
                 ArtifactTileButton buttonCurrent2 = null;
                 ArtifactTileButton buttonEmpty2 = null;
 
-                buttonCurrent2 = GetButton(linkx, linky);
+
                 SGrid.current.Move(swap);
                 SGrid.current.Move(swap2);
+
                 buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
                 StartCoroutine(SetForcePushedDown(buttonCurrent));
                 buttonEmpty.SetPosition(x, y);
-               
+
+                buttonCurrent2 = GetButton(linkx, linky);
                 buttonEmpty2 = GetButton(linkx+dx, linky+dy);
                 StartCoroutine(SetForcePushedDown(buttonCurrent2));
                 buttonCurrent2.SetPosition(linkx+dx, linky+dy);
@@ -285,10 +303,9 @@ public class UIArtifact : MonoBehaviour
                 AudioManager.Play("Artifact Error");
             }
         }
-
-
     }
 
+    //Checks if the move can happen on the grid.
     private bool OpenPath(Vector4Int move, STile[,] grid) {
         List<Vector2Int> checkedCoords = new List<Vector2Int>(); 
         int dx = move.z - move.x;
@@ -331,6 +348,7 @@ public class UIArtifact : MonoBehaviour
     //    }
     //}
     
+    //L: Mark the button on the Artifact UI at islandID if it is in the right spot. (also changes the sprite)
     public static void SetButtonComplete(int islandId, bool value)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
