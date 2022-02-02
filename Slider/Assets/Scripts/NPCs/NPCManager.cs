@@ -70,14 +70,14 @@ public class NPCManager : MonoBehaviour
         switch (Name)
         {
             case "Pierre":
-                if (!firstTimePierreCheck && currSliders == 7 && fishOn && CheckGrid.contains(SGrid.GetGridString(), "624_..7_..."))
+                if (!firstTimePierreCheck && currSliders == 7 && fishOn && VillageGrid.instance.CheckRiver())
                 {
                     voicelines[npcs[0]] = 1;
                     // ItemManager.ActivateNextItem();
                     VillageGrid.instance.ActivateSliderCollectible(8);
                     firstTimePierreCheck = true;
                 }
-                else if (firstTimePierreCheck && currSliders == 7 && fishOn && CheckGrid.contains(SGrid.GetGridString(), "624_..7_..."))
+                else if (firstTimePierreCheck && currSliders == 7 && fishOn && VillageGrid.instance.CheckRiver())
                 {
                     voicelines[npcs[0]] = 1;
                 }
@@ -122,13 +122,13 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Sam":
-                if (!fishOn && currSliders == 7 && CheckGrid.contains(SGrid.GetGridString(), "624_..7_..."))
+                if (!fishOn && currSliders == 7 && VillageGrid.instance.CheckRiver())
                 {
                     voicelines[npcs[3]] = 1;
                     AudioManager.Play("Puzzle Complete");
                     fishOn = true;
                 }
-                else if (fishOn && currSliders == 7 && CheckGrid.contains(SGrid.GetGridString(), "624_..7_..."))
+                else if (fishOn && currSliders == 7 && VillageGrid.instance.CheckRiver())
                 {
                     voicelines[npcs[3]] = 1;
                 }
@@ -163,7 +163,7 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Romeo":
-                if (currSliders >= 5 && currSliders < 9)// && CheckLovers())
+                if (currSliders >= 5 && currSliders < 9 && VillageGrid.instance.CheckLovers())
                 {
                     voicelines[npcs[5]] = 1;
                     if (!LoversOnFirstTime)
@@ -183,7 +183,7 @@ public class NPCManager : MonoBehaviour
                 }
                 break;
             case "Juliet":
-                if (currSliders >= 5 && currSliders < 9)// && CheckLovers())
+                if (currSliders >= 5 && currSliders < 9 && VillageGrid.instance.CheckLovers())
                 {
                     voicelines[npcs[6]] = 1;
                     if (!LoversOnFirstTime)

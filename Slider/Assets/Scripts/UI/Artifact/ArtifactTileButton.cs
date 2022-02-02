@@ -51,7 +51,7 @@ public class ArtifactTileButton : MonoBehaviour
         {
             if (buttonAnimator.sliderImage.sprite == emptySprite || buttonAnimator.sliderImage.sprite == blankSprite)
             {
-                buttonAnimator.sliderImage.sprite = islandSprite;
+                ResetToIslandSprite();
             }
         }
     }
@@ -116,6 +116,11 @@ public class ArtifactTileButton : MonoBehaviour
             return;
 
         isComplete = value;
+        ResetToIslandSprite();
+    }
+
+    private void ResetToIslandSprite()
+    {
         if (isComplete)
         {
             buttonAnimator.sliderImage.sprite = completedSprite;
@@ -132,14 +137,14 @@ public class ArtifactTileButton : MonoBehaviour
     }
 
     private IEnumerator NewButtonFlicker() {
-        buttonAnimator.sliderImage.sprite = islandSprite;
+        ResetToIslandSprite();
         yield return new WaitForSeconds(.25f);
         for (int i = 0; i < 3; i++) 
         {
             yield return new WaitForSeconds(.25f);
             buttonAnimator.sliderImage.sprite = blankSprite;
             yield return new WaitForSeconds(.25f);
-            buttonAnimator.sliderImage.sprite = islandSprite;
+            ResetToIslandSprite();
         }
     }
 }
