@@ -30,6 +30,7 @@ public class PlayerConditionals : MonoBehaviour
             // Debug.Log("Adding listener!");
             if (addToOnAction) {
                 PlayerAction.OnAction += OnActionListener;
+                Player.GetPlayerAction().IncrementActionsAvailable();
             }
             else {
                 CheckCondition(); // might need to be Player.OnUpdate or something
@@ -42,6 +43,7 @@ public class PlayerConditionals : MonoBehaviour
             // Debug.Log("Removing listener!");
             if (addToOnAction) {
                 PlayerAction.OnAction -= OnActionListener;
+                Player.GetPlayerAction().DecrementActionsAvailable();
             }
         }
     }

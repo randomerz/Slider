@@ -98,7 +98,7 @@ public class UIArtifact : MonoBehaviour
     public void OnDisable()
     {
         queue = new Queue<ArtifactTileButton>();
-        Debug.Log("Queue Cleared!");
+        // Debug.Log("Queue Cleared!");
     }
 
     public void DeselectCurrentButton()

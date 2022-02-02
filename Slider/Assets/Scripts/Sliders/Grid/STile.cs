@@ -21,6 +21,7 @@ public class STile : MonoBehaviour
     [Header("References")]
     public Collider2D sliderCollider;
     public GameObject tileMapCollider;
+    // these borders follow the tile and generally all activate/deactive together
     public GameObject[] borderColliders; // right top left bottom
     public GameObject stileTileMaps;
     //public GameObject floorTileGrid;
