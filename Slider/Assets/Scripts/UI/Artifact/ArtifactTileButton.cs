@@ -24,6 +24,7 @@ public class ArtifactTileButton : MonoBehaviour
     private Sprite islandSprite;
     public Sprite completedSprite;
     public Sprite emptySprite;
+    public Sprite hoverSprite;
     public Sprite blankSprite;
     public ArtifactTileButtonAnimator buttonAnimator;
     public UIArtifact buttonManager;
@@ -42,6 +43,17 @@ public class ArtifactTileButton : MonoBehaviour
         //    buttonAnimator.sliderImage.sprite = emptySprite;
         //}
         // update artifact button
+    }
+
+    public void OnDisable()
+    {
+        if (myStile.isTileActive)
+        {
+            if (buttonAnimator.sliderImage.sprite == emptySprite || buttonAnimator.sliderImage.sprite == blankSprite)
+            {
+                buttonAnimator.sliderImage.sprite = islandSprite;
+            }
+        }
     }
 
     public void SetPosition(int x, int y)
