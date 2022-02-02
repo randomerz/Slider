@@ -256,7 +256,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  moveSpeedMultiplier: 1
   playerAction: {fileID: 3635922835001186329}
   playerSpriteRenderer: {fileID: 380634036804812840}
   playerAnimator: {fileID: 380634036804812841}
@@ -368,10 +367,10 @@ GameObject:
   - component: {fileID: 380634037666542965}
   - component: {fileID: 380634037666542964}
   - component: {fileID: 380634037666542967}
-  - component: {fileID: 380634037666542962}
   - component: {fileID: 1369399787893420006}
   - component: {fileID: -2145840239031781072}
   - component: {fileID: -6385564326461512446}
+  - component: {fileID: 6966801021179979627}
   m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -444,26 +443,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 380634037666542966}
   m_Enabled: 1
---- !u!114 &380634037666542962
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 380634037666542966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a160d838ff8b4b4693ac20007e008c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AssetsPPU: 16
-  m_RefResolutionX: 320
-  m_RefResolutionY: 180
-  m_UpscaleRT: 0
-  m_PixelSnapping: 1
-  m_CropFrameX: 1
-  m_CropFrameY: 1
-  m_StretchFill: 0
 --- !u!114 &1369399787893420006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,6 +503,26 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &6966801021179979627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380634037666542966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88f5cead0c0b2a4eb05b5900433f8d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AssetsPPU: 16
+  m_RefResolutionX: 320
+  m_RefResolutionY: 180
+  m_UpscaleRT: 0
+  m_PixelSnapping: 0
+  m_CropFrameX: 1
+  m_CropFrameY: 1
+  m_StretchFill: 0
 --- !u!1 &1357893451848922036
 GameObject:
   m_ObjectHideFlags: 0

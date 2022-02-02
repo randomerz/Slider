@@ -7,9 +7,6 @@ public class SGridBackground : MonoBehaviour
 {
     public GameObject[] borderColliders; // right top left bottom
 
-
-
-
     public void SetBorderCollider(int index, bool isActive)
     {
         borderColliders[index].SetActive(isActive);

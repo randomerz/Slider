@@ -33,7 +33,6 @@ public class SGrid : MonoBehaviour
     {
 
         current = this;
-
         LoadGrid();
         SetBGGrid(bgGridTiles);
 
@@ -98,6 +97,7 @@ public class SGrid : MonoBehaviour
         ArtifactTileButton.canComplete = true;
     }
 
+    //L: This is what initially loads in the grid if a grid is not already saved.
     private void SetGrid(STile[] stiles, STile[] altStiles=null)
     {
         if (stiles.Length != width * height)
@@ -192,8 +192,10 @@ public class SGrid : MonoBehaviour
     }
 
     // Make sure to check if you CanMove() before moving
+    //L: Updates internal state (the grid) based on result of SMove. See Move in SGridAnimator for the actual moving of the tiles.
     public void Move(SMove move)
     {
+
         gridAnimator.Move(move);
 
         STile[,] newGrid = new STile[width, height];
@@ -235,7 +237,7 @@ public class SGrid : MonoBehaviour
 
     public virtual void LoadGrid() 
     { 
-        // Debug.Log("Loading grid...");
+         //Debug.Log("Loading grid...");
 
         SGridData sgridData = GameManager.GetSaveSystem().GetSGridData(myArea);
         Dictionary<string, bool> loadedMissions = GameManager.GetSaveSystem().GetMissions(new List<string>());
