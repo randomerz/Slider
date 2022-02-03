@@ -3,13 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Conditionals : MonoBehaviour
+[System.Serializable]
+public class Conditionals
 {
     public UnityEvent onSuccess;
-    // public List<Condition> conditions? idk how this should be made/formatted
-    //                        also maybe look into custom GUI scripts B)
-
-    public void CheckCondition() {
-
+    public List<Condition> conditions;
+    public bool CheckConditions() 
+    {
+        foreach (Condition cond in conditions) 
+        {
+            if (!cond.CheckCondition())
+            {
+                return false;
+            }
+        }
+        onSuccess?.Invoke();
+        return true;
     }
 }
