@@ -27,11 +27,11 @@ public class Condition
         } 
         else
         {
-            // Get world string to match
-            Regex re = new Regex(@pattern);
-            // if (re.IsMatch()) {
-
-            return true;
+            if (CheckGrid.contains(SGrid.GetGridString(), pattern))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
