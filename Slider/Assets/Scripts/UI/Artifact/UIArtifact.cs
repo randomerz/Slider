@@ -273,7 +273,7 @@ public class UIArtifact : MonoBehaviour
             int dx = buttonEmpty.x - x;
             int dy = buttonEmpty.y - y;
 
-            Vector2Int linkCoords = getLinkTileCoords(buttonCurrent);
+            Vector2Int linkCoords = GetLinkTileCoords(buttonCurrent);
             int linkx = linkCoords.x;
             int linky = linkCoords.y;
             
@@ -311,7 +311,7 @@ public class UIArtifact : MonoBehaviour
 
         if (SGrid.current.GetGrid()[prevX, prevY].linkTile != null)
         {
-            Vector2Int linkCoords = getLinkTileCoords(currentButton);
+            Vector2Int linkCoords = GetLinkTileCoords(currentButton);
             int linkx = linkCoords.x;
             int linky = linkCoords.y;
             int dx = currentButton.x - prevX;
