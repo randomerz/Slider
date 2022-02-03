@@ -109,7 +109,7 @@ public class UIArtifact : MonoBehaviour
         if (currentButton == null)
             return;
 
-        currentButton.SetPushedDown(false);
+        currentButton.SetSelected(false);
         foreach (ArtifactTileButton b in moveOptionButtons)
         {
             b.SetHighlighted(false);
@@ -164,7 +164,7 @@ public class UIArtifact : MonoBehaviour
                 //L: Player clicked a tile with movement options
                 //Debug.Log("Selected button " + button.islandId);
                 currentButton = button;
-                button.SetPushedDown(true);
+                button.SetSelected(true);
                 foreach (ArtifactTileButton b in moveOptionButtons)
                 {
                     b.SetHighlighted(true);
@@ -234,8 +234,9 @@ public class UIArtifact : MonoBehaviour
             {
                 SGrid.current.Move(swap);
                 buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
-                StartCoroutine(SetForcePushedDown(buttonCurrent));
                 buttonEmpty.SetPosition(x, y);
+                StartCoroutine(SetForcePushedDown(buttonCurrent));
+
             }
             else
             {
