@@ -19,15 +19,13 @@ public class STile : MonoBehaviour
     private int sliderColliderDisableCount; // each enable gives this +1, disable does -1
     
     [Header("References")]
+    public GameObject objects;
     public Collider2D sliderCollider;
+    public Collider2D houseSliderCollider;
     public GameObject tileMapCollider;
     // these borders follow the tile and generally all activate/deactive together
     public GameObject[] borderColliders; // right top left bottom
     public GameObject stileTileMaps;
-    //public GameObject floorTileGrid;
-    //public GameObject wallTileGrid;
-    //public GameObject decorationsTileGrid;
-    //public GameObject collidersTileGrid;
 
     protected void Awake()
     {
@@ -70,13 +68,11 @@ public class STile : MonoBehaviour
     {
         this.isTileActive = isTileActive;
 
+        objects.SetActive(isTileActive);
         stileTileMaps.SetActive(isTileActive);
-        //floorTileGrid.SetActive(isTileActive);
-        //wallTileGrid.SetActive(isTileActive);
-        //decorationsTileGrid.SetActive(isTileActive);
-        //collidersTileGrid.SetActive(isTileActive);
 
         sliderCollider.isTrigger = isTileActive;
+        houseSliderCollider.isTrigger = isTileActive;
     }
 
     // when sliderColliderDisableCount > 0, its 
@@ -88,6 +84,7 @@ public class STile : MonoBehaviour
             sliderColliderDisableCount -= 1;
 
         sliderCollider.enabled = sliderColliderDisableCount <= 0;
+        houseSliderCollider.enabled = sliderColliderDisableCount <= 0;
         tileMapCollider.SetActive(sliderColliderDisableCount <= 0);
 
         return sliderColliderDisableCount <= 0;
@@ -200,9 +197,5 @@ public class STile : MonoBehaviour
         pos = pos + new Vector3(-0.5f, -0.5f);
 
         stileTileMaps.transform.position = pos;
-        //floorTileGrid.transform.position = pos;
-        //wallTileGrid.transform.position = pos;
-        //decorationsTileGrid.transform.position = pos;
-        //collidersTileGrid.transform.position = pos;
     }
 }
