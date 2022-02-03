@@ -103,6 +103,44 @@ public class SMoveSwap : SMove
     }
 }
 
+public class SMoveLinkedSwap : SMove
+{
+    //
+    private SMoveLinkedSwap(int x1, int y1, int x2, int y2)
+    {
+        moves.Add(new Vector4Int(x1, y1, x2, y2));
+        moves.Add(new Vector4Int(x2, y2, x1, y1));
+
+        Vector2Int linkCoords = SGrid.current.GetLinkTileCoords(SGrid.current.GetGrid(), x1, y1);
+        int linkx = linkCoords.x;
+        int linky = linkCoords.y;
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+        moves.Add(new Vector4Int(linkx, linky, linkx + dx, linky + dy));
+        moves.Add(new Vector4Int(linkx + dx, linky + dy, linkx, linky));
+
+
+        if (linkCoords.x < 0)
+        {
+            Debug.LogError("Attempted to make an SMoveLinkedSwap without a link tile");
+        } else
+        {
+
+        }
+    }
+
+    public static SMoveLinkedSwap CreateInstance(int x1, int y1, int x2, int y2)
+    {
+        if (SGrid.current.GetGrid()[x1, x2].linkTile != null)
+        {
+            return new SMoveLinkedSwap(x2, y1, x2, y2);
+        } else
+        {
+            return null;
+        }
+    }
+}
+
 //L: Used primarily in the "Ocean" area for rotating tiles around
 public class SMoveRotate : SMove
 {
