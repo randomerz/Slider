@@ -96,6 +96,11 @@ public class SMoveSwap : SMove
         moves.Add(new Vector4Int(x1, y1, x2, y2));
         moves.Add(new Vector4Int(x2, y2, x1, y1));
     }
+
+    public Vector4Int GetSwapAsVector()
+    {
+        return moves[0];
+    }
 }
 
 //L: Used primarily in the "Ocean" area for rotating tiles around
