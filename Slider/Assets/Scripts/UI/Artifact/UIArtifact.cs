@@ -94,8 +94,7 @@ public class UIArtifact : MonoBehaviour
             b.buttonAnimator.sliderImage.sprite = b.emptySprite;
             if(b == hovered) 
             {
-                CheckAndSwap(dragged, hovered, true);
-
+                CheckAndSwap(dragged, hovered, false);
             }
 
         }
@@ -103,7 +102,7 @@ public class UIArtifact : MonoBehaviour
     public void OnDisable()
     {
         queue = new Queue<SMove>();
-        Debug.Log("Queue Cleared!");
+        //Debug.Log("Queue Cleared!");
     }
 
     public void DeselectCurrentButton()
