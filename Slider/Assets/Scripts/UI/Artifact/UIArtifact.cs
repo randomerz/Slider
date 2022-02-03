@@ -321,7 +321,7 @@ public class UIArtifact : MonoBehaviour
         }
     }
 
-    private Vector2Int getLinkTileCoords(ArtifactTileButton buttonCurrent)
+    private Vector2Int GetLinkTileCoords(ArtifactTileButton buttonCurrent)
     {
         STile[,] currGrid = SGrid.current.GetGrid();
         int x = buttonCurrent.x;
