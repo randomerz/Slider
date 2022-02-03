@@ -9,9 +9,9 @@ public class UIArtifact : MonoBehaviour
     // public Vector3 tempPosition = new Vector3(0,0,0);
     public ArtifactTileButton[] buttons;
     //L: The button the user has clicked on
-    private ArtifactTileButton currentButton;
+    protected ArtifactTileButton currentButton;
     //L: The available buttons the player has to move to from currentButton
-    private List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
+    protected List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
     //queue is used for when the player makes multiple moves before a move has finished.
     private Queue<SMove> queue;
     public int maxMovesBuffered = 2;
@@ -190,7 +190,7 @@ public class UIArtifact : MonoBehaviour
     }
 
     // replaces adjacentButtons
-    protected List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
+    protected virtual List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
         moveOptionButtons.Clear();
 
@@ -237,7 +237,7 @@ public class UIArtifact : MonoBehaviour
     }
 
     //L: updateGrid - if this is false, it will just update the UI without actually moving the tiles.
-    private bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty, bool queuedMove = false)
+    protected bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty, bool queuedMove = false)
     {
         STile[,] currGrid = SGrid.current.GetGrid();
 
