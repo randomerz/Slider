@@ -87,6 +87,11 @@ public class ArtifactTileButton : MonoBehaviour
         buttonAnimator.SetPushedDown(v);
     }
 
+    public void SetSelected(bool v)
+    {
+        buttonAnimator.SetSelected(v);
+    }
+
     public void SetForcedPushedDown(bool v)
     {
         buttonAnimator.SetForcedPushedDown(v);
