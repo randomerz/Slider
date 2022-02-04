@@ -8,8 +8,6 @@ public class VillageGrid : SGrid
 
     private static bool checkCompletion = false;
 
-    public Collectible[] collectibles;
-
 
     // bad
     public static bool wasQRCompleted = false;
@@ -73,14 +71,15 @@ public class VillageGrid : SGrid
         base.LoadGrid();
     }
 
-    public void ActivateSliderCollectible(int sliderId) { // temporary?
+    public void ActivateSliderCollectible(int sliderId) { // temporary
         collectibles[sliderId - 1].gameObject.SetActive(true);
 
-        if (sliderId == 9)
-        {
-            collectibles[sliderId - 1].transform.position = Player.GetPosition();
-            UIManager.closeUI = true;
-        }
+        // if (sliderId == 9)
+        // {
+        //     collectibles[sliderId - 1].transform.position = Player.GetPosition();
+        //     UIManager.closeUI = true;
+        //     CheckCompletions(this, null);
+        // }
 
         AudioManager.Play("Puzzle Complete");
     }
@@ -103,7 +102,9 @@ public class VillageGrid : SGrid
     {
         if (CheckQRCode())
         {
-            ActivateSliderCollectible(7);
+            // ActivateSliderCollectible(7);
+            ActivateCollectible("Slider 7");
+            AudioManager.Play("Puzzle Complete");
         }
     }
 
@@ -148,9 +149,23 @@ public class VillageGrid : SGrid
     {
         if (CheckFinalPlacements())
         {
-            ActivateSliderCollectible(9);
-            CheckCompletions(this, null); // lazy
+            // ActivateSliderCollectible(9);
+            ActivateCollectible("Slider 9");
+            GetCollectible("Slider 9").transform.position = Player.GetPosition();
+            UIManager.closeUI = true;
+
+            // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
+            StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+
+            AudioManager.Play("Puzzle Complete");
         }
+    }
+
+    private IEnumerator CheckCompletionsAfterDelay(float t)
+    {
+        yield return new WaitForSeconds(t);
+
+        CheckCompletions(this, null); // sets the final one to be complete
     }
 
     public static bool CheckFinalPlacements()
