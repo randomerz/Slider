@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class SGrid : MonoBehaviour
 {
+    //L: The grid the player is currently interacting with (only 1 active at a time)
     public static SGrid current { get; private set; }
 
     public class OnGridMoveArgs : System.EventArgs
     {
         public STile[,] grid;
     }
-    public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnTileMove
+    public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
 
     private STile[,] grid;
     private STile[,] altGrid;
@@ -25,15 +26,16 @@ public class SGrid : MonoBehaviour
     [SerializeField] private STile[] altStiles;
     [SerializeField] private SGridBackground[] bgGridTiles;
     [SerializeField] private SGridAnimator gridAnimator;
+    //L: This is the end goal for the slider puzzle, set in the inspector.
+    //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)
     [SerializeField] protected string targetGrid = "*********"; // format: 123456789 for  1 2 3
-                                                  //                        4 5 6
-                                                  //              (0, 0) -> 7 8 9
+                                                  //                                      4 5 6
+                                                  //              (0, 0) ->               7 8 9
 
     protected void Awake()
     {
 
         current = this;
-
         LoadGrid();
         SetBGGrid(bgGridTiles);
 
@@ -59,6 +61,11 @@ public class SGrid : MonoBehaviour
         return bgGrid;
     }
 
+    /*L: Sets the position of STiles in the grid according to their ids.
+    Note: This updates all of the STiles according to the ids in the given array (unlike the other imp., which leaves the STiles in the same positions)
+    * 
+    * This is useful for reshuffling the grid.
+    */
     public void SetGrid(int[,] puzzle)
     {
         if (puzzle.Length != grid.Length)
@@ -98,6 +105,10 @@ public class SGrid : MonoBehaviour
         ArtifactTileButton.canComplete = true;
     }
 
+    /*
+     * L: Populates the grid[,] array with the given stiles.
+     * This is what initially loads in the grid at the start of the scene if a grid is not already saved.
+     */
     private void SetGrid(STile[] stiles, STile[] altStiles=null)
     {
         if (stiles.Length != width * height)
@@ -156,6 +167,7 @@ public class SGrid : MonoBehaviour
         return s;
     }
 
+    //L: islandId is the id of the corresponding tile in the puzzle doc
     public STile GetStile(int islandId)
     {
         foreach (STile t in stiles)
@@ -174,6 +186,7 @@ public class SGrid : MonoBehaviour
         return null;
     }
 
+    //L: This mainly checks if any of the tiles involved in SMove 
     public bool CanMove(SMove move)
     {
         foreach (Vector4Int m in move.moves)
@@ -192,8 +205,10 @@ public class SGrid : MonoBehaviour
     }
 
     // Make sure to check if you CanMove() before moving
+    //L: Updates internal state (the grid[,]) based on result of SMove. See Move in SGridAnimator for the actual moving of the tiles.
     public void Move(SMove move)
     {
+
         gridAnimator.Move(move);
 
         STile[,] newGrid = new STile[width, height];
@@ -233,9 +248,10 @@ public class SGrid : MonoBehaviour
         GameManager.GetSaveSystem().SaveMissions(new Dictionary<string, bool>());
     }
 
+    //L: Used in the save system to load a grid as opposed to using SetGrid(STile[], STile[]) with default tiles positions.
     public virtual void LoadGrid() 
     { 
-        // Debug.Log("Loading grid...");
+         //Debug.Log("Loading grid...");
 
         SGridData sgridData = GameManager.GetSaveSystem().GetSGridData(myArea);
         Dictionary<string, bool> loadedMissions = GameManager.GetSaveSystem().GetMissions(new List<string>());
@@ -271,6 +287,7 @@ public class SGrid : MonoBehaviour
         // temporary ?
         // GameObject.Find("Player").transform.position = GameManager.saveSystem.GetPlayerPos(myArea);
     }
+
 
     protected static void CheckCompletions(object sender, SGrid.OnGridMoveArgs e)
     {

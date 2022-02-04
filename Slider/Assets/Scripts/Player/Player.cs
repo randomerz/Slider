@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float moveSpeed = 5;
     private float moveSpeedMultiplier = 1;
     private bool canMove = true;
-
+    [SerializeField] private bool isOnWater = false;
 
     private InputSettings controls;
     private Vector3 lastMoveDir;
@@ -59,6 +59,9 @@ public class Player : MonoBehaviour
                 playerSpriteRenderer.flipX = false;
             }
         // }
+
+        playerAnimator.SetBool("isOnWater", isOnWater);
+        // playerAnimator.SetBool("hasSunglasses", hasSunglasses);
     }
 
     private void FixedUpdate()
