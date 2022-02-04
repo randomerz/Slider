@@ -228,7 +228,7 @@ public class UIArtifact : MonoBehaviour
     }
 
     //L: Swaps the buttons on the UI, but not the actual grid.
-    private void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    protected void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
@@ -237,7 +237,7 @@ public class UIArtifact : MonoBehaviour
     }
 
     //L: updateGrid - if this is false, it will just update the UI without actually moving the tiles.
-    protected bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty, bool queuedMove = false)
+    protected virtual bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty, bool queuedMove = false)
     {
         STile[,] currGrid = SGrid.current.GetGrid();
 
@@ -409,7 +409,7 @@ public class UIArtifact : MonoBehaviour
         return false;
     }
 
-    private IEnumerator WaitForMoveThenEmptyQueue(ArtifactTileButton button)
+    protected IEnumerator WaitForMoveThenEmptyQueue(ArtifactTileButton button)
     {
         button.SetForcedPushedDown(true);
 
