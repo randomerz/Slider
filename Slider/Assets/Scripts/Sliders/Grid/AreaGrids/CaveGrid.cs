@@ -8,7 +8,13 @@ public class CaveGrid : SGrid
 
     public Collectible[] collectibles;
 
-    private bool[,] lightMap; 
+    private bool[,] lightMap;
+
+    public class OnLightMapUpdateArgs
+    {
+        public bool[,] lightMap;
+    }
+    public static event System.EventHandler<OnLightMapUpdateArgs> OnLightMapUpdate;
 
     private new void Awake() {
         myArea = Area.Caves;
@@ -51,6 +57,8 @@ public class CaveGrid : SGrid
     public void SetLit(int x, int y, bool value)
     {
         lightMap[x, y] = value;
+
+        OnLightMapUpdate?.Invoke(this, new OnLightMapUpdateArgs { lightMap = this.lightMap });
     }
 
     public override void SaveGrid() 
