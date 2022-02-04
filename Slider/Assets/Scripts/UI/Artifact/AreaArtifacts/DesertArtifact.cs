@@ -135,7 +135,7 @@ public class DesertArtifact : UIArtifact
                     }
                     if (last != null)
                     {
-                        CheckAndSwap(button, last);
+                        CheckAndSwap(button, last, false);
                     }
                 }
             }
@@ -174,7 +174,7 @@ public class DesertArtifact : UIArtifact
                     }
                     if (last != null)
                     {
-                        CheckAndSwap(button, last);
+                        CheckAndSwap(button, last, false);
                     }
                 }
             }
@@ -213,7 +213,7 @@ public class DesertArtifact : UIArtifact
                     }
                     if (last != null)
                     {
-                        CheckAndSwap(button, last);
+                        CheckAndSwap(button, last, false);
                     }
                 }
             }
@@ -252,7 +252,7 @@ public class DesertArtifact : UIArtifact
                     }
                     if (last != null)
                     {
-                        CheckAndSwap(button, last);
+                        CheckAndSwap(button, last, false);
                     }
                 }
             }
