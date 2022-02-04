@@ -8,6 +8,8 @@ public class CaveGrid : SGrid
 
     public Collectible[] collectibles;
 
+    private bool[,] lightMap; 
+
     private new void Awake() {
         myArea = Area.Caves;
 
@@ -19,6 +21,11 @@ public class CaveGrid : SGrid
         base.Awake();
 
         instance = this;
+
+        lightMap = new bool[3, 3] { { false, false, true},
+                                    { false, false, false}, 
+                                    { false, false, true},
+                                  };
     }
     
 
@@ -34,6 +41,16 @@ public class CaveGrid : SGrid
         
         AudioManager.PlayMusic("Connection");
         UIEffects.FadeFromBlack();
+    }
+
+    public bool GetLit(int x, int y)
+    {
+        return lightMap[x, y];
+    }
+
+    public void SetLit(int x, int y, bool value)
+    {
+        lightMap[x, y] = value;
     }
 
     public override void SaveGrid() 

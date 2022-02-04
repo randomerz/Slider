@@ -53,6 +53,7 @@ public class JungleArtifact : UIArtifact
     }
 
     //Checks if the move can happen on the grid.
+    //L: This should maybe be checked with GetMoveOptions?
     private bool OpenPath(Vector4Int move, STile[,] grid)
     {
         List<Vector2Int> checkedCoords = new List<Vector2Int>();

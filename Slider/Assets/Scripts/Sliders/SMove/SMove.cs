@@ -105,7 +105,6 @@ public class SMoveSwap : SMove
 
 public class SMoveLinkedSwap : SMove
 {
-    //
     private SMoveLinkedSwap(int x1, int y1, int x2, int y2)
     {
         moves.Add(new Vector4Int(x1, y1, x2, y2));
