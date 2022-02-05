@@ -60381,7 +60381,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 380634037254267601, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 380634037254267601, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -60528,7 +60528,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1324462113
 GameObject:
@@ -60632,7 +60632,6 @@ MonoBehaviour:
   - {fileID: 524494152}
   - {fileID: 1987171388}
   - {fileID: 705329675}
-  altStiles: []
   bgGridTiles:
   - {fileID: 528917036}
   - {fileID: 1223723976}
@@ -60645,6 +60644,15 @@ MonoBehaviour:
   - {fileID: 1809006832}
   gridAnimator: {fileID: 1324462116}
   targetGrid: 649135278
+  collectibles:
+  - {fileID: 22542421}
+  - {fileID: 970478805}
+  - {fileID: 1232704213}
+  - {fileID: 293426473}
+  - {fileID: 105832908}
+  - {fileID: 295341884}
+  - {fileID: 492968097}
+  - {fileID: 800506838}
   collectibles:
   - {fileID: 22542421}
   - {fileID: 970478805}
@@ -86663,7 +86671,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1907398622
 GameObject:
@@ -91071,7 +91079,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2620790810742040740, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2620790810742040740, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_AnchorMax.x
