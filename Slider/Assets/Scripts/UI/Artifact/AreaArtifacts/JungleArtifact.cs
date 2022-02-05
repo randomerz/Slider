@@ -19,6 +19,7 @@ public class JungleArtifact : UIArtifact
             return base.CheckAndSwap(buttonCurrent, buttonEmpty);
         } else
         {
+            //L: Make sure that all checks/swaps are with respect to the UI and NOT the grid (bc the grid can be behind due to queuing)
             Debug.Log("Linked Move!");
             //L: Below is to handle the case for if you have linked tiles.
             int linkx = buttonCurrent.linkButton.x;
@@ -29,7 +30,7 @@ public class JungleArtifact : UIArtifact
             SMove linkedSwap = new SMoveLinkedSwap(x, y, buttonEmpty.x, buttonEmpty.y, linkx, linky);
 
             Vector4Int movecoords = new Vector4Int(linkx, linky, linkx + dx, linky + dy);
-            if (SGrid.current.CanMove(linkedSwap) && (OpenPath(movecoords, SGrid.current.GetGrid()) || currGrid[linkx + dx, linky + dy] == currGrid[x, y]))
+            if (SGrid.current.CanMove(linkedSwap) && (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent))
             {
                 QueueCheckAndAdd(linkedSwap);
 
@@ -69,7 +70,7 @@ public class JungleArtifact : UIArtifact
 
     //Checks if the move can happen on the grid.
     //L: This should maybe be checked with GetMoveOptions?
-    private bool OpenPath(Vector4Int move, STile[,] grid)
+    private bool OpenPath(Vector4Int move)
     {
         List<Vector2Int> checkedCoords = new List<Vector2Int>();
         int dx = move.z - move.x;
@@ -81,7 +82,7 @@ public class JungleArtifact : UIArtifact
             int dir = dy / Math.Abs(dy);
             for (int i = 1; i <= toCheck; i++)
             {
-                if (grid[move.x, move.y + i * dir].isTileActive)
+                if (GetButton(move.x, move.y + i * dir).isTileActive)
                 {
                     return false;
                 }
@@ -92,7 +93,7 @@ public class JungleArtifact : UIArtifact
             int dir = dx / Math.Abs(dx);
             for (int i = 1; i <= toCheck; i++)
             {
-                if (grid[move.x + i * dir, move.y].isTileActive)
+                if (GetButton(move.x + i * dir, move.y).isTileActive)
                 {
                     return false;
                 }
