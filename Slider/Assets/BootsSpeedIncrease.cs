@@ -16,11 +16,8 @@ public class BootsSpeedIncrease : MonoBehaviour
         
     }
     
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void SpeedUp()
     {
-        if (collision.tag == "Player")
-        {
             player.bootsSpeedUp();
-        }
     }
 }
