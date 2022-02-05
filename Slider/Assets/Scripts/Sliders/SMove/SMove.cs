@@ -122,9 +122,6 @@ public class SMoveLinkedSwap : SMove
         if (linkCoords.x < 0)
         {
             Debug.LogError("Attempted to make an SMoveLinkedSwap without a link tile");
-        } else
-        {
-
         }
     }
 

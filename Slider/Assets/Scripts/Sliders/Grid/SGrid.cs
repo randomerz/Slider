@@ -91,7 +91,7 @@ public class SGrid : MonoBehaviour
             Debug.LogError("We need dumb for loop for links :(");
         }
 
-        return new Vector2Int(x, y);
+        return new Vector2Int(linkx, linky);
     }
 
     /*L: Sets the position of STiles in the grid according to their ids.

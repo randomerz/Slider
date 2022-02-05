@@ -289,13 +289,19 @@ public class UIArtifact : MonoBehaviour
     }
     */
 
-    protected void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    protected virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        moveQueue.Dequeue();
         if (moveQueue.Count > 0)
         {
-            SMove move = moveQueue.Peek();
-            SGrid.current.Move(move);
+            moveQueue.Dequeue();
+        } else
+        {
+            Debug.LogWarning("Tried to dequeue from the move queue even though there is nothing in it. This should not happen!");
+        }
+
+        if (moveQueue.Count > 0)
+        {
+            SGrid.current.Move(moveQueue.Peek());
         }
     }
 

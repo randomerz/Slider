@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class JungleArtifact : UIArtifact
 {
+    private static STile prevTileMoved;
+
     protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         STile[,] currGrid = SGrid.current.GetGrid();
@@ -13,10 +15,12 @@ public class JungleArtifact : UIArtifact
         SMove linkedSwap = SMoveLinkedSwap.CreateInstance(x, y, buttonEmpty.x, buttonEmpty.y);
         if (linkedSwap == null)
         {
+            Debug.Log("Normal Move!");
             //L: Just a normal move
             return base.CheckAndSwap(buttonCurrent, buttonEmpty);
         } else
         {
+            Debug.Log("Linked Move!");
             //L: Below is to handle the case for if you have linked tiles.
             int dx = buttonEmpty.x - x;
             int dy = buttonEmpty.y - y;
@@ -31,6 +35,10 @@ public class JungleArtifact : UIArtifact
                 QueueCheckAndAdd(linkedSwap);
 
                 //L: Swap the current button and the link button
+                //Debug.Log(buttonCurrent.x + ", " + buttonCurrent.y);
+                //Debug.Log(buttonEmpty.x + ", " + buttonEmpty.y);
+                //Debug.Log(linkx + ", " + linky);
+                //Debug.Log(linkx + dx + ", " + linky + dy);
                 SwapButtons(buttonCurrent, buttonEmpty);
                 SwapButtons(GetButton(linkx, linky), GetButton(linkx + dx, linky + dy));
 
@@ -48,6 +56,16 @@ public class JungleArtifact : UIArtifact
                 return false;
             }
         }
+    }
+
+    protected override void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        //L: This prevents the method from checking the queue twice if there are linked tiles (since it's called for every tile that invokes OnSTileMove)
+        if (prevTileMoved == null || e.stile.linkTile != prevTileMoved)
+        {
+            base.QueueCheckAfterMove(sender, e);
+        }
+        prevTileMoved = e.stile;
     }
 
     //Checks if the move can happen on the grid.
