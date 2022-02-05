@@ -139,4 +139,16 @@ public class Player : MonoBehaviour
     {
         _instance.moveSpeedMultiplier = x;
     }
+
+    public void bootsSpeedUp()
+    {
+        if (moveSpeed==5)
+        {   // tested, does effectively change the player's speed whenever boots are picked up
+            // _instance.moveSpeed+=20;
+            _instance.moveSpeed+=1;
+            // Debug.Log(_instance.moveSpeed);
+
+            // lol you'll have to pick up a ton of these boots if you want the speed to be noticeable
+        }
+    }
 }
