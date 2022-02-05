@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ArtifactTileButton : MonoBehaviour
 {
-    public static bool canComplete = false;
+    // public static bool canComplete = false;
     public bool isComplete = false;
     public bool isForcedDown = false;
 
@@ -117,7 +117,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SetComplete(bool value)
     {
-        if (!canComplete || !isTileActive)
+        if (!isTileActive)
             return;
 
         isComplete = value;
