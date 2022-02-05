@@ -5,15 +5,14 @@ using UnityEngine;
 
 public class JungleArtifact : UIArtifact
 {
-    private static STile prevTileMoved;
+    private static STile prevLinkTile = null;
 
     protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         STile[,] currGrid = SGrid.current.GetGrid();
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
-        SMove linkedSwap = SMoveLinkedSwap.CreateInstance(x, y, buttonEmpty.x, buttonEmpty.y);
-        if (linkedSwap == null)
+        if (buttonCurrent.linkButton == null)
         {
             Debug.Log("Normal Move!");
             //L: Just a normal move
@@ -22,25 +21,21 @@ public class JungleArtifact : UIArtifact
         {
             Debug.Log("Linked Move!");
             //L: Below is to handle the case for if you have linked tiles.
+            int linkx = buttonCurrent.linkButton.x;
+            int linky = buttonCurrent.linkButton.y;
             int dx = buttonEmpty.x - x;
             int dy = buttonEmpty.y - y;
 
-            Vector2Int linkCoords = SGrid.current.GetLinkTileCoords(SGrid.current.GetGrid(), x, y);
-            int linkx = linkCoords.x;
-            int linky = linkCoords.y;
-            
+            SMove linkedSwap = new SMoveLinkedSwap(x, y, buttonEmpty.x, buttonEmpty.y, linkx, linky);
+
             Vector4Int movecoords = new Vector4Int(linkx, linky, linkx + dx, linky + dy);
             if (SGrid.current.CanMove(linkedSwap) && (OpenPath(movecoords, SGrid.current.GetGrid()) || currGrid[linkx + dx, linky + dy] == currGrid[x, y]))
             {
                 QueueCheckAndAdd(linkedSwap);
 
                 //L: Swap the current button and the link button
-                //Debug.Log(buttonCurrent.x + ", " + buttonCurrent.y);
-                //Debug.Log(buttonEmpty.x + ", " + buttonEmpty.y);
-                //Debug.Log(linkx + ", " + linky);
-                //Debug.Log(linkx + dx + ", " + linky + dy);
                 SwapButtons(buttonCurrent, buttonEmpty);
-                SwapButtons(GetButton(linkx, linky), GetButton(linkx + dx, linky + dy));
+                SwapButtons(buttonCurrent.linkButton, GetButton(linkx + dx, linky + dy));
 
                 if (moveQueue.Count == 1)
                 {
@@ -61,11 +56,15 @@ public class JungleArtifact : UIArtifact
     protected override void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         //L: This prevents the method from checking the queue twice if there are linked tiles (since it's called for every tile that invokes OnSTileMove)
-        if (prevTileMoved == null || e.stile.linkTile != prevTileMoved)
+        if (prevLinkTile == null || prevLinkTile != e.stile.linkTile)
         {
             base.QueueCheckAfterMove(sender, e);
+            prevLinkTile = e.stile;
+        } else
+        {
+            //L: Note: this only works if there's one link tile.
+            prevLinkTile = null;
         }
-        prevTileMoved = e.stile;
     }
 
     //Checks if the move can happen on the grid.

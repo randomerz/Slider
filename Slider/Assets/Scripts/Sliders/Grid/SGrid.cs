@@ -58,39 +58,6 @@ public class SGrid : MonoBehaviour
         return bgGrid;
     }
 
-    //L: Returns (-1, -1) if grid[x, y].linkTile is null 
-    public Vector2Int GetLinkTileCoords(STile[,] grid, int x, int y)
-    {
-        if (grid[x, y].linkTile == null)
-        {
-            return new Vector2Int(-1, -1);
-        }
-        //L: I'm testing if getting the tile coords directly gives different results from the double for loop,
-        //and if it does, we can delete the loop entirely.
-        int oldLinkx = grid[x, y].linkTile.x;
-        int oldLinky = grid[x, y].linkTile.y;
-
-        int linkx = oldLinkx;
-        int linky = oldLinky;
-        for (int i = 0; i < SGrid.current.width; i++)
-        {
-            for (int j = 0; j < SGrid.current.height; j++)
-            {
-                if (grid[x, y].linkTile == grid[i, j])
-                {
-                    linkx = i;
-                    linky = j;
-                }
-            }
-        }
-        if (oldLinkx != linkx || oldLinky != linky)
-        {
-            Debug.LogError("We need dumb for loop for links :(");
-        }
-
-        return new Vector2Int(linkx, linky);
-    }
-
     /*L: Sets the position of STiles in the grid according to their ids.
     Note: This updates all of the STiles according to the ids in the given array (unlike the other imp., which leaves the STiles in the same positions)
     * 
