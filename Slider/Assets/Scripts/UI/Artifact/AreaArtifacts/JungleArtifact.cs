@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class JungleArtifact : UIArtifact
 {
-    protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty, bool queuedMove)
+    protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         STile[,] currGrid = SGrid.current.GetGrid();
         int x = buttonCurrent.x;
@@ -13,7 +13,8 @@ public class JungleArtifact : UIArtifact
         SMove linkedSwap = SMoveLinkedSwap.CreateInstance(x, y, buttonEmpty.x, buttonEmpty.y);
         if (linkedSwap == null)
         {
-            return base.CheckAndSwap(buttonCurrent, buttonEmpty, queuedMove);
+            //L: Just a normal move
+            return base.CheckAndSwap(buttonCurrent, buttonEmpty);
         } else
         {
             //L: Below is to handle the case for if you have linked tiles.
@@ -27,19 +28,16 @@ public class JungleArtifact : UIArtifact
             Vector4Int movecoords = new Vector4Int(linkx, linky, linkx + dx, linky + dy);
             if (SGrid.current.CanMove(linkedSwap) && (OpenPath(movecoords, SGrid.current.GetGrid()) || currGrid[linkx + dx, linky + dy] == currGrid[x, y]))
             {
-                if (queuedMove)
-                {
-                    QueueCheckAndAdd(linkedSwap);
-                }
-                else
-                {
-                    SGrid.current.Move(linkedSwap);
-                    StartCoroutine(WaitForMoveThenEmptyQueue(buttonCurrent));
-                }
+                QueueCheckAndAdd(linkedSwap);
 
                 //L: Swap the current button and the link button
                 SwapButtons(buttonCurrent, buttonEmpty);
                 SwapButtons(GetButton(linkx, linky), GetButton(linkx + dx, linky + dy));
+
+                if (moveQueue.Count == 1)
+                {
+                    SGrid.current.Move(moveQueue.Peek());
+                }
 
                 return true;
             }
