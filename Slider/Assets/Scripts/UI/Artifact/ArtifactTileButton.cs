@@ -20,7 +20,9 @@ public class ArtifactTileButton : MonoBehaviour
 
     private const int UI_OFFSET = 37;
 
-    private STile myStile;
+    public STile MyStile { get; private set; }
+    public ArtifactTileButton linkButton;
+
     private Sprite islandSprite;
     public Sprite completedSprite;
     public Sprite emptySprite;
@@ -33,10 +35,20 @@ public class ArtifactTileButton : MonoBehaviour
     {
         islandSprite = buttonAnimator.sliderImage.sprite;
 
-        myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
-        startsActive = myStile.isTileActive;
-        SetTileActive(myStile.isTileActive);
-        SetPosition(myStile.x, myStile.y);
+        MyStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
+        
+        startsActive = MyStile.isTileActive;
+        SetTileActive(MyStile.isTileActive);
+        SetPosition(MyStile.x, MyStile.y);
+
+        linkButton = null;
+        foreach (ArtifactTileButton b in buttonManager.buttons) {
+            if (MyStile.linkTile != null && MyStile.linkTile == b.MyStile)
+            {
+                linkButton = b;
+                b.linkButton = this;
+            }
+        }
 
         //if (!isTileActive)
         //{
@@ -47,7 +59,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void OnDisable()
     {
-        if (myStile.isTileActive)
+        if (MyStile.isTileActive)
         {
             if (buttonAnimator.sliderImage.sprite == emptySprite || buttonAnimator.sliderImage.sprite == blankSprite)
             {

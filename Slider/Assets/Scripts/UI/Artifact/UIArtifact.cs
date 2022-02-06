@@ -13,16 +13,22 @@ public class UIArtifact : MonoBehaviour
     //L: The available buttons the player has to move to from currentButton
     protected List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
 
-    //queue is used for when the player makes multiple moves before a move has finished.
-    private Queue<SMove> moveQueue;
-    public int maxMovesBuffered = 2;
+    //L: Queue of moves to perform on the grid from the artifact
+    //L: IMPORTANT NOTE: The top element in the queue is always the current move being executed.
+    protected Queue<SMove> moveQueue;
+    public int maxMoveQueueSize = 3;    //L: Max size of the queue.
 
     private static UIArtifact _instance;
-
+    
     public void Awake()
     {
         _instance = this;
         moveQueue = new Queue<SMove>();
+    }
+
+    public void Start()
+    {
+        SGridAnimator.OnSTileMove += QueueCheckAfterMove;
     }
 
     public static UIArtifact GetInstance()
@@ -31,12 +37,11 @@ public class UIArtifact : MonoBehaviour
     }
 
     //L: Handles when the user attempts to drag and drop a button
-    public void ButtonDragged(BaseEventData eventData)
-    {
+    public void ButtonDragged(BaseEventData eventData) {
         // Debug.Log("dragging");
-        PointerEventData data = (PointerEventData)eventData;
+        PointerEventData data = (PointerEventData) eventData;
 
-        if (currentButton != null)
+        if (currentButton != null) 
         {
             return;
         }
@@ -48,29 +53,27 @@ public class UIArtifact : MonoBehaviour
         }
 
         ArtifactTileButton hovered = null;
-        if (data.pointerEnter != null && data.pointerEnter.name == "Image")
+        if (data.pointerEnter != null && data.pointerEnter.name == "Image") 
         {
             hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton>();
         }
 
-
-        foreach (ArtifactTileButton b in GetMoveOptions(dragged))
-        {
-            if (b == hovered)
+        
+        foreach (ArtifactTileButton b in GetMoveOptions(dragged)) {
+            if(b == hovered) 
             {
                 b.buttonAnimator.sliderImage.sprite = b.hoverSprite;
             }
-            else
+            else 
             {
                 b.buttonAnimator.sliderImage.sprite = b.emptySprite;
             }
         }
     }
-    public void ButtonDragEnd(BaseEventData eventData)
-    {
-        PointerEventData data = (PointerEventData)eventData;
+    public void ButtonDragEnd(BaseEventData eventData) {
+        PointerEventData data = (PointerEventData) eventData;
         //Debug.Log("Sent drag end");
-        if (currentButton != null)
+        if (currentButton != null) 
         {
             return;
         }
@@ -82,23 +85,22 @@ public class UIArtifact : MonoBehaviour
         }
 
         ArtifactTileButton hovered = null;
-        if (data.pointerEnter != null && data.pointerEnter.name == "Image")
+        if (data.pointerEnter != null && data.pointerEnter.name == "Image") 
         {
             hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton>();
         }
-        else
+        else 
         {
             return;
         }
         hovered.buttonAnimator.sliderImage.sprite = hovered.emptySprite;
         //Debug.Log("dragged" + dragged.islandId + "hovered" + hovered.islandId);
 
-        foreach (ArtifactTileButton b in GetMoveOptions(dragged))
-        {
+        foreach (ArtifactTileButton b in GetMoveOptions(dragged)) {
             b.buttonAnimator.sliderImage.sprite = b.emptySprite;
-            if (b == hovered)
+            if(b == hovered) 
             {
-                CheckAndSwap(dragged, hovered, false);
+                CheckAndSwap(dragged, hovered);
             }
 
         }
@@ -122,7 +124,7 @@ public class UIArtifact : MonoBehaviour
         currentButton = null;
         moveOptionButtons.Clear();
     }
-
+    
     public virtual void SelectButton(ArtifactTileButton button)
     {
         // Check if on movement cooldown
@@ -135,31 +137,19 @@ public class UIArtifact : MonoBehaviour
         {
             if (moveOptionButtons.Contains(button))
             {
-                //L: Player makes a valid move on the artifact
-                if (currentButton.isForcedDown)
-                {
-                    //L: Player makes a move while the tile is still moving, so add the button to the queue.
-                    CheckAndSwap(currentButton, button, true);
 
-                    //Debug.Log(currentButton.gameObject.name + " added to the queue!");
-                    //Debug.Log(button.gameObject.name + " added to the Queue");
-                }
-                else
-                {
-                    //L: Player makes a move immediately
-                    CheckAndSwap(currentButton, button, false);
-                }
+                //L: Player makes a move while the tile is still moving, so add the button to the queue.
+                CheckAndSwap(currentButton, button);
 
                 moveOptionButtons = GetMoveOptions(currentButton);
                 foreach (ArtifactTileButton b in buttons)
                 {
                     b.SetHighlighted(moveOptionButtons.Contains(b));
                 }
-            }
-            else
+            } else 
             {
                 DeselectCurrentButton();
-            }
+            } 
         }
 
         if (currentButton == null)
@@ -193,7 +183,7 @@ public class UIArtifact : MonoBehaviour
     }
 
     // replaces adjacentButtons
-    protected virtual List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
+    protected List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
         moveOptionButtons.Clear();
 
@@ -241,49 +231,47 @@ public class UIArtifact : MonoBehaviour
 
     //L: updateGrid - if this is false, it will just update the UI without actually moving the tiles.
     //L: Returns if the swap was successful.
-    protected virtual bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty, bool queuedMove)
+    protected virtual bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         STile[,] currGrid = SGrid.current.GetGrid();
 
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
         SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y);
-
-        if (SGrid.current.CanMove(swap))
+ 
+        if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
         {
-            //L: If the move is queued (queuedMove) then we need to wait until the move is dequed before doing it to the grid.
-            if (queuedMove)
-            {
-                QueueCheckAndAdd(new SMoveSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y));
-            }
-            else
-            {
-                SGrid.current.Move(swap);
-                StartCoroutine(WaitForMoveThenEmptyQueue(buttonCurrent));
-            }
+            //L: Do the move
+
+            QueueCheckAndAdd(new SMoveSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y));
             SwapButtons(buttonCurrent, buttonEmpty);
+
+            if (moveQueue.Count == 1)
+            {
+                SGrid.current.Move(moveQueue.Peek());
+            }
             return true;
         }
         else
         {
-            Debug.Log("Couldn't perform move!");
+            Debug.Log("Couldn't perform move! (queue full?)");
             return false;
         }
     }
 
     public void QueueCheckAndAdd(SMove move)
     {
-        if (moveQueue.Count < maxMovesBuffered)
+        if (moveQueue.Count < maxMoveQueueSize)
         {
             moveQueue.Enqueue(move);
-        }
-        else
+        } else
         {
             Debug.LogWarning("Didn't add to the UIArtifact queue because it was full");
         }
 
     }
 
+    /*
     public bool QueueCheckAndRemove()
     {
         if (moveQueue.Count > 0)
@@ -299,17 +287,22 @@ public class UIArtifact : MonoBehaviour
 
         return false;
     }
+    */
 
-    protected IEnumerator WaitForMoveThenEmptyQueue(ArtifactTileButton button)
+    protected virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        button.SetForcedPushedDown(true);
-
-        do
+        if (moveQueue.Count > 0)
         {
-            yield return new WaitForSeconds(1);
-        } while (QueueCheckAndRemove());
+            moveQueue.Dequeue();
+        } else
+        {
+            Debug.LogWarning("Tried to dequeue from the move queue even though there is nothing in it. This should not happen!");
+        }
 
-        button.SetForcedPushedDown(false);
+        if (moveQueue.Count > 0)
+        {
+            SGrid.current.Move(moveQueue.Peek());
+        }
     }
 
     //public static void UpdatePushedDowns()
