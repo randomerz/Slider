@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+//Rename to DialogueDisplay
 public class DialogueManager : MonoBehaviour
 {
     private string[] dialogues;
