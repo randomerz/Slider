@@ -105,37 +105,24 @@ public class SMoveSwap : SMove
 
 public class SMoveLinkedSwap : SMove
 {
-    private SMoveLinkedSwap(int x1, int y1, int x2, int y2)
+    public SMoveLinkedSwap(int x1, int y1, int x2, int y2, int linkx, int linky)
     {
         moves.Add(new Vector4Int(x1, y1, x2, y2));
-        moves.Add(new Vector4Int(x2, y2, x1, y1));
 
-        Vector2Int linkCoords = SGrid.current.GetLinkTileCoords(SGrid.current.GetGrid(), x1, y1);
-        int linkx = linkCoords.x;
-        int linky = linkCoords.y;
         int dx = x2 - x1;
         int dy = y2 - y1;
         moves.Add(new Vector4Int(linkx, linky, linkx + dx, linky + dy));
-        moves.Add(new Vector4Int(linkx + dx, linky + dy, linkx, linky));
 
-
-        if (linkCoords.x < 0)
+        //L: Need to handle the edge case where the link tile moves to the prev tile's position
+        if (linkx+dx == x1 && linky+dy == y1)
         {
-            Debug.LogError("Attempted to make an SMoveLinkedSwap without a link tile");
+            //L: Move the empty spot to where the link tile used to be (which is now empty)
+            moves.Add(new Vector4Int(x2, y2, linkx, linky));
         } else
         {
-
-        }
-    }
-
-    public static SMoveLinkedSwap CreateInstance(int x1, int y1, int x2, int y2)
-    {
-        if (SGrid.current.GetGrid()[x1, x2].linkTile != null)
-        {
-            return new SMoveLinkedSwap(x2, y1, x2, y2);
-        } else
-        {
-            return null;
+            //L: Move both empty spots to where the cooresponding tile used to be (like with normal swaps)
+            moves.Add(new Vector4Int(linkx + dx, linky + dy, linkx, linky));
+            moves.Add(new Vector4Int(x2, y2, x1, y1));
         }
     }
 }
