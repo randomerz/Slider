@@ -14,16 +14,12 @@ public class SGrid : MonoBehaviour
     public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
 
     private STile[,] grid;
-    private STile[,] altGrid;
     private SGridBackground[,] bgGrid;
 
-
-    protected Area myArea;
     // Set in inspector 
     public int width;
     public int height;
     [SerializeField] private STile[] stiles;
-    [SerializeField] private STile[] altStiles;
     [SerializeField] private SGridBackground[] bgGridTiles;
     [SerializeField] private SGridAnimator gridAnimator;
     //L: This is the end goal for the slider puzzle, set in the inspector.
@@ -31,6 +27,9 @@ public class SGrid : MonoBehaviour
     [SerializeField] protected string targetGrid = "*********"; // format: 123456789 for  1 2 3
                                                   //                                      4 5 6
                                                   //              (0, 0) ->               7 8 9
+
+    public Collectible[] collectibles;
+    protected Area myArea; // don't forget to set me!
 
     protected void Awake()
     {
@@ -41,19 +40,17 @@ public class SGrid : MonoBehaviour
 
         if (targetGrid.Length == 0)
             Debug.LogWarning("Grid's target (end goal) is empty!");
+        
+        if (myArea == Area.None)
+            Debug.LogWarning("Area isn't set!");
 
-        OnGridMove += CheckCompletions;
+        // OnGridMove += CheckCompletions;
     }
 
 
     public STile[,] GetGrid()
     {
         return grid;
-    }
-
-    public STile[,] GetAltGrid()
-    {
-        return altGrid;
     }
 
     public SGridBackground[,] GetBGGrid()
@@ -101,15 +98,15 @@ public class SGrid : MonoBehaviour
 
         grid = newGrid;
 
-        OnGridMove += CheckCompletions;
-        ArtifactTileButton.canComplete = true;
+        // OnGridMove += CheckCompletions; // Handled in the specific grids
+        // ArtifactTileButton.canComplete = true;
     }
 
     /*
      * L: Populates the grid[,] array with the given stiles.
      * This is what initially loads in the grid at the start of the scene if a grid is not already saved.
      */
-    private void SetGrid(STile[] stiles, STile[] altStiles=null)
+    private void SetGrid(STile[] stiles)
     {
         if (stiles.Length != width * height)
         {
@@ -123,15 +120,6 @@ public class SGrid : MonoBehaviour
         {
             grid[t.x, t.y] = t;
         }
-
-        if (altStiles != null && altStiles.Length == width * height)
-        {
-            altGrid = new STile[width, height];
-            foreach (STile t in altStiles)
-            {
-                altGrid[t.x, t.y] = t;
-            }
-        }
     }
 
     private void SetBGGrid(SGridBackground[] bgGridTiles) 
@@ -143,11 +131,11 @@ public class SGrid : MonoBehaviour
         }
     }
 
-    // Returns a string like:   123_6##_3#2
+    // Returns a string like:   123_6##_4#5
     // for a grid like:  1 2 3
     //                   6 . .
-    //        (0, 0) ->  3 . 2
-    public static string GetGridString() // todo? GetAltGridString()
+    //        (0, 0) ->  4 . 5
+    public static string GetGridString()
     {
         string s = "";
         for (int y = current.height - 1; y >= 0; y--)
@@ -177,16 +165,8 @@ public class SGrid : MonoBehaviour
         return null;
     }
 
-    public STile GetAltStile(int islandId)
-    {
-        foreach (STile t in altStiles)
-            if (t.islandId == islandId)
-                return t;
-                
-        return null;
-    }
-
     //L: This mainly checks if any of the tiles involved in SMove 
+    //D: this is should also not really be relied on
     public bool CanMove(SMove move)
     {
         foreach (Vector4Int m in move.moves)
@@ -197,6 +177,24 @@ public class SGrid : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public Collectible GetCollectible(string name)
+    {
+        foreach (Collectible c in collectibles)
+        {
+            if (c.GetName() == name)
+            {
+                return c;
+            }
+        }
+
+        return null;
+    }
+
+    public void ActivateCollectible(string name)
+    {
+        GetCollectible(name).gameObject.SetActive(true);
     }
 
     public Area GetArea() 
@@ -257,7 +255,7 @@ public class SGrid : MonoBehaviour
         Dictionary<string, bool> loadedMissions = GameManager.GetSaveSystem().GetMissions(new List<string>());
 
         if (sgridData == null) {
-            SetGrid(stiles, altStiles);
+            SetGrid(stiles);
             return;
         }
 
@@ -273,16 +271,6 @@ public class SGrid : MonoBehaviour
         }
         grid = newGrid;
 
-        if (altGrid != null && altGrid.Length == width * height) {
-            STile[,] newAltGrid = new STile[width, height];
-            foreach (SGridData.STileData td in sgridData.altGrid)
-            {
-                STile stile = GetStile(td.islandId); 
-                newAltGrid[td.x, td.y] = stile;
-                stile.SetSTile(td.isTileActive, td.x, td.y);
-            }
-            altGrid = newAltGrid;
-        }
 
         // temporary ?
         // GameObject.Find("Player").transform.position = GameManager.saveSystem.GetPlayerPos(myArea);
@@ -291,6 +279,7 @@ public class SGrid : MonoBehaviour
 
     protected static void CheckCompletions(object sender, SGrid.OnGridMoveArgs e)
     {
+        // Debug.Log("Checking completions!");
         // ineffecient lol
         for (int x = 0; x < current.width; x++) {
             for (int y = 0; y < current.width; y++) {

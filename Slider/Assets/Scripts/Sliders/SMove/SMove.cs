@@ -103,6 +103,30 @@ public class SMoveSwap : SMove
     }
 }
 
+public class SMoveLinkedSwap : SMove
+{
+    public SMoveLinkedSwap(int x1, int y1, int x2, int y2, int linkx, int linky)
+    {
+        moves.Add(new Vector4Int(x1, y1, x2, y2));
+
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+        moves.Add(new Vector4Int(linkx, linky, linkx + dx, linky + dy));
+
+        //L: Need to handle the edge case where the link tile moves to the prev tile's position
+        if (linkx+dx == x1 && linky+dy == y1)
+        {
+            //L: Move the empty spot to where the link tile used to be (which is now empty)
+            moves.Add(new Vector4Int(x2, y2, linkx, linky));
+        } else
+        {
+            //L: Move both empty spots to where the cooresponding tile used to be (like with normal swaps)
+            moves.Add(new Vector4Int(linkx + dx, linky + dy, linkx, linky));
+            moves.Add(new Vector4Int(x2, y2, x1, y1));
+        }
+    }
+}
+
 //L: Used primarily in the "Ocean" area for rotating tiles around
 public class SMoveRotate : SMove
 {
