@@ -6,7 +6,7 @@ using UnityEngine;
 public class SGridData 
 {
     public List<STileData> grid = new List<STileData>();
-    public List<STileData> altGrid = new List<STileData>();
+    // public List<STileData> altGrid = new List<STileData>();
 
     [System.Serializable]
     public class STileData {
@@ -33,10 +33,10 @@ public class SGridData
         foreach (STile s in sgrid.GetGrid()) {
             grid.Add(new STileData(s));
         }
-        if (sgrid.GetAltGrid() != null) {
-            foreach (STile s in sgrid.GetAltGrid()) {
-                altGrid.Add(new STileData(s));
-            }
-        }
+        // if (sgrid.GetAltGrid() != null) {
+        //     foreach (STile s in sgrid.GetAltGrid()) {
+        //         altGrid.Add(new STileData(s));
+        //     }
+        // }
     }
 }

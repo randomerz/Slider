@@ -38,9 +38,14 @@ public class Item : MonoBehaviour
         }
 
         STile hitTile = hit.GetComponent<STile>();
-        gameObject.transform.parent = hitTile.transform.Find("Tile Maps/Decorations").transform;
+        gameObject.transform.parent = hitTile.transform.Find("Objects").transform;
         return hitTile;
  
+    }
+
+    public virtual void OnEquip()
+    {
+        Player.setMoveSpeedMultiplier(1f);
     }
 
 

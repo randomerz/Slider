@@ -113,6 +113,8 @@ public class UIManager : MonoBehaviour
             artifactAnimator.SetBool("isVisible", false);
             StartCoroutine(CloseArtPanel());
         }
+
+        uiArtifact.DeselectCurrentButton();
     }
 
     private IEnumerator CloseArtPanel()

@@ -36,6 +36,7 @@ public class UIEffects : MonoBehaviour
 
     public static void FlashWhite()
     {
+        Debug.Log("Flashing!");
         _instance.StartCoroutine(_instance.FlashCoroutine());
     }
 

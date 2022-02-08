@@ -22,10 +22,11 @@ public class Collision : MonoBehaviour
             {
                 NPCManager.firstTimeFezziwigCheck = true;
                 //EightPuzzle.ShuffleBoard();
-                int[,] shuffledPuzzle = new int[3, 3] { { 7, 0, 1 },
-                                                        { 6, 4, 8 },
-                                                        { 5, 3, 2 } };
-                SGrid.current.SetGrid(shuffledPuzzle);
+                // int[,] shuffledPuzzle = new int[3, 3] { { 7, 0, 1 },
+                //                                         { 6, 4, 8 },
+                //                                         { 5, 3, 2 } };
+                // SGrid.current.SetGrid(shuffledPuzzle);
+                VillageGrid.instance.ShufflePuzzle();
                 npc.GetComponent<DialogueManager>().FadeAwayDialogue();
                 return;
             }

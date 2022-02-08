@@ -41,6 +41,8 @@ public class PlayerInventory : MonoBehaviour
         itemIterator = equipables.GetEnumerator();
         itemIterator.MoveNext();
         currentItem = itemIterator.Current;
+
+        currentItem.OnEquip();
     }
 
     public static void NextItem()
@@ -61,6 +63,7 @@ public class PlayerInventory : MonoBehaviour
         {
             currentItem = itemIterator.Current;
             currentItem.gameObject.SetActive(true);
+            currentItem.OnEquip();
         }
         else
         {

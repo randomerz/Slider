@@ -9,26 +9,13 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     public Image pushedDownFrame;
     public Image highlightedFrame;
 
+    //The button is pushed down, regardless of the method
     private bool isPushedDown;
+    //The button is selected by the user to be able to make a move.
+    private bool isSelected;
+    //The button is forced down because it is still being moved.
     private bool isForcedPushedDown;
     private bool isHighlighted;
-
-    //public void UpdatePushedDown()
-    //{
-    //    if (isPushedDown)
-    //    {
-    //        sliderImage.rectTransform.anchoredPosition = new Vector3(0, -1);
-    //        highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, -1);
-    //        pushedDownFrame.gameObject.SetActive(true);
-    //    }
-    //    else
-    //    {
-    //        isPushedDown = false;
-    //        sliderImage.rectTransform.anchoredPosition = new Vector3(0, 0);
-    //        highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, 0);
-    //        pushedDownFrame.gameObject.SetActive(false);
-    //    }
-    //}
 
     public void SetPushedDown(bool value)
     {
@@ -39,7 +26,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, -1);
             pushedDownFrame.gameObject.SetActive(true);
         }
-        else if (isPushedDown && !value && !isForcedPushedDown)
+        else if (isPushedDown && !value)
         {
             isPushedDown = false;
             sliderImage.rectTransform.anchoredPosition = new Vector3(0, 0);
@@ -48,10 +35,16 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         }
     }
 
+    public void SetSelected(bool value)
+    {
+        isSelected = value;
+        SetPushedDown(isSelected || isForcedPushedDown);
+    }
+
     public void SetForcedPushedDown(bool value)
     {
         isForcedPushedDown = value;
-        SetPushedDown(value);
+        SetPushedDown(isSelected || isForcedPushedDown);
     }
 
     public void SetHighlighted(bool value)

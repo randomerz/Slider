@@ -9,9 +9,9 @@ public class Player : MonoBehaviour
 
     // Movement
     [SerializeField] private float moveSpeed = 5;
-    public float moveSpeedMultiplier = 1;
+    private float moveSpeedMultiplier = 1;
     private bool canMove = true;
-
+    [SerializeField] private bool isOnWater = false;
 
     private InputSettings controls;
     private Vector3 lastMoveDir;
@@ -28,6 +28,10 @@ public class Player : MonoBehaviour
 
         controls = new InputSettings();
         controls.Player.Move.performed += context => Move(context.ReadValue<Vector2>());
+        if (PlayerInventory.Contains("Boots"))
+            {
+                bootsSpeedUp();
+            }
     }
 
     private void OnEnable() {
@@ -59,6 +63,9 @@ public class Player : MonoBehaviour
                 playerSpriteRenderer.flipX = false;
             }
         // }
+
+        playerAnimator.SetBool("isOnWater", isOnWater);
+        // playerAnimator.SetBool("hasSunglasses", hasSunglasses);
     }
 
     private void FixedUpdate()
@@ -130,5 +137,22 @@ public class Player : MonoBehaviour
             return -1;
         }
         return hit.GetComponent<STile>().islandId;
+    }
+
+    public static void setMoveSpeedMultiplier(float x)
+    {
+        _instance.moveSpeedMultiplier = x;
+    }
+
+    public void bootsSpeedUp()
+    {
+        if (moveSpeed==5)
+        {   // tested, does effectively change the player's speed whenever boots are picked up
+            // _instance.moveSpeed+=20;
+            _instance.moveSpeed+=2;
+            // Debug.Log(_instance.moveSpeed);
+
+            // lol you'll have to pick up a ton of these boots if you want the speed to be noticeable
+        }
     }
 }

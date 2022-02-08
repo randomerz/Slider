@@ -14,6 +14,7 @@ public class SGridAnimator : MonoBehaviour
     public class OnTileMoveArgs : System.EventArgs
     {
         public STile stile;
+        public Vector2Int prevPos;
     }
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMove;
     
@@ -80,7 +81,7 @@ public class SGridAnimator : MonoBehaviour
         stile.SetMovingDirection(Vector2.zero);
         stile.SetGridPosition(moveCoords.z, moveCoords.w);
 
-        InvokeOnSTileMove(stile);
+        InvokeOnSTileMove(stile, new Vector2Int(moveCoords.x, moveCoords.y));
     }
 
     private IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders)
@@ -164,7 +165,7 @@ public class SGridAnimator : MonoBehaviour
     }
 
 
-    private void InvokeOnSTileMove(STile stile)
+    private void InvokeOnSTileMove(STile stile, Vector2Int prevPos)
     {
         OnSTileMove?.Invoke(this, new OnTileMoveArgs { stile = stile });
     }
