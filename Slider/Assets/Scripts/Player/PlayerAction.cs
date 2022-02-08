@@ -97,6 +97,7 @@ public class PlayerAction : MonoBehaviour
             // find nearest
             if (nodes.Length > 0)
             {
+                Debug.Log("x");
                 isPicking = true;
 
                 Collider2D nearest = nodes[0];
