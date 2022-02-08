@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCManager : MonoBehaviour
+/*public class NPCManager : MonoBehaviour
 {
     private Dictionary<GameObject, int> voicelines = new Dictionary<GameObject, int>();
     public GameObject[] npcs = new GameObject[11];
@@ -217,4 +217,4 @@ public class NPCManager : MonoBehaviour
                 break;
         }
     }
-}
+}*/

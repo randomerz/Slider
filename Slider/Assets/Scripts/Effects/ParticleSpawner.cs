@@ -5,6 +5,7 @@ using UnityEngine;
 public class ParticleSpawner : MonoBehaviour
 {
     public GameObject[] fishSpawners;
+    public static bool fishOn; //temporary
     private bool fishActive;
 
     void Awake()
@@ -15,7 +16,7 @@ public class ParticleSpawner : MonoBehaviour
     void Update()
     {
         // check fish
-        if (!fishActive && NPCManager.fishOn)
+        if (!fishActive && fishOn)
         {
             SetFish(true);
         }

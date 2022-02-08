@@ -196,6 +196,14 @@ public class SGrid : MonoBehaviour
     {
         GetCollectible(name).gameObject.SetActive(true);
     }
+    public void GetSlider(int s)
+    {
+        if (!PlayerInventory.Contains("Slider " + s.ToString(), Area.Village))
+        {
+            ActivateCollectible("Slider " + s.ToString());
+            AudioManager.Play("Puzzle Complete");
+        }
+    }
 
     public Area GetArea() 
     {

@@ -24,18 +24,6 @@ public class NPC : MonoBehaviour
             currMessage = newDialogue;
             dialogueDisplay.NewMessagePing();
         }
-
-
-    }
-    // delete
-    public NPC(string cName)
-    {
-        characterName = cName;
-    }
-    // delete
-    public int GetCurrentDialogueNumber()
-    {
-        return FindObjectOfType<NPCManager>().getVoiceLineNumber(characterName);
     }
 
     public DialogueConditionals CurrentDialogue()
@@ -53,6 +41,7 @@ public class NPC : MonoBehaviour
     }
     public void TriggerDialogue()
     {
+        currMessage.OnDialogue();
         dialogueDisplay.DisplaySentence(currMessage.GetDialogue());
     }
 
@@ -61,4 +50,8 @@ public class NPC : MonoBehaviour
         dialogueDisplay.FadeAwayDialogue();
     }
 
+    public void ClearDialogue()
+    {
+        currMessage.ClearPrio();
+    }
 }

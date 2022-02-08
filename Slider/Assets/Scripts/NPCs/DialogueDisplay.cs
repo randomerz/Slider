@@ -12,8 +12,8 @@ public class DialogueDisplay : MonoBehaviour
     public GameObject canvas;
     public GameObject highContrastBG;
 
-    public bool doubleSizeMode = false;
-    public bool highContrastMode = false;
+    public static bool doubleSizeMode = false;
+    public static bool highContrastMode = false;
 
     void Start()
     {

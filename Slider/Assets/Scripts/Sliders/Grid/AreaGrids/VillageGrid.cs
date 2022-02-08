@@ -71,6 +71,7 @@ public class VillageGrid : SGrid
         base.LoadGrid();
     }
 
+    //delete
     public void ActivateSliderCollectible(int sliderId) { // temporary
         collectibles[sliderId - 1].gameObject.SetActive(true);
 
@@ -90,11 +91,10 @@ public class VillageGrid : SGrid
 
     // Puzzle 5 - R&J 
     // Checks if Romeo (tile 1) and Juliette (tile 5) are next to each other using Regex
-    public bool CheckLovers()
-    {
-        return CheckGrid.row(GetGridString(), "15.") || CheckGrid.row(GetGridString(), ".15");
-    }
-
+    //public bool CheckLovers()
+    //{
+        //return CheckGrid.row(GetGridString(), "15.") || CheckGrid.row(GetGridString(), ".15");
+    //}
     // Puzzle 6 - QR Code
     // This method is added to SGridAnimator.OnSTileMove above in OnEnable
     // Don't forget to remove it in OnDisable, or bad things will happen when unloaded!
@@ -124,9 +124,10 @@ public class VillageGrid : SGrid
 
     // Puzzle 7 - River
     // Checks if the river tiles are in order with Regex (see puzzle doc for the proper order)
-    public bool CheckRiver()
+    public void RiverChecked()
     {
-        return CheckGrid.contains(GetGridString(), "624_..7_...");
+        ParticleSpawner.fishOn = true;
+        //return CheckGrid.contains(GetGridString(), "624_..7_...");
     }
 
 
@@ -171,5 +172,10 @@ public class VillageGrid : SGrid
     public static bool CheckFinalPlacements()
     {
         return !PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153");
+    }
+
+    public void Explode()
+    {
+        //explosion stuff here
     }
 }

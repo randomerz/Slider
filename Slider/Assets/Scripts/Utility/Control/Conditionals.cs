@@ -9,15 +9,22 @@ public class Conditionals
     [System.Serializable]
     public class Condition
     {
+        [System.Serializable]
+        public class ConditionEvent : UnityEvent<Condition>
+        {
+        }
         public enum ConditionType
         {
             item,
             grid,
+            spec,
         }
         public ConditionType type;
         public Collectible.CollectibleData item;
         public string pattern;
+        public ConditionEvent checkBool;
 
+        private bool spec = false;
         public bool CheckCondition()
         {
             if (type == ConditionType.item)
@@ -28,7 +35,7 @@ public class Conditionals
                 }
                 return false;
             }
-            else
+            else if (type == ConditionType.grid)
             {
                 if (CheckGrid.contains(SGrid.GetGridString(), pattern))
                 {
@@ -36,6 +43,15 @@ public class Conditionals
                 }
                 return false;
             }
+            else
+            {
+                checkBool.Invoke(this);
+                return spec;
+            }
+        }
+        public void SetSpec(bool b)
+        {
+            spec = b;
         }
     }
     public UnityEvent onSuccess;
