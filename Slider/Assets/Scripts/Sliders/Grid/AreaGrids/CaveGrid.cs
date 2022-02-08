@@ -6,8 +6,6 @@ public class CaveGrid : SGrid
 {
     public static CaveGrid instance;
 
-    public Collectible[] collectibles;
-
     private bool[,] lightMap;
 
     public class OnLightMapUpdateArgs

@@ -885,9 +885,17 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 1324462117}
+    - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: islandId
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 639028751927084362, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 773443186602482951, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_ColliderPaths.Array.size
       value: 2
@@ -5192,6 +5200,14 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[83].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
+    - target: {fileID: 4411489396523937360, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
+    - target: {fileID: 4777183989298997953, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 5272183297352641541, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -5240,6 +5256,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cave STile (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 8705708549762332888, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
 --- !u!4 &328402524 stripped
@@ -5392,7 +5412,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -27937,9 +27957,17 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 1324462117}
+    - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: islandId
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 639028751927084362, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 773443186602482951, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_ColliderPaths.Array.size
       value: 2
@@ -32528,6 +32556,14 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[83].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
+    - target: {fileID: 4411489396523937360, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
+    - target: {fileID: 4777183989298997953, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 5272183297352641541, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -32576,6 +32612,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cave STile (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 8705708549762332888, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
 --- !u!4 &597119684 stripped
@@ -43709,6 +43749,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: House1
       objectReference: {fileID: 0}
+    - target: {fileID: 6882957947501164272, guid: b9163ad095d169a44845e4d790b6f6c7, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9163ad095d169a44845e4d790b6f6c7, type: 3}
 --- !u!114 &1270007711 stripped
@@ -43899,9 +43943,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 1324462117}
+    - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: islandId
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 639028751927084362, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 773443186602482951, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_ColliderPaths.Array.size
       value: 2
@@ -48314,6 +48366,14 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[83].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
+    - target: {fileID: 4411489396523937360, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
+    - target: {fileID: 4777183989298997953, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 5272183297352641541, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -48362,6 +48422,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cave STile (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 8705708549762332888, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
 --- !u!4 &1317421971 stripped
@@ -48481,7 +48545,6 @@ MonoBehaviour:
   - {fileID: 1661060402}
   - {fileID: 1270007711}
   - {fileID: 1662209177}
-  altStiles: []
   bgGridTiles:
   - {fileID: 528917036}
   - {fileID: 1223723976}
@@ -48713,9 +48776,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 1324462117}
+    - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: islandId
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 639028751927084362, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 773443186602482951, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_ColliderPaths.Array.size
       value: 2
@@ -50004,6 +50075,14 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[50].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
+    - target: {fileID: 4411489396523937360, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
+    - target: {fileID: 4777183989298997953, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 5272183297352641541, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -50052,6 +50131,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cave STile (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8705708549762332888, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 9062277364896876758, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: floor
       value: 
@@ -50097,6 +50180,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 1324462117}
+    - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: islandId
       value: 1
       objectReference: {fileID: 0}
@@ -50104,6 +50191,10 @@ PrefabInstance:
       propertyPath: isTileActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 639028751927084362, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 773443186602482951, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_ColliderPaths.Array.size
       value: 1
@@ -52540,6 +52631,14 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[50].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
+    - target: {fileID: 4411489396523937360, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
+    - target: {fileID: 4777183989298997953, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 5272183297352641541, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -52592,6 +52691,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8705708549762332888, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
 --- !u!4 &1524725814 stripped
@@ -52611,9 +52714,17 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 1324462117}
+    - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: islandId
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 639028751927084362, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 773443186602482951, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.size
       value: 1
@@ -55102,6 +55213,10 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[56].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
+    - target: {fileID: 4411489396523937360, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 5272183297352641541, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -55150,6 +55265,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cave STile (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 8705708549762332888, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
 --- !u!4 &1553733329 stripped
@@ -55537,9 +55656,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 1324462117}
+    - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: islandId
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 639028751927084362, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 773443186602482951, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_ColliderPaths.Array.size
       value: 2
@@ -60084,6 +60211,10 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[83].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
+    - target: {fileID: 4777183989298997953, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 5272183297352641541, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -60132,6 +60263,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cave STile (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 8705708549762332888, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
 --- !u!4 &1718795509 stripped
@@ -82932,8 +83067,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightOn: 1
+  lightDir: {x: 0, y: 0}
   grid: {fileID: 1324462117}
   stile: {fileID: 0}
+  type: 0
 --- !u!114 &1755218402 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
@@ -83192,6 +83329,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6114948862163228022, guid: 56a510c436cb1454b9a790526fa80eca, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6114948862163228022, guid: 56a510c436cb1454b9a790526fa80eca, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6114948862163228022, guid: 56a510c436cb1454b9a790526fa80eca, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6114948862163228022, guid: 56a510c436cb1454b9a790526fa80eca, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 7014586752846344659, guid: 56a510c436cb1454b9a790526fa80eca, type: 3}
       propertyPath: m_Name
       value: Tree1
@@ -83210,9 +83363,17 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 1324462117}
+    - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: islandId
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 639028751927084362, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 773443186602482951, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_ColliderPaths.Array.size
       value: 2
@@ -87169,6 +87330,10 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[83].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
+    - target: {fileID: 4411489396523937360, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 5272183297352641541, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -87217,6 +87382,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cave STile (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 8705708549762332888, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
 --- !u!4 &1823462006 stripped
@@ -88068,6 +88237,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1324462114}
     m_Modifications:
+    - target: {fileID: 1755218402, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 1324462117}
+    - target: {fileID: 639028751927084362, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
+    - target: {fileID: 4777183989298997953, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     - target: {fileID: 5272183297352641541, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -88116,6 +88297,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cave STile (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 8705708549762332888, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4770628f1f18bab4495e9cb5f9c4aacf, type: 3}
 --- !u!1001 &2620790809741503419

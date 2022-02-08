@@ -4,50 +4,57 @@ using UnityEngine;
 
 public class CaveSTile : STile
 {
-    private bool isShadowed;
+    public bool isLit
+    {
+        get;
+        private set;
+    }
 
     //L: For Later
     public Shader paletteSwapShader;
 
     public CaveGrid grid;
 
-    private CaveLight light;
+    private CaveLight cLight;
 
     public void Start()
     {
-        isShadowed = false;
+        isLit = false;
 
         grid = SGrid.current as CaveGrid;
 
-        SGridAnimator.OnSTileMove += UpdateMapAndShadowsAfterMove;
-        CaveGrid.OnLightMapUpdate += UpdateIsShadowedHandler;
+        CaveGrid.OnLightMapUpdate += OnLightMapUpdate;
+        SGridAnimator.OnSTileMove += OnTileMoved;
 
-        light = GetComponent<CaveLight>();
+        cLight = GetComponent<CaveLight>();
     }
 
-    public void UpdateIsShadowed()
+    private void UpdateIsLit()
     {
-        isShadowed = (SGrid.current as CaveGrid).GetLit(this.x, this.y);
+        isLit = (SGrid.current as CaveGrid).GetLit(this.x, this.y);
+        //Debug.Log("Tile" + this.islandId + " is " + isLit);
 
         //L: TODO Do something to the shader to update the tiles
     }
 
-    public void UpdateIsShadowedHandler(object sender, CaveGrid.OnLightMapUpdateArgs e)
+    //L: The two ways that a tile could change lighting are if the light map changes or if the tile moves
+
+    public void OnLightMapUpdate(object sender, CaveGrid.OnLightMapUpdateArgs e)
     {
-        isShadowed = e.lightMap[x, y];
+        UpdateIsLit();
     }
 
-    private void UpdateMapAndShadowsAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    public void OnTileMoved(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (e.stile == this)
         {
-            UpdateIsShadowed();
-        }
+            UpdateIsLit();
 
-        if (light != null)
-        {
-            grid.SetLit(e.prevPos.x, e.prevPos.y, false);
-            grid.SetLit(e.stile.x, e.stile.y, false);
+            if (cLight != null)
+            {
+                cLight.UpdateLightMap(e.prevPos.x, e.prevPos.y, false);
+                cLight.UpdateLightMap(this.x, this.y, true);
+            }
         }
     }
 }
