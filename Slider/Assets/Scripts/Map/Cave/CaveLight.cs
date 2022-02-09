@@ -5,8 +5,13 @@ using UnityEngine;
 public class CaveLight : MonoBehaviour
 {
     public bool lightOn;
-    private Vector2Int lightDir;
 
+    [Header("Lighting Options")]
+    public Vector2Int lightDir;
+    public float lightRadius;
+    public float lightArcAngle;
+
+    [Header("Grid Update")]
     public CaveGrid grid;
 
     public CaveSTile stile;

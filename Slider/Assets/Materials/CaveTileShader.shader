@@ -2,11 +2,11 @@ Shader "Custom/CaveTileShader"
 {
 	Properties{
 			_MainTex("Texture", 2D) = "white" {}
-			[Toggle(IsLit)] _Lit("IsLit", Float) = 0
+			//[Toggle(IsLit)] _Lit("IsLit", Float) = 0
 	}
 
 	SubShader{
-		Tags{ "RenderType" = "Transparent" "Queue" = "Transparent"}
+		Tags{ "RenderType" = "Transparent" "Queue" = "Transparent" "UsesCaveLights" = "Yes"}
 
 		Blend SrcAlpha OneMinusSrcAlpha
 
@@ -26,6 +26,11 @@ Shader "Custom/CaveTileShader"
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
 			bool _Lit;
+
+			float4 lightPos[3];
+			float4 lightDir[3];
+			float4 lightRadius[3];
+			float4 lightArcAngle[3];
 
 			fixed4 _Color;
 
