@@ -33,22 +33,30 @@ public class LightManager : MonoBehaviour
 
     void UpdateShaderLights()
     {
-        Texture2D lightData = new Texture2D(lights.Length, 4);
-        for (int u=0; u<lights.Length; u++)
+        Matrix4x4 pos = new Matrix4x4();
+        Matrix4x4 dir = new Matrix4x4();
+        Vector4 radius = new Vector4();
+        Vector4 arcAngle = new Vector4();
+        Vector4 active = new Vector4();
+        for (int i=0; i<lights.Length; i++)
         {
-            Vector4 lightPos = lights[u].transform.position;
-            Vector4 lightDir = new Vector4(lights[u].lightDir.x, lights[u].lightDir.y);
-            float lightRadius = lights[u].lightRadius;
-            float lightArcAngle = lights[u].lightArcAngle;
-            lightData.SetPixel(u, 0, lightPos);
-            lightData.SetPixel(u, 1, lightDir);
-            lightData.SetPixel(u, 2, new Vector4(lightRadius, lightRadius));
-            lightData.SetPixel(u, 3, new Vector4(lightArcAngle, lightArcAngle));
+            pos.SetRow(i, lights[i].transform.position);
+            dir.SetRow(i, new Vector4(lights[i].lightDir.x, lights[i].lightDir.y));
+            radius[i] = lights[i].lightRadius;
+            arcAngle[i] = lights[i].lightArcAngle;
+            //Debug.Log(lights[i].enabled);
+            Debug.Log(lights[i].lightOn);
+            active[i] = lights[i].gameObject.activeInHierarchy && lights[i].lightOn ? 1.0f : 0.0f;
+            Debug.Log(active[i]);
         }
 
         foreach (Material m in caveLightMaterials)
         {
-            m.SetTexture("_LightData", lightData);
+            m.SetMatrix("_LightPos", pos);
+            m.SetMatrix("_LightDir", dir);
+            m.SetVector("_LightRadius", radius);
+            m.SetVector("_LightArcAngle", arcAngle);
+            m.SetVector("_LightActive", active);
         }
     }
 }
