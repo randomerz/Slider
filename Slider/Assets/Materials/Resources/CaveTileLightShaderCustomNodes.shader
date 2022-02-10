@@ -20,19 +20,15 @@ Shader "Custom/CaveTileShader"
 
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma 
-			
 			
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			bool _Lit;
 
-			float4 lightPos[3];
-			float4 lightDir[3];
-			float4 lightRadius[3];
-			float4 lightArcAngle[3];
-
-			fixed4 _Color;
+			//Arrays need to be fixed for shaders
+			uniform float4 lightPos[3];
+			uniform float4 lightDir[3];
+			uniform float lightRadius[3];
+			uniform float lightArcAngle[3];
 
 			struct appdata {
 				float4 vertex : POSITION;
@@ -57,7 +53,19 @@ Shader "Custom/CaveTileShader"
 			fixed4 frag(v2f i) : SV_TARGET{
 				fixed4 col = tex2D(_MainTex, i.uv);
 				
-				if (_Lit < 0.5) {
+				bool lit = false;
+				
+				for (uint index = 0; index < 3; i++) {
+					
+					bool distGood = length(lightPos[index].xyz - i.position.xyz) < lightRadius[0];
+					lit = distGood;
+
+					if (lit) {
+						break;
+					}
+				}
+				
+				if (!lit) {
 					if (col.r > 0.75) {
 						col = fixed4(0.6, 0.6, 0.6, col.a);
 					}
