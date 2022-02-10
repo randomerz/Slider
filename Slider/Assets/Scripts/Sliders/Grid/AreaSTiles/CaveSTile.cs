@@ -49,12 +49,6 @@ public class CaveSTile : STile
         if (e.stile == this)
         {
             UpdateIsLit();
-
-            if (cLight != null)
-            {
-                cLight.UpdateLightMap(e.prevPos.x, e.prevPos.y, false);
-                cLight.UpdateLightMap(this.x, this.y, true);
-            }
         }
     }
 }

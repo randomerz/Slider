@@ -1,4 +1,5 @@
-void IsPosLit_float(float2 position, float4x4 _LightPos, float4x4 _LightDir, float4 _LightRadius, float4 _LightArcAngle, float4 _LightActive, out bool output) {
+/* Goodbye custom HLSL function
+void IsPosLit_float(float2 position, Texture2D lightMask, out bool output) {
     output = false;
     for (int lIndex = 0; lIndex < 3; lIndex++) {
         if (_LightActive[lIndex] > 0.5f) {
@@ -12,6 +13,7 @@ void IsPosLit_float(float2 position, float4x4 _LightPos, float4x4 _LightDir, flo
         }
     }
 }
+*/
 
 void GetShadowedPixel_float(float4 inColor, out float4 outColor) {
     if (inColor.r > 0.75) {

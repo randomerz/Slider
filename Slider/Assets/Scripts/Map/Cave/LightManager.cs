@@ -8,6 +8,14 @@ public class LightManager : MonoBehaviour
     public CaveLight[] lights;
 
     public GameObject tilesRoot;
+    public GameObject worldBorderTiles;
+
+    private int maskOffsetX;
+    private int maskOffsetY;
+    private int maskSizeX;
+    private int maskSizeY;
+    [SerializeField]
+    private Texture2D lightMask;
 
     [SerializeField]
     private List<Material> caveLightMaterials;
@@ -28,9 +36,64 @@ public class LightManager : MonoBehaviour
             }
         }
 
-        UpdateShaderLights();
+        maskOffsetX = worldBorderTiles.GetComponent<Tilemap>().cellBounds.x;
+        maskOffsetY = worldBorderTiles.GetComponent<Tilemap>().cellBounds.y;
+        maskSizeX = worldBorderTiles.GetComponent<Tilemap>().cellBounds.xMax - maskOffsetX;
+        maskSizeY = worldBorderTiles.GetComponent<Tilemap>().cellBounds.yMax - maskOffsetY;
+        GenerateLightMask();
+        UpdateMaterials();
     }
 
+    void GenerateLightMask()
+    {
+        lightMask = new Texture2D(maskSizeX, maskSizeY);
+        for (int x = 0; x < maskSizeX; x++)
+        {
+            for (int y = 0; y < maskSizeY; y++)
+            {
+                if (x > maskSizeX / 2)
+                {
+                    lightMask.SetPixel(x, y, Color.white);
+                } else
+                {
+                    lightMask.SetPixel(x, y, Color.black);
+                }
+
+            }
+        }
+
+        
+        foreach (CaveLight l in lights)
+        {
+            Texture2D mask = l.GetLightMask(maskOffsetX, maskOffsetY, maskSizeX, maskSizeY);
+
+            //L: Add the pixels together
+            for (int x = 0; x < maskSizeX; x++)
+            {
+                for (int y = 0; y < maskSizeY; y++)
+                {
+                    Color ogPixel = lightMask.GetPixel(x, y); ;
+                    Color newPixel = mask.GetPixel(x, y);
+                    lightMask.SetPixel(x, y, ogPixel + newPixel);
+                }
+            }
+        }
+        
+
+        lightMask.Apply();
+    }
+
+    void UpdateMaterials()
+    {
+        foreach (Material m in caveLightMaterials)
+        {
+            m.SetTexture("_LightMask", lightMask);
+            m.SetVector("_MaskOffset", new Vector4(maskOffsetX, maskOffsetY));
+            m.SetVector("_MaskSize", new Vector4(maskSizeX, maskSizeY));
+        }
+    }
+
+    /* Old Shader
     void UpdateShaderLights()
     {
         Matrix4x4 pos = new Matrix4x4();
@@ -59,4 +122,5 @@ public class LightManager : MonoBehaviour
             m.SetVector("_LightActive", active);
         }
     }
+    */
 }
