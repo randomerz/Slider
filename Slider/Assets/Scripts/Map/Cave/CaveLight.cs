@@ -74,10 +74,11 @@ public class CaveLight : MonoBehaviour
         Vector2Int[] dirs = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
         foreach (Vector2Int dir in dirs)
         {
+            Vector2Int curr = lightPos;
             for (int width = -8; width <= 8; width++)
             {
                 //L: The current tile being observed in world coords.
-                Vector2Int curr = lightPos + new Vector2Int(dir.y, dir.x) * width;
+                curr = lightPos + new Vector2Int(dir.y, dir.x) * width;
 
                 //L: "Fake Raycast" from the light's position (+ width) up to 25 tiles before it hits a wall
                 for (int j=0; j<=17+8; j++)
@@ -86,19 +87,19 @@ public class CaveLight : MonoBehaviour
                     int maskY = curr.y + worldToMaskDY;
 
                     //L: Bounds Check
-                    if (maskX < 0 || maskX > maskSizeX || maskY < 0 || maskY > maskSizeY)
+                    if (maskX < 0 || maskX > maskSizeX-1 || maskY < 0 || maskY > maskSizeY-1)
                     {
                         break;
                     }
-
+                    
                     mask.SetPixel(maskX, maskY, Color.white);
-                    curr += dir;
 
                     // L: Hit Wall Check (Note: This is after so that the start of the tile still gets lit, but nothing else.
                     if (!lightOnWall && heightMask.GetPixel(maskX, maskY).r > 0.5)
                     {
-                        //break;
+                        break;
                     }
+                    curr += dir;
                 }
             }
         }
