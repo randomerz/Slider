@@ -58,7 +58,7 @@ public class OceanArtifact : UIArtifact
 
             STile[,] grid = SGrid.current.GetGrid();
 
-            if (grid[curX, curY].hasAnchor)
+            if (grid[curX, curY].hasAnchor && grid[curX, curY].isTileActive)
             {
                 SMoveRotateArr.RemoveAt(i);
                 tb.RemoveAt(i);
