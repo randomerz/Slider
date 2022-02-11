@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BobAnimation : MonoBehaviour
 {
-    private Vector3 origPos;
+    private Vector3 origOffset;
     private float PPU = 16;
 
     [SerializeField] private float totalLength = 3f; 
@@ -15,7 +15,7 @@ public class BobAnimation : MonoBehaviour
 
     void Start()
     {
-        origPos = transform.position;
+        origOffset = transform.localPosition;
     }
 
     void Update()
@@ -28,28 +28,28 @@ public class BobAnimation : MonoBehaviour
                 if (t >= firstDown)
                 {
                     state = 1;
-                    transform.position = origPos + (Vector3.down / PPU);
+                    transform.localPosition = origOffset + (Vector3.down / PPU);
                 }
                 break;
             case 1:
                 if (t >= backMiddle)
                 {
                     state = 2;
-                    transform.position = origPos;
+                    transform.localPosition = origOffset;
                 }
                 break;
             case 2:
                 if (t >= firstUp)
                 {
                     state = 3;
-                    transform.position = origPos + (Vector3.up / PPU);
+                    transform.localPosition = origOffset + (Vector3.up / PPU);
                 }
                 break;
             case 3:
                 if (t < firstDown) // cant be t > totalLength
                 {
                     state = 0;
-                    transform.position = origPos;
+                    transform.localPosition = origOffset;
                 }
                 break;
         }
