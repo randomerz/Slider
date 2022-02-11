@@ -58,14 +58,21 @@ public class CaveLight : MonoBehaviour
                 //L: "Fake Raycast" from the light's position (+ width) up to 25 tiles before it hits a wall
                 for (int j=0; j<=17+8; j++)
                 {
-                    /*
-                    if (!lightOnWall && heightMask.GetPixel(curr.x + worldToMaskDX, curr.y + worldToMaskDY).r > 0.5)
+                    int maskX = curr.x + worldToMaskDX;
+                    int maskY = curr.y + worldToMaskDY;
+                    /* L: Hit Wall Check
+                    if (!lightOnWall && heightMask.GetPixel(maskX, maskY).r > 0.5)
                     {
                         break;
                     }
                     */
-                    
-                    mask.SetPixel(curr.x + worldToMaskDX, curr.y + worldToMaskDY, Color.white);
+
+                    //L: Bounds Check
+                    if (maskX < 0 || maskX > maskSizeX || maskY < 0 || maskY > maskSizeY)
+                    {
+                        break;
+                    }
+                    mask.SetPixel(maskX, maskY, Color.white);
 
                     curr += dir;
                 }
