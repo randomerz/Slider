@@ -6,7 +6,7 @@ public class CaveGrid : SGrid
 {
     public static CaveGrid instance;
 
-    public Collectible[] collectibles;
+    // public Collectible[] collectibles;
 
     private bool[,] lightMap;
 
