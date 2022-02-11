@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+/* L : Responsible for storing heightMask, lightMask, and updating materials based on the lightMask. */
 public class LightManager : MonoBehaviour
 {
     public CaveLight[] lights;
+    public CaveSTile[] stiles;
 
     public GameObject tilesRoot;
-    public GameObject worldBorderTiles;
+    public Tilemap worldWallsTilemap;
+    public Tilemap worldBorderColliderTilemap;
 
-    private int maskOffsetX;
-    private int maskOffsetY;
+    private int worldToMaskDX;
+    private int worldToMaskDY;
     private int maskSizeX;
     private int maskSizeY;
+
+    [SerializeField]
+    private Texture2D heightMask;
     [SerializeField]
     private Texture2D lightMask;
 
@@ -36,36 +42,62 @@ public class LightManager : MonoBehaviour
             }
         }
 
-        maskOffsetX = worldBorderTiles.GetComponent<Tilemap>().cellBounds.x;
-        maskOffsetY = worldBorderTiles.GetComponent<Tilemap>().cellBounds.y;
-        maskSizeX = worldBorderTiles.GetComponent<Tilemap>().cellBounds.xMax - maskOffsetX;
-        maskSizeY = worldBorderTiles.GetComponent<Tilemap>().cellBounds.yMax - maskOffsetY;
+        worldToMaskDX = -worldBorderColliderTilemap.cellBounds.x;
+        worldToMaskDY = -worldBorderColliderTilemap.cellBounds.y;
+        maskSizeX = worldBorderColliderTilemap.cellBounds.xMax + worldToMaskDX;
+        maskSizeY = worldBorderColliderTilemap.cellBounds.yMax + worldToMaskDY;
+        GenerateHeightMask();
         GenerateLightMask();
         UpdateMaterials();
+    }
+
+    void GenerateHeightMask()
+    {
+        heightMask = new Texture2D(maskSizeX, maskSizeY);
+        for (int u = 0; u < maskSizeX; u++)
+        {
+            for (int v = 0; v < maskSizeY; v++)
+            {
+                heightMask.SetPixel(u, v, worldWallsTilemap.GetTile(new Vector3Int(u - worldToMaskDX, v - worldToMaskDY, 0)) != null ? Color.white : Color.black);
+            }
+        }
+
+        foreach (CaveSTile stile in stiles)
+        {
+            Texture2D mask = stile.GetHeightMask();
+            //L: Convert from the stile mask coords to the overall texture coords.
+            for (int u1 = 0; u1 < stile.STILE_WIDTH; u1++)
+            {
+                for (int v1 = 0; v1 < stile.STILE_WIDTH; v1++)
+                {
+                    int u2 = u1 - stile.STILE_WIDTH / 2 + (int) stile.transform.position.x + worldToMaskDX;
+                    int v2 = v1 - stile.STILE_WIDTH / 2 + (int)stile.transform.position.x + worldToMaskDY;
+
+                    heightMask.SetPixel(u2, v2, mask.GetPixel(u1, v1));
+                }
+            }
+        }
+
+        heightMask.Apply();
     }
 
     void GenerateLightMask()
     {
         lightMask = new Texture2D(maskSizeX, maskSizeY);
+        //L: Set all pixels to black (default is grey color)
         for (int x = 0; x < maskSizeX; x++)
         {
             for (int y = 0; y < maskSizeY; y++)
             {
-                if (x > maskSizeX / 2)
-                {
-                    lightMask.SetPixel(x, y, Color.white);
-                } else
-                {
-                    lightMask.SetPixel(x, y, Color.black);
-                }
-
+                lightMask.SetPixel(x, y, Color.black);
             }
         }
 
+        lightMask.Apply();
         
         foreach (CaveLight l in lights)
         {
-            Texture2D mask = l.GetLightMask(maskOffsetX, maskOffsetY, maskSizeX, maskSizeY);
+            Texture2D mask = l.GetLightMask(heightMask, worldToMaskDX, worldToMaskDY, maskSizeX, maskSizeY);
 
             //L: Add the pixels together
             for (int x = 0; x < maskSizeX; x++)
@@ -88,12 +120,12 @@ public class LightManager : MonoBehaviour
         foreach (Material m in caveLightMaterials)
         {
             m.SetTexture("_LightMask", lightMask);
-            m.SetVector("_MaskOffset", new Vector4(maskOffsetX, maskOffsetY));
+            m.SetVector("_MaskOffset", new Vector4(worldToMaskDX, worldToMaskDY));
             m.SetVector("_MaskSize", new Vector4(maskSizeX, maskSizeY));
         }
     }
 
-    /* Old Shader
+    /* Old Shader Code
     void UpdateShaderLights()
     {
         Matrix4x4 pos = new Matrix4x4();

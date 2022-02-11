@@ -27,8 +27,13 @@ public class CaveLight : MonoBehaviour
         lightDir = new Vector2Int(-1, 0);
     }
 
-    public Texture2D GetLightMask(int maskOffsetX, int maskOffsetY, int maskSizeX, int maskSizeY)
+    /* L: Gets the light mask for THIS LIGHT ONLY (see LightManager.cs for the whole world) */
+    public Texture2D GetLightMask(Texture2D heightMask, int worldToMaskDX, int worldToMaskDY, int maskSizeX, int maskSizeY)
     {
+        if (heightMask.width != maskSizeX && heightMask.height != maskSizeY)
+        {
+            Debug.LogError("heightMask did not match expected dimensions in CaveLight.cs");
+        }
 
         Texture2D mask = new Texture2D(maskSizeX, maskSizeY);
         for (int x = 0; x < maskSizeX; x++)
@@ -38,25 +43,36 @@ public class CaveLight : MonoBehaviour
                 mask.SetPixel(x, y, Color.black);
             }
         }
-        Vector2Int pos = new Vector2Int((int)transform.position.x, (int)transform.position.y);
+        Vector2Int lightPos = new Vector2Int((int)transform.position.x, (int)transform.position.y);
+
+        bool lightOnWall = heightMask.GetPixel(lightPos.x + worldToMaskDX, lightPos.y + worldToMaskDY).r > 0.5; 
 
         Vector2Int[] dirs = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
         foreach (Vector2Int dir in dirs)
         {
-            for (int i = -8; i <= 8; i++)
+            for (int width = -8; width <= 8; width++)
             {
-                Vector2Int start = pos + new Vector2Int(dir.y, dir.x) * i;
-                RaycastHit2D hit = Physics2D.Raycast(start, dir, 60);
+                //L: The current tile being observed in world coords.
+                Vector2Int curr = lightPos + new Vector2Int(dir.y, dir.x) * width;
 
-                int dist = (int) (hit.point - start).magnitude;
-                Vector2Int curr = start;
-                for (int j=0; j<dist; j++)
+                //L: "Fake Raycast" from the light's position (+ width) up to 25 tiles before it hits a wall
+                for (int j=0; j<=17+8; j++)
                 {
-                    mask.SetPixel(curr.x - maskOffsetX, curr.y - maskOffsetY, Color.white);
+                    /*
+                    if (!lightOnWall && heightMask.GetPixel(curr.x + worldToMaskDX, curr.y + worldToMaskDY).r > 0.5)
+                    {
+                        break;
+                    }
+                    */
+                    
+                    mask.SetPixel(curr.x + worldToMaskDX, curr.y + worldToMaskDY, Color.white);
+
                     curr += dir;
                 }
             }
         }
+
+        mask.Apply();
         return mask;
     }
 
