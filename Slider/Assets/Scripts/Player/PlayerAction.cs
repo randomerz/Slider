@@ -9,6 +9,9 @@ public class PlayerAction : MonoBehaviour
     [SerializeField] private Transform itemPickupLocation;
     [SerializeField] private GameObject itemDropIndicator;
     private bool canDrop;
+    
+    private int actionsAvailable = 0;
+    [SerializeField] private GameObject actionAvailableIndicator;
 
     [SerializeField] private LayerMask itemMask;
     [SerializeField] private LayerMask dropCollidingMask;
@@ -149,6 +152,25 @@ public class PlayerAction : MonoBehaviour
 
     public bool HasItem() {
         return pickedItem != null;
+    }
+
+
+    public void IncrementActionsAvailable()
+    {
+        actionsAvailable += 1;
+        if (actionsAvailable > 0)
+        {
+            actionAvailableIndicator.SetActive(true);
+        }
+    }
+
+    public void DecrementActionsAvailable()
+    {
+        actionsAvailable -= 1;
+        if (actionsAvailable <= 0)
+        {
+            actionAvailableIndicator.SetActive(false);
+        }
     }
 
 

@@ -8,7 +8,7 @@ public class OceanGrid : SGrid
 
     private static bool checkCompletion = false;
 
-    public Collectible[] collectibles;
+    // public Collectible[] collectibles;
 
     private new void Awake() {
         myArea = Area.Ocean;
@@ -22,19 +22,6 @@ public class OceanGrid : SGrid
 
         instance = this;
     }
-    
-    private void OnEnable() {
-        if (checkCompletion) {
-            SGrid.OnGridMove += SGrid.CheckCompletions;
-        }
-        
-    }
-
-    private void OnDisable() {
-        if (checkCompletion) {
-            SGrid.OnGridMove -= SGrid.CheckCompletions;
-        }
-    }
 
     void Start()
     {
@@ -44,10 +31,32 @@ public class OceanGrid : SGrid
             {
                 c.gameObject.SetActive(false);
             }
+
+            if (c.GetName() == "Slider 5")
+            {
+                c.gameObject.SetActive(false);
+            }
         }
 
         AudioManager.PlayMusic("Connection");
         UIEffects.FadeFromBlack();
+
+    }
+    
+    private void OnEnable() {
+        // if (checkCompletion) {
+        //     SGrid.OnGridMove += SGrid.CheckCompletions;
+        // }
+
+        SGridAnimator.OnSTileMove += CheckShipwreck;
+    }
+
+    private void OnDisable() {
+        // if (checkCompletion) {
+        //     SGrid.OnGridMove -= SGrid.CheckCompletions;
+        // }
+
+        SGridAnimator.OnSTileMove -= CheckShipwreck;
     }
 
     public override void SaveGrid() 
@@ -58,5 +67,26 @@ public class OceanGrid : SGrid
     public override void LoadGrid()
     {
         base.LoadGrid();
+    }
+
+
+    // === Ocean puzzle specific ===
+
+    public void CheckShipwreck(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (IsShipwreckAdjacent())
+        {
+            Collectible c = GetCollectible("Slider 5");
+            
+            if (!PlayerInventory.Contains(c))
+            {
+                c.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    public bool IsShipwreckAdjacent()
+    {
+        return CheckGrid.row(GetGridString(), "41");
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
+// Used in the ocean area
 public class UIRotateParams : MonoBehaviour
 {
     [Header("Params to set")]
@@ -95,7 +96,7 @@ public class UIRotateParams : MonoBehaviour
     {
         // OnHover();
 
-        artifact.RotateTiles(bottomLeftX, bottomLeftY, isCCW);
+        artifact.AddQueue(bottomLeftX, bottomLeftY, isCCW);
 
     }
 }

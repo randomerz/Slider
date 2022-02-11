@@ -12,6 +12,12 @@ public class Anchor : Item
     {
         GetComponentInParent<STile>().hasAnchor = true;
     }
+
+    private void OnDisable()
+    {
+        Player.setMoveSpeedMultiplier(1f);
+    }
+
     public override void PickUpItem(Transform pickLocation, System.Action callback = null) // pickLocation may be moving
     {
         Debug.Log("Anchor");
@@ -22,6 +28,13 @@ public class Anchor : Item
         }
         base.PickUpItem(pickLocation, callback);
 
+        Player.setMoveSpeedMultiplier(0.75f);
+
+    }
+
+    public override void OnEquip()
+    {
+        Player.setMoveSpeedMultiplier(0.75f);
     }
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback = null)
@@ -31,6 +44,9 @@ public class Anchor : Item
         {
             hitTile.hasAnchor = true;
         }
+
+        Player.setMoveSpeedMultiplier(1f);
+
         return null;
     }
 
@@ -39,6 +55,8 @@ public class Anchor : Item
         CameraShake.Shake(shakeDuration, shakeAmount);
         AudioManager.Play("Slide Explosion");
     }
+
+    
 
 
 }

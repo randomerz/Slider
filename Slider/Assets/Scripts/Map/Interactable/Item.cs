@@ -38,9 +38,14 @@ public class Item : MonoBehaviour
         }
 
         STile hitTile = hit.GetComponent<STile>();
-        gameObject.transform.parent = hitTile.transform.Find("Tile Maps/Decorations").transform;
+        gameObject.transform.parent = hitTile.transform.Find("Objects").transform;
         return hitTile;
  
+    }
+
+    public virtual void OnEquip()
+    {
+        Player.setMoveSpeedMultiplier(1f);
     }
 
 
@@ -49,8 +54,8 @@ public class Item : MonoBehaviour
         float t = 0;
 
         Vector3 start = new Vector3(transform.position.x, transform.position.y);
-        Debug.Log(myCollider);
-        Debug.Log(spriteRenderer);
+        // Debug.Log(myCollider);
+        // Debug.Log(spriteRenderer);
         while (t < pickUpDuration)
         {
             float x = xPickUpMotion.Evaluate(t / pickUpDuration);

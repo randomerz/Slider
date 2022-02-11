@@ -6,7 +6,7 @@
 <!--- Describe your changes in detail -->
 
 ## Related Task
-<!--- Please Link click-up task related to this PR -->
+<!--- What is the related trello task for this PR -->
 
 ## How Has This Been Tested?
 <!--- Please describe in detail how you tested your changes. -->

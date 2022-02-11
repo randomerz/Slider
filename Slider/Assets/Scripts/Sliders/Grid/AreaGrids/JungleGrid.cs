@@ -6,8 +6,6 @@ public class JungleGrid : SGrid
 {
     public static JungleGrid instance;
 
-    public Collectible[] collectibles;
-
     private new void Awake() {
         myArea = Area.Jungle;
 

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ArtifactTileButton : MonoBehaviour
 {
-    public static bool canComplete = false;
+    // public static bool canComplete = false;
     public bool isComplete = false;
     public bool isForcedDown = false;
 
@@ -15,12 +15,19 @@ public class ArtifactTileButton : MonoBehaviour
     public int x;
     public int y;
 
+    public bool flickerNext = false;
+    private bool startsActive;
+
     private const int UI_OFFSET = 37;
 
-    private STile myStile;
+    public STile MyStile { get; private set; }
+    public ArtifactTileButton linkButton;
+
     private Sprite islandSprite;
     public Sprite completedSprite;
     public Sprite emptySprite;
+    public Sprite hoverSprite;
+    public Sprite blankSprite;
     public ArtifactTileButtonAnimator buttonAnimator;
     public UIArtifact buttonManager;
 
@@ -28,15 +35,37 @@ public class ArtifactTileButton : MonoBehaviour
     {
         islandSprite = buttonAnimator.sliderImage.sprite;
 
-        myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
-        SetTileActive(myStile.isTileActive);
-        SetPosition(myStile.x, myStile.y);
+        MyStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
+        
+        startsActive = MyStile.isTileActive;
+        SetTileActive(MyStile.isTileActive);
+        SetPosition(MyStile.x, MyStile.y);
+
+        linkButton = null;
+        foreach (ArtifactTileButton b in buttonManager.buttons) {
+            if (MyStile.linkTile != null && MyStile.linkTile == b.MyStile)
+            {
+                linkButton = b;
+                b.linkButton = this;
+            }
+        }
 
         //if (!isTileActive)
         //{
         //    buttonAnimator.sliderImage.sprite = emptySprite;
         //}
         // update artifact button
+    }
+
+    public void OnDisable()
+    {
+        if (MyStile.isTileActive)
+        {
+            if (buttonAnimator.sliderImage.sprite == emptySprite || buttonAnimator.sliderImage.sprite == blankSprite)
+            {
+                ResetToIslandSprite();
+            }
+        }
     }
 
     public void SetPosition(int x, int y)
@@ -70,6 +99,11 @@ public class ArtifactTileButton : MonoBehaviour
         buttonAnimator.SetPushedDown(v);
     }
 
+    public void SetSelected(bool v)
+    {
+        buttonAnimator.SetSelected(v);
+    }
+
     public void SetForcedPushedDown(bool v)
     {
         buttonAnimator.SetForcedPushedDown(v);
@@ -81,7 +115,10 @@ public class ArtifactTileButton : MonoBehaviour
         isTileActive = v;
         if (v)
         {
-            // animation?
+            if (!startsActive)
+            {
+                flickerNext = true;
+            }
             buttonAnimator.sliderImage.sprite = islandSprite;
         }
         else
@@ -92,10 +129,15 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SetComplete(bool value)
     {
-        if (!canComplete || !isTileActive)
+        if (!isTileActive)
             return;
 
         isComplete = value;
+        ResetToIslandSprite();
+    }
+
+    private void ResetToIslandSprite()
+    {
         if (isComplete)
         {
             buttonAnimator.sliderImage.sprite = completedSprite;
@@ -103,6 +145,23 @@ public class ArtifactTileButton : MonoBehaviour
         else
         {
             buttonAnimator.sliderImage.sprite = islandSprite;
+        }
+    }
+
+    public void Flicker() {
+        flickerNext = false;
+        StartCoroutine(NewButtonFlicker());
+    }
+
+    private IEnumerator NewButtonFlicker() {
+        ResetToIslandSprite();
+        yield return new WaitForSeconds(.25f);
+        for (int i = 0; i < 3; i++) 
+        {
+            yield return new WaitForSeconds(.25f);
+            buttonAnimator.sliderImage.sprite = blankSprite;
+            yield return new WaitForSeconds(.25f);
+            ResetToIslandSprite();
         }
     }
 }

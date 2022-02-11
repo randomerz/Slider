@@ -113,6 +113,8 @@ public class UIManager : MonoBehaviour
             artifactAnimator.SetBool("isVisible", false);
             StartCoroutine(CloseArtPanel());
         }
+
+        uiArtifact.DeselectCurrentButton();
     }
 
     private IEnumerator CloseArtPanel()
@@ -146,6 +148,7 @@ public class UIManager : MonoBehaviour
             Player.SetCanMove(false);
 
             artifactAnimator.SetBool("isVisible", true);
+            uiArtifact.FlickerNewTiles();
         }
         else
         {
