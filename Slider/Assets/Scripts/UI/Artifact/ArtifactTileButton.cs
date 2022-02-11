@@ -164,4 +164,10 @@ public class ArtifactTileButton : MonoBehaviour
             ResetToIslandSprite();
         }
     }
+
+    public void AfterStileMoveDragged(object sender, SGridAnimator.OnTileMoveArgs e) 
+    {
+        if (e.stile.islandId == islandId)
+            SetPushedDown(false);
+    }
 }
