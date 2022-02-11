@@ -6,12 +6,7 @@ using UnityEngine.Tilemaps;
 public class CaveLight : MonoBehaviour
 {
     public bool lightOn;
-
-
-    [Header("Lighting Options")]
-    public Vector2Int lightDir;
-    //public float lightRadius;
-    //public float lightArcAngle;
+    public bool lightOnStart;
 
     public enum LightType
     {
@@ -20,11 +15,40 @@ public class CaveLight : MonoBehaviour
     }
     public LightType type;
 
+    public class LightEventArgs
+    {
+    }
+    public static event System.EventHandler<LightEventArgs> lightOnEvent;
+    public static event System.EventHandler<LightEventArgs> lightOffEvent;
+
     // Start is called before the first frame update
     void Start()
     {
-        lightOn = true;
-        lightDir = new Vector2Int(-1, 0);
+        SetLightOn(lightOnStart);
+    }
+
+    void OnDisable()
+    {
+        SetLightOn(false);
+    }
+
+    public void SetLightOn(bool value)
+    {
+        lightOn = value;
+
+        if (LightManager.instance != null)
+        {
+            LightManager.instance.GenerateLightMask();
+            LightManager.instance.UpdateMaterials();
+            if (value)
+            {
+                lightOnEvent?.Invoke(this, new LightEventArgs { });
+            }
+            else
+            {
+                lightOffEvent?.Invoke(this, new LightEventArgs { });
+            }
+        }
     }
 
     /* L: Gets the light mask for THIS LIGHT ONLY (see LightManager.cs for the whole world) */
@@ -60,21 +84,21 @@ public class CaveLight : MonoBehaviour
                 {
                     int maskX = curr.x + worldToMaskDX;
                     int maskY = curr.y + worldToMaskDY;
-                    /* L: Hit Wall Check
-                    if (!lightOnWall && heightMask.GetPixel(maskX, maskY).r > 0.5)
-                    {
-                        break;
-                    }
-                    */
 
                     //L: Bounds Check
                     if (maskX < 0 || maskX > maskSizeX || maskY < 0 || maskY > maskSizeY)
                     {
                         break;
                     }
-                    mask.SetPixel(maskX, maskY, Color.white);
 
+                    mask.SetPixel(maskX, maskY, Color.white);
                     curr += dir;
+
+                    // L: Hit Wall Check (Note: This is after so that the start of the tile still gets lit, but nothing else.
+                    if (!lightOnWall && heightMask.GetPixel(maskX, maskY).r > 0.5)
+                    {
+                        //break;
+                    }
                 }
             }
         }

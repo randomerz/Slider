@@ -167,6 +167,6 @@ public class SGridAnimator : MonoBehaviour
 
     private void InvokeOnSTileMove(STile stile, Vector2Int prevPos)
     {
-        OnSTileMove?.Invoke(this, new OnTileMoveArgs { stile = stile });
+        OnSTileMove?.Invoke(this, new OnTileMoveArgs { stile = stile, prevPos = prevPos});
     }
 }
