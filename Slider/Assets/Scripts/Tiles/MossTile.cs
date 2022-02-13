@@ -11,6 +11,8 @@ using UnityEditor;
 //L: See CaveMossManager.cs for how these tiles are handled.
 public class MossTile : Tile
 {
+    //L: Sprite Swap (not needed since using multiple layers)
+    //public MossTile linkedTile;
 
 #if UNITY_EDITOR
     [MenuItem("Assets/Create/2D/Tiles/Custom Tiles/Moss Tile")]

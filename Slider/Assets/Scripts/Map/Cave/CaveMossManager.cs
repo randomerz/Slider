@@ -6,7 +6,9 @@ using UnityEngine.Tilemaps;
 public class CaveMossManager : MonoBehaviour
 {
     public Tilemap mossMap;
+    public Tilemap recededMossMap;
     public Tilemap mossCollidersMap;
+
 
     public float mossFadeSpeed;
     public float playerBoopSpeed;
@@ -25,6 +27,39 @@ public class CaveMossManager : MonoBehaviour
         tilesAnimating = new HashSet<Vector3Int>();
         player = GameObject.FindWithTag("Player").GetComponent<Transform>();
         movingPlayer = false;
+
+        //L: Set moss transparencies initially
+        if (LightManager.instance != null)
+        {
+            for (int x = mossBounds.x; x < mossBounds.xMax; x++)
+            {
+                for (int y = mossBounds.y; y < mossBounds.yMax; y++)
+                {
+                    Vector3Int pos = new Vector3Int(x, y, mossBounds.z);
+                    MossTile tile = mossMap.GetTile(pos) as MossTile;
+                    if (tile != null)
+                    {
+                        mossMap.SetTileFlags(pos, TileFlags.None);
+                        recededMossMap.SetTileFlags(pos, TileFlags.None);
+
+                        Vector3Int posInWorld = new Vector3Int(x + (int)transform.position.x, y + (int)transform.position.y, pos.z);
+                        bool posIsLit = LightManager.instance.GetLightMaskAt(posInWorld.x, posInWorld.y);
+
+                        if (posIsLit)
+                        {
+                            mossMap.SetColor(pos, new Color(1.0f, 1.0f, 1.0f, 0.0f));
+                            recededMossMap.SetColor(pos, Color.white);
+                            mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
+                        } else
+                        {
+                            mossMap.SetColor(pos, Color.white);
+                            recededMossMap.SetColor(pos, new Color(1.0f, 1.0f, 1.0f, 0.0f));
+                            mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void Update()
@@ -39,7 +74,6 @@ public class CaveMossManager : MonoBehaviour
                     MossTile tile = mossMap.GetTile(pos) as MossTile;
                     if (tile != null)
                     {
-                        mossMap.SetTileFlags(pos, TileFlags.None);
 
                         Vector3Int posInWorld = new Vector3Int(x + (int) transform.position.x, y + (int) transform.position.y, pos.z);
                         bool posIsLit = LightManager.instance.GetLightMaskAt(posInWorld.x, posInWorld.y);
@@ -66,7 +100,8 @@ public class CaveMossManager : MonoBehaviour
             {
                 Color c = mossMap.GetColor(pos);
                 mossMap.SetColor(pos, new Color(c.r, c.g, c.b, c.a - mossFadeSpeed));
-                
+                recededMossMap.SetColor(pos, new Color(c.r, c.g, c.b, 1 - (c.a - mossFadeSpeed)));
+                Debug.Log(recededMossMap.GetColor(pos));
                 yield return new WaitForSeconds(0.1f);
             }
 
@@ -87,6 +122,7 @@ public class CaveMossManager : MonoBehaviour
             {
                 Color c = mossMap.GetColor(pos);
                 mossMap.SetColor(pos, new Color(c.r, c.g, c.b, c.a + mossFadeSpeed));
+                recededMossMap.SetColor(pos, new Color(c.r, c.g, c.b, 1 - (c.a + mossFadeSpeed)));
 
                 yield return new WaitForSeconds(0.1f);
             }
