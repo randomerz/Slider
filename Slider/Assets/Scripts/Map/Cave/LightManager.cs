@@ -52,6 +52,11 @@ public class LightManager : MonoBehaviour
         UpdateAll();
     }
 
+    private void Update()
+    {
+        UpdateAll();
+    }
+
     public void UpdateAll()
     {
         GenerateHeightMask();
@@ -169,6 +174,12 @@ public class LightManager : MonoBehaviour
         }
 
         lightMask.Apply();
+    }
+
+    public bool GetLightMaskAt(int x, int y)
+    {
+        //Debug.Log(lightMask.GetPixel(x + worldToMaskDX, y + worldToMaskDY));
+        return lightMask.GetPixel(x + worldToMaskDX, y + worldToMaskDY).r > 0.5f;
     }
 
     public void UpdateMaterials()
