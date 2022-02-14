@@ -29,9 +29,9 @@ public class Player : MonoBehaviour
         controls = new InputSettings();
         controls.Player.Move.performed += context => Move(context.ReadValue<Vector2>());
         if (PlayerInventory.Contains("Boots"))
-            {
-                bootsSpeedUp();
-            }
+        {
+            bootsSpeedUp();
+        }
     }
 
     private void OnEnable() {
