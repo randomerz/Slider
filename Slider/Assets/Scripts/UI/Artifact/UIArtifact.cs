@@ -18,7 +18,7 @@ public class UIArtifact : MonoBehaviour
     protected Queue<SMove> moveQueue;
     public int maxMoveQueueSize = 3;    //L: Max size of the queue.
 
-    private static UIArtifact _instance;
+    protected static UIArtifact _instance;
     
     public void Awake()
     {
@@ -209,7 +209,7 @@ public class UIArtifact : MonoBehaviour
     }
 
     // replaces adjacentButtons
-    protected List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
+    protected virtual List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
         moveOptionButtons.Clear();
 
@@ -285,8 +285,9 @@ public class UIArtifact : MonoBehaviour
         }
     }
 
-    public void QueueCheckAndAdd(SMove move)
+    public virtual void QueueCheckAndAdd(SMove move)
     {
+        Debug.Log("UIArtifact Hah scrub");
         if (moveQueue.Count < maxMoveQueueSize)
         {
             moveQueue.Enqueue(move);
@@ -317,6 +318,8 @@ public class UIArtifact : MonoBehaviour
 
     protected virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        Debug.Log("QueueCheckAfterMove just got ran!" + moveQueue);
+
         if (moveQueue.Count > 0)
         {
             moveQueue.Dequeue();

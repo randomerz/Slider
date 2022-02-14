@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class DesertArtifact : UIArtifact
 {
+    protected new Queue<SSlideSwap> moveQueue;
+
+    public new void Awake()
+    {
+        _instance = this;
+        moveQueue = new Queue<SSlideSwap>();
+    }
+
     //Chen: getMoveOptions will add buttons even if they're active for Desert sliding
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
@@ -41,69 +49,168 @@ public class DesertArtifact : UIArtifact
 
         return moveOptionButtons;
     }
-    
+
+    //Chen: finds the furthest button a given button can go to given a direction
+    private ArtifactTileButton GetLastEmpty(ArtifactTileButton button, Vector2Int dir)
+    {
+        
+        ArtifactTileButton curr = GetButton(button.x + dir.x, button.y + dir.y);
+        //ArtifactTileButton next = GetButton(curr.x + dir.x, curr.y + dir.y);
+        ArtifactTileButton last = null;
+
+
+        for (int i = 0; i < 2; i++)
+        {
+            if (curr != null)
+            {
+                //Case 1: Tile slides 2 spaces
+                if (!curr.isTileActive)
+                {
+                    last = curr;
+                } 
+                else if (GetButton(curr.x + dir.x, curr.y + dir.y) != null && !GetButton(curr.x + dir.x, curr.y + dir.y)) {
+                    last = curr;
+                    break;
+                }
+                //Edge Case: A tile on the edge will slide to the middle
+
+            }
+            else
+            {
+                break;
+            }
+            curr = GetButton(curr.x + dir.x, curr.y + dir.y);
+        }
+        //Debug.Log(last);
+        return last;
+    }
+    /*
     public override void SelectButton(ArtifactTileButton button)
     {
-        //WORK ON THIS TO MAKE MOVE QUEUING WORK
-        if (currentButton != null && currentButton.isForcedDown && moveOptionButtons.Contains(button))
-        {
-            //Debug.Log(currentButton.gameObject.name + " added to the queue!");
-            //Debug.Log(button.gameObject.name + " added to the Queue");
-            //QueueCheckAndAdd(currentButton, button);
-            DeselectCurrentButton();
-        }
+        // Check if on movement cooldown
+        //if (SGrid.GetStile(button.islandId).isMoving)
 
-        else if (currentButton == button)
-        {
-            DeselectCurrentButton();
-        }
-        else if (moveOptionButtons.Contains(button))
-        {
-            //Compare by tile location to determine direction of sliding
-            int x_dif = button.x - currentButton.x;
-            int y_dif = button.y - currentButton.y;
+        //L: This is basically just a bunch of nested logic to determine how to update the UI based on what button the user pressed.
 
-            if (x_dif > 0) { MoveRight(); }
-            else if (x_dif < 0) { MoveLeft(); }
-            else if (y_dif > 0) { MoveUp(); }
-            else { MoveDown();}
-
-            DeselectCurrentButton();
-        }
-        else
+        ArtifactTileButton oldCurrButton = currentButton;
+        if (currentButton != null)
         {
-            DeselectCurrentButton();
-
-            if (!button.isTileActive)
+            if (moveOptionButtons.Contains(button))
             {
+
+                //L: Player makes a move while the tile is still moving, so add the button to the queue.
+                CheckAndSwap(currentButton, button);
+
+                moveOptionButtons = GetMoveOptions(currentButton);
+                foreach (ArtifactTileButton b in buttons)
+                {
+                    b.SetHighlighted(moveOptionButtons.Contains(b));
+                }
+            }
+            else
+            {
+                DeselectCurrentButton();
+            }
+        }
+
+        if (currentButton == null)
+        {
+            //DeselectCurrentButton(); //L: I don't think this is necessary since currentButton is null and it will just do nothing
+
+            if (!button.isTileActive || oldCurrButton == button)
+            {
+                //L: Player tried to click an empty tile
                 return;
             }
 
             moveOptionButtons = GetMoveOptions(button);
             if (moveOptionButtons.Count == 0)
             {
+                //L: Player tried to click a locked tile (or tile that otherwise had no move options)
                 return;
             }
             else
             {
+                //L: Player clicked a tile with movement options
                 //Debug.Log("Selected button " + button.islandId);
                 currentButton = button;
-                button.SetPushedDown(true);
+                button.SetSelected(true);
                 foreach (ArtifactTileButton b in moveOptionButtons)
                 {
                     b.SetHighlighted(true);
                 }
             }
         }
-        //else
-        //{
-        //    // default deselect
-        //    DeselectCurrentButton();
-        //}
     }
-    //Chen: Below are the 4 methods for sliding all tiles right, up, left, or down.
-    public void MoveRight()
+    */
+    //L: updateGrid - if this is false, it will just update the UI without actually moving the tiles.
+    //L: Returns if the swap was successful.
+    //Chen: CheckAndSwap now calls each of the Slide() functions
+    protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
+        STile[,] currGrid = SGrid.current.GetGrid();
+
+        int dx = buttonEmpty.x - buttonCurrent.x;
+        int dy = buttonEmpty.y - buttonCurrent.y;
+        SSlideSwap swap;
+
+        //Nested logic pain time
+        if (dx > 0)
+        {
+            swap = SlideRight();
+        }
+        else if (dx < 0)
+        {
+            swap = SlideLeft();
+        }
+        else if (dy > 0)
+        {
+            swap = SlideUp();
+        }
+        else
+        {
+            swap = SlideDown();
+        }
+
+        if (SGrid.current.CanMove(swap))
+        {
+            //L: Do the move
+
+            SlideQueueCheckAndAdd(swap);
+
+            if (moveQueue.Count == 1)
+            {
+                SGrid.current.Move(moveQueue.Peek());
+            }
+            return true;
+        }
+        else
+        {
+            Debug.Log("Couldn't perform move! (queue full?)");
+            return false;
+        }
+    }
+
+    public void SlideQueueCheckAndAdd(SSlideSwap move)
+    {
+        Debug.Log("Desert Hah scrub");
+        if (moveQueue.Count < maxMoveQueueSize)
+        {
+            moveQueue.Enqueue(move);
+        }
+        else
+        {
+            Debug.LogWarning(moveQueue.Count);
+            Debug.LogWarning("Didn't add to the UIArtifact queue because it was full");
+        }
+
+    }
+
+    //Chen: Below are the 4 methods for sliding all tiles. UI swapping is handled here
+    public SSlideSwap SlideRight()
+    {
+        List<Vector4Int> swaps = new List<Vector4Int>();
+
         for (int row = 1; row >= 0; row--)
         {
             List<ArtifactTileButton> tiles = new List<ArtifactTileButton>
@@ -113,37 +220,27 @@ public class DesertArtifact : UIArtifact
             GetButton(row, 2)
             };
             
+            //Chen: For each active tile in a specific order, get the furthest empty tile and add to list of swaps for the slide
             foreach (ArtifactTileButton button in tiles)
             {
-                //Similar to getAdjacent()
                 if (button.isTileActive)
                 {
-                    ArtifactTileButton curr = button;
-                    ArtifactTileButton last = null;
-                    Vector2Int dir = Vector2Int.right;
-                    for (int i = 1; i < 3; i++)
-                    {
-                        curr = GetButton(button.x + dir.x * i, button.y + dir.y * i);
-                        if (curr == null || curr.isTileActive)
-                        {
-                            break;
-                        }
-                        else if (curr != null && !curr.isTileActive)
-                        {
-                            last = curr;
-                        }
-                    }
+                    ArtifactTileButton last = GetLastEmpty(button, Vector2Int.right);
                     if (last != null)
                     {
-                        CheckAndSwap(button, last, false);
+                        swaps.Add(new Vector4Int(button.x, button.y, last.x, last.y));
+                        SwapButtons(button, last);
                     }
                 }
             }
         }
+        return new SSlideSwap(swaps);
     }
 
-    public void MoveLeft()
+    public SSlideSwap SlideLeft()
     {
+        List<Vector4Int> swaps = new List<Vector4Int>();
+
         for (int row = 1; row < 3; row++)
         {
             List<ArtifactTileButton> tiles = new List<ArtifactTileButton>
@@ -152,37 +249,28 @@ public class DesertArtifact : UIArtifact
             GetButton(row, 1),
             GetButton(row, 2)
             };
+
+            //Chen: For each active tile in a specific order, get the furthest empty tile and add to list of swaps for the slide
             foreach (ArtifactTileButton button in tiles)
             {
                 if (button.isTileActive)
                 {
-                    //Similar to getMoveOptions
-                    ArtifactTileButton curr = button;
-                    ArtifactTileButton last = null;
-                    Vector2Int dir = Vector2Int.left;
-                    for (int i = 1; i < 3; i++)
-                    {
-                        curr = GetButton(button.x + dir.x * i, button.y + dir.y * i);
-                        if (curr != null && !curr.isTileActive)
-                        {
-                            last = curr;
-                        }
-                        else if (curr == null || curr.isTileActive)
-                        {
-                            break;
-                        }
-                    }
+                    ArtifactTileButton last = GetLastEmpty(button, Vector2Int.left);
                     if (last != null)
                     {
-                        CheckAndSwap(button, last, false);
+                        swaps.Add(new Vector4Int(button.x, button.y, last.x, last.y));
+                        SwapButtons(button, last);
                     }
                 }
             }
         }
+        return new SSlideSwap(swaps);
     }
 
-    public void MoveUp()
+    public SSlideSwap SlideUp()
     {
+        List<Vector4Int> swaps = new List<Vector4Int>();
+
         for (int col = 1; col >= 0; col--)
         {
             List<ArtifactTileButton> tiles = new List<ArtifactTileButton>
@@ -191,37 +279,28 @@ public class DesertArtifact : UIArtifact
             GetButton(1, col),
             GetButton(2, col)
             };
+
+            //Chen: For each active tile in a specific order, get the furthest empty tile and add to list of swaps for the slide
             foreach (ArtifactTileButton button in tiles)
             {
                 if (button.isTileActive)
                 {
-                    //Similar to getAdjacent()
-                    ArtifactTileButton curr = button;
-                    ArtifactTileButton last = null;
-                    Vector2Int dir = Vector2Int.up;
-                    for (int i = 1; i < 3; i++)
-                    {
-                        curr = GetButton(button.x + dir.x * i, button.y + dir.y * i);
-                        if (curr != null && !curr.isTileActive)
-                        {
-                            last = curr;
-                        }
-                        else if (curr == null || curr.isTileActive)
-                        {
-                            break;
-                        }
-                    }
+                    ArtifactTileButton last = GetLastEmpty(button, Vector2Int.up);
                     if (last != null)
                     {
-                        CheckAndSwap(button, last, false);
+                        swaps.Add(new Vector4Int(button.x, button.y, last.x, last.y));
+                        SwapButtons(button, last);
                     }
                 }
             }
         }
+        return new SSlideSwap(swaps);
     }
 
-    public void MoveDown()
+    public SSlideSwap SlideDown()
     {
+        List<Vector4Int> swaps = new List<Vector4Int>();
+
         for (int col = 1; col < 3; col++)
         {
             List<ArtifactTileButton> tiles = new List<ArtifactTileButton>
@@ -230,33 +309,21 @@ public class DesertArtifact : UIArtifact
             GetButton(1, col),
             GetButton(2, col)
             };
+
+            //Chen: For each active tile in a specific order, get the furthest empty tile and add to list of swaps for the slide
             foreach (ArtifactTileButton button in tiles)
             {
                 if (button.isTileActive)
                 {
-                    //Similar to getAdjacent()
-                    ArtifactTileButton curr = button;
-                    ArtifactTileButton last = null;
-                    Vector2Int dir = Vector2Int.down;
-                    for (int i = 1; i < 3; i++)
-                    {
-                        curr = GetButton(button.x + dir.x * i, button.y + dir.y * i);
-                        if (curr != null && !curr.isTileActive)
-                        {
-                            last = curr;
-                        }
-                        else if (curr == null || curr.isTileActive)
-                        {
-                            break;
-                        }
-                    }
+                    ArtifactTileButton last = GetLastEmpty(button, Vector2Int.down);
                     if (last != null)
                     {
-                        CheckAndSwap(button, last, false);
+                        swaps.Add(new Vector4Int(button.x, button.y, last.x, last.y));
+                        SwapButtons(button, last);
                     }
                 }
             }
         }
-            
+        return new SSlideSwap(swaps);
     }
 }
