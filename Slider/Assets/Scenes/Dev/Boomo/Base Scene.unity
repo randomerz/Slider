@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Jungle
-  sceneSpawnName: Jungle/River
+  sceneSpawnName: 0
 --- !u!1001 &105832907
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -538,7 +538,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Military
-  sceneSpawnName: Military/
+  sceneSpawnName: 0
 --- !u!1 &232673934
 GameObject:
   m_ObjectHideFlags: 0
@@ -582,7 +582,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b376d585bb448b64aae3a09678dc7f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnName: Ocean/North
+  spawnName: 0
   spawnInBoat: 1
 --- !u!1001 &244194138
 PrefabInstance:
@@ -1154,7 +1154,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1971103327}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &504704872
 TilemapRenderer:
@@ -4086,7 +4086,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b376d585bb448b64aae3a09678dc7f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnName: Ocean/East
+  spawnName: 0
   spawnInBoat: 1
 --- !u!1 &860191909
 GameObject:
@@ -4174,6 +4174,36 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2, y: 14}
   m_EdgeRadius: 0
+--- !u!1 &876815696
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 876815697}
+  m_Layer: 0
+  m_Name: BaseObjects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &876815697
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876815696}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1971103327}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &939783272 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 909526636156615937, guid: ee1f0b0d9e9ffbc4f8a85e965b62d545, type: 3}
@@ -4284,7 +4314,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1971103327}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &1088613159
 TilemapRenderer:
@@ -4613,7 +4643,7 @@ Transform:
   - {fileID: 521786143}
   - {fileID: 55972033}
   m_Father: {fileID: 1971103327}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1302539272
 PrefabInstance:
@@ -4932,7 +4962,6 @@ MonoBehaviour:
   - {fileID: 524494152}
   - {fileID: 1987171388}
   - {fileID: 705329675}
-  altStiles: []
   bgGridTiles:
   - {fileID: 528917036}
   - {fileID: 1223723976}
@@ -4945,6 +4974,7 @@ MonoBehaviour:
   - {fileID: 1809006832}
   gridAnimator: {fileID: 1324462116}
   targetGrid: '*********'
+  collectibles: []
 --- !u!114 &1324462116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5025,7 +5055,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b376d585bb448b64aae3a09678dc7f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnName: Ocean/Bushes
+  spawnName: 0
   spawnInBoat: 0
 --- !u!1001 &1346630605
 PrefabInstance:
@@ -5119,7 +5149,7 @@ Transform:
   - {fileID: 1699268622}
   - {fileID: 152617313}
   m_Father: {fileID: 1971103327}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1467808706
 GameObject:
@@ -5164,7 +5194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b376d585bb448b64aae3a09678dc7f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnName: Ocean/West
+  spawnName: 0
   spawnInBoat: 1
 --- !u!1 &1570344146
 GameObject:
@@ -5453,7 +5483,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1971103327}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!66 &1726583450
 CompositeCollider2D:
@@ -7790,7 +7820,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Jungle
-  sceneSpawnName: Jungle/Bushes
+  sceneSpawnName: 0
 --- !u!1001 &1755218389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7927,7 +7957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Village dev
-  sceneSpawnName: Village/Beach
+  sceneSpawnName: 0
 --- !u!1 &1769068890
 GameObject:
   m_ObjectHideFlags: 0
@@ -7990,7 +8020,7 @@ Transform:
   m_Children:
   - {fileID: 1743181407}
   m_Father: {fileID: 1971103327}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1809006832 stripped
 MonoBehaviour:
@@ -8267,6 +8297,7 @@ Transform:
   m_LocalPosition: {x: -0.5, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 876815697}
   - {fileID: 1088613158}
   - {fileID: 504704868}
   - {fileID: 1988335503}
@@ -8426,7 +8457,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1971103327}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &1988335504
 TilemapRenderer:
@@ -8843,7 +8874,7 @@ Transform:
   - {fileID: 1907398623}
   - {fileID: 1758840864}
   m_Father: {fileID: 1971103327}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2620790809741503419
 PrefabInstance:
