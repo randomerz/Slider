@@ -14,7 +14,7 @@ public class SGridBackground : MonoBehaviour
         if (isActive)
             borderCounts[index] += 1;
         else
-            borderCounts[index] -= 1;
+            borderCounts[index] = Mathf.Max(0, borderCounts[index] - 1);
         borderColliders[index].SetActive(borderCounts[index] > 0);
     }
 

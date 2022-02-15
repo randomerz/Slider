@@ -13,6 +13,11 @@ public class STile : MonoBehaviour
     public STile linkTile; // Probably should be a list, set in instpector
 
     private Vector2 movingDirection; // zero, right, up, left, down
+    public class STileMoveArgs : System.EventArgs
+    {
+        public Vector2 moveDir;
+    }
+    public System.EventHandler<STileMoveArgs> onChangeMove; // called when STile starts moving or ends moving
     
     public int STILE_WIDTH = 17;
 
@@ -160,6 +165,8 @@ public class STile : MonoBehaviour
             // start moving
             movingDirection = direction;
         }
+
+        onChangeMove?.Invoke(this, new STileMoveArgs {moveDir = movingDirection} );
     }
 
     public Vector2 GetMovingDirection()
