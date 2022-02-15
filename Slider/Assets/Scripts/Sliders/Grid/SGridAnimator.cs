@@ -116,7 +116,10 @@ public class SGridAnimator : MonoBehaviour
         {
             if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1))
             {
-                bgGrid[p.x, p.y].SetBorderColliders(false);
+                foreach (int i in borders[p])
+                {
+                    bgGrid[p.x, p.y].SetBorderCollider(i, false);
+                }
             }
         }
 
@@ -167,6 +170,6 @@ public class SGridAnimator : MonoBehaviour
 
     private void InvokeOnSTileMove(STile stile, Vector2Int prevPos)
     {
-        OnSTileMove?.Invoke(this, new OnTileMoveArgs { stile = stile });
+        OnSTileMove?.Invoke(this, new OnTileMoveArgs { stile = stile, prevPos = prevPos });
     }
 }

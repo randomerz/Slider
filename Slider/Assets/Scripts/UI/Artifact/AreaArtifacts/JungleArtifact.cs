@@ -14,13 +14,13 @@ public class JungleArtifact : UIArtifact
         int y = buttonCurrent.y;
         if (buttonCurrent.linkButton == null)
         {
-            Debug.Log("Normal Move!");
+            //Debug.Log("Normal Move!");
             //L: Just a normal move
             return base.CheckAndSwap(buttonCurrent, buttonEmpty);
         } else
         {
             //L: Make sure that all checks/swaps are with respect to the UI and NOT the grid (bc the grid can be behind due to queuing)
-            Debug.Log("Linked Move!");
+            //Debug.Log("Linked Move!");
             //L: Below is to handle the case for if you have linked tiles.
             int linkx = buttonCurrent.linkButton.x;
             int linky = buttonCurrent.linkButton.y;

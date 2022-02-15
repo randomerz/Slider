@@ -37,7 +37,8 @@ public class UIArtifact : MonoBehaviour
     }
 
     //L: Handles when the user attempts to drag and drop a button
-    public void ButtonDragged(BaseEventData eventData) {
+    //Plz dont touch it will break
+    public void ButtonDragged(BaseEventData eventData) { 
         // Debug.Log("dragging");
         PointerEventData data = (PointerEventData) eventData;
 
@@ -62,19 +63,27 @@ public class UIArtifact : MonoBehaviour
         foreach (ArtifactTileButton b in GetMoveOptions(dragged)) {
             if(b == hovered) 
             {
+                b.SetHighlighted(false);
                 b.buttonAnimator.sliderImage.sprite = b.hoverSprite;
             }
             else 
             {
-                b.buttonAnimator.sliderImage.sprite = b.emptySprite;
+                 b.SetHighlighted(true);
             }
         }
     }
+    //Plz dont touch it will break
     public void ButtonDragEnd(BaseEventData eventData) {
         PointerEventData data = (PointerEventData) eventData;
+
+
         //Debug.Log("Sent drag end");
         if (currentButton != null) 
         {
+            foreach (ArtifactTileButton b in GetMoveOptions(currentButton)) 
+            {
+                b.buttonAnimator.sliderImage.sprite = b.emptySprite;
+            }
             return;
         }
 
@@ -83,7 +92,10 @@ public class UIArtifact : MonoBehaviour
         {
             return;
         }
-
+        List<ArtifactTileButton> moveOptions = GetMoveOptions(dragged);
+        foreach (ArtifactTileButton b in moveOptions) {
+            b.buttonAnimator.sliderImage.sprite = b.emptySprite;
+        }
         ArtifactTileButton hovered = null;
         if (data.pointerEnter != null && data.pointerEnter.name == "Image") 
         {
@@ -91,20 +103,34 @@ public class UIArtifact : MonoBehaviour
         }
         else 
         {
+            SelectButton(dragged);
             return;
         }
-        hovered.buttonAnimator.sliderImage.sprite = hovered.emptySprite;
+        
+        if (!hovered.isTileActive)
+        {
+            hovered.buttonAnimator.sliderImage.sprite = hovered.emptySprite;
+        }
         //Debug.Log("dragged" + dragged.islandId + "hovered" + hovered.islandId);
-
-        foreach (ArtifactTileButton b in GetMoveOptions(dragged)) {
-            b.buttonAnimator.sliderImage.sprite = b.emptySprite;
-            if(b == hovered) 
+        
+        bool swapped = false;
+        foreach (ArtifactTileButton b in moveOptions) {
+            b.SetHighlighted(false);
+            // b.buttonAnimator.sliderImage.sprite = b.emptySprite;
+            if(b == hovered && !swapped) 
             {
                 CheckAndSwap(dragged, hovered);
+                SGridAnimator.OnSTileMove += dragged.AfterStileMoveDragged;
+                swapped = true;
             }
-
         }
+        if (!swapped) {
+            SelectButton(dragged);
+        }
+        // dragged.SetPushedDown(false);
     }
+
+
     public void OnDisable()
     {
         moveQueue = new Queue<SMove>();
