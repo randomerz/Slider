@@ -86,4 +86,10 @@ public class Collectible : MonoBehaviour
         SGrid.current.EnableStile(stileId);
     }
 
+
+    public SpriteRenderer getSpriteRenderer()
+    {
+        return spriteRenderer;
+    }
+
 }

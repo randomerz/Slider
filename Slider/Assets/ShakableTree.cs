@@ -5,7 +5,12 @@ using UnityEngine;
 public class ShakableTree : MonoBehaviour
 {
 
-    public bool isShaken;
+    private bool isShaken;
+    [SerializeField] public Collider2D myCollider;
+    [SerializeField] private float pickUpDuration;
+    [SerializeField] public AnimationCurve xPickUpMotion;
+    [SerializeField] public AnimationCurve yPickUpMotion;
+    public GameObject StuckPaper;
 
     // Start is called before the first frame update
     void Start()
@@ -26,11 +31,39 @@ public class ShakableTree : MonoBehaviour
         } else
         {
             Debug.Log("you shake tree");
+            GameObject instance = Instantiate(StuckPaper, myCollider.transform.position + new Vector3(0, 4), myCollider.transform.rotation, null) as GameObject;
+            StartCoroutine(animateFallingPaper(instance, null));
+
             isShaken = true;
         }
         
     }
 
+
+    protected IEnumerator animateFallingPaper(GameObject instance, System.Action callback = null)
+    {
+        float t = 0;
+        Vector3 target = instance.transform.position + new Vector3(1, -2);
+        SpriteRenderer sr = instance.GetComponent<Collectible>().getSpriteRenderer();
+
+        Vector3 start = new Vector3(instance.transform.position.x, instance.transform.position.y);
+        while (t < 1)
+        {
+            float x = xPickUpMotion.Evaluate(t / pickUpDuration);
+            float y = yPickUpMotion.Evaluate(t / pickUpDuration);
+            Vector3 pos = new Vector3(Mathf.Lerp(start.x, target.x, x),
+                                      Mathf.Lerp(start.y, target.y, y));
+
+            sr.transform.position = pos;
+
+            yield return null;
+            t += Time.deltaTime;
+        }
+
+        sr.transform.position = target;
+        callback();
+        //idk what callback does
+    }
 
 
 
