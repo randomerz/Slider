@@ -11,26 +11,26 @@ public class OceanArtifact : UIArtifact
     public new void Awake()
     {
         base.Awake();
-        positionQueue = new Queue<int>();
-        CCWQueue = new Queue<bool>();
+        // positionQueue = new Queue<int>();
+        // CCWQueue = new Queue<bool>();
     }
 
     public new void OnDisable()
     {
         base.OnDisable();
-        positionQueue = new Queue<int>();
-        CCWQueue = new Queue<bool>();
+        // positionQueue = new Queue<int>();
+        // CCWQueue = new Queue<bool>();
     }
     
     public override void SelectButton(ArtifactTileButton button) 
     {
         // do nothing
-        Debug.Log("ocean does nothing!");
     }
     
-    // temporary
+    // equivalent as CheckAndSwap in UIArtifact.cs but it doesn't remove
     public void RotateTiles(int x, int y, bool rotateCCW)
     {
+        // logic for finding which tiles to rotate
         List<Vector2Int> SMoveRotateArr = new List<Vector2Int> { 
                 new Vector2Int(x, y),
                 new Vector2Int(x, y + 1),
@@ -65,45 +65,59 @@ public class OceanArtifact : UIArtifact
             }
         }
 
-        SMove rotate = new SMoveRotate(SMoveRotateArr);
+        // performing the rotate smove
         // todo: if can rotate
-        SGrid.current.Move(rotate);
-        
-        for (int i=0; i<tb.Count; i++)
+        // if (SGrid.current.CanRotate)
+        if (moveQueue.Count < maxMoveQueueSize)
         {
-            tb[i].SetPosition(SMoveRotateArr[(i+1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y);
+            SMove rotate = new SMoveRotate(SMoveRotateArr);
+            QueueCheckAndAdd(rotate);
+            // SwapButtons(buttonCurrent, buttonEmpty);
+            // update UI button positions
+            for (int i = 0; i < tb.Count; i++)
+            {
+                tb[i].SetPosition(SMoveRotateArr[(i + 1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y);
+            }
+
+            // SGrid.current.Move(rotate);
+            QueueCheckAfterMove(this, null);
+            
+        }
+        else 
+        {
+            Debug.Log("Couldn't perform move! (queue full?)");
         }
     }
 
-    public void AddQueue(int x, int y, bool CCW)
-    {
-        if (CCWQueue.Count == 0)
-        {
-            positionQueue.Enqueue(x);
-            positionQueue.Enqueue(y);
-            CCWQueue.Enqueue(CCW);
-            CheckQueue();
-        }
-    }
+    // public void AddQueue(int x, int y, bool CCW)
+    // {
+    //     if (CCWQueue.Count == 0)
+    //     {
+    //         positionQueue.Enqueue(x);
+    //         positionQueue.Enqueue(y);
+    //         CCWQueue.Enqueue(CCW);
+    //         // CheckQueue();
+    //     }
+    // }
 
-    public new void CheckQueue()
-    {
-        if (!rotating && CCWQueue.Count != 0)
-        {
-            RotateTiles(positionQueue.Dequeue(), positionQueue.Dequeue(), CCWQueue.Dequeue());
-            StartCoroutine(RotationWait());
-        }
-        else
-        {
-            return;
-        }
-    }
+    // public new void CheckQueue()
+    // {
+    //     if (!rotating && CCWQueue.Count != 0)
+    //     {
+    //         RotateTiles(positionQueue.Dequeue(), positionQueue.Dequeue(), CCWQueue.Dequeue());
+    //         StartCoroutine(RotationWait());
+    //     }
+    //     else
+    //     {
+    //         return;
+    //     }
+    // }
 
-    private IEnumerator RotationWait()
-    {
-        rotating = true;
-        yield return new WaitForSeconds(1f);
-        rotating = false;
-        CheckQueue();
-    }
+    // private IEnumerator RotationWait()
+    // {
+    //     rotating = true;
+    //     yield return new WaitForSeconds(1f);
+    //     rotating = false;
+    //     CheckQueue();
+    // }
 }

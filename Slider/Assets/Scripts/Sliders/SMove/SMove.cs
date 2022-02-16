@@ -81,7 +81,7 @@ public class SMove
         }
         if (other.positions.Count == 0)
         {
-            GenerateBorders();
+            other.GenerateBorders();
         }
 
         foreach (Vector2Int pos in positions)
