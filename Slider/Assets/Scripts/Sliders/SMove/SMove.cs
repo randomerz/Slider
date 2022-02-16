@@ -69,6 +69,31 @@ public class SMove
         else
             borders[pos2].Add((side + 2) % 4);
     }
+
+    // DC: check if this SMove and other SMove share the same (x, y) in position
+    public virtual bool Overlaps(SMove other)
+    {
+        if (other == null) return false;
+
+        if (positions.Count == 0)
+        {
+            GenerateBorders();
+        }
+        if (other.positions.Count == 0)
+        {
+            GenerateBorders();
+        }
+
+        foreach (Vector2Int pos in positions)
+        {
+            if (other.positions.Contains(pos))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 public class Vector4Int

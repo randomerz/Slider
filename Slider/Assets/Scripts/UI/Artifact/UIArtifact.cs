@@ -320,7 +320,8 @@ public class UIArtifact : MonoBehaviour
         if (moveQueue.Count > 0)
         {
             moveQueue.Dequeue();
-        } else
+        } 
+        else
         {
             Debug.LogWarning("Tried to dequeue from the move queue even though there is nothing in it. This should not happen!");
         }
