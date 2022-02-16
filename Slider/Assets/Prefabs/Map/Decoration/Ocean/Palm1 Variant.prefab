@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 655103885725586476, guid: 56a510c436cb1454b9a790526fa80eca, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1146424964776740287, guid: 56a510c436cb1454b9a790526fa80eca, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -71,6 +75,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -8804708508421825833, guid: d15a2910f3c0f98468915fcb6eeb8932, type: 3}
+    - target: {fileID: 6241933883414211089, guid: 56a510c436cb1454b9a790526fa80eca, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7014586752846344659, guid: 56a510c436cb1454b9a790526fa80eca, type: 3}
       propertyPath: m_Name
       value: Palm1 Variant
