@@ -32,7 +32,7 @@ public class DialogueConditionals : Conditionals
     {
         return dialogue;
     }
-    public int GetPriority()
+    public int GetPrio()
     {
         return currentprio;
     }
@@ -40,8 +40,12 @@ public class DialogueConditionals : Conditionals
     {
         onDialogue?.Invoke();
     }
-    public void ClearPrio()
+    public void SetPrio(int p)
     {
-        currentprio = -1 * priority;
+        priority = p;
+    }
+    public void KillDialogue()
+    {
+        priority = 0;
     }
 }

@@ -124,11 +124,11 @@ public class VillageGrid : SGrid
 
     // Puzzle 7 - River
     // Checks if the river tiles are in order with Regex (see puzzle doc for the proper order)
-    public void RiverChecked()
-    {
-        ParticleSpawner.fishOn = true;
+    //public void RiverChecked()
+    //{
+        
         //return CheckGrid.contains(GetGridString(), "624_..7_...");
-    }
+    //}
 
 
     // Puzzle 8 - 8puzzle

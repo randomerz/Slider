@@ -198,7 +198,7 @@ public class SGrid : MonoBehaviour
     }
     public void GetSlider(int s)
     {
-        if (!PlayerInventory.Contains("Slider " + s.ToString(), Area.Village))
+        if (!PlayerInventory.Contains("Slider " + s.ToString(), myArea))
         {
             ActivateCollectible("Slider " + s.ToString());
             AudioManager.Play("Puzzle Complete");
