@@ -116,7 +116,7 @@ public class DesertArtifact : UIArtifact
             }
             //Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
             //Debug.Log(buttonCurrent + " " + buttonEmpty);
-            SlideQueueCheckAndAdd(swap);
+            QueueCheckAndAdd(swap);
             //Debug.Log("Added move to queue: current length " + moveQueue.Count);
             QueueCheckAfterMove(this, null);
             return true;

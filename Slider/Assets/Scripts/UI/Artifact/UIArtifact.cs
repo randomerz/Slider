@@ -277,7 +277,7 @@ public class UIArtifact : MonoBehaviour
             QueueCheckAndAdd(new SMoveSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y));
             SwapButtons(buttonCurrent, buttonEmpty);
 
-            Debug.Log("Added move to queue: current length " + moveQueue.Count);
+            // Debug.Log("Added move to queue: current length " + moveQueue.Count);
             QueueCheckAfterMove(this, null);
             // if (moveQueue.Count == 1)
             // {
@@ -327,17 +327,17 @@ public class UIArtifact : MonoBehaviour
     {
         if (e != null)
         {
-            Debug.Log("Checking for e");
+            //Debug.Log("Checking for e");
             if (activeMoves.Contains(e.smove))
             {
-                Debug.Log("Move has been removed");
+                //Debug.Log("Move has been removed");
                 activeMoves.Remove(e.smove);
             }
         }
 
         if (moveQueue.Count > 0)
         {
-            Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
+            //Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
 
             SMove peekedMove = moveQueue.Peek();
             // check if the peekedMove interferes with any of current moves
