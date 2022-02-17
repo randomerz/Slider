@@ -13,9 +13,11 @@ public class UIArtifact : MonoBehaviour
     //L: The available buttons the player has to move to from currentButton
     protected List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
 
+    // DC: Current list of moves being performed 
+    protected List<SMove> activeMoves = new List<SMove>();
     //L: Queue of moves to perform on the grid from the artifact
     //L: IMPORTANT NOTE: The top element in the queue is always the current move being executed.
-    protected Queue<SMove> moveQueue;
+    protected Queue<SMove> moveQueue = new Queue<SMove>();
     public int maxMoveQueueSize = 3;    //L: Max size of the queue.
 
     private static UIArtifact _instance;
@@ -23,6 +25,7 @@ public class UIArtifact : MonoBehaviour
     public void Awake()
     {
         _instance = this;
+        activeMoves = new List<SMove>();
         moveQueue = new Queue<SMove>();
     }
 
@@ -265,6 +268,8 @@ public class UIArtifact : MonoBehaviour
         int y = buttonCurrent.y;
         SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y);
  
+        Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
+        Debug.Log(buttonCurrent + " " + buttonEmpty);
         if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
         {
             //L: Do the move
@@ -272,10 +277,12 @@ public class UIArtifact : MonoBehaviour
             QueueCheckAndAdd(new SMoveSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y));
             SwapButtons(buttonCurrent, buttonEmpty);
 
-            if (moveQueue.Count == 1)
-            {
-                SGrid.current.Move(moveQueue.Peek());
-            }
+            Debug.Log("Added move to queue: current length " + moveQueue.Count);
+            QueueCheckAfterMove(this, null);
+            // if (moveQueue.Count == 1)
+            // {
+            //     SGrid.current.Move(moveQueue.Peek());
+            // }
             return true;
         }
         else
@@ -290,7 +297,8 @@ public class UIArtifact : MonoBehaviour
         if (moveQueue.Count < maxMoveQueueSize)
         {
             moveQueue.Enqueue(move);
-        } else
+        } 
+        else
         {
             Debug.LogWarning("Didn't add to the UIArtifact queue because it was full");
         }
@@ -317,18 +325,48 @@ public class UIArtifact : MonoBehaviour
 
     protected virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (moveQueue.Count > 0)
+        if (e != null)
         {
-            moveQueue.Dequeue();
-        } else
-        {
-            Debug.LogWarning("Tried to dequeue from the move queue even though there is nothing in it. This should not happen!");
+            if (activeMoves.Contains(e.smove))
+            {
+                activeMoves.Remove(e.smove);
+            }
         }
 
         if (moveQueue.Count > 0)
         {
-            SGrid.current.Move(moveQueue.Peek());
+            // Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
+
+            SMove peekedMove = moveQueue.Peek();
+            // check if the peekedMove interferes with any of current moves
+            foreach (SMove m in activeMoves)
+            {
+                if (m.Overlaps(peekedMove))
+                {
+                    return;
+                }
+            }
+
+            // Debug.Log("Move doesn't conflict! Performing move.");
+
+            // doesn't interfere! so do the move
+            SGrid.current.Move(peekedMove);
+            activeMoves.Add(moveQueue.Dequeue());
+            QueueCheckAfterMove(this, null);
         }
+        // if (moveQueue.Count > 0)
+        // {
+        //     moveQueue.Dequeue();
+        // } 
+        // else
+        // {
+        //     Debug.LogWarning("Tried to dequeue from the move queue even though there is nothing in it. This should not happen!");
+        // }
+
+        // if (moveQueue.Count > 0)
+        // {
+        //     SGrid.current.Move(moveQueue.Peek());
+        // }
     }
 
     //public static void UpdatePushedDowns()
