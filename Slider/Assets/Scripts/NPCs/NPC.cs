@@ -35,6 +35,7 @@ public class NPC : MonoBehaviour
             if (dconds[i].GetPrio() > max)
             {
                 curr = i;
+                max = dconds[i].GetPrio();
             }
         }
         if (curr == -1)

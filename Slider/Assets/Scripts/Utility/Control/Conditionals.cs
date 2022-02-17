@@ -39,6 +39,7 @@ public class Conditionals
             {
                 if (CheckGrid.contains(SGrid.GetGridString(), pattern))
                 {
+                    Debug.Log("Fishy");
                     return true;
                 }
                 return false;

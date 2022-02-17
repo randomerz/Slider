@@ -6,12 +6,12 @@ public class VillageGrid : SGrid
 {
     public static VillageGrid instance;
 
+    public GameObject caveDoor;
+    public GameObject particleSpawner;
+
+    private bool fishOn;
+
     private static bool checkCompletion = false;
-
-
-    // bad
-    public static bool wasQRCompleted = false;
-    public static bool firstTimeFezziwigCheck = false;
 
     private new void Awake() {
         myArea = Area.Village;
@@ -23,6 +23,11 @@ public class VillageGrid : SGrid
 
         base.Awake();
 
+        fishOn = WorldData.GetState("fishOn");
+        if (fishOn)
+        {
+            particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
+        }
         instance = this;
     }
     
@@ -31,7 +36,6 @@ public class VillageGrid : SGrid
             SGrid.OnGridMove += SGrid.CheckCompletions;
         }
         
-        SGridAnimator.OnSTileMove += CheckQRCodeOnMove;
         SGridAnimator.OnSTileMove += CheckFinalPlacementsOnMove;
     }
 
@@ -39,8 +43,7 @@ public class VillageGrid : SGrid
         if (checkCompletion) {
             SGrid.OnGridMove -= SGrid.CheckCompletions;
         }
-        
-        SGridAnimator.OnSTileMove -= CheckQRCodeOnMove;
+
         SGridAnimator.OnSTileMove -= CheckFinalPlacementsOnMove;
     }
 
@@ -71,20 +74,6 @@ public class VillageGrid : SGrid
         base.LoadGrid();
     }
 
-    //delete
-    public void ActivateSliderCollectible(int sliderId) { // temporary
-        collectibles[sliderId - 1].gameObject.SetActive(true);
-
-        // if (sliderId == 9)
-        // {
-        //     collectibles[sliderId - 1].transform.position = Player.GetPosition();
-        //     UIManager.closeUI = true;
-        //     CheckCompletions(this, null);
-        // }
-
-        AudioManager.Play("Puzzle Complete");
-    }
-
 
     // === Village puzzle specific ===
 
@@ -98,28 +87,6 @@ public class VillageGrid : SGrid
     // Puzzle 6 - QR Code
     // This method is added to SGridAnimator.OnSTileMove above in OnEnable
     // Don't forget to remove it in OnDisable, or bad things will happen when unloaded!
-    private void CheckQRCodeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (CheckQRCode())
-        {
-            // ActivateSliderCollectible(7);
-            ActivateCollectible("Slider 7");
-            AudioManager.Play("Puzzle Complete");
-        }
-    }
-
-    private bool CheckQRCode()
-    {
-        if (wasQRCompleted)
-        {
-            return false;
-        }
-
-        //Debug.Log("Checking qr code");
-        wasQRCompleted = CheckGrid.subgrid(GetGridString(), "3162");
-
-        return wasQRCompleted;
-    }
 
 
     // Puzzle 7 - River
@@ -130,6 +97,12 @@ public class VillageGrid : SGrid
         //return CheckGrid.contains(GetGridString(), "624_..7_...");
     //}
 
+    public void TurnFishOn()
+    {
+        WorldData.SetState("fishOn", true);
+        fishOn = true;
+        particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
+    }
 
     // Puzzle 8 - 8puzzle
     public void ShufflePuzzle() {
@@ -176,6 +149,6 @@ public class VillageGrid : SGrid
 
     public void Explode()
     {
-        //explosion stuff here
+        caveDoor.SetActive(true);
     }
 }
