@@ -212,7 +212,7 @@ public class UIArtifact : MonoBehaviour
     }
 
     // replaces adjacentButtons
-    protected List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
+    protected virtual List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
         moveOptionButtons.Clear();
 
@@ -327,15 +327,17 @@ public class UIArtifact : MonoBehaviour
     {
         if (e != null)
         {
+            Debug.Log("Checking for e");
             if (activeMoves.Contains(e.smove))
             {
+                Debug.Log("Move has been removed");
                 activeMoves.Remove(e.smove);
             }
         }
 
         if (moveQueue.Count > 0)
         {
-            // Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
+            Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
 
             SMove peekedMove = moveQueue.Peek();
             // check if the peekedMove interferes with any of current moves
@@ -343,11 +345,12 @@ public class UIArtifact : MonoBehaviour
             {
                 if (m.Overlaps(peekedMove))
                 {
+                    Debug.Log("Move conflicts!");
                     return;
                 }
             }
 
-            // Debug.Log("Move doesn't conflict! Performing move.");
+            Debug.Log("Move doesn't conflict! Performing move.");
 
             // doesn't interfere! so do the move
             SGrid.current.Move(peekedMove);
