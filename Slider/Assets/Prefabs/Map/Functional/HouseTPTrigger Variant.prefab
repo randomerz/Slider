@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onPlayerEnter: 1
-  onTrigger:
+  onEnter:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2210584986250492364}
@@ -141,3 +141,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onExit:
+    m_PersistentCalls:
+      m_Calls: []
