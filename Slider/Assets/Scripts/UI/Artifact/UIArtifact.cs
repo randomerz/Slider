@@ -268,8 +268,8 @@ public class UIArtifact : MonoBehaviour
         int y = buttonCurrent.y;
         SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y);
  
-        Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
-        Debug.Log(buttonCurrent + " " + buttonEmpty);
+        // Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
+        // Debug.Log(buttonCurrent + " " + buttonEmpty);
         if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
         {
             //L: Do the move
@@ -277,7 +277,6 @@ public class UIArtifact : MonoBehaviour
             QueueCheckAndAdd(new SMoveSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y));
             SwapButtons(buttonCurrent, buttonEmpty);
 
-            Debug.Log("Added move to queue: current length " + moveQueue.Count);
             QueueCheckAfterMove(this, null);
             // if (moveQueue.Count == 1)
             // {
