@@ -31,7 +31,7 @@ public class ShakableTree : MonoBehaviour
         } else
         {
             Debug.Log("you shake tree");
-            GameObject instance = Instantiate(StuckPaper, myCollider.transform.position + new Vector3(0, 4), myCollider.transform.rotation, null) as GameObject;
+            GameObject instance = Instantiate(StuckPaper, myCollider.transform.position + new Vector3(1.1f, 1.1f), myCollider.transform.rotation, null) as GameObject;
             StartCoroutine(animateFallingPaper(instance, null));
 
             isShaken = true;
@@ -43,7 +43,7 @@ public class ShakableTree : MonoBehaviour
     protected IEnumerator animateFallingPaper(GameObject instance, System.Action callback = null)
     {
         float t = 0;
-        Vector3 target = instance.transform.position + new Vector3(1, -2);
+        Vector3 target = instance.transform.position + new Vector3(0.5f, -1.2f);
         SpriteRenderer sr = instance.GetComponent<Collectible>().getSpriteRenderer();
 
         Vector3 start = new Vector3(instance.transform.position.x, instance.transform.position.y);
@@ -61,6 +61,7 @@ public class ShakableTree : MonoBehaviour
         }
 
         sr.transform.position = target;
+        instance.GetComponent<BoxCollider2D>().transform.position += new Vector3(0.5f, -1.2f);//idk why this doesnt change on its own
         callback();
         //idk what callback does
     }
