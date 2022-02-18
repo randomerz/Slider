@@ -82,15 +82,18 @@ public class LightManager : MonoBehaviour
     public void GenerateHeightMask()
     {
         heightMask = new Texture2D(maskSizeX, maskSizeY);
+
+        // Update mask based on the world walls (don't do anymore)
         for (int u = 0; u < maskSizeX; u++)
         {
             for (int v = 0; v < maskSizeY; v++)
             {
-                heightMask.SetPixel(u, v, worldWallsTilemap.GetTile(new Vector3Int(u - worldToMaskDX, v - worldToMaskDY, 0)) != null ? Color.white : Color.black);
+                heightMask.SetPixel(u, v, Color.black);
             }
         }
 
         heightMask.Apply();
+        
 
         foreach (CaveSTile stile in stiles)
         {
