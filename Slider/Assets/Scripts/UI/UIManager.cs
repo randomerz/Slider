@@ -168,8 +168,8 @@ public class UIManager : MonoBehaviour
 
     public void ToggleBigText(bool value)
     {
-        DialogueManager.highContrastMode = value;
-        DialogueManager.doubleSizeMode = value;
+        DialogueDisplay.highContrastMode = value;
+        DialogueDisplay.doubleSizeMode = value;
     }
 
     public void LoadGame()
