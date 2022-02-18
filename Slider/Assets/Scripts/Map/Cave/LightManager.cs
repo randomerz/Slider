@@ -14,7 +14,6 @@ public class LightManager : MonoBehaviour
     public CaveSTile[] stiles;
 
     public GameObject tilesRoot;
-    public Tilemap worldWallsTilemap;
     public Tilemap worldBorderColliderTilemap;
 
     private int worldToMaskDX;
