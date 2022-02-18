@@ -8,14 +8,15 @@ public class RailManager : MonoBehaviour
     public Tilemap railMap;
     //public BoundsInt railBounds;
     GridInformation gridInfo;
-    public Tile[] stateZeroTiles = new Tile[36];
-    public Tile[] stateOneTiles = new Tile[12];
-    public Tile[][] allTiles;
+    public List<RailTile> stateZeroTiles = new List<RailTile>();
+    public List<RailTile> stateOneTiles = new List<RailTile>(); //There are only 24 junctions, so there are only 24 tiles with alternate states
+    //public Tile[][] allTiles;
+    public List<RailTile> occupiedTiles = new List<RailTile>(); // a list of the currently occupied rail tiles. Used to prevent switching when the minecart is on the junction 
 
   
     private void Start() 
     {
-        allTiles = new Tile[2][] {stateZeroTiles, stateOneTiles};
+        //allTiles = new Tile[2][] {stateZeroTiles, stateOneTiles};
         foreach (Vector3Int position in railMap.cellBounds.allPositionsWithin) {
             TileBase tile = railMap.GetTile(position);
             if (tile != null) {
@@ -27,7 +28,32 @@ public class RailManager : MonoBehaviour
     }
 
 
+    public void SetTile(Vector3Int loc, RailTile tile)
+    {
+        railMap.SetTile(loc, tile);
+        railMap.RefreshTile(loc);
+    }
 
+
+    public void ChangeTile(Vector3Int loc, RailTile tile)
+    {
+        int index = stateOneTiles.IndexOf(tile);
+        Debug.Log(tile);
+        if (index > -1)
+            SetTile(loc, stateZeroTiles[index]);
+    }
+
+    public void ChangeAllTiles()
+    {
+        foreach (Vector3Int position in railMap.cellBounds.allPositionsWithin) {
+            RailTile tile = railMap.GetTile(position) as RailTile;
+            if (tile != null) {
+                Debug.Log(tile as RailTile);
+                ChangeTile(position, tile as RailTile);
+                //HandleReplaceTile(tilemap, tile, position);
+            }
+        }
+    }
 
     /*public void printLocation() 
     {
