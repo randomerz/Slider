@@ -12,7 +12,7 @@ public class RailManager : MonoBehaviour
     public List<RailTile> stateOneTiles = new List<RailTile>(); //There are only 24 junctions, so there are only 24 tiles with alternate states
     //public Tile[][] allTiles;
     public List<RailTile> occupiedTiles = new List<RailTile>(); // a list of the currently occupied rail tiles. Used to prevent switching when the minecart is on the junction 
-
+    public Minecart mc;
   
     private void Start() 
     {
@@ -27,6 +27,10 @@ public class RailManager : MonoBehaviour
 
     }
 
+    public void startMC()
+    {
+        mc.SnapToTile(new Vector3Int(1,1,0));
+    }
 
     public void SetTile(Vector3Int loc, RailTile tile)
     {

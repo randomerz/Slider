@@ -93,6 +93,7 @@ GameObject:
   - component: {fileID: 1805245437082581397}
   - component: {fileID: -5991808453730892517}
   - component: {fileID: 8353254314762672909}
+  - component: {fileID: 7312408125226203461}
   m_Layer: 0
   m_Name: Minecart
   m_TagString: Untagged
@@ -148,7 +149,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2751716942032489634}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a82cb59979d619b4bbd3467224a79c0d, type: 3}
   m_Name: 
@@ -161,3 +162,25 @@ MonoBehaviour:
   onCollect:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7312408125226203461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2751716942032489634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c09977d7cb971b04c87713aa73709026, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentDirection: 0
+  railManager: {fileID: 0}
+  isOnTrack: 0
+  isMoving: 0
+  currentTile: {fileID: 0}
+  targetTile: {fileID: 0}
+  speed: 0
+  currentTilePos: {x: 0, y: 0, z: 0}
+  targetTilePos: {x: 0, y: 0, z: 0}
+  targetWorldPos: {x: 0, y: 0, z: 0}
