@@ -64,7 +64,7 @@ public class NPC : MonoBehaviour
     {
         if (currMessage < dconds.Count - 1)
         {
-            dconds[currMessage+1].SetPrio(dconds[currMessage+1].GetPrio());
+            dconds[currMessage+1].SetPrio(dconds[currMessage].GetPrio());
         }
     }
 }

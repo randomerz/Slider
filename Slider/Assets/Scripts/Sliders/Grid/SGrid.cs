@@ -278,10 +278,6 @@ public class SGrid : MonoBehaviour
             stile.SetSTile(td.isTileActive, td.x, td.y);
         }
         grid = newGrid;
-
-
-        // temporary ?
-        // GameObject.Find("Player").transform.position = GameManager.saveSystem.GetPlayerPos(myArea);
     }
 
 

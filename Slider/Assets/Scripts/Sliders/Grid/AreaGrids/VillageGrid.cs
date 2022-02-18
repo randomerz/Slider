@@ -34,17 +34,15 @@ public class VillageGrid : SGrid
     private void OnEnable() {
         if (checkCompletion) {
             SGrid.OnGridMove += SGrid.CheckCompletions;
+            SGridAnimator.OnSTileMove += CheckFinalPlacementsOnMove;
         }
-        
-        SGridAnimator.OnSTileMove += CheckFinalPlacementsOnMove;
     }
 
     private void OnDisable() {
         if (checkCompletion) {
             SGrid.OnGridMove -= SGrid.CheckCompletions;
+            SGridAnimator.OnSTileMove -= CheckFinalPlacementsOnMove;
         }
-
-        SGridAnimator.OnSTileMove -= CheckFinalPlacementsOnMove;
     }
 
     void Start()
@@ -76,32 +74,19 @@ public class VillageGrid : SGrid
 
 
     // === Village puzzle specific ===
-
-
-    // Puzzle 5 - R&J 
-    // Checks if Romeo (tile 1) and Juliette (tile 5) are next to each other using Regex
-    //public bool CheckLovers()
-    //{
-        //return CheckGrid.row(GetGridString(), "15.") || CheckGrid.row(GetGridString(), ".15");
-    //}
-    // Puzzle 6 - QR Code
-    // This method is added to SGridAnimator.OnSTileMove above in OnEnable
-    // Don't forget to remove it in OnDisable, or bad things will happen when unloaded!
-
-
-    // Puzzle 7 - River
-    // Checks if the river tiles are in order with Regex (see puzzle doc for the proper order)
-    //public void RiverChecked()
-    //{
-        
-        //return CheckGrid.contains(GetGridString(), "624_..7_...");
-    //}
+    public void CheckFishOn(Conditionals.Condition c)
+    {
+        c.SetSpec(fishOn);
+    }
 
     public void TurnFishOn()
     {
-        WorldData.SetState("fishOn", true);
-        fishOn = true;
-        particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
+        if (!fishOn)
+        {
+            WorldData.SetState("fishOn", true);
+            fishOn = true;
+            particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
+        }
     }
 
     // Puzzle 8 - 8puzzle
@@ -113,15 +98,17 @@ public class VillageGrid : SGrid
 
         // fading stuff
         UIEffects.FlashWhite();
+        CameraShake.Shake(1.5f, 1.0f);
 
         checkCompletion = true;
-        OnGridMove += CheckCompletions; // SGrid.OnGridMove += SGrid.CheckCompletions
+        OnGridMove += CheckCompletions;
+        SGridAnimator.OnSTileMove += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
     }
 
 
     private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (CheckFinalPlacements())
+        if (!PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153"))
         {
             // ActivateSliderCollectible(9);
             ActivateCollectible("Slider 9");
@@ -142,13 +129,9 @@ public class VillageGrid : SGrid
         CheckCompletions(this, null); // sets the final one to be complete
     }
 
-    public static bool CheckFinalPlacements()
-    {
-        return !PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153");
-    }
-
     public void Explode()
     {
         caveDoor.SetActive(true);
+        CameraShake.Shake(4f, 6.5f);
     }
 }

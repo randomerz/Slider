@@ -19,12 +19,12 @@ public class DialogueConditionals : Conditionals
         {
             if (!cond.CheckCondition())
             {
-                onSuccess?.Invoke();
+                onFail?.Invoke();
                 currentprio = -1 * priority;
                 return false;
             }
         }
-        onFail?.Invoke();
+        onSuccess?.Invoke();
         currentprio = priority;
         return true;
     }

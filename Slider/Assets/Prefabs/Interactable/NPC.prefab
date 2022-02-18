@@ -214,6 +214,9 @@ MonoBehaviour:
     conditions: []
     dialogue: Hello, I am sign!
     priority: 1
+    onDialogue:
+      m_PersistentCalls:
+        m_Calls: []
   dialogueDisplay: {fileID: 8260142248798685880}
 --- !u!114 &8260142248798685880
 MonoBehaviour:
@@ -232,8 +235,6 @@ MonoBehaviour:
   ping: {fileID: 1639439709551164036}
   canvas: {fileID: 1390625316688445350}
   highContrastBG: {fileID: 2569609833456035175}
-  doubleSizeMode: 0
-  highContrastMode: 0
 --- !u!114 &5484560316224803013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,7 +354,7 @@ SpriteRenderer:
   m_SortingLayerID: 414317947
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9db2872fcb94eea4aa8a65efbc04ebc9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: faf11ae64f385334a96844a93b79a04c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
