@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerPositionChanger : MonoBehaviour
 {
     public Vector3 dPos;
+    public bool tpToHouse;
 
     public enum GizmoType 
     {
@@ -18,16 +19,19 @@ public class PlayerPositionChanger : MonoBehaviour
     public void UPPHard() 
     {
         Player.SetPosition(dPos);
+        Player.SetIsInHouse(tpToHouse);
     }
 
     public void UPPRelativePlayer()
     {
         Player.SetPosition(Player.GetPosition() + dPos);
+        Player.SetIsInHouse(tpToHouse);
     }
 
     public void UPPRelativeMe()
     {
         Player.SetPosition(transform.position + dPos);
+        Player.SetIsInHouse(tpToHouse);
     }
 
 
