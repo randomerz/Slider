@@ -69,8 +69,6 @@ public class CaveLight : MonoBehaviour
         }
         Vector2Int lightPos = new Vector2Int((int)transform.position.x, (int)transform.position.y);
 
-        bool lightOnWall = heightMask.GetPixel(lightPos.x + worldToMaskDX, lightPos.y + worldToMaskDY).r > 0.5; 
-
         Vector2Int[] dirs = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
         foreach (Vector2Int dir in dirs)
         {
@@ -95,7 +93,7 @@ public class CaveLight : MonoBehaviour
                     mask.SetPixel(maskX, maskY, Color.white);
 
                     // L: Hit Wall Check (Note: This is after so that the start of the tile still gets lit, but nothing else.
-                    if (!lightOnWall && heightMask.GetPixel(maskX, maskY).r > 0.5)
+                    if (heightMask.GetPixel(maskX, maskY).r > 0.5)
                     {
                         break;
                     }
