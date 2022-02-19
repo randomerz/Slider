@@ -75,7 +75,7 @@ public class DesertArtifact : UIArtifact
             }
             curr = GetButton(curr.x + dir.x, curr.y + dir.y);
         }
-        Debug.Log(last);
+        // Debug.Log(last);
         return last;
     }
    

@@ -345,12 +345,12 @@ public class UIArtifact : MonoBehaviour
             {
                 if (m.Overlaps(peekedMove))
                 {
-                    Debug.Log("Move conflicts!");
+                    // Debug.Log("Move conflicts!");
                     return;
                 }
             }
 
-            Debug.Log("Move doesn't conflict! Performing move.");
+            // Debug.Log("Move doesn't conflict! Performing move.");
 
             // doesn't interfere! so do the move
             SGrid.current.Move(peekedMove);

@@ -171,7 +171,7 @@ public class SSlideSwap : SMove
     {
         for (int i = 0; i < points.Count; i++)
         {
-            Debug.Log(points[i].x + " " + points[i].y + " " + points[i].z + " " + points[i].w);
+            // Debug.Log(points[i].x + " " + points[i].y + " " + points[i].z + " " + points[i].w);
             moves.Add(new Vector4Int(points[i].x, points[i].y, points[i].z, points[i].w));
         }
     }
