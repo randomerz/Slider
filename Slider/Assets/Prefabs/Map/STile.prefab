@@ -119,6 +119,7 @@ MonoBehaviour:
   walls: {fileID: 3816725943429882143}
   decoration: {fileID: 3276724054856826786}
   colliders: {fileID: 7264392915800798820}
+  wallTile: {fileID: 11400000, guid: 5828889e543d9544690ea4166c5e7684, type: 2}
 --- !u!1 &1015975761374927900
 GameObject:
   m_ObjectHideFlags: 0
@@ -7609,6 +7610,7 @@ MonoBehaviour:
   walls: {fileID: 543545187493346570}
   decoration: {fileID: 423066182430256492}
   colliders: {fileID: 2253781805460349436}
+  wallTile: {fileID: 11400000, guid: 5828889e543d9544690ea4166c5e7684, type: 2}
 --- !u!1 &7649429769792356515
 GameObject:
   m_ObjectHideFlags: 0

@@ -101,7 +101,6 @@ public class CaveMossManager : MonoBehaviour
                 Color c = mossMap.GetColor(pos);
                 mossMap.SetColor(pos, new Color(c.r, c.g, c.b, c.a - mossFadeSpeed));
                 recededMossMap.SetColor(pos, new Color(c.r, c.g, c.b, 1 - (c.a - mossFadeSpeed)));
-                Debug.Log(recededMossMap.GetColor(pos));
                 yield return new WaitForSeconds(0.1f);
             }
 

@@ -196,6 +196,14 @@ public class SGrid : MonoBehaviour
     {
         GetCollectible(name).gameObject.SetActive(true);
     }
+    public void ActivateSliderCollectible(int sliderId)
+    {
+        if (!PlayerInventory.Contains("Slider " + sliderId)) 
+        {
+            collectibles[sliderId - 1].gameObject.SetActive(true);
+            AudioManager.Play("Puzzle Complete");
+        }
+    }
 
     public Area GetArea() 
     {
@@ -270,10 +278,6 @@ public class SGrid : MonoBehaviour
             stile.SetSTile(td.isTileActive, td.x, td.y);
         }
         grid = newGrid;
-
-
-        // temporary ?
-        // GameObject.Find("Player").transform.position = GameManager.saveSystem.GetPlayerPos(myArea);
     }
 
 

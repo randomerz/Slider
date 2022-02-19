@@ -9,11 +9,6 @@ public class KnotBox : MonoBehaviour
     public Color bad, good;
     public LineRenderer[] lines;
 
-    private static KnotBox _instance;
-    void Awake()
-    {
-        _instance = this;
-    }
     // Update is called once per frame
     void Update()
     {
@@ -32,7 +27,7 @@ public class KnotBox : MonoBehaviour
                 lines[i].SetPosition(1, knotnodes[0].transform.position);
         }
     }
-    public bool CheckLines()
+    private bool CheckLines()
     {
         bool ret = true;
         for (int i = 0; i < lines.Length; i++)
@@ -84,8 +79,9 @@ public class KnotBox : MonoBehaviour
             return true;
         return false;
     }
-    public static bool PuzzleComplete()
+
+    public void CheckPuzzle(Conditionals.Condition c)
     {
-        return _instance.CheckLines();
+        c.SetSpec(CheckLines());
     }
 }
