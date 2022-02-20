@@ -46,18 +46,6 @@ public class CaveSTile : STile
         Texture2D heightMask = new Texture2D(STILE_WIDTH, STILE_WIDTH);
 
         //L : Coordinates coorespond to the actual tile coordinates in the world, which are offset from the Texture2D coords by STILE_WIDTH / 2
-        /*
-        for (int x = -offset; x <= offset; x++)
-        {
-            for (int y = -offset; y <= offset; y++)
-            {
-                TileBase tile = wallsSTilemap.GetTile(new Vector3Int(x, y, 0));
-                heightMask.SetPixel(x + offset, y + offset, tile != null ? Color.white : Color.black);
-            }
-        }
-        */
-
-        //L : Coordinates coorespond to the actual tile coordinates in the world, which are offset from the Texture2D coords by STILE_WIDTH / 2
         
         foreach (var go in objectsThatBlockLight)
         {
@@ -75,8 +63,13 @@ public class CaveSTile : STile
 
             } else
             {
-                Vector3Int pos = new Vector3Int((int) transform.position.x, (int) transform.position.y, (int) transform.position.z);
-                heightMask.SetPixel(x + offset, y + offset, Color.white);
+                //Position relative to the center of the tile
+                Vector2Int posOnTile = new Vector2Int((int) (go.transform.position.x - transform.position.x), (int) (go.transform.position.y - transform.position.y));
+                if (posOnTile.x < -offset || posOnTile.x > offset || posOnTile.y < -offset || posOnTile.y > offset)
+                {
+                    Debug.LogError("Positions when calculating height mask fall outside the tile's bounds");
+                }
+                heightMask.SetPixel(posOnTile.x + offset, posOnTile.y + offset, Color.white);
             }
         }
         
