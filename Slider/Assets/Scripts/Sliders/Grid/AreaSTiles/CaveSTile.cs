@@ -8,11 +8,26 @@ public class CaveSTile : STile
 
     public CaveGrid grid;
     public Tilemap wallsSTilemap;
-    public List<Tilemap> objectsThatBlockLight;
 
-    public void Start()
+    public List<GameObject> objectsThatBlockLight;
+
+    private new void Awake()
     {
+        base.Awake();
 
+        objectsThatBlockLight = new List<GameObject>();
+        Transform[] objects = GetComponentsInChildren<Transform>();
+        foreach (var o in objects)
+        {
+            if (o.CompareTag("BlocksLight"))
+            {
+                objectsThatBlockLight.Add(o.gameObject);
+            }
+        }
+    }
+
+    private void Start()
+    {
         grid = SGrid.current as CaveGrid;
         
         SGridAnimator.OnSTileMove += UpdateLightMaskAfterMove;
@@ -21,18 +36,7 @@ public class CaveSTile : STile
         {
             LightManager.instance.FindMaterials();
             LightManager.instance.UpdateAll();
-        }
-
-        Tilemap[] tilemapChildren = GetComponentsInChildren<Tilemap>();
-        objectsThatBlockLight = new List<Tilemap>();
-        foreach (Tilemap tm in tilemapChildren)
-        {
-            if (tm.CompareTag("BlocksLight"))
-            {
-                objectsThatBlockLight.Add(tm);
-            }
-        }
-        
+        }      
     }
 
     //L: Gets the STILE_WIDTH x STILE_WIDTH (17 x 17) height mask. (1 if there's a wall tile, 0 if not)
@@ -71,7 +75,6 @@ public class CaveSTile : STile
 
             } else
             {
-                Debug.Log("Else?");
                 Vector3Int pos = new Vector3Int((int) transform.position.x, (int) transform.position.y, (int) transform.position.z);
                 heightMask.SetPixel(x + offset, y + offset, Color.white);
             }
