@@ -51,7 +51,8 @@ public class DesertArtifact : UIArtifact
         ArtifactTileButton last = null;
 
         //Anchor Case: Don't move if the tile has anchor or if it's blocked by an anchor
-        if (SGrid.current.grid[button.x, button.y].hasAnchor || SGrid.current.grid[curr.x, curr.y].hasAnchor)
+        STile[,] grid = SGrid.current.GetGrid();
+        if (grid[button.x, button.y].hasAnchor || grid[curr.x, curr.y].hasAnchor)
         {
             return null;
         }
