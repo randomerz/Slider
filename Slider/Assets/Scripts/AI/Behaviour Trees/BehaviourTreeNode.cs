@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public abstract class Node
+public abstract class BehaviourTreeNode
 {
     public enum NodeState
     {

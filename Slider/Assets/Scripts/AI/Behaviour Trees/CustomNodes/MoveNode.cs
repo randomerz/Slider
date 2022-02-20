@@ -1,18 +1,18 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StayInPlaceNode : BehaviourTreeNode
+public class MoveNode : BehaviourTreeNode
 {
-    RatAI ai;
+    private RatAI ai;
 
-    public StayInPlaceNode(RatAI ai)
+    public MoveNode(RatAI ai)
     {
         this.ai = ai;
     }
     public override NodeState Evaluate()
     {
-        ai.Stay();
+        ai.Move();
         return NodeState.RUNNING;
     }
 }

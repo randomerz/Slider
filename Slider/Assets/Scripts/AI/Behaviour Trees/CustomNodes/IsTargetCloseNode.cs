@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IsTargetCloseNode : Node
+public class IsTargetCloseNode : BehaviourTreeNode
 {
     private float range;
     private Transform source;
@@ -16,7 +16,7 @@ public class IsTargetCloseNode : Node
     }
     public override NodeState Evaluate()
     {
-            return Vector3.Distance(target.position, source.position) < range ?
-                NodeState.SUCCESS : NodeState.FAILURE;
+        return Vector3.Distance(target.position, source.position) < range ?
+            NodeState.SUCCESS : NodeState.FAILURE;
     }
 }

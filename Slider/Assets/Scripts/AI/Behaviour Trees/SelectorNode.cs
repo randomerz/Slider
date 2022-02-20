@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectorNode : Node
+public class SelectorNode : BehaviourTreeNode
 {
-    protected List<Node> childNodes;
+    protected List<BehaviourTreeNode> childNodes;
 
-    public SelectorNode(List<Node> nodes)
+    public SelectorNode(List<BehaviourTreeNode> nodes)
     {
         this.childNodes = nodes;
     }
 
-    public SelectorNode() : this(new List<Node>())
+    public SelectorNode() : this(new List<BehaviourTreeNode>())
     {
         
     }

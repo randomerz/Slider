@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InverterNode : Node
+public class InverterNode : BehaviourTreeNode
 {
-    protected Node child;
+    protected BehaviourTreeNode child;
 
-    public InverterNode(Node child)
+    public InverterNode(BehaviourTreeNode child)
     {
         this.child = child;
     }

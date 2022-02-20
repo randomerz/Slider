@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SequenceNode : Node
+public class SequenceNode : BehaviourTreeNode
 {
-    protected List<Node> childNodes;
+    protected List<BehaviourTreeNode> childNodes;
 
-    public SequenceNode(List<Node> nodes)
+    public SequenceNode(List<BehaviourTreeNode> nodes)
     {
         this.childNodes = nodes;
     }
 
-    public SequenceNode() : this(new List<Node>())
+    public SequenceNode() : this(new List<BehaviourTreeNode>())
     {
         
     }
