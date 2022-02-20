@@ -64,14 +64,15 @@ public class UIArtifact : MonoBehaviour
 
         
         foreach (ArtifactTileButton b in GetMoveOptions(dragged)) {
-            if(b == hovered) 
+            if (b == hovered) 
             {
                 b.SetHighlighted(false);
-                b.buttonAnimator.sliderImage.sprite = b.hoverSprite;
+                b.buttonAnimator.sliderImage.sprite = b.hoverSprite; // = blankSprite
             }
             else 
             {
-                 b.SetHighlighted(true);
+                b.SetHighlighted(true);
+                b.ResetToIslandSprite();
             }
         }
     }
