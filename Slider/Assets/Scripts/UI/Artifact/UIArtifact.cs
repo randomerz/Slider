@@ -418,6 +418,19 @@ public class UIArtifact : MonoBehaviour
         return null;
     }
 
+    public ArtifactTileButton GetButton(int islandId){
+
+        foreach (ArtifactTileButton b in _instance.buttons)
+        {
+            if (b.islandId == islandId)
+            {
+                return b;
+            }
+        }
+
+        return null;
+    }
+
     public static void AddButton(int islandId)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
