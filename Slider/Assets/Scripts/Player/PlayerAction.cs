@@ -35,7 +35,7 @@ public class PlayerAction : MonoBehaviour
         controls.Disable();
     }
 
-    private void Update() 
+    private void Update()
     {
         pickedItem = PlayerInventory.GetCurrentItem();
         if (pickedItem != null && !isPicking) 

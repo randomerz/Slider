@@ -15,6 +15,7 @@ public class SGridAnimator : MonoBehaviour
     {
         public STile stile;
         public Vector2Int prevPos;
+        public SMove smove; // the SMove this Move() was a part of
     }
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMove;
     
@@ -31,7 +32,7 @@ public class SGridAnimator : MonoBehaviour
         {
             if (grid[m.x, m.y].isTileActive)
             {
-                StartCoroutine(StartMovingAnimation(grid[m.x, m.y], m));
+                StartCoroutine(StartMovingAnimation(grid[m.x, m.y], m, move));
             }
             else
             {
@@ -41,7 +42,8 @@ public class SGridAnimator : MonoBehaviour
 
     }
 
-    private IEnumerator StartMovingAnimation(STile stile, Vector4Int moveCoords)
+    // move is only here so we can pass it into the event
+    private IEnumerator StartMovingAnimation(STile stile, Vector4Int moveCoords, SMove move)
     {
         float t = 0;
         //isMoving = true;
@@ -81,7 +83,7 @@ public class SGridAnimator : MonoBehaviour
         stile.SetMovingDirection(Vector2.zero);
         stile.SetGridPosition(moveCoords.z, moveCoords.w);
 
-        InvokeOnSTileMove(stile, new Vector2Int(moveCoords.x, moveCoords.y));
+        InvokeOnSTileMove(stile, new Vector2Int(moveCoords.x, moveCoords.y), move);
     }
 
     private IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders)
@@ -116,7 +118,10 @@ public class SGridAnimator : MonoBehaviour
         {
             if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1))
             {
-                bgGrid[p.x, p.y].SetBorderColliders(false);
+                foreach (int i in borders[p])
+                {
+                    bgGrid[p.x, p.y].SetBorderCollider(i, false);
+                }
             }
         }
 
@@ -165,8 +170,10 @@ public class SGridAnimator : MonoBehaviour
     }
 
 
-    private void InvokeOnSTileMove(STile stile, Vector2Int prevPos)
+    private void InvokeOnSTileMove(STile stile, Vector2Int prevPos, SMove move)
     {
-        OnSTileMove?.Invoke(this, new OnTileMoveArgs { stile = stile, prevPos = prevPos });
+        OnSTileMove?.Invoke(this, new OnTileMoveArgs { 
+            stile = stile, prevPos = prevPos, smove = move 
+        });
     }
 }
