@@ -13,7 +13,7 @@ public class RatAI : MonoBehaviour
     public GameObject objectToSteal;
     public Transform player;
 
-    private bool holdingObject;
+    internal bool holdingObject;
 
     private BehaviourTreeNode behaviourTree;
 
@@ -65,16 +65,25 @@ public class RatAI : MonoBehaviour
         anim.SetBool("isRunning", false);
     }
 
+    public void StealObject()
+    {
+        holdingObject = true;
+        //L: Reparent Slider piece to be child of Rat
+        objectToSteal.transform.parent = transform;
+    }
+
     private void ConstructBehaviourTree()
     {
         var isPlayerCloseNode = new IsTargetCloseNode(transform, player, playerMinRange);
         var findDirToRunNode = new FindDirToRunNode(this, player);
         var moveNode = new MoveNode(this);
         var stayInPlaceNode = new StayInPlaceNode(this);
+        var moveTowardsObjectNode = new MoveTowardsObjectNode(this);
 
         //L: IMPORTANT NOTE: The ordering of the nodes in the tree matters
         var runSequence = new SequenceNode(new List<BehaviourTreeNode> { isPlayerCloseNode, findDirToRunNode, moveNode });
+        var stealSequence = new SequenceNode(new List<BehaviourTreeNode>() { isPlayerCloseNode, moveTowardsObjectNode });
 
-        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { runSequence, stayInPlaceNode });
+        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runSequence, stayInPlaceNode });
     }
 }
