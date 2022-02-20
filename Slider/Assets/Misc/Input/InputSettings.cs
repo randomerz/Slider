@@ -312,7 +312,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
         m_UI_OpenArtifact = m_UI.FindAction("OpenArtifact", throwIfNotFound: true);
     }
-
+    
     public void Dispose()
     {
         UnityEngine.Object.Destroy(asset);
@@ -367,6 +367,15 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
+    public void RemapButtonClicked(InputAction actionToRebind) {
+        var rebindOperation = actionToRebind
+        .PerformInteractiveRebinding()
+        .WithControlsExcluding("<Mouse>/leftButton")
+        .WithControlsExcluding("<Mouse>/rightButton")
+        .WithControlsExcluding("<Mouse>/press")
+        .WithControlsExcluding("<Pointer>/position")
+        .WithCancelingThrough("<Keyboard>/escape");
+    }
     // Player
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;

@@ -12,11 +12,19 @@ public class UIManager : MonoBehaviour
     public static bool canOpenMenus = true;
 
     public GameObject pausePanel;
+    public GameObject optionsPanel;
+    public GameObject controlsPanel;
+    public GameObject advOptionsPanel;
     public GameObject artifactPanel;
     public UIArtifact uiArtifact;
     public Animator artifactAnimator;
     public Slider sfxSlider;
     public Slider musicSlider;
+    public GameObject moveActionRebinding;
+    public GameObject pauseActionRebinding;
+    public GameObject artActionRebinding;
+    public GameObject playerActionRebinding;
+    public GameObject cycleEquipActionRebinding;
 
     public static bool closeUI;
 
@@ -129,10 +137,60 @@ public class UIManager : MonoBehaviour
             return;
 
         pausePanel.SetActive(true);
+        optionsPanel.SetActive(false);
         Time.timeScale = 0f;
         isGamePaused = true;
     }
 
+    public void OpenOptions() 
+    {
+        if (!canOpenMenus)
+            return;
+
+        pausePanel.SetActive(false);
+        optionsPanel.SetActive(true);
+        controlsPanel.SetActive(false);
+        advOptionsPanel.SetActive(false);
+        moveActionRebinding.SetActive(false);
+        playerActionRebinding.SetActive(false);
+        artActionRebinding.SetActive(false);
+        pauseActionRebinding.SetActive(false);
+        cycleEquipActionRebinding.SetActive(false);
+    }
+
+    public void OpenControls() 
+    {
+        if (!canOpenMenus)
+            return;
+
+        optionsPanel.SetActive(false);
+        controlsPanel.SetActive(true);
+        moveActionRebinding.SetActive(true);
+        playerActionRebinding.SetActive(true);
+        artActionRebinding.SetActive(true);
+        pauseActionRebinding.SetActive(true);
+        cycleEquipActionRebinding.SetActive(true);
+    }
+    public void OpenAdvOptions() 
+    {
+        if (!canOpenMenus)
+            return;
+            
+        optionsPanel.SetActive(false);
+        advOptionsPanel.SetActive(true);
+    }
+
+    public void BackPressed() 
+    {
+        if (optionsPanel.activeSelf) 
+        {
+            PauseGame();
+        }
+        else if (controlsPanel.activeSelf || advOptionsPanel.activeSelf)
+        {
+            OpenOptions();
+        }
+    }
     public void OpenArtifact()
     {
         if (!canOpenMenus)
@@ -155,6 +213,7 @@ public class UIManager : MonoBehaviour
             AudioManager.Play("Artifact Error");
         }
     }
+<<<<<<< Updated upstream
 
     public void UpdateSFXVolume(float value)
     {
@@ -184,9 +243,12 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
+=======
+>>>>>>> Stashed changes
     public void QuitGame()
     {
         Application.Quit();
         Debug.Log("Quitting game!");
     }
+    
 }
