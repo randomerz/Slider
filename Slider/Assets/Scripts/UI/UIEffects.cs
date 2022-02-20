@@ -14,30 +14,37 @@ public class UIEffects : MonoBehaviour
 
     private static UIEffects _instance;
 
+    // Holds the last flashing/black fade coroutine called so we can end it when starting a new one
+    private static Coroutine previousCoroutine;
+
     private void Awake()
     {
         _instance = this;
     }
 
-    void Start()
-    {
-        
-    }
-
     public static void FadeFromBlack(System.Action callback=null)
     {
-        _instance.StartCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 1, 0, callback));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 1, 0, callback));
     }
 
     public static void FadeToBlack(System.Action callback=null)
     {
-        _instance.StartCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, 1, callback));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, 1, callback));
     }
 
     public static void FlashWhite()
     {
         Debug.Log("Flashing!");
-        _instance.StartCoroutine(_instance.FlashCoroutine());
+        StartEffectCoroutine(_instance.FlashCoroutine());
+    }
+
+    private static void StartEffectCoroutine(IEnumerator coroutine)
+    {
+        if (previousCoroutine != null)
+        {
+            _instance.StopCoroutine(previousCoroutine);
+        }
+        previousCoroutine = _instance.StartCoroutine(coroutine);
     }
 
 
