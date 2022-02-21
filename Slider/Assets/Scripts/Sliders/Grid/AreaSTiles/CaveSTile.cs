@@ -8,11 +8,26 @@ public class CaveSTile : STile
 
     public CaveGrid grid;
     public Tilemap wallsSTilemap;
-    public List<Tilemap> objectsThatBlockLight;
 
-    public void Start()
+    public List<GameObject> objectsThatBlockLight;
+
+    private new void Awake()
     {
+        base.Awake();
 
+        objectsThatBlockLight = new List<GameObject>();
+        Transform[] objects = GetComponentsInChildren<Transform>();
+        foreach (var o in objects)
+        {
+            if (o.CompareTag("BlocksLight"))
+            {
+                objectsThatBlockLight.Add(o.gameObject);
+            }
+        }
+    }
+
+    private void Start()
+    {
         grid = SGrid.current as CaveGrid;
         
         SGridAnimator.OnSTileMove += UpdateLightMaskAfterMove;
@@ -21,18 +36,7 @@ public class CaveSTile : STile
         {
             LightManager.instance.FindMaterials();
             LightManager.instance.UpdateAll();
-        }
-
-        Tilemap[] tilemapChildren = GetComponentsInChildren<Tilemap>();
-        objectsThatBlockLight = new List<Tilemap>();
-        foreach (Tilemap tm in tilemapChildren)
-        {
-            if (tm.CompareTag("BlocksLight"))
-            {
-                objectsThatBlockLight.Add(tm);
-            }
-        }
-        
+        }      
     }
 
     //L: Gets the STILE_WIDTH x STILE_WIDTH (17 x 17) height mask. (1 if there's a wall tile, 0 if not)
@@ -40,18 +44,6 @@ public class CaveSTile : STile
     {
         int offset = STILE_WIDTH / 2;
         Texture2D heightMask = new Texture2D(STILE_WIDTH, STILE_WIDTH);
-
-        //L : Coordinates coorespond to the actual tile coordinates in the world, which are offset from the Texture2D coords by STILE_WIDTH / 2
-        /*
-        for (int x = -offset; x <= offset; x++)
-        {
-            for (int y = -offset; y <= offset; y++)
-            {
-                TileBase tile = wallsSTilemap.GetTile(new Vector3Int(x, y, 0));
-                heightMask.SetPixel(x + offset, y + offset, tile != null ? Color.white : Color.black);
-            }
-        }
-        */
 
         //L : Coordinates coorespond to the actual tile coordinates in the world, which are offset from the Texture2D coords by STILE_WIDTH / 2
         
@@ -71,9 +63,13 @@ public class CaveSTile : STile
 
             } else
             {
-                Debug.Log("Else?");
-                Vector3Int pos = new Vector3Int((int) transform.position.x, (int) transform.position.y, (int) transform.position.z);
-                heightMask.SetPixel(x + offset, y + offset, Color.white);
+                //Position relative to the center of the tile
+                Vector2Int posOnTile = new Vector2Int((int) (go.transform.position.x - transform.position.x), (int) (go.transform.position.y - transform.position.y));
+                if (posOnTile.x < -offset || posOnTile.x > offset || posOnTile.y < -offset || posOnTile.y > offset)
+                {
+                    Debug.LogError("Positions when calculating height mask fall outside the tile's bounds");
+                }
+                heightMask.SetPixel(posOnTile.x + offset, posOnTile.y + offset, Color.white);
             }
         }
         

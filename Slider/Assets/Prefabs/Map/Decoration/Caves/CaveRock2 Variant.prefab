@@ -13,7 +13,11 @@ PrefabInstance:
       objectReference: {fileID: 5403612500290037870, guid: 7f8cd95e2ca87d149a8010a50cad59b1, type: 3}
     - target: {fileID: 2715347281015270711, guid: 54ac196642f70f44b901957877a65dcd, type: 3}
       propertyPath: m_Name
-      value: CaveRock2
+      value: CaveRock2 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2715347281015270711, guid: 54ac196642f70f44b901957877a65dcd, type: 3}
+      propertyPath: m_TagString
+      value: BlocksLight
       objectReference: {fileID: 0}
     - target: {fileID: 7491566366658628313, guid: 54ac196642f70f44b901957877a65dcd, type: 3}
       propertyPath: m_Size.y
