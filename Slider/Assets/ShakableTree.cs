@@ -42,6 +42,7 @@ public class ShakableTree : MonoBehaviour
 
     protected IEnumerator animateFallingPaper(GameObject instance, System.Action callback = null)
     {
+        instance.SetActive(true);
         float t = 0;
         Vector3 target = instance.transform.position + new Vector3(0.5f, -1.2f);
         SpriteRenderer sr = instance.GetComponent<Collectible>().getSpriteRenderer();
