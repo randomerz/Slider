@@ -69,7 +69,7 @@ public class STile : MonoBehaviour
         Init();
     }
 
-    public void SetTileActive(bool isTileActive)
+    public virtual void SetTileActive(bool isTileActive)
     {
         this.isTileActive = isTileActive;
 

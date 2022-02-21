@@ -198,9 +198,9 @@ public class SGrid : MonoBehaviour
     }
     public void ActivateSliderCollectible(int sliderId)
     {
-        if (!PlayerInventory.Contains("Slider " + sliderId)) 
+        if (!PlayerInventory.Contains("Slider " + sliderId, myArea)) 
         {
-            collectibles[sliderId - 1].gameObject.SetActive(true);
+            GetCollectible("Slider " + sliderId).gameObject.SetActive(true);
             AudioManager.Play("Puzzle Complete");
         }
     }

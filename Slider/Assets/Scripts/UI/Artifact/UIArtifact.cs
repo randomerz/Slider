@@ -64,14 +64,15 @@ public class UIArtifact : MonoBehaviour
 
         
         foreach (ArtifactTileButton b in GetMoveOptions(dragged)) {
-            if(b == hovered) 
+            if (b == hovered) 
             {
                 b.SetHighlighted(false);
-                b.buttonAnimator.sliderImage.sprite = b.hoverSprite;
+                b.buttonAnimator.sliderImage.sprite = b.hoverSprite; // = blankSprite
             }
             else 
             {
-                 b.SetHighlighted(true);
+                b.SetHighlighted(true);
+                b.ResetToIslandSprite();
             }
         }
     }
@@ -268,8 +269,8 @@ public class UIArtifact : MonoBehaviour
         int y = buttonCurrent.y;
         SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y);
  
-        Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
-        Debug.Log(buttonCurrent + " " + buttonEmpty);
+        // Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
+        // Debug.Log(buttonCurrent + " " + buttonEmpty);
         if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
         {
             //L: Do the move

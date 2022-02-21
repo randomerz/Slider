@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class JungleArtifact : UIArtifact
 {
-    private static STile prevLinkTile = null;
+    // private static STile prevLinkTile = null;
 
     protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {

@@ -136,9 +136,13 @@ public class ArtifactTileButton : MonoBehaviour
         ResetToIslandSprite();
     }
 
-    private void ResetToIslandSprite()
+    public void ResetToIslandSprite()
     {
-        if (isComplete)
+        if (!isTileActive)
+        {
+            buttonAnimator.sliderImage.sprite = emptySprite;
+        }
+        else if (isComplete)
         {
             buttonAnimator.sliderImage.sprite = completedSprite;
         }
