@@ -164,3 +164,20 @@ public class SMoveRotate : SMove
 
     }
 }
+
+public class SSlideSwap : SMove
+{
+    public SSlideSwap(List<Vector4Int> points)
+    {
+        for (int i = 0; i < points.Count; i++)
+        {
+            // Debug.Log(points[i].x + " " + points[i].y + " " + points[i].z + " " + points[i].w);
+            moves.Add(new Vector4Int(points[i].x, points[i].y, points[i].z, points[i].w));
+        }
+    }
+
+    public override bool Overlaps(SMove other)
+    {
+        return true;
+    }
+}

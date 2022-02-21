@@ -96,3 +96,11 @@ fmod_editor.log
 *.erp
 /Slider/[Aa]ssets/ERP.meta
 /Slider/[Aa]ssets/ERP/*
+
+# Backup & report files from converting an old project file
+# to a newer Visual Studio version. Backup files are not needed,
+# because we have git ;-)
+/Slider/_UpgradeReport_Files/
+/Slider/Backup*/
+/Slider/UpgradeLog*.XML
+/Slider/UpgradeLog*.htm

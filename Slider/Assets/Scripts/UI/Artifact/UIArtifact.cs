@@ -64,14 +64,15 @@ public class UIArtifact : MonoBehaviour
 
         
         foreach (ArtifactTileButton b in GetMoveOptions(dragged)) {
-            if(b == hovered) 
+            if (b == hovered) 
             {
                 b.SetHighlighted(false);
-                b.buttonAnimator.sliderImage.sprite = b.hoverSprite;
+                b.buttonAnimator.sliderImage.sprite = b.hoverSprite; // = blankSprite
             }
             else 
             {
-                 b.SetHighlighted(true);
+                b.SetHighlighted(true);
+                b.ResetToIslandSprite();
             }
         }
     }
@@ -212,7 +213,7 @@ public class UIArtifact : MonoBehaviour
     }
 
     // replaces adjacentButtons
-    protected List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
+    protected virtual List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
         moveOptionButtons.Clear();
 
@@ -277,6 +278,7 @@ public class UIArtifact : MonoBehaviour
             QueueCheckAndAdd(new SMoveSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y));
             SwapButtons(buttonCurrent, buttonEmpty);
 
+            // Debug.Log("Added move to queue: current length " + moveQueue.Count);
             QueueCheckAfterMove(this, null);
             // if (moveQueue.Count == 1)
             // {
@@ -326,15 +328,17 @@ public class UIArtifact : MonoBehaviour
     {
         if (e != null)
         {
+            //Debug.Log("Checking for e");
             if (activeMoves.Contains(e.smove))
             {
+                //Debug.Log("Move has been removed");
                 activeMoves.Remove(e.smove);
             }
         }
 
         if (moveQueue.Count > 0)
         {
-            // Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
+            //Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
 
             SMove peekedMove = moveQueue.Peek();
             // check if the peekedMove interferes with any of current moves
@@ -342,6 +346,7 @@ public class UIArtifact : MonoBehaviour
             {
                 if (m.Overlaps(peekedMove))
                 {
+                    // Debug.Log("Move conflicts!");
                     return;
                 }
             }
@@ -406,6 +411,19 @@ public class UIArtifact : MonoBehaviour
         foreach (ArtifactTileButton b in _instance.buttons)
         {
             if (b.x == x && b.y == y)
+            {
+                return b;
+            }
+        }
+
+        return null;
+    }
+
+    public ArtifactTileButton GetButton(int islandId){
+
+        foreach (ArtifactTileButton b in _instance.buttons)
+        {
+            if (b.islandId == islandId)
             {
                 return b;
             }
