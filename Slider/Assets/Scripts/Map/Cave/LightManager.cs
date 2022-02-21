@@ -15,6 +15,7 @@ public class LightManager : MonoBehaviour
 
     public GameObject tilesRoot;
     public Tilemap worldBorderColliderTilemap;
+    public Tilemap worldLightColliderTilemap;
 
     private int worldToMaskDX;
     private int worldToMaskDY;
@@ -51,7 +52,7 @@ public class LightManager : MonoBehaviour
         UpdateAll();
     }
 
-    private void Update()
+    private void Update() // DC: my cpu is crying
     {
         UpdateAll();
     }
@@ -87,7 +88,8 @@ public class LightManager : MonoBehaviour
         {
             for (int v = 0; v < maskSizeY; v++)
             {
-                heightMask.SetPixel(u, v, Color.black);
+                // heightMask.SetPixel(u, v, Color.black);
+                heightMask.SetPixel(u, v, worldLightColliderTilemap.GetTile(new Vector3Int(u - worldToMaskDX, v - worldToMaskDY, 0)) != null ? Color.white : Color.black);
             }
         }
 
