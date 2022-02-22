@@ -6,6 +6,18 @@ using UnityEngine.Tilemaps;
 
 public class CaveMossManager : MonoBehaviour
 {
+    internal class MossAnimData
+    {
+        public Coroutine Animation { get; }
+        public bool IsGrowing { get; }
+
+        public MossAnimData(Coroutine animation, bool isGrowing)
+        {
+            this.Animation = animation;
+            this.IsGrowing = isGrowing;
+        }
+    }
+
     //L: For now, the moss manager handles 3 tilemaps: The moss map, the receded moss map, and the corresponding colliders.
     //L: Alternatively, could have a list of triplets if we only wanted to have one manager in a scene.
     public Tilemap mossMap;
@@ -22,17 +34,17 @@ public class CaveMossManager : MonoBehaviour
     private BoundsInt mossBounds;
 
     //L: Keep track of the tiles that are animating so that we are not calling the coroutine twice. 
-    private HashSet<Vector3Int> tilesAnimating;
+    private Dictionary<Vector3Int, MossAnimData> tilesAnimating;
 
     private bool movingPlayer;
 
     [SerializeField]
-    private STile debugTile;    //L: In case you need to debug a specific til7
+    private STile debugTile;    //L: In case you need to debug a specific tile
 
     private void Start()
     {
         mossBounds = mossMap.cellBounds;
-        tilesAnimating = new HashSet<Vector3Int>();
+        tilesAnimating = new Dictionary<Vector3Int, MossAnimData>();
         player = GameObject.FindWithTag("Player").GetComponent<Transform>();
         movingPlayer = false;
 
@@ -80,11 +92,23 @@ public class CaveMossManager : MonoBehaviour
                 bool posIsLit = LightManager.instance.GetLightMaskAt(mossMap, pos);
                 bool needsToAnimate = posIsLit ? mossMap.GetColor(pos).a > 0.5f : mossMap.GetColor(pos).a < 0.5f;
 
-                if (!tilesAnimating.Contains(pos) && needsToAnimate)
-                { 
-                    tilesAnimating.Add(pos);
-                    StartCoroutine(posIsLit ? RecedeMoss(pos) : GrowMoss(pos));
+                if (needsToAnimate)
+                {
+                    if (tilesAnimating.ContainsKey(pos) && tilesAnimating[pos].IsGrowing == posIsLit)
+                    {
+                        //L: The tile is animating the wrong way, stop the animation.
+                        StopCoroutine(tilesAnimating[pos].Animation);
+                        tilesAnimating.Remove(pos);
+                    }
+
+                    if (!tilesAnimating.ContainsKey(pos) && needsToAnimate)
+                    {
+                        //L: The tile needs to animate and is not already animating in that direction.
+                        tilesAnimating.Add(pos, new MossAnimData(StartCoroutine(posIsLit ? RecedeMoss(pos) : GrowMoss(pos)), !posIsLit));
+                    }
                 }
+
+
             });
         }
     }
@@ -103,8 +127,6 @@ public class CaveMossManager : MonoBehaviour
 
     public IEnumerator GrowMoss(Vector3Int pos)
     {
-
-
         //L: Enable the moss collider
         CheckPlayerOnMoss(pos);
         mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
@@ -115,9 +137,10 @@ public class CaveMossManager : MonoBehaviour
             mossMap.SetColor(pos, new Color(c.r, c.g, c.b, c.a + mossFadeSpeed));
             recededMossMap.SetColor(pos, new Color(c.r, c.g, c.b, 1 - (c.a + mossFadeSpeed)));
             yield return new WaitForSeconds(0.1f);
-            CheckPlayerOnMoss(pos);
+            CheckPlayerOnMoss(pos); //This shouldn't be needed, but I'm paranoid
         }
         tilesAnimating.Remove(pos);
+
     }
 
     public IEnumerator RecedeMoss(Vector3Int pos)
