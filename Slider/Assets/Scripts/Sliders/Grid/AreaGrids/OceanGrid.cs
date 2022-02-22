@@ -70,6 +70,14 @@ public class OceanGrid : SGrid
     }
 
 
+    public override void EnableStile(STile stile)
+    {
+        base.EnableStile(stile);
+        
+        stile.GetComponentInChildren<SpriteMask>().enabled = false; // on STile/SlideableArea
+        
+    }
+
     // === Ocean puzzle specific ===
 
     public void CheckShipwreck(object sender, SGridAnimator.OnTileMoveArgs e)

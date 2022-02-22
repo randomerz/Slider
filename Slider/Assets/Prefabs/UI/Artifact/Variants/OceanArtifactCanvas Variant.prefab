@@ -37,7 +37,7 @@ PrefabInstance:
       objectReference: {fileID: 7429107406889428964, guid: 56ec0393aa0d55d4cba1b6110fedd2d0, type: 3}
     - target: {fileID: 2243524688618292922, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_Name
-      value: Rotate Base (1)
+      value: Rotate Base (2)
       objectReference: {fileID: 0}
     - target: {fileID: 2243524688618292923, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_Pivot.x
@@ -49,7 +49,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2243524688618292923, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2243524688618292923, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_AnchorMax.x
@@ -146,7 +146,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2243524688618292922, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_Name
-      value: Rotate Base (3)
+      value: Rotate Base (1)
       objectReference: {fileID: 0}
     - target: {fileID: 2243524688618292923, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_Pivot.x
@@ -158,7 +158,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2243524688618292923, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2243524688618292923, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_AnchorMax.x
@@ -275,7 +275,7 @@ PrefabInstance:
       objectReference: {fileID: -5458598972809746309, guid: 56ec0393aa0d55d4cba1b6110fedd2d0, type: 3}
     - target: {fileID: 2243524688618292922, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_Name
-      value: Rotate Base (2)
+      value: Rotate Base (3)
       objectReference: {fileID: 0}
     - target: {fileID: 2243524688618292923, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_Pivot.x
@@ -287,7 +287,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2243524688618292923, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 2243524688618292923, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_AnchorMax.x
@@ -605,11 +605,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2620790810742040741, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_Name
-      value: OceanArtifactCanvas
+      value: OceanArtifactCanvas Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2620790811287915178, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8552132621250028306, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
+      propertyPath: m_RootOrder
+      value: 14
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2620790809561359189, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
@@ -750,3 +754,6 @@ MonoBehaviour:
   - {fileID: 8799935562317442825}
   - {fileID: 8799935562848230597}
   - {fileID: 8799935562723014738}
+  maxMoveQueueSize: 3
+  rotating: 0
+  rotateParams: []
