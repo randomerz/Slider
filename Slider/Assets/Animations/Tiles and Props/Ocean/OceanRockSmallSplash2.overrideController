@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: OceanRockSmallSplash2
+  m_Controller: {fileID: 9100000, guid: c058a6bfc2a6b0142844b9328915ca1b, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 4a2c95982437daf4e99dbada4ff26b75, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 50ed555dd25ccec4195862ce130647ac, type: 2}

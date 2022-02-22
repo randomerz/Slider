@@ -32,10 +32,10 @@ public class OceanGrid : SGrid
                 c.gameObject.SetActive(false);
             }
 
-            if (c.GetName() == "Slider 5")
-            {
-                c.gameObject.SetActive(false);
-            }
+            // if (c.GetName() == "Slider 5")
+            // {
+            //     c.gameObject.SetActive(false);
+            // }
         }
 
         AudioManager.PlayMusic("Connection");
