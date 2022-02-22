@@ -104,27 +104,19 @@ public class CaveMossManager : MonoBehaviour
     public IEnumerator GrowMoss(Vector3Int pos)
     {
 
-        //L: Determine if the player is on the moss while it is growing
-        Vector3Int mossTile = TileUtil.WorldToTileCoords(mossMap.CellToWorld(pos));
 
+        //L: Enable the moss collider
+        CheckPlayerOnMoss(pos);
+        mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
         while (mossMap.GetColor(pos).a < 1.0f)
         {
 
             Color c = mossMap.GetColor(pos);
             mossMap.SetColor(pos, new Color(c.r, c.g, c.b, c.a + mossFadeSpeed));
             recededMossMap.SetColor(pos, new Color(c.r, c.g, c.b, 1 - (c.a + mossFadeSpeed)));
-
             yield return new WaitForSeconds(0.1f);
-
-            bool movePlayerOffMoss = mossTile.Equals(TileUtil.WorldToTileCoords(player.transform.position));
-            if (movePlayerOffMoss && !movingPlayer)
-            {
-                StartCoroutine(MovePlayerOffMoss());
-            }
+            CheckPlayerOnMoss(pos);
         }
-
-        //L: Enable the moss collider
-        mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
         tilesAnimating.Remove(pos);
     }
 
@@ -160,5 +152,16 @@ public class CaveMossManager : MonoBehaviour
         // Debug.Log(player.transform.position);
         // Debug.Log(playerRespawn.position);
         movingPlayer = false;
+    }
+
+    private void CheckPlayerOnMoss(Vector3Int pos)
+    {
+        //L: Determine if the player is on the moss while it is growing
+        Vector3Int mossTile = TileUtil.WorldToTileCoords(mossMap.CellToWorld(pos));
+        bool movePlayerOffMoss = mossTile.Equals(TileUtil.WorldToTileCoords(player.transform.position));
+        if (movePlayerOffMoss && !movingPlayer)
+        {
+            StartCoroutine(MovePlayerOffMoss());
+        }
     }
 }
