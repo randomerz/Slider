@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine.Tilemaps;
 
 public class CaveMossManager : MonoBehaviour
 {
+    //L: For now, the moss manager handles 3 tilemaps: The moss map, the receded moss map, and the corresponding colliders.
+    //L: Alternatively, could have a list of triplets if we only wanted to have one manager in a scene.
     public Tilemap mossMap;
     public Tilemap recededMossMap;
     public Tilemap mossCollidersMap;
@@ -18,8 +21,13 @@ public class CaveMossManager : MonoBehaviour
 
     private BoundsInt mossBounds;
 
+    //L: Keep track of the tiles that are animating so that we are not calling the coroutine twice. 
     private HashSet<Vector3Int> tilesAnimating;
+
     private bool movingPlayer;
+
+    [SerializeField]
+    private STile debugTile;    //L: In case you need to debug a specific til7
 
     private void Start()
     {
@@ -28,37 +36,37 @@ public class CaveMossManager : MonoBehaviour
         player = GameObject.FindWithTag("Player").GetComponent<Transform>();
         movingPlayer = false;
 
-        //L: Set moss transparencies initially
+        //L: Initialize all moss tiles
         if (LightManager.instance != null)
         {
-            for (int x = mossBounds.x; x < mossBounds.xMax; x++)
+            ForEachMossTileIn(mossMap, (pos) =>
             {
-                for (int y = mossBounds.y; y < mossBounds.yMax; y++)
+                mossMap.SetTileFlags(pos, TileFlags.None);
+                recededMossMap.SetTileFlags(pos, TileFlags.None);
+
+                if (GetComponentInParent<STile>() == debugTile)
                 {
-                    Vector3Int pos = new Vector3Int(x, y, mossBounds.z);
-                    MossTile tile = mossMap.GetTile(pos) as MossTile;
-                    if (tile != null)
-                    {
-                        mossMap.SetTileFlags(pos, TileFlags.None);
-                        recededMossMap.SetTileFlags(pos, TileFlags.None);
-
-                        Vector3Int posInWorld = new Vector3Int(x + (int)transform.position.x, y + (int)transform.position.y, pos.z);
-                        bool posIsLit = LightManager.instance.GetLightMaskAt(posInWorld.x, posInWorld.y);
-
-                        if (posIsLit)
-                        {
-                            mossMap.SetColor(pos, new Color(1.0f, 1.0f, 1.0f, 0.0f));
-                            recededMossMap.SetColor(pos, Color.white);
-                            mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
-                        } else
-                        {
-                            mossMap.SetColor(pos, Color.white);
-                            recededMossMap.SetColor(pos, new Color(1.0f, 1.0f, 1.0f, 0.0f));
-                            mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
-                        }
-                    }
+                    Debug.Log("Position of Tile: " + pos);
+                    Debug.Log("Position of Tile in World: " + (mossMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0)));
                 }
-            }
+
+                bool posIsLit = LightManager.instance.GetLightMaskAt(mossMap, pos);
+
+                if (posIsLit)
+                {
+                    //L: mossMap -> Off, recededMossMap -> On, Colliders -> Off
+                    mossMap.SetColor(pos, new Color(1.0f, 1.0f, 1.0f, 0.0f));
+                    recededMossMap.SetColor(pos, Color.white);
+                    mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
+                }
+                else
+                {
+                    //L: mossMap -> On, recededMossMap -> Off, Colliders -> On
+                    mossMap.SetColor(pos, Color.white);
+                    recededMossMap.SetColor(pos, new Color(1.0f, 1.0f, 1.0f, 0.0f));
+                    mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
+                }
+            });
         }
     }
 
@@ -66,69 +74,72 @@ public class CaveMossManager : MonoBehaviour
     {
         if (LightManager.instance != null)
         {
-            for (int x = mossBounds.x; x < mossBounds.xMax; x++)
+            ForEachMossTileIn(mossMap, (pos) =>
             {
-                for (int y = mossBounds.y; y < mossBounds.yMax; y++)
-                {
-                    Vector3Int pos = new Vector3Int(x, y, mossBounds.z);
-                    MossTile tile = mossMap.GetTile(pos) as MossTile;
-                    if (tile != null)
-                    {
 
-                        Vector3Int posInWorld = new Vector3Int(x + (int) transform.position.x, y + (int) transform.position.y, pos.z);
-                        bool posIsLit = LightManager.instance.GetLightMaskAt(posInWorld.x, posInWorld.y);
-                        bool needsToAnimate = posIsLit ? mossMap.GetColor(pos).a > 0.5f : mossMap.GetColor(pos).a < 0.5f;
+                bool posIsLit = LightManager.instance.GetLightMaskAt(mossMap, pos);
+                bool needsToAnimate = posIsLit ? mossMap.GetColor(pos).a > 0.5f : mossMap.GetColor(pos).a < 0.5f;
 
-                        //L: Fade moss away.
-                        if (!tilesAnimating.Contains(pos) && needsToAnimate)
-                        {
-                            StartCoroutine(GrowMoss(pos, posIsLit));
-                        }
-                    }
+                if (!tilesAnimating.Contains(pos) && needsToAnimate)
+                { 
+                    tilesAnimating.Add(pos);
+                    StartCoroutine(posIsLit ? RecedeMoss(pos) : GrowMoss(pos));
                 }
+            });
+        }
+    }
+
+    private void ForEachMossTileIn(Tilemap tm, Action<Vector3Int> func)
+    {
+        foreach (Vector3Int pos in mossMap.cellBounds.allPositionsWithin)
+        {
+            MossTile tile = mossMap.GetTile(pos) as MossTile;
+            if (tile != null)
+            {
+                func(pos);
             }
         }
     }
 
-    public IEnumerator GrowMoss(Vector3Int pos, bool lit)
+    public IEnumerator GrowMoss(Vector3Int pos)
     {
-        tilesAnimating.Add(pos);
 
-        if (lit)
+        //L: Determine if the player is on the moss while it is growing
+        Vector3Int mossTile = TileUtil.WorldToTileCoords(mossMap.CellToWorld(pos));
+
+        while (mossMap.GetColor(pos).a < 1.0f)
         {
-            while (mossMap.GetColor(pos).a > 0.0f)
-            {
-                Color c = mossMap.GetColor(pos);
-                mossMap.SetColor(pos, new Color(c.r, c.g, c.b, c.a - mossFadeSpeed));
-                recededMossMap.SetColor(pos, new Color(c.r, c.g, c.b, 1 - (c.a - mossFadeSpeed)));
-                yield return new WaitForSeconds(0.1f);
-            }
 
-            //L: Disable the moss collider
-            mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
-        }
-        else
-        {
-            Vector3Int posInWorld = new Vector3Int(pos.x + (int)transform.position.x, pos.y + (int)transform.position.y, pos.z);
-            bool movePlayerOffMoss = (int)player.position.x == posInWorld.x && (int)player.position.y == posInWorld.y;
+            Color c = mossMap.GetColor(pos);
+            mossMap.SetColor(pos, new Color(c.r, c.g, c.b, c.a + mossFadeSpeed));
+            recededMossMap.SetColor(pos, new Color(c.r, c.g, c.b, 1 - (c.a + mossFadeSpeed)));
 
+            yield return new WaitForSeconds(0.1f);
+
+            bool movePlayerOffMoss = mossTile.Equals(TileUtil.WorldToTileCoords(player.transform.position));
             if (movePlayerOffMoss && !movingPlayer)
             {
                 StartCoroutine(MovePlayerOffMoss());
             }
-
-            while (mossMap.GetColor(pos).a < 1.0f)
-            {
-                Color c = mossMap.GetColor(pos);
-                mossMap.SetColor(pos, new Color(c.r, c.g, c.b, c.a + mossFadeSpeed));
-                recededMossMap.SetColor(pos, new Color(c.r, c.g, c.b, 1 - (c.a + mossFadeSpeed)));
-
-                yield return new WaitForSeconds(0.1f);
-            }
-
-            //L: Enable the moss collider
-            mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
         }
+
+        //L: Enable the moss collider
+        mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
+        tilesAnimating.Remove(pos);
+    }
+
+    public IEnumerator RecedeMoss(Vector3Int pos)
+    {
+        while (mossMap.GetColor(pos).a > 0.0f)
+        {
+            Color c = mossMap.GetColor(pos);
+            mossMap.SetColor(pos, new Color(c.r, c.g, c.b, c.a - mossFadeSpeed));
+            recededMossMap.SetColor(pos, new Color(c.r, c.g, c.b, 1 - (c.a - mossFadeSpeed)));
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        //L: Disable the moss collider
+        mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
 
         tilesAnimating.Remove(pos);
     }
@@ -145,8 +156,6 @@ public class CaveMossManager : MonoBehaviour
             player.transform.position = Vector3.Lerp(player.transform.position, playerRespawn.position, t);
             yield return new WaitForSeconds(0.1f);
         }
-
-        // Debug.Log(t);
 
         // Debug.Log(player.transform.position);
         // Debug.Log(playerRespawn.position);

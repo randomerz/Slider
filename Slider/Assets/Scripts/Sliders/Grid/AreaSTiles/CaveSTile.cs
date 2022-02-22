@@ -37,7 +37,6 @@ public class CaveSTile : STile
         
         if (isTileActive)
         {
-            SGridAnimator.OnSTileMove += UpdateLightMaskAfterMove;
 
             if (LightManager.instance != null)
             {
@@ -88,24 +87,5 @@ public class CaveSTile : STile
 
         heightMask.Apply();
         return heightMask;
-    }
-
-    //L: The two ways that a tile could change lighting are if the light map changes or if the tile moves
-
-    public void UpdateLightMaskAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (e.stile == this)
-        {
-            /*
-            LightManager.instance.ClearHeightMaskTile(e.prevPos);
-            LightManager.instance.UpdateHeightMask(this);
-            
-
-            LightManager.instance.GenerateLightMask();  //L: Regenerate the whole mask cuz I'm lazy
-            LightManager.instance.UpdateMaterials();
-            */
-
-            LightManager.instance.UpdateAll();
-        }
     }
 }

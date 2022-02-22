@@ -52,7 +52,7 @@ public class LightManager : MonoBehaviour
         UpdateAll();
     }
 
-    private void Update() // DC: my cpu is crying
+    private void Update() // DC: my cpu is crying L: Crying Emoji
     {
         UpdateAll();
     }
@@ -170,7 +170,7 @@ public class LightManager : MonoBehaviour
             {
                 for (int y = 0; y < maskSizeY; y++)
                 {
-                    Color ogPixel = lightMask.GetPixel(x, y); ;
+                    Color ogPixel = lightMask.GetPixel(x, y);
                     Color newPixel = mask.GetPixel(x, y);
                     lightMask.SetPixel(x, y, ogPixel + newPixel);
                 }
@@ -184,6 +184,13 @@ public class LightManager : MonoBehaviour
     {
         //Debug.Log(lightMask.GetPixel(x + worldToMaskDX, y + worldToMaskDY));
         return lightMask.GetPixel(x + worldToMaskDX, y + worldToMaskDY).r > 0.5f;
+    }
+
+    public bool GetLightMaskAt(Tilemap tm, Vector3Int pos)
+    {
+        Vector3 posInWorld = tm.CellToWorld(pos);
+        Vector3Int tilePos = TileUtil.WorldToTileCoords(posInWorld);
+        return GetLightMaskAt(tilePos.x, tilePos.y);
     }
 
     public void UpdateMaterials()
