@@ -15,6 +15,10 @@ PrefabInstance:
       propertyPath: dPos.y
       value: 150
       objectReference: {fileID: 0}
+    - target: {fileID: 2894810818442469168, guid: e8849e9063fd2634987343fcd6794544, type: 3}
+      propertyPath: tpToHouse
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2894810818442469169, guid: e8849e9063fd2634987343fcd6794544, type: 3}
       propertyPath: m_Size.x
       value: 1
@@ -114,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onPlayerEnter: 1
-  onTrigger:
+  onEnter:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2210584986250492364}
@@ -141,3 +145,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onExit:
+    m_PersistentCalls:
+      m_Calls: []

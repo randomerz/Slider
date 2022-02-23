@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     private float moveSpeedMultiplier = 1;
     private bool canMove = true;
     [SerializeField] private bool isOnWater = false;
+    private static bool isInHouse = false;
 
     private InputSettings controls;
     private Vector3 lastMoveDir;
@@ -29,9 +30,9 @@ public class Player : MonoBehaviour
         controls = new InputSettings();
         controls.Player.Move.performed += context => Move(context.ReadValue<Vector2>());
         if (PlayerInventory.Contains("Boots"))
-            {
-                bootsSpeedUp();
-            }
+        {
+            bootsSpeedUp();
+        }
     }
 
     private void OnEnable() {
@@ -154,5 +155,14 @@ public class Player : MonoBehaviour
 
             // lol you'll have to pick up a ton of these boots if you want the speed to be noticeable
         }
+    }
+
+    public static bool GetIsInHouse()
+    {
+        return isInHouse;
+    }
+    public static void SetIsInHouse(bool isInHouse)
+    {
+        Player.isInHouse = isInHouse;
     }
 }

@@ -69,6 +69,31 @@ public class SMove
         else
             borders[pos2].Add((side + 2) % 4);
     }
+
+    // DC: check if this SMove and other SMove share the same (x, y) in position
+    public virtual bool Overlaps(SMove other)
+    {
+        if (other == null) return false;
+
+        if (positions.Count == 0)
+        {
+            GenerateBorders();
+        }
+        if (other.positions.Count == 0)
+        {
+            other.GenerateBorders();
+        }
+
+        foreach (Vector2Int pos in positions)
+        {
+            if (other.positions.Contains(pos))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 public class Vector4Int
@@ -137,5 +162,22 @@ public class SMoveRotate : SMove
             moves.Add(new Vector4Int(points[i].x, points[i].y, points[(i + 1) % points.Count].x, points[(i + 1) % points.Count].y));
         }
 
+    }
+}
+
+public class SSlideSwap : SMove
+{
+    public SSlideSwap(List<Vector4Int> points)
+    {
+        for (int i = 0; i < points.Count; i++)
+        {
+            // Debug.Log(points[i].x + " " + points[i].y + " " + points[i].z + " " + points[i].w);
+            moves.Add(new Vector4Int(points[i].x, points[i].y, points[i].z, points[i].w));
+        }
+    }
+
+    public override bool Overlaps(SMove other)
+    {
+        return true;
     }
 }
