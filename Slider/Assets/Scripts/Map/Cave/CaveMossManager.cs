@@ -24,19 +24,15 @@ public class CaveMossManager : MonoBehaviour
     public Tilemap recededMossMap;
     public Tilemap mossCollidersMap;
 
+    public PlayerMoveOffMoss playerTP;
+
 
     public float mossFadeSpeed;
-    public float playerBoopSpeed;
-
-    public Transform player;
-    public Transform playerRespawn;
 
     private BoundsInt mossBounds;
 
     //L: Keep track of the tiles that are animating so that we are not calling the coroutine twice. 
     private Dictionary<Vector3Int, MossAnimData> tilesAnimating;
-
-    private bool movingPlayer;
 
     [SerializeField]
     private STile debugTile;    //L: In case you need to debug a specific tile
@@ -45,8 +41,6 @@ public class CaveMossManager : MonoBehaviour
     {
         mossBounds = mossMap.cellBounds;
         tilesAnimating = new Dictionary<Vector3Int, MossAnimData>();
-        player = GameObject.FindWithTag("Player").GetComponent<Transform>();
-        movingPlayer = false;
 
         //L: Initialize all moss tiles
         if (LightManager.instance != null)
@@ -94,12 +88,14 @@ public class CaveMossManager : MonoBehaviour
 
                 if (needsToAnimate)
                 {
+                    /*
                     if (tilesAnimating.ContainsKey(pos) && tilesAnimating[pos].IsGrowing == posIsLit)
                     {
                         //L: The tile is animating the wrong way, stop the animation.
                         StopCoroutine(tilesAnimating[pos].Animation);
                         tilesAnimating.Remove(pos);
                     }
+                    */
 
                     if (!tilesAnimating.ContainsKey(pos) && needsToAnimate)
                     {
@@ -128,8 +124,9 @@ public class CaveMossManager : MonoBehaviour
     public IEnumerator GrowMoss(Vector3Int pos)
     {
         //L: Enable the moss collider
-        CheckPlayerOnMoss(pos);
+        playerTP.CheckPlayerOnMoss(pos);
         mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
+
         while (mossMap.GetColor(pos).a < 1.0f)
         {
 
@@ -137,7 +134,6 @@ public class CaveMossManager : MonoBehaviour
             mossMap.SetColor(pos, new Color(c.r, c.g, c.b, c.a + mossFadeSpeed));
             recededMossMap.SetColor(pos, new Color(c.r, c.g, c.b, 1 - (c.a + mossFadeSpeed)));
             yield return new WaitForSeconds(0.1f);
-            CheckPlayerOnMoss(pos); //This shouldn't be needed, but I'm paranoid
         }
         tilesAnimating.Remove(pos);
 
@@ -157,34 +153,5 @@ public class CaveMossManager : MonoBehaviour
         mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
 
         tilesAnimating.Remove(pos);
-    }
-
-    public IEnumerator MovePlayerOffMoss()
-    {
-        movingPlayer = true;
-
-        //Move player off the moss
-        float t = 0.0f;
-        while (t < 1.0f)
-        {
-            t += playerBoopSpeed;
-            player.transform.position = Vector3.Lerp(player.transform.position, playerRespawn.position, t);
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        // Debug.Log(player.transform.position);
-        // Debug.Log(playerRespawn.position);
-        movingPlayer = false;
-    }
-
-    private void CheckPlayerOnMoss(Vector3Int pos)
-    {
-        //L: Determine if the player is on the moss while it is growing
-        Vector3Int mossTile = TileUtil.WorldToTileCoords(mossMap.CellToWorld(pos));
-        bool movePlayerOffMoss = mossTile.Equals(TileUtil.WorldToTileCoords(player.transform.position));
-        if (movePlayerOffMoss && !movingPlayer)
-        {
-            StartCoroutine(MovePlayerOffMoss());
-        }
     }
 }
