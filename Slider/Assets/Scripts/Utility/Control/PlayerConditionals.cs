@@ -19,6 +19,7 @@ public class PlayerConditionals : MonoBehaviour
     // }
 
     public bool isCarryingItem;
+    
 
 
     // private void OnDisable() {               Maybe this is needed?
@@ -62,6 +63,13 @@ public class PlayerConditionals : MonoBehaviour
 
     private void OnActionListener(object sender, System.EventArgs e) {
         CheckCondition();
+    }
+
+    public void disableConditionals()
+    {
+        PlayerAction.OnAction -= OnActionListener;
+        Player.GetPlayerAction().DecrementActionsAvailable();
+        addToOnAction = false;
     }
     
 }
