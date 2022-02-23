@@ -16,6 +16,7 @@ public class ShakableTree : MonoBehaviour
     void Start()
     {
         isShaken = false;
+        StuckPaper.SetActive(false);
     }
 
     private void Awake()
@@ -31,8 +32,9 @@ public class ShakableTree : MonoBehaviour
         } else
         {
             Debug.Log("you shake tree");
-            GameObject instance = Instantiate(StuckPaper, myCollider.transform.position + new Vector3(1.1f, 1.1f), myCollider.transform.rotation, null) as GameObject;
-            StartCoroutine(animateFallingPaper(instance, null));
+            //GameObject instance = Instantiate(StuckPaper, myCollider.transform.position + new Vector3(1.1f, 1.1f), myCollider.transform.rotation, null) as GameObject;
+            StuckPaper.transform.position = myCollider.transform.position + new Vector3(1.1f, 1.1f);
+            StartCoroutine(animateFallingPaper(StuckPaper, null));
 
             isShaken = true;
         }
@@ -43,9 +45,12 @@ public class ShakableTree : MonoBehaviour
     protected IEnumerator animateFallingPaper(GameObject instance, System.Action callback = null)
     {
         instance.SetActive(true);
+
         float t = 0;
         Vector3 target = instance.transform.position + new Vector3(0.5f, -1.2f);
-        SpriteRenderer sr = instance.GetComponent<Collectible>().getSpriteRenderer();
+        BoxCollider2D bc = instance.GetComponent<BoxCollider2D>();
+        bc.enabled = false;
+        //SpriteRenderer sr = instance.GetComponent<Collectible>().getSpriteRenderer();
 
         Vector3 start = new Vector3(instance.transform.position.x, instance.transform.position.y);
         while (t < 1)
@@ -55,14 +60,18 @@ public class ShakableTree : MonoBehaviour
             Vector3 pos = new Vector3(Mathf.Lerp(start.x, target.x, x),
                                       Mathf.Lerp(start.y, target.y, y));
 
-            sr.transform.position = pos;
+            //sr.transform.position = pos;
+            instance.transform.position = pos;
+            //bc.enabled = true;
 
             yield return null;
             t += Time.deltaTime;
         }
 
-        sr.transform.position = target;
-        instance.GetComponent<BoxCollider2D>().transform.position += new Vector3(0.5f, -1.2f);//idk why this doesnt change on its own
+        //sr.transform.position = target; //idk why I have to do this
+        instance.GetComponent<BoxCollider2D>().enabled = true;
+        bc.enabled = true;
+        
         callback();
         //idk what callback does
     }
