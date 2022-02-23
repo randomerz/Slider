@@ -11,11 +11,10 @@ public class UIRotateParams : MonoBehaviour
     public int bottomLeftX;
     public int bottomLeftY;
 
-    private Sprite unlitCWArrow;
-    private Sprite unlitCCWArrow;
-    public Sprite litCWArrow;
-    public Sprite litCCWArrow;
-
+    // private Sprite unlitCWArrow;
+    // private Sprite unlitCCWArrow;
+    // public Sprite litCWArrow;
+    // public Sprite litCCWArrow;
 
     private bool isCCW;
     private bool isHoveredOver;
@@ -26,8 +25,7 @@ public class UIRotateParams : MonoBehaviour
     private Vector2 uiOffset;
 
     [Header("References")]
-    public Image cwArrowSprite;
-    public Image ccwArrowSprite;
+    public Animator animator;
     public OceanArtifact artifact;
     public Canvas canvas;
 
@@ -38,8 +36,8 @@ public class UIRotateParams : MonoBehaviour
         uiOffset = new Vector2((float)canvasRectTransform.sizeDelta.x / 2f, 
                             (float)canvasRectTransform.sizeDelta.y / 2f);
 
-        unlitCWArrow  = cwArrowSprite.sprite;
-        unlitCCWArrow = ccwArrowSprite.sprite;
+        // unlitCWArrow  = cwArrowSprite.sprite;
+        // unlitCCWArrow = ccwArrowSprite.sprite;
     }
 
     private void Update() 
@@ -71,12 +69,16 @@ public class UIRotateParams : MonoBehaviour
         SelectArrow(offsetPos.x > offsetPos.y);
         
         // Debug.Log("hovering, is ccw: " + (offsetPos.x > offsetPos.y));
+        // Debug.Log("hovering, offsetPos: " + offsetPos);
+        // Debug.Log("hovering, proportionalPos: " + proportionalPos + " viewportPos.x " + viewportPos.x + " mcpv " + Mouse.current.position.ReadValue());
     }
 
     public void OnHoverExit() 
     {
-        cwArrowSprite.sprite  = unlitCWArrow;
-        ccwArrowSprite.sprite = unlitCCWArrow;
+        // cwArrowSprite.sprite  = unlitCWArrow;
+        // ccwArrowSprite.sprite = unlitCCWArrow;
+        animator.SetBool("highlightCW", false);
+        animator.SetBool("highlightCCW", false);
 
         isHoveredOver = false;
     }
@@ -86,10 +88,22 @@ public class UIRotateParams : MonoBehaviour
         // Debug.Log("selected ccw: " + ccw);
         isCCW = ccw; 
 
-        cwArrowSprite.sprite  = ccw ? unlitCWArrow : litCWArrow;
-        ccwArrowSprite.sprite = ccw ? litCCWArrow : unlitCCWArrow;
+        animator.SetBool("highlightCW", !ccw);
+        animator.SetBool("highlightCCW", ccw);
 
         // Debug.Log(isCCW);
+    }
+
+    public void RotateArrow(bool ccw)
+    {
+        if (ccw)
+        {
+            animator.SetTrigger("rotateCCW");
+        }
+        else
+        {
+            animator.SetTrigger("rotateCW");
+        }
     }
 
     public void OnClick()
