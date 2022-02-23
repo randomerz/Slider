@@ -11,9 +11,9 @@ public class CaveSTile : STile
 
     public List<GameObject> objectsThatBlockLight;
 
-    private new void Awake()
+    private void Awake()
     {
-        base.Awake();
+        // base.Awake();
 
         objectsThatBlockLight = new List<GameObject>();
         Transform[] objects = GetComponentsInChildren<Transform>(true); // true -> include inactive components
@@ -26,9 +26,11 @@ public class CaveSTile : STile
         }
     }
 
-    private void Start()
+    private new void Start()
     {
         grid = SGrid.current as CaveGrid;
+
+        base.Start();
     }
 
     public override void SetTileActive(bool isTileActive)
