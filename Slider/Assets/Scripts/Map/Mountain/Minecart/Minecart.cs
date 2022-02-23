@@ -22,6 +22,13 @@ public class Minecart : MonoBehaviour
     public Vector3 targetWorldPos;
     Coroutine move;
 
+
+    //creates a new minecart at the given position
+    public Minecart(RailManager rm, Vector3Int pos){
+      railManager = rm;
+      SnapToTile(pos);
+    }
+
     //Places the minecart on the tile at the given position (currently hardcoded to get the next tile to the east)
     public void SnapToTile(Vector3Int pos)
     {

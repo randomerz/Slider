@@ -92,7 +92,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1805245437082581397}
   - component: {fileID: -5991808453730892517}
-  - component: {fileID: 8353254314762672909}
   - component: {fileID: 7312408125226203461}
   m_Layer: 0
   m_Name: Minecart
@@ -142,26 +141,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &8353254314762672909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2751716942032489634}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a82cb59979d619b4bbd3467224a79c0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cData:
-    name: 
-    area: 0
-  shouldDisableAtStart: 0
-  spriteRenderer: {fileID: 3852429895674959733}
-  onCollect:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &7312408125226203461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,6 +160,7 @@ MonoBehaviour:
   currentTile: {fileID: 0}
   targetTile: {fileID: 0}
   speed: 0
+  offSet: {x: 0.5, y: 0.5, z: 0}
   currentTilePos: {x: 0, y: 0, z: 0}
   targetTilePos: {x: 0, y: 0, z: 0}
   targetWorldPos: {x: 0, y: 0, z: 0}
