@@ -20,25 +20,17 @@ public class ShakableTree : MonoBehaviour
         StuckPaper.SetActive(false);
     }
 
-    private void Awake()
-    {
-        isShaken = false;
-    }
-
     public void shakeTree()
     {
-        if (isShaken)
+        if (!isShaken)
         {
-            Debug.Log("already shaken");
-        } else
-        {
-            Debug.Log("you shake tree");
-            //GameObject instance = Instantiate(StuckPaper, myCollider.transform.position + new Vector3(1.1f, 1.1f), myCollider.transform.rotation, null) as GameObject;
             StuckPaper.transform.position = myCollider.transform.position + new Vector3(1.1f, 1.1f);
             StartCoroutine(animateFallingPaper(StuckPaper, null));
 
             isShaken = true;
-            myPlayerConditionals.enabled = false;
+            myPlayerConditionals.disableConditionals();
+            //myPlayerConditionals.addToOnAction = false;
+
             
         }
         
@@ -53,7 +45,6 @@ public class ShakableTree : MonoBehaviour
         Vector3 target = instance.transform.position + new Vector3(0.5f, -1.2f);
         BoxCollider2D bc = instance.GetComponent<BoxCollider2D>();
         bc.enabled = false;
-        //SpriteRenderer sr = instance.GetComponent<Collectible>().getSpriteRenderer();
 
         Vector3 start = new Vector3(instance.transform.position.x, instance.transform.position.y);
         while (t < 1)
@@ -63,15 +54,12 @@ public class ShakableTree : MonoBehaviour
             Vector3 pos = new Vector3(Mathf.Lerp(start.x, target.x, x),
                                       Mathf.Lerp(start.y, target.y, y));
 
-            //sr.transform.position = pos;
             instance.transform.position = pos;
-            //bc.enabled = true;
 
             yield return null;
             t += Time.deltaTime;
         }
 
-        //sr.transform.position = target; //idk why I have to do this
         instance.GetComponent<BoxCollider2D>().enabled = true;
         bc.enabled = true;
         
