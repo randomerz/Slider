@@ -10,6 +10,7 @@ public class ShakableTree : MonoBehaviour
     [SerializeField] private float pickUpDuration;
     [SerializeField] public AnimationCurve xPickUpMotion;
     [SerializeField] public AnimationCurve yPickUpMotion;
+    [SerializeField] public PlayerConditionals myPlayerConditionals;
     public GameObject StuckPaper;
 
     // Start is called before the first frame update
@@ -37,6 +38,8 @@ public class ShakableTree : MonoBehaviour
             StartCoroutine(animateFallingPaper(StuckPaper, null));
 
             isShaken = true;
+            myPlayerConditionals.enabled = false;
+            
         }
         
     }
