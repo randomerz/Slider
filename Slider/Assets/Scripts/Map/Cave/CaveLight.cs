@@ -5,15 +5,10 @@ using UnityEngine.Tilemaps;
 
 public class CaveLight : MonoBehaviour
 {
-    public bool lightOn;
-    public bool lightOnStart;
+    public bool LightOn { get; private set; }
 
-    public enum LightType
-    {
-        UniDirectional,
-        AllDirections,
-    }
-    public LightType type;
+    [SerializeField]
+    private bool lightOnStart; 
 
     public class LightEventArgs
     {
@@ -21,8 +16,7 @@ public class CaveLight : MonoBehaviour
     public static event System.EventHandler<LightEventArgs> lightOnEvent;
     public static event System.EventHandler<LightEventArgs> lightOffEvent;
 
-    // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         SetLightOn(lightOnStart);
     }
@@ -34,7 +28,7 @@ public class CaveLight : MonoBehaviour
 
     public void SetLightOn(bool value)
     {
-        lightOn = value;
+        LightOn = value;
 
         if (LightManager.instance != null)
         {
@@ -105,46 +99,6 @@ public class CaveLight : MonoBehaviour
         mask.Apply();
         return mask;
     }
-
-    /*
-    public void UpdateLightMap(bool value)
-    {
-        
-        grid.SetLit(stile.x, stile.y, value);
-        switch (type)
-        {
-            case LightType.UniDirectional:
-                grid.SetLit(stile.x + lightDir.x, stile.y + lightDir.y, value);
-                break;
-            case LightType.AllDirections:
-                grid.SetLit(stile.x + 1, stile.y, value);
-                grid.SetLit(stile.x, stile.y + 1, value);
-                grid.SetLit(stile.x - 1, stile.y, value);
-                grid.SetLit(stile.x, stile.y - 1, value);
-                break;
-        }
-        
-    }
-    
-    public void UpdateLightMap(int x, int y, bool value)
-    {
-        
-        grid.SetLit(x, y, value);
-        switch (type)
-        {
-            case LightType.UniDirectional:
-                grid.SetLit(x + lightDir.x, y + lightDir.y, value);
-                break;
-            case LightType.AllDirections:
-                grid.SetLit(x + 1, y, value);
-                grid.SetLit(x, y + 1, value);
-                grid.SetLit(x - 1, y, value);
-                grid.SetLit(x, y - 1, value);
-                break;
-        }
-        
-    }
-    */
 
     //L: Below is for the player to interact with the light, but it's kinda useless since we're not doing that anymore
     /*

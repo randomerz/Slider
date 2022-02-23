@@ -106,7 +106,7 @@ public class LightManager : MonoBehaviour
     {
         if (stile.isTileActive)
         {
-            Texture2D mask = stile.GetHeightMask();
+            Texture2D mask = stile.HeightMask;
             //L: Convert from the stile mask coords to the overall texture coords.
             for (int u1 = 0; u1 < stile.STILE_WIDTH; u1++)
             {
@@ -121,22 +121,6 @@ public class LightManager : MonoBehaviour
 
             heightMask.Apply();
         }
-    }
-
-    public void ClearHeightMaskTile(Vector2Int tilePos)
-    {
-        for (int u1 = 0; u1 < 17; u1++)
-        {
-            for (int v1 = 0; v1 < 17; v1++)
-            {
-                int u2 = u1 - 17 / 2 + (int) tilePos.x + worldToMaskDX;
-                int v2 = v1 - 17 / 2 + (int) tilePos.y + worldToMaskDY;
-
-                heightMask.SetPixel(u2, v2, Color.black);
-            }
-        }
-
-        heightMask.Apply();
     }
 
     public void GenerateLightMask()
@@ -161,7 +145,7 @@ public class LightManager : MonoBehaviour
 
     public void UpdateLightMask(CaveLight l)
     {
-        if (l.lightOn)
+        if (l.LightOn)
         {
             Texture2D mask = l.GetLightMask(heightMask, worldToMaskDX, worldToMaskDY, maskSizeX, maskSizeY);
 
@@ -180,6 +164,16 @@ public class LightManager : MonoBehaviour
         lightMask.Apply();
     }
 
+    public void UpdateMaterials()
+    {
+        foreach (Material m in caveLightMaterials)
+        {
+            m.SetTexture("_LightMask", lightMask);
+            m.SetVector("_MaskOffset", new Vector4(worldToMaskDX, worldToMaskDY));
+            m.SetVector("_MaskSize", new Vector4(maskSizeX, maskSizeY));
+        }
+    }
+
     public bool GetLightMaskAt(int x, int y)
     {
         //Debug.Log(lightMask.GetPixel(x + worldToMaskDX, y + worldToMaskDY));
@@ -192,45 +186,4 @@ public class LightManager : MonoBehaviour
         Vector3Int tilePos = TileUtil.WorldToTileCoords(posInWorld);
         return GetLightMaskAt(tilePos.x, tilePos.y);
     }
-
-    public void UpdateMaterials()
-    {
-        foreach (Material m in caveLightMaterials)
-        {
-            m.SetTexture("_LightMask", lightMask);
-            m.SetVector("_MaskOffset", new Vector4(worldToMaskDX, worldToMaskDY));
-            m.SetVector("_MaskSize", new Vector4(maskSizeX, maskSizeY));
-        }
-    }
-
-    /* Old Shader Code
-    void UpdateShaderLights()
-    {
-        Matrix4x4 pos = new Matrix4x4();
-        Matrix4x4 dir = new Matrix4x4();
-        Vector4 radius = new Vector4();
-        Vector4 arcAngle = new Vector4();
-        Vector4 active = new Vector4();
-        for (int i=0; i<lights.Length; i++)
-        {
-            pos.SetRow(i, lights[i].transform.position);
-            dir.SetRow(i, new Vector4(lights[i].lightDir.x, lights[i].lightDir.y));
-            radius[i] = lights[i].lightRadius;
-            arcAngle[i] = lights[i].lightArcAngle;
-            //Debug.Log(lights[i].enabled);
-            Debug.Log(lights[i].lightOn);
-            active[i] = lights[i].gameObject.activeInHierarchy && lights[i].lightOn ? 1.0f : 0.0f;
-            Debug.Log(active[i]);
-        }
-
-        foreach (Material m in caveLightMaterials)
-        {
-            m.SetMatrix("_LightPos", pos);
-            m.SetMatrix("_LightDir", dir);
-            m.SetVector("_LightRadius", radius);
-            m.SetVector("_LightArcAngle", arcAngle);
-            m.SetVector("_LightActive", active);
-        }
-    }
-    */
 }

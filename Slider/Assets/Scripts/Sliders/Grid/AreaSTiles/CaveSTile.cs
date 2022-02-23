@@ -11,6 +11,15 @@ public class CaveSTile : STile
 
     public List<GameObject> objectsThatBlockLight;
 
+    public Texture2D HeightMask
+    {
+        get
+        {
+            return _heightMask == null ? GenerateHeightMask() : _heightMask;
+        }
+    }
+    private Texture2D _heightMask;
+
     private void Awake()
     {
         // base.Awake();
@@ -49,7 +58,7 @@ public class CaveSTile : STile
     }
 
     //L: Gets the STILE_WIDTH x STILE_WIDTH (17 x 17) height mask. (1 if there's a wall tile, 0 if not)
-    public Texture2D GetHeightMask()
+    public Texture2D GenerateHeightMask()
     {
         int offset = STILE_WIDTH / 2;
         Texture2D heightMask = new Texture2D(STILE_WIDTH, STILE_WIDTH);

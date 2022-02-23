@@ -18,8 +18,6 @@ public class SGridAnimator : MonoBehaviour
         public SMove smove; // the SMove this Move() was a part of
     }
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMove;
-    
-
 
     public void Move(SMove move)
     {

@@ -9,4 +9,3 @@ public class TileUtil
         return new Vector3Int(Mathf.RoundToInt(posInWorld.x+0.01f), Mathf.RoundToInt(posInWorld.y+0.01f), 0);
     }
 }
-
