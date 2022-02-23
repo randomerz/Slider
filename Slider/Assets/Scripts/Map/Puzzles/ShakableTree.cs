@@ -21,12 +21,12 @@ public class ShakableTree : MonoBehaviour
         StuckPaper.GetComponent<Collider2D>().enabled = false;
     }
 
-    public void shakeTree()
+    public void ShakeTree()
     {
         if (!isShaken)
         {
             //StuckPaper.GetComponent<Collider2D>().enabled = true;
-            StartCoroutine(animateFallingPaper(StuckPaper, null));
+            StartCoroutine(AnimateFallingPaper(StuckPaper, null));
 
             isShaken = true;
             myPlayerConditionals.disableConditionals();
@@ -38,7 +38,7 @@ public class ShakableTree : MonoBehaviour
     }
 
 
-    protected IEnumerator animateFallingPaper(GameObject instance, System.Action callback = null)
+    protected IEnumerator AnimateFallingPaper(GameObject instance, System.Action callback = null)
     {
         instance.SetActive(true);
 
@@ -64,7 +64,7 @@ public class ShakableTree : MonoBehaviour
         //instance.GetComponent<BoxCollider2D>().enabled = true;
         bc.enabled = true;
         
-        callback();
+        if (callback != null) callback();
         //idk what callback does
     }
 
