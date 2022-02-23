@@ -239,6 +239,42 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1146424964776740287}
     m_Modifications:
+    - target: {fileID: -5991808453730892517, guid: 624dc2957e7c6dc4d95b6b1ec53077fe, type: 3}
+      propertyPath: m_Size.x
+      value: 0.73116875
+      objectReference: {fileID: 0}
+    - target: {fileID: -5991808453730892517, guid: 624dc2957e7c6dc4d95b6b1ec53077fe, type: 3}
+      propertyPath: m_Size.y
+      value: 0.731163
+      objectReference: {fileID: 0}
+    - target: {fileID: -5991808453730892517, guid: 624dc2957e7c6dc4d95b6b1ec53077fe, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.73928547
+      objectReference: {fileID: 0}
+    - target: {fileID: -5991808453730892517, guid: 624dc2957e7c6dc4d95b6b1ec53077fe, type: 3}
+      propertyPath: m_Offset.y
+      value: 2.058239
+      objectReference: {fileID: 0}
+    - target: {fileID: 816576571367500746, guid: 624dc2957e7c6dc4d95b6b1ec53077fe, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 816576571367500746, guid: 624dc2957e7c6dc4d95b6b1ec53077fe, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 816576571367500746, guid: 624dc2957e7c6dc4d95b6b1ec53077fe, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 816576571367500746, guid: 624dc2957e7c6dc4d95b6b1ec53077fe, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 816576571367500746, guid: 624dc2957e7c6dc4d95b6b1ec53077fe, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.125
+      objectReference: {fileID: 0}
     - target: {fileID: 1805245437082581397, guid: 624dc2957e7c6dc4d95b6b1ec53077fe, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -287,6 +323,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StuckPaper
       objectReference: {fileID: 0}
+    - target: {fileID: 3852429895674959733, guid: 624dc2957e7c6dc4d95b6b1ec53077fe, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -488721925442295091, guid: 0e9e75226c3b28c4fab918848a2de10e, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 624dc2957e7c6dc4d95b6b1ec53077fe, type: 3}
 --- !u!1 &1678953180924495974 stripped

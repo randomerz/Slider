@@ -17,14 +17,15 @@ public class ShakableTree : MonoBehaviour
     void Start()
     {
         isShaken = false;
-        StuckPaper.SetActive(false);
+        //StuckPaper.SetActive(false);
+        StuckPaper.GetComponent<Collider2D>().enabled = false;
     }
 
     public void shakeTree()
     {
         if (!isShaken)
         {
-            StuckPaper.transform.position = myCollider.transform.position + new Vector3(1.1f, 1.1f);
+            //StuckPaper.GetComponent<Collider2D>().enabled = true;
             StartCoroutine(animateFallingPaper(StuckPaper, null));
 
             isShaken = true;
@@ -42,9 +43,9 @@ public class ShakableTree : MonoBehaviour
         instance.SetActive(true);
 
         float t = 0;
-        Vector3 target = instance.transform.position + new Vector3(0.5f, -1.2f);
+        Vector3 target = instance.transform.position + new Vector3(0.75f, -2.0f);
         BoxCollider2D bc = instance.GetComponent<BoxCollider2D>();
-        bc.enabled = false;
+        //bc.enabled = false;
 
         Vector3 start = new Vector3(instance.transform.position.x, instance.transform.position.y);
         while (t < 1)
@@ -60,7 +61,7 @@ public class ShakableTree : MonoBehaviour
             t += Time.deltaTime;
         }
 
-        instance.GetComponent<BoxCollider2D>().enabled = true;
+        //instance.GetComponent<BoxCollider2D>().enabled = true;
         bc.enabled = true;
         
         callback();
