@@ -5,11 +5,15 @@ using UnityEngine;
 public class RatAI : MonoBehaviour
 {
     public float playerMinRange;
-    public float obstacleMinRange;
     public float moveSpeed;
+    [SerializeField]
+    internal float raycastDistFactor;   //Determines how quickly the AI will move in a different direction if it encounters an obstacle.
 
-    public Animator anim;
-    public Rigidbody2D rb;
+    [SerializeField]
+    private Animator anim;
+    [SerializeField]
+    private Rigidbody2D rb;
+
     public GameObject objectToSteal;
     public Transform player;
 
@@ -67,9 +71,16 @@ public class RatAI : MonoBehaviour
 
     public void StealObject()
     {
-        holdingObject = true;
-        //L: Reparent Slider piece to be child of Rat
-        objectToSteal.transform.parent = transform;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject == objectToSteal)
+        {
+            //L: Reparent Slider piece to be child of Rat
+            holdingObject = true; 
+            objectToSteal.transform.parent = transform;
+        }
     }
 
     private void ConstructBehaviourTree()
@@ -81,8 +92,9 @@ public class RatAI : MonoBehaviour
         var moveTowardsObjectNode = new MoveTowardsObjectNode(this);
 
         //L: IMPORTANT NOTE: The ordering of the nodes in the tree matters
-        var runSequence = new SequenceNode(new List<BehaviourTreeNode> { isPlayerCloseNode, findDirToRunNode, moveNode });
         var stealSequence = new SequenceNode(new List<BehaviourTreeNode>() { isPlayerCloseNode, moveTowardsObjectNode });
+        var runSequence = new SequenceNode(new List<BehaviourTreeNode> { isPlayerCloseNode, findDirToRunNode, moveNode });
+
 
         behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runSequence, stayInPlaceNode });
     }

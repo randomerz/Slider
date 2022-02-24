@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2259471374386283988}
   - component: {fileID: 6731703602745059909}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rat Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 1588607424099105229}
   - component: {fileID: 3202578252114405897}
   - component: {fileID: 7829025947982572241}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: Rat
   m_TagString: Rat
   m_Icon: {fileID: 0}
@@ -148,9 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f04283445261e74aa01e938a0b8bd00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerMinRange: 2
-  obstacleMinRange: 2
+  playerMinRange: 3
   moveSpeed: 10
+  raycastDistFactor: 0.2
   anim: {fileID: 4744002369148645980}
   rb: {fileID: 3202578252114405897}
   objectToSteal: {fileID: 0}

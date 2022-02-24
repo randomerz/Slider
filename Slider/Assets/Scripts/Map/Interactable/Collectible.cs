@@ -73,15 +73,6 @@ public class Collectible : MonoBehaviour
         {
             DoPickUp();
         }
-
-        if (collision.tag == "Rat")
-        {
-            RatAI rat = collision.gameObject.GetComponent<RatAI>();
-            if (rat != null && rat.objectToSteal == gameObject)
-            {
-                rat.StealObject();
-            }
-        }
     }
 
 

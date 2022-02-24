@@ -5169,15 +5169,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 65014026939846541, guid: 9e9dff879a1a7f24a8a6c3e172e3e2e5, type: 3}
       propertyPath: m_Layer
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 715354975513772393, guid: 9e9dff879a1a7f24a8a6c3e172e3e2e5, type: 3}
       propertyPath: m_Name
       value: Rat
-      objectReference: {fileID: 0}
-    - target: {fileID: 715354975513772393, guid: 9e9dff879a1a7f24a8a6c3e172e3e2e5, type: 3}
-      propertyPath: m_Layer
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1588607424099105229, guid: 9e9dff879a1a7f24a8a6c3e172e3e2e5, type: 3}
       propertyPath: player
@@ -5187,6 +5183,10 @@ PrefabInstance:
       propertyPath: objectToSteal
       value: 
       objectReference: {fileID: 1434532480}
+    - target: {fileID: 1588607424099105229, guid: 9e9dff879a1a7f24a8a6c3e172e3e2e5, type: 3}
+      propertyPath: playerMinRange
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2259471374386283988, guid: 9e9dff879a1a7f24a8a6c3e172e3e2e5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
