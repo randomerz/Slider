@@ -20,7 +20,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     private const int UI_OFFSET = 37;
 
-    public STile MyStile { get; private set; }
+    public STile myStile { get; private set; }
     public ArtifactTileButton linkButton;
 
     private Sprite islandSprite;
@@ -31,19 +31,22 @@ public class ArtifactTileButton : MonoBehaviour
     public ArtifactTileButtonAnimator buttonAnimator;
     public UIArtifact buttonManager;
 
-    private void Start()
+    private void Awake() 
     {
         islandSprite = buttonAnimator.sliderImage.sprite;
+    }
 
-        MyStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
+    private void Start()
+    {
+        myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
         
-        startsActive = MyStile.isTileActive;
-        SetTileActive(MyStile.isTileActive);
-        SetPosition(MyStile.x, MyStile.y);
+        startsActive = myStile.isTileActive;
+        SetTileActive(myStile.isTileActive);
+        SetPosition(myStile.x, myStile.y);
 
         linkButton = null;
         foreach (ArtifactTileButton b in buttonManager.buttons) {
-            if (MyStile.linkTile != null && MyStile.linkTile == b.MyStile)
+            if (myStile.linkTile != null && myStile.linkTile == b.myStile)
             {
                 linkButton = b;
                 b.linkButton = this;
@@ -59,7 +62,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void OnDisable()
     {
-        if (MyStile.isTileActive)
+        if (myStile.isTileActive)
         {
             if (buttonAnimator.sliderImage.sprite == emptySprite || buttonAnimator.sliderImage.sprite == blankSprite)
             {
@@ -112,6 +115,11 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SetTileActive(bool v)
     {
+        if (islandSprite == null)
+        {
+            islandSprite = buttonAnimator.sliderImage.sprite;
+        }
+
         isTileActive = v;
         if (v)
         {
@@ -136,9 +144,13 @@ public class ArtifactTileButton : MonoBehaviour
         ResetToIslandSprite();
     }
 
-    private void ResetToIslandSprite()
+    public void ResetToIslandSprite()
     {
-        if (isComplete)
+        if (!isTileActive)
+        {
+            buttonAnimator.sliderImage.sprite = emptySprite;
+        }
+        else if (isComplete)
         {
             buttonAnimator.sliderImage.sprite = completedSprite;
         }

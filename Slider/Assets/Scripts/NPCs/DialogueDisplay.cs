@@ -15,6 +15,8 @@ public class DialogueDisplay : MonoBehaviour
     public static bool doubleSizeMode = false;
     public static bool highContrastMode = false;
 
+    private const string punctuation = ",.!?";
+
     void Start()
     {
         ping.transform.position = new Vector2(transform.position.x, transform.position.y + 1);
@@ -27,17 +29,22 @@ public class DialogueDisplay : MonoBehaviour
         ReadMessagePing();
         canvas.SetActive(true);
         StopAllCoroutines();
-        StartCoroutine(TypeSentence(message));
+        message = message.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
+        StartCoroutine(TypeSentence(message.ToCharArray()));
     }
 
-    IEnumerator TypeSentence(string sentence)
+    IEnumerator TypeSentence(char[] charArray)
     {
         dialogueText.text = "";
         dialogueBG.text = "";
-        foreach (char letter in sentence.ToCharArray())
+        foreach (char letter in charArray)
         {
             dialogueText.text += letter;
             dialogueBG.text += letter;
+
+            if (punctuation.IndexOf(letter) != -1)
+                yield return new WaitForSeconds(0.03f);
+
             yield return new WaitForSeconds(0.03f);
         }
     }

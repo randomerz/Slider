@@ -5,18 +5,18 @@ using UnityEngine.Tilemaps;
 
 public class CaveSTile : STile
 {
-
+    [Header("Cave STile")]
     public CaveGrid grid;
     public Tilemap wallsSTilemap;
 
     public List<GameObject> objectsThatBlockLight;
 
-    private new void Awake()
+    private void Awake()
     {
-        base.Awake();
+        // base.Awake();
 
         objectsThatBlockLight = new List<GameObject>();
-        Transform[] objects = GetComponentsInChildren<Transform>();
+        Transform[] objects = GetComponentsInChildren<Transform>(true); // true -> include inactive components
         foreach (var o in objects)
         {
             if (o.CompareTag("BlocksLight"))
@@ -26,17 +26,27 @@ public class CaveSTile : STile
         }
     }
 
-    private void Start()
+    private new void Start()
     {
         grid = SGrid.current as CaveGrid;
-        
-        SGridAnimator.OnSTileMove += UpdateLightMaskAfterMove;
 
-        if (LightManager.instance != null)
+        base.Start();
+    }
+
+    public override void SetTileActive(bool isTileActive)
+    {
+        base.SetTileActive(isTileActive);
+        
+        if (isTileActive)
         {
-            LightManager.instance.FindMaterials();
-            LightManager.instance.UpdateAll();
-        }      
+            SGridAnimator.OnSTileMove += UpdateLightMaskAfterMove;
+
+            if (LightManager.instance != null)
+            {
+                LightManager.instance.FindMaterials();
+                LightManager.instance.UpdateAll();
+            }
+        }
     }
 
     //L: Gets the STILE_WIDTH x STILE_WIDTH (17 x 17) height mask. (1 if there's a wall tile, 0 if not)
@@ -57,11 +67,14 @@ public class CaveSTile : STile
                     for (int y = -offset; y <= offset; y++)
                     {
                         TileBase tile = tm.GetTile(new Vector3Int(x, y, 0));
-                        heightMask.SetPixel(x + offset, y + offset, tile != null ? Color.white : Color.black);
+                        Color pixelColor = heightMask.GetPixel(x + offset, y + offset);
+                        // DC: Set the height to 1 if it was already 1, or tile isnt empty
+                        heightMask.SetPixel(x + offset, y + offset, (tile != null || pixelColor == Color.white) ? Color.white : Color.black);
                     }
                 }
-
-            } else
+                // Debug.Log("Finished processing tilemap on " + name);
+            } 
+            else
             {
                 //Position relative to the center of the tile
                 Vector2Int posOnTile = new Vector2Int((int) (go.transform.position.x - transform.position.x), (int) (go.transform.position.y - transform.position.y));
@@ -69,6 +82,7 @@ public class CaveSTile : STile
                 {
                     Debug.LogError("Positions when calculating height mask fall outside the tile's bounds");
                 }
+                // Debug.Log("Adding a wall at " + posOnTile.x + ", " + posOnTile.y);
                 heightMask.SetPixel(posOnTile.x + offset, posOnTile.y + offset, Color.white);
             }
         }

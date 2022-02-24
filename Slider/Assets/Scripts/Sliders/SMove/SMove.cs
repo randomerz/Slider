@@ -155,13 +155,16 @@ public class SMoveLinkedSwap : SMove
 //L: Used primarily in the "Ocean" area for rotating tiles around
 public class SMoveRotate : SMove
 {
-    public SMoveRotate(List<Vector2Int> points)
+    public bool isCCW;
+
+    public SMoveRotate(List<Vector2Int> points, bool isCCW)
     {
         for (int i = 0; i < points.Count; i++)
         {
             moves.Add(new Vector4Int(points[i].x, points[i].y, points[(i + 1) % points.Count].x, points[(i + 1) % points.Count].y));
         }
 
+        this.isCCW = isCCW; 
     }
 }
 

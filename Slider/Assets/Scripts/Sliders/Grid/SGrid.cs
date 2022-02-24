@@ -14,7 +14,7 @@ public class SGrid : MonoBehaviour
     public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
 
     protected STile[,] grid;
-    private SGridBackground[,] bgGrid;
+    protected SGridBackground[,] bgGrid;
 
     // Set in inspector 
     public int width;
@@ -198,9 +198,9 @@ public class SGrid : MonoBehaviour
     }
     public void ActivateSliderCollectible(int sliderId)
     {
-        if (!PlayerInventory.Contains("Slider " + sliderId)) 
+        if (!PlayerInventory.Contains("Slider " + sliderId, myArea)) 
         {
-            collectibles[sliderId - 1].gameObject.SetActive(true);
+            GetCollectible("Slider " + sliderId).gameObject.SetActive(true);
             AudioManager.Play("Puzzle Complete");
         }
     }
@@ -238,11 +238,16 @@ public class SGrid : MonoBehaviour
         {
             if (s.islandId == islandId)
             {
-                s.SetTileActive(true);
-                UIArtifact.AddButton(islandId);
+                EnableStile(s);
                 return;
             }
         }
+    }
+
+    public virtual void EnableStile(STile stile)
+    {
+        stile.SetTileActive(true);
+        UIArtifact.AddButton(stile.islandId);
     }
 
 

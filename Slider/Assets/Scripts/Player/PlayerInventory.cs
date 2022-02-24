@@ -57,8 +57,8 @@ public class PlayerInventory : MonoBehaviour
             itemIterator = equipables.GetEnumerator();
         }
         bool res = itemIterator.MoveNext();
-        Debug.Log(currentItem);
-        Debug.Log(equipables);
+        // Debug.Log(currentItem);
+        // Debug.Log(equipables);
         if (res)
         {
             currentItem = itemIterator.Current;

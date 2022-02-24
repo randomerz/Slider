@@ -42,6 +42,11 @@ public class CaveGrid : SGrid
                 c.gameObject.SetActive(false);
             }
         }
+
+        GetCollectible("Slider 5").gameObject.SetActive(false); // gameboy puzzle
+        GetCollectible("Slider 6").gameObject.SetActive(false); // rat puzzle
+        GetCollectible("Slider 7").gameObject.SetActive(false); // flashlight puzzle
+        GetCollectible("Slider 9").gameObject.SetActive(false); // final puzzle
         
         AudioManager.PlayMusic("Connection");
         UIEffects.FadeFromBlack();

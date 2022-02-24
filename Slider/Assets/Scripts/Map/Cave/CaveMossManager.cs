@@ -146,10 +146,10 @@ public class CaveMossManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        Debug.Log(t);
+        // Debug.Log(t);
 
-        Debug.Log(player.transform.position);
-        Debug.Log(playerRespawn.position);
+        // Debug.Log(player.transform.position);
+        // Debug.Log(playerRespawn.position);
         movingPlayer = false;
     }
 }

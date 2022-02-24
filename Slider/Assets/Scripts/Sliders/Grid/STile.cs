@@ -32,7 +32,7 @@ public class STile : MonoBehaviour
     public GameObject[] borderColliders; // right top left bottom
     public GameObject stileTileMaps;
 
-    protected void Awake()
+    protected void Start()
     {
         Init();
         // Debug.Log(STILE_WIDTH);
@@ -40,7 +40,17 @@ public class STile : MonoBehaviour
 
     public void Init()
     {
-        SetTileActive(isTileActive);
+        // SetTileActive(isTileActive);
+        // DC: this is so that we can call any other relevant functions when STiles are enabled in SGrid
+        if (isTileActive) 
+        {
+            SGrid.current.EnableStile(this);
+        }
+        else
+        {
+            SetTileActive(isTileActive); 
+        }
+
         Vector3 defaultPos = STILE_WIDTH * new Vector3(x, y);
         transform.position = defaultPos;
         SetTileMapPositions(defaultPos);
@@ -69,7 +79,7 @@ public class STile : MonoBehaviour
         Init();
     }
 
-    public void SetTileActive(bool isTileActive)
+    public virtual void SetTileActive(bool isTileActive)
     {
         this.isTileActive = isTileActive;
 
