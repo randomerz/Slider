@@ -13,7 +13,7 @@ public class SGrid : MonoBehaviour
     }
     public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
 
-    private STile[,] grid;
+    protected STile[,] grid;
     private SGridBackground[,] bgGrid;
 
     // Set in inspector 
