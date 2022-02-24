@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -7,7 +8,7 @@ using UnityEngine.Tilemaps;
 /*L: IMPORTANT THINGS: 
  * - If you use SetPixel on a Texture2D you HAVE to call Apply() or else it won't update
  * - ALWAYS call UpdateMaterials() any time you change the heightMask or lightMask.
-*/  
+*/
 public class LightManager : MonoBehaviour
 {
     public CaveLight[] lights;
@@ -28,7 +29,8 @@ public class LightManager : MonoBehaviour
     private Texture2D lightMask;
 
     [SerializeField]
-    private List<Material> caveLightMaterials;
+    private List<Material> _caveLightMaterials;
+
     private Shader caveShader;
 
     public static LightManager instance;
@@ -43,62 +45,132 @@ public class LightManager : MonoBehaviour
             return;
         }
 
-        worldToMaskDX = -worldBorderColliderTilemap.cellBounds.x;
-        worldToMaskDY = -worldBorderColliderTilemap.cellBounds.y;
-        maskSizeX = worldBorderColliderTilemap.cellBounds.xMax + worldToMaskDX;
-        maskSizeY = worldBorderColliderTilemap.cellBounds.yMax + worldToMaskDY;
+        //if (heightMask == null || lightMask == null)
+        //{
+            DoLightingPreCalculations();
+        //}
 
-        FindMaterials();
-        UpdateAll();
+        if (_caveLightMaterials == null || _caveLightMaterials.Count == 0)
+        {
+            FindMaterials();
+        }
+        UpdateMaterials();
     }
 
-    private void Update() // DC: my cpu is crying L: Crying Emoji
+    void Update()
     {
-        UpdateAll();
     }
 
     public void UpdateAll()
     {
         GenerateHeightMask();
-        GenerateLightMask();
+        UpdateLightMaskAll();
         UpdateMaterials();
     }
 
-    public void FindMaterials()
+    private void SetTileMapSize()
     {
-        Renderer[] renderers = tilesRoot.GetComponentsInChildren<Renderer>();
-        caveLightMaterials = new List<Material>();
+        worldToMaskDX = -worldBorderColliderTilemap.cellBounds.x;
+        worldToMaskDY = -worldBorderColliderTilemap.cellBounds.y;
+        maskSizeX = worldBorderColliderTilemap.cellBounds.xMax + worldToMaskDX;
+        maskSizeY = worldBorderColliderTilemap.cellBounds.yMax + worldToMaskDY;
+    }
+
+    public void DoLightingPreCalculations()
+    {
+        SetTileMapSize();
+        GenerateHeightMask();
+        GenerateEmptyLightMask();
+        foreach (CaveLight l in lights)
+        {
+            //L: Need this because of script order.
+            if (l.lightOnStart)
+            {
+                STile lOnTile = l.GetComponentInParent<STile>();
+                //Make sure the light is actually there.
+                if (lOnTile == null || lOnTile.isTileActive)
+                {
+                    UpdateLightMask(l);
+                }
+            }
+        }
+    }
+
+
+
+    private void FindMaterials()
+    {
+        _caveLightMaterials = new List<Material>();
         caveShader = Shader.Find("Shader Graphs/CaveTileLightShader");
+
+        Renderer[] renderers = tilesRoot.GetComponentsInChildren<Renderer>();
         foreach (Renderer r in renderers)
         {
             if (r.material.shader == caveShader)
             {
-                caveLightMaterials.Add(r.material);
+                _caveLightMaterials.Add(r.material);
                 //Debug.Log(r.gameObject.name);
             }
         }
     }
 
-    public void GenerateHeightMask()
+    private void GenerateHeightMask()
     {
         heightMask = new Texture2D(maskSizeX, maskSizeY);
 
-        // Update mask based on the world walls (don't do anymore)
+        //L: Only ever need to do this part once!
         for (int u = 0; u < maskSizeX; u++)
         {
             for (int v = 0; v < maskSizeY; v++)
             {
-                // heightMask.SetPixel(u, v, Color.black);
+                heightMask.SetPixel(u, v, Color.black);
                 heightMask.SetPixel(u, v, worldLightColliderTilemap.GetTile(new Vector3Int(u - worldToMaskDX, v - worldToMaskDY, 0)) != null ? Color.white : Color.black);
             }
         }
-
         heightMask.Apply();
         
 
         foreach (CaveSTile stile in stiles)
         {
             UpdateHeightMask(stile);
+        }
+    }
+
+    private void GenerateEmptyLightMask()
+    {
+        //L: Set all pixels to black (only do this once!)
+        lightMask = new Texture2D(maskSizeX, maskSizeY);
+        for (int x = 0; x < maskSizeX; x++)
+        {
+            for (int y = 0; y < maskSizeY; y++)
+            {
+                lightMask.SetPixel(x, y, Color.black);
+            }
+        }
+
+        lightMask.Apply();
+    }
+
+    private void UpdateLightMaskAll()
+    {
+        GenerateEmptyLightMask();
+
+        foreach (CaveLight l in lights)
+        {
+            if (l.LightOn)
+            {
+                UpdateLightMask(l);
+            }
+        }
+    }
+
+    public void UpdateMaterials()
+    {
+        foreach (Material m in _caveLightMaterials)
+        {
+            m.SetTexture("_LightMask", lightMask);
+            m.SetVector("_MaskOffset", new Vector4(worldToMaskDX, worldToMaskDY));
+            m.SetVector("_MaskSize", new Vector4(maskSizeX, maskSizeY));
         }
     }
 
@@ -114,33 +186,14 @@ public class LightManager : MonoBehaviour
                 {
                     int u2 = u1 - stile.STILE_WIDTH / 2 + (int)stile.transform.position.x + worldToMaskDX;
                     int v2 = v1 - stile.STILE_WIDTH / 2 + (int)stile.transform.position.y + worldToMaskDY;
-
                     heightMask.SetPixel(u2, v2, mask.GetPixel(u1, v1));
                 }
             }
 
             heightMask.Apply();
         }
-    }
 
-    public void GenerateLightMask()
-    {
-        lightMask = new Texture2D(maskSizeX, maskSizeY);
-        //L: Set all pixels to black (default is grey color)
-        for (int x = 0; x < maskSizeX; x++)
-        {
-            for (int y = 0; y < maskSizeY; y++)
-            {
-                lightMask.SetPixel(x, y, Color.black);
-            }
-        }
-
-        lightMask.Apply();
-        
-        foreach (CaveLight l in lights)
-        {
-            UpdateLightMask(l);
-        }
+        //Light mask needs to update when height mask updates
     }
 
     public void UpdateLightMask(CaveLight l)
@@ -162,16 +215,6 @@ public class LightManager : MonoBehaviour
         }
 
         lightMask.Apply();
-    }
-
-    public void UpdateMaterials()
-    {
-        foreach (Material m in caveLightMaterials)
-        {
-            m.SetTexture("_LightMask", lightMask);
-            m.SetVector("_MaskOffset", new Vector4(worldToMaskDX, worldToMaskDY));
-            m.SetVector("_MaskSize", new Vector4(maskSizeX, maskSizeY));
-        }
     }
 
     public bool GetLightMaskAt(int x, int y)

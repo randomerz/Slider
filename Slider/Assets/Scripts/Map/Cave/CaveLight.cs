@@ -8,13 +8,9 @@ public class CaveLight : MonoBehaviour
     public bool LightOn { get; private set; }
 
     [SerializeField]
-    private bool lightOnStart; 
+    internal bool lightOnStart;
 
-    public class LightEventArgs
-    {
-    }
-    public static event System.EventHandler<LightEventArgs> lightOnEvent;
-    public static event System.EventHandler<LightEventArgs> lightOffEvent;
+    private Texture2D _lightMask;
 
     void OnEnable()
     {
@@ -29,36 +25,28 @@ public class CaveLight : MonoBehaviour
     public void SetLightOn(bool value)
     {
         LightOn = value;
-
         if (LightManager.instance != null)
         {
-            LightManager.instance.GenerateLightMask();
+            LightManager.instance.UpdateLightMask(this);
             LightManager.instance.UpdateMaterials();
-            if (value)
-            {
-                lightOnEvent?.Invoke(this, new LightEventArgs { });
-            }
-            else
-            {
-                lightOffEvent?.Invoke(this, new LightEventArgs { });
-            }
         }
     }
 
     /* L: Gets the light mask for THIS LIGHT ONLY (see LightManager.cs for the whole world) */
     public Texture2D GetLightMask(Texture2D heightMask, int worldToMaskDX, int worldToMaskDY, int maskSizeX, int maskSizeY)
     {
+
         if (heightMask.width != maskSizeX && heightMask.height != maskSizeY)
         {
             Debug.LogError("heightMask did not match expected dimensions in CaveLight.cs");
         }
 
-        Texture2D mask = new Texture2D(maskSizeX, maskSizeY);
+        _lightMask = new Texture2D(maskSizeX , maskSizeY);
         for (int x = 0; x < maskSizeX; x++)
         {
             for (int y = 0; y < maskSizeY; y++)
             {
-                mask.SetPixel(x, y, Color.black);
+                _lightMask.SetPixel(x, y, Color.black);
             }
         }
         Vector2Int lightPos = new Vector2Int((int)transform.position.x, (int)transform.position.y);
@@ -84,7 +72,7 @@ public class CaveLight : MonoBehaviour
                         break;
                     }
                     
-                    mask.SetPixel(maskX, maskY, Color.white);
+                    _lightMask.SetPixel(maskX, maskY, Color.white);
 
                     // L: Hit Wall Check (Note: This is after so that the start of the tile still gets lit, but nothing else.
                     if (heightMask.GetPixel(maskX, maskY).r > 0.5)
@@ -96,8 +84,8 @@ public class CaveLight : MonoBehaviour
             }
         }
 
-        mask.Apply();
-        return mask;
+        _lightMask.Apply();
+        return _lightMask;
     }
 
     //L: Below is for the player to interact with the light, but it's kinda useless since we're not doing that anymore

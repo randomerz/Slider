@@ -52,8 +52,8 @@ public class CaveMossManager : MonoBehaviour
 
                 if (GetComponentInParent<STile>() == debugTile)
                 {
-                    Debug.Log("Position of Tile: " + pos);
-                    Debug.Log("Position of Tile in World: " + (mossMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0)));
+                    //Debug.Log("Position of Tile: " + pos);
+                    //Debug.Log("Position of Tile in World: " + (mossMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0)));
                 }
 
                 bool posIsLit = LightManager.instance.GetLightMaskAt(mossMap, pos);
