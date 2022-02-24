@@ -2,17 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MountainSTile : MonoBehaviour
+public class MountainSTile : STile
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    protected new void Awake() {
+        STILE_WIDTH = 25;
+        base.Awake();
     }
 }

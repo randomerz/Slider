@@ -9,8 +9,18 @@ using UnityEditor;
 public class RailTile : Tile
 {
     public int[] connections = {-1, -1, -1, -1};
+    public int defaultDir = 0; //the direction that the minecart will begin traveling in by default
 
-
+    #if UNITY_EDITOR
+    [MenuItem("Assets/Create/2D/Tiles/Custom Tiles/Rail Tile")]
+    public static void CreateRailTile()
+    {
+        string path = EditorUtility.SaveFilePanelInProject("Save Rail Tile", "New Rail Tile", "Asset", "Save Rail Tile", AssetDatabase.GetAssetPath(Selection.activeObject));
+        if (path == "") return;
+        AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<RailTile>(), path);
+    }
+    #endif
+}
 
 
 /*
@@ -45,13 +55,4 @@ public class RailTile : Tile
         return tilemap.GetTile(position) == this;
     }
 */
-    #if UNITY_EDITOR
-    [MenuItem("Assets/Create/2D/Tiles/Custom Tiles/Rail Tile")]
-    public static void CreateRailTile()
-    {
-        string path = EditorUtility.SaveFilePanelInProject("Save Rail Tile", "New Rail Tile", "Asset", "Save Rail Tile", AssetDatabase.GetAssetPath(Selection.activeObject));
-        if (path == "") return;
-        AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<RailTile>(), path);
-    }
-    #endif
-}
+

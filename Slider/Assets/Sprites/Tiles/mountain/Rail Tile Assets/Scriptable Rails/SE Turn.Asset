@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd48d2e41d59bc45ae804c5f80b43e3, type: 3}
   m_Name: SE Turn
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -6342384933414545729, guid: e85488d46e6a2a641bdb8fea050f4f98, type: 3}
+  m_Sprite: {fileID: -7752529329400262301, guid: e85488d46e6a2a641bdb8fea050f4f98, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -34,4 +34,5 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  connections: ffffffffffffffff0300000002000000
+  connections: 03000000ffffffffffffffff00000000
+  defaultDir: 0
