@@ -19,7 +19,10 @@ public class Minecart : Item
     public Vector3Int currentTilePos;
     public Vector3Int targetTilePos; 
     public Vector3 targetWorldPos;
-    Coroutine move;
+
+    [SerializeField] private float derailDuration;
+    [SerializeField] private AnimationCurve xDerailMotion;
+    [SerializeField] private AnimationCurve yDerailMotion;
 
 
     //creates a new minecart at the given position
@@ -51,8 +54,8 @@ public class Minecart : Item
     public override void OnEquip()
     {
         StopMoving();
-        resetTiles();
-        base.OnEquip();
+        ResetTiles();
+        //base.OnEquip();
     }
 
     public void StartMoving() 
@@ -67,7 +70,7 @@ public class Minecart : Item
         isOnTrack = false;
     }
 
-    public void resetTiles()
+    public void ResetTiles()
     {
         currentTile = null;
         targetTile = null;
@@ -84,15 +87,13 @@ public class Minecart : Item
         currentDirection = currentTile.defaultDir;
         if(railManager.railLocations.Contains(pos))
         {
-            targetTilePos = currentTilePos + getTileOffsetVector(currentDirection);
+            targetTilePos = currentTilePos + GetTileOffsetVector(currentDirection);
             targetTile = railManager.railMap.GetTile(targetTilePos) as RailTile;
-            targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) + 0.5f * (Vector3) getTileOffsetVector(targetTile.connections[(currentDirection + 2) % 4]) + offSet;
+            targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) + 0.5f * (Vector3) GetTileOffsetVector(targetTile.connections[(currentDirection + 2) % 4]) + offSet;
             isOnTrack = true;
         }
         else
-        {
-          resetTiles();
-        }
+            ResetTiles();
     }
 
     private void Update() 
@@ -101,13 +102,9 @@ public class Minecart : Item
         {
             //Debug.Log(Vector3.Distance(transform.position, targetWorldPos));
             if(Vector3.Distance(transform.position, targetWorldPos) < 0.01f)
-            {
                 getNextTile();
-            }
             else
-            {
                 transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * speed);
-            }
         }
     }
 
@@ -115,18 +112,69 @@ public class Minecart : Item
     {
         currentTile = targetTile;
         currentTilePos = targetTilePos;
-        targetTilePos = currentTilePos + getTileOffsetVector(currentDirection);
-        targetTile = railManager.railMap.GetTile(targetTilePos) as RailTile;
-        targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) 
-                         + 0.5f * (Vector3) getTileOffsetVector(
+        targetTilePos = currentTilePos + GetTileOffsetVector(currentDirection);
+        if(railManager.railLocations.Contains(targetTilePos))
+        {
+            targetTile = railManager.railMap.GetTile(targetTilePos) as RailTile;
+            targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) 
+                         + 0.5f * (Vector3) GetTileOffsetVector(
                          targetTile.connections[(currentDirection + 2) % 4]) + offSet;
-        currentDirection = targetTile.connections[(currentDirection + 2) % 4];
+            currentDirection = targetTile.connections[(currentDirection + 2) % 4];
+        }
+        else
+        {
+            Derail();
+        }
+        
+    }
+
+    //makes the minecart fall off of the rails
+    public void Derail()
+    {
+        StopMoving();
+        ResetTiles();
+        Vector3 derailVector = transform.position 
+                               + speed * 0.3f * getDirectionAsVector(currentDirection)   
+                               + 0.5f * (new Vector3(Random.onUnitSphere.x, Random.onUnitSphere.y, 0));
+        StartCoroutine(AnimateDerail(derailVector));
     }
 
     //returns a vector that can be added to the tile position in order to determine the location of the specified point
-    public static Vector3Int getTileOffsetVector(int num)
+    public static Vector3Int GetTileOffsetVector(int num)
     {
         int[] arr = {1, 0, -1, 0};
         return new Vector3Int(arr[num], arr[(num+3) % 4], 0);
+    }
+
+    private static Vector3 getDirectionAsVector(int dir)
+    {
+        Vector3[] arr = {Vector3.right, Vector3.up, Vector3.left, Vector3.down};
+        return arr[dir];
+    }
+
+
+
+    protected IEnumerator AnimateDerail(Vector3 target, System.Action callback = null)
+    {
+        float t = derailDuration;
+
+        Vector3 start = new Vector3(transform.position.x, transform.position.y);
+       // transform.position = target;
+        while (t >= 0)
+        {
+            float x = xDerailMotion.Evaluate(t / derailDuration);
+            float y = yDerailMotion.Evaluate(t / derailDuration);
+            Vector3 pos = new Vector3(Mathf.Lerp(target.x, start.x, x),
+                                      Mathf.Lerp(target.y, start.y, y));
+            
+            base.spriteRenderer.transform.position = pos;
+            yield return null;
+            t -= Time.deltaTime;
+        }
+
+        transform.position = target;
+        base.spriteRenderer.transform.position = target;
+        callback();
+
     }
 }
