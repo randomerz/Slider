@@ -23,6 +23,6 @@ void GetShadowedPixel_float(float4 inColor, out float4 outColor) {
         outColor = float4(0.4, 0.4, 0.4, inColor.a);
     }
     else {
-        outColor = float4(0.1, 0.1, 0.1, inColor.a);
+        outColor = float4(0.101960784, 0.101960784, 0.101960784, inColor.a);
     }
 }

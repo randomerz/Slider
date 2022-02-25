@@ -32,10 +32,10 @@ public class OceanGrid : SGrid
                 c.gameObject.SetActive(false);
             }
 
-            if (c.GetName() == "Slider 5")
-            {
-                c.gameObject.SetActive(false);
-            }
+            // if (c.GetName() == "Slider 5")
+            // {
+            //     c.gameObject.SetActive(false);
+            // }
         }
 
         AudioManager.PlayMusic("Connection");
@@ -69,6 +69,14 @@ public class OceanGrid : SGrid
         base.LoadGrid();
     }
 
+
+    public override void EnableStile(STile stile)
+    {
+        base.EnableStile(stile);
+        
+        stile.GetComponentInChildren<SpriteMask>().enabled = false; // on STile/SlideableArea
+        
+    }
 
     // === Ocean puzzle specific ===
 

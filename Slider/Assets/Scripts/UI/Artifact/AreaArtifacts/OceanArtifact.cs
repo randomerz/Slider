@@ -1,25 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class OceanArtifact : UIArtifact
 {
-    public Queue<int> positionQueue;
-    public Queue<bool> CCWQueue;
-    public bool rotating = false;
+    public UIRotateParams[] rotateParams; // Bot Left, BR, TL, TR
 
     public new void Awake()
     {
         base.Awake();
-        // positionQueue = new Queue<int>();
-        // CCWQueue = new Queue<bool>();
     }
 
     public new void OnDisable()
     {
         base.OnDisable();
-        // positionQueue = new Queue<int>();
-        // CCWQueue = new Queue<bool>();
+    }
+
+    public override void ButtonDragged(BaseEventData eventData) 
+    { 
+        // do nothing
+    }
+
+    public override void ButtonDragEnd(BaseEventData eventData) 
+    {
+        // do nothing
     }
     
     public override void SelectButton(ArtifactTileButton button) 
@@ -51,6 +56,7 @@ public class OceanArtifact : UIArtifact
             tb.Reverse();
         }
 
+        bool isAtLeastOneActive = false;
         for (int i=3; i>=0; i--)
         {
             int curX = SMoveRotateArr[i].x;
@@ -58,11 +64,20 @@ public class OceanArtifact : UIArtifact
 
             STile[,] grid = SGrid.current.GetGrid();
 
-            if (grid[curX, curY].hasAnchor && grid[curX, curY].isTileActive)
+            if (grid[curX, curY].isTileActive)
             {
-                SMoveRotateArr.RemoveAt(i);
-                tb.RemoveAt(i);
+                isAtLeastOneActive = true;
+                if (grid[curX, curY].hasAnchor)
+                {
+                    SMoveRotateArr.RemoveAt(i);
+                    tb.RemoveAt(i);
+                }   
             }
+        }
+
+        if (!isAtLeastOneActive)
+        {
+            return;
         }
 
         // performing the rotate smove
@@ -70,7 +85,7 @@ public class OceanArtifact : UIArtifact
         // if (SGrid.current.CanRotate)
         if (moveQueue.Count < maxMoveQueueSize)
         {
-            SMove rotate = new SMoveRotate(SMoveRotateArr);
+            SMove rotate = new SMoveRotate(SMoveRotateArr, rotateCCW);
             QueueCheckAndAdd(rotate);
             // SwapButtons(buttonCurrent, buttonEmpty);
             // update UI button positions
@@ -89,35 +104,42 @@ public class OceanArtifact : UIArtifact
         }
     }
 
-    // public void AddQueue(int x, int y, bool CCW)
-    // {
-    //     if (CCWQueue.Count == 0)
-    //     {
-    //         positionQueue.Enqueue(x);
-    //         positionQueue.Enqueue(y);
-    //         CCWQueue.Enqueue(CCW);
-    //         // CheckQueue();
-    //     }
-    // }
+    // DC: this plays the animation when the tiles actually move... should we keep track of UI similarly?
+    protected override void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (e != null)
+        {
+            if (activeMoves.Contains(e.smove))
+            {
+                activeMoves.Remove(e.smove);
+            }
+        }
 
-    // public new void CheckQueue()
-    // {
-    //     if (!rotating && CCWQueue.Count != 0)
-    //     {
-    //         RotateTiles(positionQueue.Dequeue(), positionQueue.Dequeue(), CCWQueue.Dequeue());
-    //         StartCoroutine(RotationWait());
-    //     }
-    //     else
-    //     {
-    //         return;
-    //     }
-    // }
+        if (moveQueue.Count > 0)
+        {
+            SMoveRotate peekedMove = moveQueue.Peek() as SMoveRotate;
+            // check if the peekedMove interferes with any of current moves
+            foreach (SMove m in activeMoves)
+            {
+                if (m.Overlaps(peekedMove))
+                {
+                    // Debug.Log("Move conflicts!");
+                    return;
+                }
+            }
 
-    // private IEnumerator RotationWait()
-    // {
-    //     rotating = true;
-    //     yield return new WaitForSeconds(1f);
-    //     rotating = false;
-    //     CheckQueue();
-    // }
+            int minX = peekedMove.moves[0].x;
+            int minY = peekedMove.moves[0].y;
+
+            foreach (Vector4Int v in peekedMove.moves)
+            {
+                minX = Mathf.Min(v.x, minX);
+                minY = Mathf.Min(v.y, minY);
+            }
+            
+            rotateParams[minY * 2 + minX].RotateArrow(peekedMove.isCCW);
+        }
+
+        base.QueueCheckAfterMove(sender, e);
+    }
 }
