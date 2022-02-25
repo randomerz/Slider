@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class OceanArtifact : UIArtifact
 {
@@ -14,6 +15,16 @@ public class OceanArtifact : UIArtifact
     public new void OnDisable()
     {
         base.OnDisable();
+    }
+
+    public override void ButtonDragged(BaseEventData eventData) 
+    { 
+        // do nothing
+    }
+
+    public override void ButtonDragEnd(BaseEventData eventData) 
+    {
+        // do nothing
     }
     
     public override void SelectButton(ArtifactTileButton button) 
