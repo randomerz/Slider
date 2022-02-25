@@ -6,8 +6,19 @@ public class RatAI : MonoBehaviour
 {
     public float playerMinRange;
     public float moveSpeed;
+
+
+    //Misc AI control weights
+    //Note: In terms of the AI, darkness is treated the same as walls.
+
     [SerializeField]
-    internal float raycastDistFactor;   //Determines how quickly the AI will move in a different direction if it encounters an obstacle.
+    internal float minDistToWallFactor;   //Determines at what distance the AI is allowed to be near a wall before moving in a different direction (scaled by moveSpeed)
+    [SerializeField]
+    internal float idealDistFromWall; //The ideal distance the AI wants to keep from walls (this is essentially the rat's "vision")
+    [SerializeField]
+    [Range(0f, 1f)]
+    internal float avoidWallsWeight;    //The tendency for the rat to avoid walls (0 to 1)
+
 
     [SerializeField]
     private Animator anim;

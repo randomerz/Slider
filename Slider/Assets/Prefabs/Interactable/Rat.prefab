@@ -150,7 +150,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerMinRange: 3
   moveSpeed: 10
-  raycastDistFactor: 0.2
+  minDistToWallFactor: 0.2
+  idealDistFromWall: 8
+  avoidWallsWeight: 0
   anim: {fileID: 4744002369148645980}
   rb: {fileID: 3202578252114405897}
   objectToSteal: {fileID: 0}
