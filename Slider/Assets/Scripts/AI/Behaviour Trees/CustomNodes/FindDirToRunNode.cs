@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class FindDirToRunNode : BehaviourTreeNode
 {
-    //The minimum range the rat can be from an obstacle before it no longer runs that way
     RatAI ai;
     Transform player;
 
@@ -25,18 +24,28 @@ public class FindDirToRunNode : BehaviourTreeNode
         distanceCache = GetDistancesInAllDirections(PlayerToRatNorm()); 
 
         Vector2 avoidPlayerDir = GetBestDirAwayFromPoint(player.transform.position);
-        Vector2 avoidWallsDir = GetBestDirAwayFromWalls();
 
-        if (avoidPlayerDir == Vector2.zero && avoidPlayerDir == Vector2.zero)
+        if (avoidPlayerDir == Vector2.zero || Vector2.Dot(avoidPlayerDir, PlayerToRatNorm()) < -0.9f)
         {
             //Rat was cornered completely.
+            ai.SetDirection(-PlayerToRatNorm());
             return NodeState.FAILURE;
         } else
         {
+
+            Vector2 avoidWallsDir = GetBestDirAwayFromWalls();
             Debug.Log("Avoid Player: " + avoidPlayerDir);
             Debug.Log("Avoid Walls: " + avoidWallsDir);
-            Vector2 idealDir = Vector2.Lerp(avoidPlayerDir, avoidWallsDir, ai.avoidWallsWeight);
-            ai.SetDirection(CheckValidDir(idealDir) ? idealDir : avoidPlayerDir);   //Avoid the player, regardless of weight
+
+            if (avoidWallsDir.magnitude < 0.1f)
+            {
+                ai.SetDirection(avoidPlayerDir);
+            } else
+            {
+                Vector2 idealDir = Vector2.Lerp(avoidPlayerDir, avoidWallsDir, ai.avoidWallsWeight);
+                ai.SetDirection(idealDir);   //Avoid the player, regardless of weight
+            }
+
             return NodeState.SUCCESS;
         }
         
@@ -68,40 +77,32 @@ public class FindDirToRunNode : BehaviourTreeNode
 
     private Vector2 GetBestDirAwayFromWalls(int numDirections = 16)
     {
-        //"Best" is direction furthest away from walls or direction that avoids the closest wall.
-        Vector2 bestDir = Vector2.zero;
-        float maxDist = 0;
 
         Vector2 closestWallDir = Vector2.zero;
         float minDist = Mathf.Infinity;
 
         //First Pass: Largest distance from wall to rat within the ideal distance (distances greater than ideal are tied).
-        HashSet<Vector2> secondPassDirs = new HashSet<Vector2>();
+        
         foreach (Vector2 dir in distanceCache.Keys)
         {
             float dist = distanceCache[dir];
-            Debug.Log("Distance: " + dist);
             if (dist < minDist)
             {
                 minDist = dist;
                 closestWallDir = dir;
             }
+           // Debug.Log("Direction: " + dir + " with distance " + distanceCache[dir]);
+        }
 
-            if (dist > minDistToWall && dist >= maxDist)
-            {
-                if (dist > maxDist)
-                {
-                    maxDist = dist;
-                    secondPassDirs.Clear();
-                }
-
-                secondPassDirs.Add(dir);
-            }
+        if (closestWallDir == Vector2.zero)
+        {
+            return Vector2.zero;
         }
 
         //Second Pass: Most negative dot product from the closest wall 
+        Vector2 bestDir = Vector2.zero;
         float minDot = Mathf.Infinity;
-        foreach (Vector2 dir in secondPassDirs)
+        foreach (Vector2 dir in distanceCache.Keys)
         {
             float currDot = Vector2.Dot(dir, closestWallDir);
             if (currDot < minDot)
@@ -134,16 +135,20 @@ public class FindDirToRunNode : BehaviourTreeNode
         }
         if (!cache || !distanceCache.ContainsKey(dir))
         {
+            //Raycast to walls
             RaycastHit2D[] hits = new RaycastHit2D[1];  //We only care about the first hit.
             int numResults = Physics2D.Raycast(ai.transform.position, dir, GetRaycastFilter(), hits, ai.idealDistFromWall);
-            bool lit = true;
+            float distToWall = numResults == 0 ? Mathf.Infinity : Vector2.Distance(hits[0].point, ai.transform.position);
+
+            //Raycast on lightmap
+            float distToShadow = Mathf.Infinity;
             if (LightManager.instance != null)
             {
-                Vector2 pos = (Vector2)ai.transform.position + dir;
-                lit = LightManager.instance.GetLightMaskAt((int)pos.x, (int)pos.y);
+                distToShadow = LightRaycast(dir);
+                Debug.Log(distToShadow);
             }
 
-            float dist = numResults == 0 ? Mathf.Infinity : Vector2.Distance(hits[0].point, ai.transform.position);
+            float dist = Mathf.Min(distToWall, distToShadow);
             if (cache)
             {
                 distanceCache[dir] = dist;
@@ -155,13 +160,33 @@ public class FindDirToRunNode : BehaviourTreeNode
         return distanceCache[dir];
     }
 
+    private float LightRaycast(Vector2 dir) 
+    {
+        Vector2Int pos = TileUtil.WorldToTileCoords(ai.transform.position);
+        Vector2Int prevPos;
+        float dist = 0;
+        do
+        {
+            prevPos = pos;
+            pos = TileUtil.WorldToTileCoords(pos + dir * 1.5f);
+            dist += (pos - prevPos).magnitude;  //This should either be 1 or sqrt(2)
+        } while (dist < ai.idealDistFromWall && LightManager.instance.GetLightMaskAt(pos.x, pos.y));
+
+        if (dist > ai.idealDistFromWall)
+        {
+            dist = Mathf.Infinity;
+        }
+
+        return dist;
+    }
+
     private ContactFilter2D GetRaycastFilter()
     {
         ContactFilter2D filter = new ContactFilter2D();
         filter = filter.NoFilter();
         filter.useTriggers = false;
         filter.useLayerMask = true;
-        filter.layerMask = ~LayerMask.GetMask("Ignore Raycast", "SlideableArea", "Rat");
+        filter.layerMask = ~LayerMask.GetMask("Ignore Raycast", "SlideableArea", "Player", "Rat");
 
         return filter;
     }

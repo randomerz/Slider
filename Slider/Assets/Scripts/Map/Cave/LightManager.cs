@@ -217,16 +217,18 @@ public class LightManager : MonoBehaviour
         lightMask.Apply();
     }
 
+    //x and y are in world coordinates.
     public bool GetLightMaskAt(int x, int y)
     {
         //Debug.Log(lightMask.GetPixel(x + worldToMaskDX, y + worldToMaskDY));
         return lightMask.GetPixel(x + worldToMaskDX, y + worldToMaskDY).r > 0.5f;
     }
 
+    //Get the light mask at a tile within a tilemap. pos is in cell coordinates with respect to tm. 
     public bool GetLightMaskAt(Tilemap tm, Vector3Int pos)
     {
         Vector3 posInWorld = tm.CellToWorld(pos);
-        Vector3Int tilePos = TileUtil.WorldToTileCoords(posInWorld);
+        Vector2Int tilePos = TileUtil.WorldToTileCoords(posInWorld);
         return GetLightMaskAt(tilePos.x, tilePos.y);
     }
 }

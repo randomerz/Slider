@@ -55,7 +55,7 @@ public class PlayerMoveOffMoss : MonoBehaviour
     internal void CheckPlayerOnMoss(Vector3Int pos)
     {
         //L: Determine if the player is on the moss while it is growing
-        Vector3Int mossTile = TileUtil.WorldToTileCoords(mossMap.CellToWorld(pos));
+        Vector2Int mossTile = TileUtil.WorldToTileCoords(mossMap.CellToWorld(pos));
         bool movePlayerOffMoss = mossTile.Equals(TileUtil.WorldToTileCoords(player.transform.position));
         if (movePlayerOffMoss)
         {

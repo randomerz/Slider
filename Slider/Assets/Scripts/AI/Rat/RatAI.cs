@@ -17,13 +17,15 @@ public class RatAI : MonoBehaviour
     internal float idealDistFromWall; //The ideal distance the AI wants to keep from walls (this is essentially the rat's "vision")
     [SerializeField]
     [Range(0f, 1f)]
-    internal float avoidWallsWeight;    //The tendency for the rat to avoid walls (0 to 1)
+    internal float avoidWallsWeight;    //The tendency for the rat to avoid walls (0 to 1) (Note: This should be small, or else you get weird behaviour on the edge cases.
 
 
     [SerializeField]
     private Animator anim;
     [SerializeField]
     private Rigidbody2D rb;
+    [SerializeField]
+    private Transform mouth;
 
     public GameObject objectToSteal;
     public Transform player;
@@ -91,6 +93,7 @@ public class RatAI : MonoBehaviour
             //L: Reparent Slider piece to be child of Rat
             holdingObject = true; 
             objectToSteal.transform.parent = transform;
+            objectToSteal.transform.localPosition = mouth.localPosition;
         }
     }
 
@@ -103,7 +106,7 @@ public class RatAI : MonoBehaviour
         var moveTowardsObjectNode = new MoveTowardsObjectNode(this);
 
         //L: IMPORTANT NOTE: The ordering of the nodes in the tree matters
-        var stealSequence = new SequenceNode(new List<BehaviourTreeNode>() { isPlayerCloseNode, moveTowardsObjectNode });
+        var stealSequence = new SequenceNode(new List<BehaviourTreeNode>() { moveTowardsObjectNode });
         var runSequence = new SequenceNode(new List<BehaviourTreeNode> { isPlayerCloseNode, findDirToRunNode, moveNode });
 
 
