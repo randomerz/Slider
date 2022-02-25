@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class Minecart : MonoBehaviour
+public class Minecart : Item
 {
     
     [SerializeField] private int currentDirection;
@@ -28,10 +28,54 @@ public class Minecart : MonoBehaviour
       SnapToTile(pos);
     }
 
-    public void stop()
+
+    //Item Related Stuff
+    public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
+    {
+        Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
+        if (hit == null || hit.GetComponent<STile>() == null)
+        {
+            gameObject.transform.parent = null;
+            //Debug.LogWarning("Player isn't on top of a slider!");
+            return null;
+        }
+        STile hitTile = hit.GetComponent<STile>();
+        Tilemap railmap = hitTile.stileTileMaps.GetComponent<STileTilemap>().minecartRails;
+        railManager = railmap.GetComponent<RailManager>();
+        StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + mc.offSet, callback));
+        SnapToTile(railmap.WorldToCell(dropLocation));
+        gameObject.transform.parent = hitTile.transform.Find("Objects").transform;
+        return hitTile;
+    }
+
+    public override void OnEquip()
+    {
+        StopMoving();
+        resetTiles();
+        base.OnEquip();
+    }
+
+
+
+
+    public void StartMoving() 
+    {
+      if(isOnTrack)
+        isMoving = true;  
+    }
+
+    public void StopMoving()
     {
       isMoving = false;
       isOnTrack = false;
+    }
+
+    public void resetTiles()
+    {
+      currentTile = null;
+      targetTile = null;
+      currentTilePos = Vector3Int.zero;
+      targetTilePos = Vector3Int.zero;
     }
 
     //Places the minecart on the tile at the given position
@@ -43,17 +87,14 @@ public class Minecart : MonoBehaviour
       currentDirection = currentTile.defaultDir;
       if(railManager.railLocations.Contains(pos))
       {
-        targetTilePos = currentTilePos + getTileOffsetVector(currentDirection);
-        targetTile = railManager.railMap.GetTile(targetTilePos) as RailTile;
-        targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) + 0.5f * (Vector3) getTileOffsetVector(targetTile.connections[(currentDirection + 2) % 4]) + offSet;
-        isOnTrack = true;
+          targetTilePos = currentTilePos + getTileOffsetVector(currentDirection);
+          targetTile = railManager.railMap.GetTile(targetTilePos) as RailTile;
+          targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) + 0.5f * (Vector3) getTileOffsetVector(targetTile.connections[(currentDirection + 2) % 4]) + offSet;
+          isOnTrack = true;
       }
       else
       {
-        targetTilePos = Vector3Int.zero;
-      targetTile = null;
-      targetWorldPos = Vector3Int.zero;
-      isOnTrack = false;
+          resetTiles();
       }
       
     }

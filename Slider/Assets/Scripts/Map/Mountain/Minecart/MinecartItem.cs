@@ -10,7 +10,6 @@ public class MinecartItem : Item
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
     {
-        StartCoroutine(AnimateDrop(dropLocation, callback));
         Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
         if (hit == null || hit.GetComponent<STile>() == null)
         {
@@ -25,12 +24,14 @@ public class MinecartItem : Item
         rm.mc = mc;
         StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + mc.offSet, callback));
         mc.SnapToTile(railmap.WorldToCell(dropLocation));
+        gameObject.transform.parent = hitTile.transform.Find("Objects").transform;
         return hitTile;
     }
 
     public override void OnEquip()
     {
+        mc.StopMoving();
+        mc.resetTiles();
         base.OnEquip();
-        mc.stop();
     }
 }
