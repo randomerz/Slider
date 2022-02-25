@@ -14,6 +14,8 @@ public class Minecart : Item
     [SerializeField] public RailTile targetTile;
     [SerializeField] private float speed = 2.0f;
     public Vector3 offSet = new Vector3(0.5f, 0.5f, 0.0f);
+    [SerializeField] private SGrid sGrid;
+    [SerializeField] private RailManager borderRM;
 
 
     public Vector3Int currentTilePos;
@@ -102,13 +104,13 @@ public class Minecart : Item
         {
             //Debug.Log(Vector3.Distance(transform.position, targetWorldPos));
             if(Vector3.Distance(transform.position, targetWorldPos) < 0.01f)
-                getNextTile();
+                GetNextTile();
             else
                 transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * speed);
         }
     }
 
-    private void getNextTile()
+    private void GetNextTile()
     {
         currentTile = targetTile;
         currentTilePos = targetTilePos;
@@ -123,7 +125,39 @@ public class Minecart : Item
         }
         else
         {
-            Derail();
+            Debug.Log("Looking for other tiles");
+            //Search adjacent tiles for the position
+            List<STile> stileList = sGrid.GetActiveTiles();
+            List<RailManager> rmList = new List<RailManager>();//{borderRM};
+            Debug.Log(stileList.Count);
+            foreach(STile tile in stileList)
+            {
+                RailManager otherRM = tile.stileTileMaps.GetComponentInChildren<RailManager>();
+                if(otherRM != null)
+                    rmList.Add(otherRM);
+            }
+            Debug.Log(rmList.Count);
+            foreach(RailManager rm in rmList)
+            {
+                Vector3Int targetLoc = rm.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
+                //Debug.Log(targetLoc);
+                if(rm.railLocations.Contains(targetLoc))
+                {
+                    railManager = rm;
+                    SnapToTile(targetLoc);
+                    /*targetTile = railManager.railMap.GetTile(targetLoc) as RailTile;
+                    targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetLoc) 
+                         + 0.5f * (Vector3) GetTileOffsetVector(
+                         targetTile.connections[(currentDirection + 2) % 4]) + offSet;
+                    currentDirection = targetTile.connections[(currentDirection + 2) % 4];*/
+
+                    //move minecart to other stile
+                    gameObject.transform.parent = rm.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
+                    return;
+                }
+            }
+            StopMoving();
+            //Derail();
         }
         
     }

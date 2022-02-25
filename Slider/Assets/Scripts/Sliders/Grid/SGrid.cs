@@ -165,6 +165,16 @@ public class SGrid : MonoBehaviour
         return null;
     }
 
+    //C: returns a list of active stiles
+    public List<STile> GetActiveTiles()
+    {
+        List<STile> stileList = new List<STile>();
+        foreach(STile tile in stiles)
+            if(tile.isTileActive)
+                stileList.Add(tile);
+        return stileList;
+    }
+
     //L: This mainly checks if any of the tiles involved in SMove 
     //D: this is should also not really be relied on
     public bool CanMove(SMove move)

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MountainSTile : STile
 {
-    protected new void Awake() {
+    /*protected new void Awake() {
         STILE_WIDTH = 25;
         base.Awake();
-    }
+    }*/
 }
