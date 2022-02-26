@@ -30,7 +30,7 @@ public class Minecart : Item
     //creates a new minecart at the given position
     public Minecart(RailManager rm, Vector3Int pos){
         railManager = rm;
-        SnapToTile(pos);
+        SnapToRail(pos);
     }
 
 
@@ -48,7 +48,8 @@ public class Minecart : Item
         Tilemap railmap = hitTile.stileTileMaps.GetComponent<STileTilemap>().minecartRails;
         railManager = railmap.GetComponent<RailManager>();
         StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
-        SnapToTile(railmap.WorldToCell(dropLocation));
+        if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
+            SnapToRail(railmap.WorldToCell(dropLocation));
         gameObject.transform.parent = hitTile.transform.Find("Objects").transform;
         return hitTile;
     }
@@ -81,7 +82,7 @@ public class Minecart : Item
     }
 
     //Places the minecart on the tile at the given position
-    public void SnapToTile(Vector3Int pos)
+    public void SnapToRail(Vector3Int pos)
     {
         transform.position = railManager.railMap.layoutGrid.CellToWorld(pos) + offSet;
         currentTile = railManager.railMap.GetTile(pos) as RailTile;
@@ -97,6 +98,8 @@ public class Minecart : Item
         else
             ResetTiles();
     }
+
+    
 
     private void Update() 
     {
@@ -144,7 +147,8 @@ public class Minecart : Item
                 if(rm.railLocations.Contains(targetLoc))
                 {
                     railManager = rm;
-                    SnapToTile(targetLoc);
+                    SnapToRailNewSTile(targetLoc);
+                    //SnapToTile(targetLoc);
                     /*targetTile = railManager.railMap.GetTile(targetLoc) as RailTile;
                     targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetLoc) 
                          + 0.5f * (Vector3) GetTileOffsetVector(
@@ -160,6 +164,16 @@ public class Minecart : Item
             //Derail();
         }
         
+    }
+
+    //Used to snap to a rail tile when moving across STiles
+    public void SnapToRailNewSTile(Vector3Int pos)
+    {
+        currentTile = railManager.railMap.GetTile(pos) as RailTile;
+        currentTilePos = pos;
+        targetTilePos = currentTilePos + GetTileOffsetVector(currentDirection);
+        targetTile = railManager.railMap.GetTile(targetTilePos) as RailTile;
+        targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) + 0.5f * (Vector3) GetTileOffsetVector(targetTile.connections[(currentDirection + 2) % 4]) + offSet;
     }
 
     //makes the minecart fall off of the rails
