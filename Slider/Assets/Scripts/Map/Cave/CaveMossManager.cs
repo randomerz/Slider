@@ -83,6 +83,7 @@ public class CaveMossManager : MonoBehaviour
             stile = GetComponentInParent<CaveSTile>();
         }
 
+        //Conditions under which the moss updates.
         SGridAnimator.OnSTileMoveEnd += (sender, e) =>
         {
             UpdateMoss();
@@ -91,15 +92,15 @@ public class CaveMossManager : MonoBehaviour
         {
             UpdateMoss();
         };
+
+        CaveLight.OnLightSwitched += (sender, e) =>
+        {
+            UpdateMoss();
+        };
     }
 
     private void Update()
     {
-    }
-
-    private void UpdateMossAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        UpdateMoss();
     }
 
     private void UpdateMoss()

@@ -12,6 +12,12 @@ public class CaveLight : MonoBehaviour
 
     private Texture2D _lightMask;
 
+    public class OnLightSwitchedArgs
+    {
+        public bool lightOn;
+    }
+    public static event System.EventHandler<OnLightSwitchedArgs> OnLightSwitched;
+
     void OnEnable()
     {
         SetLightOn(lightOnStart);
@@ -30,10 +36,12 @@ public class CaveLight : MonoBehaviour
             LightManager.instance.UpdateLightMask(this);
             LightManager.instance.UpdateMaterials();
         }
+
+        OnLightSwitched?.Invoke(this, new OnLightSwitchedArgs { lightOn = value });
     }
 
     /* L: Gets the light mask for THIS LIGHT ONLY (see LightManager.cs for the whole world) */
-    public Texture2D GetLightMask(Texture2D heightMask, int worldToMaskDX, int worldToMaskDY, int maskSizeX, int maskSizeY)
+    internal Texture2D GetLightMask(Texture2D heightMask, int worldToMaskDX, int worldToMaskDY, int maskSizeX, int maskSizeY)
     {
 
         if (heightMask.width != maskSizeX && heightMask.height != maskSizeY)
