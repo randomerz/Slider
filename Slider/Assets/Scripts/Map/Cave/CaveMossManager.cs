@@ -35,6 +35,9 @@ public class CaveMossManager : MonoBehaviour
     private Dictionary<Vector3Int, MossAnimData> tilesAnimating;
 
     [SerializeField]
+    private STile stile;
+
+    [SerializeField]
     private STile debugTile;    //L: In case you need to debug a specific tile
 
     private void Start()
@@ -74,9 +77,32 @@ public class CaveMossManager : MonoBehaviour
                 }
             });
         }
+
+        if (stile == null)
+        {
+            stile = GetComponentInParent<CaveSTile>();
+        }
+
+        SGridAnimator.OnSTileMoveEnd += (sender, e) =>
+        {
+            UpdateMoss();
+        };
+        SGrid.OnSTileEnabled += (sender, e) =>
+        {
+            UpdateMoss();
+        };
     }
 
     private void Update()
+    {
+    }
+
+    private void UpdateMossAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        UpdateMoss();
+    }
+
+    private void UpdateMoss()
     {
         if (LightManager.instance != null)
         {
