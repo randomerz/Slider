@@ -38,27 +38,36 @@ public class Minecart : Item
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
     {
         Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
-        if (hit == null || hit.GetComponent<STile>() == null)
-        {
-            gameObject.transform.parent = null;
-            //Debug.LogWarning("Player isn't on top of a slider!");
+        if (hit == null)
             return null;
-        }
-        STile hitTile = hit.GetComponent<STile>();
-        Tilemap railmap = hitTile.stileTileMaps.GetComponent<STileTilemap>().minecartRails;
-        railManager = railmap.GetComponent<RailManager>();
-        StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
-        if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
+        if(hit.GetComponent<STile>())
+        {
+            STile hitTile = hit.GetComponent<STile>();
+            Tilemap railmap = hitTile.stileTileMaps.GetComponent<STileTilemap>().minecartRails;
+            railManager = railmap.GetComponent<RailManager>();
+            StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
+            if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
             SnapToRail(railmap.WorldToCell(dropLocation));
-        gameObject.transform.parent = hitTile.transform.Find("Objects").transform;
-        return hitTile;
+            gameObject.transform.parent = hitTile.transform.Find("Objects").transform;
+            return hitTile;
+        }
+        else if(hit.GetComponent<STileTilemap>())
+        {
+            Tilemap railmap = hit.GetComponent<STileTilemap>().minecartRails;
+            railManager = railmap.GetComponent<RailManager>();
+            StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
+            if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
+            SnapToRail(railmap.WorldToCell(dropLocation));
+            gameObject.transform.parent = borderRM.gameObject.GetComponentInParent<STileTilemap>().transform.Find("Objects").transform;
+        }
+        return null;
+
     }
 
     public override void OnEquip()
     {
         StopMoving();
         ResetTiles();
-        //base.OnEquip();
     }
 
     public void StartMoving() 
@@ -105,7 +114,6 @@ public class Minecart : Item
     {
         if(isMoving && isOnTrack)
         {
-            //Debug.Log(Vector3.Distance(transform.position, targetWorldPos));
             if(Vector3.Distance(transform.position, targetWorldPos) < 0.01f)
                 GetNextTile();
             else
@@ -128,43 +136,77 @@ public class Minecart : Item
         }
         else
         {
-            Debug.Log("Looking for other tiles");
-            //Search adjacent tiles for the position
-            List<STile> stileList = sGrid.GetActiveTiles();
-            List<RailManager> rmList = new List<RailManager>();//{borderRM};
-            Debug.Log(stileList.Count);
+            LookForRailManager();
+            /*List<STile> stileList = sGrid.GetActiveTiles();
+            List<RailManager> rmList = new List<RailManager>();
+            Vector3Int targetLoc;
             foreach(STile tile in stileList)
             {
                 RailManager otherRM = tile.stileTileMaps.GetComponentInChildren<RailManager>();
                 if(otherRM != null)
                     rmList.Add(otherRM);
             }
-            Debug.Log(rmList.Count);
             foreach(RailManager rm in rmList)
             {
-                Vector3Int targetLoc = rm.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
-                //Debug.Log(targetLoc);
+                targetLoc = rm.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
                 if(rm.railLocations.Contains(targetLoc))
                 {
                     railManager = rm;
                     SnapToRailNewSTile(targetLoc);
-                    //SnapToTile(targetLoc);
-                    /*targetTile = railManager.railMap.GetTile(targetLoc) as RailTile;
-                    targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetLoc) 
-                         + 0.5f * (Vector3) GetTileOffsetVector(
-                         targetTile.connections[(currentDirection + 2) % 4]) + offSet;
-                    currentDirection = targetTile.connections[(currentDirection + 2) % 4];*/
-
-                    //move minecart to other stile
                     gameObject.transform.parent = rm.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
                     return;
                 }
             }
+            targetLoc = borderRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
+                if(rm.railLocations.Contains(targetLoc))
+                {
+                    railManager = rm;
+                    SnapToRailNewSTile(targetLoc);
+                    gameObject.transform.parent = rm.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
+                    return;
+                }
             StopMoving();
-            //Derail();
+            //Derail();*/
         }
         
     }
+
+    //looks for a rail manager that has a tile which overlaps with the target postion
+    //If one is found, rail manager is updated so the minecart can operate on the new STile
+    //If one is not found, the minecart derails
+    private void LookForRailManager()
+    {
+        List<STile> stileList = sGrid.GetActiveTiles();
+        List<RailManager> rmList = new List<RailManager>();
+        Vector3Int targetLoc;
+        foreach(STile tile in stileList)
+        {
+            RailManager otherRM = tile.stileTileMaps.GetComponentInChildren<RailManager>();
+                if(otherRM != null)
+                    rmList.Add(otherRM);
+            }
+            foreach(RailManager rm in rmList)
+            {
+                targetLoc = rm.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
+                if(rm.railLocations.Contains(targetLoc))
+                {
+                    railManager = rm;
+                    SnapToRailNewSTile(targetLoc);
+                    gameObject.transform.parent = rm.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
+                    return;
+                }
+            }
+            targetLoc = borderRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
+            if(borderRM.railLocations.Contains(targetLoc))
+            {
+                railManager = borderRM;
+                SnapToRailNewSTile(targetLoc);
+                gameObject.transform.parent = borderRM.gameObject.GetComponentInParent<STileTilemap>().transform.Find("Objects").transform;
+                return;
+            }
+        StopMoving();
+    }
+
 
     //Used to snap to a rail tile when moving across STiles
     public void SnapToRailNewSTile(Vector3Int pos)
