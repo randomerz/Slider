@@ -22,6 +22,10 @@ public class STile : MonoBehaviour
     public int STILE_WIDTH = 17;
 
     private int sliderColliderDisableCount; // each enable gives this +1, disable does -1
+
+    // Whether we have picked up this tile or not. Used in MagiTech so that only collected tiles
+    // are enabled when swapping grids.
+    public bool isTileCollected;
     
     [Header("References")]
     public GameObject objects;

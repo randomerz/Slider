@@ -134,7 +134,7 @@ public class Player : MonoBehaviour
         Collider2D hit = Physics2D.OverlapPoint(_instance.transform.position, LayerMask.GetMask("Slider"));
         if (hit == null || hit.GetComponent<STile>() == null)
         {
-            //Debug.LogWarning("Player isn't on top of a slider!");
+            Debug.LogWarning("Player isn't on top of a slider!");
             return -1;
         }
         return hit.GetComponent<STile>().islandId;
