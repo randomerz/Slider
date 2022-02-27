@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIPlayerTracker : MonoBehaviour
+public class UIPlayerTracker3D : MonoBehaviour
 {
 
     private Vector2 playerPosition;

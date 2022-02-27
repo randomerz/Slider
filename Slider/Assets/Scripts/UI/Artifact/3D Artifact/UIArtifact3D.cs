@@ -50,20 +50,20 @@ public class UIArtifact3D : MonoBehaviour
             return;
         }
 
-        ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
+        ArtifactTileButton3D dragged = data.pointerDrag.GetComponent<ArtifactTileButton3D>();
         if (!dragged.isTileActive || dragged.isForcedDown)
         {
             return;
         }
 
-        ArtifactTileButton hovered = null;
+        ArtifactTileButton3D hovered = null;
         if (data.pointerEnter != null && data.pointerEnter.name == "Image") 
         {
-            hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton>();
+            hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton3D>();
         }
 
         
-        foreach (ArtifactTileButton b in GetMoveOptions(dragged)) {
+        foreach (ArtifactTileButton3D b in GetMoveOptions(dragged)) {
             if (b == hovered) 
             {
                 b.SetHighlighted(false);
@@ -91,19 +91,19 @@ public class UIArtifact3D : MonoBehaviour
             return;
         }
 
-        ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
+        ArtifactTileButton3D dragged = data.pointerDrag.GetComponent<ArtifactTileButton3D>();
         if (!dragged.isTileActive || dragged.isForcedDown)
         {
             return;
         }
-        List<ArtifactTileButton> moveOptions = GetMoveOptions(dragged);
-        foreach (ArtifactTileButton b in moveOptions) {
+        List<ArtifactTileButton3D> moveOptions = GetMoveOptions(dragged);
+        foreach (ArtifactTileButton3D b in moveOptions) {
             b.buttonAnimator.sliderImage.sprite = b.emptySprite;
         }
-        ArtifactTileButton hovered = null;
+        ArtifactTileButton3D hovered = null;
         if (data.pointerEnter != null && data.pointerEnter.name == "Image") 
         {
-            hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton>();
+            hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton3D>();
         }
         else 
         {
@@ -118,7 +118,7 @@ public class UIArtifact3D : MonoBehaviour
         //Debug.Log("dragged" + dragged.islandId + "hovered" + hovered.islandId);
         
         bool swapped = false;
-        foreach (ArtifactTileButton b in moveOptions) {
+        foreach (ArtifactTileButton3D b in moveOptions) {
             b.SetHighlighted(false);
             // b.buttonAnimator.sliderImage.sprite = b.emptySprite;
             if(b == hovered && !swapped) 
@@ -147,7 +147,7 @@ public class UIArtifact3D : MonoBehaviour
             return;
 
         currentButton.SetSelected(false);
-        foreach (ArtifactTileButton b in moveOptionButtons)
+        foreach (ArtifactTileButton3D b in moveOptionButtons)
         {
             b.SetHighlighted(false);
         }
@@ -155,14 +155,14 @@ public class UIArtifact3D : MonoBehaviour
         moveOptionButtons.Clear();
     }
     
-    public virtual void SelectButton(ArtifactTileButton button)
+    public virtual void SelectButton(ArtifactTileButton3D button)
     {
         // Check if on movement cooldown
         //if (SGrid.GetStile(button.islandId).isMoving)
 
         //L: This is basically just a bunch of nested logic to determine how to update the UI based on what button the user pressed.
 
-        ArtifactTileButton oldCurrButton = currentButton;
+        ArtifactTileButton3D oldCurrButton = currentButton;
         if (currentButton != null)
         {
             if (moveOptionButtons.Contains(button))
@@ -172,7 +172,7 @@ public class UIArtifact3D : MonoBehaviour
                 CheckAndSwap(currentButton, button);
 
                 moveOptionButtons = GetMoveOptions(currentButton);
-                foreach (ArtifactTileButton b in buttons)
+                foreach (ArtifactTileButton3D b in buttons)
                 {
                     b.SetHighlighted(moveOptionButtons.Contains(b));
                 }
@@ -204,7 +204,7 @@ public class UIArtifact3D : MonoBehaviour
                 //Debug.Log("Selected button " + button.islandId);
                 currentButton = button;
                 button.SetSelected(true);
-                foreach (ArtifactTileButton b in moveOptionButtons)
+                foreach (ArtifactTileButton3D b in moveOptionButtons)
                 {
                     b.SetHighlighted(true);
                 }
@@ -213,12 +213,12 @@ public class UIArtifact3D : MonoBehaviour
     }
 
     // replaces adjacentButtons
-    protected virtual List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
+    protected virtual List<ArtifactTileButton3D> GetMoveOptions(ArtifactTileButton3D button)
     {
         moveOptionButtons.Clear();
 
         //Vector2 buttPos = new Vector2(button.x, button.y);
-        // foreach (ArtifactTileButton b in buttons)
+        // foreach (ArtifactTileButton3D b in buttons)
         // {
         //     //if (!b.isTileActive && (buttPos - new Vector2(b.x, b.y)).magnitude == 1)
         //     if (!b.isTileActive && (button.x == b.x || button.y == b.y))
@@ -236,7 +236,7 @@ public class UIArtifact3D : MonoBehaviour
 
         foreach (Vector2Int dir in dirs)
         {
-            ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
+            ArtifactTileButton3D b = GetButton(button.x + dir.x, button.y + dir.y);
             int i = 1;
             while (b != null && !b.isTileActive)
             {
@@ -251,7 +251,7 @@ public class UIArtifact3D : MonoBehaviour
     }
 
     //L: Swaps the buttons on the UI, but not the actual grid.
-    protected void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    protected void SwapButtons(ArtifactTileButton3D buttonCurrent, ArtifactTileButton3D buttonEmpty)
     {
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
@@ -261,7 +261,7 @@ public class UIArtifact3D : MonoBehaviour
 
     //L: updateGrid - if this is false, it will just update the UI without actually moving the tiles.
     //L: Returns if the swap was successful.
-    protected virtual bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    protected virtual bool CheckAndSwap(ArtifactTileButton3D buttonCurrent, ArtifactTileButton3D buttonEmpty)
     {
         STile[,] currGrid = SGrid.current.GetGrid();
 
@@ -384,7 +384,7 @@ public class UIArtifact3D : MonoBehaviour
     //L: Mark the button on the Artifact UI at islandID if it is in the right spot. (also changes the sprite)
     public static void SetButtonComplete(int islandId, bool value)
     {
-        foreach (ArtifactTileButton b in _instance.buttons)
+        foreach (ArtifactTileButton3D b in _instance.buttons)
         {
             if (b.islandId == islandId)
             {
@@ -396,7 +396,7 @@ public class UIArtifact3D : MonoBehaviour
 
     public static void SetButtonPos(int islandId, int x, int y)
     {
-        foreach (ArtifactTileButton b in _instance.buttons)
+        foreach (ArtifactTileButton3D b in _instance.buttons)
         {
             if (b.islandId == islandId)
             {
@@ -406,9 +406,9 @@ public class UIArtifact3D : MonoBehaviour
         }
     }
 
-    protected ArtifactTileButton GetButton(int x, int y)
+    protected ArtifactTileButton3D GetButton(int x, int y)
     {
-        foreach (ArtifactTileButton b in _instance.buttons)
+        foreach (ArtifactTileButton3D b in _instance.buttons)
         {
             if (b.x == x && b.y == y)
             {
@@ -419,9 +419,9 @@ public class UIArtifact3D : MonoBehaviour
         return null;
     }
 
-    public ArtifactTileButton GetButton(int islandId){
+    public ArtifactTileButton3D GetButton(int islandId){
 
-        foreach (ArtifactTileButton b in _instance.buttons)
+        foreach (ArtifactTileButton3D b in _instance.buttons)
         {
             if (b.islandId == islandId)
             {
@@ -434,7 +434,7 @@ public class UIArtifact3D : MonoBehaviour
 
     public static void AddButton(int islandId)
     {
-        foreach (ArtifactTileButton b in _instance.buttons)
+        foreach (ArtifactTileButton3D b in _instance.buttons)
         {
             if (b.islandId == islandId)
             {
@@ -446,7 +446,7 @@ public class UIArtifact3D : MonoBehaviour
 
     public void FlickerNewTiles()
     {
-        foreach (ArtifactTileButton b in _instance.buttons)
+        foreach (ArtifactTileButton3D b in _instance.buttons)
         {
             if (b.flickerNext)
             {
