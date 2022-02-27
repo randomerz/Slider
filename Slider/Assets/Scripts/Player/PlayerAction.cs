@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerAction : MonoBehaviour 
 {
@@ -9,14 +10,14 @@ public class PlayerAction : MonoBehaviour
     [SerializeField] private Transform itemPickupLocation;
     [SerializeField] private GameObject itemDropIndicator;
     private bool canDrop;
-    
     private int actionsAvailable = 0;
     [SerializeField] private GameObject actionAvailableIndicator;
-
     [SerializeField] private LayerMask itemMask;
     [SerializeField] private LayerMask dropCollidingMask;
-    
+    private List<RaycastHit2D> RayCastResults = new List<RaycastHit2D>();
+    private ContactFilter2D LayerFilter;
     private InputSettings controls;
+    private GameObject[] objects;
 
     private void Awake() 
     {
@@ -37,25 +38,48 @@ public class PlayerAction : MonoBehaviour
 
     private void Update()
     {
+        LayerMask StileLayerMask = LayerMask.GetMask("Slider");
+        LayerFilter.SetLayerMask(StileLayerMask);
         pickedItem = PlayerInventory.GetCurrentItem();
         if (pickedItem != null && !isPicking) 
         {
 
             pickedItem.gameObject.transform.position = itemPickupLocation.position;
             itemDropIndicator.transform.position = GetIndicatorLocation();
-            
+
             // check raycast
             Vector3 raycastDir = GetIndicatorLocation() - transform.position;
             RaycastHit2D hit = Physics2D.Raycast(transform.position, raycastDir, 1.5f, dropCollidingMask);
-            if (hit) 
-            {
+            if (hit) {
                 canDrop = false;
                 itemDropIndicator.SetActive(false);
             }
-            else 
-            {
+            else {
                 canDrop = true;
                 itemDropIndicator.SetActive(true);
+            }
+            int NumOfRayCastResult = Physics2D.Raycast(transform.position, raycastDir, LayerFilter, RayCastResults, 1.5f);
+            if (NumOfRayCastResult != 0) {
+                objects = new GameObject[NumOfRayCastResult];
+                for (int i = 0; i < NumOfRayCastResult; i++)
+                {
+                    objects[i] = RayCastResults[i].collider.gameObject;
+                    STile stile = objects[i].gameObject.GetComponent(typeof(STile)) as STile;
+                    if (stile != null)
+                    {
+                        if (stile.isTileActive) 
+                        {
+                            canDrop = true;
+                            itemDropIndicator.SetActive(true);
+                        }
+                        else
+                        {
+                            canDrop = false;
+                            itemDropIndicator.SetActive(false);
+                            break;
+                        }
+                    }
+                }
             }
         }
         else if (pickedItem == null)
@@ -100,7 +124,6 @@ public class PlayerAction : MonoBehaviour
             // find nearest
             if (nodes.Length > 0)
             {
-                Debug.Log("x");
                 isPicking = true;
 
                 Collider2D nearest = nodes[0];
