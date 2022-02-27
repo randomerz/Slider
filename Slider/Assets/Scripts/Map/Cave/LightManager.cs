@@ -151,7 +151,7 @@ public class LightManager : MonoBehaviour
         lightMask.Apply();
     }
 
-    private void UpdateLightMaskAll()
+    public void UpdateLightMaskAll()
     {
         GenerateEmptyLightMask();
 

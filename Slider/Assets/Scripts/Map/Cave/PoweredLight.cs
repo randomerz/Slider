@@ -1,11 +1,22 @@
-﻿using System;
+﻿using UnityEngine;
+using UnityEngine.Events;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 public class PoweredLight : CaveLight
 {
-    public Conditionals.Condition condition;
+    [SerializeField]
+    private Conditionals powerConditionals;
+
+    private void Start()
+    {
+        powerConditionals.onSuccess?.AddListener(new UnityAction(() => { SetLightOn(true); }));
+        powerConditionals.onFail?.AddListener(new UnityAction(() => { SetLightOn(false); }));
+    }
+
+    private void Update()
+    {
+        powerConditionals.CheckConditions();
+    }
 }
 
