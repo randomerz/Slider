@@ -13,6 +13,12 @@ public class SGrid : MonoBehaviour
     }
     public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
 
+    public class OnSTileEnabledArgs : System.EventArgs
+    {
+        public STile stile;
+    }
+    public static event System.EventHandler<OnSTileEnabledArgs> OnSTileEnabled;
+
     protected STile[,] grid;
     protected SGridBackground[,] bgGrid;
 
@@ -248,6 +254,7 @@ public class SGrid : MonoBehaviour
     {
         stile.SetTileActive(true);
         UIArtifact.AddButton(stile.islandId);
+        OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
     }
 
 

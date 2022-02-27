@@ -42,7 +42,7 @@ public class DesertGrid : SGrid
         //     SGrid.OnGridMove += SGrid.CheckCompletions;
         // }
 
-        SGridAnimator.OnSTileMove += CheckOasisOnMove;
+        SGridAnimator.OnSTileMoveEnd += CheckOasisOnMove;
     }
 
     private void OnDisable() {
@@ -50,7 +50,7 @@ public class DesertGrid : SGrid
         //     SGrid.OnGridMove -= SGrid.CheckCompletions;
         // }
 
-        SGridAnimator.OnSTileMove -= CheckOasisOnMove;
+        SGridAnimator.OnSTileMoveEnd -= CheckOasisOnMove;
     }
 
     public override void SaveGrid() 

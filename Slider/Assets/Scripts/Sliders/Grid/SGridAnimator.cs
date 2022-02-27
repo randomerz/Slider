@@ -17,9 +17,8 @@ public class SGridAnimator : MonoBehaviour
         public Vector2Int prevPos;
         public SMove smove; // the SMove this Move() was a part of
     }
-    public static event System.EventHandler<OnTileMoveArgs> OnSTileMove;
-    
-
+    public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
+    public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
 
     public void Move(SMove move)
     {
@@ -50,6 +49,14 @@ public class SGridAnimator : MonoBehaviour
 
         Vector2 start = new Vector2(moveCoords.x, moveCoords.y);
         Vector2 end = new Vector2(moveCoords.z, moveCoords.w);
+
+        OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = new Vector2Int(moveCoords.x, moveCoords.y),
+            smove = move
+        });
+
         stile.SetMovingDirection(GetMovingDirection(start, end));
         
         stile.SetBorderColliders(true);
@@ -83,7 +90,12 @@ public class SGridAnimator : MonoBehaviour
         stile.SetMovingDirection(Vector2.zero);
         stile.SetGridPosition(moveCoords.z, moveCoords.w);
 
-        InvokeOnSTileMove(stile, new Vector2Int(moveCoords.x, moveCoords.y), move);
+        OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = new Vector2Int(moveCoords.x, moveCoords.y),
+            smove = move
+        });
     }
 
     private IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders)
@@ -167,13 +179,5 @@ public class SGridAnimator : MonoBehaviour
         CameraShake.Shake(0.5f, 1f);
         AudioManager.Play("Slide Explosion");
 
-    }
-
-
-    private void InvokeOnSTileMove(STile stile, Vector2Int prevPos, SMove move)
-    {
-        OnSTileMove?.Invoke(this, new OnTileMoveArgs { 
-            stile = stile, prevPos = prevPos, smove = move 
-        });
     }
 }
