@@ -7,10 +7,8 @@ using UnityEngine.UIElements;
 [CustomPropertyDrawer(typeof(Conditionals.Condition))]
 public class ConditionalsEditor : PropertyDrawer
 {
-    // The enum field that will determine what variables to display in the Inspector
-
-    //This is what actually makes the editor
-    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    /*
+    public override VisualElement CreatePropertyGUI(SerializedProperty property)
     {
         var container = new VisualElement();
 
@@ -38,5 +36,49 @@ public class ConditionalsEditor : PropertyDrawer
 
         return container;
     }
+    */
+    
+
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        return EditorGUIUtility.singleLineHeight * 8;
+    }
+
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    {
+        EditorGUI.BeginProperty(position, label, property);
+        var categoryProperty = property.FindPropertyRelative("type");
+        var itemProperty = property.FindPropertyRelative("item");
+        var patternProperty = property.FindPropertyRelative("pattern");
+        var checkBoolProperty = property.FindPropertyRelative("checkBool");
+
+        var labelRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
+        var categoryFieldRect = new Rect(position.x, position.y + 18, position.width, 24);
+        var fieldRect = new Rect(position.x, position.y + 2 * 18, position.width, 24);
+
+        //EditorGUI.indentLevel++;
+        EditorGUI.BeginFoldoutHeaderGroup(labelRect, true, label);
+        EditorGUI.PropertyField(categoryFieldRect, categoryProperty);
+        
+
+        switch ((Conditionals.Condition.ConditionType) categoryProperty.enumValueIndex)
+        {
+            case Conditionals.Condition.ConditionType.item:
+                EditorGUI.PropertyField(fieldRect, itemProperty, true);
+                break;
+            case Conditionals.Condition.ConditionType.grid:
+                EditorGUI.PropertyField(fieldRect, patternProperty);
+                break;
+            case Conditionals.Condition.ConditionType.spec:
+                EditorGUI.PropertyField(fieldRect, checkBoolProperty);
+                break;
+        }
+        EditorGUI.EndFoldoutHeaderGroup();
+
+        //EditorGUI.indentLevel--;
+        EditorGUI.EndProperty();
+    }
 }
+
+
 
