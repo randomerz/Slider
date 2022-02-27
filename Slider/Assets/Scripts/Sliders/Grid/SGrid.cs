@@ -179,9 +179,9 @@ public class SGrid : MonoBehaviour
     //D: this is should also not really be relied on
     public bool CanMove(SMove move)
     {
-        foreach (Vector4Int m in move.moves)
+        foreach (Movement m in move.moves)
         {
-            if (!grid[m.x, m.y].CanMove(m.z, m.w))
+            if (!grid[m.startLoc.x, m.startLoc.y].CanMove(m.startLoc.x, m.startLoc.y))
             {
                 return false;
             }
@@ -229,10 +229,10 @@ public class SGrid : MonoBehaviour
 
         STile[,] newGrid = new STile[width, height];
         System.Array.Copy(grid, newGrid, width * height);
-        foreach (Vector4Int m in move.moves)
+        foreach (Movement m in move.moves)
         {
             //grid[m.x, m.y].SetGridPosition(m.z, m.w);
-            newGrid[m.z, m.w] = grid[m.x, m.y];
+            newGrid[m.endLoc.x, m.endLoc.y] = grid[m.startLoc.x, m.startLoc.y];
             //Debug.Log("Setting " + m.x + " " + m.y + " to " + m.z + " " + m.w);
         }
         grid = newGrid;
