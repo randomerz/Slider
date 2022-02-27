@@ -47,36 +47,33 @@ public class PlayerAction : MonoBehaviour
             pickedItem.gameObject.transform.position = itemPickupLocation.position;
             itemDropIndicator.transform.position = GetIndicatorLocation();
 
-            // check raycast
+            // check raycast hitting items, npcs, houses, etc.
             Vector3 raycastDir = GetIndicatorLocation() - transform.position;
             RaycastHit2D hit = Physics2D.Raycast(transform.position, raycastDir, 1.5f, dropCollidingMask);
             if (hit) {
                 canDrop = false;
                 itemDropIndicator.SetActive(false);
             }
-            else {
+            else 
+            {
+                // check raycast hitting tiles that aren't active
                 canDrop = true;
                 itemDropIndicator.SetActive(true);
-            }
-            int NumOfRayCastResult = Physics2D.Raycast(transform.position, raycastDir, LayerFilter, RayCastResults, 1.5f);
-            if (NumOfRayCastResult != 0) {
-                objects = new GameObject[NumOfRayCastResult];
-                for (int i = 0; i < NumOfRayCastResult; i++)
+                
+                int NumOfRayCastResult = Physics2D.Raycast(transform.position, raycastDir, LayerFilter, RayCastResults, 1.5f);
+                if (NumOfRayCastResult != 0) 
                 {
-                    objects[i] = RayCastResults[i].collider.gameObject;
-                    STile stile = objects[i].gameObject.GetComponent(typeof(STile)) as STile;
-                    if (stile != null)
+                    for (int i = 0; i < NumOfRayCastResult; i++)
                     {
-                        if (stile.isTileActive) 
+                        STile stile = RayCastResults[i].collider.gameObject.GetComponent<STile>();
+                        if (stile != null)
                         {
-                            canDrop = true;
-                            itemDropIndicator.SetActive(true);
-                        }
-                        else
-                        {
-                            canDrop = false;
-                            itemDropIndicator.SetActive(false);
-                            break;
+                            if (!stile.isTileActive) 
+                            {
+                                canDrop = false;
+                                itemDropIndicator.SetActive(false);
+                                break;
+                            }
                         }
                     }
                 }
