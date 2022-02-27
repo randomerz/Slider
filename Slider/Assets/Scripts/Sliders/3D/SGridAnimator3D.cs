@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SGridAnimator : MonoBehaviour
+public class SGridAnimator3D : MonoBehaviour
 {
     //public bool isMoving = false;
 
@@ -11,46 +11,43 @@ public class SGridAnimator : MonoBehaviour
     public AnimationCurve movementCurve;
     public float movementDuration = 1;
 
-    public class OnTileMoveArgs : System.EventArgs
+    public class OnTileMoveArgs3D : System.EventArgs
     {
-        public STile stile;
-        public Vector2Int prevPos;
-        public SMove smove; // the SMove this Move() was a part of
+        public STile3D stile;
+        public Vector3Int prevPos;
+        public SMove3D smove; // the SMove3D this Move() was a part of
     }
-    public static event System.EventHandler<OnTileMoveArgs> OnSTileMove;
+    public static event System.EventHandler<OnTileMoveArgs3D> OnSTileMove;
     
 
 
-    public void Move(SMove move)
+    public void Move(SMove3D move)
     {
-        STile[,] grid = SGrid.current.GetGrid();
+        STile3D[,,] grid = SGrid3D.current.GetGrid();
 
-        Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
-        StartCoroutine(DisableBordersAndColliders(grid, SGrid.current.GetBGGrid(), move.positions, borders));
+        Dictionary<Vector3Int, List<int>> borders = move.GenerateBorders();
+        StartCoroutine(DisableBordersAndColliders(grid, SGrid3D.current.GetBGGrid(), move.positions, borders));
 
-        foreach (Vector4Int m in move.moves)
+        foreach (Movement m in move.moves)
         {
-            if (grid[m.x, m.y].isTileActive)
+            if (grid[m.startLoc.x, m.startLoc.y, m.startLoc.z].isTileActive)
             {
-                StartCoroutine(StartMovingAnimation(grid[m.x, m.y], m, move));
+                StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y, m.startLoc.z], m, move));
             }
             else
             {
-                grid[m.x, m.y].SetGridPosition(m.z, m.w);
+                grid[m.startLoc.x, m.startLoc.y, m.startLoc.z].SetGridPosition(m.endLoc.x, m.endLoc.y, m.endLoc.z);
             }
         }
 
     }
 
     // move is only here so we can pass it into the event
-    private IEnumerator StartMovingAnimation(STile stile, Vector4Int moveCoords, SMove move)
+    private IEnumerator StartMovingAnimation(STile3D stile, Movement moveCoords, SMove3D move)
     {
         float t = 0;
         //isMoving = true;
-
-        Vector2 start = new Vector2(moveCoords.x, moveCoords.y);
-        Vector2 end = new Vector2(moveCoords.z, moveCoords.w);
-        stile.SetMovingDirection(GetMovingDirection(start, end));
+        stile.SetMovingDirection(GetMovingDirection(moveCoords.startLoc, moveCoords.endLoc));
         
         stile.SetBorderColliders(true);
 
@@ -59,7 +56,7 @@ public class SGridAnimator : MonoBehaviour
         while (t < movementDuration)
         {
             float s = movementCurve.Evaluate(t / movementDuration);
-            Vector2 pos = Vector2.Lerp(start, end, s);
+            Vector3 pos = Vector3.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
             //Vector3 pos = (1 - s) * orig + s * target;
             
             stile.SetMovingPosition(pos);
@@ -80,81 +77,63 @@ public class SGridAnimator : MonoBehaviour
         //    }
         //}
 
-        stile.SetMovingDirection(Vector2.zero);
-        stile.SetGridPosition(moveCoords.z, moveCoords.w);
+        stile.SetMovingDirection(Vector3.zero);
+        stile.SetGridPosition(moveCoords.endLoc);
 
-        InvokeOnSTileMove(stile, new Vector2Int(moveCoords.x, moveCoords.y), move);
+        InvokeOnSTileMove(stile, moveCoords.startLoc, move);
     }
 
-    private IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders)
+    private IEnumerator DisableBordersAndColliders(STile3D[,,] grid, SGridBackground3D[,,] bgGrid, HashSet<Vector3Int> positions, Dictionary<Vector3Int, List<int>> borders)
     {
-        foreach (Vector2Int p in borders.Keys)
+        foreach (Vector3Int p in borders.Keys)
         {
-            if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1))
+            if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1) && 0 <= p.z && p.z < bgGrid.GetLength(2))
             {
                 foreach (int i in borders[p])
                 {
-                    bgGrid[p.x, p.y].SetBorderCollider(i, true);
+                    bgGrid[p.x, p.y, p.z].SetBorderCollider(i, true);
                 }
             }
         }
 
-        List<STile> disabledColliders = new List<STile>();
+        List<STile3D> disabledColliders = new List<STile3D>();
 
         // if the player is on a slider, disable hitboxes temporarily
-        foreach (Vector2Int p in positions)
+        foreach (Vector3Int p in positions)
         {
-            if (Player.GetStileUnderneath() != grid[p.x, p.y].islandId)
+            if (Player.GetStileUnderneath() != grid[p.x, p.y, p.z].islandId)
             {
                 //Debug.Log("disabling" +  p.x + " " + p.y);
-                grid[p.x, p.y].SetSliderCollider(false);
-                disabledColliders.Add(grid[p.x, p.y]);
+                grid[p.x, p.y, p.z].SetSliderCollider(false);
+                disabledColliders.Add(grid[p.x, p.y, p.z]);
             }
         }
 
         yield return new WaitForSeconds(movementDuration);
 
-        foreach (Vector2Int p in borders.Keys)
+        foreach (Vector3Int p in borders.Keys)
         {
-            if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1))
+            if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1) && 0 <= p.z && p.z < bgGrid.GetLength(2))
             {
                 foreach (int i in borders[p])
                 {
-                    bgGrid[p.x, p.y].SetBorderCollider(i, false);
+                    bgGrid[p.x, p.y, p.z].SetBorderCollider(i, false);
                 }
             }
         }
 
-        foreach (STile t in disabledColliders)
+        foreach (STile3D t in disabledColliders)
         {
             t.SetSliderCollider(true);
         }
     }
 
-    private Vector2 GetMovingDirection(Vector2 start, Vector2 end) // include magnitude?
+    private Vector2 GetMovingDirection(Vector3 start, Vector3 end) // include magnitude?
     {
-        Vector2 dif = start - end;
-        if (dif.x > 0)
-        {
-            return Vector2.right;
-        }
-        else if (dif.x < 0)
-        {
-            return Vector2.left;
-        }
-        else if (dif.y > 0)
-        {
-            return Vector2.up;
-        }
-        else if (dif.y < 0)
-        {
-            return Vector2.down;
-        }
-        else
-        {
+        Vector3 returnVector = Vector3.Normalize(start - end);
+        if(returnVector == Vector3.zero)
             Debug.LogError("Moving Tile to the same spot!");
-            return Vector2.zero;
-        }
+        return returnVector;
     }
 
     private IEnumerator StartCameraShakeEffect()
@@ -170,10 +149,10 @@ public class SGridAnimator : MonoBehaviour
     }
 
 
-    private void InvokeOnSTileMove(STile stile, Vector2Int prevPos, SMove move)
+    private void InvokeOnSTileMove(STile3D s, Vector3Int prevPos, SMove3D m)
     {
-        OnSTileMove?.Invoke(this, new OnTileMoveArgs { 
-            stile = stile, prevPos = prevPos, smove = move 
+        OnSTileMove?.Invoke(this, new OnTileMoveArgs3D { 
+            stile = s, prevPos = prevPos, smove = m 
         });
     }
 }

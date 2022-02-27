@@ -43,7 +43,7 @@ public class ArtifactTileButton3D : MonoBehaviour
         
         startsActive = myStile.isTileActive;
         SetTileActive(myStile.isTileActive);
-        SetPosition(myStile.x, myStile.y);
+        SetPosition(myStile.x, myStile.y, myStile.z);
 
         linkButton = null;
         foreach (ArtifactTileButton3D b in buttonManager.buttons) {
@@ -72,13 +72,15 @@ public class ArtifactTileButton3D : MonoBehaviour
         }
     }
 
-    public void SetPosition(int x, int y)
+    public void SetPosition(int x, int y, int z)
     {
         //Debug.Log("Current position: " + this.x + "," + this.y);
         this.x = x;
         this.y = y;
+        this.z = z;
         //Debug.Log("New position: " + this.x + "," + this.y);
 
+        //REPLACE THIS WITH NEW UI POSITION CALCULATION
         Vector3 pos = new Vector3(x - 1, y - 1) * UI_OFFSET;
         GetComponent<RectTransform>().anchoredPosition = pos;
     }
@@ -178,7 +180,7 @@ public class ArtifactTileButton3D : MonoBehaviour
         }
     }
 
-    public void AfterStileMoveDragged(object sender, SGridAnimator.OnTileMoveArgs e) 
+    public void AfterStileMoveDragged(object sender, SGridAnimator3D.OnTileMoveArgs3D e) 
     {
         if (e.stile.islandId == islandId)
             SetPushedDown(false);

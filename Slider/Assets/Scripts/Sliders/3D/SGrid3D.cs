@@ -2,26 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SGrid : MonoBehaviour
+public class SGrid3D : SGrid
 {
     //L: The grid the player is currently interacting with (only 1 active at a time)
-    public static SGrid current { get; private set; }
+    public static SGrid3D current { get; private set; }
 
     public class OnGridMoveArgs : System.EventArgs
     {
-        public STile[,] grid;
+        public STile3D[,,] grid;
     }
     public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
 
-    protected STile[,] grid;
-    protected SGridBackground[,] bgGrid;
+    protected STile3D[,,] grid;
+    protected SGridBackground3D[,,] bgGrid;
 
     // Set in inspector 
     public int width;
+    public int length;
     public int height;
-    [SerializeField] private STile[] stiles;
-    [SerializeField] private SGridBackground[] bgGridTiles;
-    [SerializeField] private SGridAnimator gridAnimator;
+    [SerializeField] private STile3D[] stiles;
+    [SerializeField] private SGridBackground3D[] bgGridTiles;
+    [SerializeField] private SGridAnimator3D gridAnimator;
     //L: This is the end goal for the slider puzzle, set in the inspector.
     //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)
     [SerializeField] protected string targetGrid = "*********"; // format: 123456789 for  1 2 3
@@ -48,12 +49,12 @@ public class SGrid : MonoBehaviour
     }
 
 
-    public STile[,] GetGrid()
+    public STile3D[,,] GetGrid()
     {
         return grid;
     }
 
-    public SGridBackground[,] GetBGGrid()
+    public SGridBackground3D[,,] GetBGGrid()
     {
         return bgGrid;
     }
@@ -63,34 +64,38 @@ public class SGrid : MonoBehaviour
     * 
     * This is useful for reshuffling the grid.
     */
-    public void SetGrid(int[,] puzzle)
+    public void SetGrid(int[,,] puzzle)
     {
         if (puzzle.Length != grid.Length)
         {
             Debug.LogWarning("Tried to SetGrid(int[,]), but provided puzzle was of a different length!");
         }
 
-        STile[,] newGrid = new STile[width, height];
-        STile next = null;
+        STile3D[,,] newGrid = new STile3D[width, length, height];
+        STile3D next = null;
 
         int playerIsland = Player.GetStileUnderneath();
         Vector3 playerOffset = Player.GetPosition() - GetStile(playerIsland).transform.position;
 
         for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < length; y++)
             {
-                //Debug.Log(puzzle[x, y]);
-                if (puzzle[x, y] == 0)
-                    next = GetStile(width * height);
-                else
-                    next = GetStile(puzzle[x, y]);
+                for(int z = 0; x < height; z++)
+                {
+                    //Debug.Log(puzzle[x, y]);
+                    if (puzzle[x, y, z] == 0)
+                        next = GetStile(width * length);
+                    else
+                        next = GetStile(puzzle[x, y, z]);
 
-                next.x = x;
-                next.y = y;
-                newGrid[x, y] = next;
-                next.Init();
-                UIArtifact.SetButtonPos(next.islandId, x, y);
+                    next.x = x;
+                    next.y = y;
+                    next.z = z;
+                    newGrid[x, y, z] = next;
+                        next.Init();
+                    UIArtifact3D.SetButtonPos(next.islandId, x, y, z);
+                }
             }
         }
 
@@ -106,30 +111,33 @@ public class SGrid : MonoBehaviour
      * L: Populates the grid[,] array with the given stiles.
      * This is what initially loads in the grid at the start of the scene if a grid is not already saved.
      */
-    private void SetGrid(STile[] stiles)
+    private void SetGrid(STile3D[] stiles)
     {
-        if (stiles.Length != width * height)
+        if (stiles.Length != width * length)
         {
             Debug.LogError("Only " + stiles.Length + " found when initializing grid! " +
-                "Expected " + width * height + ".");
+                "Expected " + width * length + ".");
             return;
         }
 
-        grid = new STile[width, height];
-        foreach (STile t in stiles)
+        grid = new STile3D[width, length, height];
+        foreach (STile3D t in stiles)
         {
-            grid[t.x, t.y] = t;
+            grid[t.x, t.y, t.z] = t;
         }
     }
 
-    private void SetBGGrid(SGridBackground[] bgGridTiles) 
+    private void SetBGGrid(SGridBackground3D[] bgGridTiles) 
     {
-        bgGrid = new SGridBackground[width, height];
+        bgGrid = new SGridBackground3D[width, length, height];
         for (int i = 0; i < bgGridTiles.Length; i++)
         {
-            bgGrid[i % width, i / width] = bgGridTiles[i];
+            bgGrid[i % width, i / width, i / (width * length)] = bgGridTiles[i];
         }
     }
+
+
+    //IDK HOW IM GONNA IMPLEMENT THIS YET 
 
     // Returns a string like:   123_6##_4#5
     // for a grid like:  1 2 3
@@ -137,13 +145,14 @@ public class SGrid : MonoBehaviour
     //        (0, 0) ->  4 . 5
     public static string GetGridString()
     {
-        string s = "";
-        for (int y = current.height - 1; y >= 0; y--)
+        
+        string s = "";/* 
+        for (int y = current.length - 1; y >= 0; y--)
         {
             for (int x = 0; x < current.width; x++)
             {
-                if (current.grid[x, y].isTileActive)
-                    s += current.grid[x, y].islandId;
+                if (current.grid[x, y, z].isTileActive)
+                    s += current.grid[x, y, z].islandId;
                 else
                     s += "#";
             }
@@ -151,37 +160,36 @@ public class SGrid : MonoBehaviour
             {
                 s += "_";
             }
-        }
+        }*/
         return s;
     }
 
     //L: islandId is the id of the corresponding tile in the puzzle doc
-    public STile GetStile(int islandId)
+    public STile3D GetStile(int islandId)
     {
-        foreach (STile t in stiles)
+        foreach (STile3D t in stiles)
             if (t.islandId == islandId)
                 return t;
-                
         return null;
     }
 
     //C: returns a list of active stiles
-    public List<STile> GetActiveTiles()
+    public List<STile3D> GetActiveTiles()
     {
-        List<STile> stileList = new List<STile>();
-        foreach(STile tile in stiles)
+        List<STile3D> stileList = new List<STile3D>();
+        foreach(STile3D tile in stiles)
             if(tile.isTileActive)
                 stileList.Add(tile);
         return stileList;
     }
 
-    //L: This mainly checks if any of the tiles involved in SMove 
+    //L: This mainly checks if any of the tiles involved in SMove3D 
     //D: this is should also not really be relied on
-    public bool CanMove(SMove move)
+    public bool CanMove(SMove3D move)
     {
-        foreach (Vector4Int m in move.moves)
+        foreach (Movement m in move.moves)
         {
-            if (!grid[m.x, m.y].CanMove(m.z, m.w))
+            if (!grid[m.startLoc.x, m.startLoc.y, m.startLoc.z].CanMove(m.endLoc))
             {
                 return false;
             }
@@ -222,17 +230,17 @@ public class SGrid : MonoBehaviour
 
     // Make sure to check if you CanMove() before moving
     //L: Updates internal state (the grid[,]) based on result of SMove. See Move in SGridAnimator for the actual moving of the tiles.
-    public void Move(SMove move)
+    public void Move(SMove3D move)
     {
 
         gridAnimator.Move(move);
 
-        STile[,] newGrid = new STile[width, height];
-        System.Array.Copy(grid, newGrid, width * height);
-        foreach (Vector4Int m in move.moves)
+        STile3D[,,] newGrid = new STile3D[width, length, height];
+        System.Array.Copy(grid, newGrid, width * length * height);
+        foreach (Movement m in move.moves)
         {
             //grid[m.x, m.y].SetGridPosition(m.z, m.w);
-            newGrid[m.z, m.w] = grid[m.x, m.y];
+            newGrid[m.endLoc.x, m.endLoc.y, m.endLoc.z] = grid[m.startLoc.x, m.startLoc.y, m.startLoc.z];
             //Debug.Log("Setting " + m.x + " " + m.y + " to " + m.z + " " + m.w);
         }
         grid = newGrid;
@@ -244,7 +252,7 @@ public class SGrid : MonoBehaviour
 
     public void EnableStile(int islandId)
     {
-        foreach (STile s in grid)
+        foreach (STile3D s in grid)
         {
             if (s.islandId == islandId)
             {
@@ -254,7 +262,7 @@ public class SGrid : MonoBehaviour
         }
     }
 
-    public virtual void EnableStile(STile stile)
+    public virtual void EnableStile(STile3D stile)
     {
         stile.SetTileActive(true);
         UIArtifact.AddButton(stile.islandId);
@@ -285,12 +293,12 @@ public class SGrid : MonoBehaviour
         Debug.Log("Loading saved data for " + myArea + "...");
 
         // setting grids... similar to initialization
-        STile[,] newGrid = new STile[width, height];
+        STile3D[,,] newGrid = new STile3D[width, length, height];
         foreach (SGridData.STileData td in sgridData.grid) 
         {
-            STile stile = GetStile(td.islandId); 
-            newGrid[td.x, td.y] = stile;
-            stile.SetSTile(td.isTileActive, td.x, td.y);
+            STile3D stile = GetStile(td.islandId); 
+            newGrid[td.x, td.y, td.z] = stile;
+            stile.SetSTile(td.isTileActive, td.x, td.y, td.z);
         }
         grid = newGrid;
     }
@@ -301,16 +309,17 @@ public class SGrid : MonoBehaviour
         // Debug.Log("Checking completions!");
         // ineffecient lol
         for (int x = 0; x < current.width; x++) {
-            for (int y = 0; y < current.width; y++) {
-                // int tid = current.targetGrid[x, y];
-                string tids = current.targetGrid[(current.height - y - 1) * current.width + x].ToString();
-                if (tids == "*") 
-                {
-                    UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
-                }
-                else {
-                    int tid = int.Parse(tids);
-                    UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+            for (int y = 0; y < current.length; y++) {
+                for (int z = 0; z < current.height; z++) {
+                    string tids = current.targetGrid[(current.length - y - 1) * current.width + x].ToString();
+                    if (tids == "*") 
+                    {
+                        UIArtifact3D.SetButtonComplete(current.grid[x, y, z].islandId, true);
+                    }
+                    else {
+                        int tid = int.Parse(tids);
+                        UIArtifact3D.SetButtonComplete(tid, current.grid[x, y, z].islandId == tid);
+                    }
                 }
             }
         }

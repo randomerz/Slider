@@ -5,44 +5,41 @@ using UnityEngine;
 //L: A representation of a move made on the artifact, as well as the borders around the move that prevent the player from clipping.
 public class SMove3D
 {
-    public List<Vector4Int> moves = new List<Vector4Int>(); // move tile at (x, y) to (z, w)
+    public List<Movement> moves = new List<Movement>(); // move tile at (x, y) to (z, w)
 
     //L: Every (x, y) position that is touched by moves
-    public HashSet<Vector2Int> positions = new HashSet<Vector2Int>();   
+    public HashSet<Vector3Int> positions = new HashSet<Vector3Int>();   
     //L: key - (x, y) position of a tile
     //L: Value - A list of values taken from 0, 1, 2, 3 (maximum of 4 values) for each tile side denoting which borderse are on.
-    public Dictionary<Vector2Int, List<int>> borders = new Dictionary<Vector2Int, List<int>>();
+    public Dictionary<Vector3Int, List<int>> borders = new Dictionary<Vector3Int, List<int>>();
 
-    public Dictionary<Vector2Int, List<int>> GenerateBorders()
+    public Dictionary<Vector3Int, List<int>> GenerateBorders()
     {
         positions.Clear();
         borders.Clear();
 
-        foreach (Vector4Int m in moves)
+        foreach (Movement m in moves)
         {
             // for the cases where its swapping more than two
-            for (int x = Mathf.Min(m.x, m.z); x <= Mathf.Max(m.x, m.z); x++)
-            {
-                for (int y = Mathf.Min(m.y, m.w); y <= Mathf.Max(m.y, m.w); y++)
-                {
-                    positions.Add(new Vector2Int(x, y));
-                }
-            }
+            for (int x = Mathf.Min(m.startLoc.x, m.endLoc.x); x <= Mathf.Max(m.startLoc.x, m.endLoc.x); x++)
+                for (int y = Mathf.Min(m.startLoc.y, m.endLoc.y); y <= Mathf.Max(m.startLoc.y, m.endLoc.y); y++)
+                    for (int z = Mathf.Min(m.startLoc.z, m.endLoc.z); z <= Mathf.Max(m.startLoc.z, m.endLoc.z); z++)
+                        positions.Add(new Vector3Int(x, y, z));
         }
 
-        foreach (Vector2Int p in positions)
+        foreach (Vector3Int p in positions)
         {
-            AddBorder(p, 0, p + Vector2Int.right);
-            AddBorder(p, 1, p + Vector2Int.up);
-            AddBorder(p, 2, p + Vector2Int.left);
-            AddBorder(p, 3, p + Vector2Int.down);
+            AddBorder(p, 0, p + Vector3Int.right);
+            AddBorder(p, 1, p + Vector3Int.up);
+            AddBorder(p, 2, p + Vector3Int.left);
+            AddBorder(p, 3, p + Vector3Int.down);
         }
 
         return borders;
     }
 
     //L: side - 0, 1, 2, 3 corresponding to right, up, left, and down sides of a tile
-    private void AddBorder(Vector2Int pos1, int side, Vector2Int pos2)
+    private void AddBorder(Vector3Int pos1, int side, Vector3Int pos2)
     {
         if (!borders.ContainsKey(pos1))
             borders.Add(pos1, new List<int>());
@@ -71,7 +68,7 @@ public class SMove3D
     }
 
     // DC: check if this SMove and other SMove share the same (x, y) in position
-    public virtual bool Overlaps(SMove other)
+    public virtual bool Overlaps(SMove3D other)
     {
         if (other == null) return false;
 
@@ -84,7 +81,7 @@ public class SMove3D
             other.GenerateBorders();
         }
 
-        foreach (Vector2Int pos in positions)
+        foreach (Vector3Int pos in positions)
         {
             if (other.positions.Contains(pos))
             {
@@ -96,90 +93,53 @@ public class SMove3D
     }
 }
 
-public class Vector4Int
+//a movment between 2 points, stored as a pair of vector 3s (this is a logical way to store this type of information)
+public class Movement 
 {
-    public int x; // x, y is the original location
-    public int y;
-    public int z; // z, w is the target location
-    public int w;
+    public Vector3Int startLoc;
+    public Vector3Int endLoc;
 
-    public Vector4Int(int x, int y, int z, int w)
+    public Movement(Vector3Int s, Vector3Int e)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
+        startLoc = s;
+        endLoc = e;
+    }
+
+    public Movement(int x1, int y1, int z1, int x2, int y2, int z2)
+    {
+        startLoc = new Vector3Int(x1, y1, z1);
+        endLoc = new Vector3Int(x2, y2, z2);
     }
 }
 
 
+
 //L: Swapping includes moving a tile to an empty spot!
-public class SMoveSwap : SMove
+public class SMoveSwap3D : SMove3D
 {
-    public SMoveSwap(int x1, int y1, int x2, int y2)
+    public SMoveSwap3D(int x1, int y1, int z1, int x2, int y2, int z2)
     {
-        moves.Add(new Vector4Int(x1, y1, x2, y2));
-        moves.Add(new Vector4Int(x2, y2, x1, y1));
+        moves.Add(new Movement(x1, y1, z1, x2, y2, z2));
+        moves.Add(new Movement(x2, y2, z2, x1, y1, z1));
     }
 
-    public Vector4Int GetSwapAsVector()
+    public Movement GetSwapAsMovement()
     {
         return moves[0];
     }
 }
 
-public class SMoveLinkedSwap : SMove
+public class SSlideSwap3D : SMove3D
 {
-    public SMoveLinkedSwap(int x1, int y1, int x2, int y2, int linkx, int linky)
-    {
-        moves.Add(new Vector4Int(x1, y1, x2, y2));
-
-        int dx = x2 - x1;
-        int dy = y2 - y1;
-        moves.Add(new Vector4Int(linkx, linky, linkx + dx, linky + dy));
-
-        //L: Need to handle the edge case where the link tile moves to the prev tile's position
-        if (linkx+dx == x1 && linky+dy == y1)
-        {
-            //L: Move the empty spot to where the link tile used to be (which is now empty)
-            moves.Add(new Vector4Int(x2, y2, linkx, linky));
-        } else
-        {
-            //L: Move both empty spots to where the cooresponding tile used to be (like with normal swaps)
-            moves.Add(new Vector4Int(linkx + dx, linky + dy, linkx, linky));
-            moves.Add(new Vector4Int(x2, y2, x1, y1));
-        }
-    }
-}
-
-//L: Used primarily in the "Ocean" area for rotating tiles around
-public class SMoveRotate : SMove
-{
-    public bool isCCW;
-
-    public SMoveRotate(List<Vector2Int> points, bool isCCW)
+    public SSlideSwap3D(List<Movement> points)
     {
         for (int i = 0; i < points.Count; i++)
         {
-            moves.Add(new Vector4Int(points[i].x, points[i].y, points[(i + 1) % points.Count].x, points[(i + 1) % points.Count].y));
-        }
-
-        this.isCCW = isCCW; 
-    }
-}
-
-public class SSlideSwap : SMove
-{
-    public SSlideSwap(List<Vector4Int> points)
-    {
-        for (int i = 0; i < points.Count; i++)
-        {
-            // Debug.Log(points[i].x + " " + points[i].y + " " + points[i].z + " " + points[i].w);
-            moves.Add(new Vector4Int(points[i].x, points[i].y, points[i].z, points[i].w));
+            moves.Add(new Movement(points[i].startLoc, points[i].endLoc));
         }
     }
 
-    public override bool Overlaps(SMove other)
+    public override bool Overlaps(SMove3D other)
     {
         return true;
     }

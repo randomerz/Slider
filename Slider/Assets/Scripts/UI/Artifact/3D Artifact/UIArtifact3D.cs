@@ -14,10 +14,10 @@ public class UIArtifact3D : MonoBehaviour
     protected List<ArtifactTileButton3D> moveOptionButtons = new List<ArtifactTileButton3D>();
 
     // DC: Current list of moves being performed 
-    protected List<SMove> activeMoves = new List<SMove>();
+    protected List<SMove3D> activeMoves = new List<SMove3D>();
     //L: Queue of moves to perform on the grid from the artifact
     //L: IMPORTANT NOTE: The top element in the queue is always the current move being executed.
-    protected Queue<SMove> moveQueue = new Queue<SMove>();
+    protected Queue<SMove3D> moveQueue = new Queue<SMove3D>();
     public int maxMoveQueueSize = 3;    //L: Max size of the queue.
 
     private static UIArtifact3D _instance;
@@ -25,13 +25,13 @@ public class UIArtifact3D : MonoBehaviour
     public void Awake()
     {
         _instance = this;
-        activeMoves = new List<SMove>();
-        moveQueue = new Queue<SMove>();
+        activeMoves = new List<SMove3D>();
+        moveQueue = new Queue<SMove3D>();
     }
 
     public void Start()
     {
-        SGridAnimator.OnSTileMove += QueueCheckAfterMove;
+        SGridAnimator3D.OnSTileMove += QueueCheckAfterMove;
     }
 
     public static UIArtifact3D GetInstance()
@@ -124,7 +124,7 @@ public class UIArtifact3D : MonoBehaviour
             if(b == hovered && !swapped) 
             {
                 CheckAndSwap(dragged, hovered);
-                SGridAnimator.OnSTileMove += dragged.AfterStileMoveDragged;
+                SGridAnimator3D.OnSTileMove += dragged.AfterStileMoveDragged;
                 swapped = true;
             }
         }
@@ -137,7 +137,7 @@ public class UIArtifact3D : MonoBehaviour
 
     public void OnDisable()
     {
-        moveQueue = new Queue<SMove>();
+        moveQueue = new Queue<SMove3D>();
         //Debug.Log("Queue Cleared!");
     }
 
@@ -227,22 +227,23 @@ public class UIArtifact3D : MonoBehaviour
         //     }
         // }
 
-        Vector2Int[] dirs = {
-            Vector2Int.right,
-            Vector2Int.up,
-            Vector2Int.left,
-            Vector2Int.down
+        Vector3Int[] dirs = {
+            Vector3Int.right,
+            Vector3Int.up,
+            Vector3Int.left,
+            Vector3Int.down,
+            Vector3Int.forward,
+            Vector3Int.back
         };
 
-        foreach (Vector2Int dir in dirs)
+        foreach (Vector3Int dir in dirs)
         {
-            ArtifactTileButton3D b = GetButton(button.x + dir.x, button.y + dir.y);
+            ArtifactTileButton3D b = GetButton(button.x + dir.x, button.y + dir.y, button.z + dir.z);
             int i = 1;
             while (b != null && !b.isTileActive)
             {
                 moveOptionButtons.Add(b);
-                b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
-
+                b = GetButton(button.x + dir.x * i, button.y + dir.y * i, button.z + dir.z);
                 i++;
             }
         }
@@ -255,27 +256,29 @@ public class UIArtifact3D : MonoBehaviour
     {
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
-        buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
-        buttonEmpty.SetPosition(oldCurrX, oldCurrY);
+        int oldCurrZ = buttonCurrent.z;
+        buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y, buttonEmpty.z);
+        buttonEmpty.SetPosition(oldCurrX, oldCurrY, oldCurrZ);
     }
 
     //L: updateGrid - if this is false, it will just update the UI without actually moving the tiles.
     //L: Returns if the swap was successful.
     protected virtual bool CheckAndSwap(ArtifactTileButton3D buttonCurrent, ArtifactTileButton3D buttonEmpty)
     {
-        STile[,] currGrid = SGrid.current.GetGrid();
+        STile3D[,,] currGrid = SGrid3D.current.GetGrid();
 
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
-        SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y);
+        int z = buttonCurrent.z;
+        SMove3D swap = new SMoveSwap3D(x, y, z, buttonEmpty.x, buttonEmpty.y, buttonEmpty.z);
  
         // Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
         // Debug.Log(buttonCurrent + " " + buttonEmpty);
-        if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
+        if (SGrid3D.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
         {
             //L: Do the move
 
-            QueueCheckAndAdd(new SMoveSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y));
+            QueueCheckAndAdd(new SMoveSwap3D(buttonCurrent.x, buttonCurrent.y, buttonCurrent.z, buttonEmpty.x, buttonEmpty.y, buttonEmpty.z));
             SwapButtons(buttonCurrent, buttonEmpty);
 
             // Debug.Log("Added move to queue: current length " + moveQueue.Count);
@@ -293,7 +296,7 @@ public class UIArtifact3D : MonoBehaviour
         }
     }
 
-    public void QueueCheckAndAdd(SMove move)
+    public void QueueCheckAndAdd(SMove3D move)
     {
         if (moveQueue.Count < maxMoveQueueSize)
         {
@@ -324,7 +327,7 @@ public class UIArtifact3D : MonoBehaviour
     }
     */
 
-    protected virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    protected virtual void QueueCheckAfterMove(object sender, SGridAnimator3D.OnTileMoveArgs3D e)
     {
         if (e != null)
         {
@@ -340,9 +343,9 @@ public class UIArtifact3D : MonoBehaviour
         {
             //Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
 
-            SMove peekedMove = moveQueue.Peek();
+            SMove3D peekedMove = moveQueue.Peek();
             // check if the peekedMove interferes with any of current moves
-            foreach (SMove m in activeMoves)
+            foreach (SMove3D m in activeMoves)
             {
                 if (m.Overlaps(peekedMove))
                 {
@@ -354,7 +357,7 @@ public class UIArtifact3D : MonoBehaviour
             // Debug.Log("Move doesn't conflict! Performing move.");
 
             // doesn't interfere! so do the move
-            SGrid.current.Move(peekedMove);
+            SGrid3D.current.Move(peekedMove);
             activeMoves.Add(moveQueue.Dequeue());
             QueueCheckAfterMove(this, null);
         }
@@ -394,23 +397,23 @@ public class UIArtifact3D : MonoBehaviour
         }
     }
 
-    public static void SetButtonPos(int islandId, int x, int y)
+    public static void SetButtonPos(int islandId, int x, int y, int z)
     {
         foreach (ArtifactTileButton3D b in _instance.buttons)
         {
             if (b.islandId == islandId)
             {
-                b.SetPosition(x, y);
+                b.SetPosition(x, y, z);
                 return;
             }
         }
     }
 
-    protected ArtifactTileButton3D GetButton(int x, int y)
+    protected ArtifactTileButton3D GetButton(int x, int y, int z)
     {
         foreach (ArtifactTileButton3D b in _instance.buttons)
         {
-            if (b.x == x && b.y == y)
+            if (b.x == x && b.y == y && b.z == z)
             {
                 return b;
             }
