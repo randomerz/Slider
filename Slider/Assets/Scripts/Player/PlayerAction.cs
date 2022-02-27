@@ -37,11 +37,6 @@ public class PlayerAction : MonoBehaviour
 
     private void Update()
     {
-        // LayerFilter = new ContactFilter2D{
-        //     useLayerMask = true,
-        //     layerMask = dropCollidingMask
-        // };
-        LayerFilter.useLayerMask = true;
         LayerFilter.SetLayerMask(dropCollidingMask);
         pickedItem = PlayerInventory.GetCurrentItem();
         if (pickedItem != null && !isPicking) 
@@ -107,7 +102,6 @@ public class PlayerAction : MonoBehaviour
             // find nearest
             if (nodes.Length > 0)
             {
-                Debug.Log("x");
                 isPicking = true;
 
                 Collider2D nearest = nodes[0];
