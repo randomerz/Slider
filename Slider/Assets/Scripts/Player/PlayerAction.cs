@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerAction : MonoBehaviour 
 {
@@ -9,13 +10,12 @@ public class PlayerAction : MonoBehaviour
     [SerializeField] private Transform itemPickupLocation;
     [SerializeField] private GameObject itemDropIndicator;
     private bool canDrop;
-    
     private int actionsAvailable = 0;
     [SerializeField] private GameObject actionAvailableIndicator;
-
     [SerializeField] private LayerMask itemMask;
     [SerializeField] private LayerMask dropCollidingMask;
-    
+    private List<RaycastHit2D> RayCastResults = new List<RaycastHit2D>();
+    private ContactFilter2D LayerFilter;
     private InputSettings controls;
 
     private void Awake() 
@@ -37,6 +37,12 @@ public class PlayerAction : MonoBehaviour
 
     private void Update()
     {
+        // LayerFilter = new ContactFilter2D{
+        //     useLayerMask = true,
+        //     layerMask = dropCollidingMask
+        // };
+        LayerFilter.useLayerMask = true;
+        LayerFilter.SetLayerMask(dropCollidingMask);
         pickedItem = PlayerInventory.GetCurrentItem();
         if (pickedItem != null && !isPicking) 
         {
@@ -46,16 +52,17 @@ public class PlayerAction : MonoBehaviour
             
             // check raycast
             Vector3 raycastDir = GetIndicatorLocation() - transform.position;
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, raycastDir, 1.5f, dropCollidingMask);
-            if (hit) 
-            {
-                canDrop = false;
-                itemDropIndicator.SetActive(false);
-            }
-            else 
-            {
-                canDrop = true;
-                itemDropIndicator.SetActive(true);
+            //RaycastHit2D hit = Physics2D.Raycast(transform.position, raycastDir, 1.5f, dropCollidingMask);
+            int NumOfRayCastResult = Physics2D.Raycast(transform.position, raycastDir, LayerFilter, RayCastResults, 1.5f);
+            for (int i = 0; i < NumOfRayCastResult; i++){
+                if (RayCastResults[i]) {
+                    canDrop = false;
+                    itemDropIndicator.SetActive(false);
+                }
+                else {
+                    canDrop = true;
+                    itemDropIndicator.SetActive(true);
+                }
             }
         }
         else if (pickedItem == null)
