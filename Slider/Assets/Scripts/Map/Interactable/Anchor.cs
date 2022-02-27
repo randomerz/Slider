@@ -10,7 +10,8 @@ public class Anchor : Item
 
     public void Start()
     {
-        GetComponentInParent<STile>().hasAnchor = true;
+        if (GetComponentInParent<STile>() != null)
+            GetComponentInParent<STile>().hasAnchor = true;
     }
 
     private void OnDisable()
