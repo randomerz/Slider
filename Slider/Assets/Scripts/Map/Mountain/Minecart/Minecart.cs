@@ -40,7 +40,7 @@ public class Minecart : Item
         Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
         if (hit == null)
             return null;
-        if(hit.GetComponent<STile>())
+        if(hit.GetComponent<STile>()) //Use Stile RM
         {
             STile hitTile = hit.GetComponent<STile>();
             Tilemap railmap = hitTile.stileTileMaps.GetComponent<STileTilemap>().minecartRails;
@@ -51,7 +51,7 @@ public class Minecart : Item
             gameObject.transform.parent = hitTile.transform.Find("Objects").transform;
             return hitTile;
         }
-        else if(hit.GetComponent<STileTilemap>())
+        else if(hit.GetComponent<STileTilemap>()) //use border RM
         {
             Tilemap railmap = hit.GetComponent<STileTilemap>().minecartRails;
             railManager = railmap.GetComponent<RailManager>();
@@ -129,44 +129,20 @@ public class Minecart : Item
         if(railManager.railLocations.Contains(targetTilePos))
         {
             targetTile = railManager.railMap.GetTile(targetTilePos) as RailTile;
+            int targetConnection = targetTile.connections[(currentDirection + 2) % 4];
+            if(targetConnection == -1) //this is a broken track, derail
+            {
+                Derail();
+                return;
+            }    
+
             targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) 
-                         + 0.5f * (Vector3) GetTileOffsetVector(
-                         targetTile.connections[(currentDirection + 2) % 4]) + offSet;
+                         + 0.5f * (Vector3) GetTileOffsetVector(targetConnection) + offSet;
             currentDirection = targetTile.connections[(currentDirection + 2) % 4];
         }
         else
         {
             LookForRailManager();
-            /*List<STile> stileList = sGrid.GetActiveTiles();
-            List<RailManager> rmList = new List<RailManager>();
-            Vector3Int targetLoc;
-            foreach(STile tile in stileList)
-            {
-                RailManager otherRM = tile.stileTileMaps.GetComponentInChildren<RailManager>();
-                if(otherRM != null)
-                    rmList.Add(otherRM);
-            }
-            foreach(RailManager rm in rmList)
-            {
-                targetLoc = rm.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
-                if(rm.railLocations.Contains(targetLoc))
-                {
-                    railManager = rm;
-                    SnapToRailNewSTile(targetLoc);
-                    gameObject.transform.parent = rm.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
-                    return;
-                }
-            }
-            targetLoc = borderRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
-                if(rm.railLocations.Contains(targetLoc))
-                {
-                    railManager = rm;
-                    SnapToRailNewSTile(targetLoc);
-                    gameObject.transform.parent = rm.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
-                    return;
-                }
-            StopMoving();
-            //Derail();*/
         }
         
     }
@@ -185,7 +161,7 @@ public class Minecart : Item
                 if(otherRM != null)
                     rmList.Add(otherRM);
             }
-            foreach(RailManager rm in rmList)
+            foreach(RailManager rm in rmList) //look and see if the next location overlaps with a location of a rail on another STile
             {
                 targetLoc = rm.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
                 if(rm.railLocations.Contains(targetLoc))
@@ -197,7 +173,7 @@ public class Minecart : Item
                 }
             }
             targetLoc = borderRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
-            if(borderRM.railLocations.Contains(targetLoc))
+            if(borderRM.railLocations.Contains(targetLoc)) //look and see if the next location overlaps with a location of a rail on the outside
             {
                 railManager = borderRM;
                 SnapToRailNewSTile(targetLoc);

@@ -8,7 +8,6 @@ public class STile : MonoBehaviour
     public int islandId = -1;
     public int x = -1;
     public int y = -1;
-    public int z = 0;
 
     public bool hasAnchor;
     public STile linkTile; // Probably should be a list, set in instpector

@@ -96,7 +96,7 @@ public class SMove
     }
 }
 
-//a movment between 2 points, stored as a pair of vector 2s (this is a logical way to store this type of information)
+//a movment between 2 points, stored as a pair of vector 2s
 public class Movement 
 {
     public Vector2Int startLoc;

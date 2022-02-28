@@ -8,7 +8,14 @@ using UnityEditor;
 
 public class RailTile : Tile
 {
-    public int[] connections = {-1, -1, -1, -1};
+    //Direction corresponance: 0 = East, 1 = North, 2 = West, 3 = South
+
+    //If the minecart enters in the direction of the index, this array contains the direction the minecart will leave the rail in
+    //If the direction is inaccesable, -1 is used
+    //for example, the EW straight has a connection array [2, -1, 0, -1] because entering from the east (0) leads to an exit to the west (2),
+    //entering to the west(2) leads to an exit to the east (0), and you cannot enter the rail from the north or south
+    public int[] connections = {-1, -1, -1, -1}; 
+    
     public int defaultDir = 0; //the direction that the minecart will begin traveling in by default
 
     #if UNITY_EDITOR
@@ -22,37 +29,4 @@ public class RailTile : Tile
     #endif
 }
 
-
-/*
-    private void Start() {
-    }
-    public override void RefreshTile(Vector3Int location, ITilemap tilemap)
-    {
-        for (int yd = -1; yd <= 1; yd++)
-            for (int xd = -1; xd <= 1; xd++)
-            {
-                Vector3Int position = new Vector3Int(location.x + xd, location.y + yd, location.z);
-                if (HasRailTile(tilemap, position))
-                    tilemap.RefreshTile(position);
-            }
-    }
-    
-    public override void GetTileData(Vector3Int location, ITilemap tilemap, ref TileData tileData)
-    {
-        tileData.sprite = sprites[state];
-    }
-
-    public void UpdateState(int num)
-    {
-        state = 1;
-        //GetTileData(this.);
-    }
-
-
-
-    private bool HasRailTile(ITilemap tilemap, Vector3Int position)
-    {
-        return tilemap.GetTile(position) == this;
-    }
-*/
 

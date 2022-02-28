@@ -22,7 +22,6 @@ public class SGridData
             islandId = stile.islandId;
             x = stile.x;
             y = stile.y;
-            z = stile.z;
         }
     }
 

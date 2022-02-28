@@ -374,12 +374,12 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   currentDirection: 0
-  railManager: {fileID: 626678187}
+  railManager: {fileID: 0}
   isOnTrack: 0
   isMoving: 0
   currentTile: {fileID: 0}
   targetTile: {fileID: 0}
-  speed: 7
+  speed: 5
   offSet: {x: 0.5, y: 0.75, z: 0}
   sGrid: {fileID: 1324462115}
   borderRM: {fileID: 1373438415}
@@ -5057,30 +5057,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7550810e46c40034fb7ad10d555f735a, type: 2}
   - {fileID: 11400000, guid: a935193eb0bb9554e9dc1f3c44a99fc7, type: 2}
   - {fileID: 11400000, guid: e3560990e37c1034ea1cf7758e3f7d77, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   stateOneTiles:
   - {fileID: 11400000, guid: b41ab881193a327419dd2a91ce8192b6, type: 2}
   - {fileID: 11400000, guid: 728f0d0f82b6f8746bbc879037d3bbc7, type: 2}
@@ -5094,20 +5070,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 959bcae95e856aa43a2f0188f1674179, type: 2}
   - {fileID: 11400000, guid: e3560990e37c1034ea1cf7758e3f7d77, type: 2}
   - {fileID: 11400000, guid: a935193eb0bb9554e9dc1f3c44a99fc7, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   railLocations: []
-  mc: {fileID: 0}
+  mc: {fileID: 50592448}
 --- !u!483693784 &626678188
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -7217,68 +7181,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   railMap: {fileID: 1373438416}
-  stateZeroTiles:
-  - {fileID: 11400000, guid: 728f0d0f82b6f8746bbc879037d3bbc7, type: 2}
-  - {fileID: 11400000, guid: b41ab881193a327419dd2a91ce8192b6, type: 2}
-  - {fileID: 11400000, guid: 115e1195afd409244a98b40672fbb20d, type: 2}
-  - {fileID: 11400000, guid: 6ffb7598043ecb64ca9c96f799209404, type: 2}
-  - {fileID: 11400000, guid: 646ed5f09e39346488fdad7f4ed1eac9, type: 2}
-  - {fileID: 11400000, guid: cc673843550df6e4a8fd2b9fec62f01c, type: 2}
-  - {fileID: 11400000, guid: 4aa4fa3e805f9424289a8c6ff0a90ba7, type: 2}
-  - {fileID: 11400000, guid: 62216d40e45f64d43b00f55fb9cedecb, type: 2}
-  - {fileID: 11400000, guid: 959bcae95e856aa43a2f0188f1674179, type: 2}
-  - {fileID: 11400000, guid: 7550810e46c40034fb7ad10d555f735a, type: 2}
-  - {fileID: 11400000, guid: a935193eb0bb9554e9dc1f3c44a99fc7, type: 2}
-  - {fileID: 11400000, guid: e3560990e37c1034ea1cf7758e3f7d77, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  stateOneTiles:
-  - {fileID: 11400000, guid: b41ab881193a327419dd2a91ce8192b6, type: 2}
-  - {fileID: 11400000, guid: 728f0d0f82b6f8746bbc879037d3bbc7, type: 2}
-  - {fileID: 11400000, guid: 6ffb7598043ecb64ca9c96f799209404, type: 2}
-  - {fileID: 11400000, guid: 115e1195afd409244a98b40672fbb20d, type: 2}
-  - {fileID: 11400000, guid: cc673843550df6e4a8fd2b9fec62f01c, type: 2}
-  - {fileID: 11400000, guid: 646ed5f09e39346488fdad7f4ed1eac9, type: 2}
-  - {fileID: 11400000, guid: 62216d40e45f64d43b00f55fb9cedecb, type: 2}
-  - {fileID: 11400000, guid: 4aa4fa3e805f9424289a8c6ff0a90ba7, type: 2}
-  - {fileID: 11400000, guid: 7550810e46c40034fb7ad10d555f735a, type: 2}
-  - {fileID: 11400000, guid: 959bcae95e856aa43a2f0188f1674179, type: 2}
-  - {fileID: 11400000, guid: e3560990e37c1034ea1cf7758e3f7d77, type: 2}
-  - {fileID: 11400000, guid: a935193eb0bb9554e9dc1f3c44a99fc7, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  stateZeroTiles: []
+  stateOneTiles: []
   railLocations: []
   mc: {fileID: 50592448}
 --- !u!1839735485 &1373438416
@@ -8089,30 +7993,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7550810e46c40034fb7ad10d555f735a, type: 2}
   - {fileID: 11400000, guid: a935193eb0bb9554e9dc1f3c44a99fc7, type: 2}
   - {fileID: 11400000, guid: e3560990e37c1034ea1cf7758e3f7d77, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   stateOneTiles:
   - {fileID: 11400000, guid: b41ab881193a327419dd2a91ce8192b6, type: 2}
   - {fileID: 11400000, guid: 728f0d0f82b6f8746bbc879037d3bbc7, type: 2}
@@ -8126,18 +8006,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 959bcae95e856aa43a2f0188f1674179, type: 2}
   - {fileID: 11400000, guid: e3560990e37c1034ea1cf7758e3f7d77, type: 2}
   - {fileID: 11400000, guid: a935193eb0bb9554e9dc1f3c44a99fc7, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   railLocations: []
   mc: {fileID: 50592448}
 --- !u!483693784 &1690827832
@@ -11340,30 +11208,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7550810e46c40034fb7ad10d555f735a, type: 2}
   - {fileID: 11400000, guid: a935193eb0bb9554e9dc1f3c44a99fc7, type: 2}
   - {fileID: 11400000, guid: e3560990e37c1034ea1cf7758e3f7d77, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   stateOneTiles:
   - {fileID: 11400000, guid: b41ab881193a327419dd2a91ce8192b6, type: 2}
   - {fileID: 11400000, guid: 728f0d0f82b6f8746bbc879037d3bbc7, type: 2}
@@ -11377,18 +11221,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 959bcae95e856aa43a2f0188f1674179, type: 2}
   - {fileID: 11400000, guid: e3560990e37c1034ea1cf7758e3f7d77, type: 2}
   - {fileID: 11400000, guid: a935193eb0bb9554e9dc1f3c44a99fc7, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   railLocations: []
   mc: {fileID: 50592448}
 --- !u!483693784 &1935984645
