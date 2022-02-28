@@ -126,7 +126,11 @@ public class STile : MonoBehaviour
 
     // CanRotate() => no anchor and not linked
 
-    
+    public void SetGridPosition(Vector2Int v)
+    {
+        SetGridPosition(v.x, v.y);
+    }
+
     // Use this one usually!
     public void SetGridPosition(int x, int y)
     {
