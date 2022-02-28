@@ -5,24 +5,20 @@ using UnityEngine.Tilemaps;
 
 public class CaveLight : MonoBehaviour
 {
-    public bool lightOn;
-    public bool lightOnStart;
+    public bool LightOn { get; private set; }
 
-    public enum LightType
+    [SerializeField]
+    internal bool lightOnStart;
+
+    private Texture2D _lightMask;
+
+    public class OnLightSwitchedArgs
     {
-        UniDirectional,
-        AllDirections,
+        public bool lightOn;
     }
-    public LightType type;
+    public static event System.EventHandler<OnLightSwitchedArgs> OnLightSwitched;
 
-    public class LightEventArgs
-    {
-    }
-    public static event System.EventHandler<LightEventArgs> lightOnEvent;
-    public static event System.EventHandler<LightEventArgs> lightOffEvent;
-
-    // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         SetLightOn(lightOnStart);
     }
@@ -34,37 +30,32 @@ public class CaveLight : MonoBehaviour
 
     public void SetLightOn(bool value)
     {
-        lightOn = value;
-
+        LightOn = value;
+        Debug.Log("Light " + gameObject.name + " is " + (value ? "on" : "off"));
         if (LightManager.instance != null)
         {
-            LightManager.instance.GenerateLightMask();
+            LightManager.instance.UpdateLightMaskAll();
             LightManager.instance.UpdateMaterials();
-            if (value)
-            {
-                lightOnEvent?.Invoke(this, new LightEventArgs { });
-            }
-            else
-            {
-                lightOffEvent?.Invoke(this, new LightEventArgs { });
-            }
         }
+
+        OnLightSwitched?.Invoke(this, new OnLightSwitchedArgs { lightOn = value });
     }
 
     /* L: Gets the light mask for THIS LIGHT ONLY (see LightManager.cs for the whole world) */
-    public Texture2D GetLightMask(Texture2D heightMask, int worldToMaskDX, int worldToMaskDY, int maskSizeX, int maskSizeY)
+    internal Texture2D GetLightMask(Texture2D heightMask, int worldToMaskDX, int worldToMaskDY, int maskSizeX, int maskSizeY)
     {
+
         if (heightMask.width != maskSizeX && heightMask.height != maskSizeY)
         {
             Debug.LogError("heightMask did not match expected dimensions in CaveLight.cs");
         }
 
-        Texture2D mask = new Texture2D(maskSizeX, maskSizeY);
+        _lightMask = new Texture2D(maskSizeX , maskSizeY);
         for (int x = 0; x < maskSizeX; x++)
         {
             for (int y = 0; y < maskSizeY; y++)
             {
-                mask.SetPixel(x, y, Color.black);
+                _lightMask.SetPixel(x, y, Color.black);
             }
         }
         Vector2Int lightPos = new Vector2Int((int)transform.position.x, (int)transform.position.y);
@@ -90,7 +81,7 @@ public class CaveLight : MonoBehaviour
                         break;
                     }
                     
-                    mask.SetPixel(maskX, maskY, Color.white);
+                    _lightMask.SetPixel(maskX, maskY, Color.white);
 
                     // L: Hit Wall Check (Note: This is after so that the start of the tile still gets lit, but nothing else.
                     if (heightMask.GetPixel(maskX, maskY).r > 0.5)
@@ -102,49 +93,9 @@ public class CaveLight : MonoBehaviour
             }
         }
 
-        mask.Apply();
-        return mask;
+        _lightMask.Apply();
+        return _lightMask;
     }
-
-    /*
-    public void UpdateLightMap(bool value)
-    {
-        
-        grid.SetLit(stile.x, stile.y, value);
-        switch (type)
-        {
-            case LightType.UniDirectional:
-                grid.SetLit(stile.x + lightDir.x, stile.y + lightDir.y, value);
-                break;
-            case LightType.AllDirections:
-                grid.SetLit(stile.x + 1, stile.y, value);
-                grid.SetLit(stile.x, stile.y + 1, value);
-                grid.SetLit(stile.x - 1, stile.y, value);
-                grid.SetLit(stile.x, stile.y - 1, value);
-                break;
-        }
-        
-    }
-    
-    public void UpdateLightMap(int x, int y, bool value)
-    {
-        
-        grid.SetLit(x, y, value);
-        switch (type)
-        {
-            case LightType.UniDirectional:
-                grid.SetLit(x + lightDir.x, y + lightDir.y, value);
-                break;
-            case LightType.AllDirections:
-                grid.SetLit(x + 1, y, value);
-                grid.SetLit(x, y + 1, value);
-                grid.SetLit(x - 1, y, value);
-                grid.SetLit(x, y - 1, value);
-                break;
-        }
-        
-    }
-    */
 
     //L: Below is for the player to interact with the light, but it's kinda useless since we're not doing that anymore
     /*

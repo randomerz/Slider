@@ -17,9 +17,8 @@ public class SGridAnimator : MonoBehaviour
         public Vector2Int prevPos;
         public SMove smove; // the SMove this Move() was a part of
     }
-    public static event System.EventHandler<OnTileMoveArgs> OnSTileMove;
-    
-
+    public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
+    public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
 
     public void Move(SMove move)
     {
@@ -47,6 +46,14 @@ public class SGridAnimator : MonoBehaviour
     {
         float t = 0;
         //isMoving = true;
+
+
+        OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = moveCoords.startLoc,
+            smove = move
+        });
 
         stile.SetMovingDirection(GetMovingDirection(moveCoords.startLoc, moveCoords.endLoc));
         
@@ -81,7 +88,12 @@ public class SGridAnimator : MonoBehaviour
         stile.SetMovingDirection(Vector2.zero);
         stile.SetGridPosition(moveCoords.endLoc);
 
-        InvokeOnSTileMove(stile, moveCoords.startLoc, move);
+        OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = moveCoords.startLoc,
+            smove = move
+        });
     }
 
     private IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders)
@@ -165,13 +177,5 @@ public class SGridAnimator : MonoBehaviour
         CameraShake.Shake(0.5f, 1f);
         AudioManager.Play("Slide Explosion");
 
-    }
-
-
-    private void InvokeOnSTileMove(STile stile, Vector2Int prevPos, SMove move)
-    {
-        OnSTileMove?.Invoke(this, new OnTileMoveArgs { 
-            stile = stile, prevPos = prevPos, smove = move 
-        });
     }
 }
