@@ -11,6 +11,19 @@ public class CaveSTile : STile
 
     public List<GameObject> objectsThatBlockLight;
 
+    public Texture2D HeightMask
+    {
+        get
+        {
+            if (_heightMask == null)
+            {
+                GenerateHeightMask();
+            }
+            return _heightMask;
+        }
+    }
+    private Texture2D _heightMask;
+
     private void Awake()
     {
         // base.Awake();
@@ -24,6 +37,8 @@ public class CaveSTile : STile
                 objectsThatBlockLight.Add(o.gameObject);
             }
         }
+
+        SGridAnimator.OnSTileMoveEnd += UpdateLightingAfterMove;
     }
 
     private new void Start()
@@ -33,27 +48,40 @@ public class CaveSTile : STile
         base.Start();
     }
 
+    private new void Update()
+    {
+        base.Update();
+
+        if (LightManager.instance != null && this.GetMovingDirection() != Vector2.zero)
+        {
+            LightManager.instance.UpdateAll();
+        }
+    }
+
+    private void UpdateLightingAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (e.stile == this)
+        {
+            LightManager.instance.UpdateAll();
+        }
+    }
+
     public override void SetTileActive(bool isTileActive)
     {
         base.SetTileActive(isTileActive);
         
-        if (isTileActive)
+        if (isTileActive && LightManager.instance != null)
         {
-            SGridAnimator.OnSTileMove += UpdateLightMaskAfterMove;
-
-            if (LightManager.instance != null)
-            {
-                LightManager.instance.FindMaterials();
-                LightManager.instance.UpdateAll();
-            }
+            LightManager.instance.UpdateHeightMask(this);
+            LightManager.instance.UpdateMaterials();
         }
     }
 
     //L: Gets the STILE_WIDTH x STILE_WIDTH (17 x 17) height mask. (1 if there's a wall tile, 0 if not)
-    public Texture2D GetHeightMask()
+    public Texture2D GenerateHeightMask()
     {
         int offset = STILE_WIDTH / 2;
-        Texture2D heightMask = new Texture2D(STILE_WIDTH, STILE_WIDTH);
+        _heightMask = new Texture2D(STILE_WIDTH, STILE_WIDTH);
 
         //L : Coordinates coorespond to the actual tile coordinates in the world, which are offset from the Texture2D coords by STILE_WIDTH / 2
         
@@ -67,9 +95,9 @@ public class CaveSTile : STile
                     for (int y = -offset; y <= offset; y++)
                     {
                         TileBase tile = tm.GetTile(new Vector3Int(x, y, 0));
-                        Color pixelColor = heightMask.GetPixel(x + offset, y + offset);
+                        Color pixelColor = _heightMask.GetPixel(x + offset, y + offset);
                         // DC: Set the height to 1 if it was already 1, or tile isnt empty
-                        heightMask.SetPixel(x + offset, y + offset, (tile != null || pixelColor == Color.white) ? Color.white : Color.black);
+                        _heightMask.SetPixel(x + offset, y + offset, (tile != null || pixelColor == Color.white) ? Color.white : Color.black);
                     }
                 }
                 // Debug.Log("Finished processing tilemap on " + name);
@@ -83,31 +111,12 @@ public class CaveSTile : STile
                     Debug.LogError("Positions when calculating height mask fall outside the tile's bounds");
                 }
                 // Debug.Log("Adding a wall at " + posOnTile.x + ", " + posOnTile.y);
-                heightMask.SetPixel(posOnTile.x + offset, posOnTile.y + offset, Color.white);
+                _heightMask.SetPixel(posOnTile.x + offset, posOnTile.y + offset, Color.white);
             }
         }
         
 
-        heightMask.Apply();
-        return heightMask;
-    }
-
-    //L: The two ways that a tile could change lighting are if the light map changes or if the tile moves
-
-    public void UpdateLightMaskAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (e.stile == this)
-        {
-            /*
-            LightManager.instance.ClearHeightMaskTile(e.prevPos);
-            LightManager.instance.UpdateHeightMask(this);
-            
-
-            LightManager.instance.GenerateLightMask();  //L: Regenerate the whole mask cuz I'm lazy
-            LightManager.instance.UpdateMaterials();
-            */
-
-            LightManager.instance.UpdateAll();
-        }
+        _heightMask.Apply();
+        return _heightMask;
     }
 }

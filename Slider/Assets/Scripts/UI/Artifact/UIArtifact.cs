@@ -31,7 +31,7 @@ public class UIArtifact : MonoBehaviour
 
     public void Start()
     {
-        SGridAnimator.OnSTileMove += QueueCheckAfterMove;
+        SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
     }
 
     public static UIArtifact GetInstance()
@@ -41,7 +41,7 @@ public class UIArtifact : MonoBehaviour
 
     //L: Handles when the user attempts to drag and drop a button
     //Plz dont touch it will break
-    public void ButtonDragged(BaseEventData eventData) { 
+    public virtual void ButtonDragged(BaseEventData eventData) { 
         // Debug.Log("dragging");
         PointerEventData data = (PointerEventData) eventData;
 
@@ -77,7 +77,7 @@ public class UIArtifact : MonoBehaviour
         }
     }
     //Plz dont touch it will break
-    public void ButtonDragEnd(BaseEventData eventData) {
+    public virtual void ButtonDragEnd(BaseEventData eventData) {
         PointerEventData data = (PointerEventData) eventData;
 
 
@@ -124,7 +124,7 @@ public class UIArtifact : MonoBehaviour
             if(b == hovered && !swapped) 
             {
                 CheckAndSwap(dragged, hovered);
-                SGridAnimator.OnSTileMove += dragged.AfterStileMoveDragged;
+                SGridAnimator.OnSTileMoveEnd += dragged.AfterStileMoveDragged;
                 swapped = true;
             }
         }

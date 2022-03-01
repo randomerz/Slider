@@ -172,6 +172,7 @@ GameObject:
   - component: {fileID: 5869755996483737865}
   - component: {fileID: 6068767039451084331}
   - component: {fileID: 460489678685213880}
+  - component: {fileID: 727506689688253414}
   m_Layer: 0
   m_Name: MossColliders
   m_TagString: Untagged
@@ -370,6 +371,22 @@ CompositeCollider2D:
     m_Paths: []
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
+--- !u!114 &727506689688253414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5462399190710666452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 522ec778294dd914ca3bb85dec735d95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mossMap: {fileID: 1866962881632741716}
+  player: {fileID: 0}
+  playerRespawn: {fileID: 2036076337874243714}
+  playerBoopSpeed: 0.5
 --- !u!1 &6243455925177525421
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,10 +615,12 @@ MonoBehaviour:
   mossMap: {fileID: 3544935774465680509}
   recededMossMap: {fileID: 4266881216955372511}
   mossCollidersMap: {fileID: 1866962881632741716}
+  playerTP: {fileID: 727506689688253414}
   mossFadeSpeed: 0.4
   playerBoopSpeed: 0.5
   player: {fileID: 0}
   playerRespawn: {fileID: 2036076337874243714}
+  debugTile: {fileID: 0}
 --- !u!1 &6323398053504528589
 GameObject:
   m_ObjectHideFlags: 0
@@ -3417,6 +3436,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7649429769792356524, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
   m_PrefabInstance: {fileID: 2522777883742973097}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &545561396114799877 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2634759908878225836, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+  m_PrefabInstance: {fileID: 2522777883742973097}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4002018905126425817 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1479630269152721008, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
@@ -3425,6 +3449,21 @@ GameObject:
 --- !u!4 &6426697957377227565 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8805243860394743684, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+  m_PrefabInstance: {fileID: 2522777883742973097}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8938375942414979755 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6848225235959610882, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+  m_PrefabInstance: {fileID: 2522777883742973097}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &8412660596775498700 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 6322336049834794853, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+  m_PrefabInstance: {fileID: 2522777883742973097}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &5272183297352641543 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 7649429769792356526, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
   m_PrefabInstance: {fileID: 2522777883742973097}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &8670949615324834724 stripped
@@ -3445,26 +3484,6 @@ GameObject:
 --- !u!1 &7378419727975763174 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5001208594554478671, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
-  m_PrefabInstance: {fileID: 2522777883742973097}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8938375942414979755 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6848225235959610882, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
-  m_PrefabInstance: {fileID: 2522777883742973097}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &545561396114799877 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2634759908878225836, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
-  m_PrefabInstance: {fileID: 2522777883742973097}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &8412660596775498700 stripped
-BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 6322336049834794853, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
-  m_PrefabInstance: {fileID: 2522777883742973097}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &5272183297352641543 stripped
-BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 7649429769792356526, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
   m_PrefabInstance: {fileID: 2522777883742973097}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &5272183297352641546 stripped

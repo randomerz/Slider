@@ -143,7 +143,7 @@ public class DesertArtifact : UIArtifact
 
     }
 
-    private List<Vector4Int> GetSlideMoves(List<Vector4Int> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
+    private List<Movement> GetSlideMoves(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
     {
         Vector2Int lastSwap = new Vector2Int(-1, -1);
         Vector2Int firstSwap = new Vector2Int(-1, -1);
@@ -160,7 +160,7 @@ public class DesertArtifact : UIArtifact
                     {
                         firstSwap = new Vector2Int(furthest.x, furthest.y);
                     }
-                    swaps.Add(new Vector4Int(button.x, button.y, furthest.x, furthest.y));
+                    swaps.Add(new Movement(button.x, button.y, furthest.x, furthest.y));
                     SwapButtons(button, furthest);
                 }
             }
@@ -168,7 +168,7 @@ public class DesertArtifact : UIArtifact
         if (lastSwap.x != -1 && firstSwap.x != -1)
         {
             //print(firstSwap.x);
-            swaps.Add(new Vector4Int(firstSwap.x, firstSwap.y, lastSwap.x, lastSwap.y));
+            swaps.Add(new Movement(firstSwap.x, firstSwap.y, lastSwap.x, lastSwap.y));
         }
 
         return swaps;
@@ -177,7 +177,7 @@ public class DesertArtifact : UIArtifact
     //Chen: Below are the 4 methods for sliding all tiles. UI swapping is handled here
     public SSlideSwap SlideRight()
     {
-        List<Vector4Int> swaps = new List<Vector4Int>();
+        List<Movement> swaps = new List<Movement>();
         
         for (int col = 0; col < 3; col++)
         {
@@ -194,7 +194,7 @@ public class DesertArtifact : UIArtifact
 
     public SSlideSwap SlideLeft()
     {
-        List<Vector4Int> swaps = new List<Vector4Int>();
+        List<Movement> swaps = new List<Movement>();
 
         for (int col = 0; col < 3; col++)
         {
@@ -210,7 +210,7 @@ public class DesertArtifact : UIArtifact
 
     public SSlideSwap SlideUp()
     {
-        List<Vector4Int> swaps = new List<Vector4Int>();
+        List<Movement> swaps = new List<Movement>();
 
         for (int row = 0; row < 3; row++)
         {
@@ -226,7 +226,7 @@ public class DesertArtifact : UIArtifact
 
     public SSlideSwap SlideDown()
     {
-        List<Vector4Int> swaps = new List<Vector4Int>();
+        List<Movement> swaps = new List<Movement>();
 
         for (int row = 0; row < 3; row++)
         {
