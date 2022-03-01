@@ -115,6 +115,12 @@ public class Movement
     }
 }
 
+//Used in the mountain for moving between layers
+public class SMoveLayerSwap: SMove
+{
+    
+}
+
 
 //L: Swapping includes moving a tile to an empty spot!
 public class SMoveSwap : SMove
