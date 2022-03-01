@@ -17,11 +17,11 @@ public class UIPause : MonoBehaviour {
         AudioManager.SetMusicVolume(manager.musicSlider.value);
     }
 
-    public void ToggleBigText(bool value)
-    {
-        DialogueManager.highContrastMode = value;
-        DialogueManager.doubleSizeMode = value;
-    }
+    // public void ToggleBigText(bool value)
+    // {
+    //     DialogueManager.highContrastMode = value;
+    //     DialogueManager.doubleSizeMode = value;
+    // }
     
     public void LoadGame()
     {

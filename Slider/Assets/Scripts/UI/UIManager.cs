@@ -20,16 +20,12 @@ public class UIManager : MonoBehaviour
     public Animator artifactAnimator;
     public Slider sfxSlider;
     public Slider musicSlider;
-    public GameObject moveActionRebinding;
-    public GameObject pauseActionRebinding;
-    public GameObject artActionRebinding;
-    public GameObject playerActionRebinding;
-    public GameObject cycleEquipActionRebinding;
 
     public static bool closeUI;
 
     private InputSettings controls;
-
+    // private InputAction inputAction;
+    // private InputActionRebindExtensions.RebindingOperation rebindingOperation;
     private void Awake()
     {
         sfxSlider.value = AudioManager.GetSFXVolume();
@@ -38,6 +34,7 @@ public class UIManager : MonoBehaviour
         uiArtifact.Awake();
         
         controls = new InputSettings();
+        // controls.m_UI_Pause =  
         controls.UI.Pause.performed += context => OnPressPause();
         controls.UI.OpenArtifact.performed += context => OnPressArtifact();
     }
@@ -91,7 +88,14 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            PauseGame();
+            if (controlsPanel.activeSelf || advOptionsPanel.activeSelf) 
+            {
+                OpenOptions();
+            } 
+            else
+            {
+                PauseGame();
+            }
         }
     }
 
@@ -116,7 +120,6 @@ public class UIManager : MonoBehaviour
         if (isArtifactOpen)
         {
             Player.SetCanMove(true);
-
             isArtifactOpen = false;
             artifactAnimator.SetBool("isVisible", false);
             StartCoroutine(CloseArtPanel());
@@ -138,6 +141,8 @@ public class UIManager : MonoBehaviour
 
         pausePanel.SetActive(true);
         optionsPanel.SetActive(false);
+        controlsPanel.SetActive(false);
+        advOptionsPanel.SetActive(false);
         Time.timeScale = 0f;
         isGamePaused = true;
     }
@@ -151,11 +156,6 @@ public class UIManager : MonoBehaviour
         optionsPanel.SetActive(true);
         controlsPanel.SetActive(false);
         advOptionsPanel.SetActive(false);
-        moveActionRebinding.SetActive(false);
-        playerActionRebinding.SetActive(false);
-        artActionRebinding.SetActive(false);
-        pauseActionRebinding.SetActive(false);
-        cycleEquipActionRebinding.SetActive(false);
     }
 
     public void OpenControls() 
@@ -165,11 +165,6 @@ public class UIManager : MonoBehaviour
 
         optionsPanel.SetActive(false);
         controlsPanel.SetActive(true);
-        moveActionRebinding.SetActive(true);
-        playerActionRebinding.SetActive(true);
-        artActionRebinding.SetActive(true);
-        pauseActionRebinding.SetActive(true);
-        cycleEquipActionRebinding.SetActive(true);
     }
     public void OpenAdvOptions() 
     {
@@ -213,38 +208,16 @@ public class UIManager : MonoBehaviour
             AudioManager.Play("Artifact Error");
         }
     }
-<<<<<<< Updated upstream
 
-    public void UpdateSFXVolume(float value)
-    {
-        AudioManager.SetSFXVolume(value);
-    }
-
-    public void UpdateMusicVolume(float value)
-    {
-        AudioManager.SetMusicVolume(value);
-    }
-
-    public void ToggleBigText(bool value)
-    {
-        DialogueDisplay.highContrastMode = value;
-        DialogueDisplay.doubleSizeMode = value;
-    }
-
-    public void LoadGame()
-    {
-        ResumeGame();
-        SceneManager.LoadScene("Game");
-    }
-
-    public void LoadMainMenu()
-    {
-        ResumeGame();
-        SceneManager.LoadScene("MainMenu");
-    }
-
-=======
->>>>>>> Stashed changes
+    // void StartInteractiveRebind() 
+    // {   
+    //     rebindingOperation = inputAction.PerformInteractiveRebinding()
+    //         .WithControlsExcluding("<Mouse>/leftButton")
+    //         .WithControlsExcluding("<Mouse>/rightButton")
+    //         .WithControlsExcluding("<Mouse>/press")
+    //         .WithControlsExcluding("<Pointer>/position")
+    //         .WithCancelingThrough("<Keyboard>/escape");   
+    // }
     public void QuitGame()
     {
         Application.Quit();
