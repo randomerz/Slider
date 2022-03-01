@@ -34,14 +34,14 @@ public class VillageGrid : SGrid
     private void OnEnable() {
         if (checkCompletion) {
             SGrid.OnGridMove += SGrid.CheckCompletions;
-            SGridAnimator.OnSTileMove += CheckFinalPlacementsOnMove;
+            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
         }
     }
 
     private void OnDisable() {
         if (checkCompletion) {
             SGrid.OnGridMove -= SGrid.CheckCompletions;
-            SGridAnimator.OnSTileMove -= CheckFinalPlacementsOnMove;
+            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;
         }
     }
 
@@ -102,7 +102,7 @@ public class VillageGrid : SGrid
 
         checkCompletion = true;
         OnGridMove += CheckCompletions;
-        SGridAnimator.OnSTileMove += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+        SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
     }
 
 

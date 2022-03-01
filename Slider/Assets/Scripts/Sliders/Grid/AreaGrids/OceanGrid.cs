@@ -48,7 +48,7 @@ public class OceanGrid : SGrid
         //     SGrid.OnGridMove += SGrid.CheckCompletions;
         // }
 
-        SGridAnimator.OnSTileMove += CheckShipwreck;
+        SGridAnimator.OnSTileMoveEnd += CheckShipwreck;
     }
 
     private void OnDisable() {
@@ -56,7 +56,7 @@ public class OceanGrid : SGrid
         //     SGrid.OnGridMove -= SGrid.CheckCompletions;
         // }
 
-        SGridAnimator.OnSTileMove -= CheckShipwreck;
+        SGridAnimator.OnSTileMoveEnd -= CheckShipwreck;
     }
 
     public override void SaveGrid() 

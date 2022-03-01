@@ -30,7 +30,7 @@ public class JungleArtifact : UIArtifact
 
             SMove linkedSwap = new SMoveLinkedSwap(x, y, buttonEmpty.x, buttonEmpty.y, linkx, linky);
 
-            Vector4Int movecoords = new Vector4Int(linkx, linky, linkx + dx, linky + dy);
+            Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy);
             if (SGrid.current.CanMove(linkedSwap) && (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && moveQueue.Count < maxMoveQueueSize)
             {
                 QueueCheckAndAdd(linkedSwap);
@@ -73,11 +73,11 @@ public class JungleArtifact : UIArtifact
 
     //Checks if the move can happen on the grid.
     //L: This should maybe be checked with GetMoveOptions?
-    private bool OpenPath(Vector4Int move)
+    private bool OpenPath(Movement move)
     {
         List<Vector2Int> checkedCoords = new List<Vector2Int>();
-        int dx = move.z - move.x;
-        int dy = move.w - move.y;
+        int dx = move.endLoc.x - move.startLoc.x;
+        int dy = move.endLoc.y - move.startLoc.y;
         // Debug.Log(move.x+" "+move.y+" "+move.z+" "+move.w);
         int toCheck = Math.Max(Math.Abs(dx), Math.Abs(dy));
         if (dx == 0)
@@ -85,7 +85,7 @@ public class JungleArtifact : UIArtifact
             int dir = dy / Math.Abs(dy);
             for (int i = 1; i <= toCheck; i++)
             {
-                if (GetButton(move.x, move.y + i * dir).isTileActive)
+                if (GetButton(move.startLoc.x, move.startLoc.y + i * dir).isTileActive)
                 {
                     return false;
                 }
@@ -96,7 +96,7 @@ public class JungleArtifact : UIArtifact
             int dir = dx / Math.Abs(dx);
             for (int i = 1; i <= toCheck; i++)
             {
-                if (GetButton(move.x + i * dir, move.y).isTileActive)
+                if (GetButton(move.startLoc.x + i * dir, move.startLoc.y).isTileActive)
                 {
                     return false;
                 }

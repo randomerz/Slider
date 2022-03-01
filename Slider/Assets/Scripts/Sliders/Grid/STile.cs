@@ -59,7 +59,7 @@ public class STile : MonoBehaviour
     
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         
     }
@@ -126,7 +126,11 @@ public class STile : MonoBehaviour
 
     // CanRotate() => no anchor and not linked
 
-    
+    public void SetGridPosition(Vector2Int v)
+    {
+        SetGridPosition(v.x, v.y);
+    }
+
     // Use this one usually!
     public void SetGridPosition(int x, int y)
     {

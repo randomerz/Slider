@@ -31,7 +31,7 @@ public class UIArtifact : MonoBehaviour
 
     public void Start()
     {
-        SGridAnimator.OnSTileMove += QueueCheckAfterMove;
+        SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
     }
 
     public static UIArtifact GetInstance()
@@ -124,7 +124,7 @@ public class UIArtifact : MonoBehaviour
             if(b == hovered && !swapped) 
             {
                 CheckAndSwap(dragged, hovered);
-                SGridAnimator.OnSTileMove += dragged.AfterStileMoveDragged;
+                SGridAnimator.OnSTileMoveEnd += dragged.AfterStileMoveDragged;
                 swapped = true;
             }
         }
