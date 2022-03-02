@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class OceanGrid : SGrid
 {
@@ -32,11 +33,9 @@ public class OceanGrid : SGrid
                 c.gameObject.SetActive(false);
             }
 
-            // if (c.GetName() == "Slider 5")
-            // {
-            //     c.gameObject.SetActive(false);
-            // }
         }
+
+        GameObject.Find("BurriedGuyNPC").transform.localScale = new Vector3(0, 0, 0);
 
         AudioManager.PlayMusic("Connection");
         UIEffects.FadeFromBlack();
@@ -96,5 +95,10 @@ public class OceanGrid : SGrid
     public bool IsShipwreckAdjacent()
     {
         return CheckGrid.row(GetGridString(), "41");
+    }
+
+    public void ActivateBurriedNPC()
+    {
+        GameObject.Find("BurriedGuyNPC").transform.localScale = new Vector3(1, 1, 1);
     }
 }
