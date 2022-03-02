@@ -15,6 +15,7 @@ public class SGridData
         public int islandId;
         public int x;
         public int y;
+        public int z;
 
         public STileData(STile stile) {
             isTileActive = stile.isTileActive;

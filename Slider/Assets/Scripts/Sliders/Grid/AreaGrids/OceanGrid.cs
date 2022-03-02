@@ -8,6 +8,9 @@ public class OceanGrid : SGrid
 
     private static bool checkCompletion = false;
 
+    public GameObject burriedGuyNPC;
+    public KnotBox knotBox;
+
     // public Collectible[] collectibles;
 
     private new void Awake() {
@@ -32,31 +35,33 @@ public class OceanGrid : SGrid
                 c.gameObject.SetActive(false);
             }
 
-            // if (c.GetName() == "Slider 5")
-            // {
-            //     c.gameObject.SetActive(false);
-            // }
         }
+
+        burriedGuyNPC.SetActive(false);
 
         AudioManager.PlayMusic("Connection");
         UIEffects.FadeFromBlack();
 
     }
     
-    private void OnEnable() {
-        // if (checkCompletion) {
-        //     SGrid.OnGridMove += SGrid.CheckCompletions;
-        // }
+    private void OnEnable() 
+    {
+         if (checkCompletion) {
+             SGrid.OnGridMove += SGrid.CheckCompletions;
+         }
 
-        SGridAnimator.OnSTileMove += CheckShipwreck;
+        SGridAnimator.OnSTileMoveEnd += CheckShipwreck;
+        SGridAnimator.OnSTileMoveEnd += CheckVolcano;
     }
 
-    private void OnDisable() {
-        // if (checkCompletion) {
-        //     SGrid.OnGridMove -= SGrid.CheckCompletions;
-        // }
+    private void OnDisable() 
+    {
+         if (checkCompletion) {
+             SGrid.OnGridMove -= SGrid.CheckCompletions;
+         }
 
-        SGridAnimator.OnSTileMove -= CheckShipwreck;
+        SGridAnimator.OnSTileMoveEnd -= CheckShipwreck;
+        SGridAnimator.OnSTileMoveEnd -= CheckVolcano;
     }
 
     public override void SaveGrid() 
@@ -82,9 +87,12 @@ public class OceanGrid : SGrid
 
     public void CheckShipwreck(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        Debug.Log(IsShipwreckAdjacent());
+        Debug.Log(GetGridString());
+        
         if (IsShipwreckAdjacent())
         {
-            Collectible c = GetCollectible("Slider 5");
+            Collectible c = GetCollectible("Treasure Chest");
             
             if (!PlayerInventory.Contains(c))
             {
@@ -95,6 +103,86 @@ public class OceanGrid : SGrid
 
     public bool IsShipwreckAdjacent()
     {
-        return CheckGrid.row(GetGridString(), "41");
+        return CheckGrid.contains(GetGridString(), "41");
     }
+
+    public void CheckVolcano(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (IsVolcanoSet())
+        {
+            Collectible c = GetCollectible("Rock");
+
+            if (!PlayerInventory.Contains(c))
+            {
+                c.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    public bool IsVolcanoSet()
+    {
+        return CheckGrid.contains(GetGridString(),".4._895_.3.");
+    }
+
+
+
+    public void ActivateBurriedNPC()
+    {
+        burriedGuyNPC.SetActive(true);
+    }
+
+    private bool BuoyConditions()
+    {
+        if (!(GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
+        {
+            return false;
+        }
+
+        if (!knotBox.isActiveAndEnabled)
+        {
+            return false;
+        }
+
+        return knotBox.CheckLines();
+    }
+
+    public void BuoyAllFound(Conditionals.Condition c)
+    {
+        if (!(GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
+        {
+            c.SetSpec(false);
+        }
+        else
+        {
+            c.SetSpec(true);
+        }
+    }
+
+    public void knotBoxEnabled(Conditionals.Condition c)
+    {
+        if (!knotBox.isActiveAndEnabled && (GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
+        {
+            c.SetSpec(true);
+        }
+        else
+        {
+            c.SetSpec(false);
+        }
+    }
+
+    public void BuoyCheck(Conditionals.Condition c)
+    {
+        c.SetSpec(BuoyConditions());
+    }
+
+    public void ToggleKnotBox()
+    {
+        knotBox.enabled = !knotBox.enabled;
+    }
+
+    public void IsCompleted(Conditionals.Condition c)
+    {
+        c.SetSpec(checkCompletion && CheckGrid.contains(GetGridString(), "412_..8_..."));
+    }
+
 }

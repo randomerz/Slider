@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class OceanArtifact : UIArtifact
 {
@@ -14,6 +15,16 @@ public class OceanArtifact : UIArtifact
     public new void OnDisable()
     {
         base.OnDisable();
+    }
+
+    public override void ButtonDragged(BaseEventData eventData) 
+    { 
+        // do nothing
+    }
+
+    public override void ButtonDragEnd(BaseEventData eventData) 
+    {
+        // do nothing
     }
     
     public override void SelectButton(ArtifactTileButton button) 
@@ -117,13 +128,13 @@ public class OceanArtifact : UIArtifact
                 }
             }
 
-            int minX = peekedMove.moves[0].x;
-            int minY = peekedMove.moves[0].y;
+            int minX = peekedMove.moves[0].startLoc.x;
+            int minY = peekedMove.moves[0].startLoc.y;
 
-            foreach (Vector4Int v in peekedMove.moves)
+            foreach (Movement v in peekedMove.moves)
             {
-                minX = Mathf.Min(v.x, minX);
-                minY = Mathf.Min(v.y, minY);
+                minX = Mathf.Min(v.startLoc.x, minX);
+                minY = Mathf.Min(v.startLoc.y, minY);
             }
             
             rotateParams[minY * 2 + minX].RotateArrow(peekedMove.isCCW);

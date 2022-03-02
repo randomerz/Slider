@@ -44,12 +44,13 @@ public class CaveGrid : SGrid
         }
 
         GetCollectible("Slider 5").gameObject.SetActive(false); // gameboy puzzle
-        GetCollectible("Slider 6").gameObject.SetActive(false); // rat puzzle
-        GetCollectible("Slider 7").gameObject.SetActive(false); // flashlight puzzle
+        GetCollectible("Slider 6").gameObject.SetActive(false); // flashlight puzzle
         GetCollectible("Slider 9").gameObject.SetActive(false); // final puzzle
         
         AudioManager.PlayMusic("Connection");
         UIEffects.FadeFromBlack();
+
+        SGrid.OnGridMove += (sender, e) => { Debug.Log(GetGridString()); };
     }
 
     public bool GetLit(int x, int y)
@@ -62,6 +63,20 @@ public class CaveGrid : SGrid
         lightMap[x, y] = value;
 
         OnLightMapUpdate?.Invoke(this, new OnLightMapUpdateArgs { lightMap = this.lightMap });
+    }
+
+    // Puzzle 8 - 8puzzle
+    public void SolvePuzzle()
+    {
+        // fading stuff
+        UIEffects.FlashWhite();
+        CameraShake.Shake(1.5f, 1.0f);
+
+
+        int[,] completedPuzzle = new int[3, 3] { { 2, 1, 5 },
+                                                 { 6, 3, 4 },
+                                                 { 8, 7, 9 } };
+        SetGrid(completedPuzzle);
     }
 
     public override void SaveGrid() 

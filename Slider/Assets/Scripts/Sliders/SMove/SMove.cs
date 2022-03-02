@@ -5,7 +5,7 @@ using UnityEngine;
 //L: A representation of a move made on the artifact, as well as the borders around the move that prevent the player from clipping.
 public class SMove
 {
-    public List<Vector4Int> moves = new List<Vector4Int>(); // move tile at (x, y) to (z, w)
+    public List<Movement> moves = new List<Movement>(); // move tile at (x1, y1) to (x2, y2)
 
     //L: Every (x, y) position that is touched by moves
     public HashSet<Vector2Int> positions = new HashSet<Vector2Int>();   
@@ -18,12 +18,12 @@ public class SMove
         positions.Clear();
         borders.Clear();
 
-        foreach (Vector4Int m in moves)
+        foreach (Movement m in moves)
         {
             // for the cases where its swapping more than two
-            for (int x = Mathf.Min(m.x, m.z); x <= Mathf.Max(m.x, m.z); x++)
+            for (int x = Mathf.Min(m.startLoc.x, m.endLoc.x); x <= Mathf.Max(m.startLoc.x, m.endLoc.x); x++)
             {
-                for (int y = Mathf.Min(m.y, m.w); y <= Mathf.Max(m.y, m.w); y++)
+                for (int y = Mathf.Min(m.startLoc.y, m.endLoc.y); y <= Mathf.Max(m.startLoc.y, m.endLoc.y); y++)
                 {
                     positions.Add(new Vector2Int(x, y));
                 }
@@ -96,19 +96,22 @@ public class SMove
     }
 }
 
-public class Vector4Int
+//a movment between 2 points, stored as a pair of vector 2s
+public class Movement 
 {
-    public int x; // x, y is the original location
-    public int y;
-    public int z; // z, w is the target location
-    public int w;
+    public Vector2Int startLoc;
+    public Vector2Int endLoc;
 
-    public Vector4Int(int x, int y, int z, int w)
+    public Movement(Vector2Int s, Vector2Int e)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
+        startLoc = s;
+        endLoc = e;
+    }
+
+    public Movement(int x1, int y1, int x2, int y2)
+    {
+        startLoc = new Vector2Int(x1, y1);
+        endLoc = new Vector2Int(x2, y2);
     }
 }
 
@@ -118,11 +121,11 @@ public class SMoveSwap : SMove
 {
     public SMoveSwap(int x1, int y1, int x2, int y2)
     {
-        moves.Add(new Vector4Int(x1, y1, x2, y2));
-        moves.Add(new Vector4Int(x2, y2, x1, y1));
+        moves.Add(new Movement(x1, y1, x2, y2));
+        moves.Add(new Movement(x2, y2, x1, y1));
     }
 
-    public Vector4Int GetSwapAsVector()
+    public Movement GetSwapAsVector()
     {
         return moves[0];
     }
@@ -132,22 +135,22 @@ public class SMoveLinkedSwap : SMove
 {
     public SMoveLinkedSwap(int x1, int y1, int x2, int y2, int linkx, int linky)
     {
-        moves.Add(new Vector4Int(x1, y1, x2, y2));
+        moves.Add(new Movement(x1, y1, x2, y2));
 
         int dx = x2 - x1;
         int dy = y2 - y1;
-        moves.Add(new Vector4Int(linkx, linky, linkx + dx, linky + dy));
+        moves.Add(new Movement(linkx, linky, linkx + dx, linky + dy));
 
         //L: Need to handle the edge case where the link tile moves to the prev tile's position
         if (linkx+dx == x1 && linky+dy == y1)
         {
             //L: Move the empty spot to where the link tile used to be (which is now empty)
-            moves.Add(new Vector4Int(x2, y2, linkx, linky));
+            moves.Add(new Movement(x2, y2, linkx, linky));
         } else
         {
             //L: Move both empty spots to where the cooresponding tile used to be (like with normal swaps)
-            moves.Add(new Vector4Int(linkx + dx, linky + dy, linkx, linky));
-            moves.Add(new Vector4Int(x2, y2, x1, y1));
+            moves.Add(new Movement(linkx + dx, linky + dy, linkx, linky));
+            moves.Add(new Movement(x2, y2, x1, y1));
         }
     }
 }
@@ -161,7 +164,7 @@ public class SMoveRotate : SMove
     {
         for (int i = 0; i < points.Count; i++)
         {
-            moves.Add(new Vector4Int(points[i].x, points[i].y, points[(i + 1) % points.Count].x, points[(i + 1) % points.Count].y));
+            moves.Add(new Movement(points[i], points[(i + 1) % points.Count]));
         }
 
         this.isCCW = isCCW; 
@@ -170,12 +173,12 @@ public class SMoveRotate : SMove
 
 public class SSlideSwap : SMove
 {
-    public SSlideSwap(List<Vector4Int> points)
+    public SSlideSwap(List<Movement> points)
     {
         for (int i = 0; i < points.Count; i++)
         {
             // Debug.Log(points[i].x + " " + points[i].y + " " + points[i].z + " " + points[i].w);
-            moves.Add(new Vector4Int(points[i].x, points[i].y, points[i].z, points[i].w));
+            moves.Add(new Movement(points[i].startLoc, points[i].endLoc));
         }
     }
 
