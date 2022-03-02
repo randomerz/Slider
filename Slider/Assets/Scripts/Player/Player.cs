@@ -12,15 +12,16 @@ public class Player : MonoBehaviour
     private float moveSpeedMultiplier = 1;
     private bool canMove = true;
     [SerializeField] private bool isOnWater = false;
-    private static bool isInHouse = false;
+    private bool isInHouse = false;
 
     private InputSettings controls;
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
     
-    // References
+    [Header("References")]
     [SerializeField] private PlayerAction playerAction;
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
+    [SerializeField] private SpriteRenderer boatSpriteRenderer;
     [SerializeField] private Animator playerAnimator;
 
     void Awake()
@@ -54,15 +55,15 @@ public class Player : MonoBehaviour
         // }
         // else 
         // {
-            playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
-            if (inputDir.x < 0)
-            {
-                playerSpriteRenderer.flipX = true;
-            }
-            else if (inputDir.x > 0)
-            {
-                playerSpriteRenderer.flipX = false;
-            }
+        playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
+        if (inputDir.x < 0)
+        {
+            playerSpriteRenderer.flipX = true;
+        }
+        else if (inputDir.x > 0)
+        {
+            playerSpriteRenderer.flipX = false;
+        }
         // }
 
         playerAnimator.SetBool("isOnWater", isOnWater);
@@ -159,10 +160,22 @@ public class Player : MonoBehaviour
 
     public static bool GetIsInHouse()
     {
-        return isInHouse;
+        return _instance.isInHouse;
     }
+
     public static void SetIsInHouse(bool isInHouse)
     {
-        Player.isInHouse = isInHouse;
+        _instance.isInHouse = isInHouse;
+    }
+
+    public static bool GetIsOnWater()
+    {
+        return _instance.isOnWater;
+    }
+
+    public static void SetIsOnWater(bool isOnWater)
+    {
+        _instance.isOnWater = isOnWater;
+        _instance.boatSpriteRenderer.enabled = isOnWater;
     }
 }
