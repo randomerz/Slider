@@ -99,10 +99,6 @@ public class CaveMossManager : MonoBehaviour
         };
     }
 
-    private void Update()
-    {
-    }
-
     private void UpdateMoss()
     {
         if (LightManager.instance != null)

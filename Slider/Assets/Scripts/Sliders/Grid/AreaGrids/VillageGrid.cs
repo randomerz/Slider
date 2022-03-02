@@ -111,9 +111,7 @@ public class VillageGrid : SGrid
         if (!PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153"))
         {
             // ActivateSliderCollectible(9);
-            ActivateCollectible("Slider 9");
-            GetCollectible("Slider 9").transform.position = Player.GetPosition();
-            UIManager.closeUI = true;
+            GivePlayerTheCollectible("Slider 9");
 
             // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
             StartCoroutine(CheckCompletionsAfterDelay(1.1f));
