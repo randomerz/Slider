@@ -47,6 +47,9 @@ public class SGridAnimator : MonoBehaviour
         float t = 0;
         //isMoving = true;
 
+        stile.SetMovingDirection(GetMovingDirection(moveCoords.startLoc, moveCoords.endLoc));
+        
+        stile.SetBorderColliders(true);
 
         OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
         {
@@ -54,10 +57,6 @@ public class SGridAnimator : MonoBehaviour
             prevPos = moveCoords.startLoc,
             smove = move
         });
-
-        stile.SetMovingDirection(GetMovingDirection(moveCoords.startLoc, moveCoords.endLoc));
-        
-        stile.SetBorderColliders(true);
 
         StartCoroutine(StartCameraShakeEffect());
 
