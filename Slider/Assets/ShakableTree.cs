@@ -6,11 +6,11 @@ public class ShakableTree : MonoBehaviour
 {
 
     private bool isShaken;
-    [SerializeField] public Collider2D myCollider;
     [SerializeField] private float pickUpDuration;
     [SerializeField] public AnimationCurve xPickUpMotion;
     [SerializeField] public AnimationCurve yPickUpMotion;
-    [SerializeField] public PlayerConditionals myPlayerConditionals;
+    [SerializeField] private PlayerConditionals myPlayerConditionals;
+    [SerializeField] public Animator animator;
     public GameObject StuckPaper;
 
     // Start is called before the first frame update
@@ -26,6 +26,7 @@ public class ShakableTree : MonoBehaviour
         if (!isShaken)
         {
             //StuckPaper.GetComponent<Collider2D>().enabled = true;
+            animator.SetTrigger("finishedMoving");
             StartCoroutine(animateFallingPaper(StuckPaper, null));
 
             isShaken = true;
