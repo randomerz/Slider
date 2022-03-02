@@ -67,4 +67,10 @@ public class NPC : MonoBehaviour
             dconds[currMessage+1].SetPrio(dconds[currMessage].GetPrio());
         }
     }
+
+    public void Teleport(Transform trans)
+    {
+        transform.position = trans.position;
+        transform.parent = trans.parent;
+    }
 }
