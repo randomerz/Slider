@@ -7,11 +7,14 @@ public class Anchor : Item
     // Start is called before the first frame update
     [SerializeField] private float shakeAmount;
     [SerializeField] private float shakeDuration;
+    public Sprite trackerSprite;
 
     public void Start()
     {
         if (GetComponentInParent<STile>() != null)
             GetComponentInParent<STile>().hasAnchor = true;
+        GetComponentInParent<STile>().hasAnchor = true;
+        UITrackerManager.addNewTracker(this.gameObject, trackerSprite);
     }
 
     private void OnDisable()

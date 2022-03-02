@@ -181,6 +181,19 @@ public class SGrid : MonoBehaviour
         return stileList;
     }
 
+    //S: copy of Player's GetStileUnderneath for the tracker
+    public STile GetStileUnderneath(GameObject target)
+    {
+        Collider2D hit = Physics2D.OverlapPoint(target.transform.position, LayerMask.GetMask("Slider"));
+        if (hit == null || hit.GetComponent<STile>() == null)
+        {
+            //Debug.LogWarning("Target isn't on top of a slider!");
+            return null;
+        }
+        return hit.GetComponent<STile>();
+    }
+
+
     //L: This mainly checks if any of the tiles involved in SMove 
     //D: this is should also not really be relied on
     public bool CanMove(SMove move)
