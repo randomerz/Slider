@@ -25,14 +25,11 @@ public class ShakableTree : MonoBehaviour
     {
         if (!isShaken)
         {
-            //StuckPaper.GetComponent<Collider2D>().enabled = true;
-            animator.SetTrigger("finishedMoving");
-            StartCoroutine(animateFallingPaper(StuckPaper, null));
+            animator.SetTrigger("shake");
+            StartCoroutine(AnimateFallingPaper(StuckPaper, null));
 
             isShaken = true;
             myPlayerConditionals.disableConditionals();
-            //myPlayerConditionals.addToOnAction = false;
-
             
         }
         

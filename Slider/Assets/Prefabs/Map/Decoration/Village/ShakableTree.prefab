@@ -153,6 +153,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3151080569709834017, guid: 56a510c436cb1454b9a790526fa80eca, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7014586752846344659, guid: 56a510c436cb1454b9a790526fa80eca, type: 3}
       propertyPath: m_Name
       value: ShakableTree
@@ -217,7 +221,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 937877037644661029}
         m_TargetAssemblyTypeName: ShakableTree, Assembly-CSharp
-        m_MethodName: shakeTree
+        m_MethodName: ShakeTree
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
