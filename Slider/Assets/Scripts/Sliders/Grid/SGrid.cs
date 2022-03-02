@@ -210,7 +210,11 @@ public class SGrid : MonoBehaviour
 
     public void ActivateCollectible(string name)
     {
-        GetCollectible(name).gameObject.SetActive(true);
+        if (!PlayerInventory.Contains(name, myArea))
+        {
+            GetCollectible(name).gameObject.SetActive(true);
+        }
+            
     }
     public void ActivateSliderCollectible(int sliderId)
     {
