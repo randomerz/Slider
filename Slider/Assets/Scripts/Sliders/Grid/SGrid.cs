@@ -210,7 +210,11 @@ public class SGrid : MonoBehaviour
 
     public void ActivateCollectible(string name)
     {
-        GetCollectible(name).gameObject.SetActive(true);
+        if (!PlayerInventory.Contains(name, myArea))
+        {
+            GetCollectible(name).gameObject.SetActive(true);
+        }
+            
     }
     public void ActivateSliderCollectible(int sliderId)
     {
@@ -321,5 +325,12 @@ public class SGrid : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void GivePlayerTheCollectible(string name)
+    {
+        ActivateCollectible(name);
+        GetCollectible(name).transform.position = Player.GetPosition();
+        UIManager.closeUI = true;
     }
 }
