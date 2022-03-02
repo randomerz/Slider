@@ -16,6 +16,12 @@ public class KnotBox : MonoBehaviour
         CheckLines();
     }
 
+    private void OnDisable()
+    {
+        RemoveLines();
+    }
+
+
     private void MakeLines()
     {
         for (int i = 0; i < knotnodes.Length; i++)
@@ -27,7 +33,18 @@ public class KnotBox : MonoBehaviour
                 lines[i].SetPosition(1, knotnodes[0].transform.position);
         }
     }
-    private bool CheckLines()
+
+    public void RemoveLines()
+    {
+        for (int i = 0; i < knotnodes.Length; i++)
+        {
+            lines[i].SetPosition(0, Vector3.zero);
+            lines[i].SetPosition(1, Vector3.zero);
+        }
+    }
+
+
+    public bool CheckLines()
     {
         bool ret = true;
         for (int i = 0; i < lines.Length; i++)
