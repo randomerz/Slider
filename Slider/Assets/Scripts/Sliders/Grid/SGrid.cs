@@ -322,4 +322,11 @@ public class SGrid : MonoBehaviour
             }
         }
     }
+
+    public void GivePlayerTheCollectible(string name)
+    {
+        ActivateCollectible(name);
+        GetCollectible(name).transform.position = Player.GetPosition();
+        UIManager.closeUI = true;
+    }
 }
