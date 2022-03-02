@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class OceanGrid : SGrid
 {
@@ -9,6 +8,7 @@ public class OceanGrid : SGrid
 
     private static bool checkCompletion = false;
 
+    public GameObject burriedGuyNPC;
     public KnotBox knotBox;
 
     // public Collectible[] collectibles;
@@ -37,14 +37,15 @@ public class OceanGrid : SGrid
 
         }
 
-        GameObject.Find("BurriedGuyNPC").transform.localScale = new Vector3(0, 0, 0);
+        burriedGuyNPC.SetActive(false);
 
         AudioManager.PlayMusic("Connection");
         UIEffects.FadeFromBlack();
 
     }
     
-    private void OnEnable() {
+    private void OnEnable() 
+    {
          if (checkCompletion) {
              SGrid.OnGridMove += SGrid.CheckCompletions;
          }
@@ -53,7 +54,8 @@ public class OceanGrid : SGrid
         SGridAnimator.OnSTileMoveEnd += CheckVolcano;
     }
 
-    private void OnDisable() {
+    private void OnDisable() 
+    {
          if (checkCompletion) {
              SGrid.OnGridMove -= SGrid.CheckCompletions;
          }
@@ -126,7 +128,7 @@ public class OceanGrid : SGrid
 
     public void ActivateBurriedNPC()
     {
-        GameObject.Find("BurriedGuyNPC").transform.localScale = new Vector3(1, 1, 1);
+        burriedGuyNPC.SetActive(true);
     }
 
     private bool BuoyConditions()
