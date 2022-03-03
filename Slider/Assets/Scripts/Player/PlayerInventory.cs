@@ -16,10 +16,21 @@ public class PlayerInventory : MonoBehaviour
     private static List<Item> equipables = new List<Item>();
     private static IEnumerator<Item> itemIterator = equipables.GetEnumerator();
     private static Item currentItem = null;
+
+    private static bool collectedAnchor = false; //todo: serialize
+    [SerializeField] private GameObject anchorPrefab;
     
     private void Awake() {
         if (instance == null) {
             instance = this;
+        }
+
+        // popular inventory on scene start
+        if (collectedAnchor)
+        {
+            GameObject anchor = Instantiate(anchorPrefab, transform.position, Quaternion.identity, transform);
+            anchor.SetActive(false);
+            equipables.Add(anchor.GetComponent<Item>());
         }
     }
 
