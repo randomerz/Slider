@@ -13,8 +13,11 @@ public class Anchor : Item
     {
         if (GetComponentInParent<STile>() != null)
             GetComponentInParent<STile>().hasAnchor = true;
-        GetComponentInParent<STile>().hasAnchor = true;
-        UITrackerManager.addNewTracker(this.gameObject, trackerSprite);
+    }
+
+    private void OnEnable()
+    {
+        
     }
 
     private void OnDisable()
@@ -33,6 +36,7 @@ public class Anchor : Item
         base.PickUpItem(pickLocation, callback);
 
         Player.setMoveSpeedMultiplier(0.75f);
+        UITrackerManager.removeTracker(this.gameObject);
 
     }
 
@@ -50,7 +54,7 @@ public class Anchor : Item
         }
 
         Player.setMoveSpeedMultiplier(1f);
-
+        UITrackerManager.addNewTracker(this.gameObject, trackerSprite);
         return null;
     }
 

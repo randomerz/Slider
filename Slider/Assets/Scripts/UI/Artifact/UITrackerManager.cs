@@ -14,10 +14,13 @@ public class UITrackerManager : MonoBehaviour
     private STile currentTile;
     private float scale = 26f/17f;
     private float centerScale = 36f/17f;
+    //S: buffer in case something loads before UITrackerManager
+    private static List<GameObject> objectBuffer = new List<GameObject>();
+    private static List<Sprite> spriteBuffer = new List<Sprite>();
     public UIArtifact artifact;
     public GameObject artifactPanel;
     public GameObject uiTrackerPrefab;
-    public List<UITracker> targets;
+    public List<UITracker> targets = new List<UITracker>();
 
 
     void Awake(){
@@ -32,6 +35,13 @@ public class UITrackerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(objectBuffer.Count > 0){
+            for(int i = 0; i < objectBuffer.Count; i++){
+                addNewTracker(objectBuffer[i], spriteBuffer[i]);
+            }
+            objectBuffer.Clear();
+            spriteBuffer.Clear();
+        }
         for(int x = 0; x < targets.Count; x++){
             if (targets[x].target == null){
                 Destroy(targets[x].gameObject);
@@ -70,10 +80,23 @@ public class UITrackerManager : MonoBehaviour
     }
     
     public static void addNewTracker(GameObject target, Sprite sprite){
+        if(_instance == null){
+            objectBuffer.Add(target);
+            spriteBuffer.Add(sprite);
+            return;
+        }
         GameObject tracker = GameObject.Instantiate(_instance.uiTrackerPrefab, _instance.transform);
         UITracker uiTracker = tracker.GetComponent<UITracker>();
         uiTracker.target = target;
         uiTracker.image.sprite = sprite;
         _instance.targets.Add(uiTracker);
+    }
+    public static void removeTracker(GameObject toRemove){
+        for(int i = 0; i < _instance.targets.Count; i++){
+            if (_instance.targets[i].target == toRemove){
+                Destroy(_instance.targets[i].gameObject);
+                _instance.targets.RemoveAt(i);
+            }
+        }
     }
 }
