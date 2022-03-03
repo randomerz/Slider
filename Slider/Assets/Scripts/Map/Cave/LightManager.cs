@@ -103,8 +103,8 @@ public class LightManager : MonoBehaviour
         _caveLightMaterials = new List<Material>();
         caveShader = Shader.Find("Shader Graphs/CaveTileLightShader");
 
-        Renderer[] renderers = tilesRoot.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in renderers)
+        Renderer[] allRenderers = FindObjectsOfType<Renderer>();
+        foreach (Renderer r in allRenderers)
         {
             if (r.material.shader == caveShader)
             {

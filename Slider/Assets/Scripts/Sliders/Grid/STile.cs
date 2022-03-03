@@ -108,10 +108,10 @@ public class STile : MonoBehaviour
         sliderCollider.enabled = sliderColliderDisableCount <= 0;
         houseSliderCollider.enabled = sliderColliderDisableCount <= 0;
         tileMapCollider.SetActive(sliderColliderDisableCount <= 0);
-        foreach (Collider2D c in decorationColliders)
-        {
-            c.enabled = sliderColliderDisableCount <= 0;
-        }
+        //foreach (Collider2D c in decorationColliders)
+        //{
+        //    c.enabled = sliderColliderDisableCount <= 0;
+        //}
 
         return sliderColliderDisableCount <= 0;
     }
