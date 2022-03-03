@@ -34,14 +34,14 @@ public class VillageGrid : SGrid
     private void OnEnable() {
         if (checkCompletion) {
             SGrid.OnGridMove += SGrid.CheckCompletions;
-            SGridAnimator.OnSTileMove += CheckFinalPlacementsOnMove;
+            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
         }
     }
 
     private void OnDisable() {
         if (checkCompletion) {
             SGrid.OnGridMove -= SGrid.CheckCompletions;
-            SGridAnimator.OnSTileMove -= CheckFinalPlacementsOnMove;
+            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;
         }
     }
 
@@ -102,7 +102,7 @@ public class VillageGrid : SGrid
 
         checkCompletion = true;
         OnGridMove += CheckCompletions;
-        SGridAnimator.OnSTileMove += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+        SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
     }
 
 
@@ -111,9 +111,7 @@ public class VillageGrid : SGrid
         if (!PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153"))
         {
             // ActivateSliderCollectible(9);
-            ActivateCollectible("Slider 9");
-            GetCollectible("Slider 9").transform.position = Player.GetPosition();
-            UIManager.closeUI = true;
+            GivePlayerTheCollectible("Slider 9");
 
             // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
             StartCoroutine(CheckCompletionsAfterDelay(1.1f));
@@ -132,6 +130,6 @@ public class VillageGrid : SGrid
     public void Explode()
     {
         caveDoor.SetActive(true);
-        CameraShake.Shake(4f, 3.5f);
+        CameraShake.Shake(3f, 3.5f);
     }
 }

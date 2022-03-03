@@ -13,6 +13,12 @@ public class SGrid : MonoBehaviour
     }
     public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
 
+    public class OnSTileEnabledArgs : System.EventArgs
+    {
+        public STile stile;
+    }
+    public static event System.EventHandler<OnSTileEnabledArgs> OnSTileEnabled;
+
     protected STile[,] grid;
     protected SGridBackground[,] bgGrid;
 
@@ -73,8 +79,8 @@ public class SGrid : MonoBehaviour
         STile[,] newGrid = new STile[width, height];
         STile next = null;
 
-        int playerIsland = Player.GetStileUnderneath();
-        Vector3 playerOffset = Player.GetPosition() - GetStile(playerIsland).transform.position;
+        STile playerSTile = Player.GetStileUnderneath();
+        Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
 
         for (int x = 0; x < width; x++)
         {
@@ -94,7 +100,8 @@ public class SGrid : MonoBehaviour
             }
         }
 
-        Player.SetPosition(GetStile(playerIsland).transform.position + playerOffset);
+        if (playerSTile != null)
+            Player.SetPosition(playerSTile.transform.position + playerOffset);
 
         grid = newGrid;
 
@@ -165,13 +172,36 @@ public class SGrid : MonoBehaviour
         return null;
     }
 
+    //C: returns a list of active stiles
+    public List<STile> GetActiveTiles()
+    {
+        List<STile> stileList = new List<STile>();
+        foreach(STile tile in stiles)
+            if(tile.isTileActive)
+                stileList.Add(tile);
+        return stileList;
+    }
+
+    //S: copy of Player's GetStileUnderneath for the tracker
+    public STile GetStileUnderneath(GameObject target)
+    {
+        Collider2D hit = Physics2D.OverlapPoint(target.transform.position, LayerMask.GetMask("Slider"));
+        if (hit == null || hit.GetComponent<STile>() == null)
+        {
+            //Debug.LogWarning("Target isn't on top of a slider!");
+            return null;
+        }
+        return hit.GetComponent<STile>();
+    }
+
+
     //L: This mainly checks if any of the tiles involved in SMove 
     //D: this is should also not really be relied on
     public bool CanMove(SMove move)
     {
-        foreach (Vector4Int m in move.moves)
+        foreach (Movement m in move.moves)
         {
-            if (!grid[m.x, m.y].CanMove(m.z, m.w))
+            if (!grid[m.startLoc.x, m.startLoc.y].CanMove(m.startLoc.x, m.startLoc.y))
             {
                 return false;
             }
@@ -194,7 +224,11 @@ public class SGrid : MonoBehaviour
 
     public void ActivateCollectible(string name)
     {
-        GetCollectible(name).gameObject.SetActive(true);
+        if (!PlayerInventory.Contains(name, myArea))
+        {
+            GetCollectible(name).gameObject.SetActive(true);
+        }
+            
     }
     public void ActivateSliderCollectible(int sliderId)
     {
@@ -219,10 +253,10 @@ public class SGrid : MonoBehaviour
 
         STile[,] newGrid = new STile[width, height];
         System.Array.Copy(grid, newGrid, width * height);
-        foreach (Vector4Int m in move.moves)
+        foreach (Movement m in move.moves)
         {
             //grid[m.x, m.y].SetGridPosition(m.z, m.w);
-            newGrid[m.z, m.w] = grid[m.x, m.y];
+            newGrid[m.endLoc.x, m.endLoc.y] = grid[m.startLoc.x, m.startLoc.y];
             //Debug.Log("Setting " + m.x + " " + m.y + " to " + m.z + " " + m.w);
         }
         grid = newGrid;
@@ -260,6 +294,7 @@ public class SGrid : MonoBehaviour
     {
         stile.SetTileActive(true);
         UIArtifact.AddButton(stile.islandId);
+        OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
     }
     // See STile.isTileCollected for an explanation
     public virtual void CollectStile(STile stile)
@@ -322,5 +357,12 @@ public class SGrid : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void GivePlayerTheCollectible(string name)
+    {
+        ActivateCollectible(name);
+        GetCollectible(name).transform.position = Player.GetPosition();
+        UIManager.closeUI = true;
     }
 }

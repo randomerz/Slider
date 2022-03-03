@@ -119,6 +119,7 @@ MonoBehaviour:
   walls: {fileID: 3816725943429882143}
   decoration: {fileID: 3276724054856826786}
   colliders: {fileID: 7264392915800798820}
+  minecartRails: {fileID: 0}
   wallTile: {fileID: 11400000, guid: 5828889e543d9544690ea4166c5e7684, type: 2}
 --- !u!1 &1015975761374927900
 GameObject:
@@ -3351,7 +3352,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -7610,6 +7611,7 @@ MonoBehaviour:
   walls: {fileID: 543545187493346570}
   decoration: {fileID: 423066182430256492}
   colliders: {fileID: 2253781805460349436}
+  minecartRails: {fileID: 0}
   wallTile: {fileID: 11400000, guid: 5828889e543d9544690ea4166c5e7684, type: 2}
 --- !u!1 &7649429769792356515
 GameObject:
@@ -7672,6 +7674,7 @@ MonoBehaviour:
   sliderCollider: {fileID: 7649429769792356526}
   houseSliderCollider: {fileID: 6322336049834794853}
   tileMapCollider: {fileID: 1479630269152721008}
+  decorationsTileMap: {fileID: 1253018884578982695}
   borderColliders:
   - {fileID: 6581962075059848973}
   - {fileID: 10815329210898457}
