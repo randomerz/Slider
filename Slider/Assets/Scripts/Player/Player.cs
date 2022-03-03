@@ -124,7 +124,7 @@ public class Player : MonoBehaviour
 
     public static void SetPosition(Vector3 pos)
     {
-        // _instance.transform.position = pos;
+        _instance.transform.position = pos;
     }
 
     public static Vector3 GetPosition()
@@ -190,6 +190,7 @@ public class Player : MonoBehaviour
                 if (stileUnderneath == null || s.islandId < stileUnderneath.islandId)
                 {
                     // in case where multiple overlap and none are picked, take the lowest number?
+                    if (stileUnderneath != null) Debug.Log("idk");
                     stileUnderneath = s;
                 }
             }
