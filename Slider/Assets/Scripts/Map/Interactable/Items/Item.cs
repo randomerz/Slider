@@ -48,9 +48,14 @@ public class Item : MonoBehaviour
  
     }
 
+    public void SetCollider(bool value)
+    {
+        myCollider.enabled = value;
+    }
+
     public virtual void OnEquip()
     {
-        Player.setMoveSpeedMultiplier(1f);
+        // Player.SetMoveSpeedMultiplier(1f);
     }
 
 
@@ -106,6 +111,7 @@ public class Item : MonoBehaviour
         callback();
 
     }
+    
     public virtual void dropCallback()
     {
 

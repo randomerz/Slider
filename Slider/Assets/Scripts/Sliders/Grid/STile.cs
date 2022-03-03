@@ -205,11 +205,11 @@ public class STile : MonoBehaviour
     {
         // if player is on stile, move them
         //              THIS IS TEMPORARY, REPLACE WITH PROPPER CHECK ON ALL SLIDEABLES
-        int playerIsland = Player.GetStileUnderneath();
-        if (playerIsland == islandId)
-        {
-            Player.SetPosition(Player.GetPosition() + dr);
-        }
+        // int playerIsland = Player.GetStileUnderneath().islandId;
+        // if (playerIsland == islandId)
+        // {
+        //     Player.SetPosition(Player.GetPosition() + dr);
+        // }
     }
 
 

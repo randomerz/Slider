@@ -79,8 +79,8 @@ public class SGrid : MonoBehaviour
         STile[,] newGrid = new STile[width, height];
         STile next = null;
 
-        int playerIsland = Player.GetStileUnderneath();
-        Vector3 playerOffset = Player.GetPosition() - GetStile(playerIsland).transform.position;
+        STile playerSTile = Player.GetStileUnderneath();
+        Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
 
         for (int x = 0; x < width; x++)
         {
@@ -100,7 +100,8 @@ public class SGrid : MonoBehaviour
             }
         }
 
-        Player.SetPosition(GetStile(playerIsland).transform.position + playerOffset);
+        if (playerSTile != null)
+            Player.SetPosition(playerSTile.transform.position + playerOffset);
 
         grid = newGrid;
 

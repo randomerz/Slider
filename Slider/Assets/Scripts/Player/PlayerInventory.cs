@@ -12,12 +12,13 @@ public class PlayerInventory : MonoBehaviour
 
     private static PlayerInventory instance;
 
-    private static List<Collectible.CollectibleData> collectibles = new List<Collectible.CollectibleData>(); // separate Sliders + items?
+    private static List<Collectible.CollectibleData> collectibles = new List<Collectible.CollectibleData>();
+
     private static List<Item> equipables = new List<Item>();
     private static IEnumerator<Item> itemIterator = equipables.GetEnumerator();
     private static Item currentItem = null;
 
-    private static bool collectedAnchor = false; //todo: serialize
+    private static bool hasCollectedAnchor = false; //todo: serialize
     [SerializeField] private GameObject anchorPrefab;
     
     private void Awake() {
@@ -25,15 +26,28 @@ public class PlayerInventory : MonoBehaviour
             instance = this;
         }
 
-        // popular inventory on scene start
-        if (collectedAnchor)
+        equipables.Clear();
+        itemIterator = equipables.GetEnumerator();
+        currentItem = null;
+        // populate inventory on scene start
+        if (hasCollectedAnchor)
         {
             GameObject anchor = Instantiate(anchorPrefab, transform.position, Quaternion.identity, transform);
             anchor.SetActive(false);
             equipables.Add(anchor.GetComponent<Item>());
+            anchor.GetComponent<Item>().SetCollider(false);
         }
     }
 
+    public static void SetHasCollectedAnchor(bool value)
+    {
+        hasCollectedAnchor = value;
+    }
+
+    public static bool GetHasCollectedAnchor()
+    {
+        return hasCollectedAnchor;
+    }
 
     public static void AddCollectible(Collectible collectible) {
         // Debug.Log("Adding " + collectible.GetArea() + " " + collectible.GetName());

@@ -87,8 +87,8 @@ public class OceanGrid : SGrid
 
     public void CheckShipwreck(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        Debug.Log(IsShipwreckAdjacent());
-        Debug.Log(GetGridString());
+        // Debug.Log(IsShipwreckAdjacent());
+        // Debug.Log(GetGridString());
         
         if (IsShipwreckAdjacent())
         {

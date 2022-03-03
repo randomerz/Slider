@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     [SerializeField] private bool isOnWater = false;
     private bool isInHouse = false;
 
+    private STile currentStileUnderneath;
+
     private InputSettings controls;
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
@@ -30,12 +32,12 @@ public class Player : MonoBehaviour
         _instance = this;
 
         controls = new InputSettings();
-        controls.Player.Move.performed += context => Move(context.ReadValue<Vector2>());
+        controls.Player.Move.performed += context => UpdateMove(context.ReadValue<Vector2>());
         if (PlayerInventory.Contains("Boots"))
         {
-            bootsSpeedUp();
+            BootsSpeedUp();
         }
-        UITrackerManager.addNewTracker(this.gameObject, trackerSprite);
+        UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
     }
 
     private void OnEnable() {
@@ -51,13 +53,6 @@ public class Player : MonoBehaviour
 
         // inputDir = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-        // if (!canMove)    // its fun to spam left/right in the cutscene :)
-        // {
-        //     playerAnimator.SetBool("isRunning", false);
-        // }
-        // else 
-        // {
-        playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
         if (inputDir.x < 0)
         {
             playerSpriteRenderer.flipX = true;
@@ -66,8 +61,8 @@ public class Player : MonoBehaviour
         {
             playerSpriteRenderer.flipX = false;
         }
-        // }
 
+        playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
         playerAnimator.SetBool("isOnWater", isOnWater);
         // playerAnimator.SetBool("hasSunglasses", hasSunglasses);
     }
@@ -77,6 +72,19 @@ public class Player : MonoBehaviour
         if (canMove)
         {
             transform.position += moveSpeed * moveSpeedMultiplier * inputDir.normalized * Time.deltaTime;
+        }
+
+        // updating childing
+        UpdateStileUnderneath();
+        // Debug.Log("Currently on: " + currentStileUnderneath);
+
+        if (currentStileUnderneath != null)
+        {
+            transform.SetParent(currentStileUnderneath.transform);
+        }
+        else
+        {
+            transform.SetParent(null);
         }
     }
 
@@ -94,7 +102,7 @@ public class Player : MonoBehaviour
 
 
 
-    private void Move(Vector2 moveDir) 
+    private void UpdateMove(Vector2 moveDir) 
     {
         inputDir = new Vector3(moveDir.x, moveDir.y);
         if (moveDir.magnitude != 0) 
@@ -116,7 +124,7 @@ public class Player : MonoBehaviour
 
     public static void SetPosition(Vector3 pos)
     {
-        _instance.transform.position = pos;
+        // _instance.transform.position = pos;
     }
 
     public static Vector3 GetPosition()
@@ -132,23 +140,81 @@ public class Player : MonoBehaviour
         return hit != null;
     }
 
-    public static int GetStileUnderneath()
+    public static STile GetStileUnderneath()
     {
-        Collider2D hit = Physics2D.OverlapPoint(_instance.transform.position, LayerMask.GetMask("Slider"));
-        if (hit == null || hit.GetComponent<STile>() == null)
-        {
-            //Debug.LogWarning("Player isn't on top of a slider!");
-            return -1;
-        }
-        return hit.GetComponent<STile>().islandId;
+        _instance.UpdateStileUnderneath();
+        return _instance.currentStileUnderneath;
     }
 
-    public static void setMoveSpeedMultiplier(float x)
+    // DC: a better way of calculating which stile the player is on, accounting for overlapping stiles
+    private void UpdateStileUnderneath()
+    {
+        // this doesnt work when you queue a move and stand at the edge. for some reason, on the moment of impact hits does not overlap with anything??
+        // Collider2D[] hits = Physics2D.OverlapPointAll(_instance.transform.position, LayerMask.GetMask("Slider"));
+        // Debug.Log("Hit " + hits.Length + " at " + _instance.transform.position);
+
+        // STile stileUnderneath = null;
+        // for (int i = 0; i < hits.Length; i++)
+        // {
+        //     STile s = hits[i].GetComponent<STile>();
+        //     if (s != null && s.isTileActive)
+        //     {
+        //         if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
+        //         {
+        //             // we are still on top of the same one
+        //             return;
+        //         }
+        //         if (stileUnderneath == null)
+        //         {
+        //             // otherwise we only care about the first hit
+        //             stileUnderneath = s;
+        //         }
+        //     }
+        // }
+        // currentStileUnderneath = stileUnderneath;
+
+        STile[,] grid = SGrid.current.GetGrid();
+        float offset = grid[0, 0].STILE_WIDTH / 2f;
+        
+        STile stileUnderneath = null;
+        foreach (STile s in grid)
+        {
+            if (s.isTileActive && IsPlayerInSTileBounds(s.transform.position, offset))
+            {
+                if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
+                {
+                    // we are still on top of the same one
+                    return;
+                }
+                
+                if (stileUnderneath == null || s.islandId < stileUnderneath.islandId)
+                {
+                    // in case where multiple overlap and none are picked, take the lowest number?
+                    stileUnderneath = s;
+                }
+            }
+        }
+
+        currentStileUnderneath = stileUnderneath;
+    }
+
+    private bool IsPlayerInSTileBounds(Vector3 stilePos, float offset)
+    {
+        Vector3 pos = transform.position;
+        if (stilePos.x - offset < pos.x && pos.x < stilePos.x + offset &&
+            stilePos.y - offset < pos.y && pos.y < stilePos.y + offset)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static void SetMoveSpeedMultiplier(float x)
     {
         _instance.moveSpeedMultiplier = x;
     }
 
-    public void bootsSpeedUp()
+    public void BootsSpeedUp()
     {
         if (moveSpeed==5)
         {   // tested, does effectively change the player's speed whenever boots are picked up

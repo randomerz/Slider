@@ -300,6 +300,7 @@ GameObject:
   - component: {fileID: 380634037254267601}
   - component: {fileID: 380634037254267614}
   - component: {fileID: 3635922835001186329}
+  - component: {fileID: 3255215873672854460}
   - component: {fileID: 380634037254267615}
   - component: {fileID: 380634037254267612}
   - component: {fileID: 5205933783250344951}
@@ -367,6 +368,19 @@ MonoBehaviour:
   dropCollidingMask:
     serializedVersion: 2
     m_Bits: 529
+--- !u!114 &3255215873672854460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380634037254267600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e18baec568b2f7a48bdf3a705beb682a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorPrefab: {fileID: 7895592663859285606, guid: 943cb2ed11f603141a66c99e265099d4, type: 3}
 --- !u!50 &380634037254267615
 Rigidbody2D:
   serializedVersion: 4
@@ -386,7 +400,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &380634037254267612
 BoxCollider2D:

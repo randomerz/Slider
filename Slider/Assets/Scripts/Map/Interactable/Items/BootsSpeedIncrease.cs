@@ -18,6 +18,6 @@ public class BootsSpeedIncrease : MonoBehaviour
     
     public void SpeedUp()
     {
-            player.bootsSpeedUp();
+            player.BootsSpeedUp();
     }
 }

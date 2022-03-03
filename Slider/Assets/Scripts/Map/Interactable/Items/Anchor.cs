@@ -22,27 +22,34 @@ public class Anchor : Item
 
     private void OnDisable()
     {
-        Player.setMoveSpeedMultiplier(1f);
+        Player.SetMoveSpeedMultiplier(1f);
     }
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null) // pickLocation may be moving
     {
-        Debug.Log("Anchor");
+        base.PickUpItem(pickLocation, callback);
+        UnanchorTile();
+
+        Player.SetMoveSpeedMultiplier(0.75f);
+        PlayerInventory.SetHasCollectedAnchor(true);
+        
+        UITrackerManager.RemoveTracker(this.gameObject);
+
+    }
+
+    public void UnanchorTile()
+    {
         STile[,] tiles = SGrid.current.GetGrid();
         foreach (STile tile in tiles)
         {
             tile.hasAnchor = false;
         }
-        base.PickUpItem(pickLocation, callback);
-
-        Player.setMoveSpeedMultiplier(0.75f);
-        UITrackerManager.removeTracker(this.gameObject);
-
     }
+
 
     public override void OnEquip()
     {
-        Player.setMoveSpeedMultiplier(0.75f);
+        Player.SetMoveSpeedMultiplier(0.75f);
     }
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback = null)
@@ -53,11 +60,10 @@ public class Anchor : Item
             hitTile.hasAnchor = true;
         }
 
-        Player.setMoveSpeedMultiplier(1f);
-        UITrackerManager.addNewTracker(this.gameObject, trackerSprite);
+        Player.SetMoveSpeedMultiplier(1f);
+        UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
         return null;
     }
-
     public override void dropCallback()
     {
         CameraShake.Shake(shakeDuration, shakeAmount);
