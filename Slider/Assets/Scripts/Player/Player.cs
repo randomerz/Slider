@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     private Vector3 inputDir;
     
     [Header("References")]
+    [SerializeField] private Sprite trackerSprite;
     [SerializeField] private PlayerAction playerAction;
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
     [SerializeField] private SpriteRenderer boatSpriteRenderer;
@@ -34,6 +35,7 @@ public class Player : MonoBehaviour
         {
             bootsSpeedUp();
         }
+        UITrackerManager.addNewTracker(this.gameObject, trackerSprite);
     }
 
     private void OnEnable() {

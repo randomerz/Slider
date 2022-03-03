@@ -7,11 +7,17 @@ public class Anchor : Item
     // Start is called before the first frame update
     [SerializeField] private float shakeAmount;
     [SerializeField] private float shakeDuration;
+    public Sprite trackerSprite;
 
     public void Start()
     {
         if (GetComponentInParent<STile>() != null)
             GetComponentInParent<STile>().hasAnchor = true;
+    }
+
+    private void OnEnable()
+    {
+        
     }
 
     private void OnDisable()
@@ -30,6 +36,7 @@ public class Anchor : Item
         base.PickUpItem(pickLocation, callback);
 
         Player.setMoveSpeedMultiplier(0.75f);
+        UITrackerManager.removeTracker(this.gameObject);
 
     }
 
@@ -47,7 +54,7 @@ public class Anchor : Item
         }
 
         Player.setMoveSpeedMultiplier(1f);
-
+        UITrackerManager.addNewTracker(this.gameObject, trackerSprite);
         return null;
     }
 

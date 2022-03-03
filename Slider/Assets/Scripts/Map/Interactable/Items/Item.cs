@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Item : MonoBehaviour 
 {
@@ -13,6 +14,10 @@ public class Item : MonoBehaviour
     [SerializeField] private float pickUpDuration;
     [SerializeField] private AnimationCurve xPickUpMotion;
     [SerializeField] private AnimationCurve yPickUpMotion;
+
+    // events
+    public UnityEvent OnPickUp;
+    public UnityEvent OnDrop;
 
 
 

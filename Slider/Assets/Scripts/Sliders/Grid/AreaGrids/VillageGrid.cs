@@ -130,6 +130,6 @@ public class VillageGrid : SGrid
     public void Explode()
     {
         caveDoor.SetActive(true);
-        CameraShake.Shake(4f, 3.5f);
+        CameraShake.Shake(3f, 3.5f);
     }
 }
