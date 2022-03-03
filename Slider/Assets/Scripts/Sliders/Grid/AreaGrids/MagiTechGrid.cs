@@ -132,9 +132,9 @@ public class MagiTechGrid : SGrid
 
     public bool AltGridCanMove(SMove move)
     {
-        foreach (Vector4Int m in move.moves)
+        foreach (Movement m in move.moves)
         {
-            if (!altGrid[m.x, m.y].CanMove(m.z, m.w))
+            if (!altGrid[m.startLoc.x, m.startLoc.y].CanMove(m.startLoc.x, m.startLoc.y))
             {
                 return false;
             }
@@ -153,10 +153,10 @@ public class MagiTechGrid : SGrid
 
             STile[,] newAltGrid = new STile[width, height];
             System.Array.Copy(altGrid, newAltGrid, width * height);
-            foreach (Vector4Int m in move.moves)
+            foreach (Movement m in move.moves)
             {
                 //grid[m.x, m.y].SetGridPosition(m.z, m.w);
-                newAltGrid[m.z, m.w] = altGrid[m.x, m.y];
+                newAltGrid[m.endLoc.x, m.endLoc.y] = altGrid[m.startLoc.x, m.startLoc.y];
                 //Debug.Log("Setting " + m.x + " " + m.y + " to " + m.z + " " + m.w);
             }
             altGrid = newAltGrid;
