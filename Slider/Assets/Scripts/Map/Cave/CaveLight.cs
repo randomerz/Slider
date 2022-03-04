@@ -35,7 +35,7 @@ public class CaveLight : MonoBehaviour
         SetLightOn(false);
     }
 
-    public void SetLightOn(bool value)
+    public void SetLightOn(bool value, bool playSound=false)
     {
         spriteRenderer.sprite = value ? onSprite : offSprite;
         if (LightOn != value)
@@ -46,6 +46,14 @@ public class CaveLight : MonoBehaviour
             {
                 LightManager.instance.UpdateLightMaskAll();
                 LightManager.instance.UpdateMaterials();
+            }
+
+            if (playSound)
+            {
+                if (value)
+                    AudioManager.Play("Power On"); 
+                else
+                    AudioManager.Play("Power Off"); 
             }
 
             OnLightSwitched?.Invoke(this, new OnLightSwitchedArgs { lightOn = value });

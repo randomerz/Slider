@@ -93,6 +93,27 @@ MonoBehaviour:
     loop: 0
     doRandomPitch: 1
     source: {fileID: 0}
+  - name: Hurt
+    clip: {fileID: 8300000, guid: 7313422adbe73294f805bf31847d41d8, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
+  - name: Power On
+    clip: {fileID: 8300000, guid: 63ed6873c5cde2d4bab704f4f53bcd65, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
+  - name: Power Off
+    clip: {fileID: 8300000, guid: 5483379a1dd5ada4f9bed87587440e28, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
   music:
   - name: Connection
     clip: {fileID: 8300000, guid: 3815ff5e82c648145900d146dbd53275, type: 3}

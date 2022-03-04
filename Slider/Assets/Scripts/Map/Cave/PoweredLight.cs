@@ -13,8 +13,12 @@ public class PoweredLight : CaveLight
 
     private void Awake()
     {
-        success = new UnityAction(() => { SetLightOn(true); });
-        failure = new UnityAction(() => { SetLightOn(false); });
+        success = new UnityAction(() => { 
+            SetLightOn(true, playSound:true); 
+        });
+        failure = new UnityAction(() => { 
+            SetLightOn(false, playSound:true); 
+        });
     }
 
     private void OnEnable()
