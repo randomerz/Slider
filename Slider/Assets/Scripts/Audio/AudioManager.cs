@@ -101,6 +101,12 @@ public class AudioManager : MonoBehaviour
         if (s.doRandomPitch)
             s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
 
+        // stop all other musics
+        foreach (Sound m in _music)
+        {
+            m.source.Stop();
+        }
+
         s.source.Play();
     }
 
@@ -116,10 +122,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        if (s.doRandomPitch)
-            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
-
-        s.source.Play();
+        s.source.Stop();
     }
 
     public static void StopMusic(string name)
@@ -134,10 +137,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        if (s.doRandomPitch)
-            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
-
-        s.source.Play();
+        s.source.Stop();
     }
 
     public static void SetSFXVolume(float value)

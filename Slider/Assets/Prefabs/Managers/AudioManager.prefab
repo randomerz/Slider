@@ -101,3 +101,24 @@ MonoBehaviour:
     loop: 1
     doRandomPitch: 0
     source: {fileID: 0}
+  - name: Caves
+    clip: {fileID: 8300000, guid: edfad8996565a3e4f84f3d6b275b66aa, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: Ocean
+    clip: {fileID: 8300000, guid: 37db68e0d2d22f941a8bd5e7a5565892, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: Desert
+    clip: {fileID: 8300000, guid: 02e9d45748c2cf1459ad5927e03ccf45, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    doRandomPitch: 0
+    source: {fileID: 0}

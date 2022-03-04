@@ -270,6 +270,34 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Debug"",
+            ""id"": ""006bbf48-ef31-4985-af97-4112bfd2135e"",
+            ""actions"": [
+                {
+                    ""name"": ""OpenDebug"",
+                    ""type"": ""Button"",
+                    ""id"": ""f9420b3e-a8e6-42ad-b409-2392ef2d5749"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""ccc5b607-6c0c-4db5-baec-5d61bffd0b4f"",
+                    ""path"": ""<Keyboard>/backquote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenDebug"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -311,6 +339,9 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
         m_UI_OpenArtifact = m_UI.FindAction("OpenArtifact", throwIfNotFound: true);
+        // Debug
+        m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
+        m_Debug_OpenDebug = m_Debug.FindAction("OpenDebug", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -456,6 +487,39 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // Debug
+    private readonly InputActionMap m_Debug;
+    private IDebugActions m_DebugActionsCallbackInterface;
+    private readonly InputAction m_Debug_OpenDebug;
+    public struct DebugActions
+    {
+        private @InputSettings m_Wrapper;
+        public DebugActions(@InputSettings wrapper) { m_Wrapper = wrapper; }
+        public InputAction @OpenDebug => m_Wrapper.m_Debug_OpenDebug;
+        public InputActionMap Get() { return m_Wrapper.m_Debug; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(DebugActions set) { return set.Get(); }
+        public void SetCallbacks(IDebugActions instance)
+        {
+            if (m_Wrapper.m_DebugActionsCallbackInterface != null)
+            {
+                @OpenDebug.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnOpenDebug;
+                @OpenDebug.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnOpenDebug;
+                @OpenDebug.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnOpenDebug;
+            }
+            m_Wrapper.m_DebugActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @OpenDebug.started += instance.OnOpenDebug;
+                @OpenDebug.performed += instance.OnOpenDebug;
+                @OpenDebug.canceled += instance.OnOpenDebug;
+            }
+        }
+    }
+    public DebugActions @Debug => new DebugActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -484,5 +548,9 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
     {
         void OnPause(InputAction.CallbackContext context);
         void OnOpenArtifact(InputAction.CallbackContext context);
+    }
+    public interface IDebugActions
+    {
+        void OnOpenDebug(InputAction.CallbackContext context);
     }
 }

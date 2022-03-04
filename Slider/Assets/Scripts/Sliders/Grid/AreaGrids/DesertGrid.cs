@@ -45,7 +45,7 @@ public class DesertGrid : SGrid
             }
         }
 
-        AudioManager.PlayMusic("Connection");
+        AudioManager.PlayMusic("Desert");
         UIEffects.FadeFromBlack();
     }
     
@@ -128,6 +128,7 @@ public class DesertGrid : SGrid
             monkeShake++;
             Debug.Log("The monkey got shook");
         }
+        // have an else?
         monkeyPrev = new Vector2Int(monkeyTile.x, monkeyTile.y);
         Debug.Log("Checked for monkey shake");
 

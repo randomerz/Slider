@@ -57,7 +57,7 @@ public class CaveGrid : SGrid
         GetCollectible("Slider 6").gameObject.SetActive(false); // flashlight puzzle
         GetCollectible("Slider 9").gameObject.SetActive(false); // final puzzle
 
-        AudioManager.PlayMusic("Connection");
+        AudioManager.PlayMusic("Caves");
         UIEffects.FadeFromBlack();
 
         SGrid.OnGridMove += (sender, e) => { Debug.Log(GetGridString()); };

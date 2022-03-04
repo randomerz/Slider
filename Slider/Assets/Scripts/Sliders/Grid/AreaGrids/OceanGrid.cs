@@ -39,7 +39,7 @@ public class OceanGrid : SGrid
 
         burriedGuyNPC.SetActive(false);
 
-        AudioManager.PlayMusic("Connection");
+        AudioManager.PlayMusic("Ocean");
         UIEffects.FadeFromBlack();
 
     }
