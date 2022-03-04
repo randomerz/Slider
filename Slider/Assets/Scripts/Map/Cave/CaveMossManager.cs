@@ -82,21 +82,22 @@ public class CaveMossManager : MonoBehaviour
         {
             stile = GetComponentInParent<CaveSTile>();
         }
+    }
 
+    private void OnEnable()
+    {
         //Conditions under which the moss updates.
-        SGridAnimator.OnSTileMoveEnd += (sender, e) =>
-        {
-            UpdateMoss();
-        };
-        SGrid.OnSTileEnabled += (sender, e) =>
-        {
-            UpdateMoss();
-        };
+        SGridAnimator.OnSTileMoveEnd += UpdateMoss;
+        SGrid.OnSTileEnabled += UpdateMoss;
+        CaveLight.OnLightSwitched += UpdateMoss;
+    }
 
-        CaveLight.OnLightSwitched += (sender, e) =>
-        {
-            UpdateMoss();
-        };
+    private void OnDisable()
+    {
+        //Conditions under which the moss updates.
+        SGridAnimator.OnSTileMoveEnd -= UpdateMoss;
+        SGrid.OnSTileEnabled -= UpdateMoss;
+        CaveLight.OnLightSwitched -= UpdateMoss;
     }
 
     private void UpdateMoss()
@@ -130,6 +131,21 @@ public class CaveMossManager : MonoBehaviour
 
             });
         }
+    }
+
+    private void UpdateMoss(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        UpdateMoss();
+    }
+
+    private void UpdateMoss(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        UpdateMoss();
+    }
+
+    private void UpdateMoss(object sender, CaveLight.OnLightSwitchedArgs e)
+    {
+        UpdateMoss();
     }
 
     private void ForEachMossTileIn(Tilemap tm, Action<Vector3Int> func)

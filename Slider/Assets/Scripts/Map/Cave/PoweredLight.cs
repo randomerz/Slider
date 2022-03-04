@@ -21,22 +21,30 @@ public class PoweredLight : CaveLight
     {
         powerConditionals.onSuccess?.AddListener(success);
         powerConditionals.onFail?.AddListener(failure);
-
-        SGrid.OnSTileEnabled += (sender, e) => { powerConditionals.CheckConditions(); };
-        SGridAnimator.OnSTileMoveStart += (sender, e) => { powerConditionals.CheckConditions(); };
-        SGridAnimator.OnSTileMoveEnd += (sender, e) => { powerConditionals.CheckConditions(); };
     }
     private void OnDisable()
     {
         powerConditionals.onSuccess?.RemoveListener(success);
         powerConditionals.onFail?.RemoveListener(failure);
 
-        SGrid.OnSTileEnabled -= (sender, e) => { powerConditionals.CheckConditions(); };
-        SGridAnimator.OnSTileMoveStart -= (sender, e) => { powerConditionals.CheckConditions(); };
-        SGridAnimator.OnSTileMoveEnd -= (sender, e) => { powerConditionals.CheckConditions(); };
+        SGrid.OnSTileEnabled -= CheckConditions;
+        SGridAnimator.OnSTileMoveStart -= CheckConditions;
+        SGridAnimator.OnSTileMoveEnd -= CheckConditions;
     }
 
     private void Start()
+    {
+        SGrid.OnSTileEnabled += CheckConditions;
+        SGridAnimator.OnSTileMoveStart += CheckConditions;
+        SGridAnimator.OnSTileMoveEnd += CheckConditions;
+    }
+
+    private void CheckConditions(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        powerConditionals.CheckConditions();
+    }
+
+    private void CheckConditions(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         powerConditionals.CheckConditions();
     }

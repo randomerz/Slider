@@ -59,14 +59,14 @@ public class LightManager : MonoBehaviour
 
     private void OnEnable()
     {
-        SGrid.OnSTileEnabled += (sender, e) => { LightManager.instance.UpdateAll(); };
-        SGridAnimator.OnSTileMoveEnd += (sender, e) => { LightManager.instance.UpdateAll(); };
+        SGrid.OnSTileEnabled += UpdateAll;
+        SGridAnimator.OnSTileMoveEnd += UpdateAll;
     }
 
     private void OnDisable()
     {
-        SGrid.OnSTileEnabled -= (sender, e) => { LightManager.instance.UpdateAll(); };
-        SGridAnimator.OnSTileMoveEnd -= (sender, e) => { LightManager.instance.UpdateAll(); };
+        SGrid.OnSTileEnabled -= UpdateAll;
+        SGridAnimator.OnSTileMoveEnd -= UpdateAll;
     }
 
     public void UpdateAll()
@@ -75,6 +75,18 @@ public class LightManager : MonoBehaviour
         UpdateLightMaskAll();
         UpdateMaterials();
     }
+
+    //These are just to handle various events
+    public void UpdateAll(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        UpdateAll();
+    }
+
+    private void UpdateAll(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        UpdateAll();
+    }
+    
 
     private void SetTileMapSize()
     {
