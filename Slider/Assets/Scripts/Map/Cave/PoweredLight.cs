@@ -22,6 +22,7 @@ public class PoweredLight : CaveLight
         powerConditionals.onSuccess?.AddListener(success);
         powerConditionals.onFail?.AddListener(failure);
 
+        SGrid.OnSTileEnabled += (sender, e) => { powerConditionals.CheckConditions(); };
         SGridAnimator.OnSTileMoveStart += (sender, e) => { powerConditionals.CheckConditions(); };
         SGridAnimator.OnSTileMoveEnd += (sender, e) => { powerConditionals.CheckConditions(); };
     }
@@ -30,6 +31,7 @@ public class PoweredLight : CaveLight
         powerConditionals.onSuccess?.RemoveListener(success);
         powerConditionals.onFail?.RemoveListener(failure);
 
+        SGrid.OnSTileEnabled -= (sender, e) => { powerConditionals.CheckConditions(); };
         SGridAnimator.OnSTileMoveStart -= (sender, e) => { powerConditionals.CheckConditions(); };
         SGridAnimator.OnSTileMoveEnd -= (sender, e) => { powerConditionals.CheckConditions(); };
     }
