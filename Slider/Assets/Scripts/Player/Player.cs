@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour
     private STile currentStileUnderneath;
 
     private InputSettings controls;
+    [SerializeField] private InputActionAsset inputActions;
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
     
@@ -30,8 +32,12 @@ public class Player : MonoBehaviour
     void Awake()
     {
         _instance = this;
-
         controls = new InputSettings();
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!String.IsNullOrEmpty(rebinds))
+        {
+            inputActions.LoadBindingOverridesFromJson(rebinds);
+        }
         controls.Player.Move.performed += context => UpdateMove(context.ReadValue<Vector2>());
         if (PlayerInventory.Contains("Boots"))
         {
