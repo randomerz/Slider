@@ -6,7 +6,7 @@ public class VillageGrid : SGrid
 {
     public static VillageGrid instance;
 
-    public GameObject caveDoor;
+    public GameObject caveDoorRocks;
     public GameObject particleSpawner;
 
     private bool fishOn;
@@ -111,9 +111,7 @@ public class VillageGrid : SGrid
         if (!PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153"))
         {
             // ActivateSliderCollectible(9);
-            ActivateCollectible("Slider 9");
-            GetCollectible("Slider 9").transform.position = Player.GetPosition();
-            UIManager.closeUI = true;
+            GivePlayerTheCollectible("Slider 9");
 
             // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
             StartCoroutine(CheckCompletionsAfterDelay(1.1f));
@@ -122,16 +120,9 @@ public class VillageGrid : SGrid
         }
     }
 
-    private IEnumerator CheckCompletionsAfterDelay(float t)
-    {
-        yield return new WaitForSeconds(t);
-
-        CheckCompletions(this, null); // sets the final one to be complete
-    }
-
     public void Explode()
     {
-        caveDoor.SetActive(true);
-        CameraShake.Shake(4f, 3.5f);
+        caveDoorRocks.SetActive(false);
+        CameraShake.Shake(3f, 3.5f);
     }
 }

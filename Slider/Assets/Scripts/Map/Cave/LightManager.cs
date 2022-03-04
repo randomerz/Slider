@@ -57,8 +57,16 @@ public class LightManager : MonoBehaviour
         UpdateMaterials();
     }
 
-    void Update()
+    private void OnEnable()
     {
+        SGrid.OnSTileEnabled += (sender, e) => { LightManager.instance.UpdateAll(); };
+        SGridAnimator.OnSTileMoveEnd += (sender, e) => { LightManager.instance.UpdateAll(); };
+    }
+
+    private void OnDisable()
+    {
+        SGrid.OnSTileEnabled -= (sender, e) => { LightManager.instance.UpdateAll(); };
+        SGridAnimator.OnSTileMoveEnd -= (sender, e) => { LightManager.instance.UpdateAll(); };
     }
 
     public void UpdateAll()
@@ -95,16 +103,13 @@ public class LightManager : MonoBehaviour
             }
         }
     }
-
-
-
     private void FindMaterials()
     {
         _caveLightMaterials = new List<Material>();
         caveShader = Shader.Find("Shader Graphs/CaveTileLightShader");
 
-        Renderer[] renderers = tilesRoot.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in renderers)
+        Renderer[] allRenderers = FindObjectsOfType<Renderer>();
+        foreach (Renderer r in allRenderers)
         {
             if (r.material.shader == caveShader)
             {
