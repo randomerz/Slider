@@ -60,7 +60,7 @@ public class CaveGrid : SGrid
         AudioManager.PlayMusic("Caves");
         UIEffects.FadeFromBlack();
 
-        SGrid.OnGridMove += (sender, e) => { Debug.Log(GetGridString()); };
+        //SGrid.OnGridMove += (sender, e) => { Debug.Log(GetGridString()); };
     }
 
     private void OnEnable()
