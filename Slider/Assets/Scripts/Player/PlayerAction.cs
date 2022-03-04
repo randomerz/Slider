@@ -21,7 +21,8 @@ public class PlayerAction : MonoBehaviour
 
     private void Awake() 
     {
-        controls = new InputSettings();
+        // controls = new InputSettings();
+        controls = InputManager.inputActions; 
         controls.Player.Action.performed += context => Action();
         controls.Player.CycleEquip.performed += context => CycleEquip();
     }
