@@ -60,6 +60,7 @@ public class PlayerMoveOffMoss : MonoBehaviour
         if (movePlayerOffMoss)
         {
             player.transform.position = playerRespawn.position;
+            AudioManager.Play("Hurt");
         }
     }
     
