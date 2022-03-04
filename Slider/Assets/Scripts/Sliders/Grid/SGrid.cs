@@ -79,8 +79,8 @@ public class SGrid : MonoBehaviour
         STile[,] newGrid = new STile[width, height];
         STile next = null;
 
-        int playerIsland = Player.GetStileUnderneath();
-        Vector3 playerOffset = Player.GetPosition() - GetStile(playerIsland).transform.position;
+        STile playerSTile = Player.GetStileUnderneath();
+        Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
 
         for (int x = 0; x < width; x++)
         {
@@ -100,7 +100,8 @@ public class SGrid : MonoBehaviour
             }
         }
 
-        Player.SetPosition(GetStile(playerIsland).transform.position + playerOffset);
+        if (playerSTile != null)
+            Player.SetPosition(playerSTile.transform.position + playerOffset);
 
         grid = newGrid;
 
@@ -181,6 +182,19 @@ public class SGrid : MonoBehaviour
         return stileList;
     }
 
+    //S: copy of Player's GetStileUnderneath for the tracker
+    public STile GetStileUnderneath(GameObject target)
+    {
+        Collider2D hit = Physics2D.OverlapPoint(target.transform.position, LayerMask.GetMask("Slider"));
+        if (hit == null || hit.GetComponent<STile>() == null)
+        {
+            //Debug.LogWarning("Target isn't on top of a slider!");
+            return null;
+        }
+        return hit.GetComponent<STile>();
+    }
+
+
     //L: This mainly checks if any of the tiles involved in SMove 
     //D: this is should also not really be relied on
     public bool CanMove(SMove move)
@@ -210,7 +224,11 @@ public class SGrid : MonoBehaviour
 
     public void ActivateCollectible(string name)
     {
-        GetCollectible(name).gameObject.SetActive(true);
+        if (!PlayerInventory.Contains(name, myArea))
+        {
+            GetCollectible(name).gameObject.SetActive(true);
+        }
+            
     }
     public void ActivateSliderCollectible(int sliderId)
     {
@@ -321,5 +339,12 @@ public class SGrid : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void GivePlayerTheCollectible(string name)
+    {
+        ActivateCollectible(name);
+        GetCollectible(name).transform.position = Player.GetPosition();
+        UIManager.closeUI = true;
     }
 }

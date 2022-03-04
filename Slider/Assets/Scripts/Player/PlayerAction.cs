@@ -37,6 +37,12 @@ public class PlayerAction : MonoBehaviour
         controls.Disable();
     }
 
+    private void OnDestroy() 
+    {
+        // controls.Player.Action.Reset();
+        // controls.Player.CycleEquip.Reset();
+    }
+
     private void Update()
     {
         LayerMask StileLayerMask = LayerMask.GetMask("Slider");

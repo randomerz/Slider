@@ -30,15 +30,18 @@ public class CaveLight : MonoBehaviour
 
     public void SetLightOn(bool value)
     {
-        LightOn = value;
-        Debug.Log("Light " + gameObject.name + " is " + (value ? "on" : "off"));
-        if (LightManager.instance != null)
+        if (LightOn != value)
         {
-            LightManager.instance.UpdateLightMaskAll();
-            LightManager.instance.UpdateMaterials();
-        }
+            LightOn = value;
+            Debug.Log("Light " + gameObject.name + " is " + (value ? "on" : "off"));
+            if (LightManager.instance != null)
+            {
+                LightManager.instance.UpdateLightMaskAll();
+                LightManager.instance.UpdateMaterials();
+            }
 
-        OnLightSwitched?.Invoke(this, new OnLightSwitchedArgs { lightOn = value });
+            OnLightSwitched?.Invoke(this, new OnLightSwitchedArgs { lightOn = value });
+        }
     }
 
     /* L: Gets the light mask for THIS LIGHT ONLY (see LightManager.cs for the whole world) */

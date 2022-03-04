@@ -12,11 +12,9 @@ public class PoweredLight : CaveLight
     {
         powerConditionals.onSuccess?.AddListener(new UnityAction(() => { SetLightOn(true); }));
         powerConditionals.onFail?.AddListener(new UnityAction(() => { SetLightOn(false); }));
-    }
 
-    private void Update()
-    {
-        powerConditionals.CheckConditions();
+        SGridAnimator.OnSTileMoveStart += (sender, e) => { powerConditionals.CheckConditions(); };
+        SGridAnimator.OnSTileMoveEnd += (sender, e) => { powerConditionals.CheckConditions(); };
     }
 }
 
