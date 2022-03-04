@@ -328,7 +328,7 @@ public class SGrid : MonoBehaviour
         for (int x = 0; x < current.width; x++) {
             for (int y = 0; y < current.width; y++) {
                 // int tid = current.targetGrid[x, y];
-                string tids = current.targetGrid[(current.height - y - 1) * current.width + x].ToString();
+                string tids = GetTileIdAt(x, y);
                 if (tids == "*") 
                 {
                     UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
@@ -346,5 +346,10 @@ public class SGrid : MonoBehaviour
         ActivateCollectible(name);
         GetCollectible(name).transform.position = Player.GetPosition();
         UIManager.closeUI = true;
+    }
+
+    private static string GetTileIdAt(int x, int y)
+    {
+        return current.targetGrid[(current.height - y - 1) * current.width + x].ToString();
     }
 }

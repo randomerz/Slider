@@ -57,10 +57,6 @@ public class LightManager : MonoBehaviour
         UpdateMaterials();
     }
 
-    void Update()
-    {
-    }
-
     public void UpdateAll()
     {
         GenerateHeightMask();
@@ -95,9 +91,6 @@ public class LightManager : MonoBehaviour
             }
         }
     }
-
-
-
     private void FindMaterials()
     {
         _caveLightMaterials = new List<Material>();
