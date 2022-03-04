@@ -14,7 +14,7 @@ public class CaveGrid : SGrid
     }
     public static event System.EventHandler<OnLightMapUpdateArgs> OnLightMapUpdate;
 
-    private bool checkLightingCompletion = false;
+    private static bool checkLightingCompletion = false;
 
     private bool allTilesLit = false;
 
@@ -99,19 +99,23 @@ public class CaveGrid : SGrid
 
     private void CheckLightingCompletions()
     {
-        allTilesLit = true;
-        for (int x = 0; x < current.width; x++)
+        //L: Scuffy me Luffy
+        if (SGrid.current != null && (SGrid.current as CaveGrid) != null)
         {
-            for (int y = 0; y < current.width; y++)
+            allTilesLit = true;
+            for (int x = 0; x < current.width; x++)
             {
-                if (grid[x, y].isTileActive)
+                for (int y = 0; y < current.width; y++)
                 {
-                    bool currLit = (grid[x, y] as CaveSTile).GetTileLit();
-                    if (!currLit)
+                    if (grid[x, y].isTileActive)
                     {
-                        allTilesLit = false;
+                        bool currLit = (grid[x, y] as CaveSTile).GetTileLit();
+                        if (!currLit)
+                        {
+                            allTilesLit = false;
+                        }
+                        UIArtifact.SetButtonComplete(grid[x, y].islandId, currLit);
                     }
-                    UIArtifact.SetButtonComplete(grid[x, y].islandId, currLit);
                 }
             }
         }
