@@ -66,4 +66,9 @@ public class DebugUIManager : MonoBehaviour
 
         return false;
     }
+
+    public void SpawnAnchor()
+    {
+        
+    }
 }
