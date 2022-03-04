@@ -175,11 +175,12 @@ public class Player : MonoBehaviour
 
         STile[,] grid = SGrid.current.GetGrid();
         float offset = grid[0, 0].STILE_WIDTH / 2f;
+        float housingOffset = -150;
         
         STile stileUnderneath = null;
         foreach (STile s in grid)
         {
-            if (s.isTileActive && IsPlayerInSTileBounds(s.transform.position, offset))
+            if (s.isTileActive && IsPlayerInSTileBounds(s.transform.position, offset, housingOffset))
             {
                 if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
                 {
@@ -199,11 +200,12 @@ public class Player : MonoBehaviour
         currentStileUnderneath = stileUnderneath;
     }
 
-    private bool IsPlayerInSTileBounds(Vector3 stilePos, float offset)
+    private bool IsPlayerInSTileBounds(Vector3 stilePos, float offset, float housingOffset)
     {
         Vector3 pos = transform.position;
         if (stilePos.x - offset < pos.x && pos.x < stilePos.x + offset &&
-            stilePos.y - offset < pos.y && pos.y < stilePos.y + offset)
+           (stilePos.y - offset < pos.y && pos.y < stilePos.y + offset || 
+            stilePos.y - offset + housingOffset < pos.y && pos.y < stilePos.y + offset + housingOffset))
         {
             return true;
         }
