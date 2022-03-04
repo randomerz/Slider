@@ -5,8 +5,8 @@ using UnityEngine;
 public class DiceGizmo : MonoBehaviour
 {
     public STile myStile;
-    public int value;
-    public Animator animator; // this is only based on Tree animator controller rn
+    public int value = 1;
+    //public Animator animator; // this is only based on Tree animator controller rn
     //Chen: Should the above be changed to the Dice animator controller or something?
 
     private void Awake()
@@ -31,11 +31,19 @@ public class DiceGizmo : MonoBehaviour
 
     public void OnStileChangeDir(object sender, STile.STileMoveArgs e)
     {
-        if (e.moveDir == Vector2.zero)
+        //Debug.Log("Dice stuff");
+        //Debug.Log(e.moveDir);
+        if (e.moveDir != Vector2.zero)
         {
-            animator.SetTrigger("finishedMoving");
+            value++;
+            if (value == 7)
+            {
+                value = 1;
+            }
         }
+        //Debug.Log(value);
         // Debug.Log("Updated!");
+        //Chen: Upadte dice dialogue here maybe?
     }
 
 
