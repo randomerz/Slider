@@ -39,8 +39,6 @@ public class CaveSTile : STile
                 objectsThatBlockLight.Add(o.gameObject);
             }
         }
-
-        SGridAnimator.OnSTileMoveEnd += UpdateLightingAfterMove;
     }
 
     private new void Start()
@@ -55,14 +53,6 @@ public class CaveSTile : STile
         base.Update();
 
         if (LightManager.instance != null && this.GetMovingDirection() != Vector2.zero)
-        {
-            LightManager.instance.UpdateAll();
-        }
-    }
-
-    private void UpdateLightingAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (e.stile == this)
         {
             LightManager.instance.UpdateAll();
         }

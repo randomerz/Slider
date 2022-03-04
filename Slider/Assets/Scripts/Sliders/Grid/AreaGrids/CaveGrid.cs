@@ -136,7 +136,7 @@ public class CaveGrid : SGrid
                                                  { 6, 3, 4 },
                                                  { 8, 7, 9 } };
         SetGrid(completedPuzzle);
-        SGrid.CheckCompletions(this, null);
+        StartCoroutine(CheckCompletionsAfterDelay(1.1f));
     }
 
     public override void SaveGrid() 

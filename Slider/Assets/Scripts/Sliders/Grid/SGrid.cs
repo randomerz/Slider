@@ -341,6 +341,13 @@ public class SGrid : MonoBehaviour
         }
     }
 
+    protected IEnumerator CheckCompletionsAfterDelay(float t)
+    {
+        yield return new WaitForSeconds(t);
+
+        CheckCompletions(this, null); // sets the final one to be complete
+    }
+
     public void GivePlayerTheCollectible(string name)
     {
         ActivateCollectible(name);

@@ -57,6 +57,18 @@ public class LightManager : MonoBehaviour
         UpdateMaterials();
     }
 
+    private void OnEnable()
+    {
+        SGrid.OnSTileEnabled += (sender, e) => { LightManager.instance.UpdateAll(); };
+        SGridAnimator.OnSTileMoveEnd += (sender, e) => { LightManager.instance.UpdateAll(); };
+    }
+
+    private void OnDisable()
+    {
+        SGrid.OnSTileEnabled -= (sender, e) => { LightManager.instance.UpdateAll(); };
+        SGridAnimator.OnSTileMoveEnd -= (sender, e) => { LightManager.instance.UpdateAll(); };
+    }
+
     public void UpdateAll()
     {
         GenerateHeightMask();
