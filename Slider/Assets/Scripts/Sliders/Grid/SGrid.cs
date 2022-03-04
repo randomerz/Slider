@@ -237,7 +237,6 @@ public class SGrid : MonoBehaviour
             //Debug.Log("Activated Collectible?");
             //Debug.Log(GetCollectible("Slider " + sliderId).gameObject.name);
             GetCollectible("Slider " + sliderId).gameObject.SetActive(true);
-            GetCollectible("Slider " + sliderId).gameObject.SetActive(true);
             AudioManager.Play("Puzzle Complete");
         }
     }
