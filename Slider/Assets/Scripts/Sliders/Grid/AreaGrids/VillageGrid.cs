@@ -120,13 +120,6 @@ public class VillageGrid : SGrid
         }
     }
 
-    private IEnumerator CheckCompletionsAfterDelay(float t)
-    {
-        yield return new WaitForSeconds(t);
-
-        CheckCompletions(this, null); // sets the final one to be complete
-    }
-
     public void Explode()
     {
         caveDoorRocks.SetActive(false);
