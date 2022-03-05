@@ -9,7 +9,9 @@ public class CaveSTile : STile
     public CaveGrid grid;
     public Tilemap wallsSTilemap;
 
-    public List<GameObject> objectsThatBlockLight;
+    private List<GameObject> objectsThatBlockLight;
+
+    [SerializeField] private List<Vector2Int> validDirsForLight;
 
     public Texture2D HeightMask
     {
@@ -37,8 +39,6 @@ public class CaveSTile : STile
                 objectsThatBlockLight.Add(o.gameObject);
             }
         }
-
-        SGridAnimator.OnSTileMoveEnd += UpdateLightingAfterMove;
     }
 
     private new void Start()
@@ -58,14 +58,6 @@ public class CaveSTile : STile
         }
     }
 
-    private void UpdateLightingAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (e.stile == this)
-        {
-            LightManager.instance.UpdateAll();
-        }
-    }
-
     public override void SetTileActive(bool isTileActive)
     {
         base.SetTileActive(isTileActive);
@@ -77,8 +69,47 @@ public class CaveSTile : STile
         }
     }
 
+    public bool GetTileLit()
+    {
+        //Check if this tile has a light source
+        CaveLight thisLight = GetComponentInChildren<CaveLight>();
+        if (thisLight != null && thisLight.LightOn)
+        {
+            return true;
+        }
+
+        //Check if any valid adjacent tile has a light source
+        foreach (var dir in validDirsForLight)
+        {
+            Vector2Int tileToCheck = new Vector2Int(this.x, this.y) + dir;
+
+            //Border lights (hardcoded for now)
+            if (tileToCheck == new Vector2Int(3, 2) || tileToCheck == new Vector2Int(2, -1))
+            {
+                return true;
+            }
+            if (tileToCheck.x >= 0 && tileToCheck.x < SGrid.current.width && tileToCheck.y >= 0 && tileToCheck.y < SGrid.current.height)
+            {
+                CaveSTile tile = (CaveSTile) SGrid.current.GetGrid()[tileToCheck.x, tileToCheck.y];
+                CaveLight light = tile.GetComponentInChildren<CaveLight>();
+                if (tile.isTileActive && light != null && light.LightOn)
+                {
+                    foreach (var lightDir in tile.validDirsForLight)
+                    {
+                        if (lightDir.x == -dir.x && lightDir.y == -dir.y)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     //L: Gets the STILE_WIDTH x STILE_WIDTH (17 x 17) height mask. (1 if there's a wall tile, 0 if not)
-    public Texture2D GenerateHeightMask()
+    private Texture2D GenerateHeightMask()
     {
         int offset = STILE_WIDTH / 2;
         _heightMask = new Texture2D(STILE_WIDTH, STILE_WIDTH);

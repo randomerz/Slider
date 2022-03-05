@@ -84,52 +84,72 @@ public class CaveMossManager : MonoBehaviour
         }
 
         //Conditions under which the moss updates.
-        SGridAnimator.OnSTileMoveEnd += (sender, e) =>
-        {
-            UpdateMoss();
-        };
-        SGrid.OnSTileEnabled += (sender, e) =>
-        {
-            UpdateMoss();
-        };
+        SGridAnimator.OnSTileMoveEnd += UpdateMoss;
+        SGrid.OnSTileEnabled += UpdateMoss;
+        CaveLight.OnLightSwitched += UpdateMoss;
+    }
 
-        CaveLight.OnLightSwitched += (sender, e) =>
-        {
-            UpdateMoss();
-        };
+    private void OnEnable()
+    {
+
+    }
+
+    private void OnDisable()
+    {
+        //Conditions under which the moss updates.
+        SGridAnimator.OnSTileMoveEnd -= UpdateMoss;
+        SGrid.OnSTileEnabled -= UpdateMoss;
+        CaveLight.OnLightSwitched -= UpdateMoss;
     }
 
     private void UpdateMoss()
     {
-        if (LightManager.instance != null)
+        //Super hacky because events are being stupid.
+        if (SGrid.current != null && SGrid.current as CaveGrid != null)
         {
-            ForEachMossTileIn(mossMap, (pos) =>
+            if (LightManager.instance != null)
             {
-
-                bool posIsLit = LightManager.instance.GetLightMaskAt(mossMap, pos);
-                bool needsToAnimate = posIsLit ? mossMap.GetColor(pos).a > 0.5f : mossMap.GetColor(pos).a < 0.5f;
-
-                if (needsToAnimate)
+                ForEachMossTileIn(mossMap, (pos) =>
                 {
-                    /*
-                    if (tilesAnimating.ContainsKey(pos) && tilesAnimating[pos].IsGrowing == posIsLit)
+
+                    bool posIsLit = LightManager.instance.GetLightMaskAt(mossMap, pos);
+                    bool needsToAnimate = posIsLit ? mossMap.GetColor(pos).a > 0.5f : mossMap.GetColor(pos).a < 0.5f;
+
+                    if (needsToAnimate)
                     {
-                        //L: The tile is animating the wrong way, stop the animation.
-                        StopCoroutine(tilesAnimating[pos].Animation);
-                        tilesAnimating.Remove(pos);
+                        /*
+                        if (tilesAnimating.ContainsKey(pos) && tilesAnimating[pos].IsGrowing == posIsLit)
+                        {
+                            //L: The tile is animating the wrong way, stop the animation.
+                            StopCoroutine(tilesAnimating[pos].Animation);
+                            tilesAnimating.Remove(pos);
+                        }
+                        */
+
+                        if (!tilesAnimating.ContainsKey(pos) && needsToAnimate)
+                        {
+                            //L: The tile needs to animate and is not already animating in that direction.
+                            tilesAnimating.Add(pos, new MossAnimData(StartCoroutine(posIsLit ? RecedeMoss(pos) : GrowMoss(pos)), !posIsLit));
+                        }
                     }
-                    */
-
-                    if (!tilesAnimating.ContainsKey(pos) && needsToAnimate)
-                    {
-                        //L: The tile needs to animate and is not already animating in that direction.
-                        tilesAnimating.Add(pos, new MossAnimData(StartCoroutine(posIsLit ? RecedeMoss(pos) : GrowMoss(pos)), !posIsLit));
-                    }
-                }
-
-
-            });
+                });
+            }
         }
+    }
+
+    private void UpdateMoss(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        UpdateMoss();
+    }
+
+    private void UpdateMoss(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        UpdateMoss();
+    }
+
+    private void UpdateMoss(object sender, CaveLight.OnLightSwitchedArgs e)
+    {
+        UpdateMoss();
     }
 
     private void ForEachMossTileIn(Tilemap tm, Action<Vector3Int> func)
