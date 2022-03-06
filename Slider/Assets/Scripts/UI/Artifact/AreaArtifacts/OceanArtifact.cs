@@ -66,12 +66,15 @@ public class OceanArtifact : UIArtifact
 
             if (grid[curX, curY].isTileActive)
             {
-                isAtLeastOneActive = true;
                 if (grid[curX, curY].hasAnchor)
                 {
                     SMoveRotateArr.RemoveAt(i);
                     tb.RemoveAt(i);
-                }   
+                }
+                else
+                {
+                    isAtLeastOneActive = true;
+                }
             }
         }
 

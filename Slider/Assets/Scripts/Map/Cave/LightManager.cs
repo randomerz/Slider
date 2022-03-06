@@ -57,8 +57,16 @@ public class LightManager : MonoBehaviour
         UpdateMaterials();
     }
 
-    void Update()
+    private void OnEnable()
     {
+        SGrid.OnSTileEnabled += UpdateAll;
+        SGridAnimator.OnSTileMoveEnd += UpdateAll;
+    }
+
+    private void OnDisable()
+    {
+        SGrid.OnSTileEnabled -= UpdateAll;
+        SGridAnimator.OnSTileMoveEnd -= UpdateAll;
     }
 
     public void UpdateAll()
@@ -67,6 +75,18 @@ public class LightManager : MonoBehaviour
         UpdateLightMaskAll();
         UpdateMaterials();
     }
+
+    //These are just to handle various events
+    public void UpdateAll(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        UpdateAll();
+    }
+
+    private void UpdateAll(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        UpdateAll();
+    }
+    
 
     private void SetTileMapSize()
     {
@@ -95,16 +115,13 @@ public class LightManager : MonoBehaviour
             }
         }
     }
-
-
-
     private void FindMaterials()
     {
         _caveLightMaterials = new List<Material>();
         caveShader = Shader.Find("Shader Graphs/CaveTileLightShader");
 
-        Renderer[] renderers = tilesRoot.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in renderers)
+        Renderer[] allRenderers = FindObjectsOfType<Renderer>();
+        foreach (Renderer r in allRenderers)
         {
             if (r.material.shader == caveShader)
             {

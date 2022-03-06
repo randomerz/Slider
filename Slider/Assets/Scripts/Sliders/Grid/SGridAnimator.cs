@@ -113,9 +113,10 @@ public class SGridAnimator : MonoBehaviour
         // if the player is on a slider, disable hitboxes temporarily
         foreach (Vector2Int p in positions)
         {
-            if (Player.GetStileUnderneath() != grid[p.x, p.y].islandId)
+            // Debug.Log(Player.GetStileUnderneath());
+            if (Player.GetStileUnderneath() != null && Player.GetStileUnderneath().islandId != grid[p.x, p.y].islandId)
             {
-                //Debug.Log("disabling" +  p.x + " " + p.y);
+                // Debug.Log("disabling" +  p.x + " " + p.y);
                 grid[p.x, p.y].SetSliderCollider(false);
                 disabledColliders.Add(grid[p.x, p.y]);
             }
