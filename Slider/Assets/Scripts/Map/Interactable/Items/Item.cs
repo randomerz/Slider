@@ -34,18 +34,28 @@ public class Item : MonoBehaviour
     public virtual STile DropItem(Vector3 dropLocation, System.Action callback=null) 
     {
         StartCoroutine(AnimateDrop(dropLocation, callback));
-        Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
-        if (hit == null || hit.GetComponent<STile>() == null)
+        
+        // Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
+        // if (hit == null || hit.GetComponent<STile>() == null)
+        // {
+        //     gameObject.transform.parent = null;
+        //     //Debug.LogWarning("Player isn't on top of a slider!");
+        //     return null;
+        // }
+
+        // STile hitTile = hit.GetComponent<STile>();
+        STile hitStile = SGrid.current.GetStileUnderneath(gameObject);
+        
+        if (hitStile == null) 
         {
-            gameObject.transform.parent = null;
-            //Debug.LogWarning("Player isn't on top of a slider!");
-            return null;
+            gameObject.transform.SetParent(null);
+        }
+        else 
+        {
+            gameObject.transform.SetParent(hitStile.transform);
         }
 
-        STile hitTile = hit.GetComponent<STile>();
-        gameObject.transform.parent = hitTile.transform.Find("Objects").transform;
-        return hitTile;
- 
+        return hitStile;
     }
 
     public void SetCollider(bool value)

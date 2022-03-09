@@ -183,15 +183,43 @@ public class SGrid : MonoBehaviour
     }
 
     //S: copy of Player's GetStileUnderneath for the tracker
+    // DC: This will prefer an GameObjs parented STile if it has one
     public STile GetStileUnderneath(GameObject target)
     {
-        Collider2D hit = Physics2D.OverlapPoint(target.transform.position, LayerMask.GetMask("Slider"));
-        if (hit == null || hit.GetComponent<STile>() == null)
+        float offset = grid[0, 0].STILE_WIDTH / 2f;
+        float housingOffset = -150;
+        
+        STile stileUnderneath = null;
+        STile currentStileUnderneath = target.GetComponentInParent<STile>(); // in case this obj is parented to something
+        foreach (STile s in grid)
         {
-            //Debug.LogWarning("Target isn't on top of a slider!");
-            return null;
+            if (s.isTileActive && IsObjectInSTileBounds(target.transform.position, s.transform.position, offset, housingOffset))
+            {
+                if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
+                {
+                    // we are still on top of the same one
+                    return currentStileUnderneath;
+                }
+                
+                if (stileUnderneath == null || s.islandId < stileUnderneath.islandId)
+                {
+                    // in case where multiple overlap and none are picked, take the lowest number?
+                    stileUnderneath = s;
+                }
+            }
         }
-        return hit.GetComponent<STile>();
+        return stileUnderneath;
+    }
+
+    private bool IsObjectInSTileBounds(Vector3 targetPos, Vector3 stilePos, float offset, float housingOffset)
+    {
+        if (stilePos.x - offset < targetPos.x && targetPos.x < stilePos.x + offset &&
+           (stilePos.y - offset < targetPos.y && targetPos.y < stilePos.y + offset || 
+            stilePos.y - offset + housingOffset < targetPos.y && targetPos.y < stilePos.y + offset + housingOffset))
+        {
+            return true;
+        }
+        return false;
     }
 
 
@@ -230,7 +258,7 @@ public class SGrid : MonoBehaviour
         }
             
     }
-    
+
     public void ActivateSliderCollectible(int sliderId)
     {
         if (!PlayerInventory.Contains("Slider " + sliderId, myArea)) 

@@ -104,7 +104,11 @@ public class DebugUIManager : MonoBehaviour
         if (commandIndex < 0 || commandIndex >= commandHistory.Count)
             consoleText.text = "";
         else
+        {
             consoleText.text = commandHistory[commandIndex];
+            // consoleText.caretPosition = consoleText.text.Length;
+            consoleText.MoveTextEnd(false);
+        }
     }
 
     public void BroadcastMessageToAllObjects()
@@ -120,18 +124,22 @@ public class DebugUIManager : MonoBehaviour
         commandIndex = commandHistory.Count;
         consoleText.text = "";
 
+        if (p.Length == 1)
+            Debug.Log("Called " + p[0] + "()");
+        else
+            Debug.Log("Called " + p[0] + "(" + p[1] + ")");
+
+
         GameObject[] gos = (GameObject[])GameObject.FindObjectsOfType(typeof(GameObject));
         foreach (GameObject go in gos) {
             if (go && go.transform.parent == null) {
                 if (p.Length == 1)
                 {
                     go.gameObject.BroadcastMessage(p[0], SendMessageOptions.DontRequireReceiver);
-                    Debug.Log("Called " + p[0] + "()");
                 }
                 else
                 {
                     go.gameObject.BroadcastMessage(p[0], p[1], SendMessageOptions.DontRequireReceiver);
-                    Debug.Log("Called " + p[0] + "(" + p[1] + ")");
                 }
             }
         }
@@ -153,6 +161,28 @@ public class DebugUIManager : MonoBehaviour
     public void GPTC(string collectibleName)
     {
         SGrid.current.GivePlayerTheCollectible(collectibleName);
+    }
+
+    // make sure pattern is length n^2
+    public void SetGrid(string pattern)
+    {
+        int n = (int)Mathf.Sqrt(pattern.Length);
+        if (pattern.Length != n * n)
+        {
+            Debug.LogWarning("Input pattern was not of size n^2!");
+            return;
+        }
+
+        int[,] puzzle = new int[n, n];
+
+        for (int i = 0; i < pattern.Length; i++)
+        {
+            int x = i % n;
+            int y = n - (i / n) - 1;
+            puzzle[x, y] = int.Parse(pattern[i].ToString());
+        }
+
+        SGrid.current.SetGrid(puzzle);
     }
 
     public void NoClip()
