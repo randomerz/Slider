@@ -687,8 +687,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -25}
-  m_SizeDelta: {x: 300, y: 60}
+  m_AnchoredPosition: {x: 0, y: -15}
+  m_SizeDelta: {x: 300, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3035348966782697214
 CanvasRenderer:
@@ -718,14 +718,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Some Helpful Commands:
-
-    SetScene [SceneName]
-
-    GPTC [Collectible
-    Name]
-
-    NoClip'
+  m_text: "  Some Commands:\nSetScene [SceneName]  SetGrid 123456789\nGPTC [Collect
+    Name]   \nNoClip                SpawnAnchor"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fdb7ca4523a2686409c6d5adb3a9da03, type: 2}
   m_sharedMaterial: {fileID: -2486997846258592095, guid: fdb7ca4523a2686409c6d5adb3a9da03, type: 2}

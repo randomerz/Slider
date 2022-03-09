@@ -155,11 +155,9 @@ public class SGridAnimator : MonoBehaviour
 
     private IEnumerator EnableTileBorderColliders(STile stile)
     {
-        Debug.Log("Setting border colliders on " + stile.islandId);
         stile.SetBorderColliders(true);
 
         yield return new WaitForSeconds(movementDuration);
-        Debug.Log("Setting border colliders off " + stile.islandId);
 
         stile.SetBorderColliders(false);
     }
