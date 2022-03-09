@@ -226,18 +226,29 @@ public class SGrid : MonoBehaviour
     {
         if (!PlayerInventory.Contains(name, myArea))
         {
-            GetCollectible(name).gameObject.SetActive(true);
+            GetCollectible(name)?.gameObject.SetActive(true);
         }
             
     }
+    
     public void ActivateSliderCollectible(int sliderId)
     {
         if (!PlayerInventory.Contains("Slider " + sliderId, myArea)) 
         {
             //Debug.Log("Activated Collectible?");
             //Debug.Log(GetCollectible("Slider " + sliderId).gameObject.name);
-            GetCollectible("Slider " + sliderId).gameObject.SetActive(true);
+            GetCollectible("Slider " + sliderId)?.gameObject.SetActive(true);
             AudioManager.Play("Puzzle Complete");
+        }
+    }
+
+    public void GivePlayerTheCollectible(string name)
+    {
+        if (GetCollectible(name) != null)
+        {
+            ActivateCollectible(name);
+            GetCollectible(name).transform.position = Player.GetPosition();
+            UIManager.closeUI = true;
         }
     }
 
@@ -348,13 +359,6 @@ public class SGrid : MonoBehaviour
         yield return new WaitForSeconds(t);
 
         CheckCompletions(this, null); // sets the final one to be complete
-    }
-
-    public void GivePlayerTheCollectible(string name)
-    {
-        ActivateCollectible(name);
-        GetCollectible(name).transform.position = Player.GetPosition();
-        UIManager.closeUI = true;
     }
 
     private static string GetTileIdAt(int x, int y)
