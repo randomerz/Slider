@@ -160,6 +160,8 @@ public class SMoveRotate : SMove
 {
     public bool isCCW;
 
+    public List<Vector2Int> anchoredPositions; // DC: this is for bugs that having a tile anchored might cause
+
     public SMoveRotate(List<Vector2Int> points, bool isCCW)
     {
         for (int i = 0; i < points.Count; i++)

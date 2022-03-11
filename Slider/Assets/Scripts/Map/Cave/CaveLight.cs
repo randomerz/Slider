@@ -60,6 +60,12 @@ public class CaveLight : MonoBehaviour
         }
     }
 
+    // DC: for some reason SetLightOn can't be exposed with default values to unityevents
+    public void SetLightWithSound(bool value)
+    {
+        SetLightOn(value, true);
+    }
+
     /* L: Gets the light mask for THIS LIGHT ONLY (see LightManager.cs for the whole world) */
     internal Texture2D GetLightMask(Texture2D heightMask, int worldToMaskDX, int worldToMaskDY, int maskSizeX, int maskSizeY)
     {

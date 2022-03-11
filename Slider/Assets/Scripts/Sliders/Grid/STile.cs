@@ -22,6 +22,7 @@ public class STile : MonoBehaviour
     public int STILE_WIDTH = 17;
 
     private int sliderColliderDisableCount; // each enable gives this +1, disable does -1
+    private int[] borderColliderDisableCount = new int[4];
     
     [Header("References")]
     public GameObject objects;
@@ -118,13 +119,20 @@ public class STile : MonoBehaviour
 
     public void SetBorderCollider(int index, bool isActive)
     {
-        borderColliders[index].SetActive(isActive);
+        // borderColliders[index].SetActive(isActive);
+        if (isActive)
+            borderColliderDisableCount[index] += 1;
+        else
+            borderColliderDisableCount[index] = Mathf.Max(0, borderColliderDisableCount[index] - 1);
+        borderColliders[index].SetActive(borderColliderDisableCount[index] > 0);
     }
 
     public void SetBorderColliders(bool isActive)
     {
-        foreach (GameObject g in borderColliders)
-            g.SetActive(isActive);
+        for (int i = 0; i < borderColliders.Length; i++)
+        {
+            SetBorderCollider(i, isActive);
+        }
     }
 
     public bool CanMove(int x, int y)
