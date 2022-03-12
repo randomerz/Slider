@@ -183,15 +183,43 @@ public class SGrid : MonoBehaviour
     }
 
     //S: copy of Player's GetStileUnderneath for the tracker
+    // DC: This will prefer an GameObjs parented STile if it has one
     public STile GetStileUnderneath(GameObject target)
     {
-        Collider2D hit = Physics2D.OverlapPoint(target.transform.position, LayerMask.GetMask("Slider"));
-        if (hit == null || hit.GetComponent<STile>() == null)
+        float offset = grid[0, 0].STILE_WIDTH / 2f;
+        float housingOffset = -150;
+        
+        STile stileUnderneath = null;
+        STile currentStileUnderneath = target.GetComponentInParent<STile>(); // in case this obj is parented to something
+        foreach (STile s in grid)
         {
-            //Debug.LogWarning("Target isn't on top of a slider!");
-            return null;
+            if (s.isTileActive && IsObjectInSTileBounds(target.transform.position, s.transform.position, offset, housingOffset))
+            {
+                if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
+                {
+                    // we are still on top of the same one
+                    return currentStileUnderneath;
+                }
+                
+                if (stileUnderneath == null || s.islandId < stileUnderneath.islandId)
+                {
+                    // in case where multiple overlap and none are picked, take the lowest number?
+                    stileUnderneath = s;
+                }
+            }
         }
-        return hit.GetComponent<STile>();
+        return stileUnderneath;
+    }
+
+    private bool IsObjectInSTileBounds(Vector3 targetPos, Vector3 stilePos, float offset, float housingOffset)
+    {
+        if (stilePos.x - offset < targetPos.x && targetPos.x < stilePos.x + offset &&
+           (stilePos.y - offset < targetPos.y && targetPos.y < stilePos.y + offset || 
+            stilePos.y - offset + housingOffset < targetPos.y && targetPos.y < stilePos.y + offset + housingOffset))
+        {
+            return true;
+        }
+        return false;
     }
 
 
@@ -226,16 +254,29 @@ public class SGrid : MonoBehaviour
     {
         if (!PlayerInventory.Contains(name, myArea))
         {
-            GetCollectible(name).gameObject.SetActive(true);
+            GetCollectible(name)?.gameObject.SetActive(true);
         }
             
     }
+
     public void ActivateSliderCollectible(int sliderId)
     {
         if (!PlayerInventory.Contains("Slider " + sliderId, myArea)) 
         {
-            GetCollectible("Slider " + sliderId).gameObject.SetActive(true);
+            //Debug.Log("Activated Collectible?");
+            //Debug.Log(GetCollectible("Slider " + sliderId).gameObject.name);
+            GetCollectible("Slider " + sliderId)?.gameObject.SetActive(true);
             AudioManager.Play("Puzzle Complete");
+        }
+    }
+
+    public void GivePlayerTheCollectible(string name)
+    {
+        if (GetCollectible(name) != null)
+        {
+            ActivateCollectible(name);
+            GetCollectible(name).transform.position = Player.GetPosition();
+            UIManager.closeUI = true;
         }
     }
 
@@ -346,7 +387,7 @@ public class SGrid : MonoBehaviour
         for (int x = 0; x < current.width; x++) {
             for (int y = 0; y < current.width; y++) {
                 // int tid = current.targetGrid[x, y];
-                string tids = current.targetGrid[(current.height - y - 1) * current.width + x].ToString();
+                string tids = GetTileIdAt(x, y);
                 if (tids == "*") 
                 {
                     UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
@@ -359,10 +400,15 @@ public class SGrid : MonoBehaviour
         }
     }
 
-    public void GivePlayerTheCollectible(string name)
+    protected IEnumerator CheckCompletionsAfterDelay(float t)
     {
-        ActivateCollectible(name);
-        GetCollectible(name).transform.position = Player.GetPosition();
-        UIManager.closeUI = true;
+        yield return new WaitForSeconds(t);
+
+        CheckCompletions(this, null); // sets the final one to be complete
+    }
+
+    private static string GetTileIdAt(int x, int y)
+    {
+        return current.targetGrid[(current.height - y - 1) * current.width + x].ToString();
     }
 }

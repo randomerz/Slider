@@ -12,6 +12,13 @@ public class CaveLight : MonoBehaviour
 
     private Texture2D _lightMask;
 
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
+    [SerializeField] private Sprite onSprite;
+    [SerializeField] private Sprite offSprite;
+
+
+
     public class OnLightSwitchedArgs
     {
         public bool lightOn;
@@ -28,8 +35,9 @@ public class CaveLight : MonoBehaviour
         SetLightOn(false);
     }
 
-    public void SetLightOn(bool value)
+    public void SetLightOn(bool value, bool playSound=false)
     {
+        spriteRenderer.sprite = value ? onSprite : offSprite;
         if (LightOn != value)
         {
             LightOn = value;
@@ -40,8 +48,22 @@ public class CaveLight : MonoBehaviour
                 LightManager.instance.UpdateMaterials();
             }
 
+            if (playSound)
+            {
+                if (value)
+                    AudioManager.Play("Power On"); 
+                else
+                    AudioManager.Play("Power Off"); 
+            }
+
             OnLightSwitched?.Invoke(this, new OnLightSwitchedArgs { lightOn = value });
         }
+    }
+
+    // DC: for some reason SetLightOn can't be exposed with default values to unityevents
+    public void SetLightWithSound(bool value)
+    {
+        SetLightOn(value, true);
     }
 
     /* L: Gets the light mask for THIS LIGHT ONLY (see LightManager.cs for the whole world) */
@@ -99,27 +121,4 @@ public class CaveLight : MonoBehaviour
         _lightMask.Apply();
         return _lightMask;
     }
-
-    //L: Below is for the player to interact with the light, but it's kinda useless since we're not doing that anymore
-    /*
-    public void SetLightDir(Vector2Int value)
-    {
-        UpdateLightMap(false);
-        lightDir = value;
-        UpdateLightMap(true);
-    }
-
-    public void RotateLight(bool ccw)
-    {
-        UpdateLightMap(false);
-        lightDir = ccw ? new Vector2Int(-lightDir.y, lightDir.x) : new Vector2Int(lightDir.y, -lightDir.x);
-        UpdateLightMap(true);
-    }
-
-    public void SetLightOn(bool value)
-    {
-        lightOn = value;
-        UpdateLightMap(value);
-    }
-    */
 }

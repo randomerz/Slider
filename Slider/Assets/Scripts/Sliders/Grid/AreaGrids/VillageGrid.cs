@@ -6,7 +6,7 @@ public class VillageGrid : SGrid
 {
     public static VillageGrid instance;
 
-    public GameObject caveDoor;
+    public GameObject caveDoorRocks;
     public GameObject particleSpawner;
 
     private bool fishOn;
@@ -120,16 +120,9 @@ public class VillageGrid : SGrid
         }
     }
 
-    private IEnumerator CheckCompletionsAfterDelay(float t)
-    {
-        yield return new WaitForSeconds(t);
-
-        CheckCompletions(this, null); // sets the final one to be complete
-    }
-
     public void Explode()
     {
-        caveDoor.SetActive(true);
+        caveDoorRocks.SetActive(false);
         CameraShake.Shake(3f, 3.5f);
     }
 }

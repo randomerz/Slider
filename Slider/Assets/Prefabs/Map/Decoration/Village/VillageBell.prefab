@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3766076133631974425}
   - component: {fileID: 3766076133631974426}
   - component: {fileID: 3766076133631974427}
-  - component: {fileID: 3766076133631974420}
+  - component: {fileID: 3734698699920728683}
   m_Layer: 0
   m_Name: VillageBell
   m_TagString: Untagged
@@ -153,21 +153,21 @@ MonoBehaviour:
   onSuccess:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3766076133631974420}
-        m_TargetAssemblyTypeName: UIClick, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 1
+      - m_Target: {fileID: 3734698699920728683}
+        m_TargetAssemblyTypeName: PlaySound, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Puzzle Complete
           m_BoolArgument: 0
         m_CallState: 2
   addToOnAction: 1
   isCarryingItem: 0
---- !u!114 &3766076133631974420
+--- !u!114 &3734698699920728683
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,6 +176,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 3766076133631974422}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 218799d69c253b34ca4c489b41cd26db, type: 3}
+  m_Script: {fileID: 11500000, guid: cd6b10abe14960b49a55c83d91a95e7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

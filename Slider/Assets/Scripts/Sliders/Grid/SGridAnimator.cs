@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,6 +42,11 @@ public class SGridAnimator : MonoBehaviour
             }
         }
 
+        // DC: bug involving anchoring a tile in a rotate, lets you walk into void
+        if (move is SMoveRotate) 
+        {
+            CheckAnchorInRotate(move as SMoveRotate, grid);
+        }
     }
 
     // move is only here so we can pass it into the event
@@ -50,10 +54,15 @@ public class SGridAnimator : MonoBehaviour
     {
         float t = 0;
         //isMoving = true;
+        bool isPlayerOnStile = (Player.GetStileUnderneath() != null &&
+                                Player.GetStileUnderneath().islandId == stile.islandId);
 
         stile.SetMovingDirection(GetMovingDirection(moveCoords.startLoc, moveCoords.endLoc));
         
-        stile.SetBorderColliders(true);
+        if (isPlayerOnStile)
+        {
+            stile.SetBorderColliders(true);
+        }
 
         OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
         {
@@ -78,7 +87,10 @@ public class SGridAnimator : MonoBehaviour
 
         //isMoving = false;
         
-        stile.SetBorderColliders(false);
+        if (isPlayerOnStile)
+        {
+            stile.SetBorderColliders(false);
+        }
         //for (int i = 0; i < collidersInactive.Count; i++)
         //{
         //    if (collidersInactive[i].SetSliderCollider(true))
@@ -126,7 +138,7 @@ public class SGridAnimator : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(movementDuration);
+        yield return new WaitForSeconds(movementDuration); // ideally this should be called with an event, not after time
 
         foreach (Vector2Int p in borders.Keys)
         {
@@ -143,6 +155,15 @@ public class SGridAnimator : MonoBehaviour
         {
             t.SetSliderCollider(true);
         }
+    }
+
+    private IEnumerator EnableTileBorderColliders(STile stile)
+    {
+        stile.SetBorderColliders(true);
+
+        yield return new WaitForSeconds(movementDuration);
+
+        stile.SetBorderColliders(false);
     }
 
     private Vector2 GetMovingDirection(Vector2 start, Vector2 end) // include magnitude?
@@ -178,8 +199,32 @@ public class SGridAnimator : MonoBehaviour
 
         yield return new WaitForSeconds(movementDuration);
 
-        CameraShake.Shake(0.5f, 1f);
+        CameraShake.Shake(0.5f, 1f); // todo: base this on movementDuration so that less camera shake if duration is lower
         AudioManager.Play("Slide Explosion");
 
+    }
+
+
+
+    
+
+    private void CheckAnchorInRotate(SMoveRotate move, STile[,] grid)
+    {
+        // if player is on a stile that is anchored
+        STile playerStile = Player.GetStileUnderneath();
+        if (playerStile != null && playerStile.hasAnchor)
+        {
+            // Debug.Log("Player is on: " + playerStile.islandId);
+            foreach (Vector2Int p in move.anchoredPositions)
+            {
+                // and that tile is involved in the rotation
+                if (grid[p.x, p.y].isTileActive && grid[p.x, p.y].islandId == playerStile.islandId)
+                {
+                    // enable colliders temporarily
+                    StartCoroutine(EnableTileBorderColliders(playerStile));
+                    return;
+                }
+            }
+        }
     }
 }

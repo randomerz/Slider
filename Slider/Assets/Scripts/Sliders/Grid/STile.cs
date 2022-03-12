@@ -26,6 +26,7 @@ public class STile : MonoBehaviour
     // Whether we have picked up this tile or not. Used in MagiTech so that only collected tiles
     // are enabled when swapping grids.
     public bool isTileCollected;
+    private int[] borderColliderDisableCount = new int[4];
     
     [Header("References")]
     public GameObject objects;
@@ -33,14 +34,14 @@ public class STile : MonoBehaviour
     public Collider2D houseSliderCollider;
     public GameObject tileMapCollider;
     public GameObject decorationsTileMap;
-    private Collider2D[] decorationColliders;
+    // private Collider2D[] decorationColliders;
     // these borders follow the tile and generally all activate/deactive together
     public GameObject[] borderColliders; // right top left bottom
     public GameObject stileTileMaps;
 
     private void Awake() 
     {
-        decorationColliders = decorationsTileMap.GetComponentsInChildren<Collider2D>();
+        // decorationColliders = decorationsTileMap.GetComponentsInChildren<Collider2D>();
     }
 
     protected void Start()
@@ -112,23 +113,30 @@ public class STile : MonoBehaviour
         sliderCollider.enabled = sliderColliderDisableCount <= 0;
         houseSliderCollider.enabled = sliderColliderDisableCount <= 0;
         tileMapCollider.SetActive(sliderColliderDisableCount <= 0);
-        foreach (Collider2D c in decorationColliders)
-        {
-            c.enabled = sliderColliderDisableCount <= 0;
-        }
+        // foreach (Collider2D c in decorationColliders)
+        // {
+        //     c.enabled = sliderColliderDisableCount <= 0;
+        // }
 
         return sliderColliderDisableCount <= 0;
     }
 
     public void SetBorderCollider(int index, bool isActive)
     {
-        borderColliders[index].SetActive(isActive);
+        // borderColliders[index].SetActive(isActive);
+        if (isActive)
+            borderColliderDisableCount[index] += 1;
+        else
+            borderColliderDisableCount[index] = Mathf.Max(0, borderColliderDisableCount[index] - 1);
+        borderColliders[index].SetActive(borderColliderDisableCount[index] > 0);
     }
 
     public void SetBorderColliders(bool isActive)
     {
-        foreach (GameObject g in borderColliders)
-            g.SetActive(isActive);
+        for (int i = 0; i < borderColliders.Length; i++)
+        {
+            SetBorderCollider(i, isActive);
+        }
     }
 
     public bool CanMove(int x, int y)

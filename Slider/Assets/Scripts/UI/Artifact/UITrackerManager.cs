@@ -54,6 +54,8 @@ public class UITrackerManager : MonoBehaviour
             if (targets[x].target == null) {
                 Destroy(targets[x].gameObject);
                 targets.RemoveAt(x);
+                x--;
+                Debug.LogWarning("Removed a tracker pointing to a destroyed object");
             }
         }
 
