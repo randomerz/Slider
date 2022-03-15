@@ -30,6 +30,7 @@ public class SaveSystem
         }
 
         areaToSGridData[area].UpdateGrid(sgrid);
+        Debug.Log("length: " + areaToSGridData[area].grid.Count);
         // playerPos[area] = Player.GetPosition();
     }
 
