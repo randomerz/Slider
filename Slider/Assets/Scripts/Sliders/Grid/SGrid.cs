@@ -36,6 +36,7 @@ public class SGrid : MonoBehaviour
 
     public Collectible[] collectibles;
     protected Area myArea; // don't forget to set me!
+    public Area MyArea { get => myArea; }
 
     protected void Awake()
     {
