@@ -54,6 +54,22 @@ public class SGrid : MonoBehaviour
         // OnGridMove += CheckCompletions;
     }
 
+    /// <summary>
+    /// Returns the number of STiles collected in the current SGrid.
+    /// </summary>
+    /// <returns></returns>
+    public int GetNumTilesCollected() {
+        int numCollected = 0;
+        foreach (STile tile in stiles)
+        {
+            if (tile.isTileCollected)
+            {
+                numCollected++;
+            }
+        }
+        return numCollected;
+    }
+
 
     public STile[,] GetGrid()
     {

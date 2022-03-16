@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class DiscordController : MonoBehaviour
 {
     private const long CLIENT_ID = 953335446056882186;
     private Discord.Discord discord;
+    private TimeSpan startTime;
 
     // Start is called before the first frame update
     void Start()
@@ -21,20 +23,27 @@ public class DiscordController : MonoBehaviour
             Therefore, always keep Discord running during tests, or use Discord.CreateFlags.NoRequireDiscord
         */
         discord = new Discord.Discord(CLIENT_ID, (ulong)Discord.CreateFlags.Default);
+        InvokeRepeating("UpdateActivity", 0, 5);
+        startTime = DateTime.Now.TimeOfDay;
     }
 
     // Update is called once per frame
     void Update()
     {
+        discord.RunCallbacks();
+    }
+
+    void UpdateActivity()
+    {
         var activityManager = discord.GetActivityManager();
 
         var activity = new Discord.Activity
         {
-            State = $"Exploring {SGrid.current.MyArea}",
-            Details = "Playing the Trumpet!",
+            // Remember to adjust this for mountain and any other weirdChamp areas
+            State = $"Exploring {SGrid.current.MyArea} ({SGrid.current.GetNumTilesCollected()} / {SGrid.current.width * SGrid.current.height})",
             Timestamps =
               {
-                  Start = 5,
+                  Start = (long) startTime.TotalSeconds
               },
             Assets =
               {
@@ -43,18 +52,9 @@ public class DiscordController : MonoBehaviour
                   SmallImage = "foo smallImageKey", // Small Image Asset Value
                   SmallText = "foo smallImageText", // Small Image Tooltip
               },
-            Party =
-              {
-                  Id = "foo partyID",
-                  Size = {
-                      CurrentSize = 1,
-                      MaxSize = 4,
-                  },
-              },
             Secrets =
               {
                   Match = "foo matchSecret",
-                  Join = "foo joinSecret",
                   Spectate = "foo spectateSecret",
               },
             Instance = true,
@@ -71,7 +71,10 @@ public class DiscordController : MonoBehaviour
                 Debug.Log("Failed");
             }
         });
+    }
 
-        discord.RunCallbacks();
+    private void OnApplicationQuit()
+    {
+        discord.Dispose(); // Stops rich presence when the game closes
     }
 }
