@@ -69,6 +69,15 @@ public class SGrid : MonoBehaviour
         }
         return numCollected;
     }
+    /// <summary>
+    /// Returns the number of STiles available in the current SGrid.
+    /// </summary>
+    /// <returns></returns>
+    public int GetTotalNumTiles()
+    {
+        return width * height;
+    }
+
 
 
     public STile[,] GetGrid()
