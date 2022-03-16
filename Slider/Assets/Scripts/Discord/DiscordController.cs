@@ -15,14 +15,18 @@ public class DiscordController : MonoBehaviour
 
     void Start()
     {
-        // Going with not requiring Discord seems like the safer option to me.
-        // Not entirely sure of the consequences here to be honest
-        discord = new Discord.Discord(CLIENT_ID, (ulong)Discord.CreateFlags.NoRequireDiscord);
-        InvokeRepeating("UpdateActivity", 0, 5);
+        if (discord == null)
+        {
+            // Going with not requiring Discord seems like the safer option to me.
+            // Not entirely sure of the consequences here to be honest
+            discord = new Discord.Discord(CLIENT_ID, (ulong)Discord.CreateFlags.NoRequireDiscord);
+            InvokeRepeating("UpdateActivity", 0, 5);
 
-        // We need our epoch time for tracking time elapsed
-        TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
-        secondsSinceEpoch = (int)t.TotalSeconds;
+            // We need our epoch time for tracking time elapsed
+            TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
+            secondsSinceEpoch = (int)t.TotalSeconds;
+            Debug.Log("Starting Rich Presence");
+        }
     }
 
     void Update()
@@ -38,9 +42,14 @@ public class DiscordController : MonoBehaviour
     {
         var activityManager = discord.GetActivityManager();
 
+        var state = "At the Start Screen";
+        if (SGrid.current != null)
+        {
+            state = $"{SGrid.current.MyArea.GetDisplayName()} ({SGrid.current.GetNumTilesCollected()} / {SGrid.current.GetTotalNumTiles()})";
+        }
         var activity = new Discord.Activity
         {
-            State = $"{SGrid.current.MyArea.GetDisplayName()} ({SGrid.current.GetNumTilesCollected()} / {SGrid.current.GetTotalNumTiles()})",
+            State = state,
             Timestamps =
             {
                 // You give Discord an Epoch time in seconds and it displays the time elapsed since then
