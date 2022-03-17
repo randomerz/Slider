@@ -36,6 +36,7 @@ public class SGrid : MonoBehaviour
 
     public Collectible[] collectibles;
     protected Area myArea; // don't forget to set me!
+    public Area MyArea { get => myArea; }
 
     protected void Awake()
     {
@@ -52,6 +53,31 @@ public class SGrid : MonoBehaviour
 
         // OnGridMove += CheckCompletions;
     }
+
+    /// <summary>
+    /// Returns the number of STiles collected in the current SGrid.
+    /// </summary>
+    /// <returns></returns>
+    public int GetNumTilesCollected() {
+        int numCollected = 0;
+        foreach (STile tile in stiles)
+        {
+            if (tile.isTileCollected)
+            {
+                numCollected++;
+            }
+        }
+        return numCollected;
+    }
+    /// <summary>
+    /// Returns the number of STiles available in the current SGrid.
+    /// </summary>
+    /// <returns></returns>
+    public int GetTotalNumTiles()
+    {
+        return width * height;
+    }
+
 
 
     public STile[,] GetGrid()
