@@ -19,9 +19,13 @@ public class SGridAnimator : MonoBehaviour
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
 
-    public void Move(SMove move)
+    public void Move(SMove move, STile[,] grid = null)
     {
-        STile[,] grid = SGrid.current.GetGrid();
+        if (grid == null)
+        {
+            grid = SGrid.current.GetGrid();
+        }
+        //STile[,] grid = SGrid.current.GetGrid();
 
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
         StartCoroutine(DisableBordersAndColliders(grid, SGrid.current.GetBGGrid(), move.positions, borders));

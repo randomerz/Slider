@@ -16,6 +16,14 @@ public class KnotBox : MonoBehaviour
         CheckLines();
     }
 
+    // animation is jittery when moving tiles
+    // https://answers.unity.com/questions/1387219/linerenderer-lags-behind-object-positions.html
+    private void LateUpdate() 
+    {
+        MakeLines();
+        CheckLines();
+    }
+
     private void OnDisable()
     {
         RemoveLines();
