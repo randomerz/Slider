@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -17,7 +18,6 @@ public class Player : MonoBehaviour
     private STile currentStileUnderneath;
 
     private InputSettings controls;
-    [SerializeField] private InputActionAsset inputActions;
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
     
@@ -27,22 +27,30 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
     [SerializeField] private SpriteRenderer boatSpriteRenderer;
     [SerializeField] private Animator playerAnimator;
-
+    private PlayerInput input;
+    [SerializeField] private InputActionAsset inputActionAsset;
     void Awake()
     {
         _instance = this;
-        controls = new InputSettings();
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!String.IsNullOrEmpty(rebinds))
-        {
-            inputActions.LoadBindingOverridesFromJson(rebinds);
-        }
-        controls.Player.Move.performed += context => UpdateMove(context.ReadValue<Vector2>());
+        LoadBindings();
         if (PlayerInventory.Contains("Boots"))
         {
             BootsSpeedUp();
         }
         UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
+    }
+    public static void LoadBindings()
+    {
+        _instance.input = _instance.GetComponent<PlayerInput>();
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+        {
+            //_instance.input.actions.LoadBindingOverridesFromJson(rebinds);
+            _instance.inputActionAsset.LoadBindingOverridesFromJson(rebinds);
+        }
+        _instance.controls = new InputSettings();
+        _instance.controls.Player.Move.performed += context => _instance.UpdateMove(context.ReadValue<Vector2>());
+        
     }
 
     private void OnEnable() {

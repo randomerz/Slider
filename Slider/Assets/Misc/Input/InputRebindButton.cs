@@ -5,17 +5,18 @@ using UnityEngine;
 using UnityEngine.UI;
 // using MyBox;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class InputRebindButton : MonoBehaviour
 {
     [SerializeField] private Control keybind;
-    [SerializeField] private Text buttonText;
+    [SerializeField] private TMP_Text buttonText;
     [SerializeField] private InputActionAsset inputActions;
 
     public void RemapKeybind()
     {
         if (keybind == Control.Move_Left || keybind == Control.Move_Right || keybind == Control.Move_Up || keybind == Control.Move_Down)
-        {
+        {   
             StartCoroutine(IRemapMovementKeybind());
         } else
         {
@@ -30,6 +31,7 @@ public class InputRebindButton : MonoBehaviour
     /// <returns></returns>
     private IEnumerator IRemapMovementKeybind()
     {
+        Debug.Log("Testing...");
         var action = inputActions.FindAction("Move");
         action.Disable();
 
@@ -37,7 +39,7 @@ public class InputRebindButton : MonoBehaviour
                     // To avoid accidental input from mouse motion
                     .WithControlsExcluding("Mouse")
                     .OnMatchWaitForAnother(0.1f)
-                    .WithTargetBinding(1 + (int)keybind)
+                    .WithTargetBinding(2 + (int)keybind)
                     .OnComplete((InputActionRebindingExtensions.RebindingOperation op) => UpdateButtonText())
                     .Start();
 
@@ -49,6 +51,7 @@ public class InputRebindButton : MonoBehaviour
         // Save our keybinds to PlayerPrefs so we can load them when the actual game starts
         var rebinds = inputActions.SaveBindingOverridesAsJson();
         PlayerPrefs.SetString("rebinds", rebinds);
+        Debug.Log("Testing Done!");
     }
 
     /// <summary>
@@ -103,7 +106,9 @@ public class InputRebindButton : MonoBehaviour
              * Control.Left = 0 and Control.Right = 1. 
             */
             var action = inputActions.FindAction("Move");
-            buttonText.text = buttonText.text = $"{keybind.ToString().ToUpper().Replace("_", " ")}: {action.bindings[1 + (int)keybind].ToDisplayString().ToUpper()}";
+            buttonText.text = buttonText.text = $"{keybind.ToString().ToUpper().Replace("_", " ")}: {action.bindings[2 + (int)keybind].ToDisplayString().ToUpper()}";
+            Player.LoadBindings();
+            Debug.Log("Binding...");
         }
         else
         {
@@ -114,10 +119,10 @@ public class InputRebindButton : MonoBehaviour
 
     public enum Control
     {
-        Move_Left = 0,
-        Move_Right = 1,
-        Move_Up = 2,
-        Move_Down = 3,
+        Move_Up = 0,
+        Move_Down = 1,
+        Move_Left = 2,
+        Move_Right = 3,
         Action,
         CycleEquip,
         OpenArtifact,

@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+using UnityEngine.InputSystem;
 public class PlayerAction : MonoBehaviour 
 {
     public static System.EventHandler<System.EventArgs> OnAction;
@@ -18,11 +18,16 @@ public class PlayerAction : MonoBehaviour
     private ContactFilter2D LayerFilter;
     private InputSettings controls;
     private GameObject[] objects;
-
+    private PlayerInput input;
     private void Awake() 
     {
+        input = GetComponent<PlayerInput>();
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+        {
+            input.actions.LoadBindingOverridesFromJson(rebinds);
+        }
         controls = new InputSettings();
-        // controls = InputManager.inputActions; 
         controls.Player.Action.performed += context => Action();
         controls.Player.CycleEquip.performed += context => CycleEquip();
     }
