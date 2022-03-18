@@ -42,6 +42,7 @@ public class OceanArtifact : UIArtifact
                 new Vector2Int(x + 1, y + 1),
                 new Vector2Int(x + 1, y),
             };
+        List<Vector2Int> anchoredPositions = new List<Vector2Int>();
 
         List<ArtifactTileButton> tb = new List<ArtifactTileButton>{
             GetButton(x, y),
@@ -70,6 +71,7 @@ public class OceanArtifact : UIArtifact
                 {
                     SMoveRotateArr.RemoveAt(i);
                     tb.RemoveAt(i);
+                    anchoredPositions.Add(new Vector2Int(curX, curY));
                 }
                 else
                 {
@@ -88,7 +90,8 @@ public class OceanArtifact : UIArtifact
         // if (SGrid.current.CanRotate)
         if (moveQueue.Count < maxMoveQueueSize)
         {
-            SMove rotate = new SMoveRotate(SMoveRotateArr, rotateCCW);
+            SMoveRotate rotate = new SMoveRotate(SMoveRotateArr, rotateCCW);
+            rotate.anchoredPositions = anchoredPositions;
             QueueCheckAndAdd(rotate);
             // SwapButtons(buttonCurrent, buttonEmpty);
             // update UI button positions

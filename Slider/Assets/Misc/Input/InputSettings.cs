@@ -283,6 +283,15 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CycleCommand"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""e69a3341-a842-425f-b125-787b7ae182c3"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -296,6 +305,39 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                     ""action"": ""OpenDebug"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""41fb3244-c339-4736-afd6-201bd88a9119"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CycleCommand"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""4b2acb07-6dc0-43d8-8dca-aaffcbe28b76"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CycleCommand"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""f8f2b0e2-a1eb-4226-aeba-880ca26fb926"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CycleCommand"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -342,6 +384,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         // Debug
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_OpenDebug = m_Debug.FindAction("OpenDebug", throwIfNotFound: true);
+        m_Debug_CycleCommand = m_Debug.FindAction("CycleCommand", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -492,11 +535,13 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Debug;
     private IDebugActions m_DebugActionsCallbackInterface;
     private readonly InputAction m_Debug_OpenDebug;
+    private readonly InputAction m_Debug_CycleCommand;
     public struct DebugActions
     {
         private @InputSettings m_Wrapper;
         public DebugActions(@InputSettings wrapper) { m_Wrapper = wrapper; }
         public InputAction @OpenDebug => m_Wrapper.m_Debug_OpenDebug;
+        public InputAction @CycleCommand => m_Wrapper.m_Debug_CycleCommand;
         public InputActionMap Get() { return m_Wrapper.m_Debug; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -509,6 +554,9 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 @OpenDebug.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnOpenDebug;
                 @OpenDebug.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnOpenDebug;
                 @OpenDebug.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnOpenDebug;
+                @CycleCommand.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnCycleCommand;
+                @CycleCommand.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnCycleCommand;
+                @CycleCommand.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnCycleCommand;
             }
             m_Wrapper.m_DebugActionsCallbackInterface = instance;
             if (instance != null)
@@ -516,6 +564,9 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 @OpenDebug.started += instance.OnOpenDebug;
                 @OpenDebug.performed += instance.OnOpenDebug;
                 @OpenDebug.canceled += instance.OnOpenDebug;
+                @CycleCommand.started += instance.OnCycleCommand;
+                @CycleCommand.performed += instance.OnCycleCommand;
+                @CycleCommand.canceled += instance.OnCycleCommand;
             }
         }
     }
@@ -552,5 +603,6 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
     public interface IDebugActions
     {
         void OnOpenDebug(InputAction.CallbackContext context);
+        void OnCycleCommand(InputAction.CallbackContext context);
     }
 }

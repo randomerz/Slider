@@ -188,7 +188,6 @@ public class Player : MonoBehaviour
                 if (stileUnderneath == null || s.islandId < stileUnderneath.islandId)
                 {
                     // in case where multiple overlap and none are picked, take the lowest number?
-                    if (stileUnderneath != null) Debug.Log("idk");
                     stileUnderneath = s;
                 }
             }
