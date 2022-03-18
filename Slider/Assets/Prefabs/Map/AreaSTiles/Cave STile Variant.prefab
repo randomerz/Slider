@@ -598,7 +598,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5272183297352641541}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5871520866656455146
 MonoBehaviour:
@@ -765,7 +765,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5272183297352641541}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2522777883742973097
 PrefabInstance:
@@ -3454,9 +3454,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8805243860394743684, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
   m_PrefabInstance: {fileID: 2522777883742973097}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8938375942414979755 stripped
+--- !u!1 &5911243025075448459 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 6848225235959610882, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8145394516729693730, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
   m_PrefabInstance: {fileID: 2522777883742973097}
   m_PrefabAsset: {fileID: 0}
 --- !u!61 &8412660596775498700 stripped
@@ -3513,7 +3513,9 @@ MonoBehaviour:
   hasAnchor: 0
   linkTile: {fileID: 0}
   STILE_WIDTH: 17
+  isTileCollected: 0
   objects: {fileID: 545561396114799877}
+  allTileMaps: {fileID: 5911243025075448459}
   sliderCollider: {fileID: 5272183297352641543}
   houseSliderCollider: {fileID: 8412660596775498700}
   tileMapCollider: {fileID: 4002018905126425817}
@@ -3523,7 +3525,6 @@ MonoBehaviour:
   - {fileID: 2532387907432920240}
   - {fileID: 8602502178754904748}
   - {fileID: 7378419727975763174}
-  stileTileMaps: {fileID: 8938375942414979755}
   grid: {fileID: 0}
   wallsSTilemap: {fileID: 0}
-  objectsThatBlockLight: []
+  validDirsForLight: []
