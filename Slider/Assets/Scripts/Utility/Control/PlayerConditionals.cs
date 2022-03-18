@@ -25,7 +25,7 @@ public class PlayerConditionals : MonoBehaviour
 
     private void Awake()
     {
-        lm = GameObject.FindWithTag("LightManager").GetComponent<LightManager>();
+        lm = GameObject.Find("LightManager").GetComponent<LightManager>();
     }
 
 
