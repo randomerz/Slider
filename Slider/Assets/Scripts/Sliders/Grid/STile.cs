@@ -30,6 +30,7 @@ public class STile : MonoBehaviour
     
     [Header("References")]
     public GameObject objects;
+    public GameObject allTileMaps;
     public Collider2D sliderCollider;
     public Collider2D houseSliderCollider;
     public GameObject tileMapCollider;
@@ -37,7 +38,6 @@ public class STile : MonoBehaviour
     // private Collider2D[] decorationColliders;
     // these borders follow the tile and generally all activate/deactive together
     public GameObject[] borderColliders; // right top left bottom
-    public GameObject stileTileMaps;
 
     private void Awake() 
     {
@@ -96,7 +96,7 @@ public class STile : MonoBehaviour
         this.isTileActive = isTileActive;
 
         objects.SetActive(isTileActive);
-        stileTileMaps.SetActive(isTileActive);
+        allTileMaps.SetActive(isTileActive);
 
         sliderCollider.isTrigger = isTileActive;
         houseSliderCollider.isTrigger = isTileActive;
@@ -240,6 +240,6 @@ public class STile : MonoBehaviour
     {
         pos = pos + new Vector3(-0.5f, -0.5f);
 
-        stileTileMaps.transform.position = pos;
+        allTileMaps.transform.position = pos;
     }
 }
