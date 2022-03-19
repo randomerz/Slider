@@ -61,6 +61,17 @@ public class Graph<T>
         to.Costs.Add(cost);
     }
 
+    public void PruneIsolatedNodes()
+    {
+        foreach (T node in nodeDict.Keys)
+        {
+            if (nodeDict[node].Neighbors.Count == 0)
+            {
+                nodeDict.Remove(node);
+            }
+        }
+    }
+
     public GraphNode<T> GetNode(T value)
     {
         return Contains(value) ? nodeDict[value] : null;
@@ -101,7 +112,7 @@ public class Graph<T>
     }
 
     //L: Calculates the shortest path from start to end.
-    public static bool AStar(Graph<LocalizedNodeType> graph, LocalizedNodeType start, LocalizedNodeType end, out List<Vector2Int> path, bool includeStart = false)
+    public static bool AStar(Graph<PosNodeType> graph, PosNodeType start, PosNodeType end, out List<Vector2Int> path, bool includeStart = false)
     {
         path = new List<Vector2Int>();
         if (start == null || end == null || !graph.Contains(start) || !graph.Contains(end))
@@ -113,16 +124,16 @@ public class Graph<T>
         var nodeStart = graph.GetNode(start);
         var nodeEnd = graph.GetNode(end);
 
-        var visited = new HashSet<GraphNode<LocalizedNodeType>>();
+        var visited = new HashSet<GraphNode<PosNodeType>>();
         //The cost of travelling from start to a given node
-        var costs = new Dictionary<GraphNode<LocalizedNodeType>, int>();
+        var costs = new Dictionary<GraphNode<PosNodeType>, int>();
         //The previous node in the shortest path from start to a given node (can backtrack to get path)
-        var prevNode = new Dictionary<GraphNode<LocalizedNodeType>, GraphNode<LocalizedNodeType>>();
+        var prevNode = new Dictionary<GraphNode<PosNodeType>, GraphNode<PosNodeType>>();
         //The priority queue that returns the lowest cost node
-        var nodeQueue = new SimplePriorityQueue<GraphNode<LocalizedNodeType>, int>();
+        var nodeQueue = new SimplePriorityQueue<GraphNode<PosNodeType>, int>();
 
         //Initialze all values in the data structure
-        foreach (GraphNode<LocalizedNodeType> node in graph.Nodes)
+        foreach (GraphNode<PosNodeType> node in graph.Nodes)
         {
             costs[node] = node.Value.Equals(start) ? 0 : int.MaxValue;
             prevNode[node] = null;
@@ -174,6 +185,7 @@ public class Graph<T>
             if (includeStart)
             {
                 path.Add(nodeStart.Value.Position);
+                path.Reverse();
             }
 
             return true;
