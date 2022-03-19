@@ -10,6 +10,7 @@ public class OceanGrid : SGrid
 
     public GameObject burriedGuyNPC;
     public KnotBox knotBox;
+    public LostGuyMovement lostGuyMovement;
 
     public int totalCreditCount;
     private bool turnedInAnchor;
@@ -250,6 +251,11 @@ public class OceanGrid : SGrid
     public void IsCompleted(Conditionals.Condition c)
     {
         c.SetSpec(checkCompletion && CheckGrid.contains(GetGridString(), "412_..8_..."));
+    }
+
+    public void IsLostGuyBeached(Conditionals.Condition c)
+    {
+        c.SetSpec(lostGuyMovement.hasBeached);
     }
 
 }
