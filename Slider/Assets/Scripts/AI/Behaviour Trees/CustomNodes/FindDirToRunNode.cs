@@ -148,7 +148,7 @@ public class FindDirToRunNode : BehaviourTreeNode
             if (LightManager.instance != null)
             {
                 distToShadow = LightRaycast(dir);
-                Debug.Log(distToShadow);
+                Debug.Log("Distance from rat to shadow: " + distToShadow);
             }
 
             float dist = Mathf.Min(distToWall, distToShadow);
@@ -165,21 +165,20 @@ public class FindDirToRunNode : BehaviourTreeNode
 
     private float LightRaycast(Vector2 dir) 
     {
-        Vector2Int pos = TileUtil.WorldToTileCoords(ai.transform.position);
+        Vector2Int nextTilePos = TileUtil.WorldToTileCoords((Vector2) ai.transform.position + dir);
         Vector2Int prevPos;
-        float dist = 0;
-        do
+        float dist = (nextTilePos - (Vector2) ai.transform.position).magnitude;
+        while(dist < ai.idealDistFromWall && LightManager.instance.GetLightMaskAt(nextTilePos.x, nextTilePos.y))
         {
-            prevPos = pos;
-            pos = TileUtil.WorldToTileCoords(pos + dir * 1.5f);
-            dist += (pos - prevPos).magnitude;  //This should either be 1 or sqrt(2)
-        } while (dist < ai.idealDistFromWall && LightManager.instance.GetLightMaskAt(pos.x, pos.y));
+            prevPos = nextTilePos;
+            nextTilePos = TileUtil.WorldToTileCoords(prevPos + dir);
+            dist += (nextTilePos - prevPos).magnitude;
+        }
 
         if (dist > ai.idealDistFromWall)
         {
             dist = Mathf.Infinity;
         }
-
         return dist;
     }
 
