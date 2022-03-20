@@ -14,18 +14,21 @@ public class RatAI : MonoBehaviour
     //Note: In terms of the AI, darkness is treated the same as walls.
 
     [SerializeField]
-    internal float minDistToWallFactor;   //Determines at what distance the AI is allowed to be near a wall before moving in a different direction (scaled by moveSpeed)
+    internal float minDistToWall;   //Determines at what distance the AI is allowed to be near a wall before moving in a different direction (scaled by moveSpeed)
     [SerializeField]
     internal float idealDistFromWall; //The ideal distance the AI wants to keep from walls (this is essentially the rat's "vision")
     [SerializeField]
     [Range(0f, 1f)]
     internal float avoidWallsWeight;    //The tendency for the rat to avoid walls (0 to 1) (Note: This should be small, or else you get weird behaviour on the edge cases.
+    [SerializeField]
+    [Range(-1f, 1f)]
+    internal float decisiveness;    //The tendency for the rat to keep moving in the direction it's facing
 
 
     [SerializeField]
     private Animator anim;
     [SerializeField]
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     [SerializeField]
     private Transform mouth;
 

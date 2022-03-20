@@ -7,15 +7,12 @@ public class FindDirToRunNode : BehaviourTreeNode
     RatAI ai;
     Transform player;
 
-    private float minDistToWall;
-
     private Dictionary<Vector2, float> distanceCache;   //Cache to avoid raycasting the same direction multiple times
 
     public FindDirToRunNode(RatAI ai, Transform player)
     {
         this.ai = ai;
         this.player = player;
-        minDistToWall = ai.moveSpeed * ai.minDistToWallFactor;
     }
 
     public override NodeState Evaluate()
@@ -44,9 +41,8 @@ public class FindDirToRunNode : BehaviourTreeNode
                 ai.SetDirection(avoidPlayerDir);
             } else
             {
-                //Vector2 idealDir = Vector2.Lerp(avoidPlayerDir, avoidWallsDir, ai.avoidWallsWeight);
-                Vector2 idealDir = avoidPlayerDir;
-                ai.SetDirection(idealDir);   //Avoid the player, regardless of weight
+                Vector2 idealDir = Vector2.Lerp(avoidPlayerDir, avoidWallsDir, ai.avoidWallsWeight);
+                ai.SetDirection(idealDir);
             }
 
             return NodeState.SUCCESS;
@@ -60,22 +56,42 @@ public class FindDirToRunNode : BehaviourTreeNode
         Vector2 currDir1 = Vector2.zero;
         Vector2 currDir2 = Vector2.zero;
 
+        List<Vector2> candidateDirs = new List<Vector2>(2 * numDirections);
         for (float theta = 0; theta < Mathf.PI - 0.0001f; theta += 2 * Mathf.PI / numDirections)
         {
             //L: Check on both sides of playerToRat for openings.
-            currDir1 = Vector2Rotate.Rotate(bestDir, theta);
+            currDir1 = Vector2Rotate.Rotate(bestDir, theta).normalized;
             if (CheckValidDir(currDir1))
             {
-                return currDir1.normalized;
+                candidateDirs.Add(currDir1);
             }
-            currDir2 = Vector2Rotate.Rotate(bestDir, -theta);
+            currDir2 = Vector2Rotate.Rotate(bestDir, -theta).normalized;
             if (CheckValidDir(currDir2))
             {
-                return currDir2.normalized;
+                candidateDirs.Add(currDir2);
             }
         }
 
-        return Vector2.zero;
+        Debug.Log(candidateDirs.Count);
+
+        if (candidateDirs.Count == 0)
+        {
+            return Vector2.zero;
+        }
+
+        Vector2 closestToFacingDir = Vector2.zero;
+        float closestToFacingDot = Mathf.NegativeInfinity;
+        foreach (Vector2 dir in candidateDirs)
+        {
+            float dot = Vector2.Dot(dir, ai.DirectionFacing);
+            if (dot > closestToFacingDot)
+            {
+                closestToFacingDir = dir;
+                closestToFacingDot = dot;
+            }
+        }
+
+        return closestToFacingDot < ai.decisiveness ? closestToFacingDir : candidateDirs[0];
     }
 
     private Vector2 GetBestDirAwayFromWalls(int numDirections = 16)
@@ -121,7 +137,7 @@ public class FindDirToRunNode : BehaviourTreeNode
     //Whether a direction is valid based on if it is far enough from the wall.
     private bool CheckValidDir(Vector2 dir)
     {
-        return GetDistToWallOrDark(dir) > minDistToWall;
+        return GetDistToWallOrDark(dir) > ai.minDistToWall;
     }
 
     private Vector2 PlayerToRatNorm()
@@ -140,7 +156,8 @@ public class FindDirToRunNode : BehaviourTreeNode
         {
             //Raycast to walls
             RaycastHit2D[] hits = new RaycastHit2D[1];  //We only care about the first hit.
-            int numResults = Physics2D.Raycast(ai.transform.position, dir, GetRaycastFilter(), hits, ai.idealDistFromWall);
+            Collider2D collider = ai.GetComponent<BoxCollider2D>();
+            int numResults = collider.Raycast(dir, GetRaycastFilter(), hits, ai.idealDistFromWall);
             float distToWall = numResults == 0 ? Mathf.Infinity : Vector2.Distance(hits[0].point, ai.transform.position);
 
             //Raycast on lightmap
@@ -188,7 +205,7 @@ public class FindDirToRunNode : BehaviourTreeNode
         filter = filter.NoFilter();
         filter.useTriggers = false;
         filter.useLayerMask = true;
-        filter.layerMask = ~LayerMask.GetMask("Ignore Raycast", "SlideableArea", "Player", "Rat");
+        filter.layerMask = ~LayerMask.GetMask("Ignore Raycast", "SlideableArea", "Rat");
 
         return filter;
     }
