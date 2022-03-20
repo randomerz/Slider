@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2259471374386283988}
   - component: {fileID: 6731703602745059909}
+  - component: {fileID: 842370665519609470}
   m_Layer: 10
   m_Name: Rat Sprite
   m_TagString: Untagged
@@ -24,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 65014026939846541}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: -0, z: 0.9238796, w: -0.38268325}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5642125429511063263}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 225}
 --- !u!212 &6731703602745059909
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -71,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 529684183
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 83b521f912c133c4f99e153af5d54bd6, type: 3}
+  m_Sprite: {fileID: 5254876852798027502, guid: 67089d1a7392f2449922653c3f0a069b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -82,6 +83,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &842370665519609470
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65014026939846541}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5a3a0067b4d0e964bb5169b3ca2bd643, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &715354975513772393
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,7 +111,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5642125429511063263}
-  - component: {fileID: 4744002369148645980}
   - component: {fileID: 1588607424099105229}
   - component: {fileID: 3202578252114405897}
   - component: {fileID: 7829025947982572241}
@@ -118,25 +137,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &4744002369148645980
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 715354975513772393}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6731637d40297734ab094182579cec75, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &1588607424099105229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,12 +149,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f04283445261e74aa01e938a0b8bd00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerMinRange: 3
-  moveSpeed: 12
+  playerAggroRange: 3
+  playerDeaggroRange: 5
+  moveSpeed: 6
+  pathfindingTolerance: 0.1
   minDistToWallFactor: 0.2
   idealDistFromWall: 8
   avoidWallsWeight: 0
-  anim: {fileID: 4744002369148645980}
+  anim: {fileID: 842370665519609470}
   rb: {fileID: 3202578252114405897}
   mouth: {fileID: 7117076765228698889}
   objectToSteal: {fileID: 0}
@@ -230,7 +232,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1467017979695379807}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8, z: 0}
+  m_LocalPosition: {x: 0, y: 0.54, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5642125429511063263}

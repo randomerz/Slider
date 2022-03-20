@@ -110,10 +110,8 @@ public class STileNavigation : MonoBehaviour
     {
         PosNodeType fromNode = null;
         PosNodeType toNode = null;
-        Debug.Log(navGraph.Nodes.Count);
         foreach (var node in navGraph.Nodes)
         {
-            Debug.Log(node.Value.Position);
             if (node.Value.Position == from)
             {
                 fromNode = node.Value;
@@ -124,9 +122,6 @@ public class STileNavigation : MonoBehaviour
                 toNode = node.Value;
             }
         }
-
-        Debug.Log(fromNode);
-        Debug.Log(toNode);
 
         currPath = new List<Vector2Int>();
         return Graph<PosNodeType>.AStar(navGraph, fromNode, toNode, out currPath);

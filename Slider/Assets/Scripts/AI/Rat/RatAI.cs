@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class RatAI : MonoBehaviour
 {
-    public float playerMinRange;
+    public float playerAggroRange;
+    public float playerDeaggroRange;
     public float moveSpeed;
+    public float pathfindingTolerance;
 
 
     //Misc AI control weights
@@ -34,6 +36,16 @@ public class RatAI : MonoBehaviour
 
     private BehaviourTreeNode behaviourTree;
 
+    private Vector2 _dirFacing;
+
+    public Vector2 DirectionFacing
+    {
+        get
+        {
+            return _dirFacing;
+        }
+    }
+
     private void Awake()
     {
 
@@ -47,7 +59,7 @@ public class RatAI : MonoBehaviour
             Debug.LogError("Rat does not have reference to player.");
         }
 
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -67,23 +79,20 @@ public class RatAI : MonoBehaviour
 
     public void SetDirection(Vector2 dir)
     {
-        transform.up = new Vector3(dir.x, dir.y, 0);
+        _dirFacing = dir.normalized;
+        transform.up = new Vector3(_dirFacing.x, _dirFacing.y, 0);
     }
 
     public void Move()
     {
         rb.velocity = transform.up * moveSpeed;
-        anim.SetBool("isRunning", true);
+        anim.SetFloat("speed", moveSpeed);
     }
 
     public void Stay()
     {
         rb.velocity = Vector2.zero;
-        anim.SetBool("isRunning", false);
-    }
-
-    public void StealObject()
-    {
+        anim.SetFloat("speed", 0f);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -99,7 +108,7 @@ public class RatAI : MonoBehaviour
 
     private void ConstructBehaviourTree()
     {
-        var isPlayerCloseNode = new IsTargetCloseNode(transform, player, playerMinRange);
+        var playerAggroNode = new AggroAtProximityNode(transform, player, playerAggroRange, playerDeaggroRange);
         var findDirToRunNode = new FindDirToRunNode(this, player);
         var moveNode = new MoveNode(this);
         var stayInPlaceNode = new StayInPlaceNode(this);
@@ -107,9 +116,9 @@ public class RatAI : MonoBehaviour
 
         //L: IMPORTANT NOTE: The ordering of the nodes in the tree matters
         var stealSequence = new SequenceNode(new List<BehaviourTreeNode>() { moveTowardsObjectNode });
-        var runSequence = new SequenceNode(new List<BehaviourTreeNode> { isPlayerCloseNode, findDirToRunNode, moveNode });
+        var runFromPlayerSequence = new SequenceNode(new List<BehaviourTreeNode> { playerAggroNode, findDirToRunNode, moveNode });
 
 
-        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runSequence, stayInPlaceNode });
+        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, stayInPlaceNode });
     }
 }

@@ -20,6 +20,8 @@ public class FindDirToRunNode : BehaviourTreeNode
 
     public override NodeState Evaluate()
     {
+        //Check if the rat is on a collision course to the player
+
         //Renew the distance cache on each evaluate (might not need to do it every time)
         distanceCache = GetDistancesInAllDirections(PlayerToRatNorm()); 
 
@@ -42,7 +44,8 @@ public class FindDirToRunNode : BehaviourTreeNode
                 ai.SetDirection(avoidPlayerDir);
             } else
             {
-                Vector2 idealDir = Vector2.Lerp(avoidPlayerDir, avoidWallsDir, ai.avoidWallsWeight);
+                //Vector2 idealDir = Vector2.Lerp(avoidPlayerDir, avoidWallsDir, ai.avoidWallsWeight);
+                Vector2 idealDir = avoidPlayerDir;
                 ai.SetDirection(idealDir);   //Avoid the player, regardless of weight
             }
 
