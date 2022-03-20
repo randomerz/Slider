@@ -18,11 +18,9 @@ public class STileNavigationEditor : Editor
     {
         base.OnInspectorGUI();
 
-        /* This needs to be done at runtime rn since it involves raycasts.
-        if (GUILayout.Button("Bake Nav Grid"))
+        if (GUILayout.Button("Set Path To Debug"))
         {
-            _target.BakeNavGrid();
+            _target.SetPathToDebug();
         }
-        */
     }
 }

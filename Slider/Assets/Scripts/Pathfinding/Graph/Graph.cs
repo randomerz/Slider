@@ -85,14 +85,7 @@ public class Graph<T>
 
     public bool Contains(T value)
     {
-        foreach(T node in nodeDict.Keys)
-        {
-            if (node.Equals(value))
-            {
-                return true;
-            }
-        }
-        return false;
+        return nodeDict.ContainsKey(value);
     }
 
     public bool Remove(T value)
@@ -125,7 +118,7 @@ public class Graph<T>
     }
 
     //L: Calculates the shortest path from start to end.
-    public static bool AStar(Graph<PosNodeType> graph, PosNodeType start, PosNodeType end, out List<Vector2Int> path, bool includeStart = false)
+    public static bool AStar(Graph<PosNodeType> graph, PosNodeType start, PosNodeType end, out List<Vector2Int> path, bool includeStart = true)
     {
         path = new List<Vector2Int>();
         if (start == null || end == null || !graph.Contains(start) || !graph.Contains(end))
@@ -188,6 +181,7 @@ public class Graph<T>
                 if (curr == null)
                 {
                     Debug.LogError("A* Algorithm: A cost was found for this path even though the path is broken");
+                    path.Clear();
                     return false;
                 }
                 path.Add(curr.Value.Position);
@@ -197,9 +191,8 @@ public class Graph<T>
             if (includeStart)
             {
                 path.Add(nodeStart.Value.Position);
-                path.Reverse();
             }
-
+            path.Reverse();
             return true;
         } else
         {
