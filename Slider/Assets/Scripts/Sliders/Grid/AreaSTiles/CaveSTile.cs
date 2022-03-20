@@ -81,21 +81,24 @@ public class CaveSTile : STile
         //Check if any valid adjacent tile has a light source
         foreach (var dir in validDirsForLight)
         {
-            Vector2Int tileToCheck = new Vector2Int(this.x, this.y) + dir;
+            Vector2Int posToCheck = new Vector2Int(this.x, this.y) + dir;
 
             //Border lights (hardcoded for now)
-            if (tileToCheck == new Vector2Int(3, 2) || tileToCheck == new Vector2Int(2, -1))
+            if (posToCheck == new Vector2Int(3, 2) || posToCheck == new Vector2Int(2, -1))
             {
                 return true;
             }
-            if (tileToCheck.x >= 0 && tileToCheck.x < SGrid.current.width && tileToCheck.y >= 0 && tileToCheck.y < SGrid.current.height)
+
+            //Check position is in the grid
+            if (posToCheck.x >= 0 && posToCheck.x < SGrid.current.width && posToCheck.y >= 0 && posToCheck.y < SGrid.current.height)
             {
-                CaveSTile tile = (CaveSTile) SGrid.current.GetGrid()[tileToCheck.x, tileToCheck.y];
+                CaveSTile tile = (CaveSTile) SGrid.current.GetGrid()[posToCheck.x, posToCheck.y];
                 CaveLight light = tile.GetComponentInChildren<CaveLight>();
                 if (tile.isTileActive && light != null && light.LightOn)
                 {
                     foreach (var lightDir in tile.validDirsForLight)
                     {
+                        //The light needs to be able to exit the tile with the light AND enter the tile we are checking from that direction.
                         if (lightDir.x == -dir.x && lightDir.y == -dir.y)
                         {
                             return true;

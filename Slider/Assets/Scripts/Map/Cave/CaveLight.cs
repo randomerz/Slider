@@ -41,7 +41,7 @@ public class CaveLight : MonoBehaviour
         if (LightOn != value)
         {
             LightOn = value;
-            Debug.Log("Light " + gameObject.name + " is " + (value ? "on" : "off"));
+            //Debug.Log("Light " + gameObject.name + " is " + (value ? "on" : "off"));
             if (LightManager.instance != null)
             {
                 LightManager.instance.UpdateLightMaskAll();

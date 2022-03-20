@@ -7,11 +7,11 @@ public class Graph<T>
 {
     private Dictionary<T, GraphNode<T>> nodeDict;
 
-    public HashSet<GraphNode<T>> Nodes
+    public Dictionary<T, GraphNode<T>>.ValueCollection Nodes
     {
         get
         {
-            return nodeDict.Values as HashSet<GraphNode<T>>;
+            return nodeDict.Values;
         }
     }
 
@@ -63,12 +63,18 @@ public class Graph<T>
 
     public void PruneIsolatedNodes()
     {
+        var isolatedNodes = new HashSet<T>();
         foreach (T node in nodeDict.Keys)
         {
             if (nodeDict[node].Neighbors.Count == 0)
             {
-                nodeDict.Remove(node);
+                isolatedNodes.Add(node);
             }
+        }
+
+        foreach (T node in isolatedNodes)
+        {
+            nodeDict.Remove(node);
         }
     }
 
@@ -79,7 +85,14 @@ public class Graph<T>
 
     public bool Contains(T value)
     {
-        return nodeDict.ContainsKey(value);
+        foreach(T node in nodeDict.Keys)
+        {
+            if (node.Equals(value))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public bool Remove(T value)
@@ -140,7 +153,6 @@ public class Graph<T>
         }
         nodeQueue.Enqueue(nodeStart, 0);
 
-        bool found = false;
         while (nodeQueue.Count > 0)
         {
             var curr = nodeQueue.Dequeue();
