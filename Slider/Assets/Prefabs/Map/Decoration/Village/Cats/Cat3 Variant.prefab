@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3386944871968235187, guid: 578827f34f2ada84d82b12d1616fe85f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 142d6f3b051360645a7eb996ef1b4de9, type: 2}
     - target: {fileID: 4934729379848720754, guid: 578827f34f2ada84d82b12d1616fe85f, type: 3}
       propertyPath: m_Controller
       value: 
@@ -63,5 +67,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cat3 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 8829883491422017534, guid: 578827f34f2ada84d82b12d1616fe85f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 2646288756313310950, guid: 077aa90d17da33a4db77df1f584b2fe5, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 578827f34f2ada84d82b12d1616fe85f, type: 3}

@@ -68,13 +68,13 @@ public class SceneSpawns : MonoBehaviour
 
 
 
-    void Start()
+    void Awake()
     {
         if (nextSpawn == spawnName && nextSpawn != SpawnLocation.Default) 
         {
             Vector3 pos = transform.position + relativePos;
             relativePos = Vector3.zero;
-            Player.SetPosition(pos);
+            GameObject.Find("Player").transform.position = pos;
 
             if (spawnInBoat)
             {
