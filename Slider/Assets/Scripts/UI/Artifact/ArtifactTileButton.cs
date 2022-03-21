@@ -15,8 +15,7 @@ public class ArtifactTileButton : MonoBehaviour
     public int x;
     public int y;
 
-    public bool flickerNext = false;
-    private bool startsActive;
+    public bool shouldFlicker = false;
 
     private const int UI_OFFSET = 37;
 
@@ -40,7 +39,6 @@ public class ArtifactTileButton : MonoBehaviour
     {
         myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
         
-        startsActive = myStile.isTileActive;
         SetTileActive(myStile.isTileActive);
         SetPosition(myStile.x, myStile.y);
 
@@ -113,6 +111,11 @@ public class ArtifactTileButton : MonoBehaviour
         isForcedDown = v;
     }
 
+    public void SetShouldFlicker(bool shouldFlicker)
+    {
+        this.shouldFlicker = shouldFlicker;
+    }
+
     public void SetTileActive(bool v)
     {
         if (islandSprite == null)
@@ -123,10 +126,6 @@ public class ArtifactTileButton : MonoBehaviour
         isTileActive = v;
         if (v)
         {
-            if (!startsActive)
-            {
-                flickerNext = true;
-            }
             buttonAnimator.sliderImage.sprite = islandSprite;
         }
         else
@@ -160,8 +159,9 @@ public class ArtifactTileButton : MonoBehaviour
         }
     }
 
-    public void Flicker() {
-        flickerNext = false;
+    public void Flicker() 
+    {
+        shouldFlicker = false;
         StartCoroutine(NewButtonFlicker());
     }
 

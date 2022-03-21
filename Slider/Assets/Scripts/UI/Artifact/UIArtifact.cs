@@ -34,6 +34,12 @@ public class UIArtifact : MonoBehaviour
         SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
     }
 
+    public void OnDisable()
+    {
+        moveQueue = new Queue<SMove>();
+        //Debug.Log("Queue Cleared!");
+    }
+
     public static UIArtifact GetInstance()
     {
         return _instance;
@@ -132,13 +138,6 @@ public class UIArtifact : MonoBehaviour
             SelectButton(dragged);
         }
         // dragged.SetPushedDown(false);
-    }
-
-
-    public void OnDisable()
-    {
-        moveQueue = new Queue<SMove>();
-        //Debug.Log("Queue Cleared!");
     }
 
     public void DeselectCurrentButton()
@@ -432,13 +431,14 @@ public class UIArtifact : MonoBehaviour
         return null;
     }
 
-    public static void AddButton(int islandId)
+    public static void AddButton(int islandId, bool shouldFlicker=true)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
         {
             if (b.islandId == islandId)
             {
                 b.SetTileActive(true);
+                b.SetShouldFlicker(shouldFlicker);
                 return;
             }
         }
@@ -448,7 +448,7 @@ public class UIArtifact : MonoBehaviour
     {
         foreach (ArtifactTileButton b in _instance.buttons)
         {
-            if (b.flickerNext)
+            if (b.shouldFlicker)
             {
                 b.Flicker();
             }

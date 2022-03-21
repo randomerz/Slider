@@ -52,7 +52,7 @@ public class STile : MonoBehaviour
         // DC: this is so that we can call any other relevant functions when STiles are enabled in SGrid
         if (isTileActive) 
         {
-            SGrid.current.EnableStile(this);
+            SGrid.current.EnableStile(this, false);
         }
         else
         {
