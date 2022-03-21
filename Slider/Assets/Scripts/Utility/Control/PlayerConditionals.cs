@@ -77,8 +77,13 @@ public class PlayerConditionals : MonoBehaviour
             }
         }
 
-        onSuccess?.Invoke();
+        InvokeSuccess();
         return true;
+    }
+
+    public void InvokeSuccess()
+    {
+        onSuccess?.Invoke();
     }
 
     private void OnActionListener(object sender, System.EventArgs e) {
