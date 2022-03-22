@@ -137,8 +137,10 @@ public class Player : MonoBehaviour
 
     public static bool IsSafe()
     {
-        Collider2D hit = Physics2D.OverlapPoint(_instance.transform.position, LayerMask.GetMask("SlideableArea"));
-        return hit != null;
+        // DC: this was needed for game jam, but probably not really anymore
+        // Collider2D hit = Physics2D.OverlapPoint(_instance.transform.position, LayerMask.GetMask("SlideableArea"));
+        // return hit != null;
+        return true;
     }
 
     public static STile GetStileUnderneath()
