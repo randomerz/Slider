@@ -43,7 +43,7 @@ public class Minecart : Item
         if(hit.GetComponent<STile>()) //Use Stile RM
         {
             STile hitTile = hit.GetComponent<STile>();
-            Tilemap railmap = hitTile.stileTileMaps.GetComponent<STileTilemap>().minecartRails;
+            Tilemap railmap = hitTile.allTileMaps.GetComponent<STileTilemap>().minecartRails;
             railManager = railmap.GetComponent<RailManager>();
             StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
             if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
@@ -157,7 +157,7 @@ public class Minecart : Item
         Vector3Int targetLoc;
         foreach(STile tile in stileList)
         {
-            RailManager otherRM = tile.stileTileMaps.GetComponentInChildren<RailManager>();
+            RailManager otherRM = tile.allTileMaps.GetComponentInChildren<RailManager>();
                 if(otherRM != null)
                     rmList.Add(otherRM);
             }

@@ -123,6 +123,6 @@ public class VillageGrid : SGrid
     public void Explode()
     {
         caveDoorRocks.SetActive(false);
-        CameraShake.Shake(3f, 3.5f);
+        CameraShake.Shake(1f, 3.5f);
     }
 }

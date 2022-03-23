@@ -9,6 +9,8 @@ public class SceneChanger : MonoBehaviour
     public string sceneName;
     public SceneSpawns.SpawnLocation sceneSpawnName;
 
+    public bool isSpawnPosRelative;
+
     void Start()
     {
         
@@ -27,6 +29,10 @@ public class SceneChanger : MonoBehaviour
     {
         SGrid.current.SaveGrid();
         SceneSpawns.nextSpawn = sceneSpawnName;
+
+        if (isSpawnPosRelative)
+            SceneSpawns.relativePos = Player.GetPosition() - transform.position;
+
         SceneManager.LoadScene(sceneName);
     }
 }

@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{14f7ebc1-8710-4ffe-a7a2-b35f0c7ac6ae}">
 		<property name="name">
-			<value>Title - Connection</value>
+			<value>Village BGM</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -30,6 +30,9 @@
 		</relationship>
 		<relationship name="timeline">
 			<destination>{fe5cde42-12cf-48b7-b1f8-a27e4176f3a1}</destination>
+		</relationship>
+		<relationship name="banks">
+			<destination>{9ff15b18-01d0-4f42-9817-12f2ed6e4030}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixer" id="{ffd5ca34-7a95-4758-b2a9-942a8b9d3300}">
@@ -66,6 +69,9 @@
 	<object class="Timeline" id="{fe5cde42-12cf-48b7-b1f8-a27e4176f3a1}">
 		<relationship name="modules">
 			<destination>{f13b1735-d44f-4dd6-9f0f-57107764dbbb}</destination>
+		</relationship>
+		<relationship name="markers">
+			<destination>{cc60eb9e-d2c6-4b71-994e-061ac7f70e1e}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{6bdc8c69-e899-49e0-bad5-dc3c7ebeca53}">
@@ -105,6 +111,20 @@
 		</relationship>
 		<relationship name="output">
 			<destination>{6bdc8c69-e899-49e0-bad5-dc3c7ebeca53}</destination>
+		</relationship>
+	</object>
+	<object class="LoopRegion" id="{cc60eb9e-d2c6-4b71-994e-061ac7f70e1e}">
+		<property name="position">
+			<value>0</value>
+		</property>
+		<property name="length">
+			<value>144.03918367346938</value>
+		</property>
+		<relationship name="timeline">
+			<destination>{fe5cde42-12cf-48b7-b1f8-a27e4176f3a1}</destination>
+		</relationship>
+		<relationship name="markerTrack">
+			<destination>{eadcd139-e84b-44f6-9f07-d4b33484fd86}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusEffectChain" id="{0c1915e4-0a30-43f8-99cc-441289cfa109}">
