@@ -9,6 +9,9 @@ public class RatAI : MonoBehaviour
     public float moveSpeed;
     public float pathfindingTolerance;
 
+    [SerializeField]
+    internal STileNavAgent navAgent;
+
 
     //Misc AI control weights
     //Note: In terms of the AI, darkness is treated the same as walls.
@@ -64,6 +67,10 @@ public class RatAI : MonoBehaviour
 
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
+
+        navAgent = GetComponent<STileNavAgent>();
+        navAgent.speed = moveSpeed;
+        navAgent.tolerance = pathfindingTolerance;
     }
 
     private void Start()

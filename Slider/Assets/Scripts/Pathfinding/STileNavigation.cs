@@ -7,7 +7,6 @@ public class STileNavigation : MonoBehaviour
     public float agentRadius;
 
     private Graph<PosNodeType> navGraph;
-    private List<Vector2Int> currPath;
 
     [SerializeField]
     private STile stile;
@@ -17,6 +16,8 @@ public class STileNavigation : MonoBehaviour
     private Vector2Int debugFrom;
     [SerializeField]
     private Vector2Int debugTo;
+
+    private List<Vector2Int> debugPath;
 
     private void Awake()
     {
@@ -106,7 +107,7 @@ public class STileNavigation : MonoBehaviour
     /**
      * Return whether a valid path was found
      */
-    public bool SetPathFromToHard(Vector2Int from, Vector2Int to)
+    public List<Vector2Int> GetPathFromToHard(Vector2Int from, Vector2Int to)
     {
         PosNodeType fromNode = null;
         PosNodeType toNode = null;
@@ -123,20 +124,26 @@ public class STileNavigation : MonoBehaviour
             }
         }
 
-        currPath = new List<Vector2Int>();
-        return Graph<PosNodeType>.AStar(navGraph, fromNode, toNode, out currPath);
+        List<Vector2Int> path = new List<Vector2Int>();
+        if (Graph<PosNodeType>.AStar(navGraph, fromNode, toNode, out path))
+        {
+            return path;
+        } else
+        {
+            return null;
+        }
     }
 
-    public bool SetPathFromToRelative(Vector2Int from, Vector2Int to)
+    public List<Vector2Int> GetPathFromToRelative(Vector2Int from, Vector2Int to)
     {
         Vector2Int posAsInt = new Vector2Int((int)stile.transform.position.x, (int)stile.transform.position.y);
-        return SetPathFromToHard(from + posAsInt, to + posAsInt);
+        return GetPathFromToHard(from + posAsInt, to + posAsInt);
     }
 
     public void SetPathToDebug()
     {
-        bool success = SetPathFromToRelative(debugFrom, debugTo);
-        if (!success)
+        debugPath = GetPathFromToRelative(debugFrom, debugTo);
+        if (debugPath == null)
         {
             Debug.LogWarning("Debug positions set do not have a valid path");
         }
@@ -148,7 +155,7 @@ public class STileNavigation : MonoBehaviour
         {
             foreach (GraphNode<PosNodeType> node in navGraph.Nodes)
             {
-                if (currPath != null && currPath.Contains(node.Value.Position))
+                if (debugPath != null && debugPath.Contains(node.Value.Position))
                 {
                     Gizmos.color = Color.green;
                 } else
@@ -159,7 +166,7 @@ public class STileNavigation : MonoBehaviour
 
                 foreach (GraphNode<PosNodeType> neighbor in node.Neighbors)
                 {
-                    if (currPath != null && currPath.Contains(node.Value.Position) && currPath.Contains(neighbor.Value.Position))
+                    if (debugPath != null && debugPath.Contains(node.Value.Position) && debugPath.Contains(neighbor.Value.Position))
                     {
                         Gizmos.color = Color.yellow;
                     } else

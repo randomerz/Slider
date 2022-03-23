@@ -19,14 +19,13 @@ public class MoveTowardsObjectNode : BehaviourTreeNode
             return NodeState.FAILURE;
         } else
         {
-            if (Vector2.Distance(ai.transform.position, ai.objectToSteal.transform.position) < 0.1f)
+            if (Vector2.Distance(ai.transform.position, ai.objectToSteal.transform.position) < ai.navAgent.tolerance)
             {
                 return NodeState.SUCCESS;
             }
 
-            Vector2 dirTowardsObject = (ai.objectToSteal.transform.position - ai.transform.position).normalized;
-            ai.SetDirection(dirTowardsObject);
-            ai.Move();
+            ai.navAgent.SetDestination(ai.objectToSteal.transform.position);
+            ai.navAgent.FollowPath();
             return NodeState.RUNNING;
         }
 

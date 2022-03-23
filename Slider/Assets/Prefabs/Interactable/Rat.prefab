@@ -112,6 +112,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5642125429511063263}
   - component: {fileID: 1588607424099105229}
+  - component: {fileID: 5482138428807836078}
   - component: {fileID: 3202578252114405897}
   - component: {fileID: 7829025947982572241}
   m_Layer: 10
@@ -156,11 +157,26 @@ MonoBehaviour:
   minDistToWall: 0.5
   idealDistFromWall: 8
   avoidWallsWeight: 0.1
+  decisiveness: 0
   anim: {fileID: 842370665519609470}
   rb: {fileID: 3202578252114405897}
   mouth: {fileID: 7117076765228698889}
   objectToSteal: {fileID: 0}
   player: {fileID: 0}
+--- !u!114 &5482138428807836078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 715354975513772393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7370d928131411e4e88b9b5ebf7213d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  tolerance: 0
 --- !u!50 &3202578252114405897
 Rigidbody2D:
   serializedVersion: 4
