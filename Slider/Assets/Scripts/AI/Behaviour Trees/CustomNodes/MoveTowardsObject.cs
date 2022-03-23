@@ -25,7 +25,6 @@ public class MoveTowardsObjectNode : BehaviourTreeNode
             }
 
             ai.navAgent.SetDestination(ai.objectToSteal.transform.position);
-            ai.navAgent.FollowPath();
             return NodeState.RUNNING;
         }
 

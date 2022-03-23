@@ -69,12 +69,6 @@ public class STileNavAgent : MonoBehaviour
         IsRunning = false;
     }
 
-    public void ResumePath()
-    {
-        UpdatePath();
-        FollowPath();
-    }
-
     public void StopPath()
     {
         StopCoroutine(followRoutine);
