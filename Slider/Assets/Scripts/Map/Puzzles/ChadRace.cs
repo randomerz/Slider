@@ -7,7 +7,7 @@ using UnityEngine;
 public class ChadRace : MonoBehaviour
 {
     public UnityEvent onPlayerWin;
-    public Transform chad;
+    public Transform finishingLine;
     public Transform player;
     public float speed;
 
@@ -67,13 +67,13 @@ public class ChadRace : MonoBehaviour
             if (!tilesAdjacent) {   
                 running = false;
                 firstTime = true;
-                chad.localPosition = chadStart;
+                transform.localPosition = chadStart;
             }
-            if (chad.position.y <= endPoint.y) {
+            if (transform.position.y <= endPoint.y) {
                 // Chad goes all the way in the x direction before going in the y direction
                 // Assume that the target location is up and to the right of the starting point
-                Vector3 targetDirection = chad.position.x >= endPoint.x ? new Vector3(0,1,0) : new Vector3(1,0,0);
-                chad.position += + speed * targetDirection * Time.deltaTime;
+                Vector3 targetDirection = transform.position.x >= endPoint.x ? new Vector3(0,1,0) : new Vector3(1,0,0);
+                transform.position += + speed * targetDirection * Time.deltaTime;
             } else {
                 // Chad has made it to the finish line
                 running = false;
@@ -87,7 +87,7 @@ public class ChadRace : MonoBehaviour
             playerWon = true;
             running = false;
             onPlayerWin.Invoke();
-            chad.localPosition = chadStart;
+            transform.localPosition = chadStart;
         }
     }
 
@@ -105,14 +105,14 @@ public class ChadRace : MonoBehaviour
     public void StartQueued() {
         if (inStart && tilesAdjacent && !started && !running && !playerWon) {
             if (firstTime) {
-                chadStart = chad.localPosition;
-                endPoint = transform.position;
+                chadStart = transform.localPosition;
+                endPoint = finishingLine.position;
             }  else {
-                chad.localPosition = chadStart;
+                transform.localPosition = chadStart;
             }
             firstTime = false;
             started = true;
-            playerStart = new Vector2(chad.position.x, chad.position.y - 1);
+            playerStart = new Vector2(transform.position.x, transform.position.y - 1);
             startTime = Time.unscaledTime;
         }
     }

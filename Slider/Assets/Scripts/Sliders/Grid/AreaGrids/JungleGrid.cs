@@ -63,7 +63,7 @@ public class JungleGrid : SGrid
         chadRace.tilesAdjacent = CheckGrid.row(GetGridString(), "523") && GetStile(5).isTileActive && GetStile(2).isTileActive && GetStile(3).isTileActive;
     }
     // Invoked by the Chad race script
-    public void onPlayerWinRace() {
+    public void OnPlayerWinRace() {
         Collectible c = GetCollectible("Boots");
             
             if (!PlayerInventory.Contains(c))
