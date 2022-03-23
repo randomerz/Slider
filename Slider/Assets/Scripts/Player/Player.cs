@@ -28,10 +28,10 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer boatSpriteRenderer;
     [SerializeField] private Animator playerAnimator;
     private PlayerInput input;
-    [SerializeField] private InputActionAsset inputActionAsset;
     void Awake()
     {
         _instance = this;
+        _instance.controls = new InputSettings();
         LoadBindings();
         if (PlayerInventory.Contains("Boots"))
         {
@@ -41,16 +41,12 @@ public class Player : MonoBehaviour
     }
     public static void LoadBindings()
     {
-        _instance.input = _instance.GetComponent<PlayerInput>();
         var rebinds = PlayerPrefs.GetString("rebinds");
         if (!string.IsNullOrEmpty(rebinds))
         {
-            //_instance.input.actions.LoadBindingOverridesFromJson(rebinds);
-            _instance.inputActionAsset.LoadBindingOverridesFromJson(rebinds);
+            _instance.controls.LoadBindingOverridesFromJson(rebinds);
         }
-        _instance.controls = new InputSettings();
         _instance.controls.Player.Move.performed += context => _instance.UpdateMove(context.ReadValue<Vector2>());
-        
     }
 
     private void OnEnable() {

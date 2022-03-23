@@ -39,7 +39,7 @@ public class InputRebindButton : MonoBehaviour
                     // To avoid accidental input from mouse motion
                     .WithControlsExcluding("Mouse")
                     .OnMatchWaitForAnother(0.1f)
-                    .WithTargetBinding(2 + (int)keybind)
+                    .WithTargetBinding(1 + (int)keybind)
                     .OnComplete((InputActionRebindingExtensions.RebindingOperation op) => UpdateButtonText())
                     .Start();
 
@@ -47,10 +47,6 @@ public class InputRebindButton : MonoBehaviour
 
         rebindOperation.Dispose(); // Stop memory leaks
         action.Enable();
-
-        // Save our keybinds to PlayerPrefs so we can load them when the actual game starts
-        var rebinds = inputActions.SaveBindingOverridesAsJson();
-        PlayerPrefs.SetString("rebinds", rebinds);
         Debug.Log("Testing Done!");
     }
 
@@ -106,7 +102,12 @@ public class InputRebindButton : MonoBehaviour
              * Control.Left = 0 and Control.Right = 1. 
             */
             var action = inputActions.FindAction("Move");
-            buttonText.text = buttonText.text = $"{keybind.ToString().ToUpper().Replace("_", " ")}: {action.bindings[2 + (int)keybind].ToDisplayString().ToUpper()}";
+            buttonText.text = buttonText.text = $"{keybind.ToString().ToUpper().Replace("_", " ")}: {action.bindings[1 + (int)keybind].ToDisplayString().ToUpper()}";
+
+            // Save our bindings
+            var rebinds = inputActions.SaveBindingOverridesAsJson();
+            PlayerPrefs.SetString("rebinds", rebinds);
+
             Player.LoadBindings();
             Debug.Log("Binding...");
         }
