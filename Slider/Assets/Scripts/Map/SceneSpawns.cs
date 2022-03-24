@@ -68,17 +68,22 @@ public class SceneSpawns : MonoBehaviour
 
 
 
-    void Start()
+    void Awake()
     {
         if (nextSpawn == spawnName && nextSpawn != SpawnLocation.Default) 
         {
             Vector3 pos = transform.position + relativePos;
+            Debug.Log("relative pos:" + relativePos);
             relativePos = Vector3.zero;
-            Player.SetPosition(pos);
+            GameObject.Find("Player").transform.position = pos;
 
             if (spawnInBoat)
             {
                 wlcManager.SetOnWater(true);
+            }
+            else
+            {
+                wlcManager?.SetOnWater(false);
             }
         }
     }

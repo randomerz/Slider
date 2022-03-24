@@ -357,17 +357,17 @@ public class SGrid : MonoBehaviour
         }
     }
 
-    public virtual void EnableStile(STile stile)
+    public virtual void EnableStile(STile stile, bool flickerButton=true)
     {
         stile.SetTileActive(true);
-        UIArtifact.AddButton(stile.islandId);
+        UIArtifact.AddButton(stile.islandId, flickerButton);
         OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
     }
     // See STile.isTileCollected for an explanation
     public virtual void CollectStile(STile stile)
     {
         stile.isTileCollected = true;
-        EnableStile(stile);
+        EnableStile(stile, true);
     }
 
 
