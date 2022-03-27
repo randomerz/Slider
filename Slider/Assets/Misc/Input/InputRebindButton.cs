@@ -109,12 +109,19 @@ public class InputRebindButton : MonoBehaviour
             PlayerPrefs.SetString("rebinds", rebinds);
 
             Player.LoadBindings();
-            Debug.Log("Binding...");
         }
         else
         {
             var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
             buttonText.text = buttonText.text = $"{keybind.ToString().ToUpper().Replace("_", " ")}: {action.GetBindingDisplayString().ToUpper()}";
+            var rebinds = inputActions.SaveBindingOverridesAsJson();
+            PlayerPrefs.SetString("rebinds", rebinds);
+            if (keybind == Control.Action || keybind == Control.CycleEquip)
+            {
+                PlayerAction.LoadBindings();
+            } else {
+                UIManager.LoadBindings();
+            }
         }
     }
 

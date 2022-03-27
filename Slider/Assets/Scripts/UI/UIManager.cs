@@ -1,12 +1,14 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
+    private static UIManager _instance;
     public bool isGamePaused;
     public bool isArtifactOpen;
     public static bool canOpenMenus = true;
@@ -24,8 +26,6 @@ public class UIManager : MonoBehaviour
     public static bool closeUI;
 
     private InputSettings controls;
-    // private InputAction inputAction;
-    // private InputActionRebindExtensions.RebindingOperation rebindingOperation;
     private void Awake()
     {
         sfxSlider.value = AudioManager.GetSFXVolume();
@@ -33,10 +33,20 @@ public class UIManager : MonoBehaviour
         //artifactPanel.GetComponent<UIArtifact>().Awake();
         uiArtifact.Awake();
         
-        controls = new InputSettings();
-        // controls.m_UI_Pause =  
-        controls.UI.Pause.performed += context => OnPressPause();
-        controls.UI.OpenArtifact.performed += context => OnPressArtifact();
+        _instance = this;
+        _instance.controls = new InputSettings();
+        LoadBindings();
+    }
+
+    public static void LoadBindings()
+    {
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+        {
+            _instance.controls.LoadBindingOverridesFromJson(rebinds);
+        }
+        _instance.controls.UI.Pause.performed += context => _instance.OnPressPause();
+        _instance.controls.UI.OpenArtifact.performed += context => _instance.OnPressArtifact();
     }
 
     private void OnEnable() {

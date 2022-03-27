@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 public class PlayerAction : MonoBehaviour 
 {
+    private static PlayerAction _instance;
     public static System.EventHandler<System.EventArgs> OnAction;
-
+    
     private Item pickedItem;
     private bool isPicking;
     [SerializeField] private Transform itemPickupLocation;
@@ -21,15 +22,20 @@ public class PlayerAction : MonoBehaviour
     private PlayerInput input;
     private void Awake() 
     {
-        input = GetComponent<PlayerInput>();
+        _instance = this;
+        _instance.controls = new InputSettings();
+        LoadBindings();
+    }
+
+    public static void LoadBindings()
+    {
         var rebinds = PlayerPrefs.GetString("rebinds");
         if (!string.IsNullOrEmpty(rebinds))
         {
-            input.actions.LoadBindingOverridesFromJson(rebinds);
+            _instance.controls.LoadBindingOverridesFromJson(rebinds);
         }
-        controls = new InputSettings();
-        controls.Player.Action.performed += context => Action();
-        controls.Player.CycleEquip.performed += context => CycleEquip();
+        _instance.controls.Player.Action.performed += context => _instance.Action();
+        _instance.controls.Player.CycleEquip.performed += context => _instance.CycleEquip();
     }
 
     private void OnEnable() 
