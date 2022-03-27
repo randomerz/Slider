@@ -82,9 +82,9 @@ public class OceanGrid : SGrid
     }
 
 
-    public override void EnableStile(STile stile)
+    public override void EnableStile(STile stile, bool shouldFlicker=true)
     {
-        base.EnableStile(stile);
+        base.EnableStile(stile, shouldFlicker);
         
         stile.GetComponentInChildren<SpriteMask>().enabled = false; // on STile/SlideableArea
         

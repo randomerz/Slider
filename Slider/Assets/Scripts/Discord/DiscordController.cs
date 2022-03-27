@@ -32,7 +32,7 @@ public class DiscordController : MonoBehaviour
     void Update()
     {
         // Not entirely sure what this does, but apparently it's important
-        discord.RunCallbacks();
+        discord?.RunCallbacks();
     }
 
     /// <summary>
@@ -63,6 +63,6 @@ public class DiscordController : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        discord.Dispose(); // Stops rich presence when the game closes
+        discord?.Dispose(); // Stops rich presence when the game closes
     }
 }
