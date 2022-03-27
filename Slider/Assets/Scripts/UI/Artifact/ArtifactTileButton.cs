@@ -8,7 +8,7 @@ public class ArtifactTileButton : MonoBehaviour
 {
     // public static bool canComplete = false;
     public bool isComplete = false;
-    public bool isForcedDown = false;
+    // public bool isInMove = false;
 
     public bool isTileActive = false;
     public int islandId = -1;
@@ -105,10 +105,9 @@ public class ArtifactTileButton : MonoBehaviour
         buttonAnimator.SetSelected(v);
     }
 
-    public void SetForcedPushedDown(bool v)
+    public void SetIsInMove(bool v)
     {
-        buttonAnimator.SetForcedPushedDown(v);
-        isForcedDown = v;
+        buttonAnimator.SetIsForcedDown(v && isTileActive);
     }
 
     public void SetShouldFlicker(bool shouldFlicker)
