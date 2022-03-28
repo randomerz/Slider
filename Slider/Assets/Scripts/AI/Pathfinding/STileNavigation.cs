@@ -46,12 +46,11 @@ public class STileNavigation : MonoBehaviour
 
     public void BakeNavGraph()
     {
-        //The inefficient way to do this
-
-        int minX = (int) stile.transform.position.x - stile.STILE_WIDTH / 2;
-        int minY = (int) stile.transform.position.y - stile.STILE_WIDTH / 2;
-        int maxX = (int) stile.transform.position.x + stile.STILE_WIDTH / 2;
-        int maxY = (int) stile.transform.position.y + stile.STILE_WIDTH / 2;
+        //Graph coordinates are relative to the stile.
+        int minX = - stile.STILE_WIDTH / 2;
+        int minY = - stile.STILE_WIDTH / 2;
+        int maxX = stile.STILE_WIDTH / 2;
+        int maxY = stile.STILE_WIDTH / 2;
 
         navGraph = new Graph<PosNodeType>();
         //Populate with nodes for all tiles in the stile (17*17)
@@ -97,8 +96,8 @@ public class STileNavigation : MonoBehaviour
         {
             ContactFilter2D filter = GetRaycastFilter();
             RaycastHit2D[] hits = new RaycastHit2D[1];  //We only care about the first hit.
-            int hit = Physics2D.CircleCast(pos, agentRadius, dir, filter, hits, Vector2Int.Distance(pos, pointToCheck));
-            if (hit == 0) 
+            int hit = Physics2D.CircleCast(pos + (Vector2) stile.transform.position, agentRadius, dir, filter, hits, Vector2Int.Distance(pos, pointToCheck));
+            if (hit == 0)
             {
                 navGraph.AddDirectedEdge(node, nodeToCheck, node.Value.GetCostTo(nodeToCheck.Value));
             }
@@ -111,6 +110,23 @@ public class STileNavigation : MonoBehaviour
      * from and to are world positions
      */
     public List<Vector2Int> GetPathFromToHard(Vector2Int from, Vector2Int to)
+    {
+        Vector2Int stilePosAsInt = new Vector2Int((int) stile.transform.position.x, (int) stile.transform.position.y);
+        List<Vector2Int> path = GetPathFromToRelative(from - stilePosAsInt, to - stilePosAsInt);
+        Debug.Log(from - stilePosAsInt);
+        Debug.Log(to - stilePosAsInt);
+        if (path != null)
+        {
+            for(int i=0; i<path.Count; i++)
+            {
+                path[i] = new Vector2Int(path[i].x + stilePosAsInt.x, path[i].y + stilePosAsInt.y);
+            }
+        }
+        return path;
+    }
+
+    //positions relative to the position of the stile (How the nodes are structured originally)
+    public List<Vector2Int> GetPathFromToRelative(Vector2Int from, Vector2Int to)
     {
         PosNodeType fromNode = null;
         PosNodeType toNode = null;
@@ -127,21 +143,21 @@ public class STileNavigation : MonoBehaviour
             }
         }
 
+        if (fromNode == null || toNode == null)
+        {
+            Debug.LogError("Attempted to use STileNavigation to calculate path between positions out of bounds of the STile");
+            return null;
+        }
+
         List<Vector2Int> path = new List<Vector2Int>();
         if (Graph<PosNodeType>.AStar(navGraph, fromNode, toNode, out path, false))
         {
             return path;
-        } else
+        }
+        else
         {
             return null;
         }
-    }
-
-    //positions relative to the position of the stile
-    public List<Vector2Int> GetPathFromToRelative(Vector2Int from, Vector2Int to)
-    {
-        Vector2Int posAsInt = new Vector2Int((int)stile.transform.position.x, (int)stile.transform.position.y);
-        return GetPathFromToHard(from + posAsInt, to + posAsInt);
     }
 
     public void SetPathToDebug()
@@ -159,6 +175,8 @@ public class STileNavigation : MonoBehaviour
         {
             foreach (GraphNode<PosNodeType> node in navGraph.Nodes)
             {
+                float x = node.Value.Position.x + stile.transform.position.x;
+                float y = node.Value.Position.y + stile.transform.position.y;
                 if (debugPath != null && debugPath.Contains(node.Value.Position))
                 {
                     Gizmos.color = Color.green;
@@ -166,10 +184,12 @@ public class STileNavigation : MonoBehaviour
                 {
                     Gizmos.color = Color.red;
                 }
-                Gizmos.DrawSphere(new Vector3(node.Value.Position.x, node.Value.Position.y, 0), 0.2f);
+                Gizmos.DrawSphere(new Vector3(x, y, 0), 0.2f);
 
                 foreach (GraphNode<PosNodeType> neighbor in node.Neighbors)
                 {
+                    float neighX = neighbor.Value.Position.x + stile.transform.position.x;
+                    float neighY = neighbor.Value.Position.y + stile.transform.position.y;
                     if (debugPath != null && debugPath.Contains(node.Value.Position) && debugPath.Contains(neighbor.Value.Position))
                     {
                         Gizmos.color = Color.yellow;
@@ -177,7 +197,7 @@ public class STileNavigation : MonoBehaviour
                     {
                         Gizmos.color = Color.blue;
                     }
-                    Gizmos.DrawLine(new Vector3(node.Value.Position.x, node.Value.Position.y, 0), new Vector3(neighbor.Value.Position.x, neighbor.Value.Position.y, 0));
+                    Gizmos.DrawLine(new Vector3(x, y, 0), new Vector3(neighX, neighY, 0));
                 }
             }
         }

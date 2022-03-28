@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FindDirToRunNode : BehaviourTreeNode
+public class MoveAwayFromPlayerNode : BehaviourTreeNode
 {
     RatAI ai;
     Transform player;
 
     private Dictionary<Vector2, float> distanceCache;   //Cache to avoid raycasting the same direction multiple times
 
-    public FindDirToRunNode(RatAI ai, Transform player)
+    public MoveAwayFromPlayerNode(RatAI ai, Transform player)
     {
         this.ai = ai;
         this.player = player;
@@ -17,7 +17,7 @@ public class FindDirToRunNode : BehaviourTreeNode
 
     public override NodeState Evaluate()
     {
-        //Check if the rat is on a collision course to the player
+        ai.navAgent.StopPath(); //ai needs to run away, so pathing is no longer relevant.
 
         //Renew the distance cache on each evaluate (might not need to do it every time)
         distanceCache = GetDistancesInAllDirections(PlayerToRatNorm()); 
@@ -33,8 +33,8 @@ public class FindDirToRunNode : BehaviourTreeNode
         {
 
             Vector2 avoidWallsDir = GetBestDirAwayFromWalls();
-            Debug.Log("Avoid Player: " + avoidPlayerDir);
-            Debug.Log("Avoid Walls: " + avoidWallsDir);
+            //Debug.Log("Avoid Player: " + avoidPlayerDir);
+            //Debug.Log("Avoid Walls: " + avoidWallsDir);
 
             if (avoidWallsDir.magnitude < 0.1f)
             {
@@ -45,6 +45,7 @@ public class FindDirToRunNode : BehaviourTreeNode
                 ai.SetDirection(idealDir);
             }
 
+            ai.Move();
             return NodeState.SUCCESS;
         }
         
@@ -72,7 +73,7 @@ public class FindDirToRunNode : BehaviourTreeNode
             }
         }
 
-        Debug.Log(candidateDirs.Count);
+        //Debug.Log(candidateDirs.Count);
 
         if (candidateDirs.Count == 0)
         {
@@ -165,7 +166,7 @@ public class FindDirToRunNode : BehaviourTreeNode
             if (LightManager.instance != null)
             {
                 distToShadow = LightRaycast(dir);
-                Debug.Log("Distance from rat to shadow: " + distToShadow);
+                //Debug.Log("Distance from rat to shadow: " + distToShadow);
             }
 
             float dist = Mathf.Min(distToWall, distToShadow);

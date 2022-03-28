@@ -23,24 +23,26 @@ public class STileNavAgent : MonoBehaviour
         private set;
     }
 
-    public void SetDestination(Vector2 dest)
+    public bool SetDestination(Vector2 dest)
     {
         //Need to change to work with multiple stiles later
         STileNavigation stileNav = GetComponentInParent<STileNavigation>();
         path = stileNav.GetPathFromToHard(new Vector2Int((int)transform.position.x, (int)transform.position.y),
                                             new Vector2Int((int)dest.x, (int)dest.y));
 
-        if (path == null || path.Count == 0)
-        {
-            Debug.LogError("No path found to this destination.");
-        }
-
         if (IsRunning)
         {
             StopPath();
         }
 
+        if (path == null || path.Count == 0)
+        {
+            IsRunning = false;
+            return false;
+        }
+
         followRoutine = StartCoroutine(FollowCoroutine());
+        return true;
     }
 
     public void UpdatePath()

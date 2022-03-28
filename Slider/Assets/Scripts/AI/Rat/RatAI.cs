@@ -118,17 +118,22 @@ public class RatAI : MonoBehaviour
 
     private void ConstructBehaviourTree()
     {
+        var setDestToObjectNode = new SetDestToObjectNode(this);
+        var moveTowardsSetDestNode = new MoveTowardsSetPosNode(this);
+
         var playerAggroNode = new AggroAtProximityNode(transform, player, playerAggroRange, playerDeaggroRange);
-        var findDirToRunNode = new FindDirToRunNode(this, player);
-        var moveNode = new MoveNode(this);
+        var moveAwayFromPlayerNode = new MoveAwayFromPlayerNode(this, player);
+
+        var setDestToLightTileNode = new SetDestToLightTileNode(this);
+
         var stayInPlaceNode = new StayInPlaceNode(this);
-        var moveTowardsObjectNode = new MoveTowardsObjectNode(this);
+
 
         //L: IMPORTANT NOTE: The ordering of the nodes in the tree matters
-        var stealSequence = new SequenceNode(new List<BehaviourTreeNode>() { moveTowardsObjectNode });
-        var runFromPlayerSequence = new SequenceNode(new List<BehaviourTreeNode> { playerAggroNode, findDirToRunNode, moveNode });
+        var stealSequence = new SequenceNode(new List<BehaviourTreeNode>() { setDestToObjectNode, moveTowardsSetDestNode });
+        var runFromPlayerSequence = new SequenceNode(new List<BehaviourTreeNode> { playerAggroNode, moveAwayFromPlayerNode });
+        var runToLightSequence = new SequenceNode(new List<BehaviourTreeNode> { setDestToLightTileNode, moveTowardsSetDestNode });
 
-
-        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, stayInPlaceNode });
+        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, runToLightSequence, stayInPlaceNode });
     }
 }
