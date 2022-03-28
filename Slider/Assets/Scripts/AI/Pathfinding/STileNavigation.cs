@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Attach this to the stile you want to bake navigation for
 public class STileNavigation : MonoBehaviour
 {
     public float agentRadius;
@@ -82,7 +83,7 @@ public class STileNavigation : MonoBehaviour
         Vector2Int pos = node.Value.Position;
         Vector2Int pointToCheck = pos + dir;
 
-        //This is dumb
+        //Go through all the nodes to find the neighboring position (This part is dumb)
         GraphNode<PosNodeType> nodeToCheck = null;
         foreach (GraphNode<PosNodeType> node2 in navGraph.Nodes)
         {
@@ -97,7 +98,7 @@ public class STileNavigation : MonoBehaviour
             ContactFilter2D filter = GetRaycastFilter();
             RaycastHit2D[] hits = new RaycastHit2D[1];  //We only care about the first hit.
             int hit = Physics2D.CircleCast(pos, agentRadius, dir, filter, hits, Vector2Int.Distance(pos, pointToCheck));
-            if (hit == 0)
+            if (hit == 0) 
             {
                 navGraph.AddDirectedEdge(node, nodeToCheck, node.Value.GetCostTo(nodeToCheck.Value));
             }
@@ -106,6 +107,8 @@ public class STileNavigation : MonoBehaviour
 
     /**
      * Return whether a valid path was found
+     * 
+     * from and to are world positions
      */
     public List<Vector2Int> GetPathFromToHard(Vector2Int from, Vector2Int to)
     {
@@ -125,7 +128,7 @@ public class STileNavigation : MonoBehaviour
         }
 
         List<Vector2Int> path = new List<Vector2Int>();
-        if (Graph<PosNodeType>.AStar(navGraph, fromNode, toNode, out path))
+        if (Graph<PosNodeType>.AStar(navGraph, fromNode, toNode, out path, false))
         {
             return path;
         } else
@@ -134,6 +137,7 @@ public class STileNavigation : MonoBehaviour
         }
     }
 
+    //positions relative to the position of the stile
     public List<Vector2Int> GetPathFromToRelative(Vector2Int from, Vector2Int to)
     {
         Vector2Int posAsInt = new Vector2Int((int)stile.transform.position.x, (int)stile.transform.position.y);

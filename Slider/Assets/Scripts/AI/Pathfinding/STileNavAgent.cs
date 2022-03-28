@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+//Attach this to the agent you want to use STileNavigation
 public class STileNavAgent : MonoBehaviour
 {
     [SerializeField]
@@ -83,6 +84,7 @@ public class STileNavAgent : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        //Draws out the path
         if (path != null)
         {
             for (int i=0; i<path.Count; i++)
