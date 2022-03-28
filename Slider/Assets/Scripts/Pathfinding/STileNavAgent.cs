@@ -24,19 +24,22 @@ public class STileNavAgent : MonoBehaviour
 
     public void SetDestination(Vector2 dest)
     {
+        //Need to change to work with multiple stiles later
         STileNavigation stileNav = GetComponentInParent<STileNavigation>();
+        path = stileNav.GetPathFromToHard(new Vector2Int((int)transform.position.x, (int)transform.position.y),
+                                            new Vector2Int((int)dest.x, (int)dest.y));
 
-        stileNav.GetPathFromToHard(new Vector2Int((int) transform.position.x, (int) transform.position.y), 
-                                   new Vector2Int((int) dest.x, (int) dest.y));
-
-        if (followRoutine == null)
+        if (path == null || path.Count == 0)
         {
-            if (path == null || path.Count == 0)
-            {
-                Debug.LogError("No path found. Did you forget to call SetDestination?");
-            }
-            followRoutine = StartCoroutine(FollowCoroutine());
+            Debug.LogError("No path found to this destination.");
         }
+
+        if (IsRunning)
+        {
+            StopPath();
+        }
+
+        followRoutine = StartCoroutine(FollowCoroutine());
     }
 
     public void UpdatePath()
@@ -71,7 +74,28 @@ public class STileNavAgent : MonoBehaviour
 
     public void StopPath()
     {
-        StopCoroutine(followRoutine);
+        if (followRoutine != null && IsRunning)
+        {
+            StopCoroutine(followRoutine);
+            IsRunning = false;
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (path != null)
+        {
+            for (int i=0; i<path.Count; i++)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawSphere(new Vector3(path[i].x, path[i].y, 0), 0.2f);
+
+                if (i != path.Count - 1)
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawLine(new Vector3(path[i].x, path[i].y, 0), new Vector3(path[i+1].x, path[i+1].y, 0));
+                }
+            }
+        }
     }
 }
-

@@ -25,7 +25,7 @@ public class MoveTowardsObjectNode : BehaviourTreeNode
             }
 
             ai.navAgent.SetDestination(ai.objectToSteal.transform.position);
-            return NodeState.RUNNING;
+            return ai.navAgent.IsRunning ? NodeState.RUNNING : NodeState.FAILURE;
         }
 
 

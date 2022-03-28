@@ -177,8 +177,6 @@ public class STileNavigation : MonoBehaviour
                 }
             }
         }
-
-
     }
 
     private ContactFilter2D GetRaycastFilter()
