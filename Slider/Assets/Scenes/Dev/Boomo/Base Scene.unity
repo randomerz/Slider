@@ -329,6 +329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Jungle
   sceneSpawnName: 0
+  isSpawnPosRelative: 0
 --- !u!1001 &105832907
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -539,6 +540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Military
   sceneSpawnName: 0
+  isSpawnPosRelative: 0
 --- !u!1 &232673934
 GameObject:
   m_ObjectHideFlags: 0
@@ -584,6 +586,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnName: 0
   spawnInBoat: 1
+  wlcManager: {fileID: 0}
 --- !u!1001 &244194138
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3578,6 +3581,103 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a8dd5829b849746afd65b9b84190aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &687189939
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3240447105416965922, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_Name
+      value: DebugCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3240447105416965928, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
 --- !u!1001 &705329673
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4070,6 +4170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnName: 0
   spawnInBoat: 1
+  wlcManager: {fileID: 0}
 --- !u!1 &860191909
 GameObject:
   m_ObjectHideFlags: 0
@@ -5030,6 +5131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnName: 0
   spawnInBoat: 0
+  wlcManager: {fileID: 0}
 --- !u!1001 &1346630605
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5169,6 +5271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnName: 0
   spawnInBoat: 1
+  wlcManager: {fileID: 0}
 --- !u!114 &1587414361 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7648707881595533458, guid: 6246f5caa1e6cac46969239c5a944200, type: 3}
@@ -5253,7 +5356,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1680646417 stripped
 GameObject:
@@ -7750,6 +7853,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Jungle
   sceneSpawnName: 0
+  isSpawnPosRelative: 0
 --- !u!1001 &1755218389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7887,6 +7991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Village dev
   sceneSpawnName: 0
+  isSpawnPosRelative: 0
 --- !u!1 &1769068890
 GameObject:
   m_ObjectHideFlags: 0
@@ -8257,6 +8362,7 @@ MonoBehaviour:
   walls: {fileID: 504704873}
   decoration: {fileID: 1988335505}
   colliders: {fileID: 1726583454}
+  minecartRails: {fileID: 0}
   wallTile: {fileID: 0}
 --- !u!1001 &1987171386
 PrefabInstance:
