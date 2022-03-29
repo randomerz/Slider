@@ -219,15 +219,34 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // void StartInteractiveRebind() 
-    // {   
-    //     rebindingOperation = inputAction.PerformInteractiveRebinding()
-    //         .WithControlsExcluding("<Mouse>/leftButton")
-    //         .WithControlsExcluding("<Mouse>/rightButton")
-    //         .WithControlsExcluding("<Mouse>/press")
-    //         .WithControlsExcluding("<Pointer>/position")
-    //         .WithCancelingThrough("<Keyboard>/escape");   
+    public void UpdateSFXVolume()  //float value
+    {   
+        AudioManager.SetSFXVolume(sfxSlider.value);
+    }
+
+    public void UpdateMusicVolume()  //float value
+    {
+        AudioManager.SetMusicVolume(musicSlider.value);
+    }
+
+    // public void ToggleBigText(bool value)
+    // {
+    //     DialogueManager.highContrastMode = value;
+    //     DialogueManager.doubleSizeMode = value;
     // }
+    
+    public void LoadGame()
+    {
+        ResumeGame();
+        SceneManager.LoadScene("Game");
+    }
+
+    public void LoadMainMenu()
+    {
+        ResumeGame();
+        SceneManager.LoadScene("MainMenu");
+    }
+
     public void QuitGame()
     {
         Application.Quit();

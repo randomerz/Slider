@@ -798,7 +798,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5557658412688991612}
   - component: {fileID: 1420214614021301863}
-  - component: {fileID: 9097900148041732938}
+  - component: {fileID: 1471118939}
   m_Layer: 5
   m_Name: MusicSlider
   m_TagString: Untagged
@@ -879,8 +879,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 9097900148041732938}
-        m_TargetAssemblyTypeName: UIPause, Assembly-CSharp
+      - m_Target: {fileID: 1471118939}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: UpdateMusicVolume
         m_Mode: 1
         m_Arguments:
@@ -891,7 +891,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &9097900148041732938
+--- !u!114 &1471118939
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -900,10 +900,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 3254454684755889359}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67c89607e28ab411aa34bff5f0cd9c76, type: 3}
+  m_Script: {fileID: 11500000, guid: 0c8c9dc99f4dc6549a2cf2cedb2d007c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 0}
+  isGamePaused: 0
+  isArtifactOpen: 0
+  pausePanel: {fileID: 5049116214901676854}
+  optionsPanel: {fileID: 6764153410580709861}
+  controlsPanel: {fileID: 3193040993723520762}
+  advOptionsPanel: {fileID: 5034203569208968072}
+  artifactPanel: {fileID: 0}
+  uiArtifact: {fileID: 0}
+  artifactAnimator: {fileID: 0}
+  sfxSlider: {fileID: 1497015175080346129}
+  musicSlider: {fileID: 1420214614021301863}
 --- !u!1 &3569721721051482940
 GameObject:
   m_ObjectHideFlags: 0
@@ -914,7 +924,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2921717293215624958}
   - component: {fileID: 1497015175080346129}
-  - component: {fileID: 1044566399577102580}
+  - component: {fileID: 1114758340}
   m_Layer: 5
   m_Name: SFXSlider
   m_TagString: Untagged
@@ -995,8 +1005,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1044566399577102580}
-        m_TargetAssemblyTypeName: UIPause, Assembly-CSharp
+      - m_Target: {fileID: 1114758340}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: UpdateSFXVolume
         m_Mode: 1
         m_Arguments:
@@ -1007,7 +1017,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1044566399577102580
+--- !u!114 &1114758340
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1016,10 +1026,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 3569721721051482940}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67c89607e28ab411aa34bff5f0cd9c76, type: 3}
+  m_Script: {fileID: 11500000, guid: 0c8c9dc99f4dc6549a2cf2cedb2d007c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 0}
+  isGamePaused: 0
+  isArtifactOpen: 0
+  pausePanel: {fileID: 5049116214901676854}
+  optionsPanel: {fileID: 6764153410580709861}
+  controlsPanel: {fileID: 3193040993723520762}
+  advOptionsPanel: {fileID: 5034203569208968072}
+  artifactPanel: {fileID: 0}
+  uiArtifact: {fileID: 0}
+  artifactAnimator: {fileID: 0}
+  sfxSlider: {fileID: 1497015175080346129}
+  musicSlider: {fileID: 1420214614021301863}
 --- !u!1 &3649435627984385565
 GameObject:
   m_ObjectHideFlags: 0
@@ -1542,14 +1562,14 @@ MonoBehaviour:
   isGamePaused: 0
   isArtifactOpen: 0
   pausePanel: {fileID: 5049116214901676854}
-  optionsPanel: {fileID: 0}
-  controlsPanel: {fileID: 0}
-  advOptionsPanel: {fileID: 0}
+  optionsPanel: {fileID: 6764153410580709861}
+  controlsPanel: {fileID: 3193040993723520762}
+  advOptionsPanel: {fileID: 5034203569208968072}
   artifactPanel: {fileID: 0}
   uiArtifact: {fileID: 0}
   artifactAnimator: {fileID: 0}
-  sfxSlider: {fileID: 0}
-  musicSlider: {fileID: 0}
+  sfxSlider: {fileID: 1497015175080346129}
+  musicSlider: {fileID: 1420214614021301863}
 --- !u!1 &5049116215467832722
 GameObject:
   m_ObjectHideFlags: 0
@@ -3849,7 +3869,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -45
+      value: 19.4
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3877,7 +3897,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541341, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a251bed476ecbe741969521e66693b15, type: 3}
