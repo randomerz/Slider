@@ -2,13 +2,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class JungleArtifact : UIArtifact
 {
     // private static STile prevLinkTile = null;
 
+    protected override void test()
+    {
+        // base.test();
+        Debug.Log("called from jongle");
+    }
+
+    public override void SelectButton(ArtifactTileButton button)
+    {
+        Debug.Log("Jungle select buton");
+        base.SelectButton(button);
+    }
+
+    public override void ButtonDragged(BaseEventData eventData)
+    {
+        Debug.Log("jungle drag start");
+        base.ButtonDragged(eventData);
+    }
+
+    public override void ButtonDragEnd(BaseEventData eventData)
+    {
+        Debug.Log("Jungle drag end");
+        base.ButtonDragEnd(eventData);
+    }
+
     protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
+        Debug.Log("Jungle check + swap");
         if (buttonCurrent.linkButton == null)
         {
             //L: Just a normal move
@@ -28,9 +54,10 @@ public class JungleArtifact : UIArtifact
             int dx = buttonEmpty.x - x;
             int dy = buttonEmpty.y - y;
 
-            SMove linkedSwap = new SMoveLinkedSwap(x, y, buttonEmpty.x, buttonEmpty.y, linkx, linky);
+            SMove linkedSwap = new SMoveLinkedSwap(x, y, buttonEmpty.x, buttonEmpty.y, linkx, linky,
+                                                    buttonCurrent.islandId, buttonCurrent.linkButton.islandId);
 
-            Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy);
+            Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy, buttonCurrent.islandId);
             if (SGrid.current.CanMove(linkedSwap) && (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && moveQueue.Count < maxMoveQueueSize)
             {
                 QueueCheckAndAdd(linkedSwap);
