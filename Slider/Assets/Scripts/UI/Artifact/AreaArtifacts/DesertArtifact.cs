@@ -147,6 +147,7 @@ public class DesertArtifact : UIArtifact
     {
         Vector2Int lastSwap = new Vector2Int(-1, -1);
         Vector2Int firstSwap = new Vector2Int(-1, -1);
+        int firstIslandId = -1;
 
         foreach (ArtifactTileButton button in tiles)
         {
@@ -159,8 +160,9 @@ public class DesertArtifact : UIArtifact
                     if (firstSwap.x == -1)
                     {
                         firstSwap = new Vector2Int(furthest.x, furthest.y);
+                        firstIslandId = furthest.islandId;
                     }
-                    swaps.Add(new Movement(button.x, button.y, furthest.x, furthest.y));
+                    swaps.Add(new Movement(button.x, button.y, furthest.x, furthest.y, button.islandId));
                     SwapButtons(button, furthest);
                 }
             }
@@ -168,7 +170,7 @@ public class DesertArtifact : UIArtifact
         if (lastSwap.x != -1 && firstSwap.x != -1)
         {
             //print(firstSwap.x);
-            swaps.Add(new Movement(firstSwap.x, firstSwap.y, lastSwap.x, lastSwap.y));
+            swaps.Add(new Movement(firstSwap.x, firstSwap.y, lastSwap.x, lastSwap.y, firstIslandId));
         }
 
         return swaps;
