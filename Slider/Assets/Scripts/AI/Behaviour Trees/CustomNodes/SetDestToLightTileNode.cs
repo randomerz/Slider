@@ -43,10 +43,9 @@ public class SetDestToLightTileNode : BehaviourTreeNode
                         if (LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y))
                         {
                             //Debug.Log("Found Lit Tile: " + posToCheck);
-                            STileNavigation nav = ai.GetComponentInParent<STileNavigation>();
-                            List<Vector2Int> path = nav.GetPathFromToHard(posAsInt, posToCheck);
-
-                            if (path != null)
+                            WorldNavigation nav = ai.GetComponentInParent<WorldNavigation>();
+                            List<Vector2Int> path = new List<Vector2Int>();
+                            if (nav.GetPathFromToBStar(posAsInt, posToCheck, out path))
                             {
                                 //It has to be possible to actually get there in order for this to be valid.
                                 //Debug.Log("Found Path");

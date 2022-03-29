@@ -4,14 +4,14 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.EditorTools;
 
-[CustomEditor(typeof(STileNavigation))]
-public class STileNavigationEditor : Editor
+[CustomEditor(typeof(WorldNavigation))]
+public class WorldNavigationEditor : Editor
 {
-    private STileNavigation _target;
+    private WorldNavigation _target;
 
     private void OnEnable()
     {
-        _target = (STileNavigation)target;
+        _target = (WorldNavigation)target;
     }
 
     public override void OnInspectorGUI()

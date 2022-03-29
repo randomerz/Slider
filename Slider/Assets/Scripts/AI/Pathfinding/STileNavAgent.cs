@@ -26,10 +26,11 @@ public class STileNavAgent : MonoBehaviour
     public bool SetDestination(Vector2 dest)
     {
         //Need to change to work with multiple stiles later
-        STileNavigation stileNav = GetComponentInParent<STileNavigation>();
-        path = stileNav.GetPathFromToHard(new Vector2Int((int)transform.position.x, (int)transform.position.y),
-                                            new Vector2Int((int)dest.x, (int)dest.y));
+        WorldNavigation worldNav = GetComponentInParent<WorldNavigation>();
+        worldNav.GetPathFromToBStar(new Vector2Int((int)transform.position.x, (int)transform.position.y),
+                                            new Vector2Int((int)dest.x, (int)dest.y), out path);
 
+        Debug.Log(path.Count);
         if (IsRunning)
         {
             StopPath();

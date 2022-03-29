@@ -361,7 +361,7 @@ CompositeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
@@ -559,7 +559,7 @@ CompositeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
@@ -3434,19 +3434,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7649429769792356524, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
   m_PrefabInstance: {fileID: 2522777883742973097}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4002018905126425817 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1479630269152721008, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
-  m_PrefabInstance: {fileID: 2522777883742973097}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &545561396114799877 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2634759908878225836, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
   m_PrefabInstance: {fileID: 2522777883742973097}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3630230152951732110 stripped
+--- !u!1 &4002018905126425817 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1253018884578982695, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1479630269152721008, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
   m_PrefabInstance: {fileID: 2522777883742973097}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &6426697957377227565 stripped
@@ -3519,7 +3514,6 @@ MonoBehaviour:
   sliderCollider: {fileID: 5272183297352641543}
   houseSliderCollider: {fileID: 8412660596775498700}
   tileMapCollider: {fileID: 4002018905126425817}
-  decorationsTileMap: {fileID: 3630230152951732110}
   borderColliders:
   - {fileID: 8670949615324834724}
   - {fileID: 2532387907432920240}
