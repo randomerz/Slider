@@ -42,6 +42,7 @@ public class OceanArtifact : UIArtifact
                 new Vector2Int(x + 1, y + 1),
                 new Vector2Int(x + 1, y),
             };
+        List<int> islandIds = new List<int>();
         List<Vector2Int> anchoredPositions = new List<Vector2Int>();
 
         List<ArtifactTileButton> tb = new List<ArtifactTileButton>{
@@ -72,12 +73,14 @@ public class OceanArtifact : UIArtifact
                     SMoveRotateArr.RemoveAt(i);
                     tb.RemoveAt(i);
                     anchoredPositions.Add(new Vector2Int(curX, curY));
+                    continue;
                 }
                 else
                 {
                     isAtLeastOneActive = true;
                 }
             }
+            islandIds.Add(grid[curX, curY].islandId);
         }
 
         if (!isAtLeastOneActive)
@@ -90,7 +93,7 @@ public class OceanArtifact : UIArtifact
         // if (SGrid.current.CanRotate)
         if (moveQueue.Count < maxMoveQueueSize)
         {
-            SMoveRotate rotate = new SMoveRotate(SMoveRotateArr, rotateCCW);
+            SMoveRotate rotate = new SMoveRotate(SMoveRotateArr, islandIds, rotateCCW);
             rotate.anchoredPositions = anchoredPositions;
             QueueCheckAndAdd(rotate);
             // SwapButtons(buttonCurrent, buttonEmpty);
