@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-
 using Priority_Queue;
 
 public class WorldNavigation : MonoBehaviour
@@ -141,8 +140,6 @@ public class WorldNavigation : MonoBehaviour
 
         return result;
     }
-
-    //positions relative to the position of the stile (How the nodes are structured originally)
 
     //L: Calculates the shortest path from start to end.
     //BStar = Boomo Star
