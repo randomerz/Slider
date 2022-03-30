@@ -23,7 +23,7 @@ public class WorldNavigation : MonoBehaviour
 
     private List<Vector2Int> debugPath;
 
-    private void Start()
+    private void Awake()
     {
         validPts = new HashSet<Vector2Int>();
         validPtsWorld = new HashSet<Vector2Int>();
