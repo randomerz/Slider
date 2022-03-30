@@ -35,9 +35,9 @@ public class OceanGrid : SGrid
 
     void Start()
     {
-        foreach (Collectible c in collectibles) 
+        foreach (Collectible c in collectibles)
         {
-            if (PlayerInventory.Contains(c)) 
+            if (PlayerInventory.Contains(c))
             {
                 c.gameObject.SetActive(false);
             }
@@ -50,8 +50,8 @@ public class OceanGrid : SGrid
         UIEffects.FadeFromBlack();
 
     }
-    
-    private void OnEnable() 
+
+    private void OnEnable()
     {
         if (checkCompletion) {
             SGrid.OnGridMove += SGrid.CheckCompletions;
@@ -61,7 +61,7 @@ public class OceanGrid : SGrid
         SGridAnimator.OnSTileMoveEnd += CheckVolcano;
     }
 
-    private void OnDisable() 
+    private void OnDisable()
     {
         if (checkCompletion) {
             SGrid.OnGridMove -= SGrid.CheckCompletions;
@@ -71,7 +71,7 @@ public class OceanGrid : SGrid
         SGridAnimator.OnSTileMoveEnd -= CheckVolcano;
     }
 
-    public override void SaveGrid() 
+    public override void SaveGrid()
     {
         base.SaveGrid();
     }
@@ -85,9 +85,9 @@ public class OceanGrid : SGrid
     public override void EnableStile(STile stile, bool shouldFlicker=true)
     {
         base.EnableStile(stile, shouldFlicker);
-        
+
         stile.GetComponentInChildren<SpriteMask>().enabled = false; // on STile/SlideableArea
-        
+
     }
 
     // === Temporary Tavernkeep Methods
@@ -132,10 +132,12 @@ public class OceanGrid : SGrid
         }
 
         // just activate in order for now
-        for (int i = 4; i < Mathf.Min(4 + totalCreditCount, 10); i++)
-        {
-            ActivateSliderCollectible(i);
-        }
+        //for (int i = 4; i < Mathf.Min(4 + totalCreditCount, 10); i++)
+        //{
+          //  ActivateSliderCollectible(i);
+        //}
+
+        
 
         // check final quest on completing all others
         if (totalCreditCount == 7 + 1 && !startedFinalQuest) // todo: remove +1 later
@@ -155,11 +157,11 @@ public class OceanGrid : SGrid
     {
         // Debug.Log(IsShipwreckAdjacent());
         // Debug.Log(GetGridString());
-        
+
         if (IsShipwreckAdjacent())
         {
             Collectible c = GetCollectible("Treasure Chest");
-            
+
             if (!PlayerInventory.Contains(c))
             {
                 c.gameObject.SetActive(true);

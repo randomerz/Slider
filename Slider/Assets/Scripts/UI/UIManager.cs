@@ -9,10 +9,12 @@ public class UIManager : MonoBehaviour
 {
     public bool isGamePaused;
     public bool isArtifactOpen;
+    public bool isQuestPanelOpen;
     public static bool canOpenMenus = true;
 
     public GameObject pausePanel;
     public GameObject artifactPanel;
+    public GameObject oceanQuestPanel;
     public UIArtifact uiArtifact;
     public Animator artifactAnimator;
     public Slider sfxSlider;
@@ -28,7 +30,7 @@ public class UIManager : MonoBehaviour
         musicSlider.value = AudioManager.GetMusicVolume();
         //artifactPanel.GetComponent<UIArtifact>().Awake();
         uiArtifact.Awake();
-        
+
         controls = new InputSettings();
         controls.UI.Pause.performed += context => OnPressPause();
         controls.UI.OpenArtifact.performed += context => OnPressArtifact();
@@ -37,7 +39,7 @@ public class UIManager : MonoBehaviour
     private void OnEnable() {
         controls.Enable();
     }
-    
+
     private void OnDisable() {
         controls.Disable();
     }
@@ -75,7 +77,7 @@ public class UIManager : MonoBehaviour
         // }
     }
 
-    private void OnPressPause() 
+    private void OnPressPause()
     {
         if (isGamePaused)
         {
@@ -87,7 +89,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void OnPressArtifact() 
+    private void OnPressArtifact()
     {
         if (isArtifactOpen)
         {
@@ -112,6 +114,8 @@ public class UIManager : MonoBehaviour
             isArtifactOpen = false;
             artifactAnimator.SetBool("isVisible", false);
             StartCoroutine(CloseArtPanel());
+        } else if (oceanQuestPanel.activeSelf) {
+            oceanQuestPanel.SetActive(false);
         }
 
         uiArtifact.DeselectCurrentButton();
@@ -189,4 +193,25 @@ public class UIManager : MonoBehaviour
         Application.Quit();
         Debug.Log("Quitting game!");
     }
+
+    public void OpenShopPanel() {
+          if (!canOpenMenus)
+              return;
+          if (Player.IsSafe())
+          {
+              oceanQuestPanel.SetActive(true);
+              //UIArtifact.UpdatePushedDowns();
+              isGamePaused = true;
+              isQuestPanelOpen = true;
+              Time.timeScale = 0;
+              Player.SetCanMove(false);
+              artifactAnimator.SetBool("isVisible", true); //i'll keep this in rn
+              uiArtifact.FlickerNewTiles();
+          }
+          else
+          {
+              AudioManager.Play("OceanQuestPanel Error");
+          }
+      }
+
 }
