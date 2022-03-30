@@ -1,17 +1,22 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
+    private static UIManager _instance;
     public bool isGamePaused;
     public bool isArtifactOpen;
     public static bool canOpenMenus = true;
 
     public GameObject pausePanel;
+    public GameObject optionsPanel;
+    public GameObject controlsPanel;
+    public GameObject advOptionsPanel;
     public GameObject artifactPanel;
     public UIArtifact uiArtifact;
     public Animator artifactAnimator;
@@ -21,7 +26,6 @@ public class UIManager : MonoBehaviour
     public static bool closeUI;
 
     private InputSettings controls;
-
     private void Awake()
     {
         sfxSlider.value = AudioManager.GetSFXVolume();
@@ -29,9 +33,20 @@ public class UIManager : MonoBehaviour
         //artifactPanel.GetComponent<UIArtifact>().Awake();
         uiArtifact.Awake();
         
-        controls = new InputSettings();
-        controls.UI.Pause.performed += context => OnPressPause();
-        controls.UI.OpenArtifact.performed += context => OnPressArtifact();
+        _instance = this;
+        _instance.controls = new InputSettings();
+        LoadBindings();
+    }
+
+    public static void LoadBindings()
+    {
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+        {
+            _instance.controls.LoadBindingOverridesFromJson(rebinds);
+        }
+        _instance.controls.UI.Pause.performed += context => _instance.OnPressPause();
+        _instance.controls.UI.OpenArtifact.performed += context => _instance.OnPressArtifact();
     }
 
     private void OnEnable() {
@@ -83,7 +98,14 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            PauseGame();
+            if (controlsPanel.activeSelf || advOptionsPanel.activeSelf) 
+            {
+                OpenOptions();
+            } 
+            else
+            {
+                PauseGame();
+            }
         }
     }
 
@@ -108,7 +130,6 @@ public class UIManager : MonoBehaviour
         if (isArtifactOpen)
         {
             Player.SetCanMove(true);
-
             isArtifactOpen = false;
             artifactAnimator.SetBool("isVisible", false);
             StartCoroutine(CloseArtPanel());
@@ -129,10 +150,52 @@ public class UIManager : MonoBehaviour
             return;
 
         pausePanel.SetActive(true);
+        optionsPanel.SetActive(false);
+        controlsPanel.SetActive(false);
+        advOptionsPanel.SetActive(false);
         Time.timeScale = 0f;
         isGamePaused = true;
     }
 
+    public void OpenOptions() 
+    {
+        if (!canOpenMenus)
+            return;
+
+        pausePanel.SetActive(false);
+        optionsPanel.SetActive(true);
+        controlsPanel.SetActive(false);
+        advOptionsPanel.SetActive(false);
+    }
+
+    public void OpenControls() 
+    {
+        if (!canOpenMenus)
+            return;
+
+        optionsPanel.SetActive(false);
+        controlsPanel.SetActive(true);
+    }
+    public void OpenAdvOptions() 
+    {
+        if (!canOpenMenus)
+            return;
+            
+        optionsPanel.SetActive(false);
+        advOptionsPanel.SetActive(true);
+    }
+
+    public void BackPressed() 
+    {
+        if (optionsPanel.activeSelf) 
+        {
+            PauseGame();
+        }
+        else if (controlsPanel.activeSelf || advOptionsPanel.activeSelf)
+        {
+            OpenOptions();
+        }
+    }
     public void OpenArtifact()
     {
         if (!canOpenMenus)
@@ -156,22 +219,22 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateSFXVolume(float value)
-    {
-        AudioManager.SetSFXVolume(value);
+    public void UpdateSFXVolume()  //float value
+    {   
+        AudioManager.SetSFXVolume(sfxSlider.value);
     }
 
-    public void UpdateMusicVolume(float value)
+    public void UpdateMusicVolume()  //float value
     {
-        AudioManager.SetMusicVolume(value);
+        AudioManager.SetMusicVolume(musicSlider.value);
     }
 
-    public void ToggleBigText(bool value)
-    {
-        DialogueDisplay.highContrastMode = value;
-        DialogueDisplay.doubleSizeMode = value;
-    }
-
+    // public void ToggleBigText(bool value)
+    // {
+    //     DialogueManager.highContrastMode = value;
+    //     DialogueManager.doubleSizeMode = value;
+    // }
+    
     public void LoadGame()
     {
         ResumeGame();
@@ -189,4 +252,5 @@ public class UIManager : MonoBehaviour
         Application.Quit();
         Debug.Log("Quitting game!");
     }
+    
 }

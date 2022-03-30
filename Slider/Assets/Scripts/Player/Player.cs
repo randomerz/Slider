@@ -1,4 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -23,18 +27,26 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
     [SerializeField] private SpriteRenderer boatSpriteRenderer;
     [SerializeField] private Animator playerAnimator;
-
+    private PlayerInput input;
     void Awake()
     {
         _instance = this;
-
-        controls = new InputSettings();
-        controls.Player.Move.performed += context => UpdateMove(context.ReadValue<Vector2>());
+        _instance.controls = new InputSettings();
+        LoadBindings();
         if (PlayerInventory.Contains("Boots"))
         {
             BootsSpeedUp();
         }
         UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
+    }
+    public static void LoadBindings()
+    {
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+        {
+            _instance.controls.LoadBindingOverridesFromJson(rebinds);
+        }
+        _instance.controls.Player.Move.performed += context => _instance.UpdateMove(context.ReadValue<Vector2>());
     }
 
     private void OnEnable() {
