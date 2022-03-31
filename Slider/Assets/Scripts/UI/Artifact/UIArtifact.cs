@@ -36,12 +36,6 @@ public class UIArtifact : MonoBehaviour
         SGridAnimator.OnSTileMoveEnd += UpdatePushedDowns;
 
         // Debug.Log(this is JungleArtifact);
-        test();
-    }
-
-    protected virtual void test()
-    {
-        Debug.LogWarning("called test from UIArtifact");
     }
 
     public void OnDisable()
@@ -199,7 +193,6 @@ public class UIArtifact : MonoBehaviour
 
                 //L: Player makes a move while the tile is still moving, so add the button to the queue.
                 CheckAndSwap(currentButton, button);
-                test();
 
                 moveOptionButtons = GetMoveOptions(currentButton);
                 foreach (ArtifactTileButton b in buttons)
@@ -295,7 +288,6 @@ public class UIArtifact : MonoBehaviour
     //L: Returns if the swap was successful.
     protected virtual bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        Debug.Log("base check + swap");
         STile[,] currGrid = SGrid.current.GetGrid();
 
         int x = buttonCurrent.x;

@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
     [SerializeField] private SpriteRenderer boatSpriteRenderer;
     [SerializeField] private Animator playerAnimator;
-    private PlayerInput input;
+
     void Awake()
     {
         _instance = this;

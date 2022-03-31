@@ -13,13 +13,6 @@ public class OceanGrid : SGrid
     public LostGuyMovement lostGuyMovement;
 
     public int totalCreditCount;
-    private bool turnedInAnchor;
-    private bool turnedInTreasureChest;
-    private bool turnedInTreasureMap;
-    private bool turnedInMushroom;
-    private bool turnedInGoldenFish;
-    private bool turnedInRock;
-    private bool startedFinalQuest;
 
     private new void Awake() {
         myArea = Area.Ocean;
@@ -91,65 +84,6 @@ public class OceanGrid : SGrid
 
     }
 
-    // === Temporary Tavernkeep Methods
-
-    public void CheckTavernKeep()
-    {
-        // first talk
-        ActivateSliderCollectible(3);
-
-        // rest of rewards
-        if (PlayerInventory.GetHasCollectedAnchor() && !turnedInAnchor)
-        {
-            turnedInAnchor = true;
-            totalCreditCount += 2;
-            // +1 because tile 4 is free in shop
-            totalCreditCount += 1;
-        }
-        if (PlayerInventory.Contains("Treasure Chest") && !turnedInTreasureChest)
-        {
-            turnedInTreasureChest = true;
-            totalCreditCount += 1;
-        }
-        if (PlayerInventory.Contains("Treasure Map") && !turnedInTreasureMap)
-        {
-            turnedInTreasureMap = true;
-            totalCreditCount += 1;
-        }
-        if (PlayerInventory.Contains("Mushroom") && !turnedInMushroom)
-        {
-            turnedInMushroom = true;
-            totalCreditCount += 1;
-        }
-        if (PlayerInventory.Contains("Golden Fish") && !turnedInGoldenFish)
-        {
-            turnedInGoldenFish = true;
-            totalCreditCount += 1;
-        }
-        if (PlayerInventory.Contains("Rock") && !turnedInRock)
-        {
-            turnedInRock = true;
-            totalCreditCount += 1;
-        }
-
-        // just activate in order for now
-        //for (int i = 4; i < Mathf.Min(4 + totalCreditCount, 10); i++)
-        //{
-          //  ActivateSliderCollectible(i);
-        //}
-
-        
-
-        // check final quest on completing all others
-        if (totalCreditCount == 7 + 1 && !startedFinalQuest) // todo: remove +1 later
-        {
-            startedFinalQuest = true;
-            checkCompletion = true;
-            SGrid.OnGridMove += SGrid.CheckCompletions;
-
-            AudioManager.Play("Puzzle Complete");
-        }
-    }
 
 
     // === Ocean puzzle specific ===

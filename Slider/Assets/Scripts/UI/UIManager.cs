@@ -8,11 +8,17 @@ using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
+    public static System.EventHandler<System.EventArgs> OnPause;
+    public static System.EventHandler<System.EventArgs> OnResume;
+
     private static UIManager _instance;
     public bool isGamePaused;
     public bool isArtifactOpen;
-    public bool isQuestPanelOpen;
     public static bool canOpenMenus = true;
+
+    public static bool closeUI;
+
+    private InputSettings controls;
 
     public GameObject pausePanel;
     public GameObject optionsPanel;
@@ -25,17 +31,15 @@ public class UIManager : MonoBehaviour
     public Slider sfxSlider;
     public Slider musicSlider;
 
-    public static bool closeUI;
-
-    private InputSettings controls;
     private void Awake()
     {
+        _instance = this;
+
         sfxSlider.value = AudioManager.GetSFXVolume();
         musicSlider.value = AudioManager.GetMusicVolume();
         //artifactPanel.GetComponent<UIArtifact>().Awake();
         uiArtifact.Awake();
 
-        _instance = this;
         _instance.controls = new InputSettings();
         LoadBindings();
     }
@@ -66,47 +70,33 @@ public class UIManager : MonoBehaviour
             closeUI = false;
             ResumeGame();
         }
-
-        // if (Input.GetKeyDown(KeyCode.Escape))
-        // {
-        //     if (isGamePaused)
-        //     {
-        //         ResumeGame();
-        //     }
-        //     else
-        //     {
-        //         PauseGame();
-        //     }
-        // }
-
-        // if (Input.GetKeyDown(KeyCode.Tab))
-        // {
-        //     if (isArtifactOpen)
-        //     {
-        //         ResumeGame();
-        //     }
-        //     else
-        //     {
-        //         OpenArtifact();
-        //     }
-        // }
     }
 
     private void OnPressPause()
     {
-        if (isGamePaused)
+        if (isGamePaused && pausePanel.activeSelf)
         {
             ResumeGame();
         }
         else
         {
+            // if in a pause sub-menu
             if (controlsPanel.activeSelf || advOptionsPanel.activeSelf)
             {
                 OpenOptions();
             }
             else
             {
-                PauseGame();
+                // if another menu is open (e.g. ocean shop)
+                if (IsUIOpen())
+                {
+                    // do nothing
+                }
+                else 
+                {
+                    PauseGame();
+                    OpenPause();
+                }
             }
         }
     }
@@ -123,6 +113,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    
+
+    public static bool IsUIOpen() // used for if Player can use Action
+    {
+        return _instance.isGamePaused || _instance.isArtifactOpen;
+    }
+
+    public static void CloseUI()
+    {
+        _instance.ResumeGame();
+    }
+
     public void ResumeGame()
     {
         pausePanel.SetActive(false);
@@ -135,11 +137,11 @@ public class UIManager : MonoBehaviour
             isArtifactOpen = false;
             artifactAnimator.SetBool("isVisible", false);
             StartCoroutine(CloseArtPanel());
-        } else if (oceanQuestPanel.activeSelf) {
-            oceanQuestPanel.SetActive(false);
         }
 
         uiArtifact.DeselectCurrentButton();
+        
+        OnResume?.Invoke(this, null);
     }
 
     private IEnumerator CloseArtPanel()
@@ -148,7 +150,28 @@ public class UIManager : MonoBehaviour
         artifactPanel.SetActive(false);
     }
 
+    // DC: this is really bad code haha
+    public static void PauseGameGlobal()
+    {
+        _instance.PauseGame();
+    }
+
+    // DC: pauses the game, but doesn't do anything to UI
+    // we should consider refactoring this to use a state machine
     public void PauseGame()
+    {
+        if (!canOpenMenus)
+            return;
+
+        Time.timeScale = 0f;
+        isGamePaused = true;
+
+        OnPause?.Invoke(this, null);
+    }
+
+
+
+    public void OpenPause()
     {
         if (!canOpenMenus)
             return;
@@ -157,8 +180,6 @@ public class UIManager : MonoBehaviour
         optionsPanel.SetActive(false);
         controlsPanel.SetActive(false);
         advOptionsPanel.SetActive(false);
-        Time.timeScale = 0f;
-        isGamePaused = true;
     }
 
     public void OpenOptions()
@@ -193,13 +214,14 @@ public class UIManager : MonoBehaviour
     {
         if (optionsPanel.activeSelf)
         {
-            PauseGame();
+            OpenPause();
         }
         else if (controlsPanel.activeSelf || advOptionsPanel.activeSelf)
         {
             OpenOptions();
         }
     }
+
     public void OpenArtifact()
     {
         if (!canOpenMenus)
@@ -256,25 +278,4 @@ public class UIManager : MonoBehaviour
         Application.Quit();
         Debug.Log("Quitting game!");
     }
-
-    public void OpenShopPanel() {
-          if (!canOpenMenus)
-              return;
-          if (Player.IsSafe())
-          {
-              oceanQuestPanel.SetActive(true);
-              //UIArtifact.UpdatePushedDowns();
-              isGamePaused = true;
-              isQuestPanelOpen = true;
-              Time.timeScale = 0;
-              Player.SetCanMove(false);
-              artifactAnimator.SetBool("isVisible", true); //i'll keep this in rn
-              uiArtifact.FlickerNewTiles();
-          }
-          else
-          {
-              AudioManager.Play("OceanQuestPanel Error");
-          }
-      }
-
 }

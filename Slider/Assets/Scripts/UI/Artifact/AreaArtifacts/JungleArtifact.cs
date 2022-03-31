@@ -8,33 +8,8 @@ public class JungleArtifact : UIArtifact
 {
     // private static STile prevLinkTile = null;
 
-    protected override void test()
-    {
-        // base.test();
-        Debug.Log("called from jongle");
-    }
-
-    public override void SelectButton(ArtifactTileButton button)
-    {
-        Debug.Log("Jungle select buton");
-        base.SelectButton(button);
-    }
-
-    public override void ButtonDragged(BaseEventData eventData)
-    {
-        Debug.Log("jungle drag start");
-        base.ButtonDragged(eventData);
-    }
-
-    public override void ButtonDragEnd(BaseEventData eventData)
-    {
-        Debug.Log("Jungle drag end");
-        base.ButtonDragEnd(eventData);
-    }
-
     protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        Debug.Log("Jungle check + swap");
         if (buttonCurrent.linkButton == null)
         {
             //L: Just a normal move
@@ -82,21 +57,6 @@ public class JungleArtifact : UIArtifact
             }
         }
     }
-
-    // protected override void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    // {
-    //     //L: This prevents the method from checking the queue twice if there are linked tiles (since it's called for every tile that invokes OnSTileMove)
-    //     if (prevLinkTile == null || prevLinkTile != e.stile.linkTile)
-    //     {
-    //         base.QueueCheckAfterMove(sender, e);
-    //         prevLinkTile = e.stile;
-    //     } 
-    //     else
-    //     {
-    //         //L: Note: this only works if there's one link tile.
-    //         prevLinkTile = null;
-    //     }
-    // }
 
     //Checks if the move can happen on the grid.
     //L: This should maybe be checked with GetMoveOptions?

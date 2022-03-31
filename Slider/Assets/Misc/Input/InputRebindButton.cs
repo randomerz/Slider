@@ -119,8 +119,11 @@ public class InputRebindButton : MonoBehaviour
             if (keybind == Control.Action || keybind == Control.CycleEquip)
             {
                 PlayerAction.LoadBindings();
-            } else {
+            } 
+            else 
+            {
                 UIManager.LoadBindings();
+                ShopManager.LoadBindings(); // for Ocean shop UI
             }
         }
     }
