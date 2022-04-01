@@ -8,6 +8,7 @@ public class ShopDialogueManager : MonoBehaviour
     // TODO: serialize these somehow
     private bool canOverrideDialogue = true;
     public bool isFirstTime = true;
+    private bool isVisiting = false;
     
     private TextMeshProUGUI currentText;
     private ShopDialogue currentDialogue;
@@ -158,6 +159,27 @@ public class ShopDialogueManager : MonoBehaviour
             return;
         }
 
+        if (isVisiting) 
+        {
+            UpdateDialogue("Visiting");
+            return;
+        }
+
+        if ((SGrid.current as OceanGrid).GetCheckCompletion()) 
+        {
+
+            if ((SGrid.current as OceanGrid).GetIsCompleted())
+            {
+                UpdateDialogue("Ocean Complete");
+                return;
+            }
+            else
+            {
+                UpdateDialogue("All Items Returned");
+                return;
+            }
+        }
+
         if (shopManager.uiState == ShopManager.State.Main)
         {
             UpdateDialogue("Default Main");
@@ -217,6 +239,7 @@ public class ShopDialogueManager : MonoBehaviour
                     null,
                     "Would you like Gunmaster's Gin, Raider's Rum, or Sea Wolf's Whiskey?",
                     () => {
+                        canOverrideDialogue = true;
                         isFirstTime = false;
                         UpdateDialogue("No Anchor");
                     }
@@ -301,7 +324,9 @@ public class ShopDialogueManager : MonoBehaviour
             
             case "All Items Returned":
                 SetDialogue(new ShopDialogue(
-                    null,
+                    () => {
+                        (SGrid.current as OceanGrid).StartFinalChallenge();
+                    },
                     "Looks like you've about explored the whole darned ocean. Time to put things in their rightful places.",
                     null
                 ));
@@ -316,16 +341,21 @@ public class ShopDialogueManager : MonoBehaviour
                         shopManager.OpenDialoguePanel();
                     },
                     "Wish you could stay, but something tells me you have places to be.",
-                    () => SetDialogue(
+                    () => {
+                        // Cutscene stuff???
+                        (SGrid.current as OceanGrid).ClearTreesToJungle();
+                        shopManager.OpenMainPanel();
 
-                new ShopDialogue(
+                        isVisiting = true;
+
+                        SetDialogue(new ShopDialogue(
                     null,
                     "Safe travels! And welcome to the Jungle.",
                     () => {
                         canOverrideDialogue = true;
-                        shopManager.OpenMainPanel();
                     }
-                ))
+                ));
+                    }
                 ));
                 break;
             

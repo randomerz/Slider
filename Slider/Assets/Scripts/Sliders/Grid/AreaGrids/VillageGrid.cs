@@ -127,5 +127,6 @@ public class VillageGrid : SGrid
     {
         caveDoorRocks.SetActive(false);
         CameraShake.Shake(1f, 3.5f);
+        AudioManager.Play("Slide Explosion");
     }
 }

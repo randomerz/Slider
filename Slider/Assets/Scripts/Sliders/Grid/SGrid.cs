@@ -408,6 +408,11 @@ public class SGrid : MonoBehaviour
 
     protected static void UpdateButtonCompletions(object sender, System.EventArgs e)
     {
+        current.UpdateButtonCompletionsHelper();
+    }
+
+    protected virtual void UpdateButtonCompletionsHelper()
+    {
         // Debug.Log("Checking completions!");
         // ineffecient lol
         for (int x = 0; x < current.width; x++) {
@@ -436,7 +441,7 @@ public class SGrid : MonoBehaviour
         UpdateButtonCompletions(this, null); // sets the final one to be complete
     }
 
-    private static string GetTileIdAt(int x, int y)
+    protected static string GetTileIdAt(int x, int y)
     {
         return current.targetGrid[(current.height - y - 1) * current.width + x].ToString();
     }

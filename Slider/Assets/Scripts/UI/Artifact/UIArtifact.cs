@@ -38,7 +38,12 @@ public class UIArtifact : MonoBehaviour
         // Debug.Log(this is JungleArtifact);
     }
 
-    public void OnDisable()
+    public virtual void OnEnable()
+    {
+
+    }
+
+    public virtual void OnDisable()
     {
         moveQueue = new Queue<SMove>();
         //Debug.Log("Queue Cleared!");
@@ -464,6 +469,32 @@ public class UIArtifact : MonoBehaviour
 
         return null;
     }
+    
+
+    // Returns a string like:   123_6##_4#5
+    // for a grid like:  1 2 3
+    //                   6 . .
+    //        (0, 0) ->  4 . 5
+    public static string GetGridString()
+    {
+        string s = "";
+        for (int y = 3 - 1; y >= 0; y--)
+        {
+            for (int x = 0; x < 3; x++)
+            {
+                ArtifactTileButton b = GetButton(x, y);
+                if (b.isTileActive)
+                    s += b.islandId;
+                else
+                    s += "#";
+            }
+            if (y != 0)
+            {
+                s += "_";
+            }
+        }
+        return s;
+    }
 
     public static void AddButton(int islandId, bool shouldFlicker=true)
     {
@@ -484,8 +515,16 @@ public class UIArtifact : MonoBehaviour
         {
             if (b.shouldFlicker)
             {
-                b.Flicker();
+                b.Flicker(3);
             }
+        }
+    }
+
+    public void FlickerAllOnce()
+    {
+        foreach (ArtifactTileButton b in _instance.buttons)
+        {
+            b.Flicker(1);
         }
     }
 }

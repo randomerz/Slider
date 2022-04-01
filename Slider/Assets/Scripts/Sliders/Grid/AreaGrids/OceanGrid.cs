@@ -6,14 +6,16 @@ public class OceanGrid : SGrid
 {
     public static OceanGrid instance;
 
-    private static bool checkCompletion = false; // TODO: serialize
+    private static bool checkCompletion = false; // TODO: serialize all these
     private static bool isCompleted = false;
+    public static bool canRotate = true; // global variable, used in OceanArtifact
 
     public GameObject burriedGuyNPC;
     public KnotBox knotBox;
     public LostGuyMovement lostGuyMovement;
+    public OceanArtifact oceanArtifact; // used for the final quest to lock movement
+    public GameObject treesToJungle;
 
-    public int totalCreditCount;
 
     private new void Awake() {
         myArea = Area.Ocean;
@@ -26,6 +28,17 @@ public class OceanGrid : SGrid
         base.Awake();
 
         instance = this;
+
+        // StartCoroutine(test());
+    }
+
+    private IEnumerator test()
+    {
+
+        yield return new WaitForSeconds(5);
+        StartFinalChallenge();
+        // Debug.Log("Locking movement!");
+        // oceanArtifact.SetCanRotate(false);
     }
 
     void Start()
@@ -83,6 +96,8 @@ public class OceanGrid : SGrid
 
         stile.GetComponentInChildren<SpriteMask>().enabled = false; // on STile/SlideableArea
 
+        CheckShipwreck(this, null);
+        CheckVolcano(this, null);
     }
 
 
@@ -119,6 +134,9 @@ public class OceanGrid : SGrid
             if (!PlayerInventory.Contains(c))
             {
                 c.gameObject.SetActive(true);
+                CameraShake.Shake(0.75f, 5);
+                AudioManager.Play("Slide Explosion");
+
                 AudioManager.Play("Puzzle Complete");
             }
         }
@@ -187,7 +205,12 @@ public class OceanGrid : SGrid
 
     public void IsCompleted(Conditionals.Condition c)
     {
-        c.SetSpec(checkCompletion && CheckGrid.contains(GetGridString(), "412_..8_..."));
+        c?.SetSpec(checkCompletion && IsFinalPuzzleMatching());
+    }
+
+    private bool IsFinalPuzzleMatching()
+    {
+        return CheckGrid.contains(GetGridString(), "412_[^1248]{2}8_[^1248]{3}");
     }
 
     public void IsLostGuyBeached(Conditionals.Condition c)
@@ -196,23 +219,70 @@ public class OceanGrid : SGrid
     }
 
 
+    public bool GetCheckCompletion()
+    {
+        return checkCompletion;
+    }
+
+    public bool GetIsCompleted()
+    {
+        return isCompleted;
+    }
+
     public void StartFinalChallenge()
     {
-        checkCompletion = true;
-        OnGridMove += UpdateButtonCompletions; // this is probably not needed
-        UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
-        SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+        if (!checkCompletion)
+        {
+            checkCompletion = true;
+            OnGridMove += UpdateButtonCompletions; // this is probably not needed
+            UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
+            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+
+            SGrid.UpdateButtonCompletions(this, null);
+        }
     }
 
     private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (!PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153"))
+        if (!isCompleted && IsFinalPuzzleMatching())
         {
-
-            // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
-            StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+            Debug.Log("Final puzzle complete!");
+            isCompleted = true;
+            oceanArtifact.SetCanRotate(false);
 
             AudioManager.Play("Puzzle Complete");
+            oceanArtifact.FlickerAllOnce();
         }
+    }
+
+    protected override void UpdateButtonCompletionsHelper()
+    {
+        for (int x = 0; x < current.width; x++) {
+            for (int y = 0; y < current.width; y++) {
+                // int tid = current.targetGrid[x, y];
+                string tids = GetTileIdAt(x, y);
+                ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
+                if (tids == "*") 
+                {
+                    int abid = artifactButton.islandId;
+                    bool isLand = abid == 1 || abid == 2 || abid == 4 || abid == 8; // this is scuffed
+
+                    // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
+                    UIArtifact.SetButtonComplete(artifactButton.islandId, !isLand);
+                }
+                else {
+                    int tid = int.Parse(tids);
+                    // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+                    UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
+                }
+            }
+        }
+    }
+
+    public void ClearTreesToJungle() // called in ShopDialogueManager
+    {
+        treesToJungle.SetActive(false);
+        CameraShake.Shake(1, 2);
+        AudioManager.Play("Slide Explosion");
     }
 }
