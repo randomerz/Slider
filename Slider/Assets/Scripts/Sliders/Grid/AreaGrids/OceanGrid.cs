@@ -134,10 +134,10 @@ public class OceanGrid : SGrid
             if (!PlayerInventory.Contains(c))
             {
                 c.gameObject.SetActive(true);
+                AudioManager.Play("Puzzle Complete");
+
                 CameraShake.Shake(0.75f, 5);
                 AudioManager.Play("Slide Explosion");
-
-                AudioManager.Play("Puzzle Complete");
             }
         }
     }

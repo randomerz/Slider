@@ -16,6 +16,7 @@ public class ShopManager : MonoBehaviour
     private bool turnedInGoldenFish;
     private bool turnedInRock;
     private bool startedFinalQuest;
+    private bool[] wasSliderCollectibleBought = new bool[6]; // from 4 to 9
 
     public State uiState { get; private set; }
     public TalkState talkState { get; private set; }
@@ -32,6 +33,7 @@ public class ShopManager : MonoBehaviour
     public GameObject talkPanel;
     public GameObject dialoguePanel;
 
+    public GameObject[] buyItemButtons;
     public GameObject[] talkSubPanels;
 
     private InputSettings controls;
@@ -188,6 +190,23 @@ public class ShopManager : MonoBehaviour
         credits -= value;
     }
 
+    public void TryBuySlider(int sliderNumber)
+    {
+        if ((credits > 0 || sliderNumber == 4) && !wasSliderCollectibleBought[sliderNumber - 4])
+        {
+            if (sliderNumber != 4) SpendCredits(1);
+            SGrid.current.ActivateSliderCollectible(sliderNumber);
+            wasSliderCollectibleBought[sliderNumber - 4] = true;
+            AudioManager.Play("Puzzle Complete");
+
+            UpdateBuyButtons();
+        }
+        else
+        {
+            AudioManager.Play("Artifact Error");
+        }
+    }
+
     #region UI
 
     // Called when you walk up to the tavernkeeper and press 'E'
@@ -277,7 +296,26 @@ public class ShopManager : MonoBehaviour
         CloseAllPanels();
         uiState = State.Buy;
         buyPanel.SetActive(true);
+        UpdateBuyButtons();
         shopDialogueManager.UpdateDialogue();
+    }
+
+    public void UpdateBuyButtons()
+    {
+        int numTurnedOn = 0;
+
+        for (int i = 0; i < buyItemButtons.Length; i++)
+        {
+            if (!wasSliderCollectibleBought[i] && numTurnedOn < 4)
+            {
+                buyItemButtons[i].SetActive(true);
+                numTurnedOn += 1;
+            }
+            else
+            {
+                buyItemButtons[i].SetActive(false);
+            }
+        }
     }
 
     public void OpenTalkPanel()
