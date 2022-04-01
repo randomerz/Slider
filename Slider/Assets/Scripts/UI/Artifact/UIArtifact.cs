@@ -6,7 +6,7 @@ using System;
 
 public class UIArtifact : MonoBehaviour
 {
-    public static System.EventHandler<System.EventArgs> onButtonInteract;
+    public static System.EventHandler<System.EventArgs> OnButtonInteract;
 
     public ArtifactTileButton[] buttons;
     //L: The button the user has clicked on
@@ -32,7 +32,7 @@ public class UIArtifact : MonoBehaviour
     {
         SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
 
-        onButtonInteract += UpdatePushedDowns;
+        OnButtonInteract += UpdatePushedDowns;
         SGridAnimator.OnSTileMoveEnd += UpdatePushedDowns;
 
         // Debug.Log(this is JungleArtifact);
@@ -91,7 +91,7 @@ public class UIArtifact : MonoBehaviour
             }
         }
 
-        onButtonInteract?.Invoke(this, null);
+        OnButtonInteract?.Invoke(this, null);
     }
 
     public virtual void ButtonDragEnd(BaseEventData eventData) {
@@ -159,7 +159,7 @@ public class UIArtifact : MonoBehaviour
             DeselectCurrentButton();
         }
 
-        onButtonInteract?.Invoke(this, null);
+        OnButtonInteract?.Invoke(this, null);
     }
 
     public void DeselectCurrentButton()
@@ -175,7 +175,7 @@ public class UIArtifact : MonoBehaviour
         currentButton = null;
         moveOptionButtons.Clear();
 
-        onButtonInteract?.Invoke(this, null);
+        OnButtonInteract?.Invoke(this, null);
     }
     
     public virtual void SelectButton(ArtifactTileButton button)
@@ -234,7 +234,7 @@ public class UIArtifact : MonoBehaviour
             }
         }
 
-        onButtonInteract?.Invoke(this, null);
+        OnButtonInteract?.Invoke(this, null);
     }
 
     // replaces adjacentButtons
@@ -439,7 +439,7 @@ public class UIArtifact : MonoBehaviour
         }
     }
 
-    protected ArtifactTileButton GetButton(int x, int y)
+    public static ArtifactTileButton GetButton(int x, int y)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
         {

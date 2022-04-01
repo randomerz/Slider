@@ -6,7 +6,8 @@ public class OceanGrid : SGrid
 {
     public static OceanGrid instance;
 
-    private static bool checkCompletion = false;
+    private static bool checkCompletion = false; // TODO: serialize
+    private static bool isCompleted = false;
 
     public GameObject burriedGuyNPC;
     public KnotBox knotBox;
@@ -48,7 +49,7 @@ public class OceanGrid : SGrid
     private void OnEnable()
     {
         if (checkCompletion) {
-            SGrid.OnGridMove += SGrid.CheckCompletions;
+            SGrid.OnGridMove += SGrid.UpdateButtonCompletions;
         }
 
         SGridAnimator.OnSTileMoveEnd += CheckShipwreck;
@@ -58,7 +59,7 @@ public class OceanGrid : SGrid
     private void OnDisable()
     {
         if (checkCompletion) {
-            SGrid.OnGridMove -= SGrid.CheckCompletions;
+            SGrid.OnGridMove -= SGrid.UpdateButtonCompletions;
         }
 
         SGridAnimator.OnSTileMoveEnd -= CheckShipwreck;
@@ -194,4 +195,24 @@ public class OceanGrid : SGrid
         c.SetSpec(lostGuyMovement.hasBeached);
     }
 
+
+    public void StartFinalChallenge()
+    {
+        checkCompletion = true;
+        OnGridMove += UpdateButtonCompletions; // this is probably not needed
+        UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
+        SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+    }
+
+    private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (!PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153"))
+        {
+
+            // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
+            StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+
+            AudioManager.Play("Puzzle Complete");
+        }
+    }
 }

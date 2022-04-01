@@ -8,6 +8,12 @@ TextureImporter:
   - first:
       213: -365007515289808529
     second: dead_trees_1
+  - first:
+      213: -7697880242507426355
+    second: dead_trees_2
+  - first:
+      213: -5393885985699174204
+    second: dead_trees_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -146,6 +152,48 @@ TextureImporter:
       bones: []
       spriteID: f619dc6499b3feaf0800000000000000
       internalID: -365007515289808529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dead_trees_2
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 5
+        width: 55
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc5d8dd54b2ab2590800000000000000
+      internalID: -7697880242507426355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dead_trees_3
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 5
+        width: 53
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c8617726411525b0800000000000000
+      internalID: -5393885985699174204
       vertices: []
       indices: 
       edges: []
