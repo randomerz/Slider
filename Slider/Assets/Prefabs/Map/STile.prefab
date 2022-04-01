@@ -3652,7 +3652,7 @@ CompositeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
@@ -7825,7 +7825,6 @@ MonoBehaviour:
   sliderCollider: {fileID: 7649429769792356526}
   houseSliderCollider: {fileID: 6322336049834794853}
   tileMapCollider: {fileID: 1479630269152721008}
-  decorationsTileMap: {fileID: 1253018884578982695}
   borderColliders:
   - {fileID: 6581962075059848973}
   - {fileID: 10815329210898457}

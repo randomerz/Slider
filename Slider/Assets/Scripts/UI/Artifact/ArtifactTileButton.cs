@@ -22,7 +22,7 @@ public class ArtifactTileButton : MonoBehaviour
     public STile myStile { get; private set; }
     public ArtifactTileButton linkButton;
 
-    private Sprite islandSprite;
+    protected Sprite islandSprite;
     public Sprite completedSprite;
     public Sprite emptySprite;
     public Sprite hoverSprite;
@@ -35,7 +35,7 @@ public class ArtifactTileButton : MonoBehaviour
         islandSprite = buttonAnimator.sliderImage.sprite;
     }
 
-    private void Start()
+    protected void Start()
     {
         myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
         
@@ -142,7 +142,7 @@ public class ArtifactTileButton : MonoBehaviour
         ResetToIslandSprite();
     }
 
-    public void ResetToIslandSprite()
+    public virtual void ResetToIslandSprite()
     {
         if (!isTileActive)
         {
