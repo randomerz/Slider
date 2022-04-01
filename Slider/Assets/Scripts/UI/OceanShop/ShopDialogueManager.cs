@@ -173,7 +173,7 @@ public class ShopDialogueManager : MonoBehaviour
                 UpdateDialogue("Ocean Complete");
                 return;
             }
-            else
+            else if (shopManager.uiState == ShopManager.State.Main)
             {
                 UpdateDialogue("All Items Returned");
                 return;

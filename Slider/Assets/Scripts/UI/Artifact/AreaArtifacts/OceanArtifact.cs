@@ -172,8 +172,6 @@ public class OceanArtifact : UIArtifact
     public void UpdateHighlights(object sender, System.EventArgs e)
     {
         string gridString = GetGridString();
-        
-        Debug.Log("checking highlights! " + gridString);
 
         oceanHighlights.SetBoat(CheckGrid.contains(gridString, "41"));
         oceanHighlights.SetVolcanoEast(CheckGrid.contains(gridString, "95"));

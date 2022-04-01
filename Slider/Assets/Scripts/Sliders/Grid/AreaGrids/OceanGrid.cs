@@ -136,7 +136,8 @@ public class OceanGrid : SGrid
                 c.gameObject.SetActive(true);
                 AudioManager.Play("Puzzle Complete");
 
-                CameraShake.Shake(0.75f, 5);
+                // have some particle effects and propper stuff here
+                // CameraShake.Shake(0.75f, 5); 
                 AudioManager.Play("Slide Explosion");
             }
         }

@@ -8,7 +8,7 @@ public class BootsSpeedIncrease : MonoBehaviour
     private static Player player;
     void Start()
     {
-        player =  GameObject.FindWithTag("Player").GetComponent<Player>();
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
     }
 
     void Update()
@@ -18,6 +18,6 @@ public class BootsSpeedIncrease : MonoBehaviour
     
     public void SpeedUp()
     {
-            player.BootsSpeedUp();
+        player.UpdatePlayerSpeed();
     }
 }
