@@ -14,8 +14,7 @@ class CaveArtifactTileButton : ArtifactTileButton
     {
         base.Start();
 
-        isLit = (myStile as CaveSTile).GetTileLit();
-        islandSprite = isLit ? islandLitSprite : islandDarkSprite;
+        CheckLit();
     }
 
     private void OnEnable()

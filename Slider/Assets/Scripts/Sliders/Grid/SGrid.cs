@@ -302,7 +302,7 @@ public class SGrid : MonoBehaviour
         {
             ActivateCollectible(name);
             GetCollectible(name).transform.position = Player.GetPosition();
-            UIManager.closeUI = true;
+            UIManager.CloseUI();
         }
     }
 

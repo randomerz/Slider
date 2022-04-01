@@ -13,13 +13,6 @@ public class OceanGrid : SGrid
     public LostGuyMovement lostGuyMovement;
 
     public int totalCreditCount;
-    private bool turnedInAnchor;
-    private bool turnedInTreasureChest;
-    private bool turnedInTreasureMap;
-    private bool turnedInMushroom;
-    private bool turnedInGoldenFish;
-    private bool turnedInRock;
-    private bool startedFinalQuest;
 
     private new void Awake() {
         myArea = Area.Ocean;
@@ -36,9 +29,9 @@ public class OceanGrid : SGrid
 
     void Start()
     {
-        foreach (Collectible c in collectibles) 
+        foreach (Collectible c in collectibles)
         {
-            if (PlayerInventory.Contains(c)) 
+            if (PlayerInventory.Contains(c))
             {
                 c.gameObject.SetActive(false);
             }
@@ -51,8 +44,8 @@ public class OceanGrid : SGrid
         UIEffects.FadeFromBlack();
 
     }
-    
-    private void OnEnable() 
+
+    private void OnEnable()
     {
         if (checkCompletion) {
             SGrid.OnGridMove += SGrid.CheckCompletions;
@@ -62,7 +55,7 @@ public class OceanGrid : SGrid
         SGridAnimator.OnSTileMoveEnd += CheckVolcano;
     }
 
-    private void OnDisable() 
+    private void OnDisable()
     {
         if (checkCompletion) {
             SGrid.OnGridMove -= SGrid.CheckCompletions;
@@ -72,7 +65,7 @@ public class OceanGrid : SGrid
         SGridAnimator.OnSTileMoveEnd -= CheckVolcano;
     }
 
-    public override void SaveGrid() 
+    public override void SaveGrid()
     {
         base.SaveGrid();
     }
@@ -86,68 +79,11 @@ public class OceanGrid : SGrid
     public override void EnableStile(STile stile, bool shouldFlicker=true)
     {
         base.EnableStile(stile, shouldFlicker);
-        
+
         stile.GetComponentInChildren<SpriteMask>().enabled = false; // on STile/SlideableArea
-        
+
     }
 
-    // === Temporary Tavernkeep Methods
-
-    public void CheckTavernKeep()
-    {
-        // first talk
-        ActivateSliderCollectible(3);
-
-        // rest of rewards
-        if (PlayerInventory.GetHasCollectedAnchor() && !turnedInAnchor)
-        {
-            turnedInAnchor = true;
-            totalCreditCount += 2;
-            // +1 because tile 4 is free in shop
-            totalCreditCount += 1;
-        }
-        if (PlayerInventory.Contains("Treasure Chest") && !turnedInTreasureChest)
-        {
-            turnedInTreasureChest = true;
-            totalCreditCount += 1;
-        }
-        if (PlayerInventory.Contains("Treasure Map") && !turnedInTreasureMap)
-        {
-            turnedInTreasureMap = true;
-            totalCreditCount += 1;
-        }
-        if (PlayerInventory.Contains("Mushroom") && !turnedInMushroom)
-        {
-            turnedInMushroom = true;
-            totalCreditCount += 1;
-        }
-        if (PlayerInventory.Contains("Golden Fish") && !turnedInGoldenFish)
-        {
-            turnedInGoldenFish = true;
-            totalCreditCount += 1;
-        }
-        if (PlayerInventory.Contains("Rock") && !turnedInRock)
-        {
-            turnedInRock = true;
-            totalCreditCount += 1;
-        }
-
-        // just activate in order for now
-        for (int i = 4; i < Mathf.Min(4 + totalCreditCount, 10); i++)
-        {
-            ActivateSliderCollectible(i);
-        }
-
-        // check final quest on completing all others
-        if (totalCreditCount == 7 + 1 && !startedFinalQuest) // todo: remove +1 later
-        {
-            startedFinalQuest = true;
-            checkCompletion = true;
-            SGrid.OnGridMove += SGrid.CheckCompletions;
-
-            AudioManager.Play("Puzzle Complete");
-        }
-    }
 
 
     // === Ocean puzzle specific ===
@@ -156,11 +92,11 @@ public class OceanGrid : SGrid
     {
         // Debug.Log(IsShipwreckAdjacent());
         // Debug.Log(GetGridString());
-        
+
         if (IsShipwreckAdjacent())
         {
             Collectible c = GetCollectible("Treasure Chest");
-            
+
             if (!PlayerInventory.Contains(c))
             {
                 c.gameObject.SetActive(true);

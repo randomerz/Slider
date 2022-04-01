@@ -8,23 +8,27 @@ public class PlayerAction : MonoBehaviour
     
     private Item pickedItem;
     private bool isPicking;
+    private bool canDrop;
     [SerializeField] private Transform itemPickupLocation;
     [SerializeField] private GameObject itemDropIndicator;
-    private bool canDrop;
-    private int actionsAvailable = 0;
-    [SerializeField] private GameObject actionAvailableIndicator;
     [SerializeField] private LayerMask itemMask;
     [SerializeField] private LayerMask dropCollidingMask;
     private List<RaycastHit2D> RayCastResults = new List<RaycastHit2D>();
     private ContactFilter2D LayerFilter;
+
+    private int actionsAvailable = 0;
+    [SerializeField] private GameObject actionAvailableIndicator;
     private InputSettings controls;
-    private GameObject[] objects;
-    private PlayerInput input;
+    // private GameObject[] objects;
+
     private void Awake() 
     {
         _instance = this;
         _instance.controls = new InputSettings();
         LoadBindings();
+
+        LayerMask StileLayerMask = LayerMask.GetMask("Slider");
+        LayerFilter.SetLayerMask(StileLayerMask);
     }
 
     public static void LoadBindings()
@@ -50,14 +54,11 @@ public class PlayerAction : MonoBehaviour
 
     private void OnDestroy() 
     {
-        // controls.Player.Action.Reset();
-        // controls.Player.CycleEquip.Reset();
+        
     }
 
     private void Update()
     {
-        LayerMask StileLayerMask = LayerMask.GetMask("Slider");
-        LayerFilter.SetLayerMask(StileLayerMask);
         pickedItem = PlayerInventory.GetCurrentItem();
         if (pickedItem != null && !isPicking) 
         {
@@ -105,7 +106,12 @@ public class PlayerAction : MonoBehaviour
 
     private void Action() 
     {
-        TryPick();
+        if (UIManager.IsUIOpen())
+            return;
+
+        if (TryPick())
+            return; // if succesfully picked something up, return
+
         OnAction?.Invoke(this, new System.EventArgs());
     }
 
@@ -126,11 +132,11 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
-    public void TryPick() 
+    public bool TryPick() 
     {
         if (isPicking) 
         {
-            return;
+            return false;
         }
 
         Collider2D[] nodes = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y), 1f, itemMask);
@@ -158,6 +164,7 @@ public class PlayerAction : MonoBehaviour
                 PlayerInventory.AddItem(pickedItem);
                 pickedItem.PickUpItem(itemPickupLocation.transform, callback:FinishPicking);
 
+                return true;
             } 
         }
         else // pickedItem != null
@@ -169,8 +176,12 @@ public class PlayerAction : MonoBehaviour
                 pickedItem.DropItem(GetIndicatorLocation(), callback:pickedItem.dropCallback);
                 pickedItem = null;
                 itemDropIndicator.SetActive(false);
+
+                return true;
             }
         }
+
+        return false;
     }
 
     private void FinishPicking() 
