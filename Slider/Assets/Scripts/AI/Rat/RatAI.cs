@@ -76,6 +76,7 @@ public class RatAI : MonoBehaviour
     private void Start()
     {
         ConstructBehaviourTree();
+        StealPiece();
     }
 
     private void Update()
@@ -109,11 +110,15 @@ public class RatAI : MonoBehaviour
     {
         if (collision.gameObject == objectToSteal)
         {
-            //L: Reparent Slider piece to be child of Rat
-            holdingObject = true; 
-            objectToSteal.transform.parent = transform;
-            objectToSteal.transform.localPosition = mouth.localPosition;
         }
+    }
+
+    private void StealPiece()
+    {
+        //L: Reparent Slider piece to be child of Rat
+        holdingObject = true;
+        objectToSteal.transform.parent = transform;
+        objectToSteal.transform.localPosition = mouth.localPosition;
     }
 
     private void ConstructBehaviourTree()

@@ -13,6 +13,8 @@ public class CaveSTile : STile
 
     [SerializeField] private List<Vector2Int> validDirsForLight;
 
+    [SerializeField] private List<CaveLight> borderLights;
+
     public Texture2D HeightMask
     {
         get
@@ -69,7 +71,7 @@ public class CaveSTile : STile
         }
     }
 
-    public bool GetTileLit()
+    public bool GetTileLit(int x, int y)
     {
         //Check if this tile has a light source
         CaveLight thisLight = GetComponentInChildren<CaveLight>();
@@ -81,18 +83,19 @@ public class CaveSTile : STile
         //Check if any valid adjacent tile has a light source
         foreach (var dir in validDirsForLight)
         {
-            Vector2Int posToCheck = new Vector2Int(this.x, this.y) + dir;
-
+            Vector2Int posToCheck = new Vector2Int(x, y) + dir;
             //Border lights (hardcoded for now)
-            if (posToCheck == new Vector2Int(3, 2) || posToCheck == new Vector2Int(2, -1))
-            {
-                return true;
+            foreach (CaveLight light in borderLights) {
+                if (light != null && light.LightOn && light.GetPos() == posToCheck)
+                {
+                    return true;
+                } 
             }
 
             //Check position is in the grid
             if (posToCheck.x >= 0 && posToCheck.x < SGrid.current.width && posToCheck.y >= 0 && posToCheck.y < SGrid.current.height)
             {
-                CaveSTile tile = (CaveSTile) SGrid.current.GetGrid()[posToCheck.x, posToCheck.y];
+                CaveSTile tile = (CaveSTile)SGrid.current.GetGrid()[posToCheck.x, posToCheck.y];
                 CaveLight light = tile.GetComponentInChildren<CaveLight>();
                 if (tile.isTileActive && light != null && light.LightOn)
                 {
@@ -109,6 +112,11 @@ public class CaveSTile : STile
         }
 
         return false;
+    }
+
+    public bool GetTileLit()
+    {
+        return GetTileLit(this.x, this.y);
     }
 
     //L: Gets the STILE_WIDTH x STILE_WIDTH (17 x 17) height mask. (1 if there's a wall tile, 0 if not)

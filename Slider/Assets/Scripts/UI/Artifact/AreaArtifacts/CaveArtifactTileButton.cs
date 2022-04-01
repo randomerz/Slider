@@ -19,15 +19,18 @@ class CaveArtifactTileButton : ArtifactTileButton
 
     private void OnEnable()
     {
+        CheckLit();
         SGrid.OnSTileEnabled += STileEnabled;
-        SGrid.OnGridMove += GridMove;
+        UIArtifact.onButtonInteract += ButtonDid;
+        CaveLight.OnLightSwitched += LightSwitched;
     }
 
     private void OnDisable()
     {
         base.OnDisable();
         SGrid.OnSTileEnabled -= STileEnabled;
-        SGrid.OnGridMove -= GridMove;
+        UIArtifact.onButtonInteract -= ButtonDid;
+        CaveLight.OnLightSwitched -= LightSwitched;
     }
 
     private void STileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
@@ -35,15 +38,25 @@ class CaveArtifactTileButton : ArtifactTileButton
         CheckLit();
     }
 
-    private void GridMove(object sender, SGrid.OnGridMoveArgs e)
+    private void ButtonDid(object sender, System.EventArgs e)
     {
+        CheckLit();
+    }
+
+    private void LightSwitched(object sender, CaveLight.OnLightSwitchedArgs e)
+    {
+        Debug.Log("YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
         CheckLit();
     }
 
     public void CheckLit()
     {
-        isLit = (myStile as CaveSTile).GetTileLit();
-        islandSprite = isLit ? islandLitSprite : islandDarkSprite;
+        if (isTileActive)
+        {
+            isLit = (myStile as CaveSTile).GetTileLit(this.x, this.y);
+            islandSprite = isLit ? islandLitSprite : islandDarkSprite;
+            ResetToIslandSprite();
+        }
     }
 }
 
