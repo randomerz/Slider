@@ -21,7 +21,6 @@ public class SelectorNode : BehaviourTreeNode
         //L: Effectively Acts as an "OR Gate" between child nodes
 
         _state = NodeState.RUNNING;
-        bool childNodeStillRunning = false;
         foreach (var node in childNodes)
         {
             //L: Evaluate all child nodes
