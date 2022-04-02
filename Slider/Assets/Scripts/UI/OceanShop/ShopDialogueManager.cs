@@ -211,7 +211,7 @@ public class ShopDialogueManager : MonoBehaviour
             case "Default Buy":
                 SetDialogue(new ShopDialogue(
                     null,
-                    "Well, whatcha thinking?",
+                    "Whaddya' want, landlubber",
                     null
                 ));
                 break;
@@ -258,8 +258,14 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "Tell you what, why don't you go pick up an anchor for yourself, and I'll see what I can do for you.",
+                    "And you don't have an anchor? Every self-respecting pirate has one.",
+                    () => SetDialogue(
+
+                new ShopDialogue(
+                    null,
+                    "Quickly, go find one. I don't want people seein' an anchorless schmuck in my tavern. Bring one back and I'll see what I can do for you.",
                     () => shopManager.CloseShop()
+                ))
                 ))
                 ));
                 break;
@@ -395,7 +401,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "I run a tavern and pawn shop. If you bring me some good stuff, I'll pay you some good stuff.",
+                    "I run a tavern and pawn shop. Bring me anything interesting and you'll make a pretty penny",
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
@@ -423,7 +429,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Privateer Pete's ship took some damage on their last voyage. Guiding it back to shore is sure to secure you some plunder.",
+                    "Privateer Pete's ship took some damage on their last voyage. Guiding it back to shore is sure to secure you some booty.",
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
@@ -487,17 +493,23 @@ public class ShopDialogueManager : MonoBehaviour
                 ));
                 break;
             
-            case "Piracy":
+            case "Aliens":
                 SetDialogue(new ShopDialogue(
                     () => { 
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Piracy is the culture of the seas here, and you'd do well to remember that. Acquiring loot is a surefire way to get people's notice.",
+                    "Some shifty-looking fellows walked in a while ago. They pay well so I can't complain, but something seems different about them.",
+                    () => SetDialogue(
+
+                new ShopDialogue(
+                    null,
+                    "Maybe they came in that strange flying saucer, ha!",
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
                     }
+                ))
                 ));
                 break;
             
@@ -571,10 +583,10 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Big expanse of plains to the East. It's a restricted area, run by the military.",
+                    "Big crater in the desert to the north.",
                     () => SetDialogue(new ShopDialogue(
                     null,
-                    "Who knows what they're doing inside there.",
+                    "Some say tell tales of strange happenings, things that can't be explained. I don't believe a word of it.",
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
