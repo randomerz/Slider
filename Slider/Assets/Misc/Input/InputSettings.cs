@@ -222,6 +222,15 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""c90ad11b-24b7-4931-97b8-549328aaa95a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -266,6 +275,17 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""OpenArtifact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""101197b0-472e-401e-a41e-d3e1299c14ae"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -381,6 +401,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
         m_UI_OpenArtifact = m_UI.FindAction("OpenArtifact", throwIfNotFound: true);
+        m_UI_MouseClick = m_UI.FindAction("MouseClick", throwIfNotFound: true);
         // Debug
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_OpenDebug = m_Debug.FindAction("OpenDebug", throwIfNotFound: true);
@@ -495,12 +516,14 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
     private IUIActions m_UIActionsCallbackInterface;
     private readonly InputAction m_UI_Pause;
     private readonly InputAction m_UI_OpenArtifact;
+    private readonly InputAction m_UI_MouseClick;
     public struct UIActions
     {
         private @InputSettings m_Wrapper;
         public UIActions(@InputSettings wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pause => m_Wrapper.m_UI_Pause;
         public InputAction @OpenArtifact => m_Wrapper.m_UI_OpenArtifact;
+        public InputAction @MouseClick => m_Wrapper.m_UI_MouseClick;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -516,6 +539,9 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 @OpenArtifact.started -= m_Wrapper.m_UIActionsCallbackInterface.OnOpenArtifact;
                 @OpenArtifact.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnOpenArtifact;
                 @OpenArtifact.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnOpenArtifact;
+                @MouseClick.started -= m_Wrapper.m_UIActionsCallbackInterface.OnMouseClick;
+                @MouseClick.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnMouseClick;
+                @MouseClick.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnMouseClick;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -526,6 +552,9 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 @OpenArtifact.started += instance.OnOpenArtifact;
                 @OpenArtifact.performed += instance.OnOpenArtifact;
                 @OpenArtifact.canceled += instance.OnOpenArtifact;
+                @MouseClick.started += instance.OnMouseClick;
+                @MouseClick.performed += instance.OnMouseClick;
+                @MouseClick.canceled += instance.OnMouseClick;
             }
         }
     }
@@ -599,6 +628,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
     {
         void OnPause(InputAction.CallbackContext context);
         void OnOpenArtifact(InputAction.CallbackContext context);
+        void OnMouseClick(InputAction.CallbackContext context);
     }
     public interface IDebugActions
     {

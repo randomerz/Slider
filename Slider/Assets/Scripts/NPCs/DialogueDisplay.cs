@@ -15,8 +15,6 @@ public class DialogueDisplay : MonoBehaviour
     public static bool doubleSizeMode = false;
     public static bool highContrastMode = false;
 
-    private const string punctuation = ",.!?";
-
     void Start()
     {
         ping.transform.position = new Vector2(transform.position.x, transform.position.y + 1);
@@ -42,10 +40,10 @@ public class DialogueDisplay : MonoBehaviour
             dialogueText.text += letter;
             dialogueBG.text += letter;
 
-            if (punctuation.IndexOf(letter) != -1)
-                yield return new WaitForSeconds(0.03f);
+            if (GameSettings.punctuation.IndexOf(letter) != -1)
+                yield return new WaitForSeconds(GameSettings.textSpeed);
 
-            yield return new WaitForSeconds(0.03f);
+            yield return new WaitForSeconds(GameSettings.textSpeed);
         }
     }
 
