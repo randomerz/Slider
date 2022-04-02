@@ -8,11 +8,18 @@ public class DesertGrid : SGrid
 
     private int monkeShake = 0;
     private Vector2Int monkeyPrev = new Vector2Int(1, 1);
+    private bool monkeyOasis = false;
 
     private bool jackalBoned = false;
+    private bool jackalOasis = false;
 
     [SerializeField] private DiceGizmo die1;
     [SerializeField] private DiceGizmo die2;
+    private bool startDice = false;
+    private bool diceWon = false;
+
+    private bool VIPHelped = false;
+    private bool GazelleOasis = false;
 
     private static bool checkCompletion = false;
 
@@ -54,7 +61,7 @@ public class DesertGrid : SGrid
         //     SGrid.OnGridMove += SGrid.CheckCompletions;
         // }
 
-        SGridAnimator.OnSTileMoveEnd += CheckOasisOnMove;
+        //SGridAnimator.OnSTileMoveEnd += CheckOasisOnMove;
     }
 
     private void OnDisable() {
@@ -62,7 +69,7 @@ public class DesertGrid : SGrid
         //     SGrid.OnGridMove -= SGrid.CheckCompletions;
         // }
 
-        SGridAnimator.OnSTileMoveEnd -= CheckOasisOnMove;
+        //SGridAnimator.OnSTileMoveEnd -= CheckOasisOnMove;
     }
 
     public override void SaveGrid() 
@@ -79,6 +86,7 @@ public class DesertGrid : SGrid
     // === Desert puzzle specific ===
 
     //Puzzle 1: Oasis
+    /*
     public void CheckOasisOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (CheckOasis())
@@ -106,6 +114,7 @@ public class DesertGrid : SGrid
         // Debug.Log(CheckGrid.contains(GetGridString(), "2...1"));
         return CheckGrid.contains(GetGridString(), "2...1");
     }
+    */
 
     //Puzzle 2: Baboon tree shake
     public void CheckMonkeyShakeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
@@ -114,7 +123,10 @@ public class DesertGrid : SGrid
         if (SGrid.current.GetActiveTiles().Contains(SGrid.current.GetStile(3)) && CheckMonkeyShake())
         {
             Debug.Log("The Monkey has awoken!");
+
             //Baboon awakes
+            monkeyOasis = true;
+
             SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
             SGridAnimator.OnSTileMoveEnd += CheckMonkeyOasisOnMove;
         }
@@ -139,12 +151,19 @@ public class DesertGrid : SGrid
         return false;
     }
 
+    //cond for monkey dialogue
+    public void IsAwake(Conditionals.Condition c)
+    {
+        c.SetSpec(monkeShake >= 3);
+    }
+
     public void CheckMonkeyOasisOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (monkeShake == 3 && CheckMonkeyNearOasis())
         {
             Debug.Log("Monkey joined sussy bday party");
             //Have monke join the bday crew
+            monkeyOasis = true;
             Collectible c = GetCollectible("Slider 5");
 
             if (!PlayerInventory.Contains(c))
@@ -157,6 +176,14 @@ public class DesertGrid : SGrid
     public bool CheckMonkeyNearOasis()
     {
         return CheckGrid.contains(GetGridString(), "(3|2)(2|3)") || CheckGrid.contains(GetGridString(), "(3|2)...(2|3)");
+    }
+    public void IsMonkeyNearOasis(Conditionals.Condition c)
+    {
+        c.SetSpec(CheckMonkeyNearOasis());
+    }
+    public void IsMonkeyInOasis(Conditionals.Condition c)
+    {
+        c.SetSpec(monkeyOasis);
     }
 
     //Puzzle 3: Jackal Bone
@@ -188,9 +215,6 @@ public class DesertGrid : SGrid
             {
                 c.gameObject.SetActive(true);
             }
-
-            SGridAnimator.OnSTileMoveEnd += CheckDiceOnMove;
-            SGridAnimator.OnSTileMoveEnd += CheckShadesOnMove;
             SGridAnimator.OnSTileMoveEnd -= CheckJackalOasisOnMove;
         }
     }
@@ -203,6 +227,32 @@ public class DesertGrid : SGrid
 
     //Puzzle 4: Dice. Should not start checking until after both tiles have been activated
 
+    //Chen: Method to "Spawn the dice" and roll the 5's for Chad at first
+    public void EnableDice()
+    {
+        //Enable both dice?
+        die1.gameObject.SetActive(true);
+        die2.gameObject.SetActive(true);
+        Debug.Log("Dice got rolled by chad");
+    }
+
+    //Conditon for Chad to enable the rolling of dice
+    public void CheckDice(Conditionals.Condition c)
+    {
+        c.SetSpec(die1.isActiveAndEnabled && die2.isActiveAndEnabled);
+    }
+    public void RollAndStartCountingDice()
+    {
+        if (startDice)
+        {
+            ////WWIP
+        }
+        die1.value = 1;
+        die2.value = 1;
+        SGridAnimator.OnSTileMoveEnd += CheckDiceOnMove;
+        Debug.Log("now the player can start rolling");
+    }
+
     //Updates the dice while the casino isn't together
     public void CheckDiceOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
@@ -212,7 +262,8 @@ public class DesertGrid : SGrid
             if (die1.value + die2.value > 10)
             {
                 Collectible c = GetCollectible("Slider 7");
-                Debug.Log("Enabled slider 7");
+                //Debug.Log("Enabled slider 7");
+                diceWon = true;
 
                 if (!PlayerInventory.Contains(c))
                 {
@@ -228,21 +279,73 @@ public class DesertGrid : SGrid
     {
         return CheckGrid.contains(GetGridString(), "56");
     }
+    public void IsDiceWon(Conditionals.Condition c)
+    {
+        c.SetSpec(diceWon);
+    }
+
+    //Puzzle 5: Cactus Juice
+    public void HasBottle(Conditionals.Condition c)
+    {
+        c.SetSpec(Player.GetPlayerAction().pickedItem != null && Player.GetPlayerAction().pickedItem.itemName.Equals("Bottle"));
+    }
+    //Chen: Dcond tests for bottle type
+    public void IsCactusJuice(Conditionals.Condition c)
+    {
+        Bottle item = (Bottle)Player.GetPlayerAction().pickedItem;
+        if (item != null && item.itemName.Equals("Bottle"))
+        {
+            c.SetSpec(item.state == bottleState.cactus);
+        }
+        else
+        {
+            c.SetSpec(false);
+        }
+    }
+    public void IsDirtyWater(Conditionals.Condition c)
+    {
+        Bottle item = (Bottle) Player.GetPlayerAction().pickedItem;
+        if (item != null && item.itemName.Equals("Bottle"))
+        {
+            c.SetSpec(item.state == bottleState.dirty);
+        }
+        else
+        {
+            c.SetSpec(false);
+        }
+    }
+    public void IsCleanWater(Conditionals.Condition c)
+    {
+        Bottle item = (Bottle)Player.GetPlayerAction().pickedItem;
+        if (item != null && item.itemName.Equals("Bottle"))
+        {
+            c.SetSpec(item.state == bottleState.clean);
+        }
+        else
+        {
+            c.SetSpec(false);
+        }
+    }
+    public void CheckVIPHelped(Conditionals.Condition c)
+    {
+        c.SetSpec(VIPHelped);
+    }
+    public void SpawnShades()
+    {
+        Collectible c = GetCollectible("Sunglasses");
+        Debug.Log("Shades creep up to your neck");
+        VIPHelped = true;
+        if (!PlayerInventory.Contains(c))
+        {
+            c.gameObject.SetActive(true);
+        }
+    }
+    
 
     //Puzzle 6: Shady Gazelle
-    public void CheckShadesOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    public void EnableGazelleOasisCheck()
     {
-        if (CheckShades())
-        {
-            //Gazelle Dialogue
-            Debug.Log("Got the shades");
-            SGridAnimator.OnSTileMoveEnd -= CheckShadesOnMove;
-            SGridAnimator.OnSTileMoveEnd += CheckGazelleNearOasisOnMove;
-        }
-    } 
-    public bool CheckShades()
-    {
-        return PlayerInventory.Contains("Sunglasses");
+        SGridAnimator.OnSTileMoveEnd += CheckGazelleNearOasisOnMove;
     }
 
     public void CheckGazelleNearOasisOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
@@ -250,18 +353,23 @@ public class DesertGrid : SGrid
         if (CheckGazelleNearOasis())
         {
             Collectible c = GetCollectible("Slider 8");
-
+            Debug.Log("Gazelle got dem munchlaxxed");
             if (!PlayerInventory.Contains(c))
             {
                 c.gameObject.SetActive(true);
             }
 
             SGridAnimator.OnSTileMoveEnd -= CheckGazelleNearOasisOnMove;
-        }
+        } 
     }
     public bool CheckGazelleNearOasis()
     {
         Debug.Log("Checking Gazelle");
         return (CheckGrid.contains(GetGridString(), "26") || CheckGrid.contains(GetGridString(), "6...2"));
+    }
+
+    public void ReAlignGrid()
+    {
+        //conduct series of STile swaps or something? Maybe set grid to something   
     }
 } 

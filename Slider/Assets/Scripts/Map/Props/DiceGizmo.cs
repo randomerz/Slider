@@ -5,9 +5,12 @@ using UnityEngine;
 public class DiceGizmo : MonoBehaviour
 {
     public STile myStile;
-    public int value = 1;
+
+    public int value;
+    public Sprite[] sprites;
     //public Animator animator; // this is only based on Tree animator controller rn
     //Chen: Should the above be changed to the Dice animator controller or something?
+    [SerializeField] private bool shouldDisableAtStart = true;
 
     private void Awake()
     {
@@ -15,6 +18,13 @@ public class DiceGizmo : MonoBehaviour
         {
             FindSTile();
         }
+        if (shouldDisableAtStart)
+            gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        this.GetComponent<SpriteRenderer>().sprite = sprites[value - 1];
     }
 
     private void OnEnable()
@@ -43,7 +53,6 @@ public class DiceGizmo : MonoBehaviour
         }
         //Debug.Log(value);
         // Debug.Log("Updated!");
-        //Chen: Upadte dice dialogue here maybe?
     }
 
 
