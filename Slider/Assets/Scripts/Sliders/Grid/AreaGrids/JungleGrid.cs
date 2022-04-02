@@ -33,7 +33,6 @@ public class JungleGrid : SGrid
                 c.gameObject.SetActive(false);
             }
         }
-        
         AudioManager.PlayMusic("Connection");
         UIEffects.FadeFromBlack();
     }
@@ -56,6 +55,12 @@ public class JungleGrid : SGrid
         base.LoadGrid();
     }
 
+    public override void EnableStile(STile stile, bool shouldFlicker=true)
+    {
+        base.EnableStile(stile, shouldFlicker);
+        CheckChad(this, null);
+    }
+
     // === Jungle Puzzle Specific ===
     
     // Puzzle 5 - Chad Race
@@ -64,11 +69,19 @@ public class JungleGrid : SGrid
     }
     // Invoked by the Chad race script
     public void OnPlayerWinRace() {
+        
         Collectible c = GetCollectible("Boots");
             
-            if (!PlayerInventory.Contains(c))
-            {
-                c.gameObject.SetActive(true);
-            }
+        if (!PlayerInventory.Contains(c))
+        {
+            c.gameObject.SetActive(true);
+        }
+
+        c = GetCollectible("Slider 6");
+            
+        if (!PlayerInventory.Contains(c))
+        {
+            c.gameObject.SetActive(true);
+        }
     }
 }
