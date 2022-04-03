@@ -38,7 +38,10 @@ public class DiceGizmo : MonoBehaviour
         if (myStile != null)
             myStile.onChangeMove -= OnStileChangeDir;
     }
-
+    public void changeValue(int num)
+    {
+        value = num;
+    }
     public void OnStileChangeDir(object sender, STile.STileMoveArgs e)
     {
         //Debug.Log("Dice stuff");
@@ -54,8 +57,6 @@ public class DiceGizmo : MonoBehaviour
         //Debug.Log(value);
         // Debug.Log("Updated!");
     }
-
-
 
     private void FindSTile()
     {

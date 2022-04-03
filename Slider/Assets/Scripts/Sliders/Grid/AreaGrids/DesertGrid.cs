@@ -13,8 +13,9 @@ public class DesertGrid : SGrid
     private bool jackalBoned = false;
     private bool jackalOasis = false;
 
-    [SerializeField] private DiceGizmo die1;
-    [SerializeField] private DiceGizmo die2;
+    [SerializeField] private DiceGizmo dice1;
+    [SerializeField] private DiceGizmo dice2;
+    private bool challengedChad = false;
     private bool startDice = false;
     private bool diceWon = false;
 
@@ -40,7 +41,7 @@ public class DesertGrid : SGrid
 
     void Start()
     {
-        if (die1 == null && die2 == null)
+        if (dice1 == null && dice2 == null)
         {
             Debug.LogWarning("Die have not been set!");
         }
@@ -227,54 +228,50 @@ public class DesertGrid : SGrid
 
     //Puzzle 4: Dice. Should not start checking until after both tiles have been activated
 
-    //Chen: Method to "Spawn the dice" and roll the 5's for Chad at first
-    public void EnableDice()
+    //Dconds for Chad dice game
+    public void CheckChallenge(Conditionals.Condition c)
     {
-        //Enable both dice?
-        die1.gameObject.SetActive(true);
-        die2.gameObject.SetActive(true);
-        Debug.Log("Dice got rolled by chad");
+        c.SetSpec(challengedChad);
     }
-
-    //Conditon for Chad to enable the rolling of dice
     public void CheckDice(Conditionals.Condition c)
     {
-        c.SetSpec(die1.isActiveAndEnabled && die2.isActiveAndEnabled);
+        c.SetSpec(dice1.isActiveAndEnabled && dice2.isActiveAndEnabled);
     }
+    public void CheckRolledDice(Conditionals.Condition c)
+    {
+        c.SetSpec(startDice);
+    }
+    /*
+    public void CheckPlayerChangedDice(Conditionals.Condition c)
+    {
+        c.SetSpec(startDice && dice1.value > 1 && dice2.value > 1);
+    }
+    */
+    public void ChallengedChad()
+    {
+        challengedChad = true;
+        Debug.Log("Chad challenged!");
+    }
+    //Activate stuff
     public void RollAndStartCountingDice()
     {
-        if (startDice)
-        {
-            ////WWIP
-        }
-        die1.value = 1;
-        die2.value = 1;
-        SGridAnimator.OnSTileMoveEnd += CheckDiceOnMove;
+        startDice = true;
         Debug.Log("now the player can start rolling");
     }
 
     //Updates the dice while the casino isn't together
-    public void CheckDiceOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    public void CheckDiceValues(Conditionals.Condition c)
     {
-        //If Casino is together. As a nod to speedrunners, the player does NOT have to be in the casino for the slider to spawn
-        if (CheckCasinoTogether())
+        if (CheckCasinoTogether() && dice1.value + dice2.value > 10)
         {
-            if (die1.value + die2.value > 10)
-            {
-                Collectible c = GetCollectible("Slider 7");
-                //Debug.Log("Enabled slider 7");
-                diceWon = true;
-
-                if (!PlayerInventory.Contains(c))
-                {
-                    c.gameObject.SetActive(true);
-                }
-                //activate chad dialogue
-                SGridAnimator.OnSTileMoveEnd -= CheckDiceOnMove;
-            }
+            c.SetSpec(true);
+            diceWon = true;
+        }
+        else
+        {
+            c.SetSpec(false);
         }
     }
-    //Add this to the OnSTile Move when the dice game
     public bool CheckCasinoTogether()
     {
         return CheckGrid.contains(GetGridString(), "56");

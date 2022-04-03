@@ -79,6 +79,8 @@ public class DesertArtifact : UIArtifact
         // Debug.Log(last);
         return last;
     }
+
+    //Chen: Overriding the drag and drop calls so sliding works
    
     //L: updateGrid - if this is false, it will just update the UI without actually moving the tiles.
     //L: Returns if the swap was successful.
