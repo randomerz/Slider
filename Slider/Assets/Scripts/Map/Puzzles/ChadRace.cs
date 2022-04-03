@@ -6,50 +6,37 @@ using UnityEngine;
 // Chad race should be attatched to chad
 public class ChadRace : MonoBehaviour
 {
-    public UnityEvent onPlayerWin;
+    enum State {
+        NotStarted,
+        Started,
+        Running,
+        Cheated,
+        ChadWon,
+        PlayerWon
+    };
+
+    public UnityEvent onRaceWon;
     public Transform finishingLine;
     public Transform player;
     public float speed;
-
+    public Transform startStileObjects;
+    public Transform trackStileObjects;
     public bool tilesAdjacent;
-
     public Animator chadimator;
-
-    //Scuffed dialogue stuff
     public NPC npcScript;
     public DialogueConditionals countDownDialogue;
 
-    
-
-    // The local position of the chad so he goes back to his spot on the STile
+    private Transform currParent;
     private Vector2 chadStartLocal;
-
-    // The global starting position of the player
     private Vector2 playerStart;
-
-    //The global position of the endpoint so chad can calculate where he needs to go
     private Vector2 endPoint;
-
-    // True when player is in the start position
+    private Vector2 chadEndLocal;
+    private State raceState;
     private bool inStart;
-
-    // True when the race has first started, turns false once the race is running
-    private bool started;
-
-    // True when the race is running
-    private bool running;
-
-    // Keeps track of when the race was started
     private float startTime;
-
-    // Keeps track of if player won
-    private bool playerWon;
 
     // Keeps track if this is the first time the play has tried the race with the current tile positions
     private bool firstTime;
-
-    // Keeps track of if the player cheated
-    private bool cheated;
 
     // Start is called before the first frame update
     void Start()
@@ -57,10 +44,10 @@ public class ChadRace : MonoBehaviour
         // Setting all the starting params
         tilesAdjacent = false;
         inStart = false;
-        started = false;
-        running = false;
-        playerWon = false;
         firstTime = true;
+        raceState = State.NotStarted;
+        // Chad's start location relative to the starting stile will always be the same
+        chadStartLocal = transform.localPosition;
 
         // Setting the chadimator initial bools
         chadimator.SetBool("isWalking", false);
@@ -74,51 +61,61 @@ public class ChadRace : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (started) {
-            player.position = playerStart;
-            // Wait 3 seconds after first starts to run the race
-            if (Time.unscaledTime - startTime >= 3) {
-                countDownDialogue.dialogue = "GO!";
-                npcScript.TriggerDialogue();
-                running = true;
-                chadimator.SetBool("isWalking", true);
-                started = false;
-            } else {
-                countDownDialogue.dialogue = (int)(4 - (Time.unscaledTime - startTime)) + "";
-                npcScript.TriggerDialogue();
-            }
-        }
-        if (running) {
-            // The player has tried to cheat
-            if (!tilesAdjacent) { 
-                chadimator.SetBool("isWalking", false); 
-                running = false;
-                firstTime = true;
-                cheated = true;
-                transform.localPosition = chadStartLocal;
-            } else if (transform.position.y <= endPoint.y) {
-                // Chad goes all the way in the x direction before going in the y direction
-                // Assume that the target location is up and to the right of the starting point
-                Vector3 targetDirection = transform.position.x >= endPoint.x ? new Vector3(0,1,0) : new Vector3(1,0,0);
-                transform.position += + speed * targetDirection * Time.deltaTime;
-            } else {
-                // Chad has made it to the finish line
+        switch (raceState) {
+            case State.Started:
+                player.position = playerStart;
+                float timeDiff = Time.unscaledTime - startTime;
+                if (timeDiff < 3) {
+                    countDownDialogue.dialogue = (int)(4 - (Time.unscaledTime - startTime)) + "";
+                    npcScript.TriggerDialogue();  
+                } else {
+                    countDownDialogue.dialogue = "GO!";
+                    npcScript.TriggerDialogue();
+                    chadimator.SetBool("isWalking", true);
+                    raceState = State.Running;
+                }
+                break;
+            case State.Running:
+                if (!tilesAdjacent) {
+                    // The player has cheated
+                    chadEndLocal = transform.localPosition;
+                    raceState = State.Cheated;
+                } else if (transform.position.y <= endPoint.y) {
+                    MoveChad();
+                } else {
+                    // Chad has made it to the finish line
+                    onRaceWon.Invoke();
+                    chadEndLocal = transform.localPosition;
+                    raceState = State.ChadWon;
+                }
+                break;
+            case State.Cheated:
                 chadimator.SetBool("isWalking", false);
-                countDownDialogue.dialogue = "Pfft, too easy. Come back when you're fast enough (e to start)";
-                running = false;
-            }
-        } else if (!firstTime && !tilesAdjacent) {
-            transform.localPosition = chadStartLocal;
+                transform.localPosition = chadEndLocal;
+                firstTime = true;
+                break;
+            case State.ChadWon:
+                chadimator.SetBool("isWalking", false);
+                countDownDialogue.dialogue = "Pfft, too easy. Come back when you're fast enough to compete with me. (e to start)";
+                transform.localPosition = chadEndLocal;
+                break;
+            case State.PlayerWon:
+                chadEndLocal = finishingLine.localPosition - new Vector3(0, 3, 0);
+                if (transform.localPosition.y < chadEndLocal.y) {
+                    chadimator.SetBool("isWalking", false);
+                    MoveChad();
+                } else {
+                    transform.localPosition = chadEndLocal;
+                    chadimator.SetBool("isSad", true);
+                }
+                break;
         }
     }
 
     public void PlayerEnteredEnd() {
-        if (running) {
-            playerWon = true;
-            running = false;
-            onPlayerWin.Invoke();
-            chadimator.SetBool("isWalking", false);
-            chadimator.SetBool("isSad", true);
+        if (raceState == State.Running) {
+            raceState = State.PlayerWon;
+            onRaceWon.Invoke();
         }
     }
 
@@ -134,16 +131,11 @@ public class ChadRace : MonoBehaviour
 
     // Invoked by Player Conditionals on success
     public void StartQueued() {
-        if (inStart && tilesAdjacent && !started && !running && !playerWon) {
-            if (firstTime) {
-                chadStartLocal = transform.localPosition;
-                endPoint = finishingLine.position - new Vector3(0, 1, 0);
-            }  else {
-                transform.localPosition = chadStartLocal;
-            }
-            cheated = false;
-            firstTime = false;
-            started = true;
+        if (inStart && tilesAdjacent && (raceState != State.Started && raceState != State.Running && raceState != State.PlayerWon)) {
+            endPoint = finishingLine.position - new Vector3(0, 1, 0);
+            transform.parent = startStileObjects;
+            transform.localPosition = chadStartLocal;
+            raceState = State.Started;
             playerStart = new Vector2(transform.position.x, transform.position.y - 1);
             startTime = Time.unscaledTime;
         }
@@ -151,16 +143,28 @@ public class ChadRace : MonoBehaviour
 
     // Conditionals stuff for Chad Dialogue
     public void CurrentlyRunning(Conditionals.Condition cond) {
-        cond.SetSpec(running);
+        cond.SetSpec(raceState == State.Running);
     }
 
     public void PlayerWon(Conditionals.Condition cond) {
-        cond.SetSpec(playerWon);
+        cond.SetSpec(raceState == State.PlayerWon);
     }
 
     public void Cheated(Conditionals.Condition cond) {
-        cond.SetSpec(cheated);
+        cond.SetSpec(raceState == State.Cheated);
     }
 
+    // Private helper methods
+    private void MoveChad() {
+        // Chad goes all the way in the x direction before going in the y direction
+        // Assume that the target location is up and to the right of the starting point
+        Vector3 targetDirection = transform.position.x >= endPoint.x ? new Vector3(0,1,0) : new Vector3(1,0,0);
+        transform.position += + speed * targetDirection * Time.deltaTime;
 
+        if ((transform.position - trackStileObjects.parent.position).sqrMagnitude < (transform.position - startStileObjects.parent.position).sqrMagnitude) {
+            transform.parent = trackStileObjects;
+        } else {
+            transform.parent = startStileObjects;
+        }
+    }
 }

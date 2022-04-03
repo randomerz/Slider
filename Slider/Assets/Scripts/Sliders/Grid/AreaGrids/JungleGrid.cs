@@ -67,11 +67,13 @@ public class JungleGrid : SGrid
     public void CheckChad(object sender, SGrid.OnGridMoveArgs e) {
         chadRace.tilesAdjacent = CheckGrid.row(GetGridString(), "523") && GetStile(5).isTileActive && GetStile(2).isTileActive && GetStile(3).isTileActive;
     }
-    // Invoked by the Chad race script
-    public void OnPlayerWinRace() {
-        
+    
+    public void OnRaceWon() {
+        AudioManager.Play("Puzzle Complete");
+    }
+
+    public void SpawnChadRewards() {
         Collectible c = GetCollectible("Boots");
-            
         if (!PlayerInventory.Contains(c))
         {
             c.gameObject.SetActive(true);
