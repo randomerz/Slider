@@ -20,13 +20,12 @@ public class ChadRace : MonoBehaviour
     public Transform player;
     public float speed;
     public Transform startStileObjects;
-    public Transform trackStileObjects;
+    public SGrid jungleGrid;
     public bool tilesAdjacent;
     public Animator chadimator;
     public NPC npcScript;
     public DialogueConditionals countDownDialogue;
 
-    private Transform currParent;
     private Vector2 chadStartLocal;
     private Vector2 playerStart;
     private Vector2 endPoint;
@@ -66,11 +65,9 @@ public class ChadRace : MonoBehaviour
                 player.position = playerStart;
                 float timeDiff = Time.unscaledTime - startTime;
                 if (timeDiff < 3) {
-                    countDownDialogue.dialogue = (int)(4 - (Time.unscaledTime - startTime)) + "";
-                    npcScript.TriggerDialogue();  
+                    DisplayAndTriggerDialogue((int)(4 - (Time.unscaledTime - startTime)) + "");
                 } else {
-                    countDownDialogue.dialogue = "GO!";
-                    npcScript.TriggerDialogue();
+                    DisplayAndTriggerDialogue("GO!");
                     chadimator.SetBool("isWalking", true);
                     raceState = State.Running;
                 }
@@ -100,7 +97,8 @@ public class ChadRace : MonoBehaviour
                 transform.localPosition = chadEndLocal;
                 break;
             case State.PlayerWon:
-                chadEndLocal = finishingLine.localPosition - new Vector3(0, 3, 0);
+                // Not entirely sure why, but an offset of .5 in x gets chad in the right spot at the end
+                chadEndLocal = finishingLine.localPosition - new Vector3(.5f, 2, 0);
                 if (transform.localPosition.y < chadEndLocal.y) {
                     chadimator.SetBool("isWalking", false);
                     MoveChad();
@@ -161,10 +159,12 @@ public class ChadRace : MonoBehaviour
         Vector3 targetDirection = transform.position.x >= endPoint.x ? new Vector3(0,1,0) : new Vector3(1,0,0);
         transform.position += + speed * targetDirection * Time.deltaTime;
 
-        if ((transform.position - trackStileObjects.parent.position).sqrMagnitude < (transform.position - startStileObjects.parent.position).sqrMagnitude) {
-            transform.parent = trackStileObjects;
-        } else {
-            transform.parent = startStileObjects;
-        }
+        // Assigns chad's current parent to the objects of the stile that he is currently over
+        transform.parent = jungleGrid.GetStileUnderneath(gameObject).transform.GetChild(0);
+    }
+
+    private void DisplayAndTriggerDialogue(string message) {
+        countDownDialogue.dialogue = message;
+        npcScript.TriggerDialogue();
     }
 }
