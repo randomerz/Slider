@@ -51,8 +51,12 @@ class CaveArtifactTileButton : ArtifactTileButton
 
     public void CheckLit()
     {
-        if (isTileActive)
+        if (myStile != null && isTileActive)
         {
+            if (myStile.islandId == 1)
+            {
+                Debug.Log("Tile active and checking");
+            }
             isLit = (myStile as CaveSTile).GetTileLit(this.x, this.y);
             islandSprite = isLit ? islandLitSprite : islandDarkSprite;
             ResetToIslandSprite();
