@@ -21,7 +21,7 @@ class CaveArtifactTileButton : ArtifactTileButton
     {
         CheckLit();
         SGrid.OnSTileEnabled += STileEnabled;
-        UIArtifact.onButtonInteract += ButtonDid;
+        UIArtifact.OnButtonInteract += ButtonDid;
         CaveLight.OnLightSwitched += LightSwitched;
     }
 
@@ -29,7 +29,7 @@ class CaveArtifactTileButton : ArtifactTileButton
     {
         base.OnDisable();
         SGrid.OnSTileEnabled -= STileEnabled;
-        UIArtifact.onButtonInteract -= ButtonDid;
+        UIArtifact.OnButtonInteract -= ButtonDid;
         CaveLight.OnLightSwitched -= LightSwitched;
     }
 

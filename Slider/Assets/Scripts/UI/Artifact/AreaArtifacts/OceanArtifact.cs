@@ -6,15 +6,27 @@ using UnityEngine.EventSystems;
 public class OceanArtifact : UIArtifact
 {
     public UIRotateParams[] rotateParams; // Bot Left, BR, TL, TR
+    public OceanArtifactHighlights oceanHighlights;
+
+    private bool canRotate = true;
 
     public new void Awake()
     {
         base.Awake();
     }
 
-    public new void OnDisable()
+    public override void OnEnable()
+    {
+        base.OnEnable();
+
+        OnButtonInteract += UpdateHighlights;
+    }
+
+    public override void OnDisable()
     {
         base.OnDisable();
+
+        OnButtonInteract -= UpdateHighlights;
     }
 
     public override void ButtonDragged(BaseEventData eventData) 
@@ -35,6 +47,9 @@ public class OceanArtifact : UIArtifact
     // equivalent as CheckAndSwap in UIArtifact.cs but it doesn't remove
     public void RotateTiles(int x, int y, bool rotateCCW)
     {
+        if (!canRotate)
+            return;
+
         // logic for finding which tiles to rotate
         List<Vector2Int> SMoveRotateArr = new List<Vector2Int> { 
                 new Vector2Int(x, y),
@@ -111,6 +126,8 @@ public class OceanArtifact : UIArtifact
         {
             Debug.Log("Couldn't perform move! (queue full?)");
         }
+
+        OnButtonInteract?.Invoke(this, null);
     }
 
     // DC: this plays the animation when the tiles actually move... should we keep track of UI similarly?
@@ -150,5 +167,26 @@ public class OceanArtifact : UIArtifact
         }
 
         base.QueueCheckAfterMove(sender, e);
+    }
+
+    public void UpdateHighlights(object sender, System.EventArgs e)
+    {
+        string gridString = GetGridString();
+
+        oceanHighlights.SetBoat(CheckGrid.contains(gridString, "41"));
+        oceanHighlights.SetVolcanoEast(CheckGrid.contains(gridString, "95"));
+        oceanHighlights.SetVolcanoNorth(CheckGrid.contains(gridString, "4...9"));
+        oceanHighlights.SetVolcanoWest(CheckGrid.contains(gridString, "89"));
+        oceanHighlights.SetVolcanoSouth(CheckGrid.contains(gridString, "9...3"));
+    }
+
+    public void SetCanRotate(bool value)
+    {
+        canRotate = value;
+        if (!value)
+        {
+            moveQueue.Clear();
+            activeMoves.Clear();
+        }
     }
 }

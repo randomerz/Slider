@@ -8,6 +8,12 @@ TextureImporter:
   - first:
       213: -1921472970981327869
     second: desert_dying_vip_1
+  - first:
+      213: -4943820046926871302
+    second: desert_dying_vip_2
+  - first:
+      213: -2085016494546649241
+    second: desert_dying_vip_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -113,11 +119,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 16
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -134,6 +140,27 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30cb427638e8555e0800000000000000
+      internalID: -1921472970981327869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: desert_dying_vip_2
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 0
         width: 16
         height: 16
@@ -144,8 +171,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 30cb427638e8555e0800000000000000
-      internalID: -1921472970981327869
+      spriteID: af4087d5cd5046bb0800000000000000
+      internalID: -4943820046926871302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: desert_dying_vip_3
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76f77bb8b888013e0800000000000000
+      internalID: -2085016494546649241
       vertices: []
       indices: 
       edges: []

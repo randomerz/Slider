@@ -406,7 +406,12 @@ public class SGrid : MonoBehaviour
     }
 
 
-    protected static void CheckCompletions(object sender, SGrid.OnGridMoveArgs e)
+    protected static void UpdateButtonCompletions(object sender, System.EventArgs e)
+    {
+        current.UpdateButtonCompletionsHelper();
+    }
+
+    protected virtual void UpdateButtonCompletionsHelper()
     {
         // Debug.Log("Checking completions!");
         // ineffecient lol
@@ -414,13 +419,16 @@ public class SGrid : MonoBehaviour
             for (int y = 0; y < current.width; y++) {
                 // int tid = current.targetGrid[x, y];
                 string tids = GetTileIdAt(x, y);
+                ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
                 if (tids == "*") 
                 {
-                    UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
+                    // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
+                    UIArtifact.SetButtonComplete(artifactButton.islandId, true);
                 }
                 else {
                     int tid = int.Parse(tids);
-                    UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+                    // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+                    UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
                 }
             }
         }
@@ -430,10 +438,10 @@ public class SGrid : MonoBehaviour
     {
         yield return new WaitForSeconds(t);
 
-        CheckCompletions(this, null); // sets the final one to be complete
+        UpdateButtonCompletions(this, null); // sets the final one to be complete
     }
 
-    private static string GetTileIdAt(int x, int y)
+    protected static string GetTileIdAt(int x, int y)
     {
         return current.targetGrid[(current.height - y - 1) * current.width + x].ToString();
     }

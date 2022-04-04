@@ -33,14 +33,16 @@ public class VillageGrid : SGrid
     
     private void OnEnable() {
         if (checkCompletion) {
-            SGrid.OnGridMove += SGrid.CheckCompletions;
+            SGrid.OnGridMove += SGrid.UpdateButtonCompletions; // this is probably not needed
+            UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
         }
     }
 
     private void OnDisable() {
         if (checkCompletion) {
-            SGrid.OnGridMove -= SGrid.CheckCompletions;
+            SGrid.OnGridMove -= SGrid.UpdateButtonCompletions; // this is probably not needed
+            UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;
         }
     }
@@ -101,7 +103,8 @@ public class VillageGrid : SGrid
         CameraShake.Shake(1.5f, 1.0f);
 
         checkCompletion = true;
-        OnGridMove += CheckCompletions;
+        OnGridMove += UpdateButtonCompletions; // this is probably not needed
+        UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
         SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
     }
 
@@ -124,5 +127,6 @@ public class VillageGrid : SGrid
     {
         caveDoorRocks.SetActive(false);
         CameraShake.Shake(1f, 3.5f);
+        AudioManager.Play("Slide Explosion");
     }
 }

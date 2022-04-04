@@ -6,7 +6,7 @@ using System;
 
 public class UIArtifact : MonoBehaviour
 {
-    public static System.EventHandler<System.EventArgs> onButtonInteract;
+    public static System.EventHandler<System.EventArgs> OnButtonInteract;
 
     public ArtifactTileButton[] buttons;
     //L: The button the user has clicked on
@@ -32,13 +32,18 @@ public class UIArtifact : MonoBehaviour
     {
         SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
 
-        onButtonInteract += UpdatePushedDowns;
+        OnButtonInteract += UpdatePushedDowns;
         SGridAnimator.OnSTileMoveEnd += UpdatePushedDowns;
 
         // Debug.Log(this is JungleArtifact);
     }
 
-    public void OnDisable()
+    public virtual void OnEnable()
+    {
+
+    }
+
+    public virtual void OnDisable()
     {
         moveQueue = new Queue<SMove>();
         //Debug.Log("Queue Cleared!");
@@ -91,7 +96,7 @@ public class UIArtifact : MonoBehaviour
             }
         }
 
-        onButtonInteract?.Invoke(this, null);
+        OnButtonInteract?.Invoke(this, null);
     }
 
     public virtual void ButtonDragEnd(BaseEventData eventData) {
@@ -159,7 +164,7 @@ public class UIArtifact : MonoBehaviour
             DeselectCurrentButton();
         }
 
-        onButtonInteract?.Invoke(this, null);
+        OnButtonInteract?.Invoke(this, null);
     }
 
     public void DeselectCurrentButton()
@@ -175,7 +180,7 @@ public class UIArtifact : MonoBehaviour
         currentButton = null;
         moveOptionButtons.Clear();
 
-        onButtonInteract?.Invoke(this, null);
+        OnButtonInteract?.Invoke(this, null);
     }
     
     public virtual void SelectButton(ArtifactTileButton button)
@@ -234,7 +239,7 @@ public class UIArtifact : MonoBehaviour
             }
         }
 
-        onButtonInteract?.Invoke(this, null);
+        OnButtonInteract?.Invoke(this, null);
     }
 
     // replaces adjacentButtons
@@ -439,7 +444,7 @@ public class UIArtifact : MonoBehaviour
         }
     }
 
-    protected ArtifactTileButton GetButton(int x, int y)
+    public static ArtifactTileButton GetButton(int x, int y)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
         {
@@ -464,6 +469,32 @@ public class UIArtifact : MonoBehaviour
 
         return null;
     }
+    
+
+    // Returns a string like:   123_6##_4#5
+    // for a grid like:  1 2 3
+    //                   6 . .
+    //        (0, 0) ->  4 . 5
+    public static string GetGridString()
+    {
+        string s = "";
+        for (int y = 3 - 1; y >= 0; y--)
+        {
+            for (int x = 0; x < 3; x++)
+            {
+                ArtifactTileButton b = GetButton(x, y);
+                if (b.isTileActive)
+                    s += b.islandId;
+                else
+                    s += "#";
+            }
+            if (y != 0)
+            {
+                s += "_";
+            }
+        }
+        return s;
+    }
 
     public static void AddButton(int islandId, bool shouldFlicker=true)
     {
@@ -484,8 +515,16 @@ public class UIArtifact : MonoBehaviour
         {
             if (b.shouldFlicker)
             {
-                b.Flicker();
+                b.Flicker(3);
             }
+        }
+    }
+
+    public void FlickerAllOnce()
+    {
+        foreach (ArtifactTileButton b in _instance.buttons)
+        {
+            b.Flicker(1);
         }
     }
 }

@@ -33,10 +33,9 @@ public class Player : MonoBehaviour
         _instance = this;
         _instance.controls = new InputSettings();
         LoadBindings();
-        if (PlayerInventory.Contains("Boots"))
-        {
-            BootsSpeedUp();
-        }
+
+        UpdatePlayerSpeed();
+
         UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
     }
     public static void LoadBindings()
@@ -231,15 +230,18 @@ public class Player : MonoBehaviour
         _instance.moveSpeedMultiplier = x;
     }
 
-    public void BootsSpeedUp()
+    public void UpdatePlayerSpeed()
     {
-        if (moveSpeed==5)
-        {   // tested, does effectively change the player's speed whenever boots are picked up
-            // _instance.moveSpeed+=20;
-            _instance.moveSpeed+=2;
-            // Debug.Log(_instance.moveSpeed);
+        moveSpeed = 5;
 
-            // lol you'll have to pick up a ton of these boots if you want the speed to be noticeable
+        if (PlayerInventory.Contains("Boots"))
+        {
+            moveSpeed += 2;
+        }
+
+        if (isOnWater)
+        {
+            moveSpeed += 1;
         }
     }
 
@@ -267,5 +269,7 @@ public class Player : MonoBehaviour
     {
         this.isOnWater = isOnWater;
         boatSpriteRenderer.enabled = isOnWater;
+
+        UpdatePlayerSpeed();
     }
 }

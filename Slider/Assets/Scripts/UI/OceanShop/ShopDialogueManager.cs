@@ -8,6 +8,7 @@ public class ShopDialogueManager : MonoBehaviour
     // TODO: serialize these somehow
     private bool canOverrideDialogue = true;
     public bool isFirstTime = true;
+    private bool isVisiting = false;
     
     private TextMeshProUGUI currentText;
     private ShopDialogue currentDialogue;
@@ -158,6 +159,27 @@ public class ShopDialogueManager : MonoBehaviour
             return;
         }
 
+        if (isVisiting) 
+        {
+            UpdateDialogue("Visiting");
+            return;
+        }
+
+        if ((SGrid.current as OceanGrid).GetCheckCompletion()) 
+        {
+
+            if ((SGrid.current as OceanGrid).GetIsCompleted())
+            {
+                UpdateDialogue("Ocean Complete");
+                return;
+            }
+            else if (shopManager.uiState == ShopManager.State.Main)
+            {
+                UpdateDialogue("All Items Returned");
+                return;
+            }
+        }
+
         if (shopManager.uiState == ShopManager.State.Main)
         {
             UpdateDialogue("Default Main");
@@ -189,7 +211,7 @@ public class ShopDialogueManager : MonoBehaviour
             case "Default Buy":
                 SetDialogue(new ShopDialogue(
                     null,
-                    "Well, whatcha thinking?",
+                    "Whaddya' want, landlubber",
                     null
                 ));
                 break;
@@ -217,6 +239,7 @@ public class ShopDialogueManager : MonoBehaviour
                     null,
                     "Would you like Gunmaster's Gin, Raider's Rum, or Sea Wolf's Whiskey?",
                     () => {
+                        canOverrideDialogue = true;
                         isFirstTime = false;
                         UpdateDialogue("No Anchor");
                     }
@@ -235,8 +258,14 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "Tell you what, why don't you go pick up an anchor for yourself, and I'll see what I can do for you.",
+                    "And you don't have an anchor? Every self-respecting pirate has one.",
+                    () => SetDialogue(
+
+                new ShopDialogue(
+                    null,
+                    "Quickly, go find one. I don't want people seein' an anchorless schmuck in my tavern. Bring one back and I'll see what I can do for you.",
                     () => shopManager.CloseShop()
+                ))
                 ))
                 ));
                 break;
@@ -301,7 +330,9 @@ public class ShopDialogueManager : MonoBehaviour
             
             case "All Items Returned":
                 SetDialogue(new ShopDialogue(
-                    null,
+                    () => {
+                        (SGrid.current as OceanGrid).StartFinalChallenge();
+                    },
                     "Looks like you've about explored the whole darned ocean. Time to put things in their rightful places.",
                     null
                 ));
@@ -316,16 +347,21 @@ public class ShopDialogueManager : MonoBehaviour
                         shopManager.OpenDialoguePanel();
                     },
                     "Wish you could stay, but something tells me you have places to be.",
-                    () => SetDialogue(
+                    () => {
+                        // Cutscene stuff???
+                        (SGrid.current as OceanGrid).ClearTreesToJungle();
+                        shopManager.OpenMainPanel();
 
-                new ShopDialogue(
+                        isVisiting = true;
+
+                        SetDialogue(new ShopDialogue(
                     null,
                     "Safe travels! And welcome to the Jungle.",
                     () => {
                         canOverrideDialogue = true;
-                        shopManager.OpenMainPanel();
                     }
-                ))
+                ));
+                    }
                 ));
                 break;
             
@@ -365,7 +401,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "I run a tavern and pawn shop. If you bring me some good stuff, I'll pay you some good stuff.",
+                    "I run a tavern and pawn shop. Bring me anything interesting and you'll make a pretty penny",
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
@@ -393,7 +429,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Privateer Pete's ship took some damage on their last voyage. Guiding it back to shore is sure to secure you some plunder.",
+                    "Privateer Pete's ship took some damage on their last voyage. Guiding it back to shore is sure to secure you some booty.",
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
@@ -457,17 +493,23 @@ public class ShopDialogueManager : MonoBehaviour
                 ));
                 break;
             
-            case "Piracy":
+            case "Aliens":
                 SetDialogue(new ShopDialogue(
                     () => { 
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Piracy is the culture of the seas here, and you'd do well to remember that. Acquiring loot is a surefire way to get people's notice.",
+                    "Some shifty-looking fellows walked in a while ago. They pay well so I can't complain, but something seems different about them.",
+                    () => SetDialogue(
+
+                new ShopDialogue(
+                    null,
+                    "Maybe they came in that strange flying saucer, ha!",
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
                     }
+                ))
                 ));
                 break;
             
@@ -541,10 +583,10 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Big expanse of plains to the East. It's a restricted area, run by the military.",
+                    "Big crater in the desert to the north.",
                     () => SetDialogue(new ShopDialogue(
                     null,
-                    "Who knows what they're doing inside there.",
+                    "Some say tell tales of strange happenings, things that can't be explained. I don't believe a word of it.",
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
