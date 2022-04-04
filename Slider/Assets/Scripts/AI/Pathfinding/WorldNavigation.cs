@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -10,7 +10,15 @@ public class WorldNavigation : MonoBehaviour
     private Tilemap worldFloorTM;
 
     //L: Why use a graph when you can use a set of pts?
-    private HashSet<Vector2Int> validPts;
+    private HashSet<Vector2Int> _validPts;
+
+    public HashSet<Vector2Int> ValidPts
+    {
+        get
+        {
+            return _validPts;
+        }
+    }
 
     private HashSet<Vector2Int> validPtsWorld;
     private Dictionary<STile, HashSet<Vector2Int>> validPtsStiles;
@@ -25,10 +33,12 @@ public class WorldNavigation : MonoBehaviour
 
     private void Awake()
     {
-        validPts = new HashSet<Vector2Int>();
+        _validPts = new HashSet<Vector2Int>();
         validPtsWorld = new HashSet<Vector2Int>();
         validPtsStiles = new Dictionary<STile, HashSet<Vector2Int>>();
         ConstructValidPts();
+
+
     }
 
     private void OnEnable()
@@ -55,20 +65,20 @@ public class WorldNavigation : MonoBehaviour
 
     private void ConstructValidPts()
     {
-        validPts = new HashSet<Vector2Int>();
+        _validPts = new HashSet<Vector2Int>();
         if (validPtsWorld == null || validPtsWorld.Count == 0)
         {
             validPtsWorld = GetWorldValidPts();
         }
 
-        validPts.UnionWith(validPtsWorld);
+        _validPts.UnionWith(validPtsWorld);
 
         STile[] stiles = GetComponentsInChildren<STile>();
         foreach (STile stile in stiles)
         {
             if (stile.isTileActive)
             {
-                validPts.UnionWith(GetSTileValidPtsHard(stile));
+                _validPts.UnionWith(GetSTileValidPtsHard(stile));
             }
         }
     }
@@ -143,12 +153,17 @@ public class WorldNavigation : MonoBehaviour
 
     //L: Calculates the shortest path from start to end.
     //BStar = Boomo Star
-    public bool GetPathFromToBStar(Vector2Int start, Vector2Int end, out List<Vector2Int> path, bool includeStart = false)
+    public bool GetPathFromToAStar(Vector2Int start, Vector2Int end, out List<Vector2Int> path, bool includeStart = false, Func<Vector2Int, Vector2Int, Vector2Int, int> costFunc = null)
     {
-        path = new List<Vector2Int>();
-        if (!validPts.Contains(start) || !validPts.Contains(end))
+        if (costFunc == null)
         {
-            Debug.LogError("A* Algorithm tried to calculate a path for nonexistant nodes!");
+            costFunc = new Func<Vector2Int, Vector2Int, Vector2Int, int>(GetAStarCost);
+        }
+
+        path = new List<Vector2Int>();
+        if (!_validPts.Contains(end))
+        {
+            Debug.LogError("Invalid Destination: " + end);
             return false;
         }
 
@@ -161,7 +176,7 @@ public class WorldNavigation : MonoBehaviour
         var nodeQueue = new SimplePriorityQueue<Vector2Int, int>();
 
         //Initialze all values in the data structure
-        foreach (Vector2Int node in validPts)
+        foreach (Vector2Int node in _validPts)
         {
             costs[node] = node.Equals(start) ? 0 : int.MaxValue;
             prevNode[node] = Vector2Int.zero;
@@ -182,9 +197,9 @@ public class WorldNavigation : MonoBehaviour
                 if (!visited.Contains(neighbor))
                 {
                     //A* Heuristic: 
-                    //G Cost = costs[curr] + GetCost(curr, neighbor) (Cost to get to this node plus the edge weight to the neighbor
+                    //G Cost = costs[curr] + GetCost(curr, neighbor) (Cost to get to this node plus the edge weight to the neighbor)
                     //H Cost = GetCost(neighbor, end) (Distance from neighbor to end)
-                    int newCost = costs[curr] + GetCost(curr, neighbor) + GetCost(neighbor, end);
+                    int newCost = costs[curr] + costFunc(curr, neighbor, end);
                     if (newCost < costs[neighbor])
                     {
                         //Update the node's cost, and set it's path to come from the current node.
@@ -234,7 +249,7 @@ public class WorldNavigation : MonoBehaviour
 
         foreach (var dir in cardinalDirs)
         {
-            if (validPts.Contains(curr+dir))
+            if (_validPts.Contains(curr+dir))
             {
                 result.Add(curr+dir);
             }
@@ -242,7 +257,7 @@ public class WorldNavigation : MonoBehaviour
 
         foreach (var dir in diagDirs)
         {
-            if (validPts.Contains(curr+dir) && validPts.Contains(curr + new Vector2Int(dir.x, 0)) && validPts.Contains(curr + new Vector2Int(0, dir.y)))
+            if (_validPts.Contains(curr+dir) && _validPts.Contains(curr + new Vector2Int(dir.x, 0)) && _validPts.Contains(curr + new Vector2Int(0, dir.y)))
             {
                 result.Add(curr+dir);
             }
@@ -251,14 +266,19 @@ public class WorldNavigation : MonoBehaviour
         return result;
     }
 
-    private int GetCost(Vector2Int from, Vector2Int to)
+    private static int GetAStarCost(Vector2Int curr, Vector2Int neighbor, Vector2Int end)
+    {
+        return GetDistanceCost(curr, neighbor) + GetDistanceCost(neighbor, end);
+    }
+
+    private static int GetDistanceCost(Vector2Int from, Vector2Int to)
     {
         return Mathf.Abs(Mathf.RoundToInt(10 * Vector2Int.Distance(from, to)));
     }
 
     public void SetPathToDebug()
     {
-        if (!GetPathFromToBStar(debugFrom, debugTo, out debugPath, true))
+        if (!GetPathFromToAStar(debugFrom, debugTo, out debugPath, true))
         {
             Debug.LogWarning("Debug positions set do not have a valid path");
         }
@@ -277,9 +297,9 @@ public class WorldNavigation : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (validPts != null)
+        if (_validPts != null)
         {
-            foreach (Vector2Int pos in validPts)
+            foreach (Vector2Int pos in _validPts)
             {
                 Gizmos.color = Color.blue;
                 Gizmos.DrawSphere(new Vector3(pos.x, pos.y, 0), 0.2f);

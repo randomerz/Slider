@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class RatAI : MonoBehaviour
 {
+    [Header("Player")]
     public float playerAggroRange;
     public float playerDeaggroRange;
+
+    [Header("Pathfinding")]
     public float moveSpeed;
     public float pathfindingTolerance;
-
     [SerializeField]
     internal STileNavAgent navAgent;
-
 
     //Misc AI control weights
     //Note: In terms of the AI, darkness is treated the same as walls.
 
+    [Header("Weights")]
     [SerializeField]
     internal float minDistToWall;   //Determines at what distance the AI is allowed to be near a wall before moving in a different direction (scaled by moveSpeed)
     [SerializeField]
@@ -27,7 +29,7 @@ public class RatAI : MonoBehaviour
     [Range(-1f, 1f)]
     internal float decisiveness;    //The tendency for the rat to keep moving in the direction it's facing
 
-
+    [Header("Internal References")]
     [SerializeField]
     private Animator anim;
     [SerializeField]
@@ -35,6 +37,7 @@ public class RatAI : MonoBehaviour
     [SerializeField]
     private Transform mouth;
 
+    [Header("External References")]
     public GameObject objectToSteal;
     public Transform player;
 
@@ -43,7 +46,6 @@ public class RatAI : MonoBehaviour
     private BehaviourTreeNode behaviourTree;
 
     private Vector2 _dirFacing;
-
     public Vector2 DirectionFacing
     {
         get
@@ -51,6 +53,9 @@ public class RatAI : MonoBehaviour
             return _dirFacing;
         }
     }
+
+    [HideInInspector]
+    internal HashSet<Vector2Int> visited = null;    //For debugging
 
     private void Awake()
     {
@@ -67,8 +72,8 @@ public class RatAI : MonoBehaviour
 
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
-
         navAgent = GetComponent<STileNavAgent>();
+
         navAgent.speed = moveSpeed;
         navAgent.tolerance = pathfindingTolerance;
     }
@@ -140,5 +145,17 @@ public class RatAI : MonoBehaviour
         var runToLightSequence = new SequenceNode(new List<BehaviourTreeNode> { setDestToLightTileNode, moveTowardsSetDestNode });
 
         behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, runToLightSequence, stayInPlaceNode });
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (visited != null)
+        {
+            foreach (Vector2Int pt in visited)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawSphere(new Vector3(pt.x, pt.y, 0), 0.2f);
+            }
+        }
     }
 }

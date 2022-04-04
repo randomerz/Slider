@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//Attach this to the stile you want to bake navigation for
+//THIS CLASS IS NO LONGER USED (See WorldNavigation.cs)
+/*
 public class STileNavigation : MonoBehaviour
 {
     public float agentRadius;
@@ -103,12 +104,14 @@ public class STileNavigation : MonoBehaviour
             }
         }
     }
+*/
 
     /**
      * Return whether a valid path was found
      * 
      * from and to are world positions
      */
+/*
     public List<Vector2Int> GetPathFromToHard(Vector2Int from, Vector2Int to)
     {
         Vector2Int stilePosAsInt = new Vector2Int((int) stile.transform.position.x, (int) stile.transform.position.y);
@@ -214,3 +217,4 @@ public class STileNavigation : MonoBehaviour
         return filter;
     }
 }
+*/

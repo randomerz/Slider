@@ -6,14 +6,14 @@ using UnityEngine;
 //Attach this to the agent you want to use STileNavigation
 public class STileNavAgent : MonoBehaviour
 {
-    [SerializeField]
+    [HideInInspector]
     public float speed;
-    [SerializeField]
+    [HideInInspector]
     public float tolerance;
 
     private List<Vector2Int> path;
 
-    private Vector2 currDest;
+    private Vector2Int currDest;
 
     private Coroutine followRoutine;
 
@@ -23,14 +23,14 @@ public class STileNavAgent : MonoBehaviour
         private set;
     }
 
-    public bool SetDestination(Vector2 dest)
+    public bool SetDestination(Vector2Int dest)
     {
-        //Need to change to work with multiple stiles later
         WorldNavigation worldNav = GetComponentInParent<WorldNavigation>();
-        worldNav.GetPathFromToBStar(new Vector2Int((int)transform.position.x, (int)transform.position.y),
-                                            new Vector2Int((int)dest.x, (int)dest.y), out path);
 
-        Debug.Log(path.Count);
+        //Get the closest point to this transform
+        Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
+        worldNav.GetPathFromToAStar(posAsInt, dest, out path);
+
         if (IsRunning)
         {
             StopPath();
