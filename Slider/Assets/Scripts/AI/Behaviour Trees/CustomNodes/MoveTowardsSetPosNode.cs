@@ -26,7 +26,7 @@ public class MoveTowardsSetPosNode : BehaviourTreeNode
 
         if (readyForUpdate)
         {
-            ai.navAgent.SetDestination(TileUtil.WorldToTileCoords(RatBlackboard.Instance.destination));
+            ai.navAgent.SetDestination(TileUtil.WorldToTileCoords(RatBlackboard.Instance.destination), RatBlackboard.Instance.costFunc);
             ai.StartCoroutine(WaitAsync());
         }
 
@@ -40,4 +40,3 @@ public class MoveTowardsSetPosNode : BehaviourTreeNode
         readyForUpdate = true;
     }
 }
-

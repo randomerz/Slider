@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -23,13 +24,13 @@ public class STileNavAgent : MonoBehaviour
         private set;
     }
 
-    public bool SetDestination(Vector2Int dest)
+    public bool SetDestination(Vector2Int dest, Func<Vector2Int, Vector2Int, Vector2Int, int> costFunc = null)
     {
         WorldNavigation worldNav = GetComponentInParent<WorldNavigation>();
 
         //Get the closest point to this transform
         Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
-        worldNav.GetPathFromToAStar(posAsInt, dest, out path);
+        worldNav.GetPathFromToAStar(posAsInt, dest, out path, false, costFunc);
 
         if (IsRunning)
         {

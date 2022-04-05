@@ -161,6 +161,12 @@ public class WorldNavigation : MonoBehaviour
         }
 
         path = new List<Vector2Int>();
+        if (!_validPts.Contains(start))
+        {
+            Debug.LogError("Invalid Start: " + start);
+            return false;
+        }
+
         if (!_validPts.Contains(end))
         {
             Debug.LogError("Invalid Destination: " + end);
@@ -199,7 +205,17 @@ public class WorldNavigation : MonoBehaviour
                     //A* Heuristic: 
                     //G Cost = costs[curr] + GetCost(curr, neighbor) (Cost to get to this node plus the edge weight to the neighbor)
                     //H Cost = GetCost(neighbor, end) (Distance from neighbor to end)
-                    int newCost = costs[curr] + costFunc(curr, neighbor, end);
+
+                    //Need to check against overflow.
+                    int newCost;
+                    if (costs[curr] == int.MaxValue || costFunc(curr, neighbor, end) == int.MaxValue)
+                    {
+                        newCost = int.MaxValue;
+                    } else
+                    {
+                        newCost = costs[curr] + costFunc(curr, neighbor, end);
+                    }
+
                     if (newCost < costs[neighbor])
                     {
                         //Update the node's cost, and set it's path to come from the current node.
@@ -266,12 +282,12 @@ public class WorldNavigation : MonoBehaviour
         return result;
     }
 
-    private static int GetAStarCost(Vector2Int curr, Vector2Int neighbor, Vector2Int end)
+    public static int GetAStarCost(Vector2Int curr, Vector2Int neighbor, Vector2Int end)
     {
         return GetDistanceCost(curr, neighbor) + GetDistanceCost(neighbor, end);
     }
 
-    private static int GetDistanceCost(Vector2Int from, Vector2Int to)
+    public static int GetDistanceCost(Vector2Int from, Vector2Int to)
     {
         return Mathf.Abs(Mathf.RoundToInt(10 * Vector2Int.Distance(from, to)));
     }

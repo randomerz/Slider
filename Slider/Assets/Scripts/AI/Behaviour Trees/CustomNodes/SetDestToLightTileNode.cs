@@ -27,22 +27,24 @@ public class SetDestToLightTileNode : BehaviourTreeNode
             }
 
             RatBlackboard.Instance.destination = nearestLightTile[0];
+            RatBlackboard.Instance.costFunc = null;
             return NodeState.SUCCESS;
         }
     }
 
+    //This algorithm essentially checks the given pos, it's neighbors, the neighbors' neighbors, and so on moving outwards from the original pos.
     private List<Vector2Int> FindNearestValidLightTile(Vector2Int posAsInt)
     {
         var result = new List<Vector2Int>();    //This is kind of a workaround since Vector2Int can't be null.
         WorldNavigation nav = ai.GetComponentInParent<WorldNavigation>();
 
-        int radius = 1;
+        int dist = 1;
         var queue = new Queue<Vector2Int>();
         var visited = new HashSet<Vector2Int>();
 
         visited.Add(posAsInt);
         queue.Enqueue(posAsInt);
-        while (queue.Count > 0 && radius < ai.GetComponentInParent<STile>().STILE_WIDTH * 1.41f)   //worst case scenario it's in the corner and has to check up to the opposite corner
+        while (queue.Count > 0 && dist < ai.GetComponentInParent<STile>().STILE_WIDTH * 1.41f)   //worst case scenario it's in the corner and has to check up to the opposite corner
         {
             Vector2Int currPos = queue.Dequeue();
 
@@ -68,8 +70,8 @@ public class SetDestToLightTileNode : BehaviourTreeNode
                     }
                 }
 
+                dist = (int)Vector2Int.Distance(posAsInt, posToCheck);
             }
-            radius = (int)Vector2Int.Distance(currPos, posAsInt);
         }
 
         ai.visited = visited;   //To draw gizmos for debugging purposes

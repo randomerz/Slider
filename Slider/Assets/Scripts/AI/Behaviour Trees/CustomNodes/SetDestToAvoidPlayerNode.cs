@@ -6,23 +6,6 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
     //The minimum range the rat can be from an obstacle before it no longer runs that way
     private RatAI ai;
 
-    private Dictionary<Vector2Int, int> _costs;
-
-    private const int nearWallsPenalty = 10;
-
-    public Dictionary<Vector2Int, int> Costs
-    {
-        get
-        {
-            if (_costs == null)
-            {
-                _costs = GenerateCostMap();
-            }
-
-            return _costs;
-        }
-    }
-
     public SetDestToAvoidPlayerNode(RatAI ai)
     {
         this.ai = ai;
@@ -30,26 +13,57 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
 
     public override NodeState Evaluate()
     {
-        return NodeState.SUCCESS;
-    }
+        Vector2Int minCostNeighbor = Vector2Int.zero;
+        int minCost = int.MaxValue;
 
-    private Dictionary<Vector2Int, int> GenerateCostMap()
-    {
-        var nav = ai.GetComponentInParent<WorldNavigation>();
-        HashSet<Vector2Int> validPts = nav.ValidPts;
-
-        Vector2Int playerPosAsInt = TileUtil.WorldToTileCoords(ai.player.position);
-
-        var costs = new Dictionary<Vector2Int, int>();
-        foreach (var pt in validPts)
+        WorldNavigation nav = ai.GetComponentInParent<WorldNavigation>();
+        foreach (Vector2Int neighbor in nav.GetMooreNeighbors(TileUtil.WorldToTileCoords(ai.transform.position)))
         {
-            //Dark tiles and the tile with the player must be avoided at all costs.
-            if (pt.Equals(playerPosAsInt) || !LightManager.instance.GetLightMaskAt(pt.x, pt.y))
+
+            List<Vector2Int> path = new List<Vector2Int>();
+            int cost = GetTileCost(neighbor);
+            if (cost < minCost)
             {
-                costs.Add(pt, int.MaxValue);
+                minCost = cost;
+                minCostNeighbor = neighbor;
             }
         }
+        
+        if (minCost < int.MaxValue)
+        {
+            RatBlackboard.Instance.destination = minCostNeighbor;
+            RatBlackboard.Instance.costFunc = CostAStar;
+            return NodeState.SUCCESS;
+        } else
+        {
+            return NodeState.FAILURE;
+        }
+    }
 
-        return costs;
+    //Use this to get the cost to a point. (DON'T USE THIS TO GENERATE THE COST MAP)
+    private int GetTileCost(Vector2Int pt)
+    {
+        Vector2Int playerPosAsInt = TileUtil.WorldToTileCoords(ai.player.position);
+        if (!ai.CostMap.ContainsKey(pt) || pt.Equals(playerPosAsInt))
+        {
+            return int.MaxValue;
+        } else
+        {
+            float distToPlayer = Vector2Int.Distance(playerPosAsInt, pt);
+            return Mathf.Max(ai.CostMap[pt], Mathf.Clamp((int)(RatAI.tileMaxPenalty - (int)(10 * distToPlayer - 1)), 0, RatAI.tileMaxPenalty));
+        }
+    }
+
+    private int CostAStar(Vector2Int curr, Vector2Int neighbor, Vector2Int end)
+    {
+
+        int addCost = GetTileCost(neighbor);
+        if (addCost == int.MaxValue)
+        {
+            return int.MaxValue;
+        } else
+        {
+            return WorldNavigation.GetAStarCost(curr, neighbor, end) + addCost;
+        }
     }
 }

@@ -248,4 +248,19 @@ public class LightManager : MonoBehaviour
         Vector2Int tilePos = TileUtil.WorldToTileCoords(posInWorld);
         return GetLightMaskAt(tilePos.x, tilePos.y);
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        for (int x = -worldToMaskDX; x < maskSizeX - worldToMaskDX; x++)
+        {
+            for (int y = -worldToMaskDY; y < maskSizeY - worldToMaskDY; y++)
+            {
+                if (GetLightMaskAt(x, y))
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawSphere(new Vector3(x, y, 0), 0.2f);
+                }
+            }
+        }
+    }
 }

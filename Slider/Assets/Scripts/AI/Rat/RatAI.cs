@@ -57,6 +57,22 @@ public class RatAI : MonoBehaviour
     [HideInInspector]
     internal HashSet<Vector2Int> visited = null;    //For debugging
 
+
+    //Costs for running away from player
+    public Dictionary<Vector2Int, int> CostMap
+    {
+        get
+        {
+            if (_costMap == null)
+            {
+                GenerateCostMap();
+            }
+            return _costMap;
+        }
+    }
+    private Dictionary<Vector2Int, int> _costMap = null;
+    internal const int tileMaxPenalty = 100;
+
     private void Awake()
     {
 
@@ -76,10 +92,12 @@ public class RatAI : MonoBehaviour
 
         navAgent.speed = moveSpeed;
         navAgent.tolerance = pathfindingTolerance;
+
     }
 
     private void Start()
     {
+        GenerateCostMap();
         ConstructBehaviourTree();
         StealPiece();
     }
@@ -91,6 +109,28 @@ public class RatAI : MonoBehaviour
         {
             Stay();
         }
+    }
+
+    private void OnEnable()
+    {
+        SGrid.OnSTileEnabled += OnTileEnabledHandler;
+        SGridAnimator.OnSTileMoveEnd += OnTileMovedHandler;
+    }
+
+    private void OnDisable()
+    {
+        SGrid.OnSTileEnabled -= OnTileEnabledHandler;
+        SGridAnimator.OnSTileMoveEnd -= OnTileMovedHandler;
+    }
+
+    private void OnTileEnabledHandler(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        GenerateCostMap();
+    }
+
+    private void OnTileMovedHandler(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        GenerateCostMap();
     }
 
     public void SetDirection(Vector2 dir)
@@ -132,8 +172,9 @@ public class RatAI : MonoBehaviour
         var moveTowardsSetDestNode = new MoveTowardsSetPosNode(this);
 
         var playerAggroNode = new AggroAtProximityNode(transform, player, playerAggroRange, playerDeaggroRange);
-        var moveAwayFromPlayerNode = new MoveAwayFromPlayerNode(this, player);
+        //var moveAwayFromPlayerNode = new MoveAwayFromPlayerNode(this, player);
 
+        var setDestToAvoidPlayerNode = new SetDestToAvoidPlayerNode(this);
         var setDestToLightTileNode = new SetDestToLightTileNode(this);
 
         var stayInPlaceNode = new StayInPlaceNode(this);
@@ -141,14 +182,69 @@ public class RatAI : MonoBehaviour
 
         //L: IMPORTANT NOTE: The ordering of the nodes in the tree matters
         var stealSequence = new SequenceNode(new List<BehaviourTreeNode>() { setDestToObjectNode, moveTowardsSetDestNode });
-        var runFromPlayerSequence = new SequenceNode(new List<BehaviourTreeNode> { playerAggroNode, moveAwayFromPlayerNode });
+        var runFromPlayerSequence = new SequenceNode(new List<BehaviourTreeNode> { playerAggroNode, setDestToAvoidPlayerNode, moveTowardsSetDestNode});
         var runToLightSequence = new SequenceNode(new List<BehaviourTreeNode> { setDestToLightTileNode, moveTowardsSetDestNode });
 
         behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, runToLightSequence, stayInPlaceNode });
     }
 
+    private Dictionary<Vector2Int, int> GenerateCostMap()
+    {
+        var nav = GetComponentInParent<WorldNavigation>();
+        HashSet<Vector2Int> validPts = nav.ValidPts;
+
+        _costMap = new Dictionary<Vector2Int, int>();
+        foreach (var pt in validPts)
+        {
+            _costMap.Add(pt, Mathf.Clamp((int)(tileMaxPenalty - (int)(10 * GetDistToNearestBadTile(pt) - 1)), 0, tileMaxPenalty));
+        }
+        return _costMap;
+    }
+
+    //This algorithm essentially checks the given pos, it's neighbors, the neighbors' neighbors, and so on moving outwards from the original pos.
+    private float GetDistToNearestBadTile(Vector2Int posAsInt)
+    {
+        WorldNavigation nav = GetComponentInParent<WorldNavigation>();
+
+        float dist = 0f;
+        const float maxDistCheck = tileMaxPenalty / 10f + 1f;
+
+        var queue = new Queue<Vector2Int>();
+        var visited = new HashSet<Vector2Int>();
+        visited.Add(posAsInt);
+        queue.Enqueue(posAsInt);
+        while (queue.Count > 0 && dist < maxDistCheck)   //worst case scenario it's in the corner and has to check up to the opposite corner
+        {
+            Vector2Int currPos = queue.Dequeue();
+
+            Vector2Int[] neighborDirs = { Vector2Int.up, Vector2Int.left, Vector2Int.down, Vector2Int.right,
+                                      new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1) };
+
+            foreach (var dir in neighborDirs)
+            {
+                Vector2Int posToCheck = currPos + dir;
+                dist = Vector2Int.Distance(posAsInt, posToCheck);
+                if (!visited.Contains(posToCheck))
+                {
+                    visited.Add(posToCheck);
+                    queue.Enqueue(posToCheck);
+
+                    //Check wall, darkness, or player occupation
+                    if (!nav.ValidPts.Contains(posToCheck) || !LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y))
+                    {
+                        return dist;
+                    }
+                }
+
+            }
+        }
+
+        return int.MaxValue;    //Obstacles are ("infinitely far") from the ai (far enough that the ai doesn't need to care)
+    }
+
     private void OnDrawGizmosSelected()
     {
+        /*
         if (visited != null)
         {
             foreach (Vector2Int pt in visited)
@@ -157,5 +253,24 @@ public class RatAI : MonoBehaviour
                 Gizmos.DrawSphere(new Vector3(pt.x, pt.y, 0), 0.2f);
             }
         }
+        */
+
+        
+        if (CostMap != null)
+        {
+            foreach (Vector2Int pt in CostMap.Keys)
+            {
+                if (CostMap[pt] == int.MaxValue)
+                {
+                    Gizmos.color = Color.red;
+                } else
+                {
+                    Gizmos.color = Color.Lerp(Color.green, Color.red, CostMap[pt] / 100f);
+                }
+
+                Gizmos.DrawSphere(new Vector3(pt.x, pt.y, 0), 0.2f);
+            }
+        }
+        
     }
 }
