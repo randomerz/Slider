@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class OceanGrid : SGrid
@@ -16,6 +14,21 @@ public class OceanGrid : SGrid
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
 
+    private Vector2Int[] correctPath =
+    {
+        Vector2Int.left,
+        Vector2Int.down,
+        Vector2Int.left,
+        Vector2Int.up,
+        Vector2Int.left,
+        Vector2Int.down,
+        Vector2Int.left,
+        Vector2Int.up,
+        Vector2Int.left,
+    };
+    private int playerIndex = 0;
+    private Vector2Int playerMovement;
+    private int lastIslandId = 1;
 
     private new void Awake() {
         myArea = Area.Ocean;
@@ -26,6 +39,7 @@ public class OceanGrid : SGrid
         }
 
         base.Awake();
+
 
         instance = this;
 
@@ -67,6 +81,7 @@ public class OceanGrid : SGrid
 
         SGridAnimator.OnSTileMoveEnd += CheckShipwreck;
         SGridAnimator.OnSTileMoveEnd += CheckVolcano;
+        SGridAnimator.OnSTileMoveEnd += CheckFoggySeas;
     }
 
     private void OnDisable()
@@ -77,6 +92,14 @@ public class OceanGrid : SGrid
 
         SGridAnimator.OnSTileMoveEnd -= CheckShipwreck;
         SGridAnimator.OnSTileMoveEnd -= CheckVolcano;
+        SGridAnimator.OnSTileMoveEnd -= CheckFoggySeas;
+    }
+
+    private void Update()
+    {
+        //Get tile the player is on. if it change from last update, find the direction the player moved. Add direction to list of moves. put list in checkfoggy. only why on fog tiles
+        updatePlayerMovement();
+
     }
 
     public override void SaveGrid()
@@ -106,9 +129,6 @@ public class OceanGrid : SGrid
 
     public void CheckShipwreck(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        // Debug.Log(IsShipwreckAdjacent());
-        // Debug.Log(GetGridString());
-
         if (IsShipwreckAdjacent())
         {
             Collectible c = GetCollectible("Treasure Chest");
@@ -219,7 +239,6 @@ public class OceanGrid : SGrid
         c.SetSpec(lostGuyMovement.hasBeached);
     }
 
-
     public bool GetCheckCompletion()
     {
         return checkCompletion;
@@ -285,5 +304,87 @@ public class OceanGrid : SGrid
         treesToJungle.SetActive(false);
         CameraShake.Shake(1, 2);
         AudioManager.Play("Slide Explosion");
+    }
+    public void CheckFoggySeas(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        FoggyCorrectMovement();
+        Debug.Log(playerMovement);  
+
+        if (GetStile(6).isTileActive && GetStile(7).isTileActive && FoggyCompleted())
+        {
+            Debug.Log("Finish Puzzle");
+
+            Collectible c = GetCollectible("Mushroom");
+
+            if (!PlayerInventory.Contains(c))
+            {
+                c.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    private void updatePlayerMovement()
+    {
+
+        if (Player.GetStileUnderneath() == null)
+        {
+            return;
+        }
+
+        int currentIslandId = Player.GetStileUnderneath().islandId;
+        
+        if (currentIslandId != lastIslandId)
+        {
+            if (currentIslandId != 6 && currentIslandId != 7)
+            {
+                failFoggy();
+            }
+            else
+            {
+                STile current = GetStile(currentIslandId);
+                STile old = GetStile(lastIslandId);
+
+                Vector2Int currentPos = new Vector2Int(current.x, current.y);
+                Vector2Int oldPos = new Vector2Int(old.x, old.y);
+
+                playerMovement = currentPos - oldPos;
+            }
+        }
+
+        //Debug.Log(playerMovement);
+
+        lastIslandId = currentIslandId;
+
+    }
+
+    private void FoggySeasAudio()
+    {
+        AudioManager.PlayWithPitch("Puzzle Complete", 0.3f + playerIndex * 0.05f);
+    }
+
+    public void FoggyCorrectMovement()
+    {
+        if(correctPath[playerIndex] == playerMovement)
+        {
+            playerIndex++;
+            FoggySeasAudio();
+            Debug.Log(playerIndex);
+        }
+        else
+        {
+            failFoggy();
+        }
+
+    }
+
+    private void failFoggy()
+    {
+        playerIndex = 0;
+        AudioManager.Play("Artifact Error");
+    }
+
+    public bool FoggyCompleted()
+    {
+        return playerIndex == 9;
     }
 }
