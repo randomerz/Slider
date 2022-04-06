@@ -19,15 +19,17 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
         WorldNavigation nav = ai.GetComponentInParent<WorldNavigation>();
         foreach (Vector2Int neighbor in nav.GetMooreNeighbors(TileUtil.WorldToTileCoords(ai.transform.position)))
         {
-
             List<Vector2Int> path = new List<Vector2Int>();
             int cost = GetTileCost(neighbor);
+            Debug.Log($"Cost To: {neighbor} is {cost}");
             if (cost < minCost)
             {
                 minCost = cost;
                 minCostNeighbor = neighbor;
             }
         }
+
+        Debug.Log($"Min Cost Neighbor: {minCostNeighbor} with cost {minCost}");
         
         if (minCost < int.MaxValue)
         {
@@ -50,7 +52,9 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
         } else
         {
             float distToPlayer = Vector2Int.Distance(playerPosAsInt, pt);
-            return Mathf.Max(ai.CostMap[pt], Mathf.Clamp((int)(RatAI.tileMaxPenalty - (int)(10 * distToPlayer - 1)), 0, RatAI.tileMaxPenalty));
+
+            //This can be a variety of functions of player/tile cost (max doesn't work due to corridor edge case)
+            return ai.CostMap[pt] + RatAI.CostToThreat(distToPlayer);
         }
     }
 

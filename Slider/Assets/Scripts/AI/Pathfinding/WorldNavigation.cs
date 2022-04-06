@@ -31,14 +31,14 @@ public class WorldNavigation : MonoBehaviour
 
     private List<Vector2Int> debugPath;
 
+    public static event System.EventHandler<System.EventArgs> OnValidPtsChanged;
+
     private void Awake()
     {
         _validPts = new HashSet<Vector2Int>();
         validPtsWorld = new HashSet<Vector2Int>();
         validPtsStiles = new Dictionary<STile, HashSet<Vector2Int>>();
         ConstructValidPts();
-
-
     }
 
     private void OnEnable()
@@ -81,6 +81,7 @@ public class WorldNavigation : MonoBehaviour
                 _validPts.UnionWith(GetSTileValidPtsHard(stile));
             }
         }
+        OnValidPtsChanged?.Invoke(this, new System.EventArgs());
     }
 
     private HashSet<Vector2Int> GetWorldValidPts()
@@ -163,13 +164,13 @@ public class WorldNavigation : MonoBehaviour
         path = new List<Vector2Int>();
         if (!_validPts.Contains(start))
         {
-            Debug.LogError("Invalid Start: " + start);
+            Debug.LogWarning($"Invalid Start: {start} This might be intentional (not an error).");
             return false;
         }
 
         if (!_validPts.Contains(end))
         {
-            Debug.LogError("Invalid Destination: " + end);
+            Debug.LogWarning($"Invalid Start: {end} This might be intentional (not an error).");
             return false;
         }
 

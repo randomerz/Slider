@@ -35,6 +35,8 @@ public class LightManager : MonoBehaviour
 
     public static LightManager instance;
 
+    public static event System.EventHandler<System.EventArgs> OnLightMaskChanged;
+
     void Awake()
     {
         if (instance == null)
@@ -179,6 +181,8 @@ public class LightManager : MonoBehaviour
                 UpdateLightMask(l);
             }
         }
+
+        OnLightMaskChanged?.Invoke(this, new System.EventArgs());
     }
 
     public void UpdateMaterials()

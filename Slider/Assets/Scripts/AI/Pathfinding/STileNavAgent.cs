@@ -94,7 +94,7 @@ public class STileNavAgent : MonoBehaviour
             for (int i=0; i<path.Count; i++)
             {
                 Gizmos.color = Color.green;
-                Gizmos.DrawSphere(new Vector3(path[i].x, path[i].y, 0), 0.2f);
+                //Gizmos.DrawSphere(new Vector3(path[i].x, path[i].y, 0), 0.2f);
 
                 if (i != path.Count - 1)
                 {

@@ -72,6 +72,7 @@ public class RatAI : MonoBehaviour
     }
     private Dictionary<Vector2Int, int> _costMap = null;
     internal const int tileMaxPenalty = 100;
+    internal const float maxCareDist = 3f;
 
     private void Awake()
     {
@@ -113,22 +114,17 @@ public class RatAI : MonoBehaviour
 
     private void OnEnable()
     {
-        SGrid.OnSTileEnabled += OnTileEnabledHandler;
-        SGridAnimator.OnSTileMoveEnd += OnTileMovedHandler;
+        WorldNavigation.OnValidPtsChanged += CostMapEventHandler;
+        LightManager.OnLightMaskChanged += CostMapEventHandler;
     }
 
     private void OnDisable()
     {
-        SGrid.OnSTileEnabled -= OnTileEnabledHandler;
-        SGridAnimator.OnSTileMoveEnd -= OnTileMovedHandler;
+        WorldNavigation.OnValidPtsChanged -= CostMapEventHandler;
+        LightManager.OnLightMaskChanged -= CostMapEventHandler;
     }
 
-    private void OnTileEnabledHandler(object sender, SGrid.OnSTileEnabledArgs e)
-    {
-        GenerateCostMap();
-    }
-
-    private void OnTileMovedHandler(object sender, SGridAnimator.OnTileMoveArgs e)
+    private void CostMapEventHandler(object sender, System.EventArgs e)
     {
         GenerateCostMap();
     }
@@ -196,9 +192,20 @@ public class RatAI : MonoBehaviour
         _costMap = new Dictionary<Vector2Int, int>();
         foreach (var pt in validPts)
         {
-            _costMap.Add(pt, Mathf.Clamp((int)(tileMaxPenalty - (int)(10 * GetDistToNearestBadTile(pt) - 1)), 0, tileMaxPenalty));
+            if (LightManager.instance != null && LightManager.instance.GetLightMaskAt(pt.x, pt.y))
+            {
+                _costMap.Add(pt, CostToThreat(GetDistToNearestBadTile(pt)));
+            }
         }
         return _costMap;
+    }
+
+    internal static int CostToThreat(float distToThreat)
+    {
+        int cost = Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / maxCareDist * (distToThreat - 1f)), 0, tileMaxPenalty);
+        //Debug.Log("Distance: " + distToThreat);
+        //Debug.Log("Cost: " + cost);
+        return cost;
     }
 
     //This algorithm essentially checks the given pos, it's neighbors, the neighbors' neighbors, and so on moving outwards from the original pos.
@@ -254,7 +261,6 @@ public class RatAI : MonoBehaviour
             }
         }
         */
-
         
         if (CostMap != null)
         {
@@ -265,7 +271,8 @@ public class RatAI : MonoBehaviour
                     Gizmos.color = Color.red;
                 } else
                 {
-                    Gizmos.color = Color.Lerp(Color.green, Color.red, CostMap[pt] / 100f);
+                    //Debug.Log($"CostMap in OnDrawGizmosSelected: {CostMap[pt]}");
+                    Gizmos.color = Color.Lerp(Color.green, Color.red, (float) CostMap[pt] / tileMaxPenalty);
                 }
 
                 Gizmos.DrawSphere(new Vector3(pt.x, pt.y, 0), 0.2f);
