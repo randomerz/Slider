@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -6,14 +7,14 @@ using UnityEngine;
 //Attach this to the agent you want to use STileNavigation
 public class STileNavAgent : MonoBehaviour
 {
-    [SerializeField]
+    [HideInInspector]
     public float speed;
-    [SerializeField]
+    [HideInInspector]
     public float tolerance;
 
     private List<Vector2Int> path;
 
-    private Vector2 currDest;
+    private Vector2Int currDest;
 
     private Coroutine followRoutine;
 
@@ -23,14 +24,14 @@ public class STileNavAgent : MonoBehaviour
         private set;
     }
 
-    public bool SetDestination(Vector2 dest)
+    public bool SetDestination(Vector2Int dest, Func<Vector2Int, Vector2Int, Vector2Int, int> costFunc = null)
     {
-        //Need to change to work with multiple stiles later
         WorldNavigation worldNav = GetComponentInParent<WorldNavigation>();
-        worldNav.GetPathFromToBStar(new Vector2Int((int)transform.position.x, (int)transform.position.y),
-                                            new Vector2Int((int)dest.x, (int)dest.y), out path);
 
-        Debug.Log(path.Count);
+        //Get the closest point to this transform
+        Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
+        worldNav.GetPathFromToAStar(posAsInt, dest, out path, false, costFunc);
+
         if (IsRunning)
         {
             StopPath();
@@ -93,7 +94,7 @@ public class STileNavAgent : MonoBehaviour
             for (int i=0; i<path.Count; i++)
             {
                 Gizmos.color = Color.green;
-                Gizmos.DrawSphere(new Vector3(path[i].x, path[i].y, 0), 0.2f);
+                //Gizmos.DrawSphere(new Vector3(path[i].x, path[i].y, 0), 0.2f);
 
                 if (i != path.Count - 1)
                 {

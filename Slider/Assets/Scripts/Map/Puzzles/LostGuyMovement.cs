@@ -99,7 +99,6 @@ public class LostGuyMovement : MonoBehaviour
 
     private STile CanMove(STile[,] e, Vector2Int dir, STile original)
     {
-        Debug.Log(dir.ToString());
 
         STile prev = original;
    
@@ -174,7 +173,6 @@ public class LostGuyMovement : MonoBehaviour
 
     private IEnumerator StartLostGuyAnimation(STile end, Vector2 dir, float duration)
     {
-        Debug.Log("Lost Guy Check");
         float t = 0;
 
         Vector3 firstTileEdge = (dir * end.STILE_WIDTH) / 2;

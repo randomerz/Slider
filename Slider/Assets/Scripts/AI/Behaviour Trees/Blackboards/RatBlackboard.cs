@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 class RatBlackboard : TreeBlackboard
 {
@@ -22,5 +23,6 @@ class RatBlackboard : TreeBlackboard
     private RatBlackboard() { } //Don't allow construction
     #endregion
 
+    public Func<Vector2Int, Vector2Int, Vector2Int, int> costFunc = null;
     public Vector2 destination;
 }
