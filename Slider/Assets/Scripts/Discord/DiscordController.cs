@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Handles Discord Rich Presence. Should probably be attached to GameManager or
@@ -20,13 +21,24 @@ public class DiscordController : MonoBehaviour
             // Going with not requiring Discord seems like the safer option to me.
             // Not entirely sure of the consequences here to be honest
             discord = new Discord.Discord(CLIENT_ID, (ulong)Discord.CreateFlags.NoRequireDiscord);
-            InvokeRepeating("UpdateActivity", 0, 5);
+            //InvokeRepeating("UpdateActivity", 0, 5);
 
             // We need our epoch time for tracking time elapsed
             TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
             secondsSinceEpoch = (int)t.TotalSeconds;
+
+            SGrid.OnSTileCollected += (object sender, SGrid.OnSTileCollectedArgs args) => UpdateActivity();
+            SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => UpdateActivity();
+
+            UpdateActivity();
+
             Debug.Log("Starting Rich Presence");
         }
+    }
+
+    private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        throw new NotImplementedException();
     }
 
     void Update()
