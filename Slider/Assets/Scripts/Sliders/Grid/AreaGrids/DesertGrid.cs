@@ -6,15 +6,19 @@ public class DesertGrid : SGrid
 {
     public static DesertGrid instance;
 
+    private bool crocoOasis = false;
+    private bool crocoQuest = false;
+
     private int monkeShake = 0;
     private Vector2Int monkeyPrev = new Vector2Int(1, 1);
     private bool monkeyOasis = false;
 
+    private bool jackalQuest = false;
     private bool jackalBoned = false;
     private bool jackalOasis = false;
 
-    [SerializeField] private DiceGizmo dice1;
-    [SerializeField] private DiceGizmo dice2;
+    public DiceGizmo dice1;
+    public DiceGizmo dice2;
     private bool challengedChad = false;
     private bool startDice = false;
     private bool diceWon = false;
@@ -87,41 +91,36 @@ public class DesertGrid : SGrid
     // === Desert puzzle specific ===
 
     //Puzzle 1: Oasis
-    /*
-    public void CheckOasisOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    public void SetCrocoOasis(bool b)
     {
-        if (CheckOasis())
-        {
-            Collectible c = GetCollectible("Slider 3");
-            Collectible d = GetCollectible("Slider 4");
-
-            if (!PlayerInventory.Contains(c))
-            {
-                c.gameObject.SetActive(true);
-            }
-            if (!PlayerInventory.Contains(d))
-            {
-                d.gameObject.SetActive(true);
-            }
-
-            SGridAnimator.OnSTileMoveEnd += CheckMonkeyShakeOnMove;
-            SGridAnimator.OnSTileMoveEnd += CheckMonkeyOasisOnMove;
-            SGridAnimator.OnSTileMoveEnd += CheckJackalBoneOnMove;
-            SGridAnimator.OnSTileMoveEnd += CheckJackalOasisOnMove;
-        }
+        crocoOasis = b;
     }
-    public bool CheckOasis()
+    public void CheckArchTip(Conditionals.Condition c)
     {
-        // Debug.Log(CheckGrid.contains(GetGridString(), "2...1"));
-        return CheckGrid.contains(GetGridString(), "2...1");
+        c.SetSpec(!crocoOasis);
     }
-    */
+    public void CheckCrocoOasis(Conditionals.Condition c)
+    {
+        c.SetSpec(crocoOasis);
+    }
+    public void SetCrocoQuest(bool b)
+    {
+        crocoQuest = b;
+    }
+    public void CheckCrocoQuest(Conditionals.Condition c)
+    {
+        c.SetSpec(crocoQuest);
+    }
+    public void EnableMonkeyShake()
+    {
+        SGridAnimator.OnSTileMoveEnd += CheckMonkeyShakeOnMove;
+    }
 
     //Puzzle 2: Baboon tree shake
     public void CheckMonkeyShakeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         //If the baboon is shaken awake
-        if (SGrid.current.GetActiveTiles().Contains(SGrid.current.GetStile(3)) && CheckMonkeyShake())
+        if (CheckMonkeyShake()) //SGrid.current.GetActiveTiles().Contains(SGrid.current.GetStile(3))
         {
             Debug.Log("The Monkey has awoken!");
 
@@ -129,9 +128,9 @@ public class DesertGrid : SGrid
             monkeyOasis = true;
 
             SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
-            SGridAnimator.OnSTileMoveEnd += CheckMonkeyOasisOnMove;
         }
     }
+    //cond for monkey dialogue
     public bool CheckMonkeyShake()
     {
         STile monkeyTile = SGrid.current.GetStile(3);
@@ -145,38 +144,19 @@ public class DesertGrid : SGrid
         monkeyPrev = new Vector2Int(monkeyTile.x, monkeyTile.y);
         Debug.Log("Checked for monkey shake");
 
-        if (monkeShake == 3)
+        if (monkeShake >= 3)
         {
             return true;
         }
         return false;
     }
-
-    //cond for monkey dialogue
-    public void IsAwake(Conditionals.Condition c)
-    {
-        c.SetSpec(monkeShake >= 3);
-    }
-
-    public void CheckMonkeyOasisOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (monkeShake == 3 && CheckMonkeyNearOasis())
-        {
-            Debug.Log("Monkey joined sussy bday party");
-            //Have monke join the bday crew
-            monkeyOasis = true;
-            Collectible c = GetCollectible("Slider 5");
-
-            if (!PlayerInventory.Contains(c))
-            {
-                c.gameObject.SetActive(true);
-            }
-            SGridAnimator.OnSTileMoveEnd -= CheckMonkeyOasisOnMove;
-        }
-    }
     public bool CheckMonkeyNearOasis()
     {
         return CheckGrid.contains(GetGridString(), "(3|2)(2|3)") || CheckGrid.contains(GetGridString(), "(3|2)...(2|3)");
+    }
+    public void IsAwake(Conditionals.Condition c)
+    {
+        c.SetSpec(monkeShake >= 3);
     }
     public void IsMonkeyNearOasis(Conditionals.Condition c)
     {
@@ -188,21 +168,30 @@ public class DesertGrid : SGrid
     }
 
     //Puzzle 3: Jackal Bone
-    public void CheckJackalBoneOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    public void SetJackalQuest(bool b)
     {
-        if (SGrid.current.GetActiveTiles().Contains(SGrid.current.GetStile(4)) && CheckJackalBone())
-        {
-            Debug.Log("Jackal got dem boned");
-            jackalBoned = true;
-            SGridAnimator.OnSTileMoveEnd -= CheckJackalBoneOnMove;
-            SGridAnimator.OnSTileMoveEnd += CheckJackalOasisOnMove;
-        }
+        jackalOasis = b;
     }
-    public bool CheckJackalBone()
+    public void SetJackalBoned(bool b)
     {
-        return SGrid.current.GetStile(4).x == 0 && SGrid.current.GetStile(4).y == 2;
+        jackalBoned = b;
     }
-
+    public void SetJackalOasis(bool b)
+    {
+        jackalOasis = b;
+    }
+    public void CheckJackalQuest(Conditionals.Condition c)
+    {
+        c.SetSpec(jackalQuest);
+    }
+    public void CheckJackalBoned(Conditionals.Condition c)
+    {
+        c.SetSpec(jackalBoned);
+    }
+    public void CheckJackalOasis(Conditionals.Condition c)
+    {
+        c.SetSpec(jackalOasis);
+    }
     public void CheckJackalOasisOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (jackalBoned && CheckJackalNearOasis())
@@ -221,11 +210,12 @@ public class DesertGrid : SGrid
     }
     public bool CheckJackalNearOasis()
     {
-        //Debug.Log("Checking Jackal and Oasis");
-        //Debug.Log(GetGridString());
         return CheckGrid.contains(GetGridString(), "24") || CheckGrid.contains(GetGridString(), "2...4");
     }
-
+    public void CheckDinoNearArch(Conditionals.Condition c)
+    {
+        c.SetSpec(CheckGrid.contains(GetGridString(), "14") || CheckGrid.contains(GetGridString(), "1...4"));
+    }
     //Puzzle 4: Dice. Should not start checking until after both tiles have been activated
 
     //Dconds for Chad dice game
@@ -289,10 +279,11 @@ public class DesertGrid : SGrid
     //Chen: Dcond tests for bottle type
     public void IsCactusJuice(Conditionals.Condition c)
     {
-        Bottle item = (Bottle)Player.GetPlayerAction().pickedItem;
+        Item item = Player.GetPlayerAction().pickedItem;
         if (item != null && item.itemName.Equals("Bottle"))
         {
-            c.SetSpec(item.state == bottleState.cactus);
+            Bottle cast = (Bottle)item;
+            c.SetSpec(cast.state == bottleState.cactus);
         }
         else
         {
@@ -301,10 +292,11 @@ public class DesertGrid : SGrid
     }
     public void IsDirtyWater(Conditionals.Condition c)
     {
-        Bottle item = (Bottle) Player.GetPlayerAction().pickedItem;
+        Item item = Player.GetPlayerAction().pickedItem;
         if (item != null && item.itemName.Equals("Bottle"))
         {
-            c.SetSpec(item.state == bottleState.dirty);
+            Bottle cast = (Bottle)item;
+            c.SetSpec(cast.state == bottleState.dirty);
         }
         else
         {
@@ -313,10 +305,11 @@ public class DesertGrid : SGrid
     }
     public void IsCleanWater(Conditionals.Condition c)
     {
-        Bottle item = (Bottle)Player.GetPlayerAction().pickedItem;
+        Item item = Player.GetPlayerAction().pickedItem;
         if (item != null && item.itemName.Equals("Bottle"))
         {
-            c.SetSpec(item.state == bottleState.clean);
+            Bottle cast = (Bottle)item;
+            c.SetSpec(cast.state == bottleState.clean);
         }
         else
         {
