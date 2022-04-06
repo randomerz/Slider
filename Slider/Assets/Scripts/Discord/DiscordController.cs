@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Handles Discord Rich Presence. Should probably be attached to GameManager or
@@ -20,11 +21,18 @@ public class DiscordController : MonoBehaviour
             // Going with not requiring Discord seems like the safer option to me.
             // Not entirely sure of the consequences here to be honest
             discord = new Discord.Discord(CLIENT_ID, (ulong)Discord.CreateFlags.NoRequireDiscord);
-            InvokeRepeating("UpdateActivity", 0, 5);
+            //InvokeRepeating("UpdateActivity", 0, 5);
 
             // We need our epoch time for tracking time elapsed
             TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
             secondsSinceEpoch = (int)t.TotalSeconds;
+
+            // Update activity status whenever a slider is collected or the scene is changed
+            SGrid.OnSTileCollected += (object sender, SGrid.OnSTileCollectedArgs args) => UpdateActivity();
+            SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => UpdateActivity();
+
+            UpdateActivity();
+
             Debug.Log("Starting Rich Presence");
         }
     }
@@ -36,7 +44,8 @@ public class DiscordController : MonoBehaviour
     }
 
     /// <summary>
-    /// We call this once every 5s using InvokeRepeating to update our rich presence status.
+    /// Call this whenever we want to update the rich presence status.
+    /// Currently that's only when the player picks up a slider or changes scenes.
     /// </summary>
     void UpdateActivity()
     {

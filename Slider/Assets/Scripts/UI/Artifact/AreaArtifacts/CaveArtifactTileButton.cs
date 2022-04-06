@@ -10,7 +10,7 @@ class CaveArtifactTileButton : ArtifactTileButton
     [SerializeField]
     private Sprite islandLitSprite;
 
-    private void Start()
+    private new void Start()
     {
         base.Start();
 
@@ -25,7 +25,7 @@ class CaveArtifactTileButton : ArtifactTileButton
         CaveLight.OnLightSwitched += LightSwitched;
     }
 
-    private void OnDisable()
+    private new void OnDisable()
     {
         base.OnDisable();
         SGrid.OnSTileEnabled -= STileEnabled;
@@ -51,7 +51,7 @@ class CaveArtifactTileButton : ArtifactTileButton
 
     public void CheckLit()
     {
-        if (isTileActive)
+        if (myStile != null && isTileActive)
         {
             isLit = (myStile as CaveSTile).GetTileLit(this.x, this.y);
             islandSprite = isLit ? islandLitSprite : islandDarkSprite;

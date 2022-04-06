@@ -10,10 +10,10 @@ public class UIManager : MonoBehaviour
 {
     public static System.EventHandler<System.EventArgs> OnPause;
     public static System.EventHandler<System.EventArgs> OnResume;
-
     private static UIManager _instance;
+    
     public bool isGamePaused;
-    public bool isArtifactOpen;
+    // public bool isArtifactOpen;
     public static bool canOpenMenus = true;
 
     public static bool closeUI;
@@ -24,10 +24,9 @@ public class UIManager : MonoBehaviour
     public GameObject optionsPanel;
     public GameObject controlsPanel;
     public GameObject advOptionsPanel;
-    public GameObject artifactPanel;
-    public GameObject oceanQuestPanel;
-    public UIArtifact uiArtifact;
-    public Animator artifactAnimator;
+    // public GameObject artifactPanel;
+    // public UIArtifact uiArtifact;
+    // public Animator artifactAnimator;
     public Slider sfxSlider;
     public Slider musicSlider;
 
@@ -37,8 +36,7 @@ public class UIManager : MonoBehaviour
 
         sfxSlider.value = AudioManager.GetSFXVolume();
         musicSlider.value = AudioManager.GetMusicVolume();
-        //artifactPanel.GetComponent<UIArtifact>().Awake();
-        uiArtifact.Awake();
+        
 
         _instance.controls = new InputSettings();
         LoadBindings();
@@ -76,6 +74,7 @@ public class UIManager : MonoBehaviour
     {
         if (isGamePaused && pausePanel.activeSelf)
         {
+            Debug.Log("a");
             ResumeGame();
         }
         else
@@ -91,6 +90,7 @@ public class UIManager : MonoBehaviour
                 if (IsUIOpen())
                 {
                     // do nothing
+                    Debug.Log("Another menu is open, doing nothing..");
                 }
                 else 
                 {
@@ -103,21 +103,21 @@ public class UIManager : MonoBehaviour
 
     private void OnPressArtifact()
     {
-        if (isArtifactOpen)
-        {
-            ResumeGame();
-        }
-        else
-        {
-            OpenArtifact();
-        }
+        // if (isArtifactOpen)
+        // {
+        //     ResumeGame();
+        // }
+        // else
+        // {
+        //     OpenArtifact();
+        // }
     }
 
     
 
     public static bool IsUIOpen() // used for if Player can use Action
     {
-        return _instance.isGamePaused || _instance.isArtifactOpen;
+        return _instance.isGamePaused;// || _instance.isArtifactOpen;
     }
 
     public static void CloseUI()
@@ -131,24 +131,24 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 1;
         isGamePaused = false;
 
-        if (isArtifactOpen)
-        {
-            Player.SetCanMove(true);
-            isArtifactOpen = false;
-            artifactAnimator.SetBool("isVisible", false);
-            StartCoroutine(CloseArtPanel());
-        }
+        // if (isArtifactOpen)
+        // {
+        //     Player.SetCanMove(true);
+        //     isArtifactOpen = false;
+        //     artifactAnimator.SetBool("isVisible", false);
+        //     StartCoroutine(CloseArtPanel());
+        // }
 
-        uiArtifact.DeselectCurrentButton();
+        // uiArtifact.DeselectCurrentButton();
         
         OnResume?.Invoke(this, null);
     }
 
-    private IEnumerator CloseArtPanel()
-    {
-        yield return new WaitForSeconds(0.34f);
-        artifactPanel.SetActive(false);
-    }
+    // private IEnumerator CloseArtPanel()
+    // {
+    //     yield return new WaitForSeconds(0.34f);
+    //     artifactPanel.SetActive(false);
+    // }
 
     // DC: this is really bad code haha
     public static void PauseGameGlobal()
@@ -222,28 +222,28 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void OpenArtifact()
-    {
-        if (!canOpenMenus)
-            return;
+    // public void OpenArtifact()
+    // {
+    //     if (!canOpenMenus)
+    //         return;
 
-        if (Player.IsSafe())
-        {
-            artifactPanel.SetActive(true);
-            //UIArtifact.UpdatePushedDowns();
-            isGamePaused = true;
-            isArtifactOpen = true;
+    //     if (Player.IsSafe())
+    //     {
+    //         artifactPanel.SetActive(true);
+    //         //UIArtifact.UpdatePushedDowns();
+    //         isGamePaused = true;
+    //         isArtifactOpen = true;
 
-            Player.SetCanMove(false);
+    //         Player.SetCanMove(false);
 
-            artifactAnimator.SetBool("isVisible", true);
-            uiArtifact.FlickerNewTiles();
-        }
-        else
-        {
-            AudioManager.Play("Artifact Error");
-        }
-    }
+    //         artifactAnimator.SetBool("isVisible", true);
+    //         uiArtifact.FlickerNewTiles();
+    //     }
+    //     else
+    //     {
+    //         AudioManager.Play("Artifact Error");
+    //     }
+    // }
 
     public void UpdateSFXVolume()  //float value
     {

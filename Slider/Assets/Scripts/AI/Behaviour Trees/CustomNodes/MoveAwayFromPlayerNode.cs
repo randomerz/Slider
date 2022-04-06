@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
 public class MoveAwayFromPlayerNode : BehaviourTreeNode
 {
     RatAI ai;
@@ -224,3 +225,4 @@ public class MoveAwayFromPlayerNode : BehaviourTreeNode
         return distances;
     }
 }
+*/

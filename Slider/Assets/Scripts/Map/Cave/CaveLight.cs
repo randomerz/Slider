@@ -57,7 +57,6 @@ public class CaveLight : MonoBehaviour
                     AudioManager.Play("Power Off"); 
             }
 
-            Debug.Log("Hello?");
             OnLightSwitched?.Invoke(this, new OnLightSwitchedArgs { lightOn = value });
         }
     }

@@ -116,6 +116,7 @@ public class InputRebindButton : MonoBehaviour
             buttonText.text = buttonText.text = $"{keybind.ToString().ToUpper().Replace("_", " ")}: {action.GetBindingDisplayString().ToUpper()}";
             var rebinds = inputActions.SaveBindingOverridesAsJson();
             PlayerPrefs.SetString("rebinds", rebinds);
+            
             if (keybind == Control.Action || keybind == Control.CycleEquip)
             {
                 PlayerAction.LoadBindings();
@@ -124,6 +125,7 @@ public class InputRebindButton : MonoBehaviour
             {
                 UIManager.LoadBindings();
                 ShopManager.LoadBindings(); // for Ocean shop UI
+                UIArtifactMenus.LoadBindings(); // for artiface menus
             }
         }
     }
