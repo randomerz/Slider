@@ -88,8 +88,6 @@ public class ShopManager : MonoBehaviour
         _instance.controls.UI.MouseClick.performed += context => _instance.shopDialogueManager.OnActionPressed();
         _instance.controls.Player.Action.performed += context => _instance.shopDialogueManager.OnActionPressed();
     }
-    
-
 
     public void CheckTavernKeep()
     {
