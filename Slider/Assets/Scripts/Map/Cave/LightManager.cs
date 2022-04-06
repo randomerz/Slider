@@ -35,6 +35,8 @@ public class LightManager : MonoBehaviour
 
     public static LightManager instance;
 
+    public static event System.EventHandler<System.EventArgs> OnLightMaskChanged;
+
     void Awake()
     {
         if (instance == null)
@@ -179,6 +181,8 @@ public class LightManager : MonoBehaviour
                 UpdateLightMask(l);
             }
         }
+
+        OnLightMaskChanged?.Invoke(this, new System.EventArgs());
     }
 
     public void UpdateMaterials()
@@ -247,5 +251,20 @@ public class LightManager : MonoBehaviour
         Vector3 posInWorld = tm.CellToWorld(pos);
         Vector2Int tilePos = TileUtil.WorldToTileCoords(posInWorld);
         return GetLightMaskAt(tilePos.x, tilePos.y);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        for (int x = -worldToMaskDX; x < maskSizeX - worldToMaskDX; x++)
+        {
+            for (int y = -worldToMaskDY; y < maskSizeY - worldToMaskDY; y++)
+            {
+                if (GetLightMaskAt(x, y))
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawSphere(new Vector3(x, y, 0), 0.2f);
+                }
+            }
+        }
     }
 }
