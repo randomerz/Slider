@@ -82,6 +82,28 @@ public class AudioManager : MonoBehaviour
 
         if (s.doRandomPitch)
             s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
+        else
+            s.source.pitch = s.pitch;
+
+        s.source.Play();
+    }
+
+    public static void PlayWithPitch(string name, float pitch) //Used In Ocean Scene
+    {
+        if (_sounds == null)
+            return;
+        Sound s = Array.Find(_sounds, sound => sound.name == name);
+
+        if (s == null)
+        {
+            Debug.LogError("Sound: " + name + " not found!");
+            return;
+        }
+
+        if (s.doRandomPitch)
+            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f) * pitch;
+        else
+            s.source.pitch = s.pitch * pitch;
 
         s.source.Play();
     }
