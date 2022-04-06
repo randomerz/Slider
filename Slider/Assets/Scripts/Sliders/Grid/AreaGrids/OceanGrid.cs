@@ -31,6 +31,7 @@ public class OceanGrid : SGrid
     private int lastIslandId = 1;
     public GameObject fog6;
     public GameObject fog7;
+    public GameObject fogIsland;
 
     private new void Awake() {
         myArea = Area.Ocean;
@@ -259,7 +260,6 @@ public class OceanGrid : SGrid
     {
         if (!isCompleted && IsFinalPuzzleMatching())
         {
-            Debug.Log("Final puzzle complete!");
             isCompleted = true;
             oceanArtifact.SetCanRotate(false);
 
@@ -304,25 +304,17 @@ public class OceanGrid : SGrid
 
         if (GetStile(6).isTileActive && GetStile(7).isTileActive && FoggyCompleted())
         {
+            fogIsland.transform.position = Player.GetStileUnderneath().transform.position;
+            fogIsland.SetActive(true);
 
-
-            Collectible c = GetCollectible("Mushroom");
-
-            c.transform.position =  Player.GetStileUnderneath().transform.position;
-            c.transform.SetParent(Player.GetStileUnderneath().transform);
-            
             if (Player.GetStileUnderneath().islandId == 6)
             {
                 fog6.SetActive(false);
+                
             }
             else 
             {
                 fog7.SetActive(false);
-            }
-
-            if (!PlayerInventory.Contains(c))
-            {
-                c.gameObject.SetActive(true);
             }
         }
     }
@@ -341,6 +333,8 @@ public class OceanGrid : SGrid
         {
             fog7.SetActive(true);
             fog6.SetActive(true);
+            fogIsland.SetActive(false);
+
             if (currentIslandId != 6 && currentIslandId != 7)
             {
                 failFoggy();
@@ -384,8 +378,13 @@ public class OceanGrid : SGrid
 
     private void failFoggy()
     {
+        if (playerIndex != 0)
+        {
+            AudioManager.Play("Artifact Error");
+        }
         playerIndex = 0;
-        AudioManager.Play("Artifact Error");
+        
+        
     }
 
     public bool FoggyCompleted()
