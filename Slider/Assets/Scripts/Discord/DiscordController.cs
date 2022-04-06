@@ -27,6 +27,7 @@ public class DiscordController : MonoBehaviour
             TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
             secondsSinceEpoch = (int)t.TotalSeconds;
 
+            // Update activity status whenever a slider is collected or the scene is changed
             SGrid.OnSTileCollected += (object sender, SGrid.OnSTileCollectedArgs args) => UpdateActivity();
             SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => UpdateActivity();
 
@@ -36,11 +37,6 @@ public class DiscordController : MonoBehaviour
         }
     }
 
-    private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
-    {
-        throw new NotImplementedException();
-    }
-
     void Update()
     {
         // Not entirely sure what this does, but apparently it's important
@@ -48,7 +44,8 @@ public class DiscordController : MonoBehaviour
     }
 
     /// <summary>
-    /// We call this once every 5s using InvokeRepeating to update our rich presence status.
+    /// Call this whenever we want to update the rich presence status.
+    /// Currently that's only when the player picks up a slider or changes scenes.
     /// </summary>
     void UpdateActivity()
     {
