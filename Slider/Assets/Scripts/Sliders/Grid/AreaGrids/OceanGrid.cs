@@ -29,6 +29,8 @@ public class OceanGrid : SGrid
     private int playerIndex = 0;
     private Vector2Int playerMovement;
     private int lastIslandId = 1;
+    public GameObject fog6;
+    public GameObject fog7;
 
     private new void Awake() {
         myArea = Area.Ocean;
@@ -46,14 +48,6 @@ public class OceanGrid : SGrid
         // StartCoroutine(test());
     }
 
-    private IEnumerator test()
-    {
-
-        yield return new WaitForSeconds(5);
-        StartFinalChallenge();
-        // Debug.Log("Locking movement!");
-        // oceanArtifact.SetCanRotate(false);
-    }
 
     void Start()
     {
@@ -81,7 +75,6 @@ public class OceanGrid : SGrid
 
         SGridAnimator.OnSTileMoveEnd += CheckShipwreck;
         SGridAnimator.OnSTileMoveEnd += CheckVolcano;
-        SGridAnimator.OnSTileMoveEnd += CheckFoggySeas;
     }
 
     private void OnDisable()
@@ -92,11 +85,11 @@ public class OceanGrid : SGrid
 
         SGridAnimator.OnSTileMoveEnd -= CheckShipwreck;
         SGridAnimator.OnSTileMoveEnd -= CheckVolcano;
-        SGridAnimator.OnSTileMoveEnd -= CheckFoggySeas;
     }
 
     private void Update()
     {
+
         //Get tile the player is on. if it change from last update, find the direction the player moved. Add direction to list of moves. put list in checkfoggy. only why on fog tiles
         updatePlayerMovement();
 
@@ -308,13 +301,24 @@ public class OceanGrid : SGrid
     public void CheckFoggySeas(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         FoggyCorrectMovement();
-        Debug.Log(playerMovement);  
 
         if (GetStile(6).isTileActive && GetStile(7).isTileActive && FoggyCompleted())
         {
-            Debug.Log("Finish Puzzle");
+
 
             Collectible c = GetCollectible("Mushroom");
+
+            c.transform.position =  Player.GetStileUnderneath().transform.position;
+            c.transform.SetParent(Player.GetStileUnderneath().transform);
+            
+            if (Player.GetStileUnderneath().islandId == 6)
+            {
+                fog6.SetActive(false);
+            }
+            else 
+            {
+                fog7.SetActive(false);
+            }
 
             if (!PlayerInventory.Contains(c))
             {
@@ -335,6 +339,8 @@ public class OceanGrid : SGrid
         
         if (currentIslandId != lastIslandId)
         {
+            fog7.SetActive(true);
+            fog6.SetActive(true);
             if (currentIslandId != 6 && currentIslandId != 7)
             {
                 failFoggy();
@@ -348,10 +354,10 @@ public class OceanGrid : SGrid
                 Vector2Int oldPos = new Vector2Int(old.x, old.y);
 
                 playerMovement = currentPos - oldPos;
+                CheckFoggySeas(this, null);
             }
         }
 
-        //Debug.Log(playerMovement);
 
         lastIslandId = currentIslandId;
 
@@ -368,9 +374,8 @@ public class OceanGrid : SGrid
         {
             playerIndex++;
             FoggySeasAudio();
-            Debug.Log(playerIndex);
         }
-        else
+        else 
         {
             failFoggy();
         }
