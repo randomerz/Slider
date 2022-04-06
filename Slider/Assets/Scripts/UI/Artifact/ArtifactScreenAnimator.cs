@@ -9,6 +9,9 @@ public class ArtifactScreenAnimator : MonoBehaviour
     private int currentScreenIndex;
     private int targetScreenIndex;
 
+    public Animator rightArrowAnimator;
+    public Animator leftArrowAnimator;
+
     public float duration;
 
     private Coroutine switchCouroutine;
@@ -17,12 +20,12 @@ public class ArtifactScreenAnimator : MonoBehaviour
     {
         currentScreenIndex = 0;
         targetScreenIndex = 0;
+
+        SetScreensActive(false);
+        screens[0].gameObject.SetActive(true);
         animators[0].SetBool("isVisible", true);
 
-        for (int i = 1; i < screens.Count; i++)
-        {
-            animators[i].SetBool("isVisible", false);
-        }
+        UpdateArrowVisibility(true);
     }
 
     private void OnDisable() 
@@ -39,35 +42,22 @@ public class ArtifactScreenAnimator : MonoBehaviour
         }
     }
 
-    private IEnumerator SwitchScreens(int target)
+    public void NextScreen()
     {
-        screens[target].gameObject.SetActive(true);
-        animators[target].SetBool("isVisible", true);
-
-        if (currentScreenIndex < target)
+        if (targetScreenIndex + 1 >= screens.Count)
         {
-            // screens move left
-            animators[currentScreenIndex].SetTrigger("rightOut");
-            animators[target].SetTrigger("leftIn");
+            return;
         }
-        else
+        SetScreen(targetScreenIndex + 1);
+    }
+
+    public void PrevScreen()
+    {
+        if (targetScreenIndex - 1 < 0)
         {
-            animators[currentScreenIndex].SetTrigger("leftOut");
-            animators[target].SetTrigger("rightIn");
+            return;
         }
-
-        yield return new WaitForSeconds(duration);
-
-        currentScreenIndex = target;
-
-        SetScreensActive(false);
-        screens[currentScreenIndex].gameObject.SetActive(true);
-        animators[currentScreenIndex].SetBool("isVisible", true);
-
-        switchCouroutine = null;
-
-        if (targetScreenIndex != currentScreenIndex)
-            SwitchScreens(targetScreenIndex);
+        SetScreen(targetScreenIndex - 1);
     }
 
     public void SetScreen(int index)
@@ -80,12 +70,57 @@ public class ArtifactScreenAnimator : MonoBehaviour
         targetScreenIndex = index;
     }
 
+    private void UpdateArrowVisibility(bool immediate)
+    {
+        rightArrowAnimator.SetBool("isVisible", targetScreenIndex < screens.Count - 1);
+        rightArrowAnimator.SetBool("immediate", immediate);
+        leftArrowAnimator.SetBool("isVisible", targetScreenIndex > 0);
+        leftArrowAnimator.SetBool("immediate", immediate);
+    }
+
+    private IEnumerator SwitchScreens(int target)
+    {
+        screens[target].gameObject.SetActive(true);
+        animators[target].SetBool("isVisible", true);
+        UpdateArrowVisibility(false);
+
+        if (currentScreenIndex < target)
+        {
+            // screens move left
+            animators[currentScreenIndex].SetTrigger("rightOut");
+            animators[target].SetTrigger("leftIn");
+
+            rightArrowAnimator.SetTrigger("bump");
+        }
+        else
+        {
+            animators[currentScreenIndex].SetTrigger("leftOut");
+            animators[target].SetTrigger("rightIn");
+
+            leftArrowAnimator.SetTrigger("bump");
+        }
+
+        yield return new WaitForSeconds(duration);
+
+        currentScreenIndex = target;
+
+        SetScreensActive(false);
+        screens[currentScreenIndex].gameObject.SetActive(true);
+        animators[currentScreenIndex].SetBool("isVisible", true);
+        // UpdateArrowVisibility(false);
+
+        switchCouroutine = null;
+
+        if (targetScreenIndex != currentScreenIndex)
+            SwitchScreens(targetScreenIndex);
+    }
+
     private void SetScreensActive(bool value)
     {
         for (int i = 0; i < screens.Count; i++)
         {
             screens[i].gameObject.SetActive(value);
-            animators[i].SetBool("isVisible", true);
+            if (value) animators[i].SetBool("isVisible", value);
         }
     }
 

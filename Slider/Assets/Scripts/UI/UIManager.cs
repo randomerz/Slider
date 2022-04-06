@@ -160,7 +160,6 @@ public class UIManager : MonoBehaviour
     // we should consider refactoring this to use a state machine
     public void PauseGame()
     {
-        Debug.Log("pause, " + isGamePaused);
         if (!canOpenMenus)
             return;
 

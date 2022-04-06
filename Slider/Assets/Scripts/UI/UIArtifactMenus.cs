@@ -9,6 +9,7 @@ public class UIArtifactMenus : MonoBehaviour
 
     public GameObject artifactPanel;
     public UIArtifact uiArtifact;
+    public ArtifactScreenAnimator screenAnimator;
     public Animator artifactAnimator;
 
     private bool isArtifactOpen;
@@ -43,6 +44,8 @@ public class UIArtifactMenus : MonoBehaviour
         
         _instance.controls.UI.Pause.performed += context => _instance.CloseArtifact();
         _instance.controls.UI.OpenArtifact.performed += context => _instance.OnPressArtifact();
+        _instance.controls.UI.ArtifactRight.performed += context => _instance.screenAnimator.NextScreen();
+        _instance.controls.UI.ArtifactLeft.performed += context => _instance.screenAnimator.PrevScreen();
     }
 
 
