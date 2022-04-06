@@ -17,6 +17,7 @@ public class RatAI : MonoBehaviour
     //Misc AI control weights
     //Note: In terms of the AI, darkness is treated the same as walls.
 
+    /*
     [Header("Weights")]
     [SerializeField]
     internal float minDistToWall;   //Determines at what distance the AI is allowed to be near a wall before moving in a different direction (scaled by moveSpeed)
@@ -28,6 +29,7 @@ public class RatAI : MonoBehaviour
     [SerializeField]
     [Range(-1f, 1f)]
     internal float decisiveness;    //The tendency for the rat to keep moving in the direction it's facing
+    */
 
     [Header("Internal References")]
     [SerializeField]
@@ -71,8 +73,10 @@ public class RatAI : MonoBehaviour
         }
     }
     private Dictionary<Vector2Int, int> _costMap = null;
+
     internal const int tileMaxPenalty = 100;
-    internal const float maxCareDist = 3f;
+    internal const float maxDistCostmap = 3f;
+    internal const float maxDistVision = 2f;
 
     private void Awake()
     {
@@ -202,7 +206,7 @@ public class RatAI : MonoBehaviour
 
     internal static int CostToThreat(float distToThreat)
     {
-        int cost = Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / maxCareDist * (distToThreat - 1f)), 0, tileMaxPenalty);
+        int cost = Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / maxDistCostmap * (distToThreat - 1f)), 0, tileMaxPenalty);
         //Debug.Log("Distance: " + distToThreat);
         //Debug.Log("Cost: " + cost);
         return cost;

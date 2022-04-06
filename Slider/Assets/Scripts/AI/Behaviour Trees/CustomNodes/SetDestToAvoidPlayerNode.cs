@@ -17,19 +17,43 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
         int minCost = int.MaxValue;
 
         WorldNavigation nav = ai.GetComponentInParent<WorldNavigation>();
-        foreach (Vector2Int neighbor in nav.GetMooreNeighbors(TileUtil.WorldToTileCoords(ai.transform.position)))
+        Vector2Int posAsInt = TileUtil.WorldToTileCoords(ai.transform.position);
+
+        float dist = 0f;
+        var queue = new Queue<Vector2Int>();
+        var visited = new HashSet<Vector2Int>();
+        visited.Add(posAsInt);
+        queue.Enqueue(posAsInt);
+        while (queue.Count > 0 && dist < RatAI.maxDistVision)   //worst case scenario it's in the corner and has to check up to the opposite corner
         {
-            List<Vector2Int> path = new List<Vector2Int>();
-            int cost = GetTileCost(neighbor);
-            Debug.Log($"Cost To: {neighbor} is {cost}");
-            if (cost < minCost)
+            Vector2Int currPos = queue.Dequeue();
+
+            List<Vector2Int> neighbors = nav.GetMooreNeighbors(currPos);
+
+            foreach (var neighbor in neighbors)
             {
-                minCost = cost;
-                minCostNeighbor = neighbor;
+                if (!visited.Contains(neighbor))
+                {
+                    dist = Vector2Int.Distance(posAsInt, neighbor);
+                    visited.Add(neighbor);
+                    queue.Enqueue(neighbor);
+
+                    int cost = GetTileCost(neighbor);
+                    //Debug.Log($"Cost To: {neighbor} is {cost}");
+                    List<Vector2Int> path;  //Don't actually care about this
+                    if (cost < minCost)
+                    {
+                        if (dist < 1.5f || nav.GetPathFromToAStar(posAsInt, neighbor, out path, false, CostAStar))
+                        {
+                            minCost = cost;
+                            minCostNeighbor = neighbor;
+                        }
+                    }
+                }
             }
         }
 
-        Debug.Log($"Min Cost Neighbor: {minCostNeighbor} with cost {minCost}");
+        //Debug.Log($"Min Cost Neighbor: {minCostNeighbor} with cost {minCost}");
         
         if (minCost < int.MaxValue)
         {
