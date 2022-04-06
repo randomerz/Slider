@@ -19,6 +19,12 @@ public class SGrid : MonoBehaviour
     }
     public static event System.EventHandler<OnSTileEnabledArgs> OnSTileEnabled;
 
+    public class OnSTileCollectedArgs : System.EventArgs
+    {
+        public STile stile;
+    }
+    public static event System.EventHandler<OnSTileCollectedArgs> OnSTileCollected;
+
     protected STile[,] grid;
     protected SGridBackground[,] bgGrid;
 
@@ -368,6 +374,7 @@ public class SGrid : MonoBehaviour
     {
         stile.isTileCollected = true;
         EnableStile(stile, true);
+        OnSTileCollected?.Invoke(this, new OnSTileCollectedArgs { stile = stile });
     }
 
 
