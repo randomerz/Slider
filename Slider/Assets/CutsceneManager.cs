@@ -15,23 +15,31 @@ public class CutsceneManager : MonoBehaviour
     public List<GameObject> textboxes;
     public GameObject skipbox;
     public float dialoguePause;
+    bool skipImages = false;//for skipping dialogue
+
 
     // Start is called before the first frame update
-    void Start()
+    void Start() 
     {
         if (images.Count != textboxes.Count)
         {
             throw new System.Exception("Number of textboxes in cutscene must equal number of images ");
         }
-        for (int x = 0; x < images.Count; x++)
+        for (int x = 1; x < images.Count; x++)
         {
             images[x].SetActive(false);
             textboxes[x].SetActive(false);
         }
+        images[0].SetActive(true);
+        textboxes[0].SetActive(true);
+        StartCoroutine(scrolltext(textboxes[0]));
 
-        InputSystem.onAnyButtonPress.CallOnce(ctrl => showskip());
-        
-        StartCoroutine(cutscene());
+
+        InputSystem.onAnyButtonPress.CallOnce(ctrl => advanceCutscene());
+
+
+
+        //StartCoroutine(cutscene());
     }
 
     // Update is called once per frame
@@ -40,40 +48,15 @@ public class CutsceneManager : MonoBehaviour
         
     }
 
-    void showskip()
+    void advanceCutscene()
     {
-        skipbox.SetActive(true);
-        InputSystem.onAnyButtonPress.CallOnce(ctrl => exitCutscene());
+        blackBoxAnimator.SetBool("advance", true);
+        skipImages = true;
     }
 
-    private IEnumerator cutscene()
+    void stopAdvance()
     {
-        while (i < images.Count)
-        {
-
-            images[i].SetActive(true);
-            textboxes[i].SetActive(true);
-            StartCoroutine(scrolltext(textboxes[i]));
-            blackBoxAnimator.SetBool("fadeout", true);
-
-            //this is really scuffed
-            //idk how to do this without hard coding it
-            //sorry
-            yield return new WaitForSeconds(dialoguePause + 1.2f);
-            blackBoxAnimator.SetBool("fadeout", false);
-            blackBoxAnimator.SetBool("fadein", true);
-
-            yield return new WaitForSeconds(1.3f);
-            //fadein makes the images fade out, fadeout makes the images fade in
-            //perfect
-            blackBoxAnimator.SetBool("fadein", false);
-
-            images[i].SetActive(false);
-            textboxes[i].SetActive(false);
-
-            i++;
-        }
-        exitCutscene();
+        blackBoxAnimator.SetBool("advance", false);
     }
 
     public void exitCutscene()
@@ -81,20 +64,47 @@ public class CutsceneManager : MonoBehaviour
         SceneManager.LoadScene(sceneToLoad);
     }
 
+    public void showImages()
+    {
+        if (i + 1 < images.Count)
+        {
+            images[i].SetActive(false);
+            textboxes[i].SetActive(false);
+            i++;
+            images[i].SetActive(true);
+            StartCoroutine(scrolltext(textboxes[i]));
+            textboxes[i].SetActive(true);
+            
+        } else
+        {
+            exitCutscene();
+        }
+    }
+
+
     IEnumerator scrolltext(GameObject text)
     {
+        skipImages = false;
         TMP_Text tmp = text.GetComponent<TMP_Text>();
 
         string s1 = tmp.text;
         string s2 = "";
+        tmp.text = "";
         //wait a bit so it doesnt start during fadein
         yield return new WaitForSeconds(0.2f);
         foreach (char letter in s1)
         {
+            if (skipImages)
+            {
+                tmp.text = s1;
+                break;
+            }
             s2 += letter;
             tmp.text = (s2);
 
-            yield return new WaitForSeconds(0.09f);
+            yield return new WaitForSeconds(0.1f);
         }
+
+        advanceCutscene();
     }
 }

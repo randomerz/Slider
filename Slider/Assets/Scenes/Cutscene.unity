@@ -557,7 +557,6 @@ GameObject:
   - component: {fileID: 863612621}
   - component: {fileID: 863612624}
   - component: {fileID: 863612623}
-  - component: {fileID: 863612622}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -584,25 +583,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!95 &863612622
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 863612620}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d291bdea06fb4f44c8c752bbd23af1d7, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &863612623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,6 +747,7 @@ GameObject:
   - component: {fileID: 1481655390}
   - component: {fileID: 1481655389}
   - component: {fileID: 1481655395}
+  - component: {fileID: 1481655393}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -862,6 +843,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 32, y: 18}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!95 &1481655393
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481655388}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d291bdea06fb4f44c8c752bbd23af1d7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &1481655395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -874,7 +874,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c73ad924b9562e42a4129205b8bf67e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blackBoxAnimator: {fileID: 863612622}
+  blackBoxAnimator: {fileID: 1481655393}
   sceneToLoad: Village
   images:
   - {fileID: 428615872}
