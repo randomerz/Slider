@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class OceanGrid : SGrid
 {
-    public static OceanGrid instance;
+    // public static OceanGrid instance;
 
     private static bool checkCompletion = false; // TODO: serialize all these
     private static bool isCompleted = false;
@@ -44,7 +44,7 @@ public class OceanGrid : SGrid
         base.Awake();
 
 
-        instance = this;
+        // instance = this;
 
         // StartCoroutine(test());
     }
@@ -113,8 +113,11 @@ public class OceanGrid : SGrid
 
         stile.GetComponentInChildren<SpriteMask>().enabled = false; // on STile/SlideableArea
 
-        CheckShipwreck(this, null);
-        CheckVolcano(this, null);
+        if (grid != null)
+        {
+            CheckShipwreck(this, null);
+            CheckVolcano(this, null);
+        }
     }
 
 
@@ -233,71 +236,8 @@ public class OceanGrid : SGrid
         c.SetSpec(lostGuyMovement.hasBeached);
     }
 
-    public bool GetCheckCompletion()
-    {
-        return checkCompletion;
-    }
-
-    public bool GetIsCompleted()
-    {
-        return isCompleted;
-    }
-
-    public void StartFinalChallenge()
-    {
-        if (!checkCompletion)
-        {
-            checkCompletion = true;
-            OnGridMove += UpdateButtonCompletions; // this is probably not needed
-            UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
-            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
-
-            SGrid.UpdateButtonCompletions(this, null);
-        }
-    }
-
-    private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (!isCompleted && IsFinalPuzzleMatching())
-        {
-            isCompleted = true;
-            oceanArtifact.SetCanRotate(false);
-
-            AudioManager.Play("Puzzle Complete");
-            oceanArtifact.FlickerAllOnce();
-        }
-    }
-
-    protected override void UpdateButtonCompletionsHelper()
-    {
-        for (int x = 0; x < current.width; x++) {
-            for (int y = 0; y < current.width; y++) {
-                // int tid = current.targetGrid[x, y];
-                string tids = GetTileIdAt(x, y);
-                ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
-                if (tids == "*") 
-                {
-                    int abid = artifactButton.islandId;
-                    bool isLand = abid == 1 || abid == 2 || abid == 4 || abid == 8; // this is scuffed
-
-                    // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
-                    UIArtifact.SetButtonComplete(artifactButton.islandId, !isLand);
-                }
-                else {
-                    int tid = int.Parse(tids);
-                    // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
-                    UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
-                }
-            }
-        }
-    }
-
-    public void ClearTreesToJungle() // called in ShopDialogueManager
-    {
-        treesToJungle.SetActive(false);
-        CameraShake.Shake(1, 2);
-        AudioManager.Play("Slide Explosion");
-    }
+    // Foggy Seas
+    
     public void CheckFoggySeas(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         FoggyCorrectMovement();
@@ -390,5 +330,72 @@ public class OceanGrid : SGrid
     public bool FoggyCompleted()
     {
         return playerIndex == 9;
+    }
+
+    // Final puzzle
+    public bool GetCheckCompletion()
+    {
+        return checkCompletion;
+    }
+
+    public bool GetIsCompleted()
+    {
+        return isCompleted;
+    }
+
+    public void StartFinalChallenge()
+    {
+        if (!checkCompletion)
+        {
+            checkCompletion = true;
+            OnGridMove += UpdateButtonCompletions; // this is probably not needed
+            UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
+            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+
+            SGrid.UpdateButtonCompletions(this, null);
+        }
+    }
+
+    private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (!isCompleted && IsFinalPuzzleMatching())
+        {
+            isCompleted = true;
+            oceanArtifact.SetCanRotate(false);
+
+            AudioManager.Play("Puzzle Complete");
+            oceanArtifact.FlickerAllOnce();
+        }
+    }
+
+    protected override void UpdateButtonCompletionsHelper()
+    {
+        for (int x = 0; x < current.width; x++) {
+            for (int y = 0; y < current.width; y++) {
+                // int tid = current.targetGrid[x, y];
+                string tids = GetTileIdAt(x, y);
+                ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
+                if (tids == "*") 
+                {
+                    int abid = artifactButton.islandId;
+                    bool isLand = abid == 1 || abid == 2 || abid == 4 || abid == 8; // this is scuffed
+
+                    // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
+                    UIArtifact.SetButtonComplete(artifactButton.islandId, !isLand);
+                }
+                else {
+                    int tid = int.Parse(tids);
+                    // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+                    UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
+                }
+            }
+        }
+    }
+
+    public void ClearTreesToJungle() // called in ShopDialogueManager
+    {
+        treesToJungle.SetActive(false);
+        CameraShake.Shake(1, 2);
+        AudioManager.Play("Slide Explosion");
     }
 }

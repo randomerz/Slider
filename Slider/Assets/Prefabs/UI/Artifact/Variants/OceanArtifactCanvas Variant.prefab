@@ -511,6 +511,10 @@ PrefabInstance:
       propertyPath: buttonManager
       value: 
       objectReference: {fileID: 2620790809741503431}
+    - target: {fileID: 1758565598924807139, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
+      propertyPath: artifact
+      value: 
+      objectReference: {fileID: 2620790809741503431}
     - target: {fileID: 2620790809561359190, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_Name
       value: OceanArtifaceUIManager
@@ -610,6 +614,10 @@ PrefabInstance:
     - target: {fileID: 2620790811287915178, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4263683600396054177, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
+      propertyPath: m_RootOrder
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 5194626061953635198, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_Delegates.Array.size
@@ -864,3 +872,4 @@ MonoBehaviour:
   - {fileID: 8799935562723014738}
   maxMoveQueueSize: 3
   rotateParams: []
+  oceanHighlights: {fileID: 0}
