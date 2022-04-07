@@ -35,7 +35,7 @@ public class CutsceneManager : MonoBehaviour
         StartCoroutine(scrolltext(textboxes[0]));
 
 
-        InputSystem.onAnyButtonPress.CallOnce(ctrl => advanceCutscene());
+        InputSystem.onAnyButtonPress.Call(ctrl => advanceCutscene());
 
 
 
