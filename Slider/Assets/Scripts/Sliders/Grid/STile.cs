@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class STile : MonoBehaviour
 {
@@ -22,23 +23,22 @@ public class STile : MonoBehaviour
     public int STILE_WIDTH = 17;
 
     private int sliderColliderDisableCount; // each enable gives this +1, disable does -1
+
+    // Whether we have picked up this tile or not. Used in MagiTech so that only collected tiles
+    // are enabled when swapping grids.
+    public bool isTileCollected;
     private int[] borderColliderDisableCount = new int[4];
     
     [Header("References")]
     public GameObject objects;
+    public GameObject allTileMaps;
     public Collider2D sliderCollider;
     public Collider2D houseSliderCollider;
     public GameObject tileMapCollider;
-    public GameObject decorationsTileMap;
-    // private Collider2D[] decorationColliders;
+    private List<Collider2D> disabledColliders = new List<Collider2D>();
+    private List<GameObject> disabledColliderTilemaps = new List<GameObject>();
     // these borders follow the tile and generally all activate/deactive together
     public GameObject[] borderColliders; // right top left bottom
-    public GameObject stileTileMaps;
-
-    private void Awake() 
-    {
-        // decorationColliders = decorationsTileMap.GetComponentsInChildren<Collider2D>();
-    }
 
     protected void Start()
     {
@@ -52,7 +52,7 @@ public class STile : MonoBehaviour
         // DC: this is so that we can call any other relevant functions when STiles are enabled in SGrid
         if (isTileActive) 
         {
-            SGrid.current.EnableStile(this);
+            SGrid.current.EnableStile(this, false);
         }
         else
         {
@@ -92,13 +92,13 @@ public class STile : MonoBehaviour
         this.isTileActive = isTileActive;
 
         objects.SetActive(isTileActive);
-        stileTileMaps.SetActive(isTileActive);
+        allTileMaps.SetActive(isTileActive);
 
         sliderCollider.isTrigger = isTileActive;
         houseSliderCollider.isTrigger = isTileActive;
     }
 
-    // when sliderColliderDisableCount > 0, its 
+    // when sliderColliderDisableCount > 0, its disabled
     public bool SetSliderCollider(bool isActive)
     {
         if (!isActive)
@@ -109,10 +109,53 @@ public class STile : MonoBehaviour
         sliderCollider.enabled = sliderColliderDisableCount <= 0;
         houseSliderCollider.enabled = sliderColliderDisableCount <= 0;
         tileMapCollider.SetActive(sliderColliderDisableCount <= 0);
-        // foreach (Collider2D c in decorationColliders)
-        // {
-        //     c.enabled = sliderColliderDisableCount <= 0;
-        // }
+        
+        if (sliderColliderDisableCount > 0)
+        {
+            // disable internal colliders (decorations, npcs, etc.)
+            foreach (Collider2D c in allTileMaps.GetComponentsInChildren<Collider2D>())
+            {
+                if (c.isActiveAndEnabled)
+                {
+                    if (c is TilemapCollider2D)
+                    {
+                        // DC: disabling these is weird because they have a 2d tilemap collider and a composite collider?
+                        // Debug.LogWarning("Found a tilemap " + name + ", " + c.name + " while moving tiles! This may result in unexpected behavior.");
+
+                        // skip triggers because they kinda wacky?
+                        // if (c.isTrigger)
+                        c.gameObject.SetActive(false);
+                        disabledColliderTilemaps.Add(c.gameObject);
+                        continue;
+
+                    }
+                    c.enabled = false;
+                    disabledColliders.Add(c);
+                }
+            }
+            foreach (Collider2D c in objects.GetComponentsInChildren<Collider2D>())
+            {
+                if (c.isActiveAndEnabled)
+                {
+                    c.enabled = false;
+                    disabledColliders.Add(c);
+                }
+            }
+        }
+        else
+        {
+            // enable internal colliders
+            foreach (Collider2D c in disabledColliders)
+            {
+                c.enabled = true;
+            }
+            disabledColliders.Clear();
+            foreach (GameObject g in disabledColliderTilemaps)
+            {
+                g.SetActive(true);
+            }
+            disabledColliderTilemaps.Clear();
+        }
 
         return sliderColliderDisableCount <= 0;
     }
@@ -236,6 +279,6 @@ public class STile : MonoBehaviour
     {
         pos = pos + new Vector3(-0.5f, -0.5f);
 
-        stileTileMaps.transform.position = pos;
+        allTileMaps.transform.position = pos;
     }
 }

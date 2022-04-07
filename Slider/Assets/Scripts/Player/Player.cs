@@ -1,4 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -27,14 +31,21 @@ public class Player : MonoBehaviour
     void Awake()
     {
         _instance = this;
+        _instance.controls = new InputSettings();
+        LoadBindings();
 
-        controls = new InputSettings();
-        controls.Player.Move.performed += context => UpdateMove(context.ReadValue<Vector2>());
-        if (PlayerInventory.Contains("Boots"))
-        {
-            BootsSpeedUp();
-        }
+        UpdatePlayerSpeed();
+
         UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
+    }
+    public static void LoadBindings()
+    {
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+        {
+            _instance.controls.LoadBindingOverridesFromJson(rebinds);
+        }
+        _instance.controls.Player.Move.performed += context => _instance.UpdateMove(context.ReadValue<Vector2>());
     }
 
     private void OnEnable() {
@@ -86,6 +97,10 @@ public class Player : MonoBehaviour
     }
 
 
+    public static Player GetInstance()
+    {
+        return _instance;
+    }
 
     public static PlayerAction GetPlayerAction() 
     {
@@ -133,8 +148,10 @@ public class Player : MonoBehaviour
 
     public static bool IsSafe()
     {
-        Collider2D hit = Physics2D.OverlapPoint(_instance.transform.position, LayerMask.GetMask("SlideableArea"));
-        return hit != null;
+        // DC: this was needed for game jam, but probably not really anymore
+        // Collider2D hit = Physics2D.OverlapPoint(_instance.transform.position, LayerMask.GetMask("SlideableArea"));
+        // return hit != null;
+        return true;
     }
 
     public static STile GetStileUnderneath()
@@ -213,15 +230,18 @@ public class Player : MonoBehaviour
         _instance.moveSpeedMultiplier = x;
     }
 
-    public void BootsSpeedUp()
+    public void UpdatePlayerSpeed()
     {
-        if (moveSpeed==5)
-        {   // tested, does effectively change the player's speed whenever boots are picked up
-            // _instance.moveSpeed+=20;
-            _instance.moveSpeed+=2;
-            // Debug.Log(_instance.moveSpeed);
+        moveSpeed = 5;
 
-            // lol you'll have to pick up a ton of these boots if you want the speed to be noticeable
+        if (PlayerInventory.Contains("Boots"))
+        {
+            moveSpeed += 2;
+        }
+
+        if (isOnWater)
+        {
+            moveSpeed += 1;
         }
     }
 
@@ -235,14 +255,21 @@ public class Player : MonoBehaviour
         _instance.isInHouse = isInHouse;
     }
 
-    public static bool GetIsOnWater()
+    public bool GetIsOnWater()
     {
-        return _instance.isOnWater;
+        return isOnWater;
     }
 
-    public static void SetIsOnWater(bool isOnWater)
+    public void GetIsOnWater(Conditionals.Condition c)
     {
-        _instance.isOnWater = isOnWater;
-        _instance.boatSpriteRenderer.enabled = isOnWater;
+        c.SetSpec(isOnWater);
+    }
+
+    public void SetIsOnWater(bool isOnWater)
+    {
+        this.isOnWater = isOnWater;
+        boatSpriteRenderer.enabled = isOnWater;
+
+        UpdatePlayerSpeed();
     }
 }

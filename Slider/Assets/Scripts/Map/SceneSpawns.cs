@@ -60,15 +60,31 @@ public class SceneSpawns : MonoBehaviour
     }
 
     public static SpawnLocation nextSpawn;
+    public static Vector3 relativePos;
 
     [SerializeField] private SpawnLocation spawnName;
     [SerializeField] private bool spawnInBoat;
+    [SerializeField] private WaterLandColliderManager wlcManager;
 
-    void Start()
+
+
+    void Awake()
     {
         if (nextSpawn == spawnName && nextSpawn != SpawnLocation.Default) 
         {
-            Player.SetPosition(transform.position);
+            Vector3 pos = transform.position + relativePos;
+            // Debug.Log("relative pos:" + relativePos);
+            relativePos = Vector3.zero;
+            GameObject.Find("Player").transform.position = pos;
+
+            if (spawnInBoat)
+            {
+                wlcManager.SetOnWater(true);
+            }
+            else
+            {
+                wlcManager?.SetOnWater(false);
+            }
         }
     }
 }

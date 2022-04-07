@@ -19,7 +19,15 @@ public class PlayerConditionals : MonoBehaviour
     // }
 
     public bool isCarryingItem;
-    
+
+    public bool triggerIsLit;
+    private LightManager lm;
+
+    private void Awake()
+    {
+        lm = GameObject.Find("LightManager")?.GetComponent<LightManager>();
+    }
+
 
 
     // private void OnDisable() {               Maybe this is needed?
@@ -57,8 +65,25 @@ public class PlayerConditionals : MonoBehaviour
             }
         }
 
-        onSuccess?.Invoke();
+        if (triggerIsLit)
+        {
+            //Just check if the center is lit cuz lazy dev
+            if (lm != null)
+            {
+                if (!lm.GetLightMaskAt((int) transform.position.x, (int) transform.position.y))
+                {
+                    return false;
+                }
+            }
+        }
+
+        InvokeSuccess();
         return true;
+    }
+
+    public void InvokeSuccess()
+    {
+        onSuccess?.Invoke();
     }
 
     private void OnActionListener(object sender, System.EventArgs e) {

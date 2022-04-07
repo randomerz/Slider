@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class CaveLight : MonoBehaviour
 {
+
     public bool LightOn { get; private set; }
 
     [SerializeField]
@@ -17,7 +18,7 @@ public class CaveLight : MonoBehaviour
     [SerializeField] private Sprite onSprite;
     [SerializeField] private Sprite offSprite;
 
-
+    [SerializeField] private Vector2Int borderPos;
 
     public class OnLightSwitchedArgs
     {
@@ -41,7 +42,7 @@ public class CaveLight : MonoBehaviour
         if (LightOn != value)
         {
             LightOn = value;
-            Debug.Log("Light " + gameObject.name + " is " + (value ? "on" : "off"));
+            //Debug.Log("Light " + gameObject.name + " is " + (value ? "on" : "off"));
             if (LightManager.instance != null)
             {
                 LightManager.instance.UpdateLightMaskAll();
@@ -120,5 +121,12 @@ public class CaveLight : MonoBehaviour
 
         _lightMask.Apply();
         return _lightMask;
+    }
+
+    public Vector2Int GetPos()
+    {
+        STile stile = GetComponentInParent<STile>();
+
+        return stile == null ? borderPos : new Vector2Int(stile.x, stile.y);
     }
 }

@@ -4,23 +4,29 @@ using UnityEngine;
 
 public class WaterLandColliderManager : MonoBehaviour
 {
+    public Player player;
     public List<GameObject> waterColliders;
     public List<GameObject> landColliders;
 
     void Start()
     {
+        if (player == null) 
+        {
+            Debug.LogError("Field \"player\" of WaterLandColliderManager isn't set!");
+            player = Player.GetInstance();
+        }
         UpdateColliders();
     }
 
     public void SetOnWater(bool isOnWater)
     {
-        Player.SetIsOnWater(isOnWater);
+        player.SetIsOnWater(isOnWater);
         UpdateColliders();
     }
 
     public void UpdateColliders()
     {
-        bool pow = Player.GetIsOnWater();
+        bool pow = player.GetIsOnWater();
         foreach (GameObject g in waterColliders)
         {
             g.SetActive(!pow);

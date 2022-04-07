@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class JungleArtifact : UIArtifact
 {
@@ -28,9 +29,10 @@ public class JungleArtifact : UIArtifact
             int dx = buttonEmpty.x - x;
             int dy = buttonEmpty.y - y;
 
-            SMove linkedSwap = new SMoveLinkedSwap(x, y, buttonEmpty.x, buttonEmpty.y, linkx, linky);
+            SMove linkedSwap = new SMoveLinkedSwap(x, y, buttonEmpty.x, buttonEmpty.y, linkx, linky,
+                                                    buttonCurrent.islandId, buttonCurrent.linkButton.islandId);
 
-            Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy);
+            Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy, buttonCurrent.islandId);
             if (SGrid.current.CanMove(linkedSwap) && (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && moveQueue.Count < maxMoveQueueSize)
             {
                 QueueCheckAndAdd(linkedSwap);
@@ -55,21 +57,6 @@ public class JungleArtifact : UIArtifact
             }
         }
     }
-
-    // protected override void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    // {
-    //     //L: This prevents the method from checking the queue twice if there are linked tiles (since it's called for every tile that invokes OnSTileMove)
-    //     if (prevLinkTile == null || prevLinkTile != e.stile.linkTile)
-    //     {
-    //         base.QueueCheckAfterMove(sender, e);
-    //         prevLinkTile = e.stile;
-    //     } 
-    //     else
-    //     {
-    //         //L: Note: this only works if there's one link tile.
-    //         prevLinkTile = null;
-    //     }
-    // }
 
     //Checks if the move can happen on the grid.
     //L: This should maybe be checked with GetMoveOptions?

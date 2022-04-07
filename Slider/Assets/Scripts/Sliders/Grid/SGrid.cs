@@ -19,6 +19,12 @@ public class SGrid : MonoBehaviour
     }
     public static event System.EventHandler<OnSTileEnabledArgs> OnSTileEnabled;
 
+    public class OnSTileCollectedArgs : System.EventArgs
+    {
+        public STile stile;
+    }
+    public static event System.EventHandler<OnSTileCollectedArgs> OnSTileCollected;
+
     protected STile[,] grid;
     protected SGridBackground[,] bgGrid;
 
@@ -27,7 +33,7 @@ public class SGrid : MonoBehaviour
     public int height;
     [SerializeField] private STile[] stiles;
     [SerializeField] private SGridBackground[] bgGridTiles;
-    [SerializeField] private SGridAnimator gridAnimator;
+    [SerializeField] protected SGridAnimator gridAnimator;
     //L: This is the end goal for the slider puzzle, set in the inspector.
     //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)
     [SerializeField] protected string targetGrid = "*********"; // format: 123456789 for  1 2 3
@@ -36,11 +42,13 @@ public class SGrid : MonoBehaviour
 
     public Collectible[] collectibles;
     protected Area myArea; // don't forget to set me!
+    public Area MyArea { get => myArea; }
 
     protected void Awake()
     {
 
         current = this;
+        InitUIArtifact();
         LoadGrid();
         SetBGGrid(bgGridTiles);
 
@@ -53,6 +61,10 @@ public class SGrid : MonoBehaviour
         // OnGridMove += CheckCompletions;
     }
 
+    private void InitUIArtifact()
+    {
+        GameObject.FindObjectOfType<UIArtifact>().Init();
+    }
 
     public STile[,] GetGrid()
     {
@@ -182,6 +194,30 @@ public class SGrid : MonoBehaviour
         return stileList;
     }
 
+    /// <summary>
+    /// Returns the number of STiles collected in the current SGrid.
+    /// </summary>
+    /// <returns></returns>
+    public int GetNumTilesCollected() {
+        int numCollected = 0;
+        foreach (STile tile in stiles)
+        {
+            if (tile.isTileCollected)
+            {
+                numCollected++;
+            }
+        }
+        return numCollected;
+    }
+    /// <summary>
+    /// Returns the number of STiles available in the current SGrid.
+    /// </summary>
+    /// <returns></returns>
+    public int GetTotalNumTiles()
+    {
+        return width * height;
+    }
+
     //S: copy of Player's GetStileUnderneath for the tracker
     // DC: This will prefer an GameObjs parented STile if it has one
     public STile GetStileUnderneath(GameObject target)
@@ -276,7 +312,7 @@ public class SGrid : MonoBehaviour
         {
             ActivateCollectible(name);
             GetCollectible(name).transform.position = Player.GetPosition();
-            UIManager.closeUI = true;
+            UIManager.CloseUI();
         }
     }
 
@@ -287,7 +323,7 @@ public class SGrid : MonoBehaviour
 
     // Make sure to check if you CanMove() before moving
     //L: Updates internal state (the grid[,]) based on result of SMove. See Move in SGridAnimator for the actual moving of the tiles.
-    public void Move(SMove move)
+    public virtual void Move(SMove move)
     {
 
         gridAnimator.Move(move);
@@ -318,12 +354,31 @@ public class SGrid : MonoBehaviour
             }
         }
     }
+    // See STile.isTileCollected for an explanation
+    public virtual void CollectSTile(int islandId)
+    {
+        foreach (STile s in grid)
+        {
+            if (s.islandId == islandId)
+            {
+                CollectStile(s);
+                return;
+            }
+        }
+    }
 
-    public virtual void EnableStile(STile stile)
+    public virtual void EnableStile(STile stile, bool flickerButton=true)
     {
         stile.SetTileActive(true);
-        UIArtifact.AddButton(stile.islandId);
+        UIArtifact.AddButton(stile.islandId, flickerButton);
         OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
+    }
+    // See STile.isTileCollected for an explanation
+    public virtual void CollectStile(STile stile)
+    {
+        stile.isTileCollected = true;
+        EnableStile(stile, true);
+        OnSTileCollected?.Invoke(this, new OnSTileCollectedArgs { stile = stile });
     }
 
 
@@ -362,7 +417,12 @@ public class SGrid : MonoBehaviour
     }
 
 
-    protected static void CheckCompletions(object sender, SGrid.OnGridMoveArgs e)
+    protected static void UpdateButtonCompletions(object sender, System.EventArgs e)
+    {
+        current.UpdateButtonCompletionsHelper();
+    }
+
+    protected virtual void UpdateButtonCompletionsHelper()
     {
         // Debug.Log("Checking completions!");
         // ineffecient lol
@@ -370,13 +430,16 @@ public class SGrid : MonoBehaviour
             for (int y = 0; y < current.width; y++) {
                 // int tid = current.targetGrid[x, y];
                 string tids = GetTileIdAt(x, y);
+                ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
                 if (tids == "*") 
                 {
-                    UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
+                    // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
+                    UIArtifact.SetButtonComplete(artifactButton.islandId, true);
                 }
                 else {
                     int tid = int.Parse(tids);
-                    UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+                    // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+                    UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
                 }
             }
         }
@@ -386,10 +449,10 @@ public class SGrid : MonoBehaviour
     {
         yield return new WaitForSeconds(t);
 
-        CheckCompletions(this, null); // sets the final one to be complete
+        UpdateButtonCompletions(this, null); // sets the final one to be complete
     }
 
-    private static string GetTileIdAt(int x, int y)
+    protected static string GetTileIdAt(int x, int y)
     {
         return current.targetGrid[(current.height - y - 1) * current.width + x].ToString();
     }
