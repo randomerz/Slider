@@ -73,7 +73,7 @@ public class SceneSpawns : MonoBehaviour
         if (nextSpawn == spawnName && nextSpawn != SpawnLocation.Default) 
         {
             Vector3 pos = transform.position + relativePos;
-            Debug.Log("relative pos:" + relativePos);
+            // Debug.Log("relative pos:" + relativePos);
             relativePos = Vector3.zero;
             GameObject.Find("Player").transform.position = pos;
 
