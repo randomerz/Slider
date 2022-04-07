@@ -25,8 +25,6 @@ public class CameraShake : MonoBehaviour
         }
 
         _instance = this;
-
-        Shake(5, 1);
     }
 
     public static void Shake(float duration, float amount)
