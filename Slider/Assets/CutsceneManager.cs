@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -16,6 +17,7 @@ public class CutsceneManager : MonoBehaviour
     public GameObject skipbox;
     public float dialoguePause;
     bool skipImages = false;//for skipping dialogue
+    private IDisposable listener;
 
 
     // Start is called before the first frame update
@@ -35,10 +37,9 @@ public class CutsceneManager : MonoBehaviour
         StartCoroutine(scrolltext(textboxes[0]));
 
 
-        InputSystem.onAnyButtonPress.Call(ctrl => advanceCutscene());
-
-
-
+        listener = InputSystem.onAnyButtonPress.Call(ctrl => advanceCutscene());
+        
+        
         //StartCoroutine(cutscene());
     }
 
@@ -61,6 +62,7 @@ public class CutsceneManager : MonoBehaviour
 
     public void exitCutscene()
     {
+        listener.Dispose();
         SceneManager.LoadScene(sceneToLoad);
     }
 
