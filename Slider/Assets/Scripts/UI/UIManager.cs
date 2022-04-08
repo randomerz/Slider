@@ -74,27 +74,30 @@ public class UIManager : MonoBehaviour
     {
         if (isGamePaused && pausePanel.activeSelf)
         {
+            Debug.Log("a");
             ResumeGame();
         }
-        else if (optionsPanel.activeSelf)
-        {
-            OpenPause();
-        }
-        else if (controlsPanel.activeSelf || advOptionsPanel.activeSelf)
+        else
         {
             // if in a pause sub-menu
-            OpenOptions();
-        }
-        else if (IsUIOpen())
-        {
-            // if another menu is open (e.g. ocean shop)
-            // do nothing
-            Debug.Log("Another menu is open, doing nothing..");
-        }
-        else 
-        {
-            PauseGame();
-            OpenPause();
+            if (controlsPanel.activeSelf || advOptionsPanel.activeSelf)
+            {
+                OpenOptions();
+            }
+            else
+            {
+                // if another menu is open (e.g. ocean shop)
+                if (IsUIOpen())
+                {
+                    // do nothing
+                    Debug.Log("Another menu is open, doing nothing..");
+                }
+                else 
+                {
+                    PauseGame();
+                    OpenPause();
+                }
+            }
         }
     }
 

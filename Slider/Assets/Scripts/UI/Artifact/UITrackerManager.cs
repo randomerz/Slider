@@ -59,34 +59,33 @@ public class UITrackerManager : MonoBehaviour
             }
         }
 
-        foreach (UITracker t in targets) {
-            position = t.getPosition();
-            currentTile = t.GetSTile();
-            t.gameObject.SetActive(t.target.activeInHierarchy);
+        foreach(UITracker x in targets){
+            position = x.getPosition();
+            currentTile = x.GetSTile();
+            x.gameObject.SetActive(x.target.activeInHierarchy);
 
             //S: When target is not on a tile
             if(currentTile == null){
-                t.image.rectTransform.SetParent(artifactPanel.GetComponent<RectTransform>());
+                x.image.rectTransform.SetParent(artifactPanel.GetComponent<RectTransform>());
                 offset = (position - center) * centerScale;
 
-                t.image.rectTransform.anchoredPosition = offset;
+                x.image.rectTransform.anchoredPosition = offset;
 
                 continue;
             }
 
-            offset = (position - (Vector2)currentTile.transform.position) * scale;
-
             currentButton = artifact.GetButton(currentTile.islandId);
-            // Debug.Log("Setting transform of " + t.name);
-            t.image.rectTransform.SetParent(currentButton.GetComponent<RectTransform>());
+
+            offset = (position - (Vector2)currentTile.transform.position) * scale;
+            x.image.rectTransform.SetParent(currentButton.GetComponent<RectTransform>());
             
-            if(t.GetIsInHouse())
+            if(x.GetIsInHouse())
             {
-                t.image.rectTransform.anchoredPosition = Vector2.zero;
+                x.image.rectTransform.anchoredPosition = Vector2.zero;
             }
             else
             {
-                t.image.rectTransform.anchoredPosition = offset;
+                x.image.rectTransform.anchoredPosition = offset;
             }
         }
     }
@@ -103,7 +102,6 @@ public class UITrackerManager : MonoBehaviour
         uiTracker.image.sprite = sprite;
         _instance.targets.Add(uiTracker);
     }
-
     public static void RemoveTracker(GameObject toRemove) {
         if (_instance == null){
             removeBuffer.Add(toRemove);

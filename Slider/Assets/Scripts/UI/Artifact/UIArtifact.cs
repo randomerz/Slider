@@ -25,11 +25,6 @@ public class UIArtifact : MonoBehaviour
     
     public void Awake()
     {
-        Init();
-    }
-
-    public void Init()
-    {
         _instance = this;
     }
 
@@ -462,9 +457,9 @@ public class UIArtifact : MonoBehaviour
         return null;
     }
 
-    public ArtifactTileButton GetButton(int islandId) { // this causes issues with UITracker and setting prefab parents for some reason...
+    public ArtifactTileButton GetButton(int islandId){
 
-        foreach (ArtifactTileButton b in buttons)
+        foreach (ArtifactTileButton b in _instance.buttons)
         {
             if (b.islandId == islandId)
             {
@@ -516,7 +511,7 @@ public class UIArtifact : MonoBehaviour
 
     public void FlickerNewTiles()
     {
-        foreach (ArtifactTileButton b in buttons)
+        foreach (ArtifactTileButton b in _instance.buttons)
         {
             if (b.shouldFlicker)
             {
@@ -527,7 +522,7 @@ public class UIArtifact : MonoBehaviour
 
     public void FlickerAllOnce()
     {
-        foreach (ArtifactTileButton b in buttons)
+        foreach (ArtifactTileButton b in _instance.buttons)
         {
             b.Flicker(1);
         }
