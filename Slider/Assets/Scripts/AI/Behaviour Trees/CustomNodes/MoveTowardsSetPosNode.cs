@@ -6,7 +6,7 @@ public class MoveTowardsSetPosNode : BehaviourTreeNode
     //The minimum range the rat can be from an obstacle before it no longer runs that way
     private RatAI ai;
 
-    private const float updateTimer = 1.0f;
+    private const float updateTimer = 0.1f;
 
     private bool readyForUpdate;
 
@@ -26,7 +26,7 @@ public class MoveTowardsSetPosNode : BehaviourTreeNode
 
         if (readyForUpdate)
         {
-            ai.navAgent.SetDestination(RatBlackboard.Instance.destination);
+            ai.navAgent.SetDestination(TileUtil.WorldToTileCoords(RatBlackboard.Instance.destination), RatBlackboard.Instance.costFunc);
             ai.StartCoroutine(WaitAsync());
         }
 
@@ -40,4 +40,3 @@ public class MoveTowardsSetPosNode : BehaviourTreeNode
         readyForUpdate = true;
     }
 }
-

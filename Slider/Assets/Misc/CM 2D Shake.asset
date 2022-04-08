@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7f59e54f2bfd184b9dd451a678d089b, type: 3}
+  m_Name: CM 2D Shake
+  m_EditorClassIdentifier: 
+  PositionNoise:
+  - X:
+      Frequency: 13.2
+      Amplitude: 0.61
+      Constant: 1
+    Y:
+      Frequency: 11.9
+      Amplitude: 0.69
+      Constant: 1
+    Z:
+      Frequency: 0
+      Amplitude: 0
+      Constant: 0
+  - X:
+      Frequency: 17.7
+      Amplitude: 0.59
+      Constant: 1
+    Y:
+      Frequency: 19.1
+      Amplitude: 0.5
+      Constant: 0
+    Z:
+      Frequency: 0
+      Amplitude: 0
+      Constant: 0
+  - X:
+      Frequency: 151.51
+      Amplitude: 0.62
+      Constant: 1
+    Y:
+      Frequency: 155.54
+      Amplitude: 0.6
+      Constant: 1
+    Z:
+      Frequency: 0
+      Amplitude: 0
+      Constant: 0
+  OrientationNoise: []

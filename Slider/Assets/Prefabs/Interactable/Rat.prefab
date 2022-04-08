@@ -152,12 +152,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerAggroRange: 3
   playerDeaggroRange: 4
-  moveSpeed: 8
+  moveSpeed: 6
   pathfindingTolerance: 0.1
-  minDistToWall: 0.5
-  idealDistFromWall: 8
-  avoidWallsWeight: 0.1
-  decisiveness: 0
+  navAgent: {fileID: 5482138428807836078}
   anim: {fileID: 842370665519609470}
   rb: {fileID: 3202578252114405897}
   mouth: {fileID: 7117076765228698889}
