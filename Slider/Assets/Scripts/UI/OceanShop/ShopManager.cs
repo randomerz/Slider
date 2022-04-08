@@ -84,6 +84,7 @@ public class ShopManager : MonoBehaviour
         }
         _instance.controls.UI.Pause.performed += context => _instance.ExitCurrentPanel();
 
+        // Using PlayerAction, UIClick, or OpenArtifact skips text typewriter effect or advances to the next dialogue
         _instance.controls.UI.OpenArtifact.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
         _instance.controls.UI.Click.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
         _instance.controls.Player.Action.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
