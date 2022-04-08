@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 public class CutsceneManager : MonoBehaviour
 {
     public Animator blackBoxAnimator;
-    private int i = 0;
+    [SerializeField] private int i = 0;
     public string sceneToLoad;
     public List<GameObject> images;
     public List<GameObject> textboxes;
@@ -104,7 +104,7 @@ public class CutsceneManager : MonoBehaviour
             s2 += letter;
             tmp.text = (s2);
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(2 * GameSettings.textSpeed);
         }
 
         advanceCutscene();

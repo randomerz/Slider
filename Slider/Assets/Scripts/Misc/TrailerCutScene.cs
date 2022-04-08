@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class IntroCutScene : MonoBehaviour
+public class TrailerCutScene : MonoBehaviour
 {
     public CinemachineVirtualCamera cmPlayerCam;
     public CinemachineVirtualCamera cmDollyCam;
