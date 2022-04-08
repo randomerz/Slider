@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class ShopDialogueManager : MonoBehaviour
 {
@@ -42,15 +43,20 @@ public class ShopDialogueManager : MonoBehaviour
     }
 
     // when the player presses the 'E' key
-    public void OnActionPressed()
+    public void OnActionPressed(InputAction.CallbackContext context)
     {
-        if (typingCoroutine != null)
+        // Tr: Ignore event when the key/mouse is released.
+        // I thought this was safer than changing the controls to only trigger on press.
+        if (context.control.IsPressed())
         {
-            FinishTyping();
-        }
-        else
-        {
-            FinishAndAction();
+            if (typingCoroutine != null)
+            {
+                FinishTyping();
+            }
+            else
+            {
+                FinishAndAction();
+            }
         }
     }
 
