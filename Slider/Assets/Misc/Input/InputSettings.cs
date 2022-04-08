@@ -917,6 +917,8 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
         m_UI_OpenArtifact = m_UI.FindAction("OpenArtifact", throwIfNotFound: true);
+        m_UI_ArtifactRight = m_UI.FindAction("ArtifactRight", throwIfNotFound: true);
+        m_UI_ArtifactLeft = m_UI.FindAction("ArtifactLeft", throwIfNotFound: true);
         // Debug
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_OpenDebug = m_Debug.FindAction("OpenDebug", throwIfNotFound: true);
@@ -1041,6 +1043,8 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_TrackedDeviceOrientation;
     private readonly InputAction m_UI_Pause;
     private readonly InputAction m_UI_OpenArtifact;
+    private readonly InputAction m_UI_ArtifactRight;
+    private readonly InputAction m_UI_ArtifactLeft;
     public struct UIActions
     {
         private @InputSettings m_Wrapper;
@@ -1057,6 +1061,8 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
         public InputAction @Pause => m_Wrapper.m_UI_Pause;
         public InputAction @OpenArtifact => m_Wrapper.m_UI_OpenArtifact;
+        public InputAction @ArtifactRight => m_Wrapper.m_UI_ArtifactRight;
+        public InputAction @ArtifactLeft => m_Wrapper.m_UI_ArtifactLeft;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1102,6 +1108,12 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 @OpenArtifact.started -= m_Wrapper.m_UIActionsCallbackInterface.OnOpenArtifact;
                 @OpenArtifact.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnOpenArtifact;
                 @OpenArtifact.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnOpenArtifact;
+                @ArtifactRight.started -= m_Wrapper.m_UIActionsCallbackInterface.OnArtifactRight;
+                @ArtifactRight.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnArtifactRight;
+                @ArtifactRight.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnArtifactRight;
+                @ArtifactLeft.started -= m_Wrapper.m_UIActionsCallbackInterface.OnArtifactLeft;
+                @ArtifactLeft.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnArtifactLeft;
+                @ArtifactLeft.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnArtifactLeft;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1142,6 +1154,12 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 @OpenArtifact.started += instance.OnOpenArtifact;
                 @OpenArtifact.performed += instance.OnOpenArtifact;
                 @OpenArtifact.canceled += instance.OnOpenArtifact;
+                @ArtifactRight.started += instance.OnArtifactRight;
+                @ArtifactRight.performed += instance.OnArtifactRight;
+                @ArtifactRight.canceled += instance.OnArtifactRight;
+                @ArtifactLeft.started += instance.OnArtifactLeft;
+                @ArtifactLeft.performed += instance.OnArtifactLeft;
+                @ArtifactLeft.canceled += instance.OnArtifactLeft;
             }
         }
     }
@@ -1225,6 +1243,8 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnOpenArtifact(InputAction.CallbackContext context);
+        void OnArtifactRight(InputAction.CallbackContext context);
+        void OnArtifactLeft(InputAction.CallbackContext context);
     }
     public interface IDebugActions
     {
