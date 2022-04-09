@@ -92,6 +92,7 @@ public class UIArtifactMenus : MonoBehaviour
         if (isArtifactOpen)
         {
             isArtifactOpen = false;
+            uiArtifact.DeselectCurrentButton();
             Player.SetCanMove(true);
 
             UIManager.CloseUI();
