@@ -48,6 +48,7 @@ public class SGrid : MonoBehaviour
     {
 
         current = this;
+        InitUIArtifact();
         LoadGrid();
         SetBGGrid(bgGridTiles);
 
@@ -60,31 +61,10 @@ public class SGrid : MonoBehaviour
         // OnGridMove += CheckCompletions;
     }
 
-    /// <summary>
-    /// Returns the number of STiles collected in the current SGrid.
-    /// </summary>
-    /// <returns></returns>
-    public int GetNumTilesCollected() {
-        int numCollected = 0;
-        foreach (STile tile in stiles)
-        {
-            if (tile.isTileCollected)
-            {
-                numCollected++;
-            }
-        }
-        return numCollected;
-    }
-    /// <summary>
-    /// Returns the number of STiles available in the current SGrid.
-    /// </summary>
-    /// <returns></returns>
-    public int GetTotalNumTiles()
+    private void InitUIArtifact()
     {
-        return width * height;
+        GameObject.FindObjectOfType<UIArtifact>().Init();
     }
-
-
 
     public STile[,] GetGrid()
     {
@@ -212,6 +192,30 @@ public class SGrid : MonoBehaviour
             if(tile.isTileActive)
                 stileList.Add(tile);
         return stileList;
+    }
+
+    /// <summary>
+    /// Returns the number of STiles collected in the current SGrid.
+    /// </summary>
+    /// <returns></returns>
+    public int GetNumTilesCollected() {
+        int numCollected = 0;
+        foreach (STile tile in stiles)
+        {
+            if (tile.isTileCollected)
+            {
+                numCollected++;
+            }
+        }
+        return numCollected;
+    }
+    /// <summary>
+    /// Returns the number of STiles available in the current SGrid.
+    /// </summary>
+    /// <returns></returns>
+    public int GetTotalNumTiles()
+    {
+        return width * height;
     }
 
     //S: copy of Player's GetStileUnderneath for the tracker
