@@ -32,11 +32,19 @@ public class Bottle : Item
         }
     }
 
-    public void PurificationCheck(Bottle bottle)
+    public void PurificationCheck()
     {
-        if (bottle.state == bottleState.dirty)
+        if (this.state == bottleState.dirty)
         {
-            bottle.state = bottleState.clean;
+            this.state = bottleState.clean;
+        }
+    }
+
+    public void ScoopDirtyWater()
+    {
+        if (this.state != bottleState.clean)
+        {
+            this.state = bottleState.dirty;
         }
     }
 }
