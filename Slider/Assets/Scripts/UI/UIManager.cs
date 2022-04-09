@@ -15,8 +15,7 @@ public class UIManager : MonoBehaviour
     public bool isGamePaused;
     // public bool isArtifactOpen;
     public static bool canOpenMenus = true;
-
-    public static bool closeUI;
+    private static bool couldOpenMenusLastFrame = true; // DC: maximum jank because timing
 
     private InputSettings controls;
 
@@ -61,14 +60,11 @@ public class UIManager : MonoBehaviour
         controls.Disable();
     }
 
-    void Update()
+    private void LateUpdate() 
     {
-        if (closeUI)
-        {
-            closeUI = false;
-            ResumeGame();
-        }
+        couldOpenMenusLastFrame = canOpenMenus;
     }
+
 
     private void OnPressPause()
     {
@@ -157,7 +153,7 @@ public class UIManager : MonoBehaviour
     // we should consider refactoring this to use a state machine
     public void PauseGame()
     {
-        if (!canOpenMenus)
+        if (!couldOpenMenusLastFrame)
             return;
 
         Time.timeScale = 0f;
@@ -170,7 +166,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenPause()
     {
-        if (!canOpenMenus)
+        if (!couldOpenMenusLastFrame)
             return;
 
         pausePanel.SetActive(true);
@@ -181,7 +177,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenOptions()
     {
-        if (!canOpenMenus)
+        if (!couldOpenMenusLastFrame)
             return;
 
         pausePanel.SetActive(false);
@@ -192,7 +188,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenControls()
     {
-        if (!canOpenMenus)
+        if (!couldOpenMenusLastFrame)
             return;
 
         optionsPanel.SetActive(false);
@@ -200,7 +196,7 @@ public class UIManager : MonoBehaviour
     }
     public void OpenAdvOptions()
     {
-        if (!canOpenMenus)
+        if (!couldOpenMenusLastFrame)
             return;
 
         optionsPanel.SetActive(false);
