@@ -25,6 +25,8 @@ public class DesertGrid : SGrid
     private bool diceWon = false;
 
     private bool VIPHelped = false;
+
+    private bool GazelleQuest = false;
     private bool GazelleOasis = false;
 
     private static bool checkCompletion = false;
@@ -189,9 +191,9 @@ public class DesertGrid : SGrid
     {
         c.SetSpec(jackalOasis);
     }
-    public bool CheckJackalNearOasis()
+    public void CheckJackalNearOasis(Conditionals.Condition c)
     {
-        return CheckGrid.contains(GetGridString(), "24") || CheckGrid.contains(GetGridString(), "2...4");
+       c.SetSpec(CheckGrid.contains(GetGridString(), "24") || CheckGrid.contains(GetGridString(), "2...4"));
     }
     public void CheckDinoNearArch(Conditionals.Condition c)
     {
@@ -315,31 +317,30 @@ public class DesertGrid : SGrid
     
 
     //Puzzle 6: Shady Gazelle
-    public void EnableGazelleOasisCheck()
+    public void SetGazelleQuest(bool b)
     {
-        SGridAnimator.OnSTileMoveEnd += CheckGazelleNearOasisOnMove;
+        GazelleQuest = b;
     }
 
-    public void CheckGazelleNearOasisOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    public void SetGazelleOasis(bool b)
     {
-        if (CheckGazelleNearOasis())
-        {
-            Collectible c = GetCollectible("Slider 8");
-            Debug.Log("Gazelle got dem munchlaxxed");
-            if (!PlayerInventory.Contains(c))
-            {
-                c.gameObject.SetActive(true);
-            }
-
-            SGridAnimator.OnSTileMoveEnd -= CheckGazelleNearOasisOnMove;
-        } 
+        GazelleOasis = b;
     }
-    public bool CheckGazelleNearOasis()
+    public void CheckGazelleQuest(Conditionals.Condition c)
     {
-        Debug.Log("Checking Gazelle");
-        return (CheckGrid.contains(GetGridString(), "26") || CheckGrid.contains(GetGridString(), "6...2"));
+        c.SetSpec(GazelleQuest);
     }
 
+    public void CheckGazelleNearOasis(Conditionals.Condition c)
+    {
+        c.SetSpec(CheckGrid.contains(GetGridString(), "26") || CheckGrid.contains(GetGridString(), "6...2"));
+    }
+    public void CheckGazelleOasis(Conditionals.Condition c)
+    {
+        c.SetSpec(GazelleOasis);
+    }
+
+    //Puzzle 7: 8puzzle
     public void ReAlignGrid()
     {
         //conduct series of STile swaps or something? Maybe set grid to something   
