@@ -116,6 +116,9 @@ public class VillageGrid : SGrid
             // ActivateSliderCollectible(9);
             GivePlayerTheCollectible("Slider 9");
 
+            // Disable queues
+            UIArtifact.ClearQueues();
+
             // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
             StartCoroutine(CheckCompletionsAfterDelay(1.1f));
 

@@ -421,7 +421,6 @@ public class SGrid : MonoBehaviour
     protected virtual void UpdateButtonCompletionsHelper()
     {
         // Debug.Log("Checking completions!");
-        // ineffecient lol
         for (int x = 0; x < current.width; x++) {
             for (int y = 0; y < current.width; y++) {
                 // int tid = current.targetGrid[x, y];
@@ -439,6 +438,33 @@ public class SGrid : MonoBehaviour
                 }
             }
         }
+    }
+
+    protected static int GetNumButtonCompletions()
+    {
+        return current.GetNumButtonCompletionsHelper();
+    }
+
+    protected virtual int GetNumButtonCompletionsHelper()
+    {
+        int numComplete = 0;
+        for (int x = 0; x < current.width; x++) {
+            for (int y = 0; y < current.width; y++) {
+                string tids = GetTileIdAt(x, y);
+                ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
+                if (tids == "*") 
+                {
+                    numComplete += 1;
+                }
+                else {
+                    int tid = int.Parse(tids);
+                    if (artifactButton.islandId == tid)
+                        numComplete += 1;
+                }
+            }
+        }
+
+        return numComplete;
     }
 
     protected IEnumerator CheckCompletionsAfterDelay(float t)
