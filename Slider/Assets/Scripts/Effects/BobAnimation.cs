@@ -11,16 +11,25 @@ public class BobAnimation : MonoBehaviour
     [SerializeField] private float firstDown = 0.5f; 
     [SerializeField] private float backMiddle = 1.5f;
     [SerializeField] private float firstUp = 2f;
+    [SerializeField] private float initOffset = 0;
     private int state; // this is my attempt to make it more effecient
+
+    public bool useRectTransform;
+    private RectTransform rectTransform;
 
     void Start()
     {
         origOffset = transform.localPosition;
+        if (useRectTransform) 
+        {
+            rectTransform = GetComponent<RectTransform>();
+            origOffset = rectTransform.anchoredPosition;
+        }
     }
 
     void Update()
     {
-        float t = Time.time % totalLength;
+        float t = (Time.time + initOffset) % totalLength;
 
         switch (state) 
         {
@@ -28,28 +37,40 @@ public class BobAnimation : MonoBehaviour
                 if (t >= firstDown)
                 {
                     state = 1;
-                    transform.localPosition = origOffset + (Vector3.down / PPU);
+                    if (!useRectTransform)
+                        transform.localPosition = origOffset + (Vector3.down / PPU);
+                    else
+                        rectTransform.anchoredPosition = origOffset + Vector3.down;
                 }
                 break;
             case 1:
                 if (t >= backMiddle)
                 {
                     state = 2;
-                    transform.localPosition = origOffset;
+                    if (!useRectTransform)
+                        transform.localPosition = origOffset;
+                    else
+                        rectTransform.anchoredPosition = origOffset;
                 }
                 break;
             case 2:
                 if (t >= firstUp)
                 {
                     state = 3;
-                    transform.localPosition = origOffset + (Vector3.up / PPU);
+                    if (!useRectTransform)
+                        transform.localPosition = origOffset + (Vector3.up / PPU);
+                    else
+                        rectTransform.anchoredPosition = origOffset + Vector3.up;
                 }
                 break;
             case 3:
                 if (t < firstDown) // cant be t > totalLength
                 {
                     state = 0;
-                    transform.localPosition = origOffset;
+                    if (!useRectTransform)
+                        transform.localPosition = origOffset;
+                    else
+                        rectTransform.anchoredPosition = origOffset;
                 }
                 break;
         }
