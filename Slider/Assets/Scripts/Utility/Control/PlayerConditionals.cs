@@ -7,7 +7,7 @@ public class PlayerConditionals : MonoBehaviour
 {
 
     public UnityEvent onSuccess;
-    
+
     public bool addToOnAction;
 
 
@@ -21,38 +21,64 @@ public class PlayerConditionals : MonoBehaviour
     public bool isCarryingItem;
     public string itemNameCheck;
 
+    public bool triggerIsLit;
+    private LightManager lm;
+
+    private void Awake()
+    {
+        lm = GameObject.Find("LightManager")?.GetComponent<LightManager>();
+    }
 
     // private void OnDisable() {               Maybe this is needed?
     //     PlayerAction.OnAction -= OnActionListener;
     // }
 
-    private void OnTriggerEnter2D(Collider2D other) {
-        if (other.CompareTag("Player")) {
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
             // Debug.Log("Adding listener!");
-            if (addToOnAction) {
+            if (addToOnAction)
+            {
                 PlayerAction.OnAction += OnActionListener;
                 Player.GetPlayerAction().IncrementActionsAvailable();
             }
-            else {
+            else
+            {
                 CheckCondition(); // might need to be Player.OnUpdate or something
             }
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other) {
-        if (other.CompareTag("Player")) {
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
             // Debug.Log("Removing listener!");
-            if (addToOnAction) {
+            if (addToOnAction)
+            {
                 PlayerAction.OnAction -= OnActionListener;
                 Player.GetPlayerAction().DecrementActionsAvailable();
             }
         }
     }
 
-    public bool CheckCondition() 
+    public bool CheckCondition()
     {
-        if (isCarryingItem) {
-            if (!Player.GetPlayerAction().HasItem()) {
+        if (triggerIsLit)
+        {
+            if (lm != null)
+            {
+                if (!lm.GetLightMaskAt((int)transform.position.x, (int)transform.position.y))
+                {
+                    return false;
+                }
+            }
+        }
+        if (isCarryingItem)
+        {
+            if (!Player.GetPlayerAction().HasItem())
+            {
                 return false;
             }
             if (!Player.GetPlayerAction().pickedItem.itemName.Equals(itemNameCheck))
@@ -70,7 +96,8 @@ public class PlayerConditionals : MonoBehaviour
         onSuccess?.Invoke();
     }
 
-    private void OnActionListener(object sender, System.EventArgs e) {
+    private void OnActionListener(object sender, System.EventArgs e)
+    {
         CheckCondition();
     }
 
@@ -80,5 +107,5 @@ public class PlayerConditionals : MonoBehaviour
         Player.GetPlayerAction().DecrementActionsAvailable();
         addToOnAction = false;
     }
-    
+
 }
