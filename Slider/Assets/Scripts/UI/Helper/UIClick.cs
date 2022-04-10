@@ -4,11 +4,22 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/// <summary>
+/// Contains functionality for playing sound OnClick and selecting the button OnPointerEnter or OnEnable.
+/// </summary>
 public class UIClick : MonoBehaviour, IPointerEnterHandler
 {
     Button button;
+
     [Tooltip("Set this true to make this the default button selected when the menu opens")]
     [SerializeField] private bool isSelectedOnMenuOpen;
+    [Tooltip("Set this true to make this button selected when the pointer moves over it. " +
+        "This means that the button will be triggered if PlayerAction is pressed while the cursor it")]
+    [SerializeField] private bool selectOnPointerEnter;
+
+    [Tooltip("Set this true to make the button not stay selected after being clicked. Useful if you" +
+        "don't want PlayerAction to trigger this button.")]
+    [SerializeField] private bool deselectOnClick;
 
     private void OnEnable()
     {
@@ -27,7 +38,6 @@ public class UIClick : MonoBehaviour, IPointerEnterHandler
     /// <returns></returns>
     private IEnumerator IOnEnable()
     {
-
         // Apparently we have this script on some things without a button component, so let's avoid
         // scary NREs in the console
         if (button != null)
@@ -47,16 +57,23 @@ public class UIClick : MonoBehaviour, IPointerEnterHandler
 
     public void Click()
     {
+        if (deselectOnClick)
+        {
+            EventSystemManager.ClearSelectable();
+        }
         AudioManager.Play("UI Click");
     }
 
     // Player can use the mouse or movement keys to select buttons
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (button == null)
+        if (selectOnPointerEnter)
         {
-            button = GetComponent<Button>();
+            if (button == null)
+            {
+                button = GetComponent<Button>();
+            }
+            button.Select();
         }
-        button.Select();
     }
 }
