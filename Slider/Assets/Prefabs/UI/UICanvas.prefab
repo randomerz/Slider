@@ -878,7 +878,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 5049116215420832317}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: UpdateMusicVolume
         m_Mode: 1
@@ -980,7 +980,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 5049116215420832317}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: UpdateSFXVolume
         m_Mode: 1
@@ -1512,15 +1512,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGamePaused: 0
-  isArtifactOpen: 0
   pausePanel: {fileID: 5049116214901676854}
   optionsPanel: {fileID: 6764153410580709861}
   controlsPanel: {fileID: 3193040993723520762}
   advOptionsPanel: {fileID: 5034203569208968072}
-  artifactPanel: {fileID: 0}
-  oceanQuestPanel: {fileID: 0}
-  uiArtifact: {fileID: 0}
-  artifactAnimator: {fileID: 0}
   sfxSlider: {fileID: 1497015175080346129}
   musicSlider: {fileID: 1420214614021301863}
 --- !u!1 &5049116215467832722
