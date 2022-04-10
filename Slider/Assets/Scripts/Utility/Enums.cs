@@ -36,3 +36,10 @@ public enum Area {
     MagiTech,
     Space
 }
+
+public enum bottleState { 
+    empty, 
+    cactus, 
+    dirty, 
+    clean 
+}
