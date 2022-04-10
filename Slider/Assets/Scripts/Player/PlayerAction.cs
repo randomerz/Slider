@@ -5,8 +5,8 @@ public class PlayerAction : MonoBehaviour
 {
     private static PlayerAction _instance;
     public static System.EventHandler<System.EventArgs> OnAction;
-    
-    private Item pickedItem;
+
+    public Item pickedItem;
     private bool isPicking;
     private bool canDrop;
     [SerializeField] private Transform itemPickupLocation;

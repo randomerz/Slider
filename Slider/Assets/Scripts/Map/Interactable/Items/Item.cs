@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class Item : MonoBehaviour 
 {
 
+    public string itemName;
     [SerializeField] protected SpriteRenderer spriteRenderer;
     [SerializeField] private Collider2D myCollider;
     public bool canKeep = false;
