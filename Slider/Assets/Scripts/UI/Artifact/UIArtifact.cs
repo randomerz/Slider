@@ -127,11 +127,7 @@ public class UIArtifact : MonoBehaviour
         // reset move options visual
         List<ArtifactTileButton> moveOptions = GetMoveOptions(dragged);
         foreach (ArtifactTileButton b in moveOptions) {
-            //Chen: Only resets to empty if tile is inactive since active tiles are included in desert GetMoveOptions
-            if (!b.isTileActive)
-            {
-                b.buttonAnimator.sliderImage.sprite = b.emptySprite;
-            }
+            b.buttonAnimator.sliderImage.sprite = b.emptySprite;
         }
         
         ArtifactTileButton hovered = null;
@@ -149,9 +145,6 @@ public class UIArtifact : MonoBehaviour
         if (!hovered.isTileActive)
         {
             hovered.buttonAnimator.sliderImage.sprite = hovered.emptySprite;
-        } else
-        {
-            hovered.ResetToIslandSprite();
         }
         //Debug.Log("dragged" + dragged.islandId + "hovered" + hovered.islandId);
         
