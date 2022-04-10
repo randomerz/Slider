@@ -18,7 +18,7 @@ public class EventSystemManager : MonoBehaviour
     public static void ClearSelectable()
     {
         _instance.eventSystem.SetSelectedGameObject(null);
-        Debug.Log(_instance.eventSystem.currentSelectedGameObject);
+        // Debug.Log(_instance.eventSystem.currentSelectedGameObject);
     }
 
     private void Awake()
