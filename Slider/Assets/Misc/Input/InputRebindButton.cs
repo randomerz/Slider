@@ -13,6 +13,11 @@ public class InputRebindButton : MonoBehaviour
     [SerializeField] private TMP_Text buttonText;
     [SerializeField] private InputActionAsset inputActions;
 
+    private void OnEnable()
+    {
+        UpdateButtonText();
+    }
+
     public void RemapKeybind()
     {
         if (keybind == Control.Move_Left || keybind == Control.Move_Right || keybind == Control.Move_Up || keybind == Control.Move_Down)
