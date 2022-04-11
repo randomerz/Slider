@@ -54,6 +54,13 @@ public class UIManager : MonoBehaviour
 
     private void OnDisable() {
         controls.Disable();
+
+        if (!canOpenMenus)
+        {
+            Debug.LogWarning("UIManager was disabled without closing the menu!");
+            isGamePaused = false;
+            canOpenMenus = true;
+        }
     }
 
     private void LateUpdate() 

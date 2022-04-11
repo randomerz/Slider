@@ -14,19 +14,43 @@ public class UITrackerManager : MonoBehaviour
     private STile currentTile;
     private float scale = 26f/17f;
     private float centerScale = 36f/17f;
-    //S: buffer in case something loads before UITrackerManager
-    private static List<GameObject> objectBuffer = new List<GameObject>();
-    private static List<Sprite> spriteBuffer = new List<Sprite>();
-    private static List<GameObject> removeBuffer = new List<GameObject>();
+    
     public UIArtifact artifact;
     public GameObject artifactPanel;
     public GameObject uiTrackerPrefab;
     public List<UITracker> targets = new List<UITracker>();
+    
+    // Buffers for when called before initialization
+    private static List<GameObject> objectBuffer = new List<GameObject>();
+    private static List<Sprite> spriteBuffer = new List<Sprite>();
+    private static List<Sprite> blinkSpriteBuffer = new List<Sprite>();
+    private static List<DefaultSprites> enumBuffer = new List<DefaultSprites>();
+    private static List<DefaultSprites> blinkEnumBuffer = new List<DefaultSprites>();
+    private static List<float> blinkTimeBuffer = new List<float>();
 
+    private static List<GameObject> removeBuffer = new List<GameObject>();
 
-    void Awake(){
+    [Header("Default Pins")]
+    public Sprite empty;
+    public Sprite circle1;
+    public Sprite circle2;
+    public Sprite circleEmpty;
+    public Sprite pin;
+    public Sprite exclamation;
+
+    public enum DefaultSprites {
+        none,
+        circle1,
+        circle2,
+        circleEmpty,
+        pin,
+        exclamation,
+    }
+
+    void Awake() {
         _instance = this;
     }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,10 +62,22 @@ public class UITrackerManager : MonoBehaviour
     {
         if (objectBuffer.Count > 0) {
             for(int i = 0; i < objectBuffer.Count; i++) {
-                AddNewTracker(objectBuffer[i], spriteBuffer[i]);
+                if (spriteBuffer[i] != null)
+                {
+                    AddNewTracker(objectBuffer[i], spriteBuffer[i], blinkSpriteBuffer[i], blinkTimeBuffer[i]);
+                }
+                else
+                {
+                    AddNewTracker(objectBuffer[i], enumBuffer[i], blinkEnumBuffer[i], blinkTimeBuffer[i]);
+                }
+                
             }
             objectBuffer.Clear();
             spriteBuffer.Clear();
+            blinkSpriteBuffer.Clear();
+            enumBuffer.Clear();
+            blinkEnumBuffer.Clear();
+            blinkTimeBuffer.Clear();
         }
         if (removeBuffer.Count > 0) {
             for(int i = 0; i < objectBuffer.Count; i++) {
@@ -68,6 +104,7 @@ public class UITrackerManager : MonoBehaviour
             if(currentTile == null){
                 t.image.rectTransform.SetParent(artifactPanel.GetComponent<RectTransform>());
                 offset = (position - center) * centerScale;
+                offset = new Vector3(Mathf.Clamp(offset.x, -62.5f, 62.5f), Mathf.Clamp(offset.y, -57.5f, 57.5f));
 
                 t.image.rectTransform.anchoredPosition = offset;
 
@@ -78,7 +115,7 @@ public class UITrackerManager : MonoBehaviour
 
             currentButton = artifact.GetButton(currentTile.islandId);
             // Debug.Log("Setting transform of " + t.name);
-            t.image.rectTransform.SetParent(currentButton.GetComponent<RectTransform>());
+            t.image.rectTransform.SetParent(currentButton.transform.Find("Image").GetComponent<RectTransform>());
             
             if(t.GetIsInHouse())
             {
@@ -90,18 +127,65 @@ public class UITrackerManager : MonoBehaviour
             }
         }
     }
-    
-    public static void AddNewTracker(GameObject target, Sprite sprite){
+
+    public static void AddNewTracker(GameObject target, DefaultSprites sprite=DefaultSprites.circle1, DefaultSprites blinkSprite=DefaultSprites.none, float blinkTime=-1) {
         if (_instance == null){
-            objectBuffer.Add(target);
-            spriteBuffer.Add(sprite);
+            AddToBuffer(target, null, null, sprite, blinkSprite, blinkTime);
             return;
         }
+
+        AddNewTracker(target, EnumToSprite(sprite), EnumToSprite(blinkSprite), blinkTime);
+    }
+
+    private static Sprite EnumToSprite(DefaultSprites enumValue)
+    {
+        Debug.Log(_instance);
+        switch (enumValue)
+        {
+            case DefaultSprites.none:
+                return null;
+            case DefaultSprites.circle1:
+                return _instance.circle1;
+            case DefaultSprites.circle2:
+                return _instance.circle2;
+            case DefaultSprites.circleEmpty:
+                return _instance.circleEmpty;
+            case DefaultSprites.pin:
+                return _instance.pin;
+            case DefaultSprites.exclamation:
+                return _instance.exclamation;
+
+        }
+        Debug.LogWarning("Couldn't find pin!");
+        return null;
+    }
+    
+    public static void AddNewTracker(GameObject target, Sprite sprite, Sprite blinkSprite=null, float blinkTime=-1) {
+        if (_instance == null){
+            AddToBuffer(target, sprite, blinkSprite, DefaultSprites.none, DefaultSprites.none, blinkTime);
+            return;
+        }
+
         GameObject tracker = GameObject.Instantiate(_instance.uiTrackerPrefab, _instance.transform);
         UITracker uiTracker = tracker.GetComponent<UITracker>();
         uiTracker.target = target;
-        uiTracker.image.sprite = sprite;
+        uiTracker.SetSprite(sprite);
+        if (blinkTime != -1)
+        {
+            uiTracker.StartBlinking(blinkSprite, blinkTime);
+        }
+
         _instance.targets.Add(uiTracker);
+    }
+
+    private static void AddToBuffer(GameObject target, Sprite sprite, Sprite blinkSprite, DefaultSprites ds, DefaultSprites bs, float blinkTime)
+    {
+        objectBuffer.Add(target);
+        spriteBuffer.Add(sprite);
+        blinkSpriteBuffer.Add(blinkSprite);
+        enumBuffer.Add(ds);
+        blinkEnumBuffer.Add(bs);
+        blinkTimeBuffer.Add(blinkTime);
     }
 
     public static void RemoveTracker(GameObject toRemove) {

@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     private Vector3 inputDir;
     
     [Header("References")]
-    [SerializeField] private Sprite trackerSprite;
+    // [SerializeField] private Sprite trackerSprite;
     [SerializeField] private PlayerAction playerAction;
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
     [SerializeField] private SpriteRenderer boatSpriteRenderer;
@@ -35,9 +35,13 @@ public class Player : MonoBehaviour
         LoadBindings();
 
         UpdatePlayerSpeed();
-
-        UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
     }
+    
+    private void Start() 
+    {
+        UITrackerManager.AddNewTracker(gameObject, UITrackerManager.DefaultSprites.circle1, UITrackerManager.DefaultSprites.circleEmpty, 3f);
+    }
+
     public static void LoadBindings()
     {
         var rebinds = PlayerPrefs.GetString("rebinds");
