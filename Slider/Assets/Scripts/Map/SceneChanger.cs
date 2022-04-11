@@ -32,36 +32,38 @@ public class SceneChanger : MonoBehaviour
 
         if (isSpawnPosRelative)
             SceneSpawns.relativePos = Player.GetPosition() - transform.position;
-        ChangeScenesHelper();
-    }
-
-    AsyncOperation sceneLoad;
-
-    private void ChangeScenesHelper()
-    {
+        
+        // Start a fade to black and then load the scene once it finishes
         UIEffects.FadeToBlack(() => { StartLoadingScene(); }, 2);
     }
+
+    // We need our loading op stored between both of our loading helper methods
+    AsyncOperation sceneLoad;
 
     private void StartLoadingScene()
     {
         SceneTransitionOverlayManager.ShowOverlay();
 
+        /* This loads our new scene in the background. There are two components to loading a new scene:
+         * 1. Actually loading it: We can do that in the background easily with LoadSceneAsync and make things smoother.
+         * 2. Initializing it: All of our Awake, Start, etc methods have to run now, which takes time. To hide this, we
+         *    want the screen to be fully black while this happens so the player can't see anything.
+         *    
+         * We do part 1 during the fade to black, then totally cover the screen (a separate overlay is needed because the first
+         * will get unloaded briefly before the new UIEffects Canvas is loaded), then do part 2. Once part 2 finishes, 
+         * SceneTransitionOverlayManager notices automatically and disables the overlay.
+         */
         sceneLoad = SceneManager.LoadSceneAsync(sceneName);
-        sceneLoad.allowSceneActivation = false;
-        StartCoroutine(ChangeSceneCallback());
+        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
+        StartCoroutine(IChangeScene());
     }
 
-    private IEnumerator ChangeSceneCallback()
+    private IEnumerator IChangeScene()
     {
         while (sceneLoad.progress < 0.9f)
         {
             yield return null;
         }
-        sceneLoad.allowSceneActivation = true;
-        while (!sceneLoad.isDone)
-        {
-            yield return null;
-        }
-        //UIEffects.FadeFromBlack();
+        sceneLoad.allowSceneActivation = true; // "Okay now do it and hurry up!!"
     }
 }
