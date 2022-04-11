@@ -23,9 +23,6 @@ public class UIManager : MonoBehaviour
     public GameObject optionsPanel;
     public GameObject controlsPanel;
     public GameObject advOptionsPanel;
-    // public GameObject artifactPanel;
-    // public UIArtifact uiArtifact;
-    // public Animator artifactAnimator;
     public Slider sfxSlider;
     public Slider musicSlider;
     public Slider screenShakeSlider;
@@ -52,7 +49,6 @@ public class UIManager : MonoBehaviour
             _instance.controls.LoadBindingOverridesFromJson(rebinds);
         }
         _instance.controls.UI.Pause.performed += context => _instance.OnPressPause();
-        _instance.controls.UI.OpenArtifact.performed += context => _instance.OnPressArtifact();
     }
 
     private void OnEnable() {
@@ -97,18 +93,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void OnPressArtifact()
-    {
-        // if (isArtifactOpen)
-        // {
-        //     ResumeGame();
-        // }
-        // else
-        // {
-        //     OpenArtifact();
-        // }
-    }
-
     
 
     public static bool IsUIOpen() // used for if Player can use Action
@@ -139,12 +123,6 @@ public class UIManager : MonoBehaviour
         
         OnResume?.Invoke(this, null);
     }
-
-    // private IEnumerator CloseArtPanel()
-    // {
-    //     yield return new WaitForSeconds(0.34f);
-    //     artifactPanel.SetActive(false);
-    // }
 
     // DC: this is really bad code haha
     public static void PauseGameGlobal()
@@ -223,29 +201,6 @@ public class UIManager : MonoBehaviour
             OpenOptions();
         }
     }
-
-    // public void OpenArtifact()
-    // {
-    //     if (!canOpenMenus)
-    //         return;
-
-    //     if (Player.IsSafe())
-    //     {
-    //         artifactPanel.SetActive(true);
-    //         //UIArtifact.UpdatePushedDowns();
-    //         isGamePaused = true;
-    //         isArtifactOpen = true;
-
-    //         Player.SetCanMove(false);
-
-    //         artifactAnimator.SetBool("isVisible", true);
-    //         uiArtifact.FlickerNewTiles();
-    //     }
-    //     else
-    //     {
-    //         AudioManager.Play("Artifact Error");
-    //     }
-    // }
 
     public void UpdateSFXVolume()
     {
