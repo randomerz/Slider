@@ -53,7 +53,15 @@ public class SettingsManager : MonoBehaviour
             WriteCurrentSettingsToPlayerPrefs();
         }
     }
-
+    public static float ScreenShake
+    {
+        get => _instance.currentSettings.screenShake;
+        set
+        {
+            _instance.currentSettings.screenShake = value;
+            WriteCurrentSettingsToPlayerPrefs();
+        }
+    }
 
     /// <summary>
     /// Call this whenever we update something in the settings so that 
@@ -95,6 +103,7 @@ struct Settings
 {
     public float sfxVolume;
     public float musicVolume;
+    public float screenShake;
     public bool bigTextEnabled;
 
     /// <summary>
@@ -103,13 +112,14 @@ struct Settings
     /// <returns></returns>
     public static Settings GetDefaultSettings()
     {
-        return new Settings(0.5f, 0.5f, false);
+        return new Settings(0.5f, 0.5f, 1.0f, false);
     }
 
-    public Settings(float sfxVolume, float musicVolume, bool bigTextEnabled)
+    public Settings(float sfxVolume, float musicVolume, float screenShake, bool bigTextEnabled)
     {
         this.sfxVolume = sfxVolume;
         this.musicVolume = musicVolume;
+        this.screenShake = screenShake;
         this.bigTextEnabled = bigTextEnabled;
     }
 }

@@ -199,7 +199,7 @@ public class SGridAnimator : MonoBehaviour
 
         yield return new WaitForSeconds(movementDuration);
 
-        CameraShake.Shake(0.5f, 1f); // todo: base this on movementDuration so that less camera shake if duration is lower
+        CameraShake.Shake(0.5f, 1.0f); // todo: base this on movementDuration so that less camera shake if duration is lower
         AudioManager.Play("Slide Explosion");
 
     }

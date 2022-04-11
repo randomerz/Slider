@@ -28,6 +28,7 @@ public class UIManager : MonoBehaviour
     // public Animator artifactAnimator;
     public Slider sfxSlider;
     public Slider musicSlider;
+    public Slider screenShakeSlider;
     public Toggle bigTextToggle;
 
     private void Awake()
@@ -181,6 +182,7 @@ public class UIManager : MonoBehaviour
     {
         sfxSlider.value = AudioManager.GetSFXVolume();
         musicSlider.value = AudioManager.GetMusicVolume();
+        screenShakeSlider.value = SettingsManager.ScreenShake;
 
         if (!couldOpenMenusLastFrame)
             return;
@@ -255,6 +257,11 @@ public class UIManager : MonoBehaviour
     {
         SettingsManager.MusicVolume = musicSlider.value;
         AudioManager.SetMusicVolume(musicSlider.value);
+    }
+
+    public void UpdateScreenShake()
+    {
+        SettingsManager.ScreenShake = screenShakeSlider.value;
     }
 
     public void ToggleBigText(bool value)
