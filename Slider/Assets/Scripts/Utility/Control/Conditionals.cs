@@ -15,14 +15,15 @@ public class Conditionals
         }
         public enum ConditionType
         {
-            item,
+            item, // DC this should be called collectible but i don't want to rename it bc it will break everything
             grid,
             gridStationary, //L: Forces the grid to be stationary before it can evaluate the condition to true.
             spec,
+            playerCarryingItem,
         }
         public ConditionType type;
 
-        //item
+        // collectible
         public Collectible.CollectibleData item;
 
         //grid
@@ -31,6 +32,9 @@ public class Conditionals
 
         //spec
         public ConditionEvent checkBool;
+
+        // player item
+        public string playerItemName;
 
         private bool spec = false;
         public bool CheckCondition()
@@ -62,6 +66,16 @@ public class Conditionals
                         return true;
                     }
                     return false;
+                case ConditionType.playerCarryingItem:
+                    if (!Player.GetPlayerAction().HasItem())
+                    {
+                        return false;
+                    }
+                    if (!Player.GetPlayerAction().pickedItem.itemName.Equals(playerItemName))
+                    {
+                        return false;
+                    }
+                    return true;
                 case ConditionType.spec:
                 default:
                     checkBool.Invoke(this);

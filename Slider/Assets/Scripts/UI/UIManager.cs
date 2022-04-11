@@ -23,22 +23,22 @@ public class UIManager : MonoBehaviour
     public GameObject optionsPanel;
     public GameObject controlsPanel;
     public GameObject advOptionsPanel;
-    // public GameObject artifactPanel;
-    // public UIArtifact uiArtifact;
-    // public Animator artifactAnimator;
     public Slider sfxSlider;
     public Slider musicSlider;
+    public Slider screenShakeSlider;
+    public Toggle bigTextToggle;
 
     private void Awake()
     {
         _instance = this;
 
-        sfxSlider.value = AudioManager.GetSFXVolume();
-        musicSlider.value = AudioManager.GetMusicVolume();
-        
-
         _instance.controls = new InputSettings();
         LoadBindings();
+
+        sfxSlider.value = AudioManager.GetSFXVolume();
+        musicSlider.value = AudioManager.GetMusicVolume();
+
+        bigTextToggle.onValueChanged.AddListener((bool value) => { ToggleBigText(value); });
     }
 
     public static void LoadBindings()
@@ -49,7 +49,6 @@ public class UIManager : MonoBehaviour
             _instance.controls.LoadBindingOverridesFromJson(rebinds);
         }
         _instance.controls.UI.Pause.performed += context => _instance.OnPressPause();
-        _instance.controls.UI.OpenArtifact.performed += context => _instance.OnPressArtifact();
     }
 
     private void OnEnable() {
@@ -94,18 +93,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void OnPressArtifact()
-    {
-        // if (isArtifactOpen)
-        // {
-        //     ResumeGame();
-        // }
-        // else
-        // {
-        //     OpenArtifact();
-        // }
-    }
-
     
 
     public static bool IsUIOpen() // used for if Player can use Action
@@ -136,12 +123,6 @@ public class UIManager : MonoBehaviour
         
         OnResume?.Invoke(this, null);
     }
-
-    // private IEnumerator CloseArtPanel()
-    // {
-    //     yield return new WaitForSeconds(0.34f);
-    //     artifactPanel.SetActive(false);
-    // }
 
     // DC: this is really bad code haha
     public static void PauseGameGlobal()
@@ -177,6 +158,10 @@ public class UIManager : MonoBehaviour
 
     public void OpenOptions()
     {
+        sfxSlider.value = AudioManager.GetSFXVolume();
+        musicSlider.value = AudioManager.GetMusicVolume();
+        screenShakeSlider.value = SettingsManager.ScreenShake;
+
         if (!couldOpenMenusLastFrame)
             return;
 
@@ -196,6 +181,8 @@ public class UIManager : MonoBehaviour
     }
     public void OpenAdvOptions()
     {
+        bigTextToggle.isOn = SettingsManager.BigTextEnabled;
+
         if (!couldOpenMenusLastFrame)
             return;
 
@@ -215,44 +202,31 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // public void OpenArtifact()
-    // {
-    //     if (!canOpenMenus)
-    //         return;
-
-    //     if (Player.IsSafe())
-    //     {
-    //         artifactPanel.SetActive(true);
-    //         //UIArtifact.UpdatePushedDowns();
-    //         isGamePaused = true;
-    //         isArtifactOpen = true;
-
-    //         Player.SetCanMove(false);
-
-    //         artifactAnimator.SetBool("isVisible", true);
-    //         uiArtifact.FlickerNewTiles();
-    //     }
-    //     else
-    //     {
-    //         AudioManager.Play("Artifact Error");
-    //     }
-    // }
-
-    public void UpdateSFXVolume()  //float value
+    public void UpdateSFXVolume()
     {
+        SettingsManager.SFXVolume = sfxSlider.value;
         AudioManager.SetSFXVolume(sfxSlider.value);
     }
 
-    public void UpdateMusicVolume()  //float value
+    public void UpdateMusicVolume()
     {
+        SettingsManager.MusicVolume = musicSlider.value;
         AudioManager.SetMusicVolume(musicSlider.value);
     }
 
-    // public void ToggleBigText(bool value)
-    // {
-    //     DialogueManager.highContrastMode = value;
-    //     DialogueManager.doubleSizeMode = value;
-    // }
+    public void UpdateScreenShake()
+    {
+        SettingsManager.ScreenShake = screenShakeSlider.value;
+    }
+
+    public void ToggleBigText(bool value)
+    {
+        // By the word of our noble lord, Boomo, long may he reign, these two lines must remain commented out
+        //DialogueManager.highContrastMode = value;
+        //DialogueManager.doubleSizeMode = value;
+
+        SettingsManager.BigTextEnabled = value;
+    }
 
     public void LoadGame()
     {
