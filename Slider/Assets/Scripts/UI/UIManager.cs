@@ -25,17 +25,20 @@ public class UIManager : MonoBehaviour
     public GameObject advOptionsPanel;
     public Slider sfxSlider;
     public Slider musicSlider;
+    public Slider screenShakeSlider;
+    public Toggle bigTextToggle;
 
     private void Awake()
     {
         _instance = this;
 
-        sfxSlider.value = AudioManager.GetSFXVolume();
-        musicSlider.value = AudioManager.GetMusicVolume();
-        
-
         _instance.controls = new InputSettings();
         LoadBindings();
+
+        sfxSlider.value = AudioManager.GetSFXVolume();
+        musicSlider.value = AudioManager.GetMusicVolume();
+
+        bigTextToggle.onValueChanged.AddListener((bool value) => { ToggleBigText(value); });
     }
 
     public static void LoadBindings()
@@ -162,6 +165,10 @@ public class UIManager : MonoBehaviour
 
     public void OpenOptions()
     {
+        sfxSlider.value = AudioManager.GetSFXVolume();
+        musicSlider.value = AudioManager.GetMusicVolume();
+        screenShakeSlider.value = SettingsManager.ScreenShake;
+
         if (!couldOpenMenusLastFrame)
             return;
 
@@ -181,6 +188,8 @@ public class UIManager : MonoBehaviour
     }
     public void OpenAdvOptions()
     {
+        bigTextToggle.isOn = SettingsManager.BigTextEnabled;
+
         if (!couldOpenMenusLastFrame)
             return;
 
@@ -200,21 +209,31 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateSFXVolume()  //float value
+    public void UpdateSFXVolume()
     {
+        SettingsManager.SFXVolume = sfxSlider.value;
         AudioManager.SetSFXVolume(sfxSlider.value);
     }
 
-    public void UpdateMusicVolume()  //float value
+    public void UpdateMusicVolume()
     {
+        SettingsManager.MusicVolume = musicSlider.value;
         AudioManager.SetMusicVolume(musicSlider.value);
     }
 
-    // public void ToggleBigText(bool value)
-    // {
-    //     DialogueManager.highContrastMode = value;
-    //     DialogueManager.doubleSizeMode = value;
-    // }
+    public void UpdateScreenShake()
+    {
+        SettingsManager.ScreenShake = screenShakeSlider.value;
+    }
+
+    public void ToggleBigText(bool value)
+    {
+        // By the word of our noble lord, Boomo, long may he reign, these two lines must remain commented out
+        //DialogueManager.highContrastMode = value;
+        //DialogueManager.doubleSizeMode = value;
+
+        SettingsManager.BigTextEnabled = value;
+    }
 
     public void LoadGame()
     {
