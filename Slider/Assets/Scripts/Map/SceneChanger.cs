@@ -32,7 +32,36 @@ public class SceneChanger : MonoBehaviour
 
         if (isSpawnPosRelative)
             SceneSpawns.relativePos = Player.GetPosition() - transform.position;
+        ChangeScenesHelper();
+    }
 
-        SceneManager.LoadScene(sceneName);
+    AsyncOperation sceneLoad;
+
+    private void ChangeScenesHelper()
+    {
+        UIEffects.FadeToBlack(() => { StartLoadingScene(); }, 2);
+    }
+
+    private void StartLoadingScene()
+    {
+        SceneTransitionOverlayManager.ShowOverlay();
+
+        sceneLoad = SceneManager.LoadSceneAsync(sceneName);
+        sceneLoad.allowSceneActivation = false;
+        StartCoroutine(ChangeSceneCallback());
+    }
+
+    private IEnumerator ChangeSceneCallback()
+    {
+        while (sceneLoad.progress < 0.9f)
+        {
+            yield return null;
+        }
+        sceneLoad.allowSceneActivation = true;
+        while (!sceneLoad.isDone)
+        {
+            yield return null;
+        }
+        //UIEffects.FadeFromBlack();
     }
 }
