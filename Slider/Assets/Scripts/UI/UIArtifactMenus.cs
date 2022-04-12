@@ -80,6 +80,11 @@ public class UIArtifactMenus : MonoBehaviour
 
             artifactAnimator.SetBool("isVisible", true);
             uiArtifact.FlickerNewTiles();
+
+            foreach(ArtifactTileButton b in uiArtifact.buttons)
+            {
+                b.SetPushedDown(b.myStile.hasAnchor);
+            }
         }
         else
         {

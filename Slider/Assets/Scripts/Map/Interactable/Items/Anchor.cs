@@ -39,10 +39,10 @@ public class Anchor : Item
 
     public void UnanchorTile()
     {
-        STile[,] tiles = SGrid.current.GetGrid();
-        foreach (STile tile in tiles)
+        STile hitTile = SGrid.current.GetStileUnderneath(this.gameObject);
+        if (hitTile != null)
         {
-            tile.hasAnchor = false;
+            hitTile.hasAnchor = false;
         }
     }
 

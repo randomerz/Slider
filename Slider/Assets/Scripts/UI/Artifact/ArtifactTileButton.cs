@@ -97,12 +97,12 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SetPushedDown(bool v)
     {
-        buttonAnimator.SetPushedDown(v);
+        buttonAnimator.SetPushedDown(v || myStile.hasAnchor);
     }
 
     public void SetSelected(bool v)
     {
-        buttonAnimator.SetSelected(v);
+        buttonAnimator.SetSelected(v || myStile.hasAnchor);
     }
 
     public void SetIsInMove(bool v)
