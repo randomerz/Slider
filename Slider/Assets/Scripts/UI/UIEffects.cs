@@ -22,14 +22,14 @@ public class UIEffects : MonoBehaviour
         _instance = this;
     }
 
-    public static void FadeFromBlack(System.Action callback=null)
+    public static void FadeFromBlack(System.Action callback=null, float speed = 1)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 1, 0, callback));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 1, 0, callback, speed));
     }
 
-    public static void FadeToBlack(System.Action callback=null)
+    public static void FadeToBlack(System.Action callback=null, float speed = 1)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, 1, callback));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, 1, callback, speed));
     }
 
     public static void FlashWhite()
@@ -48,7 +48,7 @@ public class UIEffects : MonoBehaviour
     }
 
 
-    private IEnumerator FadeCoroutine(GameObject gameObject, CanvasGroup group, float startAlpha, float endAlpha, System.Action callback=null)
+    private IEnumerator FadeCoroutine(GameObject gameObject, CanvasGroup group, float startAlpha, float endAlpha, System.Action callback=null, float speed = 1)
     {
         float t = 0;
         gameObject.SetActive(true);
@@ -59,7 +59,7 @@ public class UIEffects : MonoBehaviour
             group.alpha = Mathf.Lerp(startAlpha, endAlpha, t / fadeDuration);
 
             yield return null;
-            t += Time.deltaTime;
+            t += (Time.deltaTime * speed);
         }
 
         group.alpha = endAlpha;
