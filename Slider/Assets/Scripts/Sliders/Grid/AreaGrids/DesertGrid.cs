@@ -345,7 +345,7 @@ public class DesertGrid : SGrid
     }
     private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (!PlayerInventory.Contains("Slider 9", Area.Desert) && (GetGridString() == "624_8#7_153"))
+        if (!PlayerInventory.Contains("Slider 9", Area.Desert) && (GetGridString() == "567_2#3_184"))
         {
             // ActivateSliderCollectible(9);
             GivePlayerTheCollectible("Slider 9");
