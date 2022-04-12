@@ -65,19 +65,16 @@ public class DesertGrid : SGrid
     }
     
     private void OnEnable() {
-        // if (checkCompletion) {
-        //     SGrid.OnGridMove += SGrid.CheckCompletions;
-        // }
-
-        //SGridAnimator.OnSTileMoveEnd += CheckOasisOnMove;
+        if (checkCompletion) {
+            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
+        }
     }
 
     private void OnDisable() {
-        // if (checkCompletion) {
-        //     SGrid.OnGridMove -= SGrid.CheckCompletions;
-        // }
-
-        //SGridAnimator.OnSTileMoveEnd -= CheckOasisOnMove;
+        if (checkCompletion)
+        {
+            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;
+        }
     }
 
     public override void SaveGrid() 
@@ -325,6 +322,7 @@ public class DesertGrid : SGrid
     public void SetGazelleOasis(bool b)
     {
         GazelleOasis = b;
+        checkCompletion = b;
     }
     public void CheckGazelleQuest(Conditionals.Condition c)
     {
@@ -344,5 +342,21 @@ public class DesertGrid : SGrid
     public void ReAlignGrid()
     {
         //conduct series of STile swaps or something? Maybe set grid to something   
+    }
+    private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (!PlayerInventory.Contains("Slider 9", Area.Desert) && (GetGridString() == "624_8#7_153"))
+        {
+            // ActivateSliderCollectible(9);
+            GivePlayerTheCollectible("Slider 9");
+
+            // Disable queues
+            UIArtifact.ClearQueues();
+
+            // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
+            StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+
+            AudioManager.Play("Puzzle Complete");
+        }
     }
 } 
