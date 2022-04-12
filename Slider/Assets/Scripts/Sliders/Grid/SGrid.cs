@@ -386,8 +386,7 @@ public class SGrid : MonoBehaviour
     public virtual void SaveGrid() 
     { 
         Debug.Log("Saving data for " + myArea);
-        GameManager.GetSaveSystem().SaveSGridData(myArea, this);
-        GameManager.GetSaveSystem().SaveMissions(new Dictionary<string, bool>());
+        SaveSystem.Current.SaveSGridData(myArea, this);
     }
 
     //L: Used in the save system to load a grid as opposed to using SetGrid(STile[], STile[]) with default tiles positions.
@@ -395,8 +394,7 @@ public class SGrid : MonoBehaviour
     { 
          //Debug.Log("Loading grid...");
 
-        SGridData sgridData = GameManager.GetSaveSystem().GetSGridData(myArea);
-        Dictionary<string, bool> loadedMissions = GameManager.GetSaveSystem().GetMissions(new List<string>());
+        SGridData sgridData = SaveSystem.Current.GetSGridData(myArea);
 
         if (sgridData == null) {
             SetGrid(stiles);
