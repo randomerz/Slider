@@ -514,7 +514,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   isOnWater: 0
-  trackerSprite: {fileID: 2475121381554812345, guid: 9a913c55ce379ea49825a14ccddfd181, type: 3}
   playerAction: {fileID: 3635922835001186329}
   playerSpriteRenderer: {fileID: 380634036804812840}
   boatSpriteRenderer: {fileID: 3785533694745293587}
@@ -531,6 +530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a0c07f211adfbe4fbd02edebb162437, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickedItem: {fileID: 0}
   itemPickupLocation: {fileID: 5563323968977859811}
   itemDropIndicator: {fileID: 224774816551553932}
   itemMask:
@@ -598,8 +598,8 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.75, y: 0.875}
-  m_EdgeRadius: 0
+  m_Size: {x: 0.5, y: 0.625}
+  m_EdgeRadius: 0.125
 --- !u!114 &5205933783250344951
 MonoBehaviour:
   m_ObjectHideFlags: 0
