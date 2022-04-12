@@ -6,6 +6,7 @@ public class VillageGrid : SGrid
 {
     public static VillageGrid instance;
 
+    public GameObject caveDoorEntrance;
     public GameObject caveDoorRocks;
     public GameObject particleSpawner;
 
@@ -128,6 +129,7 @@ public class VillageGrid : SGrid
 
     public void Explode()
     {
+        caveDoorEntrance.SetActive(true);
         caveDoorRocks.SetActive(false);
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");

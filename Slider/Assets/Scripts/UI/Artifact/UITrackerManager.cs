@@ -139,7 +139,6 @@ public class UITrackerManager : MonoBehaviour
 
     private static Sprite EnumToSprite(DefaultSprites enumValue)
     {
-        Debug.Log(_instance);
         switch (enumValue)
         {
             case DefaultSprites.none:
