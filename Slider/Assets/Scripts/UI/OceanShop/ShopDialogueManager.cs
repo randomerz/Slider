@@ -340,7 +340,7 @@ public class ShopDialogueManager : MonoBehaviour
             case "Turn in Treasure Map":
                 SetDialogue(new ShopDialogue(
                     null,
-                    "Well look at this! A good old treasure map. Seems a bit, uh, out of its prime.",
+                    "A treasure map! One time someone told me \"the coconuts are the key\". Sounds crazy, but I don't know.",
                     TKSprite.Normal,
                     null
                 ));
@@ -507,11 +507,18 @@ public class ShopDialogueManager : MonoBehaviour
                         shopManager.OpenDialoguePanel();
                     },
                     "There's a treacherous patch of foggy sea down south we call \"The Veil\". Who knows what the mist may be hiding.",
+                    TKSprite.Question,
+                    () => SetDialogue(
+
+                new ShopDialogue(
+                    null,
+                    "Tales tell of a song of three verses needed to navigate it. Think it started went \"West, South, West,\" but I forgot the rest.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
                     }
+                ))
                 ));
                 break;
             
