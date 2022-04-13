@@ -15,8 +15,7 @@ public class UIManager : MonoBehaviour
     public bool isGamePaused;
     // public bool isArtifactOpen;
     public static bool canOpenMenus = true;
-
-    public static bool closeUI;
+    private static bool couldOpenMenusLastFrame = true; // DC: maximum jank because timing
 
     private InputSettings controls;
 
@@ -24,22 +23,22 @@ public class UIManager : MonoBehaviour
     public GameObject optionsPanel;
     public GameObject controlsPanel;
     public GameObject advOptionsPanel;
-    // public GameObject artifactPanel;
-    // public UIArtifact uiArtifact;
-    // public Animator artifactAnimator;
     public Slider sfxSlider;
     public Slider musicSlider;
+    public Slider screenShakeSlider;
+    public Toggle bigTextToggle;
 
     private void Awake()
     {
         _instance = this;
 
-        sfxSlider.value = AudioManager.GetSFXVolume();
-        musicSlider.value = AudioManager.GetMusicVolume();
-        
-
         _instance.controls = new InputSettings();
         LoadBindings();
+
+        sfxSlider.value = AudioManager.GetSFXVolume();
+        musicSlider.value = AudioManager.GetMusicVolume();
+
+        bigTextToggle.onValueChanged.AddListener((bool value) => { ToggleBigText(value); });
     }
 
     public static void LoadBindings()
@@ -50,7 +49,6 @@ public class UIManager : MonoBehaviour
             _instance.controls.LoadBindingOverridesFromJson(rebinds);
         }
         _instance.controls.UI.Pause.performed += context => _instance.OnPressPause();
-        _instance.controls.UI.OpenArtifact.performed += context => _instance.OnPressArtifact();
     }
 
     private void OnEnable() {
@@ -59,16 +57,20 @@ public class UIManager : MonoBehaviour
 
     private void OnDisable() {
         controls.Disable();
-    }
 
-    void Update()
-    {
-        if (closeUI)
+        if (!canOpenMenus)
         {
-            closeUI = false;
-            ResumeGame();
+            Debug.LogWarning("UIManager was disabled without closing the menu!");
+            isGamePaused = false;
+            canOpenMenus = true;
         }
     }
+
+    private void LateUpdate() 
+    {
+        couldOpenMenusLastFrame = canOpenMenus;
+    }
+
 
     private void OnPressPause()
     {
@@ -96,18 +98,6 @@ public class UIManager : MonoBehaviour
             PauseGame();
             OpenPause();
         }
-    }
-
-    private void OnPressArtifact()
-    {
-        // if (isArtifactOpen)
-        // {
-        //     ResumeGame();
-        // }
-        // else
-        // {
-        //     OpenArtifact();
-        // }
     }
 
     
@@ -141,12 +131,6 @@ public class UIManager : MonoBehaviour
         OnResume?.Invoke(this, null);
     }
 
-    // private IEnumerator CloseArtPanel()
-    // {
-    //     yield return new WaitForSeconds(0.34f);
-    //     artifactPanel.SetActive(false);
-    // }
-
     // DC: this is really bad code haha
     public static void PauseGameGlobal()
     {
@@ -157,7 +141,7 @@ public class UIManager : MonoBehaviour
     // we should consider refactoring this to use a state machine
     public void PauseGame()
     {
-        if (!canOpenMenus)
+        if (!couldOpenMenusLastFrame)
             return;
 
         Time.timeScale = 0f;
@@ -170,7 +154,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenPause()
     {
-        if (!canOpenMenus)
+        if (!couldOpenMenusLastFrame)
             return;
 
         pausePanel.SetActive(true);
@@ -181,7 +165,11 @@ public class UIManager : MonoBehaviour
 
     public void OpenOptions()
     {
-        if (!canOpenMenus)
+        sfxSlider.value = AudioManager.GetSFXVolume();
+        musicSlider.value = AudioManager.GetMusicVolume();
+        screenShakeSlider.value = SettingsManager.ScreenShake;
+
+        if (!couldOpenMenusLastFrame)
             return;
 
         pausePanel.SetActive(false);
@@ -192,7 +180,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenControls()
     {
-        if (!canOpenMenus)
+        if (!couldOpenMenusLastFrame)
             return;
 
         optionsPanel.SetActive(false);
@@ -200,7 +188,9 @@ public class UIManager : MonoBehaviour
     }
     public void OpenAdvOptions()
     {
-        if (!canOpenMenus)
+        bigTextToggle.isOn = SettingsManager.BigTextEnabled;
+
+        if (!couldOpenMenusLastFrame)
             return;
 
         optionsPanel.SetActive(false);
@@ -219,44 +209,31 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // public void OpenArtifact()
-    // {
-    //     if (!canOpenMenus)
-    //         return;
-
-    //     if (Player.IsSafe())
-    //     {
-    //         artifactPanel.SetActive(true);
-    //         //UIArtifact.UpdatePushedDowns();
-    //         isGamePaused = true;
-    //         isArtifactOpen = true;
-
-    //         Player.SetCanMove(false);
-
-    //         artifactAnimator.SetBool("isVisible", true);
-    //         uiArtifact.FlickerNewTiles();
-    //     }
-    //     else
-    //     {
-    //         AudioManager.Play("Artifact Error");
-    //     }
-    // }
-
-    public void UpdateSFXVolume()  //float value
+    public void UpdateSFXVolume()
     {
+        SettingsManager.SFXVolume = sfxSlider.value;
         AudioManager.SetSFXVolume(sfxSlider.value);
     }
 
-    public void UpdateMusicVolume()  //float value
+    public void UpdateMusicVolume()
     {
+        SettingsManager.MusicVolume = musicSlider.value;
         AudioManager.SetMusicVolume(musicSlider.value);
     }
 
-    // public void ToggleBigText(bool value)
-    // {
-    //     DialogueManager.highContrastMode = value;
-    //     DialogueManager.doubleSizeMode = value;
-    // }
+    public void UpdateScreenShake()
+    {
+        SettingsManager.ScreenShake = screenShakeSlider.value;
+    }
+
+    public void ToggleBigText(bool value)
+    {
+        // By the word of our noble lord, Boomo, long may he reign, these two lines must remain commented out
+        //DialogueManager.highContrastMode = value;
+        //DialogueManager.doubleSizeMode = value;
+
+        SettingsManager.BigTextEnabled = value;
+    }
 
     public void LoadGame()
     {

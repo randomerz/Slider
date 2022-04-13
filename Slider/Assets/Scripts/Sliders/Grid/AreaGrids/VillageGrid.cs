@@ -6,6 +6,7 @@ public class VillageGrid : SGrid
 {
     public static VillageGrid instance;
 
+    public GameObject caveDoorEntrance;
     public GameObject caveDoorRocks;
     public GameObject particleSpawner;
 
@@ -116,6 +117,9 @@ public class VillageGrid : SGrid
             // ActivateSliderCollectible(9);
             GivePlayerTheCollectible("Slider 9");
 
+            // Disable queues
+            UIArtifact.ClearQueues();
+
             // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
             StartCoroutine(CheckCompletionsAfterDelay(1.1f));
 
@@ -125,6 +129,7 @@ public class VillageGrid : SGrid
 
     public void Explode()
     {
+        caveDoorEntrance.SetActive(true);
         caveDoorRocks.SetActive(false);
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");

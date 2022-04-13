@@ -13,6 +13,11 @@ public class InputRebindButton : MonoBehaviour
     [SerializeField] private TMP_Text buttonText;
     [SerializeField] private InputActionAsset inputActions;
 
+    private void OnEnable()
+    {
+        UpdateButtonText();
+    }
+
     public void RemapKeybind()
     {
         if (keybind == Control.Move_Left || keybind == Control.Move_Right || keybind == Control.Move_Up || keybind == Control.Move_Down)
@@ -126,6 +131,7 @@ public class InputRebindButton : MonoBehaviour
                 UIManager.LoadBindings();
                 ShopManager.LoadBindings(); // for Ocean shop UI
                 UIArtifactMenus.LoadBindings(); // for artiface menus
+                MainMenuManager.LoadBindings(); // for main menu
             }
         }
     }

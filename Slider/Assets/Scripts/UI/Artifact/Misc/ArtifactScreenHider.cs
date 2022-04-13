@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,13 +6,17 @@ using UnityEngine;
 public class ArtifactScreenHider : MonoBehaviour 
 {
     public ArtifactScreenAnimator screenAnimator;
+    public UIArtifactMenus uiArtifactMenus;
 
     private List<RectTransform> screens;
     private List<Animator> animators;
 
     private void Awake() 
     {
-        Init();
+        if (!PlayerInventory.Contains("Map", Area.Village))
+        {
+            Init();
+        }
     }
 
     public void Init()
@@ -27,5 +32,21 @@ public class ArtifactScreenHider : MonoBehaviour
     {
         screenAnimator.screens = new List<RectTransform>(screens);
         screenAnimator.animators = new List<Animator>(animators);
+    }
+
+    public void AddScreensAndShow()
+    {
+        AddScreens();
+        StartCoroutine(IAddScreensAndShow());
+    }
+
+    private IEnumerator IAddScreensAndShow()
+    {
+        yield return new WaitForSeconds(2.25f); // magic number
+
+        uiArtifactMenus.OpenArtifact();
+
+        // show hint about pressing Q and E here
+        Debug.Log("Press [Q] and [E] to switch screens on The Artifact!");
     }
 }

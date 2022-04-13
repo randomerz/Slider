@@ -50,7 +50,7 @@ public class UIArtifact : MonoBehaviour
 
     public virtual void OnDisable()
     {
-        moveQueue = new Queue<SMove>();
+        ClearQueues();
         //Debug.Log("Queue Cleared!");
     }
 
@@ -375,6 +375,11 @@ public class UIArtifact : MonoBehaviour
             activeMoves.Add(moveQueue.Dequeue());
             QueueCheckAfterMove(this, null);
         }
+    }
+
+    public static void ClearQueues()
+    {
+        _instance.moveQueue.Clear();
     }
 
     public void UpdatePushedDowns(object sender, System.EventArgs e)

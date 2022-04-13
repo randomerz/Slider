@@ -386,8 +386,7 @@ public class SGrid : MonoBehaviour
     public virtual void SaveGrid() 
     { 
         Debug.Log("Saving data for " + myArea);
-        GameManager.GetSaveSystem().SaveSGridData(myArea, this);
-        GameManager.GetSaveSystem().SaveMissions(new Dictionary<string, bool>());
+        SaveSystem.Current.SaveSGridData(myArea, this);
     }
 
     //L: Used in the save system to load a grid as opposed to using SetGrid(STile[], STile[]) with default tiles positions.
@@ -395,8 +394,7 @@ public class SGrid : MonoBehaviour
     { 
          //Debug.Log("Loading grid...");
 
-        SGridData sgridData = GameManager.GetSaveSystem().GetSGridData(myArea);
-        Dictionary<string, bool> loadedMissions = GameManager.GetSaveSystem().GetMissions(new List<string>());
+        SGridData sgridData = SaveSystem.Current.GetSGridData(myArea);
 
         if (sgridData == null) {
             SetGrid(stiles);
@@ -425,7 +423,6 @@ public class SGrid : MonoBehaviour
     protected virtual void UpdateButtonCompletionsHelper()
     {
         // Debug.Log("Checking completions!");
-        // ineffecient lol
         for (int x = 0; x < current.width; x++) {
             for (int y = 0; y < current.width; y++) {
                 // int tid = current.targetGrid[x, y];
@@ -443,6 +440,33 @@ public class SGrid : MonoBehaviour
                 }
             }
         }
+    }
+
+    protected static int GetNumButtonCompletions()
+    {
+        return current.GetNumButtonCompletionsHelper();
+    }
+
+    protected virtual int GetNumButtonCompletionsHelper()
+    {
+        int numComplete = 0;
+        for (int x = 0; x < current.width; x++) {
+            for (int y = 0; y < current.width; y++) {
+                string tids = GetTileIdAt(x, y);
+                ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
+                if (tids == "*") 
+                {
+                    numComplete += 1;
+                }
+                else {
+                    int tid = int.Parse(tids);
+                    if (artifactButton.islandId == tid)
+                        numComplete += 1;
+                }
+            }
+        }
+
+        return numComplete;
     }
 
     protected IEnumerator CheckCompletionsAfterDelay(float t)

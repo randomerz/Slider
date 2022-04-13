@@ -37,6 +37,8 @@ public class CameraShake : MonoBehaviour
 
     public IEnumerator cShake(float duration, float amount)
     {
+        amount *= SettingsManager.ScreenShake;
+
         float curTime = 0;
         Vector3 origPos = transform.position;
 
@@ -68,6 +70,8 @@ public class CameraShake : MonoBehaviour
 
     public IEnumerator cConstantShake(float duration, float amount)
     {
+        amount *= SettingsManager.ScreenShake;
+
         float curTime = 0;
         Vector3 origPos = transform.position;
         curIntensity = amount;
@@ -99,6 +103,8 @@ public class CameraShake : MonoBehaviour
 
     public IEnumerator cIncreaseShake(float duration, float amount)
     {
+        amount *= SettingsManager.ScreenShake;
+
         float curTime = 0;
         Vector3 origPos = transform.position;
         curIntensity = amount;
@@ -118,6 +124,17 @@ public class CameraShake : MonoBehaviour
         }
 
         transform.position = _instance.baseTransform.position;
+        if(cmPerlin != null) cmPerlin.m_AmplitudeGain = 0;
+    }
+
+    public static void StopShake()
+    {
+        if (_instance == null)
+            return;
+
+        _instance.StopAllCoroutines();
+
+        _instance.transform.position = _instance.baseTransform.position;
         if(cmPerlin != null) cmPerlin.m_AmplitudeGain = 0;
     }
 }

@@ -164,9 +164,7 @@ public class OceanGrid : SGrid
     {
         return CheckGrid.contains(GetGridString(),".4._895_.3.");
     }
-
-
-
+    
     public void ActivateBurriedNPC()
     {
         burriedGuyNPC.SetActive(true);
@@ -219,6 +217,22 @@ public class OceanGrid : SGrid
     public void ToggleKnotBox()
     {
         knotBox.enabled = !knotBox.enabled;
+        if(knotBox.enabled)
+        {
+            foreach(GameObject knotnode in knotBox.knotnodes)
+            {
+                UITrackerManager.AddNewTracker(knotnode);
+            }
+        }
+        else
+        {
+            foreach(GameObject knotnode in knotBox.knotnodes)
+            {
+                UITrackerManager.RemoveTracker(knotnode);
+            }
+        }
+        
+
     }
 
     public void IsCompleted(Conditionals.Condition c)

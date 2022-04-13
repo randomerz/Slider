@@ -28,22 +28,27 @@ public class DialogueConditionals : Conditionals
         currentprio = priority;
         return true;
     }
+
     public string GetDialogue()
     {
         return dialogue;
     }
+
     public int GetPrio()
     {
         return currentprio;
     }
+
     public void OnDialogue()
     {
         onDialogue?.Invoke();
     }
+
     public void SetPrio(int p)
     {
         priority = p;
     }
+    
     public void KillDialogue()
     {
         priority = 0;
