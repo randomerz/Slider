@@ -5,6 +5,8 @@ using UnityEngine;
 public class DiceGizmo : MonoBehaviour
 {
     public STile myStile;
+    public NPC npcScript;
+    public DialogueConditionals NumberDialogue;
 
     public int value;
     public Sprite[] sprites;
@@ -19,12 +21,20 @@ public class DiceGizmo : MonoBehaviour
             FindSTile();
         }
         if (shouldDisableAtStart)
-            gameObject.SetActive(false);
+            gameObject.SetActive(false); 
+        NumberDialogue.dialogue = value.ToString();
+        npcScript.dconds.Add(NumberDialogue);
     }
 
     private void Update()
     {
+        if (myStile.hasAnchor)
+        {
+            value = 1;
+        }
         this.GetComponent<SpriteRenderer>().sprite = sprites[value - 1];
+        NumberDialogue.dialogue = value.ToString();
+        npcScript.TriggerDialogue();
     }
 
     private void OnEnable()
