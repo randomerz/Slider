@@ -116,28 +116,84 @@ MonoBehaviour:
     source: {fileID: 0}
   music:
   - name: Connection
-    clip: {fileID: 8300000, guid: 3815ff5e82c648145900d146dbd53275, type: 3}
+    clip: {fileID: 8300000, guid: a2db4f040f6815049b5d38ac7012d9e1, type: 3}
     volume: 1
     pitch: 1
     loop: 1
     doRandomPitch: 0
     source: {fileID: 0}
   - name: Caves
-    clip: {fileID: 8300000, guid: edfad8996565a3e4f84f3d6b275b66aa, type: 3}
+    clip: {fileID: 8300000, guid: d81ff2e0f64c58a42a0bb6ee5d732e64, type: 3}
     volume: 1
     pitch: 1
     loop: 1
     doRandomPitch: 0
     source: {fileID: 0}
   - name: Ocean
-    clip: {fileID: 8300000, guid: 37db68e0d2d22f941a8bd5e7a5565892, type: 3}
+    clip: {fileID: 8300000, guid: 5225459d37450564c814073485a72a47, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: Ocean Tavern
+    clip: {fileID: 8300000, guid: cfedbd86f1f92854c9f4762362d0ddce, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: Ocean Uwu
+    clip: {fileID: 8300000, guid: b7562a25ab703b040af737de14b14dad, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: Jungle
+    clip: {fileID: 8300000, guid: a2db4f040f6815049b5d38ac7012d9e1, type: 3}
     volume: 1
     pitch: 1
     loop: 1
     doRandomPitch: 0
     source: {fileID: 0}
   - name: Desert
-    clip: {fileID: 8300000, guid: 02e9d45748c2cf1459ad5927e03ccf45, type: 3}
+    clip: {fileID: 8300000, guid: 7a6a551c7cf1ea8409ec6c8472cd0825, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: Desert Casino
+    clip: {fileID: 8300000, guid: 46ea4a9c6c19a2141aee57da0738645f, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: Factory
+    clip: {fileID: 8300000, guid: d912323a53a80a34a96d1beb2ef00af6, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: Military
+    clip: {fileID: 8300000, guid: 9c0442708da60c34d85c2bf824f94feb, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: Mountain
+    clip: {fileID: 8300000, guid: 2c701b5040539a6418f5472a1a1e0b40, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: MagiTech
+    clip: {fileID: 8300000, guid: e0b4c301f4ac608469f11846d990fd71, type: 3}
     volume: 1
     pitch: 1
     loop: 1
