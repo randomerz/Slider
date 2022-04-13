@@ -126,4 +126,15 @@ public class CameraShake : MonoBehaviour
         transform.position = _instance.baseTransform.position;
         if(cmPerlin != null) cmPerlin.m_AmplitudeGain = 0;
     }
+
+    public static void StopShake()
+    {
+        if (_instance == null)
+            return;
+
+        _instance.StopAllCoroutines();
+
+        _instance.transform.position = _instance.baseTransform.position;
+        if(cmPerlin != null) cmPerlin.m_AmplitudeGain = 0;
+    }
 }
