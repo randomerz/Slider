@@ -322,7 +322,7 @@ public class ShopDialogueManager : MonoBehaviour
             case "Turn in Anchor":
                 SetDialogue(new ShopDialogue(
                     null,
-                    "Aye, that's a solid tool there. Here, have some coins on the house. Take a look at what we have and see if you're interested.",
+                    "Aye, that's a solid tool there. Here, have some coins on the house. Ask me about jobs and I can help you get started.",
                     TKSprite.Happy,
                     null
                 ));
@@ -385,11 +385,24 @@ public class ShopDialogueManager : MonoBehaviour
             case "All Items Returned":
                 SetDialogue(new ShopDialogue(
                     () => {
+                        canOverrideDialogue = false;
+                        shopManager.OpenDialoguePanel();
                         (SGrid.current as OceanGrid).StartFinalChallenge();
                     },
                     "Looks like you've about explored the whole darned ocean. Time to put things in their rightful places.",
                     TKSprite.Normal,
-                    null
+                    () => {
+                        shopManager.OpenMainPanel();
+
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "Help with this, and I'll get you access to the next town over.",
+                    TKSprite.Happy,
+                    () => {
+                        canOverrideDialogue = true;
+                    }
+                ));
+                    }
                 ));
                 break;
             
@@ -512,7 +525,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "Tales tell of a song of three verses needed to navigate it. Think it started went \"West, South, West,\" but I forgot the rest.",
+                    "Tales tell of a song of three verses needed to navigate it. Think it started went \"West, South, West,\" but I forgot the rest. Maybe others remember.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;

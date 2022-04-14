@@ -194,7 +194,9 @@ public class ShopManager : MonoBehaviour
         if ((credits > 0 || sliderNumber == 4) && !wasSliderCollectibleBought[sliderNumber - 4])
         {
             if (sliderNumber != 4) SpendCredits(1);
-            SGrid.current.ActivateSliderCollectible(sliderNumber);
+            Collectible c = SGrid.current.GetCollectible("Slider " + sliderNumber);
+            c.DoOnCollect();
+            // SGrid.current.ActivateSliderCollectible(sliderNumber);
             wasSliderCollectibleBought[sliderNumber - 4] = true;
             AudioManager.Play("Puzzle Complete");
 

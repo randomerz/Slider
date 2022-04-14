@@ -19,6 +19,11 @@ public class UIArtifactMenus : MonoBehaviour
     {
         _instance = this;
 
+        // check if this is pointing to the correct UIArtifact or prefab (this happens when we have scripts/prefabs extend UIArtifact)
+        if (uiArtifact.gameObject.scene.name == null)
+        {
+            Debug.LogWarning("You might need to update my UIArtifact reference!");
+        }
         
         _instance.controls = new InputSettings();
         LoadBindings();
@@ -89,6 +94,7 @@ public class UIArtifactMenus : MonoBehaviour
 
     public void CloseArtifact()
     {
+        Debug.Log("Closing artifact!");
         if (isArtifactOpen)
         {
             isArtifactOpen = false;

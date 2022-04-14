@@ -71,7 +71,9 @@ public class OceanGrid : SGrid
     private void OnEnable()
     {
         if (checkCompletion) {
-            SGrid.OnGridMove += SGrid.UpdateButtonCompletions;
+            OnGridMove += UpdateButtonCompletions; // this is probably not needed
+            UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
+            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
         }
 
         SGridAnimator.OnSTileMoveEnd += CheckShipwreck;
@@ -81,7 +83,9 @@ public class OceanGrid : SGrid
     private void OnDisable()
     {
         if (checkCompletion) {
-            SGrid.OnGridMove -= SGrid.UpdateButtonCompletions;
+            OnGridMove -= UpdateButtonCompletions; // this is probably not needed
+            UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
+            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
         }
 
         SGridAnimator.OnSTileMoveEnd -= CheckShipwreck;
