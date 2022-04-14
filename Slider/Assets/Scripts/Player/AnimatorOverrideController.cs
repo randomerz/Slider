@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class AnimatorOverrideController : MonoBehaviour
 {
-    public void SwapAnimator(Animator a)
+    public void SwapAnimator(RuntimeAnimatorController a)
     {
-        this.GetComponent<Player>().SetPlayerAnimator(a);
+        this.GetComponent<Animator>().runtimeAnimatorController = a;
     }
 }

@@ -276,9 +276,4 @@ public class Player : MonoBehaviour
 
         UpdatePlayerSpeed();
     }
-
-    public void SetPlayerAnimator(Animator a)
-    {
-        playerAnimator = a;
-    }
 }
