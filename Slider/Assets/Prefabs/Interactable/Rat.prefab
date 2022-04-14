@@ -160,6 +160,9 @@ MonoBehaviour:
   mouth: {fileID: 7117076765228698889}
   objectToSteal: {fileID: 0}
   player: {fileID: 0}
+  tileMaxPenalty: 100
+  maxDistCostmap: 2
+  maxDistVision: 2
 --- !u!114 &5482138428807836078
 MonoBehaviour:
   m_ObjectHideFlags: 0
