@@ -94,7 +94,6 @@ public class UIArtifactMenus : MonoBehaviour
 
     public void CloseArtifact()
     {
-        Debug.Log("Closing artifact!");
         if (isArtifactOpen)
         {
             isArtifactOpen = false;

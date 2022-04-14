@@ -115,87 +115,111 @@ MonoBehaviour:
     doRandomPitch: 1
     source: {fileID: 0}
   music:
-  - name: Connection
-    clip: {fileID: 8300000, guid: a2db4f040f6815049b5d38ac7012d9e1, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 1
-    doRandomPitch: 0
-    source: {fileID: 0}
+  - name: Village
+    fmodEvent:
+      Guid:
+        Data1: 351792065
+        Data2: 1342080784
+        Data3: 1605608103
+        Data4: -1362724340
+      Path: event:/Music/Village BGM
+    emitter: {fileID: 0}
   - name: Caves
-    clip: {fileID: 8300000, guid: d81ff2e0f64c58a42a0bb6ee5d732e64, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 1
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 1063990748
+        Data2: 1197884078
+        Data3: -835948662
+        Data4: -2105031872
+      Path: event:/Music/Caves BGM
+    emitter: {fileID: 0}
   - name: Ocean
-    clip: {fileID: 8300000, guid: 5225459d37450564c814073485a72a47, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 1
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -143502079
+        Data2: 1091950173
+        Data3: 1390174081
+        Data4: -1060142498
+      Path: event:/Music/Ocean BGM
+    emitter: {fileID: 0}
   - name: Ocean Tavern
-    clip: {fileID: 8300000, guid: cfedbd86f1f92854c9f4762362d0ddce, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 1
-    doRandomPitch: 0
-    source: {fileID: 0}
-  - name: Ocean Uwu
-    clip: {fileID: 8300000, guid: b7562a25ab703b040af737de14b14dad, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 1
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -1740888750
+        Data2: 1110485277
+        Data3: -664087911
+        Data4: -1827194727
+      Path: event:/Music/Ocean Tavern BGM
+    emitter: {fileID: 0}
+  - name: Ocean uwu
+    fmodEvent:
+      Guid:
+        Data1: 960538987
+        Data2: 1289359998
+        Data3: 919902364
+        Data4: -1690861368
+      Path: event:/Music/Ocean uwu BGM
+    emitter: {fileID: 0}
   - name: Jungle
-    clip: {fileID: 8300000, guid: a2db4f040f6815049b5d38ac7012d9e1, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 1
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -2105319134
+        Data2: 1222893821
+        Data3: -2068011088
+        Data4: -233881059
+      Path: event:/Music/Jungle BGM
+    emitter: {fileID: 0}
   - name: Desert
-    clip: {fileID: 8300000, guid: 7a6a551c7cf1ea8409ec6c8472cd0825, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 1
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 1186989440
+        Data2: 1286352738
+        Data3: -1408343377
+        Data4: -2120831231
+      Path: event:/Music/Desert BGM
+    emitter: {fileID: 0}
   - name: Desert Casino
-    clip: {fileID: 8300000, guid: 46ea4a9c6c19a2141aee57da0738645f, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 1
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -805718326
+        Data2: 1237749369
+        Data3: 1266896305
+        Data4: -1869818348
+      Path: event:/Music/Casino BGM
+    emitter: {fileID: 0}
   - name: Factory
-    clip: {fileID: 8300000, guid: d912323a53a80a34a96d1beb2ef00af6, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 1
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    emitter: {fileID: 0}
   - name: Military
-    clip: {fileID: 8300000, guid: 9c0442708da60c34d85c2bf824f94feb, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 1
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    emitter: {fileID: 0}
   - name: Mountain
-    clip: {fileID: 8300000, guid: 2c701b5040539a6418f5472a1a1e0b40, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 1
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    emitter: {fileID: 0}
   - name: MagiTech
-    clip: {fileID: 8300000, guid: e0b4c301f4ac608469f11846d990fd71, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 1
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    emitter: {fileID: 0}

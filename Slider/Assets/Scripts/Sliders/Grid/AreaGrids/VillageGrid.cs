@@ -58,7 +58,7 @@ public class VillageGrid : SGrid
             }
         }
 
-        AudioManager.PlayMusic("Connection");
+        AudioManager.PlayMusic("Village");
         UIEffects.FadeFromBlack();
     }
 

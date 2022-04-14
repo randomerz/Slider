@@ -10,7 +10,7 @@ public class SaveSystem
 {
     public static SaveProfile Current {
         get {
-            if (current == null) 
+            if (current == null && SGrid.current != null) 
             {
                 Debug.LogError("Save System is not using a profile! Creating a default profile for now...");
                 current = new SaveProfile("UNNAMED PROFILE");

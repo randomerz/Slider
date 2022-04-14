@@ -64,6 +64,8 @@ public class OceanGrid : SGrid
         burriedGuyNPC.SetActive(false);
 
         AudioManager.PlayMusic("Ocean");
+        AudioManager.PlayMusic("Ocean Tavern", false);
+        AudioManager.PlayMusic("Ocean uwu", false);
         UIEffects.FadeFromBlack();
 
     }
@@ -287,7 +289,7 @@ public class OceanGrid : SGrid
 
         int currentIslandId = Player.GetStileUnderneath().islandId;
         
-        if (currentIslandId != lastIslandId)
+        if (currentIslandId != lastIslandId && (lastIslandId == 6 || lastIslandId == 7))
         {
             fog7.SetActive(true);
             fog6.SetActive(true);
@@ -318,6 +320,7 @@ public class OceanGrid : SGrid
     private void FoggySeasAudio()
     {
         AudioManager.PlayWithPitch("Puzzle Complete", 0.3f + playerIndex * 0.05f);
+        AudioManager.SetMusicParameter("Ocean", "OceanFoggyProgress", playerIndex);
     }
 
     public void FoggyCorrectMovement()
@@ -340,9 +343,9 @@ public class OceanGrid : SGrid
         {
             AudioManager.Play("Artifact Error");
         }
+
         playerIndex = 0;
-        
-        
+        AudioManager.SetMusicParameter("Ocean", "OceanFoggyProgress", 0);
     }
 
     public bool FoggyCompleted()
