@@ -43,8 +43,16 @@ public class RatAI : MonoBehaviour
     public GameObject objectToSteal;
     public Transform player;
 
-    internal bool holdingObject;
 
+    [Header("Cost Map Calculations")]
+    [SerializeField]
+    internal int tileMaxPenalty = 100;
+    [SerializeField]
+    internal float maxDistCostmap = 3f;
+    [SerializeField]
+    internal float maxDistVision = 2f;  //This should be a low value
+
+    internal bool holdingObject;
     private BehaviourTreeNode behaviourTree;
 
     private Vector2 _dirFacing;
@@ -55,10 +63,6 @@ public class RatAI : MonoBehaviour
             return _dirFacing;
         }
     }
-
-    [HideInInspector]
-    internal HashSet<Vector2Int> visited = null;    //For debugging
-
 
     //Costs for running away from player
     public Dictionary<Vector2Int, int> CostMap
@@ -74,9 +78,8 @@ public class RatAI : MonoBehaviour
     }
     private Dictionary<Vector2Int, int> _costMap = null;
 
-    internal const int tileMaxPenalty = 100;
-    internal const float maxDistCostmap = 3f;
-    internal const float maxDistVision = 2f;
+    [HideInInspector]
+    internal HashSet<Vector2Int> visited = null;    //For debugging
 
     private void Awake()
     {
@@ -102,7 +105,6 @@ public class RatAI : MonoBehaviour
 
     private void Start()
     {
-        GenerateCostMap();
         ConstructBehaviourTree();
         StealPiece();
     }
@@ -188,28 +190,30 @@ public class RatAI : MonoBehaviour
         behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, runToLightSequence, stayInPlaceNode });
     }
 
-    private Dictionary<Vector2Int, int> GenerateCostMap()
+    private void GenerateCostMap()
     {
         var nav = GetComponentInParent<WorldNavigation>();
-        HashSet<Vector2Int> validPts = nav.ValidPts;
-
-        _costMap = new Dictionary<Vector2Int, int>();
-        foreach (var pt in validPts)
+        if (nav.ValidPts != null)
         {
-            if (LightManager.instance != null && LightManager.instance.GetLightMaskAt(pt.x, pt.y))
+            _costMap = new Dictionary<Vector2Int, int>();
+            foreach (var pt in nav.ValidPts)
             {
-                if (Mathf.Pow(pt.x - transform.position.x, 2) + Mathf.Pow(pt.y - transform.position.y, 2) < 400) // DC this is really laggy! I hope this doesnt break the nav
+                if (LightManager.instance != null && LightManager.instance.GetLightMaskAt(pt.x, pt.y))
                 {
-                    _costMap.Add(pt, CostToThreat(GetDistToNearestBadTile(pt)));
+                    // if (Mathf.Pow(pt.x - transform.position.x, 2) + Mathf.Pow(pt.y - transform.position.y, 2) < 400) // DC: this is laggy! adding this for the demo
+                    {
+                        _costMap.Add(pt, CostToThreat(GetDistToNearestBadTile(pt)));
+                    }
                 }
             }
         }
-        return _costMap;
+
+        Debug.Assert(_costMap != null, "Tried to initialize Cost Map before Valid Pts. This might be a problem.");
     }
 
-    internal static int CostToThreat(float distToThreat)
+    internal int CostToThreat(float distToThreat)
     {
-        int cost = Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / maxDistCostmap * (distToThreat - 1f)), 0, tileMaxPenalty);
+        int cost = (distToThreat == float.MaxValue) ? 0 : Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / maxDistCostmap * (distToThreat - 1f)), 0, tileMaxPenalty);
         //Debug.Log("Distance: " + distToThreat);
         //Debug.Log("Cost: " + cost);
         return cost;
@@ -221,14 +225,12 @@ public class RatAI : MonoBehaviour
         WorldNavigation nav = GetComponentInParent<WorldNavigation>();
 
         float dist = 0f;
-        // const float maxDistCheck = tileMaxPenalty / 10f + 1f;
-        const float maxDistCheck = tileMaxPenalty / 100f + 1f; // DC: this is really laggy! lets tone this down for the demo... 
 
         var queue = new Queue<Vector2Int>();
         var visited = new HashSet<Vector2Int>();
         visited.Add(posAsInt);
         queue.Enqueue(posAsInt);
-        while (queue.Count > 0 && dist < maxDistCheck)   //worst case scenario it's in the corner and has to check up to the opposite corner
+        while (queue.Count > 0 && dist < maxDistCostmap)
         {
             Vector2Int currPos = queue.Dequeue();
 
@@ -254,7 +256,7 @@ public class RatAI : MonoBehaviour
             }
         }
 
-        return int.MaxValue;    //Obstacles are ("infinitely far") from the ai (far enough that the ai doesn't need to care)
+        return float.MaxValue;    //Obstacles are ("infinitely far") from the ai (far enough that the ai doesn't need to care)
     }
 
     private void OnDrawGizmosSelected()
