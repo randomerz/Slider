@@ -199,6 +199,7 @@ public class DesertArtifact : UIArtifact
             QueueCheckAndAdd(swap);
             //Debug.Log("Added move to queue: current length " + moveQueue.Count);
             QueueCheckAfterMove(this, null);
+            DeselectCurrentButton();
             return true;
         }
         else
