@@ -61,6 +61,7 @@ public class DesertGrid : SGrid
         }
 
         AudioManager.PlayMusic("Desert");
+        AudioManager.PlayMusic("Desert Casino", false);
         UIEffects.FadeFromBlack();
     }
     
@@ -75,6 +76,19 @@ public class DesertGrid : SGrid
         {
             SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;
         }
+    }
+
+    private void Update() 
+    {
+        // For Casino music
+        
+        STile s5 = SGrid.current.GetStile(5);
+        float dist1 = s5.isTileActive ? (Player.GetPosition() - s5.transform.position).magnitude : 17; // center
+        float dist2 = s5.isTileActive ? (Player.GetPosition() - (s5.transform.position + Vector3.right * 8.5f)).magnitude : 17; // right
+        STile s6 = SGrid.current.GetStile(6);
+        float dist3 = s6.isTileActive ? (Player.GetPosition() - s6.transform.position).magnitude : 17; // center
+        float dist4 = s6.isTileActive ? (Player.GetPosition() - (s6.transform.position + Vector3.left * 8.5f)).magnitude : 17; // left
+        AudioManager.SetMusicParameter("Desert", "DesertDistToCasino", Mathf.Min(dist1, dist2, dist3, dist4));
     }
 
     public override void SaveGrid() 
@@ -153,6 +167,14 @@ public class DesertGrid : SGrid
     public void IsMonkeyInOasis(Conditionals.Condition c)
     {
         c.SetSpec(monkeyOasis);
+    }
+    public void IsFirstShake(Conditionals.Condition c)
+    {
+        c.SetSpec(monkeShake >= 1);
+    }
+    public void IsSecondShake(Conditionals.Condition c)
+    {
+        c.SetSpec(monkeShake >= 2);
     }
 
     //Puzzle 3: Jackal Bone

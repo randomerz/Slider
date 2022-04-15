@@ -39,8 +39,12 @@ public class DiscordController : MonoBehaviour
 
     void Update()
     {
-        // Not entirely sure what this does, but apparently it's important
-        discord?.RunCallbacks();
+        // "homie really told discord shush be quiet" — Lord Boomo
+        try
+        {
+            discord?.RunCallbacks();
+        }
+        catch { }
     }
 
     /// <summary>

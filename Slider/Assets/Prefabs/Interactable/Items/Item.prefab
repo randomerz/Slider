@@ -46,8 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59ec98f46be488f40a665e0375116960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: 
   spriteRenderer: {fileID: 8919005992056777909}
   myCollider: {fileID: 4607457495645169289}
+  canKeep: 0
   pickUpDuration: 0.5
   xPickUpMotion:
     serializedVersion: 2
@@ -115,6 +117,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  OnPickUp:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDrop:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &4607457495645169294
 Rigidbody2D:
   serializedVersion: 4
@@ -224,7 +232,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 4711866757045417178, guid: b612fb15b8ee6a544b86f03b56ce4ea4, type: 3}
-  m_Color: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

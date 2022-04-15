@@ -91,7 +91,7 @@ public class UIManager : MonoBehaviour
         {
             // if another menu is open (e.g. ocean shop)
             // do nothing
-            Debug.Log("Another menu is open, doing nothing..");
+            // Debug.Log("Another menu is open, doing nothing..");
         }
         else 
         {

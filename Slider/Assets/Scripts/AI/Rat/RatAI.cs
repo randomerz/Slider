@@ -199,6 +199,7 @@ public class RatAI : MonoBehaviour
             foreach (var pt in nav.ValidPts)
             {
                 if (LightManager.instance != null && LightManager.instance.GetLightMaskAt(pt.x, pt.y))
+                //if (Mathf.Pow(pt.x - transform.position.x, 2) + Mathf.Pow(pt.y - transform.position.y, 2) < 400) // DC this is really laggy! I hope this doesnt break the nav
                 {
                     _costMap.Add(pt, CostToThreat(GetDistToNearestBadTile(pt)));
                 }

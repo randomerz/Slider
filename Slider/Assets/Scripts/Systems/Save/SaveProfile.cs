@@ -94,21 +94,26 @@ public class SaveProfile
     //     return playerPos[area];
     // }
 
-    public void SaveBools(Dictionary<string, bool> missions)
+
+    public bool GetBool(string name)
     {
-        foreach (string s in missions.Keys)
-        {
-            bools[s] = missions[s];
-        }
+        // add a null check here?
+        return bools[name];
     }
 
-    public Dictionary<string, bool> GetBools(List<string> missions)
+    public void SetBool(string name, bool value)
     {
-        Dictionary<string, bool> ret = new Dictionary<string, bool>();
-        foreach (string s in missions)
-        {
-            ret[s] = bools[s];
-        }
-        return ret;
+        bools[name] = value;
+    }
+    
+    public string GetString(string name)
+    {
+        // add a null check here?
+        return strings[name];
+    }
+
+    public void SetString(string name, string value)
+    {
+        strings[name] = value;
     }
 }

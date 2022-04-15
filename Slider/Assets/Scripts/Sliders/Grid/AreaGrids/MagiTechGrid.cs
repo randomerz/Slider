@@ -34,7 +34,7 @@ public class MagiTechGrid : SGrid
             }
         }
 
-        AudioManager.PlayMusic("Connection");
+        AudioManager.PlayMusic("MagiTech");
         UIEffects.FadeFromBlack();
     }
 
