@@ -34,6 +34,7 @@ public class VillageGrid : SGrid
     
     private void OnEnable() {
         if (checkCompletion) {
+            UpdateButtonCompletions(this, null);
             SGrid.OnGridMove += SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
@@ -58,7 +59,7 @@ public class VillageGrid : SGrid
             }
         }
 
-        AudioManager.PlayMusic("Connection");
+        AudioManager.PlayMusic("Village");
         UIEffects.FadeFromBlack();
     }
 

@@ -67,6 +67,7 @@ public class CaveGrid : SGrid
     {
         if (checkLightingCompletion)
         {
+            checkCompletionsOnMoveFunc(this, null);
             SGridAnimator.OnSTileMoveEnd += checkCompletionsOnMoveFunc;
         }
     }

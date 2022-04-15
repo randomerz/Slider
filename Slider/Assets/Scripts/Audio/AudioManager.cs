@@ -2,18 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class AudioManager : MonoBehaviour
 {
     [SerializeField]
     private Sound[] sounds;
     private static Sound[] _sounds;
+
     [SerializeField]
-    private Sound[] music;
-    private static Sound[] _music;
+    private Music[] music;
+    private static Music[] _music;
 
     private static float sfxVolume = 0.5f; // [0..1]
     private static float musicVolume = 0.5f;
+
+    private static FMOD.Studio.Bus sfxBus;
+    private static FMOD.Studio.Bus musicBus;
 
     //[SerializeField]
     //private GameObject audioListenerObj;
@@ -48,17 +53,14 @@ public class AudioManager : MonoBehaviour
             s.source.loop = s.loop;
         }
 
-        foreach (Sound s in _music)
+        foreach (Music m in _music)
         {
-            s.source = gameObject.AddComponent<AudioSource>();
-            s.source.clip = s.clip;
-
-            s.source.volume = s.volume;
-            s.source.pitch = s.pitch;
-            s.source.loop = s.loop;
+            m.emitter = gameObject.AddComponent<StudioEventEmitter>();
+            m.emitter.EventReference = m.fmodEvent;
         }
 
-        //menuLowPass = audioListenerObj.GetComponent<AudioLowPassFilter>();
+        sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/SFX");
+        musicBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/Music");
         SetSFXVolume(sfxVolume);
         SetMusicVolume(musicVolume);
     }
@@ -66,6 +68,21 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
 
+    }
+
+    private static Music GetMusic(string name)
+    {
+        if (_music == null)
+            return null;
+        Music m = Array.Find(_music, music => music.name == name);
+
+        if (m == null)
+        {
+            Debug.LogError("Music: " + name + " not found!");
+            return null;
+        }
+
+        return m;
     }
 
     public static void Play(string name)
@@ -108,30 +125,6 @@ public class AudioManager : MonoBehaviour
         s.source.Play();
     }
 
-    public static void PlayMusic(string name)
-    {
-        if (_music == null)
-            return;
-        Sound s = Array.Find(_music, sound => sound.name == name);
-
-        if (s == null)
-        {
-            Debug.LogError("Sound: " + name + " not found!");
-            return;
-        }
-
-        if (s.doRandomPitch)
-            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
-
-        // stop all other musics
-        foreach (Sound m in _music)
-        {
-            m.source.Stop();
-        }
-
-        s.source.Play();
-    }
-
     public static void Stop(string name)
     {
         if (_sounds == null)
@@ -147,20 +140,51 @@ public class AudioManager : MonoBehaviour
         s.source.Stop();
     }
 
-    public static void StopMusic(string name)
+    public static void PlayMusic(string name, bool stopOtherTracks=true)
     {
-        if (_music == null)
+        Music m = GetMusic(name);
+        
+        if (m == null)
             return;
-        Sound s = Array.Find(_music, sound => sound.name == name);
 
-        if (s == null)
+        if (stopOtherTracks)
         {
-            Debug.LogError("Sound: " + name + " not found!");
-            return;
+            foreach (Music music in _music)
+            {
+                music.emitter.Stop(); //FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            }
         }
 
-        s.source.Stop();
+        m.emitter.Play();
     }
+
+    public static void StopMusic(string name)
+    {
+        Music m = GetMusic(name);
+        
+        if (m == null)
+            return;
+
+        m.emitter.Stop();
+    }
+
+    public static void SetMusicParameter(string name, string parameterName, float value)
+    {
+        // for global parameters
+        FMODUnity.RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
+
+        Music m = GetMusic(name);
+        
+        if (m == null)
+            return;
+
+        // for track-specific parameters
+        m.emitter.SetParameter(parameterName, value);
+    }
+
+
+
+
 
     public static void SetSFXVolume(float value)
     {
@@ -175,6 +199,8 @@ public class AudioManager : MonoBehaviour
                 continue;
             s.source.volume = s.volume * value;
         }
+
+        sfxBus.setVolume(value);
     }
 
     public static void SetMusicVolume(float value)
@@ -184,15 +210,35 @@ public class AudioManager : MonoBehaviour
 
         if (_music == null)
             return;
-        foreach (Sound s in _music)
+        foreach (Music m in _music)
         {
-            if (s == null || s.source == null)
+            if (m == null || m.emitter == null)
                 continue;
-            s.source.volume = s.volume * value;
+            // m.emitter. = m.volume * value;
         }
+
+        // if (value == 0)
+        // {
+        //     foreach (Music music in _music)
+        //     {
+        //         music.emitter.Stop(); //FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        //     }
+        // }
+        
+        musicBus.setVolume(value);
     }
 
-    public static void SetPitch(float value)
+    public static float GetSFXVolume()
+    {
+        return sfxVolume;
+    }
+
+    public static float GetMusicVolume()
+    {
+        return musicVolume;
+    }
+
+    public static void SetSFXPitch(float value)
     {
         value = Mathf.Clamp(value, 0.3f, 3f);
         //volume = value;
@@ -205,16 +251,6 @@ public class AudioManager : MonoBehaviour
                 continue;
             s.source.pitch = s.pitch * value;
         }
-    }
-
-    public static float GetSFXVolume()
-    {
-        return sfxVolume;
-    }
-
-    public static float GetMusicVolume()
-    {
-        return musicVolume;
     }
 
     //public static void SetLowPassEnabled(bool value)

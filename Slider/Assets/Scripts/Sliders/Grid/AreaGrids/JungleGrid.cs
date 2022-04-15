@@ -33,7 +33,7 @@ public class JungleGrid : SGrid
                 c.gameObject.SetActive(false);
             }
         }
-        AudioManager.PlayMusic("Connection");
+        AudioManager.PlayMusic("Jungle");
         UIEffects.FadeFromBlack();
     }
 
