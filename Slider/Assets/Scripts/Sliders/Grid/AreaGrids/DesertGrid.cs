@@ -168,6 +168,14 @@ public class DesertGrid : SGrid
     {
         c.SetSpec(monkeyOasis);
     }
+    public void IsFirstShake(Conditionals.Condition c)
+    {
+        c.SetSpec(monkeShake >= 1);
+    }
+    public void IsSecondShake(Conditionals.Condition c)
+    {
+        c.SetSpec(monkeShake >= 2);
+    }
 
     //Puzzle 3: Jackal Bone
     public void SetJackalQuest(bool b)
