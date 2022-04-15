@@ -201,9 +201,9 @@ public class RatAI : MonoBehaviour
                 if (LightManager.instance != null && LightManager.instance.GetLightMaskAt(pt.x, pt.y))
                 {
                     // if (Mathf.Pow(pt.x - transform.position.x, 2) + Mathf.Pow(pt.y - transform.position.y, 2) < 400) // DC: this is laggy! adding this for the demo
-                    {
+                    //{
                         _costMap.Add(pt, CostToThreat(GetDistToNearestBadTile(pt)));
-                    }
+                    //}
                 }
             }
         }
