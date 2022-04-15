@@ -12,6 +12,7 @@ public class VillageGrid : SGrid
 
     private bool fishOn;
 
+    private Coroutine shuffleBuildUpCoroutine;
     private static bool checkCompletion = false;
 
     private new void Awake() {
@@ -95,14 +96,43 @@ public class VillageGrid : SGrid
 
     // Puzzle 8 - 8puzzle
     public void ShufflePuzzle() {
+        if (shuffleBuildUpCoroutine == null)
+        {
+            shuffleBuildUpCoroutine = StartCoroutine(ShuffleBuildUp());
+        }
+    }
+
+    private IEnumerator ShuffleBuildUp()
+    {
+        AudioManager.Play("Puzzle Complete");
+
+        yield return new WaitForSeconds(0.5f);
+
+        CameraShake.Shake(0.25f, 0.25f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(0.75f, 0.5f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(1.5f, 2.5f);
+        AudioManager.Play("Slide Explosion");
+
+        yield return new WaitForSeconds(0.25f);
+
+        UIEffects.FlashWhite();
+        DoShuffle();
+    }
+
+    private void DoShuffle()
+    {
         int[,] shuffledPuzzle = new int[3, 3] { { 7, 0, 1 },
                                                 { 6, 4, 8 },
                                                 { 5, 3, 2 } };
         SetGrid(shuffledPuzzle);
-
-        // fading stuff
-        UIEffects.FlashWhite();
-        CameraShake.Shake(1.5f, 1.0f);
 
         checkCompletion = true;
         OnGridMove += UpdateButtonCompletions; // this is probably not needed

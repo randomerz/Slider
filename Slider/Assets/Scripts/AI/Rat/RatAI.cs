@@ -198,7 +198,10 @@ public class RatAI : MonoBehaviour
         {
             if (LightManager.instance != null && LightManager.instance.GetLightMaskAt(pt.x, pt.y))
             {
-                _costMap.Add(pt, CostToThreat(GetDistToNearestBadTile(pt)));
+                if (Mathf.Pow(pt.x - transform.position.x, 2) + Mathf.Pow(pt.y - transform.position.y, 2) < 400) // DC this is really laggy! I hope this doesnt break the nav
+                {
+                    _costMap.Add(pt, CostToThreat(GetDistToNearestBadTile(pt)));
+                }
             }
         }
         return _costMap;
@@ -218,7 +221,8 @@ public class RatAI : MonoBehaviour
         WorldNavigation nav = GetComponentInParent<WorldNavigation>();
 
         float dist = 0f;
-        const float maxDistCheck = tileMaxPenalty / 10f + 1f;
+        // const float maxDistCheck = tileMaxPenalty / 10f + 1f;
+        const float maxDistCheck = tileMaxPenalty / 100f + 1f; // DC: this is really laggy! lets tone this down for the demo... 
 
         var queue = new Queue<Vector2Int>();
         var visited = new HashSet<Vector2Int>();
