@@ -193,13 +193,14 @@ public class RatAI : MonoBehaviour
     private void GenerateCostMap()
     {
         var nav = GetComponentInParent<WorldNavigation>();
-        if (nav.ValidPts != null)
+        HashSet<Vector2Int> validPts = nav.ValidPts;
+
+        _costMap = new Dictionary<Vector2Int, int>();
+        foreach (var pt in validPts)
         {
-            _costMap = new Dictionary<Vector2Int, int>();
-            foreach (var pt in nav.ValidPts)
+            if (LightManager.instance != null && LightManager.instance.GetLightMaskAt(pt.x, pt.y))
             {
-                if (LightManager.instance != null && LightManager.instance.GetLightMaskAt(pt.x, pt.y))
-                //if (Mathf.Pow(pt.x - transform.position.x, 2) + Mathf.Pow(pt.y - transform.position.y, 2) < 400) // DC this is really laggy! I hope this doesnt break the nav
+                if (Mathf.Pow(pt.x - transform.position.x, 2) + Mathf.Pow(pt.y - transform.position.y, 2) < 400) // DC this is really laggy! I hope this doesnt break the nav
                 {
                     _costMap.Add(pt, CostToThreat(GetDistToNearestBadTile(pt)));
                 }
