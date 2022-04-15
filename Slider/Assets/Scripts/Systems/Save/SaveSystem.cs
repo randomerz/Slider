@@ -13,7 +13,7 @@ public class SaveSystem
             if (current == null && SGrid.current != null) 
             {
                 Debug.LogError("Save System is not using a profile! Creating a default profile for now...");
-                current = new SaveProfile("UNNAMED PROFILE");
+                current = new SaveProfile("Boomo");
             }
             return current;
         }

@@ -39,7 +39,7 @@ public class DialogueDisplay : MonoBehaviour
         {
             startIndex = message.IndexOf('<', startIndex);
             // case with \<
-            if (message[startIndex - 1] == '\\')
+            if (startIndex != 0 && message[startIndex - 1] == '\\')
             {
                 // continue
                 startIndex += 1;

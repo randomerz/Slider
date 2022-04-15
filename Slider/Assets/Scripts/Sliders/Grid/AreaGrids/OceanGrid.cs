@@ -74,6 +74,7 @@ public class OceanGrid : SGrid
     private void OnEnable()
     {
         if (checkCompletion) {
+            UpdateButtonCompletions(this, null);
             OnGridMove += UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
@@ -189,7 +190,7 @@ public class OceanGrid : SGrid
             return false;
         }
 
-        return knotBox.CheckLines();
+        return knotBox.CheckLines() == 0;
     }
 
     public void BuoyAllFound(Conditionals.Condition c)

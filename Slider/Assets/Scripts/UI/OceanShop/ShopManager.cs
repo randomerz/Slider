@@ -93,7 +93,9 @@ public class ShopManager : MonoBehaviour
     public void CheckTavernKeep()
     {
         // first talk
-        SGrid.current.ActivateSliderCollectible(3);
+        // SGrid.current.ActivateSliderCollectible(3);
+        Collectible c = SGrid.current.GetCollectible("Slider 3");
+        c.DoOnCollect();
 
         // rest of rewards
         if (PlayerInventory.GetHasCollectedAnchor() && !turnedInAnchor)
