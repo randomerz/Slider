@@ -9,7 +9,10 @@ public class DesertArtifact : UIArtifact
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
         moveOptionButtons.Clear();
-
+        if (button == null)
+        {
+            return moveOptionButtons;
+        }
         //Vector2 buttPos = new Vector2(button.x, button.y);
         // foreach (ArtifactTileButton b in buttons)
         // {
