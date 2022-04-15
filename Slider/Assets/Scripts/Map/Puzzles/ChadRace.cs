@@ -37,6 +37,8 @@ public class ChadRace : MonoBehaviour
     // Keeps track if this is the first time the play has tried the race with the current tile positions
     private bool firstTime;
 
+    private float jungleChadEnd;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -70,6 +72,10 @@ public class ChadRace : MonoBehaviour
                     DisplayAndTriggerDialogue("GO!");
                     chadimator.SetBool("isWalking", true);
                     raceState = State.Running;
+
+                    // AudioManager.SetMusicParameter("Jungle", "JungleChadStarted", 1); // magnet to start of race
+                    // AudioManager.SetMusicParameter("Jungle", "JungleChadWon", 0);
+                    StartCoroutine(SetParameterTemporary("JungleChadStarted", 1, 0));
                 }
                 break;
             case State.Running:
@@ -85,6 +91,7 @@ public class ChadRace : MonoBehaviour
                     chadEndLocal = transform.localPosition;
                     raceState = State.ChadWon;
                 }
+                
                 break;
             case State.Cheated:
                 chadimator.SetBool("isWalking", false);
@@ -95,16 +102,24 @@ public class ChadRace : MonoBehaviour
                 chadimator.SetBool("isWalking", false);
                 countDownDialogue.dialogue = "Pfft, too easy. Come back when you're fast enough to compete with me. (e to start)";
                 transform.localPosition = chadEndLocal;
+
+                // AudioManager.SetMusicParameter("Jungle", "JungleChadStarted", 0);
+                // AudioManager.SetMusicParameter("Jungle", "JungleChadWon", 1);
+                jungleChadEnd = 1;
                 break;
             case State.PlayerWon:
                 // Not entirely sure why, but an offset of .5 in x gets chad in the right spot at the end
                 chadEndLocal = finishingLine.localPosition - new Vector3(.5f, 2, 0);
                 if (transform.localPosition.y < chadEndLocal.y) {
-                    chadimator.SetBool("isWalking", false);
                     MoveChad();
                 } else {
                     transform.localPosition = chadEndLocal;
+                    chadimator.SetBool("isWalking", false);
                     chadimator.SetBool("isSad", true);
+
+                    // AudioManager.SetMusicParameter("Jungle", "JungleChadStarted", 0);
+                    // AudioManager.SetMusicParameter("Jungle", "JungleChadWon", 2);
+                    jungleChadEnd = 1;
                 }
                 break;
         }
@@ -166,5 +181,27 @@ public class ChadRace : MonoBehaviour
     private void DisplayAndTriggerDialogue(string message) {
         countDownDialogue.dialogue = message;
         npcScript.TriggerDialogue();
+    }
+
+
+    private IEnumerator SetParameterTemporary(string parameterName, float value1, float value2)
+    {
+        Debug.Log("Param update to " + value1);
+        AudioManager.SetMusicParameter("Jungle", parameterName, value1);
+
+        yield return new WaitForSeconds(1);
+        
+        Debug.Log("Param update to " + value2);
+        AudioManager.SetMusicParameter("Jungle", parameterName, value2);
+    }
+
+    public void UpdateChadEnd()
+    {
+        if (jungleChadEnd == 1)
+        {
+            Debug.Log("peep ee poo poo");
+            StartCoroutine(SetParameterTemporary("JungleChadEnd", 1, 0));
+            jungleChadEnd = 0;
+        }
     }
 }

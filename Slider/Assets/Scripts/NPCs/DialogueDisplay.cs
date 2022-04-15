@@ -28,7 +28,37 @@ public class DialogueDisplay : MonoBehaviour
         canvas.SetActive(true);
         StopAllCoroutines();
         message = message.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
+        message = ConvertVariablesToStrings(message);
         StartCoroutine(TypeSentence(message.ToCharArray()));
+    }
+
+    private string ConvertVariablesToStrings(string message)
+    {
+        int startIndex = 0;
+        while (message.IndexOf('<', startIndex) != -1)
+        {
+            startIndex = message.IndexOf('<', startIndex);
+            // case with \<
+            if (message[startIndex - 1] == '\\')
+            {
+                // continue
+                startIndex += 1;
+                continue;
+            }
+
+            int endIndex = message.IndexOf('>', startIndex);
+            if (endIndex == -1)
+            {
+                // no more ends!
+                break;
+            }
+            string varName = message.Substring(startIndex + 1, endIndex - startIndex - 1);
+            string varResult = SaveSystem.Current.GetString(varName);
+            message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
+            // startIndex = endIndex;
+        }
+
+        return message;
     }
 
     IEnumerator TypeSentence(char[] charArray)

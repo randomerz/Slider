@@ -62,6 +62,7 @@ public class OceanGrid : SGrid
         }
 
         burriedGuyNPC.SetActive(false);
+        fogIsland.SetActive(false);
 
         AudioManager.PlayMusic("Ocean");
         AudioManager.PlayMusic("Ocean Tavern", false);
