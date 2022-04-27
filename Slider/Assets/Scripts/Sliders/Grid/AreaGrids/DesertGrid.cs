@@ -67,14 +67,18 @@ public class DesertGrid : SGrid
     
     private void OnEnable() {
         if (checkCompletion) {
-            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
+            OnGridMove += UpdateButtonCompletions; // this is probably not needed
+            UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
+            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
         }
     }
 
     private void OnDisable() {
         if (checkCompletion)
         {
-            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;
+            OnGridMove -= UpdateButtonCompletions; // this is probably not needed
+            UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
+            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
         }
     }
 
@@ -340,17 +344,14 @@ public class DesertGrid : SGrid
     {
         GazelleQuest = b;
     }
-
     public void SetGazelleOasis(bool b)
     {
         GazelleOasis = b;
-        checkCompletion = b;
     }
     public void CheckGazelleQuest(Conditionals.Condition c)
     {
         c.SetSpec(GazelleQuest);
     }
-
     public void CheckGazelleNearOasis(Conditionals.Condition c)
     {
         c.SetSpec(CheckGrid.contains(GetGridString(), "26") || CheckGrid.contains(GetGridString(), "6...2"));
@@ -361,9 +362,21 @@ public class DesertGrid : SGrid
     }
 
     //Puzzle 7: 8puzzle
-    public void ReAlignGrid()
+    public void ShufflePuzzle()
     {
-        //conduct series of STile swaps or something? Maybe set grid to something   
+        int[,] shuffledPuzzle = new int[3, 3] { { 4, 8, 1 },
+                                                { 3, 0, 6 },
+                                                { 2, 7, 5 } };
+        SetGrid(shuffledPuzzle);
+
+        // fading stuff
+        UIEffects.FlashWhite();
+        CameraShake.Shake(1.5f, 1.0f);
+
+        checkCompletion = true;
+        OnGridMove += UpdateButtonCompletions; // this is probably not needed
+        UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
+        SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
     }
     private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
