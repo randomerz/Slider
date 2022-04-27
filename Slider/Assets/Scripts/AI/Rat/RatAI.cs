@@ -43,8 +43,17 @@ public class RatAI : MonoBehaviour
     public GameObject objectToSteal;
     public Transform player;
 
-    internal bool holdingObject;
 
+    [Header("Cost Map Calculations")]
+    [SerializeField]
+    internal int tileMaxPenalty = 100;
+    [SerializeField]
+    internal float maxDistCostmap = 3f;
+    [SerializeField]
+    internal float maxDistVision = 2f;  //This should be a low value
+
+    internal bool holdingObject;
+    private STile currentStileUnderneath;
     private BehaviourTreeNode behaviourTree;
 
     private Vector2 _dirFacing;
@@ -55,10 +64,6 @@ public class RatAI : MonoBehaviour
             return _dirFacing;
         }
     }
-
-    [HideInInspector]
-    internal HashSet<Vector2Int> visited = null;    //For debugging
-
 
     //Costs for running away from player
     public Dictionary<Vector2Int, int> CostMap
@@ -74,9 +79,8 @@ public class RatAI : MonoBehaviour
     }
     private Dictionary<Vector2Int, int> _costMap = null;
 
-    internal const int tileMaxPenalty = 100;
-    internal const float maxDistCostmap = 3f;
-    internal const float maxDistVision = 2f;
+    [HideInInspector]
+    internal HashSet<Vector2Int> visited = null;    //For debugging
 
     private void Awake()
     {
@@ -102,7 +106,6 @@ public class RatAI : MonoBehaviour
 
     private void Start()
     {
-        GenerateCostMap();
         ConstructBehaviourTree();
         StealPiece();
     }
@@ -115,6 +118,36 @@ public class RatAI : MonoBehaviour
             Stay();
         }
     }
+
+    private void FixedUpdate()
+    {
+        // updating childing
+        UpdateStileUnderneath();
+        // Debug.Log("Currently on: " + currentStileUnderneath);
+
+        if (currentStileUnderneath != null)
+        {
+            transform.SetParent(currentStileUnderneath.transform);
+        }
+        else
+        {
+            transform.SetParent(null);
+        }
+    }
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.layer == LayerMask.NameToLayer("Slider"))
+    //    {
+    //        STile tile = collision.GetComponent<STile>();
+    //        Debug.Log(tile);
+    //        if (collision.GetComponent<STile>().isTileActive)
+    //        {
+    //            transform.parent = collision.transform;
+    //        }
+
+    //    }
+    //}
 
     private void OnEnable()
     {
@@ -151,13 +184,6 @@ public class RatAI : MonoBehaviour
         anim.SetFloat("speed", 0f);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject == objectToSteal)
-        {
-        }
-    }
-
     private void StealPiece()
     {
         //L: Reparent Slider piece to be child of Rat
@@ -188,25 +214,30 @@ public class RatAI : MonoBehaviour
         behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, runToLightSequence, stayInPlaceNode });
     }
 
-    private Dictionary<Vector2Int, int> GenerateCostMap()
+    private void GenerateCostMap()
     {
         var nav = GetComponentInParent<WorldNavigation>();
-        HashSet<Vector2Int> validPts = nav.ValidPts;
-
-        _costMap = new Dictionary<Vector2Int, int>();
-        foreach (var pt in validPts)
+        if (nav.ValidPts != null)
         {
-            if (LightManager.instance != null && LightManager.instance.GetLightMaskAt(pt.x, pt.y))
+            _costMap = new Dictionary<Vector2Int, int>();
+            foreach (var pt in nav.ValidPts)
             {
-                _costMap.Add(pt, CostToThreat(GetDistToNearestBadTile(pt)));
+                if (LightManager.instance != null && LightManager.instance.GetLightMaskAt(pt.x, pt.y))
+                {
+                    //if (Mathf.Pow(pt.x - transform.position.x, 2) + Mathf.Pow(pt.y - transform.position.y, 2) < 400) // DC: this is laggy! adding this for the demo
+                    //{
+                        _costMap.Add(pt, CostToThreat(GetDistToNearestBadTile(pt)));
+                    //}
+                }
             }
         }
-        return _costMap;
+
+        Debug.Assert(_costMap != null, "Tried to initialize Cost Map before Valid Pts. This might be a problem.");
     }
 
-    internal static int CostToThreat(float distToThreat)
+    internal int CostToThreat(float distToThreat)
     {
-        int cost = Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / maxDistCostmap * (distToThreat - 1f)), 0, tileMaxPenalty);
+        int cost = (distToThreat == float.MaxValue) ? 0 : Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / maxDistCostmap * (distToThreat - 1f)), 0, tileMaxPenalty);
         //Debug.Log("Distance: " + distToThreat);
         //Debug.Log("Cost: " + cost);
         return cost;
@@ -218,13 +249,12 @@ public class RatAI : MonoBehaviour
         WorldNavigation nav = GetComponentInParent<WorldNavigation>();
 
         float dist = 0f;
-        const float maxDistCheck = tileMaxPenalty / 10f + 1f;
 
         var queue = new Queue<Vector2Int>();
         var visited = new HashSet<Vector2Int>();
         visited.Add(posAsInt);
         queue.Enqueue(posAsInt);
-        while (queue.Count > 0 && dist < maxDistCheck)   //worst case scenario it's in the corner and has to check up to the opposite corner
+        while (queue.Count > 0 && dist < maxDistCostmap)
         {
             Vector2Int currPos = queue.Dequeue();
 
@@ -250,7 +280,72 @@ public class RatAI : MonoBehaviour
             }
         }
 
-        return int.MaxValue;    //Obstacles are ("infinitely far") from the ai (far enough that the ai doesn't need to care)
+        return float.MaxValue;    //Obstacles are ("infinitely far") from the ai (far enough that the ai doesn't need to care)
+    }
+
+    // DC: a better way of calculating which stile the player is on, accounting for overlapping stiles
+    private void UpdateStileUnderneath()
+    {
+        // this doesnt work when you queue a move and stand at the edge. for some reason, on the moment of impact hits does not overlap with anything??
+        // Collider2D[] hits = Physics2D.OverlapPointAll(_instance.transform.position, LayerMask.GetMask("Slider"));
+        // Debug.Log("Hit " + hits.Length + " at " + _instance.transform.position);
+
+        // STile stileUnderneath = null;
+        // for (int i = 0; i < hits.Length; i++)
+        // {
+        //     STile s = hits[i].GetComponent<STile>();
+        //     if (s != null && s.isTileActive)
+        //     {
+        //         if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
+        //         {
+        //             // we are still on top of the same one
+        //             return;
+        //         }
+        //         if (stileUnderneath == null)
+        //         {
+        //             // otherwise we only care about the first hit
+        //             stileUnderneath = s;
+        //         }
+        //     }
+        // }
+        // currentStileUnderneath = stileUnderneath;
+
+        STile[,] grid = SGrid.current.GetGrid();
+        float offset = grid[0, 0].STILE_WIDTH / 2f;
+        float housingOffset = -150;
+
+        STile stileUnderneath = null;
+        foreach (STile s in grid)
+        {
+            if (s.isTileActive && IsPlayerInSTileBounds(s.transform.position, offset, housingOffset))
+            {
+                if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
+                {
+                    // we are still on top of the same one
+                    return;
+                }
+
+                if (stileUnderneath == null || s.islandId < stileUnderneath.islandId)
+                {
+                    // in case where multiple overlap and none are picked, take the lowest number?
+                    stileUnderneath = s;
+                }
+            }
+        }
+
+        currentStileUnderneath = stileUnderneath;
+    }
+
+    private bool IsPlayerInSTileBounds(Vector3 stilePos, float offset, float housingOffset)
+    {
+        Vector3 pos = transform.position;
+        if (stilePos.x - offset < pos.x && pos.x < stilePos.x + offset &&
+           (stilePos.y - offset < pos.y && pos.y < stilePos.y + offset ||
+            stilePos.y - offset + housingOffset < pos.y && pos.y < stilePos.y + offset + housingOffset))
+        {
+            return true;
+        }
+        return false;
     }
 
     private void OnDrawGizmosSelected()

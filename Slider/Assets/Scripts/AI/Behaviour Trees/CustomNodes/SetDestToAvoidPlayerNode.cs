@@ -24,7 +24,7 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
         var visited = new HashSet<Vector2Int>();
         visited.Add(posAsInt);
         queue.Enqueue(posAsInt);
-        while (queue.Count > 0 && dist < RatAI.maxDistVision)   //worst case scenario it's in the corner and has to check up to the opposite corner
+        while (queue.Count > 0 && dist < ai.maxDistVision)   //worst case scenario it's in the corner and has to check up to the opposite corner
         {
             Vector2Int currPos = queue.Dequeue();
 
@@ -78,7 +78,7 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
             float distToPlayer = Vector2Int.Distance(playerPosAsInt, pt);
 
             //This can be a variety of functions of player/tile cost (max doesn't work due to corridor edge case)
-            return ai.CostMap[pt] + RatAI.CostToThreat(distToPlayer);
+            return ai.CostMap[pt] + ai.CostToThreat(distToPlayer);
         }
     }
 

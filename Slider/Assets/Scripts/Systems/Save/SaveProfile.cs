@@ -108,6 +108,11 @@ public class SaveProfile
     
     public string GetString(string name)
     {
+        if (!strings.ContainsKey(name))
+        {
+            Debug.LogError("Couldn't find saved variable of name: " + name);
+            return name;
+        }
         // add a null check here?
         return strings[name];
     }

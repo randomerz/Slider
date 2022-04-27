@@ -29,7 +29,7 @@ public class ShakableTree : MonoBehaviour
             StartCoroutine(AnimateFallingPaper(StuckPaper, null));
 
             isShaken = true;
-            myPlayerConditionals.disableConditionals();
+            myPlayerConditionals.DisableConditionals();
             
         }
         

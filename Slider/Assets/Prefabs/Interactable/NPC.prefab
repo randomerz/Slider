@@ -230,8 +230,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bc5308457a4bcd44b45b8eb11bfa22c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueText: {fileID: 863640731015937093}
-  dialogueBG: {fileID: 3031016440214396035}
+  textTyperText: {fileID: 2664969615823266812}
+  textTyperBG: {fileID: 5413396733350346047}
   ping: {fileID: 1639439709551164036}
   canvas: {fileID: 1390625316688445350}
   highContrastBG: {fileID: 2569609833456035175}
@@ -451,6 +451,8 @@ GameObject:
   - component: {fileID: 2931230219487757481}
   - component: {fileID: 1512610234196649377}
   - component: {fileID: 3031016440214396035}
+  - component: {fileID: 5413396733350346047}
+  - component: {fileID: 5062938066658938547}
   m_Layer: 5
   m_Name: Dialogue BG Font
   m_TagString: Untagged
@@ -505,9 +507,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: i i i ii i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i
-    i i i ii ii i i ii i i i i i i i i i i i i i i i i i i i i i i i i i i i i i
-    i i i i i i i
+  m_text: Something went wrong with my dialogue!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f46a94f8999c4a5438046a90dccf8a75, type: 2}
   m_sharedMaterial: {fileID: -6722964685613506005, guid: f46a94f8999c4a5438046a90dccf8a75, type: 2}
@@ -576,6 +576,38 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5413396733350346047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4373966769904450837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbe7e1e212663649aad033efbc87b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invisibleAtStart: 0
+  fadeTextIn: 1
+  rolloverCharacterSpread: 2
+  finishedTyping: 0
+--- !u!114 &5062938066658938547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4373966769904450837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f3740a2eefdf014c8799dba4f92eae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jitterMultiplier: 0.01
+  shakeMultiplier: 0.01
+  waveAmplitude: 0.01
+  wavePeriod: 1
 --- !u!1 &5307824455736266433
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,6 +619,8 @@ GameObject:
   - component: {fileID: 5105196423396195397}
   - component: {fileID: 4451752362851266767}
   - component: {fileID: 863640731015937093}
+  - component: {fileID: 2664969615823266812}
+  - component: {fileID: 5785310853724136222}
   m_Layer: 5
   m_Name: Dialogue
   m_TagString: Untagged
@@ -641,9 +675,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: i i i ii i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i
-    i i i ii ii i i ii i i i i i i i i i i i i i i i i i i i i i i i i i i i i i
-    i i i i i i i
+  m_text: Something went wrong with my dialogue!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c7029ecf3a2b2c44b8c14e89e54a7682, type: 2}
   m_sharedMaterial: {fileID: -5073963218194134624, guid: c7029ecf3a2b2c44b8c14e89e54a7682, type: 2}
@@ -712,6 +744,38 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2664969615823266812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5307824455736266433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbe7e1e212663649aad033efbc87b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invisibleAtStart: 0
+  fadeTextIn: 1
+  rolloverCharacterSpread: 2
+  finishedTyping: 0
+--- !u!114 &5785310853724136222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5307824455736266433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f3740a2eefdf014c8799dba4f92eae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jitterMultiplier: 0.01
+  shakeMultiplier: 0.01
+  waveAmplitude: 0.01
+  wavePeriod: 1
 --- !u!1 &8047462946301359007
 GameObject:
   m_ObjectHideFlags: 0
