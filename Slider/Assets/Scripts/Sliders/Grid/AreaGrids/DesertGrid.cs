@@ -67,14 +67,18 @@ public class DesertGrid : SGrid
     
     private void OnEnable() {
         if (checkCompletion) {
-            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
+            OnGridMove += UpdateButtonCompletions; // this is probably not needed
+            UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
+            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
         }
     }
 
     private void OnDisable() {
         if (checkCompletion)
         {
-            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;
+            OnGridMove -= UpdateButtonCompletions; // this is probably not needed
+            UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
+            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
         }
     }
 
