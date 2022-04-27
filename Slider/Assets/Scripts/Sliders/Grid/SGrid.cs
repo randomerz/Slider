@@ -80,6 +80,8 @@ public class SGrid : MonoBehaviour
     Note: This updates all of the STiles according to the ids in the given array (unlike the other imp., which leaves the STiles in the same positions)
     * 
     * This is useful for reshuffling the grid.
+    * 
+    * C: The "0" STile represents where the 9th tile should go
     */
     public void SetGrid(int[,] puzzle)
     {
