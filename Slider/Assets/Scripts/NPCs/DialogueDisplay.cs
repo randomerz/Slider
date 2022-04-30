@@ -5,8 +5,11 @@ using TMPro;
 
 public class DialogueDisplay : MonoBehaviour
 {
-    public TextMeshProUGUI dialogueText;
-    public TextMeshProUGUI dialogueBG;
+    public TMPTextTyper textTyperText;
+    public TMPTextTyper textTyperBG;
+
+    // public TextMeshProUGUI dialogueText;
+    // public TextMeshProUGUI dialogueBG;
     public GameObject ping;
 
     public GameObject canvas;
@@ -28,8 +31,10 @@ public class DialogueDisplay : MonoBehaviour
         canvas.SetActive(true);
         StopAllCoroutines();
         message = message.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
-        message = ConvertVariablesToStrings(message);
-        StartCoroutine(TypeSentence(message.ToCharArray()));
+        // message = ConvertVariablesToStrings(message);
+        textTyperText.StartTyping(message);
+        textTyperBG.StartTyping(message);
+        // StartCoroutine(TypeSentence(message.ToCharArray()));
     }
 
     private string ConvertVariablesToStrings(string message)
@@ -61,21 +66,21 @@ public class DialogueDisplay : MonoBehaviour
         return message;
     }
 
-    IEnumerator TypeSentence(char[] charArray)
-    {
-        dialogueText.text = "";
-        dialogueBG.text = "";
-        foreach (char letter in charArray)
-        {
-            dialogueText.text += letter;
-            dialogueBG.text += letter;
+    // IEnumerator TypeSentence(char[] charArray)
+    // {
+    //     dialogueText.text = "";
+    //     dialogueBG.text = "";
+    //     foreach (char letter in charArray)
+    //     {
+    //         dialogueText.text += letter;
+    //         dialogueBG.text += letter;
 
-            if (GameSettings.punctuation.IndexOf(letter) != -1)
-                yield return new WaitForSeconds(GameSettings.textSpeed);
+    //         if (GameSettings.punctuation.IndexOf(letter) != -1)
+    //             yield return new WaitForSeconds(GameSettings.textSpeed);
 
-            yield return new WaitForSeconds(GameSettings.textSpeed);
-        }
-    }
+    //         yield return new WaitForSeconds(GameSettings.textSpeed);
+    //     }
+    // }
 
     public void FadeAwayDialogue()
     {

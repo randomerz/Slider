@@ -5,6 +5,8 @@ using UnityEngine;
 // This is for the village, to initially hide the first 2 artifact screens
 public class ArtifactScreenHider : MonoBehaviour 
 {
+    [SerializeField] private bool debugSkipHiding;
+
     public ArtifactScreenAnimator screenAnimator;
     public UIArtifactMenus uiArtifactMenus;
 
@@ -31,6 +33,9 @@ public class ArtifactScreenHider : MonoBehaviour
 
     public void Init()
     {
+        if (debugSkipHiding)
+            return;
+
         screens = new List<RectTransform>(screenAnimator.screens);
         animators = new List<Animator>(screenAnimator.animators);
 

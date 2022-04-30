@@ -44,7 +44,7 @@ public class SGrid : MonoBehaviour
     protected Area myArea; // don't forget to set me!
     public Area MyArea { get => myArea; }
 
-    protected void Awake()
+    protected virtual void Awake()
     {
 
         current = this;
@@ -59,6 +59,20 @@ public class SGrid : MonoBehaviour
             Debug.LogWarning("Area isn't set!");
 
         // OnGridMove += CheckCompletions;
+    }
+
+    protected virtual void Start() 
+    {
+        foreach (Collectible c in collectibles)
+        {
+            if (PlayerInventory.Contains(c))
+            {
+                c.gameObject.SetActive(false);
+            }
+
+        }
+
+        UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.oneBit);
     }
 
     private void InitUIArtifact()
@@ -80,6 +94,8 @@ public class SGrid : MonoBehaviour
     Note: This updates all of the STiles according to the ids in the given array (unlike the other imp., which leaves the STiles in the same positions)
     * 
     * This is useful for reshuffling the grid.
+    * 
+    * C: The "0" STile represents where the 9th tile should go
     */
     public void SetGrid(int[,] puzzle)
     {

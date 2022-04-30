@@ -15,7 +15,7 @@ public class VillageGrid : SGrid
     private Coroutine shuffleBuildUpCoroutine;
     private static bool checkCompletion = false;
 
-    private new void Awake() {
+    protected override void Awake() {
         myArea = Area.Village;
 
         foreach (Collectible c in collectibles) 
@@ -31,6 +31,14 @@ public class VillageGrid : SGrid
             particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
         }
         instance = this;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        AudioManager.PlayMusic("Village");
+        UIEffects.FadeFromBlack();
     }
     
     private void OnEnable() {
@@ -48,20 +56,6 @@ public class VillageGrid : SGrid
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;
         }
-    }
-
-    void Start()
-    {
-        foreach (Collectible c in collectibles) 
-        {
-            if (PlayerInventory.Contains(c)) 
-            {
-                c.gameObject.SetActive(false);
-            }
-        }
-
-        AudioManager.PlayMusic("Village");
-        UIEffects.FadeFromBlack();
     }
 
     public override void SaveGrid() 

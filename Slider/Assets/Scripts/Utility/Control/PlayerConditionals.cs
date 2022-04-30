@@ -10,17 +10,13 @@ public class PlayerConditionals : MonoBehaviour
 
     public bool addToOnAction;
 
+    private bool isEnabled = true;
 
-    //      im just gonna brute force check them
-    // public class PlayerCondition {
-    //     public abstract bool Evaluate() {
-    //         return false;
-    //     }
-    // }
 
     public bool isCarryingItem;
     public string itemNameCheck;
 
+    // caves
     public bool triggerIsLit;
     private LightManager lm;
 
@@ -40,8 +36,11 @@ public class PlayerConditionals : MonoBehaviour
             // Debug.Log("Adding listener!");
             if (addToOnAction)
             {
-                PlayerAction.OnAction += OnActionListener;
-                Player.GetPlayerAction().IncrementActionsAvailable();
+                if (isEnabled)
+                {
+                    PlayerAction.OnAction += OnActionListener;
+                    Player.GetPlayerAction().IncrementActionsAvailable();
+                }
             }
             else
             {
@@ -57,14 +56,23 @@ public class PlayerConditionals : MonoBehaviour
             // Debug.Log("Removing listener!");
             if (addToOnAction)
             {
-                PlayerAction.OnAction -= OnActionListener;
-                Player.GetPlayerAction().DecrementActionsAvailable();
+                if (isEnabled)
+                {
+                    PlayerAction.OnAction -= OnActionListener;
+                    Player.GetPlayerAction().DecrementActionsAvailable();
+                }
             }
         }
     }
 
     public bool CheckCondition()
     {
+        if (!isEnabled)
+        {
+            return false;
+        }
+
+        // caves
         if (triggerIsLit)
         {
             if (lm != null)
@@ -75,6 +83,7 @@ public class PlayerConditionals : MonoBehaviour
                 }
             }
         }
+
         if (isCarryingItem)
         {
             if (!Player.GetPlayerAction().HasItem())
@@ -101,11 +110,12 @@ public class PlayerConditionals : MonoBehaviour
         CheckCondition();
     }
 
-    public void disableConditionals()
+    public void DisableConditionals()
     {
         PlayerAction.OnAction -= OnActionListener;
         Player.GetPlayerAction().DecrementActionsAvailable();
         addToOnAction = false;
+        isEnabled = false;
     }
 
 }
