@@ -44,7 +44,7 @@ public class SGrid : MonoBehaviour
     protected Area myArea; // don't forget to set me!
     public Area MyArea { get => myArea; }
 
-    protected void Awake()
+    protected virtual void Awake()
     {
 
         current = this;
@@ -59,6 +59,20 @@ public class SGrid : MonoBehaviour
             Debug.LogWarning("Area isn't set!");
 
         // OnGridMove += CheckCompletions;
+    }
+
+    protected virtual void Start() 
+    {
+        foreach (Collectible c in collectibles)
+        {
+            if (PlayerInventory.Contains(c))
+            {
+                c.gameObject.SetActive(false);
+            }
+
+        }
+
+        UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.oneBit);
     }
 
     private void InitUIArtifact()

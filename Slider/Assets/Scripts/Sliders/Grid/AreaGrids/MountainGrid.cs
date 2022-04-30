@@ -10,7 +10,7 @@ public class MountainGrid : SGrid
     public SGridBackground[,] topBgGrid;
 
 
-    private new void Awake() {
+    protected override void Awake() {
         myArea = Area.Mountain;
         base.Awake();
         instance = this;

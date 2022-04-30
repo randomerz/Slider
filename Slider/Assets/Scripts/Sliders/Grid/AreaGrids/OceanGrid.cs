@@ -33,7 +33,7 @@ public class OceanGrid : SGrid
     public GameObject fog7;
     public GameObject fogIsland;
 
-    private new void Awake() {
+    protected override void Awake() {
         myArea = Area.Ocean;
 
         foreach (Collectible c in collectibles) // maybe don't have this
@@ -50,16 +50,9 @@ public class OceanGrid : SGrid
     }
 
 
-    void Start()
+    protected override void Start()
     {
-        foreach (Collectible c in collectibles)
-        {
-            if (PlayerInventory.Contains(c))
-            {
-                c.gameObject.SetActive(false);
-            }
-
-        }
+        base.Start();
 
         burriedGuyNPC.SetActive(false);
         fogIsland.SetActive(false);

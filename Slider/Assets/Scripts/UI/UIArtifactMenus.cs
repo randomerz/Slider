@@ -11,6 +11,7 @@ public class UIArtifactMenus : MonoBehaviour
     public UIArtifact uiArtifact;
     public ArtifactScreenAnimator screenAnimator;
     public Animator artifactAnimator;
+    public UIArtifactWorldMap artifactWorldMap;
 
     private bool isArtifactOpen;
     private InputSettings controls;
@@ -18,6 +19,8 @@ public class UIArtifactMenus : MonoBehaviour
     private void Awake() 
     {
         _instance = this;
+
+        artifactWorldMap.Init();
 
         // check if this is pointing to the correct UIArtifact or prefab (this happens when we have scripts/prefabs extend UIArtifact)
         if (uiArtifact.gameObject.scene.name == null)

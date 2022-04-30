@@ -33,7 +33,7 @@ public class DesertGrid : SGrid
 
     // public Collectible[] collectibles;
 
-    private new void Awake() {
+    protected override void Awake() {
         myArea = Area.Desert;
 
         foreach (Collectible c in collectibles) // maybe don't have this
@@ -46,18 +46,13 @@ public class DesertGrid : SGrid
         instance = this;
     }
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         if (dice1 == null && dice2 == null)
         {
             Debug.LogWarning("Die have not been set!");
-        }
-        foreach (Collectible c in collectibles)
-        {
-            if (PlayerInventory.Contains(c))
-            {
-                c.gameObject.SetActive(false);
-            }
         }
 
         AudioManager.PlayMusic("Desert");

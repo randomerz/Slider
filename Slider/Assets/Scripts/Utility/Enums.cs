@@ -18,7 +18,7 @@ public static class Areas
         Area.Mountain => "Riding Through the Mountain",
         Area.Military => "Commiting Warcrimes",
         Area.MagiTech => "Playing With Time Portals",
-        Area.Space => "Exploring the Galaxy",
+        // Area.Space => "Exploring the Galaxy",
         _ => "None",
     };
 }
@@ -34,7 +34,7 @@ public enum Area {
     Mountain,
     Military,
     MagiTech,
-    Space
+    // Space
 }
 
 public enum bottleState { 

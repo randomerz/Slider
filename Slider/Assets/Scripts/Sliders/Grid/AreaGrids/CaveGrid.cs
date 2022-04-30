@@ -22,7 +22,7 @@ public class CaveGrid : SGrid
 
 
 
-    private new void Awake() {
+    protected override void Awake() {
         myArea = Area.Caves;
 
         foreach (Collectible c in collectibles)
@@ -43,15 +43,9 @@ public class CaveGrid : SGrid
     }
 
 
-    void Start()
+    protected override void Start()
     {
-        foreach (Collectible c in collectibles)
-        {
-            if (PlayerInventory.Contains(c))
-            {
-                c.gameObject.SetActive(false);
-            }
-        }
+        base.Start();
 
         GetCollectible("Slider 5").gameObject.SetActive(false); // gameboy puzzle
         GetCollectible("Slider 6").gameObject.SetActive(false); // flashlight puzzle
