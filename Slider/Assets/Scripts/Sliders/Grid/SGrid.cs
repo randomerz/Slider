@@ -438,7 +438,7 @@ public class SGrid : MonoBehaviour
 
     protected virtual void UpdateButtonCompletionsHelper()
     {
-        Debug.Log("SGrid update buttons complete!");
+        // Debug.Log("SGrid update buttons complete!");
 
         // Debug.Log("Checking completions!");
         for (int x = 0; x < current.width; x++) {

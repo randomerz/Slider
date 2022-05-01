@@ -110,6 +110,7 @@ public class ArtifactScreenAnimator : MonoBehaviour
         // UpdateArrowVisibility(false);
 
         switchCouroutine = null;
+        OnScreenChange(currentScreenIndex);
 
         if (targetScreenIndex != currentScreenIndex)
             SwitchScreens(targetScreenIndex);
@@ -124,4 +125,12 @@ public class ArtifactScreenAnimator : MonoBehaviour
         }
     }
 
+    private void OnScreenChange(int index)
+    {
+        // map screen
+        if (index == 2)
+        {
+            UIArtifactWorldMap.UpdateAreaStatuses();
+        }
+    }
 }

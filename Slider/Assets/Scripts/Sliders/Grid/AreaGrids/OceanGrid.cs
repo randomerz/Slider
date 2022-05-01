@@ -381,6 +381,8 @@ public class OceanGrid : SGrid
 
             AudioManager.Play("Puzzle Complete");
             oceanArtifact.FlickerAllOnce();
+            
+            UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
 

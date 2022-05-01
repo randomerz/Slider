@@ -136,6 +136,8 @@ public class CaveGrid : SGrid
                                                  { 8, 7, 9 } };
         SetGrid(completedPuzzle);
         StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+
+        UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
     }
 
     public override void SaveGrid() 

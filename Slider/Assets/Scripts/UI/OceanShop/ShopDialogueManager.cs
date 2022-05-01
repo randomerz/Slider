@@ -525,7 +525,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "Tales tell of a song of three verses needed to navigate it. Think it started went \"West, South, West,\" but I forgot the rest. Maybe others remember.",
+                    "Tales tell of a song of three whole verses needed to navigate it. Think it started went \"West, South, West,\" but I forgot the rest. Maybe others remember.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
@@ -657,6 +657,8 @@ public class ShopDialogueManager : MonoBehaviour
                     () => { 
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
+
+                        UIArtifactWorldMap.SetAreaStatus(Area.Jungle, ArtifactWorldMapArea.AreaStatus.silhouette);
                     },
                     "Treetop town in the jungle to the North.",
                     TKSprite.Normal,
@@ -677,6 +679,8 @@ public class ShopDialogueManager : MonoBehaviour
                     () => { 
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
+
+                        UIArtifactWorldMap.SetAreaStatus(Area.Desert, ArtifactWorldMapArea.AreaStatus.silhouette);
                     },
                     "Big crater in the desert to the north.",
                     TKSprite.Normal,
