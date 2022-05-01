@@ -22,6 +22,8 @@ public class ArtifactWorldMapArea : MonoBehaviour
     public Sprite oneBitSprite;
     public Sprite colorSprite;
 
+    public Material whiteSpriteMat;
+
 
     public bool SetStatus(AreaStatus status)
     {
@@ -33,7 +35,15 @@ public class ArtifactWorldMapArea : MonoBehaviour
 
         areaStatus = status;
         UpdateSprite();
+        if (gameObject.activeInHierarchy)
+            StartCoroutine(FlashWhite());
         return true;
+    }
+
+    public void ClearStatus()
+    {
+        areaStatus = AreaStatus.none;
+        UpdateSprite();
     }
 
     public void UpdateSprite()
@@ -53,5 +63,16 @@ public class ArtifactWorldMapArea : MonoBehaviour
                 image.sprite = colorSprite;
                 break;
         }
+    }
+
+    private IEnumerator FlashWhite()
+    {
+        Debug.Log(name + "starting");
+        image.material = whiteSpriteMat;
+
+        yield return new WaitForSeconds(0.05f);
+        Debug.Log(name + "ending");
+
+        image.material = null;
     }
 }

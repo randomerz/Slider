@@ -70,4 +70,10 @@ public class UIArtifactWorldMap : MonoBehaviour
             areaToStatus[area] = status;
         }
     }
+
+    public static void ClearAreaStatus(Area area)
+    {
+        areaToMapArea[area].ClearStatus();
+        areaToStatus[area] = ArtifactWorldMapArea.AreaStatus.none;
+    }
 }
