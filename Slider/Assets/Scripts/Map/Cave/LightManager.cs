@@ -39,6 +39,7 @@ public class LightManager : MonoBehaviour
 
     void Awake()
     {
+        //There can only be one LightManager in the scene at a time, but we don't want it to be persistent between scenes since there's overhead + it causes issues.
         if (instance == null)
             instance = this;
         else
@@ -69,6 +70,14 @@ public class LightManager : MonoBehaviour
     {
         SGrid.OnSTileEnabled -= UpdateAll;
         SGridAnimator.OnSTileMoveEnd -= UpdateAll;
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
     }
 
     public void UpdateAll()
@@ -119,10 +128,11 @@ public class LightManager : MonoBehaviour
     }
     private void FindMaterials()
     {
+        Debug.Log("Finding Materials");
         _caveLightMaterials = new List<Material>();
         caveShader = Shader.Find("Shader Graphs/CaveTileLightShader");
 
-        Renderer[] allRenderers = FindObjectsOfType<Renderer>();
+        Renderer[] allRenderers = FindObjectsOfType<Renderer>(true);
         foreach (Renderer r in allRenderers)
         {
             if (r.material.shader == caveShader)
