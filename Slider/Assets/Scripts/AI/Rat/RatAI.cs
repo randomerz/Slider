@@ -48,9 +48,9 @@ public class RatAI : MonoBehaviour
     [SerializeField]
     internal int tileMaxPenalty = 100;
     [SerializeField]
-    internal float maxDistCostmap = 3f;
+    internal float maxDistVision = 2f;  //This should be a low value to avoid lag/crashes
     [SerializeField]
-    internal float maxDistVision = 2f;  //This should be a low value
+    internal float maxDistCost = 3f;
 
     internal bool holdingObject;
     private STile currentStileUnderneath;
@@ -113,7 +113,12 @@ public class RatAI : MonoBehaviour
     private void Update()
     {
         behaviourTree.Evaluate();
-        GenerateCostMap();
+
+        //if (rb.velocity.magnitude > 0f)
+        //{
+            GenerateCostMap();
+        //}
+
         if (behaviourTree.State == BehaviourTreeNode.NodeState.FAILURE)
         {
             Stay();
@@ -132,40 +137,26 @@ public class RatAI : MonoBehaviour
         }
         else
         {
-            transform.SetParent(null);
+            transform.SetParent(GameObject.Find("World Grid").transform);
         }
     }
 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.layer == LayerMask.NameToLayer("Slider"))
-    //    {
-    //        STile tile = collision.GetComponent<STile>();
-    //        Debug.Log(tile);
-    //        if (collision.GetComponent<STile>().isTileActive)
-    //        {
-    //            transform.parent = collision.transform;
-    //        }
-
-    //    }
-    //}
-
     private void OnEnable()
     {
-        WorldNavigation.OnValidPtsChanged += CostMapEventHandler;
-        LightManager.OnLightMaskChanged += CostMapEventHandler;
+        //WorldNavigation.OnValidPtsChanged += CostMapEventHandler;
+        //LightManager.OnLightMaskChanged += CostMapEventHandler;
     }
 
     private void OnDisable()
     {
-        WorldNavigation.OnValidPtsChanged -= CostMapEventHandler;
-        LightManager.OnLightMaskChanged -= CostMapEventHandler;
+        //WorldNavigation.OnValidPtsChanged -= CostMapEventHandler;
+        //LightManager.OnLightMaskChanged -= CostMapEventHandler;
     }
 
-    private void CostMapEventHandler(object sender, System.EventArgs e)
-    {
-        GenerateCostMap();
-    }
+    //private void CostMapEventHandler(object sender, System.EventArgs e)
+    //{
+    //    GenerateCostMap();
+    //}
 
     public void SetDirection(Vector2 dir)
     {
@@ -217,28 +208,32 @@ public class RatAI : MonoBehaviour
 
     private void GenerateCostMap()
     {
+        Debug.Log("Generating Cost Map");
         var nav = GetComponentInParent<WorldNavigation>();
-        if (nav.ValidPts != null)
+        if (nav.ValidPts != null && LightManager.instance != null)
         {
             _costMap = new Dictionary<Vector2Int, int>();
-            foreach (var pt in nav.ValidPts)
+            Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
+            //Square that includes Rat vision (which itself is a circle)
+            for (int x = (int)-maxDistVision; x <= (int)maxDistVision; x++)
             {
-                if (LightManager.instance != null && LightManager.instance.GetLightMaskAt(pt.x, pt.y))
+                for (int y = (int)-maxDistVision; y <= (int)maxDistVision; y++)
                 {
-                    if (Mathf.Pow(pt.x - transform.position.x, 2) + Mathf.Pow(pt.y - transform.position.y, 2) < 10*10) // DC: this is laggy! adding this for the demo
+                    Vector2Int pos = posAsInt + new Vector2Int(x, y);
+                    if (nav.ValidPts.Contains(pos) && LightManager.instance.GetLightMaskAt(pos.x, pos.y))
                     {
-                        _costMap.Add(pt, CostToThreat(GetDistToNearestBadTile(pt)));
+                        _costMap.Add(pos, CostToThreat(GetDistToNearestBadTile(pos)));
                     }
                 }
             }
         }
 
-        Debug.Assert(_costMap != null, "Tried to initialize Cost Map before Valid Pts. This might be a problem.");
+        Debug.Assert(_costMap != null, "Tried to initialize Cost Map before Valid Pts or LightManager. This might be a problem.");
     }
 
     internal int CostToThreat(float distToThreat)
     {
-        int cost = (distToThreat == float.MaxValue) ? 0 : Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / maxDistCostmap * (distToThreat - 1f)), 0, tileMaxPenalty);
+        int cost = (distToThreat == float.MaxValue) ? 0 : Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / maxDistCost * (distToThreat - 1f)), 0, tileMaxPenalty);
         //Debug.Log("Distance: " + distToThreat);
         //Debug.Log("Cost: " + cost);
         return cost;
@@ -255,12 +250,11 @@ public class RatAI : MonoBehaviour
         var visited = new HashSet<Vector2Int>();
         visited.Add(posAsInt);
         queue.Enqueue(posAsInt);
-        while (queue.Count > 0 && dist < maxDistCostmap)
+        Vector2Int[] neighborDirs = { Vector2Int.up, Vector2Int.left, Vector2Int.down, Vector2Int.right,
+                                      new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1) };
+        while (queue.Count > 0 && dist < maxDistCost)
         {
             Vector2Int currPos = queue.Dequeue();
-
-            Vector2Int[] neighborDirs = { Vector2Int.up, Vector2Int.left, Vector2Int.down, Vector2Int.right,
-                                      new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1) };
 
             foreach (var dir in neighborDirs)
             {
@@ -318,7 +312,7 @@ public class RatAI : MonoBehaviour
         STile stileUnderneath = null;
         foreach (STile s in grid)
         {
-            if (s.isTileActive && IsPlayerInSTileBounds(s.transform.position, offset, housingOffset))
+            if (s.isTileActive && IsInSTileBounds(s.transform.position, offset, housingOffset))
             {
                 if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
                 {
@@ -337,7 +331,7 @@ public class RatAI : MonoBehaviour
         currentStileUnderneath = stileUnderneath;
     }
 
-    private bool IsPlayerInSTileBounds(Vector3 stilePos, float offset, float housingOffset)
+    private bool IsInSTileBounds(Vector3 stilePos, float offset, float housingOffset)
     {
         Vector3 pos = transform.position;
         if (stilePos.x - offset < pos.x && pos.x < stilePos.x + offset &&

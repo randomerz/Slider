@@ -24,17 +24,17 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
         var visited = new HashSet<Vector2Int>();
         visited.Add(posAsInt);
         queue.Enqueue(posAsInt);
-        while (queue.Count > 0 && dist < ai.maxDistVision)   //worst case scenario it's in the corner and has to check up to the opposite corner
+        while (queue.Count > 0 && dist < ai.maxDistVision)
         {
             Vector2Int currPos = queue.Dequeue();
 
             List<Vector2Int> neighbors = nav.GetMooreNeighbors(currPos);
+            dist = Vector2Int.Distance(posAsInt, neighbors[0]);
 
             foreach (var neighbor in neighbors)
             {
                 if (!visited.Contains(neighbor))
                 {
-                    dist = Vector2Int.Distance(posAsInt, neighbor);
                     visited.Add(neighbor);
                     queue.Enqueue(neighbor);
 
@@ -43,7 +43,7 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
                     List<Vector2Int> path;  //Don't actually care about this
                     if (cost < minCost)
                     {
-                        if (dist < 1.5f || nav.GetPathFromToAStar(posAsInt, neighbor, out path, false, CostAStar))
+                        if (dist < 1.5f || nav.GetPathFromToAStar(posAsInt, neighbor, out path, false, TotalCostAStar))
                         {
                             minCost = cost;
                             minCostNeighbor = neighbor;
@@ -58,7 +58,7 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
         if (minCost < int.MaxValue)
         {
             RatBlackboard.Instance.destination = minCostNeighbor;
-            RatBlackboard.Instance.costFunc = CostAStar;
+            RatBlackboard.Instance.costFunc = TotalCostAStar;
             return NodeState.SUCCESS;
         } else
         {
@@ -70,19 +70,19 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
     private int GetTileCost(Vector2Int pt)
     {
         Vector2Int playerPosAsInt = TileUtil.WorldToTileCoords(ai.player.position);
-        if (!ai.CostMap.ContainsKey(pt) || pt.Equals(playerPosAsInt))
+        if (!ai.CostMap.ContainsKey(pt) || pt.Equals(playerPosAsInt))   //Either the Rat can't get there, or it's the player (which the Rat should avoid at all costs!)
         {
             return int.MaxValue;
         } else
         {
             float distToPlayer = Vector2Int.Distance(playerPosAsInt, pt);
 
-            //This can be a variety of functions of player/tile cost (max doesn't work due to corridor edge case)
+            //Total cost is the cost of the tile itself (based on how close it is to a wall) 
             return ai.CostMap[pt] + ai.CostToThreat(distToPlayer);
         }
     }
 
-    private int CostAStar(Vector2Int curr, Vector2Int neighbor, Vector2Int end)
+    private int TotalCostAStar(Vector2Int curr, Vector2Int neighbor, Vector2Int end)
     {
 
         int addCost = GetTileCost(neighbor);

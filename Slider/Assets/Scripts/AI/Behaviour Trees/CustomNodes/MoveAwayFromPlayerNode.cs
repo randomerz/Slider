@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
+/* No longer used in favor of CostMap method.
 public class MoveAwayFromPlayerNode : BehaviourTreeNode
 {
     RatAI ai;

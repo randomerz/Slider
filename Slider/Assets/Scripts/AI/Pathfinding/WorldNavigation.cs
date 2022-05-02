@@ -153,7 +153,6 @@ public class WorldNavigation : MonoBehaviour
     }
 
     //L: Calculates the shortest path from start to end.
-    //BStar = Boomo Star
     public bool GetPathFromToAStar(Vector2Int start, Vector2Int end, out List<Vector2Int> path, bool includeStart = false, Func<Vector2Int, Vector2Int, Vector2Int, int> costFunc = null)
     {
         if (costFunc == null)
