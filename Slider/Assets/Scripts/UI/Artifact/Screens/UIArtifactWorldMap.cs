@@ -43,6 +43,7 @@ public class UIArtifactWorldMap : MonoBehaviour
                 continue; // 0 is Area.none
 
             areaToMapArea[(Area)i].SetStatus(areaToStatus[(Area)i]);
+            areaToMapArea[(Area)i].UpdateSprite(true);
         }
     }
 
@@ -68,6 +69,20 @@ public class UIArtifactWorldMap : MonoBehaviour
         if (areaToMapArea[area].SetStatus(status))
         {
             areaToStatus[area] = status;
+        }
+    }
+
+    public static void ClearAreaStatus(Area area)
+    {
+        areaToMapArea[area].ClearStatus();
+        areaToStatus[area] = ArtifactWorldMapArea.AreaStatus.none;
+    }
+
+    public static void UpdateAreaStatuses()
+    {
+        foreach (ArtifactWorldMapArea a in areaToMapArea.Values)
+        {
+            a.UpdateSprite();
         }
     }
 }

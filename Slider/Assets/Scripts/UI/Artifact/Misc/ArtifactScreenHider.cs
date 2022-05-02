@@ -13,12 +13,19 @@ public class ArtifactScreenHider : MonoBehaviour
     private List<RectTransform> screens;
     private List<Animator> animators;
 
+    public ArtifactWorldMapGifAnimation gifAnimation;
+
     private void Awake() 
     {
         if (!PlayerInventory.Contains("Map", Area.Village))
         {
             Init();
         }
+    }
+
+    private void Start() 
+    {
+        // AddScreensAndShow(2);
     }
 
     private void OnEnable() 
@@ -67,15 +74,32 @@ public class ArtifactScreenHider : MonoBehaviour
 
     public void AddScreensAndShow()
     {
-        AddScreens();
-        StartCoroutine(IAddScreensAndShow());
+        AddScreensAndShow(0);
     }
 
-    private IEnumerator IAddScreensAndShow()
+    public void AddScreensAndShow(int screenIndex)
+    {
+        AddScreens();
+        StartCoroutine(IAddScreensAndShow(screenIndex));
+    }
+
+    private IEnumerator IAddScreensAndShow(int screenIndex)
     {
         yield return new WaitForSeconds(2.25f); // magic number
 
         uiArtifactMenus.OpenArtifact();
+
+        if (screenIndex != 0)
+        {
+            yield return new WaitForSeconds(0.3f); // magic number
+
+            screenAnimator.SetScreen(screenIndex);
+            
+            // For the gif of the week!
+            // gifAnimation.ClearAllAreas();
+            // yield return new WaitForSeconds(0.6f);
+            // StartCoroutine(gifAnimation.AnimateAllAreas());
+        }
     }
 
 
@@ -87,7 +111,7 @@ public class ArtifactScreenHider : MonoBehaviour
             PlayerInventory.OnPlayerGetCollectible -= CheckAddInventoryScreen;
 
 
-            StartCoroutine(IAddScreensAndShow());
+            StartCoroutine(IAddScreensAndShow(0));
             // show hint about pressing Q and E here
             Debug.Log("Press [Q] and [E] to switch screens on The Artifact!");
         }

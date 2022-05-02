@@ -377,7 +377,6 @@ public class DesertGrid : SGrid
     {
         if (!PlayerInventory.Contains("Slider 9", Area.Desert) && (GetGridString() == "567_2#3_184"))
         {
-            // ActivateSliderCollectible(9);
             GivePlayerTheCollectible("Slider 9");
 
             // Disable queues
@@ -387,6 +386,7 @@ public class DesertGrid : SGrid
             StartCoroutine(CheckCompletionsAfterDelay(1.1f));
 
             AudioManager.Play("Puzzle Complete");
+            UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
 } 

@@ -34,12 +34,16 @@ public class UIArtifactMenus : MonoBehaviour
 
     private void OnEnable() 
     {
-        controls.Enable();    
+        controls.Enable();
+
+        PlayerInventory.OnPlayerGetCollectible += CloseArtifactListener;
     }
 
     private void OnDisable() 
     {
         controls.Disable();    
+
+        PlayerInventory.OnPlayerGetCollectible -= CloseArtifactListener;
     }
 
     public static void LoadBindings()
@@ -111,6 +115,11 @@ public class UIArtifactMenus : MonoBehaviour
             artifactAnimator.SetBool("isVisible", false);
             StartCoroutine(CloseArtPanel());
         }
+    }
+
+    private void CloseArtifactListener(object sender, System.EventArgs e)
+    {
+        CloseArtifact();
     }
 
     private IEnumerator CloseArtPanel()

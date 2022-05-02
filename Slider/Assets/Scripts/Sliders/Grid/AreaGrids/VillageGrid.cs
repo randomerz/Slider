@@ -13,7 +13,7 @@ public class VillageGrid : SGrid
     private bool fishOn;
 
     private Coroutine shuffleBuildUpCoroutine;
-    private static bool checkCompletion = false;
+    private static bool checkCompletion = false; // TODO: serialize
 
     protected override void Awake() {
         myArea = Area.Village;
@@ -139,7 +139,6 @@ public class VillageGrid : SGrid
     {
         if (!PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153"))
         {
-            // ActivateSliderCollectible(9);
             GivePlayerTheCollectible("Slider 9");
 
             // Disable queues
@@ -149,6 +148,7 @@ public class VillageGrid : SGrid
             StartCoroutine(CheckCompletionsAfterDelay(1.1f));
 
             AudioManager.Play("Puzzle Complete");
+            UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
 

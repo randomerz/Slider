@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour
 {
-    public class InventoryEvent {
+    public class InventoryEvent : System.EventArgs {
         public Collectible collectible;
     }
     
