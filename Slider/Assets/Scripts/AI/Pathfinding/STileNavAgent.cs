@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-//Attach this to the agent you want to use STileNavigation
+//Attach this to the agent you want to use STileNavigation (or WorldNavigation)
 public class STileNavAgent : MonoBehaviour
 {
     [HideInInspector]
