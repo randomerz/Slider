@@ -37,6 +37,7 @@ public class UIArtifactMenus : MonoBehaviour
         controls.Enable();
 
         PlayerInventory.OnPlayerGetCollectible += CloseArtifactListener;
+        UIManager.OnCloseAllMenus += CloseArtifactListener;
     }
 
     private void OnDisable() 
@@ -44,6 +45,7 @@ public class UIArtifactMenus : MonoBehaviour
         controls.Disable();    
 
         PlayerInventory.OnPlayerGetCollectible -= CloseArtifactListener;
+        UIManager.OnCloseAllMenus -= CloseArtifactListener;
     }
 
     public static void LoadBindings()
@@ -109,8 +111,6 @@ public class UIArtifactMenus : MonoBehaviour
 
             UIManager.CloseUI();
             UIManager.canOpenMenus = true;
-
-            Player.SetCanMove(true);
             
             artifactAnimator.SetBool("isVisible", false);
             StartCoroutine(CloseArtPanel());

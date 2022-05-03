@@ -23,6 +23,8 @@ public class DebugUIManager : MonoBehaviour
     private void Awake()
     {
         controls = new InputSettings();
+
+        controls.UI.Pause.performed += context => CloseDebug();
         controls.Debug.OpenDebug.performed += context => OnPressDebug();
         controls.Debug.CycleCommand.performed += context => CycleCommand(context.ReadValue<float>());
     }
@@ -43,10 +45,31 @@ public class DebugUIManager : MonoBehaviour
 
         if (isDebugOpen)
         {
+            UIManager.PauseGameGlobal();
+            UIManager.canOpenMenus = false;
+
             consoleText.Select();
             consoleText.ActivateInputField();
             consoleText.text = "";
             commandIndex = commandHistory.Count + 1;
+        }
+        else
+        {
+            UIManager.CloseUI();
+            UIManager.canOpenMenus = true;
+        }
+    }
+
+    private void CloseDebug()
+    {
+        if (isDebugOpen)
+        {
+            isDebugOpen = false;
+            Player.SetCanMove(true);
+            debugPanel.SetActive(false);
+            
+            UIManager.CloseUI();
+            UIManager.canOpenMenus = true;
         }
     }
 
