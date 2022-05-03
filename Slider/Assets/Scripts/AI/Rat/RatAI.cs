@@ -208,7 +208,6 @@ public class RatAI : MonoBehaviour
 
     private void GenerateCostMap()
     {
-        Debug.Log("Generating Cost Map");
         var nav = GetComponentInParent<WorldNavigation>();
         if (nav.ValidPts != null && LightManager.instance != null)
         {
