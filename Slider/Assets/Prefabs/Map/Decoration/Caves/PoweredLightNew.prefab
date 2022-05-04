@@ -112,7 +112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7c7f5a90b0e3714280909490021a207, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputNodes: []
+  nodeType: 2
+  neighbors: []
   spriteRenderer: {fileID: 3003996721049224434}
   onSprite: {fileID: 21300000, guid: 973eec9ef606a7e4995956a335eb8c60, type: 3}
   offSprite: {fileID: 21300000, guid: da0bda1697f822e45a1d36ba9531c6e3, type: 3}

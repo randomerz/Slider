@@ -2,48 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoweredLightNew : ElectricalOutput
+public class PoweredLightNew : ElectricalNode
 {
-    public bool Powered
-    {
-        get;
-        private set;
-    }
 
     [SerializeField] private SpriteRenderer spriteRenderer;
 
     [SerializeField] private Sprite onSprite;
     [SerializeField] private Sprite offSprite;
 
-    public class OnLightSwitchedArgs
+    private void Awake()
     {
-        public bool lightOn;
+        nodeType = NodeType.OUTPUT;
     }
-    public static event System.EventHandler<OnLightSwitchedArgs> OnLightSwitched;
-
 
     public override void PropagateSignal(bool value, List<ElectricalNode> recStack, int numSignals = 1)
     {
-        SetLightOn(value, true);
+        //L: I was gonna do other stuff here, but I didn't ...
+        base.PropagateSignal(value, recStack, numSignals);
     }
 
+    public override void OnPoweredHandler(bool value, bool valueChanged)
+    {
+        SetLightOn(value, valueChanged);
+    }
 
     public void SetLightOn(bool value, bool playSound = false)
     {
         spriteRenderer.sprite = value ? onSprite : offSprite;
-        if (Powered != value)
+
+        if (playSound)
         {
-            Powered = value;
-
-            if (playSound)
-            {
-                if (value)
-                    AudioManager.Play("Power On");
-                else
-                    AudioManager.Play("Power Off");
-            }
-
-            OnLightSwitched?.Invoke(this, new OnLightSwitchedArgs { lightOn = value });
+            AudioManager.Play(value ? "Power On" : "Power Off");
         }
     }
 }

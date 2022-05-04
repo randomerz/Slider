@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerBox : ElectricalInput
+public class PowerBox : ElectricalNode
 {
-    public bool Powered
+
+    private void Awake()
     {
-        get;
-        private set;
+        nodeType = NodeType.INPUT;
     }
 
     void Start()
@@ -19,10 +19,10 @@ public class PowerBox : ElectricalInput
     {
         if (Powered != input || initializer)
         {
-            Powered = input;
+            powerRefCount = input ? 1 : 0;
             Debug.Log("Powering: " + input);
 
-            foreach (ElectricalNode node in outputNodes)
+            foreach (ElectricalNode node in neighbors)
             {
                 List<ElectricalNode> recStack = new List<ElectricalNode> ();
                 node.PropagateSignal(Powered, recStack);

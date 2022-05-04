@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ElectricalOutput : ElectricalNode
+public class ElectricalIO : ElectricalNode
 {
     protected override void AddNeighbor(ElectricalNode node, bool directed = false)
     {

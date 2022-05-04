@@ -12919,8 +12919,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 199e2a2ca0f70db4a9f86ac7625ed5b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outputNodes:
-  - {fileID: 945863028}
+  nodeType: 1
+  neighbors:
+  - {fileID: 858266952}
 --- !u!1001 &492968096
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28571,8 +28572,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e4fe60b50e186a41a59d9c7f9c5d62b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nodeType: 0
   neighbors:
-  - {fileID: 945863028}
   - {fileID: 1885738685}
   offSprite: {fileID: 592423230}
   onSprite: {fileID: 1873367938}
@@ -28746,6 +28747,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49e2e710cfca5d64aac6876812dc2f7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  powerRefCount: 0
+  neighbors:
+  - {fileID: 858266952}
+  powerRefCount: 0
   neighbors:
   - {fileID: 858266952}
 --- !u!1001 &970478804
