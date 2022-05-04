@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
 {
     public static System.EventHandler<System.EventArgs> OnPause;
     public static System.EventHandler<System.EventArgs> OnResume;
+    public static System.EventHandler<System.EventArgs> OnCloseAllMenus;
     private static UIManager _instance;
     
     public bool isGamePaused;
@@ -117,16 +118,6 @@ public class UIManager : MonoBehaviour
         pausePanel.SetActive(false);
         Time.timeScale = 1;
         isGamePaused = false;
-
-        // if (isArtifactOpen)
-        // {
-        //     Player.SetCanMove(true);
-        //     isArtifactOpen = false;
-        //     artifactAnimator.SetBool("isVisible", false);
-        //     StartCoroutine(CloseArtPanel());
-        // }
-
-        // uiArtifact.DeselectCurrentButton();
         
         OnResume?.Invoke(this, null);
     }
@@ -148,6 +139,13 @@ public class UIManager : MonoBehaviour
         isGamePaused = true;
 
         OnPause?.Invoke(this, null);
+    }
+
+    public static void InvokeCloseAllMenus()
+    {
+        _instance.ResumeGame();
+
+        OnCloseAllMenus.Invoke(_instance, null);
     }
 
 

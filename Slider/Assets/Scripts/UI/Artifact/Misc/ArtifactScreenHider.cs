@@ -13,7 +13,7 @@ public class ArtifactScreenHider : MonoBehaviour
     private List<RectTransform> screens;
     private List<Animator> animators;
 
-    public ArtifactWorldMapGifAnimation gifAnimation;
+    // public ArtifactWorldMapGifAnimation gifAnimation;
 
     private void Awake() 
     {
