@@ -119,7 +119,7 @@ public class SGrid : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                //Debug.Log(puzzle[x, y]);
+                Debug.Log(puzzle[x, y]);
                 if (puzzle[x, y] == 0)
                     next = GetStile(width * height);
                 else
@@ -137,9 +137,6 @@ public class SGrid : MonoBehaviour
             Player.SetPosition(playerSTile.transform.position + playerOffset);
 
         grid = newGrid;
-
-        // OnGridMove += CheckCompletions; // Handled in the specific grids
-        // ArtifactTileButton.canComplete = true;
     }
 
     /*

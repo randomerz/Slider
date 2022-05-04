@@ -9,13 +9,32 @@ public class ArtifactTab : MonoBehaviour
     public UnityEvent OnHoverEnter;
     public UnityEvent OnHoverExit;
 
-    [SerializeField] private bool isVisible;
+    private bool isVisible; // for when you are on a separate screen
+    [SerializeField] private bool isActive; // if the tab works or not
+    public int homeScreen = 0; // default screen = artifact screen
 
     public Animator tabAnimator;
     
     void Start()
     {
-        tabAnimator.SetBool("isVisible", isVisible);
+        gameObject.SetActive(isActive); // this is bad but should work for now?
+        UpdateVisibility();
+    }
+
+    public bool GetIsVisible()
+    {
+        return isVisible && isActive;
+    }
+
+    public void SetIsVisible(bool value)
+    {
+        isVisible = value;
+        UpdateVisibility();
+    }
+
+    private void UpdateVisibility()
+    {
+        tabAnimator.SetBool("isVisible", GetIsVisible());
     }
 
     public void Click()
