@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ConductiveElectricalNode : ElectricalNode
 {
-    private void OnTriggerEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         ConductiveElectricalNode node = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
         if (node != null)
@@ -13,7 +13,7 @@ public class ConductiveElectricalNode : ElectricalNode
         }
     }
 
-    private void OnTriggerStay2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         ConductiveElectricalNode node = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
         if (node != null && !neighbors.Contains(node))
@@ -22,7 +22,7 @@ public class ConductiveElectricalNode : ElectricalNode
         }
     }
 
-    private void OnTriggerExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         ConductiveElectricalNode node = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
         if (node != null)

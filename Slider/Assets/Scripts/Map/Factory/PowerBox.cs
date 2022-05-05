@@ -7,25 +7,26 @@ public class PowerBox : ConductiveElectricalNode
 
     private void Awake()
     {
+        base.Awake();
         nodeType = NodeType.INPUT;
     }
 
     void Start()
     {
-        SetPowered(false, true);
+        SetPowered(true, true);
     }
 
     void SetPowered(bool input, bool initializer = false)
     {
         if (Powered != input || initializer)
         {
-            powerRefTable[this] = input ? 1 : 0;
+            powerRefs = input ? 1 : 0;
             Debug.Log("Powering: " + input);
 
             foreach (ElectricalNode node in neighbors)
             {
-                List<ElectricalNode> recStack = new List<ElectricalNode> ();
-                node.PropagateSignal(Powered, recStack);
+                HashSet<ElectricalNode> recStack = new HashSet<ElectricalNode>() { this };
+                node.PropagateSignal(input, this, recStack);
             }
         }
     }

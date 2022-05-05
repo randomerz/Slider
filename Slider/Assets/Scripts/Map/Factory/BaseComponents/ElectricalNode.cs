@@ -40,7 +40,7 @@ public abstract class ElectricalNode : MonoBehaviour
     }
     public static event System.EventHandler<OnPoweredArgs> OnPowered;
 
-    private void Awake()
+    protected void Awake()
     {
         powerPathPrevs = new HashSet<ElectricalNode>();
         powerRefs = 0;

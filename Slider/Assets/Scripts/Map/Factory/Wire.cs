@@ -11,6 +11,7 @@ public class Wire : ConductiveElectricalNode
 
     private void Awake()
     {
+        base.Awake();
         nodeType = NodeType.IO;
     }
 

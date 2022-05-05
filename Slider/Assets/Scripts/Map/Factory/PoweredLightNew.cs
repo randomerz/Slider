@@ -12,13 +12,14 @@ public class PoweredLightNew : ConductiveElectricalNode
 
     private void Awake()
     {
+        base.Awake();
         nodeType = NodeType.OUTPUT;
     }
 
-    public override void PropagateSignal(bool value, List<ElectricalNode> recStack, int numSignals = 1)
+    public override void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
     {
         //L: I was gonna do other stuff here, but I didn't ...
-        base.PropagateSignal(value, recStack, numSignals);
+        base.PropagateSignal(value, this, recStack, numRefs);
     }
 
     public override void OnPoweredHandler(bool value, bool valueChanged)
