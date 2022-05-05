@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerBox : ElectricalNode
+public class PowerBox : ConductiveElectricalNode
 {
 
     private void Awake()
@@ -19,7 +19,7 @@ public class PowerBox : ElectricalNode
     {
         if (Powered != input || initializer)
         {
-            powerRefCount = input ? 1 : 0;
+            powerRefTable[this] = input ? 1 : 0;
             Debug.Log("Powering: " + input);
 
             foreach (ElectricalNode node in neighbors)

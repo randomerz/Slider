@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoweredLightNew : ElectricalNode
+public class PoweredLightNew : ConductiveElectricalNode
 {
 
     [SerializeField] private SpriteRenderer spriteRenderer;
