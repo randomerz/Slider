@@ -9,16 +9,7 @@ public class ConductiveElectricalNode : ElectricalNode
         ConductiveElectricalNode node = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
         if (node != null)
         {
-            AddConnection(node);
-        }
-    }
-
-    private void OnTriggerExit2D(Collision2D collision)
-    {
-        ConductiveElectricalNode node = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
-        if (node != null)
-        {
-            RemoveConnection(node);
+            AddNeighbor(node);
         }
     }
 
@@ -27,34 +18,16 @@ public class ConductiveElectricalNode : ElectricalNode
         ConductiveElectricalNode node = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
         if (node != null && !neighbors.Contains(node))
         {
-            AddConnection(node);
+            AddNeighbor(node);
         }
     }
 
-    private void AddConnection(ConductiveElectricalNode other)
+    private void OnTriggerExit2D(Collision2D collision)
     {
-        //Directed edges are easy since can just propagate along the direction of the edge.
-        if (nodeType == NodeType.INPUT || other.nodeType == NodeType.OUTPUT)
+        ConductiveElectricalNode node = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
+        if (node != null)
         {
-            //Update this reference table and AddNeighbor
-            AddNeighbor(other);
+            RemoveNeighbor(node);
         }
-
-        if (other.nodeType != NodeType.INPUT)
-        {
-
-        }
-        if (!neighbors.Contains(other))
-        {
-            //Handle the connection points
-            int totalRefCount = this.powerRefCount + other.powerRefCount;
-
-            //Propagate both values towards other neighbors.
-        }
-    }
-
-    private void RemoveConnection(ConductiveElectricalNode other)
-    {
-
     }
 }
