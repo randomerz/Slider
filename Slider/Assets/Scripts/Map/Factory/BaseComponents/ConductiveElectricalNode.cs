@@ -9,6 +9,7 @@ public class ConductiveElectricalNode : ElectricalNode
         ConductiveElectricalNode node = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
         if (node != null)
         {
+            Debug.Log($"{gameObject.name} entering {collision.gameObject.name}");
             AddNeighbor(node);
         }
     }
@@ -16,8 +17,9 @@ public class ConductiveElectricalNode : ElectricalNode
     private void OnTriggerStay2D(Collider2D collision)
     {
         ConductiveElectricalNode node = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
-        if (node != null && !neighbors.Contains(node))
+        if (node != null && !(neighbors.Contains(node) || node.neighbors.Contains(this)))
         {
+            Debug.Log($"{gameObject.name} colliding with {collision.gameObject.name}");
             AddNeighbor(node);
         }
     }
@@ -27,6 +29,7 @@ public class ConductiveElectricalNode : ElectricalNode
         ConductiveElectricalNode node = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
         if (node != null)
         {
+            Debug.Log($"{gameObject.name} exiting {collision.gameObject.name}");
             RemoveNeighbor(node);
         }
     }

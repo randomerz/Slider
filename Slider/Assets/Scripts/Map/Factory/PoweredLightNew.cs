@@ -19,7 +19,7 @@ public class PoweredLightNew : ConductiveElectricalNode
     public override void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
     {
         //L: I was gonna do other stuff here, but I didn't ...
-        base.PropagateSignal(value, this, recStack, numRefs);
+        base.PropagateSignal(value, prev, recStack, numRefs);
     }
 
     public override void OnPoweredHandler(bool value, bool valueChanged)

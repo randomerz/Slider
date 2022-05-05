@@ -116,9 +116,10 @@ public abstract class ElectricalNode : MonoBehaviour
 
         int refs = powerPathPrevs.Count == 0 ? 1 : 0;   //1 for the base case, 0 otherwise
 
+        //Make sure the chain of prevs has no cycles (which is should) or else this will cause stack overflow
         foreach (ElectricalNode prev in powerPathPrevs)
         {
-            refs += GetPathNodesRecursive(nodes);
+            refs += prev.GetPathNodesRecursive(nodes);
         }
 
         return refs;
@@ -134,6 +135,7 @@ public abstract class ElectricalNode : MonoBehaviour
         //The neighbor is already added, this prevents double counting.
         if (neighbors.Contains(other) || other.neighbors.Contains(this))
         {
+            //Debug.Log($"{gameObject.name} already has an edge including {other.gameObject.name}. This method does nothing.");
             return;
         }
 
@@ -208,12 +210,13 @@ public abstract class ElectricalNode : MonoBehaviour
 
     }
 
-    //Target Complexity : O(n * p) p is the number of paths in this node as well as other (i.e. refs)
+    //Target Complexity : O(n) p is the number of paths in this node as well as other (i.e. refs)
     protected virtual void RemoveNeighbor(ElectricalNode other)
     {
         //The neighbor is already removed, this prevents double counting.
         if (!neighbors.Contains(other) && !other.neighbors.Contains(this))
         {
+            //Debug.Log($"{gameObject.name} does not have an edge including {other.gameObject.name}. This method does nothing.");
             return;
         }
 
@@ -276,7 +279,7 @@ public abstract class ElectricalNode : MonoBehaviour
                 //Don't need to update this.powerRefs since it can't change.
                 HashSet<ElectricalNode> otherNodes;
                 other.GetPathNodes(out otherNodes);
-                other.PropagateSignal(false, this, otherNodes, other.powerRefs);
+                this.PropagateSignal(false, other, otherNodes, other.powerRefs);
             }
         }
         else
