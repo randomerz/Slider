@@ -10,7 +10,7 @@ public class PoweredLightNew : ConductiveElectricalNode
     [SerializeField] private Sprite onSprite;
     [SerializeField] private Sprite offSprite;
 
-    private void Awake()
+    private new void Awake()
     {
         base.Awake();
         nodeType = NodeType.OUTPUT;

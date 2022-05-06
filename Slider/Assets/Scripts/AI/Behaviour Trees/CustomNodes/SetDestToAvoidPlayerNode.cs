@@ -11,53 +11,51 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
         this.ai = ai;
     }
 
+    //Efficiency: (2*ai.maxDistVision-1)^2
     public override NodeState Evaluate()
     {
-        Vector2Int minCostNeighbor = Vector2Int.zero;
         int minCost = int.MaxValue;
+        Vector2Int minCostPt = Vector2Int.zero;
 
-        WorldNavigation nav = ai.GetComponentInParent<WorldNavigation>();
         Vector2Int posAsInt = TileUtil.WorldToTileCoords(ai.transform.position);
 
         float dist = 0f;
         var queue = new Queue<Vector2Int>();
         var visited = new HashSet<Vector2Int>();
-        visited.Add(posAsInt);
         queue.Enqueue(posAsInt);
         while (queue.Count > 0 && dist < ai.maxDistVision)
         {
             Vector2Int currPos = queue.Dequeue();
-
-            List<Vector2Int> neighbors = nav.GetMooreNeighbors(currPos);
-            dist = Vector2Int.Distance(posAsInt, neighbors[0]);
-
-            foreach (var neighbor in neighbors)
+            visited.Add(currPos);
+            int cost = GetTileCost(currPos);
+            if (cost < int.MaxValue)   //Tile is traversable
             {
-                if (!visited.Contains(neighbor))
-                {
-                    visited.Add(neighbor);
-                    queue.Enqueue(neighbor);
+                //Since we only enqueue tiles that are traversable, there will always be a path from the start to the minCost tile that we choose
+                //meaning that we no longer have to call AStar on every neighbor!
+                dist = Mathf.Max(dist, Vector2Int.Distance(posAsInt, currPos));
 
-                    int cost = GetTileCost(neighbor);
-                    //Debug.Log($"Cost To: {neighbor} is {cost}");
-                    List<Vector2Int> path;  //Don't actually care about this
-                    if (cost < minCost)
+                if (cost < minCost)
+                {
+                    minCost = cost;
+                    minCostPt = currPos;
+                }
+
+                List<Vector2Int> neighbors = ai.nav.GetMooreNeighbors(currPos);
+                foreach (var neighbor in neighbors)
+                {
+                    if (!visited.Contains(neighbor))
                     {
-                        if (dist < 1.5f || nav.GetPathFromToAStar(posAsInt, neighbor, out path, false, TotalCostAStar))
-                        {
-                            minCost = cost;
-                            minCostNeighbor = neighbor;
-                        }
+                        queue.Enqueue(neighbor);
                     }
                 }
+                //Debug.Log($"Cost To: {neighbor} is {cost}");
             }
         }
-
         //Debug.Log($"Min Cost Neighbor: {minCostNeighbor} with cost {minCost}");
         
-        if (minCost < int.MaxValue)
+        if (minCost < int.MaxValue && !minCostPt.Equals(posAsInt))
         {
-            RatBlackboard.Instance.destination = minCostNeighbor;
+            RatBlackboard.Instance.destination = minCostPt;
             RatBlackboard.Instance.costFunc = TotalCostAStar;
             return NodeState.SUCCESS;
         } else
@@ -78,7 +76,7 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
             float distToPlayer = Vector2Int.Distance(playerPosAsInt, pt);
 
             //Total cost is the cost of the tile itself (based on how close it is to a wall) 
-            return ai.CostMap[pt] + ai.CostToThreat(distToPlayer);
+            return ai.CostMap[pt] + ai.CostToThreat(distToPlayer, true);
         }
     }
 

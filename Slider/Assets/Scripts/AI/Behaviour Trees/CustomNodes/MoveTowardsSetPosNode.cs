@@ -5,13 +5,14 @@ public class MoveTowardsSetPosNode : BehaviourTreeNode
 {
     private RatAI ai;
 
-    private const float updateTimer = 0.1f;
+    private float updateTimer; //Controls how often the AI updates its path.
 
     private bool readyForUpdate;
 
-    public MoveTowardsSetPosNode(RatAI ai)
+    public MoveTowardsSetPosNode(RatAI ai, float updateTimer)
     {
         this.ai = ai;
+        this.updateTimer = updateTimer;
         readyForUpdate = true;
     }
 

@@ -9,7 +9,7 @@ public class Wire : ConductiveElectricalNode
     [SerializeField]
     private GameObject onSprite;
 
-    private void Awake()
+    private new void Awake()
     {
         base.Awake();
         nodeType = NodeType.IO;

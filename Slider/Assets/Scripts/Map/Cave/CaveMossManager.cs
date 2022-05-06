@@ -102,7 +102,6 @@ public class CaveMossManager : MonoBehaviour
 
     private void UpdateMoss()
     {
-        //Super hacky because events are being stupid.
         if (SGrid.current != null && SGrid.current as CaveGrid != null)
         {
             if (LightManager.instance != null)

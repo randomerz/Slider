@@ -128,7 +128,6 @@ public class LightManager : MonoBehaviour
     }
     private void FindMaterials()
     {
-        Debug.Log("Finding Materials");
         _caveLightMaterials = new List<Material>();
         caveShader = Shader.Find("Shader Graphs/CaveTileLightShader");
 

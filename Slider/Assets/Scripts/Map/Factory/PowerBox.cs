@@ -5,7 +5,7 @@ using UnityEngine;
 public class PowerBox : ConductiveElectricalNode
 {
 
-    private void Awake()
+    private new void Awake()
     {
         base.Awake();
         nodeType = NodeType.INPUT;

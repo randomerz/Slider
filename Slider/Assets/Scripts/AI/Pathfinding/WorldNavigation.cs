@@ -208,12 +208,13 @@ public class WorldNavigation : MonoBehaviour
 
                     //Need to check against overflow.
                     int newCost;
-                    if (costs[curr] == int.MaxValue || costFunc(curr, neighbor, end) == int.MaxValue)
+                    int edgeCost = costFunc(curr, neighbor, end);
+                    if (costs[curr] == int.MaxValue || edgeCost == int.MaxValue)
                     {
                         newCost = int.MaxValue;
                     } else
                     {
-                        newCost = costs[curr] + costFunc(curr, neighbor, end);
+                        newCost = costs[curr] + edgeCost;
                     }
 
                     if (newCost < costs[neighbor])

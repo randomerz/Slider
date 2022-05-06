@@ -9,14 +9,13 @@ public class RatAI : MonoBehaviour
     public float playerDeaggroRange;
 
     [Header("Pathfinding")]
-    public float moveSpeed;
-    public float pathfindingTolerance;
     [SerializeField]
-    internal STileNavAgent navAgent;
+    internal WorldNavigation nav;
+    [SerializeField]
+    internal WorldNavAgent navAgent;
 
     //Misc AI control weights
     //Note: In terms of the AI, darkness is treated the same as walls.
-
     /*
     [Header("Weights")]
     [SerializeField]
@@ -40,17 +39,23 @@ public class RatAI : MonoBehaviour
     private Transform mouth;
 
     [Header("External References")]
-    public GameObject objectToSteal;
-    public Transform player;
+    [SerializeField]
+    internal GameObject objectToSteal;
+    [SerializeField]
+    internal Transform player;
 
 
     [Header("Cost Map Calculations")]
     [SerializeField]
     internal int tileMaxPenalty = 100;
+    //These values are REALLY important for optimization, so don't make them too high!
+    //Max dist vision optimally should be about 2 times player aggro range
     [SerializeField]
-    internal float maxDistVision = 2f;  //This should be a low value to avoid lag/crashes
+    internal float maxDistVision = 2f;
     [SerializeField]
-    internal float maxDistCost = 3f;
+    internal float maxDistCost = 2f;
+    [SerializeField]
+    internal float updateTimer = 0.25f;
 
     internal bool holdingObject;
     private STile currentStileUnderneath;
@@ -70,10 +75,6 @@ public class RatAI : MonoBehaviour
     {
         get
         {
-            if (_costMap == null)
-            {
-                GenerateCostMap();
-            }
             return _costMap;
         }
     }
@@ -87,7 +88,7 @@ public class RatAI : MonoBehaviour
 
         if (objectToSteal == null)
         {
-            Debug.LogError("Rat does not have reference to slider piece");
+            Debug.LogWarning("Rat does not have reference to slider piece");
         }
 
         if (player == null)
@@ -95,13 +96,15 @@ public class RatAI : MonoBehaviour
             Debug.LogError("Rat does not have reference to player.");
         }
 
+        nav = GetComponentInParent<WorldNavigation>();
+        if (nav == null)
+        {
+            Debug.LogError("Rat requires a WorldNavigation component in the root of the scene.");
+        }
+
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        navAgent = GetComponent<STileNavAgent>();
-
-        navAgent.speed = moveSpeed;
-        navAgent.tolerance = pathfindingTolerance;
-
+        navAgent = GetComponent<WorldNavAgent>();
     }
 
     private void Start()
@@ -121,7 +124,7 @@ public class RatAI : MonoBehaviour
 
         if (behaviourTree.State == BehaviourTreeNode.NodeState.FAILURE)
         {
-            Stay();
+            navAgent.StopPath();
         }
     }
 
@@ -139,6 +142,8 @@ public class RatAI : MonoBehaviour
         {
             transform.SetParent(GameObject.Find("World Grid").transform);
         }
+
+        anim.SetFloat("speed", rb.velocity.magnitude);
     }
 
     private void OnEnable()
@@ -164,18 +169,6 @@ public class RatAI : MonoBehaviour
         transform.up = new Vector3(_dirFacing.x, _dirFacing.y, 0);
     }
 
-    public void Move()
-    {
-        rb.velocity = transform.up * moveSpeed;
-        anim.SetFloat("speed", moveSpeed);
-    }
-
-    public void Stay()
-    {
-        rb.velocity = Vector2.zero;
-        anim.SetFloat("speed", 0f);
-    }
-
     private void StealPiece()
     {
         //L: Reparent Slider piece to be child of Rat
@@ -187,15 +180,15 @@ public class RatAI : MonoBehaviour
     private void ConstructBehaviourTree()
     {
         var setDestToObjectNode = new SetDestToObjectNode(this);
-        var moveTowardsSetDestNode = new MoveTowardsSetPosNode(this);
 
         var playerAggroNode = new AggroAtProximityNode(transform, player, playerAggroRange, playerDeaggroRange);
-        //var moveAwayFromPlayerNode = new MoveAwayFromPlayerNode(this, player);
-
         var setDestToAvoidPlayerNode = new SetDestToAvoidPlayerNode(this);
+
         var setDestToLightTileNode = new SetDestToLightTileNode(this);
 
-        var stayInPlaceNode = new StayInPlaceNode(this);
+        var moveTowardsSetDestNode = new MoveTowardsSetPosNode(this, updateTimer);
+
+        var stayInPlaceNode = new DoNothingNode(this);
 
 
         //L: IMPORTANT NOTE: The ordering of the nodes in the tree matters
@@ -206,9 +199,9 @@ public class RatAI : MonoBehaviour
         behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, runToLightSequence, stayInPlaceNode });
     }
 
+    //Efficiency: (2*maxDistVision+1)^2 * (2*maxDistCostmap+1)^2 (This is the most costly operation in the AI)
     private void GenerateCostMap()
     {
-        var nav = GetComponentInParent<WorldNavigation>();
         if (nav.ValidPts != null && LightManager.instance != null)
         {
             _costMap = new Dictionary<Vector2Int, int>();
@@ -221,7 +214,7 @@ public class RatAI : MonoBehaviour
                     Vector2Int pos = posAsInt + new Vector2Int(x, y);
                     if (nav.ValidPts.Contains(pos) && LightManager.instance.GetLightMaskAt(pos.x, pos.y))
                     {
-                        _costMap.Add(pos, CostToThreat(GetDistToNearestBadTile(pos)));
+                        _costMap.Add(pos, CostToThreat(GetDistToNearestBadTile(pos), false));
                     }
                 }
             }
@@ -230,27 +223,31 @@ public class RatAI : MonoBehaviour
         Debug.Assert(_costMap != null, "Tried to initialize Cost Map before Valid Pts or LightManager. This might be a problem.");
     }
 
-    internal int CostToThreat(float distToThreat)
+    internal int CostToThreat(float distToThreat, bool threatIsPlayer)
     {
-        int cost = (distToThreat == float.MaxValue) ? 0 : Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / maxDistCost * (distToThreat - 1f)), 0, tileMaxPenalty);
+        float penaltyDivider = threatIsPlayer ? playerAggroRange : maxDistCost;
+        int cost = (distToThreat == float.MaxValue) ? 0 : Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / penaltyDivider * (distToThreat - 1f)), 0, tileMaxPenalty);
+
+        cost *= threatIsPlayer ? 1000 : 1; //Basically make the player as unappealing as possible (because the Rat loses if it touches the player)
+
         //Debug.Log("Distance: " + distToThreat);
         //Debug.Log("Cost: " + cost);
         return cost;
     }
 
     //This algorithm essentially checks the given pos, it's neighbors, the neighbors' neighbors, and so on moving outwards from the original pos.
+    //Efficiency: (2*maxDistCost+1)^2
     private float GetDistToNearestBadTile(Vector2Int posAsInt)
     {
-        WorldNavigation nav = GetComponentInParent<WorldNavigation>();
+        float distToNearestObstacle = float.MaxValue;
+        Vector2Int[] neighborDirs = { Vector2Int.up, Vector2Int.left, Vector2Int.down, Vector2Int.right,
+                                      new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1) };
 
         float dist = 0f;
-
         var queue = new Queue<Vector2Int>();
         var visited = new HashSet<Vector2Int>();
         visited.Add(posAsInt);
         queue.Enqueue(posAsInt);
-        Vector2Int[] neighborDirs = { Vector2Int.up, Vector2Int.left, Vector2Int.down, Vector2Int.right,
-                                      new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1) };
         while (queue.Count > 0 && dist < maxDistCost)
         {
             Vector2Int currPos = queue.Dequeue();
@@ -258,23 +255,24 @@ public class RatAI : MonoBehaviour
             foreach (var dir in neighborDirs)
             {
                 Vector2Int posToCheck = currPos + dir;
-                dist = Vector2Int.Distance(posAsInt, posToCheck);
                 if (!visited.Contains(posToCheck))
                 {
+                    float distToPoint = Vector2Int.Distance(posAsInt, currPos);
+                    dist = Mathf.Max(dist, distToPoint);
                     visited.Add(posToCheck);
                     queue.Enqueue(posToCheck);
 
                     //Check wall, darkness, or player occupation
-                    if (!nav.ValidPts.Contains(posToCheck) || !LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y))
+                    if (!nav.ValidPts.Contains(posToCheck) || !LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y) && distToPoint < distToNearestObstacle)
                     {
-                        return dist;
+                        distToNearestObstacle = distToPoint;
                     }
                 }
 
             }
         }
 
-        return float.MaxValue;    //Obstacles are ("infinitely far") from the ai (far enough that the ai doesn't need to care)
+        return distToNearestObstacle;
     }
 
     // DC: a better way of calculating which stile the player is on, accounting for overlapping stiles
