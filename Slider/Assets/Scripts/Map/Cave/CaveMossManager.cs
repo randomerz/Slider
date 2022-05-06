@@ -40,6 +40,14 @@ public class CaveMossManager : MonoBehaviour
     [SerializeField]
     private STile debugTile;    //L: In case you need to debug a specific tile
 
+    public class MossIsGrowingArgs : System.EventArgs
+    {
+        public STile stile;
+        public Vector3Int pos;
+        public bool isGrowing;
+    }
+    public static event System.EventHandler<MossIsGrowingArgs> MossIsGrowing;
+
     private void Start()
     {
         mossBounds = mossMap.cellBounds;
@@ -164,7 +172,6 @@ public class CaveMossManager : MonoBehaviour
     public IEnumerator GrowMoss(Vector3Int pos)
     {
         //L: Enable the moss collider
-        playerTP.CheckPlayerOnMoss(pos);
         mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
 
         while (mossMap.GetColor(pos).a < 1.0f)
@@ -177,6 +184,7 @@ public class CaveMossManager : MonoBehaviour
         }
         tilesAnimating.Remove(pos);
 
+        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = true });
     }
 
     public IEnumerator RecedeMoss(Vector3Int pos)
@@ -191,7 +199,8 @@ public class CaveMossManager : MonoBehaviour
 
         //L: Disable the moss collider
         mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
-
         tilesAnimating.Remove(pos);
+
+        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = false });
     }
 }

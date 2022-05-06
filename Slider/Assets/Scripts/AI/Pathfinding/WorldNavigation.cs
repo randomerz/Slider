@@ -9,19 +9,11 @@ public class WorldNavigation : MonoBehaviour
     [SerializeField]
     private Tilemap worldFloorTM;
 
-    //L: Why use a graph when you can use a set of pts?
-    private HashSet<Vector2Int> _validPts;
-
-    public HashSet<Vector2Int> ValidPts
-    {
-        get
-        {
-            return _validPts;
-        }
-    }
-
+    //We cache these in sets since there are a lot of points to consider.
     private HashSet<Vector2Int> validPtsWorld;
     private Dictionary<STile, HashSet<Vector2Int>> validPtsStiles;
+
+    private STile[] stiles;
 
     [Header("Debug")]
     [SerializeField]
@@ -35,51 +27,55 @@ public class WorldNavigation : MonoBehaviour
 
     private void Awake()
     {
-        _validPts = new HashSet<Vector2Int>();
-        validPtsWorld = new HashSet<Vector2Int>();
+        validPtsWorld = GetWorldValidPts();
+
         validPtsStiles = new Dictionary<STile, HashSet<Vector2Int>>();
-        ConstructValidPts();
-    }
-
-    private void OnEnable()
-    {
-        SGrid.OnSTileEnabled += OnTileEnabledHandler;
-        SGridAnimator.OnSTileMoveEnd += OnTileMovedHandler;
-    }
-
-    private void OnDisable()
-    {
-        SGrid.OnSTileEnabled -= OnTileEnabledHandler;
-        SGridAnimator.OnSTileMoveEnd -= OnTileMovedHandler;
-    }
-
-    private void OnTileEnabledHandler(object sender, SGrid.OnSTileEnabledArgs e)
-    {
-        ConstructValidPts();
-    }
-
-    private void OnTileMovedHandler(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        ConstructValidPts();
-    }
-
-    private void ConstructValidPts()
-    {
-        _validPts = new HashSet<Vector2Int>();
-        if (validPtsWorld == null || validPtsWorld.Count == 0)
-        {
-            validPtsWorld = GetWorldValidPts();
-        }
-
-        _validPts.UnionWith(validPtsWorld);
-
-        STile[] stiles = GetComponentsInChildren<STile>();
+        stiles = GetComponentsInChildren<STile>();
         foreach (STile stile in stiles)
         {
             if (stile.isTileActive)
             {
-                _validPts.UnionWith(GetSTileValidPtsHard(stile));
+                validPtsStiles[stile] = GetSTileValidPts(stile);
             }
+        }
+    }
+
+    private void OnEnable()
+    {
+        SGrid.OnSTileEnabled += HandleSTileEnabled;
+        SGridAnimator.OnSTileMoveEnd += HandleSTileMoved;
+        CaveMossManager.MossIsGrowing += HandleMossGrowing;
+    }
+
+    private void OnDisable()
+    {
+        SGrid.OnSTileEnabled -= HandleSTileEnabled;
+        SGridAnimator.OnSTileMoveEnd -= HandleSTileMoved;
+        CaveMossManager.MossIsGrowing -= HandleMossGrowing;
+    }
+
+    private void HandleSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
+
+        OnValidPtsChanged?.Invoke(this, new System.EventArgs());
+    }
+
+    private void HandleSTileMoved(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
+
+        OnValidPtsChanged?.Invoke(this, new System.EventArgs());
+    }
+
+    private void HandleMossGrowing(object sender, CaveMossManager.MossIsGrowingArgs e)
+    {
+        if (e.isGrowing)
+        {
+            validPtsStiles[e.stile].Remove((Vector2Int) e.pos);
+        } else
+        {
+            validPtsStiles[e.stile].Add((Vector2Int) e.pos);
         }
         OnValidPtsChanged?.Invoke(this, new System.EventArgs());
     }
@@ -107,23 +103,7 @@ public class WorldNavigation : MonoBehaviour
         return result;
     }
 
-    private HashSet<Vector2Int> GetSTileValidPtsHard(STile stile)
-    {
-        HashSet<Vector2Int> result = new HashSet<Vector2Int>();
-        if (!validPtsStiles.ContainsKey(stile))
-        {
-            validPtsStiles.Add(stile, GetSTileValidPtsRelative(stile));
-        }
-
-        foreach (Vector2Int pt in validPtsStiles[stile])
-        {
-            result.Add(pt + new Vector2Int((int)stile.transform.position.x, (int)stile.transform.position.y));
-        }
-
-        return result;
-    }
-
-    private HashSet<Vector2Int> GetSTileValidPtsRelative(STile stile)
+    private HashSet<Vector2Int> GetSTileValidPts(STile stile)
     {
         var result = new HashSet<Vector2Int>();
 
@@ -135,6 +115,7 @@ public class WorldNavigation : MonoBehaviour
 
         ContactFilter2D filter = GetFilterWithoutTriggers(~LayerMask.GetMask("Ignore Raycast", "SlideableArea", "Player", "Rat"));
         RaycastHit2D[] hits = new RaycastHit2D[1];
+        CaveMossManager moss = stile.GetComponentInChildren<CaveMossManager>();
         for (int x = minX; x <= maxX; x++)
         {
             for (int y = minY; y <= maxY; y++)
@@ -144,12 +125,56 @@ public class WorldNavigation : MonoBehaviour
                 int hit = Physics2D.CircleCast(pos, 0.5f, Vector2.up, filter, hits, 0f);
                 if (hit == 0)
                 {
-                    result.Add(pos - new Vector2Int((int) stile.transform.position.x, (int) stile.transform.position.y));
+                    if (moss == null || moss.mossCollidersMap.GetColliderType((Vector3Int) pos) == Tile.ColliderType.None)
+                    {
+                        result.Add(pos);
+                    }
                 }
             }
         }
-
         return result;
+    }
+    
+    //Check if a point is in.
+    public bool IsValidPt(Vector2Int pos)
+    {
+        if (validPtsWorld.Contains(pos))
+        {
+            return true;
+        }
+
+        foreach (STile stile in stiles)
+        {
+            if (validPtsStiles.ContainsKey(stile) && validPtsStiles[stile].Contains(pos))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //Perform some arbitrary function on every point.
+    private void ForEachValidPt(Action<Vector2Int> func)
+    {
+        if (validPtsWorld != null)
+        {
+            foreach (Vector2Int pt in validPtsWorld)
+            {
+                func(pt);
+            }
+        }
+
+        foreach (STile stile in stiles)
+        {
+            if (validPtsStiles.ContainsKey(stile))
+            {
+                foreach (Vector2Int pt in validPtsStiles[stile])
+                {
+                    func(pt);
+                }
+            }
+        }
     }
 
     //L: Calculates the shortest path from start to end.
@@ -161,13 +186,13 @@ public class WorldNavigation : MonoBehaviour
         }
 
         path = new List<Vector2Int>();
-        if (!_validPts.Contains(start))
+        if (!IsValidPt(start))
         {
             Debug.LogWarning($"Invalid Start: {start} This might be intentional (not an error).");
             return false;
         }
 
-        if (!_validPts.Contains(end))
+        if (!IsValidPt(end))
         {
             Debug.LogWarning($"Invalid Start: {end} This might be intentional (not an error).");
             return false;
@@ -182,11 +207,12 @@ public class WorldNavigation : MonoBehaviour
         var nodeQueue = new SimplePriorityQueue<Vector2Int, int>();
 
         //Initialze all values in the data structure
-        foreach (Vector2Int node in _validPts)
+        ForEachValidPt((pt) =>
         {
-            costs[node] = node.Equals(start) ? 0 : int.MaxValue;
-            prevNode[node] = Vector2Int.zero;
-        }
+            costs[pt] = pt.Equals(start) ? 0 : int.MaxValue;
+            prevNode[pt] = Vector2Int.zero;
+        });
+
         nodeQueue.Enqueue(start, 0);
 
         while (nodeQueue.Count > 0)
@@ -266,7 +292,7 @@ public class WorldNavigation : MonoBehaviour
 
         foreach (var dir in cardinalDirs)
         {
-            if (_validPts.Contains(curr+dir))
+            if (IsValidPt(curr+dir))
             {
                 result.Add(curr+dir);
             }
@@ -274,7 +300,7 @@ public class WorldNavigation : MonoBehaviour
 
         foreach (var dir in diagDirs)
         {
-            if (_validPts.Contains(curr+dir) && _validPts.Contains(curr + new Vector2Int(dir.x, 0)) && _validPts.Contains(curr + new Vector2Int(0, dir.y)))
+            if (IsValidPt(curr+dir) && IsValidPt(curr + new Vector2Int(dir.x, 0)) && IsValidPt(curr + new Vector2Int(0, dir.y)))
             {
                 result.Add(curr+dir);
             }
@@ -314,13 +340,12 @@ public class WorldNavigation : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (_validPts != null)
+        if (validPtsWorld != null)
         {
-            foreach (Vector2Int pos in _validPts)
-            {
+            ForEachValidPt ((pos) => {
                 Gizmos.color = Color.blue;
                 Gizmos.DrawSphere(new Vector3(pos.x, pos.y, 0), 0.2f);
-            }
+            });
 
             if (debugPath != null)
             {

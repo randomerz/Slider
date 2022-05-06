@@ -42,11 +42,11 @@ public class WorldNavAgent : MonoBehaviour
         //Get the closest point to this transform
         Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
         nav.GetPathFromToAStar(posAsInt, dest, out path, false, costFunc);
-        Debug.Log($"Path To {dest}:");
-        foreach (Vector2Int pos in path)
-        {
-            Debug.Log(pos);
-        }
+        //Debug.Log($"Path To {dest}:");
+        //foreach (Vector2Int pos in path)
+        //{
+        //    Debug.Log(pos);
+        //}
 
         if (IsRunning)
         {

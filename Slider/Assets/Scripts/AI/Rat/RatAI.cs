@@ -117,10 +117,7 @@ public class RatAI : MonoBehaviour
     {
         behaviourTree.Evaluate();
 
-        //if (rb.velocity.magnitude > 0f)
-        //{
-            GenerateCostMap();
-        //}
+        GenerateCostMap();
 
         if (behaviourTree.State == BehaviourTreeNode.NodeState.FAILURE)
         {
@@ -148,25 +145,38 @@ public class RatAI : MonoBehaviour
 
     private void OnEnable()
     {
-        //WorldNavigation.OnValidPtsChanged += CostMapEventHandler;
-        //LightManager.OnLightMaskChanged += CostMapEventHandler;
+        CaveMossManager.MossIsGrowing += DieOnMoss;
     }
 
     private void OnDisable()
     {
-        //WorldNavigation.OnValidPtsChanged -= CostMapEventHandler;
-        //LightManager.OnLightMaskChanged -= CostMapEventHandler;
+        CaveMossManager.MossIsGrowing -= DieOnMoss;
     }
-
-    //private void CostMapEventHandler(object sender, System.EventArgs e)
-    //{
-    //    GenerateCostMap();
-    //}
 
     public void SetDirection(Vector2 dir)
     {
         _dirFacing = dir.normalized;
         transform.up = new Vector3(_dirFacing.x, _dirFacing.y, 0);
+    }
+
+    private void DieOnMoss(object sender, CaveMossManager.MossIsGrowingArgs e)
+    {
+        Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
+        if (posAsInt.Equals((Vector2Int) e.pos))
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        //Play Death Animation
+
+        if (holdingObject && objectToSteal != null)
+        {
+            objectToSteal.transform.parent = transform.parent;  //"Unparent" The Rat from the object so the Rat "Drops" it
+        }
+        Destroy(gameObject);
     }
 
     private void StealPiece()
@@ -202,7 +212,7 @@ public class RatAI : MonoBehaviour
     //Efficiency: (2*maxDistVision+1)^2 * (2*maxDistCostmap+1)^2 (This is the most costly operation in the AI)
     private void GenerateCostMap()
     {
-        if (nav.ValidPts != null && LightManager.instance != null)
+        if (LightManager.instance != null)
         {
             _costMap = new Dictionary<Vector2Int, int>();
             Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
@@ -212,7 +222,7 @@ public class RatAI : MonoBehaviour
                 for (int y = (int)-maxDistVision; y <= (int)maxDistVision; y++)
                 {
                     Vector2Int pos = posAsInt + new Vector2Int(x, y);
-                    if (nav.ValidPts.Contains(pos) && LightManager.instance.GetLightMaskAt(pos.x, pos.y))
+                    if (nav.IsValidPt(pos) && LightManager.instance.GetLightMaskAt(pos.x, pos.y))
                     {
                         _costMap.Add(pos, CostToThreat(GetDistToNearestBadTile(pos), false));
                     }
@@ -220,7 +230,7 @@ public class RatAI : MonoBehaviour
             }
         }
 
-        Debug.Assert(_costMap != null, "Tried to initialize Cost Map before Valid Pts or LightManager. This might be a problem.");
+        Debug.Assert(_costMap != null, "Tried to initialize Cost Map before LightManager. This might be a problem.");
     }
 
     internal int CostToThreat(float distToThreat, bool threatIsPlayer)
@@ -263,7 +273,7 @@ public class RatAI : MonoBehaviour
                     queue.Enqueue(posToCheck);
 
                     //Check wall, darkness, or player occupation
-                    if (!nav.ValidPts.Contains(posToCheck) || !LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y) && distToPoint < distToNearestObstacle)
+                    if (!nav.IsValidPt(posToCheck) || !LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y) && distToPoint < distToNearestObstacle)
                     {
                         distToNearestObstacle = distToPoint;
                     }
