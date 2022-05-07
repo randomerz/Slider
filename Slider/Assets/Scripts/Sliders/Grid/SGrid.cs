@@ -40,6 +40,11 @@ public class SGrid : MonoBehaviour
                                                   //                                      4 5 6
                                                   //              (0, 0) ->               7 8 9
 
+    public string TargetGrid
+    {
+        get { return targetGrid; }
+    }
+
     public Collectible[] collectibles;
     protected Area myArea; // don't forget to set me!
     public Area MyArea { get => myArea; }

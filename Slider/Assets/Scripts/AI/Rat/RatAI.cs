@@ -9,14 +9,13 @@ public class RatAI : MonoBehaviour
     public float playerDeaggroRange;
 
     [Header("Pathfinding")]
-    public float moveSpeed;
-    public float pathfindingTolerance;
     [SerializeField]
-    internal STileNavAgent navAgent;
+    internal WorldNavigation nav;
+    [SerializeField]
+    internal WorldNavAgent navAgent;
 
     //Misc AI control weights
     //Note: In terms of the AI, darkness is treated the same as walls.
-
     /*
     [Header("Weights")]
     [SerializeField]
@@ -40,17 +39,23 @@ public class RatAI : MonoBehaviour
     private Transform mouth;
 
     [Header("External References")]
-    public GameObject objectToSteal;
-    public Transform player;
+    [SerializeField]
+    internal GameObject objectToSteal;
+    [SerializeField]
+    internal Transform player;
 
 
     [Header("Cost Map Calculations")]
     [SerializeField]
     internal int tileMaxPenalty = 100;
+    //These values are REALLY important for optimization, so don't make them too high!
+    //Max dist vision optimally should be about 2 times player aggro range
     [SerializeField]
-    internal float maxDistCostmap = 3f;
+    internal float maxDistVision = 2f;
     [SerializeField]
-    internal float maxDistVision = 2f;  //This should be a low value
+    internal float maxDistCost = 2f;
+    [SerializeField]
+    internal float updateTimer = 0.25f;
 
     internal bool holdingObject;
     private STile currentStileUnderneath;
@@ -70,10 +75,6 @@ public class RatAI : MonoBehaviour
     {
         get
         {
-            if (_costMap == null)
-            {
-                GenerateCostMap();
-            }
             return _costMap;
         }
     }
@@ -87,7 +88,7 @@ public class RatAI : MonoBehaviour
 
         if (objectToSteal == null)
         {
-            Debug.LogError("Rat does not have reference to slider piece");
+            Debug.LogWarning("Rat does not have reference to slider piece");
         }
 
         if (player == null)
@@ -95,13 +96,15 @@ public class RatAI : MonoBehaviour
             Debug.LogError("Rat does not have reference to player.");
         }
 
+        nav = GetComponentInParent<WorldNavigation>();
+        if (nav == null)
+        {
+            Debug.LogError("Rat requires a WorldNavigation component in the root of the scene.");
+        }
+
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        navAgent = GetComponent<STileNavAgent>();
-
-        navAgent.speed = moveSpeed;
-        navAgent.tolerance = pathfindingTolerance;
-
+        navAgent = GetComponent<WorldNavAgent>();
     }
 
     private void Start()
@@ -113,9 +116,12 @@ public class RatAI : MonoBehaviour
     private void Update()
     {
         behaviourTree.Evaluate();
+
+        GenerateCostMap();
+
         if (behaviourTree.State == BehaviourTreeNode.NodeState.FAILURE)
         {
-            Stay();
+            navAgent.StopPath();
         }
     }
 
@@ -131,39 +137,20 @@ public class RatAI : MonoBehaviour
         }
         else
         {
-            transform.SetParent(null);
+            transform.SetParent(GameObject.Find("World Grid").transform);
         }
+
+        anim.SetFloat("speed", rb.velocity.magnitude);
     }
-
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.layer == LayerMask.NameToLayer("Slider"))
-    //    {
-    //        STile tile = collision.GetComponent<STile>();
-    //        Debug.Log(tile);
-    //        if (collision.GetComponent<STile>().isTileActive)
-    //        {
-    //            transform.parent = collision.transform;
-    //        }
-
-    //    }
-    //}
 
     private void OnEnable()
     {
-        WorldNavigation.OnValidPtsChanged += CostMapEventHandler;
-        LightManager.OnLightMaskChanged += CostMapEventHandler;
+        CaveMossManager.MossIsGrowing += DieOnMoss;
     }
 
     private void OnDisable()
     {
-        WorldNavigation.OnValidPtsChanged -= CostMapEventHandler;
-        LightManager.OnLightMaskChanged -= CostMapEventHandler;
-    }
-
-    private void CostMapEventHandler(object sender, System.EventArgs e)
-    {
-        GenerateCostMap();
+        CaveMossManager.MossIsGrowing -= DieOnMoss;
     }
 
     public void SetDirection(Vector2 dir)
@@ -172,16 +159,24 @@ public class RatAI : MonoBehaviour
         transform.up = new Vector3(_dirFacing.x, _dirFacing.y, 0);
     }
 
-    public void Move()
+    private void DieOnMoss(object sender, CaveMossManager.MossIsGrowingArgs e)
     {
-        rb.velocity = transform.up * moveSpeed;
-        anim.SetFloat("speed", moveSpeed);
+        Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
+        if (posAsInt.Equals((Vector2Int) e.pos))
+        {
+            Die();
+        }
     }
 
-    public void Stay()
+    public void Die()
     {
-        rb.velocity = Vector2.zero;
-        anim.SetFloat("speed", 0f);
+        //Play Death Animation
+
+        if (holdingObject && objectToSteal != null)
+        {
+            objectToSteal.transform.parent = transform.parent;  //"Unparent" The Rat from the object so the Rat "Drops" it
+        }
+        Destroy(gameObject);
     }
 
     private void StealPiece()
@@ -195,15 +190,15 @@ public class RatAI : MonoBehaviour
     private void ConstructBehaviourTree()
     {
         var setDestToObjectNode = new SetDestToObjectNode(this);
-        var moveTowardsSetDestNode = new MoveTowardsSetPosNode(this);
 
         var playerAggroNode = new AggroAtProximityNode(transform, player, playerAggroRange, playerDeaggroRange);
-        //var moveAwayFromPlayerNode = new MoveAwayFromPlayerNode(this, player);
-
         var setDestToAvoidPlayerNode = new SetDestToAvoidPlayerNode(this);
+
         var setDestToLightTileNode = new SetDestToLightTileNode(this);
 
-        var stayInPlaceNode = new StayInPlaceNode(this);
+        var moveTowardsSetDestNode = new MoveTowardsSetPosNode(this, updateTimer);
+
+        var stayInPlaceNode = new DoNothingNode(this);
 
 
         //L: IMPORTANT NOTE: The ordering of the nodes in the tree matters
@@ -214,73 +209,80 @@ public class RatAI : MonoBehaviour
         behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, runToLightSequence, stayInPlaceNode });
     }
 
+    //Efficiency: (2*maxDistVision+1)^2 * (2*maxDistCostmap+1)^2 (This is the most costly operation in the AI)
     private void GenerateCostMap()
     {
-        var nav = GetComponentInParent<WorldNavigation>();
-        if (nav.ValidPts != null)
+        if (LightManager.instance != null)
         {
             _costMap = new Dictionary<Vector2Int, int>();
-            foreach (var pt in nav.ValidPts)
+            Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
+            //Square that includes Rat vision (which itself is a circle)
+            for (int x = (int)-maxDistVision; x <= (int)maxDistVision; x++)
             {
-                if (LightManager.instance != null && LightManager.instance.GetLightMaskAt(pt.x, pt.y))
+                for (int y = (int)-maxDistVision; y <= (int)maxDistVision; y++)
                 {
-                    //if (Mathf.Pow(pt.x - transform.position.x, 2) + Mathf.Pow(pt.y - transform.position.y, 2) < 400) // DC: this is laggy! adding this for the demo
-                    //{
-                        _costMap.Add(pt, CostToThreat(GetDistToNearestBadTile(pt)));
-                    //}
+                    Vector2Int pos = posAsInt + new Vector2Int(x, y);
+                    if (nav.IsValidPt(pos) && LightManager.instance.GetLightMaskAt(pos.x, pos.y))
+                    {
+                        _costMap.Add(pos, CostToThreat(GetDistToNearestBadTile(pos), false));
+                    }
                 }
             }
         }
 
-        Debug.Assert(_costMap != null, "Tried to initialize Cost Map before Valid Pts. This might be a problem.");
+        Debug.Assert(_costMap != null, "Tried to initialize Cost Map before LightManager. This might be a problem.");
     }
 
-    internal int CostToThreat(float distToThreat)
+    internal int CostToThreat(float distToThreat, bool threatIsPlayer)
     {
-        int cost = (distToThreat == float.MaxValue) ? 0 : Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / maxDistCostmap * (distToThreat - 1f)), 0, tileMaxPenalty);
+        float penaltyDivider = threatIsPlayer ? playerAggroRange : maxDistCost;
+        int cost = (distToThreat == float.MaxValue) ? 0 : Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / penaltyDivider * (distToThreat - 1f)), 0, tileMaxPenalty);
+
+        cost *= threatIsPlayer ? 1000 : 1; //Basically make the player as unappealing as possible (because the Rat loses if it touches the player)
+
         //Debug.Log("Distance: " + distToThreat);
         //Debug.Log("Cost: " + cost);
         return cost;
     }
 
     //This algorithm essentially checks the given pos, it's neighbors, the neighbors' neighbors, and so on moving outwards from the original pos.
+    //Efficiency: (2*maxDistCost+1)^2
     private float GetDistToNearestBadTile(Vector2Int posAsInt)
     {
-        WorldNavigation nav = GetComponentInParent<WorldNavigation>();
+        float distToNearestObstacle = float.MaxValue;
+        Vector2Int[] neighborDirs = { Vector2Int.up, Vector2Int.left, Vector2Int.down, Vector2Int.right,
+                                      new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1) };
 
         float dist = 0f;
-
         var queue = new Queue<Vector2Int>();
         var visited = new HashSet<Vector2Int>();
         visited.Add(posAsInt);
         queue.Enqueue(posAsInt);
-        while (queue.Count > 0 && dist < maxDistCostmap)
+        while (queue.Count > 0 && dist < maxDistCost)
         {
             Vector2Int currPos = queue.Dequeue();
-
-            Vector2Int[] neighborDirs = { Vector2Int.up, Vector2Int.left, Vector2Int.down, Vector2Int.right,
-                                      new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1) };
 
             foreach (var dir in neighborDirs)
             {
                 Vector2Int posToCheck = currPos + dir;
-                dist = Vector2Int.Distance(posAsInt, posToCheck);
                 if (!visited.Contains(posToCheck))
                 {
+                    float distToPoint = Vector2Int.Distance(posAsInt, currPos);
+                    dist = Mathf.Max(dist, distToPoint);
                     visited.Add(posToCheck);
                     queue.Enqueue(posToCheck);
 
                     //Check wall, darkness, or player occupation
-                    if (!nav.ValidPts.Contains(posToCheck) || !LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y))
+                    if (!nav.IsValidPt(posToCheck) || !LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y) && distToPoint < distToNearestObstacle)
                     {
-                        return dist;
+                        distToNearestObstacle = distToPoint;
                     }
                 }
 
             }
         }
 
-        return float.MaxValue;    //Obstacles are ("infinitely far") from the ai (far enough that the ai doesn't need to care)
+        return distToNearestObstacle;
     }
 
     // DC: a better way of calculating which stile the player is on, accounting for overlapping stiles
@@ -317,7 +319,7 @@ public class RatAI : MonoBehaviour
         STile stileUnderneath = null;
         foreach (STile s in grid)
         {
-            if (s.isTileActive && IsPlayerInSTileBounds(s.transform.position, offset, housingOffset))
+            if (s.isTileActive && IsInSTileBounds(s.transform.position, offset, housingOffset))
             {
                 if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
                 {
@@ -336,7 +338,7 @@ public class RatAI : MonoBehaviour
         currentStileUnderneath = stileUnderneath;
     }
 
-    private bool IsPlayerInSTileBounds(Vector3 stilePos, float offset, float housingOffset)
+    private bool IsInSTileBounds(Vector3 stilePos, float offset, float housingOffset)
     {
         Vector3 pos = transform.position;
         if (stilePos.x - offset < pos.x && pos.x < stilePos.x + offset &&
