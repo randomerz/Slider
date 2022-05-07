@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{e3663886-99e7-4457-ae70-c834914b70d6}">
+		<property name="name">
+			<value>MountainTemperature</value>
+		</property>
+		<relationship name="folder">
+			<destination>{076b9c86-d860-4db7-af07-2980b2d4c9c0}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{62be071a-b7c4-482e-973d-1df64a46cc52}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{62be071a-b7c4-482e-973d-1df64a46cc52}">
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+		<property name="seekSpeed">
+			<value>1</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

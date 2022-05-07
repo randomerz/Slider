@@ -5,8 +5,11 @@ using TMPro;
 
 public class DialogueDisplay : MonoBehaviour
 {
-    public TextMeshProUGUI dialogueText;
-    public TextMeshProUGUI dialogueBG;
+    public TMPTextTyper textTyperText;
+    public TMPTextTyper textTyperBG;
+
+    // public TextMeshProUGUI dialogueText;
+    // public TextMeshProUGUI dialogueBG;
     public GameObject ping;
 
     public GameObject canvas;
@@ -14,8 +17,6 @@ public class DialogueDisplay : MonoBehaviour
 
     public static bool doubleSizeMode = false;
     public static bool highContrastMode = false;
-
-    private const string punctuation = ",.!?";
 
     void Start()
     {
@@ -30,24 +31,56 @@ public class DialogueDisplay : MonoBehaviour
         canvas.SetActive(true);
         StopAllCoroutines();
         message = message.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
-        StartCoroutine(TypeSentence(message.ToCharArray()));
+        // message = ConvertVariablesToStrings(message);
+        textTyperText.StartTyping(message);
+        textTyperBG.StartTyping(message);
+        // StartCoroutine(TypeSentence(message.ToCharArray()));
     }
 
-    IEnumerator TypeSentence(char[] charArray)
+    private string ConvertVariablesToStrings(string message)
     {
-        dialogueText.text = "";
-        dialogueBG.text = "";
-        foreach (char letter in charArray)
+        int startIndex = 0;
+        while (message.IndexOf('<', startIndex) != -1)
         {
-            dialogueText.text += letter;
-            dialogueBG.text += letter;
+            startIndex = message.IndexOf('<', startIndex);
+            // case with \<
+            if (startIndex != 0 && message[startIndex - 1] == '\\')
+            {
+                // continue
+                startIndex += 1;
+                continue;
+            }
 
-            if (punctuation.IndexOf(letter) != -1)
-                yield return new WaitForSeconds(0.03f);
-
-            yield return new WaitForSeconds(0.03f);
+            int endIndex = message.IndexOf('>', startIndex);
+            if (endIndex == -1)
+            {
+                // no more ends!
+                break;
+            }
+            string varName = message.Substring(startIndex + 1, endIndex - startIndex - 1);
+            string varResult = SaveSystem.Current.GetString(varName);
+            message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
+            // startIndex = endIndex;
         }
+
+        return message;
     }
+
+    // IEnumerator TypeSentence(char[] charArray)
+    // {
+    //     dialogueText.text = "";
+    //     dialogueBG.text = "";
+    //     foreach (char letter in charArray)
+    //     {
+    //         dialogueText.text += letter;
+    //         dialogueBG.text += letter;
+
+    //         if (GameSettings.punctuation.IndexOf(letter) != -1)
+    //             yield return new WaitForSeconds(GameSettings.textSpeed);
+
+    //         yield return new WaitForSeconds(GameSettings.textSpeed);
+    //     }
+    // }
 
     public void FadeAwayDialogue()
     {

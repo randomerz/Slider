@@ -16,6 +16,14 @@ public class KnotBox : MonoBehaviour
         CheckLines();
     }
 
+    // animation is jittery when moving tiles
+    // https://answers.unity.com/questions/1387219/linerenderer-lags-behind-object-positions.html
+    private void LateUpdate() 
+    {
+        MakeLines();
+        CheckLines();
+    }
+
     private void OnDisable()
     {
         RemoveLines();
@@ -44,9 +52,10 @@ public class KnotBox : MonoBehaviour
     }
 
 
-    public bool CheckLines()
+    // update + return number of intersects
+    public int CheckLines()
     {
-        bool ret = true;
+        int ret = 0;
         for (int i = 0; i < lines.Length; i++)
         {
             bool intersects = false;
@@ -57,7 +66,7 @@ public class KnotBox : MonoBehaviour
                     lines[i].startColor = bad;
                     lines[i].endColor = bad;
                     intersects = true;
-                    ret = false;
+                    ret += 1;
                 }
             }
             for (int j = i + 1; j < lines.Length; j++)
@@ -67,7 +76,7 @@ public class KnotBox : MonoBehaviour
                     lines[i].startColor = bad;
                     lines[i].endColor = bad;
                     intersects = true;
-                    ret = false;
+                    ret += 1;
                 }
             }
             if (!intersects)
@@ -99,6 +108,11 @@ public class KnotBox : MonoBehaviour
 
     public void CheckPuzzle(Conditionals.Condition c)
     {
-        c.SetSpec(CheckLines());
+        c.SetSpec(CheckLines() == 0);
+    }
+
+    public void CheckPuzzlePartial(Conditionals.Condition c)
+    {
+        c.SetSpec(CheckLines() <= 3);
     }
 }

@@ -101,17 +101,20 @@ public class Movement
 {
     public Vector2Int startLoc;
     public Vector2Int endLoc;
+    public int islandId;
 
-    public Movement(Vector2Int s, Vector2Int e)
+    public Movement(Vector2Int s, Vector2Int e, int islandId)
     {
         startLoc = s;
         endLoc = e;
+        this.islandId = islandId;
     }
 
-    public Movement(int x1, int y1, int x2, int y2)
+    public Movement(int x1, int y1, int x2, int y2, int islandId)
     {
         startLoc = new Vector2Int(x1, y1);
         endLoc = new Vector2Int(x2, y2);
+        this.islandId = islandId;
     }
 }
 
@@ -125,10 +128,10 @@ public class SMoveLayerSwap: SMove
 //L: Swapping includes moving a tile to an empty spot!
 public class SMoveSwap : SMove
 {
-    public SMoveSwap(int x1, int y1, int x2, int y2)
+    public SMoveSwap(int x1, int y1, int x2, int y2, int islandId1, int islandId2)
     {
-        moves.Add(new Movement(x1, y1, x2, y2));
-        moves.Add(new Movement(x2, y2, x1, y1));
+        moves.Add(new Movement(x1, y1, x2, y2, islandId1));
+        moves.Add(new Movement(x2, y2, x1, y1, islandId2));
     }
 
     public Movement GetSwapAsVector()
@@ -139,24 +142,26 @@ public class SMoveSwap : SMove
 
 public class SMoveLinkedSwap : SMove
 {
-    public SMoveLinkedSwap(int x1, int y1, int x2, int y2, int linkx, int linky)
+    public SMoveLinkedSwap(int x1, int y1, int x2, int y2, 
+                                int linkx, int linky, int islandId, int linkIslandId)
     {
-        moves.Add(new Movement(x1, y1, x2, y2));
+        moves.Add(new Movement(x1, y1, x2, y2, islandId));
 
         int dx = x2 - x1;
         int dy = y2 - y1;
-        moves.Add(new Movement(linkx, linky, linkx + dx, linky + dy));
+        moves.Add(new Movement(linkx, linky, linkx + dx, linky + dy, linkIslandId));
 
         //L: Need to handle the edge case where the link tile moves to the prev tile's position
+        // DC: IMPORTANT: we are currently not handling the islandId for linked swaps for the inactive tiles
         if (linkx+dx == x1 && linky+dy == y1)
         {
             //L: Move the empty spot to where the link tile used to be (which is now empty)
-            moves.Add(new Movement(x2, y2, linkx, linky));
+            moves.Add(new Movement(x2, y2, linkx, linky, -1));
         } else
         {
             //L: Move both empty spots to where the cooresponding tile used to be (like with normal swaps)
-            moves.Add(new Movement(linkx + dx, linky + dy, linkx, linky));
-            moves.Add(new Movement(x2, y2, x1, y1));
+            moves.Add(new Movement(linkx + dx, linky + dy, linkx, linky, -1));
+            moves.Add(new Movement(x2, y2, x1, y1, -1));
         }
     }
 }
@@ -166,11 +171,13 @@ public class SMoveRotate : SMove
 {
     public bool isCCW;
 
-    public SMoveRotate(List<Vector2Int> points, bool isCCW)
+    public List<Vector2Int> anchoredPositions; // DC: this is for bugs that having a tile anchored might cause
+
+    public SMoveRotate(List<Vector2Int> points, List<int> islandIds, bool isCCW)
     {
         for (int i = 0; i < points.Count; i++)
         {
-            moves.Add(new Movement(points[i], points[(i + 1) % points.Count]));
+            moves.Add(new Movement(points[i], points[(i + 1) % points.Count], islandIds[i]));
         }
 
         this.isCCW = isCCW; 
@@ -184,7 +191,7 @@ public class SSlideSwap : SMove
         for (int i = 0; i < points.Count; i++)
         {
             // Debug.Log(points[i].x + " " + points[i].y + " " + points[i].z + " " + points[i].w);
-            moves.Add(new Movement(points[i].startLoc, points[i].endLoc));
+            moves.Add(new Movement(points[i].startLoc, points[i].endLoc, points[i].islandId));
         }
     }
 

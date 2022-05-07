@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{b1cc4a72-c7b0-44f3-b97a-13153f6293c1}">
+		<property name="name">
+			<value>OceanTrackNumber</value>
+		</property>
+		<relationship name="folder">
+			<destination>{076b9c86-d860-4db7-af07-2980b2d4c9c0}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{37912c70-b673-48f6-8310-69f6d60f56ab}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{37912c70-b673-48f6-8310-69f6d60f56ab}">
+		<property name="parameterType">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>11</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

@@ -1,102 +1,116 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
+    public static System.EventHandler<System.EventArgs> OnPause;
+    public static System.EventHandler<System.EventArgs> OnResume;
+    public static System.EventHandler<System.EventArgs> OnCloseAllMenus;
+    private static UIManager _instance;
+    
     public bool isGamePaused;
-    public bool isArtifactOpen;
+    // public bool isArtifactOpen;
     public static bool canOpenMenus = true;
-
-    public GameObject pausePanel;
-    public GameObject artifactPanel;
-    public UIArtifact uiArtifact;
-    public Animator artifactAnimator;
-    public Slider sfxSlider;
-    public Slider musicSlider;
-
-    public static bool closeUI;
+    private static bool couldOpenMenusLastFrame = true; // DC: maximum jank because timing
 
     private InputSettings controls;
 
+    public GameObject pausePanel;
+    public GameObject optionsPanel;
+    public GameObject controlsPanel;
+    public GameObject advOptionsPanel;
+    public Slider sfxSlider;
+    public Slider musicSlider;
+    public Slider screenShakeSlider;
+    public Toggle bigTextToggle;
+
     private void Awake()
     {
+        _instance = this;
+
+        _instance.controls = new InputSettings();
+        LoadBindings();
+
         sfxSlider.value = AudioManager.GetSFXVolume();
         musicSlider.value = AudioManager.GetMusicVolume();
-        //artifactPanel.GetComponent<UIArtifact>().Awake();
-        uiArtifact.Awake();
-        
-        controls = new InputSettings();
-        controls.UI.Pause.performed += context => OnPressPause();
-        controls.UI.OpenArtifact.performed += context => OnPressArtifact();
+
+        bigTextToggle.onValueChanged.AddListener((bool value) => { ToggleBigText(value); });
+    }
+
+    public static void LoadBindings()
+    {
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+        {
+            _instance.controls.LoadBindingOverridesFromJson(rebinds);
+        }
+        _instance.controls.UI.Pause.performed += context => _instance.OnPressPause();
     }
 
     private void OnEnable() {
         controls.Enable();
     }
-    
+
     private void OnDisable() {
         controls.Disable();
-    }
 
-    void Update()
-    {
-        if (closeUI)
+        if (!canOpenMenus)
         {
-            closeUI = false;
-            ResumeGame();
+            Debug.LogWarning("UIManager was disabled without closing the menu!");
+            isGamePaused = false;
+            canOpenMenus = true;
         }
-
-        // if (Input.GetKeyDown(KeyCode.Escape))
-        // {
-        //     if (isGamePaused)
-        //     {
-        //         ResumeGame();
-        //     }
-        //     else
-        //     {
-        //         PauseGame();
-        //     }
-        // }
-
-        // if (Input.GetKeyDown(KeyCode.Tab))
-        // {
-        //     if (isArtifactOpen)
-        //     {
-        //         ResumeGame();
-        //     }
-        //     else
-        //     {
-        //         OpenArtifact();
-        //     }
-        // }
     }
 
-    private void OnPressPause() 
+    private void LateUpdate() 
     {
-        if (isGamePaused)
+        couldOpenMenusLastFrame = canOpenMenus;
+    }
+
+
+    private void OnPressPause()
+    {
+        if (isGamePaused && pausePanel.activeSelf)
         {
             ResumeGame();
         }
-        else
+        else if (optionsPanel.activeSelf)
+        {
+            OpenPause();
+        }
+        else if (controlsPanel.activeSelf || advOptionsPanel.activeSelf)
+        {
+            // if in a pause sub-menu
+            OpenOptions();
+        }
+        else if (IsUIOpen())
+        {
+            // if another menu is open (e.g. ocean shop)
+            // do nothing
+            // Debug.Log("Another menu is open, doing nothing..");
+        }
+        else 
         {
             PauseGame();
+            OpenPause();
         }
     }
 
-    private void OnPressArtifact() 
+    
+
+    public static bool IsUIOpen() // used for if Player can use Action
     {
-        if (isArtifactOpen)
-        {
-            ResumeGame();
-        }
-        else
-        {
-            OpenArtifact();
-        }
+        return _instance.isGamePaused;// || _instance.isArtifactOpen;
+    }
+
+    public static void CloseUI()
+    {
+        _instance.ResumeGame();
     }
 
     public void ResumeGame()
@@ -104,72 +118,119 @@ public class UIManager : MonoBehaviour
         pausePanel.SetActive(false);
         Time.timeScale = 1;
         isGamePaused = false;
-
-        if (isArtifactOpen)
-        {
-            Player.SetCanMove(true);
-
-            isArtifactOpen = false;
-            artifactAnimator.SetBool("isVisible", false);
-            StartCoroutine(CloseArtPanel());
-        }
-
-        uiArtifact.DeselectCurrentButton();
+        
+        OnResume?.Invoke(this, null);
     }
 
-    private IEnumerator CloseArtPanel()
+    // DC: this is really bad code haha
+    public static void PauseGameGlobal()
     {
-        yield return new WaitForSeconds(0.34f);
-        artifactPanel.SetActive(false);
+        _instance.PauseGame();
     }
 
+    // DC: pauses the game, but doesn't do anything to UI
+    // we should consider refactoring this to use a state machine
     public void PauseGame()
     {
-        if (!canOpenMenus)
+        if (!couldOpenMenusLastFrame)
+            return;
+
+        Time.timeScale = 0f;
+        isGamePaused = true;
+
+        OnPause?.Invoke(this, null);
+    }
+
+    public static void InvokeCloseAllMenus()
+    {
+        _instance.ResumeGame();
+
+        OnCloseAllMenus.Invoke(_instance, null);
+    }
+
+
+
+    public void OpenPause()
+    {
+        if (!couldOpenMenusLastFrame)
             return;
 
         pausePanel.SetActive(true);
-        Time.timeScale = 0f;
-        isGamePaused = true;
+        optionsPanel.SetActive(false);
+        controlsPanel.SetActive(false);
+        advOptionsPanel.SetActive(false);
     }
 
-    public void OpenArtifact()
+    public void OpenOptions()
     {
-        if (!canOpenMenus)
+        sfxSlider.value = AudioManager.GetSFXVolume();
+        musicSlider.value = AudioManager.GetMusicVolume();
+        screenShakeSlider.value = SettingsManager.ScreenShake;
+
+        if (!couldOpenMenusLastFrame)
             return;
 
-        if (Player.IsSafe())
+        pausePanel.SetActive(false);
+        optionsPanel.SetActive(true);
+        controlsPanel.SetActive(false);
+        advOptionsPanel.SetActive(false);
+    }
+
+    public void OpenControls()
+    {
+        if (!couldOpenMenusLastFrame)
+            return;
+
+        optionsPanel.SetActive(false);
+        controlsPanel.SetActive(true);
+    }
+    public void OpenAdvOptions()
+    {
+        bigTextToggle.isOn = SettingsManager.BigTextEnabled;
+
+        if (!couldOpenMenusLastFrame)
+            return;
+
+        optionsPanel.SetActive(false);
+        advOptionsPanel.SetActive(true);
+    }
+
+    public void BackPressed()
+    {
+        if (optionsPanel.activeSelf)
         {
-            artifactPanel.SetActive(true);
-            //UIArtifact.UpdatePushedDowns();
-            isGamePaused = true;
-            isArtifactOpen = true;
-
-            Player.SetCanMove(false);
-
-            artifactAnimator.SetBool("isVisible", true);
-            uiArtifact.FlickerNewTiles();
+            OpenPause();
         }
-        else
+        else if (controlsPanel.activeSelf || advOptionsPanel.activeSelf)
         {
-            AudioManager.Play("Artifact Error");
+            OpenOptions();
         }
     }
 
-    public void UpdateSFXVolume(float value)
+    public void UpdateSFXVolume()
     {
-        AudioManager.SetSFXVolume(value);
+        SettingsManager.SFXVolume = sfxSlider.value;
+        AudioManager.SetSFXVolume(sfxSlider.value);
     }
 
-    public void UpdateMusicVolume(float value)
+    public void UpdateMusicVolume()
     {
-        AudioManager.SetMusicVolume(value);
+        SettingsManager.MusicVolume = musicSlider.value;
+        AudioManager.SetMusicVolume(musicSlider.value);
+    }
+
+    public void UpdateScreenShake()
+    {
+        SettingsManager.ScreenShake = screenShakeSlider.value;
     }
 
     public void ToggleBigText(bool value)
     {
-        DialogueDisplay.highContrastMode = value;
-        DialogueDisplay.doubleSizeMode = value;
+        // By the word of our noble lord, Boomo, long may he reign, these two lines must remain commented out
+        //DialogueManager.highContrastMode = value;
+        //DialogueManager.doubleSizeMode = value;
+
+        SettingsManager.BigTextEnabled = value;
     }
 
     public void LoadGame()

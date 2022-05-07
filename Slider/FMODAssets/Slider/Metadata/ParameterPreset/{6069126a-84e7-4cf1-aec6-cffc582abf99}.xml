@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{6069126a-84e7-4cf1-aec6-cffc582abf99}">
+		<property name="name">
+			<value>DesertDistToCasino</value>
+		</property>
+		<relationship name="folder">
+			<destination>{076b9c86-d860-4db7-af07-2980b2d4c9c0}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{e0dd4ca5-d07b-48fd-9e8c-39f07d23dfaf}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{e0dd4ca5-d07b-48fd-9e8c-39f07d23dfaf}">
+		<property name="maximum">
+			<value>17</value>
+		</property>
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>17</value>
+		</property>
+		<property name="seekSpeed">
+			<value>5</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

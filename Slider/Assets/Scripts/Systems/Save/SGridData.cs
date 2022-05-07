@@ -31,8 +31,16 @@ public class SGridData
     }
 
     public void UpdateGrid(SGrid sgrid) {
-        foreach (STile s in sgrid.GetGrid()) {
-            grid.Add(new STileData(s));
+        grid.Clear();
+        for (int x = 0; x < sgrid.width; x++)
+        {
+            for (int y = 0; y < sgrid.height; y++)
+            {
+                STileData std = new STileData(sgrid.GetGrid()[x, y]);
+                std.x = x;
+                std.y = y;
+                grid.Add(std);
+            }
         }
         // if (sgrid.GetAltGrid() != null) {
         //     foreach (STile s in sgrid.GetAltGrid()) {

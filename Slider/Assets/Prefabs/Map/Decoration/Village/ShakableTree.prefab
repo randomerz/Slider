@@ -233,6 +233,8 @@ MonoBehaviour:
         m_CallState: 2
   addToOnAction: 1
   isCarryingItem: 0
+  itemNameCheck: 
+  triggerIsLit: 0
 --- !u!114 &937877037644661029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,3 +299,46 @@ MonoBehaviour:
   myPlayerConditionals: {fileID: -7129918156412228392}
   animator: {fileID: 4319375637555883040}
   StuckPaper: {fileID: 1693654710240747891}
+--- !u!114 &7036134985732005652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6034319641449941471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2087bdea9124b1544bf43a5ed3660a22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkOnStart: 1
+  conditionals:
+    onSuccess:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: -7129918156412228392}
+          m_TargetAssemblyTypeName: PlayerConditionals, Assembly-CSharp
+          m_MethodName: DisableConditionals
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    onFail:
+      m_PersistentCalls:
+        m_Calls: []
+    conditions:
+    - type: 0
+      item:
+        name: 'Page '
+        area: 1
+      pattern: 
+      stationaryTiles: 
+      checkBool:
+        m_PersistentCalls:
+          m_Calls: []
+      playerItemName: 

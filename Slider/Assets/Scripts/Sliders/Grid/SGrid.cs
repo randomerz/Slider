@@ -19,6 +19,12 @@ public class SGrid : MonoBehaviour
     }
     public static event System.EventHandler<OnSTileEnabledArgs> OnSTileEnabled;
 
+    public class OnSTileCollectedArgs : System.EventArgs
+    {
+        public STile stile;
+    }
+    public static event System.EventHandler<OnSTileCollectedArgs> OnSTileCollected;
+
     protected STile[,] grid;
     protected SGridBackground[,] bgGrid;
 
@@ -27,7 +33,7 @@ public class SGrid : MonoBehaviour
     public int height;
     [SerializeField] private STile[] stiles;
     [SerializeField] private SGridBackground[] bgGridTiles;
-    [SerializeField] private SGridAnimator gridAnimator;
+    [SerializeField] protected SGridAnimator gridAnimator;
     //L: This is the end goal for the slider puzzle, set in the inspector.
     //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)
     [SerializeField] protected string targetGrid = "*********"; // format: 123456789 for  1 2 3
@@ -36,11 +42,13 @@ public class SGrid : MonoBehaviour
 
     public Collectible[] collectibles;
     protected Area myArea; // don't forget to set me!
+    public Area MyArea { get => myArea; }
 
-    protected void Awake()
+    protected virtual void Awake()
     {
 
         current = this;
+        InitUIArtifact();
         LoadGrid();
         SetBGGrid(bgGridTiles);
 
@@ -53,6 +61,24 @@ public class SGrid : MonoBehaviour
         // OnGridMove += CheckCompletions;
     }
 
+    protected virtual void Start() 
+    {
+        foreach (Collectible c in collectibles)
+        {
+            if (PlayerInventory.Contains(c))
+            {
+                c.gameObject.SetActive(false);
+            }
+
+        }
+
+        UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.oneBit);
+    }
+
+    private void InitUIArtifact()
+    {
+        GameObject.FindObjectOfType<UIArtifact>().Init();
+    }
 
     public STile[,] GetGrid()
     {
@@ -68,6 +94,8 @@ public class SGrid : MonoBehaviour
     Note: This updates all of the STiles according to the ids in the given array (unlike the other imp., which leaves the STiles in the same positions)
     * 
     * This is useful for reshuffling the grid.
+    * 
+    * C: The "0" STile represents where the 9th tile should go
     */
     public void SetGrid(int[,] puzzle)
     {
@@ -86,7 +114,7 @@ public class SGrid : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                //Debug.Log(puzzle[x, y]);
+                Debug.Log(puzzle[x, y]);
                 if (puzzle[x, y] == 0)
                     next = GetStile(width * height);
                 else
@@ -104,9 +132,6 @@ public class SGrid : MonoBehaviour
             Player.SetPosition(playerSTile.transform.position + playerOffset);
 
         grid = newGrid;
-
-        // OnGridMove += CheckCompletions; // Handled in the specific grids
-        // ArtifactTileButton.canComplete = true;
     }
 
     /*
@@ -182,16 +207,68 @@ public class SGrid : MonoBehaviour
         return stileList;
     }
 
+    /// <summary>
+    /// Returns the number of STiles collected in the current SGrid.
+    /// </summary>
+    /// <returns></returns>
+    public int GetNumTilesCollected() {
+        int numCollected = 0;
+        foreach (STile tile in stiles)
+        {
+            if (tile.isTileCollected)
+            {
+                numCollected++;
+            }
+        }
+        return numCollected;
+    }
+    /// <summary>
+    /// Returns the number of STiles available in the current SGrid.
+    /// </summary>
+    /// <returns></returns>
+    public int GetTotalNumTiles()
+    {
+        return width * height;
+    }
+
     //S: copy of Player's GetStileUnderneath for the tracker
+    // DC: This will prefer an GameObjs parented STile if it has one
     public STile GetStileUnderneath(GameObject target)
     {
-        Collider2D hit = Physics2D.OverlapPoint(target.transform.position, LayerMask.GetMask("Slider"));
-        if (hit == null || hit.GetComponent<STile>() == null)
+        float offset = grid[0, 0].STILE_WIDTH / 2f;
+        float housingOffset = -150;
+        
+        STile stileUnderneath = null;
+        STile currentStileUnderneath = target.GetComponentInParent<STile>(); // in case this obj is parented to something
+        foreach (STile s in grid)
         {
-            //Debug.LogWarning("Target isn't on top of a slider!");
-            return null;
+            if (s.isTileActive && IsObjectInSTileBounds(target.transform.position, s.transform.position, offset, housingOffset))
+            {
+                if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
+                {
+                    // we are still on top of the same one
+                    return currentStileUnderneath;
+                }
+                
+                if (stileUnderneath == null || s.islandId < stileUnderneath.islandId)
+                {
+                    // in case where multiple overlap and none are picked, take the lowest number?
+                    stileUnderneath = s;
+                }
+            }
         }
-        return hit.GetComponent<STile>();
+        return stileUnderneath;
+    }
+
+    private bool IsObjectInSTileBounds(Vector3 targetPos, Vector3 stilePos, float offset, float housingOffset)
+    {
+        if (stilePos.x - offset < targetPos.x && targetPos.x < stilePos.x + offset &&
+           (stilePos.y - offset < targetPos.y && targetPos.y < stilePos.y + offset || 
+            stilePos.y - offset + housingOffset < targetPos.y && targetPos.y < stilePos.y + offset + housingOffset))
+        {
+            return true;
+        }
+        return false;
     }
 
 
@@ -226,18 +303,29 @@ public class SGrid : MonoBehaviour
     {
         if (!PlayerInventory.Contains(name, myArea))
         {
-            GetCollectible(name).gameObject.SetActive(true);
+            GetCollectible(name)?.gameObject.SetActive(true);
         }
             
     }
+
     public void ActivateSliderCollectible(int sliderId)
     {
         if (!PlayerInventory.Contains("Slider " + sliderId, myArea)) 
         {
             //Debug.Log("Activated Collectible?");
             //Debug.Log(GetCollectible("Slider " + sliderId).gameObject.name);
-            GetCollectible("Slider " + sliderId).gameObject.SetActive(true);
+            GetCollectible("Slider " + sliderId)?.gameObject.SetActive(true);
             AudioManager.Play("Puzzle Complete");
+        }
+    }
+
+    public void GivePlayerTheCollectible(string name)
+    {
+        if (GetCollectible(name) != null)
+        {
+            ActivateCollectible(name);
+            GetCollectible(name).transform.position = Player.GetPosition();
+            UIManager.CloseUI();
         }
     }
 
@@ -248,7 +336,7 @@ public class SGrid : MonoBehaviour
 
     // Make sure to check if you CanMove() before moving
     //L: Updates internal state (the grid[,]) based on result of SMove. See Move in SGridAnimator for the actual moving of the tiles.
-    public void Move(SMove move)
+    public virtual void Move(SMove move)
     {
 
         gridAnimator.Move(move);
@@ -279,12 +367,31 @@ public class SGrid : MonoBehaviour
             }
         }
     }
+    // See STile.isTileCollected for an explanation
+    public virtual void CollectSTile(int islandId)
+    {
+        foreach (STile s in grid)
+        {
+            if (s.islandId == islandId)
+            {
+                CollectStile(s);
+                return;
+            }
+        }
+    }
 
-    public virtual void EnableStile(STile stile)
+    public virtual void EnableStile(STile stile, bool flickerButton=true)
     {
         stile.SetTileActive(true);
-        UIArtifact.AddButton(stile.islandId);
+        UIArtifact.AddButton(stile.islandId, flickerButton);
         OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
+    }
+    // See STile.isTileCollected for an explanation
+    public virtual void CollectStile(STile stile)
+    {
+        stile.isTileCollected = true;
+        EnableStile(stile, true);
+        OnSTileCollected?.Invoke(this, new OnSTileCollectedArgs { stile = stile });
     }
 
 
@@ -292,8 +399,7 @@ public class SGrid : MonoBehaviour
     public virtual void SaveGrid() 
     { 
         Debug.Log("Saving data for " + myArea);
-        GameManager.GetSaveSystem().SaveSGridData(myArea, this);
-        GameManager.GetSaveSystem().SaveMissions(new Dictionary<string, bool>());
+        SaveSystem.Current.SaveSGridData(myArea, this);
     }
 
     //L: Used in the save system to load a grid as opposed to using SetGrid(STile[], STile[]) with default tiles positions.
@@ -301,8 +407,7 @@ public class SGrid : MonoBehaviour
     { 
          //Debug.Log("Loading grid...");
 
-        SGridData sgridData = GameManager.GetSaveSystem().GetSGridData(myArea);
-        Dictionary<string, bool> loadedMissions = GameManager.GetSaveSystem().GetMissions(new List<string>());
+        SGridData sgridData = SaveSystem.Current.GetSGridData(myArea);
 
         if (sgridData == null) {
             SetGrid(stiles);
@@ -323,41 +428,70 @@ public class SGrid : MonoBehaviour
     }
 
 
-    protected static void CheckCompletions(object sender, SGrid.OnGridMoveArgs e)
+    protected static void UpdateButtonCompletions(object sender, System.EventArgs e)
     {
+        current.UpdateButtonCompletionsHelper();
+    }
+
+    protected virtual void UpdateButtonCompletionsHelper()
+    {
+        // Debug.Log("SGrid update buttons complete!");
+
         // Debug.Log("Checking completions!");
-        // ineffecient lol
         for (int x = 0; x < current.width; x++) {
             for (int y = 0; y < current.width; y++) {
                 // int tid = current.targetGrid[x, y];
                 string tids = GetTileIdAt(x, y);
+                ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
                 if (tids == "*") 
                 {
-                    UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
+                    // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
+                    UIArtifact.SetButtonComplete(artifactButton.islandId, true);
                 }
                 else {
                     int tid = int.Parse(tids);
-                    UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+                    // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+                    UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
                 }
             }
         }
+    }
+
+    protected static int GetNumButtonCompletions()
+    {
+        return current.GetNumButtonCompletionsHelper();
+    }
+
+    protected virtual int GetNumButtonCompletionsHelper()
+    {
+        int numComplete = 0;
+        for (int x = 0; x < current.width; x++) {
+            for (int y = 0; y < current.width; y++) {
+                string tids = GetTileIdAt(x, y);
+                ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
+                if (tids == "*") 
+                {
+                    numComplete += 1;
+                }
+                else {
+                    int tid = int.Parse(tids);
+                    if (artifactButton.islandId == tid)
+                        numComplete += 1;
+                }
+            }
+        }
+
+        return numComplete;
     }
 
     protected IEnumerator CheckCompletionsAfterDelay(float t)
     {
         yield return new WaitForSeconds(t);
 
-        CheckCompletions(this, null); // sets the final one to be complete
+        UpdateButtonCompletions(this, null); // sets the final one to be complete
     }
 
-    public void GivePlayerTheCollectible(string name)
-    {
-        ActivateCollectible(name);
-        GetCollectible(name).transform.position = Player.GetPosition();
-        UIManager.closeUI = true;
-    }
-
-    private static string GetTileIdAt(int x, int y)
+    protected static string GetTileIdAt(int x, int y)
     {
         return current.targetGrid[(current.height - y - 1) * current.width + x].ToString();
     }

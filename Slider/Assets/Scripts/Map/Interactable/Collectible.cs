@@ -77,11 +77,9 @@ public class Collectible : MonoBehaviour
 
 
     // common methods for onCollect
-
-    
     public void ActivateSTile(int stileId) 
     {
-        SGrid.current.EnableStile(stileId);
+        SGrid.current.CollectSTile(stileId);
     }
 
 

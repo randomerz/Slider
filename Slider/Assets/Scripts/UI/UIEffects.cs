@@ -22,20 +22,29 @@ public class UIEffects : MonoBehaviour
         _instance = this;
     }
 
-    public static void FadeFromBlack(System.Action callback=null)
+    public static void FadeFromBlack(System.Action callback=null, float speed=1)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 1, 0, callback));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 1, 0, callback, speed));
     }
 
-    public static void FadeToBlack(System.Action callback=null)
+    public static void FadeToBlack(System.Action callback=null, float speed=1)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, 1, callback));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, 1, callback, speed));
     }
 
-    public static void FlashWhite()
+    public static void FadeFromWhite(System.Action callback=null, float speed=1)
     {
-        Debug.Log("Flashing!");
-        StartEffectCoroutine(_instance.FlashCoroutine());
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0.9f, 0, callback, speed));
+    }
+
+    public static void FadeToWhite(System.Action callback=null, float speed=1)
+    {
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, 1, callback, speed));
+    }
+
+    public static void FlashWhite(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1)
+    {
+        StartEffectCoroutine(_instance.FlashCoroutine(callbackMiddle, callbackEnd, speed));
     }
 
     private static void StartEffectCoroutine(IEnumerator coroutine)
@@ -48,7 +57,7 @@ public class UIEffects : MonoBehaviour
     }
 
 
-    private IEnumerator FadeCoroutine(GameObject gameObject, CanvasGroup group, float startAlpha, float endAlpha, System.Action callback=null)
+    private IEnumerator FadeCoroutine(GameObject gameObject, CanvasGroup group, float startAlpha, float endAlpha, System.Action callback=null, float speed=1)
     {
         float t = 0;
         gameObject.SetActive(true);
@@ -59,7 +68,7 @@ public class UIEffects : MonoBehaviour
             group.alpha = Mathf.Lerp(startAlpha, endAlpha, t / fadeDuration);
 
             yield return null;
-            t += Time.deltaTime;
+            t += (Time.deltaTime * speed);
         }
 
         group.alpha = endAlpha;
@@ -68,7 +77,7 @@ public class UIEffects : MonoBehaviour
         callback?.Invoke();
     }
 
-    private IEnumerator FlashCoroutine()
+    private IEnumerator FlashCoroutine(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1)
     {
         float t = 0;
         whitePanel.SetActive(true);
@@ -79,18 +88,22 @@ public class UIEffects : MonoBehaviour
             whitePanelCanvasGroup.alpha = Mathf.Lerp(0, 1, t / (flashDuration / 2));
 
             yield return null;
-            t += Time.deltaTime;
+            t += (Time.deltaTime * speed);
         }
+
+        callbackMiddle?.Invoke();
 
         while (t >= 0)
         {
             whitePanelCanvasGroup.alpha = Mathf.Lerp(0, 1, t / (flashDuration / 2));
 
             yield return null;
-            t -= Time.deltaTime;
+            t -= (Time.deltaTime * speed);
         }
 
         whitePanelCanvasGroup.alpha = 0;
         whitePanel.SetActive(false);
+        
+        callbackEnd?.Invoke();
     }
 }
