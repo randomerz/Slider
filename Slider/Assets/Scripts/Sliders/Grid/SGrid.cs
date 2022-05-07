@@ -27,6 +27,7 @@ public class SGrid : MonoBehaviour
 
     protected STile[,] grid;
     protected SGridBackground[,] bgGrid;
+    public int[,] saveGrid;
 
     // Set in inspector 
     public int width;
@@ -95,7 +96,6 @@ public class SGrid : MonoBehaviour
     * 
     * This is useful for reshuffling the grid.
     * 
-    * C: The "0" STile represents where the 9th tile should go
     */
     public void SetGrid(int[,] puzzle)
     {
@@ -427,6 +427,34 @@ public class SGrid : MonoBehaviour
         grid = newGrid;
     }
 
+    public virtual void SaveSaveGrid()
+    {
+        //Debug.Log("Saved!");
+        saveGrid = new int[current.width, current.height];
+        //GedGridString but turns it to SetGrid format
+        for (int x = 0; x < current.width; x++)
+        {
+            for (int y = 0; y < current.height; y++)
+            {
+                //Debug.Log(current.grid[x, y].islandId);
+                saveGrid[x,y] = grid[x, y].islandId;
+            }
+        }
+        //Debug.Log(saveGrid);
+    }
+
+    public virtual void LoadSaveGrid()
+    {
+        //Debug.Log("Loaded!");
+        if (saveGrid == null)
+        {
+            //THIS SHOULD NOT BE HAPPENING
+            Debug.LogError("saveGrid is null!");
+            return;
+        }
+        SetGrid(saveGrid);
+        saveGrid = null;
+    }
 
     protected static void UpdateButtonCompletions(object sender, System.EventArgs e)
     {
@@ -457,7 +485,7 @@ public class SGrid : MonoBehaviour
         }
     }
 
-    protected static int GetNumButtonCompletions()
+    public static int GetNumButtonCompletions()
     {
         return current.GetNumButtonCompletionsHelper();
     }
