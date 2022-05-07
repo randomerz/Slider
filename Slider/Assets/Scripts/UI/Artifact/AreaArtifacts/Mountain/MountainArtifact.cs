@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MountainArtifact : UIArtifact
 {
+    
 
     // replaces adjacentButtons
     private List<ArtifactTileButton> GetMoveOptions(MountainArtifactButton button)
@@ -19,7 +20,7 @@ public class MountainArtifact : UIArtifact
             Vector3Int.back
         };
 
-        foreach (Vector3Int dir in dirs)
+       /* foreach (Vector3Int dir in dirs)
         {
             MountainArtifactButton b = GetButton(button.x + dir.x, button.y + dir.y, button.z + dir.z);
             int i = 1;
@@ -30,7 +31,7 @@ public class MountainArtifact : UIArtifact
 
                 i++;
             }
-        }
+        }*/
 
         return moveOptionButtons;
     }
@@ -40,9 +41,8 @@ public class MountainArtifact : UIArtifact
     {
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
-        int oldCurrZ = buttonCurrent.z;
-        buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y, buttonEmpty.z);
-        buttonEmpty.SetPosition(oldCurrX, oldCurrY, oldCurrZ);
+        buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
+        buttonEmpty.SetPosition(oldCurrX, oldCurrY);
     }
 
     //L: updateGrid - if this is false, it will just update the UI without actually moving the tiles.
@@ -53,7 +53,6 @@ public class MountainArtifact : UIArtifact
 
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
-        int z = buttonCurrent.z;
         SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
  
         // Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
@@ -78,30 +77,5 @@ public class MountainArtifact : UIArtifact
             Debug.Log("Couldn't perform move! (queue full?)");
             return false;
         }
-    }
-
-    public static void SetButtonPos(int islandId, int x, int y, int z)
-    {
-        foreach (MountainArtifactButton b in _instance.buttons)
-        {
-            if (b.islandId == islandId)
-            {
-                b.SetPosition(x, y, z);
-                return;
-            }
-        }
-    }
-
-    private MountainArtifactButton GetButton(int x, int y, int z)
-    {
-        foreach (MountainArtifactButton b in _instance.buttons)
-        {
-            if (b.x == x && b.y == y && b.z == z)
-            {
-                return b;
-            }
-        }
-
-        return null;
     }
 }
