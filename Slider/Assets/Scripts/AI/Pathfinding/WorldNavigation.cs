@@ -44,14 +44,14 @@ public class WorldNavigation : MonoBehaviour
     {
         SGrid.OnSTileEnabled += HandleSTileEnabled;
         SGridAnimator.OnSTileMoveEnd += HandleSTileMoved;
-        CaveMossManager.MossIsGrowing += HandleMossGrowing;
+        CaveMossManager.MossUpdated += HandleMossUpdated;
     }
 
     private void OnDisable()
     {
         SGrid.OnSTileEnabled -= HandleSTileEnabled;
         SGridAnimator.OnSTileMoveEnd -= HandleSTileMoved;
-        CaveMossManager.MossIsGrowing -= HandleMossGrowing;
+        CaveMossManager.MossUpdated -= HandleMossUpdated;
     }
 
     private void HandleSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
@@ -68,15 +68,25 @@ public class WorldNavigation : MonoBehaviour
         OnValidPtsChanged?.Invoke(this, new System.EventArgs());
     }
 
-    private void HandleMossGrowing(object sender, CaveMossManager.MossIsGrowingArgs e)
+    private void HandleMossUpdated(object sender, CaveMossManager.MossUpdatedArgs e)
     {
-        if (e.isGrowing)
+        /* This isn't consistent for some stupid reason.
+        if (validPtsStiles.ContainsKey(e.stile))
         {
-            validPtsStiles[e.stile].Remove((Vector2Int) e.pos);
-        } else
-        {
-            validPtsStiles[e.stile].Add((Vector2Int) e.pos);
+            if (e.isGrowing)
+            {
+                validPtsStiles[e.stile].Remove((Vector2Int) e.pos);
+                Debug.Log("Removed: " + e.pos);
+            }
+            else
+            {
+                Debug.Log("Added: " + e.pos);
+                validPtsStiles[e.stile].Add((Vector2Int)e.pos);
+            }
         }
+        */
+
+        validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
         OnValidPtsChanged?.Invoke(this, new System.EventArgs());
     }
 

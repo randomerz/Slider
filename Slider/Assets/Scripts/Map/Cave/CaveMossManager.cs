@@ -46,7 +46,24 @@ public class CaveMossManager : MonoBehaviour
         public Vector3Int pos;
         public bool isGrowing;
     }
+
+    public class MossUpdatedArgs : System.EventArgs
+    {
+        public STile stile;
+    }
     public static event System.EventHandler<MossIsGrowingArgs> MossIsGrowing;
+
+    public static event System.EventHandler<MossUpdatedArgs> MossUpdated;
+
+    private bool updating;
+
+    private void Awake()
+    {
+        if (stile == null)
+        {
+            stile = GetComponentInParent<CaveSTile>();
+        }
+    }
 
     private void Start()
     {
@@ -75,6 +92,7 @@ public class CaveMossManager : MonoBehaviour
                     mossMap.SetColor(pos, new Color(1.0f, 1.0f, 1.0f, 0.0f));
                     recededMossMap.SetColor(pos, Color.white);
                     mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
+                    MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = false });
                 }
                 else
                 {
@@ -82,13 +100,9 @@ public class CaveMossManager : MonoBehaviour
                     mossMap.SetColor(pos, Color.white);
                     recededMossMap.SetColor(pos, new Color(1.0f, 1.0f, 1.0f, 0.0f));
                     mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
+                    MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = true });
                 }
             });
-        }
-
-        if (stile == null)
-        {
-            stile = GetComponentInParent<CaveSTile>();
         }
     }
 
@@ -106,6 +120,15 @@ public class CaveMossManager : MonoBehaviour
         SGridAnimator.OnSTileMoveEnd -= UpdateMoss;
         SGrid.OnSTileEnabled -= UpdateMoss;
         CaveLight.OnLightSwitched -= UpdateMoss;
+    }
+
+    private void Update()
+    {
+        if (updating && tilesAnimating.Count == 0)
+        {
+            MossUpdated?.Invoke(this, new MossUpdatedArgs { stile = stile });
+            updating = false;
+        }
     }
 
     private void UpdateMoss()
@@ -135,6 +158,7 @@ public class CaveMossManager : MonoBehaviour
                         {
                             //L: The tile needs to animate and is not already animating in that direction.
                             tilesAnimating.Add(pos, new MossAnimData(StartCoroutine(posIsLit ? RecedeMoss(pos) : GrowMoss(pos)), !posIsLit));
+                            updating = true;
                         }
                     }
                 });
@@ -173,6 +197,7 @@ public class CaveMossManager : MonoBehaviour
     {
         //L: Enable the moss collider
         mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
+        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = true });
 
         while (mossMap.GetColor(pos).a < 1.0f)
         {
@@ -183,8 +208,6 @@ public class CaveMossManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         tilesAnimating.Remove(pos);
-
-        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = true });
     }
 
     public IEnumerator RecedeMoss(Vector3Int pos)
