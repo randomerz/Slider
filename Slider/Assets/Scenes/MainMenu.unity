@@ -391,6 +391,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4653869308099428880, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: deselectOnClick
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653869308099428880, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: selectOnPointerEnter
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4878303943482852176, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -475,6 +483,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_Navigation.m_WrapAround
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_SpriteState.m_SelectedSprite
+      value: 
+      objectReference: {fileID: 5325387788926593336, guid: 212c8e84c5e9d2a43b00694bf844aced, type: 3}
     - target: {fileID: 4878303943482852191, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
       propertyPath: m_Name
       value: Save (2)
@@ -836,6 +856,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Continue Button
       objectReference: {fileID: 0}
+    - target: {fileID: 8175251183880460336, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460350, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_Interactable
       value: 0
@@ -935,6 +959,14 @@ PrefabInstance:
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8237850414301288831, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: deselectOnClick
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8237850414301288831, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: selectOnPointerEnter
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
@@ -1113,6 +1145,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8017564828789371741, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017564828789371741, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 901309740}
@@ -1146,6 +1182,18 @@ PrefabInstance:
       propertyPath: mainMenuManager
       value: 
       objectReference: {fileID: 901309740}
+    - target: {fileID: 4653869308099428880, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: deselectOnClick
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653869308099428880, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: isSelectedOnMenuOpen
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653869308099428880, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: selectOnPointerEnter
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4878303943482852176, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1230,6 +1278,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_SpriteState.m_SelectedSprite
+      value: 
+      objectReference: {fileID: 5325387788926593336, guid: 212c8e84c5e9d2a43b00694bf844aced, type: 3}
     - target: {fileID: 4878303943482852191, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
       propertyPath: m_Name
       value: Save (1)
@@ -1811,6 +1867,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4653869308099428880, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: deselectOnClick
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653869308099428880, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: selectOnPointerEnter
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4878303943482852176, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1895,6 +1959,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_Navigation.m_WrapAround
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_SpriteState.m_SelectedSprite
+      value: 
+      objectReference: {fileID: 5325387788926593336, guid: 212c8e84c5e9d2a43b00694bf844aced, type: 3}
     - target: {fileID: 4878303943482852191, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
       propertyPath: m_Name
       value: Save (3)
@@ -2417,6 +2493,10 @@ PrefabInstance:
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8237850414301288831, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: deselectOnClick
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8237850414301288831, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: selectOnPointerEnter
@@ -3025,6 +3105,7 @@ GameObject:
   - component: {fileID: 1851512825}
   - component: {fileID: 1851512824}
   - component: {fileID: 1851512823}
+  - component: {fileID: 1851512826}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -3089,6 +3170,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1851512826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851512822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df5b7d3ceed6b224bb1530c694d9042b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1909759397 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
@@ -3384,6 +3477,10 @@ PrefabInstance:
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8237850414301288831, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: deselectOnClick
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8237850414301288831, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: selectOnPointerEnter
@@ -8326,8 +8423,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8237850414301288831, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
-      propertyPath: isSelectedOnMenuOpen
+      propertyPath: deselectOnClick
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8237850414301288831, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: isSelectedOnMenuOpen
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8237850414301288831, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: selectOnPointerEnter
