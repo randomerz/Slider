@@ -621,6 +621,17 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""6f8bf429-0412-47c3-90e3-aa674a5fc9b4"",
+                    ""path"": ""<Keyboard>/backspace"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""468a9609-b92f-4f8a-949b-58f589b76950"",
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",

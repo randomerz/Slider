@@ -35,6 +35,7 @@ public class MainMenuManager : MonoBehaviour
     [Header("Other References")]
     public Button continueButton;
     public TextMeshProUGUI continueText;
+    public Button playButton;
 
     private System.IDisposable listener;
     private InputSettings controls;
@@ -53,6 +54,8 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(OpenCutscene());
 
         listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
+
+        _instance.controls.UI.Cancel.performed += context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); };
     }
 
     private void OnEnable() {
@@ -117,13 +120,30 @@ public class MainMenuManager : MonoBehaviour
     {
         StopAllCoroutines();
         CameraShake.StopShake();
-        
+
         titleAnimator.SetBool("isUp", true);
         playerAnimator.SetBool("isUp", true);
         mainMenuButtonsAnimator.SetBool("isUp", true);
         textAnimator.SetBool("isVisible", false);
+
+        StartCoroutine(SelectTopmostButton());
     }
 
+    // Select either Play or Select.
+    // We need to WaitForEndOfFrame to prevent a mouse input at the splah screen from de-selecting our button.
+    private IEnumerator SelectTopmostButton()
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (continueButton.interactable)
+        {
+            continueButton.Select();
+        }
+        else
+        {
+            playButton.Select();
+        }
+    }
 
     #region UI stuff
 
@@ -155,6 +175,8 @@ public class MainMenuManager : MonoBehaviour
         advancedOptionsPanel.SetActive(false);
         controlsPanel.SetActive(false);
         creditsPanel.SetActive(false);
+
+        StartCoroutine(SelectTopmostButton());
     }
 
     public void OpenSaves()
