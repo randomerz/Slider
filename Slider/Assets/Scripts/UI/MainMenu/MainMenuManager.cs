@@ -126,6 +126,14 @@ public class MainMenuManager : MonoBehaviour
         mainMenuButtonsAnimator.SetBool("isUp", true);
         textAnimator.SetBool("isVisible", false);
 
+        StartCoroutine(IStartMainMenu());
+    }
+
+    // We need this to provide a delay before we accept keyboard inputs when moving from splash screen
+    // to buttons screen. Otherwise spamming buttons can lead to immediately entering the play menu.
+    private IEnumerator IStartMainMenu()
+    {
+        yield return new WaitForSeconds(1);
         StartCoroutine(SelectTopmostButton());
     }
 
@@ -165,6 +173,8 @@ public class MainMenuManager : MonoBehaviour
         {
             QuitGame();
         }
+
+        StartCoroutine(SelectTopmostButton());
     }
 
     public void CloseAllPanels()
@@ -175,8 +185,6 @@ public class MainMenuManager : MonoBehaviour
         advancedOptionsPanel.SetActive(false);
         controlsPanel.SetActive(false);
         creditsPanel.SetActive(false);
-
-        StartCoroutine(SelectTopmostButton());
     }
 
     public void OpenSaves()

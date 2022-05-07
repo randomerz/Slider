@@ -13,12 +13,11 @@ public class EventSystemManager : MonoBehaviour
     private UnityEngine.EventSystems.EventSystem eventSystem;
 
     /// <summary>
-    /// Call this to deslect the currently select button. No, there isn't a better approach to this. Yes, that drives me insane.
+    /// Call this to deslect the currently selected button. No, there isn't a better approach to this. Yes, that drives me insane.
     /// </summary>
     public static void ClearSelectable()
     {
         _instance.eventSystem.SetSelectedGameObject(null);
-        // Debug.Log(_instance.eventSystem.currentSelectedGameObject);
     }
 
     private void Awake()
