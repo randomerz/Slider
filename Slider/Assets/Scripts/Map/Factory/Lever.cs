@@ -19,7 +19,7 @@ public class Lever : ElectricalNode
     {
     }
 
-    public void OnSwitch()
+    public void Switch()
     {
         StartSignal(!Powered);
         offSprite.SetActive(!Powered);

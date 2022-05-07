@@ -15,9 +15,9 @@ public class Wire : ConductiveElectricalNode
         nodeType = NodeType.IO;
     }
 
-    public override void OnPoweredHandler(bool value, bool valueChanged)
+    public void OnPoweredHandler(OnPoweredArgs args)
     {
-        offSprite.SetActive(!value);
-        onSprite.SetActive(value);
+        offSprite.SetActive(!args.powered);
+        onSprite.SetActive(args.powered);
     }
 }

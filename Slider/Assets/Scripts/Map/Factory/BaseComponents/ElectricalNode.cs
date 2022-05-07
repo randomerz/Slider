@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 //This was originally an interface, but I want to serialize it, so can't do that.
-public abstract class ElectricalNode : MonoBehaviour
+public class ElectricalNode : MonoBehaviour
 {
 
     public enum NodeType
@@ -38,12 +39,19 @@ public abstract class ElectricalNode : MonoBehaviour
         public bool powered;
         public bool valueChanged;
     }
-    public static event System.EventHandler<OnPoweredArgs> OnPowered;
+    //public static event System.EventHandler<OnPoweredArgs> OnPowered;
+
+    [SerializeField]
+    public UnityEvent<OnPoweredArgs> OnPowered;
 
     protected void Awake()
     {
         powerPathPrevs = new HashSet<ElectricalNode>();
         powerRefs = 0;  //Always start off and let things turn on.
+    }
+
+    private void OnEnable()
+    {
     }
 
     public virtual void StartSignal(bool input)
@@ -104,8 +112,7 @@ public abstract class ElectricalNode : MonoBehaviour
 
         //Call the event/handlers (this should only be used for devices to respond to things, NOT to update node state)
         bool valueChanged = Powered != oldPowered;
-        OnPoweredHandler(value, Powered != oldPowered);
-        OnPowered?.Invoke(this, new OnPoweredArgs { powered = Powered, valueChanged = valueChanged });
+        OnPowered?.Invoke(new OnPoweredArgs { powered = Powered, valueChanged = valueChanged });
 
         //Propagate new signal to all other neighbors
         recStack.Add(this);
@@ -144,9 +151,6 @@ public abstract class ElectricalNode : MonoBehaviour
 
         return refs;
     }
-
-    //Could use the event here instead, but why do that?
-    public virtual void OnPoweredHandler(bool value, bool valueChanged) { }
 
     //Target Complexity: O(n * p) p is the number of paths in this node as well as other (i.e. refs)
     //This method needs to not only add the neighbor, but update the state and ref counts to reflect the change (which can get more complicated).
