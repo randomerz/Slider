@@ -54,7 +54,7 @@ public class MountainArtifact : UIArtifact
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
         int z = buttonCurrent.z;
-        SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y);
+        SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
  
         // Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
         // Debug.Log(buttonCurrent + " " + buttonEmpty);
@@ -62,7 +62,7 @@ public class MountainArtifact : UIArtifact
         {
             //L: Do the move
 
-            QueueCheckAndAdd(new SMoveSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y));
+            QueueCheckAndAdd(new SMoveSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId));
             SwapButtons(buttonCurrent, buttonEmpty);
 
             // Debug.Log("Added move to queue: current length " + moveQueue.Count);

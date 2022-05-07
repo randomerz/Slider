@@ -17,6 +17,7 @@ public class MountainArtifactButton : ArtifactTileButton
         //Debug.Log("Current position: " + this.x + "," + this.y);
         this.x = x;
         this.y = y;
+        this.z = z;
         //Debug.Log("New position: " + this.x + "," + this.y);
 
         Vector3 pos = button1Position + x * xOffset + y * yOffset + z * zOffset;
