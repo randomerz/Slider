@@ -46,7 +46,7 @@ public class STile : MonoBehaviour
         // Debug.Log(STILE_WIDTH);
     }
 
-    public void Init()
+    public virtual void Init()
     {
         // SetTileActive(isTileActive);
         // DC: this is so that we can call any other relevant functions when STiles are enabled in SGrid
@@ -194,7 +194,7 @@ public class STile : MonoBehaviour
     }
 
     // Use this one usually!
-    public void SetGridPosition(int x, int y)
+    public virtual void SetGridPosition(int x, int y)
     {
         this.x = x;
         this.y = y;
@@ -218,7 +218,7 @@ public class STile : MonoBehaviour
         }
     }
 
-    public void SetGridPositionRaw(int x, int y)
+    public virtual void SetGridPositionRaw(int x, int y)
     {
         this.x = x;
         this.y = y;
@@ -250,7 +250,7 @@ public class STile : MonoBehaviour
         return movingDirection;
     }
 
-    public void SetMovingPosition(Vector2 position)
+    public virtual void SetMovingPosition(Vector2 position)
     {
         Vector3 newPos = STILE_WIDTH * new Vector3(position.x, position.y);
 
@@ -263,7 +263,7 @@ public class STile : MonoBehaviour
         SetTileMapPositions(newPos);
     }
 
-    private void UpdateTilePhysics(Vector3 dr)
+    protected void UpdateTilePhysics(Vector3 dr)
     {
         // if player is on stile, move them
         //              THIS IS TEMPORARY, REPLACE WITH PROPPER CHECK ON ALL SLIDEABLES
@@ -275,7 +275,7 @@ public class STile : MonoBehaviour
     }
 
 
-    private void SetTileMapPositions(Vector3 pos)
+    protected void SetTileMapPositions(Vector3 pos)
     {
         pos = pos + new Vector3(-0.5f, -0.5f);
 
