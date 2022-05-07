@@ -2,24 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SGridAnimator : MonoBehaviour
+public class MountainSGridAnimator : SGridAnimator
 {
-    //public bool isMoving = false;
+     //public bool isMoving = false;
 
     // set in inspector
-    public AnimationCurve movementCurve;
-    public float movementDuration = 1;
 
-    public class OnTileMoveArgs : System.EventArgs
-    {
-        public STile stile;
-        public Vector2Int prevPos;
-        public SMove smove; // the SMove this Move() was a part of
-    }
-    public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
-    public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
 
-    public virtual void Move(SMove move, STile[,] grid = null)
+    public override void Move(SMove move, STile[,] grid = null)
     {
         if (grid == null)
         {
@@ -34,23 +24,22 @@ public class SGridAnimator : MonoBehaviour
         {
             if (grid[m.startLoc.x, m.startLoc.y].isTileActive)
             {
+                if (Mathf.Abs(m.endLoc.y - m.startLoc.y) <= 1)
                 StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move));
+                else
+                StartCoroutine(StartLayerMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move));
             }
             else
             {
                 grid[m.startLoc.x, m.startLoc.y].SetGridPosition(m.endLoc.x, m.endLoc.y);
             }
         }
-
-        // DC: bug involving anchoring a tile in a rotate, lets you walk into void
-        if (move is SMoveRotate) 
-        {
-            CheckAnchorInRotate(move as SMoveRotate, grid);
-        }
     }
 
+    
+   // TODO: Write actual swap logic for layer swaps instead of instantly swapping them 
     // move is only here so we can pass it into the event
-    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move)
+    private IEnumerator StartLayerMovingAnimation(STile stile, Movement moveCoords, SMove move)
     {
         float t = 0;
         //isMoving = true;
@@ -64,12 +53,12 @@ public class SGridAnimator : MonoBehaviour
             stile.SetBorderColliders(true);
         }
 
-        OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
+       /* OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
             smove = move
-        });
+        });*/
 
         StartCoroutine(StartCameraShakeEffect());
 
@@ -103,15 +92,17 @@ public class SGridAnimator : MonoBehaviour
         stile.SetMovingDirection(Vector2.zero);
         stile.SetGridPosition(moveCoords.endLoc);
 
-        OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
+        /*OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
             smove = move
-        });
+        });*/
     }
 
-    protected IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders)
+    //TODO: Colliders :meownotlikethis:
+    /*
+    private IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders)
     {
         foreach (Vector2Int p in borders.Keys)
         {
@@ -157,74 +148,17 @@ public class SGridAnimator : MonoBehaviour
         }
     }
 
-    protected IEnumerator EnableTileBorderColliders(STile stile)
+    private IEnumerator EnableTileBorderColliders(STile stile)
     {
         stile.SetBorderColliders(true);
 
         yield return new WaitForSeconds(movementDuration);
 
         stile.SetBorderColliders(false);
-    }
+    }*/
 
-    protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) // include magnitude?
+    protected override Vector2 GetMovingDirection(Vector2 start, Vector2 end) // include magnitude?
     {
-        Vector2 dif = start - end;
-        if (dif.x > 0)
-        {
-            return Vector2.right;
-        }
-        else if (dif.x < 0)
-        {
-            return Vector2.left;
-        }
-        else if (dif.y > 0)
-        {
-            return Vector2.up;
-        }
-        else if (dif.y < 0)
-        {
-            return Vector2.down;
-        }
-        else
-        {
-            Debug.LogError("Moving Tile to the same spot!");
-            return Vector2.zero;
-        }
-    }
-
-    protected IEnumerator StartCameraShakeEffect()
-    {
-        CameraShake.ShakeConstant(movementDuration + 0.1f, 0.15f);
-        AudioManager.Play("Slide Rumble");
-
-        yield return new WaitForSeconds(movementDuration);
-
-        CameraShake.Shake(0.5f, 1.0f); // todo: base this on movementDuration so that less camera shake if duration is lower
-        AudioManager.Play("Slide Explosion");
-
-    }
-
-
-
-    
-
-    private void CheckAnchorInRotate(SMoveRotate move, STile[,] grid)
-    {
-        // if player is on a stile that is anchored
-        STile playerStile = Player.GetStileUnderneath();
-        if (playerStile != null && playerStile.hasAnchor)
-        {
-            // Debug.Log("Player is on: " + playerStile.islandId);
-            foreach (Vector2Int p in move.anchoredPositions)
-            {
-                // and that tile is involved in the rotation
-                if (grid[p.x, p.y].isTileActive && grid[p.x, p.y].islandId == playerStile.islandId)
-                {
-                    // enable colliders temporarily
-                    StartCoroutine(EnableTileBorderColliders(playerStile));
-                    return;
-                }
-            }
-        }
+        return start - end;
     }
 }
