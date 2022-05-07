@@ -27,7 +27,7 @@ public class PoweredLightNew : ConductiveElectricalNode
         SetLightOn(value, valueChanged);
     }
 
-    public void SetLightOn(bool value, bool playSound = false)
+    public void SetLightOn(bool value, bool playSound = true)
     {
         spriteRenderer.sprite = value ? onSprite : offSprite;
 

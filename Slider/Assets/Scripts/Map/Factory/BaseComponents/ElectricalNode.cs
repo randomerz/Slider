@@ -43,7 +43,29 @@ public abstract class ElectricalNode : MonoBehaviour
     protected void Awake()
     {
         powerPathPrevs = new HashSet<ElectricalNode>();
-        powerRefs = 0;
+        powerRefs = 0;  //Always start off and let things turn on.
+    }
+
+    public virtual void StartSignal(bool input)
+    {
+        if (nodeType == NodeType.OUTPUT)
+        {
+            //According to the OOD gurus and lord Aibek, this violates Liskov Substitution (I think). Oh well.
+            Debug.LogError("Cannot start signal from an OUTPUT Node");
+        }
+
+        Debug.Log(Powered);
+        Debug.Log(input);
+        if (Powered != input)    //This ensures we don't double propagate
+        {
+            powerRefs = input ? 1 : 0;
+
+            foreach (ElectricalNode node in neighbors)
+            {
+                HashSet<ElectricalNode> recStack = new HashSet<ElectricalNode>() { this };
+                node.PropagateSignal(input, this, recStack);
+            }
+        }
     }
 
     //Target Complexity : O(n) including recursive calls (so updating node state should be O(1)
@@ -68,7 +90,7 @@ public abstract class ElectricalNode : MonoBehaviour
             powerPathPrevs.Add(prev);
         } else
         {
-            powerRefs = powerRefs - numRefs;
+            powerRefs = Mathf.Max(powerRefs - numRefs, 0);
             powerPathPrevs.Remove(prev);
         }
 
