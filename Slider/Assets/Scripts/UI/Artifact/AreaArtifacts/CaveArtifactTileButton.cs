@@ -45,7 +45,6 @@ class CaveArtifactTileButton : ArtifactTileButton
 
     private void LightSwitched(object sender, CaveLight.OnLightSwitchedArgs e)
     {
-        Debug.Log("YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
         CheckLit();
     }
 

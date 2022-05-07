@@ -14,7 +14,7 @@ public static class Areas
         Area.Ocean => "Sailing the Ocean",
         Area.Jungle => "Traversing the Jungle",
         Area.Desert => "Trekking Through the Desert",
-        Area.Factory => "Working in the Factory",
+        Area.Factory => "Powering Up in the Factory",
         Area.Mountain => "Riding Through the Mountain",
         Area.Military => "Commiting Warcrimes",
         Area.MagiTech => "Playing With Time Portals",

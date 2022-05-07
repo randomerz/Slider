@@ -40,6 +40,31 @@ public class CaveMossManager : MonoBehaviour
     [SerializeField]
     private STile debugTile;    //L: In case you need to debug a specific tile
 
+    public class MossIsGrowingArgs : System.EventArgs
+    {
+        public STile stile;
+        public Vector3Int pos;
+        public bool isGrowing;
+    }
+
+    public class MossUpdatedArgs : System.EventArgs
+    {
+        public STile stile;
+    }
+    public static event System.EventHandler<MossIsGrowingArgs> MossIsGrowing;
+
+    public static event System.EventHandler<MossUpdatedArgs> MossUpdated;
+
+    private bool updating;
+
+    private void Awake()
+    {
+        if (stile == null)
+        {
+            stile = GetComponentInParent<CaveSTile>();
+        }
+    }
+
     private void Start()
     {
         mossBounds = mossMap.cellBounds;
@@ -67,6 +92,7 @@ public class CaveMossManager : MonoBehaviour
                     mossMap.SetColor(pos, new Color(1.0f, 1.0f, 1.0f, 0.0f));
                     recededMossMap.SetColor(pos, Color.white);
                     mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
+                    MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = false });
                 }
                 else
                 {
@@ -74,24 +100,18 @@ public class CaveMossManager : MonoBehaviour
                     mossMap.SetColor(pos, Color.white);
                     recededMossMap.SetColor(pos, new Color(1.0f, 1.0f, 1.0f, 0.0f));
                     mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
+                    MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = true });
                 }
             });
         }
-
-        if (stile == null)
-        {
-            stile = GetComponentInParent<CaveSTile>();
-        }
-
-        //Conditions under which the moss updates.
-        SGridAnimator.OnSTileMoveEnd += UpdateMoss;
-        SGrid.OnSTileEnabled += UpdateMoss;
-        CaveLight.OnLightSwitched += UpdateMoss;
     }
 
     private void OnEnable()
     {
-
+        //Conditions under which the moss updates.
+        SGridAnimator.OnSTileMoveEnd += UpdateMoss;
+        SGrid.OnSTileEnabled += UpdateMoss;
+        CaveLight.OnLightSwitched += UpdateMoss;
     }
 
     private void OnDisable()
@@ -102,9 +122,17 @@ public class CaveMossManager : MonoBehaviour
         CaveLight.OnLightSwitched -= UpdateMoss;
     }
 
+    private void Update()
+    {
+        if (updating && tilesAnimating.Count == 0)
+        {
+            MossUpdated?.Invoke(this, new MossUpdatedArgs { stile = stile });
+            updating = false;
+        }
+    }
+
     private void UpdateMoss()
     {
-        //Super hacky because events are being stupid.
         if (SGrid.current != null && SGrid.current as CaveGrid != null)
         {
             if (LightManager.instance != null)
@@ -130,6 +158,7 @@ public class CaveMossManager : MonoBehaviour
                         {
                             //L: The tile needs to animate and is not already animating in that direction.
                             tilesAnimating.Add(pos, new MossAnimData(StartCoroutine(posIsLit ? RecedeMoss(pos) : GrowMoss(pos)), !posIsLit));
+                            updating = true;
                         }
                     }
                 });
@@ -167,8 +196,8 @@ public class CaveMossManager : MonoBehaviour
     public IEnumerator GrowMoss(Vector3Int pos)
     {
         //L: Enable the moss collider
-        playerTP.CheckPlayerOnMoss(pos);
         mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
+        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = true });
 
         while (mossMap.GetColor(pos).a < 1.0f)
         {
@@ -179,7 +208,6 @@ public class CaveMossManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         tilesAnimating.Remove(pos);
-
     }
 
     public IEnumerator RecedeMoss(Vector3Int pos)
@@ -194,7 +222,8 @@ public class CaveMossManager : MonoBehaviour
 
         //L: Disable the moss collider
         mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
-
         tilesAnimating.Remove(pos);
+
+        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = false });
     }
 }
