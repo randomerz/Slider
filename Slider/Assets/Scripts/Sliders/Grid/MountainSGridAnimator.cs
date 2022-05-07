@@ -37,11 +37,9 @@ public class MountainSGridAnimator : SGridAnimator
     }
 
     
-   // TODO: Write actual swap logic for layer swaps instead of instantly swapping them 
     // move is only here so we can pass it into the event
     private IEnumerator StartLayerMovingAnimation(STile stile, Movement moveCoords, SMove move)
     {
-        float t = 0;
         //isMoving = true;
         bool isPlayerOnStile = (Player.GetStileUnderneath() != null &&
                                 Player.GetStileUnderneath().islandId == stile.islandId);
@@ -53,26 +51,11 @@ public class MountainSGridAnimator : SGridAnimator
             stile.SetBorderColliders(true);
         }
 
-       /* OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
-        {
-            stile = stile,
-            prevPos = moveCoords.startLoc,
-            smove = move
-        });*/
+        base.InvokeOnStileMoveStart(stile, moveCoords, move);
 
         StartCoroutine(StartCameraShakeEffect());
 
-        while (t < movementDuration)
-        {
-            float s = movementCurve.Evaluate(t / movementDuration);
-            Vector2 pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
-            //Vector3 pos = (1 - s) * orig + s * target;
-            
-            stile.SetMovingPosition(pos);
-
-            yield return null;
-            t += Time.deltaTime;
-        }
+        yield return new WaitForSeconds(movementDuration);
 
         //isMoving = false;
         
@@ -92,12 +75,7 @@ public class MountainSGridAnimator : SGridAnimator
         stile.SetMovingDirection(Vector2.zero);
         stile.SetGridPosition(moveCoords.endLoc);
 
-        /*OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
-        {
-            stile = stile,
-            prevPos = moveCoords.startLoc,
-            smove = move
-        });*/
+        base.InvokeOnStileMoveEnd(stile, moveCoords, move);
     }
 
     //TODO: Colliders :meownotlikethis:

@@ -111,6 +111,25 @@ public class SGridAnimator : MonoBehaviour
         });
     }
 
+    protected void InvokeOnStileMoveStart(STile stile, Movement moveCoords, SMove move) {
+        OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = moveCoords.startLoc,
+            smove = move
+        });
+    }
+
+    protected void InvokeOnStileMoveEnd(STile stile, Movement moveCoords, SMove move) {
+        OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = moveCoords.startLoc,
+            smove = move
+        });
+    }
+
+
     protected IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders)
     {
         foreach (Vector2Int p in borders.Keys)
