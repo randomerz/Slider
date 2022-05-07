@@ -54,8 +54,6 @@ public abstract class ElectricalNode : MonoBehaviour
             Debug.LogError("Cannot start signal from an OUTPUT Node");
         }
 
-        Debug.Log(Powered);
-        Debug.Log(input);
         if (Powered != input)    //This ensures we don't double propagate
         {
             powerRefs = input ? 1 : 0;

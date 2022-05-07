@@ -17,14 +17,12 @@ public class Lever : ElectricalNode
 
     private void Start()
     {
-        OnSwitch(true);
     }
 
-    public void OnSwitch(bool value)
+    public void OnSwitch()
     {
-        offSprite.SetActive(!value);
-        onSprite.SetActive(value);
-
-        StartSignal(value);
+        StartSignal(!Powered);
+        offSprite.SetActive(!Powered);
+        onSprite.SetActive(Powered);
     }
 }
