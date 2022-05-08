@@ -13,6 +13,10 @@ public class Wire : ConductiveElectricalNode
     {
         base.Awake();
         nodeType = NodeType.IO;
+
+        //Just initializing to make sure they're not both active at the same time
+        offSprite.SetActive(!Powered);
+        onSprite.SetActive(Powered);
     }
 
     public void OnPoweredHandler(OnPoweredArgs args)
