@@ -308,6 +308,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "f844606a-4ae4-4f72-9988-45d387a8ba92",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -588,22 +597,33 @@
                 },
                 {
                     "name": "",
-                    "id": "d81d01e4-59de-4a7a-838a-4d7ac7abf68a",
-                    "path": "*/{Cancel}",
+                    "id": "51e3c884-8d31-4a36-9d3d-95c87ad2b55d",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard Mouse",
-                    "action": "Cancel",
+                    "action": "Submit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "6f8bf429-0412-47c3-90e3-aa674a5fc9b4",
-                    "path": "<Keyboard>/backspace",
+                    "id": "a73e9b9f-4608-44e1-9b45-0dd0215a3912",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard Mouse",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d81d01e4-59de-4a7a-838a-4d7ac7abf68a",
+                    "path": "*/{Cancel}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard Mouse",
                     "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -781,6 +801,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "ArtifactLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7019df37-c935-4727-9315-cf65314296a3",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Back",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

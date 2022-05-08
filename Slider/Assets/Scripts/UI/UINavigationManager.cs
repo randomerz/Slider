@@ -15,10 +15,10 @@ public class UINavigationManager : MonoBehaviour
     private UnityEngine.EventSystems.EventSystem eventSystem;
 
     [Tooltip("Match each UI panel GameObject with all the navigatable buttons inside of it.")]
-    [SerializeField] private ButtonSet[] buttonSets;
+    [SerializeField] private ButtonSet[] selectableSets;
 
     // We convert our buttonSets into a dictionary at start (dictionaries are not serializable and therefore invis in the inspector)
-    private Dictionary<GameObject, Button[]> buttonSetsDictionary;
+    private Dictionary<GameObject, Selectable[]> selectableSetDictionary;
 
     /// <summary>
     /// This should be set to a GameObject inside of buttonSets. Make sure this matches the currently active menu panel 
@@ -40,10 +40,10 @@ public class UINavigationManager : MonoBehaviour
         _instance = this;
         _instance.eventSystem = GetComponent<UnityEngine.EventSystems.EventSystem>();
 
-        buttonSetsDictionary = new Dictionary<GameObject, Button[]>();
-        foreach (ButtonSet set in buttonSets)
+        selectableSetDictionary = new Dictionary<GameObject, Selectable[]>();
+        foreach (ButtonSet set in selectableSets)
         {
-            buttonSetsDictionary[set.menu] = set.buttons;
+            selectableSetDictionary[set.menu] = set.selectables;
         }
     }
 
@@ -61,15 +61,15 @@ public class UINavigationManager : MonoBehaviour
         {
             return false;
         }
-        if (!_instance.buttonSetsDictionary.ContainsKey(_instance._currentMenu))
+        if (!_instance.selectableSetDictionary.ContainsKey(_instance._currentMenu))
         {
             Debug.LogError($"EventSystemManager could not find ButtonSet for Menu Object {_instance._currentMenu}. Did you remember to setup this menu in the Button Sets?");
             return false;
         }
 
-        foreach (Button button in _instance.buttonSetsDictionary[_instance._currentMenu])
+        foreach (Selectable selectable in _instance.selectableSetDictionary[_instance._currentMenu])
         {
-            if (_instance.eventSystem.currentSelectedGameObject == button.gameObject)
+            if (_instance.eventSystem.currentSelectedGameObject == selectable.gameObject)
             {
                 return true;
             }
@@ -88,16 +88,16 @@ public class UINavigationManager : MonoBehaviour
         {
             return;
         }
-        if (!_instance.buttonSetsDictionary.ContainsKey(_instance._currentMenu))
+        if (!_instance.selectableSetDictionary.ContainsKey(_instance._currentMenu))
         {
             Debug.LogError($"EventSystemManager could not find ButtonSet for Menu Object {_instance._currentMenu}");
             return;
         }
-        foreach (Button button in _instance.buttonSetsDictionary[_instance._currentMenu])
+        foreach (Selectable selectable in _instance.selectableSetDictionary[_instance._currentMenu])
         {
-            if (button.interactable)
+            if (selectable.interactable)
             {
-                button.Select();
+                selectable.Select();
                 break;
             }
         }
@@ -112,5 +112,5 @@ public class UINavigationManager : MonoBehaviour
 public struct ButtonSet
 {
     public GameObject menu;
-    public Button[] buttons;
+    public Selectable[] selectables;
 }

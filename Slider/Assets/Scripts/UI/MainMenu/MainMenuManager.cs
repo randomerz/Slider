@@ -56,7 +56,7 @@ public class MainMenuManager : MonoBehaviour
 
         listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
 
-        _instance.controls.UI.Cancel.performed += context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); };
+        _instance.controls.UI.Back.performed += context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); };
 
         // Pressing a navigation key selects a button is one is not already selected
         _instance.controls.UI.Navigate.performed += context => 
