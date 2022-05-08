@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MomentumGizmo : MonoBehaviour
 {
+    [Tooltip("This will be set automatically in Awake() if needed")]
     public STile myStile;
     public Animator animator; // this is only based on Tree animator controller rn
 

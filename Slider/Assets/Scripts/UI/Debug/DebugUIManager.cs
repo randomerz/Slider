@@ -23,6 +23,8 @@ public class DebugUIManager : MonoBehaviour
     private void Awake()
     {
         controls = new InputSettings();
+
+        controls.UI.Pause.performed += context => CloseDebug();
         controls.Debug.OpenDebug.performed += context => OnPressDebug();
         controls.Debug.CycleCommand.performed += context => CycleCommand(context.ReadValue<float>());
     }
@@ -43,10 +45,31 @@ public class DebugUIManager : MonoBehaviour
 
         if (isDebugOpen)
         {
+            UIManager.PauseGameGlobal();
+            UIManager.canOpenMenus = false;
+
             consoleText.Select();
             consoleText.ActivateInputField();
             consoleText.text = "";
             commandIndex = commandHistory.Count + 1;
+        }
+        else
+        {
+            UIManager.CloseUI();
+            UIManager.canOpenMenus = true;
+        }
+    }
+
+    private void CloseDebug()
+    {
+        if (isDebugOpen)
+        {
+            isDebugOpen = false;
+            Player.SetCanMove(true);
+            debugPanel.SetActive(false);
+            
+            UIManager.CloseUI();
+            UIManager.canOpenMenus = true;
         }
     }
 
@@ -147,10 +170,26 @@ public class DebugUIManager : MonoBehaviour
 
     public void GiveAllSliders()
     {
-        for (int i = 1; i <= 9; i++)
+        //Also make sure the sliders are in the right positions!
+        string target = SGrid.current.TargetGrid;
+        int[,] grid = new int[3, 3];
+        int i = 0;
+        while(target.Length > 0)
         {
-            SGrid.current.EnableStile(i);
+            char c = target[0];
+            target = target.Substring(1);
+            int islandId = (int) c  - '0';
+            if (islandId >= 1 && islandId <= 9)
+            {
+                int x = i % 3;
+                int y = 2 - i / 3;
+                grid[x, y] = islandId;
+                SGrid.current.EnableStile(islandId);
+                i++;
+            }
         }
+
+        SGrid.current.SetGrid(grid);
     }
 
     public void SpawnAnchor()

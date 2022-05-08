@@ -11,6 +11,7 @@ public class UIArtifactMenus : MonoBehaviour
     public UIArtifact uiArtifact;
     public ArtifactScreenAnimator screenAnimator;
     public Animator artifactAnimator;
+    public UIArtifactWorldMap artifactWorldMap;
 
     private bool isArtifactOpen;
     private InputSettings controls;
@@ -19,6 +20,13 @@ public class UIArtifactMenus : MonoBehaviour
     {
         _instance = this;
 
+        artifactWorldMap.Init();
+
+        // check if this is pointing to the correct UIArtifact or prefab (this happens when we have scripts/prefabs extend UIArtifact)
+        if (uiArtifact.gameObject.scene.name == null)
+        {
+            Debug.LogWarning("You might need to update my UIArtifact reference!");
+        }
         
         _instance.controls = new InputSettings();
         LoadBindings();
@@ -26,12 +34,18 @@ public class UIArtifactMenus : MonoBehaviour
 
     private void OnEnable() 
     {
-        controls.Enable();    
+        controls.Enable();
+
+        PlayerInventory.OnPlayerGetCollectible += CloseArtifactListener;
+        UIManager.OnCloseAllMenus += CloseArtifactListener;
     }
 
     private void OnDisable() 
     {
         controls.Disable();    
+
+        PlayerInventory.OnPlayerGetCollectible -= CloseArtifactListener;
+        UIManager.OnCloseAllMenus -= CloseArtifactListener;
     }
 
     public static void LoadBindings()
@@ -102,12 +116,15 @@ public class UIArtifactMenus : MonoBehaviour
 
             UIManager.CloseUI();
             UIManager.canOpenMenus = true;
-
-            Player.SetCanMove(true);
             
             artifactAnimator.SetBool("isVisible", false);
             StartCoroutine(CloseArtPanel());
         }
+    }
+
+    private void CloseArtifactListener(object sender, System.EventArgs e)
+    {
+        CloseArtifact();
     }
 
     private IEnumerator CloseArtPanel()

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{3c28e9f3-6750-44b7-898f-44f832b7d4e3}">
+		<property name="name">
+			<value>OceanIsInTavern</value>
+		</property>
+		<relationship name="folder">
+			<destination>{076b9c86-d860-4db7-af07-2980b2d4c9c0}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{0b2d1eb5-b121-4d90-8548-274fc729680b}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{0b2d1eb5-b121-4d90-8548-274fc729680b}">
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.5</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

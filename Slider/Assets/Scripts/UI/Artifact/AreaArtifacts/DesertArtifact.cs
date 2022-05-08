@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class DesertArtifact : UIArtifact
 {
@@ -8,7 +9,10 @@ public class DesertArtifact : UIArtifact
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
         moveOptionButtons.Clear();
-
+        if (button == null)
+        {
+            return moveOptionButtons;
+        }
         //Vector2 buttPos = new Vector2(button.x, button.y);
         // foreach (ArtifactTileButton b in buttons)
         // {
@@ -41,7 +45,86 @@ public class DesertArtifact : UIArtifact
 
         return moveOptionButtons;
     }
+    //Chen: Override for dragndrop since desert GetMoveOPtions include  active tiles
+    public override void ButtonDragEnd(BaseEventData eventData)
+    {
+        PointerEventData data = (PointerEventData)eventData;
 
+
+        // Debug.Log("Sent drag end");
+        // if (currentButton != null) 
+        // {
+        //     foreach (ArtifactTileButton b in GetMoveOptions(currentButton)) 
+        //     {
+        //         b.buttonAnimator.sliderImage.sprite = b.emptySprite;
+        //     }
+        //     return;
+        // }
+
+        ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
+        if (!dragged.isTileActive)// || dragged.isForcedDown)
+        {
+            return;
+        }
+
+        // reset move options visual
+        List<ArtifactTileButton> moveOptions = GetMoveOptions(dragged);
+        foreach (ArtifactTileButton b in moveOptions)
+        {
+            //Chen: Only resets to empty if tile is inactive since active tiles are included in desert GetMoveOptions
+            if (!b.isTileActive)
+            {
+                b.buttonAnimator.sliderImage.sprite = b.emptySprite;
+            }
+        }
+
+        ArtifactTileButton hovered = null;
+        if (data.pointerEnter != null && data.pointerEnter.name == "Image")
+        {
+            hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton>();
+        }
+        else
+        {
+            // dragged should already be selected
+            // SelectButton(dragged);
+            return;
+        }
+
+        if (!hovered.isTileActive)
+        {
+            hovered.buttonAnimator.sliderImage.sprite = hovered.emptySprite;
+        }
+        else
+        {
+            hovered.ResetToIslandSprite();
+        }
+        //Debug.Log("dragged" + dragged.islandId + "hovered" + hovered.islandId);
+
+        bool swapped = false;
+        for (int i = 0; i < moveOptions.Count; i++)
+        {
+            ArtifactTileButton b = moveOptions[i];
+            b.SetHighlighted(false);
+            // b.buttonAnimator.sliderImage.sprite = b.emptySprite;
+            if (b == hovered && !swapped)
+            {
+                SelectButton(hovered);
+                // CheckAndSwap(dragged, hovered);
+                // SGridAnimator.OnSTileMoveEnd += dragged.AfterStileMoveDragged;
+                swapped = true;
+            }
+        }
+        if (!swapped)
+        {
+            SelectButton(dragged);
+        }
+        else
+        {
+            DeselectCurrentButton();
+        }
+
+        OnButtonInteract?.Invoke(this, null);
+    }
     //Chen: finds the furthest button a given button can go to given a direction
     private ArtifactTileButton GetLastEmpty(ArtifactTileButton button, Vector2Int dir)
     {
@@ -79,9 +162,6 @@ public class DesertArtifact : UIArtifact
         // Debug.Log(last);
         return last;
     }
-
-    //Chen: Overriding the drag and drop calls so sliding works
-   
     //L: updateGrid - if this is false, it will just update the UI without actually moving the tiles.
     //L: Returns if the swap was successful.
     //Chen: CheckAndSwap now calls each of the Slide() functions
@@ -122,6 +202,7 @@ public class DesertArtifact : UIArtifact
             QueueCheckAndAdd(swap);
             //Debug.Log("Added move to queue: current length " + moveQueue.Count);
             QueueCheckAfterMove(this, null);
+            DeselectCurrentButton();
             return true;
         }
         else

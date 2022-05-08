@@ -4,17 +4,26 @@ using UnityEngine;
 
 public class ArtifactScreenAnimator : MonoBehaviour
 {
-    public List<RectTransform> screens;
-    public List<Animator> animators;
+    // one day we will replace the function with an event
+    // public class ScreenChangeEvent : System.EventArgs {
+    //     int screenIndex;
+    // }
+
+    // public static System.EventHandler<ScreenChangeEvent> OnScreenChange;
+
     private int currentScreenIndex;
     private int targetScreenIndex;
-
-    public Animator rightArrowAnimator;
-    public Animator leftArrowAnimator;
 
     public float duration;
 
     private Coroutine switchCouroutine;
+
+    [Header("References")]
+    public List<RectTransform> screens;
+    public List<Animator> animators;
+    public Animator rightArrowAnimator;
+    public Animator leftArrowAnimator;
+    public ArtifactTabManager tabManager;
 
     private void OnEnable() 
     {
@@ -76,6 +85,8 @@ public class ArtifactScreenAnimator : MonoBehaviour
         rightArrowAnimator.SetBool("immediate", immediate);
         leftArrowAnimator.SetBool("isVisible", targetScreenIndex > 0);
         leftArrowAnimator.SetBool("immediate", immediate);
+        
+        tabManager?.SetCurrentScreen(targetScreenIndex);
     }
 
     private IEnumerator SwitchScreens(int target)
@@ -110,6 +121,7 @@ public class ArtifactScreenAnimator : MonoBehaviour
         // UpdateArrowVisibility(false);
 
         switchCouroutine = null;
+        OnScreenChange(currentScreenIndex);
 
         if (targetScreenIndex != currentScreenIndex)
             SwitchScreens(targetScreenIndex);
@@ -124,4 +136,13 @@ public class ArtifactScreenAnimator : MonoBehaviour
         }
     }
 
+    private void OnScreenChange(int index)
+    {
+
+        // map screen
+        if (index == 2)
+        {
+            UIArtifactWorldMap.UpdateAreaStatuses();
+        }
+    }
 }

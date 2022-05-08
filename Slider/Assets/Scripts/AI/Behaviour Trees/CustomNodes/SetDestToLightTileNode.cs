@@ -11,6 +11,7 @@ public class SetDestToLightTileNode : BehaviourTreeNode
         this.ai = ai;
     }
 
+    //Efficiency: (2 * ai.maxDistVision + 1)^2
     public override NodeState Evaluate()
     {
         Vector2Int posAsInt = TileUtil.WorldToTileCoords(ai.transform.position);
@@ -33,44 +34,34 @@ public class SetDestToLightTileNode : BehaviourTreeNode
     }
 
     //This algorithm essentially checks the given pos, it's neighbors, the neighbors' neighbors, and so on moving outwards from the original pos.
+    //512 calculations
     private List<Vector2Int> FindNearestValidLightTile(Vector2Int posAsInt)
     {
         var result = new List<Vector2Int>();    //This is kind of a workaround since Vector2Int can't be null.
-        WorldNavigation nav = ai.GetComponentInParent<WorldNavigation>();
 
-        int dist = 1;
+        float dist = 0f;
         var queue = new Queue<Vector2Int>();
         var visited = new HashSet<Vector2Int>();
-
         visited.Add(posAsInt);
         queue.Enqueue(posAsInt);
-        while (queue.Count > 0 && dist < ai.GetComponentInParent<STile>().STILE_WIDTH * 1.41f)   //worst case scenario it's in the corner and has to check up to the opposite corner
+        while (queue.Count > 0 && dist < ai.maxDistVision)   //Checks up to half a tile width.
         {
             Vector2Int currPos = queue.Dequeue();
+            List<Vector2Int> neighbors = ai.nav.GetMooreNeighbors(currPos);
 
-            Vector2Int[] neighborDirs = { Vector2Int.up, Vector2Int.left, Vector2Int.down, Vector2Int.right,
-                                      new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1) };
-
-            foreach (var dir in neighborDirs)
+            foreach (var neighbor in neighbors)
             {
-                Vector2Int posToCheck = currPos + dir;
-                if (!visited.Contains(posToCheck))
+                if (!visited.Contains(neighbor))
                 {
-                    visited.Add(posToCheck);
-                    queue.Enqueue(posToCheck);
-                    if (nav.ValidPts.Contains(posToCheck) && LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y))
+                    visited.Add(neighbor);
+                    dist = Mathf.Max(dist, Vector2Int.Distance(posAsInt, neighbor));
+                    queue.Enqueue(neighbor);
+                    if (LightManager.instance.GetLightMaskAt(neighbor.x, neighbor.y))
                     {
-                        List<Vector2Int> path = new List<Vector2Int>();
-                        if (nav.GetPathFromToAStar(posAsInt, posToCheck, out path))
-                        {
-                            //It has to be possible to actually get there in order for this to be valid.
-                            result.Add(posToCheck);
-                            return result;
-                        }
+                        result.Add(neighbor);
+                        return result;
                     }
                 }
-
-                dist = (int)Vector2Int.Distance(posAsInt, posToCheck);
             }
         }
 

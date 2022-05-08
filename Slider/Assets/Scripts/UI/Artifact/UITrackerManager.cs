@@ -15,7 +15,7 @@ public class UITrackerManager : MonoBehaviour
     private float scale = 26f/17f;
     private float centerScale = 36f/17f;
     
-    public UIArtifact artifact;
+    public UIArtifactMenus uiArtifactMenus;
     public GameObject artifactPanel;
     public GameObject uiTrackerPrefab;
     public List<UITracker> targets = new List<UITracker>();
@@ -113,7 +113,7 @@ public class UITrackerManager : MonoBehaviour
 
             offset = (position - (Vector2)currentTile.transform.position) * scale;
 
-            currentButton = artifact.GetButton(currentTile.islandId);
+            currentButton = uiArtifactMenus.uiArtifact.GetButton(currentTile.islandId);
             // Debug.Log("Setting transform of " + t.name);
             t.image.rectTransform.SetParent(currentButton.transform.Find("Image").GetComponent<RectTransform>());
             

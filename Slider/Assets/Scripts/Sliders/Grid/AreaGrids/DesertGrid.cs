@@ -33,7 +33,7 @@ public class DesertGrid : SGrid
 
     // public Collectible[] collectibles;
 
-    private new void Awake() {
+    protected override void Awake() {
         myArea = Area.Desert;
 
         foreach (Collectible c in collectibles) // maybe don't have this
@@ -46,38 +46,48 @@ public class DesertGrid : SGrid
         instance = this;
     }
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         if (dice1 == null && dice2 == null)
         {
             Debug.LogWarning("Die have not been set!");
         }
-        foreach (Collectible c in collectibles)
-        {
-            if (PlayerInventory.Contains(c))
-            {
-                c.gameObject.SetActive(false);
-            }
-        }
 
         AudioManager.PlayMusic("Desert");
+        AudioManager.PlayMusic("Desert Casino", false);
         UIEffects.FadeFromBlack();
     }
     
     private void OnEnable() {
-        // if (checkCompletion) {
-        //     SGrid.OnGridMove += SGrid.CheckCompletions;
-        // }
-
-        //SGridAnimator.OnSTileMoveEnd += CheckOasisOnMove;
+        if (checkCompletion) {
+            OnGridMove += UpdateButtonCompletions; // this is probably not needed
+            UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
+            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+        }
     }
 
     private void OnDisable() {
-        // if (checkCompletion) {
-        //     SGrid.OnGridMove -= SGrid.CheckCompletions;
-        // }
+        if (checkCompletion)
+        {
+            OnGridMove -= UpdateButtonCompletions; // this is probably not needed
+            UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
+            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+        }
+    }
 
-        //SGridAnimator.OnSTileMoveEnd -= CheckOasisOnMove;
+    private void Update() 
+    {
+        // For Casino music
+        
+        STile s5 = SGrid.current.GetStile(5);
+        float dist1 = s5.isTileActive ? (Player.GetPosition() - s5.transform.position).magnitude : 17; // center
+        float dist2 = s5.isTileActive ? (Player.GetPosition() - (s5.transform.position + Vector3.right * 8.5f)).magnitude : 17; // right
+        STile s6 = SGrid.current.GetStile(6);
+        float dist3 = s6.isTileActive ? (Player.GetPosition() - s6.transform.position).magnitude : 17; // center
+        float dist4 = s6.isTileActive ? (Player.GetPosition() - (s6.transform.position + Vector3.left * 8.5f)).magnitude : 17; // left
+        AudioManager.SetMusicParameter("Desert", "DesertDistToCasino", Mathf.Min(dist1, dist2, dist3, dist4));
     }
 
     public override void SaveGrid() 
@@ -156,6 +166,14 @@ public class DesertGrid : SGrid
     public void IsMonkeyInOasis(Conditionals.Condition c)
     {
         c.SetSpec(monkeyOasis);
+    }
+    public void IsFirstShake(Conditionals.Condition c)
+    {
+        c.SetSpec(monkeShake >= 1);
+    }
+    public void IsSecondShake(Conditionals.Condition c)
+    {
+        c.SetSpec(monkeShake >= 2);
     }
 
     //Puzzle 3: Jackal Bone
@@ -321,7 +339,6 @@ public class DesertGrid : SGrid
     {
         GazelleQuest = b;
     }
-
     public void SetGazelleOasis(bool b)
     {
         GazelleOasis = b;
@@ -330,7 +347,6 @@ public class DesertGrid : SGrid
     {
         c.SetSpec(GazelleQuest);
     }
-
     public void CheckGazelleNearOasis(Conditionals.Condition c)
     {
         c.SetSpec(CheckGrid.contains(GetGridString(), "26") || CheckGrid.contains(GetGridString(), "6...2"));
@@ -341,8 +357,36 @@ public class DesertGrid : SGrid
     }
 
     //Puzzle 7: 8puzzle
-    public void ReAlignGrid()
+    public void ShufflePuzzle()
     {
-        //conduct series of STile swaps or something? Maybe set grid to something   
+        int[,] shuffledPuzzle = new int[3, 3] { { 4, 8, 1 },
+                                                { 3, 0, 6 },
+                                                { 2, 7, 5 } };
+        SetGrid(shuffledPuzzle);
+
+        // fading stuff
+        UIEffects.FlashWhite();
+        CameraShake.Shake(1.5f, 1.0f);
+
+        checkCompletion = true;
+        OnGridMove += UpdateButtonCompletions; // this is probably not needed
+        UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
+        SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+    }
+    private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (!PlayerInventory.Contains("Slider 9", Area.Desert) && (GetGridString() == "567_2#3_184"))
+        {
+            GivePlayerTheCollectible("Slider 9");
+
+            // Disable queues
+            UIArtifact.ClearQueues();
+
+            // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
+            StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+
+            AudioManager.Play("Puzzle Complete");
+            UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
+        }
     }
 } 

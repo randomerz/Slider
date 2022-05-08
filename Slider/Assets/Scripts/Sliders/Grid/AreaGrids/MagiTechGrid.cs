@@ -10,7 +10,7 @@ public class MagiTechGrid : SGrid
 
     [SerializeField] private STile[,] altGrid;
 
-    private new void Awake()
+    protected override void Awake()
     {
         myArea = Area.MagiTech;
 
@@ -24,17 +24,11 @@ public class MagiTechGrid : SGrid
         instance = this;
     }
 
-    void Start()
+    protected override void Start()
     {
-        foreach (Collectible c in collectibles)
-        {
-            if (PlayerInventory.Contains(c))
-            {
-                c.gameObject.SetActive(false);
-            }
-        }
+        base.Start();
 
-        AudioManager.PlayMusic("Connection");
+        AudioManager.PlayMusic("MagiTech");
         UIEffects.FadeFromBlack();
     }
 

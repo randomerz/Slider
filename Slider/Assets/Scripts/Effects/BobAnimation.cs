@@ -17,6 +17,9 @@ public class BobAnimation : MonoBehaviour
     public bool useRectTransform;
     private RectTransform rectTransform;
 
+    public bool doHorizontalInstead;
+    private Vector3 up;
+
     void Start()
     {
         origOffset = transform.localPosition;
@@ -25,6 +28,8 @@ public class BobAnimation : MonoBehaviour
             rectTransform = GetComponent<RectTransform>();
             origOffset = rectTransform.anchoredPosition;
         }
+        
+        up = doHorizontalInstead ? Vector3.right : Vector3.up;
     }
 
     void Update()
@@ -38,9 +43,9 @@ public class BobAnimation : MonoBehaviour
                 {
                     state = 1;
                     if (!useRectTransform)
-                        transform.localPosition = origOffset + (Vector3.down / PPU);
+                        transform.localPosition = origOffset + (-up / PPU);
                     else
-                        rectTransform.anchoredPosition = origOffset + Vector3.down;
+                        rectTransform.anchoredPosition = origOffset + (-up);
                 }
                 break;
             case 1:
@@ -58,9 +63,9 @@ public class BobAnimation : MonoBehaviour
                 {
                     state = 3;
                     if (!useRectTransform)
-                        transform.localPosition = origOffset + (Vector3.up / PPU);
+                        transform.localPosition = origOffset + (up / PPU);
                     else
-                        rectTransform.anchoredPosition = origOffset + Vector3.up;
+                        rectTransform.anchoredPosition = origOffset + up;
                 }
                 break;
             case 3:
