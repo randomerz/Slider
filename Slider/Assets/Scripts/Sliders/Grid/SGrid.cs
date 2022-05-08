@@ -151,6 +151,7 @@ public class SGrid : MonoBehaviour
         foreach (STile t in stiles)
         {
             grid[t.x, t.y] = t;
+            Debug.Log(t);
         }
     }
 

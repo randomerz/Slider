@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class MountainGrid : SGrid
 {
-    public static MountainGrid instance;
     public int layerOffset; //the y offset of the top layer from the bottom (used to calculate top tile y position)
 
     /* The mountian sgrid is a 2 by 4 grid. The top 4 tiles represent the top layer,
@@ -28,6 +27,5 @@ public class MountainGrid : SGrid
     protected override void Awake() {
         myArea = Area.Mountain;
         base.Awake();
-        instance = this;
     }
 }
