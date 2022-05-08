@@ -24,6 +24,7 @@ public class MainMenuManager : MonoBehaviour
     public Animator mainMenuButtonsAnimator;
 
     [Header("Panels")]
+    public GameObject mainMenuPanel;
     public GameObject savesPanel;
     public GameObject newSavePanel;
     public TMP_InputField profileNameTextField;
@@ -56,6 +57,15 @@ public class MainMenuManager : MonoBehaviour
         listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
 
         _instance.controls.UI.Cancel.performed += context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); };
+
+        // Pressing a navigation key selects a button is one is not already selected
+        _instance.controls.UI.Navigate.performed += context => 
+        {
+            if (!UINavigationManager.ButtonInCurrentMenuIsSelected())
+            {
+                UINavigationManager.SelectBestButtonInCurrentMenu();
+            }
+        };
     }
 
     private void OnEnable() {
@@ -94,6 +104,8 @@ public class MainMenuManager : MonoBehaviour
         {
             OpenNewSave(0);
         }
+
+
     }
 
     private bool AreAnyProfilesLoaded()
@@ -133,24 +145,16 @@ public class MainMenuManager : MonoBehaviour
     // to buttons screen. Otherwise spamming buttons can lead to immediately entering the play menu.
     private IEnumerator IStartMainMenu()
     {
+        UINavigationManager.CurrentMenu = mainMenuPanel;
         yield return new WaitForSeconds(1);
         StartCoroutine(SelectTopmostButton());
     }
 
-    // Select either Play or Select.
-    // We need to WaitForEndOfFrame to prevent a mouse input at the splah screen from de-selecting our button.
     private IEnumerator SelectTopmostButton()
     {
+        // Safety to prevent inputs from triggering a button immediately after opening the menu
         yield return new WaitForEndOfFrame();
-
-        if (continueButton.interactable)
-        {
-            continueButton.Select();
-        }
-        else
-        {
-            playButton.Select();
-        }
+        UINavigationManager.SelectBestButtonInCurrentMenu();
     }
 
     #region UI stuff
@@ -160,14 +164,17 @@ public class MainMenuManager : MonoBehaviour
         if (advancedOptionsPanel.activeSelf || controlsPanel.activeSelf)
         {
             OpenOptions();
+            UINavigationManager.CurrentMenu = optionsPanel;
         }
         else if (newSavePanel.activeSelf)
         {
             OpenSaves();
+            UINavigationManager.CurrentMenu = savesPanel;
         }
         else if (savesPanel.activeSelf || optionsPanel.activeSelf || creditsPanel.activeSelf)
         {
             CloseAllPanels();
+            UINavigationManager.CurrentMenu = mainMenuPanel;
         }
         else
         {
@@ -185,12 +192,16 @@ public class MainMenuManager : MonoBehaviour
         advancedOptionsPanel.SetActive(false);
         controlsPanel.SetActive(false);
         creditsPanel.SetActive(false);
+
+        UINavigationManager.CurrentMenu = mainMenuPanel;
+        StartCoroutine(SelectTopmostButton());
     }
 
     public void OpenSaves()
     {
         CloseAllPanels();
         savesPanel.SetActive(true);
+        UINavigationManager.CurrentMenu = savesPanel;
     }
 
     public void OpenNewSave(int profileIndex)
@@ -203,6 +214,7 @@ public class MainMenuManager : MonoBehaviour
         profileNameTextField.Select();
         profileNameTextField.ActivateInputField();
         profileNameTextField.text = "";
+        UINavigationManager.CurrentMenu = newSavePanel;
     }
 
     public void OnTextFieldChangeText(string text)
@@ -218,24 +230,32 @@ public class MainMenuManager : MonoBehaviour
     {
         CloseAllPanels();
         optionsPanel.SetActive(true);
+        UINavigationManager.CurrentMenu = optionsPanel;
+        StartCoroutine(SelectTopmostButton());
     }
 
     public void OpenAdvancedOptions()
     {
         CloseAllPanels();
         advancedOptionsPanel.SetActive(true);
+        UINavigationManager.CurrentMenu = advancedOptionsPanel;
+        StartCoroutine(SelectTopmostButton());
     }
 
     public void OpenControls()
     {
         CloseAllPanels();
         controlsPanel.SetActive(true);
+        UINavigationManager.CurrentMenu = controlsPanel;
+        StartCoroutine(SelectTopmostButton());
     }
 
     public void OpenCredits()
     {
         CloseAllPanels();
         creditsPanel.SetActive(true);
+        UINavigationManager.CurrentMenu = creditsPanel;
+        StartCoroutine(SelectTopmostButton());
     }
 
     #endregion
