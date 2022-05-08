@@ -102,6 +102,46 @@ public class UINavigationManager : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Apply a temporary lockout to all selectables in the current menu panel, making them
+    /// un-interactable for the passed in duration. This has no effect is currentMenu
+    /// is null.
+    /// </summary>
+    public static void LockoutSelectablesInCurrentMenu(System.Action callback = null, float duration = 1)
+    {
+        if (_instance._currentMenu == null)
+        {
+            return;
+        }
+
+        _instance.StartCoroutine(ILockoutSelectablesInCurrentMenu(callback, duration));
+    }
+    private static IEnumerator ILockoutSelectablesInCurrentMenu(System.Action callback, float duration)
+    {
+        // We need to track all of the ones we disable and then re-enable them, otherwise we would
+        // re-activate ones that were disabled before this method was called.
+        List<Selectable> selectablesToReactivate = new List<Selectable>();
+
+        // Disable all interactables in set
+        foreach (Selectable selectable in _instance.selectableSetDictionary[_instance._currentMenu])
+        {
+            if (selectable.interactable)
+            {
+                selectable.interactable = false;
+                selectablesToReactivate.Add(selectable);
+            }
+        }
+
+        yield return new WaitForSeconds(duration);
+
+        // Re-enable
+        foreach (Selectable selectable in selectablesToReactivate)
+        {
+            selectable.interactable = true;
+        }
+        callback?.Invoke();
+    }
 }
 
 /// <summary>

@@ -148,19 +148,16 @@ public class MainMenuManager : MonoBehaviour
         mainMenuButtonsAnimator.SetBool("isUp", true);
         textAnimator.SetBool("isVisible", false);
 
-        StartCoroutine(IStartMainMenu());
-    }
-
-    // We need this to provide a delay before we accept keyboard inputs when moving from splash screen
-    // to buttons screen. Otherwise spamming buttons can lead to immediately entering the play menu.
-    private IEnumerator IStartMainMenu()
-    {
         UINavigationManager.CurrentMenu = mainMenuPanel;
-        yield return new WaitForSeconds(1);
-        StartCoroutine(SelectTopmostButton());
+        UINavigationManager.LockoutSelectablesInCurrentMenu(SelectTopmostButton, 1);
     }
 
-    private IEnumerator SelectTopmostButton()
+
+    private void SelectTopmostButton()
+    {
+        StartCoroutine(ISelectTopmostButton());
+    }
+    private IEnumerator ISelectTopmostButton()
     {
         // Safety to prevent inputs from triggering a button immediately after opening the menu
         yield return new WaitForEndOfFrame();
@@ -191,7 +188,7 @@ public class MainMenuManager : MonoBehaviour
             QuitGame();
         }
 
-        StartCoroutine(SelectTopmostButton());
+        StartCoroutine(ISelectTopmostButton());
     }
 
     public void CloseAllPanels()
@@ -204,7 +201,7 @@ public class MainMenuManager : MonoBehaviour
         creditsPanel.SetActive(false);
 
         UINavigationManager.CurrentMenu = mainMenuPanel;
-        StartCoroutine(SelectTopmostButton());
+        StartCoroutine(ISelectTopmostButton());
     }
 
     public void OpenSaves()
@@ -241,7 +238,7 @@ public class MainMenuManager : MonoBehaviour
         CloseAllPanels();
         optionsPanel.SetActive(true);
         UINavigationManager.CurrentMenu = optionsPanel;
-        StartCoroutine(SelectTopmostButton());
+        StartCoroutine(ISelectTopmostButton());
 
         musicSlider.value = SettingsManager.MusicVolume;
         sfxSlider.value = SettingsManager.SFXVolume;
@@ -252,7 +249,11 @@ public class MainMenuManager : MonoBehaviour
         CloseAllPanels();
         advancedOptionsPanel.SetActive(true);
         UINavigationManager.CurrentMenu = advancedOptionsPanel;
-        StartCoroutine(SelectTopmostButton());
+
+        screenShakeSlider.value = SettingsManager.ScreenShake;
+        bigTextToggle.isOn = SettingsManager.BigTextEnabled;
+
+        StartCoroutine(ISelectTopmostButton());
     }
 
     public void OpenControls()
@@ -260,7 +261,7 @@ public class MainMenuManager : MonoBehaviour
         CloseAllPanels();
         controlsPanel.SetActive(true);
         UINavigationManager.CurrentMenu = controlsPanel;
-        StartCoroutine(SelectTopmostButton());
+        StartCoroutine(ISelectTopmostButton());
     }
 
     public void OpenCredits()
@@ -268,7 +269,7 @@ public class MainMenuManager : MonoBehaviour
         CloseAllPanels();
         creditsPanel.SetActive(true);
         UINavigationManager.CurrentMenu = creditsPanel;
-        StartCoroutine(SelectTopmostButton());
+        StartCoroutine(ISelectTopmostButton());
     }
 
     #endregion
