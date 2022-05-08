@@ -19,7 +19,7 @@ public class MountainGrid : SGrid
         represents the grid with 5, 1, 2, and 8 on the top layer.
         In order to accomidate this grid, the following major changes have been made
         1. There is a custom logic for determining a tile's neighbors
-        2. There is a new sMove, INSERT NAME HERE, which instanly swaps Stiles
+        2. There is a new MountainSGridAnimator which allows layer swaps to happen without animation
         3. The bottom 4 sTile locations have cameras above them, allowing them to be shown on textures "underneath" the top tiles
         4. 
     */
