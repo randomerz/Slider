@@ -38,6 +38,11 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI continueText;
     public Button playButton;
 
+    public Slider sfxSlider;
+    public Slider musicSlider;
+    public Slider screenShakeSlider;
+    public Toggle bigTextToggle;
+
     private System.IDisposable listener;
     private InputSettings controls;
 
@@ -85,12 +90,17 @@ public class MainMenuManager : MonoBehaviour
 
     public static void LoadBindings()
     {
+        if (_instance == null)
+        {
+            return;
+        }
+
         var rebinds = PlayerPrefs.GetString("rebinds");
         if (!string.IsNullOrEmpty(rebinds))
         {
             _instance.controls.LoadBindingOverridesFromJson(rebinds);
         }
-        
+
         _instance.controls.UI.Pause.performed += context => _instance.CloseCurrentPanel();
     }
 
@@ -232,6 +242,9 @@ public class MainMenuManager : MonoBehaviour
         optionsPanel.SetActive(true);
         UINavigationManager.CurrentMenu = optionsPanel;
         StartCoroutine(SelectTopmostButton());
+
+        musicSlider.value = SettingsManager.MusicVolume;
+        sfxSlider.value = SettingsManager.SFXVolume;
     }
 
     public void OpenAdvancedOptions()
@@ -301,5 +314,33 @@ public class MainMenuManager : MonoBehaviour
 
         Debug.LogWarning("lol just kidding loading village");
         SceneManager.LoadScene("Village");
+    }
+
+
+    // We need these to handle settings in Main Menu :)
+    public void UpdateSFXVolume()
+    {
+        SettingsManager.SFXVolume = sfxSlider.value;
+        AudioManager.SetSFXVolume(sfxSlider.value);
+    }
+
+    public void UpdateMusicVolume()
+    {
+        SettingsManager.MusicVolume = musicSlider.value;
+        AudioManager.SetMusicVolume(musicSlider.value);
+    }
+
+    public void UpdateScreenShake()
+    {
+        SettingsManager.ScreenShake = screenShakeSlider.value;
+    }
+
+    public void UpdateBigText()
+    {
+        // By the word of our noble lord, Boomo, long may he reign, these two lines must remain commented out
+        //DialogueManager.highContrastMode = value;
+        //DialogueManager.doubleSizeMode = value;
+
+        SettingsManager.BigTextEnabled = bigTextToggle.isOn;
     }
 }

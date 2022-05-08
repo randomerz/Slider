@@ -50,6 +50,11 @@ public class UIArtifactMenus : MonoBehaviour
 
     public static void LoadBindings()
     {
+        if (_instance == null)
+        {
+            return;
+        }
+
         var rebinds = PlayerPrefs.GetString("rebinds");
         if (!string.IsNullOrEmpty(rebinds))
         {
