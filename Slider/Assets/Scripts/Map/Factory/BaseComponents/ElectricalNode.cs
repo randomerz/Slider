@@ -20,8 +20,11 @@ public class ElectricalNode : MonoBehaviour
 
     public NodeType nodeType;
 
+    //These are serialized for debugging purposes. They should not need to be set in the insepctor.
+    [SerializeField]
     protected int powerRefs;
-    protected HashSet<ElectricalNode> powerPathPrevs;
+    [SerializeField]
+    protected List<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
 
     [SerializeField]
     protected List<ElectricalNode> neighbors;
@@ -46,7 +49,7 @@ public class ElectricalNode : MonoBehaviour
 
     protected void Awake()
     {
-        powerPathPrevs = new HashSet<ElectricalNode>();
+        powerPathPrevs = new List<ElectricalNode>();
         powerRefs = 0;  //Always start off and let things turn on.
     }
 
@@ -163,6 +166,8 @@ public class ElectricalNode : MonoBehaviour
             return;
         }
 
+        Debug.Log($"Adding Node {other.gameObject} to node {this.gameObject}");
+
         if (this.nodeType == NodeType.IO && other.nodeType == NodeType.IO)
         {
             //Undirected case (Note: I'm using "this" mainly for readability to distinguish from other and show the parallelism)
@@ -244,42 +249,36 @@ public class ElectricalNode : MonoBehaviour
             return;
         }
 
+        Debug.Log($"Removing Node {other.gameObject} from node {this.gameObject}");
+
         if (this.nodeType == NodeType.IO && other.nodeType == NodeType.IO)
         {
-            //This goes in the opposite order as AddNeighbor, so we remove the edge first.
+            //Undirected Case
+
+            //The procedure goes in the opposite order as AddNeighbor, so we remove the edge first.
             this.neighbors.Remove(other);
             other.neighbors.Remove(this);
 
-            bool powerPathToOther = this.powerPathPrevs.Remove(other);
-            bool powerPathToThis = other.powerPathPrevs.Remove(this);
+            bool powerPathFromOtherToThis = this.powerPathPrevs.Remove(other);  //false
+            bool powerPathFromThisToOther = other.powerPathPrevs.Remove(this);   //true
 
-            //Undirected Case
-            if (powerPathToOther)  //Remove checks if the set contains other
+
+            if (powerPathFromOtherToThis)
             {
-                //This automatically means that other originally had an on state since it was included in a path (i.e. nonzero powerREfs)
-
                 HashSet<ElectricalNode> otherNodes;
                 int otherRefsNew = other.GetPathNodes(out otherNodes);
-                otherNodes.Add(this);
                 other.powerRefs = otherRefsNew;
 
                 //Deletes ("Breaks") the paths that pass from other to this
-                foreach (ElectricalNode neighbor in this.neighbors)
-                {
-                    neighbor.PropagateSignal(false, this, otherNodes, otherRefsNew);
-                }
+                this.PropagateSignal(false, other, otherNodes, otherRefsNew);
             }
-            if (powerPathToThis)
+            if (powerPathFromThisToOther)
             {
                 HashSet<ElectricalNode> thisNodes;
                 int thisRefsNew = this.GetPathNodes(out thisNodes);
-                thisNodes.Add(other);
                 this.powerRefs = thisRefsNew;
 
-                foreach (ElectricalNode neighbor in other.neighbors)
-                {
-                    neighbor.PropagateSignal(false, other, thisNodes, thisRefsNew);
-                }
+                other.PropagateSignal(false, this, thisNodes, thisRefsNew);
             }
         }
         else if (this.nodeType != NodeType.OUTPUT && other.nodeType != NodeType.INPUT)

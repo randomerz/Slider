@@ -13,7 +13,6 @@ public class PoweredDoor : ElectricalNode
 
     public void OnPoweredHandler(OnPoweredArgs e)
     {
-        Debug.Log("Yes?");
         off.SetActive(!e.powered);
         on.SetActive(e.powered);
     }
