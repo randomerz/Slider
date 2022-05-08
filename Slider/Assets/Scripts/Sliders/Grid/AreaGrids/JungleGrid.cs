@@ -10,7 +10,7 @@ public class JungleGrid : SGrid
 
     private static bool checkCompletion = false;
 
-    private new void Awake() {
+    protected override void Awake() {
         myArea = Area.Jungle;
 
         foreach (Collectible c in collectibles) 
@@ -24,16 +24,11 @@ public class JungleGrid : SGrid
     }
     
 
-    void Start()
+    protected override void Start()
     {
-        foreach (Collectible c in collectibles) 
-        {
-            if (PlayerInventory.Contains(c)) 
-            {
-                c.gameObject.SetActive(false);
-            }
-        }
-        AudioManager.PlayMusic("Connection");
+        base.Start();
+
+        AudioManager.PlayMusic("Jungle");
         UIEffects.FadeFromBlack();
     }
 

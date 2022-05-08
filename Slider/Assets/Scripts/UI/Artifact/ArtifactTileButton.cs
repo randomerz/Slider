@@ -164,15 +164,25 @@ public class ArtifactTileButton : MonoBehaviour
         StartCoroutine(NewButtonFlicker(numFlickers));
     }
 
-    private IEnumerator NewButtonFlicker(int numFlickers) {
-        ResetToIslandSprite();
-        yield return new WaitForSeconds(.25f);
+    public void FlickerImmediate(int numFlickers)
+    {
+        shouldFlicker = false;
+        StartCoroutine(NewButtonFlicker(numFlickers, true));
+    }
+
+    private IEnumerator NewButtonFlicker(int numFlickers, bool blankImmediately=false) {
+        if (!blankImmediately)
+        {
+            ResetToIslandSprite();
+            yield return new WaitForSeconds(.25f);
+        }
+        
         for (int i = 0; i < numFlickers; i++) 
         {
-            yield return new WaitForSeconds(.25f);
             buttonAnimator.sliderImage.sprite = blankSprite;
             yield return new WaitForSeconds(.25f);
             ResetToIslandSprite();
+            yield return new WaitForSeconds(.25f);
         }
     }
 

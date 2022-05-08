@@ -12,9 +12,10 @@ public class VillageGrid : SGrid
 
     private bool fishOn;
 
-    private static bool checkCompletion = false;
+    private Coroutine shuffleBuildUpCoroutine;
+    private static bool checkCompletion = false; // TODO: serialize
 
-    private new void Awake() {
+    protected override void Awake() {
         myArea = Area.Village;
 
         foreach (Collectible c in collectibles) 
@@ -31,9 +32,18 @@ public class VillageGrid : SGrid
         }
         instance = this;
     }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        AudioManager.PlayMusic("Village");
+        UIEffects.FadeFromBlack();
+    }
     
     private void OnEnable() {
         if (checkCompletion) {
+            UpdateButtonCompletions(this, null);
             SGrid.OnGridMove += SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
@@ -46,20 +56,6 @@ public class VillageGrid : SGrid
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;
         }
-    }
-
-    void Start()
-    {
-        foreach (Collectible c in collectibles) 
-        {
-            if (PlayerInventory.Contains(c)) 
-            {
-                c.gameObject.SetActive(false);
-            }
-        }
-
-        AudioManager.PlayMusic("Connection");
-        UIEffects.FadeFromBlack();
     }
 
     public override void SaveGrid() 
@@ -94,14 +90,43 @@ public class VillageGrid : SGrid
 
     // Puzzle 8 - 8puzzle
     public void ShufflePuzzle() {
+        if (shuffleBuildUpCoroutine == null)
+        {
+            shuffleBuildUpCoroutine = StartCoroutine(ShuffleBuildUp());
+        }
+    }
+
+    private IEnumerator ShuffleBuildUp()
+    {
+        AudioManager.Play("Puzzle Complete");
+
+        yield return new WaitForSeconds(0.5f);
+
+        CameraShake.Shake(0.25f, 0.25f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(0.75f, 0.5f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(1.5f, 2.5f);
+        AudioManager.Play("Slide Explosion");
+
+        yield return new WaitForSeconds(0.25f);
+
+        UIEffects.FlashWhite();
+        DoShuffle();
+    }
+
+    private void DoShuffle()
+    {
         int[,] shuffledPuzzle = new int[3, 3] { { 7, 0, 1 },
                                                 { 6, 4, 8 },
                                                 { 5, 3, 2 } };
         SetGrid(shuffledPuzzle);
-
-        // fading stuff
-        UIEffects.FlashWhite();
-        CameraShake.Shake(1.5f, 1.0f);
 
         checkCompletion = true;
         OnGridMove += UpdateButtonCompletions; // this is probably not needed
@@ -114,7 +139,6 @@ public class VillageGrid : SGrid
     {
         if (!PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153"))
         {
-            // ActivateSliderCollectible(9);
             GivePlayerTheCollectible("Slider 9");
 
             // Disable queues
@@ -124,6 +148,7 @@ public class VillageGrid : SGrid
             StartCoroutine(CheckCompletionsAfterDelay(1.1f));
 
             AudioManager.Play("Puzzle Complete");
+            UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
 

@@ -94,21 +94,31 @@ public class SaveProfile
     //     return playerPos[area];
     // }
 
-    public void SaveBools(Dictionary<string, bool> missions)
+
+    public bool GetBool(string name)
     {
-        foreach (string s in missions.Keys)
-        {
-            bools[s] = missions[s];
-        }
+        // add a null check here?
+        return bools[name];
     }
 
-    public Dictionary<string, bool> GetBools(List<string> missions)
+    public void SetBool(string name, bool value)
     {
-        Dictionary<string, bool> ret = new Dictionary<string, bool>();
-        foreach (string s in missions)
+        bools[name] = value;
+    }
+    
+    public string GetString(string name)
+    {
+        if (!strings.ContainsKey(name))
         {
-            ret[s] = bools[s];
+            Debug.LogError("Couldn't find saved variable of name: " + name);
+            return name;
         }
-        return ret;
+        // add a null check here?
+        return strings[name];
+    }
+
+    public void SetString(string name, string value)
+    {
+        strings[name] = value;
     }
 }

@@ -328,7 +328,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Jungle
-  sceneSpawnName: Jungle/River
+  sceneSpawnName: 0
+  isSpawnPosRelative: 0
 --- !u!1001 &105832907
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -538,7 +539,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Military
-  sceneSpawnName: Military/
+  sceneSpawnName: 0
+  isSpawnPosRelative: 0
 --- !u!1 &232673934
 GameObject:
   m_ObjectHideFlags: 0
@@ -582,8 +584,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b376d585bb448b64aae3a09678dc7f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnName: Ocean/North
+  spawnName: 0
   spawnInBoat: 1
+  wlcManager: {fileID: 0}
 --- !u!1001 &244194138
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -851,21 +854,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onPlayerEnter: 1
-  onTrigger:
+  onEnter:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1743181408}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: ChangeScenes
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  onExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &311256332
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -993,6 +987,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a8dd5829b849746afd65b9b84190aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &399325867 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7648707882233313094, guid: 6246f5caa1e6cac46969239c5a944200, type: 3}
+  m_PrefabInstance: {fileID: 7648707882642669003}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &399325868
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399325867}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bdf3538e6b0474441b9c4d6e75b9b2f3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &433435241
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3454,21 +3472,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onPlayerEnter: 1
-  onTrigger:
+  onEnter:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 152617314}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: ChangeScenes
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  onExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &522432812
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4086,8 +4095,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b376d585bb448b64aae3a09678dc7f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnName: Ocean/East
+  spawnName: 0
   spawnInBoat: 1
+  wlcManager: {fileID: 0}
 --- !u!1 &860191909
 GameObject:
   m_ObjectHideFlags: 0
@@ -4133,21 +4143,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onPlayerEnter: 1
-  onTrigger:
+  onEnter:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1758840865}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: ChangeScenes
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  onExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &860191912
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4712,6 +4713,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 380634036804812841, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 1624944711f0bf1469af94f2c2ee6137, type: 2}
     - target: {fileID: 380634037254267600, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_Name
       value: Player
@@ -4932,7 +4937,6 @@ MonoBehaviour:
   - {fileID: 524494152}
   - {fileID: 1987171388}
   - {fileID: 705329675}
-  altStiles: []
   bgGridTiles:
   - {fileID: 528917036}
   - {fileID: 1223723976}
@@ -4945,6 +4949,7 @@ MonoBehaviour:
   - {fileID: 1809006832}
   gridAnimator: {fileID: 1324462116}
   targetGrid: '*********'
+  collectibles: []
 --- !u!114 &1324462116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5025,8 +5030,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b376d585bb448b64aae3a09678dc7f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnName: Ocean/Bushes
+  spawnName: 0
   spawnInBoat: 0
+  wlcManager: {fileID: 0}
 --- !u!1001 &1346630605
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5164,8 +5170,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b376d585bb448b64aae3a09678dc7f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnName: Ocean/West
+  spawnName: 0
   spawnInBoat: 1
+  wlcManager: {fileID: 0}
 --- !u!1 &1570344146
 GameObject:
   m_ObjectHideFlags: 0
@@ -5195,7 +5202,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2174c99b64445cd91a5f2b6747aa4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npcs: []
 --- !u!4 &1570344148
 Transform:
   m_ObjectHideFlags: 0
@@ -5299,11 +5305,6 @@ Transform:
 --- !u!1 &1680646417 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2620790811287915178, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
-  m_PrefabInstance: {fileID: 2620790809741503419}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1680646418 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 2620790811287915177, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
   m_PrefabInstance: {fileID: 2620790809741503419}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1699268621
@@ -7790,7 +7791,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Jungle
-  sceneSpawnName: Jungle/Bushes
+  sceneSpawnName: 0
+  isSpawnPosRelative: 0
 --- !u!1001 &1755218389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7927,7 +7929,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Village dev
-  sceneSpawnName: Village/Beach
+  sceneSpawnName: 0
+  isSpawnPosRelative: 0
 --- !u!1 &1769068890
 GameObject:
   m_ObjectHideFlags: 0
@@ -8135,21 +8138,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onPlayerEnter: 1
-  onTrigger:
+  onEnter:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 55972034}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: ChangeScenes
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  onExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &1930376836
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8306,6 +8300,8 @@ MonoBehaviour:
   walls: {fileID: 504704873}
   decoration: {fileID: 1988335505}
   colliders: {fileID: 1726583454}
+  minecartRails: {fileID: 0}
+  wallTile: {fileID: 0}
 --- !u!1001 &1987171386
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9060,7 +9056,7 @@ PrefabInstance:
     - target: {fileID: 5049116215420832317, guid: 898b250fe0c06464293cf5013d6eb685, type: 3}
       propertyPath: artifactAnimator
       value: 
-      objectReference: {fileID: 1680646418}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 898b250fe0c06464293cf5013d6eb685, type: 3}
 --- !u!1001 &7648707882642669003
