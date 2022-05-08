@@ -24,7 +24,7 @@ public class MountainSGridAnimator : SGridAnimator
         {
             if (grid[m.startLoc.x, m.startLoc.y].isTileActive)
             {
-                if (Mathf.Abs(m.endLoc.y - m.startLoc.y) <= 1)
+                if (Mathf.Abs(m.endLoc.y - m.startLoc.y) <= 25)
                 StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move));
                 else
                 StartCoroutine(StartLayerMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move));

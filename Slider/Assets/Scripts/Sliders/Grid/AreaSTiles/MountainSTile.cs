@@ -32,7 +32,7 @@ public class MountainSTile : STile
 
     public Vector3 calculatePosition(int x, int y) 
     {
-        return new Vector3(x, y/2 * ((MountainGrid) SGrid.current).layerOffset + y % 2 * STILE_WIDTH);
+        return new Vector3(x * STILE_WIDTH, y/2 * ((MountainGrid) SGrid.current).layerOffset + y % 2 * STILE_WIDTH);
     }
 
     public override void SetGridPosition(int x, int y)
