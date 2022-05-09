@@ -59,7 +59,7 @@ public class STile : MonoBehaviour
             SetTileActive(isTileActive); 
         }
 
-        Vector3 defaultPos = STILE_WIDTH * new Vector3(x, y);
+        Vector3 defaultPos = calculatePosition(x,y);
         transform.position = defaultPos;
         SetTileMapPositions(defaultPos);
         sliderColliderDisableCount = 0;
@@ -198,7 +198,7 @@ public class STile : MonoBehaviour
     {
         this.x = x;
         this.y = y;
-        Vector3 newPos = STILE_WIDTH * new Vector3(x, y);
+        Vector3 newPos = calculatePosition(x, y);
 
         //StartCoroutine(StartCameraShakeEffect());
 
@@ -218,11 +218,16 @@ public class STile : MonoBehaviour
         }
     }
 
+    public virtual Vector3 calculatePosition(int x, int y) 
+    {
+        return STILE_WIDTH * new Vector3(x, y);
+    }
+
     public virtual void SetGridPositionRaw(int x, int y)
     {
         this.x = x;
         this.y = y;
-        Vector3 newPos = STILE_WIDTH * new Vector3(x, y);
+        Vector3 newPos = calculatePosition(x, y);
         transform.position = newPos;
         SetTileMapPositions(newPos);
     }
@@ -250,7 +255,7 @@ public class STile : MonoBehaviour
         return movingDirection;
     }
 
-    public void SetMovingPosition(Vector2 position)
+    public virtual void SetMovingPosition(Vector2 position)
     {
         Vector3 newPos = STILE_WIDTH * new Vector3(position.x, position.y);
 

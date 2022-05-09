@@ -352,6 +352,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8529986348122845572, guid: 2ee45d69e3f15804f8df184abc8b4411, type: 3}
+      propertyPath: music.Array.data[10].fmodEvent.Path
+      value: event:/Music/Mountain BGM
+      objectReference: {fileID: 0}
+    - target: {fileID: 8529986348122845572, guid: 2ee45d69e3f15804f8df184abc8b4411, type: 3}
+      propertyPath: music.Array.data[10].fmodEvent.Guid.Data1
+      value: -281630821
+      objectReference: {fileID: 0}
+    - target: {fileID: 8529986348122845572, guid: 2ee45d69e3f15804f8df184abc8b4411, type: 3}
+      propertyPath: music.Array.data[10].fmodEvent.Guid.Data2
+      value: 1224269927
+      objectReference: {fileID: 0}
+    - target: {fileID: 8529986348122845572, guid: 2ee45d69e3f15804f8df184abc8b4411, type: 3}
+      propertyPath: music.Array.data[10].fmodEvent.Guid.Data3
+      value: -2143467359
+      objectReference: {fileID: 0}
+    - target: {fileID: 8529986348122845572, guid: 2ee45d69e3f15804f8df184abc8b4411, type: 3}
+      propertyPath: music.Array.data[10].fmodEvent.Guid.Data4
+      value: 250861364
+      objectReference: {fileID: 0}
     - target: {fileID: 8529986348122845573, guid: 2ee45d69e3f15804f8df184abc8b4411, type: 3}
       propertyPath: m_Name
       value: AudioManager
