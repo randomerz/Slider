@@ -59,7 +59,6 @@ public class SMove
          * |   |   | - without toggling         |       | - with toggling
          * |___|___|                            |_______|
          *
-         * C: added checkOverlap boolean which is false for mountain layer moves, true by default
          */
         if (borders[pos1].Contains(side))
             borders[pos1].Remove(side);
@@ -167,6 +166,18 @@ public class SMoveLayerSwap: SMove
             AddBorder(p, 2, p + Vector2Int.left);
             AddBorder(p, 3, p + Vector2Int.down);
         }
+
+        /*
+         * C:
+         * if we are starting from y=0 or y=2, then the sum of start and end y is 2. We should not have a top
+         * border on y=1. If we are starting from y=1 or y-3, then the sum of the start and end y is 4.
+         * We should not have a bottom border on y=2
+         *
+         */
+        if(moves[0].startLoc.y + moves[0].endLoc.y == 2)
+            borders[new Vector2Int(moves[0].startLoc.x, 1)].Remove(1);
+        else
+            borders[new Vector2Int(moves[0].startLoc.x, 2)].Remove(3);        
         return borders;
     }
 }
