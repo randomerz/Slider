@@ -16,10 +16,13 @@ public class ArtifactTabManager : MonoBehaviour
 
     // Tabs -- this is not a good solution but we only have one set of tabs so it's fine lol
     public Animator rearrangingTabAnimator;
+    public Animator rearrangingFragTabAnimator;
     public ArtifactTab fragRealignTab;
     public ArtifactTab RealignTab;
     public ArtifactTab saveTab;
     public ArtifactTab loadTab;
+    private ArtifactTileButton empty;
+    private ArtifactTileButton middle;
     private int[,] originalGrid;
     public Sprite saveTabSprite;
     public Sprite loadTabSprite;
@@ -190,46 +193,40 @@ public class ArtifactTabManager : MonoBehaviour
 
     public void FragRearrangeOnClick()
     {
-        if (isRearranging)
+        // Do the rearranging!
+        Debug.Log("Swapped!");
+        if (middle == empty)
+        {
+            AudioManager.Play("Artifact Error");
             return;
-        isRearranging = true;
-
-        StartCoroutine(IFragRearrangeOnClick());
-    }
-
-    private IEnumerator IFragRearrangeOnClick()
-    {
-        UIManager.InvokeCloseAllMenus();
-        UIManager.canOpenMenus = false;
-
-        CameraShake.ShakeIncrease(2, 1);
-        AudioManager.Play("Slide Explosion"); // TODO: fix sfx
-
-        yield return new WaitForSeconds(0.5f);
-        AudioManager.Play("Slide Explosion");
-
-        UIEffects.FlashWhite(callbackMiddle: () => {
-            // Do the rearranging!
-            Debug.Log("Rearranged!");
-
-
-            UIManager.canOpenMenus = true;
-            isRearranging = false;
-        }, speed: 0.5f);
-
-        yield return new WaitForSeconds(1.5f);
-
-        CameraShake.Shake(2, 1);
+        }
+        UIArtifact._instance.FragRealignCheckAndSwap(middle, empty);
+        middle.SetHighlighted(false);
+        empty.SetHighlighted(false);
     }
 
     public void FragRearrangeOnHoverEnter()
     {
-        rearrangingTabAnimator.SetFloat("speed", 2);
+        rearrangingFragTabAnimator.SetFloat("speed", 4);
+        //Preview!
+        middle = UIArtifact.GetButton(1, 1);
+        foreach (ArtifactTileButton button in UIArtifact._instance.buttons)
+        {
+            if (button.islandId == 9)
+            {
+                empty = button;
+            }
+        }
+        middle.SetHighlighted(true);
+        empty.SetHighlighted(true);
     }
 
     public void FragRearrangeOnHoverExit()
     {
-        rearrangingTabAnimator.SetFloat("speed", 1);
+        rearrangingFragTabAnimator.SetFloat("speed", 1);
+        //Reset preview
+        middle.SetHighlighted(false);
+        empty.SetHighlighted(false);
     }
     #endregion
 }

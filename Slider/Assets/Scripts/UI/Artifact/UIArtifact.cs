@@ -21,7 +21,7 @@ public class UIArtifact : MonoBehaviour
     protected Queue<SMove> moveQueue = new Queue<SMove>();
     public int maxMoveQueueSize = 3;    //L: Max size of the queue.
 
-    private static UIArtifact _instance;
+    public static UIArtifact _instance;
     
     public void Awake()
     {
@@ -382,6 +382,27 @@ public class UIArtifact : MonoBehaviour
         _instance.moveQueue.Clear();
     }
 
+    public Boolean FragRealignCheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    {
+        STile[,] currGrid = SGrid.current.GetGrid();
+
+        int x = buttonCurrent.x;
+        int y = buttonCurrent.y;
+        SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+
+        if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
+        {
+            QueueCheckAndAdd(swap);
+            SwapButtons(buttonCurrent, buttonEmpty);
+            QueueCheckAfterMove(this, null);
+            return true;
+        }
+        else
+        {
+            Debug.Log("Couldn't perform move! (queue full?)");
+            return false;
+        }
+    }
     public void UpdatePushedDowns(object sender, System.EventArgs e)
     {
        foreach (ArtifactTileButton b in _instance.buttons)

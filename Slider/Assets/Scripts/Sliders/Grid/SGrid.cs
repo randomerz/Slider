@@ -431,6 +431,7 @@ public class SGrid : MonoBehaviour
             stile.SetSTile(td.isTileActive, td.x, td.y);
         }
         grid = newGrid;
+        saveGrid = sgridData.saveGrid;
     }
 
     public virtual void SaveSaveGrid()
