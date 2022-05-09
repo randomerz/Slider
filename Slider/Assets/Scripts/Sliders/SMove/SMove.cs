@@ -58,6 +58,7 @@ public class SMove
          *  ___ ___                              _______                       
          * |   |   | - without toggling         |       | - with toggling
          * |___|___|                            |_______|
+         *
          */
         if (borders[pos1].Contains(side))
             borders[pos1].Remove(side);
