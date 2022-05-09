@@ -38,4 +38,42 @@ public class MountainArtifact : UIArtifact
 
         return moveOptionButtons;
     }
+
+    protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    {
+        STile[,] currGrid = SGrid.current.GetGrid();
+
+        int x = buttonCurrent.x;
+        int y = buttonCurrent.y;
+        SMove swap;
+        if(Mathf.Abs(buttonCurrent.y - buttonEmpty.y) < 2) {
+            swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+        }
+        else {
+            swap = new SMoveLayerSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+        }
+ 
+        // Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
+        // Debug.Log(buttonCurrent + " " + buttonEmpty);
+        if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
+        {
+            //L: Do the move
+
+            QueueCheckAndAdd(swap);
+            SwapButtons(buttonCurrent, buttonEmpty);
+
+            // Debug.Log("Added move to queue: current length " + moveQueue.Count);
+            QueueCheckAfterMove(this, null);
+            // if (moveQueue.Count == 1)
+            // {
+            //     SGrid.current.Move(moveQueue.Peek());
+            // }
+            return true;
+        }
+        else
+        {
+            Debug.Log("Couldn't perform move! (queue full?)");
+            return false;
+        }
+    }
 }

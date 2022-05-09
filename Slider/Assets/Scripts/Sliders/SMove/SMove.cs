@@ -13,7 +13,7 @@ public class SMove
     //L: Value - A list of values taken from 0, 1, 2, 3 (maximum of 4 values) for each tile side denoting which borderse are on.
     public Dictionary<Vector2Int, List<int>> borders = new Dictionary<Vector2Int, List<int>>();
 
-    public Dictionary<Vector2Int, List<int>> GenerateBorders()
+    public virtual Dictionary<Vector2Int, List<int>> GenerateBorders()
     {
         positions.Clear();
         borders.Clear();
@@ -42,7 +42,7 @@ public class SMove
     }
 
     //L: side - 0, 1, 2, 3 corresponding to right, up, left, and down sides of a tile
-    private void AddBorder(Vector2Int pos1, int side, Vector2Int pos2)
+    protected void AddBorder(Vector2Int pos1, int side, Vector2Int pos2, bool checkOverlap = true)
     {
         if (!borders.ContainsKey(pos1))
             borders.Add(pos1, new List<int>());
@@ -59,16 +59,18 @@ public class SMove
          * |   |   | - without toggling         |       | - with toggling
          * |___|___|                            |_______|
          *
+         * C: added checkOverlap boolean which is false for mountain layer moves, true by default
          */
-        if (borders[pos1].Contains(side))
+        if (borders[pos1].Contains(side) && checkOverlap)
             borders[pos1].Remove(side);
         else
             borders[pos1].Add(side);
-        //L: The sides are with respect to pos1, so the opposite side is added for pos2 (think geometrically with 2 tiles that share a side)
-        if (borders[pos2].Contains((side + 2) % 4))
+            //L: The sides are with respect to pos1, so the opposite side is added for pos2 (think geometrically with 2 tiles that share a side)
+        if (borders[pos2].Contains((side + 2) % 4) && checkOverlap)
             borders[pos2].Remove((side + 2) % 4);
         else
             borders[pos2].Add((side + 2) % 4);
+        
     }
 
     // DC: check if this SMove and other SMove share the same (x, y) in position
@@ -97,7 +99,7 @@ public class SMove
     }
 }
 
-//a movment between 2 points, stored as a pair of vector 2s
+//C: a movment between 2 points, stored as a pair of vector 2s
 public class Movement 
 {
     public Vector2Int startLoc;
@@ -131,6 +133,41 @@ public class SMoveSwap : SMove
     public Movement GetSwapAsVector()
     {
         return moves[0];
+    }
+}
+
+public class SMoveLayerSwap: SMove
+{
+    public SMoveLayerSwap(int x1, int y1, int x2, int y2, int islandId1, int islandId2)
+    {
+        moves.Add(new Movement(x1, y1, x2, y2, islandId1));
+        moves.Add(new Movement(x2, y2, x1, y1, islandId2));
+    }
+
+    public Movement GetSwapAsVector()
+    {
+        return moves[0];
+    }
+
+    public override Dictionary<Vector2Int, List<int>> GenerateBorders()
+    {
+        positions.Clear();
+        borders.Clear();
+
+        foreach (Movement m in moves)
+        {
+            positions.Add(new Vector2Int(m.startLoc.x, m.startLoc.y));
+            positions.Add(new Vector2Int(m.endLoc.x, m.endLoc.y));
+        }
+
+        foreach (Vector2Int p in positions)
+        {
+            AddBorder(p, 0, p + Vector2Int.right, true);
+            AddBorder(p, 1, p + Vector2Int.up, true);
+            AddBorder(p, 2, p + Vector2Int.left, true);
+            AddBorder(p, 3, p + Vector2Int.down, true);
+        }
+        return borders;
     }
 }
 

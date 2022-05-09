@@ -15,9 +15,9 @@ public class MountainSGridAnimator : SGridAnimator
         {
             grid = SGrid.current.GetGrid();
         }
-        //STile[,] grid = SGrid.current.GetGrid();
-
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
+   
+        //STile[,] grid = SGrid.current.GetGrid();
         StartCoroutine(DisableBordersAndColliders(grid, SGrid.current.GetBGGrid(), move.positions, borders));
 
         foreach (Movement m in move.moves)
