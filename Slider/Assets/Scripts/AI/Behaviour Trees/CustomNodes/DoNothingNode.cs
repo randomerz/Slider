@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StayInPlaceNode : BehaviourTreeNode
+public class DoNothingNode : BehaviourTreeNode
 {
     RatAI ai;
 
-    public StayInPlaceNode(RatAI ai)
+    public DoNothingNode(RatAI ai)
     {
         this.ai = ai;
     }
     public override NodeState Evaluate()
     {
-        ai.Stay();
+        ai.navAgent.StopPath();
+        ai.transform.up = (ai.player.transform.position - ai.transform.position).normalized;
         return NodeState.RUNNING;
     }
 }

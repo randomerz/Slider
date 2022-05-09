@@ -75,14 +75,15 @@ public class SGridAnimator : MonoBehaviour
 
         while (t < movementDuration)
         {
-            float s = movementCurve.Evaluate(t / movementDuration);
+            t += Time.deltaTime;    //L: This needs to be before evaluate, or else t won't reach 1 before loop exits.
+            //Idk if Evaluate actually clamps or not
+            float s = movementCurve.Evaluate(Mathf.Min(t / movementDuration, 1));
             Vector2 pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
             //Vector3 pos = (1 - s) * orig + s * target;
             
             stile.SetMovingPosition(pos);
 
             yield return null;
-            t += Time.deltaTime;
         }
 
         //isMoving = false;
