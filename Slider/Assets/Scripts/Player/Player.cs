@@ -194,7 +194,10 @@ public class Player : MonoBehaviour
         STile[,] grid = SGrid.current.GetGrid();
         float offset = grid[0, 0].STILE_WIDTH / 2f;
         float housingOffset = -150;
-        
+
+        if(SGrid.current is MountainGrid)
+            housingOffset -= 100;
+                
         STile stileUnderneath = null;
         foreach (STile s in grid)
         {

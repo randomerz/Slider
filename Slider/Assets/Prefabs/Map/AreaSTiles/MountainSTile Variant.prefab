@@ -17879,6 +17879,10 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[624].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
+    - target: {fileID: 1419621809432289417, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -250
+      objectReference: {fileID: 0}
     - target: {fileID: 1421565161471655187, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
       propertyPath: m_Size.x
       value: 25
@@ -17903,6 +17907,10 @@ PrefabInstance:
       propertyPath: m_Points.Array.data[1].y
       value: 12.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2751361735075224609, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -250
+      objectReference: {fileID: 0}
     - target: {fileID: 3006547907602362798, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
       propertyPath: m_ColliderPaths.Array.size
       value: 1
@@ -17915,6 +17923,14 @@ PrefabInstance:
       propertyPath: m_Size.y
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 3702484291144592064, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -250
+      objectReference: {fileID: 0}
+    - target: {fileID: 4123332756909825766, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -250
+      objectReference: {fileID: 0}
     - target: {fileID: 6322336049834794853, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
       propertyPath: m_Size.x
       value: 25
@@ -17922,6 +17938,10 @@ PrefabInstance:
     - target: {fileID: 6322336049834794853, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
       propertyPath: m_Size.y
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322336049834794853, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+      propertyPath: m_Offset.y
+      value: -250
       objectReference: {fileID: 0}
     - target: {fileID: 6581962075059848973, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
       propertyPath: m_IsActive
@@ -17957,7 +17977,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7649429769792356515, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
       propertyPath: m_Name
-      value: MountainSTile
+      value: MountainSTile Variant
       objectReference: {fileID: 0}
     - target: {fileID: 7649429769792356515, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
       propertyPath: m_IsActive
@@ -18034,6 +18054,10 @@ PrefabInstance:
     - target: {fileID: 7789924758786968951, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
       propertyPath: m_Points.Array.data[1].y
       value: -12.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8838641267444953778, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -250
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6902505667763091165, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}

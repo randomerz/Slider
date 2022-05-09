@@ -6,6 +6,8 @@ public class MountainGrid : SGrid
 {
     public int layerOffset; //the y offset of the top layer from the bottom (used to calculate top tile y position)
 
+    public static MountainGrid instance;
+
     /* The mountian sgrid is a 2 by 4 grid. The top 4 tiles represent the top layer,
         while the bottom 4 tiles represent the bottom layer. For example, the following grid
 
@@ -23,9 +25,26 @@ public class MountainGrid : SGrid
         4. 
     */
 
-
     protected override void Awake() {
         myArea = Area.Mountain;
+
+        foreach (Collectible c in collectibles)
+        {
+            c.SetArea(myArea);
+        }
+
         base.Awake();
+
+        instance = this;
+    }
+
+
+    protected override void Start()
+    {
+        base.Start();
+
+        AudioManager.PlayMusic("Mountain");
+        UIEffects.FadeFromBlack();
+
     }
 }
