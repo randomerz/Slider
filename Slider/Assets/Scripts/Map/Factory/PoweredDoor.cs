@@ -7,9 +7,15 @@ public class PoweredDoor : ElectricalNode
     //Probably want to do an animation later instead of sprite swapping
 
     [SerializeField]
-    GameObject off;
+    private GameObject off;
     [SerializeField]
-    GameObject on;
+    private GameObject on;
+
+    private new void Awake()
+    {
+        base.Awake();
+        nodeType = NodeType.OUTPUT;
+    }
 
     public void OnPoweredHandler(OnPoweredArgs e)
     {

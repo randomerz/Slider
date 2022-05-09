@@ -19,6 +19,11 @@ public class UIArtifact : MonoBehaviour
     //L: Queue of moves to perform on the grid from the artifact
     //L: IMPORTANT NOTE: The top element in the queue is always the current move being executed.
     protected Queue<SMove> moveQueue = new Queue<SMove>();
+    public bool PlayerCanQueue
+    {
+        get;
+        set;
+    }
     public int maxMoveQueueSize = 3;    //L: Max size of the queue.
 
     private static UIArtifact _instance;
@@ -31,6 +36,8 @@ public class UIArtifact : MonoBehaviour
     public void Init()
     {
         _instance = this;
+
+        PlayerCanQueue = true;
     }
 
     public void Start()
@@ -59,8 +66,31 @@ public class UIArtifact : MonoBehaviour
         return _instance;
     }
 
-    //L: Handles when the user attempts to drag and drop a button
+    //This is in case we have situations where the grid is modified without interacting with the artifact (Factory conveyors, Mountain anchor, MagiTech Desyncs.
+    public void SetArtifactToGrid()
+    {
+        STile[,] grid = SGrid.current.GetGrid();
 
+        for (int x = 0; x < SGrid.current.width; x++)
+        {
+            for (int y = 0; y < SGrid.current.height; y++)
+            {
+                //If there is a tile at the position, set the corresponding button to that position, otherwise set an empty tile to that position
+                if (grid[x, y] != null)
+                {
+                    foreach (ArtifactTileButton button in buttons)
+                    {
+                        if (button.islandId == grid[x, y].islandId)
+                        {
+                            button.SetPosition(x, y);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //L: Handles when the user attempts to drag and drop a button
     public virtual void ButtonDragged(BaseEventData eventData) { 
         // Debug.Log("draggi   ng");
         PointerEventData data = (PointerEventData) eventData;
@@ -294,7 +324,6 @@ public class UIArtifact : MonoBehaviour
         buttonEmpty.SetPosition(oldCurrX, oldCurrY);
     }
 
-    //L: updateGrid - if this is false, it will just update the UI without actually moving the tiles.
     //L: Returns if the swap was successful.
     protected virtual bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
@@ -306,10 +335,9 @@ public class UIArtifact : MonoBehaviour
  
         // Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
         // Debug.Log(buttonCurrent + " " + buttonEmpty);
-        if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
+        if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize && PlayerCanQueue)
         {
             //L: Do the move
-
             QueueCheckAndAdd(swap);
             SwapButtons(buttonCurrent, buttonEmpty);
 
@@ -323,7 +351,7 @@ public class UIArtifact : MonoBehaviour
         }
         else
         {
-            Debug.Log("Couldn't perform move! (queue full?)");
+            Debug.Log("Couldn't perform move! (queue full or disabled?)");
             return false;
         }
     }
@@ -341,8 +369,10 @@ public class UIArtifact : MonoBehaviour
 
     }
 
-    protected virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    //This is called every time a tile finishes moving
+    public virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        //If e is null, this is the first tile to move, if it's not null, then a previous tile moved.
         if (e != null)
         {
             //Debug.Log("Checking for e");
@@ -368,13 +398,23 @@ public class UIArtifact : MonoBehaviour
                 }
             }
 
-            // Debug.Log("Move doesn't conflict! Performing move.");
+             Debug.Log("Move doesn't conflict! Performing move.");
 
             // doesn't interfere! so do the move
             SGrid.current.Move(peekedMove);
             activeMoves.Add(moveQueue.Dequeue());
             QueueCheckAfterMove(this, null);
         }
+    }
+
+    public static bool ActiveMovesExist()
+    {
+        return _instance.activeMoves.Count > 0;
+    }
+
+    public static List<SMove> GetActiveMoves()
+    {
+        return _instance.activeMoves;
     }
 
     public static void ClearQueues()
