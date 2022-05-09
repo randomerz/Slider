@@ -42,7 +42,7 @@ public class SMove
     }
 
     //L: side - 0, 1, 2, 3 corresponding to right, up, left, and down sides of a tile
-    protected void AddBorder(Vector2Int pos1, int side, Vector2Int pos2, bool checkOverlap = true)
+    protected void AddBorder(Vector2Int pos1, int side, Vector2Int pos2)
     {
         if (!borders.ContainsKey(pos1))
             borders.Add(pos1, new List<int>());
@@ -61,12 +61,12 @@ public class SMove
          *
          * C: added checkOverlap boolean which is false for mountain layer moves, true by default
          */
-        if (borders[pos1].Contains(side) && checkOverlap)
+        if (borders[pos1].Contains(side))
             borders[pos1].Remove(side);
         else
             borders[pos1].Add(side);
             //L: The sides are with respect to pos1, so the opposite side is added for pos2 (think geometrically with 2 tiles that share a side)
-        if (borders[pos2].Contains((side + 2) % 4) && checkOverlap)
+        if (borders[pos2].Contains((side + 2) % 4))
             borders[pos2].Remove((side + 2) % 4);
         else
             borders[pos2].Add((side + 2) % 4);
@@ -162,10 +162,10 @@ public class SMoveLayerSwap: SMove
 
         foreach (Vector2Int p in positions)
         {
-            AddBorder(p, 0, p + Vector2Int.right, true);
-            AddBorder(p, 1, p + Vector2Int.up, true);
-            AddBorder(p, 2, p + Vector2Int.left, true);
-            AddBorder(p, 3, p + Vector2Int.down, true);
+            AddBorder(p, 0, p + Vector2Int.right);
+            AddBorder(p, 1, p + Vector2Int.up);
+            AddBorder(p, 2, p + Vector2Int.left);
+            AddBorder(p, 3, p + Vector2Int.down);
         }
         return borders;
     }
