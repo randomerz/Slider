@@ -28,16 +28,14 @@ public class ArtifactTabManager : MonoBehaviour
 
     public void SetCurrentScreen(int screenIndex)
     {
-        Debug.Log("Checked stuff");
-        if (PlayerInventory.Contains("Scroll Frag", Area.Desert)
-            && !PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
-        {
-            fragRealignTab.SetIsVisible(screenIndex == fragRealignTab.homeScreen);
-        }
-        else if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert)
+        //Debug.Log("Checked stuff");
+        //Debug.Log(SGrid.current.GetActiveTiles().Count + " " + SGrid.GetNumButtonCompletions());
+        //Debug.Log(PlayerInventory.Contains("Scroll of Realigning", Area.Desert));
+        if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert)
             && SGrid.current.GetActiveTiles().Count == SGrid.current.GetTotalNumTiles()
             && SGrid.GetNumButtonCompletions() != SGrid.current.GetTotalNumTiles())
         {
+            Debug.Log("RealignTab Activated!");
             RealignTab.SetIsVisible(screenIndex == RealignTab.homeScreen);
         }
         else if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert)
@@ -45,6 +43,18 @@ public class ArtifactTabManager : MonoBehaviour
         {
             saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
             loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
+        }
+        else if (PlayerInventory.Contains("Scroll Frag", Area.Desert)
+                 && SGrid.current.GetArea() == Area.Desert)
+        {
+            fragRealignTab.SetIsVisible(screenIndex == fragRealignTab.homeScreen);
+        }
+        else
+        {
+            RealignTab.SetIsVisible(false);
+            fragRealignTab.SetIsVisible(false);
+            saveTab.SetIsVisible(false);
+            loadTab.SetIsVisible(false);
         }
     }
 
@@ -58,7 +68,6 @@ public class ArtifactTabManager : MonoBehaviour
         if (isRearranging)
             return;
         isRearranging = true;
-
         StartCoroutine(IRearrangeOnClick());
     }
 
@@ -76,6 +85,7 @@ public class ArtifactTabManager : MonoBehaviour
         UIEffects.FlashWhite(callbackMiddle: () => {
             // Do the rearranging!
             Debug.Log("Rearranged!");
+            SGrid.current.RearrangeGrid();
 
 
             UIManager.canOpenMenus = true;

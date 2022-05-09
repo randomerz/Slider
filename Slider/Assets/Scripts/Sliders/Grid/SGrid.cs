@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -410,7 +411,7 @@ public class SGrid : MonoBehaviour
     //L: Used in the save system to load a grid as opposed to using SetGrid(STile[], STile[]) with default tiles positions.
     public virtual void LoadGrid() 
     { 
-         //Debug.Log("Loading grid...");
+        //Debug.Log("Loading grid...");
 
         SGridData sgridData = SaveSystem.Current.GetSGridData(myArea);
 
@@ -461,6 +462,29 @@ public class SGrid : MonoBehaviour
         saveGrid = null;
     }
 
+    public virtual void RearrangeGrid()
+    {
+        //Convert the target grid into the proper int[] and pass into setgrid
+        saveGrid = new int[current.width, current.height];
+        for (int x = current.width - 1; x >= 0; x--)
+        {
+            for (int y = 0; y < current.height; y++)
+            {
+                Debug.Log("Setgrid indices: " + y + " " + (width - 1 - x) + " Tile: " + targetGrid[(x * height) + y]);
+                saveGrid[y, (current.width - 1 - x)] = (int) Char.GetNumericValue(targetGrid[(x * current.height) + y]);
+            }
+        }
+        current.SetGrid(saveGrid);
+
+        for (int x = 0; x < current.width; x++)
+        {
+            for (int y = 0; y < current.height; y++)
+            {
+                ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
+                UIArtifact.SetButtonComplete(artifactButton.islandId, true);
+            }
+        }
+    }
     protected static void UpdateButtonCompletions(object sender, System.EventArgs e)
     {
         current.UpdateButtonCompletionsHelper();
@@ -472,7 +496,7 @@ public class SGrid : MonoBehaviour
 
         // Debug.Log("Checking completions!");
         for (int x = 0; x < current.width; x++) {
-            for (int y = 0; y < current.width; y++) {
+            for (int y = 0; y < current.height; y++) {
                 // int tid = current.targetGrid[x, y];
                 string tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
@@ -499,15 +523,17 @@ public class SGrid : MonoBehaviour
     {
         int numComplete = 0;
         for (int x = 0; x < current.width; x++) {
-            for (int y = 0; y < current.width; y++) {
+            for (int y = 0; y < current.height; y++) {
                 string tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
+                //Debug.Log(x + " " + y);
                 if (tids == "*") 
                 {
                     numComplete += 1;
                 }
                 else {
                     int tid = int.Parse(tids);
+                    //Debug.Log("tid: " + tid + " artifactButton: " + artifactButton);
                     if (artifactButton.islandId == tid)
                         numComplete += 1;
                 }
