@@ -226,7 +226,6 @@ public class UIArtifact : MonoBehaviour
             }
 
             moveOptionButtons = GetMoveOptions(button);
-            Debug.Log("moveOptions" + moveOptionButtons.Count);
             if (moveOptionButtons.Count == 0)
             {
                 //L: Player tried to click a locked tile (or tile that otherwise had no move options)
