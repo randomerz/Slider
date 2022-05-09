@@ -250,7 +250,7 @@ public class STile : MonoBehaviour
         return movingDirection;
     }
 
-    public virtual void SetMovingPosition(Vector2 position)
+    public void SetMovingPosition(Vector2 position)
     {
         Vector3 newPos = STILE_WIDTH * new Vector3(position.x, position.y);
 

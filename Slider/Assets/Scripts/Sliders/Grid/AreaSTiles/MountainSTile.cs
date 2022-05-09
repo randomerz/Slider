@@ -67,17 +67,4 @@ public class MountainSTile : STile
         transform.position = newPos;
         SetTileMapPositions(newPos);
     }
-
-    public override void SetMovingPosition(Vector2 position)
-    {
-        Vector3 newPos = calculatePosition((int) position.x, (int) position.y);
-
-        // physics
-        Vector3 dr = newPos - transform.position;
-        UpdateTilePhysics(dr);
-
-
-        transform.position = newPos;
-        SetTileMapPositions(newPos);
-    }
 }
