@@ -39,12 +39,15 @@ public class ArtifactTabManager : MonoBehaviour
             && SGrid.GetNumButtonCompletions() != SGrid.current.GetTotalNumTiles())
         {
             RealignTab.SetIsVisible(screenIndex == RealignTab.homeScreen);
+            saveTab.SetIsVisible(false);
+            loadTab.SetIsVisible(false);
         }
         else if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert)
                  && SGrid.GetNumButtonCompletions() != SGrid.current.GetTotalNumTiles())
         {
             saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
             loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
+            fragRealignTab.SetIsVisible(false);
         }
         else if (PlayerInventory.Contains("Scroll Frag", Area.Desert)
                  && SGrid.current.GetArea() == Area.Desert)
