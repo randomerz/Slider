@@ -21,7 +21,7 @@ public class UIArtifact : MonoBehaviour
     protected Queue<SMove> moveQueue = new Queue<SMove>();
     public int maxMoveQueueSize = 3;    //L: Max size of the queue.
 
-    public static UIArtifact _instance;
+    protected static UIArtifact _instance;
     
     public void Awake()
     {

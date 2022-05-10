@@ -38,7 +38,6 @@ public class ArtifactTabManager : MonoBehaviour
             && SGrid.current.GetActiveTiles().Count == SGrid.current.GetTotalNumTiles()
             && SGrid.GetNumButtonCompletions() != SGrid.current.GetTotalNumTiles())
         {
-            Debug.Log("RealignTab Activated!");
             RealignTab.SetIsVisible(screenIndex == RealignTab.homeScreen);
         }
         else if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert)
@@ -87,7 +86,7 @@ public class ArtifactTabManager : MonoBehaviour
 
         UIEffects.FlashWhite(callbackMiddle: () => {
             // Do the rearranging!
-            Debug.Log("Rearranged!");
+            //Debug.Log("Rearranged!");
             SGrid.current.RearrangeGrid();
 
 
@@ -124,13 +123,17 @@ public class ArtifactTabManager : MonoBehaviour
 
     // Load tab
 
-    public void LoadOnClick()
+    public void LoadOnClick(UIArtifact uiartifact)
     {
         if (SGrid.current.saveGrid != null)
         {
             // Do the rearranging!
             SGrid.current.LoadSaveGrid();
-            Debug.Log("Loaded!");
+            foreach (ArtifactTileButton button in uiartifact.buttons)
+            {
+                button.SetHighlighted(false);
+            }
+            //Debug.Log("Loaded!");
 
 
             UIEffects.FadeFromWhite();
@@ -167,6 +170,7 @@ public class ArtifactTabManager : MonoBehaviour
                     //Debug.Log(SGrid.current.saveGrid[x, y] + " button array index: " + (SGrid.current.saveGrid[x, y] - 1) + " " + x + " " + y);
                     originalGrid[x, y] = SGrid.current.GetGrid()[x, y].islandId;
                     uiartifact.buttons[SGrid.current.saveGrid[x, y] - 1].SetPosition(x, y);
+                    uiartifact.buttons[SGrid.current.saveGrid[x, y] - 1].SetHighlighted(true);
                 }
             }
         }
@@ -178,12 +182,13 @@ public class ArtifactTabManager : MonoBehaviour
         //get the id's from the grid
         if (SGrid.current.saveGrid != null)
         {
-            Debug.Log("Reset!");
+            //Debug.Log("Reset!");
             for (int x = 0; x < SGrid.current.width; x++)
             {
                 for (int y = 0; y < SGrid.current.height; y++)
                 {
                     uiartifact.buttons[originalGrid[x, y] - 1].SetPosition(x, y);
+                    uiartifact.buttons[originalGrid[x, y] - 1].SetHighlighted(false);
                 }
             }
         }
@@ -191,26 +196,26 @@ public class ArtifactTabManager : MonoBehaviour
 
     //Rearranging Fragment
 
-    public void FragRearrangeOnClick()
+    public void FragRearrangeOnClick(UIArtifact uiartifact)
     {
         // Do the rearranging!
-        Debug.Log("Swapped!");
+        //Debug.Log("Swapped!");
         if (middle == empty)
         {
             AudioManager.Play("Artifact Error");
             return;
         }
-        UIArtifact._instance.FragRealignCheckAndSwap(middle, empty);
+        uiartifact.FragRealignCheckAndSwap(middle, empty);
         middle.SetHighlighted(false);
         empty.SetHighlighted(false);
     }
 
-    public void FragRearrangeOnHoverEnter()
+    public void FragRearrangeOnHoverEnter(UIArtifact uiartifact)
     {
         rearrangingFragTabAnimator.SetFloat("speed", 4);
         //Preview!
         middle = UIArtifact.GetButton(1, 1);
-        foreach (ArtifactTileButton button in UIArtifact._instance.buttons)
+        foreach (ArtifactTileButton button in uiartifact.buttons)
         {
             if (button.islandId == 9)
             {

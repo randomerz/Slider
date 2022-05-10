@@ -471,7 +471,7 @@ public class SGrid : MonoBehaviour
         {
             for (int y = 0; y < current.height; y++)
             {
-                Debug.Log("Setgrid indices: " + y + " " + (width - 1 - x) + " Tile: " + targetGrid[(x * height) + y]);
+                //Debug.Log("Setgrid indices: " + y + " " + (width - 1 - x) + " Tile: " + targetGrid[(x * height) + y]);
                 saveGrid[y, (current.width - 1 - x)] = (int) Char.GetNumericValue(targetGrid[(x * current.height) + y]);
             }
         }
