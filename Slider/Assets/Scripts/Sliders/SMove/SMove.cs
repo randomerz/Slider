@@ -178,15 +178,6 @@ public class SMoveRotate : SMove
     }
 }
 
-public class SMoveConveyor : SMove
-{
-    //Scuffy Rubby me Dubby Tubby
-    public SMoveConveyor(List<Movement> moves)
-    {
-        this.moves = new List<Movement>(moves);
-    }
-}
-
 public class SSlideSwap : SMove
 {
     public SSlideSwap(List<Movement> points)

@@ -5,9 +5,9 @@ using UnityEngine;
 public class Wire : ConductiveElectricalNode
 {
     [SerializeField]
-    private GameObject off;
+    private GameObject offSprite;
     [SerializeField]
-    private GameObject on;
+    private GameObject onSprite;
 
     private new void Awake()
     {
@@ -15,13 +15,13 @@ public class Wire : ConductiveElectricalNode
         nodeType = NodeType.IO;
 
         //Just initializing to make sure they're not both active at the same time
-        off.SetActive(!Powered);
-        on.SetActive(Powered);
+        offSprite.SetActive(!Powered);
+        onSprite.SetActive(Powered);
     }
 
     public void OnPoweredHandler(OnPoweredArgs args)
     {
-        off.SetActive(!args.powered);
-        on.SetActive(args.powered);
+        offSprite.SetActive(!args.powered);
+        onSprite.SetActive(args.powered);
     }
 }

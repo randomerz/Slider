@@ -48,8 +48,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodeType: 0
-  powerRefs: 0
-  powerPathPrevs: []
   neighbors: []
   OnPowered:
     m_PersistentCalls:
@@ -66,8 +64,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  off: {fileID: 8207227140246353176}
-  on: {fileID: 8207227141369749535}
+  offSprite: {fileID: 8207227140246353176}
+  onSprite: {fileID: 8207227141369749535}
 --- !u!50 &8207227139567865597
 Rigidbody2D:
   serializedVersion: 4

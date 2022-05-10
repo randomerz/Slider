@@ -166,7 +166,7 @@ public class ElectricalNode : MonoBehaviour
             return;
         }
 
-        //Debug.Log($"Adding Node {other.gameObject} to node {this.gameObject}");
+        Debug.Log($"Adding Node {other.gameObject} to node {this.gameObject}");
 
         if (this.nodeType == NodeType.IO && other.nodeType == NodeType.IO)
         {
@@ -249,7 +249,7 @@ public class ElectricalNode : MonoBehaviour
             return;
         }
 
-        //Debug.Log($"Removing Node {other.gameObject} from node {this.gameObject}");
+        Debug.Log($"Removing Node {other.gameObject} from node {this.gameObject}");
 
         if (this.nodeType == NodeType.IO && other.nodeType == NodeType.IO)
         {
