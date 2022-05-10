@@ -223,6 +223,11 @@ public class STile : MonoBehaviour
         return STILE_WIDTH * new Vector3(x, y);
     }
 
+    public virtual Vector3 calculateMovingPosition(float x, float y) 
+    {
+        return STILE_WIDTH * new Vector3(x, y);
+    }
+
     public virtual void SetGridPositionRaw(int x, int y)
     {
         this.x = x;
@@ -255,10 +260,9 @@ public class STile : MonoBehaviour
         return movingDirection;
     }
 
-    public virtual void SetMovingPosition(Vector2 position)
+    public void SetMovingPosition(Vector2 position)
     {
-        Vector3 newPos = STILE_WIDTH * new Vector3(position.x, position.y);
-
+        Vector3 newPos = calculateMovingPosition(position.x, position.y);
         // physics
         Vector3 dr = newPos - transform.position;
         UpdateTilePhysics(dr);

@@ -46,6 +46,7 @@ public class MountainArtifact : UIArtifact
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
         SMove swap;
+        //If swapping layers, the difference in y values will be 2
         if(Mathf.Abs(buttonCurrent.y - buttonEmpty.y) < 2) {
             swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
         }
@@ -53,8 +54,6 @@ public class MountainArtifact : UIArtifact
             swap = new SMoveLayerSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
         }
  
-        // Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
-        // Debug.Log(buttonCurrent + " " + buttonEmpty);
         if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
         {
             //L: Do the move

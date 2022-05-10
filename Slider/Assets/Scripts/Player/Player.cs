@@ -195,6 +195,7 @@ public class Player : MonoBehaviour
         float offset = grid[0, 0].STILE_WIDTH / 2f;
         float housingOffset = -150;
 
+        //C: The housing offset in the mountain is -250 due to the map's large size
         if(SGrid.current is MountainGrid)
             housingOffset -= 100;
                 
