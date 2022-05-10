@@ -131,7 +131,7 @@ public class OceanArtifact : UIArtifact
     }
 
     // DC: this plays the animation when the tiles actually move... should we keep track of UI similarly?
-    protected override void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    public override void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (e != null)
         {
