@@ -92,11 +92,14 @@ public class UIArtifact : MonoBehaviour
 
     public void UpdateMoveOptions()
     {
-        moveOptionButtons = GetMoveOptions(currentButton);
-
-        foreach (ArtifactTileButton b in buttons)
+        if (currentButton != null)
         {
-            b.SetHighlighted(moveOptionButtons.Contains(b));
+            moveOptionButtons = GetMoveOptions(currentButton);
+
+            foreach (ArtifactTileButton b in buttons)
+            {
+                b.SetHighlighted(moveOptionButtons.Contains(b));
+            }
         }
     }
 
@@ -357,7 +360,8 @@ public class UIArtifact : MonoBehaviour
         }
         else
         {
-            Debug.Log("Couldn't perform move! (queue full or disabled?)");
+            string debug = PlayerCanQueue ? "Player Queueing is disabled" : "Queue was full";
+            Debug.Log($"Couldn't perform move! {debug}");
             return false;
         }
     }
