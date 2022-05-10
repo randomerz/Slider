@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Anchor : Item
 {
+    public class OnAnchorDropArgs : System.EventArgs
+    {
+        public STile stile;
+    }
+    public static event System.EventHandler<OnAnchorDropArgs> OnAnchorDrop;
+
     // Start is called before the first frame update
     [SerializeField] private float shakeAmount;
     [SerializeField] private float shakeDuration;
@@ -62,6 +68,7 @@ public class Anchor : Item
 
         Player.SetMoveSpeedMultiplier(1f);
         UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
+        OnAnchorDrop?.Invoke(this, new OnAnchorDropArgs { stile = hitTile });
         return null;
     }
     public override void dropCallback()

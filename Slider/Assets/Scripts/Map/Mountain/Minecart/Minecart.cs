@@ -43,7 +43,7 @@ public class Minecart : Item
         if(hit.GetComponent<STile>()) //Use Stile RM
         {
             STile hitTile = hit.GetComponent<STile>();
-            Tilemap railmap = hitTile.allTileMaps.GetComponent<STileTilemap>().minecartRails;
+            Tilemap railmap = hitTile.allTileMaps.GetComponentInChildren<STileTilemap>().minecartRails;
             railManager = railmap.GetComponent<RailManager>();
             StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
             if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
@@ -147,9 +147,10 @@ public class Minecart : Item
         
     }
 
-    //looks for a rail manager that has a tile which overlaps with the target postion
-    //If one is found, rail manager is updated so the minecart can operate on the new STile
-    //If one is not found, the minecart derails
+    /*C:looks for a rail manager that has a tile which overlaps with the target postion
+     * If one is found, rail manager is updated so the minecart can operate on the new STile
+     * If one is not found, the minecart derails
+     */
     private void LookForRailManager()
     {
         List<STile> stileList = sGrid.GetActiveTiles();
