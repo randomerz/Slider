@@ -55,7 +55,15 @@ public class ElectricalNode : MonoBehaviour
 
     private void OnEnable()
     {
+        OnPowered.AddListener(OnPoweredHandler);
     }
+
+    private void OnDisable()
+    {
+        OnPowered.RemoveListener(OnPoweredHandler);
+    }
+
+    public virtual void OnPoweredHandler(OnPoweredArgs e) { }
 
     public virtual void StartSignal(bool input)
     {

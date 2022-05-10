@@ -90,6 +90,16 @@ public class UIArtifact : MonoBehaviour
         }
     }
 
+    public void UpdateMoveOptions()
+    {
+        moveOptionButtons = GetMoveOptions(currentButton);
+
+        foreach (ArtifactTileButton b in buttons)
+        {
+            b.SetHighlighted(moveOptionButtons.Contains(b));
+        }
+    }
+
     //L: Handles when the user attempts to drag and drop a button
     public virtual void ButtonDragged(BaseEventData eventData) { 
         // Debug.Log("draggi   ng");
@@ -234,11 +244,7 @@ public class UIArtifact : MonoBehaviour
                 //L: Player makes a move while the tile is still moving, so add the button to the queue.
                 CheckAndSwap(currentButton, button);
 
-                moveOptionButtons = GetMoveOptions(currentButton);
-                foreach (ArtifactTileButton b in buttons)
-                {
-                    b.SetHighlighted(moveOptionButtons.Contains(b));
-                }
+                UpdateMoveOptions();
             } else 
             {
                 DeselectCurrentButton();
@@ -398,7 +404,7 @@ public class UIArtifact : MonoBehaviour
                 }
             }
 
-             Debug.Log("Move doesn't conflict! Performing move.");
+            //Debug.Log("Move doesn't conflict! Performing move.");
 
             // doesn't interfere! so do the move
             SGrid.current.Move(peekedMove);

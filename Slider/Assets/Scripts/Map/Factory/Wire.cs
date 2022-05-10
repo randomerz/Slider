@@ -19,7 +19,7 @@ public class Wire : ConductiveElectricalNode
         on.SetActive(Powered);
     }
 
-    public void OnPoweredHandler(OnPoweredArgs args)
+    public override void OnPoweredHandler(OnPoweredArgs args)
     {
         off.SetActive(!args.powered);
         on.SetActive(args.powered);

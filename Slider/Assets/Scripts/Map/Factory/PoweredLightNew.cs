@@ -22,9 +22,9 @@ public class PoweredLightNew : ConductiveElectricalNode
         base.PropagateSignal(value, prev, recStack, numRefs);
     }
 
-    public void OnPoweredHandler(bool value, bool valueChanged)
+    public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        SetLightOn(value, valueChanged);
+        SetLightOn(e.powered, e.valueChanged);
     }
 
     public void SetLightOn(bool value, bool playSound = true)

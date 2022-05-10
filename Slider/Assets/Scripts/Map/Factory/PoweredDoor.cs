@@ -17,7 +17,7 @@ public class PoweredDoor : ElectricalNode
         nodeType = NodeType.OUTPUT;
     }
 
-    public void OnPoweredHandler(OnPoweredArgs e)
+    public override void OnPoweredHandler(OnPoweredArgs e)
     {
         off.SetActive(!e.powered);
         on.SetActive(e.powered);

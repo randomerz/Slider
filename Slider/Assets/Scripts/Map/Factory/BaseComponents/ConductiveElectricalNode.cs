@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ConductiveElectricalNode : ElectricalNode
 {
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         ConductiveElectricalNode node = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
