@@ -50,7 +50,8 @@ public class ArtifactTabManager : MonoBehaviour
             fragRealignTab.SetIsVisible(false);
         }
         else if (SGrid.current.GetArea() == Area.Desert
-                 && PlayerInventory.Contains("Scroll Frag", Area.Desert))
+                 && PlayerInventory.Contains("Scroll Frag", Area.Desert)
+                 && !PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
         {
             fragRealignTab.SetIsVisible(screenIndex == fragRealignTab.homeScreen);
         }
