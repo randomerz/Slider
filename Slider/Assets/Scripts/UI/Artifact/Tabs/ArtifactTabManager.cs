@@ -21,14 +21,14 @@ public class ArtifactTabManager : MonoBehaviour
     public ArtifactTab RealignTab;
     public ArtifactTab saveTab;
     public ArtifactTab loadTab;
-    private ArtifactTileButton empty;
-    private ArtifactTileButton middle;
     private int[,] originalGrid;
     public Sprite saveTabSprite;
     public Sprite loadTabSprite;
     public Sprite saveEmptyTabSprite;
     public Sprite loadEmptyTabSprite;
 
+    private ArtifactTileButton empty;
+    private ArtifactTileButton middle;
     public void SetCurrentScreen(int screenIndex)
     {
         //Debug.Log("Checked stuff");
@@ -49,8 +49,8 @@ public class ArtifactTabManager : MonoBehaviour
             loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
             fragRealignTab.SetIsVisible(false);
         }
-        else if (PlayerInventory.Contains("Scroll Frag", Area.Desert)
-                 && SGrid.current.GetArea() == Area.Desert)
+        else if (SGrid.current.GetArea() == Area.Desert
+                 && PlayerInventory.Contains("Scroll Frag", Area.Desert))
         {
             fragRealignTab.SetIsVisible(screenIndex == fragRealignTab.homeScreen);
         }
@@ -118,7 +118,7 @@ public class ArtifactTabManager : MonoBehaviour
     {
         // flash tiles white
         //Debug.Log("Tried to save!");
-        SGrid.current.SaveSaveGrid();
+        SGrid.current.SaveRealigningGrid();
         uiArtifactMenus.uiArtifact.FlickerAllOnce();
         saveTab.GetComponentInChildren<Image>().sprite = saveTabSprite;
         loadTab.GetComponentInChildren<Image>().sprite = loadTabSprite;
@@ -128,10 +128,10 @@ public class ArtifactTabManager : MonoBehaviour
 
     public void LoadOnClick(UIArtifact uiartifact)
     {
-        if (SGrid.current.saveGrid != null)
+        if (SGrid.current.realigningGrid != null)
         {
             // Do the rearranging!
-            SGrid.current.LoadSaveGrid();
+            SGrid.current.LoadRealigningGrid();
             foreach (ArtifactTileButton button in uiartifact.buttons)
             {
                 button.SetHighlighted(false);
@@ -162,7 +162,7 @@ public class ArtifactTabManager : MonoBehaviour
     {
         // set it to saved
         //get the realignGrid, put the button stuff in the order based on that, then call bggrid set
-        if(SGrid.current.saveGrid != null)
+        if(SGrid.current.realigningGrid != null)
         {
             //Debug.Log("Previewed!");
             originalGrid = new int[SGrid.current.width, SGrid.current.height];
@@ -172,8 +172,8 @@ public class ArtifactTabManager : MonoBehaviour
                 {
                     //Debug.Log(SGrid.current.saveGrid[x, y] + " button array index: " + (SGrid.current.saveGrid[x, y] - 1) + " " + x + " " + y);
                     originalGrid[x, y] = SGrid.current.GetGrid()[x, y].islandId;
-                    uiartifact.buttons[SGrid.current.saveGrid[x, y] - 1].SetPosition(x, y);
-                    uiartifact.buttons[SGrid.current.saveGrid[x, y] - 1].SetHighlighted(true);
+                    uiartifact.buttons[SGrid.current.realigningGrid[x, y] - 1].SetPosition(x, y);
+                    uiartifact.buttons[SGrid.current.realigningGrid[x, y] - 1].SetHighlighted(true);
                 }
             }
         }
@@ -183,7 +183,7 @@ public class ArtifactTabManager : MonoBehaviour
     {
         // reset
         //get the id's from the grid
-        if (SGrid.current.saveGrid != null)
+        if (SGrid.current.realigningGrid != null)
         {
             //Debug.Log("Reset!");
             for (int x = 0; x < SGrid.current.width; x++)
