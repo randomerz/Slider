@@ -35,7 +35,7 @@ public class ArtifactTileButton : MonoBehaviour
         islandSprite = buttonAnimator.sliderImage.sprite;
     }
 
-    protected void Start()
+    protected virtual void Start()
     {
         myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
         
@@ -69,7 +69,7 @@ public class ArtifactTileButton : MonoBehaviour
         }
     }
 
-    public void SetPosition(int x, int y)
+    public virtual void SetPosition(int x, int y)
     {
         //Debug.Log("Current position: " + this.x + "," + this.y);
         this.x = x;
