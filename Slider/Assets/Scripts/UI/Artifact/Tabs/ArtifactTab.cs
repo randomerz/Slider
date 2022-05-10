@@ -17,7 +17,7 @@ public class ArtifactTab : MonoBehaviour
     
     void Start()
     {
-        gameObject.SetActive(isActive); // this is bad but should work for now?
+        gameObject.SetActive(isActive); // this is bad but should work for now? no it's bad >:(
         UpdateVisibility();
     }
 
@@ -28,6 +28,8 @@ public class ArtifactTab : MonoBehaviour
 
     public void SetIsVisible(bool value)
     {
+        isActive = value;
+        gameObject.SetActive(isActive);
         isVisible = value;
         UpdateVisibility();
     }
