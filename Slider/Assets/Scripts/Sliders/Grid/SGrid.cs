@@ -120,7 +120,7 @@ public class SGrid : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                Debug.Log(puzzle[x, y]);
+                //Debug.Log(puzzle[x, y]);
                 if (puzzle[x, y] == 0)
                     next = GetStile(width * height);
                 else
