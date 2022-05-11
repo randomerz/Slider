@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class Minecart : Item
 {
     
-    [SerializeField] private int currentDirection;
+    [SerializeField] public int currentDirection {get; set;} //so this can be used from debug
     public RailManager railManager;
     [SerializeField] private bool isOnTrack;
     [SerializeField] private bool isMoving;

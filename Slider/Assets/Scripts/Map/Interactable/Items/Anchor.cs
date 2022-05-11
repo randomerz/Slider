@@ -64,11 +64,11 @@ public class Anchor : Item
         if (hitTile != null)
         {
             hitTile.hasAnchor = true;
+            OnAnchorDrop?.Invoke(this, new OnAnchorDropArgs { stile = hitTile });
         }
 
         Player.SetMoveSpeedMultiplier(1f);
         UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
-        OnAnchorDrop?.Invoke(this, new OnAnchorDropArgs { stile = hitTile });
         return null;
     }
     public override void dropCallback()

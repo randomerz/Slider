@@ -40,7 +40,7 @@ public class RailManager : MonoBehaviour
         foreach (Vector3Int position in railMap.cellBounds.allPositionsWithin) {
             RailTile tile = railMap.GetTile(position) as RailTile;
             if (tile != null) {
-                ChangeTile(position, tile as RailTile);
+                ChangeTile(position, tile);
             }
         }
     }

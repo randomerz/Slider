@@ -29,15 +29,38 @@ public class MountainGrid : SGrid
         }
 
         base.Awake();
-
         instance = this;
     }
+    
+    private void OnEnable()
+    {
+        Anchor.OnAnchorDrop += OnAnchorDrop;
+        Debug.Log("amogus");
+    }
 
+    private void OnDisable()
+    {
+        Anchor.OnAnchorDrop -= OnAnchorDrop;
+    }
+
+    private void OnAnchorDrop(object sender, Anchor.OnAnchorDropArgs dropArgs)
+    {
+        Debug.Log("vent");
+        STile dropTile = dropArgs.stile;
+        if(dropTile.y < 2)
+            return; //currently using the anchor on the bottom layer does nothing
+        STile lower = SGrid.current.GetGrid()[dropTile.x, dropTile.y - 2];
+        if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile
+        {
+            MountainArtifact uiArtifact = (MountainArtifact) MountainArtifact.GetInstance();
+            UIArtifact.ClearQueues();
+            uiArtifact.AnchorSwap(dropTile, lower);
+        }
+    }
 
     protected override void Start()
     {
         base.Start();
-
         AudioManager.PlayMusic("Mountain");
         UIEffects.FadeFromBlack();
 
