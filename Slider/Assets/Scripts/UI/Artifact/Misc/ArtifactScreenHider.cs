@@ -40,11 +40,11 @@ public class ArtifactScreenHider : MonoBehaviour
 
     public void Init()
     {
-        if (debugSkipHiding)
-            return;
-
         screens = new List<RectTransform>(screenAnimator.screens);
         animators = new List<Animator>(screenAnimator.animators);
+
+        if (debugSkipHiding)
+            return;
 
         if (!PlayerHasCoffeeOrPages()) 
         {
@@ -64,23 +64,31 @@ public class ArtifactScreenHider : MonoBehaviour
     {
         screenAnimator.screens = new List<RectTransform>(screens);
         screenAnimator.animators = new List<Animator>(animators);
+        if (debugSkipHiding)
+            return;
     }
 
     public void AddInventoryScreen()
     {
         screenAnimator.screens = new List<RectTransform>(screens.GetRange(0, 2));
         screenAnimator.animators = new List<Animator>(animators.GetRange(0, 2));
+        if (debugSkipHiding)
+            return;
     }
 
     public void AddScreensAndShow()
     {
         AddScreensAndShow(0);
+        if (debugSkipHiding)
+            return;
     }
 
     public void AddScreensAndShow(int screenIndex)
     {
         AddScreens();
         StartCoroutine(IAddScreensAndShow(screenIndex));
+        if (debugSkipHiding)
+            return;
     }
 
     private IEnumerator IAddScreensAndShow(int screenIndex)
