@@ -10,7 +10,6 @@ public class DesertGrid : SGrid
     private bool crocoQuest = false;
 
     private int monkeShake = 0;
-    private Vector2Int monkeyPrev = new Vector2Int(1, 1);
     private bool monkeyOasis = false;
 
     private bool jackalQuest = false;
@@ -30,6 +29,7 @@ public class DesertGrid : SGrid
     private bool GazelleOasis = false;
 
     private static bool checkCompletion = false;
+    private static bool checkMonkey = false;
 
     // public Collectible[] collectibles;
 
@@ -66,6 +66,10 @@ public class DesertGrid : SGrid
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
         }
+        if (checkMonkey)
+        {
+            SGridAnimator.OnSTileMoveEnd += CheckMonkeyShakeOnMove;
+        }
     }
 
     private void OnDisable() {
@@ -74,6 +78,10 @@ public class DesertGrid : SGrid
             OnGridMove -= UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+        }
+        if (checkMonkey)
+        {
+            SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
         }
     }
 
@@ -102,7 +110,7 @@ public class DesertGrid : SGrid
 
 
     // === Desert puzzle specific ===
-
+    #region Oasis
     //Puzzle 1: Oasis
     public void SetCrocoOasis(bool b)
     {
@@ -127,24 +135,29 @@ public class DesertGrid : SGrid
     public void EnableMonkeyShake()
     {
         SGridAnimator.OnSTileMoveEnd += CheckMonkeyShakeOnMove;
+        checkMonkey = true;
     }
+    #endregion
 
+    #region Monkey
     //Puzzle 2: Baboon tree shake
-    public void CheckMonkeyShake()
-    {
-        STile monkeyTile = SGrid.current.GetStile(3);
-        if (Mathf.Abs(monkeyPrev.x - monkeyTile.x) == 2 || Mathf.Abs(monkeyPrev.y - monkeyTile.y) == 2)
-        {
-            //Shake the monkey. Logic for monkey stages of awake?
-            monkeShake++;
-            Debug.Log("The monkey got shook");
-        }
-        // have an else?
-        monkeyPrev = new Vector2Int(monkeyTile.x, monkeyTile.y);
-    }
     public void CheckMonkeyShakeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        CheckMonkeyShake();
+        STile monkeyTile = SGrid.current.GetStile(3);
+        if (e.stile == SGrid.current.GetStile(3))
+        {
+            if (Mathf.Abs(e.prevPos.x - monkeyTile.x) == 2 || Mathf.Abs(e.prevPos.y - monkeyTile.y) == 2)
+            {
+                //Shake the monkey. Logic for monkey stages of awake?
+                monkeShake++;
+                Debug.Log("The monkey got shook");
+            }
+            else
+            {
+                monkeShake = 0;
+                Debug.Log("Monkey shakes reset!");
+            }
+        }
         if (monkeShake >= 3)
         {
             SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
@@ -158,6 +171,7 @@ public class DesertGrid : SGrid
     public void IsAwake(Conditionals.Condition c)
     {
         c.SetSpec(monkeShake >= 3);
+        checkMonkey = !(monkeShake >= 3);
     }
     public void IsMonkeyNearOasis(Conditionals.Condition c)
     {
@@ -175,7 +189,9 @@ public class DesertGrid : SGrid
     {
         c.SetSpec(monkeShake >= 2);
     }
+    #endregion
 
+    #region Jackal
     //Puzzle 3: Jackal Bone
     public void SetJackalQuest(bool b)
     {
@@ -217,7 +233,9 @@ public class DesertGrid : SGrid
     {
         c.SetSpec(CheckGrid.contains(GetGridString(), "14") || CheckGrid.contains(GetGridString(), "1...4"));
     }
+    #endregion
 
+    #region DicePuzzle
     //Puzzle 4: Dice. Should not start checking until after both tiles have been activated
 
     //Dconds for Chad dice game
@@ -254,7 +272,7 @@ public class DesertGrid : SGrid
     //Updates the dice while the casino isn't together
     public void CheckDiceValues(Conditionals.Condition c)
     {
-        if (CheckCasinoTogether() && dice1.value + dice2.value > 10)
+        if (CheckCasinoTogether() && dice1.value + dice2.value == 11)
         {
             c.SetSpec(true);
             diceWon = true;
@@ -273,6 +291,9 @@ public class DesertGrid : SGrid
         c.SetSpec(diceWon);
     }
 
+    #endregion
+
+    #region VIPWater
     //Puzzle 5: Cactus Juice
     public void HasBottle(Conditionals.Condition c)
     {
@@ -332,8 +353,10 @@ public class DesertGrid : SGrid
             c.gameObject.SetActive(true);
         }
     }
-    
 
+    #endregion
+
+    #region Gazelle
     //Puzzle 6: Shady Gazelle
     public void SetGazelleQuest(bool b)
     {
@@ -356,11 +379,14 @@ public class DesertGrid : SGrid
         c.SetSpec(GazelleOasis);
     }
 
+    #endregion
+
+    #region 8puzzle
     //Puzzle 7: 8puzzle
     public void ShufflePuzzle()
     {
         int[,] shuffledPuzzle = new int[3, 3] { { 4, 8, 1 },
-                                                { 3, 0, 6 },
+                                                { 3, 9, 6 },
                                                 { 2, 7, 5 } };
         SetGrid(shuffledPuzzle);
 
@@ -389,4 +415,5 @@ public class DesertGrid : SGrid
             UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
-} 
+    #endregion
+}

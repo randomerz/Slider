@@ -46,7 +46,7 @@ public class STile : MonoBehaviour
         // Debug.Log(STILE_WIDTH);
     }
 
-    public void Init()
+    public virtual void Init()
     {
         // SetTileActive(isTileActive);
         // DC: this is so that we can call any other relevant functions when STiles are enabled in SGrid
@@ -59,7 +59,7 @@ public class STile : MonoBehaviour
             SetTileActive(isTileActive); 
         }
 
-        Vector3 defaultPos = STILE_WIDTH * new Vector3(x, y);
+        Vector3 defaultPos = calculatePosition(x,y);
         transform.position = defaultPos;
         SetTileMapPositions(defaultPos);
         sliderColliderDisableCount = 0;
@@ -194,11 +194,11 @@ public class STile : MonoBehaviour
     }
 
     // Use this one usually!
-    public void SetGridPosition(int x, int y)
+    public virtual void SetGridPosition(int x, int y)
     {
         this.x = x;
         this.y = y;
-        Vector3 newPos = STILE_WIDTH * new Vector3(x, y);
+        Vector3 newPos = calculatePosition(x, y);
 
         //StartCoroutine(StartCameraShakeEffect());
 
@@ -218,11 +218,21 @@ public class STile : MonoBehaviour
         }
     }
 
-    public void SetGridPositionRaw(int x, int y)
+    public virtual Vector3 calculatePosition(int x, int y) 
+    {
+        return STILE_WIDTH * new Vector3(x, y);
+    }
+
+    public virtual Vector3 calculateMovingPosition(float x, float y) 
+    {
+        return STILE_WIDTH * new Vector3(x, y);
+    }
+
+    public virtual void SetGridPositionRaw(int x, int y)
     {
         this.x = x;
         this.y = y;
-        Vector3 newPos = STILE_WIDTH * new Vector3(x, y);
+        Vector3 newPos = calculatePosition(x, y);
         transform.position = newPos;
         SetTileMapPositions(newPos);
     }
@@ -252,8 +262,7 @@ public class STile : MonoBehaviour
 
     public void SetMovingPosition(Vector2 position)
     {
-        Vector3 newPos = STILE_WIDTH * new Vector3(position.x, position.y);
-
+        Vector3 newPos = calculateMovingPosition(position.x, position.y);
         // physics
         Vector3 dr = newPos - transform.position;
         UpdateTilePhysics(dr);
@@ -263,7 +272,7 @@ public class STile : MonoBehaviour
         SetTileMapPositions(newPos);
     }
 
-    private void UpdateTilePhysics(Vector3 dr)
+    protected void UpdateTilePhysics(Vector3 dr)
     {
         // if player is on stile, move them
         //              THIS IS TEMPORARY, REPLACE WITH PROPPER CHECK ON ALL SLIDEABLES
@@ -275,7 +284,7 @@ public class STile : MonoBehaviour
     }
 
 
-    private void SetTileMapPositions(Vector3 pos)
+    protected void SetTileMapPositions(Vector3 pos)
     {
         pos = pos + new Vector3(-0.5f, -0.5f);
 
