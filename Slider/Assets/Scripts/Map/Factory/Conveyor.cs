@@ -23,6 +23,7 @@ public class Conveyor : ElectricalNode
     [SerializeField]
     private UIArtifact artifact;
 
+    #region Unity Events
     private new void Awake()
     {
         base.Awake();
@@ -44,6 +45,7 @@ public class Conveyor : ElectricalNode
     {
         SGridAnimator.OnSTileMoveEnd -= OnTileMove;
     }
+    #endregion
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {

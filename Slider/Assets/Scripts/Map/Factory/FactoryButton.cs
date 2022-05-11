@@ -27,7 +27,7 @@ public class FactoryButton : ElectricalNode
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //Might have to restrict this to specific items
+        //Might have to restrict this to specific items, but it works for now.
         if (collision.CompareTag("Player") || collision.CompareTag("Item"))
         {
             if (numObjectsOn == 0)
