@@ -175,7 +175,7 @@ GameObject:
   - component: {fileID: 727506689688253414}
   m_Layer: 0
   m_Name: MossColliders
-  m_TagString: Untagged
+  m_TagString: Moss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3522,3 +3522,4 @@ MonoBehaviour:
   grid: {fileID: 0}
   wallsSTilemap: {fileID: 0}
   validDirsForLight: []
+  borderLights: []

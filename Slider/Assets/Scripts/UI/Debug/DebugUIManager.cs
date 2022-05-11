@@ -170,10 +170,26 @@ public class DebugUIManager : MonoBehaviour
 
     public void GiveAllSliders()
     {
-        for (int i = 1; i <= 9; i++)
+        //Also make sure the sliders are in the right positions!
+        string target = SGrid.current.TargetGrid;
+        int[,] grid = new int[3, 3];
+        int i = 0;
+        while(target.Length > 0)
         {
-            SGrid.current.EnableStile(i);
+            char c = target[0];
+            target = target.Substring(1);
+            int islandId = (int) c  - '0';
+            if (islandId >= 1 && islandId <= 9)
+            {
+                int x = i % 3;
+                int y = 2 - i / 3;
+                grid[x, y] = islandId;
+                SGrid.current.EnableStile(islandId);
+                i++;
+            }
         }
+
+        SGrid.current.SetGrid(grid);
     }
 
     public void SpawnAnchor()

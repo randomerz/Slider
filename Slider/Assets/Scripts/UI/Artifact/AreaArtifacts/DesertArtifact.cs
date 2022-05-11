@@ -212,20 +212,6 @@ public class DesertArtifact : UIArtifact
         }
     }
 
-    public void SlideQueueCheckAndAdd(SSlideSwap move)
-    {
-        Debug.Log("Desert Hah scrub");
-        if (moveQueue.Count < maxMoveQueueSize)
-        {
-            moveQueue.Enqueue(move);
-        }
-        else
-        {
-            Debug.LogWarning("Didn't add to the UIArtifact queue because it was full");
-        }
-
-    }
-
     private List<Movement> GetSlideMoves(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
     {
         Vector2Int lastSwap = new Vector2Int(-1, -1);
