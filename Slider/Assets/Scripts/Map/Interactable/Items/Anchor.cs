@@ -14,6 +14,7 @@ public class Anchor : Item
     [SerializeField] private float shakeAmount;
     [SerializeField] private float shakeDuration;
     public Sprite trackerSprite;
+    private STile currentSTile; //C: used so it can be passed as a parameter in OnAnchorDrop
 
     public void Start()
     {
@@ -35,6 +36,7 @@ public class Anchor : Item
     {
         base.PickUpItem(pickLocation, callback);
         UnanchorTile();
+        currentSTile = null;
 
         Player.SetMoveSpeedMultiplier(0.75f);
         PlayerInventory.SetHasCollectedAnchor(true);
@@ -64,7 +66,7 @@ public class Anchor : Item
         if (hitTile != null)
         {
             hitTile.hasAnchor = true;
-            OnAnchorDrop?.Invoke(this, new OnAnchorDropArgs { stile = hitTile });
+            currentSTile = hitTile;
         }
 
         Player.SetMoveSpeedMultiplier(1f);
@@ -75,6 +77,7 @@ public class Anchor : Item
     {
         CameraShake.Shake(shakeDuration, shakeAmount);
         AudioManager.Play("Slide Explosion");
+        OnAnchorDrop?.Invoke(this, new OnAnchorDropArgs { stile = currentSTile });
     }
 
     
