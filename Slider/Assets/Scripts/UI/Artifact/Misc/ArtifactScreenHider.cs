@@ -62,33 +62,34 @@ public class ArtifactScreenHider : MonoBehaviour
 
     public void AddScreens()
     {
-        screenAnimator.screens = new List<RectTransform>(screens);
-        screenAnimator.animators = new List<Animator>(animators);
         if (debugSkipHiding)
             return;
+
+        screenAnimator.screens = new List<RectTransform>(screens);
+        screenAnimator.animators = new List<Animator>(animators);
     }
 
     public void AddInventoryScreen()
     {
-        screenAnimator.screens = new List<RectTransform>(screens.GetRange(0, 2));
-        screenAnimator.animators = new List<Animator>(animators.GetRange(0, 2));
         if (debugSkipHiding)
             return;
+
+        screenAnimator.screens = new List<RectTransform>(screens.GetRange(0, 2));
+        screenAnimator.animators = new List<Animator>(animators.GetRange(0, 2));
     }
 
     public void AddScreensAndShow()
     {
         AddScreensAndShow(0);
-        if (debugSkipHiding)
-            return;
     }
 
     public void AddScreensAndShow(int screenIndex)
     {
-        AddScreens();
-        StartCoroutine(IAddScreensAndShow(screenIndex));
         if (debugSkipHiding)
             return;
+
+        AddScreens();
+        StartCoroutine(IAddScreensAndShow(screenIndex));
     }
 
     private IEnumerator IAddScreensAndShow(int screenIndex)
