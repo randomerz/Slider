@@ -7,7 +7,7 @@ public class SGridData
 {
     public List<STileData> grid = new List<STileData>();
     // public List<STileData> altGrid = new List<STileData>();
-    public int[,] saveGrid;
+    public int[,] realigningGrid;
 
     [System.Serializable]
     public class STileData {
@@ -43,7 +43,7 @@ public class SGridData
                 grid.Add(std);
             }
         }
-        saveGrid = sgrid.saveGrid;
+        realigningGrid = sgrid.realigningGrid;
         // if (sgrid.GetAltGrid() != null) {
         //     foreach (STile s in sgrid.GetAltGrid()) {
         //         altGrid.Add(new STileData(s));
