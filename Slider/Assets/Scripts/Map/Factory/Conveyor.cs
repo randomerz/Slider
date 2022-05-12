@@ -32,8 +32,11 @@ public class Conveyor : ElectricalNode
         //Just initializing to make sure they're not both active at the same time
         off.SetActive(!Powered);
         on.SetActive(Powered);
+    }
 
-        artifact = UIArtifact.GetInstance();
+    private void Start()
+    {
+        artifact ??= UIArtifact.GetInstance();
     }
 
     private void OnEnable()

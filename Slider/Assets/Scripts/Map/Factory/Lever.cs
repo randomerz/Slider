@@ -10,6 +10,7 @@ public class Lever : ElectricalNode
     {
         base.Awake();
         nodeType = NodeType.INPUT;
+
         animator ??= GetComponent<Animator>();
     }
 

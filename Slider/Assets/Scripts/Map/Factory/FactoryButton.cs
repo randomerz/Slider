@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class FactoryButton : ElectricalNode
 {
-    [SerializeField]
-    private GameObject offSprite;
-    [SerializeField]
-    private GameObject onSprite;
+    [SerializeField] private Animator animator;
 
     private int numObjectsOn;
 
@@ -16,13 +13,13 @@ public class FactoryButton : ElectricalNode
         base.Awake();
         nodeType = NodeType.INPUT;
         numObjectsOn = 0;
-    }
 
+        animator ??= GetComponent<Animator>();
+    }
     public void Switch()
     {
+        animator.SetTrigger("Toggle");
         StartSignal(!Powered);
-        offSprite.SetActive(!Powered);
-        onSprite.SetActive(Powered);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
