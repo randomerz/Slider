@@ -59,7 +59,7 @@ public class UIClick : MonoBehaviour, IPointerEnterHandler
     {
         if (deselectOnClick)
         {
-            EventSystemManager.ClearSelectable();
+            UINavigationManager.ClearSelectable();
         }
         AudioManager.Play("UI Click");
     }

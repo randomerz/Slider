@@ -330,6 +330,15 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Back"",
+                    ""type"": ""Button"",
+                    ""id"": ""f844606a-4ae4-4f72-9988-45d387a8ba92"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -610,6 +619,28 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""51e3c884-8d31-4a36-9d3d-95c87ad2b55d"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard Mouse"",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a73e9b9f-4608-44e1-9b45-0dd0215a3912"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard Mouse"",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""d81d01e4-59de-4a7a-838a-4d7ac7abf68a"",
                     ""path"": ""*/{Cancel}"",
                     ""interactions"": """",
@@ -794,6 +825,17 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                     ""action"": ""ArtifactLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7019df37-c935-4727-9315-cf65314296a3"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -919,6 +961,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         m_UI_OpenArtifact = m_UI.FindAction("OpenArtifact", throwIfNotFound: true);
         m_UI_ArtifactRight = m_UI.FindAction("ArtifactRight", throwIfNotFound: true);
         m_UI_ArtifactLeft = m_UI.FindAction("ArtifactLeft", throwIfNotFound: true);
+        m_UI_Back = m_UI.FindAction("Back", throwIfNotFound: true);
         // Debug
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_OpenDebug = m_Debug.FindAction("OpenDebug", throwIfNotFound: true);
@@ -1045,6 +1088,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_OpenArtifact;
     private readonly InputAction m_UI_ArtifactRight;
     private readonly InputAction m_UI_ArtifactLeft;
+    private readonly InputAction m_UI_Back;
     public struct UIActions
     {
         private @InputSettings m_Wrapper;
@@ -1063,6 +1107,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         public InputAction @OpenArtifact => m_Wrapper.m_UI_OpenArtifact;
         public InputAction @ArtifactRight => m_Wrapper.m_UI_ArtifactRight;
         public InputAction @ArtifactLeft => m_Wrapper.m_UI_ArtifactLeft;
+        public InputAction @Back => m_Wrapper.m_UI_Back;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1114,6 +1159,9 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 @ArtifactLeft.started -= m_Wrapper.m_UIActionsCallbackInterface.OnArtifactLeft;
                 @ArtifactLeft.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnArtifactLeft;
                 @ArtifactLeft.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnArtifactLeft;
+                @Back.started -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
+                @Back.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
+                @Back.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1160,6 +1208,9 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 @ArtifactLeft.started += instance.OnArtifactLeft;
                 @ArtifactLeft.performed += instance.OnArtifactLeft;
                 @ArtifactLeft.canceled += instance.OnArtifactLeft;
+                @Back.started += instance.OnBack;
+                @Back.performed += instance.OnBack;
+                @Back.canceled += instance.OnBack;
             }
         }
     }
@@ -1245,6 +1296,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         void OnOpenArtifact(InputAction.CallbackContext context);
         void OnArtifactRight(InputAction.CallbackContext context);
         void OnArtifactLeft(InputAction.CallbackContext context);
+        void OnBack(InputAction.CallbackContext context);
     }
     public interface IDebugActions
     {
