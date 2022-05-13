@@ -400,6 +400,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 218799d69c253b34ca4c489b41cd26db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isSelectedOnMenuOpen: 0
+  selectOnPointerEnter: 0
+  deselectOnClick: 0
 --- !u!1 &5255975379809269057
 GameObject:
   m_ObjectHideFlags: 0
