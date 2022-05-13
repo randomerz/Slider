@@ -199,6 +199,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodeType: 0
+  powerRefs: 0
+  powerPathPrevs: []
   neighbors: []
   OnPowered:
     m_PersistentCalls:
@@ -216,9 +218,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.00588578, y: 0}
+  m_Offset: {x: 0.01327014, y: -0.0017204285}
   serializedVersion: 2
-  m_Radius: 0.6236016
+  m_Radius: 0.76844025
 --- !u!1 &7152859413422319311
 GameObject:
   m_ObjectHideFlags: 0

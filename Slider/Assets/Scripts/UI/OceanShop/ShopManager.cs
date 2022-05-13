@@ -112,7 +112,7 @@ public class ShopManager : MonoBehaviour
         c.DoOnCollect();
 
         // rest of rewards
-        if (PlayerInventory.GetHasCollectedAnchor() && !turnedInAnchor)
+        if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
         {
             turnedInAnchor = true;
             EarnCredits(2);
@@ -303,7 +303,7 @@ public class ShopManager : MonoBehaviour
                     SetTalkState(0);
                 break;
             case States.Dialogue:
-                if (shopDialogueManager.isFirstTime || !PlayerInventory.GetHasCollectedAnchor())
+                if (shopDialogueManager.isFirstTime || !PlayerInventory.Instance.GetHasCollectedAnchor())
                 {
                     CloseShop();
                     break;
