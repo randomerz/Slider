@@ -131,7 +131,7 @@ public class ElectricalNode : MonoBehaviour
         {
             if (!recStack.Contains(neighbor))
             {
-                neighbor.PropagateSignal(value, this, recStack);
+                neighbor.PropagateSignal(value, this, recStack, numRefs);
             }
         }
         recStack.Remove(this);
@@ -167,6 +167,11 @@ public class ElectricalNode : MonoBehaviour
     //This method needs to not only add the neighbor, but update the state and ref counts of other nodes to reflect the change (which can get more complicated).
     protected virtual void AddNeighbor(ElectricalNode other)
     {
+        if (other == null)
+        {
+            Debug.LogError("You cannot add a null neighbor to ElectricalNode");
+            return;
+        }
         //The neighbor is already added, this prevents double counting.
         if (neighbors.Contains(other) || other.neighbors.Contains(this))
         {
