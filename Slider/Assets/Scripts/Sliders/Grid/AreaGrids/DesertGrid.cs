@@ -385,10 +385,7 @@ public class DesertGrid : SGrid
     //Puzzle 7: 8puzzle
     public void ShufflePuzzle()
     {
-        int[,] shuffledPuzzle = new int[3, 3] { { 4, 8, 1 },
-                                                { 3, 9, 6 },
-                                                { 2, 7, 5 } };
-        SetGrid(shuffledPuzzle);
+        DesertArtifactRandomizer.ShuffleGrid();
 
         // fading stuff
         UIEffects.FlashWhite();
