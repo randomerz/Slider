@@ -20,10 +20,10 @@ public class ElectricalNode : MonoBehaviour
 
     public NodeType nodeType;
 
-    //These are serialized for debugging purposes. They should not need to be set in the insepctor.
-    [SerializeField]
+    //These are serialized for debugging purposes. They should not need to be set in the inspector.
+    //[SerializeField]
     protected int powerRefs;
-    [SerializeField]
+    //[SerializeField]
     protected List<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
 
     [SerializeField]
@@ -85,7 +85,7 @@ public class ElectricalNode : MonoBehaviour
         }
     }
 
-    //Target Complexity : O(n) including recursive calls (so updating node state should be O(1)
+    //Target Complexity : O(n) including recursive calls (so updating node state should be O(1))
     public virtual void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
     {
         if (nodeType == NodeType.INPUT)
@@ -164,7 +164,7 @@ public class ElectricalNode : MonoBehaviour
     }
 
     //Target Complexity: O(n * p) p is the number of paths in this node as well as other (i.e. refs)
-    //This method needs to not only add the neighbor, but update the state and ref counts to reflect the change (which can get more complicated).
+    //This method needs to not only add the neighbor, but update the state and ref counts of other nodes to reflect the change (which can get more complicated).
     protected virtual void AddNeighbor(ElectricalNode other)
     {
         //The neighbor is already added, this prevents double counting.
@@ -316,7 +316,7 @@ public class ElectricalNode : MonoBehaviour
         else
         {
             //Any other cases are essentially not allowed.
-            Debug.LogError("Attempted to create a connection going out of an output node or into an input node, this is not allowed.");
+            Debug.LogError("Attempted to remove a connection going out of an output node or into an input node, this is not allowed.");
         }
     }
 }
