@@ -31,8 +31,6 @@ AnimationClip:
       value: {fileID: -5315991749165586829, guid: f4378a58dbe432c4f81baee02915f57d, type: 3}
     - time: 1
       value: {fileID: -5315991749165586829, guid: f4378a58dbe432c4f81baee02915f57d, type: 3}
-    - time: 3.75
-      value: {fileID: 4461675010074418354, guid: f4378a58dbe432c4f81baee02915f57d, type: 3}
     attribute: m_Sprite
     path: DoorSprite
     classID: 212
@@ -58,13 +56,12 @@ AnimationClip:
     - {fileID: 6634458025150929795, guid: f4378a58dbe432c4f81baee02915f57d, type: 3}
     - {fileID: -5315991749165586829, guid: f4378a58dbe432c4f81baee02915f57d, type: 3}
     - {fileID: -5315991749165586829, guid: f4378a58dbe432c4f81baee02915f57d, type: 3}
-    - {fileID: 4461675010074418354, guid: f4378a58dbe432c4f81baee02915f57d, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 3.8125
+    m_StopTime: 1.0625
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
