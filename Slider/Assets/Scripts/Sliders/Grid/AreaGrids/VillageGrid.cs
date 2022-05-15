@@ -9,9 +9,12 @@ public class VillageGrid : SGrid
     public GameObject caveDoorEntrance;
     public GameObject caveDoorRocks;
     public GameObject particleSpawner;
+    public GameObject chad;
 
     private bool fishOn;
+    private bool chadFell;
 
+    private Coroutine chadFallCoroutine;
     private Coroutine shuffleBuildUpCoroutine;
     private static bool checkCompletion = false; // TODO: serialize
 
@@ -24,6 +27,8 @@ public class VillageGrid : SGrid
         }
 
         base.Awake();
+
+        chadFell = false;
 
         fishOn = WorldData.GetState("fishOn");
         if (fishOn)
@@ -42,6 +47,7 @@ public class VillageGrid : SGrid
     }
     
     private void OnEnable() {
+        SGridAnimator.OnSTileMoveEnd += CheckChadMoved;
         if (checkCompletion) {
             UpdateButtonCompletions(this, null);
             SGrid.OnGridMove += SGrid.UpdateButtonCompletions; // this is probably not needed
@@ -51,6 +57,7 @@ public class VillageGrid : SGrid
     }
 
     private void OnDisable() {
+        SGridAnimator.OnSTileMoveEnd -= CheckChadMoved;
         if (checkCompletion) {
             SGrid.OnGridMove -= SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
@@ -158,5 +165,41 @@ public class VillageGrid : SGrid
         caveDoorRocks.SetActive(false);
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");
+    }
+
+    // Mini-Puzzle - Chad Flashlight
+    public void CheckChadMoved(object sender, SGridAnimator.OnTileMoveArgs e) {
+        if (GetStile(8).isTileActive && e.stile.islandId == 8 && !chadFell) {
+            chadFallCoroutine = StartCoroutine(ChadFall());
+        }
+    }
+
+    // Animates Chad Falling
+    private IEnumerator ChadFall() {
+        Vector3 currPos = chad.transform.position;
+        Vector3 targetPos = currPos + new Vector3(1f, -1f, 0);
+
+        Vector3 currRot = chad.transform.eulerAngles;
+        Vector3 targetRot = currRot + new Vector3(0, 0, -90);
+        chad.transform.GetChild(0).GetComponent<Animator>().SetBool("isSad", true);
+        while (currPos.x < targetPos.x && currPos.y > targetPos.y) {
+            chad.transform.position += new Vector3(.1f, -.1f, 0);
+            chad.transform.eulerAngles += new Vector3(0, 0, -9);
+            currPos = chad.transform.position;
+            currRot = chad.transform.eulerAngles;
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        currRot = chad.transform.eulerAngles;
+        targetRot = new Vector3(0, 0, 0);
+        Debug.Log(chad.transform.eulerAngles);
+        yield return new WaitForSeconds(1.5f);
+
+
+        while (currRot.z > targetRot.z) {
+            chad.transform.eulerAngles += new Vector3(0, 0, 9);
+            currRot = chad.transform.eulerAngles;
+            yield return new WaitForSeconds(0.05f);
+        }
     }
 }
