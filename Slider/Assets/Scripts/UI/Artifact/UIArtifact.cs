@@ -7,6 +7,7 @@ using System;
 public class UIArtifact : MonoBehaviour
 {
     public static System.EventHandler<System.EventArgs> OnButtonInteract;
+    public static System.EventHandler<System.EventArgs> MoveMadeOnArtifact;
 
     public ArtifactTileButton[] buttons;
     //L: The button the user has clicked on
@@ -228,7 +229,7 @@ public class UIArtifact : MonoBehaviour
         currentButton = null;
         moveOptionButtons.Clear();
 
-        OnButtonInteract?.Invoke(this, null);
+        //OnButtonInteract?.Invoke(this, null);
     }
     
     public virtual void SelectButton(ArtifactTileButton button)
@@ -256,7 +257,6 @@ public class UIArtifact : MonoBehaviour
 
         if (currentButton == null)
         {
-            //DeselectCurrentButton(); //L: I don't think this is necessary since currentButton is null and it will just do nothing
 
             if (!button.isTileActive || oldCurrButton == button)
             {
@@ -347,6 +347,7 @@ public class UIArtifact : MonoBehaviour
         if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize && PlayerCanQueue)
         {
             //L: Do the move
+            MoveMadeOnArtifact?.Invoke(this, null);
             QueueCheckAndAdd(swap);
             SwapButtons(buttonCurrent, buttonEmpty);
 

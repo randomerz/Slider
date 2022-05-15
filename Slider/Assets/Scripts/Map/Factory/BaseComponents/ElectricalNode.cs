@@ -21,9 +21,9 @@ public class ElectricalNode : MonoBehaviour
     public NodeType nodeType;
 
     //These are serialized for debugging purposes. They should not need to be set in the inspector.
-    //[SerializeField]
+    [SerializeField]
     protected int powerRefs;
-    //[SerializeField]
+    [SerializeField]
     protected HashSet<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
 
     //NEIGHBORS ARE OUTGOING EDGES (or undirected)
@@ -191,43 +191,27 @@ public class ElectricalNode : MonoBehaviour
         {
             //Undirected case (Note: I'm using "this" mainly for readability to distinguish from other and show the parallelism)
 
-            HashSet<ElectricalNode> otherNodes;
-            other.GetPathNodes(out otherNodes);
-            HashSet<ElectricalNode> thisNodes;
-            this.GetPathNodes(out thisNodes);
-            otherNodes.UnionWith(new HashSet<ElectricalNode>() { this });
-            thisNodes.UnionWith(new HashSet<ElectricalNode>() { other });
-
             //We only propagate "On's" for adding since paths can only be formed, not broken.
             //Essentially, since we created a new edge, there are now new possible paths from a power source to nodes that are reachable from this to other.
             //In order to account for these new paths, we need to propagate "across the edge" in both directions, so other's refs are propagated to this's neighbors and vice-versa.
             //BOTH propagations happen BEFORE we update the nodes themselves in order to avoid double counting refs.
+            int oldThisRefs = this.powerRefs;   //If we don't do this, and power is coming from both directions, it will double count refs.
             if (other.Powered)
             {
-
-                foreach (ElectricalNode neighbor in this.neighbors)
-                {
-                    neighbor.PropagateSignal(true, this, otherNodes, other.powerRefs);
-                }
-                this.powerPathPrevs.Add(other);
+                HashSet<ElectricalNode> otherNodes;
+                other.GetPathNodes(out otherNodes);
+                this.PropagateSignal(true, other, otherNodes, other.powerRefs);
             }
             if (this.Powered)
             {
-                foreach (ElectricalNode neighbor in other.neighbors)
-                {
-                    neighbor.PropagateSignal(true, other, thisNodes, this.powerRefs);
-                }
-                other.powerPathPrevs.Add(this);
+                HashSet<ElectricalNode> thisNodes;
+                this.GetPathNodes(out thisNodes);
+                other.PropagateSignal(true, this, thisNodes, oldThisRefs);
             }
 
             //Create an undirected edge between the two
             this.neighbors.Add(other);
             other.neighbors.Add(this);
-
-            //Update the state of this and other.
-            int totalRefCount = this.powerRefs + other.powerRefs;
-            this.powerRefs = totalRefCount;
-            other.powerRefs = totalRefCount; 
         } else if (this.nodeType != NodeType.OUTPUT && other.nodeType != NodeType.INPUT)
         {
             //Directed edge from this to other.

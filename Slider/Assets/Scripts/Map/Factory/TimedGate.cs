@@ -12,6 +12,7 @@ public class TimedGate : ElectricalNode
     private HashSet<ElectricalNode> inputsPowered;
 
     private bool gateActive;    //Whether the timed gate is activated and displaying the countdown (Note: This is different from Powered)
+    [SerializeField] private int countdown;
 
     public override bool Powered
     {
@@ -21,6 +22,7 @@ public class TimedGate : ElectricalNode
         }
     }
 
+    #region Unity Events
     private new void Awake()
     {
         base.Awake();
@@ -30,6 +32,17 @@ public class TimedGate : ElectricalNode
 
         inputsPowered = new HashSet<ElectricalNode>();
     }
+
+    private void OnEnable()
+    {
+        UIArtifact.MoveMadeOnArtifact += OnMoveMade;
+    }
+
+    private void OnDisable()
+    {
+        UIArtifact.MoveMadeOnArtifact -= OnMoveMade;
+    }
+    #endregion
 
     #region ElectricalNode Overrides
 
@@ -59,10 +72,51 @@ public class TimedGate : ElectricalNode
     }
     #endregion
 
+    private void OnMoveMade(object sender, System.EventArgs e)
+    {
+        if (gateActive)
+        {
+            if (countdown > 0)
+            {
+                countdown--;
+
+                //Set the gate sprite to the countdown (maybe have array of sprites instead of animation, or both?)
+            }
+
+            if (countdown <= 0)
+            {
+                StartCoroutine(WaitToTurnGateOff());
+            }
+        }
+    }
+
+    private IEnumerator WaitToTurnGateOff()
+    {
+        bool tilesAreMoving = true;
+        while (tilesAreMoving)
+        {
+            tilesAreMoving = SGrid.current.TilesMoving();
+
+            if (!tilesAreMoving)
+            {
+                //Wait a bit, and then check again. If there's still no movement, then we can safely turn off the gate.
+                //This gives the player enough leeway to complete the puzzle at the last second (i.e. puzzle 3c)
+                yield return new WaitForSeconds(0.2f);
+
+                tilesAreMoving = SGrid.current.TilesMoving();
+            } else
+            {
+                yield return null;  //Resume doing other stuff, or else this will spinlock.
+            }
+        }
+        GateOff();
+    }
+
     public void GateOn()
     {
         gateActive = true;
         anim.SetBool("Active", true);
+        countdown = numTurns;
 
         foreach (ElectricalNode input in powerPathPrevs)
         {
