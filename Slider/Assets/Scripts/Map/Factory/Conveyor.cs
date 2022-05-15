@@ -6,22 +6,15 @@ public class Conveyor : ElectricalNode
 {
     //Probably want to do an animation later instead of sprite swapping
 
-    [SerializeField]
-    private GameObject off;
-    [SerializeField]
-    private GameObject on;
+    [SerializeField] private Vector2Int start;
 
-    [SerializeField]
-    private Vector2Int start;
+    [SerializeField] private Vector2Int dir;
 
-    [SerializeField]
-    private Vector2Int dir;
+    [SerializeField] private int length; //This is probably going to be 1 for all of them
 
-    [SerializeField]
-    private int length; //This is probably going to be 1
+    [SerializeField] private UIArtifact artifact;   //We need reference to the artifact for the queue and to update the UI
 
-    [SerializeField]
-    private UIArtifact artifact;
+    [SerializeField] private Animator animator;
 
     #region Unity Events
     private new void Awake()
@@ -29,14 +22,21 @@ public class Conveyor : ElectricalNode
         base.Awake();
         nodeType = NodeType.OUTPUT;
 
-        //Just initializing to make sure they're not both active at the same time
-        off.SetActive(!Powered);
-        on.SetActive(Powered);
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
     }
 
     private void Start()
     {
-        artifact ??= UIArtifact.GetInstance();
+
+        animator.SetFloat("speed", Powered ? 1 : 0);
+
+        if (artifact == null)
+        {
+            artifact = UIArtifact.GetInstance();
+        }
     }
 
     private void OnEnable()
@@ -52,8 +52,7 @@ public class Conveyor : ElectricalNode
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        off.SetActive(!e.powered);
-        on.SetActive(e.powered);
+        animator.SetFloat("speed", e.powered ? 1 : 0);
 
         if (e.powered)
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-//This was originally an interface, but I want to serialize it, so can't do that.
+//This is what controls the electrical system for the Factory/any other system that uses it.
 public class ElectricalNode : MonoBehaviour
 {
 
@@ -24,23 +24,17 @@ public class ElectricalNode : MonoBehaviour
     //[SerializeField]
     protected int powerRefs;
     //[SerializeField]
-    protected List<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
+    protected HashSet<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
 
+    //NEIGHBORS ARE OUTGOING EDGES (or undirected)
     [SerializeField]
     protected List<ElectricalNode> neighbors;
 
-    public bool Powered
-    {
-        get
-        {
-            return powerRefs > 0;
-        }
-    }
+    public virtual bool Powered => powerRefs > 0; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
 
     public class OnPoweredArgs
     {
         public bool powered;
-        public bool valueChanged;
     }
     //public static event System.EventHandler<OnPoweredArgs> OnPowered;
 
@@ -49,7 +43,7 @@ public class ElectricalNode : MonoBehaviour
 
     protected void Awake()
     {
-        powerPathPrevs = new List<ElectricalNode>();
+        powerPathPrevs = new HashSet<ElectricalNode>();
         powerRefs = 0;  //Always start off and let things turn on.
     }
 
@@ -67,10 +61,10 @@ public class ElectricalNode : MonoBehaviour
 
     public virtual void StartSignal(bool input)
     {
-        if (nodeType == NodeType.OUTPUT)
+        if (nodeType != NodeType.INPUT)
         {
-            //According to the OOD gurus and lord Aibek, this violates Liskov Substitution (I think). Oh well.
-            Debug.LogError("Cannot start signal from an OUTPUT Node");
+            //According to the OOD gurus and lord Aibek, this violates some design principle (I think). Oh well.
+            Debug.LogError("Can only start a signal from an INPUT node.");
         }
 
         if (Powered != input)    //This ensures we don't double propagate
@@ -86,15 +80,34 @@ public class ElectricalNode : MonoBehaviour
     }
 
     //Target Complexity : O(n) including recursive calls (so updating node state should be O(1))
-    public virtual void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
+    protected virtual void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
+    {
+        //These two methods are split in order to implement buffered input (which is only used for timed gates).
+        bool oldPowered = Powered;
+        if (EvaluateNodeInput(value, prev, recStack, numRefs))
+        {
+            //Call the event/handlers (this should only be used for nodes to respond to inputs, NOT to update node state)
+            if (Powered != oldPowered)
+            {
+                OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
+            }
+
+            PushSignalToOutput(value, recStack, numRefs);
+        }
+
+    }
+
+    //Takes the signal in, updates the node's state (powerRefs, powerPathPrevs)
+    protected bool EvaluateNodeInput(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
     {
         if (nodeType == NodeType.INPUT)
         {
             Debug.LogError("Cannot propogate a signal through an INPUT Node Type.");
         }
 
-        if (recStack.Contains(this)) {  //Cycle Detection
-            return;
+        if (recStack.Contains(this))
+        {  //Cycle Detection
+            return false;
         }
 
         bool oldPowered = Powered;
@@ -105,26 +118,19 @@ public class ElectricalNode : MonoBehaviour
         {
             powerRefs = powerRefs + numRefs;
             powerPathPrevs.Add(prev);
-        } else
+        }
+        else
         {
             powerRefs = Mathf.Max(powerRefs - numRefs, 0);
             powerPathPrevs.Remove(prev);
         }
 
-        /*
-        if (powerRefTable.ContainsKey(prev))
-        {
-            powerRefTable[prev] = value ? powerRefTable[prev] + numSignals : Mathf.Max(powerRefTable[prev] - numSignals, 0);
-        } else
-        {
-            powerRefTable[prev] = value ? numSignals : 0;
-        }
-        */
+        return true;
+    }
 
-        //Call the event/handlers (this should only be used for devices to respond to things, NOT to update node state)
-        bool valueChanged = Powered != oldPowered;
-        OnPowered?.Invoke(new OnPoweredArgs { powered = Powered, valueChanged = valueChanged });
-
+    //Takes the existing signal on the node and pushes it to the node's neighbors.
+    protected void PushSignalToOutput(bool value, HashSet<ElectricalNode> recStack, int numRefs = 1)
+    {
         //Propagate new signal to all other neighbors
         recStack.Add(this);
         foreach (ElectricalNode neighbor in neighbors)
@@ -152,7 +158,7 @@ public class ElectricalNode : MonoBehaviour
     {
         nodes.Add(this);
 
-        int refs = powerPathPrevs.Count == 0 ? 1 : 0;   //1 for the base case, 0 otherwise
+        int refs = powerPathPrevs.Count == 0 ? 1 : 0;   //If a node doesn't have a prev, then it is the origin of the signal.
 
         //Make sure the chain of prevs has no cycles (which is should) or else this will cause stack overflow
         foreach (ElectricalNode prev in powerPathPrevs)
@@ -165,7 +171,7 @@ public class ElectricalNode : MonoBehaviour
 
     //Target Complexity: O(n * p) p is the number of paths in this node as well as other (i.e. refs)
     //This method needs to not only add the neighbor, but update the state and ref counts of other nodes to reflect the change (which can get more complicated).
-    protected virtual void AddNeighbor(ElectricalNode other)
+    public virtual void AddNeighbor(ElectricalNode other)
     {
         if (other == null)
         {
@@ -253,7 +259,7 @@ public class ElectricalNode : MonoBehaviour
     }
 
     //Target Complexity : O(n) p is the number of paths in this node as well as other (i.e. refs)
-    protected virtual void RemoveNeighbor(ElectricalNode other)
+    public virtual void RemoveNeighbor(ElectricalNode other)
     {
         //The neighbor is already removed, this prevents double counting.
         if (!neighbors.Contains(other) && !other.neighbors.Contains(this))

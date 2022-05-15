@@ -16,7 +16,7 @@ public class PoweredLightNew : ConductiveElectricalNode
         nodeType = NodeType.OUTPUT;
     }
 
-    public override void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
+    protected override void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
     {
         //L: I was gonna do other stuff here, but I didn't ...
         base.PropagateSignal(value, prev, recStack, numRefs);
@@ -24,7 +24,7 @@ public class PoweredLightNew : ConductiveElectricalNode
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        SetLightOn(e.powered, e.valueChanged);
+        SetLightOn(e.powered, true);
     }
 
     public void SetLightOn(bool value, bool playSound = true)
