@@ -14,6 +14,8 @@ public class TimedGate : ElectricalNode
     private bool gateActive;    //Whether the timed gate is activated and displaying the countdown (Note: This is different from Powered)
     [SerializeField] private int countdown;
 
+    private Coroutine waitingToEndGate;
+
     public override bool Powered
     {
         get
@@ -31,6 +33,7 @@ public class TimedGate : ElectricalNode
         anim.SetBool("Powered", false);
 
         inputsPowered = new HashSet<ElectricalNode>();
+        waitingToEndGate = null;
     }
 
     private void OnEnable()
@@ -76,17 +79,23 @@ public class TimedGate : ElectricalNode
     {
         if (gateActive)
         {
-            if (countdown > 0)
-            {
-                countdown--;
+            countdown--;
 
-                //Set the gate sprite to the countdown (maybe have array of sprites instead of animation, or both?)
+            if (countdown == 0)
+            {
+                waitingToEndGate = StartCoroutine(WaitToTurnGateOff());
+            } else if (countdown < 0)
+            {
+                //If player tries to queue another move, just stop the gate immediately. (avoids some nasty edge cases)
+                if (waitingToEndGate != null)
+                {
+                    StopCoroutine(waitingToEndGate);
+                }
+
+                GateOff();
             }
 
-            if (countdown <= 0)
-            {
-                StartCoroutine(WaitToTurnGateOff());
-            }
+            
         }
     }
 
