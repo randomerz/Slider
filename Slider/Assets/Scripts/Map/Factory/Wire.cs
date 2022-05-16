@@ -1,27 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Wire : ConductiveElectricalNode
 {
-    [SerializeField]
-    private GameObject off;
-    [SerializeField]
-    private GameObject on;
+    private Tilemap tm;
 
     private new void Awake()
     {
         base.Awake();
         nodeType = NodeType.IO;
 
-        //Just initializing to make sure they're not both active at the same time
-        off.SetActive(!Powered);
-        on.SetActive(Powered);
+        tm = GetComponent<Tilemap>();
+        SetTiles(Powered);
     }
 
-    public override void OnPoweredHandler(OnPoweredArgs args)
+    public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        off.SetActive(!args.powered);
-        on.SetActive(args.powered);
+        SetTiles(e.powered);
+    }
+
+    private void SetTiles(bool powered)
+    {
+        WireDatabase.Instance.SwapTiles(tm, powered);
     }
 }
