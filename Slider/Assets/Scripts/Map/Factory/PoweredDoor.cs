@@ -6,15 +6,19 @@ public class PoweredDoor : ElectricalNode
 {
     //Probably want to do an animation later instead of sprite swapping
 
-    [SerializeField]
-    GameObject off;
-    [SerializeField]
-    GameObject on;
+    [SerializeField] private Animator animator;
 
-    public void OnPoweredHandler(OnPoweredArgs e)
+    private new void Awake()
     {
-        Debug.Log("Yes?");
-        off.SetActive(!e.powered);
-        on.SetActive(e.powered);
+        base.Awake();
+        nodeType = NodeType.OUTPUT;
+
+        animator ??= GetComponent<Animator>();
+    }
+
+    public override void OnPoweredHandler(OnPoweredArgs e)
+    {
+        //Debug.Log($"We Powered? {e.powered}");
+        animator.SetBool("Powered", e.powered);
     }
 }

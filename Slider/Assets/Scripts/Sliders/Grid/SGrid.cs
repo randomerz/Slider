@@ -414,7 +414,20 @@ public class SGrid : MonoBehaviour
         OnSTileCollected?.Invoke(this, new OnSTileCollectedArgs { stile = stile });
     }
 
+    public virtual bool TilesMoving()
+    {
+        List<STile> stiles = SGrid.current.GetActiveTiles();
+        bool tilesAreMoving = false;
+        foreach (STile stile in stiles)
+        {
+            if (stile.GetMovingDirection() != Vector2.zero)
+            {
+                tilesAreMoving = true;
+            }
+        }
 
+        return tilesAreMoving;
+    }
 
     public virtual void SaveGrid() 
     { 

@@ -62,6 +62,7 @@ public class PlayerAction : MonoBehaviour
         
     }
 
+    //L: :(
     private void Update()
     {
         pickedItem = PlayerInventory.GetCurrentItem();
