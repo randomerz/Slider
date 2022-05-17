@@ -18,9 +18,14 @@ public class PlayerInventory : MonoBehaviour
     private static IEnumerator<Item> itemIterator = equipables.GetEnumerator();
     private static Item currentItem = null;
 
-    private static bool hasCollectedAnchor = false; //todo: serialize
+    [SerializeField] private bool hasCollectedAnchor = false; //todo: serialize
     [SerializeField] private GameObject anchorPrefab;
-    
+
+    public static PlayerInventory Instance
+    {
+        get => instance;
+    }
+
     private void Awake() {
         if (instance == null) {
             instance = this;
@@ -39,12 +44,12 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    public static void SetHasCollectedAnchor(bool value)
+    public void SetHasCollectedAnchor(bool value)
     {
         hasCollectedAnchor = value;
     }
 
-    public static bool GetHasCollectedAnchor()
+    public bool GetHasCollectedAnchor()
     {
         return hasCollectedAnchor;
     }
