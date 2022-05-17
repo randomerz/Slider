@@ -39,7 +39,7 @@ public class UIArtifactInventory : MonoBehaviour
             c.SetVisible(PlayerInventory.Contains(c.collectibleName));
         }
 
-        anchorCollectible.SetVisible(PlayerInventory.GetHasCollectedAnchor());
+        anchorCollectible.SetVisible(PlayerInventory.Instance.GetHasCollectedAnchor());
 
         scrollCollectible.SetVisible(PlayerInventory.Contains("Scroll of Realigning"));
         scrollFragCollectible.SetVisible(!PlayerInventory.Contains("Scroll of Realigning") && PlayerInventory.Contains("Scroll Frag"));
