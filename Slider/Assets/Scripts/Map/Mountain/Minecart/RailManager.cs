@@ -27,6 +27,11 @@ public class RailManager : MonoBehaviour
         railMap.RefreshTile(loc);
     }
 
+    public void ChangeTile(Vector3Int loc) 
+    {
+        ChangeTile(loc, railMap.GetTile(loc) as RailTile);
+    }
+
     public void ChangeTile(Vector3Int loc, RailTile tile)
     {
         int index = stateOneTiles.IndexOf(tile);
