@@ -13,16 +13,21 @@ public class Wire : ConductiveElectricalNode
         nodeType = NodeType.IO;
 
         tm = GetComponent<Tilemap>();
-        SetTiles(Powered);
+    }
+
+    private IEnumerator Start()
+    {
+        yield return new WaitUntil(() => WireDatabase.Instance != null);
+        SetTiles();
     }
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        SetTiles(e.powered);
+        SetTiles();
     }
 
-    private void SetTiles(bool powered)
+    private void SetTiles()
     {
-        WireDatabase.Instance.SwapTiles(tm, powered);
+        WireDatabase.Instance.SwapTiles(tm, Powered);
     }
 }

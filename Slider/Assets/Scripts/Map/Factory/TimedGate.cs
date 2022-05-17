@@ -20,7 +20,8 @@ public class TimedGate : ElectricalNode
     {
         get
         {
-            return inputsPowered != null && inputsPowered.Count >= numInputs;
+            bool normal = inputsPowered != null && inputsPowered.Count >= numInputs;
+            return invertSignal ? !normal : normal;
         }
     }
 
@@ -36,13 +37,15 @@ public class TimedGate : ElectricalNode
         waitingToEndGate = null;
     }
 
-    private void OnEnable()
+    private new void OnEnable()
     {
+        base.OnEnable();
         UIArtifact.MoveMadeOnArtifact += OnMoveMade;
     }
 
-    private void OnDisable()
+    private new void OnDisable()
     {
+        base.OnDisable();
         UIArtifact.MoveMadeOnArtifact -= OnMoveMade;
     }
     #endregion
@@ -61,7 +64,6 @@ public class TimedGate : ElectricalNode
                 OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
             }
         }
-
     }
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
@@ -94,8 +96,6 @@ public class TimedGate : ElectricalNode
 
                 GateOff();
             }
-
-            
         }
     }
 

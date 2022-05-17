@@ -50,12 +50,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodeType: 0
+  powerRefs: 0
   neighbors: []
+  invertSignal: 0
   OnPowered:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4912617762989399492}
+        m_TargetAssemblyTypeName: TimedGate, Assembly-CSharp
+        m_MethodName: OnPoweredHandler
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   numTurns: 1
   numInputs: 2
+  anim: {fileID: 1270150983506746665}
+  countdown: 0
 --- !u!114 &4581142379752906045
 MonoBehaviour:
   m_ObjectHideFlags: 0

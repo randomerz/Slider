@@ -183,7 +183,7 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0029429197, y: 0}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.6795167
 --- !u!114 &6037744222577193214
@@ -200,8 +200,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeType: 0
   powerRefs: 0
-  powerPathPrevs: []
   neighbors: []
+  invertSignal: 0
   OnPowered:
     m_PersistentCalls:
       m_Calls: []
@@ -218,9 +218,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.01327014, y: -0.0017204285}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.76844025
+  m_Radius: 0.8611642
 --- !u!1 &7152859413422319311
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,7 +290,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 529684183
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 1029078488505346688, guid: ba1cca9a305be6442832fb7612032d69, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

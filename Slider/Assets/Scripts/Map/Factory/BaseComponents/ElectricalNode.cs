@@ -30,7 +30,9 @@ public class ElectricalNode : MonoBehaviour
     [SerializeField]
     protected List<ElectricalNode> neighbors;
 
-    public virtual bool Powered => powerRefs > 0; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
+    [SerializeField] protected bool invertSignal = false;
+
+    public virtual bool Powered => invertSignal ? powerRefs <= 0 : powerRefs > 0; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
 
     public class OnPoweredArgs
     {
@@ -47,12 +49,12 @@ public class ElectricalNode : MonoBehaviour
         powerRefs = 0;  //Always start off and let things turn on.
     }
 
-    private void OnEnable()
+    protected void OnEnable()
     {
         OnPowered.AddListener(OnPoweredHandler);
     }
 
-    private void OnDisable()
+    protected void OnDisable()
     {
         OnPowered.RemoveListener(OnPoweredHandler);
     }
