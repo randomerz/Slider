@@ -32,6 +32,8 @@ public class TimedGate : ElectricalNode
     public UnityEvent OnGateActivated;
     public UnityEvent OnGateDeactivated;
 
+    public bool GateActive => gateActive;
+
     public override bool Powered
     {
         get
@@ -103,7 +105,7 @@ public class TimedGate : ElectricalNode
 
     private void OnMoveMade(object sender, System.EventArgs e)
     {
-        if (gateActive)
+        if (gateActive && !Powered)
         {
             countdown--;
 
@@ -193,31 +195,36 @@ public class TimedGate : ElectricalNode
         }
     }
 
+    //This is called via player interaction
     public void ActivateGate()
     {
-        gateActive = true;
-        countdown = numTurns;
-        nextSprite = countdownSprite[numTurns];
-
-        foreach (ElectricalNode input in powerPathPrevs)
+        //You can restart the gate in the middle, but once it succeeds you can't restart it.
+        if (!Powered)
         {
-            //Add all the nodes that were already connected to the gate when it was turned on.
-            inputsPowered.Add(input);
-        }
+            gateActive = true;
+            countdown = numTurns;
+            nextSprite = countdownSprite[numTurns];
 
-        StartCoroutine(BlinkThenShowNext());
-        OnGateActivated?.Invoke();
+            foreach (ElectricalNode input in powerPathPrevs)
+            {
+                //Add all the nodes that were already connected to the gate when it was turned on.
+                inputsPowered.Add(input);
+            }
+
+            StartCoroutine(BlinkThenShowNext());
+            OnGateActivated?.Invoke();
+        }
     }
 
     public void EvaluateGate()
     {
-        gateActive = false;
         nextSprite = Powered ? successSprite : failureSprite;
         StartCoroutine(BlinkThenShowNext());
 
         if (!Powered)
         {
             //Player failed to power the inputs in time.
+            gateActive = false;
             inputsPowered.Clear();
             OnGateDeactivated?.Invoke();
         }

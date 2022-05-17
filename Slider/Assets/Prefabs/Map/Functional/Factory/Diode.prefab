@@ -108,7 +108,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5921995312595147166}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7c7f5a90b0e3714280909490021a207, type: 3}
+  m_Script: {fileID: 11500000, guid: 030ba8a092895ca4aabf2309da4dfd28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   nodeType: 2
@@ -131,4 +131,4 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   swapper: {fileID: 5193721676886920101}
-  stayOn: 1
+  gate: {fileID: 0}

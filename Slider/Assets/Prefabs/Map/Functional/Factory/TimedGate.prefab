@@ -280,6 +280,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Diode (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6844563274227702258, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
+      propertyPath: gate
+      value: 
+      objectReference: {fileID: 4912617762989399492}
     - target: {fileID: 8645311206062095760, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -353,6 +357,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Diode
       objectReference: {fileID: 0}
+    - target: {fileID: 6844563274227702258, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
+      propertyPath: gate
+      value: 
+      objectReference: {fileID: 4912617762989399492}
     - target: {fileID: 8645311206062095760, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
       propertyPath: m_RootOrder
       value: 0

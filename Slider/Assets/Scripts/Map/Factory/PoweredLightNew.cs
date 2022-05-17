@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PoweredLightNew : ElectricalNode
 {
-    [SerializeField] private SpriteSwapper swapper;
-    [SerializeField] private bool stayOn = false;
+    [SerializeField] protected SpriteSwapper swapper;
 
     private new void Awake()
     {
@@ -31,7 +30,7 @@ public class PoweredLightNew : ElectricalNode
         if (e.powered)
         {
             swapper.TurnOn();
-        } else if (!stayOn)
+        } else
         {
             swapper.TurnOff();
         }
