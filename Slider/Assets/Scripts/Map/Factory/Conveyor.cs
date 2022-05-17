@@ -154,7 +154,7 @@ public class Conveyor : ElectricalNode
         List<Vector2Int> emptyTiles = new List<Vector2Int>();
         int moveLength = 0;
         bool passedFirstEmpty = false;
-        while (moveLength < length && curr.x < SGrid.current.width && curr.y < SGrid.current.height)
+        while (moveLength < length && curr.x >= 0 && curr.y >= 0 && curr.x < SGrid.current.width && curr.y < SGrid.current.height)
         {
             if (stiles[curr.x, curr.y].isTileActive && !passedFirstEmpty)
             {
