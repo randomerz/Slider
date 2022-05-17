@@ -192,7 +192,7 @@ public class ShopDialogueManager : MonoBehaviour
             return;
         }
 
-        if (!PlayerInventory.GetHasCollectedAnchor())
+        if (!PlayerInventory.Instance.GetHasCollectedAnchor())
         {
             UpdateDialogue("No Anchor");
             return;
