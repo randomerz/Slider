@@ -28,7 +28,7 @@ public class SGrid : MonoBehaviour
 
     protected STile[,] grid;
     protected SGridBackground[,] bgGrid;
-    public int[,] saveGrid;
+    public int[,] realigningGrid;
 
     // Set in inspector 
     public int width;
@@ -120,7 +120,7 @@ public class SGrid : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                Debug.Log(puzzle[x, y]);
+                //Debug.Log(puzzle[x, y]);
                 if (puzzle[x, y] == 0)
                     next = GetStile(width * height);
                 else
@@ -400,7 +400,20 @@ public class SGrid : MonoBehaviour
         OnSTileCollected?.Invoke(this, new OnSTileCollectedArgs { stile = stile });
     }
 
+    public virtual bool TilesMoving()
+    {
+        List<STile> stiles = SGrid.current.GetActiveTiles();
+        bool tilesAreMoving = false;
+        foreach (STile stile in stiles)
+        {
+            if (stile.GetMovingDirection() != Vector2.zero)
+            {
+                tilesAreMoving = true;
+            }
+        }
 
+        return tilesAreMoving;
+    }
 
     public virtual void SaveGrid() 
     { 
@@ -431,51 +444,51 @@ public class SGrid : MonoBehaviour
             stile.SetSTile(td.isTileActive, td.x, td.y);
         }
         grid = newGrid;
-        saveGrid = sgridData.saveGrid;
+        realigningGrid = sgridData.realigningGrid;
     }
 
-    public virtual void SaveSaveGrid()
+    public virtual void SaveRealigningGrid()
     {
         //Debug.Log("Saved!");
-        saveGrid = new int[current.width, current.height];
+        realigningGrid = new int[current.width, current.height];
         //GedGridString but turns it to SetGrid format
         for (int x = 0; x < current.width; x++)
         {
             for (int y = 0; y < current.height; y++)
             {
                 //Debug.Log(current.grid[x, y].islandId);
-                saveGrid[x,y] = grid[x, y].islandId;
+                realigningGrid[x,y] = grid[x, y].islandId;
             }
         }
-        //Debug.Log(saveGrid);
+        //Debug.Log(realigningGrid);
     }
 
-    public virtual void LoadSaveGrid()
+    public virtual void LoadRealigningGrid()
     {
         //Debug.Log("Loaded!");
-        if (saveGrid == null)
+        if (realigningGrid == null)
         {
             //THIS SHOULD NOT BE HAPPENING
-            Debug.LogError("saveGrid is null!");
+            Debug.LogError("realigningGrid is null!");
             return;
         }
-        SetGrid(saveGrid);
-        saveGrid = null;
+        SetGrid(realigningGrid);
+        realigningGrid = null;
     }
 
     public virtual void RearrangeGrid()
     {
         //Convert the target grid into the proper int[] and pass into setgrid
-        saveGrid = new int[current.width, current.height];
+        realigningGrid = new int[current.width, current.height];
         for (int x = current.width - 1; x >= 0; x--)
         {
             for (int y = 0; y < current.height; y++)
             {
                 //Debug.Log("Setgrid indices: " + y + " " + (width - 1 - x) + " Tile: " + targetGrid[(x * height) + y]);
-                saveGrid[y, (current.width - 1 - x)] = (int) Char.GetNumericValue(targetGrid[(x * current.height) + y]);
+                realigningGrid[y, (current.width - 1 - x)] = (int) Char.GetNumericValue(targetGrid[(x * current.height) + y]);
             }
         }
-        current.SetGrid(saveGrid);
+        current.SetGrid(realigningGrid);
 
         for (int x = 0; x < current.width; x++)
         {

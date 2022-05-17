@@ -9,7 +9,7 @@ public class AnchorFirstAppearance : MonoBehaviour
     
     void Start()
     {
-        if (PlayerInventory.GetHasCollectedAnchor())
+        if (PlayerInventory.Instance.GetHasCollectedAnchor())
         {
             anchor.UnanchorTile();
             Destroy(gameObject);
