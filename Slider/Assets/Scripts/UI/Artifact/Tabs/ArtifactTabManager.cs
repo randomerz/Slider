@@ -47,6 +47,7 @@ public class ArtifactTabManager : MonoBehaviour
         {
             saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
             loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
+            SetSaveLoadTabSprites(SGrid.current.HasRealigningGrid());
             fragRealignTab.SetIsVisible(false);
         }
         else if (SGrid.current.GetArea() == Area.Desert
@@ -121,19 +122,18 @@ public class ArtifactTabManager : MonoBehaviour
         //Debug.Log("Tried to save!");
         SGrid.current.SaveRealigningGrid();
         uiArtifactMenus.uiArtifact.FlickerAllOnce();
-        saveTab.GetComponentInChildren<Image>().sprite = saveTabSprite;
-        loadTab.GetComponentInChildren<Image>().sprite = loadTabSprite;
+        SetSaveLoadTabSprites(true);
     }
 
     // Load tab
 
-    public void LoadOnClick(UIArtifact uiartifact)
+    public void LoadOnClick()
     {
         if (SGrid.current.realigningGrid != null)
         {
             // Do the rearranging!
             SGrid.current.LoadRealigningGrid();
-            foreach (ArtifactTileButton button in uiartifact.buttons)
+            foreach (ArtifactTileButton button in uiArtifactMenus.uiArtifact.buttons)
             {
                 button.SetHighlighted(false);
             }
@@ -144,8 +144,7 @@ public class ArtifactTabManager : MonoBehaviour
             CameraShake.Shake(1.5f, 0.75f);
             AudioManager.Play("Slide Explosion");
 
-            saveTab.GetComponentInChildren<Image>().sprite = saveEmptyTabSprite;
-            loadTab.GetComponentInChildren<Image>().sprite = loadEmptyTabSprite;
+            SetSaveLoadTabSprites(false);
         }
         else
         {
@@ -159,30 +158,31 @@ public class ArtifactTabManager : MonoBehaviour
         yield return null;
     }
 
-    public void LoadOnHoverEnter(UIArtifact uiartifact)
+    public void LoadOnHoverEnter()
     {
-        // set it to saved
         //get the realignGrid, put the button stuff in the order based on that, then call bggrid set
         if(SGrid.current.realigningGrid != null)
         {
-            //Debug.Log("Previewed!");
+            Debug.Log("Previewed!");
+            uiArtifactMenus.uiArtifact.DeselectCurrentButton();
             originalGrid = new int[SGrid.current.width, SGrid.current.height];
             for (int x = 0; x < SGrid.current.width; x++)
             {
                 for (int y = 0; y < SGrid.current.height; y++)
                 {
                     //Debug.Log(SGrid.current.saveGrid[x, y] + " button array index: " + (SGrid.current.saveGrid[x, y] - 1) + " " + x + " " + y);
-                    originalGrid[x, y] = SGrid.current.GetGrid()[x, y].islandId;
-                    uiartifact.buttons[SGrid.current.realigningGrid[x, y] - 1].SetPosition(x, y);
-                    uiartifact.buttons[SGrid.current.realigningGrid[x, y] - 1].SetHighlighted(true);
+                    int tid = SGrid.current.GetGrid()[x, y].islandId;
+                    originalGrid[x, y] = tid;
+                    uiArtifactMenus.uiArtifact.GetButton(SGrid.current.realigningGrid[x, y]).SetPosition(x, y);
+                    uiArtifactMenus.uiArtifact.GetButton(SGrid.current.realigningGrid[x, y]).SetHighlighted(true);
                 }
             }
         }
     }
 
-    public void LoadOnHoverExit(UIArtifact uiartifact)
+    public void LoadOnHoverExit()
     {
-        // reset
+        //reset
         //get the id's from the grid
         if (SGrid.current.realigningGrid != null)
         {
@@ -191,16 +191,30 @@ public class ArtifactTabManager : MonoBehaviour
             {
                 for (int y = 0; y < SGrid.current.height; y++)
                 {
-                    uiartifact.buttons[originalGrid[x, y] - 1].SetPosition(x, y);
-                    uiartifact.buttons[originalGrid[x, y] - 1].SetHighlighted(false);
+                    int tid = originalGrid[x, y];
+                    uiArtifactMenus.uiArtifact.GetButton(tid).SetPosition(x, y);
+                    uiArtifactMenus.uiArtifact.GetButton(tid).SetHighlighted(false);
                 }
             }
         }
     }
-
+    //Chen: sets the sprites of the save and load tabs based on the passed in bool
+    public void SetSaveLoadTabSprites(bool b)
+    {
+        if (b)
+        {
+            saveTab.GetComponentInChildren<Image>().sprite = saveTabSprite;
+            loadTab.GetComponentInChildren<Image>().sprite = loadTabSprite;
+        }
+        else
+        {
+            saveTab.GetComponentInChildren<Image>().sprite = saveEmptyTabSprite;
+            loadTab.GetComponentInChildren<Image>().sprite = loadEmptyTabSprite;
+        }
+    }
     //Rearranging Fragment
 
-    public void FragRearrangeOnClick(UIArtifact uiartifact)
+    public void FragRearrangeOnClick()
     {
         // Do the rearranging!
         //Debug.Log("Swapped!");
@@ -209,17 +223,17 @@ public class ArtifactTabManager : MonoBehaviour
             AudioManager.Play("Artifact Error");
             return;
         }
-        uiartifact.FragRealignCheckAndSwap(middle, empty);
+        uiArtifactMenus.uiArtifact.FragRealignCheckAndSwap(middle, empty);
         middle.SetHighlighted(false);
         empty.SetHighlighted(false);
     }
 
-    public void FragRearrangeOnHoverEnter(UIArtifact uiartifact)
+    public void FragRearrangeOnHoverEnter()
     {
         rearrangingFragTabAnimator.SetFloat("speed", 4);
         //Preview!
         middle = UIArtifact.GetButton(1, 1);
-        foreach (ArtifactTileButton button in uiartifact.buttons)
+        foreach (ArtifactTileButton button in uiArtifactMenus.uiArtifact.buttons)
         {
             if (button.islandId == 9)
             {

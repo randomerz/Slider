@@ -536,7 +536,7 @@ public class UIArtifact : MonoBehaviour
                 return b;
             }
         }
-
+        Debug.LogWarning("Artifact tile button at " + x + ", " + y + " was not found!");
         return null;
     }
 

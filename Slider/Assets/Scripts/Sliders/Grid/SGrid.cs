@@ -504,6 +504,10 @@ public class SGrid : MonoBehaviour
             }
         }
     }
+    public bool HasRealigningGrid()
+    {
+        return realigningGrid != null;
+    }
     protected static void UpdateButtonCompletions(object sender, System.EventArgs e)
     {
         current.UpdateButtonCompletionsHelper();
@@ -545,7 +549,7 @@ public class SGrid : MonoBehaviour
             for (int y = 0; y < current.height; y++) {
                 string tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
-                //Debug.Log(x + " " + y);
+                Debug.Log(x + " " + y);
                 if (tids == "*") 
                 {
                     numComplete += 1;
