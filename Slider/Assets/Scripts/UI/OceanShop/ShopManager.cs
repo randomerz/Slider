@@ -18,6 +18,8 @@ public class ShopManager : MonoBehaviour
     private bool startedFinalQuest;
     private bool[] wasSliderCollectibleBought = new bool[6]; // from 4 to 9
 
+    private Collectible collectibleToActivateOnClose; // for slider 3 cutscene when you quit shop
+
     public States UIState { get => _uiState;  private set { _uiState = value; UpdateNavManagerCurrentMenu(); } }
     private States _uiState;
 
@@ -108,8 +110,10 @@ public class ShopManager : MonoBehaviour
     {
         // first talk
         // SGrid.current.ActivateSliderCollectible(3);
-        Collectible c = SGrid.current.GetCollectible("Slider 3");
-        c.DoOnCollect();
+        if (!PlayerInventory.Contains("Slider 3", Area.Ocean))
+        {
+            collectibleToActivateOnClose = SGrid.current.GetCollectible("Slider 3");
+        }
 
         // rest of rewards
         if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
@@ -281,6 +285,14 @@ public class ShopManager : MonoBehaviour
         UIManager.CloseUI();
 
         Player.SetCanMove(true);
+
+        // For the 3rd collectible
+        if (collectibleToActivateOnClose != null)
+        {
+            Debug.Log("nay nay");
+            collectibleToActivateOnClose.DoPickUp();
+            collectibleToActivateOnClose = null;
+        }
     }
 
     // Called whenever you press 'Esc'
