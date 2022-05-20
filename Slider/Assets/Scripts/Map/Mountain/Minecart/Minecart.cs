@@ -14,7 +14,6 @@ public class Minecart : Item
     [SerializeField] public RailTile targetTile;
     [SerializeField] private float speed = 2.0f;
     public Vector3 offSet = new Vector3(0.5f, 0.5f, 0.0f);
-    [SerializeField] private SGrid sGrid;
     [SerializeField] private RailManager borderRM;
 
 
@@ -40,14 +39,20 @@ public class Minecart : Item
         Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
         if (hit == null)
             return null;
+        
         if(hit.GetComponent<STile>()) //Use Stile RM
         {
             STile hitTile = hit.GetComponent<STile>();
             Tilemap railmap = hitTile.allTileMaps.GetComponentInChildren<STileTilemap>().minecartRails;
             railManager = railmap.GetComponent<RailManager>();
-            StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
-            if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
-            SnapToRail(railmap.WorldToCell(dropLocation));
+            if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation))) //C: If this is dropped onto rails, it will snap into position (change to station only later?)
+            {
+                StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
+                SnapToRail(railmap.WorldToCell(dropLocation));
+            }
+            else
+                StartCoroutine(AnimateDrop(dropLocation, callback));
+            
             gameObject.transform.parent = hitTile.transform.Find("Objects").transform;
             return hitTile;
         }
@@ -55,9 +60,14 @@ public class Minecart : Item
         {
             Tilemap railmap = hit.GetComponent<STileTilemap>().minecartRails;
             railManager = railmap.GetComponent<RailManager>();
-            StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
-            if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
-            SnapToRail(railmap.WorldToCell(dropLocation));
+
+            if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation))) //C: If this is dropped onto rails, it will snap into position (change to station only later?)
+            {
+                StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
+                SnapToRail(railmap.WorldToCell(dropLocation));
+            }
+            else
+                StartCoroutine(AnimateDrop(dropLocation, callback));
             gameObject.transform.parent = borderRM.gameObject.GetComponentInParent<STileTilemap>().transform.Find("Objects").transform;
         }
         return null;
@@ -147,13 +157,13 @@ public class Minecart : Item
         
     }
 
-    /*C:looks for a rail manager that has a tile which overlaps with the target postion
+    /*C: looks for a rail manager that has a tile which overlaps with the target position
      * If one is found, rail manager is updated so the minecart can operate on the new STile
      * If one is not found, the minecart derails
      */
     private void LookForRailManager()
     {
-        List<STile> stileList = sGrid.GetActiveTiles();
+        List<STile> stileList = SGrid.current.GetActiveTiles();
         List<RailManager> rmList = new List<RailManager>();
         Vector3Int targetLoc;
         foreach(STile tile in stileList)
@@ -169,6 +179,15 @@ public class Minecart : Item
                 {
                     railManager = rm;
                     SnapToRailNewSTile(targetLoc);
+                    gameObject.transform.parent = rm.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
+                    return;
+                }
+                //C: Check if the minecart can drop down to the tile below
+                else if(MountainGrid.instance && rm.railLocations.Contains(targetLoc + new Vector3Int(0,-1 * MountainGrid.instance.layerOffset, 0)))
+                {
+                    railManager = rm;
+                    transform.position += new Vector3Int(0,-1 * MountainGrid.instance.layerOffset, 0);
+                    SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.instance.layerOffset, 0)); //give seperate method for between layers?
                     gameObject.transform.parent = rm.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
                     return;
                 }
