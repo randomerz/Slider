@@ -174,6 +174,18 @@ public class DebugUIManager : MonoBehaviour
         //Also make sure the sliders are in the right positions!
         string target = SGrid.current.TargetGrid;
         int[,] grid = new int[3, 3];
+        
+
+        // dc: if there's a * in the TargetGrid, then we just set them all on and are done w it lol
+        if (target.Contains("*"))
+        {
+            for (int j = 1; j <= 9; j++)
+            {
+                SGrid.current.EnableStile(j);
+            }
+            return;
+        }
+
         int i = 0;
         while(target.Length > 0)
         {
