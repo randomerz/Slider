@@ -171,6 +171,7 @@ public class TimedGate : ElectricalNode
                 }
             }
 
+            sr.sprite = nextSprite;
             blinking = false;
         }
     }
@@ -191,6 +192,7 @@ public class TimedGate : ElectricalNode
                     yield return new WaitForSeconds(0.25f);
                 }
             }
+            sr.sprite = nextSprite;
             blinking = false;
         }
     }
@@ -205,10 +207,15 @@ public class TimedGate : ElectricalNode
             countdown = numTurns;
             nextSprite = countdownSprite[numTurns];
 
+            bool oldPowered = Powered;
             foreach (ElectricalNode input in powerPathPrevs)
             {
                 //Add all the nodes that were already connected to the gate when it was turned on.
                 inputsPowered.Add(input);
+            }
+            if (Powered != oldPowered)
+            {
+                OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
             }
 
             StartCoroutine(BlinkThenShowNext());

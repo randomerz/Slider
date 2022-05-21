@@ -10,12 +10,14 @@ public class TimedGateDiode : PoweredLightNew
     private new void OnEnable()
     {
         base.OnEnable();
+        gate.OnGateActivated.AddListener(GateActivatedHandler);
         gate.OnGateDeactivated.AddListener(GateDeactivatedHandler);
     }
 
     private new void OnDisable()
     {
         base.OnDisable();
+        gate.OnGateActivated.RemoveListener(GateActivatedHandler);
         gate.OnGateDeactivated.RemoveListener(GateDeactivatedHandler);
     }
 
@@ -26,6 +28,15 @@ public class TimedGateDiode : PoweredLightNew
         {
             swapper.TurnOn();
         }
+    }
+
+    public void GateActivatedHandler()
+    {
+        if (Powered)
+        {
+            swapper.TurnOn();
+        }
+
     }
 
     public void GateDeactivatedHandler()
