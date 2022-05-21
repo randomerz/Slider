@@ -58,17 +58,17 @@ public class VillageGrid : SGrid
         }
     }
 
-    public override void SaveGrid() 
+    public override void Save() 
     {
-        base.SaveGrid();
+        base.Save();
 
         // GameManager.saveSystem.SaveSGridData(Area.Village, this);
         // GameManager.saveSystem.SaveMissions(new Dictionary<string, bool>());
     }
 
-    public override void LoadGrid()
+    public override void Load()
     {
-        base.LoadGrid();
+        base.Load();
     }
 
 

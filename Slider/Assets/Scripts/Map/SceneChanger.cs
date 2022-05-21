@@ -27,7 +27,7 @@ public class SceneChanger : MonoBehaviour
 
     public void ChangeScenes() 
     {
-        SGrid.current.SaveGrid();
+        SaveSystem.Current.Save();
         SceneSpawns.nextSpawn = sceneSpawnName;
 
         if (isSpawnPosRelative)

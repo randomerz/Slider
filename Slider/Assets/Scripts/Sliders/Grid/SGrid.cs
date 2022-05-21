@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SGrid : MonoBehaviour
+public class SGrid : MonoBehaviour, ISavable
 {
     //L: The grid the player is currently interacting with (only 1 active at a time)
     public static SGrid current { get; private set; }
@@ -56,7 +56,7 @@ public class SGrid : MonoBehaviour
 
         current = this;
         InitUIArtifact();
-        LoadGrid();
+        Load();
         SetBGGrid(bgGridTiles);
 
         if (targetGrid.Length == 0)
@@ -415,14 +415,14 @@ public class SGrid : MonoBehaviour
         return tilesAreMoving;
     }
 
-    public virtual void SaveGrid() 
+    public virtual void Save() 
     { 
         Debug.Log("Saving data for " + myArea);
         SaveSystem.Current.SaveSGridData(myArea, this);
     }
 
     //L: Used in the save system to load a grid as opposed to using SetGrid(STile[], STile[]) with default tiles positions.
-    public virtual void LoadGrid() 
+    public virtual void Load() 
     { 
         //Debug.Log("Loading grid...");
 
