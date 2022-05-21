@@ -8,8 +8,6 @@ public class JungleGrid : SGrid
 
     public ChadRace chadRace;
 
-    private static bool checkCompletion = false;
-
     protected override void Awake() {
         myArea = Area.Jungle;
 
