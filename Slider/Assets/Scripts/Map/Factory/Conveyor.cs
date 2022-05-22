@@ -86,7 +86,7 @@ public class Conveyor : ElectricalNode
         SMoveConveyor move = ConstructMove();
         if (move != null)
         {
-            //A Move is going to happen on the conveyor belt.
+            //Do not allow the player to queue any moves at this point!
             artifact.PlayerCanQueue = false;
             UIArtifact.ClearQueues();
 
@@ -127,13 +127,14 @@ public class Conveyor : ElectricalNode
     }
 
     //This could be put in SMove.cs. Idk. I thought it made more sense here.
+    //This method covers conveyor belts that stretch over multiple tiles as well as arbitrary grid size, which is a lot more than we needed lol.
     private SMoveConveyor ConstructMove()
     {
         List<Movement> moves = new List<Movement>();
         STile[,] stiles = SGrid.current.GetGrid();
 
 
-        //Loop until reaching the first non-active tile.
+        //Check if a tile is on the conveyor belt
         int count = 0;
         Vector2Int curr = start;
         while (!stiles[curr.x, curr.y].isTileActive)
@@ -141,9 +142,10 @@ public class Conveyor : ElectricalNode
             curr += dir;
             count++;
 
-            //There's no tile on the conveyor belt.
+
             if (count >= length)
             {
+                //There's no tile on the conveyor belt.
                 return null;
             }
         }
@@ -158,28 +160,30 @@ public class Conveyor : ElectricalNode
         {
             if (stiles[curr.x, curr.y].isTileActive && !passedFirstEmpty)
             {
-                //
+                //Add all tiles on the conveyor belt and tiles pushed by those on the conveyor belt.
                 movingTiles.Add(curr);
             }
             else if (!stiles[curr.x, curr.y].isTileActive)
             {
-                //There's space at the end of the conveyor for a move
+                //Check that there's space at the end of the conveyor belt.
+                //This only happens once for length 1 conveyors (i.e. Factory)
                 emptyTiles.Add(curr);
-                moveLength++;
+                moveLength++;   
                 passedFirstEmpty = true;
             } else
             {
-                //Active tile after passing the first empty tile
+                //Tile is active, and we've already passed at least one empty tile
                 //NOTE: There is an edge case where if length is more than one, it could push into an empty square and then push into another chain, but our grids are small enough that this case doesn't occur.
                 break;
             }
 
             curr += dir;
-            if (!passedFirstEmpty && (curr.x >= SGrid.current.width || curr.y >= SGrid.current.height))
-            {
-                //Belt is locked, so this move isn't possible.
-                return null;
-            }
+        }
+
+        if (!passedFirstEmpty) //&& (curr.x >= SGrid.current.width || curr.y >= SGrid.current.height || curr.x < 0 || curr.y < 0))
+        {
+            //Belt is locked, so this move isn't possible.
+            return null;
         }
 
         foreach (Vector2Int pos in movingTiles)
@@ -187,6 +191,7 @@ public class Conveyor : ElectricalNode
             moves.Add(new Movement(pos, pos + dir * moveLength, stiles[pos.x, pos.y].islandId));
         }
 
+        //The empty tiles are put at the start of the conveyor belt. (again, for Factory, there's only 1 possible empty tile.)
         for (int i=0; i<moveLength; i++)
         {
             moves.Add(new Movement(emptyTiles[i], moveStart + dir * i, stiles[emptyTiles[i].x, emptyTiles[i].y].islandId));

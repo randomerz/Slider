@@ -59,6 +59,15 @@ public class ElectricalNode : MonoBehaviour
         OnPowered.RemoveListener(OnPoweredHandler);
     }
 
+    private void Start()
+    {
+        if (Powered)
+        {
+            //This is mainly for inverted power.
+            OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
+        }
+    }
+
     public virtual void OnPoweredHandler(OnPoweredArgs e) { }
 
     public virtual void StartSignal(bool input)
