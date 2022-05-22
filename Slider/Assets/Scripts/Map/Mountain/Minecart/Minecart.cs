@@ -15,6 +15,7 @@ public class Minecart : Item
     [SerializeField] private float speed = 2.0f;
     public Vector3 offSet = new Vector3(0.5f, 0.5f, 0.0f);
     [SerializeField] private RailManager borderRM;
+    private STile currentSTile;
 
 
     public Vector3Int currentTilePos;
@@ -32,6 +33,30 @@ public class Minecart : Item
         SnapToRail(pos);
     }
 
+    private void OnEnable()
+    {
+        SGridAnimator.OnSTileMoveStart += OnMoveStart;
+        SGridAnimator.OnSTileMoveEnd += OnMoveEnd;
+
+    }
+
+    private void OnDisable()
+    {
+        SGridAnimator.OnSTileMoveStart -= OnMoveStart;
+        SGridAnimator.OnSTileMoveEnd += OnMoveEnd;
+    }
+
+    private void OnMoveStart(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs)
+    {
+        if(tileMoveArgs.stile = currentSTile)
+            Derail();
+    }
+
+    private void OnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs)
+    {
+        if(tileMoveArgs.stile = currentSTile);
+        //recalculate target position
+    }
 
     //Item Related Stuff
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
@@ -54,6 +79,7 @@ public class Minecart : Item
                 StartCoroutine(AnimateDrop(dropLocation, callback));
             
             gameObject.transform.parent = hitTile.transform.Find("Objects").transform;
+            currentSTile = hitTile;
             return hitTile;
         }
         else if(hit.GetComponent<STileTilemap>()) //use border RM
@@ -78,7 +104,11 @@ public class Minecart : Item
     {
         StopMoving();
         ResetTiles();
+        currentSTile = null;
     }
+
+
+
 
     public void StartMoving() 
     {

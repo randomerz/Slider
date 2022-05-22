@@ -35,7 +35,6 @@ public class MountainGrid : SGrid
     private void OnEnable()
     {
         Anchor.OnAnchorDrop += OnAnchorDrop;
-        Debug.Log("amogus");
     }
 
     private void OnDisable()
@@ -45,7 +44,6 @@ public class MountainGrid : SGrid
 
     private void OnAnchorDrop(object sender, Anchor.OnAnchorDropArgs dropArgs)
     {
-        Debug.Log("vent");
         STile dropTile = dropArgs.stile;
         if(dropTile.y < 2)
             return; //currently using the anchor on the bottom layer does nothing
