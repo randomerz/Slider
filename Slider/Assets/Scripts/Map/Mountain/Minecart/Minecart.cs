@@ -6,10 +6,11 @@ using UnityEngine.Tilemaps;
 public class Minecart : Item
 {
     
-    [SerializeField] public int currentDirection {get; set;} //so this can be used from debug
+    [SerializeField] private int currentDirection;
     public RailManager railManager;
     [SerializeField] private bool isOnTrack;
     [SerializeField] private bool isMoving;
+    private bool canStartMoving = true;
     [SerializeField] public RailTile currentTile;
     [SerializeField] public RailTile targetTile;
     [SerializeField] private float speed = 2.0f;
@@ -25,9 +26,15 @@ public class Minecart : Item
     [SerializeField] private float derailDuration;
     [SerializeField] private AnimationCurve xDerailMotion;
     [SerializeField] private AnimationCurve yDerailMotion;
+
     
     public Sprite trackerSprite;
 
+
+    public void setCanStartMoving(bool canStart)
+    {
+        canStartMoving = canStart;
+    }
 
     //C: this is horrible
     private void Awake() 
@@ -56,12 +63,18 @@ public class Minecart : Item
     private void OnMoveStart(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs)
     {
         if(tileMoveArgs.stile = currentSTile)
-            Derail();
+        {
+            if(isMoving)
+                Derail();
+            else
+                canStartMoving = false;
+        }
     }
 
     private void OnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs)
     {
-        if(tileMoveArgs.stile = currentSTile);
+        if(tileMoveArgs.stile = currentSTile)
+            canStartMoving = true;
         //recalculate target position
     }
 
@@ -127,7 +140,7 @@ public class Minecart : Item
 
     public void StartMoving() 
     {
-        if(isOnTrack)
+        if(isOnTrack && canStartMoving)
             isMoving = true;  
     }
 
@@ -156,7 +169,7 @@ public class Minecart : Item
         {
             targetTilePos = currentTilePos + GetTileOffsetVector(currentDirection);
             targetTile = railManager.railMap.GetTile(targetTilePos) as RailTile;
-            targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) + 0.5f * (Vector3) GetTileOffsetVector(targetTile.connections[(currentDirection + 2) % 4]) + offSet;
+            targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) + offSet;
             isOnTrack = true;
         }
         else
@@ -167,6 +180,7 @@ public class Minecart : Item
 
     private void Update() 
     {
+        if(Time.timeScale == 0) return;
         if(isMoving && isOnTrack)
         {
             if(Vector3.Distance(transform.position, targetWorldPos) < 0.01f)
@@ -191,8 +205,7 @@ public class Minecart : Item
                 return;
             }    
 
-            targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) 
-                         + 0.5f * (Vector3) GetTileOffsetVector(targetConnection) + offSet;
+            targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) + offSet;
             currentDirection = targetTile.connections[(currentDirection + 2) % 4];
         }
         else
@@ -258,7 +271,7 @@ public class Minecart : Item
         currentTilePos = pos;
         targetTilePos = currentTilePos + GetTileOffsetVector(currentDirection);
         targetTile = railManager.railMap.GetTile(targetTilePos) as RailTile;
-        targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) + 0.5f * (Vector3) GetTileOffsetVector(targetTile.connections[(currentDirection + 2) % 4]) + offSet;
+        targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) + offSet; 
     }
 
     //makes the minecart fall off of the rails
@@ -292,7 +305,6 @@ public class Minecart : Item
         float t = derailDuration;
 
         Vector3 start = new Vector3(transform.position.x, transform.position.y);
-       // transform.position = target;
         while (t >= 0)
         {
             float x = xDerailMotion.Evaluate(t / derailDuration);
