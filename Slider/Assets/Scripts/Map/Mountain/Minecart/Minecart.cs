@@ -25,6 +25,8 @@ public class Minecart : Item
     [SerializeField] private float derailDuration;
     [SerializeField] private AnimationCurve xDerailMotion;
     [SerializeField] private AnimationCurve yDerailMotion;
+    
+    public Sprite trackerSprite;
 
 
     //C: this is horrible
@@ -35,6 +37,7 @@ public class Minecart : Item
             if(r.isBorderRM)
                 borderRM = r;
         }
+        UITrackerManager.AddNewTracker(gameObject, trackerSprite);
     }
 
     private void OnEnable()
@@ -62,9 +65,16 @@ public class Minecart : Item
         //recalculate target position
     }
 
+    public override void PickUpItem(Transform pickLocation, System.Action callback = null)
+    {
+        base.PickUpItem(pickLocation, callback);
+        UITrackerManager.RemoveTracker(this.gameObject);
+    }
+
     //Item Related Stuff
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
     {
+        UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
         Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
         if (hit == null)
             return null;
