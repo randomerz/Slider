@@ -8,25 +8,27 @@ public class MountainUITrackerManager : UITrackerManager
 
     private Vector2 xOffset = new Vector2(35f/50f, -16f/50f);
     private Vector2 yOffset = new Vector2(35f/50f, 16f/50f);
-    private Vector2 lowerCenter;
-    private Vector2 upperCenter;
+    private Vector2 xCenterOffset = new Vector2(53f/50f, -29f/50f);
+    private Vector2 yCenterOffset = new Vector2(53f/50f, 29f/50f);
+    private Vector2 lowerCenter = new Vector2(12.5f, 12.5f);
+    private Vector2 upperCenter = new Vector2(12.5f, 112.5f);
 
     protected override void Awake() {
         base.Awake();
         _instance = this;
     }
 
-    /*protected override void calculateOffsetNullTile() 
+    protected override void calculateOffsetNullTile() 
     {
-        offset = (position - center) * centerScale;
-        //yea i have no idea how to deal with that yet 
+        Vector2 temp = (position - (position.y > 62.5? upperCenter: lowerCenter));
+        offset = temp.x * xCenterOffset + temp.y * yCenterOffset + (position.y > 62.5? new Vector2(0, 29): new Vector2(0, -30));
+        //C: TODO: clamp outside of stiles
         //offset = new Vector3(Mathf.Clamp(offset.x, -62.5f, 62.5f), Mathf.Clamp(offset.y, -57.5f, 57.5f));
-    }*/
+    }
 
     protected override void calculateOffset() 
     {
-        Debug.Log("sussy baka");
-        Vector2 temp =(position - (Vector2)currentTile.transform.position);
+        Vector2 temp = (position - (Vector2)currentTile.transform.position);
         offset = temp.x * xOffset + temp.y * yOffset;
     }
 }
