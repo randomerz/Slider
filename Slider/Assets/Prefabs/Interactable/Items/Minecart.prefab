@@ -69,7 +69,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 529684183
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7070549666122394232, guid: 211dbaf33a3335243a6a768ec0a757c9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -129,7 +129,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.09375}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -140,7 +140,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 0.825}
   m_EdgeRadius: 0
 --- !u!114 &7312408125226203461
 MonoBehaviour:
@@ -231,7 +231,6 @@ MonoBehaviour:
   OnDrop:
     m_PersistentCalls:
       m_Calls: []
-  currentDirection: 0
   railManager: {fileID: 0}
   isOnTrack: 0
   isMoving: 0
@@ -239,7 +238,6 @@ MonoBehaviour:
   targetTile: {fileID: 0}
   speed: 5
   offSet: {x: 0.5, y: 0.75, z: 0}
-  sGrid: {fileID: 0}
   borderRM: {fileID: 0}
   currentTilePos: {x: 0, y: 0, z: 0}
   targetTilePos: {x: 0, y: 0, z: 0}

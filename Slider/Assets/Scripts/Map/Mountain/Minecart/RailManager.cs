@@ -10,6 +10,7 @@ public class RailManager : MonoBehaviour
     public List<RailTile> stateOneTiles = new List<RailTile>(24); //There are only 24 junctions, so there are only 24 tiles with alternate states
     public List<Vector3Int> railLocations = new List<Vector3Int>(); // a list of the locations of the rail tiles 
     public Minecart mc;
+    public bool isBorderRM = false; //this is really jank but for now it works
   
     private void Start() 
     {

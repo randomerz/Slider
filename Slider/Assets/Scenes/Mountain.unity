@@ -267,6 +267,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Minecart
       objectReference: {fileID: 0}
+    - target: {fileID: 2751716942032489634, guid: 7c947d829ca8f984d94686e57a784593, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c947d829ca8f984d94686e57a784593, type: 3}
 --- !u!4 &277661937 stripped
@@ -65178,6 +65182,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lever
       objectReference: {fileID: 0}
+    - target: {fileID: 1153565343378161810, guid: ded966bd4c502b6439b634031fd5c071, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ded966bd4c502b6439b634031fd5c071, type: 3}
 --- !u!1001 &1023933736
@@ -79740,6 +79748,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a935193eb0bb9554e9dc1f3c44a99fc7, type: 2}
   railLocations: []
   mc: {fileID: 0}
+  isBorderRM: 0
 --- !u!1839735485 &1373438416
 Tilemap:
   m_ObjectHideFlags: 0
@@ -97378,13 +97387,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: MountainArtifactCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 4739148939289593070, guid: 04c889285472d4e4e973e2009785fd23, type: 3}
+      propertyPath: m_Name
+      value: Mountain UI Tracker Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4739148939289593070, guid: 04c889285472d4e4e973e2009785fd23, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5744667041030270647, guid: 04c889285472d4e4e973e2009785fd23, type: 3}
       propertyPath: uiArtifact
       value: 
       objectReference: {fileID: 869511466}
     - target: {fileID: 8378080407628115176, guid: 04c889285472d4e4e973e2009785fd23, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04c889285472d4e4e973e2009785fd23, type: 3}

@@ -27,10 +27,14 @@ public class Minecart : Item
     [SerializeField] private AnimationCurve yDerailMotion;
 
 
-    //creates a new minecart at the given position
-    public Minecart(RailManager rm, Vector3Int pos){
-        railManager = rm;
-        SnapToRail(pos);
+    //C: this is horrible
+    private void Awake() 
+    {
+        RailManager[] rms = FindObjectsOfType<RailManager>();
+        foreach (RailManager r in rms) {
+            if(r.isBorderRM)
+                borderRM = r;
+        }
     }
 
     private void OnEnable()
@@ -94,6 +98,7 @@ public class Minecart : Item
             }
             else
                 StartCoroutine(AnimateDrop(dropLocation, callback));
+            //decouple from RM
             gameObject.transform.parent = borderRM.gameObject.GetComponentInParent<STileTilemap>().transform.Find("Objects").transform;
         }
         return null;
@@ -222,6 +227,7 @@ public class Minecart : Item
                     return;
                 }
             }
+            if(borderRM) {
             targetLoc = borderRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
             if(borderRM.railLocations.Contains(targetLoc)) //look and see if the next location overlaps with a location of a rail on the outside
             {
@@ -229,6 +235,7 @@ public class Minecart : Item
                 SnapToRailNewSTile(targetLoc);
                 gameObject.transform.parent = borderRM.gameObject.GetComponentInParent<STileTilemap>().transform.Find("Objects").transform;
                 return;
+            }
             }
         StopMoving();
     }
@@ -252,7 +259,7 @@ public class Minecart : Item
         Vector3 derailVector = transform.position 
                                + speed * 0.3f * getDirectionAsVector(currentDirection)   
                                + 0.5f * (new Vector3(Random.onUnitSphere.x, Random.onUnitSphere.y, 0));
-        StartCoroutine(AnimateDerail(derailVector));
+       // StartCoroutine(AnimateDerail(derailVector));
     }
 
     //returns a vector that can be added to the tile position in order to determine the location of the specified point
