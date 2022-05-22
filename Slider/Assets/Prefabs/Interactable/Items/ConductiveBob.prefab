@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5721591233379736590}
   - component: {fileID: 3501832411120084381}
   - component: {fileID: 1490788914983603484}
+  - component: {fileID: 7346633303750058602}
   m_Layer: 0
   m_Name: Conducting Part
   m_TagString: Untagged
@@ -67,6 +68,27 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 2
+--- !u!50 &7346633303750058602
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 255418467045388141}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 1
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &718312118525715025
 GameObject:
   m_ObjectHideFlags: 0

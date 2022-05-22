@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 137529611704269846}
   - component: {fileID: 5259855817225781814}
   - component: {fileID: 4775528935428077422}
+  - component: {fileID: 1641171343835192531}
   m_Layer: 0
   m_Name: Conducting Part
   m_TagString: Untagged
@@ -79,6 +80,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!50 &1641171343835192531
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6461738482124030556}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 1
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &7018306198962470640
 GameObject:
   m_ObjectHideFlags: 0

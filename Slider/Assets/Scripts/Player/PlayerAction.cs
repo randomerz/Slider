@@ -7,7 +7,9 @@ public class PlayerAction : MonoBehaviour
     public static System.EventHandler<System.EventArgs> OnAction;
 
     public Item pickedItem;
-    private bool isPicking;
+    private Item lastDroppedItem;
+    private bool isPicking; //Picking up animation is happening
+    private bool isDropping;    //Drop animation is happening.
     private bool canDrop;
     [SerializeField] private Transform itemPickupLocation;
     [SerializeField] private GameObject itemDropIndicator;
@@ -81,10 +83,10 @@ public class PlayerAction : MonoBehaviour
             }
             else 
             {
-                // check raycast hitting tiles that aren't active
                 canDrop = true;
                 itemDropIndicator.SetActive(true);
-                
+
+                // check raycast hitting tiles that aren't active
                 int NumOfRayCastResult = Physics2D.Raycast(transform.position, raycastDir, LayerFilter, RayCastResults, 1.5f);
                 if (NumOfRayCastResult != 0) 
                 {
@@ -140,7 +142,7 @@ public class PlayerAction : MonoBehaviour
 
     public bool TryPick() 
     {
-        if (isPicking) 
+        if (isPicking || isDropping) 
         {
             return false;
         }
@@ -148,11 +150,13 @@ public class PlayerAction : MonoBehaviour
         Collider2D[] nodes = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y), 1f, itemMask);
         if (pickedItem == null) 
         {
-            // find nearest
+            //Try picking an item up
+
             if (nodes.Length > 0)
             {
                 isPicking = true;
 
+                // find nearest item
                 Collider2D nearest = nodes[0];
                 float nearestDist = Vector3.Distance(nearest.transform.position, transform.position);
                 for (int i = 1; i < nodes.Length; i++) {
@@ -162,7 +166,7 @@ public class PlayerAction : MonoBehaviour
                     }
                 }
                 
-                pickedItem = nearest.GetComponent<Item>();
+                pickedItem = nearest.GetComponent<Item>();  //Not GetComponentInParent?
                 if (pickedItem == null) {
                     Debug.LogError("Picked something that isn't an Item!");
                 }
@@ -175,11 +179,13 @@ public class PlayerAction : MonoBehaviour
         }
         else // pickedItem != null
         {
-            // check if can drop
+            // Try dropping the item
             if (canDrop) 
             {
+                isDropping = true;
                 PlayerInventory.RemoveItem();
-                pickedItem.DropItem(GetIndicatorLocation(), callback:pickedItem.dropCallback);
+                pickedItem.DropItem(GetIndicatorLocation(), callback:FinishDropping);
+                lastDroppedItem = pickedItem;
                 pickedItem = null;
                 itemDropIndicator.SetActive(false);
 
@@ -194,6 +200,13 @@ public class PlayerAction : MonoBehaviour
     {
         isPicking = false;
         itemDropIndicator.SetActive(true);
+    }
+
+    private void FinishDropping()
+    {
+        lastDroppedItem.dropCallback();
+        isDropping = false;
+        itemDropIndicator.SetActive(false);
     }
 
     private Vector3 GetIndicatorLocation() 
