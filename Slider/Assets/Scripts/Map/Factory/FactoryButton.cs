@@ -16,10 +16,10 @@ public class FactoryButton : ElectricalNode
 
         animator ??= GetComponent<Animator>();
     }
-    public void Switch()
+    public void Switch(bool powered)
     {
-        animator.SetTrigger("Toggle");
-        StartSignal(!Powered);
+        StartSignal(powered);
+        animator.SetBool("Powered", powered);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -29,7 +29,7 @@ public class FactoryButton : ElectricalNode
         {
             if (numObjectsOn == 0)
             {
-                Switch();
+                Switch(true);
             }
             numObjectsOn++;
         }
@@ -44,7 +44,7 @@ public class FactoryButton : ElectricalNode
             if (numObjectsOn <= 0)
             {
                 numObjectsOn = 0;
-                Switch();
+                Switch(false);
             }
         }
 
