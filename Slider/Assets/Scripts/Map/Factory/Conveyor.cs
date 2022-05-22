@@ -105,8 +105,7 @@ public class Conveyor : ElectricalNode
             }
 
             //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones)
-            yield return new WaitForEndOfFrame();
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.2f);
             if (Powered)
             {
                 //Queue the move, then immediately unqueue it so that it becomes the next active move.

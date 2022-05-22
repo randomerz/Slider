@@ -75,7 +75,7 @@ public class PlayerAction : MonoBehaviour
             // check raycast hitting items, npcs, houses, etc.
             Vector3 raycastDir = GetIndicatorLocation() - transform.position;
             RaycastHit2D hit = Physics2D.Raycast(transform.position, raycastDir, 1.5f, dropCollidingMask);
-            if (hit) {
+            if (hit && hit.collider.gameObject != pickedItem.gameObject) {  //Need to make sure the item isn't itself!
                 canDrop = false;
                 itemDropIndicator.SetActive(false);
             }

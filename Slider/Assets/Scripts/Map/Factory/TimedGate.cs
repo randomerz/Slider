@@ -142,7 +142,7 @@ public class TimedGate : ElectricalNode
             {
                 //Wait a bit, and then check again. If there's still no movement, then we can safely turn off the gate.
                 //This gives the player enough leeway to complete the puzzle at the last second (i.e. puzzle 3c)
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.4f);
 
                 tilesAreMoving = SGrid.current.TilesMoving();
             } else
