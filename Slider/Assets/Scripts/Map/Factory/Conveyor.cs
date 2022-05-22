@@ -33,7 +33,7 @@ public class Conveyor : ElectricalNode
     private void Start()
     {
 
-        animator.SetFloat("speed", Powered ? 1 : 0);
+        animator.SetFloat("speed", Powered ? 2 : 0);
 
         if (artifact == null)
         {
@@ -56,7 +56,7 @@ public class Conveyor : ElectricalNode
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        animator.SetFloat("speed", e.powered ? 1 : 0);
+        animator.SetFloat("speed", e.powered ? 2 : 0);
 
         if (e.powered && gettingMoveCoroutine == null)
         {

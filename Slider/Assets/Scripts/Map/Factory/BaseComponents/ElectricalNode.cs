@@ -82,6 +82,8 @@ public class ElectricalNode : MonoBehaviour
         {
             powerRefs = input ? 1 : 0;
 
+            OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
+
             foreach (ElectricalNode node in neighbors)
             {
                 HashSet<ElectricalNode> recStack = new HashSet<ElectricalNode>() { this };
