@@ -509,22 +509,18 @@ public class SGrid : MonoBehaviour, ISavable
 
     protected virtual void UpdateButtonCompletionsHelper()
     {
-        // Debug.Log("SGrid update buttons complete!");
-
-        // Debug.Log("Checking completions!");
+        Debug.Log("Checking completions!");
         for (int x = 0; x < current.width; x++) {
             for (int y = 0; y < current.height; y++) {
                 // int tid = current.targetGrid[x, y];
                 string tids = GetTileIdAt(x, y);
-                Debug.Log("Getting button at " + x + " " + y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
-                Debug.Log(artifactButton);
                 if (tids == "*") 
                 {
                     // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, true);
                 }
-                else {
+                else if (artifactButton != null) {
                     int tid = int.Parse(tids);
                     // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);

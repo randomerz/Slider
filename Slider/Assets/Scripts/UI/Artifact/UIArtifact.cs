@@ -530,7 +530,6 @@ public class UIArtifact : MonoBehaviour
     {
         foreach (ArtifactTileButton b in _instance.buttons)
         {
-            Debug.Log(b.x + " " + b.y);
             if (b.x == x && b.y == y)
             {
                 return b;
