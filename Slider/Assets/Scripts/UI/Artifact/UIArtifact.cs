@@ -530,7 +530,7 @@ public class UIArtifact : MonoBehaviour
     {
         foreach (ArtifactTileButton b in _instance.buttons)
         {
-            //Debug.Log(b.x + " " + b.y);
+            Debug.Log(b.x + " " + b.y);
             if (b.x == x && b.y == y)
             {
                 return b;
@@ -579,13 +579,14 @@ public class UIArtifact : MonoBehaviour
         return s;
     }
 
-    public static void AddButton(int islandId, bool shouldFlicker=true)
+    public static void AddButton(STile stile, bool shouldFlicker=true)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
         {
-            if (b.islandId == islandId)
+            if (b.islandId == stile.islandId)
             {
                 b.SetTileActive(true);
+                b.SetPosition(stile.x, stile.y);
                 b.SetShouldFlicker(shouldFlicker);
                 return;
             }

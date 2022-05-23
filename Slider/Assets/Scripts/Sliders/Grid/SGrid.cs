@@ -327,6 +327,7 @@ public class SGrid : MonoBehaviour, ISavable
 
     public void GivePlayerTheCollectible(string name)
     {
+        Debug.Log("Activating collectible " + name);
         if (GetCollectible(name) != null)
         {
             ActivateCollectible(name);
@@ -389,7 +390,7 @@ public class SGrid : MonoBehaviour, ISavable
     public virtual void EnableStile(STile stile, bool flickerButton=true)
     {
         stile.SetTileActive(true);
-        UIArtifact.AddButton(stile.islandId, flickerButton);
+        UIArtifact.AddButton(stile, flickerButton);
         OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
     }
     // See STile.isTileCollected for an explanation
@@ -437,10 +438,12 @@ public class SGrid : MonoBehaviour, ISavable
 
         // setting grids... similar to initialization
         STile[,] newGrid = new STile[width, height];
+        int[,] idGrid = new int[width, height];
         foreach (SGridData.STileData td in sgridData.grid) 
         {
             STile stile = GetStile(td.islandId); 
             newGrid[td.x, td.y] = stile;
+            idGrid[td.x, td.y] = td.islandId;
             stile.SetSTile(td.isTileActive, td.x, td.y);
         }
         grid = newGrid;
@@ -513,7 +516,9 @@ public class SGrid : MonoBehaviour, ISavable
             for (int y = 0; y < current.height; y++) {
                 // int tid = current.targetGrid[x, y];
                 string tids = GetTileIdAt(x, y);
+                Debug.Log("Getting button at " + x + " " + y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
+                Debug.Log(artifactButton);
                 if (tids == "*") 
                 {
                     // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
