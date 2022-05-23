@@ -15,7 +15,7 @@ public class InputRebindButton : MonoBehaviour
 
     private void OnEnable()
     {
-        UpdateButtonText();
+        Initialize();
     }
 
     public void RemapKeybind()

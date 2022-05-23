@@ -173,6 +173,18 @@ public class DebugUIManager : MonoBehaviour
         //Also make sure the sliders are in the right positions!
         string target = SGrid.current.TargetGrid;
         int[,] grid = new int[3, 3];
+        
+
+        // dc: if there's a * in the TargetGrid, then we just set them all on and are done w it lol
+        if (target.Contains("*"))
+        {
+            for (int j = 1; j <= 9; j++)
+            {
+                SGrid.current.EnableStile(j);
+            }
+            return;
+        }
+
         int i = 0;
         while(target.Length > 0)
         {
@@ -200,6 +212,20 @@ public class DebugUIManager : MonoBehaviour
     public void GPTC(string collectibleName)
     {
         SGrid.current.GivePlayerTheCollectible(collectibleName);
+    }
+
+    public void Give(string collectibleName)
+    {
+        SGrid.current.GivePlayerTheCollectible(collectibleName);
+    }
+
+    public void ES(string num)
+    {
+        int n = int.Parse(num);
+        for (int i = 1; i <= n; i++)
+        {
+            SGrid.current.GetCollectible("Slider " + i)?.DoPickUp();
+        }
     }
 
     // make sure pattern is length n^2

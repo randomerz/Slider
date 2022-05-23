@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class ArtifactTabManager : MonoBehaviour 
 {
@@ -15,12 +16,51 @@ public class ArtifactTabManager : MonoBehaviour
 
     // Tabs -- this is not a good solution but we only have one set of tabs so it's fine lol
     public Animator rearrangingTabAnimator;
+    public Animator rearrangingFragTabAnimator;
+    public ArtifactTab fragRealignTab;
+    public ArtifactTab RealignTab;
+    public ArtifactTab saveTab;
+    public ArtifactTab loadTab;
+    private int[,] originalGrid;
+    public Sprite saveTabSprite;
+    public Sprite loadTabSprite;
+    public Sprite saveEmptyTabSprite;
+    public Sprite loadEmptyTabSprite;
 
+    private ArtifactTileButton empty;
+    private ArtifactTileButton middle;
     public void SetCurrentScreen(int screenIndex)
     {
-        foreach (ArtifactTab t in tabs)
+        //Debug.Log("Checked stuff");
+        //Debug.Log(SGrid.current.GetActiveTiles().Count + " " + SGrid.GetNumButtonCompletions());
+        //Debug.Log(PlayerInventory.Contains("Scroll of Realigning", Area.Desert));
+        if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert)
+            && SGrid.current.GetActiveTiles().Count == SGrid.current.GetTotalNumTiles()
+            && SGrid.GetNumButtonCompletions() != SGrid.current.GetTotalNumTiles())
         {
-            t.SetIsVisible(screenIndex == t.homeScreen);
+            RealignTab.SetIsVisible(screenIndex == RealignTab.homeScreen);
+            saveTab.SetIsVisible(false);
+            loadTab.SetIsVisible(false);
+        }
+        else if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert)
+                 && SGrid.GetNumButtonCompletions() != SGrid.current.GetTotalNumTiles())
+        {
+            saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
+            loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
+            fragRealignTab.SetIsVisible(false);
+        }
+        else if (SGrid.current.GetArea() == Area.Desert
+                 && PlayerInventory.Contains("Scroll Frag", Area.Desert)
+                 && !PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
+        {
+            fragRealignTab.SetIsVisible(screenIndex == fragRealignTab.homeScreen);
+        }
+        else
+        {
+            RealignTab.SetIsVisible(false);
+            fragRealignTab.SetIsVisible(false);
+            saveTab.SetIsVisible(false);
+            loadTab.SetIsVisible(false);
         }
     }
 
@@ -34,7 +74,6 @@ public class ArtifactTabManager : MonoBehaviour
         if (isRearranging)
             return;
         isRearranging = true;
-
         StartCoroutine(IRearrangeOnClick());
     }
 
@@ -51,7 +90,8 @@ public class ArtifactTabManager : MonoBehaviour
 
         UIEffects.FlashWhite(callbackMiddle: () => {
             // Do the rearranging!
-            Debug.Log("Rearranged!");
+            //Debug.Log("Rearranged!");
+            SGrid.current.RearrangeGrid();
 
 
             UIManager.canOpenMenus = true;
@@ -78,24 +118,39 @@ public class ArtifactTabManager : MonoBehaviour
     public void SaveOnClick()
     {
         // flash tiles white
+        //Debug.Log("Tried to save!");
+        SGrid.current.SaveRealigningGrid();
         uiArtifactMenus.uiArtifact.FlickerAllOnce();
+        saveTab.GetComponentInChildren<Image>().sprite = saveTabSprite;
+        loadTab.GetComponentInChildren<Image>().sprite = loadTabSprite;
     }
 
     // Load tab
 
-    public void LoadOnClick()
+    public void LoadOnClick(UIArtifact uiartifact)
     {
-        // Do the rearranging!
-        SGrid.current.SetGrid(new int[,] {{7, 4, 1},
-                                          {8, 5, 2},
-                                          {9, 6, 3}});
-        Debug.Log("Rearranged!");
+        if (SGrid.current.realigningGrid != null)
+        {
+            // Do the rearranging!
+            SGrid.current.LoadRealigningGrid();
+            foreach (ArtifactTileButton button in uiartifact.buttons)
+            {
+                button.SetHighlighted(false);
+            }
+            //Debug.Log("Loaded!");
 
-        
-        UIEffects.FadeFromWhite();
-        CameraShake.Shake(1.5f, 0.75f);
-        AudioManager.Play("Slide Explosion");
 
+            UIEffects.FadeFromWhite();
+            CameraShake.Shake(1.5f, 0.75f);
+            AudioManager.Play("Slide Explosion");
+
+            saveTab.GetComponentInChildren<Image>().sprite = saveEmptyTabSprite;
+            loadTab.GetComponentInChildren<Image>().sprite = loadEmptyTabSprite;
+        }
+        else
+        {
+            AudioManager.Play("Artifact Error");
+        }
         // StartCoroutine(ILoadOnClick());
     }
 
@@ -104,15 +159,83 @@ public class ArtifactTabManager : MonoBehaviour
         yield return null;
     }
 
-    public void LoadOnHoverEnter()
+    public void LoadOnHoverEnter(UIArtifact uiartifact)
     {
         // set it to saved
+        //get the realignGrid, put the button stuff in the order based on that, then call bggrid set
+        if(SGrid.current.realigningGrid != null)
+        {
+            //Debug.Log("Previewed!");
+            originalGrid = new int[SGrid.current.width, SGrid.current.height];
+            for (int x = 0; x < SGrid.current.width; x++)
+            {
+                for (int y = 0; y < SGrid.current.height; y++)
+                {
+                    //Debug.Log(SGrid.current.saveGrid[x, y] + " button array index: " + (SGrid.current.saveGrid[x, y] - 1) + " " + x + " " + y);
+                    originalGrid[x, y] = SGrid.current.GetGrid()[x, y].islandId;
+                    uiartifact.buttons[SGrid.current.realigningGrid[x, y] - 1].SetPosition(x, y);
+                    uiartifact.buttons[SGrid.current.realigningGrid[x, y] - 1].SetHighlighted(true);
+                }
+            }
+        }
     }
 
-    public void LoadOnHoverExit()
+    public void LoadOnHoverExit(UIArtifact uiartifact)
     {
         // reset
+        //get the id's from the grid
+        if (SGrid.current.realigningGrid != null)
+        {
+            //Debug.Log("Reset!");
+            for (int x = 0; x < SGrid.current.width; x++)
+            {
+                for (int y = 0; y < SGrid.current.height; y++)
+                {
+                    uiartifact.buttons[originalGrid[x, y] - 1].SetPosition(x, y);
+                    uiartifact.buttons[originalGrid[x, y] - 1].SetHighlighted(false);
+                }
+            }
+        }
     }
 
+    //Rearranging Fragment
+
+    public void FragRearrangeOnClick(UIArtifact uiartifact)
+    {
+        // Do the rearranging!
+        //Debug.Log("Swapped!");
+        if (middle == empty)
+        {
+            AudioManager.Play("Artifact Error");
+            return;
+        }
+        uiartifact.FragRealignCheckAndSwap(middle, empty);
+        middle.SetHighlighted(false);
+        empty.SetHighlighted(false);
+    }
+
+    public void FragRearrangeOnHoverEnter(UIArtifact uiartifact)
+    {
+        rearrangingFragTabAnimator.SetFloat("speed", 4);
+        //Preview!
+        middle = UIArtifact.GetButton(1, 1);
+        foreach (ArtifactTileButton button in uiartifact.buttons)
+        {
+            if (button.islandId == 9)
+            {
+                empty = button;
+            }
+        }
+        middle.SetHighlighted(true);
+        empty.SetHighlighted(true);
+    }
+
+    public void FragRearrangeOnHoverExit()
+    {
+        rearrangingFragTabAnimator.SetFloat("speed", 1);
+        //Reset preview
+        middle.SetHighlighted(false);
+        empty.SetHighlighted(false);
+    }
     #endregion
 }

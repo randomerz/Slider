@@ -18,8 +18,13 @@ public class ShopManager : MonoBehaviour
     private bool startedFinalQuest;
     private bool[] wasSliderCollectibleBought = new bool[6]; // from 4 to 9
 
-    public State uiState { get; private set; }
-    public TalkState talkState { get; private set; }
+    private Collectible collectibleToActivateOnClose; // for slider 3 cutscene when you quit shop
+
+    public States UIState { get => _uiState;  private set { _uiState = value; UpdateNavManagerCurrentMenu(); } }
+    private States _uiState;
+
+    public TalkStates TalkState { get => _talkState; private set { _talkState = value; Debug.Log(_talkState); UpdateNavManagerCurrentMenu(); } }
+    private TalkStates _talkState;
 
     //  === References ===
     public ShopDialogueManager shopDialogueManager;
@@ -38,7 +43,7 @@ public class ShopManager : MonoBehaviour
 
     private InputSettings controls;
 
-    public enum State 
+    public enum States 
     {
         None,
         Main,
@@ -47,7 +52,7 @@ public class ShopManager : MonoBehaviour
         Dialogue,
     }
 
-    public enum TalkState
+    public enum TalkStates
     {
         Default,
         CoinToBeHad,
@@ -75,8 +80,10 @@ public class ShopManager : MonoBehaviour
     public static void LoadBindings()
     {
         if (_instance == null)
+        {
             return;
-            
+        }
+
         var rebinds = PlayerPrefs.GetString("rebinds");
         if (!string.IsNullOrEmpty(rebinds))
         {
@@ -88,17 +95,28 @@ public class ShopManager : MonoBehaviour
         _instance.controls.UI.OpenArtifact.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
         _instance.controls.UI.Click.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
         _instance.controls.Player.Action.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
+
+        // Pressing a navigation key selects a button is one is not already selected
+        _instance.controls.UI.Navigate.performed += context =>
+        {
+            if (!UINavigationManager.ButtonInCurrentMenuIsSelected())
+            {
+                UINavigationManager.SelectBestButtonInCurrentMenu();
+            }
+        };
     }
 
     public void CheckTavernKeep()
     {
         // first talk
         // SGrid.current.ActivateSliderCollectible(3);
-        Collectible c = SGrid.current.GetCollectible("Slider 3");
-        c.DoOnCollect();
+        if (!PlayerInventory.Contains("Slider 3", Area.Ocean))
+        {
+            collectibleToActivateOnClose = SGrid.current.GetCollectible("Slider 3");
+        }
 
         // rest of rewards
-        if (PlayerInventory.GetHasCollectedAnchor() && !turnedInAnchor)
+        if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
         {
             turnedInAnchor = true;
             EarnCredits(2);
@@ -212,6 +230,33 @@ public class ShopManager : MonoBehaviour
 
     #region UI
 
+    private void UpdateNavManagerCurrentMenu()
+    {
+        switch (_uiState)
+        {
+            case States.None:
+                break;
+            case States.Main:
+                UINavigationManager.CurrentMenu = mainPanel;
+                break;
+            case States.Buy:
+                UINavigationManager.CurrentMenu = buyPanel;
+                break;
+            case States.Talk:
+                if (_talkState == 0)
+                {
+                    UINavigationManager.CurrentMenu = talkPanel;
+                } 
+                else
+                {
+                    UINavigationManager.CurrentMenu = talkSubPanels[(int)_talkState];
+                }
+                break;
+            case States.Dialogue:
+                break;
+        }
+    }
+
     // Called when you walk up to the tavernkeeper and press 'E'
     public void OpenShop()
     {
@@ -240,29 +285,37 @@ public class ShopManager : MonoBehaviour
         UIManager.CloseUI();
 
         Player.SetCanMove(true);
+
+        // For the 3rd collectible
+        if (collectibleToActivateOnClose != null)
+        {
+            Debug.Log("nay nay");
+            collectibleToActivateOnClose.DoPickUp();
+            collectibleToActivateOnClose = null;
+        }
     }
 
     // Called whenever you press 'Esc'
     public void ExitCurrentPanel()
     {
-        switch (uiState)
+        switch (UIState)
         {
-            case State.None:
+            case States.None:
                 break;
-            case State.Main:
+            case States.Main:
                 CloseShop();
                 break;
-            case State.Buy:
+            case States.Buy:
                 OpenMainPanel();
                 break;
-            case State.Talk:
-                if (talkState == TalkState.Default)
+            case States.Talk:
+                if (TalkState == TalkStates.Default)
                     OpenMainPanel();
                 else
                     SetTalkState(0);
                 break;
-            case State.Dialogue:
-                if (shopDialogueManager.isFirstTime || !PlayerInventory.GetHasCollectedAnchor())
+            case States.Dialogue:
+                if (shopDialogueManager.isFirstTime || !PlayerInventory.Instance.GetHasCollectedAnchor())
                 {
                     CloseShop();
                     break;
@@ -275,7 +328,7 @@ public class ShopManager : MonoBehaviour
 
     public void CloseAllPanels()
     {
-        uiState = State.None;
+        UIState = States.None;
         mainPanel.SetActive(false);
         buyPanel.SetActive(false);
         talkPanel.SetActive(false);
@@ -289,7 +342,7 @@ public class ShopManager : MonoBehaviour
     public void OpenMainPanel()
     {
         CloseAllPanels();
-        uiState = State.Main;
+        UIState = States.Main;
         mainPanel.SetActive(true);
         shopDialogueManager.UpdateDialogue();
     }
@@ -297,7 +350,7 @@ public class ShopManager : MonoBehaviour
     public void OpenBuyPanel()
     {
         CloseAllPanels();
-        uiState = State.Buy;
+        UIState = States.Buy;
         buyPanel.SetActive(true);
         UpdateBuyButtons();
         shopDialogueManager.UpdateDialogue();
@@ -324,7 +377,7 @@ public class ShopManager : MonoBehaviour
     public void OpenTalkPanel()
     {
         CloseAllPanels();
-        uiState = State.Talk;
+        UIState = States.Talk;
         talkPanel.SetActive(true);
         shopDialogueManager.UpdateDialogue();
     }
@@ -332,7 +385,7 @@ public class ShopManager : MonoBehaviour
     // for inspector
     public void SetTalkState(int state)
     {
-        talkState = (TalkState)state;
+        TalkState = (TalkStates)state;
         for (int i = 0; i < talkSubPanels.Length; i++)
         {
             talkSubPanels[i].SetActive(i == state);
@@ -342,7 +395,7 @@ public class ShopManager : MonoBehaviour
     public void OpenDialoguePanel()
     {
         CloseAllPanels();
-        uiState = State.Dialogue;
+        UIState = States.Dialogue;
         dialoguePanel.SetActive(true);
         shopDialogueManager.UpdateDialogue();
     }

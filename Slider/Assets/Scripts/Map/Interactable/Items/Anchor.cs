@@ -22,7 +22,10 @@ public class Anchor : Item
 
     private void OnDisable()
     {
-        Player.SetMoveSpeedMultiplier(1f);
+        if (Player.GetInstance() != null)
+        {
+            Player.SetMoveSpeedMultiplier(1f);
+        }
     }
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null) // pickLocation may be moving
@@ -31,7 +34,7 @@ public class Anchor : Item
         UnanchorTile();
 
         Player.SetMoveSpeedMultiplier(0.75f);
-        PlayerInventory.SetHasCollectedAnchor(true);
+        PlayerInventory.Instance.SetHasCollectedAnchor(true);
         
         UITrackerManager.RemoveTracker(this.gameObject);
 
