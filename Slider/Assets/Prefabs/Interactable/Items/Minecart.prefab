@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 816576571367500746}
   - component: {fileID: 3852429895674959733}
+  - component: {fileID: 1505501552}
   m_Layer: 9
   m_Name: Item Sprite
   m_TagString: Untagged
@@ -82,6 +83,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1505501552
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 826947605044322349}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a61b1c9d2a49a3c48b8817de3b34eabc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2751716942032489634
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,6 +251,7 @@ MonoBehaviour:
   OnDrop:
     m_PersistentCalls:
       m_Calls: []
+  currentDirection: 0
   railManager: {fileID: 0}
   isOnTrack: 0
   isMoving: 0
@@ -256,6 +277,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   trackerSprite: {fileID: -1334703156212787541, guid: 9a913c55ce379ea49825a14ccddfd181, type: 3}
+  minecartAnimator: {fileID: 1505501552}
 --- !u!50 &-8482788907804060962
 Rigidbody2D:
   serializedVersion: 4

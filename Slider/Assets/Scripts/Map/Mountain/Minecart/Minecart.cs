@@ -29,6 +29,7 @@ public class Minecart : Item
 
     
     public Sprite trackerSprite;
+    [SerializeField] private Animator minecartAnimator;
 
 
     public void setCanStartMoving(bool canStart)
@@ -45,6 +46,8 @@ public class Minecart : Item
                 borderRM = r;
         }
         UITrackerManager.AddNewTracker(gameObject, trackerSprite);
+        minecartAnimator ??= GetComponent<Animator>();
+
     }
 
     private void OnEnable()
@@ -141,13 +144,17 @@ public class Minecart : Item
     public void StartMoving() 
     {
         if(isOnTrack && canStartMoving)
-            isMoving = true;  
+        {
+            isMoving = true; 
+            minecartAnimator.SetBool("isMoving", true);
+        } 
     }
 
     public void StopMoving()
     {
         isMoving = false;
         isOnTrack = false;
+        minecartAnimator.SetBool("isMoving", false);
     }
 
     public void ResetTiles()
