@@ -55,6 +55,31 @@ public class SaveProfile
         return areaToSGridData;
     }
 
+    public void SetAreaToSGridData(Dictionary<Area, SGridData> value)
+    {
+        areaToSGridData = value;
+    }
+
+    public Dictionary<string, bool> GetBoolsDictionary()
+    {
+        return bools;
+    }
+
+    public void SetBoolsDictionary(Dictionary<string, bool> value)
+    {
+        bools = value;
+    }
+
+    public Dictionary<string, string> GetStringsDictionary()
+    {
+        return strings;
+    }
+
+    public void SetStringsDictionary(Dictionary<string, string> value)
+    {
+        strings = value;
+    }
+
     #endregion
 
     public void Save()
