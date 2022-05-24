@@ -103,7 +103,7 @@ public class UITrackerManager : MonoBehaviour
             //S: When target is not on a tile
             if(currentTile == null){
                 t.image.rectTransform.SetParent(artifactPanel.GetComponent<RectTransform>());
-                calculateOffsetNullTile();
+                CalculateOffsetNullTile();
                 //offset = (position - center) * centerScale;
                 //offset = new Vector3(Mathf.Clamp(offset.x, -62.5f, 62.5f), Mathf.Clamp(offset.y, -57.5f, 57.5f));
 
@@ -112,7 +112,7 @@ public class UITrackerManager : MonoBehaviour
                 continue;
             }
 
-            calculateOffset();
+            CalculateOffset();
             //offset = (position - (Vector2)currentTile.transform.position) * scale;
 
             currentButton = uiArtifactMenus.uiArtifact.GetButton(currentTile.islandId);
@@ -131,13 +131,13 @@ public class UITrackerManager : MonoBehaviour
     }
 
     // C: made into its own method so it can be overriden 
-    protected virtual void calculateOffsetNullTile() 
+    protected virtual void CalculateOffsetNullTile() 
     {
         offset = (position - center) * centerScale;
         offset = new Vector3(Mathf.Clamp(offset.x, -62.5f, 62.5f), Mathf.Clamp(offset.y, -57.5f, 57.5f));
     }
 
-    protected virtual void calculateOffset() 
+    protected virtual void CalculateOffset() 
     {
         offset = (position - (Vector2)currentTile.transform.position) * scale;
     }

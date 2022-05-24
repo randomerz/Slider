@@ -18,7 +18,7 @@ public class MountainUITrackerManager : UITrackerManager
         _instance = this;
     }
 
-    protected override void calculateOffsetNullTile() 
+    protected override void CalculateOffsetNullTile() 
     {
         Vector2 temp = (position - (position.y > 62.5? upperCenter: lowerCenter));
         offset = temp.x * xCenterOffset + temp.y * yCenterOffset + (position.y > 62.5? new Vector2(0, 29): new Vector2(0, -30));
@@ -26,7 +26,7 @@ public class MountainUITrackerManager : UITrackerManager
         //offset = new Vector3(Mathf.Clamp(offset.x, -62.5f, 62.5f), Mathf.Clamp(offset.y, -57.5f, 57.5f));
     }
 
-    protected override void calculateOffset() 
+    protected override void CalculateOffset() 
     {
         Vector2 temp = (position - (Vector2)currentTile.transform.position);
         offset = temp.x * xOffset + temp.y * yOffset;
