@@ -32,6 +32,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     private void Awake() 
     {
+        Debug.Log("defaulting the sprite..");
         islandSprite = buttonAnimator.sliderImage.sprite;
     }
 
@@ -125,7 +126,7 @@ public class ArtifactTileButton : MonoBehaviour
         isTileActive = v;
         if (v)
         {
-            buttonAnimator.sliderImage.sprite = islandSprite;
+            buttonAnimator.sliderImage.sprite = isComplete ? completedSprite : islandSprite;
         }
         else
         {

@@ -220,6 +220,20 @@ public class DebugUIManager : MonoBehaviour
         SGrid.current.GivePlayerTheCollectible(collectibleName);
     }
 
+    public void Give(string collectibleName)
+    {
+        SGrid.current.GivePlayerTheCollectible(collectibleName);
+    }
+
+    public void ES(string num)
+    {
+        int n = int.Parse(num);
+        for (int i = 1; i <= n; i++)
+        {
+            SGrid.current.GetCollectible("Slider " + i)?.DoPickUp();
+        }
+    }
+
     //C: make sure pattern is the same length as the current sgrid
     public void SetGrid(string pattern)
     {

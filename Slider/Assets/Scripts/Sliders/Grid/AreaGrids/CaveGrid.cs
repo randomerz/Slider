@@ -140,13 +140,13 @@ public class CaveGrid : SGrid
         UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
     }
 
-    public override void SaveGrid() 
+    public override void Save() 
     {
-        base.SaveGrid();
+        base.Save();
     }
 
-    public override void LoadGrid()
+    public override void Load()
     {
-        base.LoadGrid();
+        base.Load();
     }
 }
