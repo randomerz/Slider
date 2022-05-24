@@ -8,9 +8,10 @@ using UnityEngine;
 
 public class SaveSystem 
 {
+    // returns the current SaveProfile being used
     public static SaveProfile Current {
         get {
-            if (current == null && SGrid.current != null) 
+            if (current == null && SGrid.current != null) // SGrid.current != null meas we are in play
             {
                 Debug.LogError("Save System is not using a profile! Creating a default profile for now...");
                 current = new SaveProfile("Boomo");
@@ -26,7 +27,7 @@ public class SaveSystem
     private static SaveProfile[] saveProfiles = new SaveProfile[3];
 
     public SaveSystem() {
-        // load profiles here maybe
+        // load profiles from file here maybe
         saveProfiles[0] = new SaveProfile("Temp Catto");
     }
 

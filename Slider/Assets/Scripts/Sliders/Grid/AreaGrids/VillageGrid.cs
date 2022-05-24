@@ -16,7 +16,7 @@ public class VillageGrid : SGrid
 
     private Coroutine chadFallCoroutine;
     private Coroutine shuffleBuildUpCoroutine;
-    private static bool checkCompletion = false; // TODO: serialize
+    private bool checkCompletion = false; // TODO: serialize
 
     protected override void Awake() {
         myArea = Area.Village;
@@ -28,9 +28,6 @@ public class VillageGrid : SGrid
 
         base.Awake();
 
-        chadFell = false;
-
-        fishOn = WorldData.GetState("fishOn");
         if (fishOn)
         {
             particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
@@ -44,12 +41,16 @@ public class VillageGrid : SGrid
 
         AudioManager.PlayMusic("Village");
         UIEffects.FadeFromBlack();
+        
+        if (checkCompletion) {
+            UpdateButtonCompletions(this, null);
+        }
     }
     
     private void OnEnable() {
         SGridAnimator.OnSTileMoveEnd += CheckChadMoved;
         if (checkCompletion) {
-            UpdateButtonCompletions(this, null);
+            Debug.Log("OnEnable checkCompletion");
             SGrid.OnGridMove += SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
@@ -65,17 +66,20 @@ public class VillageGrid : SGrid
         }
     }
 
-    public override void SaveGrid() 
+    public override void Save() 
     {
-        base.SaveGrid();
+        base.Save();
 
-        // GameManager.saveSystem.SaveSGridData(Area.Village, this);
-        // GameManager.saveSystem.SaveMissions(new Dictionary<string, bool>());
+        SaveSystem.Current.SetBool("villageCompletion", checkCompletion);
+        SaveSystem.Current.SetBool("villageFishOn", fishOn);
     }
 
-    public override void LoadGrid()
+    public override void Load()
     {
-        base.LoadGrid();
+        base.Load();
+        
+        checkCompletion = SaveSystem.Current.GetBool("villageCompletion");
+        fishOn = SaveSystem.Current.GetBool("villageFishOn");
     }
 
 
@@ -89,7 +93,6 @@ public class VillageGrid : SGrid
     {
         if (!fishOn)
         {
-            WorldData.SetState("fishOn", true);
             fishOn = true;
             particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
         }

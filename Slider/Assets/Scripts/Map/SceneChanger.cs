@@ -27,7 +27,7 @@ public class SceneChanger : MonoBehaviour
 
     public void ChangeScenes() 
     {
-        SGrid.current.SaveGrid();
+        SaveSystem.Current.Save();
         SceneSpawns.nextSpawn = sceneSpawnName;
 
         if (isSpawnPosRelative)
@@ -53,9 +53,17 @@ public class SceneChanger : MonoBehaviour
          * will get unloaded briefly before the new UIEffects Canvas is loaded), then do part 2. Once part 2 finishes, 
          * SceneTransitionOverlayManager notices automatically and disables the overlay.
          */
-        sceneLoad = SceneManager.LoadSceneAsync(sceneName);
-        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
-        StartCoroutine(IChangeScene());
+        try {
+            sceneLoad = SceneManager.LoadSceneAsync(sceneName);
+            sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
+            StartCoroutine(IChangeScene());
+        }
+        catch (System.Exception e) {
+            Debug.LogWarning("Scene could not be loaded! Is it properly named and added to build?");
+            Debug.LogError(e);
+            UIEffects.ClearScreen();
+            SceneTransitionOverlayManager.HideOverlay();
+        }
     }
 
     private IEnumerator IChangeScene()

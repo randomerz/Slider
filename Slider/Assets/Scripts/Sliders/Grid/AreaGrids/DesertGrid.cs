@@ -98,14 +98,14 @@ public class DesertGrid : SGrid
         AudioManager.SetMusicParameter("Desert", "DesertDistToCasino", Mathf.Min(dist1, dist2, dist3, dist4));
     }
 
-    public override void SaveGrid() 
+    public override void Save() 
     {
-        base.SaveGrid();
+        base.Save();
     }
 
-    public override void LoadGrid()
+    public override void Load()
     {
-        base.LoadGrid();
+        base.Load();
     }
 
 
