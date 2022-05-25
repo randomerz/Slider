@@ -26,14 +26,12 @@ public class Meltable : MonoBehaviour
 
     public void Melt()
     {
-        Debug.Log("melting");
         spriteRenderer.sprite = meltedSprite;
         isFrozen = false;
     }
 
     public void Freeze()
     {
-        Debug.Log("freezing");
         spriteRenderer.sprite = frozenSprite;
         isFrozen = true;
     }
