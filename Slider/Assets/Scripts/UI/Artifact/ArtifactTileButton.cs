@@ -32,7 +32,6 @@ public class ArtifactTileButton : MonoBehaviour
 
     private void Awake() 
     {
-        Debug.Log("defaulting the sprite..");
         islandSprite = buttonAnimator.sliderImage.sprite;
     }
 

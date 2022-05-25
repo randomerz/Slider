@@ -333,7 +333,6 @@ public class ShopManager : MonoBehaviour
         // For the 3rd collectible
         if (collectibleToActivateOnClose != null)
         {
-            Debug.Log("nay nay");
             collectibleToActivateOnClose.DoPickUp();
             collectibleToActivateOnClose = null;
         }

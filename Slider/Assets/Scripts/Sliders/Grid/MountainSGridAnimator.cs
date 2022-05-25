@@ -7,7 +7,7 @@ public class MountainSGridAnimator : SGridAnimator
      //public bool isMoving = false;
 
     // set in inspector
-
+ 
 
     public override void Move(SMove move, STile[,] grid = null)
     {

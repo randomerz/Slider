@@ -59,6 +59,15 @@ public class ElectricalNode : MonoBehaviour
         OnPowered.RemoveListener(OnPoweredHandler);
     }
 
+    private void Start()
+    {
+        if (Powered)
+        {
+            //This is mainly for inverted power.
+            OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
+        }
+    }
+
     public virtual void OnPoweredHandler(OnPoweredArgs e) { }
 
     public virtual void StartSignal(bool input)
@@ -72,6 +81,8 @@ public class ElectricalNode : MonoBehaviour
         if (Powered != input)    //This ensures we don't double propagate
         {
             powerRefs = input ? 1 : 0;
+
+            OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
 
             foreach (ElectricalNode node in neighbors)
             {
@@ -165,7 +176,10 @@ public class ElectricalNode : MonoBehaviour
         //Make sure the chain of prevs has no cycles (which is should) or else this will cause stack overflow
         foreach (ElectricalNode prev in powerPathPrevs)
         {
-            refs += prev.GetPathNodesRecursive(nodes);
+            if (!nodes.Contains(prev))  //Need to add this to prevent stack overflow w/ more than 1 power source.
+            {
+                refs += prev.GetPathNodesRecursive(nodes);
+            }
         }
 
         return refs;
@@ -198,13 +212,14 @@ public class ElectricalNode : MonoBehaviour
             //In order to account for these new paths, we need to propagate "across the edge" in both directions, so other's refs are propagated to this's neighbors and vice-versa.
             //BOTH propagations happen BEFORE we update the nodes themselves in order to avoid double counting refs.
             int oldThisRefs = this.powerRefs;   //If we don't do this, and power is coming from both directions, it will double count refs.
+            bool oldPowered = this.Powered;
             if (other.Powered)
             {
                 HashSet<ElectricalNode> otherNodes;
                 other.GetPathNodes(out otherNodes);
                 this.PropagateSignal(true, other, otherNodes, other.powerRefs);
             }
-            if (this.Powered)
+            if (oldPowered)
             {
                 HashSet<ElectricalNode> thisNodes;
                 this.GetPathNodes(out thisNodes);

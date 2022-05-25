@@ -49,8 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeType: 1
   powerRefs: 0
-  powerPathPrevs: []
   neighbors: []
+  invertSignal: 0
   OnPowered:
     m_PersistentCalls:
       m_Calls: []
@@ -181,7 +181,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 6
   m_Sprite: {fileID: 3253217600472362319, guid: fc7c41f453103fa43b7190cbf778ef02, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
