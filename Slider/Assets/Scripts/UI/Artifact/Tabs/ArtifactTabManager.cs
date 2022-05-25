@@ -118,8 +118,6 @@ public class ArtifactTabManager : MonoBehaviour
 
     public void SaveOnClick()
     {
-        // flash tiles white
-        //Debug.Log("Tried to save!");
         SGrid.current.SaveRealigningGrid();
         uiArtifactMenus.uiArtifact.FlickerAllOnce();
         SetSaveLoadTabSprites(true);
@@ -198,7 +196,7 @@ public class ArtifactTabManager : MonoBehaviour
             }
         }
     }
-    //Chen: sets the sprites of the save and load tabs based on the passed in bool
+
     public void SetSaveLoadTabSprites(bool b)
     {
         if (b)
@@ -212,8 +210,8 @@ public class ArtifactTabManager : MonoBehaviour
             loadTab.GetComponentInChildren<Image>().sprite = loadEmptyTabSprite;
         }
     }
-    //Rearranging Fragment
 
+    //Rearranging Fragment
     public void FragRearrangeOnClick()
     {
         // Do the rearranging!
@@ -224,8 +222,10 @@ public class ArtifactTabManager : MonoBehaviour
             return;
         }
         uiArtifactMenus.uiArtifact.FragRealignCheckAndSwap(middle, empty);
-        middle.SetHighlighted(false);
-        empty.SetHighlighted(false);
+        uiArtifactMenus.uiArtifact.DeselectCurrentButton();
+        middle.FragLightningPreview(false);
+        empty.FragLightningPreview(false);
+        UIArtifact.DisableLightning();
     }
 
     public void FragRearrangeOnHoverEnter()
@@ -233,23 +233,19 @@ public class ArtifactTabManager : MonoBehaviour
         rearrangingFragTabAnimator.SetFloat("speed", 4);
         //Preview!
         middle = UIArtifact.GetButton(1, 1);
-        foreach (ArtifactTileButton button in uiArtifactMenus.uiArtifact.buttons)
-        {
-            if (button.islandId == 9)
-            {
-                empty = button;
-            }
-        }
-        middle.SetHighlighted(true);
-        empty.SetHighlighted(true);
+        empty = uiArtifactMenus.uiArtifact.GetButton(9);
+        if (middle.isTileActive) UIArtifact.SetLightningPos(1, 1);
+        middle.FragLightningPreview(true);
+        empty.FragLightningPreview(true);
     }
 
     public void FragRearrangeOnHoverExit()
     {
         rearrangingFragTabAnimator.SetFloat("speed", 1);
         //Reset preview
-        middle.SetHighlighted(false);
-        empty.SetHighlighted(false);
+        UIArtifact.DisableLightning();
+        middle.FragLightningPreview(false);
+        empty.FragLightningPreview(false);
     }
     #endregion
 }
