@@ -22,10 +22,6 @@ public class Item : MonoBehaviour
     public UnityEvent OnPickUp;
     public UnityEvent OnDrop;
 
-    public void Awake() 
-    {
-    }
-
     public virtual void PickUpItem(Transform pickLocation, System.Action callback=null) // pickLocation may be moving
     {
         StartCoroutine(AnimatePickUp(pickLocation, callback));

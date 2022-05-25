@@ -75,4 +75,13 @@ public class MountainArtifact : UIArtifact
             return false;
         }
     }
+
+    public void AnchorSwap(STile s1, STile s2)
+    {
+        //We can't just call CheckandSwap because CanMove will return false due to the anchor
+        SMove swap = new SMoveLayerSwap(s1.x, s1.y, s2.x, s2.y, s1.islandId, s2.islandId);
+        QueueCheckAndAdd(swap);
+        SwapButtons(GetButton(s1.islandId), GetButton(s2.islandId));
+        QueueCheckAfterMove(this, null);
+    }
 }
