@@ -518,7 +518,6 @@ public class SGrid : MonoBehaviour, ISavable
 
     protected virtual void UpdateButtonCompletionsHelper()
     {
-        Debug.Log("Checking completions!");
         for (int x = 0; x < current.width; x++) {
             for (int y = 0; y < current.height; y++) {
                 // int tid = current.targetGrid[x, y];
