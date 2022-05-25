@@ -93,5 +93,4 @@ public class Anchor : Item
 
         //conductiveNode.GetComponent<Collider2D>().enabled = true;
         //triggerCollider.enabled = true;
-    }
 }

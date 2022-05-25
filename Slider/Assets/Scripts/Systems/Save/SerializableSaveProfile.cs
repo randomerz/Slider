@@ -23,6 +23,8 @@ public class SerializableSaveProfile
 
     public static SerializableSaveProfile FromSaveProfile(SaveProfile saveProfile)
     {
+        if (saveProfile == null) return null;
+
         SerializableSaveProfile ssp = new SerializableSaveProfile();
 
         ssp.profileName = saveProfile.GetProfileName();

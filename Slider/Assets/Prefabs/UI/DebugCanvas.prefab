@@ -719,8 +719,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "  Some Commands:\nSetScene [SceneName]  SetGrid 123456789\nGPTC [Collect
-    Name]   \nNoClip                SpawnAnchor"
+  m_text: '  Some Commands:
+
+    SetScene [SceneName]  SetGrid 123456789
+
+    Give
+    [Collect Name]   NoClip
+
+    ES [Num Sliders]      SpawnAnchor
+
+    Any method
+    in the scene!'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fdb7ca4523a2686409c6d5adb3a9da03, type: 2}
   m_sharedMaterial: {fileID: -2486997846258592095, guid: fdb7ca4523a2686409c6d5adb3a9da03, type: 2}
