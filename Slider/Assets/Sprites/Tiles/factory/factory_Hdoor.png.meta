@@ -17,6 +17,9 @@ TextureImporter:
   - first:
       213: 7020184961544933495
     second: factory_Hdoor_5
+  - first:
+      213: -4683821561875168763
+    second: factory_Hdoor_1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -133,12 +136,12 @@ TextureImporter:
       name: factory_Hdoor_0
       rect:
         serializedVersion: 2
-        x: 96
-        y: 6
-        width: 48
-        height: 25
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 0
+        y: 0
+        width: 80
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -154,12 +157,12 @@ TextureImporter:
       name: factory_Hdoor_2
       rect:
         serializedVersion: 2
-        x: 176
-        y: 6
-        width: 48
-        height: 25
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 160
+        y: 0
+        width: 80
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -175,12 +178,12 @@ TextureImporter:
       name: factory_Hdoor_3
       rect:
         serializedVersion: 2
-        x: 256
-        y: 6
-        width: 48
-        height: 25
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 240
+        y: 0
+        width: 80
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -196,12 +199,12 @@ TextureImporter:
       name: factory_Hdoor_4
       rect:
         serializedVersion: 2
-        x: 336
-        y: 6
-        width: 48
-        height: 25
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 320
+        y: 0
+        width: 80
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -214,22 +217,22 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: factory_Hdoor_5
+      name: factory_Hdoor_1
       rect:
         serializedVersion: 2
-        x: 16
-        y: 6
-        width: 48
-        height: 25
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 80
+        y: 0
+        width: 80
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 770dc6a2705bc6160800000000000000
-      internalID: 7020184961544933495
+      spriteID: 5028d1dfa19bffeb0800000000000000
+      internalID: -4683821561875168763
       vertices: []
       indices: 
       edges: []

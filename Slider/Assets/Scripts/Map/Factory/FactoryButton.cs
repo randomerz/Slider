@@ -16,35 +16,35 @@ public class FactoryButton : ElectricalNode
 
         animator ??= GetComponent<Animator>();
     }
-    public void Switch()
+    public void Switch(bool powered)
     {
-        animator.SetTrigger("Toggle");
-        StartSignal(!Powered);
+        StartSignal(powered);
+        animator.SetBool("Powered", powered);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         //Might have to restrict this to specific items, but it works for now.
-        if (collision.CompareTag("Player") || collision.CompareTag("Item"))
+        if (other.CompareTag("Player") || other.CompareTag("ButtonTrigger"))
         {
             if (numObjectsOn == 0)
             {
-                Switch();
+                Switch(true);
             }
             numObjectsOn++;
         }
 
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        if (collision.CompareTag("Player") || collision.CompareTag("Item"))
+        if (other.CompareTag("Player") || other.CompareTag("ButtonTrigger"))
         {
             numObjectsOn--;
             if (numObjectsOn <= 0)
             {
                 numObjectsOn = 0;
-                Switch();
+                Switch(false);
             }
         }
 
