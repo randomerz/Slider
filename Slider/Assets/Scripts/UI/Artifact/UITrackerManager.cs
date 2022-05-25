@@ -5,15 +5,15 @@ using UnityEngine.UI;
 
 public class UITrackerManager : MonoBehaviour
 {
-    private static UITrackerManager _instance;
+    protected static UITrackerManager _instance;
     
-    private Vector2 center = new Vector2(17, 17);
-    private Vector2 position;
-    private Vector2 offset;
-    private ArtifactTileButton currentButton;
-    private STile currentTile;
-    private float scale = 26f/17f;
-    private float centerScale = 36f/17f;
+    protected Vector2 center = new Vector2(17, 17);
+    protected Vector2 position;
+    protected Vector2 offset;
+    protected ArtifactTileButton currentButton;
+    protected STile currentTile;
+    protected float scale = 27f/17f;
+    protected float centerScale = 37f/17f;
     
     public UIArtifactMenus uiArtifactMenus;
     public GameObject artifactPanel;
@@ -47,7 +47,7 @@ public class UITrackerManager : MonoBehaviour
         exclamation,
     }
 
-    void Awake() {
+    protected virtual void Awake() {
         _instance = this;
     }
 
@@ -96,22 +96,24 @@ public class UITrackerManager : MonoBehaviour
         }
 
         foreach (UITracker t in targets) {
-            position = t.getPosition();
+            position = t.GetPosition();
             currentTile = t.GetSTile();
             t.gameObject.SetActive(t.target.activeInHierarchy);
 
             //S: When target is not on a tile
             if(currentTile == null){
                 t.image.rectTransform.SetParent(artifactPanel.GetComponent<RectTransform>());
-                offset = (position - center) * centerScale;
-                offset = new Vector3(Mathf.Clamp(offset.x, -62.5f, 62.5f), Mathf.Clamp(offset.y, -57.5f, 57.5f));
+                CalculateOffsetNullTile();
+                //offset = (position - center) * centerScale;
+                //offset = new Vector3(Mathf.Clamp(offset.x, -62.5f, 62.5f), Mathf.Clamp(offset.y, -57.5f, 57.5f));
 
                 t.image.rectTransform.anchoredPosition = offset;
 
                 continue;
             }
 
-            offset = (position - (Vector2)currentTile.transform.position) * scale;
+            CalculateOffset();
+            //offset = (position - (Vector2)currentTile.transform.position) * scale;
 
             currentButton = uiArtifactMenus.uiArtifact.GetButton(currentTile.islandId);
             // Debug.Log("Setting transform of " + t.name);
@@ -127,6 +129,19 @@ public class UITrackerManager : MonoBehaviour
             }
         }
     }
+
+    // C: made into its own method so it can be overriden 
+    protected virtual void CalculateOffsetNullTile() 
+    {
+        offset = (position - center) * centerScale;
+        offset = new Vector3(Mathf.Clamp(offset.x, -62.5f, 62.5f), Mathf.Clamp(offset.y, -57.5f, 57.5f));
+    }
+
+    protected virtual void CalculateOffset() 
+    {
+        offset = (position - (Vector2)currentTile.transform.position) * scale;
+    }
+
 
     public static void AddNewTracker(GameObject target, DefaultSprites sprite=DefaultSprites.circle1, DefaultSprites blinkSprite=DefaultSprites.none, float blinkTime=-1) {
         if (_instance == null){

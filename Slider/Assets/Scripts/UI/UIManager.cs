@@ -39,11 +39,16 @@ public class UIManager : MonoBehaviour
         sfxSlider.value = AudioManager.GetSFXVolume();
         musicSlider.value = AudioManager.GetMusicVolume();
 
-        bigTextToggle.onValueChanged.AddListener((bool value) => { ToggleBigText(value); });
+        bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
     }
 
     public static void LoadBindings()
     {
+        if (_instance == null)
+        {
+            return;
+        }
+
         var rebinds = PlayerPrefs.GetString("rebinds");
         if (!string.IsNullOrEmpty(rebinds))
         {
@@ -159,6 +164,9 @@ public class UIManager : MonoBehaviour
         optionsPanel.SetActive(false);
         controlsPanel.SetActive(false);
         advOptionsPanel.SetActive(false);
+
+        UINavigationManager.CurrentMenu = pausePanel;
+        UINavigationManager.SelectBestButtonInCurrentMenu();
     }
 
     public void OpenOptions()
@@ -174,6 +182,9 @@ public class UIManager : MonoBehaviour
         optionsPanel.SetActive(true);
         controlsPanel.SetActive(false);
         advOptionsPanel.SetActive(false);
+
+        UINavigationManager.CurrentMenu = optionsPanel;
+        UINavigationManager.SelectBestButtonInCurrentMenu();
     }
 
     public void OpenControls()
@@ -183,6 +194,9 @@ public class UIManager : MonoBehaviour
 
         optionsPanel.SetActive(false);
         controlsPanel.SetActive(true);
+
+        UINavigationManager.CurrentMenu = controlsPanel;
+        UINavigationManager.SelectBestButtonInCurrentMenu();
     }
     public void OpenAdvOptions()
     {
@@ -193,6 +207,9 @@ public class UIManager : MonoBehaviour
 
         optionsPanel.SetActive(false);
         advOptionsPanel.SetActive(true);
+
+        UINavigationManager.CurrentMenu = advOptionsPanel;
+        UINavigationManager.SelectBestButtonInCurrentMenu();
     }
 
     public void BackPressed()
@@ -224,13 +241,13 @@ public class UIManager : MonoBehaviour
         SettingsManager.ScreenShake = screenShakeSlider.value;
     }
 
-    public void ToggleBigText(bool value)
+    public void UpdateBigText()
     {
         // By the word of our noble lord, Boomo, long may he reign, these two lines must remain commented out
         //DialogueManager.highContrastMode = value;
         //DialogueManager.doubleSizeMode = value;
 
-        SettingsManager.BigTextEnabled = value;
+        SettingsManager.BigTextEnabled = bigTextToggle.isOn;
     }
 
     public void LoadGame()

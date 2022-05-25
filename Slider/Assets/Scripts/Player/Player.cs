@@ -44,6 +44,11 @@ public class Player : MonoBehaviour
 
     public static void LoadBindings()
     {
+        if (_instance == null)
+        {
+            return;
+        }
+
         var rebinds = PlayerPrefs.GetString("rebinds");
         if (!string.IsNullOrEmpty(rebinds))
         {
@@ -194,7 +199,11 @@ public class Player : MonoBehaviour
         STile[,] grid = SGrid.current.GetGrid();
         float offset = grid[0, 0].STILE_WIDTH / 2f;
         float housingOffset = -150;
-        
+
+        //C: The housing offset in the mountain is -250 due to the map's large size
+        if(SGrid.current is MountainGrid)
+            housingOffset -= 100;
+                
         STile stileUnderneath = null;
         foreach (STile s in grid)
         {

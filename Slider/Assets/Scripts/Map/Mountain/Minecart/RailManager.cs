@@ -10,6 +10,7 @@ public class RailManager : MonoBehaviour
     public List<RailTile> stateOneTiles = new List<RailTile>(24); //There are only 24 junctions, so there are only 24 tiles with alternate states
     public List<Vector3Int> railLocations = new List<Vector3Int>(); // a list of the locations of the rail tiles 
     public Minecart mc;
+    public bool isBorderRM = false; //this is really jank but for now it works
   
     private void Start() 
     {
@@ -27,6 +28,11 @@ public class RailManager : MonoBehaviour
         railMap.RefreshTile(loc);
     }
 
+    public void ChangeTile(Vector3Int loc) 
+    {
+        ChangeTile(loc, railMap.GetTile(loc) as RailTile);
+    }
+
     public void ChangeTile(Vector3Int loc, RailTile tile)
     {
         int index = stateOneTiles.IndexOf(tile);
@@ -40,7 +46,7 @@ public class RailManager : MonoBehaviour
         foreach (Vector3Int position in railMap.cellBounds.allPositionsWithin) {
             RailTile tile = railMap.GetTile(position) as RailTile;
             if (tile != null) {
-                ChangeTile(position, tile as RailTile);
+                ChangeTile(position, tile);
             }
         }
     }

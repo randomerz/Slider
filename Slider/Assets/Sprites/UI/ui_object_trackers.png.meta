@@ -26,6 +26,9 @@ TextureImporter:
   - first:
       213: 5333845850840386237
     second: ui_object_trackers_circle3
+  - first:
+      213: -1334703156212787541
+    second: ui_object_trackers_minecart
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -261,7 +264,7 @@ TextureImporter:
         width: 7
         height: 9
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -282,7 +285,7 @@ TextureImporter:
         width: 5
         height: 5
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -290,6 +293,27 @@ TextureImporter:
       bones: []
       spriteID: dba480a9a80a50a40800000000000000
       internalID: 5333845850840386237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_object_trackers_minecart
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 0
+        width: 7
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba6185d0d8e2a7de0800000000000000
+      internalID: -1334703156212787541
       vertices: []
       indices: 
       edges: []

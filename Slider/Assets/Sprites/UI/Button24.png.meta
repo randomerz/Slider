@@ -8,6 +8,9 @@ TextureImporter:
   - first:
       213: 5325387788926593336
     second: Button24_1
+  - first:
+      213: 6641034709832212186
+    second: Button24_2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -117,8 +120,8 @@ TextureImporter:
         width: 24
         height: 24
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 3, y: 3, z: 3, w: 3}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -138,14 +141,35 @@ TextureImporter:
         width: 24
         height: 24
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 3, y: 3, z: 3, w: 3}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
       spriteID: 8392c2a9af397e940800000000000000
       internalID: 5325387788926593336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button24_2
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ade969402e1b92c50800000000000000
+      internalID: 6641034709832212186
       vertices: []
       indices: 
       edges: []

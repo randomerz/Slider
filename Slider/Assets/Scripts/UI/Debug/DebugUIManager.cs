@@ -19,6 +19,7 @@ public class DebugUIManager : MonoBehaviour
 
     [Header("Objects")]
     public GameObject anchorPrefab;
+    public GameObject minecartPrefab;
 
     private void Awake()
     {
@@ -173,6 +174,18 @@ public class DebugUIManager : MonoBehaviour
         //Also make sure the sliders are in the right positions!
         string target = SGrid.current.TargetGrid;
         int[,] grid = new int[3, 3];
+        
+
+        // dc: if there's a * in the TargetGrid, then we just set them all on and are done w it lol
+        if (target.Contains("*"))
+        {
+            for (int j = 1; j <= 9; j++)
+            {
+                SGrid.current.EnableStile(j);
+            }
+            return;
+        }
+
         int i = 0;
         while(target.Length > 0)
         {
@@ -197,27 +210,49 @@ public class DebugUIManager : MonoBehaviour
         Instantiate(anchorPrefab, Player.GetPosition(), Quaternion.identity);
     }
 
+    public void SpawnMinecart()
+    {
+        Instantiate(minecartPrefab, Player.GetPosition(), Quaternion.identity);
+    }
+
     public void GPTC(string collectibleName)
     {
         SGrid.current.GivePlayerTheCollectible(collectibleName);
     }
 
-    // make sure pattern is length n^2
+    public void Give(string collectibleName)
+    {
+        SGrid.current.GivePlayerTheCollectible(collectibleName);
+    }
+
+    public void ES(string num)
+    {
+        int n = int.Parse(num);
+        for (int i = 1; i <= n; i++)
+        {
+            SGrid.current.GetCollectible("Slider " + i)?.DoPickUp();
+        }
+    }
+
+    //C: make sure pattern is the same length as the current sgrid
     public void SetGrid(string pattern)
     {
-        int n = (int)Mathf.Sqrt(pattern.Length);
-        if (pattern.Length != n * n)
+        SGrid grid = SGrid.current;
+        int width = grid.width;
+        int height = grid.height;
+
+        if (pattern.Length != width * height)
         {
-            Debug.LogWarning("Input pattern was not of size n^2!");
+            Debug.LogWarning("Input pattern was not the size of this SGrid!");
             return;
         }
 
-        int[,] puzzle = new int[n, n];
+        int[,] puzzle = new int[width, height];
 
         for (int i = 0; i < pattern.Length; i++)
         {
-            int x = i % n;
-            int y = n - (i / n) - 1;
+            int x = i % width;
+            int y = i / height;
             puzzle[x, y] = int.Parse(pattern[i].ToString());
         }
 

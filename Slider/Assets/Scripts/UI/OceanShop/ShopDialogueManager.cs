@@ -83,18 +83,18 @@ public class ShopDialogueManager : MonoBehaviour
         dialogue.onStart?.Invoke();
 
         TextMeshProUGUI myText = null;
-        switch (shopManager.uiState)
+        switch (shopManager.UIState)
         {
-            case ShopManager.State.Main:
+            case ShopManager.States.Main:
                 myText = mainText;
                 break;
-            case ShopManager.State.Buy:
+            case ShopManager.States.Buy:
                 myText = buyText;
                 break;
-            case ShopManager.State.Talk:
+            case ShopManager.States.Talk:
                 myText = talkText;
                 break;
-            case ShopManager.State.Dialogue:
+            case ShopManager.States.Dialogue:
                 myText = dialogueText;
                 break;
         }
@@ -192,7 +192,7 @@ public class ShopDialogueManager : MonoBehaviour
             return;
         }
 
-        if (!PlayerInventory.GetHasCollectedAnchor())
+        if (!PlayerInventory.Instance.GetHasCollectedAnchor())
         {
             UpdateDialogue("No Anchor");
             return;
@@ -212,20 +212,20 @@ public class ShopDialogueManager : MonoBehaviour
                 UpdateDialogue("Ocean Complete");
                 return;
             }
-            else if (shopManager.uiState == ShopManager.State.Main)
+            else if (shopManager.UIState == ShopManager.States.Main)
             {
                 UpdateDialogue("All Items Returned");
                 return;
             }
         }
 
-        if (shopManager.uiState == ShopManager.State.Main)
+        if (shopManager.UIState == ShopManager.States.Main)
         {
             UpdateDialogue("Default Main");
             return;
         }
 
-        if (shopManager.uiState == ShopManager.State.Buy)
+        if (shopManager.UIState == ShopManager.States.Buy)
         {
             UpdateDialogue("Default Buy");
             return;

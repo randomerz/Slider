@@ -24,6 +24,7 @@ public class MainMenuManager : MonoBehaviour
     public Animator mainMenuButtonsAnimator;
 
     [Header("Panels")]
+    public GameObject mainMenuPanel;
     public GameObject savesPanel;
     public GameObject newSavePanel;
     public TMP_InputField profileNameTextField;
@@ -35,6 +36,12 @@ public class MainMenuManager : MonoBehaviour
     [Header("Other References")]
     public Button continueButton;
     public TextMeshProUGUI continueText;
+    public Button playButton;
+
+    public Slider sfxSlider;
+    public Slider musicSlider;
+    public Slider screenShakeSlider;
+    public Toggle bigTextToggle;
 
     private System.IDisposable listener;
     private InputSettings controls;
@@ -53,6 +60,17 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(OpenCutscene());
 
         listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
+
+        _instance.controls.UI.Back.performed += context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); };
+
+        // Pressing a navigation key selects a button is one is not already selected
+        _instance.controls.UI.Navigate.performed += context => 
+        {
+            if (!UINavigationManager.ButtonInCurrentMenuIsSelected())
+            {
+                UINavigationManager.SelectBestButtonInCurrentMenu();
+            }
+        };
     }
 
     private void OnEnable() {
@@ -72,12 +90,17 @@ public class MainMenuManager : MonoBehaviour
 
     public static void LoadBindings()
     {
+        if (_instance == null)
+        {
+            return;
+        }
+
         var rebinds = PlayerPrefs.GetString("rebinds");
         if (!string.IsNullOrEmpty(rebinds))
         {
             _instance.controls.LoadBindingOverridesFromJson(rebinds);
         }
-        
+
         _instance.controls.UI.Pause.performed += context => _instance.CloseCurrentPanel();
     }
 
@@ -91,6 +114,8 @@ public class MainMenuManager : MonoBehaviour
         {
             OpenNewSave(0);
         }
+
+
     }
 
     private bool AreAnyProfilesLoaded()
@@ -117,13 +142,27 @@ public class MainMenuManager : MonoBehaviour
     {
         StopAllCoroutines();
         CameraShake.StopShake();
-        
+
         titleAnimator.SetBool("isUp", true);
         playerAnimator.SetBool("isUp", true);
         mainMenuButtonsAnimator.SetBool("isUp", true);
         textAnimator.SetBool("isVisible", false);
+
+        UINavigationManager.CurrentMenu = mainMenuPanel;
+        UINavigationManager.LockoutSelectablesInCurrentMenu(SelectTopmostButton, 1);
     }
 
+
+    private void SelectTopmostButton()
+    {
+        StartCoroutine(ISelectTopmostButton());
+    }
+    private IEnumerator ISelectTopmostButton()
+    {
+        // Safety to prevent inputs from triggering a button immediately after opening the menu
+        yield return new WaitForEndOfFrame();
+        UINavigationManager.SelectBestButtonInCurrentMenu();
+    }
 
     #region UI stuff
 
@@ -132,19 +171,24 @@ public class MainMenuManager : MonoBehaviour
         if (advancedOptionsPanel.activeSelf || controlsPanel.activeSelf)
         {
             OpenOptions();
+            UINavigationManager.CurrentMenu = optionsPanel;
         }
         else if (newSavePanel.activeSelf)
         {
             OpenSaves();
+            UINavigationManager.CurrentMenu = savesPanel;
         }
         else if (savesPanel.activeSelf || optionsPanel.activeSelf || creditsPanel.activeSelf)
         {
             CloseAllPanels();
+            UINavigationManager.CurrentMenu = mainMenuPanel;
         }
         else
         {
             QuitGame();
         }
+
+        StartCoroutine(ISelectTopmostButton());
     }
 
     public void CloseAllPanels()
@@ -155,12 +199,16 @@ public class MainMenuManager : MonoBehaviour
         advancedOptionsPanel.SetActive(false);
         controlsPanel.SetActive(false);
         creditsPanel.SetActive(false);
+
+        UINavigationManager.CurrentMenu = mainMenuPanel;
+        StartCoroutine(ISelectTopmostButton());
     }
 
     public void OpenSaves()
     {
         CloseAllPanels();
         savesPanel.SetActive(true);
+        UINavigationManager.CurrentMenu = savesPanel;
     }
 
     public void OpenNewSave(int profileIndex)
@@ -173,6 +221,7 @@ public class MainMenuManager : MonoBehaviour
         profileNameTextField.Select();
         profileNameTextField.ActivateInputField();
         profileNameTextField.text = "";
+        UINavigationManager.CurrentMenu = newSavePanel;
     }
 
     public void OnTextFieldChangeText(string text)
@@ -188,24 +237,39 @@ public class MainMenuManager : MonoBehaviour
     {
         CloseAllPanels();
         optionsPanel.SetActive(true);
+        UINavigationManager.CurrentMenu = optionsPanel;
+        StartCoroutine(ISelectTopmostButton());
+
+        musicSlider.value = SettingsManager.MusicVolume;
+        sfxSlider.value = SettingsManager.SFXVolume;
     }
 
     public void OpenAdvancedOptions()
     {
         CloseAllPanels();
         advancedOptionsPanel.SetActive(true);
+        UINavigationManager.CurrentMenu = advancedOptionsPanel;
+
+        screenShakeSlider.value = SettingsManager.ScreenShake;
+        bigTextToggle.isOn = SettingsManager.BigTextEnabled;
+
+        StartCoroutine(ISelectTopmostButton());
     }
 
     public void OpenControls()
     {
         CloseAllPanels();
         controlsPanel.SetActive(true);
+        UINavigationManager.CurrentMenu = controlsPanel;
+        StartCoroutine(ISelectTopmostButton());
     }
 
     public void OpenCredits()
     {
         CloseAllPanels();
         creditsPanel.SetActive(true);
+        UINavigationManager.CurrentMenu = creditsPanel;
+        StartCoroutine(ISelectTopmostButton());
     }
 
     #endregion
@@ -251,5 +315,33 @@ public class MainMenuManager : MonoBehaviour
 
         Debug.LogWarning("lol just kidding loading village");
         SceneManager.LoadScene("Village");
+    }
+
+
+    // We need these to handle settings in Main Menu :)
+    public void UpdateSFXVolume()
+    {
+        SettingsManager.SFXVolume = sfxSlider.value;
+        AudioManager.SetSFXVolume(sfxSlider.value);
+    }
+
+    public void UpdateMusicVolume()
+    {
+        SettingsManager.MusicVolume = musicSlider.value;
+        AudioManager.SetMusicVolume(musicSlider.value);
+    }
+
+    public void UpdateScreenShake()
+    {
+        SettingsManager.ScreenShake = screenShakeSlider.value;
+    }
+
+    public void UpdateBigText()
+    {
+        // By the word of our noble lord, Boomo, long may he reign, these two lines must remain commented out
+        //DialogueManager.highContrastMode = value;
+        //DialogueManager.doubleSizeMode = value;
+
+        SettingsManager.BigTextEnabled = bigTextToggle.isOn;
     }
 }

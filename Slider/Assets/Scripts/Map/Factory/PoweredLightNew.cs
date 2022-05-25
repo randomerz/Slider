@@ -2,31 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoweredLightNew : ConductiveElectricalNode
+public class PoweredLightNew : ElectricalNode
 {
-
-    [SerializeField] private SpriteRenderer spriteRenderer;
-
-    [SerializeField] private Sprite onSprite;
-    [SerializeField] private Sprite offSprite;
+    [SerializeField] protected SpriteSwapper swapper;
 
     private new void Awake()
     {
         base.Awake();
         nodeType = NodeType.OUTPUT;
+
+        if (swapper == null)
+        {
+            swapper = GetComponent<SpriteSwapper>();
+        }
     }
 
-    public override void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
+    /*
+    protected override void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
     {
         //L: I was gonna do other stuff here, but I didn't ...
         base.PropagateSignal(value, prev, recStack, numRefs);
     }
+    */
 
-    public void OnPoweredHandler(bool value, bool valueChanged)
+    public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        SetLightOn(value, valueChanged);
+        if (e.powered)
+        {
+            swapper.TurnOn();
+        } else
+        {
+            swapper.TurnOff();
+        }
     }
 
+    /*
     public void SetLightOn(bool value, bool playSound = true)
     {
         spriteRenderer.sprite = value ? onSprite : offSprite;
@@ -36,4 +46,5 @@ public class PoweredLightNew : ConductiveElectricalNode
             AudioManager.Play(value ? "Power On" : "Power Off");
         }
     }
+    */
 }
