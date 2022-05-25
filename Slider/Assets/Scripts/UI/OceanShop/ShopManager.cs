@@ -124,7 +124,7 @@ public class ShopManager : MonoBehaviour
         if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
         {
             turnedInAnchor = true;
-            EarnCredits(25);
+            EarnCredits(2);
             shopDialogueManager.UpdateDialogue("Turn in Anchor");
         }
 
