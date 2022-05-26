@@ -479,7 +479,7 @@ public class UIArtifact : MonoBehaviour
         {
             foreach (Movement m in smove.moves)
             {
-                Debug.Log(m.islandId);
+                //Debug.Log(m.islandId);
                 if (m.islandId == islandId)
                 {
                     return true;
