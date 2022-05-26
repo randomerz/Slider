@@ -193,6 +193,20 @@ public class SGrid : MonoBehaviour, ISavable
         return s;
     }
 
+    public static int[,] GridStringToSetGridFormat(string gridstring)
+    {
+        //Chen: This in theory should work for other grids? This is mostly used with Scroll of Realigning stuff.
+        int[,] gridFormat = new int[current.width, current.height];
+        for (int x = current.width - 1; x >= 0; x--)
+        {
+            for (int y = 0; y < current.height; y++)
+            {
+                gridFormat[y, (current.width - 1 - x)] = (int)Char.GetNumericValue(gridstring[(x * current.height) + y]);
+            }
+        }
+        return gridFormat;
+    }
+
     //L: islandId is the id of the corresponding tile in the puzzle doc
     public STile GetStile(int islandId)
     {
@@ -482,16 +496,7 @@ public class SGrid : MonoBehaviour, ISavable
     public virtual void RearrangeGrid()
     {
         //Convert the target grid into the proper int[] and pass into setgrid
-        realigningGrid = new int[current.width, current.height];
-        for (int x = current.width - 1; x >= 0; x--)
-        {
-            for (int y = 0; y < current.height; y++)
-            {
-                //Debug.Log("Setgrid indices: " + y + " " + (width - 1 - x) + " Tile: " + targetGrid[(x * height) + y]);
-                realigningGrid[y, (current.width - 1 - x)] = (int) Char.GetNumericValue(targetGrid[(x * current.height) + y]);
-            }
-        }
-        current.SetGrid(realigningGrid);
+        current.SetGrid(GridStringToSetGridFormat(targetGrid));
 
         for (int x = 0; x < current.width; x++)
         {
@@ -501,6 +506,10 @@ public class SGrid : MonoBehaviour, ISavable
                 UIArtifact.SetButtonComplete(artifactButton.islandId, true);
             }
         }
+    }
+    public bool HasRealigningGrid()
+    {
+        return realigningGrid != null;
     }
     protected static void UpdateButtonCompletions(object sender, System.EventArgs e)
     {
@@ -540,7 +549,7 @@ public class SGrid : MonoBehaviour, ISavable
             for (int y = 0; y < current.height; y++) {
                 string tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
-                //Debug.Log(x + " " + y);
+                Debug.Log(x + " " + y);
                 if (tids == "*") 
                 {
                     numComplete += 1;

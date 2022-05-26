@@ -197,17 +197,15 @@ public class DesertArtifact : UIArtifact
             {
                 return false;
             }
-            //Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
-            //Debug.Log(buttonCurrent + " " + buttonEmpty);
             QueueCheckAndAdd(swap);
-            //Debug.Log("Added move to queue: current length " + moveQueue.Count);
             QueueCheckAfterMove(this, null);
             DeselectCurrentButton();
             return true;
         }
         else
         {
-            Debug.Log("Couldn't perform move! (queue full?)");
+            string debug = PlayerCanQueue ? "Player Queueing is disabled" : "Queue was full";
+            Debug.Log($"Couldn't perform move! {debug}");
             return false;
         }
     }
