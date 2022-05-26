@@ -72,8 +72,7 @@ public class WorldNavAgent : MonoBehaviour
         IsRunning = true;
         while(path.Count > 0)
         {
-            transform.up = (path[0] - (Vector2)transform.position).normalized;
-            rb.velocity = transform.up * speed;
+            rb.velocity = (path[0] - (Vector2)transform.position).normalized * speed;
             while (Vector2.Distance(path[0], transform.position) > tolerance)
             {
                 yield return null;
@@ -82,8 +81,7 @@ public class WorldNavAgent : MonoBehaviour
             path.RemoveAt(0);
         }
 
-        transform.up = (currDest - (Vector2)transform.position).normalized;
-        rb.velocity = transform.up * speed;
+        rb.velocity = (currDest - (Vector2)transform.position).normalized * speed;
         while (Vector2.Distance(transform.position, currDest) > tolerance)
         {
             yield return null;

@@ -137,6 +137,8 @@ public class RatAI : MonoBehaviour
         {
             navAgent.StopPath();
         }
+
+        transform.up = rb.velocity.normalized;
     }
 
     private void FixedUpdate()
