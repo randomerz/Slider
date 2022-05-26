@@ -114,6 +114,13 @@ MonoBehaviour:
     loop: 0
     doRandomPitch: 1
     source: {fileID: 0}
+  - name: Glass Clink
+    clip: {fileID: 8300000, guid: fa5d024a49be548988f2317729a17510, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
   music:
   - name: Village
     fmodEvent:

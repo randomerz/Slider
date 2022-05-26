@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class ShopManager : MonoBehaviour
 {
     private static ShopManager _instance;
-
     private int totalCreditCount;
     private int credits; // TODO: serialize
     private bool turnedInAnchor;
@@ -16,7 +15,8 @@ public class ShopManager : MonoBehaviour
     private bool turnedInGoldenFish;
     private bool turnedInRock;
     private bool startedFinalQuest;
-    private bool[] wasSliderCollectibleBought = new bool[6]; // from 4 to 9
+    private bool[] wasSliderOrDrinkCollectibleBought = new bool[9]; // from 4 to 9 and then three drinks
+
 
     private Collectible collectibleToActivateOnClose; // for slider 3 cutscene when you quit shop
 
@@ -34,6 +34,11 @@ public class ShopManager : MonoBehaviour
     public GameObject uiShopPanel;
     // these are sub sections (the bottom ones)
     public GameObject mainPanel;
+
+    public GameObject bottle1;
+    public GameObject bottle2;
+    public GameObject bottle3;
+
     public GameObject buyPanel;
     public GameObject talkPanel;
     public GameObject dialoguePanel;
@@ -43,7 +48,7 @@ public class ShopManager : MonoBehaviour
 
     private InputSettings controls;
 
-    public enum States 
+    public enum States
     {
         None,
         Main,
@@ -60,21 +65,21 @@ public class ShopManager : MonoBehaviour
         TheWorld
     }
 
-    private void Awake() 
+    private void Awake()
     {
         _instance = this;
         _instance.controls = new InputSettings();
         LoadBindings();
     }
 
-    private void OnEnable() 
+    private void OnEnable()
     {
         controls.Enable();
     }
 
-    private void OnDisable() 
+    private void OnDisable()
     {
-        controls.Disable();    
+        controls.Disable();
     }
 
     public static void LoadBindings()
@@ -119,7 +124,7 @@ public class ShopManager : MonoBehaviour
         if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
         {
             turnedInAnchor = true;
-            EarnCredits(2);
+            EarnCredits(2); //change back to 2
             shopDialogueManager.UpdateDialogue("Turn in Anchor");
         }
 
@@ -154,7 +159,7 @@ public class ShopManager : MonoBehaviour
             EarnCredits(1);
             shopDialogueManager.UpdateDialogue("Turn in Rock");
         }
-        
+
         if (totalCreditCount - origCreditCount >= 1)
         {
             AudioManager.Play("Puzzle Complete");
@@ -180,7 +185,7 @@ public class ShopManager : MonoBehaviour
           //  ActivateSliderCollectible(i);
         //}
 
-        
+
 
         // check final quest on completing all others
         // if (totalCreditCount == 7 + 1 && !startedFinalQuest) // todo: remove +1 later
@@ -209,8 +214,33 @@ public class ShopManager : MonoBehaviour
         credits -= value;
     }
 
-    public void TryBuySlider(int sliderNumber)
+    public void TryBuySliderOrDrink(int sliderNumber)
     {
+        if (sliderNumber == 4 && !wasSliderOrDrinkCollectibleBought[0])
+        {
+          Collectible c = SGrid.current.GetCollectible("Slider " + 4);
+          c.DoOnCollect();
+          wasSliderOrDrinkCollectibleBought[0] = true;
+          AudioManager.Play("Puzzle Complete");
+          UpdateBuyButtons();
+        }
+        else if (sliderNumber <= 9 && !wasSliderOrDrinkCollectibleBought[sliderNumber - 4] && credits > 0)
+        {
+          SpendCredits(1);
+          Collectible c = SGrid.current.GetCollectible("Slider " + sliderNumber);
+          c.DoOnCollect();
+          wasSliderOrDrinkCollectibleBought[sliderNumber - 4] = true;
+          AudioManager.Play("Puzzle Complete");
+          UpdateBuyButtons();
+        }
+        else if (sliderNumber > 9 && credits > 0)
+        {
+          SpendCredits(1);
+          wasSliderOrDrinkCollectibleBought[sliderNumber - 4] = true;
+          AudioManager.Play("Glass Clink");
+          UpdateBuyButtons();
+        }
+        /*
         if ((credits > 0 || sliderNumber == 4) && !wasSliderCollectibleBought[sliderNumber - 4])
         {
             if (sliderNumber != 4) SpendCredits(1);
@@ -220,13 +250,27 @@ public class ShopManager : MonoBehaviour
             wasSliderCollectibleBought[sliderNumber - 4] = true;
             AudioManager.Play("Puzzle Complete");
 
-            UpdateBuyButtons();
+            int numTurnedOn = UpdateBuyButtons();
+            if (numTurnedOn == 0)
+            {
+              ActivateUnboughtDrinkButtons();
+            }
         }
+        */
         else
         {
             AudioManager.Play("Artifact Error");
         }
     }
+
+    /*
+    public void ActivateUnboughtDrinkButtons()
+    {
+      buyDrinksButtons[0].SetActive(true);
+      buyDrinksButtons[1].SetActive(true);
+      buyDrinksButtons[2].SetActive(true);
+    }
+    */
 
     #region UI
 
@@ -246,7 +290,7 @@ public class ShopManager : MonoBehaviour
                 if (_talkState == 0)
                 {
                     UINavigationManager.CurrentMenu = talkPanel;
-                } 
+                }
                 else
                 {
                     UINavigationManager.CurrentMenu = talkSubPanels[(int)_talkState];
@@ -262,7 +306,7 @@ public class ShopManager : MonoBehaviour
     {
         UIManager.PauseGameGlobal();
         UIManager.canOpenMenus = false;
-        
+
         // scuffed parts
         Player.SetCanMove(false);
         Time.timeScale = 1;
@@ -271,7 +315,7 @@ public class ShopManager : MonoBehaviour
         uiShopPanel.SetActive(true);
         OpenMainPanel();
 
-        
+
         CheckTavernKeep();
     }
 
@@ -343,6 +387,7 @@ public class ShopManager : MonoBehaviour
         CloseAllPanels();
         UIState = States.Main;
         mainPanel.SetActive(true);
+        //bottlesShowing.SetActive(true);
         shopDialogueManager.UpdateDialogue();
     }
 
@@ -361,7 +406,7 @@ public class ShopManager : MonoBehaviour
 
         for (int i = 0; i < buyItemButtons.Length; i++)
         {
-            if (!wasSliderCollectibleBought[i] && numTurnedOn < 4)
+            if (!wasSliderOrDrinkCollectibleBought[i] && numTurnedOn < 4 && i < 6) //only display if not bought and less than 4 currently being displayed
             {
                 buyItemButtons[i].SetActive(true);
                 numTurnedOn += 1;
@@ -370,6 +415,33 @@ public class ShopManager : MonoBehaviour
             {
                 buyItemButtons[i].SetActive(false);
             }
+        }
+        if (numTurnedOn == 0)
+        {
+          int drinksBought = 0;
+          for (int i = 6; i < buyItemButtons.Length; i++)
+          {
+            if (!wasSliderOrDrinkCollectibleBought[i])
+            {
+              buyItemButtons[i].SetActive(true);
+            }
+            else
+            {
+              drinksBought++;
+            }
+          }
+          if (drinksBought == 1)
+          {
+            bottle1.SetActive(false);
+          }
+          else if (drinksBought == 2)
+          {
+            bottle2.SetActive(false);
+          }
+          else if (drinksBought == 3)
+          {
+            bottle3.SetActive(false);
+          }
         }
     }
 
