@@ -37,6 +37,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     protected virtual void Start()
     {
+        Debug.Log("Anchored tile IslandId: " + buttonManager.anchoredTile);
         myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
         
         SetTileActive(myStile.isTileActive);
@@ -49,7 +50,10 @@ public class ArtifactTileButton : MonoBehaviour
                 linkButton = b;
                 b.linkButton = this;
             }
+            if(buttonManager.anchoredTile == b.islandId)
+                buttonAnimator.SetIsForcedDown(true);
         }
+        
 
         //if (!isTileActive)
         //{
@@ -60,6 +64,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void OnDisable()
     {
+        
         if (myStile != null && myStile.isTileActive)
         {
             if (buttonAnimator.sliderImage.sprite == emptySprite || buttonAnimator.sliderImage.sprite == blankSprite)
@@ -97,12 +102,12 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SetPushedDown(bool v)
     {
-        buttonAnimator.SetPushedDown(v || myStile.hasAnchor);
+        buttonAnimator.SetPushedDown(v);
     }
 
     public void SetSelected(bool v)
     {
-        buttonAnimator.SetSelected(v || myStile.hasAnchor);
+        buttonAnimator.SetSelected(v);
     }
 
     public void SetIsInMove(bool v)
@@ -191,4 +196,5 @@ public class ArtifactTileButton : MonoBehaviour
         if (e.stile.islandId == islandId)
             SetPushedDown(false);
     }
+    
 }

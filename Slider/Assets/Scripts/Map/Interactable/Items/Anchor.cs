@@ -8,7 +8,12 @@ public class Anchor : Item
     {
         public STile stile;
     }
+    public class OnAnchorPickUpArgs : System.EventArgs
+    {
+        public STile stile;
+    }
     public static event System.EventHandler<OnAnchorDropArgs> OnAnchorDrop;
+    public static event System.EventHandler<OnAnchorPickUpArgs> OnAnchorPickUp;
 
     // Start is called before the first frame update
     [SerializeField] private float shakeAmount;
@@ -19,13 +24,13 @@ public class Anchor : Item
 
     public void Start()
     {
-        if (GetComponentInParent<STile>() != null)
-            GetComponentInParent<STile>().hasAnchor = true;
-    }
-
-    private void OnEnable()
-    {
-        
+        Debug.Log("Anchor started");
+        currentSTile = GetComponentInParent<STile>();
+        if (currentSTile != null){
+             currentSTile.hasAnchor = true;
+        }
+        OnAnchorDrop?.Invoke(this, new OnAnchorDropArgs { stile = currentSTile });
+           
     }
 
     private void OnDisable()
@@ -42,6 +47,7 @@ public class Anchor : Item
         //triggerCollider.enabled = false;
 
         base.PickUpItem(pickLocation, callback);
+        OnAnchorPickUp?.Invoke(this, new OnAnchorPickUpArgs { stile = currentSTile });
         UnanchorTile();
         currentSTile = null;
 
@@ -49,6 +55,7 @@ public class Anchor : Item
         PlayerInventory.Instance.SetHasCollectedAnchor(true);
         
         UITrackerManager.RemoveTracker(this.gameObject);
+        
     }
 
     public void UnanchorTile()
@@ -77,9 +84,12 @@ public class Anchor : Item
             hitTile.hasAnchor = true;
             currentSTile = hitTile;
         }
+        else
+            currentSTile = null;
 
         Player.SetMoveSpeedMultiplier(1f);
         UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
+        
         return null;
     }
     public override void dropCallback()

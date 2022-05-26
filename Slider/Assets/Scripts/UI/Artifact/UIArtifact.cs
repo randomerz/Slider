@@ -26,7 +26,7 @@ public class UIArtifact : MonoBehaviour
         set;
     }
     public int maxMoveQueueSize = 3;    //L: Max size of the queue.
-
+    public int anchoredTile = -1; // the islandId of the tile that has an anchor -1 if no anchor
     protected static UIArtifact _instance;
     
     public void Awake()
@@ -238,7 +238,6 @@ public class UIArtifact : MonoBehaviour
         //if (SGrid.GetStile(button.islandId).isMoving)
 
         //L: This is basically just a bunch of nested logic to determine how to update the UI based on what button the user pressed.
-
         ArtifactTileButton oldCurrButton = currentButton;
         if (currentButton != null)
         {
@@ -251,6 +250,7 @@ public class UIArtifact : MonoBehaviour
                 UpdateMoveOptions();
             } else 
             {
+                Debug.Log("deselected current button " + currentButton.myStile.islandId);
                 DeselectCurrentButton();
             } 
         }
@@ -265,7 +265,7 @@ public class UIArtifact : MonoBehaviour
             }
 
             moveOptionButtons = GetMoveOptions(button);
-            if (moveOptionButtons.Count == 0)
+            if (moveOptionButtons.Count == 0 || button.myStile.hasAnchor)
             {
                 //L: Player tried to click a locked tile (or tile that otherwise had no move options)
                 return;
@@ -273,12 +273,13 @@ public class UIArtifact : MonoBehaviour
             else
             {
                 //L: Player clicked a tile with movement options
-                //Debug.Log("Selected button " + button.islandId);
+                Debug.Log("Selected button " + button.islandId);
                 currentButton = button;
                 button.SetSelected(true);
                 foreach (ArtifactTileButton b in moveOptionButtons)
                 {
-                    b.SetHighlighted(true);
+                    if(!b.myStile.hasAnchor)
+                        b.SetHighlighted(true);
                 }
             }
         }
@@ -461,6 +462,10 @@ public class UIArtifact : MonoBehaviour
            if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
            {
                b.SetIsInMove(true);
+           }
+           else if(b.myStile.hasAnchor)
+           {
+               continue;
            }
            else
            {
