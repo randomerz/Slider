@@ -45,7 +45,7 @@ public class MountainGrid : SGrid
     private void OnAnchorDrop(object sender, Anchor.OnAnchorDropArgs dropArgs)
     {
         STile dropTile = dropArgs.stile;
-        if(dropTile.y < 2)
+        if(!dropTile || dropTile.y < 2)
             return; //currently using the anchor on the bottom layer does nothing
         STile lower = SGrid.current.GetGrid()[dropTile.x, dropTile.y - 2];
         if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile
