@@ -9,4 +9,10 @@ public class Lava : MonoBehaviour
         if(other.gameObject.GetComponent<Meltable>())
             other.gameObject.GetComponent<Meltable>().Melt();
     }
+
+    private void OnTriggerExit2D(Collider2D other) 
+    {
+        if(other.gameObject.GetComponent<Meltable>())
+            other.gameObject.GetComponent<Meltable>().RemoveLava();
+    }
 }
