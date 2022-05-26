@@ -57,6 +57,10 @@ public class RatAI : MonoBehaviour
     [SerializeField]
     internal float updateTimer = 0.25f;
 
+    [Header("Other")]
+    [SerializeField]
+    internal bool avoidsDark = false;
+
     internal bool holdingObject;
     private STile currentStileUnderneath;
     private BehaviourTreeNode behaviourTree;
@@ -113,6 +117,16 @@ public class RatAI : MonoBehaviour
         StealPiece();
     }
 
+    private void OnEnable()
+    {
+        CaveMossManager.MossIsGrowing += DieOnMoss;
+    }
+
+    private void OnDisable()
+    {
+        CaveMossManager.MossIsGrowing -= DieOnMoss;
+    }
+
     private void Update()
     {
         behaviourTree.Evaluate();
@@ -143,15 +157,7 @@ public class RatAI : MonoBehaviour
         anim.SetFloat("speed", rb.velocity.magnitude);
     }
 
-    private void OnEnable()
-    {
-        CaveMossManager.MossIsGrowing += DieOnMoss;
-    }
 
-    private void OnDisable()
-    {
-        CaveMossManager.MossIsGrowing -= DieOnMoss;
-    }
 
     public void SetDirection(Vector2 dir)
     {
@@ -171,6 +177,7 @@ public class RatAI : MonoBehaviour
     public void Die()
     {
         //Play Death Animation
+        anim.SetBool("dead", true);
 
         if (holdingObject && objectToSteal != null)
         {
@@ -194,7 +201,7 @@ public class RatAI : MonoBehaviour
         var playerAggroNode = new AggroAtProximityNode(transform, player, playerAggroRange, playerDeaggroRange);
         var setDestToAvoidPlayerNode = new SetDestToAvoidPlayerNode(this);
 
-        var setDestToLightTileNode = new SetDestToLightTileNode(this);
+        var setDestToNearestValidPtNode = new SetDestToNearestValidPtNode(this);
 
         var moveTowardsSetDestNode = new MoveTowardsSetPosNode(this, updateTimer);
 
@@ -203,16 +210,17 @@ public class RatAI : MonoBehaviour
 
         //L: IMPORTANT NOTE: The ordering of the nodes in the tree matters
         var stealSequence = new SequenceNode(new List<BehaviourTreeNode>() { setDestToObjectNode, moveTowardsSetDestNode });
-        var runFromPlayerSequence = new SequenceNode(new List<BehaviourTreeNode> { playerAggroNode, setDestToAvoidPlayerNode, moveTowardsSetDestNode});
-        var runToLightSequence = new SequenceNode(new List<BehaviourTreeNode> { setDestToLightTileNode, moveTowardsSetDestNode });
+        var runFromPlayerSequence = new SequenceNode(new List<BehaviourTreeNode> { playerAggroNode, setDestToAvoidPlayerNode, moveTowardsSetDestNode });
+        var runToValidPtSequence = new SequenceNode(new List<BehaviourTreeNode> { setDestToNearestValidPtNode, moveTowardsSetDestNode });
 
-        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, runToLightSequence, stayInPlaceNode });
+        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, runToValidPtSequence, stayInPlaceNode }); 
+
     }
 
     //Efficiency: (2*maxDistVision+1)^2 * (2*maxDistCostmap+1)^2 (This is the most costly operation in the AI)
     private void GenerateCostMap()
     {
-        if (LightManager.instance != null)
+        if (!avoidsDark || LightManager.instance != null)
         {
             _costMap = new Dictionary<Vector2Int, int>();
             Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
@@ -222,7 +230,7 @@ public class RatAI : MonoBehaviour
                 for (int y = (int)-maxDistVision; y <= (int)maxDistVision; y++)
                 {
                     Vector2Int pos = posAsInt + new Vector2Int(x, y);
-                    if (nav.IsValidPt(pos) && LightManager.instance.GetLightMaskAt(pos.x, pos.y))
+                    if (nav.IsValidPt(pos) && (!avoidsDark || LightManager.instance.GetLightMaskAt(pos.x, pos.y)))
                     {
                         _costMap.Add(pos, CostToThreat(GetDistToNearestBadTile(pos), false));
                     }
@@ -272,8 +280,9 @@ public class RatAI : MonoBehaviour
                     visited.Add(posToCheck);
                     queue.Enqueue(posToCheck);
 
-                    //Check wall, darkness, or player occupation
-                    if (!nav.IsValidPt(posToCheck) || !LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y) && distToPoint < distToNearestObstacle)
+                    //Check wall, darkness, etc.
+                    bool darkObstacle = avoidsDark && !LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y);
+                    if ((!nav.IsValidPt(posToCheck) || darkObstacle) && distToPoint < distToNearestObstacle)
                     {
                         distToNearestObstacle = distToPoint;
                     }

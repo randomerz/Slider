@@ -27,6 +27,8 @@ public class WorldNavigation : MonoBehaviour
 
     private void Awake()
     {
+        //Unfortunately, due to script order and some other complications, the moss won't update the points until it 
+        //changes for the first time. This doesn't affect the game tho, so it's not super important to fix (until it is).
         validPtsWorld = GetWorldValidPts();
 
         validPtsStiles = new Dictionary<STile, HashSet<Vector2Int>>();
@@ -63,9 +65,9 @@ public class WorldNavigation : MonoBehaviour
 
     private void HandleSTileMoved(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
+        //validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
 
-        OnValidPtsChanged?.Invoke(this, new System.EventArgs());
+        //OnValidPtsChanged?.Invoke(this, new System.EventArgs());
     }
 
     private void HandleMossUpdated(object sender, CaveMossManager.MossUpdatedArgs e)
@@ -118,10 +120,10 @@ public class WorldNavigation : MonoBehaviour
         var result = new HashSet<Vector2Int>();
 
         //Graph coordinates are relative to the stile.
-        int minX = -stile.STILE_WIDTH / 2 + (int) stile.transform.position.x;
-        int minY = -stile.STILE_WIDTH / 2 + (int)stile.transform.position.y;
-        int maxX = stile.STILE_WIDTH / 2 + (int)stile.transform.position.x;
-        int maxY = stile.STILE_WIDTH / 2 + (int)stile.transform.position.y;
+        int minX = -stile.STILE_WIDTH / 2 ;
+        int minY = -stile.STILE_WIDTH / 2;
+        int maxX = stile.STILE_WIDTH / 2;
+        int maxY = stile.STILE_WIDTH / 2;
 
         ContactFilter2D filter = GetFilterWithoutTriggers(~LayerMask.GetMask("Ignore Raycast", "SlideableArea", "Player", "Rat"));
         RaycastHit2D[] hits = new RaycastHit2D[1];
@@ -130,32 +132,57 @@ public class WorldNavigation : MonoBehaviour
         {
             for (int y = minY; y <= maxY; y++)
             {
-                Vector2Int pos = new Vector2Int(x, y);
+                Vector2Int posRel = new Vector2Int(x, y);
+                Vector2 posAbs = RelToAbsPos(posRel, stile);
 
-                int hit = Physics2D.CircleCast(pos, 0.5f, Vector2.up, filter, hits, 0f);
+
+                int hit = Physics2D.CircleCast(posAbs, 0.5f, Vector2.up, filter, hits, 0f);
                 if (hit == 0)
                 {
-                    if (moss == null || moss.mossCollidersMap.GetColliderType((Vector3Int) pos) == Tile.ColliderType.None)
+                    if (moss == null || moss.mossCollidersMap.GetColliderType((Vector3Int) TileUtil.WorldToTileCoords(posAbs)) == Tile.ColliderType.None)
                     {
-                        result.Add(pos);
+                        result.Add(posRel);
                     }
                 }
             }
         }
         return result;
     }
-    
+
+    private Vector2Int RelToAbsPosTile(Vector2Int pos, STile stile)
+    {
+        return pos + new Vector2Int((int) stile.transform.position.x, (int) stile.transform.position.y);
+    }
+
+    private Vector2 RelToAbsPos(Vector2Int pos, STile stile)
+    {
+        return pos + new Vector2(stile.transform.position.x, stile.transform.position.y);
+    }
+
+    private Vector2Int AbsToRelPos(Vector2 pos, STile stile)
+    {
+        Vector2 relPos = pos - new Vector2(stile.transform.position.x, stile.transform.position.y);
+        return TileUtil.WorldToTileCoords(relPos);
+    }
+
+    private Vector2Int AbsToRelPos(Vector2Int pos, STile stile)
+    {
+        return pos - TileUtil.WorldToTileCoords(stile.transform.position);
+    }
+
+
+
     //Check if a point is in.
     public bool IsValidPt(Vector2Int pos)
     {
-        if (validPtsWorld.Contains(pos))
+        if (validPtsWorld.Contains(TileUtil.WorldToTileCoords(pos)))
         {
             return true;
         }
 
         foreach (STile stile in stiles)
         {
-            if (validPtsStiles.ContainsKey(stile) && validPtsStiles[stile].Contains(pos))
+            if (validPtsStiles.ContainsKey(stile) && validPtsStiles[stile].Contains(AbsToRelPos(pos, stile)))
             {
                 return true;
             }
@@ -181,7 +208,7 @@ public class WorldNavigation : MonoBehaviour
             {
                 foreach (Vector2Int pt in validPtsStiles[stile])
                 {
-                    func(pt);
+                    func(RelToAbsPosTile(pt, stile));
                 }
             }
         }
@@ -198,13 +225,20 @@ public class WorldNavigation : MonoBehaviour
         path = new List<Vector2Int>();
         if (!IsValidPt(start))
         {
-            Debug.LogWarning($"Invalid Start: {start} This might be intentional (not an error).");
-            return false;
+            //Check all the neighbors too in case this is an edge case.
+            foreach (Vector2Int pt in GetMooreNeighbors(start))
+            {
+                if (!IsValidPt(pt))
+                {
+                    Debug.LogWarning($"Invalid Start: {start} This might be intentional (not an error).");
+                    return false;
+                }
+            }
         }
 
         if (!IsValidPt(end))
         {
-            Debug.LogWarning($"Invalid Start: {end} This might be intentional (not an error).");
+            Debug.LogWarning($"Invalid End: {end} This might be intentional (not an error).");
             return false;
         }
 
