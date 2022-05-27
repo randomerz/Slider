@@ -10,6 +10,16 @@ public class NPC : MonoBehaviour
     [SerializeField] private DialogueDisplay dialogueDisplay;
 
     private int currMessage;
+    private bool dialogueEnabled;
+
+    private STile currentStileUnderneath;
+    private WorldNavAgent nav;
+
+    private void Awake()
+    {
+        nav = GetComponent<WorldNavAgent>();
+        dialogueEnabled = true;
+    }
 
     // might need optimizing
     void Update()
@@ -19,10 +29,26 @@ public class NPC : MonoBehaviour
             d.CheckConditions();
         }
         int newDialogue = CurrentDialogue();
-        if (currMessage != newDialogue)
+        if (currMessage != newDialogue && dialogueEnabled)
         {
             currMessage = newDialogue;
             dialogueDisplay.NewMessagePing();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        // updating childing
+        currentStileUnderneath = STile.GetSTileUnderneath(transform, currentStileUnderneath);
+        // Debug.Log("Currently on: " + currentStileUnderneath);
+
+        if (currentStileUnderneath != null)
+        {
+            transform.SetParent(currentStileUnderneath.transform);
+        }
+        else
+        {
+            transform.SetParent(null);
         }
     }
 
@@ -46,8 +72,11 @@ public class NPC : MonoBehaviour
     }
     public void TriggerDialogue()
     {
-        dconds[currMessage].OnDialogue();
-        dialogueDisplay.DisplaySentence(dconds[currMessage].GetDialogue());
+        if (dialogueEnabled)
+        {
+            dconds[currMessage].OnDialogue();
+            dialogueDisplay.DisplaySentence(dconds[currMessage].GetDialogue());
+        }
     }
 
     public void FadeDialogue()
@@ -72,5 +101,15 @@ public class NPC : MonoBehaviour
     {
         transform.position = trans.position;
         transform.parent = trans.parent;
+    }
+
+    public void WalkTo(Transform trans)
+    {
+        //NPCs can't talkie while they walkie (under normal circumstances)
+        dialogueEnabled = false;
+        nav.SetDestination(TileUtil.WorldToTileCoords(trans.position), null, (pos) =>
+        {
+            dialogueEnabled = true;
+        });
     }
 }

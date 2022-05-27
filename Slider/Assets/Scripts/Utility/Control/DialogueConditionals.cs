@@ -53,4 +53,10 @@ public class DialogueConditionals : Conditionals
     {
         priority = 0;
     }
+
+    //This is mainly for 
+    public void IgnoreConditions()
+    {
+
+    }
 }
