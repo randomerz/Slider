@@ -113,6 +113,7 @@ public class SGrid : MonoBehaviour, ISavable
         STile[,] newGrid = new STile[width, height];
         STile next = null;
 
+        // We might not need this getunderstile stuff anymore now that we actually child player to STiles!
         STile playerSTile = Player.GetStileUnderneath();
         Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
 
@@ -459,6 +460,8 @@ public class SGrid : MonoBehaviour, ISavable
             newGrid[td.x, td.y] = stile;
             idGrid[td.x, td.y] = td.islandId;
             stile.SetSTile(td.isTileActive, td.x, td.y);
+
+            UIArtifact.SetButtonPos(td.islandId, td.x, td.y);
         }
         grid = newGrid;
         realigningGrid = sgridData.realigningGrid;
