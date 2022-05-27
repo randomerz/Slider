@@ -255,12 +255,14 @@ public class TMPTextTyper : MonoBehaviour
 
         SetTextAlphaZero(); // TEMP bug fix because first character is skipped when typing
         
+        
         charIndex = 0;
         startingCharacterIndex = 0; // also temp but maybe these arent as bad
         if (fadeTextIn)
             coroutine = StartCoroutine(TypeStringFadeIn());
         else
             coroutine = StartCoroutine(TypeString());
+        
     }
     
     /// <summary>
