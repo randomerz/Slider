@@ -9,6 +9,7 @@ public class Meltable : MonoBehaviour
     public Sprite frozenSprite; //C: switch to animation later maybe? but that doesn't sound fun
     public Sprite meltedSprite;
     public SpriteRenderer spriteRenderer;
+    public Collider2D collider;
 
     public bool isFrozen = true;
 
@@ -29,7 +30,8 @@ public class Meltable : MonoBehaviour
         numLavaSources++;
         if(isFrozen && numLavaSources > 0) //C: the second check is pointless but maybe wacky things could happen
         {
-            spriteRenderer.sprite = meltedSprite;
+            if (spriteRenderer)
+                spriteRenderer.sprite = meltedSprite;
             isFrozen = false;
             onMelt.Invoke();
         }
@@ -40,10 +42,30 @@ public class Meltable : MonoBehaviour
         numLavaSources--;
     }
 
+    public void IsFrozen(Conditionals.Condition c) {
+        c.SetSpec(isFrozen);
+    }
+
+    public void IsNotFrozen(Conditionals.Condition c) {
+        c.SetSpec(!isFrozen);
+    }
+
     public void Freeze()
     {
-        spriteRenderer.sprite = frozenSprite;
+        if (spriteRenderer)
+            spriteRenderer.sprite = frozenSprite;
         isFrozen = true;
+        onFreeze.Invoke();
+    }
+
+    public void sus()
+    {
+        Debug.Log("sus");
+    }
+
+    public void ToggleCollider(bool toggle)
+    {
+       // collider.trig
     }
 
 }
