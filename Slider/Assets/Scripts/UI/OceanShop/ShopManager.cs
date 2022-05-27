@@ -23,7 +23,7 @@ public class ShopManager : MonoBehaviour
     public States UIState { get => _uiState;  private set { _uiState = value; UpdateNavManagerCurrentMenu(); } }
     private States _uiState;
 
-    public TalkStates TalkState { get => _talkState; private set { _talkState = value; Debug.Log(_talkState); UpdateNavManagerCurrentMenu(); } }
+    public TalkStates TalkState { get => _talkState; private set { _talkState = value; UpdateNavManagerCurrentMenu(); } }
     private TalkStates _talkState;
 
     //  === References ===
