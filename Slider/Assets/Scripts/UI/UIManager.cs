@@ -250,12 +250,6 @@ public class UIManager : MonoBehaviour
         SettingsManager.BigTextEnabled = bigTextToggle.isOn;
     }
 
-    public void LoadGame()
-    {
-        ResumeGame();
-        SceneManager.LoadScene("Game");
-    }
-
     public void LoadMainMenu()
     {
         ResumeGame();

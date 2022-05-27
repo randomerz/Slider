@@ -51,14 +51,19 @@ public class SaveSystem
     }
 
 
-    // saves the current game to file
+    /// <summary>
+    /// Saves the game to the current loaded profile index (either 1, 2, or 3). If the profile index is -1, then no data will be saved.
+    /// </summary>
     public static void SaveGame()
     {
+        currentIndex = 1;
         current.Save();
+
+        if (currentIndex == -1)
+            return;
 
         SerializableSaveProfile profile = SerializableSaveProfile.FromSaveProfile(current);
 
-        currentIndex = 1;
         SaveToFile(profile, currentIndex);
     }
 
@@ -67,11 +72,12 @@ public class SaveSystem
         Debug.Log("Saving data to file...");
 
         BinaryFormatter formatter = new BinaryFormatter();
-        string path = Application.persistentDataPath + string.Format("/slider{0}.cat", index);
+        string path = GetFilePath(index);
         FileStream stream = new FileStream(path, FileMode.Create);
 
         formatter.Serialize(stream, profile);
 
+        // in case we need json somewhere in the future? idk
         bool doJson = false;
         if (doJson)
         {
@@ -84,5 +90,55 @@ public class SaveSystem
         }
 
         stream.Close();
+    }
+
+    public static void LoadSaveProfile(int index)
+    {
+        SerializableSaveProfile ssp = null;
+
+        ssp = LoadFromFile(index);
+
+        SaveProfile profile;
+        if (ssp == null)
+        {
+            Debug.LogError("Creating a new temporary save profile -- this shouldn't happen!");
+            profile = new SaveProfile("Boomo");
+        }
+        else
+        {
+            profile = ssp.ToSaveProfile();
+        }
+
+        current = profile;
+        currentIndex = index;
+
+        current.Load();
+    }
+
+    private static SerializableSaveProfile LoadFromFile(int index)
+    {
+        Debug.Log("Loading data from file...");
+
+        string path = GetFilePath(index);
+        if (File.Exists(path))
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Open);
+
+            SerializableSaveProfile profile = formatter.Deserialize(stream) as SerializableSaveProfile;
+            stream.Close();
+
+            return profile;
+        }
+        else
+        {
+            Debug.LogError("Save file not found at " + path);
+            return null;
+        }
+    }
+
+    private static string GetFilePath(int index)
+    {
+        return Application.persistentDataPath + string.Format("/slider{0}.cat", index);
     }
 }

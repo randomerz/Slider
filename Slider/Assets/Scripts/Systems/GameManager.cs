@@ -39,4 +39,11 @@ public class GameManager : MonoBehaviour
 
         SaveSystem.SaveGame();
     }
+
+    public void LoadGame()
+    {
+        Debug.LogWarning("Called GameManager.LoadGame(), you should probably call SaveSystem.LoadGame() instead.");
+
+        SaveSystem.LoadSaveProfile(1);
+    }
 }

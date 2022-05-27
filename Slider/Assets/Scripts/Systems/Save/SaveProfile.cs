@@ -89,6 +89,13 @@ public class SaveProfile
         SaveSavablesData();
     }
 
+    public void Load()
+    {
+        // Tells everyone to load from this profile's data
+
+        LoadSavablesData();
+    }
+
     public void SaveSGridData(Area area, SGrid sgrid)
     {
         if (area == Area.None)
@@ -128,6 +135,14 @@ public class SaveProfile
         foreach (ISavable s in GetCachedSavables())
         {
             s.Save();
+        }
+    }
+
+    public void LoadSavablesData()
+    {
+        foreach (ISavable s in GetCachedSavables())
+        {
+            s.Load(this);
         }
     }
 

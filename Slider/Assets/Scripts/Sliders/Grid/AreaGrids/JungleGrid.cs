@@ -43,9 +43,9 @@ public class JungleGrid : SGrid
         base.Save();
     }
 
-    public override void Load()
+    public override void Load(SaveProfile profile)
     {
-        base.Load();
+        base.Load(profile);
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker=true)

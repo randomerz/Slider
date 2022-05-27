@@ -56,7 +56,7 @@ public class SGrid : MonoBehaviour, ISavable
 
         current = this;
         InitUIArtifact();
-        Load();
+        Load(SaveSystem.Current); // DC: this won't cause run order issues right :)
         SetBGGrid(bgGridTiles);
 
         if (targetGrid.Length == 0)
@@ -437,11 +437,11 @@ public class SGrid : MonoBehaviour, ISavable
     }
 
     //L: Used in the save system to load a grid as opposed to using SetGrid(STile[], STile[]) with default tiles positions.
-    public virtual void Load() 
+    public virtual void Load(SaveProfile profile) 
     { 
         //Debug.Log("Loading grid...");
 
-        SGridData sgridData = SaveSystem.Current.GetSGridData(myArea);
+        SGridData sgridData = profile.GetSGridData(myArea);
 
         if (sgridData == null) {
             SetGrid(stiles);

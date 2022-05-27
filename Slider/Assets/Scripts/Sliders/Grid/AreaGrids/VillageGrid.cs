@@ -69,12 +69,12 @@ public class VillageGrid : SGrid
         SaveSystem.Current.SetBool("villageFishOn", fishOn);
     }
 
-    public override void Load()
+    public override void Load(SaveProfile profile)
     {
-        base.Load();
+        base.Load(profile);
         
-        checkCompletion = SaveSystem.Current.GetBool("villageCompletion");
-        fishOn = SaveSystem.Current.GetBool("villageFishOn");
+        checkCompletion = profile.GetBool("villageCompletion");
+        fishOn = profile.GetBool("villageFishOn");
     }
 
 

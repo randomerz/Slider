@@ -102,9 +102,9 @@ public class OceanGrid : SGrid
         base.Save();
     }
 
-    public override void Load()
+    public override void Load(SaveProfile profile)
     {
-        base.Load();
+        base.Load(profile);
     }
 
 
