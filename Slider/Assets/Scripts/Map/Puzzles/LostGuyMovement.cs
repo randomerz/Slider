@@ -132,6 +132,16 @@ public class LostGuyMovement : MonoBehaviour
             return null;
         }
 
+        if(e[x,y].islandId == 6 && OceanGrid.fog6 == false)         //lost guy cannot move onto the foggy island
+        {
+            return null;
+        }
+
+        if(e[x,y].islandId == 7 && OceanGrid.fog7 == false)         //lost guy cannot move onto the foggy island
+        {
+            return null;
+        }
+
         if (e[x, y].islandId == 1 && dir == Vector2Int.left)        //lost guy cannot move to right starting beach tile if they are moving left
         {
             return null;
