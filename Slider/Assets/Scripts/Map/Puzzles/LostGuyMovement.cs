@@ -10,6 +10,8 @@ public class LostGuyMovement : MonoBehaviour
     public SpriteRenderer raftSprite;
     public Sprite trackerSprite;
     public SGridAnimator animator;
+    public GameObject fog6;
+    public GameObject fog7;
 
     // Start is called before the first frame update
     void Start()
@@ -132,12 +134,12 @@ public class LostGuyMovement : MonoBehaviour
             return null;
         }
 
-        if(e[x,y].islandId == 6 && OceanGrid.fog6 == false)         //lost guy cannot move onto the foggy island
+        if(e[x, y].islandId == 6 && fog6.activeSelf == false)         //lost guy cannot move onto the foggy island
         {
             return null;
         }
 
-        if(e[x,y].islandId == 7 && OceanGrid.fog7 == false)         //lost guy cannot move onto the foggy island
+        if(e[x, y].islandId == 7 && fog7.activeSelf == false)         //lost guy cannot move onto the foggy island
         {
             return null;
         }

@@ -29,8 +29,8 @@ public class OceanGrid : SGrid
     private int playerIndex = 0;
     private Vector2Int playerMovement;
     private int lastIslandId = 1;
-    public static GameObject fog6;
-    public static GameObject fog7;
+    public GameObject fog6;
+    public GameObject fog7;
     public GameObject fogIsland;
 
     protected override void Awake() {
