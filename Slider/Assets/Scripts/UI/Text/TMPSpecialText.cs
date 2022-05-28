@@ -535,7 +535,7 @@ public class TMPSpecialText : MonoBehaviour
 
             for (int i = start; i <= end; i++)
             {
-                Debug.Log($"Start: {start} End: {end}");
+                //Debug.Log($"Start: {start} End: {end}");
                 // Skip characters that are not visible and thus have no geometry to manipulate.
                 if (!textInfo.characterInfo[i].isVisible)
                     continue;
