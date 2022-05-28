@@ -158,7 +158,7 @@ public class TMPTextTyper : MonoBehaviour
                 // Skip characters that are not visible and thus have no geometry to manipulate.
                 if (!textInfo.characterInfo[i].isVisible)
                 {
-                    continue;
+                    startingCharacterIndex++;   //Added bc otherwise you get an infinite loop where it never increments startingCharacterIndex and thus doesn't finish the text.
                 }
                 else
                 {
@@ -170,13 +170,14 @@ public class TMPTextTyper : MonoBehaviour
                     {
                         startingCharacterIndex += 1;
 
-                        if (startingCharacterIndex == characterCount)
-                        {
-                            // Update mesh vertex data one last time.
-                            m_TextMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
-                            isRangeMax = true; 
-                        }
                     }
+                }
+
+                if (startingCharacterIndex == characterCount)
+                {
+                    // Update mesh vertex data one last time.
+                    m_TextMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
+                    isRangeMax = true;
                 }
             }
 

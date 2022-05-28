@@ -29,6 +29,7 @@ public class DialogueConditionals : Conditionals
         public float delayAfterFinishedTyping = 0.5f;
         public bool waitUntilPlayerAction;  //Player has to press e to continue.
         public bool doNotRepeatAfterTriggered;
+        public bool dontInterrupt;
 
         public UnityEvent onDialogueStart;
         public UnityEvent onDialogueEnd;

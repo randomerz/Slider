@@ -103,8 +103,8 @@ public class NPC : MonoBehaviour
 
     public void TriggerDialogue()
     {
-        if (dialogueEnabled)
-        {
+       if (dialogueEnabled)
+       {
             if (dconds[currDconds].dialogueChain.Count == 0)
             {
                 dconds[currDconds].OnDialogueStart();
@@ -116,7 +116,7 @@ public class NPC : MonoBehaviour
             }
 
             startedTyping = true;
-        }
+       }
     }
 
     public void FinishDialogue()
@@ -133,6 +133,13 @@ public class NPC : MonoBehaviour
 
     public void FadeDialogue()
     {
+        var dChain = dconds[currDconds].dialogueChain;
+        if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt)
+        {
+            //Dialogue keeps playing even if the player exits
+            return;
+        }
+
         dialogueDisplay.FadeAwayDialogue();
 
         //Don't allow player to continue conversation.
@@ -144,9 +151,12 @@ public class NPC : MonoBehaviour
         }
 
         //Dialogue that doesn't repeat should be skipped now.
-        if (dconds[currDconds].dialogueChain.Count > 0 && dconds[currDconds].dialogueChain[currDialogueInChain].doNotRepeatAfterTriggered)
+        if (dChain.Count > 0)
         {
-            SetNextDialogueInChain();
+            if (dChain[currDialogueInChain].doNotRepeatAfterTriggered)
+            {
+                SetNextDialogueInChain();
+            }
         }
     }
 
@@ -165,6 +175,7 @@ public class NPC : MonoBehaviour
 
     private void OnPlayerAction(object sender, System.EventArgs e)
     {
+        /*
         if (waitingForPlayerContinue)
         {
             SetNextDialogueInChain(true);
@@ -174,6 +185,7 @@ public class NPC : MonoBehaviour
             dialogueDisplay.textTyperText.TrySkipText();
             dialogueDisplay.textTyperBG.TrySkipText();
         }
+        */
     }
 
     private void SetNextDialogueInChain(bool triggerNext = false)   //args are useless, this is just so it can be called by player action.
