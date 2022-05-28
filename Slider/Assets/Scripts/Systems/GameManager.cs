@@ -30,4 +30,13 @@ public class GameManager : MonoBehaviour
 
         return saveSystem;
     }
+
+
+    // temporary -- only to expose to Unity
+    public void SaveGame()
+    {
+        Debug.LogWarning("Called GameManager.SaveGame(), you should probably call SaveSystem.SaveGame() instead.");
+
+        SaveSystem.SaveGame();
+    }
 }

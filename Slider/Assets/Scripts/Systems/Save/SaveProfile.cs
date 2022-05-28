@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class SaveProfile
 {
-    // metadata
+    // profile-specific metadata
     private string profileName;
     private float playTimeInSeconds;
     private bool completionStatus;
@@ -54,7 +55,39 @@ public class SaveProfile
         return areaToSGridData;
     }
 
+    public void SetAreaToSGridData(Dictionary<Area, SGridData> value)
+    {
+        areaToSGridData = value;
+    }
+
+    public Dictionary<string, bool> GetBoolsDictionary()
+    {
+        return bools;
+    }
+
+    public void SetBoolsDictionary(Dictionary<string, bool> value)
+    {
+        bools = value;
+    }
+
+    public Dictionary<string, string> GetStringsDictionary()
+    {
+        return strings;
+    }
+
+    public void SetStringsDictionary(Dictionary<string, string> value)
+    {
+        strings = value;
+    }
+
     #endregion
+
+    public void Save()
+    {
+        // Responsible for going around and saving all the data
+
+        SaveSavablesData();
+    }
 
     public void SaveSGridData(Area area, SGrid sgrid)
     {
@@ -90,6 +123,25 @@ public class SaveProfile
         return areaToSGridData[area];
     }
 
+    public void SaveSavablesData()
+    {
+        foreach (ISavable s in GetCachedSavables())
+        {
+            s.Save();
+        }
+    }
+
+    private List<ISavable> GetCachedSavables()
+    {
+        // TODO: actually cache them
+        List<ISavable> savables = new List<ISavable>();
+        foreach (ISavable s in GameObject.FindObjectsOfType<MonoBehaviour>(true).OfType<ISavable>())
+        {
+            savables.Add(s);
+        }
+        return savables;
+    }
+
     // public Vector3 GetPlayerPos(Area area) {
     //     return playerPos[area];
     // }
@@ -97,6 +149,11 @@ public class SaveProfile
 
     public bool GetBool(string name)
     {
+        if (!bools.ContainsKey(name))
+        {
+            Debug.LogWarning("Couldn't find saved variable of name: " + name);
+            return false;
+        }
         // add a null check here?
         return bools[name];
     }
@@ -110,7 +167,7 @@ public class SaveProfile
     {
         if (!strings.ContainsKey(name))
         {
-            Debug.LogError("Couldn't find saved variable of name: " + name);
+            Debug.LogWarning("Couldn't find saved variable of name: " + name);
             return name;
         }
         // add a null check here?

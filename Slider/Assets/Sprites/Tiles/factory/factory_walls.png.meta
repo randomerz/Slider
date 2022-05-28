@@ -80,6 +80,12 @@ TextureImporter:
   - first:
       213: -7486242702885228093
     second: factory_floor_9
+  - first:
+      213: 6162867600795283485
+    second: factory_walls_26
+  - first:
+      213: 4253713392269286141
+    second: factory_walls_27
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -710,6 +716,48 @@ TextureImporter:
       bones: []
       spriteID: 3c17a20fce58b1890800000000000000
       internalID: -7486242702885228093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_walls_26
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d10ba2f3e67e68550800000000000000
+      internalID: 6162867600795283485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_walls_27
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 16
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfa588a0bc9380b30800000000000000
+      internalID: 4253713392269286141
       vertices: []
       indices: 
       edges: []

@@ -32,14 +32,14 @@ public class MagiTechGrid : SGrid
         UIEffects.FadeFromBlack();
     }
 
-    public override void SaveGrid()
+    public override void Save()
     {
-        base.SaveGrid();
+        base.Save();
     }
 
-    public override void LoadGrid()
+    public override void Load()
     {
-        base.LoadGrid();
+        base.Load();
 
         // Should look into linking this into the save/load system later
         SetAltGrid(altStiles);

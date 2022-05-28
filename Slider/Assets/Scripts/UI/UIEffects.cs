@@ -47,6 +47,14 @@ public class UIEffects : MonoBehaviour
         StartEffectCoroutine(_instance.FlashCoroutine(callbackMiddle, callbackEnd, speed));
     }
 
+    public static void ClearScreen()
+    {
+        _instance.blackPanel.SetActive(false);
+        _instance.blackPanelCanvasGroup.alpha = 0;
+        _instance.whitePanel.SetActive(false);
+        _instance.whitePanelCanvasGroup.alpha = 0;
+    }
+
     private static void StartEffectCoroutine(IEnumerator coroutine)
     {
         if (previousCoroutine != null)

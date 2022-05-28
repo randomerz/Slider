@@ -8,8 +8,6 @@ public class JungleGrid : SGrid
 
     public ChadRace chadRace;
 
-    private static bool checkCompletion = false;
-
     protected override void Awake() {
         myArea = Area.Jungle;
 
@@ -40,14 +38,14 @@ public class JungleGrid : SGrid
         SGrid.OnGridMove -= CheckChad;
     }
 
-    public override void SaveGrid() 
+    public override void Save() 
     {
-        base.SaveGrid();
+        base.Save();
     }
 
-    public override void LoadGrid()
+    public override void Load()
     {
-        base.LoadGrid();
+        base.Load();
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker=true)

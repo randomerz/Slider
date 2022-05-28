@@ -100,6 +100,15 @@ public class ArtifactTileButton : MonoBehaviour
         buttonAnimator.SetPushedDown(v);
     }
 
+    public void SetLightning(bool v)
+    {
+        buttonAnimator.SetLightning(v);
+    }
+
+    public void FragLightningPreview(bool v)
+    {
+        buttonAnimator.FragLightningPreview(v);
+    }
     public void SetSelected(bool v)
     {
         buttonAnimator.SetSelected(v);
@@ -125,7 +134,7 @@ public class ArtifactTileButton : MonoBehaviour
         isTileActive = v;
         if (v)
         {
-            buttonAnimator.sliderImage.sprite = islandSprite;
+            buttonAnimator.sliderImage.sprite = isComplete ? completedSprite : islandSprite;
         }
         else
         {

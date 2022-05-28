@@ -97,14 +97,14 @@ public class OceanGrid : SGrid
 
     }
 
-    public override void SaveGrid()
+    public override void Save()
     {
-        base.SaveGrid();
+        base.Save();
     }
 
-    public override void LoadGrid()
+    public override void Load()
     {
-        base.LoadGrid();
+        base.Load();
     }
 
 

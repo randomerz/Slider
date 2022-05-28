@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SGrid : MonoBehaviour
+public class SGrid : MonoBehaviour, ISavable
 {
     //L: The grid the player is currently interacting with (only 1 active at a time)
     public static SGrid current { get; private set; }
@@ -56,7 +56,7 @@ public class SGrid : MonoBehaviour
 
         current = this;
         InitUIArtifact();
-        LoadGrid();
+        Load();
         SetBGGrid(bgGridTiles);
 
         if (targetGrid.Length == 0)
@@ -193,6 +193,20 @@ public class SGrid : MonoBehaviour
         return s;
     }
 
+    public static int[,] GridStringToSetGridFormat(string gridstring)
+    {
+        //Chen: This in theory should work for other grids? This is mostly used with Scroll of Realigning stuff.
+        int[,] gridFormat = new int[current.width, current.height];
+        for (int x = current.width - 1; x >= 0; x--)
+        {
+            for (int y = 0; y < current.height; y++)
+            {
+                gridFormat[y, (current.width - 1 - x)] = (int)Char.GetNumericValue(gridstring[(x * current.height) + y]);
+            }
+        }
+        return gridFormat;
+    }
+
     //L: islandId is the id of the corresponding tile in the puzzle doc
     public STile GetStile(int islandId)
     {
@@ -327,6 +341,7 @@ public class SGrid : MonoBehaviour
 
     public void GivePlayerTheCollectible(string name)
     {
+        Debug.Log("Activating collectible " + name);
         if (GetCollectible(name) != null)
         {
             ActivateCollectible(name);
@@ -389,7 +404,7 @@ public class SGrid : MonoBehaviour
     public virtual void EnableStile(STile stile, bool flickerButton=true)
     {
         stile.SetTileActive(true);
-        UIArtifact.AddButton(stile.islandId, flickerButton);
+        UIArtifact.AddButton(stile, flickerButton);
         OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
     }
     // See STile.isTileCollected for an explanation
@@ -400,16 +415,29 @@ public class SGrid : MonoBehaviour
         OnSTileCollected?.Invoke(this, new OnSTileCollectedArgs { stile = stile });
     }
 
+    public virtual bool TilesMoving()
+    {
+        List<STile> stiles = SGrid.current.GetActiveTiles();
+        bool tilesAreMoving = false;
+        foreach (STile stile in stiles)
+        {
+            if (stile.GetMovingDirection() != Vector2.zero)
+            {
+                tilesAreMoving = true;
+            }
+        }
 
+        return tilesAreMoving;
+    }
 
-    public virtual void SaveGrid() 
+    public virtual void Save() 
     { 
         Debug.Log("Saving data for " + myArea);
         SaveSystem.Current.SaveSGridData(myArea, this);
     }
 
     //L: Used in the save system to load a grid as opposed to using SetGrid(STile[], STile[]) with default tiles positions.
-    public virtual void LoadGrid() 
+    public virtual void Load() 
     { 
         //Debug.Log("Loading grid...");
 
@@ -424,10 +452,12 @@ public class SGrid : MonoBehaviour
 
         // setting grids... similar to initialization
         STile[,] newGrid = new STile[width, height];
+        int[,] idGrid = new int[width, height];
         foreach (SGridData.STileData td in sgridData.grid) 
         {
             STile stile = GetStile(td.islandId); 
             newGrid[td.x, td.y] = stile;
+            idGrid[td.x, td.y] = td.islandId;
             stile.SetSTile(td.isTileActive, td.x, td.y);
         }
         grid = newGrid;
@@ -466,16 +496,7 @@ public class SGrid : MonoBehaviour
     public virtual void RearrangeGrid()
     {
         //Convert the target grid into the proper int[] and pass into setgrid
-        realigningGrid = new int[current.width, current.height];
-        for (int x = current.width - 1; x >= 0; x--)
-        {
-            for (int y = 0; y < current.height; y++)
-            {
-                //Debug.Log("Setgrid indices: " + y + " " + (width - 1 - x) + " Tile: " + targetGrid[(x * height) + y]);
-                realigningGrid[y, (current.width - 1 - x)] = (int) Char.GetNumericValue(targetGrid[(x * current.height) + y]);
-            }
-        }
-        current.SetGrid(realigningGrid);
+        current.SetGrid(GridStringToSetGridFormat(targetGrid));
 
         for (int x = 0; x < current.width; x++)
         {
@@ -486,6 +507,10 @@ public class SGrid : MonoBehaviour
             }
         }
     }
+    public bool HasRealigningGrid()
+    {
+        return realigningGrid != null;
+    }
     protected static void UpdateButtonCompletions(object sender, System.EventArgs e)
     {
         current.UpdateButtonCompletionsHelper();
@@ -493,9 +518,6 @@ public class SGrid : MonoBehaviour
 
     protected virtual void UpdateButtonCompletionsHelper()
     {
-        // Debug.Log("SGrid update buttons complete!");
-
-        // Debug.Log("Checking completions!");
         for (int x = 0; x < current.width; x++) {
             for (int y = 0; y < current.height; y++) {
                 // int tid = current.targetGrid[x, y];
@@ -506,7 +528,7 @@ public class SGrid : MonoBehaviour
                     // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, true);
                 }
-                else {
+                else if (artifactButton != null) {
                     int tid = int.Parse(tids);
                     // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
@@ -527,7 +549,7 @@ public class SGrid : MonoBehaviour
             for (int y = 0; y < current.height; y++) {
                 string tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
-                //Debug.Log(x + " " + y);
+                Debug.Log(x + " " + y);
                 if (tids == "*") 
                 {
                     numComplete += 1;
