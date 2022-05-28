@@ -175,7 +175,6 @@ public class NPC : MonoBehaviour
 
     private void OnPlayerAction(object sender, System.EventArgs e)
     {
-        /*
         if (waitingForPlayerContinue)
         {
             SetNextDialogueInChain(true);
@@ -184,8 +183,7 @@ public class NPC : MonoBehaviour
         {
             dialogueDisplay.textTyperText.TrySkipText();
             dialogueDisplay.textTyperBG.TrySkipText();
-        }
-        */
+        }  
     }
 
     private void SetNextDialogueInChain(bool triggerNext = false)   //args are useless, this is just so it can be called by player action.
