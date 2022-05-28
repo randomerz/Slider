@@ -10,6 +10,8 @@ public class SerializableSaveProfile
     public float playTimeInSeconds;
     public bool completionStatus;
 
+    public SerializablePlayer serializablePlayer;
+
     //private Dictionary<Area, SGridData> areaToSGridData = new Dictionary<Area, SGridData>();
     public Area[] areaToSGridData_Keys;
     public SGridData[] areaToSGridData_Values;
@@ -31,6 +33,8 @@ public class SerializableSaveProfile
         ssp.playTimeInSeconds = saveProfile.GetPlayTimeInSeconds();
         ssp.completionStatus = saveProfile.GetCompletionStatus();
 
+        ssp.serializablePlayer = saveProfile.GetSerializablePlayer();
+
 
         ssp.areaToSGridData_Keys = saveProfile.GetAreaToSGridData().Keys.ToArray();
         ssp.bools_Keys = saveProfile.GetBoolsDictionary().Keys.ToArray();
@@ -49,6 +53,8 @@ public class SerializableSaveProfile
         
         sp.SetPlayTimeInSeconds(playTimeInSeconds);
         sp.SetCompletionStatus(completionStatus);
+
+        sp.SetSerializeablePlayer(serializablePlayer);
 
         Dictionary<Area, SGridData> areaToSGridData = new Dictionary<Area, SGridData>(areaToSGridData_Keys.Length);
         for (int i = 0; i < areaToSGridData_Keys.Length; i++)

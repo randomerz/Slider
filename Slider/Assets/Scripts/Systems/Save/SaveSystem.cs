@@ -112,6 +112,10 @@ public class SaveSystem
         current = profile;
         currentIndex = index;
 
+        // TODO:
+        // - Load (and save!) proper scene/area
+        // - Higher execution order thingy? or async... not sure
+
         current.Load();
     }
 

@@ -9,13 +9,15 @@ public class SaveProfile
     private float playTimeInSeconds;
     private bool completionStatus;
 
+    private SerializablePlayer serializablePlayer;
+
     private Dictionary<Area, SGridData> areaToSGridData = new Dictionary<Area, SGridData>();
 
     private Dictionary<string, bool> bools = new Dictionary<string, bool>();
     private Dictionary<string, string> strings = new Dictionary<string, string>();
 
-    // private Dictionary<Area, Vector3> playerPos = new Dictionary<Area, Vector3>(); // temporary
-    // TODO: save player inventory
+    // Cached stuff
+    // nothing bc i dont know what to do bc scenes exist
 
     public SaveProfile(string profileName)
     {
@@ -48,6 +50,16 @@ public class SaveProfile
     public void SetCompletionStatus(bool value)
     {
         completionStatus = value;
+    }
+
+    public SerializablePlayer GetSerializablePlayer()
+    {
+        return serializablePlayer;
+    }
+
+    public void SetSerializeablePlayer(SerializablePlayer value)
+    {
+        serializablePlayer = value;
     }
 
     public Dictionary<Area, SGridData> GetAreaToSGridData()
@@ -140,9 +152,23 @@ public class SaveProfile
 
     public void LoadSavablesData()
     {
-        foreach (ISavable s in GetCachedSavables())
+        List<ISavable> savables = GetCachedSavables();
+        // Load Player first
+        foreach (ISavable s in savables)
         {
-            s.Load(this);
+            if (s is Player)
+            {
+                s.Load(this);
+            }
+        }
+
+        // then load rest
+        foreach (ISavable s in savables)
+        {
+            if (!(s is Player))
+            {
+                s.Load(this);
+            }
         }
     }
 
