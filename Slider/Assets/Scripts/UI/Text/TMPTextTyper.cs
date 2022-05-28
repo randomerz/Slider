@@ -75,7 +75,7 @@ public class TMPTextTyper : MonoBehaviour
 
             textInfo.characterInfo[i].color.a = 0;
 
-            SetCharacterColor(textInfo, textInfo.characterInfo[i].color, i);
+            SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
         }
     }
 
@@ -109,7 +109,7 @@ public class TMPTextTyper : MonoBehaviour
             {
                 textInfo.characterInfo[charIndex].color.a = 255;
 
-                SetCharacterColor(textInfo, textInfo.characterInfo[charIndex].color, charIndex);
+                SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[charIndex].color, charIndex);
 
             }
 
@@ -164,7 +164,7 @@ public class TMPTextTyper : MonoBehaviour
                 {
                     byte alpha = (byte)Mathf.Clamp(textInfo.characterInfo[i].color.a + fadeSteps, 0, 255);
                     textInfo.characterInfo[i].color.a = alpha;
-                    SetCharacterColor(textInfo, textInfo.characterInfo[i].color, i);
+                    SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
 
                     if (alpha == 255)
                     {
@@ -190,7 +190,7 @@ public class TMPTextTyper : MonoBehaviour
         finishedTyping = true;
     }
 
-    private void SetCharacterColor(TMP_TextInfo textInfo, Color32 c, int ind)
+    public static void SetCharacterColor(TextMeshProUGUI tmp, TMP_TextInfo textInfo, Color32 c, int ind)
     {
         int meshIndex = textInfo.characterInfo[ind].materialReferenceIndex;
 
@@ -208,7 +208,7 @@ public class TMPTextTyper : MonoBehaviour
         textInfo.meshInfo[meshIndex].mesh.colors32 = vertexColors;
 
         // update mesh
-        m_TextMeshPro.UpdateGeometry(textInfo.meshInfo[meshIndex].mesh, meshIndex);
+        tmp.UpdateGeometry(textInfo.meshInfo[meshIndex].mesh, meshIndex);
     }
 
     /// <summary>
@@ -229,7 +229,7 @@ public class TMPTextTyper : MonoBehaviour
 
                 textInfo.characterInfo[i].color.a = 255;
 
-                SetCharacterColor(textInfo, textInfo.characterInfo[i].color, i);
+                SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
             }
 
             StopCoroutine(coroutine);
