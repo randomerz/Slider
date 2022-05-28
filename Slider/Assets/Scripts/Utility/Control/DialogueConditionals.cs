@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 [System.Serializable]
 public class DialogueConditionals : Conditionals
 {
+    [Header("Dialogue Conditionals")]
     [TextArea(1, 4)]
     public string dialogue; //If you just have a single message, you can put it here, otherwise you can use dialogue chains for all the new functionality.
     public int priority;
@@ -25,8 +26,9 @@ public class DialogueConditionals : Conditionals
         [TextArea(1, 4)]
         public string dialogue;
 
-        public float delayAfterFinishedTyping = 3.0f;
+        public float delayAfterFinishedTyping = 0.5f;
         public bool waitUntilPlayerAction;  //Player has to press e to continue.
+        public bool doNotRepeatAfterTriggered;
 
         public UnityEvent onDialogueStart;
         public UnityEvent onDialogueEnd;
@@ -68,7 +70,7 @@ public class DialogueConditionals : Conditionals
         string dialogue = dialogueChain[index].dialogue;
         if (dialogueChain[index].waitUntilPlayerAction)
         {
-            dialogue = string.Concat(dialogue, ". . .");
+            dialogue = string.Concat(dialogue, "<shake>. . .</shake>");
         }
 
         return dialogue;

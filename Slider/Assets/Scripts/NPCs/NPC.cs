@@ -9,10 +9,14 @@ public class NPC : MonoBehaviour
 
     [SerializeField] private DialogueDisplay dialogueDisplay;
 
+    //indices to get the right dialogue
     private int currDconds;
     private int currDialogueInChain;
+
     private bool dialogueEnabled;
-    private bool pollFinishedTyping;
+    private bool startedTyping;
+    private bool waitingForPlayerContinue;
+
 
     private STile currentStileUnderneath;
     private WorldNavAgent nav;
@@ -23,8 +27,18 @@ public class NPC : MonoBehaviour
     {
         nav = GetComponent<WorldNavAgent>();
         dialogueEnabled = true;
-        pollFinishedTyping = false;
+        startedTyping = false;
         waitNextDialogueCoroutine = null;
+    }
+
+    private void OnEnable()
+    {
+        PlayerAction.OnAction += OnPlayerAction;
+    }
+
+    private void OnDisable()
+    {
+        PlayerAction.OnAction -= OnPlayerAction;
     }
 
     // might need optimizing
@@ -45,9 +59,9 @@ public class NPC : MonoBehaviour
             dconds[currDconds].onDialogueChanged?.Invoke();
         }
 
-        if (pollFinishedTyping && dialogueDisplay.textTyperText.finishedTyping)
+        if (startedTyping && dialogueDisplay.textTyperText.finishedTyping)
         {
-            pollFinishedTyping = false;
+            startedTyping = false;
             FinishDialogue();
         }
     }
@@ -101,7 +115,7 @@ public class NPC : MonoBehaviour
                 dialogueDisplay.DisplaySentence(dconds[currDconds].GetDialogueChain(currDialogueInChain));
             }
 
-            pollFinishedTyping = true;
+            startedTyping = true;
         }
     }
 
@@ -124,9 +138,15 @@ public class NPC : MonoBehaviour
         //Don't allow player to continue conversation.
         if (waitNextDialogueCoroutine != null)
         {
-            PlayerAction.OnAction -= SetNextDialogueInChain;
+            waitingForPlayerContinue = false;
             StopCoroutine(waitNextDialogueCoroutine);
             waitNextDialogueCoroutine = null;
+        }
+
+        //Dialogue that doesn't repeat should be skipped now.
+        if (dconds[currDconds].dialogueChain.Count > 0 && dconds[currDconds].dialogueChain[currDialogueInChain].doNotRepeatAfterTriggered)
+        {
+            SetNextDialogueInChain();
         }
     }
 
@@ -143,34 +163,47 @@ public class NPC : MonoBehaviour
         }
     }
 
-    public void SetNextDialogueInChain(object sender, System.EventArgs e)   //args are useless, this is just so it can be called by player action.
+    private void OnPlayerAction(object sender, System.EventArgs e)
     {
+        if (waitingForPlayerContinue)
+        {
+            SetNextDialogueInChain(true);
+            waitingForPlayerContinue = false;
+        } else if (startedTyping && !dialogueDisplay.textTyperText.finishedTyping)
+        {
+            dialogueDisplay.textTyperText.TrySkipText();
+            dialogueDisplay.textTyperBG.TrySkipText();
+        }
+    }
 
-        PlayerAction.OnAction -= SetNextDialogueInChain;
-
+    private void SetNextDialogueInChain(bool triggerNext = false)   //args are useless, this is just so it can be called by player action.
+    {
         //The dialogue will just chill on the last line if it's already been exhausted (could maybe customize to repeat the last line or start from the beginning).
         if (currDialogueInChain < dconds[currDconds].dialogueChain.Count - 1)
         {
             currDialogueInChain++;
-            TriggerDialogue();
+            if (triggerNext)
+            {
+                TriggerDialogue();
+            }
         } else
         {
             dconds[currDconds].OnDialogueChainExhausted();
         }
     }
 
-    public IEnumerator WaitForNextDialogue()
+    private IEnumerator WaitForNextDialogue()
     {
         DialogueConditionals.Dialogue curr = dconds[currDconds].dialogueChain[currDialogueInChain];
         if (curr.waitUntilPlayerAction)
         {
-            PlayerAction.OnAction += SetNextDialogueInChain;
             //Might want to loop an animation here of the ... per this card: https://trello.com/c/MMGJR8Ra/143-new-npc-dialogue-features
+            waitingForPlayerContinue = true;
             yield return null;
         } else
         {
             yield return new WaitForSeconds(curr.delayAfterFinishedTyping);
-            SetNextDialogueInChain(null, null);
+            SetNextDialogueInChain(true);
         }
     }
 
