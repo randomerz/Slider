@@ -54,7 +54,7 @@ public class TMPTextTyper : MonoBehaviour
             SetTextAlphaZero();
         }
 
-        finishedTyping = !invisibleAtStart;
+        //finishedTyping = !invisibleAtStart;   //This causes problems :\
     }
 
     #region Setting Text Mesh
@@ -216,7 +216,7 @@ public class TMPTextTyper : MonoBehaviour
     /// </summary>
     public void SkipTypingString()
     {
-        Debug.Log("Skipping string");
+        //Debug.Log("Skipping string");
         if (coroutine != null)
         {
             TMP_TextInfo textInfo = m_TextMeshPro.textInfo;

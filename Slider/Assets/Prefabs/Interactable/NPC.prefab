@@ -216,7 +216,17 @@ MonoBehaviour:
     conditions: []
     dialogue: Hello, I am sign!
     priority: 1
-    onDialogue:
+    onDialogueStart:
+      m_PersistentCalls:
+        m_Calls: []
+    onDialogueEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    onDialogueChanged:
+      m_PersistentCalls:
+        m_Calls: []
+    dialogueChain: []
+    onDialogueChainExhausted:
       m_PersistentCalls:
         m_Calls: []
   dialogueDisplay: {fileID: 8260142248798685880}
@@ -234,6 +244,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textTyperText: {fileID: 2664969615823266812}
   textTyperBG: {fileID: 5413396733350346047}
+  textSpecialText: {fileID: 5785310853724136222}
+  textSpecialBG: {fileID: 5062938066658938547}
   ping: {fileID: 1639439709551164036}
   canvas: {fileID: 1390625316688445350}
   highContrastBG: {fileID: 2569609833456035175}

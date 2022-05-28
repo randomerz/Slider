@@ -41,6 +41,8 @@ public class TMPSpecialText : MonoBehaviour
     public float waveAmplitude = 1;
     public float wavePeriod = 1;
 
+    private List<Coroutine> effectCoroutines;
+
 
     private struct CommandArg
     {
@@ -80,6 +82,7 @@ public class TMPSpecialText : MonoBehaviour
         }
 
         // StartCoroutine(ParseText(m_TextMeshPro.text));
+        effectCoroutines = new List<Coroutine>();
     }
 
     // moved to start so SGrid can initialize, for SaveSystem
@@ -210,19 +213,19 @@ public class TMPSpecialText : MonoBehaviour
             case -1623808880:
             // jittery
             case 270799001:
-                StartCoroutine(TMPJitter(start, end, jitterMultiplier * 2, jitterMultiplier * 2));
+                effectCoroutines.Add(StartCoroutine(TMPJitter(start, end, jitterMultiplier * 2, jitterMultiplier * 2)));
                 break;
             // shake
             case 371760912:
             // shaky
             case 371760908:
-                StartCoroutine(TMPJitter(start, end, 0, shakeMultiplier * 10));
+                effectCoroutines.Add(StartCoroutine(TMPJitter(start, end, 0, shakeMultiplier * 10)));
                 break;
             // wave
             case -1966748055:
             // wavy
             case -1066070667:
-                StartCoroutine(Wavy(start, end, waveAmplitude * 5, wavePeriod * .5f));
+                effectCoroutines.Add(StartCoroutine(Wavy(start, end, waveAmplitude * 5, wavePeriod * .5f)));
                 break;
             default:
                 return false;
@@ -242,6 +245,14 @@ public class TMPSpecialText : MonoBehaviour
         }
 
         return originalText;
+    }
+
+    public void StopEffects()
+    {
+        foreach(var effect in effectCoroutines)
+        {
+            StopCoroutine(effect);
+        }
     }
 
 
