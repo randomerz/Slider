@@ -253,6 +253,9 @@ public class TMPSpecialText : MonoBehaviour
         {
             StopCoroutine(effect);
         }
+
+        effectCoroutines.Clear();
+        commandArgs.Clear();
     }
 
 
