@@ -326,7 +326,7 @@ public class OceanGrid : SGrid
 
     public void FoggyCorrectMovement()
     {
-        if(correctPath[playerIndex] == playerMovement)
+        if (playerIndex < correctPath.Length && correctPath[playerIndex] == playerMovement)
         {
             playerIndex++;
             FoggySeasAudio();
