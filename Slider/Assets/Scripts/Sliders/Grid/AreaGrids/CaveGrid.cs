@@ -20,7 +20,7 @@ public class CaveGrid : SGrid
 
     static System.EventHandler<SGridAnimator.OnTileMoveArgs> checkCompletionsOnMoveFunc;
 
-
+    //events
 
     protected override void Awake() {
         myArea = Area.Caves;
@@ -121,15 +121,28 @@ public class CaveGrid : SGrid
         c.SetSpec(checkLightingCompletion && allTilesLit);
     }
 
+    public void CavesShake1()
+    {
+        CameraShake.Shake(0.25f, 0.25f);
+        AudioManager.Play("Slide Rumble");
+    }
+    public void CavesShake2()
+    {
+        CameraShake.Shake(0.75f, 0.5f);
+        AudioManager.Play("Slide Rumble");
+    }
+
+    public void CavesShake3()
+    {
+        CameraShake.Shake(1.5f, 2.5f);
+        AudioManager.Play("Slide Explosion");
+        UIEffects.FlashWhite();
+    }
+
     // Puzzle 8 - light  up caves
     public void FinishCaves()
     {
         GivePlayerTheCollectible("Slider 9");
-
-        // fading stuff
-        UIEffects.FlashWhite();
-        CameraShake.Shake(1.5f, 1.0f);
-
 
         int[,] completedPuzzle = new int[3, 3] { { 2, 1, 5 },
                                                  { 6, 3, 4 },
@@ -137,7 +150,7 @@ public class CaveGrid : SGrid
         SetGrid(completedPuzzle);
         StartCoroutine(CheckCompletionsAfterDelay(1.1f));
 
-        UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
+        UIArtifactWorldMap.SetAreaStatus(Area.Caves, ArtifactWorldMapArea.AreaStatus.color);
     }
 
     public override void Save() 

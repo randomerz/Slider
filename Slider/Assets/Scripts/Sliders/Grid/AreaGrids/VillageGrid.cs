@@ -103,9 +103,9 @@ public class VillageGrid : SGrid
 
     private IEnumerator ShuffleBuildUp()
     {
-        AudioManager.Play("Puzzle Complete");
+        //AudioManager.Play("Puzzle Complete");
 
-        yield return new WaitForSeconds(0.5f);
+        //yield return new WaitForSeconds(0.5f);
 
         CameraShake.Shake(0.25f, 0.25f);
         AudioManager.Play("Slide Rumble");

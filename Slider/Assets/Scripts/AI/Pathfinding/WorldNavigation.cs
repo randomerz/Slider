@@ -27,6 +27,8 @@ public class WorldNavigation : MonoBehaviour
 
     private void Awake()
     {
+        //Unfortunately, due to script order and some other complications, the moss won't update the points until it 
+        //changes for the first time. This doesn't affect the game tho, so it's not super important to fix (until it is).
         validPtsWorld = GetWorldValidPts();
 
         validPtsStiles = new Dictionary<STile, HashSet<Vector2Int>>();
@@ -63,9 +65,10 @@ public class WorldNavigation : MonoBehaviour
 
     private void HandleSTileMoved(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
+        //We don't need to do this anymore since the positions are relative per stile.
+        //validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
 
-        OnValidPtsChanged?.Invoke(this, new System.EventArgs());
+        //OnValidPtsChanged?.Invoke(this, new System.EventArgs());
     }
 
     private void HandleMossUpdated(object sender, CaveMossManager.MossUpdatedArgs e)
@@ -93,7 +96,7 @@ public class WorldNavigation : MonoBehaviour
     private HashSet<Vector2Int> GetWorldValidPts()
     {
         var result = new HashSet<Vector2Int>();
-        ContactFilter2D filter = GetFilterWithoutTriggers(~LayerMask.GetMask("Ignore Raycast", "SlideableArea", "Player", "Rat"));
+        ContactFilter2D filter = GetFilterWithoutTriggers(~LayerMask.GetMask("Ignore Raycast", "SlideableArea", "Player", "Rat", "NPC"));
         RaycastHit2D[] hits = new RaycastHit2D[1];
         foreach (Vector2Int pos in worldFloorTM.cellBounds.allPositionsWithin)
         {
@@ -118,33 +121,58 @@ public class WorldNavigation : MonoBehaviour
         var result = new HashSet<Vector2Int>();
 
         //Graph coordinates are relative to the stile.
-        int minX = -stile.STILE_WIDTH / 2 + (int) stile.transform.position.x;
-        int minY = -stile.STILE_WIDTH / 2 + (int)stile.transform.position.y;
-        int maxX = stile.STILE_WIDTH / 2 + (int)stile.transform.position.x;
-        int maxY = stile.STILE_WIDTH / 2 + (int)stile.transform.position.y;
+        int minX = -stile.STILE_WIDTH / 2 ;
+        int minY = -stile.STILE_WIDTH / 2;
+        int maxX = stile.STILE_WIDTH / 2;
+        int maxY = stile.STILE_WIDTH / 2;
 
-        ContactFilter2D filter = GetFilterWithoutTriggers(~LayerMask.GetMask("Ignore Raycast", "SlideableArea", "Player", "Rat"));
+        ContactFilter2D filter = GetFilterWithoutTriggers(~LayerMask.GetMask("Ignore Raycast", "SlideableArea", "Player", "Rat", "NPC"));
         RaycastHit2D[] hits = new RaycastHit2D[1];
         CaveMossManager moss = stile.GetComponentInChildren<CaveMossManager>();
         for (int x = minX; x <= maxX; x++)
         {
             for (int y = minY; y <= maxY; y++)
             {
-                Vector2Int pos = new Vector2Int(x, y);
+                Vector2Int posRel = new Vector2Int(x, y);
+                Vector2 posAbs = RelToAbsPos(posRel, stile);
 
-                int hit = Physics2D.CircleCast(pos, 0.5f, Vector2.up, filter, hits, 0f);
+
+                int hit = Physics2D.CircleCast(posAbs, 0.5f, Vector2.up, filter, hits, 0f);
                 if (hit == 0)
                 {
-                    if (moss == null || moss.mossCollidersMap.GetColliderType((Vector3Int) pos) == Tile.ColliderType.None)
+                    if (moss == null || moss.mossCollidersMap.GetColliderType((Vector3Int) TileUtil.WorldToTileCoords(posAbs)) == Tile.ColliderType.None)
                     {
-                        result.Add(pos);
+                        result.Add(posRel);
                     }
                 }
             }
         }
         return result;
     }
-    
+
+    private Vector2Int RelToAbsPosTile(Vector2Int pos, STile stile)
+    {
+        return pos + TileUtil.WorldToTileCoords(stile.transform.position);
+    }
+
+    private Vector2 RelToAbsPos(Vector2Int pos, STile stile)
+    {
+        return pos + new Vector2(stile.transform.position.x, stile.transform.position.y);
+    }
+
+    private Vector2Int AbsToRelPos(Vector2 pos, STile stile)
+    {
+        Vector2 relPos = pos - new Vector2(stile.transform.position.x, stile.transform.position.y);
+        return TileUtil.WorldToTileCoords(relPos);
+    }
+
+    private Vector2Int AbsToRelPos(Vector2Int pos, STile stile)
+    {
+        return pos - TileUtil.WorldToTileCoords(stile.transform.position);
+    }
+
+
+
     //Check if a point is in.
     public bool IsValidPt(Vector2Int pos)
     {
@@ -155,7 +183,7 @@ public class WorldNavigation : MonoBehaviour
 
         foreach (STile stile in stiles)
         {
-            if (validPtsStiles.ContainsKey(stile) && validPtsStiles[stile].Contains(pos))
+            if (validPtsStiles.ContainsKey(stile) && validPtsStiles[stile].Contains(AbsToRelPos(pos, stile)))
             {
                 return true;
             }
@@ -181,7 +209,7 @@ public class WorldNavigation : MonoBehaviour
             {
                 foreach (Vector2Int pt in validPtsStiles[stile])
                 {
-                    func(pt);
+                    func(RelToAbsPosTile(pt, stile));
                 }
             }
         }
@@ -198,13 +226,20 @@ public class WorldNavigation : MonoBehaviour
         path = new List<Vector2Int>();
         if (!IsValidPt(start))
         {
-            Debug.LogWarning($"Invalid Start: {start} This might be intentional (not an error).");
-            return false;
+            //Check all the neighbors too in case this is an edge case.
+            foreach (Vector2Int pt in GetMooreNeighbors(start))
+            {
+                if (!IsValidPt(pt))
+                {
+                    Debug.LogWarning($"Invalid Start: {start} This might be intentional (not an error).");
+                    return false;
+                }
+            }
         }
 
         if (!IsValidPt(end))
         {
-            Debug.LogWarning($"Invalid Start: {end} This might be intentional (not an error).");
+            Debug.LogWarning($"Invalid End: {end} This might be intentional (not an error).");
             return false;
         }
 
@@ -219,13 +254,16 @@ public class WorldNavigation : MonoBehaviour
         //Initialze all values in the data structure
         ForEachValidPt((pt) =>
         {
-            costs[pt] = pt.Equals(start) ? 0 : int.MaxValue;
+            costs[pt] = int.MaxValue;
             prevNode[pt] = Vector2Int.zero;
         });
 
+        costs[start] = 0;
+        costs[end] = int.MaxValue;
+
         nodeQueue.Enqueue(start, 0);
 
-        while (nodeQueue.Count > 0)
+        while (nodeQueue.Count > 0 && costs[end] >= int.MaxValue)
         {
             var curr = nodeQueue.Dequeue();
             visited.Add(curr);
@@ -245,12 +283,22 @@ public class WorldNavigation : MonoBehaviour
                     //Need to check against overflow.
                     int newCost;
                     int edgeCost = costFunc(curr, neighbor, end);
+
+                    if (!costs.ContainsKey(curr))
+                    {
+                        Debug.LogError($"Error Calculating Path: Tried to iterate on position {curr} that was not initialized in costs.");
+                    }
                     if (costs[curr] == int.MaxValue || edgeCost == int.MaxValue)
                     {
                         newCost = int.MaxValue;
                     } else
                     {
                         newCost = costs[curr] + edgeCost;
+                    }
+
+                    if (!costs.ContainsKey(neighbor))
+                    {
+                        costs[neighbor] = int.MaxValue;
                     }
 
                     if (newCost < costs[neighbor])
