@@ -172,18 +172,17 @@ public class Player : MonoBehaviour, ISavable
 
         // Update position
         transform.SetParent(null);
-        SetPosition(new Vector3(sp.position[0], sp.position[1], sp.position[2]));
-        UpdateStileUnderneath();
-        if (currentStileUnderneath != null)
-            transform.SetParent(currentStileUnderneath.transform);
+        transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
+        STile stileUnderneath = STile.GetSTileUnderneath(transform, null);
+        transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
 
         Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
         isOnWater = sp.isOnWater;
         isInHouse = sp.isInHouse;
 
         // PlayerInventory
-        GetPlayerInventory().SetCollectiblesList(sp.collectibles);
-        GetPlayerInventory().SetHasCollectedAnchor(sp.hasCollectedAnchor);
+        playerInventory.SetCollectiblesList(sp.collectibles);
+        playerInventory.SetHasCollectedAnchor(sp.hasCollectedAnchor);
 
         // Other init functions
         UpdatePlayerSpeed();
