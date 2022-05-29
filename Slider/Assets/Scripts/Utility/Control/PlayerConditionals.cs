@@ -67,10 +67,10 @@ public class PlayerConditionals : MonoBehaviour
 
     public void CheckConditionSpec(Conditionals.Condition c)
     {
-        c.SetSpec(CheckCondition());
+        c.SetSpec(CheckCondition(false));
     }
 
-    public bool CheckCondition()
+    public bool CheckCondition(bool invoke=true)
     {
         if (!isEnabled)
         {
@@ -101,7 +101,10 @@ public class PlayerConditionals : MonoBehaviour
             }
         }
 
-        InvokeSuccess();
+        if (invoke)
+        {
+            InvokeSuccess();
+        }
         return true;
     }
 

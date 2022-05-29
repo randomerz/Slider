@@ -170,7 +170,7 @@ public class RatAI : MonoBehaviour
     private void DieOnMoss(object sender, CaveMossManager.MossIsGrowingArgs e)
     {
         Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
-        if (posAsInt.Equals((Vector2Int) e.pos))
+        if (posAsInt.Equals(TileUtil.WorldToTileCoords(e.mossMap.CellToWorld(e.cellPos))))
         {
             Die();
         }
