@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour, ISavable
 {
     private static Player _instance;
+    private bool didInit;
 
     // Movement
     [SerializeField] private float moveSpeed = 5;
@@ -36,12 +37,20 @@ public class Player : MonoBehaviour, ISavable
         _instance.controls = new InputSettings();
         LoadBindings();
 
-        Init();
+        if (!didInit)
+            Init();
     }
 
-    private void Init()
+    public void SetSingleton()
     {
-        GetPlayerInventory().Init();
+        _instance = this;
+    }
+
+    public void Init()
+    {
+        didInit = true;
+
+        playerInventory.Init();
 
         UpdatePlayerSpeed();
     }
@@ -175,8 +184,8 @@ public class Player : MonoBehaviour, ISavable
         transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
         STile stileUnderneath = STile.GetSTileUnderneath(transform, null);
         transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
-
         Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
+
         isOnWater = sp.isOnWater;
         isInHouse = sp.isInHouse;
 

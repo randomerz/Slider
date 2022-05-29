@@ -7,6 +7,7 @@ public class SGrid : MonoBehaviour, ISavable
 {
     //L: The grid the player is currently interacting with (only 1 active at a time)
     public static SGrid current { get; private set; }
+    private bool didInit;
 
     public class OnGridMoveArgs : System.EventArgs
     {
@@ -48,24 +49,16 @@ public class SGrid : MonoBehaviour, ISavable
     }
 
     public Collectible[] collectibles;
-    protected Area myArea; // don't forget to set me!
+    [SerializeField] protected Area myArea; // don't forget to set me!
     public Area MyArea { get => myArea; }
 
-    protected virtual void Awake()
+
+    protected void Awake()
     {
-
         current = this;
-        InitUIArtifact();
-        Load(SaveSystem.Current); // DC: this won't cause run order issues right :)
-        SetBGGrid(bgGridTiles);
 
-        if (targetGrid.Length == 0)
-            Debug.LogWarning("Grid's target (end goal) is empty!");
-        
-        if (myArea == Area.None)
-            Debug.LogWarning("Area isn't set!");
-
-        // OnGridMove += CheckCompletions;
+        if (!didInit)
+            Init();
     }
 
     protected virtual void Start() 
@@ -82,9 +75,25 @@ public class SGrid : MonoBehaviour, ISavable
         UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.oneBit);
     }
 
-    private void InitUIArtifact()
+    public void SetSingleton()
     {
-        GameObject.FindObjectOfType<UIArtifact>().Init();
+        current = this;
+    }
+
+    public virtual void Init()
+    {
+        didInit = true;
+
+        Load(SaveSystem.Current); // DC: this won't cause run order issues right :)
+        SetBGGrid(bgGridTiles);
+
+        if (targetGrid.Length == 0)
+            Debug.LogWarning("Grid's target (end goal) is empty!");
+
+        if (myArea == Area.None)
+            Debug.LogWarning("Area isn't set!");
+
+        // OnGridMove += CheckCompletions;
     }
 
     public STile[,] GetGrid()

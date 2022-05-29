@@ -10,7 +10,7 @@ public class MagiTechGrid : SGrid
 
     [SerializeField] private STile[,] altGrid;
 
-    protected override void Awake()
+    public override void Init()
     {
         myArea = Area.MagiTech;
 
@@ -19,7 +19,7 @@ public class MagiTechGrid : SGrid
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
 
         instance = this;
     }

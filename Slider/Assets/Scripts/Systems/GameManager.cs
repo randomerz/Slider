@@ -7,8 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance { get; private set; }
 
     private static SaveSystem saveSystem;
-
-    public static SaveProfile profileToLoad;
+    public SceneInitializer sceneInitializer;
 
     private void Awake() {
         if (instance == null) {
@@ -20,15 +19,8 @@ public class GameManager : MonoBehaviour
             // saveSystem = saveSystemGO.GetComponent<SaveSystem>();
             saveSystem = new SaveSystem();
         }
-        else
-        {
-            if (profileToLoad != null)
-            {
-                profileToLoad.Load();
 
-                profileToLoad = null;
-            }
-        }
+        sceneInitializer?.Init();
     }
 
     public static SaveSystem GetSaveSystem() 

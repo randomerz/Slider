@@ -33,15 +33,15 @@ public class OceanGrid : SGrid
     public GameObject fog7;
     public GameObject fogIsland;
 
-    protected override void Awake() {
+    public override void Init() {
         myArea = Area.Ocean;
 
-        foreach (Collectible c in collectibles) // maybe don't have this
+        foreach (Collectible c in collectibles)
         {
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
 
 
         // instance = this;

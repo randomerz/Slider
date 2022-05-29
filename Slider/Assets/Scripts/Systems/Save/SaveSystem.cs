@@ -115,7 +115,7 @@ public class SaveSystem
 
 
         // This makes it so the profile gets loaded first thing in the new scene
-        GameManager.profileToLoad = current;
+        SceneInitializer.profileToLoad = current;
 
         // Load last scene the player was in
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

@@ -8,7 +8,7 @@ public class JungleGrid : SGrid
 
     public ChadRace chadRace;
 
-    protected override void Awake() {
+    public override void Init() {
         myArea = Area.Jungle;
 
         foreach (Collectible c in collectibles) 
@@ -16,7 +16,7 @@ public class JungleGrid : SGrid
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
 
         instance = this;
     }

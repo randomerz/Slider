@@ -33,13 +33,17 @@ public class UIArtifact : MonoBehaviour
     
     public void Awake()
     {
+        SetSingleton();
         Init();
+    }
+
+    public void SetSingleton()
+    {
+        _instance = this;
     }
 
     public void Init()
     {
-        _instance = this;
-
         PlayerCanQueue = true;
     }
 

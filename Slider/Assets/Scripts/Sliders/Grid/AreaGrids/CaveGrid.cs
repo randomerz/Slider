@@ -22,7 +22,7 @@ public class CaveGrid : SGrid
 
     //events
 
-    protected override void Awake() {
+    public override void Init() {
         myArea = Area.Caves;
 
         foreach (Collectible c in collectibles)
@@ -30,7 +30,7 @@ public class CaveGrid : SGrid
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
 
         instance = this;
 
