@@ -61,6 +61,7 @@ public class UIArtifact : MonoBehaviour
     public virtual void OnDisable()
     {
         ClearQueues();
+
         //Debug.Log("Queue Cleared!");
     }
 
@@ -267,7 +268,7 @@ public class UIArtifact : MonoBehaviour
             }
 
             moveOptionButtons = GetMoveOptions(button);
-            if (moveOptionButtons.Count == 0)
+            if (moveOptionButtons.Count == 0|| button.myStile.hasAnchor)
             {
                 //L: Player tried to click a locked tile (or tile that otherwise had no move options)
                 return;
@@ -465,6 +466,10 @@ public class UIArtifact : MonoBehaviour
            if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
            {
                b.SetIsInMove(true);
+           }
+           else if(b.myStile.hasAnchor)
+           {
+               continue;
            }
            else
            {

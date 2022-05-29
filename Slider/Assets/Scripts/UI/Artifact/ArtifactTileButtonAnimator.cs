@@ -13,7 +13,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     private bool isPushedDown;
     //The button is selected by the user to be able to make a move.
     [SerializeField] private bool isSelected;
-    //The button is forced down because it is still being moved.
+    //The button is forced down because it is still being moved or is anchored.
     [SerializeField] private bool isForcedDown;
     private bool isHighlighted;
     //Button has lightning highlight and pusheddown and has lightning effect around it
@@ -21,6 +21,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
 
     public void SetPushedDown(bool value)
     {
+        value = value || isForcedDown;
         if (!isPushedDown && value)
         {
             isPushedDown = true;
@@ -40,13 +41,19 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     public void SetSelected(bool value)
     {
         isSelected = value;
-        SetPushedDown(isSelected || isForcedDown);
+        SetPushedDown(isSelected);
     }
 
     public void SetIsForcedDown(bool value)
     {
         isForcedDown = value;
-        SetPushedDown(isSelected || isForcedDown);
+        SetPushedDown(isSelected);
+    }
+
+    public void SetAnchored(bool value)
+    {
+        isForcedDown = value;
+        SetPushedDown(isForcedDown);
     }
 
     public void SetHighlighted(bool value)

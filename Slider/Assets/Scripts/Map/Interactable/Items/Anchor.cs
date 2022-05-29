@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Anchor : Item
 {
-    public class OnAnchorDropArgs : System.EventArgs
+    public class OnAnchorInteractArgs : System.EventArgs
     {
         public STile stile;
+        public bool drop;
     }
-    public static event System.EventHandler<OnAnchorDropArgs> OnAnchorDrop;
+    public static event System.EventHandler<OnAnchorInteractArgs> OnAnchorInteract;
 
+    
     // Start is called before the first frame update
     [SerializeField] private float shakeAmount;
     [SerializeField] private float shakeDuration;
@@ -19,8 +21,13 @@ public class Anchor : Item
 
     public void Start()
     {
-        if (GetComponentInParent<STile>() != null)
-            GetComponentInParent<STile>().hasAnchor = true;
+        currentSTile = GetComponentInParent<STile>();
+        if (currentSTile != null)
+        {
+            currentSTile.hasAnchor = true;
+            OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true });
+        }
+            
     }
 
     private void OnEnable()
@@ -42,8 +49,9 @@ public class Anchor : Item
         //triggerCollider.enabled = false;
 
         base.PickUpItem(pickLocation, callback);
+        OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=false });
         UnanchorTile();
-        currentSTile = null;
+        
 
         Player.SetMoveSpeedMultiplier(0.75f);
         PlayerInventory.Instance.SetHasCollectedAnchor(true);
@@ -53,11 +61,8 @@ public class Anchor : Item
 
     public void UnanchorTile()
     {
-        STile[,] tiles = SGrid.current.GetGrid();
-        foreach (STile tile in tiles)
-        {
-            tile.hasAnchor = false;
-        }
+        currentSTile.hasAnchor = false;
+        currentSTile = null;
     }
 
 
@@ -88,7 +93,7 @@ public class Anchor : Item
         CameraShake.Shake(shakeDuration, shakeAmount);
         AudioManager.Play("Slide Explosion");
         
-        OnAnchorDrop?.Invoke(this, new OnAnchorDropArgs { stile = currentSTile });
+        OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true });
     }
 
         //conductiveNode.GetComponent<Collider2D>().enabled = true;
