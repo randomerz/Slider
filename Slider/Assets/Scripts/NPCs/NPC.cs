@@ -13,9 +13,10 @@ public class NPC : MonoBehaviour
     private int currDconds;
     private int currDialogueInChain;
 
-    private bool dialogueEnabled;
-    private bool startedTyping;
-    private bool waitingForPlayerContinue;
+    private bool dialogueEnabled;   //The NPC can give dialogue
+    private bool dialogueActive;    //The NPC is in the process of giving dialogue (regardless of if it's finished)
+    private bool startedTyping;     //The NPC is in the middle of typing the dialogue
+    private bool waitingForPlayerContinue;  //The NPC is waiting for the player to press e to continue its chain.
 
 
     private STile currentStileUnderneath;
@@ -27,7 +28,9 @@ public class NPC : MonoBehaviour
     {
         nav = GetComponent<WorldNavAgent>();
         dialogueEnabled = true;
+        dialogueActive = false;
         startedTyping = false;
+        waitingForPlayerContinue = false;
         waitNextDialogueCoroutine = null;
     }
 
@@ -53,10 +56,7 @@ public class NPC : MonoBehaviour
         int newDialogue = CurrentDialogue();
         if (currDconds != newDialogue && dialogueEnabled)
         {
-            currDconds = newDialogue;
-            currDialogueInChain = 0;
-            dialogueDisplay.NewMessagePing();
-            dconds[currDconds].onDialogueChanged?.Invoke();
+            StartCoroutine(WaitThenChangeDialogue());
         }
 
         if (startedTyping && dialogueDisplay.textTyperText.finishedTyping)
@@ -116,10 +116,34 @@ public class NPC : MonoBehaviour
             }
 
             startedTyping = true;
+            dialogueActive = true;
        }
     }
 
-    public void FinishDialogue()
+    private void ChangeDialogue(int newDialogue)
+    {
+        currDconds = newDialogue;
+        currDialogueInChain = 0;
+        dialogueDisplay.NewMessagePing();
+        dconds[currDconds].onDialogueChanged?.Invoke();
+    }
+
+    private IEnumerator WaitThenChangeDialogue()
+    {
+        yield return new WaitUntil(() =>
+        {
+            return !dialogueActive;
+        });
+
+        //Make sure the dialogue didn't change while we were waiting
+        int newDialogue = CurrentDialogue();
+        if (currDconds != newDialogue && dialogueEnabled)
+        {
+            ChangeDialogue(newDialogue);
+        }
+    }
+
+    private void FinishDialogue()
     {
         if (dconds[currDconds].dialogueChain.Count == 0)
         {
@@ -158,6 +182,8 @@ public class NPC : MonoBehaviour
                 SetNextDialogueInChain();
             }
         }
+
+        dialogueActive = false;
     }
 
     public void ClearDialogue()
@@ -173,20 +199,7 @@ public class NPC : MonoBehaviour
         }
     }
 
-    private void OnPlayerAction(object sender, System.EventArgs e)
-    {
-        if (waitingForPlayerContinue)
-        {
-            SetNextDialogueInChain(true);
-            waitingForPlayerContinue = false;
-        } else if (startedTyping && !dialogueDisplay.textTyperText.finishedTyping)
-        {
-            dialogueDisplay.textTyperText.TrySkipText();
-            dialogueDisplay.textTyperBG.TrySkipText();
-        }  
-    }
-
-    private void SetNextDialogueInChain(bool triggerNext = false)   //args are useless, this is just so it can be called by player action.
+    private void SetNextDialogueInChain(bool triggerNext = false)
     {
         //The dialogue will just chill on the last line if it's already been exhausted (could maybe customize to repeat the last line or start from the beginning).
         if (currDialogueInChain < dconds[currDconds].dialogueChain.Count - 1)
@@ -196,10 +209,26 @@ public class NPC : MonoBehaviour
             {
                 TriggerDialogue();
             }
-        } else
+        }
+        else
         {
             dconds[currDconds].OnDialogueChainExhausted();
         }
+    }
+
+    private void OnPlayerAction(object sender, System.EventArgs e)
+    {
+        if (waitingForPlayerContinue)
+        {
+            //Player triggered next dialogue.
+            SetNextDialogueInChain(true);
+            waitingForPlayerContinue = false;
+        } else if (startedTyping && !dialogueDisplay.textTyperText.finishedTyping)
+        {
+            //Player skipped through text.
+            dialogueDisplay.textTyperText.TrySkipText();
+            dialogueDisplay.textTyperBG.TrySkipText();
+        }  
     }
 
     private IEnumerator WaitForNextDialogue()
