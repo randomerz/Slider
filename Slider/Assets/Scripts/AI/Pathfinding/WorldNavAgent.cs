@@ -35,9 +35,13 @@ public class WorldNavAgent : MonoBehaviour
         }
 
         nav = GetComponentInParent<WorldNavigation>();
+        if (nav == null)
+        {
+            Debug.LogWarning("WorldNavAgent detected in scene without a WorldNavigation component. This entity will not use navigation.");
+        }
     }
 
-    public bool SetDestination(Vector2Int dest, Func<Vector2Int, Vector2Int, Vector2Int, int> costFunc = null)
+    public bool SetDestination(Vector2Int dest, Func<Vector2Int, Vector2Int, Vector2Int, int> costFunc = null, Action<Vector2Int> callback = null)
     {
         //Get the closest point to this transform
         Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
@@ -58,39 +62,37 @@ public class WorldNavAgent : MonoBehaviour
             return false;
         }
         currDest = dest;
-        followRoutine = StartCoroutine(FollowCoroutine());
+        followRoutine = StartCoroutine(FollowCoroutine(callback));
         return true;
     }
 
-    public void UpdatePath()
-    {
-        SetDestination(currDest);
-    }
-
-    private IEnumerator FollowCoroutine()
+    private IEnumerator FollowCoroutine(Action<Vector2Int> callback = null)
     {
         IsRunning = true;
         while(path.Count > 0)
         {
-            transform.up = (path[0] - (Vector2)transform.position).normalized;
-            rb.velocity = transform.up * speed;
             while (Vector2.Distance(path[0], transform.position) > tolerance)
             {
+                rb.velocity = (path[0] - (Vector2)transform.position).normalized * speed;
                 yield return null;
             }
 
             path.RemoveAt(0);
         }
 
-        transform.up = (currDest - (Vector2)transform.position).normalized;
-        rb.velocity = transform.up * speed;
         while (Vector2.Distance(transform.position, currDest) > tolerance)
         {
+            rb.velocity = (currDest - (Vector2)transform.position).normalized * speed;
             yield return null;
         }
 
         IsRunning = false;
         rb.velocity = Vector2.zero;
+
+        if (callback != null)
+        {
+            callback(currDest);
+        }
     }
 
     public void StopPath()

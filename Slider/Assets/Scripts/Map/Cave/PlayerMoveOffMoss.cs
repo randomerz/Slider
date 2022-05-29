@@ -64,13 +64,17 @@ public class PlayerMoveOffMoss : MonoBehaviour
 
     internal void CheckPlayerOnMoss(object sender, CaveMossManager.MossIsGrowingArgs e)
     {
-        //L: Determine if the player is on the moss while it is growing
-        Vector2Int mossTile = TileUtil.WorldToTileCoords(mossMap.CellToWorld(e.pos));
-        bool movePlayerOffMoss = mossTile.Equals(TileUtil.WorldToTileCoords(player.transform.position)) && e.isGrowing;
-        if (movePlayerOffMoss)
+        //Each mossMap is tied to a specific respawn point.
+        if (e.mossMap == mossMap)   //This check (hopefully) avoids bugs with teleporting to the wrong places (tile 4 bug)
         {
-            player.transform.position = playerRespawn.position;
-            AudioManager.Play("Hurt");
+            //L: Determine if the player is on the moss while it is growing
+            Vector2Int mossTile = TileUtil.WorldToTileCoords(e.mossMap.CellToWorld(e.cellPos));
+            bool movePlayerOffMoss = mossTile.Equals(TileUtil.WorldToTileCoords(player.transform.position)) && e.isGrowing;
+            if (movePlayerOffMoss)
+            {
+                player.transform.position = playerRespawn.position;
+                AudioManager.Play("Hurt");
+            }
         }
     }
     
