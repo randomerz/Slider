@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    // temporary -- only to expose to Unity
+    // temporary -- only to expose to Unity/Slider debugger
     public void SaveGame()
     {
         Debug.LogWarning("Called GameManager.SaveGame(), you should probably call SaveSystem.SaveGame() instead.");
