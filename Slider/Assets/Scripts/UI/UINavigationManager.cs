@@ -63,7 +63,7 @@ public class UINavigationManager : MonoBehaviour
         }
         if (!_instance.selectableSetDictionary.ContainsKey(_instance._currentMenu))
         {
-            Debug.LogError($"EventSystemManager could not find ButtonSet for Menu Object {_instance._currentMenu}. Did you remember to setup this menu in the Button Sets?");
+            Debug.LogError($"EventSystemManager could not find ButtonSet for Menu Object {_instance._currentMenu.name}. Did you remember to setup this menu in the Button Sets?");
             return false;
         }
 
@@ -90,7 +90,7 @@ public class UINavigationManager : MonoBehaviour
         }
         if (!_instance.selectableSetDictionary.ContainsKey(_instance._currentMenu))
         {
-            Debug.LogError($"EventSystemManager could not find ButtonSet for Menu Object {_instance._currentMenu}");
+            Debug.LogError($"EventSystemManager could not find ButtonSet for Menu Object {_instance._currentMenu.name}. Did you remember to setup this menu in the Button Sets?");
             return;
         }
         foreach (Selectable selectable in _instance.selectableSetDictionary[_instance._currentMenu])
