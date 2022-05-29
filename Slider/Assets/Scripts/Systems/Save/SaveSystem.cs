@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -112,11 +113,12 @@ public class SaveSystem
         current = profile;
         currentIndex = index;
 
-        // TODO:
-        // - Load (and save!) proper scene/area
-        // - Higher execution order thingy? or async... not sure
 
-        current.Load();
+        // This makes it so the profile gets loaded first thing in the new scene
+        GameManager.profileToLoad = current;
+
+        // Load last scene the player was in
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private static SerializableSaveProfile LoadFromFile(int index)
