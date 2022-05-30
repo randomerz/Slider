@@ -62,13 +62,19 @@ public class KnotBox : MonoBehaviour
             Vector2 a = lines[i].GetPosition(0); 
             Vector2 b = lines[i].GetPosition(1);
             Vector2 dir = b - a;
-            
-            RaycastHit2D hit = Physics2D.Raycast(a + 0.41f*dir.normalized,dir,(dir.magnitude-0.825f), 512);
-            if(hit){
-                lines[i].startColor = bad;
-                lines[i].endColor = bad;
-                intersects = true;
-                ret += 1;
+            int next = i+1;
+            if(i == lines.Length-1){
+                next = 0;
+            } 
+            //RaycastHit2D hit = Physics2D.Raycast(a + 0.43f*dir.normalized,dir,(dir.magnitude-0.877f), 2048);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(a,dir,dir.magnitude, 4096);
+            foreach(RaycastHit2D hit in hits){
+                if(!(GameObject.ReferenceEquals(knotnodes[i], hit.collider.gameObject) || GameObject.ReferenceEquals(knotnodes[next], hit.collider.gameObject))){
+                    lines[i].startColor = bad;
+                    lines[i].endColor = bad;
+                    intersects = true;
+                    ret += 1;
+                }
             }
             for(int j = i-2; j >= 0; j--)
             {
