@@ -28,6 +28,8 @@ public class VillageGrid : SGrid
 
         base.Awake();
 
+        chadFell = false;
+
         if (fishOn)
         {
             particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
@@ -173,35 +175,20 @@ public class VillageGrid : SGrid
     // Mini-Puzzle - Chad Flashlight
     public void CheckChadMoved(object sender, SGridAnimator.OnTileMoveArgs e) {
         if (GetStile(8).isTileActive && e.stile.islandId == 8 && !chadFell) {
+            chadFell = true;
             chadFallCoroutine = StartCoroutine(ChadFall());
         }
     }
 
     // Animates Chad Falling
     private IEnumerator ChadFall() {
+        chad.transform.GetChild(0).GetComponent<Animator>().SetBool("isFalling", true);
+        yield return new WaitForSeconds(0.05f);
         Vector3 currPos = chad.transform.position;
-        Vector3 targetPos = currPos + new Vector3(1f, -1f, 0);
-
-        Vector3 currRot = chad.transform.eulerAngles;
-        Vector3 targetRot = currRot + new Vector3(0, 0, -90);
-        chad.transform.GetChild(0).GetComponent<Animator>().SetBool("isSad", true);
-        while (currPos.x < targetPos.x && currPos.y > targetPos.y) {
-            chad.transform.position += new Vector3(.1f, -.1f, 0);
-            chad.transform.eulerAngles += new Vector3(0, 0, -9);
+        Vector3 targetPos = currPos + new Vector3(-1f, -1f, 0);
+        while (currPos.x > targetPos.x && currPos.y > targetPos.y) {
+            chad.transform.position += new Vector3(-.1f, -.1f, 0);
             currPos = chad.transform.position;
-            currRot = chad.transform.eulerAngles;
-            yield return new WaitForSeconds(0.05f);
-        }
-
-        currRot = chad.transform.eulerAngles;
-        targetRot = new Vector3(0, 0, 0);
-        Debug.Log(chad.transform.eulerAngles);
-        yield return new WaitForSeconds(1.5f);
-
-
-        while (currRot.z > targetRot.z) {
-            chad.transform.eulerAngles += new Vector3(0, 0, 9);
-            currRot = chad.transform.eulerAngles;
             yield return new WaitForSeconds(0.05f);
         }
     }
