@@ -19,6 +19,10 @@ public class GameManager : MonoBehaviour
             // saveSystem = saveSystemGO.GetComponent<SaveSystem>();
             saveSystem = new SaveSystem();
         }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         sceneInitializer?.Init();
     }
