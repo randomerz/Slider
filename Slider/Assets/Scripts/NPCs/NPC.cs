@@ -1,47 +1,79 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class NPC : MonoBehaviour
 {
+    [System.Serializable]
+    public class STileCrossing
+    {
+        public STile from;
+        public STile to;
+
+        public Vector2Int dir;  //Check from + dir = to in order to check the crossing is valid.
+    }
+
+    [System.Serializable]
+    public class NPCWalk
+    {
+        //public bool usePathfinding;
+        public List<Transform> path;
+        public List<STileCrossing> stileCrossings;
+
+        public UnityEvent onPathStarted;
+        public UnityEvent onPathFinished;
+        public UnityEvent onPathBroken;
+        public UnityEvent onPathResumed;
+    }
+
     public string characterName;
+    [SerializeField] private float speed;
     public List<DialogueConditionals> dconds;
 
     [SerializeField] private DialogueDisplay dialogueDisplay;
 
-    //indices to get the right dialogue
-    private int currDconds;
-    private int currDialogueInChain;
 
+
+    //Dialogue
+    private int currDconds;    //indices to get the right dialogue
+    private int currDialogueInChain;
     private bool dialogueEnabled;   //The NPC can give dialogue
     private bool dialogueActive;    //The NPC is in the process of giving dialogue (regardless of if it's finished)
     private bool startedTyping;     //The NPC is in the middle of typing the dialogue
     private bool waitingForPlayerContinue;  //The NPC is waiting for the player to press e to continue its chain.
+    private Coroutine waitNextDialogueCoroutine;
 
-
+    //Walking
     private STile currentStileUnderneath;
     private WorldNavAgent nav;
+    private bool walking;   //NPC is in the process of following a path.
+    private NPCWalk currWalk;   //Current walk the NPC is performing, null otherwise.
+    private List<STileCrossing> remainingStileCrossings;
+    private List<Transform> remainingPath;
+    private Coroutine walkCoroutine;
 
-    private Coroutine waitNextDialogueCoroutine;
+
 
     private void Awake()
     {
         nav = GetComponent<WorldNavAgent>();
         dialogueEnabled = true;
-        dialogueActive = false;
-        startedTyping = false;
-        waitingForPlayerContinue = false;
         waitNextDialogueCoroutine = null;
     }
 
     private void OnEnable()
     {
         PlayerAction.OnAction += OnPlayerAction;
+        SGridAnimator.OnSTileMoveStart += OnSTileMoveStart;
+        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
     }
 
     private void OnDisable()
     {
         PlayerAction.OnAction -= OnPlayerAction;
+        SGridAnimator.OnSTileMoveStart -= OnSTileMoveStart;
+        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
     }
 
     // might need optimizing
@@ -56,7 +88,7 @@ public class NPC : MonoBehaviour
         int newDialogue = CurrentDialogue();
         if (currDconds != newDialogue && dialogueEnabled)
         {
-            StartCoroutine(WaitThenChangeDialogue());
+            ChangeDialogue(newDialogue, dialogueActive);
         }
 
         if (startedTyping && dialogueDisplay.textTyperText.finishedTyping)
@@ -82,6 +114,7 @@ public class NPC : MonoBehaviour
         }
     }
 
+    #region Dialogue
     public int CurrentDialogue()
     {
         int curr = -1;
@@ -120,14 +153,24 @@ public class NPC : MonoBehaviour
        }
     }
 
-    private void ChangeDialogue(int newDialogue)
-    {
+    private void ChangeDialogue(int newDialogue, bool triggerOnChange=false)
+        {
         currDconds = newDialogue;
         currDialogueInChain = 0;
-        dialogueDisplay.NewMessagePing();
+        if (!dconds[newDialogue].dialogue.Equals("") || dconds[newDialogue].dialogueChain.Count > 0)
+        {
+            //Basically, ensure the dialogue actually has dialogue in it.
+            dialogueDisplay.NewMessagePing();
+        }
+
+        if (triggerOnChange)
+        {
+            TriggerDialogue();
+        }
         dconds[currDconds].onDialogueChanged?.Invoke();
     }
 
+    //Waits until the player has exited the trigger before retrieving the next dialogue (idk if this is necessary, might be annoying/confusing to the player).
     private IEnumerator WaitThenChangeDialogue()
     {
         yield return new WaitUntil(() =>
@@ -199,6 +242,11 @@ public class NPC : MonoBehaviour
         }
     }
 
+    public void DialogueEnabled(bool value)
+    {
+        dialogueEnabled = value;
+    }
+
     private void SetNextDialogueInChain(bool triggerNext = false)
     {
         //The dialogue will just chill on the last line if it's already been exhausted (could maybe customize to repeat the last line or start from the beginning).
@@ -245,6 +293,7 @@ public class NPC : MonoBehaviour
             SetNextDialogueInChain(true);
         }
     }
+    #endregion Dialogue
 
     public void Teleport(Transform trans)
     {
@@ -252,6 +301,132 @@ public class NPC : MonoBehaviour
         transform.parent = trans.parent;
     }
 
+    #region Walking
+
+    public void StartCurrentWalk()
+    {
+        if (dconds[currDconds].walk.path.Count == 0)
+        {
+            Debug.LogError($"Tried to start a walk event for NPC {gameObject.name} that did not exist.");
+            return;
+        }
+
+        if (currWalk == null)
+        {
+            currWalk = dconds[currDconds].walk;
+            remainingStileCrossings = new List<STileCrossing>(currWalk.stileCrossings);
+            remainingPath = new List<Transform>(currWalk.path);
+            walkCoroutine = StartCoroutine(DoCurrentWalk(false));
+        }
+    }
+
+    public IEnumerator DoCurrentWalk(bool resumed)
+    {
+        walking = true;
+
+        if (resumed)
+        {
+            currWalk.onPathResumed?.Invoke();
+            //Create a dummy transform that matches the NPC's current position
+            remainingPath[0] = ((GameObject) Instantiate(remainingPath[0].gameObject, transform.position, transform.rotation, transform.parent)).transform;
+        } else
+        {
+            currWalk.onPathStarted?.Invoke();
+        }
+
+        if (SGrid.current.TilesMoving())
+        {
+            yield return new WaitUntil(() => !SGrid.current.TilesMoving());
+        }
+
+        //Lerp positions until we go through the whole path.
+        float s;
+        float t;
+        while(remainingPath.Count >= 2)
+        {
+            s = speed / Vector3.Distance(remainingPath[0].position, remainingPath[1].position);    //This factor ensures that the speed traveled is scaled properly to the distance btw points.
+            t = 0;
+            while (t < 1f)
+            {
+                transform.position = Vector3.Lerp(remainingPath[0].position, remainingPath[1].position, t);
+                t += s * Time.deltaTime;
+
+                if (remainingStileCrossings.Count > 0 && remainingStileCrossings[0].to == currentStileUnderneath)
+                {
+                    remainingStileCrossings.RemoveAt(0);
+                }
+                yield return new WaitForEndOfFrame();
+            }
+            transform.position = remainingPath[1].position;
+            remainingPath.RemoveAt(0);
+        }
+
+        walking = false;
+        currWalk.onPathFinished?.Invoke();
+        currWalk = null;
+    }
+
+    //Check if the path is broken.
+    private void OnSTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (currWalk != null && walking)
+        {
+            //Handle STile moved while the NPC was walking
+            foreach (STileCrossing cross in remainingStileCrossings)
+            {
+                if (e.stile == cross.from || e.stile == cross.to)
+                {
+                    //Stop the routine if a tile is moved that is part of the remaining path.
+                    StopCoroutine(walkCoroutine);
+                    walkCoroutine = null;
+                    walking = false;
+                    currWalk.onPathBroken?.Invoke();
+                }
+            }
+        }
+    }
+
+    //Check if the path can be resumed.
+    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (currWalk != null && remainingPath.Count > 0 && !walking)
+        {
+            if (PathExistsAndValid(remainingPath, remainingStileCrossings))
+            {
+                walkCoroutine = StartCoroutine(DoCurrentWalk(true));
+            }
+        }
+    }
+
+    public void CheckCurrentPathExistsAndIsValid(Conditionals.Condition c)
+    {
+        c.SetSpec(CurrentPathExistsAndValid());
+    }
+
+    public bool CurrentPathExistsAndValid()
+    {
+        return PathExistsAndValid(dconds[currDconds].walk.path, dconds[currDconds].walk.stileCrossings);
+    }
+
+    private bool PathExistsAndValid(List<Transform> path, List<STileCrossing> stileCrossings)
+    {
+        if (path.Count > 0)
+        {
+            foreach (STileCrossing cross in stileCrossings)
+            {
+                if (cross.to.y - cross.from.y != cross.dir.y || cross.to.x - cross.from.x != cross.dir.x)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /*  Old Walking
     public void WalkTo(Transform trans)
     {
         //NPCs can't talkie while they walkie (under normal circumstances)
@@ -261,4 +436,6 @@ public class NPC : MonoBehaviour
             dialogueEnabled = true;
         });
     }
+    */
+    #endregion
 }

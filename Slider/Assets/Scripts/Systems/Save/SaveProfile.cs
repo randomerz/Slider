@@ -151,7 +151,7 @@ public class SaveProfile
     {
         if (!bools.ContainsKey(name))
         {
-            Debug.LogWarning("Couldn't find saved variable of name: " + name);
+            //Debug.LogWarning("Couldn't find saved variable of name: " + name);
             return false;
         }
         // add a null check here?
