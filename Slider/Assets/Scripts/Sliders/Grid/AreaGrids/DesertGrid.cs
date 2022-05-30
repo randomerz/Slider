@@ -6,6 +6,12 @@ public class DesertGrid : SGrid
 {
     public static DesertGrid instance;
 
+    //Maybe to reduce the number of functions that do essentially the same thing? More editor heavy (slightly)
+    private Dictionary<string, bool> dialogueFlags = new Dictionary<string, bool>();
+
+    private bool campfire = false;
+    public Item log; //Right now the animator for the campfire doesn't stay alive if scene transitions
+
     private bool crocoOasis = false;
     private bool crocoQuest = false;
 
@@ -31,8 +37,6 @@ public class DesertGrid : SGrid
     private static bool checkCompletion = false;
     private static bool checkMonkey = false;
 
-    // public Collectible[] collectibles;
-
     protected override void Awake() {
         myArea = Area.Desert;
 
@@ -50,10 +54,10 @@ public class DesertGrid : SGrid
     {
         base.Start();
 
-        if (dice1 == null && dice2 == null)
-        {
-            Debug.LogWarning("Die have not been set!");
-        }
+        if (dice1 == null && dice2 == null) Debug.LogWarning("Die have not been set!");
+        if (log == null) Debug.LogWarning("Log has not been set!");
+
+        if (campfire == false) log.gameObject.SetActive(true);
 
         AudioManager.PlayMusic("Desert");
         AudioManager.PlayMusic("Desert Casino", false);
@@ -62,7 +66,6 @@ public class DesertGrid : SGrid
     
     private void OnEnable() {
         if (checkCompletion) {
-            OnGridMove += UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
         }
@@ -108,10 +111,19 @@ public class DesertGrid : SGrid
         base.Load();
     }
 
-
     // === Desert puzzle specific ===
     #region Oasis
     //Puzzle 1: Oasis
+    public void LightCampFire()
+    {
+        campfire = true;
+        PlayerInventory.RemoveItem();
+        log.gameObject.SetActive(false);
+    }
+    public void CheckCampfire(Conditionals.Condition c)
+    {
+        c.SetSpec(campfire);
+    }
     public void SetCrocoOasis(bool b)
     {
         crocoOasis = b;
@@ -385,10 +397,7 @@ public class DesertGrid : SGrid
     //Puzzle 7: 8puzzle
     public void ShufflePuzzle()
     {
-        int[,] shuffledPuzzle = new int[3, 3] { { 4, 8, 1 },
-                                                { 3, 9, 6 },
-                                                { 2, 7, 5 } };
-        SetGrid(shuffledPuzzle);
+        DesertArtifactRandomizer.ShuffleGrid();
 
         // fading stuff
         UIEffects.FlashWhite();

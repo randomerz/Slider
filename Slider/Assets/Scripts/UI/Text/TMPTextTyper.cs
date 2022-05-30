@@ -54,7 +54,7 @@ public class TMPTextTyper : MonoBehaviour
             SetTextAlphaZero();
         }
 
-        finishedTyping = !invisibleAtStart;
+        //finishedTyping = !invisibleAtStart;   //This causes problems :\
     }
 
     #region Setting Text Mesh
@@ -75,7 +75,7 @@ public class TMPTextTyper : MonoBehaviour
 
             textInfo.characterInfo[i].color.a = 0;
 
-            SetCharacterColor(textInfo, textInfo.characterInfo[i].color, i);
+            SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
         }
     }
 
@@ -109,7 +109,7 @@ public class TMPTextTyper : MonoBehaviour
             {
                 textInfo.characterInfo[charIndex].color.a = 255;
 
-                SetCharacterColor(textInfo, textInfo.characterInfo[charIndex].color, charIndex);
+                SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[charIndex].color, charIndex);
 
             }
 
@@ -158,25 +158,26 @@ public class TMPTextTyper : MonoBehaviour
                 // Skip characters that are not visible and thus have no geometry to manipulate.
                 if (!textInfo.characterInfo[i].isVisible)
                 {
-                    continue;
+                    startingCharacterIndex++;   //Added bc otherwise you get an infinite loop where it never increments startingCharacterIndex and thus doesn't finish the text.
                 }
                 else
                 {
                     byte alpha = (byte)Mathf.Clamp(textInfo.characterInfo[i].color.a + fadeSteps, 0, 255);
                     textInfo.characterInfo[i].color.a = alpha;
-                    SetCharacterColor(textInfo, textInfo.characterInfo[i].color, i);
+                    SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
 
                     if (alpha == 255)
                     {
                         startingCharacterIndex += 1;
 
-                        if (startingCharacterIndex == characterCount)
-                        {
-                            // Update mesh vertex data one last time.
-                            m_TextMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
-                            isRangeMax = true; 
-                        }
                     }
+                }
+
+                if (startingCharacterIndex == characterCount)
+                {
+                    // Update mesh vertex data one last time.
+                    m_TextMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
+                    isRangeMax = true;
                 }
             }
 
@@ -190,7 +191,7 @@ public class TMPTextTyper : MonoBehaviour
         finishedTyping = true;
     }
 
-    private void SetCharacterColor(TMP_TextInfo textInfo, Color32 c, int ind)
+    public static void SetCharacterColor(TextMeshProUGUI tmp, TMP_TextInfo textInfo, Color32 c, int ind)
     {
         int meshIndex = textInfo.characterInfo[ind].materialReferenceIndex;
 
@@ -208,7 +209,7 @@ public class TMPTextTyper : MonoBehaviour
         textInfo.meshInfo[meshIndex].mesh.colors32 = vertexColors;
 
         // update mesh
-        m_TextMeshPro.UpdateGeometry(textInfo.meshInfo[meshIndex].mesh, meshIndex);
+        tmp.UpdateGeometry(textInfo.meshInfo[meshIndex].mesh, meshIndex);
     }
 
     /// <summary>
@@ -216,7 +217,7 @@ public class TMPTextTyper : MonoBehaviour
     /// </summary>
     public void SkipTypingString()
     {
-        Debug.Log("Skipping string");
+        //Debug.Log("Skipping string");
         if (coroutine != null)
         {
             TMP_TextInfo textInfo = m_TextMeshPro.textInfo;
@@ -229,7 +230,7 @@ public class TMPTextTyper : MonoBehaviour
 
                 textInfo.characterInfo[i].color.a = 255;
 
-                SetCharacterColor(textInfo, textInfo.characterInfo[i].color, i);
+                SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
             }
 
             StopCoroutine(coroutine);
@@ -255,12 +256,14 @@ public class TMPTextTyper : MonoBehaviour
 
         SetTextAlphaZero(); // TEMP bug fix because first character is skipped when typing
         
+        
         charIndex = 0;
         startingCharacterIndex = 0; // also temp but maybe these arent as bad
         if (fadeTextIn)
             coroutine = StartCoroutine(TypeStringFadeIn());
         else
             coroutine = StartCoroutine(TypeString());
+        
     }
     
     /// <summary>

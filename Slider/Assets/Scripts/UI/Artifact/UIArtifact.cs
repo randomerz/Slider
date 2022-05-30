@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
+using UnityEngine.UI;
 
 public class UIArtifact : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class UIArtifact : MonoBehaviour
     public static System.EventHandler<System.EventArgs> MoveMadeOnArtifact;
 
     public ArtifactTileButton[] buttons;
+    public GameObject lightning;
     //L: The button the user has clicked on
     protected ArtifactTileButton currentButton;
     //L: The available buttons the player has to move to from currentButton
@@ -59,6 +61,7 @@ public class UIArtifact : MonoBehaviour
     public virtual void OnDisable()
     {
         ClearQueues();
+
         //Debug.Log("Queue Cleared!");
     }
 
@@ -116,7 +119,7 @@ public class UIArtifact : MonoBehaviour
         }
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
-        if (!dragged.isTileActive)// || dragged.isForcedDown)
+        if (!dragged.isTileActive || dragged.myStile.hasAnchor)// || dragged.isForcedDown)
         {
             return;
         }
@@ -265,7 +268,7 @@ public class UIArtifact : MonoBehaviour
             }
 
             moveOptionButtons = GetMoveOptions(button);
-            if (moveOptionButtons.Count == 0)
+            if (moveOptionButtons.Count == 0 || button.myStile.hasAnchor)
             {
                 //L: Player tried to click a locked tile (or tile that otherwise had no move options)
                 return;
@@ -433,7 +436,7 @@ public class UIArtifact : MonoBehaviour
         _instance.moveQueue.Clear();
     }
 
-    public Boolean FragRealignCheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    public bool FragRealignCheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         STile[,] currGrid = SGrid.current.GetGrid();
 
@@ -443,6 +446,7 @@ public class UIArtifact : MonoBehaviour
 
         if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
         {
+            MoveMadeOnArtifact?.Invoke(this, null);
             QueueCheckAndAdd(swap);
             SwapButtons(buttonCurrent, buttonEmpty);
             QueueCheckAfterMove(this, null);
@@ -450,7 +454,8 @@ public class UIArtifact : MonoBehaviour
         }
         else
         {
-            Debug.Log("Couldn't perform move! (queue full?)");
+            string debug = PlayerCanQueue ? "Player Queueing is disabled" : "Queue was full";
+            Debug.Log($"Couldn't perform move! {debug}");
             return false;
         }
     }
@@ -461,6 +466,10 @@ public class UIArtifact : MonoBehaviour
            if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
            {
                b.SetIsInMove(true);
+           }
+           else if(b.myStile.hasAnchor)
+           {
+               continue;
            }
            else
            {
@@ -475,6 +484,7 @@ public class UIArtifact : MonoBehaviour
         {
             foreach (Movement m in smove.moves)
             {
+                //Debug.Log(m.islandId);
                 if (m.islandId == islandId)
                 {
                     return true;
@@ -526,6 +536,30 @@ public class UIArtifact : MonoBehaviour
         }
     }
 
+    public static void SetLightningPos(int x, int y)
+    {
+        //Debug.Log("Set Lightning Pos!");
+        if (_instance.lightning == null) Debug.LogError("Lightning was not found! Set in inspector?");
+        ArtifactTileButton b = GetButton(x, y);
+        _instance.lightning.transform.SetParent(b.transform);
+        _instance.lightning.transform.position = b.transform.position;
+        _instance.lightning.gameObject.SetActive(true);
+        b.SetLightning(true);
+    }
+    public static void SetLightningPos(ArtifactTileButton b)
+    {
+        //Debug.Log("Set Lightning Pos!");
+        if (_instance.lightning == null) Debug.LogError("Lightning was not found! Set in inspector?");
+        _instance.lightning.transform.SetParent(b.transform);
+        _instance.lightning.transform.position = b.transform.position;
+        _instance.lightning.gameObject.SetActive(true);
+        b.SetLightning(true);
+    }
+    public static void DisableLightning()
+    {
+        _instance.lightning.gameObject.SetActive(false);
+        _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
+    }
     public static ArtifactTileButton GetButton(int x, int y)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
@@ -535,7 +569,7 @@ public class UIArtifact : MonoBehaviour
                 return b;
             }
         }
-
+        Debug.LogWarning("Artifact tile button at " + x + ", " + y + " was not found!");
         return null;
     }
 
