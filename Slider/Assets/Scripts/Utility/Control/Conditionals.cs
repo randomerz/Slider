@@ -87,6 +87,7 @@ public class Conditionals
             spec = b;
         }
     }
+    [Header("Base Condition Events (DO NOT USE FOR DIALOGUE)")]
     public UnityEvent onSuccess;
     public UnityEvent onFail;
     public List<Condition> conditions;

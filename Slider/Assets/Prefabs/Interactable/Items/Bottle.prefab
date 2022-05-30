@@ -13,11 +13,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4607457495645169288, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 34.459732
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4607457495645169288, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 34.56
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4607457495645169288, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
       propertyPath: m_LocalPosition.z
@@ -55,12 +55,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bottle
       objectReference: {fileID: 0}
+    - target: {fileID: 8919005992056777909, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -4941526940147315279, guid: 2e3a5f4ec64af6a438967e191303eae4, type: 3}
     m_RemovedComponents:
     - {fileID: 4015862400581203686, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
 --- !u!1 &6311707099964001012 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4607457495645169290, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
+  m_PrefabInstance: {fileID: 7523063087647059070}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &6311707099964001015 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 4607457495645169289, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
+  m_PrefabInstance: {fileID: 7523063087647059070}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &1414665423304097995 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8919005992056777909, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
   m_PrefabInstance: {fileID: 7523063087647059070}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &2006681486730977906
@@ -75,10 +89,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a22a2c956b421e942ae093dbcdfbaa1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 0}
-  myCollider: {fileID: 0}
+  itemName: Bottle
+  spriteRenderer: {fileID: 1414665423304097995}
+  myCollider: {fileID: 6311707099964001015}
   canKeep: 0
-  pickUpDuration: 0
+  pickUpDuration: 0.5
   xPickUpMotion:
     serializedVersion: 2
     m_Curve:
@@ -152,3 +167,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   state: 0
+  sprites:
+  - {fileID: -4941526940147315279, guid: 2e3a5f4ec64af6a438967e191303eae4, type: 3}
+  - {fileID: 2952564699683390175, guid: 2e3a5f4ec64af6a438967e191303eae4, type: 3}
+  - {fileID: 4612818446655504486, guid: 2e3a5f4ec64af6a438967e191303eae4, type: 3}
+  - {fileID: -4204712955724186319, guid: 2e3a5f4ec64af6a438967e191303eae4, type: 3}

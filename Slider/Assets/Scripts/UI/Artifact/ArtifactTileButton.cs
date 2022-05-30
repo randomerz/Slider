@@ -32,7 +32,6 @@ public class ArtifactTileButton : MonoBehaviour
 
     private void Awake() 
     {
-        Debug.Log("defaulting the sprite..");
         islandSprite = buttonAnimator.sliderImage.sprite;
     }
 
@@ -52,10 +51,10 @@ public class ArtifactTileButton : MonoBehaviour
             }
         }
 
-        //if (!isTileActive)
-        //{
-        //    buttonAnimator.sliderImage.sprite = emptySprite;
-        //}
+        // if (!isTileActive)
+        // {
+        //    //buttonAnimator.sliderImage.sprite = emptySprite;
+        // }
         // update artifact button
     }
 
@@ -101,6 +100,15 @@ public class ArtifactTileButton : MonoBehaviour
         buttonAnimator.SetPushedDown(v);
     }
 
+    public void SetLightning(bool v)
+    {
+        buttonAnimator.SetLightning(v);
+    }
+
+    public void FragLightningPreview(bool v)
+    {
+        buttonAnimator.FragLightningPreview(v);
+    }
     public void SetSelected(bool v)
     {
         buttonAnimator.SetSelected(v);

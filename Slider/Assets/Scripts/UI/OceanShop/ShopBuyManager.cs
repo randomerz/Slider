@@ -9,7 +9,7 @@ public class ShopBuyManager : MonoBehaviour
 
     public void whenSlidersBought(int sliderId)
     {
-        if (sliderId != 4)
+        if (sliderId != 4 && sliderId != 1 && sliderId != 2 && sliderId != 3)
         {
             Debug.Log(shopManager.GetCredits());
             if (shopManager.GetCredits() <= 0)
@@ -19,6 +19,6 @@ public class ShopBuyManager : MonoBehaviour
             shopManager.SpendCredits(1);
         }
         SGrid.current.ActivateSliderCollectible(sliderId);
-        sliderButtons[sliderId - 4].SetActive(false);
+        sliderButtons[sliderId - 1].SetActive(false);
     }
 }
