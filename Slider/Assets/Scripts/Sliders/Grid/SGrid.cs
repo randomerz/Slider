@@ -84,6 +84,8 @@ public class SGrid : MonoBehaviour, ISavable
     {
         didInit = true;
 
+        SaveSystem.Current.SetLastArea(myArea);
+
         Load(SaveSystem.Current); // DC: this won't cause run order issues right :)
         SetBGGrid(bgGridTiles);
 

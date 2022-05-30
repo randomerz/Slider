@@ -118,7 +118,7 @@ public class SaveSystem
         SceneInitializer.profileToLoad = current;
 
         // Load last scene the player was in
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(current.GetLastArea().ToString());
     }
 
     private static SerializableSaveProfile LoadFromFile(int index)

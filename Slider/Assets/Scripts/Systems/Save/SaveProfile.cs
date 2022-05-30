@@ -10,6 +10,7 @@ public class SaveProfile
     private bool completionStatus;
 
     private SerializablePlayer serializablePlayer;
+    private Area lastArea;
 
     private Dictionary<Area, SGridData> areaToSGridData = new Dictionary<Area, SGridData>();
 
@@ -60,6 +61,16 @@ public class SaveProfile
     public void SetSerializeablePlayer(SerializablePlayer value)
     {
         serializablePlayer = value;
+    }
+
+    public Area GetLastArea()
+    {
+        return lastArea;
+    }
+
+    public void SetLastArea(Area value)
+    {
+        lastArea = value;
     }
 
     public Dictionary<Area, SGridData> GetAreaToSGridData()
@@ -187,7 +198,11 @@ public class SaveProfile
     //     return playerPos[area];
     // }
 
-
+    /// <summary>
+    /// Returns false if bools dictionary doesn't contain "name" in keys.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
     public bool GetBool(string name)
     {
         if (!bools.ContainsKey(name))
@@ -204,6 +219,11 @@ public class SaveProfile
         bools[name] = value;
     }
     
+    /// <summary>
+    /// Returns "name" if strings dictionary doesn't contain "name" in keys.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
     public string GetString(string name)
     {
         if (!strings.ContainsKey(name))

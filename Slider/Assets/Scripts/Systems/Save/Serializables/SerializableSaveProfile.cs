@@ -11,6 +11,7 @@ public class SerializableSaveProfile
     public bool completionStatus;
 
     public SerializablePlayer serializablePlayer;
+    public Area lastArea;
 
     //private Dictionary<Area, SGridData> areaToSGridData = new Dictionary<Area, SGridData>();
     public Area[] areaToSGridData_Keys;
@@ -34,7 +35,7 @@ public class SerializableSaveProfile
         ssp.completionStatus = saveProfile.GetCompletionStatus();
 
         ssp.serializablePlayer = saveProfile.GetSerializablePlayer();
-
+        ssp.lastArea = saveProfile.GetLastArea();
 
         ssp.areaToSGridData_Keys = saveProfile.GetAreaToSGridData().Keys.ToArray();
         ssp.bools_Keys = saveProfile.GetBoolsDictionary().Keys.ToArray();
@@ -55,6 +56,7 @@ public class SerializableSaveProfile
         sp.SetCompletionStatus(completionStatus);
 
         sp.SetSerializeablePlayer(serializablePlayer);
+        sp.SetLastArea(lastArea);
 
         Dictionary<Area, SGridData> areaToSGridData = new Dictionary<Area, SGridData>(areaToSGridData_Keys.Length);
         for (int i = 0; i < areaToSGridData_Keys.Length; i++)
