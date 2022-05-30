@@ -290,4 +290,72 @@ public class STile : MonoBehaviour
 
         allTileMaps.transform.position = pos;
     }
+
+    // DC: a better way of calculating which stile the player is on, accounting for overlapping stiles
+    public static STile GetSTileUnderneath(Transform entity, STile prevUnderneath)
+    {
+        // this doesnt work when you queue a move and stand at the edge. for some reason, on the moment of impact hits does not overlap with anything??
+        // Collider2D[] hits = Physics2D.OverlapPointAll(_instance.transform.position, LayerMask.GetMask("Slider"));
+        // Debug.Log("Hit " + hits.Length + " at " + _instance.transform.position);
+
+        // STile stileUnderneath = null;
+        // for (int i = 0; i < hits.Length; i++)
+        // {
+        //     STile s = hits[i].GetComponent<STile>();
+        //     if (s != null && s.isTileActive)
+        //     {
+        //         if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
+        //         {
+        //             // we are still on top of the same one
+        //             return;
+        //         }
+        //         if (stileUnderneath == null)
+        //         {
+        //             // otherwise we only care about the first hit
+        //             stileUnderneath = s;
+        //         }
+        //     }
+        // }
+        // currentStileUnderneath = stileUnderneath;
+
+        STile[,] grid = SGrid.current.GetGrid();
+        float offset = grid[0, 0].STILE_WIDTH / 2f;
+        float housingOffset = -150;
+
+        //C: The housing offset in the mountain is -250 due to the map's large size
+        if (SGrid.current is MountainGrid)
+            housingOffset -= 100;
+
+        STile stileUnderneath = null;
+        foreach (STile s in grid)
+        {
+            if (s.isTileActive && PosInSTileBounds(entity.position, s.transform.position, offset, housingOffset))
+            {
+                if (prevUnderneath != null && s.islandId == prevUnderneath.islandId)
+                {
+                    // we are still on top of the same one
+                    return prevUnderneath;
+                }
+
+                if (stileUnderneath == null || s.islandId < stileUnderneath.islandId)
+                {
+                    // in case where multiple overlap and none are picked, take the lowest number?
+                    stileUnderneath = s;
+                }
+            }
+        }
+
+        return stileUnderneath;
+    }
+
+    private static bool PosInSTileBounds(Vector3 pos, Vector3 stilePos, float offset, float housingOffset)
+    {
+        if (stilePos.x - offset < pos.x && pos.x < stilePos.x + offset &&
+           (stilePos.y - offset < pos.y && pos.y < stilePos.y + offset ||
+            stilePos.y - offset + housingOffset < pos.y && pos.y < stilePos.y + offset + housingOffset))
+        {
+            return true;
+        }
+        return false;
+    }
 }

@@ -43,7 +43,8 @@ public class CaveMossManager : MonoBehaviour
     public class MossIsGrowingArgs : System.EventArgs
     {
         public STile stile;
-        public Vector3Int pos;
+        public Tilemap mossMap;
+        public Vector3Int cellPos;
         public bool isGrowing;
     }
 
@@ -92,7 +93,7 @@ public class CaveMossManager : MonoBehaviour
                     mossMap.SetColor(pos, new Color(1.0f, 1.0f, 1.0f, 0.0f));
                     recededMossMap.SetColor(pos, Color.white);
                     mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
-                    MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = false });
+                    MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, mossMap = mossCollidersMap, cellPos = pos, isGrowing = false });
                 }
                 else
                 {
@@ -100,7 +101,7 @@ public class CaveMossManager : MonoBehaviour
                     mossMap.SetColor(pos, Color.white);
                     recededMossMap.SetColor(pos, new Color(1.0f, 1.0f, 1.0f, 0.0f));
                     mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
-                    MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = true });
+                    MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, mossMap = mossCollidersMap, cellPos = pos, isGrowing = true });
                 }
             });
         }
@@ -197,7 +198,7 @@ public class CaveMossManager : MonoBehaviour
     {
         //L: Enable the moss collider
         mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
-        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = true });
+        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, mossMap = mossCollidersMap, cellPos = pos, isGrowing = true });
 
         while (mossMap.GetColor(pos).a < 1.0f)
         {
@@ -224,6 +225,6 @@ public class CaveMossManager : MonoBehaviour
         mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
         tilesAnimating.Remove(pos);
 
-        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, pos = pos, isGrowing = false });
+        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, mossMap = mossCollidersMap, cellPos = pos, isGrowing = false });
     }
 }

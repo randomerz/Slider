@@ -7,6 +7,9 @@ public class DialogueDisplay : MonoBehaviour
 {
     public TMPTextTyper textTyperText;
     public TMPTextTyper textTyperBG;
+    public TMPSpecialText textSpecialText;
+    public TMPSpecialText textSpecialBG;
+
 
     // public TextMeshProUGUI dialogueText;
     // public TextMeshProUGUI dialogueBG;
@@ -32,6 +35,8 @@ public class DialogueDisplay : MonoBehaviour
         StopAllCoroutines();
         message = message.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
         // message = ConvertVariablesToStrings(message);
+        textSpecialText.StopEffects();
+        textSpecialBG.StopEffects();
         textTyperText.StartTyping(message);
         textTyperBG.StartTyping(message);
         // StartCoroutine(TypeSentence(message.ToCharArray()));
