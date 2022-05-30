@@ -25,7 +25,8 @@ public class Anchor : Item
         if (currentSTile != null)
         {
             currentSTile.hasAnchor = true;
-            OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true });
+            if(currentSTile.isTileActive)
+                OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true });
         }
             
     }
@@ -61,7 +62,8 @@ public class Anchor : Item
 
     public void UnanchorTile()
     {
-        currentSTile.hasAnchor = false;
+        if(currentSTile != null)
+            currentSTile.hasAnchor = false;
         currentSTile = null;
     }
 

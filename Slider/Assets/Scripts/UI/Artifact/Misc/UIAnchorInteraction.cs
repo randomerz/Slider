@@ -10,11 +10,13 @@ public class UIAnchorInteraction : MonoBehaviour
     private void OnEnable()
     {
         Anchor.OnAnchorInteract += OnAnchorInteract;
+        SGrid.OnSTileEnabled += OnSTileEnabled;
     }
 
     private void OnDisable()
     {
         Anchor.OnAnchorInteract -= OnAnchorInteract;
+        SGrid.OnSTileEnabled -= OnSTileEnabled;
     }
 
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs interactArgs)
@@ -28,6 +30,16 @@ public class UIAnchorInteraction : MonoBehaviour
         }
         
 
+    }
+
+    private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs args)
+    {
+        STile dropTile = args.stile;
+        if(dropTile != null && dropTile.hasAnchor)
+        {
+            ArtifactTileButton anchorbutton = uiArtifactMenus.uiArtifact.GetButton(dropTile.islandId);
+            anchorbutton.buttonAnimator.SetAnchored(true);
+        }
     }
     
 

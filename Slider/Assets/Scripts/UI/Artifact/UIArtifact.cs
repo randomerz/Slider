@@ -119,7 +119,7 @@ public class UIArtifact : MonoBehaviour
         }
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
-        if (!dragged.isTileActive)// || dragged.isForcedDown)
+        if (!dragged.isTileActive || dragged.myStile.hasAnchor)// || dragged.isForcedDown)
         {
             return;
         }
@@ -268,7 +268,7 @@ public class UIArtifact : MonoBehaviour
             }
 
             moveOptionButtons = GetMoveOptions(button);
-            if (moveOptionButtons.Count == 0|| button.myStile.hasAnchor)
+            if (moveOptionButtons.Count == 0 || button.myStile.hasAnchor)
             {
                 //L: Player tried to click a locked tile (or tile that otherwise had no move options)
                 return;

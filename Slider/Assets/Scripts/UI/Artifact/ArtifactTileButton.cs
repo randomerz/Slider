@@ -51,10 +51,10 @@ public class ArtifactTileButton : MonoBehaviour
             }
         }
 
-        //if (!isTileActive)
-        //{
-        //    buttonAnimator.sliderImage.sprite = emptySprite;
-        //}
+        // if (!isTileActive)
+        // {
+        //    //buttonAnimator.sliderImage.sprite = emptySprite;
+        // }
         // update artifact button
     }
 
