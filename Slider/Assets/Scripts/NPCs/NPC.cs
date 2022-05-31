@@ -11,6 +11,10 @@ public class NPC : MonoBehaviour
         public STile from;
         public STile to;
 
+        //Use if from or to is null.
+        public Vector2Int fromPos;  
+        public Vector2Int toPos;
+
         public Vector2Int dir;  //Check from + dir = to in order to check the crossing is valid.
     }
 
@@ -329,6 +333,18 @@ public class NPC : MonoBehaviour
         }
     }
 
+    public void StartValidWalk()
+    {
+        for(int i=0; i<dconds[currDconds].walks.Count; i++)
+        {
+            if (CurrentPathExistsAndValid(i))
+            {
+                StartCurrentWalk(i);
+                break;
+            }
+        }
+    }
+
     public IEnumerator DoCurrentWalk(bool resumed)
     {
         walking = true;
@@ -418,6 +434,8 @@ public class NPC : MonoBehaviour
         {
             foreach (STileCrossing cross in stileCrossings)
             {
+                Vector2Int from = cross.from ? new Vector2Int(cross.from.x, cross.from.y) : cross.fromPos;
+                Vector2Int to = cross.to ? new Vector2Int(cross.to.x, cross.to.y) : cross.toPos;
                 if (cross.to.y - cross.from.y != cross.dir.y || cross.to.x - cross.from.x != cross.dir.x)
                 {
                     return false;
