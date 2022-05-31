@@ -27,6 +27,11 @@ public class GameManager : MonoBehaviour
         sceneInitializer?.Init();
     }
 
+    private void OnApplicationQuit()
+    {
+        SaveSystem.SaveGame();
+    }
+
     public static SaveSystem GetSaveSystem() 
     {
         if (saveSystem == null)
@@ -50,6 +55,6 @@ public class GameManager : MonoBehaviour
     {
         Debug.LogWarning("Called GameManager.LoadGame(), you should probably call SaveSystem.LoadGame() instead.");
 
-        SaveSystem.LoadSaveProfile(1);
+        SaveSystem.LoadSaveProfile(0);
     }
 }

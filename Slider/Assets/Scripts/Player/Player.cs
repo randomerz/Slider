@@ -184,7 +184,7 @@ public class Player : MonoBehaviour, ISavable
         transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
         STile stileUnderneath = STile.GetSTileUnderneath(transform, null);
         transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
-        Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
+        //Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
 
         isOnWater = sp.isOnWater;
         isInHouse = sp.isInHouse;

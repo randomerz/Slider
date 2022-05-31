@@ -14,6 +14,8 @@ public class MainMenuSaveButton : MonoBehaviour
     [SerializeField] private int profileIndex = -1;
     private SaveProfile profile;
 
+    public static bool deleteMode;
+
     public MainMenuManager mainMenuManager;
 
     private void OnEnable() 
@@ -22,7 +24,7 @@ public class MainMenuSaveButton : MonoBehaviour
         UpdateButton();
     }
 
-    private void UpdateButton()
+    public void UpdateButton()
     {
 
         if (profile != null)
@@ -30,7 +32,11 @@ public class MainMenuSaveButton : MonoBehaviour
             completionText.gameObject.SetActive(true);
             timeText.gameObject.SetActive(true);
 
-            profileNameText.text = profile.GetProfileName();
+            // name based on delete mode
+            if (!deleteMode)
+                profileNameText.text = profile.GetProfileName();
+            else
+                profileNameText.text = "Delete?";
             completionText.text = string.Format("{0}/9", profile.GetAreaToSGridData().Keys.Count);
             float seconds = profile.GetPlayTimeInSeconds();
             int minutes = (int)seconds / 60;
@@ -53,6 +59,7 @@ public class MainMenuSaveButton : MonoBehaviour
             profile = ssp.ToSaveProfile();
         else
             profile = null;
+        SaveSystem.SetProfile(profileIndex, profile);
     }
 
     public void OnClick()
@@ -64,8 +71,16 @@ public class MainMenuSaveButton : MonoBehaviour
         }
         else
         {
-            // load my profile
-            LoadThisProfile();
+            if (deleteMode)
+            {
+                Debug.Log("Deleteing profile " + profileIndex);
+                DeleteThisProfile();
+            }
+            else
+            {
+                // load my profile
+                LoadThisProfile();
+            }
         }
     }
 
@@ -81,6 +96,8 @@ public class MainMenuSaveButton : MonoBehaviour
             // TODO: seek confirmation
             SaveSystem.DeleteSaveProfile(profileIndex);
             profile = null;
+            SaveSystem.SetProfile(profileIndex, profile);
+            UpdateButton();
         }
     }
 }

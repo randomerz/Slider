@@ -31,8 +31,11 @@ public class SaveSystem
 
     private static SaveProfile[] saveProfiles = new SaveProfile[3];
 
-    public SaveSystem() {
-        
+    public SaveSystem()
+    {
+        SetProfile(0, GetSerializableSaveProfile(0)?.ToSaveProfile());
+        SetProfile(1, GetSerializableSaveProfile(1)?.ToSaveProfile());
+        SetProfile(2, GetSerializableSaveProfile(2)?.ToSaveProfile());
     }
 
     public static SaveProfile GetProfile(int index)
@@ -141,7 +144,7 @@ public class SaveSystem
         }
         else
         {
-            Debug.LogError("Save file not found at " + path);
+            Debug.LogWarning("Save file not found at " + path);
             return null;
         }
     }
