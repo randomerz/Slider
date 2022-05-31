@@ -302,21 +302,6 @@ public class MainMenuManager : MonoBehaviour
         UIEffects.FadeToBlack(() => {SceneManager.LoadScene(cutsceneSceneName);});
     }
 
-    public void StartGameWithCurrentSave()
-    {
-        if (SaveSystem.Current == null)
-        {
-            Debug.LogError("Tried to continue game, but Current save was null!");
-            return;
-        }
-
-        // load last scene
-        Debug.Log("Continuing from last scene of profile " + SaveSystem.Current.GetProfileName());
-
-        Debug.LogWarning("lol just kidding loading village");
-        SceneManager.LoadScene("Village");
-    }
-
 
     // We need these to handle settings in Main Menu :)
     public void UpdateSFXVolume()

@@ -32,8 +32,7 @@ public class SaveSystem
     private static SaveProfile[] saveProfiles = new SaveProfile[3];
 
     public SaveSystem() {
-        // load profiles from file here maybe
-        saveProfiles[0] = new SaveProfile("Temp Catto");
+        
     }
 
     public static SaveProfile GetProfile(int index)
@@ -57,7 +56,6 @@ public class SaveSystem
     /// </summary>
     public static void SaveGame()
     {
-        currentIndex = 1;
         current.Save();
 
         if (currentIndex == -1)
@@ -97,7 +95,7 @@ public class SaveSystem
     {
         SerializableSaveProfile ssp = null;
 
-        ssp = LoadFromFile(index);
+        ssp = GetSerializableSaveProfile(index);
 
         SaveProfile profile;
         if (ssp == null)
@@ -121,6 +119,11 @@ public class SaveSystem
         SceneManager.LoadScene(current.GetLastArea().ToString());
     }
 
+    public static SerializableSaveProfile GetSerializableSaveProfile(int index)
+    {
+        return LoadFromFile(index);
+    }
+
     private static SerializableSaveProfile LoadFromFile(int index)
     {
         Debug.Log("Loading data from file...");
@@ -140,6 +143,17 @@ public class SaveSystem
         {
             Debug.LogError("Save file not found at " + path);
             return null;
+        }
+    }
+
+    public static void DeleteSaveProfile(int index)
+    {
+        Debug.Log("Deleting Save profile #" + index + "!");
+
+        string path = GetFilePath(index);
+        if (File.Exists(path))
+        {
+            File.Delete(path);
         }
     }
 

@@ -18,12 +18,12 @@ public class MainMenuSaveButton : MonoBehaviour
 
     private void OnEnable() 
     {
+        ReadProfileFromSave();
         UpdateButton();
     }
 
     private void UpdateButton()
     {
-        profile = SaveSystem.GetProfile(profileIndex);
 
         if (profile != null)
         {
@@ -45,6 +45,15 @@ public class MainMenuSaveButton : MonoBehaviour
             catSticker.enabled = false;
         }
     }
+    
+    public void ReadProfileFromSave()
+    {
+        SerializableSaveProfile ssp = SaveSystem.GetSerializableSaveProfile(profileIndex);
+        if (ssp != null)
+            profile = ssp.ToSaveProfile();
+        else
+            profile = null;
+    }
 
     public void OnClick()
     {
@@ -62,7 +71,16 @@ public class MainMenuSaveButton : MonoBehaviour
 
     private void LoadThisProfile()
     {
-        SaveSystem.SetCurrentProfile(profileIndex);
-        mainMenuManager.StartGameWithCurrentSave();
+        SaveSystem.LoadSaveProfile(profileIndex);
+    }
+
+    public void DeleteThisProfile()
+    {
+        if (profile != null)
+        {
+            // TODO: seek confirmation
+            SaveSystem.DeleteSaveProfile(profileIndex);
+            profile = null;
+        }
     }
 }
