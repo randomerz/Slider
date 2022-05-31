@@ -15,15 +15,15 @@ public class VillageGrid : SGrid
     private Coroutine shuffleBuildUpCoroutine;
     private bool checkCompletion = false; // TODO: serialize
 
-    protected override void Awake() {
+    public override void Init() {
         myArea = Area.Village;
 
-        foreach (Collectible c in collectibles) 
+        foreach (Collectible c in collectibles)
         {
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
 
         if (fishOn)
         {
@@ -69,12 +69,12 @@ public class VillageGrid : SGrid
         SaveSystem.Current.SetBool("villageFishOn", fishOn);
     }
 
-    public override void Load()
+    public override void Load(SaveProfile profile)
     {
-        base.Load();
+        base.Load(profile);
         
-        checkCompletion = SaveSystem.Current.GetBool("villageCompletion");
-        fishOn = SaveSystem.Current.GetBool("villageFishOn");
+        checkCompletion = profile.GetBool("villageCompletion");
+        fishOn = profile.GetBool("villageFishOn");
     }
 
 

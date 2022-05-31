@@ -38,6 +38,8 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI continueText;
     public Button playButton;
 
+    public MainMenuSaveButton[] saveProfileButtons;
+
     public Slider sfxSlider;
     public Slider musicSlider;
     public Slider screenShakeSlider;
@@ -47,6 +49,8 @@ public class MainMenuManager : MonoBehaviour
     private InputSettings controls;
 
     private static MainMenuManager _instance;
+
+    private bool skippedSavePicking;
     
     private void Awake() {
         _instance = this;
@@ -109,13 +113,6 @@ public class MainMenuManager : MonoBehaviour
     {
         listener.Dispose();
         StartMainMenu();
-
-        if (!AreAnyProfilesLoaded())
-        {
-            OpenNewSave(0);
-        }
-
-
     }
 
     private bool AreAnyProfilesLoaded()
@@ -178,6 +175,10 @@ public class MainMenuManager : MonoBehaviour
             OpenSaves();
             UINavigationManager.CurrentMenu = savesPanel;
         }
+        else if (MainMenuSaveButton.deleteMode)
+        {
+            SetDeleteMode(false);
+        }
         else if (savesPanel.activeSelf || optionsPanel.activeSelf || creditsPanel.activeSelf)
         {
             CloseAllPanels();
@@ -206,9 +207,33 @@ public class MainMenuManager : MonoBehaviour
 
     public void OpenSaves()
     {
+        if (!AreAnyProfilesLoaded() && !skippedSavePicking)
+        {
+            skippedSavePicking = true;
+            OpenNewSave(0);
+            return;
+        }
+
         CloseAllPanels();
         savesPanel.SetActive(true);
         UINavigationManager.CurrentMenu = savesPanel;
+
+        SetDeleteMode(false);
+    }
+
+    public void SetDeleteMode(bool value)
+    {
+        MainMenuSaveButton.deleteMode = value;
+
+        foreach (MainMenuSaveButton b in saveProfileButtons)
+        {
+            b.UpdateButton();
+        }
+    }
+
+    public void ToggleDeleteMode()
+    {
+        SetDeleteMode(!MainMenuSaveButton.deleteMode);
     }
 
     public void OpenNewSave(int profileIndex)
@@ -300,21 +325,6 @@ public class MainMenuManager : MonoBehaviour
     {
         // SceneManager.LoadSceneAsync(cutsceneSceneName, LoadSceneMode.Additive);
         UIEffects.FadeToBlack(() => {SceneManager.LoadScene(cutsceneSceneName);});
-    }
-
-    public void StartGameWithCurrentSave()
-    {
-        if (SaveSystem.Current == null)
-        {
-            Debug.LogError("Tried to continue game, but Current save was null!");
-            return;
-        }
-
-        // load last scene
-        Debug.Log("Continuing from last scene of profile " + SaveSystem.Current.GetProfileName());
-
-        Debug.LogWarning("lol just kidding loading village");
-        SceneManager.LoadScene("Village");
     }
 
 

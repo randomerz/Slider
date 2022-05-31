@@ -117,6 +117,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  enableOnDrop: []
   OnPickUp:
     m_PersistentCalls:
       m_Calls: []
@@ -229,7 +230,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 529684183
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 4711866757045417178, guid: b612fb15b8ee6a544b86f03b56ce4ea4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

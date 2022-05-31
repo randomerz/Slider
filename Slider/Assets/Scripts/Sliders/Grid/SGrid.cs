@@ -7,6 +7,7 @@ public class SGrid : MonoBehaviour, ISavable
 {
     //L: The grid the player is currently interacting with (only 1 active at a time)
     public static SGrid current { get; private set; }
+    private bool didInit;
 
     public class OnGridMoveArgs : System.EventArgs
     {
@@ -48,24 +49,16 @@ public class SGrid : MonoBehaviour, ISavable
     }
 
     public Collectible[] collectibles;
-    protected Area myArea; // don't forget to set me!
+    [SerializeField] protected Area myArea; // don't forget to set me!
     public Area MyArea { get => myArea; }
 
-    protected virtual void Awake()
+
+    protected void Awake()
     {
-
         current = this;
-        InitUIArtifact();
-        Load();
-        SetBGGrid(bgGridTiles);
 
-        if (targetGrid.Length == 0)
-            Debug.LogWarning("Grid's target (end goal) is empty!");
-        
-        if (myArea == Area.None)
-            Debug.LogWarning("Area isn't set!");
-
-        // OnGridMove += CheckCompletions;
+        if (!didInit)
+            Init();
     }
 
     protected virtual void Start() 
@@ -82,9 +75,27 @@ public class SGrid : MonoBehaviour, ISavable
         UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.oneBit);
     }
 
-    private void InitUIArtifact()
+    public void SetSingleton()
     {
-        GameObject.FindObjectOfType<UIArtifact>().Init();
+        current = this;
+    }
+
+    public virtual void Init()
+    {
+        didInit = true;
+
+        SaveSystem.Current.SetLastArea(myArea);
+
+        Load(SaveSystem.Current); // DC: this won't cause run order issues right :)
+        SetBGGrid(bgGridTiles);
+
+        if (targetGrid.Length == 0)
+            Debug.LogWarning("Grid's target (end goal) is empty!");
+
+        if (myArea == Area.None)
+            Debug.LogWarning("Area isn't set!");
+
+        // OnGridMove += CheckCompletions;
     }
 
     public STile[,] GetGrid()
@@ -113,6 +124,7 @@ public class SGrid : MonoBehaviour, ISavable
         STile[,] newGrid = new STile[width, height];
         STile next = null;
 
+        // We might not need this getunderstile stuff anymore now that we actually child player to STiles!
         STile playerSTile = Player.GetStileUnderneath();
         Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
 
@@ -437,11 +449,11 @@ public class SGrid : MonoBehaviour, ISavable
     }
 
     //L: Used in the save system to load a grid as opposed to using SetGrid(STile[], STile[]) with default tiles positions.
-    public virtual void Load() 
+    public virtual void Load(SaveProfile profile) 
     { 
         //Debug.Log("Loading grid...");
 
-        SGridData sgridData = SaveSystem.Current.GetSGridData(myArea);
+        SGridData sgridData = profile.GetSGridData(myArea);
 
         if (sgridData == null) {
             SetGrid(stiles);
@@ -459,6 +471,8 @@ public class SGrid : MonoBehaviour, ISavable
             newGrid[td.x, td.y] = stile;
             idGrid[td.x, td.y] = td.islandId;
             stile.SetSTile(td.isTileActive, td.x, td.y);
+
+            UIArtifact.SetButtonPos(td.islandId, td.x, td.y);
         }
         grid = newGrid;
         realigningGrid = sgridData.realigningGrid;
