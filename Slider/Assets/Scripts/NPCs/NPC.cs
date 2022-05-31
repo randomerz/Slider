@@ -136,13 +136,22 @@ public class NPC : MonoBehaviour
 
     public void TriggerDialogue()
     {
-       if (dialogueEnabled)
-       {
+       if (!dialogueActive)
+        {
+            TypeNextDialogue();
+        }
+    }
+
+    public void TypeNextDialogue()
+    {
+        if (dialogueEnabled)
+        {
             if (dconds[currDconds].dialogueChain.Count == 0)
             {
                 dconds[currDconds].OnDialogueStart();
                 dialogueDisplay.DisplaySentence(dconds[currDconds].GetDialogue());
-            } else
+            }
+            else
             {
                 dconds[currDconds].OnDialogueChainStart(currDialogueInChain);
                 dialogueDisplay.DisplaySentence(dconds[currDconds].GetDialogueChain(currDialogueInChain));
@@ -150,7 +159,7 @@ public class NPC : MonoBehaviour
 
             startedTyping = true;
             dialogueActive = true;
-       }
+        }
     }
 
     private void ChangeDialogue(int newDialogue, bool triggerOnChange=false)
@@ -165,7 +174,7 @@ public class NPC : MonoBehaviour
 
         if (triggerOnChange)
         {
-            TriggerDialogue();
+            TypeNextDialogue();
         }
         dconds[currDconds].onDialogueChanged?.Invoke();
     }
@@ -255,7 +264,7 @@ public class NPC : MonoBehaviour
             currDialogueInChain++;
             if (triggerNext)
             {
-                TriggerDialogue();
+                TypeNextDialogue();
             }
         }
         else
@@ -303,9 +312,9 @@ public class NPC : MonoBehaviour
 
     #region Walking
 
-    public void StartCurrentWalk()
+    public void StartCurrentWalk(int walkInd)
     {
-        if (dconds[currDconds].walk.path.Count == 0)
+        if (walkInd < 0 || walkInd >= dconds[currDconds].walks.Count)
         {
             Debug.LogError($"Tried to start a walk event for NPC {gameObject.name} that did not exist.");
             return;
@@ -313,7 +322,7 @@ public class NPC : MonoBehaviour
 
         if (currWalk == null)
         {
-            currWalk = dconds[currDconds].walk;
+            currWalk = dconds[currDconds].walks[walkInd];
             remainingStileCrossings = new List<STileCrossing>(currWalk.stileCrossings);
             remainingPath = new List<Transform>(currWalk.path);
             walkCoroutine = StartCoroutine(DoCurrentWalk(false));
@@ -398,14 +407,9 @@ public class NPC : MonoBehaviour
         }
     }
 
-    public void CheckCurrentPathExistsAndIsValid(Conditionals.Condition c)
+    public bool CurrentPathExistsAndValid(int walkInd)
     {
-        c.SetSpec(CurrentPathExistsAndValid());
-    }
-
-    public bool CurrentPathExistsAndValid()
-    {
-        return PathExistsAndValid(dconds[currDconds].walk.path, dconds[currDconds].walk.stileCrossings);
+        return (walkInd < 0 || walkInd >= dconds[currDconds].walks.Count) ? false : PathExistsAndValid(dconds[currDconds].walks[walkInd].path, dconds[currDconds].walks[walkInd].stileCrossings);
     }
 
     private bool PathExistsAndValid(List<Transform> path, List<STileCrossing> stileCrossings)
