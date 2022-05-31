@@ -39,21 +39,4 @@ public class GameManager : MonoBehaviour
 
         SaveSystem.SaveGame();
     }
-
-    //This is so they can be used in the inspector.
-    public bool GetBool(string name)
-    {
-        return SaveSystem.Current.GetBool(name);
-    }
-
-    //This is the only way to do it plz.
-    public void SetBoolOn(string name)
-    {
-        SaveSystem.Current.SetBool(name, true);
-    }
-
-    public void SetBoolOff(string name)
-    {
-        SaveSystem.Current.SetBool(name, false);
-    }
 }
