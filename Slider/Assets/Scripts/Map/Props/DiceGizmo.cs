@@ -34,7 +34,7 @@ public class DiceGizmo : MonoBehaviour
         }
         this.GetComponent<SpriteRenderer>().sprite = sprites[value - 1];
         NumberDialogue.dialogue = value.ToString();
-        npcScript.TriggerDialogue();
+        npcScript.TypeNextDialogue();
     }
 
     private void OnEnable()

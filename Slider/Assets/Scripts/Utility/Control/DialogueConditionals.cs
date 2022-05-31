@@ -39,6 +39,8 @@ public class DialogueConditionals : Conditionals
     public List<Dialogue> dialogueChain;
     public UnityEvent onDialogueChainExhausted;
 
+    public List<NPC.NPCWalk> walks;
+
     public new bool CheckConditions()
     {
         foreach (Condition cond in conditions)
