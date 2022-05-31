@@ -50,6 +50,7 @@ public class ConditionalsEditor : PropertyDrawer
         var stationaryTilesProperty = property.FindPropertyRelative("stationaryTiles");
         var checkBoolProperty = property.FindPropertyRelative("checkBool");
         var playerItemNameProperty = property.FindPropertyRelative("playerItemName");
+        var flagNameProperty = property.FindPropertyRelative("flagName");
 
         var labelRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
         var categoryFieldRect = new Rect(position.x, position.y + 18, position.width, 24);
@@ -81,6 +82,9 @@ public class ConditionalsEditor : PropertyDrawer
                     break;
                 case Conditionals.Condition.ConditionType.playerCarryingItem:
                     EditorGUI.PropertyField(fieldRect, playerItemNameProperty);
+                    break;
+                case Conditionals.Condition.ConditionType.flag:
+                    EditorGUI.PropertyField(fieldRect, flagNameProperty);
                     break;
             }
         }

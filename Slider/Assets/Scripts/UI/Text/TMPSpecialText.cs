@@ -503,6 +503,20 @@ public class TMPSpecialText : MonoBehaviour
 
         while (true)
         {
+            for (int i = start; i <= end; i++)
+            {
+                //Debug.Log($"Start: {start} End: {end}");
+                // Skip characters that are not visible and thus have no geometry to manipulate.
+                if (!textInfo.characterInfo[i].isVisible)
+                    continue;
+
+                textInfo.characterInfo[i].color.a = 0;
+
+                TMPTextTyper.SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
+            }
+
+            yield return new WaitForSeconds(speed);
+
             charIndex = start;
             while (charIndex <= end)
             {
@@ -532,20 +546,6 @@ public class TMPSpecialText : MonoBehaviour
                 charIndex++;
                 yield return new WaitForSeconds(speed);
             }
-
-            for (int i = start; i <= end; i++)
-            {
-                //Debug.Log($"Start: {start} End: {end}");
-                // Skip characters that are not visible and thus have no geometry to manipulate.
-                if (!textInfo.characterInfo[i].isVisible)
-                    continue;
-
-                textInfo.characterInfo[i].color.a = 0;
-
-                TMPTextTyper.SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
-            }
-
-            yield return new WaitForSeconds(speed);
         }
     }
     #endregion

@@ -180,7 +180,7 @@ public class ChadRace : MonoBehaviour
 
     private void DisplayAndTriggerDialogue(string message) {
         countDownDialogue.dialogue = message;
-        npcScript.TriggerDialogue();
+        npcScript.TypeNextDialogue();
     }
 
 
