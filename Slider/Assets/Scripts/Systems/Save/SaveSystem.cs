@@ -27,7 +27,7 @@ public class SaveSystem
         }
     }
     private static SaveProfile current;
-    private static int currentIndex; // if -1, then it's a temporary profile
+    private static int currentIndex = -1; // if -1, then it's a temporary profile
 
     private static SaveProfile[] saveProfiles = new SaveProfile[3];
 
@@ -59,10 +59,10 @@ public class SaveSystem
     /// </summary>
     public static void SaveGame()
     {
-        current.Save();
-
         if (currentIndex == -1)
             return;
+
+        current.Save();
 
         SerializableSaveProfile profile = SerializableSaveProfile.FromSaveProfile(current);
 
