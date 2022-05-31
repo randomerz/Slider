@@ -92,7 +92,7 @@ public class NPC : MonoBehaviour
         int newDialogue = CurrentDialogue();
         if (currDconds != newDialogue && dialogueEnabled)
         {
-            ChangeDialogue(newDialogue, dialogueActive);
+            StartCoroutine(WaitThenChangeDialogue());
         }
 
         if (startedTyping && dialogueDisplay.textTyperText.finishedTyping)
@@ -140,10 +140,13 @@ public class NPC : MonoBehaviour
 
     public void TriggerDialogue()
     {
-       if (!dialogueActive)
+        var dChain = dconds[currDconds].dialogueChain;
+        if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt && startedTyping)
         {
-            TypeNextDialogue();
+            return;
         }
+        
+        TypeNextDialogue();
     }
 
     public void TypeNextDialogue()
@@ -188,6 +191,11 @@ public class NPC : MonoBehaviour
     {
         yield return new WaitUntil(() =>
         {
+            var dChain = dconds[currDconds].dialogueChain;
+            if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt && dialogueDisplay.textTyperText.finishedTyping)
+            {
+                return true;
+            }
             return !dialogueActive;
         });
 
