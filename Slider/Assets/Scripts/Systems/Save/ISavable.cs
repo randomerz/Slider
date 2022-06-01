@@ -1,5 +1,5 @@
 public interface ISavable
 {
     void Save();
-    void Load();
+    void Load(SaveProfile profile);
 }

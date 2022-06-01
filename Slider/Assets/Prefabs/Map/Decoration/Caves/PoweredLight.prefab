@@ -100,7 +100,7 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 4004264985894055378, guid: 08af4d8ab8702764086f8e78d452856b, type: 3}
   m_PrefabInstance: {fileID: 2171393422205397280}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1448937501
+--- !u!114 &7130886567687580183
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,27 +109,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 3003996721049224432}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 810cdab5a8505f84c886da1383cb09b7, type: 3}
+  m_Script: {fileID: 11500000, guid: d57453879f24e9443be445b4f2948d7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lightOnStart: 0
   spriteRenderer: {fileID: 3003996721049224434}
   onSprite: {fileID: 21300000, guid: 973eec9ef606a7e4995956a335eb8c60, type: 3}
   offSprite: {fileID: 21300000, guid: da0bda1697f822e45a1d36ba9531c6e3, type: 3}
-  powerConditionals:
-    onSuccess:
-      m_PersistentCalls:
-        m_Calls: []
-    onFail:
-      m_PersistentCalls:
-        m_Calls: []
-    conditions:
-    - type: 2
-      item:
-        name: 
-        area: 0
-      pattern: 54
-      stationaryTiles: 0400000005000000
-      checkBool:
-        m_PersistentCalls:
-          m_Calls: []
+  borderPos: {x: 0, y: 0}
+--- !u!114 &2745781584710628665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3003996721049224432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58c1b528e0c005048941bffa94744ab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodeType: 2
+  powerRefs: 0
+  neighbors: []
+  invertSignal: 0
+  OnPowered:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7130886567687580183}
+        m_TargetAssemblyTypeName: CaveLight, Assembly-CSharp
+        m_MethodName: SetLightOnPowered
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

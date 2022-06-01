@@ -4,9 +4,10 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, ISavable
 {
     private static Player _instance;
+    private bool didInit;
 
     // Movement
     [SerializeField] private float moveSpeed = 5;
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour
     [Header("References")]
     // [SerializeField] private Sprite trackerSprite;
     [SerializeField] private PlayerAction playerAction;
+    [SerializeField] private PlayerInventory playerInventory;
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
     [SerializeField] private SpriteRenderer boatSpriteRenderer;
     [SerializeField] private Animator playerAnimator;
@@ -34,6 +36,21 @@ public class Player : MonoBehaviour
         _instance = this;
         _instance.controls = new InputSettings();
         LoadBindings();
+
+        if (!didInit)
+            Init();
+    }
+
+    public void SetSingleton()
+    {
+        _instance = this;
+    }
+
+    public void Init()
+    {
+        didInit = true;
+
+        playerInventory.Init();
 
         UpdatePlayerSpeed();
     }
@@ -117,14 +134,67 @@ public class Player : MonoBehaviour
         return _instance;
     }
 
-    public static PlayerAction GetPlayerAction() 
+    public static PlayerAction GetPlayerAction()
     {
         return _instance.playerAction;
+    }
+
+    public static PlayerInventory GetPlayerInventory()
+    {
+        return _instance.playerInventory;
     }
 
     public static SpriteRenderer GetSpriteRenderer()
     {
         return _instance.playerSpriteRenderer;
+    }
+
+    public void Save()
+    {
+        SerializablePlayer sp = new SerializablePlayer();
+
+        // Player
+        sp.position = new float[3];
+        Vector3 pos = GetPosition();
+        Debug.Log("Saved position: " + pos);
+        sp.position[0] = pos.x;
+        sp.position[1] = pos.y;
+        sp.position[2] = pos.z;
+        sp.isOnWater = isOnWater;
+        sp.isInHouse = isInHouse;
+
+        // PlayerInventory
+        sp.collectibles = GetPlayerInventory().GetCollectiblesList();
+        sp.hasCollectedAnchor = GetPlayerInventory().GetHasCollectedAnchor();
+
+        SaveSystem.Current.SetSerializeablePlayer(sp);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        if (profile == null || profile.GetSerializablePlayer() == null)
+            return;
+
+        SerializablePlayer sp = profile.GetSerializablePlayer();
+
+        // Player
+
+        // Update position
+        transform.SetParent(null);
+        transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
+        STile stileUnderneath = STile.GetSTileUnderneath(transform, null);
+        transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
+        //Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
+
+        isOnWater = sp.isOnWater;
+        isInHouse = sp.isInHouse;
+
+        // PlayerInventory
+        playerInventory.SetCollectiblesList(sp.collectibles);
+        playerInventory.SetHasCollectedAnchor(sp.hasCollectedAnchor);
+
+        // Other init functions
+        UpdatePlayerSpeed();
     }
 
 

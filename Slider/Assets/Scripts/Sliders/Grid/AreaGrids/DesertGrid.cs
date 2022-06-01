@@ -37,15 +37,15 @@ public class DesertGrid : SGrid
     private static bool checkCompletion = false;
     private static bool checkMonkey = false;
 
-    protected override void Awake() {
+    public override void Init() {
         myArea = Area.Desert;
 
-        foreach (Collectible c in collectibles) // maybe don't have this
+        foreach (Collectible c in collectibles)
         {
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
 
         instance = this;
     }
@@ -106,9 +106,9 @@ public class DesertGrid : SGrid
         base.Save();
     }
 
-    public override void Load()
+    public override void Load(SaveProfile profile)
     {
-        base.Load();
+        base.Load(profile);
     }
 
     // === Desert puzzle specific ===

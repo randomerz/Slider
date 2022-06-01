@@ -41,14 +41,16 @@ public class Conveyor : ElectricalNode
         }
     }
 
-    private void OnEnable()
+    private new void OnEnable()
     {
+        base.OnEnable();
         SGridAnimator.OnSTileMoveEnd += OnTileMove;
         SGrid.OnSTileEnabled += OnTileEnabled;
     }
 
-    private void OnDisable()
+    private new void OnDisable()
     {
+        base.OnDisable();
         SGridAnimator.OnSTileMoveEnd -= OnTileMove;
         SGrid.OnSTileEnabled -= OnTileEnabled;
     }

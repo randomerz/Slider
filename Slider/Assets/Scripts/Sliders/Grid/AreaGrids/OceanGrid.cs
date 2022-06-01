@@ -33,15 +33,15 @@ public class OceanGrid : SGrid
     public GameObject fog7;
     public GameObject fogIsland;
 
-    protected override void Awake() {
+    public override void Init() {
         myArea = Area.Ocean;
 
-        foreach (Collectible c in collectibles) // maybe don't have this
+        foreach (Collectible c in collectibles)
         {
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
 
 
         // instance = this;
@@ -102,9 +102,9 @@ public class OceanGrid : SGrid
         base.Save();
     }
 
-    public override void Load()
+    public override void Load(SaveProfile profile)
     {
-        base.Load();
+        base.Load(profile);
     }
 
 
@@ -326,7 +326,7 @@ public class OceanGrid : SGrid
 
     public void FoggyCorrectMovement()
     {
-        if(correctPath[playerIndex] == playerMovement)
+        if (playerIndex < correctPath.Length && correctPath[playerIndex] == playerMovement)
         {
             playerIndex++;
             FoggySeasAudio();

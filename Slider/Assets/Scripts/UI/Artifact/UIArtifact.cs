@@ -33,13 +33,17 @@ public class UIArtifact : MonoBehaviour
     
     public void Awake()
     {
+        SetSingleton();
         Init();
+    }
+
+    public void SetSingleton()
+    {
+        _instance = this;
     }
 
     public void Init()
     {
-        _instance = this;
-
         PlayerCanQueue = true;
     }
 
@@ -569,7 +573,7 @@ public class UIArtifact : MonoBehaviour
                 return b;
             }
         }
-        Debug.LogWarning("Artifact tile button at " + x + ", " + y + " was not found!");
+        //Debug.LogWarning("Artifact tile button at " + x + ", " + y + " was not found!");
         return null;
     }
 
