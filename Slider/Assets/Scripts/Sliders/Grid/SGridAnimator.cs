@@ -101,8 +101,8 @@ public class SGridAnimator : MonoBehaviour
         //    }
         //}
 
-        stile.SetMovingDirection(Vector2.zero);
         stile.SetGridPosition(moveCoords.endLoc);
+        stile.SetMovingDirection(Vector2.zero);
 
         OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
         {
