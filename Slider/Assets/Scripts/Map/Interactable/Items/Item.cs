@@ -111,8 +111,8 @@ public class Item : MonoBehaviour
         end.transform.position = target;
 
         STile hitStile = SGrid.current.GetStileUnderneath(end);
-        start.transform.parent = hitStile.transform;
-        end.transform.parent = hitStile.transform;
+        start.transform.parent = hitStile == null ? null : hitStile.transform;
+        end.transform.parent = hitStile == null ? null : hitStile.transform;
 
         //transform.position = target;
         while (t >= 0)
