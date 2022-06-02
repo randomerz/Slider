@@ -8,7 +8,7 @@ public class MountainGrid : SGrid
 
     public static MountainGrid instance;
 
-    /* The mountian sgrid is a 2 by 4 grid. The top 4 tiles represent the top layer,
+    /* C: The mountian sgrid is a 2 by 4 grid. The top 4 tiles represent the top layer,
         while the bottom 4 tiles represent the bottom layer. For example, the following grid
 
                 5 1

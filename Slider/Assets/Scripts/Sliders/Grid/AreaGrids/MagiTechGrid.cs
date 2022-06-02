@@ -6,6 +6,21 @@ public class MagiTechGrid : SGrid
 {
     public static MagiTechGrid instance;
 
+    public int GridOffset = 100; //C: The X distance between the present and past grid
+
+    /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
+    and the right 9 STiles represent the past. The past tile will have an islandID
+    exactly 9 more than its corresponding present tile. Note that in strings, the past tiles
+    will be reprsented with the characters A-I so they can retain a length of 1. *THIS HAS NOT BEEN PROPERLY IMPLEMENTED YET
+
+    A Magitech grid might look like this
+
+        1 2 3   A B C
+        4 5 6   D E F
+        7 8 9   G H I
+
+    */
+
     [SerializeField] private STile[] altStiles;
 
     [SerializeField] private STile[,] altGrid;
@@ -22,6 +37,7 @@ public class MagiTechGrid : SGrid
         base.Init();
 
         instance = this;
+        SetSingleton();
     }
 
     protected override void Start()
@@ -42,10 +58,10 @@ public class MagiTechGrid : SGrid
         base.Load(profile);
 
         // Should look into linking this into the save/load system later
-        SetAltGrid(altStiles);
+      //  SetAltGrid(altStiles);
 
         // We want the colliders in the altGrid disabled so they don't push the player around
-        StartCoroutine(ISetAltGridCollidersToTrigger());
+    //   StartCoroutine(ISetAltGridCollidersToTrigger());
         /*foreach (STile tile in altGrid)
         {
             tile.SetTileActive(false);
@@ -53,7 +69,7 @@ public class MagiTechGrid : SGrid
             tile.sliderCollider.isTrigger = true;
         }*/
     }
-
+/*
     private IEnumerator ISetAltGridCollidersToTrigger()
     {
         yield return new WaitForEndOfFrame();
@@ -67,7 +83,7 @@ public class MagiTechGrid : SGrid
 
     /*
      * L: Populates the altGrid[,] array with the given stiles.
-     */
+     *
     private void SetAltGrid(STile[] stiles)
     {
         if (stiles.Length != width * height)
@@ -101,28 +117,28 @@ public class MagiTechGrid : SGrid
             tile.SetTileActive(tile.isTileCollected);
         }
     }
-
+*/
     // See STile.isTileCollected for an explanation
     public override void CollectSTile(int islandId)
     {
         foreach (STile s in grid)
         {
             //Debug.Log(s.islandId);
-            if (s.islandId == islandId)
+            if (s != null && (s.islandId == islandId || s.islandId - 9 == islandId))
             {
                 CollectStile(s);
-                break;
+                //break;
             }
         }
-        foreach (STile s in altGrid)
+        /*foreach (STile s in altGrid)
         {
             if (s.islandId == islandId)
             {
                 CollectStile(s);
                 break;
             }
-        }
-    }
+        }*/
+    }/*
 
     public bool AltGridCanMove(SMove move)
     {
@@ -135,7 +151,7 @@ public class MagiTechGrid : SGrid
         }
         return true;
     }
-
+/*
     public override void Move(SMove move)
     {
         base.Move(move);
@@ -156,4 +172,5 @@ public class MagiTechGrid : SGrid
             altGrid = newAltGrid;
         }
     }
+    */
 }
