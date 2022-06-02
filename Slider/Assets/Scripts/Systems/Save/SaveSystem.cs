@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -26,13 +27,15 @@ public class SaveSystem
         }
     }
     private static SaveProfile current;
-    private static int currentIndex; // if -1, then it's a temporary profile
+    private static int currentIndex = -1; // if -1, then it's a temporary profile
 
     private static SaveProfile[] saveProfiles = new SaveProfile[3];
 
-    public SaveSystem() {
-        // load profiles from file here maybe
-        saveProfiles[0] = new SaveProfile("Temp Catto");
+    public SaveSystem()
+    {
+        SetProfile(0, GetSerializableSaveProfile(0)?.ToSaveProfile());
+        SetProfile(1, GetSerializableSaveProfile(1)?.ToSaveProfile());
+        SetProfile(2, GetSerializableSaveProfile(2)?.ToSaveProfile());
     }
 
     public static SaveProfile GetProfile(int index)
@@ -51,14 +54,18 @@ public class SaveSystem
     }
 
 
-    // saves the current game to file
+    /// <summary>
+    /// Saves the game to the current loaded profile index (either 1, 2, or 3). If the profile index is -1, then no data will be saved.
+    /// </summary>
     public static void SaveGame()
     {
+        if (currentIndex == -1)
+            return;
+
         current.Save();
 
         SerializableSaveProfile profile = SerializableSaveProfile.FromSaveProfile(current);
 
-        currentIndex = 1;
         SaveToFile(profile, currentIndex);
     }
 
@@ -67,11 +74,12 @@ public class SaveSystem
         Debug.Log("Saving data to file...");
 
         BinaryFormatter formatter = new BinaryFormatter();
-        string path = Application.persistentDataPath + string.Format("/slider{0}.cat", index);
+        string path = GetFilePath(index);
         FileStream stream = new FileStream(path, FileMode.Create);
 
         formatter.Serialize(stream, profile);
 
+        // in case we need json somewhere in the future? idk
         bool doJson = false;
         if (doJson)
         {
@@ -84,5 +92,76 @@ public class SaveSystem
         }
 
         stream.Close();
+    }
+
+    public static void LoadSaveProfile(int index)
+    {
+        SerializableSaveProfile ssp = null;
+
+        ssp = GetSerializableSaveProfile(index);
+
+        SaveProfile profile;
+        if (ssp == null)
+        {
+            Debug.LogError("Creating a new temporary save profile -- this shouldn't happen!");
+            profile = new SaveProfile("Boomo");
+        }
+        else
+        {
+            profile = ssp.ToSaveProfile();
+        }
+
+        current = profile;
+        currentIndex = index;
+
+
+        // This makes it so the profile gets loaded first thing in the new scene
+        SceneInitializer.profileToLoad = current;
+
+        // Load last scene the player was in
+        SceneManager.LoadScene(current.GetLastArea().ToString());
+    }
+
+    public static SerializableSaveProfile GetSerializableSaveProfile(int index)
+    {
+        return LoadFromFile(index);
+    }
+
+    private static SerializableSaveProfile LoadFromFile(int index)
+    {
+        Debug.Log("Loading data from file...");
+
+        string path = GetFilePath(index);
+        if (File.Exists(path))
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Open);
+
+            SerializableSaveProfile profile = formatter.Deserialize(stream) as SerializableSaveProfile;
+            stream.Close();
+
+            return profile;
+        }
+        else
+        {
+            Debug.LogWarning("Save file not found at " + path);
+            return null;
+        }
+    }
+
+    public static void DeleteSaveProfile(int index)
+    {
+        Debug.Log("Deleting Save profile #" + index + "!");
+
+        string path = GetFilePath(index);
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+    }
+
+    private static string GetFilePath(int index)
+    {
+        return Application.persistentDataPath + string.Format("/slider{0}.cat", index);
     }
 }

@@ -241,7 +241,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 414317947
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: faf11ae64f385334a96844a93b79a04c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -324,7 +324,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 529684183
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 8815141463009395645, guid: 7820ee49eed33b44584825f10d27f82b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -429,7 +429,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 529684183
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 1515997999314860018, guid: b4f019f3f306d41b5a198fba8d41e63f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -515,9 +515,11 @@ MonoBehaviour:
   moveSpeed: 5
   isOnWater: 0
   playerAction: {fileID: 3635922835001186329}
+  playerInventory: {fileID: 3255215873672854460}
   playerSpriteRenderer: {fileID: 380634036804812840}
   boatSpriteRenderer: {fileID: 3785533694745293587}
   playerAnimator: {fileID: 380634036804812841}
+  rb: {fileID: 380634037254267615}
 --- !u!114 &3635922835001186329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,6 +554,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e18baec568b2f7a48bdf3a705beb682a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasCollectedAnchor: 0
   anchorPrefab: {fileID: 7895592663859285606, guid: 943cb2ed11f603141a66c99e265099d4, type: 3}
 --- !u!50 &380634037254267615
 Rigidbody2D:
@@ -965,7 +968,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 529684183
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: -1
   m_Sprite: {fileID: 3719326130305959940, guid: d3d84574845e7804eaffcb832365a380, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

@@ -33,13 +33,17 @@ public class UIArtifact : MonoBehaviour
     
     public void Awake()
     {
+        SetSingleton();
         Init();
+    }
+
+    public void SetSingleton()
+    {
+        _instance = this;
     }
 
     public void Init()
     {
-        _instance = this;
-
         PlayerCanQueue = true;
     }
 
@@ -61,6 +65,7 @@ public class UIArtifact : MonoBehaviour
     public virtual void OnDisable()
     {
         ClearQueues();
+
         //Debug.Log("Queue Cleared!");
     }
 
@@ -118,7 +123,7 @@ public class UIArtifact : MonoBehaviour
         }
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
-        if (!dragged.isTileActive)// || dragged.isForcedDown)
+        if (!dragged.isTileActive || dragged.myStile.hasAnchor)// || dragged.isForcedDown)
         {
             return;
         }
@@ -267,7 +272,7 @@ public class UIArtifact : MonoBehaviour
             }
 
             moveOptionButtons = GetMoveOptions(button);
-            if (moveOptionButtons.Count == 0)
+            if (moveOptionButtons.Count == 0 || button.myStile.hasAnchor)
             {
                 //L: Player tried to click a locked tile (or tile that otherwise had no move options)
                 return;
@@ -465,6 +470,10 @@ public class UIArtifact : MonoBehaviour
            if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
            {
                b.SetIsInMove(true);
+           }
+           else if(b.myStile.hasAnchor)
+           {
+               continue;
            }
            else
            {

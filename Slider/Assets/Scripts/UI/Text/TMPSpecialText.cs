@@ -28,6 +28,8 @@ public class TMPSpecialText : MonoBehaviour
 
         "var",
         "string",
+
+        "type",
     };
     private static int[] commandHashes;
     private List<CommandArg> commandArgs = new List<CommandArg>();
@@ -40,6 +42,9 @@ public class TMPSpecialText : MonoBehaviour
     public float shakeMultiplier = 1;
     public float waveAmplitude = 1;
     public float wavePeriod = 1;
+    public float typeLoopSpeed = 0.05f;
+
+    private List<Coroutine> effectCoroutines;
 
 
     private struct CommandArg
@@ -80,6 +85,7 @@ public class TMPSpecialText : MonoBehaviour
         }
 
         // StartCoroutine(ParseText(m_TextMeshPro.text));
+        effectCoroutines = new List<Coroutine>();
     }
 
     // moved to start so SGrid can initialize, for SaveSystem
@@ -154,6 +160,7 @@ public class TMPSpecialText : MonoBehaviour
                 m_TextMeshPro.text = text;
 
                 //Debug.Log(command + " " + i + " - " + (closing_tag - command.Length - 2));
+                //Debug.Log($"Hash {commandHash}");
                 //ParseCommand(commandHash, i - offset, closing_tag - command.Length - 3 - offset);
                 commandArgs.Add(new CommandArg(command, commandHash, i - offset, i + originalText.Length - offset - 1));// closing_tag - command.Length - 3 - offset));
             }
@@ -204,25 +211,30 @@ public class TMPSpecialText : MonoBehaviour
     /// <returns>True if a coroutine was started, else false</returns>
     private bool ParseCommand(int commandHash, int start, int end)
     {
+        //Debug.Log($"Hash of Type: {"type".GetHashCode()}");
         switch (commandHash)
         {
             // jitter
             case -1623808880:
             // jittery
             case 270799001:
-                StartCoroutine(TMPJitter(start, end, jitterMultiplier * 2, jitterMultiplier * 2));
+                effectCoroutines.Add(StartCoroutine(TMPJitter(start, end, jitterMultiplier * 2, jitterMultiplier * 2)));
                 break;
             // shake
             case 371760912:
             // shaky
             case 371760908:
-                StartCoroutine(TMPJitter(start, end, 0, shakeMultiplier * 10));
+                effectCoroutines.Add(StartCoroutine(TMPJitter(start, end, 0, shakeMultiplier * 10)));
                 break;
             // wave
             case -1966748055:
             // wavy
             case -1066070667:
-                StartCoroutine(Wavy(start, end, waveAmplitude * 5, wavePeriod * .5f));
+                effectCoroutines.Add(StartCoroutine(Wavy(start, end, waveAmplitude * 5, wavePeriod * .5f)));
+                break;
+            //type
+            case 1421151742:
+                effectCoroutines.Add(StartCoroutine(LoopType(start, end, typeLoopSpeed)));
                 break;
             default:
                 return false;
@@ -242,6 +254,17 @@ public class TMPSpecialText : MonoBehaviour
         }
 
         return originalText;
+    }
+
+    public void StopEffects()
+    {
+        foreach(var effect in effectCoroutines)
+        {
+            StopCoroutine(effect);
+        }
+
+        effectCoroutines.Clear();
+        commandArgs.Clear();
     }
 
 
@@ -455,6 +478,74 @@ public class TMPSpecialText : MonoBehaviour
 
             // changed from 0.1f
             yield return new WaitForSeconds(0.05f);
+        }
+    }
+    #endregion
+
+    #region Type
+    IEnumerator LoopType(int start, int end, float speed)
+    {
+        TMP_TextInfo textInfo = m_TextMeshPro.textInfo;
+        int charIndex;
+        bool allCharsVisible = false;
+        while (!allCharsVisible)
+        {
+            allCharsVisible = true;
+            for (int i = start; i < end; i++)
+            {
+                if (textInfo.characterInfo[i].color.a == 0)
+                {
+                    allCharsVisible = false;
+                }
+            }
+            yield return null;
+        }
+
+        while (true)
+        {
+            for (int i = start; i <= end; i++)
+            {
+                //Debug.Log($"Start: {start} End: {end}");
+                // Skip characters that are not visible and thus have no geometry to manipulate.
+                if (!textInfo.characterInfo[i].isVisible)
+                    continue;
+
+                textInfo.characterInfo[i].color.a = 0;
+
+                TMPTextTyper.SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
+            }
+
+            yield return new WaitForSeconds(speed);
+
+            charIndex = start;
+            while (charIndex <= end)
+            {
+
+                // // If No Characters then just yield and wait for some text to be added
+                // if (textInfo.characterCount == 0)
+                // {
+                //     yield return new WaitForSeconds(textSpeed);
+                //     continue;
+                // }
+
+                // Skip characters that are not visible and thus have no geometry to manipulate.
+                if (!textInfo.characterInfo[charIndex].isVisible)
+                {
+                    charIndex++;
+                    continue;
+                }
+                else
+                {
+                    textInfo.characterInfo[charIndex].color.a = 255;
+
+                    TMPTextTyper.SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[charIndex].color, charIndex);
+
+                }
+
+                char currChar = textInfo.characterInfo[charIndex].character;
+                charIndex++;
+                yield return new WaitForSeconds(speed);
+            }
         }
     }
     #endregion

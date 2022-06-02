@@ -20,6 +20,7 @@ public class Conditionals
             gridStationary, //L: Forces the grid to be stationary before it can evaluate the condition to true.
             spec,
             playerCarryingItem,
+            flag,
         }
         public ConditionType type;
 
@@ -35,6 +36,9 @@ public class Conditionals
 
         // player item
         public string playerItemName;
+
+        //flag
+        public string flagName;
 
         private bool spec = false;
         public bool CheckCondition()
@@ -76,6 +80,8 @@ public class Conditionals
                         return false;
                     }
                     return true;
+                case ConditionType.flag:
+                    return SaveSystem.Current.GetBool(flagName);
                 case ConditionType.spec:
                 default:
                     checkBool.Invoke(this);
@@ -87,6 +93,7 @@ public class Conditionals
             spec = b;
         }
     }
+    [Header("Base Condition Events (DO NOT USE FOR DIALOGUE)")]
     public UnityEvent onSuccess;
     public UnityEvent onFail;
     public List<Condition> conditions;

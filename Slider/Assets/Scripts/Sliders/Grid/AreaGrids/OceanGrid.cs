@@ -33,15 +33,15 @@ public class OceanGrid : SGrid
     public GameObject fog7;
     public GameObject fogIsland;
 
-    protected override void Awake() {
+    public override void Init() {
         myArea = Area.Ocean;
 
-        foreach (Collectible c in collectibles) // maybe don't have this
+        foreach (Collectible c in collectibles)
         {
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
 
 
         // instance = this;
@@ -102,9 +102,9 @@ public class OceanGrid : SGrid
         base.Save();
     }
 
-    public override void Load()
+    public override void Load(SaveProfile profile)
     {
-        base.Load();
+        base.Load(profile);
     }
 
 
@@ -188,7 +188,7 @@ public class OceanGrid : SGrid
 
     public void BuoyAllFound(Conditionals.Condition c)
     {
-        if (!(GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
+        if (!AllBuoy())
         {
             c.SetSpec(false);
         }
@@ -196,6 +196,11 @@ public class OceanGrid : SGrid
         {
             c.SetSpec(true);
         }
+    }
+
+    public bool AllBuoy()
+    {
+        return GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive;
     }
 
     public void knotBoxEnabled(Conditionals.Condition c)
@@ -217,23 +222,24 @@ public class OceanGrid : SGrid
 
     public void ToggleKnotBox()
     {
-        knotBox.enabled = !knotBox.enabled;
-        if(knotBox.enabled)
+        if(AllBuoy())
         {
-            foreach(GameObject knotnode in knotBox.knotnodes)
+            knotBox.enabled = !knotBox.enabled;
+            if (knotBox.enabled)
             {
-                UITrackerManager.AddNewTracker(knotnode);
+                foreach (GameObject knotnode in knotBox.knotnodes)
+                {
+                    UITrackerManager.AddNewTracker(knotnode);
+                }
+            }
+            else
+            {
+                foreach (GameObject knotnode in knotBox.knotnodes)
+                {
+                    UITrackerManager.RemoveTracker(knotnode);
+                }
             }
         }
-        else
-        {
-            foreach(GameObject knotnode in knotBox.knotnodes)
-            {
-                UITrackerManager.RemoveTracker(knotnode);
-            }
-        }
-        
-
     }
 
     public void IsCompleted(Conditionals.Condition c)
@@ -320,7 +326,7 @@ public class OceanGrid : SGrid
 
     public void FoggyCorrectMovement()
     {
-        if(correctPath[playerIndex] == playerMovement)
+        if (playerIndex < correctPath.Length && correctPath[playerIndex] == playerMovement)
         {
             playerIndex++;
             FoggySeasAudio();

@@ -70,7 +70,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 529684183
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 5254876852798027502, guid: 67089d1a7392f2449922653c3f0a069b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f04283445261e74aa01e938a0b8bd00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAggroRange: 3
+  playerAggroRange: 2.5
   playerDeaggroRange: 5
   nav: {fileID: 0}
   navAgent: {fileID: 5482138428807836078}
@@ -160,9 +160,10 @@ MonoBehaviour:
   objectToSteal: {fileID: 0}
   player: {fileID: 0}
   tileMaxPenalty: 100
-  maxDistVision: 6
+  maxDistVision: 4
   maxDistCost: 2
   updateTimer: 0.25
+  avoidsDark: 0
 --- !u!114 &5482138428807836078
 MonoBehaviour:
   m_ObjectHideFlags: 0

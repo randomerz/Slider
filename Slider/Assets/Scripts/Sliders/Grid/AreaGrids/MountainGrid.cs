@@ -20,7 +20,7 @@ public class MountainGrid : SGrid
         represents the grid with 5, 1, 2, and 8 on the top layer.
     */
 
-    protected override void Awake() {
+    public override void Init() {
         myArea = Area.Mountain;
 
         foreach (Collectible c in collectibles)
@@ -28,32 +28,46 @@ public class MountainGrid : SGrid
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
         instance = this;
     }
     
     private void OnEnable()
     {
-        Anchor.OnAnchorDrop += OnAnchorDrop;
+        Anchor.OnAnchorInteract += OnAnchorInteract;
     }
 
     private void OnDisable()
     {
-        Anchor.OnAnchorDrop -= OnAnchorDrop;
+        Anchor.OnAnchorInteract -= OnAnchorInteract;
     }
 
-    private void OnAnchorDrop(object sender, Anchor.OnAnchorDropArgs dropArgs)
+    private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs interactArgs)
     {
         STile dropTile = dropArgs.stile;
         if(!dropTile || dropTile.y < 2)
             return; //currently using the anchor on the bottom layer does nothing
         STile lower = SGrid.current.GetGrid()[dropTile.x, dropTile.y - 2];
         if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile
+        if (interactArgs.drop)
         {
-            MountainArtifact uiArtifact = (MountainArtifact) MountainArtifact.GetInstance();
-            UIArtifact.ClearQueues();
-            uiArtifact.AnchorSwap(dropTile, lower);
+            STile dropTile = interactArgs.stile;
+            if(dropTile!= null)
+            {
+                if(dropTile.y < 2)
+                return; //currently using the anchor on the bottom layer does nothing
+                STile lower = SGrid.current.GetGrid()[dropTile.x, dropTile.y - 2];
+                if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile
+                {
+                    MountainArtifact uiArtifact = (MountainArtifact) MountainArtifact.GetInstance();
+                    UIArtifact.ClearQueues();
+                    uiArtifact.AnchorSwap(dropTile, lower);
+                }
+            }
+            
         }
+        //PJ: define behavior for anchor pick up?
+        
     }
 
     protected override void Start()
