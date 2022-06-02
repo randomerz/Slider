@@ -74,9 +74,9 @@ public class UIRotateParams : MonoBehaviour
         //Debug.Log($"hovering over {gameObject.name}, is ccw: {(offsetPos.x > offsetPos.y)}");
         //Debug.Log($"hovering over {gameObject.name}, offsetPos: {offsetPos}");
         //Debug.Log($"hovering over {gameObject.name}, proportionalPos: {proportionalPos}");
-        Debug.Log($"Camera Dimensions: {Camera.main.pixelWidth}, {Camera.main.pixelHeight}");
+        //Debug.Log($"Camera Dimensions: {Camera.main.pixelWidth}, {Camera.main.pixelHeight}");
         //Debug.Log($"hovering over {gameObject.name}, normalizedPos: {normalizedPos}");
-        Debug.Log($"hovering over {gameObject.name}, mcpv: {Mouse.current.position.ReadValue()}");
+        //Debug.Log($"hovering over {gameObject.name}, mcpv: {Mouse.current.position.ReadValue()}");
         //Debug.Log($"Size Delta: {canvasRectTransform.sizeDelta}");
         //Debug.Log($"uiOffset: {uiOffset}");
         //Debug.Log($"Anchored Position: {myRectTransform.anchoredPosition}");
