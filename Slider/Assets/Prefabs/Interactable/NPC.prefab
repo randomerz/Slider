@@ -206,6 +206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: TutorialSign
+  speed: 3
   dconds:
   - onSuccess:
       m_PersistentCalls:
@@ -229,6 +230,7 @@ MonoBehaviour:
     onDialogueChainExhausted:
       m_PersistentCalls:
         m_Calls: []
+    walks: []
   dialogueDisplay: {fileID: 8260142248798685880}
 --- !u!114 &8260142248798685880
 MonoBehaviour:
@@ -267,7 +269,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3652435011426292518}
         m_TargetAssemblyTypeName: NPC, Assembly-CSharp
-        m_MethodName: TriggerDialogue
+        m_MethodName: DialogueTriggerEnter
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -282,7 +284,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3652435011426292518}
         m_TargetAssemblyTypeName: NPC, Assembly-CSharp
-        m_MethodName: FadeDialogue
+        m_MethodName: DialogueTriggerExit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

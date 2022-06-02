@@ -15,7 +15,7 @@ public class NPC : MonoBehaviour
         public Vector2Int fromPos;  
         public Vector2Int toPos;
 
-        public Vector2Int dir;  //Check from + dir = to in order to check the crossing is valid.
+        public Vector2Int[] dirs;  //Check from + dir = to in order to check the crossing is valid.
     }
 
     [System.Serializable]
@@ -138,17 +138,31 @@ public class NPC : MonoBehaviour
         return curr;
     }
 
-    public void TriggerDialogue()
+    public void DialogueTriggerEnter()
     {
         var dChain = dconds[currDconds].dialogueChain;
-        if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt && startedTyping)
+        if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt && dialogueActive)
         {
+            //Don't retype the don't interrupt dialogue if it's already been typed.
             return;
         }
         
         TypeNextDialogue();
     }
 
+    public void DialogueTriggerExit()
+    {
+        var dChain = dconds[currDconds].dialogueChain;
+        if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt)
+        {
+            //Dialogue keeps playing even if the player exits
+            return;
+        }
+
+        FadeDialogue();
+    }
+
+    //Player entering the trigger and also from moving to the next dialogue in the chain.
     public void TypeNextDialogue()
     {
         if (dialogueEnabled)
@@ -169,20 +183,56 @@ public class NPC : MonoBehaviour
         }
     }
 
-    private void ChangeDialogue(int newDialogue, bool triggerOnChange=false)
+    public void FadeDialogue()
+    {
+        dialogueDisplay.FadeAwayDialogue();
+
+        //Don't allow player to continue conversation.
+        if (waitNextDialogueCoroutine != null)
         {
+            waitingForPlayerContinue = false;
+            StopCoroutine(waitNextDialogueCoroutine);
+            waitNextDialogueCoroutine = null;
+        }
+
+        //Dialogue that doesn't repeat should be skipped now.
+        var dChain = dconds[currDconds].dialogueChain;
+        if (dChain.Count > 0)
+        {
+            if (dChain[currDialogueInChain].doNotRepeatAfterTriggered)
+            {
+                SetNextDialogueInChain();
+            }
+        }
+
+        dialogueActive = false;
+    }
+
+    private void ChangeDialogue(int newDialogue, bool triggerOnChange = false)
+    {
         currDconds = newDialogue;
         currDialogueInChain = 0;
         if (!dconds[newDialogue].dialogue.Equals("") || dconds[newDialogue].dialogueChain.Count > 0)
         {
-            //Basically, ensure the dialogue actually has dialogue in it.
+            //Show new message ping if the dialogue actually exists.
             dialogueDisplay.NewMessagePing();
+        } else
+        {
+            dialogueDisplay.ReadMessagePing();
         }
 
-        if (triggerOnChange)
+        if (dialogueActive)
+        {
+            //If there was dialogue playing before, get rid of it.
+            FadeDialogue();
+        }
+
+        
+        if (triggerOnChange)    //Use this if we immediately want to go into the next dialogue.
         {
             TypeNextDialogue();
         }
+        
         dconds[currDconds].onDialogueChanged?.Invoke();
     }
 
@@ -217,37 +267,6 @@ public class NPC : MonoBehaviour
             dconds[currDconds].OnDialogueChainEnd(currDialogueInChain);
             waitNextDialogueCoroutine = StartCoroutine(WaitForNextDialogue());
         }
-    }
-
-    public void FadeDialogue()
-    {
-        var dChain = dconds[currDconds].dialogueChain;
-        if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt)
-        {
-            //Dialogue keeps playing even if the player exits
-            return;
-        }
-
-        dialogueDisplay.FadeAwayDialogue();
-
-        //Don't allow player to continue conversation.
-        if (waitNextDialogueCoroutine != null)
-        {
-            waitingForPlayerContinue = false;
-            StopCoroutine(waitNextDialogueCoroutine);
-            waitNextDialogueCoroutine = null;
-        }
-
-        //Dialogue that doesn't repeat should be skipped now.
-        if (dChain.Count > 0)
-        {
-            if (dChain[currDialogueInChain].doNotRepeatAfterTriggered)
-            {
-                SetNextDialogueInChain();
-            }
-        }
-
-        dialogueActive = false;
     }
 
     public void ClearDialogue()
@@ -343,13 +362,33 @@ public class NPC : MonoBehaviour
 
     public void StartValidWalk()
     {
-        for(int i=0; i<dconds[currDconds].walks.Count; i++)
+        if (currWalk == null)
+        {
+            StartCoroutine(WaitThenCheckValidWalk());
+        }
+    }
+
+    private IEnumerator WaitThenCheckValidWalk()
+    {
+        if (SGrid.current.TilesMoving())
+        {
+            yield return new WaitUntil(() => !SGrid.current.TilesMoving());
+        }
+
+        bool validWalkFound = false;
+        for (int i = 0; i < dconds[currDconds].walks.Count; i++)
         {
             if (CurrentPathExistsAndValid(i))
             {
+                validWalkFound = true;
                 StartCurrentWalk(i);
                 break;
             }
+        }
+
+        if (!validWalkFound)
+        {
+            Debug.LogError($"Valid Walk Not Found For {gameObject.name}");
         }
     }
 
@@ -369,7 +408,7 @@ public class NPC : MonoBehaviour
 
         if (SGrid.current.TilesMoving())
         {
-            yield return new WaitUntil(() => !SGrid.current.TilesMoving());
+
         }
 
         //Lerp positions until we go through the whole path.
@@ -438,22 +477,34 @@ public class NPC : MonoBehaviour
 
     private bool PathExistsAndValid(List<Transform> path, List<STileCrossing> stileCrossings)
     {
-        if (path.Count > 0)
+        if (path.Count <= 0)
         {
-            foreach (STileCrossing cross in stileCrossings)
+            return false;
+        }
+
+        //If all the crossings are valid, the path is valid.
+        foreach (STileCrossing cross in stileCrossings)
+        {
+            bool crossGood = false;
+            Vector2Int from = cross.from ? new Vector2Int(cross.from.x, cross.from.y) : cross.fromPos;
+            Vector2Int to = cross.to ? new Vector2Int(cross.to.x, cross.to.y) : cross.toPos;
+
+            //If any of the directions are good, the crossing is good.
+            foreach (Vector2Int dir in cross.dirs)
             {
-                Vector2Int from = cross.from ? new Vector2Int(cross.from.x, cross.from.y) : cross.fromPos;
-                Vector2Int to = cross.to ? new Vector2Int(cross.to.x, cross.to.y) : cross.toPos;
-                if (cross.to.y - cross.from.y != cross.dir.y || cross.to.x - cross.from.x != cross.dir.x)
+                if ((to - from).Equals(dir))
                 {
-                    return false;
+                    crossGood = true;
                 }
             }
 
-            return true;
+            if (!crossGood)
+            {
+                return false;
+            }
         }
 
-        return false;
+        return true;
     }
 
     /*  Old Walking
