@@ -277,6 +277,20 @@ public class UIArtifact : MonoBehaviour
                 //L: Player tried to click a locked tile (or tile that otherwise had no move options)
                 return;
             }
+            //tile can only go one location so just auto move B)
+            else if(moveOptionButtons.Count == 1)
+            {
+                currentButton = button;
+                currentButton.SetSelected(true);
+                foreach(ArtifactTileButton b in moveOptionButtons)
+                {
+                    if(b != currentButton)
+                        button = b;
+                }
+                CheckAndSwap(currentButton, button);
+                DeselectCurrentButton();
+                Debug.Log("UIArtifact.cs: 289 ehh what happened");
+            }
             else
             {
                 //L: Player clicked a tile with movement options
@@ -318,7 +332,7 @@ public class UIArtifact : MonoBehaviour
         foreach (Vector2Int dir in dirs)
         {
             ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
-            int i = 1;
+            int i = 2;
             while (b != null && !b.isTileActive)
             {
                 moveOptionButtons.Add(b);

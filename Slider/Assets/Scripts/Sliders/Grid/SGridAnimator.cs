@@ -8,7 +8,7 @@ public class SGridAnimator : MonoBehaviour
 
     // set in inspector
     public AnimationCurve movementCurve;
-    public float movementDuration = 1;
+    protected float movementDuration = 1;
 
     public class OnTileMoveArgs : System.EventArgs
     {
@@ -18,6 +18,19 @@ public class SGridAnimator : MonoBehaviour
     }
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
+
+
+    public void ChangeMovementDuration(float value)
+    {
+        movementDuration =value;
+    }
+
+
+    public float GetMovementDuration()
+    {
+        return movementDuration;
+    }
+
 
     public virtual void Move(SMove move, STile[,] grid = null)
     {
