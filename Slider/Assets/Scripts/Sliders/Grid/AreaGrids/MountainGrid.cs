@@ -20,7 +20,7 @@ public class MountainGrid : SGrid
         represents the grid with 5, 1, 2, and 8 on the top layer.
     */
 
-    protected override void Awake() {
+    public override void Init() {
         myArea = Area.Mountain;
 
         foreach (Collectible c in collectibles)
@@ -28,7 +28,7 @@ public class MountainGrid : SGrid
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
         instance = this;
     }
     

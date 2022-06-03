@@ -72,6 +72,11 @@ public class CaveLight : MonoBehaviour
         SetLightOn(value, false);
     }
 
+    public void SetLightOnPowered(ElectricalNode.OnPoweredArgs e)
+    {
+        SetLightWithSound(e.powered);
+    }
+
     /* L: Gets the light mask for THIS LIGHT ONLY (see LightManager.cs for the whole world) */
     internal Texture2D GetLightMask(Texture2D heightMask, int worldToMaskDX, int worldToMaskDY, int maskSizeX, int maskSizeY)
     {
