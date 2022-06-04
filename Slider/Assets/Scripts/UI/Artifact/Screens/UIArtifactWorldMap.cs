@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UIArtifactWorldMap : MonoBehaviour
@@ -9,6 +10,7 @@ public class UIArtifactWorldMap : MonoBehaviour
     
     private static Dictionary<Area, ArtifactWorldMapArea> areaToMapArea = new Dictionary<Area, ArtifactWorldMapArea>();
     private static Dictionary<Area, ArtifactWorldMapArea.AreaStatus> areaToStatus; // TODO: serialize
+    public GameObject inventoryText;
 
     private bool didInit = false;
 
@@ -84,5 +86,11 @@ public class UIArtifactWorldMap : MonoBehaviour
         {
             a.UpdateSprite();
         }
+    }
+
+    public void UpdateText(string text)
+    {
+        inventoryText.GetComponentsInChildren<TextMeshProUGUI>()[0].text = text;
+        inventoryText.GetComponentsInChildren<TextMeshProUGUI>()[1].text = text;
     }
 }

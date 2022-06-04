@@ -19,6 +19,7 @@ public class ArtifactWorldMapArea : MonoBehaviour
     public Area myArea;
     public Image image;
     public Image playerPin;
+    public UIArtifactWorldMap worldmap;
 
     public Sprite emptySprite;
     public Sprite silhouetteSprite;
@@ -99,6 +100,15 @@ public class ArtifactWorldMapArea : MonoBehaviour
             playerPin.material = null;
 
             yield return new WaitForSeconds(0.25f);
+        }
+    }
+
+    public void UpdateAreaName()
+    {
+        Debug.Log("MapHovered " + myArea.ToString());
+        if (areaStatus >= AreaStatus.silhouette)
+        {
+            worldmap.UpdateText(myArea.ToString());
         }
     }
 }
