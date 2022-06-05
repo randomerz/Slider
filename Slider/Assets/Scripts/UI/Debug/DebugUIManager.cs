@@ -19,10 +19,13 @@ public class DebugUIManager : MonoBehaviour
 
     [Header("Objects")]
     public GameObject anchorPrefab;
+    public GameObject minecartPrefab;
 
     private void Awake()
     {
         controls = new InputSettings();
+
+        controls.UI.Pause.performed += context => CloseDebug();
         controls.Debug.OpenDebug.performed += context => OnPressDebug();
         controls.Debug.CycleCommand.performed += context => CycleCommand(context.ReadValue<float>());
     }
@@ -43,10 +46,31 @@ public class DebugUIManager : MonoBehaviour
 
         if (isDebugOpen)
         {
+            UIManager.PauseGameGlobal();
+            UIManager.canOpenMenus = false;
+
             consoleText.Select();
             consoleText.ActivateInputField();
             consoleText.text = "";
             commandIndex = commandHistory.Count + 1;
+        }
+        else
+        {
+            UIManager.CloseUI();
+            UIManager.canOpenMenus = true;
+        }
+    }
+
+    private void CloseDebug()
+    {
+        if (isDebugOpen)
+        {
+            isDebugOpen = false;
+            Player.SetCanMove(true);
+            debugPanel.SetActive(false);
+            
+            UIManager.CloseUI();
+            UIManager.canOpenMenus = true;
         }
     }
 
@@ -147,10 +171,38 @@ public class DebugUIManager : MonoBehaviour
 
     public void GiveAllSliders()
     {
-        for (int i = 1; i <= 9; i++)
+        //Also make sure the sliders are in the right positions!
+        string target = SGrid.current.TargetGrid;
+        int[,] grid = new int[3, 3];
+        
+
+        // dc: if there's a * in the TargetGrid, then we just set them all on and are done w it lol
+        if (target.Contains("*"))
         {
-            SGrid.current.EnableStile(i);
+            for (int j = 1; j <= 9; j++)
+            {
+                SGrid.current.EnableStile(j);
+            }
+            return;
         }
+
+        int i = 0;
+        while(target.Length > 0)
+        {
+            char c = target[0];
+            target = target.Substring(1);
+            int islandId = (int) c  - '0';
+            if (islandId >= 1 && islandId <= 9)
+            {
+                int x = i % 3;
+                int y = 2 - i / 3;
+                grid[x, y] = islandId;
+                SGrid.current.EnableStile(islandId);
+                i++;
+            }
+        }
+
+        SGrid.current.SetGrid(grid);
     }
 
     public void SpawnAnchor()
@@ -158,27 +210,49 @@ public class DebugUIManager : MonoBehaviour
         Instantiate(anchorPrefab, Player.GetPosition(), Quaternion.identity);
     }
 
+    public void SpawnMinecart()
+    {
+        Instantiate(minecartPrefab, Player.GetPosition(), Quaternion.identity);
+    }
+
     public void GPTC(string collectibleName)
     {
         SGrid.current.GivePlayerTheCollectible(collectibleName);
     }
 
-    // make sure pattern is length n^2
+    public void Give(string collectibleName)
+    {
+        SGrid.current.GivePlayerTheCollectible(collectibleName);
+    }
+
+    public void ES(string num)
+    {
+        int n = int.Parse(num);
+        for (int i = 1; i <= n; i++)
+        {
+            SGrid.current.GetCollectible("Slider " + i)?.DoPickUp();
+        }
+    }
+
+    //C: make sure pattern is the same length as the current sgrid
     public void SetGrid(string pattern)
     {
-        int n = (int)Mathf.Sqrt(pattern.Length);
-        if (pattern.Length != n * n)
+        SGrid grid = SGrid.current;
+        int width = grid.width;
+        int height = grid.height;
+
+        if (pattern.Length != width * height)
         {
-            Debug.LogWarning("Input pattern was not of size n^2!");
+            Debug.LogWarning("Input pattern was not the size of this SGrid!");
             return;
         }
 
-        int[,] puzzle = new int[n, n];
+        int[,] puzzle = new int[width, height];
 
         for (int i = 0; i < pattern.Length; i++)
         {
-            int x = i % n;
-            int y = n - (i / n) - 1;
+            int x = i % width;
+            int y = i / height;
             puzzle[x, y] = int.Parse(pattern[i].ToString());
         }
 

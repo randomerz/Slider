@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour
 {
-    public class InventoryEvent {
+    public class InventoryEvent : System.EventArgs {
         public Collectible collectible;
     }
     
@@ -18,11 +18,24 @@ public class PlayerInventory : MonoBehaviour
     private static IEnumerator<Item> itemIterator = equipables.GetEnumerator();
     private static Item currentItem = null;
 
-    private static bool hasCollectedAnchor = false; //todo: serialize
+    private static bool hasCollectedAnchor = false;
     [SerializeField] private GameObject anchorPrefab;
-    
-    private void Awake() {
-        if (instance == null) {
+
+    public static PlayerInventory Instance
+    {
+        get => instance;
+    }
+
+    private void Awake()
+    {
+        Init();
+    }
+
+    // Called by Player.Init() too
+    public void Init()
+    {
+        if (instance == null)
+        {
             instance = this;
         }
 
@@ -39,12 +52,22 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    public static void SetHasCollectedAnchor(bool value)
+    public void SetCollectiblesList(List<Collectible.CollectibleData> value)
+    {
+        collectibles = value;
+    }
+
+    public List<Collectible.CollectibleData> GetCollectiblesList()
+    {
+        return collectibles;
+    }
+
+    public void SetHasCollectedAnchor(bool value)
     {
         hasCollectedAnchor = value;
     }
 
-    public static bool GetHasCollectedAnchor()
+    public bool GetHasCollectedAnchor()
     {
         return hasCollectedAnchor;
     }

@@ -11,6 +11,7 @@ public class UIArtifactMenus : MonoBehaviour
     public UIArtifact uiArtifact;
     public ArtifactScreenAnimator screenAnimator;
     public Animator artifactAnimator;
+    public UIArtifactWorldMap artifactWorldMap;
 
     private bool isArtifactOpen;
     private InputSettings controls;
@@ -18,6 +19,8 @@ public class UIArtifactMenus : MonoBehaviour
     private void Awake() 
     {
         _instance = this;
+
+        artifactWorldMap.Init();
 
         // check if this is pointing to the correct UIArtifact or prefab (this happens when we have scripts/prefabs extend UIArtifact)
         if (uiArtifact.gameObject.scene.name == null)
@@ -31,16 +34,27 @@ public class UIArtifactMenus : MonoBehaviour
 
     private void OnEnable() 
     {
-        controls.Enable();    
+        controls.Enable();
+
+        PlayerInventory.OnPlayerGetCollectible += CloseArtifactListener;
+        UIManager.OnCloseAllMenus += CloseArtifactListener;
     }
 
     private void OnDisable() 
     {
         controls.Disable();    
+
+        PlayerInventory.OnPlayerGetCollectible -= CloseArtifactListener;
+        UIManager.OnCloseAllMenus -= CloseArtifactListener;
     }
 
     public static void LoadBindings()
     {
+        if (_instance == null)
+        {
+            return;
+        }
+
         var rebinds = PlayerPrefs.GetString("rebinds");
         if (!string.IsNullOrEmpty(rebinds))
         {
@@ -49,8 +63,10 @@ public class UIArtifactMenus : MonoBehaviour
         
         _instance.controls.UI.Pause.performed += context => _instance.CloseArtifact();
         _instance.controls.UI.OpenArtifact.performed += context => _instance.OnPressArtifact();
-        _instance.controls.UI.ArtifactRight.performed += context => _instance.screenAnimator.NextScreen();
-        _instance.controls.UI.ArtifactLeft.performed += context => _instance.screenAnimator.PrevScreen();
+        
+        // Disabled for now, we should add key rebinding for this and maybe make it like Next Panel Left and Next Panel Right
+        //_instance.controls.UI.ArtifactRight.performed += context => _instance.screenAnimator.NextScreen();
+        //_instance.controls.UI.ArtifactLeft.performed += context => _instance.screenAnimator.PrevScreen();
     }
 
 
@@ -102,12 +118,15 @@ public class UIArtifactMenus : MonoBehaviour
 
             UIManager.CloseUI();
             UIManager.canOpenMenus = true;
-
-            Player.SetCanMove(true);
             
             artifactAnimator.SetBool("isVisible", false);
             StartCoroutine(CloseArtPanel());
         }
+    }
+
+    private void CloseArtifactListener(object sender, System.EventArgs e)
+    {
+        CloseArtifact();
     }
 
     private IEnumerator CloseArtPanel()

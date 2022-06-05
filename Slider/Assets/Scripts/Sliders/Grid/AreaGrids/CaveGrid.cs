@@ -20,9 +20,9 @@ public class CaveGrid : SGrid
 
     static System.EventHandler<SGridAnimator.OnTileMoveArgs> checkCompletionsOnMoveFunc;
 
+    //events
 
-
-    private new void Awake() {
+    public override void Init() {
         myArea = Area.Caves;
 
         foreach (Collectible c in collectibles)
@@ -30,7 +30,7 @@ public class CaveGrid : SGrid
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
 
         instance = this;
 
@@ -43,15 +43,9 @@ public class CaveGrid : SGrid
     }
 
 
-    void Start()
+    protected override void Start()
     {
-        foreach (Collectible c in collectibles)
-        {
-            if (PlayerInventory.Contains(c))
-            {
-                c.gameObject.SetActive(false);
-            }
-        }
+        base.Start();
 
         GetCollectible("Slider 5").gameObject.SetActive(false); // gameboy puzzle
         GetCollectible("Slider 6").gameObject.SetActive(false); // flashlight puzzle
@@ -127,30 +121,45 @@ public class CaveGrid : SGrid
         c.SetSpec(checkLightingCompletion && allTilesLit);
     }
 
+    public void CavesShake1()
+    {
+        CameraShake.Shake(0.25f, 0.25f);
+        AudioManager.Play("Slide Rumble");
+    }
+    public void CavesShake2()
+    {
+        CameraShake.Shake(0.75f, 0.5f);
+        AudioManager.Play("Slide Rumble");
+    }
+
+    public void CavesShake3()
+    {
+        CameraShake.Shake(1.5f, 2.5f);
+        AudioManager.Play("Slide Explosion");
+        UIEffects.FlashWhite();
+    }
+
     // Puzzle 8 - light  up caves
     public void FinishCaves()
     {
         GivePlayerTheCollectible("Slider 9");
-
-        // fading stuff
-        UIEffects.FlashWhite();
-        CameraShake.Shake(1.5f, 1.0f);
-
 
         int[,] completedPuzzle = new int[3, 3] { { 2, 1, 5 },
                                                  { 6, 3, 4 },
                                                  { 8, 7, 9 } };
         SetGrid(completedPuzzle);
         StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+
+        UIArtifactWorldMap.SetAreaStatus(Area.Caves, ArtifactWorldMapArea.AreaStatus.color);
     }
 
-    public override void SaveGrid() 
+    public override void Save() 
     {
-        base.SaveGrid();
+        base.Save();
     }
 
-    public override void LoadGrid()
+    public override void Load(SaveProfile profile)
     {
-        base.LoadGrid();
+        base.Load(profile);
     }
 }

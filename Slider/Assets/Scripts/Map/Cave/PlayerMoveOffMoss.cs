@@ -13,13 +13,23 @@ public class PlayerMoveOffMoss : MonoBehaviour
 
     //private bool movingPlayer;
 
-    private void Start()
+    private void Awake()
     {
         if (player == null)
         {
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         }
         mossMap = GetComponent<Tilemap>();
+    }
+
+    private void OnEnable()
+    {
+        CaveMossManager.MossIsGrowing += CheckPlayerOnMoss;
+    }
+
+    private void OnDisable()
+    {
+        CaveMossManager.MossIsGrowing -= CheckPlayerOnMoss;
     }
 
     /*
@@ -51,16 +61,20 @@ public class PlayerMoveOffMoss : MonoBehaviour
         movingPlayer = false;
     }
     */
-    
-    internal void CheckPlayerOnMoss(Vector3Int pos)
+
+    internal void CheckPlayerOnMoss(object sender, CaveMossManager.MossIsGrowingArgs e)
     {
-        //L: Determine if the player is on the moss while it is growing
-        Vector2Int mossTile = TileUtil.WorldToTileCoords(mossMap.CellToWorld(pos));
-        bool movePlayerOffMoss = mossTile.Equals(TileUtil.WorldToTileCoords(player.transform.position));
-        if (movePlayerOffMoss)
+        //Each mossMap is tied to a specific respawn point.
+        if (e.mossMap == mossMap)   //This check (hopefully) avoids bugs with teleporting to the wrong places (tile 4 bug)
         {
-            player.transform.position = playerRespawn.position;
-            AudioManager.Play("Hurt");
+            //L: Determine if the player is on the moss while it is growing
+            Vector2Int mossTile = TileUtil.WorldToTileCoords(e.mossMap.CellToWorld(e.cellPos));
+            bool movePlayerOffMoss = mossTile.Equals(TileUtil.WorldToTileCoords(player.transform.position)) && e.isGrowing;
+            if (movePlayerOffMoss)
+            {
+                player.transform.position = playerRespawn.position;
+                AudioManager.Play("Hurt");
+            }
         }
     }
     

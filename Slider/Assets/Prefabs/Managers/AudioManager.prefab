@@ -114,6 +114,13 @@ MonoBehaviour:
     loop: 0
     doRandomPitch: 1
     source: {fileID: 0}
+  - name: Glass Clink
+    clip: {fileID: 8300000, guid: fa5d024a49be548988f2317729a17510, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
   music:
   - name: Village
     fmodEvent:
@@ -190,11 +197,11 @@ MonoBehaviour:
   - name: Factory
     fmodEvent:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -502515923
+        Data2: 1307452366
+        Data3: 697227945
+        Data4: -176429047
+      Path: event:/Music/Factory BGM
     emitter: {fileID: 0}
   - name: Military
     fmodEvent:

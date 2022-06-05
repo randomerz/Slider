@@ -8,9 +8,7 @@ public class JungleGrid : SGrid
 
     public ChadRace chadRace;
 
-    private static bool checkCompletion = false;
-
-    private new void Awake() {
+    public override void Init() {
         myArea = Area.Jungle;
 
         foreach (Collectible c in collectibles) 
@@ -18,21 +16,16 @@ public class JungleGrid : SGrid
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
 
         instance = this;
     }
     
 
-    void Start()
+    protected override void Start()
     {
-        foreach (Collectible c in collectibles) 
-        {
-            if (PlayerInventory.Contains(c)) 
-            {
-                c.gameObject.SetActive(false);
-            }
-        }
+        base.Start();
+
         AudioManager.PlayMusic("Jungle");
         UIEffects.FadeFromBlack();
     }
@@ -45,14 +38,14 @@ public class JungleGrid : SGrid
         SGrid.OnGridMove -= CheckChad;
     }
 
-    public override void SaveGrid() 
+    public override void Save() 
     {
-        base.SaveGrid();
+        base.Save();
     }
 
-    public override void LoadGrid()
+    public override void Load(SaveProfile profile)
     {
-        base.LoadGrid();
+        base.Load(profile);
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker=true)

@@ -197,33 +197,17 @@ public class DesertArtifact : UIArtifact
             {
                 return false;
             }
-            //Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
-            //Debug.Log(buttonCurrent + " " + buttonEmpty);
             QueueCheckAndAdd(swap);
-            //Debug.Log("Added move to queue: current length " + moveQueue.Count);
             QueueCheckAfterMove(this, null);
             DeselectCurrentButton();
             return true;
         }
         else
         {
-            Debug.Log("Couldn't perform move! (queue full?)");
+            string debug = PlayerCanQueue ? "Player Queueing is disabled" : "Queue was full";
+            Debug.Log($"Couldn't perform move! {debug}");
             return false;
         }
-    }
-
-    public void SlideQueueCheckAndAdd(SSlideSwap move)
-    {
-        Debug.Log("Desert Hah scrub");
-        if (moveQueue.Count < maxMoveQueueSize)
-        {
-            moveQueue.Enqueue(move);
-        }
-        else
-        {
-            Debug.LogWarning("Didn't add to the UIArtifact queue because it was full");
-        }
-
     }
 
     private List<Movement> GetSlideMoves(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)

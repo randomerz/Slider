@@ -20,6 +20,15 @@ TextureImporter:
   - first:
       213: 7914938972093050573
     second: ui_object_trackers_exclamation
+  - first:
+      213: 259427318395890041
+    second: ui_object_trackers_pin2
+  - first:
+      213: 5333845850840386237
+    second: ui_object_trackers_circle3
+  - first:
+      213: -1334703156212787541
+    second: ui_object_trackers_minecart
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -145,7 +154,7 @@ TextureImporter:
       name: ui_object_trackers_anchor
       rect:
         serializedVersion: 2
-        x: 9
+        x: 16
         y: 9
         width: 7
         height: 7
@@ -229,12 +238,12 @@ TextureImporter:
       name: ui_object_trackers_exclamation
       rect:
         serializedVersion: 2
-        x: 17
+        x: 24
         y: 9
         width: 3
         height: 7
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -242,6 +251,69 @@ TextureImporter:
       bones: []
       spriteID: dce608a5f0387dd60800000000000000
       internalID: 7914938972093050573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_object_trackers_pin2
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 7
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 979e40685cba99300800000000000000
+      internalID: 259427318395890041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_object_trackers_circle3
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dba480a9a80a50a40800000000000000
+      internalID: 5333845850840386237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_object_trackers_minecart
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 0
+        width: 7
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba6185d0d8e2a7de0800000000000000
+      internalID: -1334703156212787541
       vertices: []
       indices: 
       edges: []

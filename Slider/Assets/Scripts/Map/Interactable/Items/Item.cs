@@ -16,16 +16,11 @@ public class Item : MonoBehaviour
     [SerializeField] private AnimationCurve xPickUpMotion;
     [SerializeField] private AnimationCurve yPickUpMotion;
 
+    [SerializeField] protected GameObject[] enableOnDrop;
+
     // events
     public UnityEvent OnPickUp;
     public UnityEvent OnDrop;
-
-
-
-    public void Awake() 
-    {
-       
-    }
 
     public virtual void PickUpItem(Transform pickLocation, System.Action callback=null) // pickLocation may be moving
     {
@@ -67,11 +62,20 @@ public class Item : MonoBehaviour
     public virtual void OnEquip()
     {
         // Player.SetMoveSpeedMultiplier(1f);
+        foreach (GameObject go in enableOnDrop)
+        {
+            go.SetActive(false);
+        }
     }
 
 
     protected IEnumerator AnimatePickUp(Transform target, System.Action callback=null)
     {
+        foreach (GameObject go in enableOnDrop)
+        {
+            go.SetActive(false);
+        }
+
         float t = 0;
 
         Vector3 start = new Vector3(transform.position.x, transform.position.y);
@@ -100,16 +104,23 @@ public class Item : MonoBehaviour
     {
         float t = pickUpDuration;
 
-        Vector3 start = new Vector3(transform.position.x, transform.position.y);
-        transform.position = target;
-        myCollider.enabled = true;
+        //Create 2 dummy transforms for the animation.
+        GameObject start = new GameObject();
+        start.transform.position = transform.position;
+        GameObject end = new GameObject();
+        end.transform.position = target;
 
+        STile hitStile = SGrid.current.GetStileUnderneath(end);
+        start.transform.parent = hitStile.transform;
+        end.transform.parent = hitStile.transform;
+
+        //transform.position = target;
         while (t >= 0)
         {
             float x = xPickUpMotion.Evaluate(t / pickUpDuration);
             float y = yPickUpMotion.Evaluate(t / pickUpDuration);
-            Vector3 pos = new Vector3(Mathf.Lerp(target.x, start.x, x),
-                                      Mathf.Lerp(target.y, start.y, y));
+            Vector3 pos = new Vector3(Mathf.Lerp(end.transform.position.x, start.transform.position.x, x),
+                                      Mathf.Lerp(end.transform.position.y, start.transform.position.y, y));
             
             spriteRenderer.transform.position = pos;
 
@@ -117,14 +128,18 @@ public class Item : MonoBehaviour
             t -= Time.deltaTime;
         }
 
-        transform.position = target;
-        spriteRenderer.transform.position = target;
+        myCollider.enabled = true;
+        transform.position = end.transform.position;
+        spriteRenderer.transform.position = end.transform.position;
         callback();
 
     }
     
     public virtual void dropCallback()
     {
-
+        foreach (GameObject go in enableOnDrop)
+        {
+            go.SetActive(true);
+        }
     }
 }

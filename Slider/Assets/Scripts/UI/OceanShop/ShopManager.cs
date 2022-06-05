@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class ShopManager : MonoBehaviour
 {
     private static ShopManager _instance;
-
     private int totalCreditCount;
     private int credits; // TODO: serialize
     private bool turnedInAnchor;
@@ -16,10 +15,16 @@ public class ShopManager : MonoBehaviour
     private bool turnedInGoldenFish;
     private bool turnedInRock;
     private bool startedFinalQuest;
-    private bool[] wasSliderCollectibleBought = new bool[6]; // from 4 to 9
+    private bool[] wasSliderOrDrinkCollectibleBought = new bool[9]; // from 4 to 9 and then three drinks
 
-    public State uiState { get; private set; }
-    public TalkState talkState { get; private set; }
+
+    private Collectible collectibleToActivateOnClose; // for slider 3 cutscene when you quit shop
+
+    public States UIState { get => _uiState;  private set { _uiState = value; UpdateNavManagerCurrentMenu(); } }
+    private States _uiState;
+
+    public TalkStates TalkState { get => _talkState; private set { _talkState = value; UpdateNavManagerCurrentMenu(); } }
+    private TalkStates _talkState;
 
     //  === References ===
     public ShopDialogueManager shopDialogueManager;
@@ -29,6 +34,11 @@ public class ShopManager : MonoBehaviour
     public GameObject uiShopPanel;
     // these are sub sections (the bottom ones)
     public GameObject mainPanel;
+
+    public GameObject bottle1;
+    public GameObject bottle2;
+    public GameObject bottle3;
+
     public GameObject buyPanel;
     public GameObject talkPanel;
     public GameObject dialoguePanel;
@@ -38,7 +48,7 @@ public class ShopManager : MonoBehaviour
 
     private InputSettings controls;
 
-    public enum State 
+    public enum States
     {
         None,
         Main,
@@ -47,7 +57,7 @@ public class ShopManager : MonoBehaviour
         Dialogue,
     }
 
-    public enum TalkState
+    public enum TalkStates
     {
         Default,
         CoinToBeHad,
@@ -55,28 +65,30 @@ public class ShopManager : MonoBehaviour
         TheWorld
     }
 
-    private void Awake() 
+    private void Awake()
     {
         _instance = this;
         _instance.controls = new InputSettings();
         LoadBindings();
     }
 
-    private void OnEnable() 
+    private void OnEnable()
     {
         controls.Enable();
     }
 
-    private void OnDisable() 
+    private void OnDisable()
     {
-        controls.Disable();    
+        controls.Disable();
     }
 
     public static void LoadBindings()
     {
         if (_instance == null)
+        {
             return;
-            
+        }
+
         var rebinds = PlayerPrefs.GetString("rebinds");
         if (!string.IsNullOrEmpty(rebinds))
         {
@@ -88,20 +100,31 @@ public class ShopManager : MonoBehaviour
         _instance.controls.UI.OpenArtifact.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
         _instance.controls.UI.Click.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
         _instance.controls.Player.Action.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
+
+        // Pressing a navigation key selects a button is one is not already selected
+        _instance.controls.UI.Navigate.performed += context =>
+        {
+            if (!UINavigationManager.ButtonInCurrentMenuIsSelected())
+            {
+                UINavigationManager.SelectBestButtonInCurrentMenu();
+            }
+        };
     }
 
     public void CheckTavernKeep()
     {
         // first talk
         // SGrid.current.ActivateSliderCollectible(3);
-        Collectible c = SGrid.current.GetCollectible("Slider 3");
-        c.DoOnCollect();
+        if (!PlayerInventory.Contains("Slider 3", Area.Ocean))
+        {
+            collectibleToActivateOnClose = SGrid.current.GetCollectible("Slider 3");
+        }
 
         // rest of rewards
-        if (PlayerInventory.GetHasCollectedAnchor() && !turnedInAnchor)
+        if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
         {
             turnedInAnchor = true;
-            EarnCredits(2);
+            EarnCredits(2); //change back to 2
             shopDialogueManager.UpdateDialogue("Turn in Anchor");
         }
 
@@ -136,7 +159,7 @@ public class ShopManager : MonoBehaviour
             EarnCredits(1);
             shopDialogueManager.UpdateDialogue("Turn in Rock");
         }
-        
+
         if (totalCreditCount - origCreditCount >= 1)
         {
             AudioManager.Play("Puzzle Complete");
@@ -162,7 +185,7 @@ public class ShopManager : MonoBehaviour
           //  ActivateSliderCollectible(i);
         //}
 
-        
+
 
         // check final quest on completing all others
         // if (totalCreditCount == 7 + 1 && !startedFinalQuest) // todo: remove +1 later
@@ -191,8 +214,33 @@ public class ShopManager : MonoBehaviour
         credits -= value;
     }
 
-    public void TryBuySlider(int sliderNumber)
+    public void TryBuySliderOrDrink(int sliderNumber)
     {
+        if (sliderNumber == 4 && !wasSliderOrDrinkCollectibleBought[0])
+        {
+          Collectible c = SGrid.current.GetCollectible("Slider " + 4);
+          c.DoOnCollect();
+          wasSliderOrDrinkCollectibleBought[0] = true;
+          AudioManager.Play("Puzzle Complete");
+          UpdateBuyButtons();
+        }
+        else if (sliderNumber <= 9 && !wasSliderOrDrinkCollectibleBought[sliderNumber - 4] && credits > 0)
+        {
+          SpendCredits(1);
+          Collectible c = SGrid.current.GetCollectible("Slider " + sliderNumber);
+          c.DoOnCollect();
+          wasSliderOrDrinkCollectibleBought[sliderNumber - 4] = true;
+          AudioManager.Play("Puzzle Complete");
+          UpdateBuyButtons();
+        }
+        else if (sliderNumber > 9 && credits > 0)
+        {
+          SpendCredits(1);
+          wasSliderOrDrinkCollectibleBought[sliderNumber - 4] = true;
+          AudioManager.Play("Glass Clink");
+          UpdateBuyButtons();
+        }
+        /*
         if ((credits > 0 || sliderNumber == 4) && !wasSliderCollectibleBought[sliderNumber - 4])
         {
             if (sliderNumber != 4) SpendCredits(1);
@@ -202,22 +250,63 @@ public class ShopManager : MonoBehaviour
             wasSliderCollectibleBought[sliderNumber - 4] = true;
             AudioManager.Play("Puzzle Complete");
 
-            UpdateBuyButtons();
+            int numTurnedOn = UpdateBuyButtons();
+            if (numTurnedOn == 0)
+            {
+              ActivateUnboughtDrinkButtons();
+            }
         }
+        */
         else
         {
             AudioManager.Play("Artifact Error");
         }
     }
 
+    /*
+    public void ActivateUnboughtDrinkButtons()
+    {
+      buyDrinksButtons[0].SetActive(true);
+      buyDrinksButtons[1].SetActive(true);
+      buyDrinksButtons[2].SetActive(true);
+    }
+    */
+
     #region UI
+
+    private void UpdateNavManagerCurrentMenu()
+    {
+        switch (_uiState)
+        {
+            case States.None:
+                break;
+            case States.Main:
+                UINavigationManager.CurrentMenu = mainPanel;
+                break;
+            case States.Buy:
+                UINavigationManager.CurrentMenu = buyPanel;
+                break;
+            case States.Talk:
+                if (_talkState == 0)
+                {
+                    UINavigationManager.CurrentMenu = talkPanel;
+                }
+                else
+                {
+                    UINavigationManager.CurrentMenu = talkSubPanels[(int)_talkState];
+                }
+                break;
+            case States.Dialogue:
+                break;
+        }
+    }
 
     // Called when you walk up to the tavernkeeper and press 'E'
     public void OpenShop()
     {
         UIManager.PauseGameGlobal();
         UIManager.canOpenMenus = false;
-        
+
         // scuffed parts
         Player.SetCanMove(false);
         Time.timeScale = 1;
@@ -226,7 +315,7 @@ public class ShopManager : MonoBehaviour
         uiShopPanel.SetActive(true);
         OpenMainPanel();
 
-        
+
         CheckTavernKeep();
     }
 
@@ -240,29 +329,36 @@ public class ShopManager : MonoBehaviour
         UIManager.CloseUI();
 
         Player.SetCanMove(true);
+
+        // For the 3rd collectible
+        if (collectibleToActivateOnClose != null)
+        {
+            collectibleToActivateOnClose.DoPickUp();
+            collectibleToActivateOnClose = null;
+        }
     }
 
     // Called whenever you press 'Esc'
     public void ExitCurrentPanel()
     {
-        switch (uiState)
+        switch (UIState)
         {
-            case State.None:
+            case States.None:
                 break;
-            case State.Main:
+            case States.Main:
                 CloseShop();
                 break;
-            case State.Buy:
+            case States.Buy:
                 OpenMainPanel();
                 break;
-            case State.Talk:
-                if (talkState == TalkState.Default)
+            case States.Talk:
+                if (TalkState == TalkStates.Default)
                     OpenMainPanel();
                 else
                     SetTalkState(0);
                 break;
-            case State.Dialogue:
-                if (shopDialogueManager.isFirstTime || !PlayerInventory.GetHasCollectedAnchor())
+            case States.Dialogue:
+                if (shopDialogueManager.isFirstTime || !PlayerInventory.Instance.GetHasCollectedAnchor())
                 {
                     CloseShop();
                     break;
@@ -275,7 +371,7 @@ public class ShopManager : MonoBehaviour
 
     public void CloseAllPanels()
     {
-        uiState = State.None;
+        UIState = States.None;
         mainPanel.SetActive(false);
         buyPanel.SetActive(false);
         talkPanel.SetActive(false);
@@ -289,15 +385,16 @@ public class ShopManager : MonoBehaviour
     public void OpenMainPanel()
     {
         CloseAllPanels();
-        uiState = State.Main;
+        UIState = States.Main;
         mainPanel.SetActive(true);
+        //bottlesShowing.SetActive(true);
         shopDialogueManager.UpdateDialogue();
     }
 
     public void OpenBuyPanel()
     {
         CloseAllPanels();
-        uiState = State.Buy;
+        UIState = States.Buy;
         buyPanel.SetActive(true);
         UpdateBuyButtons();
         shopDialogueManager.UpdateDialogue();
@@ -309,7 +406,7 @@ public class ShopManager : MonoBehaviour
 
         for (int i = 0; i < buyItemButtons.Length; i++)
         {
-            if (!wasSliderCollectibleBought[i] && numTurnedOn < 4)
+            if (!wasSliderOrDrinkCollectibleBought[i] && numTurnedOn < 4 && i < 6) //only display if not bought and less than 4 currently being displayed
             {
                 buyItemButtons[i].SetActive(true);
                 numTurnedOn += 1;
@@ -319,12 +416,39 @@ public class ShopManager : MonoBehaviour
                 buyItemButtons[i].SetActive(false);
             }
         }
+        if (numTurnedOn == 0)
+        {
+          int drinksBought = 0;
+          for (int i = 6; i < buyItemButtons.Length; i++)
+          {
+            if (!wasSliderOrDrinkCollectibleBought[i])
+            {
+              buyItemButtons[i].SetActive(true);
+            }
+            else
+            {
+              drinksBought++;
+            }
+          }
+          if (drinksBought == 1)
+          {
+            bottle1.SetActive(false);
+          }
+          else if (drinksBought == 2)
+          {
+            bottle2.SetActive(false);
+          }
+          else if (drinksBought == 3)
+          {
+            bottle3.SetActive(false);
+          }
+        }
     }
 
     public void OpenTalkPanel()
     {
         CloseAllPanels();
-        uiState = State.Talk;
+        UIState = States.Talk;
         talkPanel.SetActive(true);
         shopDialogueManager.UpdateDialogue();
     }
@@ -332,7 +456,7 @@ public class ShopManager : MonoBehaviour
     // for inspector
     public void SetTalkState(int state)
     {
-        talkState = (TalkState)state;
+        TalkState = (TalkStates)state;
         for (int i = 0; i < talkSubPanels.Length; i++)
         {
             talkSubPanels[i].SetActive(i == state);
@@ -342,7 +466,7 @@ public class ShopManager : MonoBehaviour
     public void OpenDialoguePanel()
     {
         CloseAllPanels();
-        uiState = State.Dialogue;
+        UIState = States.Dialogue;
         dialoguePanel.SetActive(true);
         shopDialogueManager.UpdateDialogue();
     }

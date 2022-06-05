@@ -8,6 +8,9 @@ TextureImporter:
   - first:
       213: 5511940154264969741
     second: bobs_small_1
+  - first:
+      213: -995525616022390036
+    second: bobs_small_2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -105,7 +108,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -126,7 +129,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -134,6 +137,27 @@ TextureImporter:
       bones: []
       spriteID: d02ec26ed585e7c40800000000000000
       internalID: 5511940154264969741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bobs_small_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ceafe2c0abe2f22f0800000000000000
+      internalID: -995525616022390036
       vertices: []
       indices: 
       edges: []

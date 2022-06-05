@@ -13,29 +13,40 @@ public class VillageGrid : SGrid
     private bool fishOn;
 
     private Coroutine shuffleBuildUpCoroutine;
-    private static bool checkCompletion = false;
+    private bool checkCompletion = false; // TODO: serialize
 
-    private new void Awake() {
+    public override void Init() {
         myArea = Area.Village;
 
-        foreach (Collectible c in collectibles) 
+        foreach (Collectible c in collectibles)
         {
             c.SetArea(myArea);
         }
 
-        base.Awake();
+        base.Init();
 
-        fishOn = WorldData.GetState("fishOn");
         if (fishOn)
         {
             particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
         }
         instance = this;
     }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        AudioManager.PlayMusic("Village");
+        UIEffects.FadeFromBlack();
+        
+        if (checkCompletion) {
+            UpdateButtonCompletions(this, null);
+        }
+    }
     
     private void OnEnable() {
         if (checkCompletion) {
-            UpdateButtonCompletions(this, null);
+            Debug.Log("OnEnable checkCompletion");
             SGrid.OnGridMove += SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
@@ -50,31 +61,20 @@ public class VillageGrid : SGrid
         }
     }
 
-    void Start()
+    public override void Save() 
     {
-        foreach (Collectible c in collectibles) 
-        {
-            if (PlayerInventory.Contains(c)) 
-            {
-                c.gameObject.SetActive(false);
-            }
-        }
+        base.Save();
 
-        AudioManager.PlayMusic("Village");
-        UIEffects.FadeFromBlack();
+        SaveSystem.Current.SetBool("villageCompletion", checkCompletion);
+        SaveSystem.Current.SetBool("villageFishOn", fishOn);
     }
 
-    public override void SaveGrid() 
+    public override void Load(SaveProfile profile)
     {
-        base.SaveGrid();
-
-        // GameManager.saveSystem.SaveSGridData(Area.Village, this);
-        // GameManager.saveSystem.SaveMissions(new Dictionary<string, bool>());
-    }
-
-    public override void LoadGrid()
-    {
-        base.LoadGrid();
+        base.Load(profile);
+        
+        checkCompletion = profile.GetBool("villageCompletion");
+        fishOn = profile.GetBool("villageFishOn");
     }
 
 
@@ -88,7 +88,6 @@ public class VillageGrid : SGrid
     {
         if (!fishOn)
         {
-            WorldData.SetState("fishOn", true);
             fishOn = true;
             particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
         }
@@ -104,9 +103,9 @@ public class VillageGrid : SGrid
 
     private IEnumerator ShuffleBuildUp()
     {
-        AudioManager.Play("Puzzle Complete");
+        //AudioManager.Play("Puzzle Complete");
 
-        yield return new WaitForSeconds(0.5f);
+        //yield return new WaitForSeconds(0.5f);
 
         CameraShake.Shake(0.25f, 0.25f);
         AudioManager.Play("Slide Rumble");
@@ -145,7 +144,6 @@ public class VillageGrid : SGrid
     {
         if (!PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153"))
         {
-            // ActivateSliderCollectible(9);
             GivePlayerTheCollectible("Slider 9");
 
             // Disable queues
@@ -155,6 +153,7 @@ public class VillageGrid : SGrid
             StartCoroutine(CheckCompletionsAfterDelay(1.1f));
 
             AudioManager.Play("Puzzle Complete");
+            UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
 

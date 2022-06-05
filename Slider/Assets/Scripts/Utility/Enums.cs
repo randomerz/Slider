@@ -14,11 +14,11 @@ public static class Areas
         Area.Ocean => "Sailing the Ocean",
         Area.Jungle => "Traversing the Jungle",
         Area.Desert => "Trekking Through the Desert",
-        Area.Factory => "Working in the Factory",
+        Area.Factory => "Powering Up in the Factory",
         Area.Mountain => "Riding Through the Mountain",
         Area.Military => "Commiting Warcrimes",
         Area.MagiTech => "Playing With Time Portals",
-        Area.Space => "Exploring the Galaxy",
+        // Area.Space => "Exploring the Galaxy",
         _ => "None",
     };
 }
@@ -34,7 +34,7 @@ public enum Area {
     Mountain,
     Military,
     MagiTech,
-    Space
+    // Space
 }
 
 public enum bottleState { 

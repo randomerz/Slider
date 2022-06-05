@@ -35,7 +35,7 @@ public class ArtifactTileButton : MonoBehaviour
         islandSprite = buttonAnimator.sliderImage.sprite;
     }
 
-    protected void Start()
+    protected virtual void Start()
     {
         myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
         
@@ -51,10 +51,10 @@ public class ArtifactTileButton : MonoBehaviour
             }
         }
 
-        //if (!isTileActive)
-        //{
-        //    buttonAnimator.sliderImage.sprite = emptySprite;
-        //}
+        // if (!isTileActive)
+        // {
+        //    //buttonAnimator.sliderImage.sprite = emptySprite;
+        // }
         // update artifact button
     }
 
@@ -69,7 +69,7 @@ public class ArtifactTileButton : MonoBehaviour
         }
     }
 
-    public void SetPosition(int x, int y)
+    public virtual void SetPosition(int x, int y)
     {
         //Debug.Log("Current position: " + this.x + "," + this.y);
         this.x = x;
@@ -100,6 +100,15 @@ public class ArtifactTileButton : MonoBehaviour
         buttonAnimator.SetPushedDown(v);
     }
 
+    public void SetLightning(bool v)
+    {
+        buttonAnimator.SetLightning(v);
+    }
+
+    public void FragLightningPreview(bool v)
+    {
+        buttonAnimator.FragLightningPreview(v);
+    }
     public void SetSelected(bool v)
     {
         buttonAnimator.SetSelected(v);
@@ -125,7 +134,7 @@ public class ArtifactTileButton : MonoBehaviour
         isTileActive = v;
         if (v)
         {
-            buttonAnimator.sliderImage.sprite = islandSprite;
+            buttonAnimator.sliderImage.sprite = isComplete ? completedSprite : islandSprite;
         }
         else
         {
@@ -164,15 +173,25 @@ public class ArtifactTileButton : MonoBehaviour
         StartCoroutine(NewButtonFlicker(numFlickers));
     }
 
-    private IEnumerator NewButtonFlicker(int numFlickers) {
-        ResetToIslandSprite();
-        yield return new WaitForSeconds(.25f);
+    public void FlickerImmediate(int numFlickers)
+    {
+        shouldFlicker = false;
+        StartCoroutine(NewButtonFlicker(numFlickers, true));
+    }
+
+    private IEnumerator NewButtonFlicker(int numFlickers, bool blankImmediately=false) {
+        if (!blankImmediately)
+        {
+            ResetToIslandSprite();
+            yield return new WaitForSeconds(.25f);
+        }
+        
         for (int i = 0; i < numFlickers; i++) 
         {
-            yield return new WaitForSeconds(.25f);
             buttonAnimator.sliderImage.sprite = blankSprite;
             yield return new WaitForSeconds(.25f);
             ResetToIslandSprite();
+            yield return new WaitForSeconds(.25f);
         }
     }
 

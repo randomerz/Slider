@@ -19,7 +19,7 @@ public class SGridAnimator : MonoBehaviour
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
 
-    public void Move(SMove move, STile[,] grid = null)
+    public virtual void Move(SMove move, STile[,] grid = null)
     {
         if (grid == null)
         {
@@ -50,7 +50,7 @@ public class SGridAnimator : MonoBehaviour
     }
 
     // move is only here so we can pass it into the event
-    private IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move)
+    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move)
     {
         float t = 0;
         //isMoving = true;
@@ -75,14 +75,15 @@ public class SGridAnimator : MonoBehaviour
 
         while (t < movementDuration)
         {
-            float s = movementCurve.Evaluate(t / movementDuration);
+            t += Time.deltaTime;    //L: This needs to be before evaluate, or else t won't reach 1 before loop exits.
+            //Idk if Evaluate actually clamps or not
+            float s = movementCurve.Evaluate(Mathf.Min(t / movementDuration, 1));
             Vector2 pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
             //Vector3 pos = (1 - s) * orig + s * target;
             
             stile.SetMovingPosition(pos);
 
             yield return null;
-            t += Time.deltaTime;
         }
 
         //isMoving = false;
@@ -100,8 +101,8 @@ public class SGridAnimator : MonoBehaviour
         //    }
         //}
 
-        stile.SetMovingDirection(Vector2.zero);
         stile.SetGridPosition(moveCoords.endLoc);
+        stile.SetMovingDirection(Vector2.zero);
 
         OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
         {
@@ -111,7 +112,26 @@ public class SGridAnimator : MonoBehaviour
         });
     }
 
-    private IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders)
+    protected void InvokeOnStileMoveStart(STile stile, Movement moveCoords, SMove move) {
+        OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = moveCoords.startLoc,
+            smove = move
+        });
+    }
+
+    protected void InvokeOnStileMoveEnd(STile stile, Movement moveCoords, SMove move) {
+        OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = moveCoords.startLoc,
+            smove = move
+        });
+    }
+
+
+    protected IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders)
     {
         foreach (Vector2Int p in borders.Keys)
         {
@@ -157,7 +177,7 @@ public class SGridAnimator : MonoBehaviour
         }
     }
 
-    private IEnumerator EnableTileBorderColliders(STile stile)
+    protected IEnumerator EnableTileBorderColliders(STile stile)
     {
         stile.SetBorderColliders(true);
 
@@ -166,7 +186,7 @@ public class SGridAnimator : MonoBehaviour
         stile.SetBorderColliders(false);
     }
 
-    private Vector2 GetMovingDirection(Vector2 start, Vector2 end) // include magnitude?
+    protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) // include magnitude?
     {
         Vector2 dif = start - end;
         if (dif.x > 0)
@@ -192,7 +212,7 @@ public class SGridAnimator : MonoBehaviour
         }
     }
 
-    private IEnumerator StartCameraShakeEffect()
+    protected IEnumerator StartCameraShakeEffect()
     {
         CameraShake.ShakeConstant(movementDuration + 0.1f, 0.15f);
         AudioManager.Play("Slide Rumble");

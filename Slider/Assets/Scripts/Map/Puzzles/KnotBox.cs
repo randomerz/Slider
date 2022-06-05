@@ -59,8 +59,27 @@ public class KnotBox : MonoBehaviour
         for (int i = 0; i < lines.Length; i++)
         {
             bool intersects = false;
-            for(int j = 0; j < i; j++)
+            Vector2 a = lines[i].GetPosition(0); 
+            Vector2 b = lines[i].GetPosition(1);
+            Vector2 dir = b - a;
+            int next = i+1;
+            if(i == lines.Length-1){
+                next = 0;
+            } 
+            //RaycastHit2D hit = Physics2D.Raycast(a + 0.43f*dir.normalized,dir,(dir.magnitude-0.877f), 2048);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(a,dir,dir.magnitude, 4096);
+            foreach(RaycastHit2D hit in hits){
+                if(!(GameObject.ReferenceEquals(knotnodes[i], hit.collider.gameObject) || GameObject.ReferenceEquals(knotnodes[next], hit.collider.gameObject))){
+                    lines[i].startColor = bad;
+                    lines[i].endColor = bad;
+                    intersects = true;
+                    ret += 1;
+                }
+            }
+            for(int j = i-2; j >= 0; j--)
             {
+                if(j == 0 && i == lines.Length-1)
+                    break;
                 if (IntersectingSegs(lines[i], lines[j]))
                 {
                     lines[i].startColor = bad;
@@ -69,8 +88,10 @@ public class KnotBox : MonoBehaviour
                     ret += 1;
                 }
             }
-            for (int j = i + 1; j < lines.Length; j++)
+            for (int j = i + 2; j < lines.Length; j++)
             {
+                if(j == lines.Length-1 && i == 0)
+                    break;
                 if (IntersectingSegs(lines[i], lines[j]))
                 {
                     lines[i].startColor = bad;
@@ -87,22 +108,28 @@ public class KnotBox : MonoBehaviour
         }
         return ret;
     }
-
+    public static bool Approximately(float a, float b, float tolerance = 1e-5f) {
+        return Mathf.Abs(a - b) <= tolerance;
+    }
+    private float CrossProduct2D(Vector2 a, Vector2 b){
+        return a.x * b.y - a.y * b.x;
+    }
     private bool IntersectingSegs(LineRenderer line1, LineRenderer line2)
     {
         // Haha segs
-        Vector2 sp1 = line1.GetPosition(0); //p0
-        Vector2 ep1 = line1.GetPosition(1); //p1
-        Vector2 sp2 = line2.GetPosition(0); //p2
-        Vector2 ep2 = line2.GetPosition(1); //p3
-
-        Vector2 e = ep1 - sp1;
-        Vector2 f = ep2 - sp2;
-        Vector2 p = new Vector2(-e.y, e.x);
-        float h = Vector2.Dot(sp1 - sp2, p) / Vector2.Dot(f, p);
-
-        if (h > 0 && h < 1)
+        Vector2 a = line1.GetPosition(0); // line segments a->b and c->d
+        Vector2 b = line1.GetPosition(1);
+        Vector2 c = line2.GetPosition(0);
+        Vector2 d = line2.GetPosition(1);
+        
+        //orientations of point to points on other line segment
+        float oa = CrossProduct2D(d-a,c-a);
+        float ob = CrossProduct2D(d-b,c-b);
+        float oc = CrossProduct2D(b-c,a-c);
+        float od = CrossProduct2D(b-d,a-d);
+        if(Mathf.Sign(oa) + Mathf.Sign(ob) == 0 && Mathf.Sign(oc) + Mathf.Sign(od) == 0) {
             return true;
+        }
         return false;
     }
 
