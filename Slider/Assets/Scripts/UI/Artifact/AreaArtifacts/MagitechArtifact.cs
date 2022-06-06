@@ -53,10 +53,12 @@ public class MagitechArtifact : UIArtifact
 
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
-        SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
-        
         //C: Don't worry about desynch at the moment
-        SMove swap2 = new SMoveSwap(FindAlt(x, 3), y, FindAlt(buttonEmpty.x, 3), buttonEmpty.y, FindAlt(buttonCurrent.islandId, 9), FindAlt(buttonEmpty.islandId, 9));
+
+        SMove swap = new SMoveSyncedMove(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+       // SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+        
+       // SMove swap2 = new SMoveSwap(FindAlt(x, 3), y, FindAlt(buttonEmpty.x, 3), buttonEmpty.y, FindAlt(buttonCurrent.islandId, 9), FindAlt(buttonEmpty.islandId, 9));
 
  
         // Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
@@ -66,7 +68,7 @@ public class MagitechArtifact : UIArtifact
             //L: Do the move
             MoveMadeOnArtifact?.Invoke(this, null);
             QueueCheckAndAdd(swap);
-            QueueCheckAndAdd(swap2);
+            //QueueCheckAndAdd(swap2);
             SwapButtons(buttonCurrent, buttonEmpty);
 
             // Debug.Log("Added move to queue: current length " + moveQueue.Count);
