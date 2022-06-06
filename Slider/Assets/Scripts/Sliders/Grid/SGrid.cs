@@ -181,6 +181,21 @@ public class SGrid : MonoBehaviour, ISavable
         }
     }
 
+    /* C: converts integers >=10 to characters
+     * 10 = A, 11 = B, etc.
+     * Integers 0-9 are left untouched (note that they
+     * are now characters)
+     */
+    public static char IntToChar(int num)
+    {
+        return (num > 9) ? (char)('A' -  10 + num) : (char)('0' + num);
+    }
+
+    public static int CharToInt(char c)
+    {
+        return (c > '9') ? (c - 'A' +  10) : (c - '0');
+    }
+
     // Returns a string like:   123_6##_4#5
     // for a grid like:  1 2 3
     //                   6 . .
@@ -193,7 +208,7 @@ public class SGrid : MonoBehaviour, ISavable
             for (int x = 0; x < current.width; x++)
             {
                 if (current.grid[x, y].isTileActive)
-                    s += current.grid[x, y].islandId;
+                    s += IntToChar(current.grid[x, y].islandId);
                 else
                     s += "#";
             }
