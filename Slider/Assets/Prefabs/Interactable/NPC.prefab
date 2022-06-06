@@ -207,6 +207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: TutorialSign
   speed: 3
+  animator: {fileID: 898760068327470465}
   dconds:
   - onSuccess:
       m_PersistentCalls:
