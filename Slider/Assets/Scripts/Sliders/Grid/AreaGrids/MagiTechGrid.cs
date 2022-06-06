@@ -124,7 +124,7 @@ public class MagiTechGrid : SGrid
         foreach (STile s in grid)
         {
             //Debug.Log(s.islandId);
-            if (s != null && (s.islandId == islandId || s.islandId - 9 == islandId))
+            if (s.islandId == islandId || s.islandId - 9 == islandId)
             {
                 CollectStile(s);
                 //break;

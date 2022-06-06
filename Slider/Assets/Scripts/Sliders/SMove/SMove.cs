@@ -195,8 +195,6 @@ public class SMoveSyncedMove : SMove
         {
             moves.Add(m);
         }
-        //moves.Add((new SMoveSwap(x1, y1, x2, y2, islandId1, islandId2)).moves);
-       // moves.Add(new SMoveSwap(FindAlt(x1, 3), y1, FindAlt(x2, 3), y2, FindAlt(islandId1, 9), FinadAlt(islandId2, 9)));
     }
 
     //C: basically just modulus. Used to find corresponding values on either side of the grid

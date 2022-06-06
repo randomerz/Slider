@@ -34,7 +34,7 @@ public class SGrid : MonoBehaviour, ISavable
     // Set in inspector 
     public int width;
     public int height;
-    [SerializeField] private STile[] stiles;
+    [SerializeField] protected STile[] stiles;
     [SerializeField] private SGridBackground[] bgGridTiles;
     [SerializeField] protected SGridAnimator gridAnimator;
     //L: This is the end goal for the slider puzzle, set in the inspector.
