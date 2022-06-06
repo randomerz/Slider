@@ -561,8 +561,8 @@ public class UIArtifact : MonoBehaviour
     }
     public static void DisableLightning()
     {
-        _instance.lightning.gameObject.SetActive(false);
-        _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
+            _instance.lightning.gameObject.SetActive(false);
+            _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
     }
     public static ArtifactTileButton GetButton(int x, int y)
     {
