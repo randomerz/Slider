@@ -67,9 +67,9 @@ public class MagitechArtifact : UIArtifact
         }
         
         int offset = (desynchLocation.x / 3) * 3 ;
-        for(int x = 0; x < 2; x++)
+        for(int x = 0; x < 3; x++)
         {
-            for(int y = 0; y < 2; y++)
+            for(int y = 0; y < 3; y++)
             {
                 newGrid[x + offset, y] = FindAlt(currGrid[x - offset + 3,y], 9); 
             }
