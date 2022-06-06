@@ -228,7 +228,7 @@ public class SGrid : MonoBehaviour, ISavable
         {
             for (int y = 0; y < current.height; y++)
             {
-                gridFormat[y, (current.width - 1 - x)] = (int)Char.GetNumericValue(gridstring[(x * current.height) + y]);
+                gridFormat[y, (current.width - 1 - x)] = CharToInt(gridstring[(x * current.height) + y]);
             }
         }
         return gridFormat;

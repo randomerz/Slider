@@ -35,15 +35,71 @@ public class MagitechArtifact : UIArtifact
             {
                 desynchLocation = new Vector2Int(FindAlt(dropTile.x,3), dropTile.y);
                 desynchIslandId = FindAlt(dropTile.islandId, 9);
-                //C: If you want to do anything when a desynch starts, do it here, will make a seperate method in the future
+                //C: If you want to do anything when a desynch starts, make a method and call it here 
             }
         }
         else
         {
+            RestoreOnEndDesynch();
             desynchLocation = new Vector2Int(-1, -1);
             desynchIslandId = -1;
-            //C: If you want to do anything when a desynch ends, do it here, will make a seperate method in the future
+            //C: If you want to do anything when a desynch ends, make a method and call it here
         }
+    }
+
+
+    /* C: moves the tiles on the non-anchored timeline to align with the tiles on the 
+     * anchored timeline. We need to both restore the tile that was desynched and
+     * the non-active tiles, since they might no longer be aligned
+     */
+    private void RestoreOnEndDesynch()
+    {
+        STile[,] temp = SGrid.current.GetGrid();
+        int[,] currGrid = new int[6,3];
+        int[,] newGrid = new int[6,3];
+        for(int x = 0; x < 6; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                currGrid[x,y] = temp[x,y].islandId;
+                newGrid[x,y] = temp[x,y].islandId;
+            }
+        }
+        
+        int offset = (desynchLocation.x / 3) * 3 ;
+        for(int x = 0; x < 2; x++)
+        {
+            for(int y = 0; y < 2; y++)
+            {
+                newGrid[x + offset, y] = FindAlt(currGrid[x - offset + 3,y], 9); 
+            }
+        }
+
+        string output = "";
+        
+        for(int y = 2; y >=0 ; y--)
+        {
+            for (int x = 0; x < 6; x++)
+            {
+                output+=currGrid[x,y];
+                output+= "\t";
+            }
+            output+="\n";
+        }
+        output+="\n";
+        output+="\n";
+        for(int y = 2; y >=0 ; y--)
+        {
+            for (int x = 0; x < 6; x++)
+            {
+                output+=newGrid[x,y];
+                output+= "\t";
+            }
+            output+="\n";
+        }
+        Debug.Log(output);
+        SGrid.current.SetGrid(newGrid);
+        Debug.Log("sussy");
     }
 
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
