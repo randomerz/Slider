@@ -6,21 +6,16 @@ public class DesertGrid : SGrid
 {
     public static DesertGrid instance;
 
-    //Maybe to reduce the number of functions that do essentially the same thing? More editor heavy (slightly)
-    private Dictionary<string, bool> dialogueFlags = new Dictionary<string, bool>();
-
-    private bool campfire = false;
+    private bool campfireIsLit = false;
     public Item log; //Right now the animator for the campfire doesn't stay alive if scene transitions
+    public NPCAnimatorController campfire;
 
     private bool crocoOasis = false;
-    private bool crocoQuest = false;
 
     private int monkeShake = 0;
     private bool monkeyOasis = false;
 
-    private bool jackalQuest = false;
     private bool jackalBoned = false;
-    private bool jackalLeadToOasis = false;
     private bool jackalOasis = false;
 
     public DiceGizmo dice1;
@@ -34,8 +29,8 @@ public class DesertGrid : SGrid
     private bool GazelleQuest = false;
     private bool GazelleOasis = false;
 
-    private static bool checkCompletion = false;
-    private static bool checkMonkey = false;
+    private bool checkCompletion = false;
+    private bool checkMonkey = false;
 
     public override void Init() {
         myArea = Area.Desert;
@@ -57,8 +52,11 @@ public class DesertGrid : SGrid
         if (dice1 == null && dice2 == null) Debug.LogWarning("Die have not been set!");
         if (log == null) Debug.LogWarning("Log has not been set!");
 
-        if (campfire == false) log.gameObject.SetActive(true);
-
+        if (campfire == false)
+        {
+            log.gameObject.SetActive(true);
+            campfire.SetBoolToTrue("isDying");
+        }
         AudioManager.PlayMusic("Desert");
         AudioManager.PlayMusic("Desert Casino", false);
         UIEffects.FadeFromBlack();
@@ -104,6 +102,10 @@ public class DesertGrid : SGrid
     public override void Save() 
     {
         base.Save();
+
+        //Bool Fun
+        SaveSystem.Current.SetBool("desertCamp", campfireIsLit);
+
     }
 
     public override void Load(SaveProfile profile)
@@ -116,13 +118,13 @@ public class DesertGrid : SGrid
     //Puzzle 1: Oasis
     public void LightCampFire()
     {
-        campfire = true;
+        campfireIsLit = true;
         PlayerInventory.RemoveItem();
         log.gameObject.SetActive(false);
     }
     public void CheckCampfire(Conditionals.Condition c)
     {
-        c.SetSpec(campfire);
+        c.SetSpec(campfireIsLit);
     }
     public void SetCrocoOasis(bool b)
     {
@@ -135,14 +137,6 @@ public class DesertGrid : SGrid
     public void CheckCrocoOasis(Conditionals.Condition c)
     {
         c.SetSpec(crocoOasis);
-    }
-    public void SetCrocoQuest(bool b)
-    {
-        crocoQuest = b;
-    }
-    public void CheckCrocoQuest(Conditionals.Condition c)
-    {
-        c.SetSpec(crocoQuest);
     }
     public void EnableMonkeyShake()
     {
@@ -205,33 +199,17 @@ public class DesertGrid : SGrid
 
     #region Jackal
     //Puzzle 3: Jackal Bone
-    public void SetJackalQuest(bool b)
-    {
-        jackalQuest = b;
-    }
     public void SetJackalBoned(bool b)
     {
         jackalBoned = b;
-    }
-    public void SetJackalLeadToOasis(bool b)
-    {
-        jackalLeadToOasis = b;
     }
     public void SetJackalOasis(bool b)
     {
         jackalOasis = b;
     }
-    public void CheckJackalQuest(Conditionals.Condition c)
-    {
-        c.SetSpec(jackalQuest);
-    }
     public void CheckJackalBoned(Conditionals.Condition c)
     {
         c.SetSpec(jackalBoned);
-    }
-    public void CheckJackalLeadToOasis(Conditionals.Condition c)
-    {
-        c.SetSpec(jackalLeadToOasis);
     }
     public void CheckJackalOasis(Conditionals.Condition c)
     {
@@ -249,39 +227,11 @@ public class DesertGrid : SGrid
 
     #region DicePuzzle
     //Puzzle 4: Dice. Should not start checking until after both tiles have been activated
-
-    //Dconds for Chad dice game
-    public void CheckChallenge(Conditionals.Condition c)
-    {
-        c.SetSpec(challengedChad);
-    }
-    public void CheckDice(Conditionals.Condition c)
+    public void CheckRolledDice(Conditionals.Condition c)
     {
         c.SetSpec(dice1.isActiveAndEnabled && dice2.isActiveAndEnabled);
     }
-    public void CheckRolledDice(Conditionals.Condition c)
-    {
-        c.SetSpec(startDice);
-    }
-    /*
-    public void CheckPlayerChangedDice(Conditionals.Condition c)
-    {
-        c.SetSpec(startDice && dice1.value > 1 && dice2.value > 1);
-    }
-    */
-    public void ChallengedChad()
-    {
-        challengedChad = true;
-        Debug.Log("Chad challenged!");
-    }
-    //Activate stuff
-    public void RollAndStartCountingDice()
-    {
-        startDice = true;
-        Debug.Log("now the player can start rolling");
-    }
 
-    //Updates the dice while the casino isn't together
     public void CheckDiceValues(Conditionals.Condition c)
     {
         if (CheckCasinoTogether() && dice1.value + dice2.value == 11)
@@ -297,10 +247,6 @@ public class DesertGrid : SGrid
     public bool CheckCasinoTogether()
     {
         return CheckGrid.contains(GetGridString(), "56");
-    }
-    public void IsDiceWon(Conditionals.Condition c)
-    {
-        c.SetSpec(diceWon);
     }
 
     #endregion
