@@ -330,7 +330,7 @@ public class STile : MonoBehaviour
         foreach (STile s in grid)
         {
            // Debug.Log("Null? " + (s == null));
-            if (s!= null && s.isTileActive && PosInSTileBounds(entity.position, s.transform.position, offset, housingOffset))
+            if (s.isTileActive && PosInSTileBounds(entity.position, s.transform.position, offset, housingOffset))
             {
                 if (prevUnderneath != null && s.islandId == prevUnderneath.islandId)
                 {

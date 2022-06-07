@@ -57,15 +57,4 @@ public class Meltable : MonoBehaviour
         isFrozen = true;
         onFreeze.Invoke();
     }
-
-    public void sus()
-    {
-        Debug.Log("sus");
-    }
-
-    public void ToggleCollider(bool toggle)
-    {
-       // collider.trig
-    }
-
 }
