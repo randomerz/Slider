@@ -105,10 +105,9 @@ public class ArtifactWorldMapArea : MonoBehaviour
 
     public void UpdateAreaName()
     {
-        Debug.Log("MapHovered " + myArea.ToString());
         if (areaStatus >= AreaStatus.silhouette)
         {
-            worldmap.UpdateText(myArea.ToString());
+            worldmap.UpdateText(myArea.GetDisplayName());
         }
     }
 }
