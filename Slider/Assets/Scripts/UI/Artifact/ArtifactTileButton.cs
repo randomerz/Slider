@@ -30,7 +30,7 @@ public class ArtifactTileButton : MonoBehaviour
     public ArtifactTileButtonAnimator buttonAnimator;
     public UIArtifact buttonManager;
 
-    private void Awake() 
+    protected void Awake() 
     {
         islandSprite = buttonAnimator.sliderImage.sprite;
     }
