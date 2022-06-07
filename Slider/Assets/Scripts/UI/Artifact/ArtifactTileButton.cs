@@ -72,11 +72,11 @@ public class ArtifactTileButton : MonoBehaviour
     public virtual void SetPosition(int x, int y)
     {
         //Debug.Log("Current position: " + this.x + "," + this.y);
-        this.x = x;
+        this.x = x; 
         this.y = y;
         //Debug.Log("New position: " + this.x + "," + this.y);
 
-        Vector3 pos = new Vector3(x - 1, y - 1) * UI_OFFSET;
+        Vector3 pos = new Vector3((x % SGrid.current.height) - 1, y - 1) * UI_OFFSET; //C: i refuse to make everything into MT buttons
         GetComponent<RectTransform>().anchoredPosition = pos;
     }
 

@@ -467,18 +467,21 @@ public class UIArtifact : MonoBehaviour
     {
        foreach (ArtifactTileButton b in _instance.buttons)
        {
-           if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
-           {
-               b.SetIsInMove(true);
-           }
-           else if(b.myStile.hasAnchor)
-           {
-               continue;
-           }
-           else
-           {
-               b.SetIsInMove(false);
-           }
+            if(b.gameObject.activeSelf)
+            {
+                if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
+                {
+                    b.SetIsInMove(true);
+                }
+                else if(b.myStile.hasAnchor)
+                {
+                    continue;
+                }
+                else
+                {
+                    b.SetIsInMove(false);
+                }
+            } 
        }
     }
 
@@ -634,7 +637,7 @@ public class UIArtifact : MonoBehaviour
     {
         foreach (ArtifactTileButton b in buttons)
         {
-            if (b.shouldFlicker)
+            if (b.gameObject.activeSelf && b.shouldFlicker)
             {
                 b.Flicker(3);
             }

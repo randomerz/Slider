@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MagitechArtifact : UIArtifact
 {
@@ -14,16 +15,32 @@ public class MagitechArtifact : UIArtifact
     //C: likewise this is the ID of the *opposite* Stile
     public int desynchIslandId = -1; 
 
+    public bool isInPast = false;
+
+    public Image background;
+    public Sprite presentBackgroundSprite;
+    public Sprite pastBackgroundSprite;
+
     public override void OnEnable()
     {
         base.OnEnable();
         Anchor.OnAnchorInteract += OnAnchorInteract;
+        SetButtonsAndBackground();
     }
 
     public override void OnDisable()
     {
         base.OnDisable();
         Anchor.OnAnchorInteract -= OnAnchorInteract;
+    }
+
+    private void Update()
+    {
+        if(isInPast && Player.GetInstance().transform.position.x < 34 || !isInPast && Player.GetInstance().transform.position.x > 34)
+        {
+            isInPast = !isInPast;
+            SetButtonsAndBackground();
+        }
     }
 
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs interactArgs)
@@ -43,11 +60,11 @@ public class MagitechArtifact : UIArtifact
         {
             RestoreOnEndDesynch();
             //UIArtifact.DisableLightning();
-            foreach(ArtifactTileButton b in UIArtifact.GetInstance().buttons)
+            /*foreach(ArtifactTileButton b in UIArtifact.GetInstance().buttons)
             {
                 if (b.islandId == desynchIslandId)
                     b.Flicker(3);
-            }
+            }*/
             desynchLocation = new Vector2Int(-1, -1);
             desynchIslandId = -1;
             //C: If you want to do anything when a desynch ends, make a method and call it here
@@ -183,5 +200,22 @@ public class MagitechArtifact : UIArtifact
             Debug.Log($"Couldn't perform move! {debug}");
             return false;
         }
+    }
+
+    public void SetButtonsAndBackground()
+    {
+        foreach (ArtifactTileButton b in buttons)
+        {
+            if (b.islandId > 9 && isInPast || b.islandId <= 9 && !isInPast)
+            {
+                b.gameObject.SetActive(true);
+                STile myStile = SGrid.current.GetStile(b.islandId);
+                b.SetTileActive(myStile.isTileActive);
+                b.SetPosition(myStile.x, myStile.y);
+            }
+            else
+                b.gameObject.SetActive(false);
+        }
+        background.sprite = isInPast? pastBackgroundSprite : presentBackgroundSprite;
     }
 }
