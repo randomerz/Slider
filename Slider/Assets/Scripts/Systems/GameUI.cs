@@ -22,7 +22,6 @@ public class GameUI : MonoBehaviour
         {
             foreach (GameObject go in GameObject.FindGameObjectsWithTag("GameUI"))
             {
-                Debug.Log("looking at: " + go);
                 if (go.name != prefab.name)
                     continue;
                 // if there's one in the scene, may as well take it
@@ -34,7 +33,6 @@ public class GameUI : MonoBehaviour
                 // destroy all other objects
                 else if (go.GetInstanceID() != singleton.GetInstanceID())
                 {
-                    Debug.Log("Destroying! " + go);
                     go.SetActive(false); // this is so we don't run it's awake (hopefully)
                     Destroy(go);
                 }
@@ -44,6 +42,7 @@ public class GameUI : MonoBehaviour
             if (singleton == null)
             {
                 singleton = Instantiate(prefab);
+                singleton.name = prefab.name;
                 DontDestroyOnLoad(singleton);
             }
         }
@@ -59,9 +58,6 @@ public class GameUI : MonoBehaviour
     private void Awake()
     {
         Init();
-        //Singlify();
-
-        Debug.Log("GameUI Awake");
     }
 
     public void Init()
