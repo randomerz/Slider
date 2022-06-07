@@ -277,8 +277,8 @@ public class UIArtifact : MonoBehaviour
                 //L: Player tried to click a locked tile (or tile that otherwise had no move options)
                 return;
             }
-            //tile can only go one location so just auto move B)
-            else if(moveOptionButtons.Count == 1)
+            //tile can only go one location so just auto move 
+            else if(moveOptionButtons.Count == 1 && SettingsManager.AutoMove)
             {
                 currentButton = button;
                 currentButton.SetSelected(true);
@@ -289,7 +289,6 @@ public class UIArtifact : MonoBehaviour
                 }
                 CheckAndSwap(currentButton, button);
                 DeselectCurrentButton();
-                Debug.Log("UIArtifact.cs: 289 ehh what happened");
             }
             else
             {

@@ -133,6 +133,7 @@ public class VillageGrid : SGrid
                                                 { 5, 3, 2 } };
         SetGrid(shuffledPuzzle);
         base.gridAnimator.ChangeMovementDuration(0.5f);
+        SettingsManager.AutoMove = true;
         checkCompletion = true;
         OnGridMove += UpdateButtonCompletions; // this is probably not needed
         UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
