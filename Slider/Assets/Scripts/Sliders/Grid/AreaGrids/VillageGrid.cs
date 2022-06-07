@@ -206,10 +206,10 @@ public class VillageGrid : SGrid
     public IEnumerator ChadJump() {
         var chadimator = chad.transform.GetChild(0).GetComponent<Animator>();
         chadimator.SetBool("isJumping", true);
-        var moveVector = new Vector3(-.1f, -.1f, 0);
+        var moveVector = new Vector3(-.1f, .1f, 0);
         Vector3 currPos = chad.transform.localPosition;
-        Vector3 targetPos = currPos + new Vector3(-1f, -1f, 0);
-        while (currPos.x > targetPos.x && currPos.y > targetPos.y) {
+        Vector3 targetPos = currPos + new Vector3(-1f, 1f, 0);
+        while (currPos.y < targetPos.y) {
             chad.transform.localPosition += moveVector;
             //flashlight.transform.localPosition += moveVector;
             currPos = chad.transform.localPosition;
@@ -237,7 +237,7 @@ public class VillageGrid : SGrid
         chadimator.SetBool("isFalling", false);
         
         flashlight.transform.parent = oldFlashParent;
-        flashlight.GetComponent<Item>().DropItem(chad.transform.position + Vector3.left, callback:ChadFinishFall);
+        flashlight.GetComponent<Item>().DropItem(chad.transform.position + (Vector3.left * 1.5f), callback:ChadFinishFall);
     }
     private void ChadFinishFall() {
         var flashlight_item = flashlight.GetComponent<Item>();
