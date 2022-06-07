@@ -6,17 +6,15 @@ public class GameUI : MonoBehaviour
 {
     public static GameUI instance { get; private set; }
     private bool didInit;
+    public bool isMenuScene;
 
+    [System.Serializable]
     public class GameUICanvas
     {
-        public GameUICanvas(GameObject prefab)
-        {
-            this.prefab = prefab;
-        }
-
         //public System.Type myType;
         public GameObject prefab;
-        public GameObject singleton;
+        public bool activeInMenuScenes;
+        private GameObject singleton;
 
         public void Singlify()
         {
@@ -46,12 +44,19 @@ public class GameUI : MonoBehaviour
                 DontDestroyOnLoad(singleton);
             }
         }
+
+        public void SetActive(bool value)
+        {
+            if (activeInMenuScenes) // in main menu scenes, leave this on
+                return;
+            singleton.SetActive(value);
+        }
     }
 
-    public GameObject UICanvasPrefab;
-    public GameObject UIEffectsPrefab;
-    public GameObject DebugCanvasPrefab;
-    public GameObject SceneTransitionOverlayPrefab;
+    public GameUICanvas UICanvasPrefab;
+    public GameUICanvas UIEffectsPrefab;
+    public GameUICanvas DebugCanvasPrefab;
+    public GameUICanvas SceneTransitionOverlayPrefab;
 
     private List<GameUICanvas> uiCanvases = new List<GameUICanvas>();
 
@@ -71,13 +76,15 @@ public class GameUI : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
 
-            uiCanvases.Add(new GameUICanvas(UICanvasPrefab));
-            uiCanvases.Add(new GameUICanvas(UIEffectsPrefab));
-            uiCanvases.Add(new GameUICanvas(DebugCanvasPrefab));
-            uiCanvases.Add(new GameUICanvas(SceneTransitionOverlayPrefab));
+            uiCanvases.Add(UICanvasPrefab);
+            uiCanvases.Add(UIEffectsPrefab);
+            uiCanvases.Add(DebugCanvasPrefab);
+            uiCanvases.Add(SceneTransitionOverlayPrefab);
         }
         
         instance.Singlify();
+
+        instance.SetCanvasesActive(!isMenuScene); // if its a menu scene, lets turn off the canvases
     }
 
     public void Singlify()
@@ -93,7 +100,7 @@ public class GameUI : MonoBehaviour
     {
         foreach (GameUICanvas c in uiCanvases)
         {
-            c.singleton.SetActive(value);
+            c.SetActive(value);
         }
     }
 }

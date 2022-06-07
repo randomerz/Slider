@@ -20,6 +20,8 @@ public class UIEffects : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+
+        Debug.Log("UIEffects Awake");
     }
 
     public static void FadeFromBlack(System.Action callback=null, float speed=1)
@@ -61,6 +63,7 @@ public class UIEffects : MonoBehaviour
         {
             _instance.StopCoroutine(previousCoroutine);
         }
+        Debug.Log("UIEffects instance: " + _instance);
         previousCoroutine = _instance.StartCoroutine(coroutine);
     }
 
