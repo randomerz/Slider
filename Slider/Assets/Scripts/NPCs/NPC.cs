@@ -33,6 +33,7 @@ public class NPC : MonoBehaviour
 
     public string characterName;
     [SerializeField] private float speed;
+    public NPCAnimatorController animator;
     public List<DialogueConditionals> dconds;
 
     [SerializeField] private DialogueDisplay dialogueDisplay;
@@ -395,7 +396,7 @@ public class NPC : MonoBehaviour
     public IEnumerator DoCurrentWalk(bool resumed)
     {
         walking = true;
-
+        animator.SetBoolToTrue("isWalking");
         if (resumed)
         {
             currWalk.onPathResumed?.Invoke();
@@ -434,6 +435,7 @@ public class NPC : MonoBehaviour
         }
 
         walking = false;
+        animator.SetBoolToFalse("isWalking");
         currWalk.onPathFinished?.Invoke();
         currWalk = null;
     }
@@ -452,6 +454,7 @@ public class NPC : MonoBehaviour
                     StopCoroutine(walkCoroutine);
                     walkCoroutine = null;
                     walking = false;
+                    animator.SetBoolToFalse("isWalking");
                     currWalk.onPathBroken?.Invoke();
                 }
             }
