@@ -40,6 +40,8 @@ public class UIManager : MonoBehaviour
         musicSlider.value = AudioManager.GetMusicVolume();
 
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
+
+        Debug.Log("Awake!");
     }
 
     public static void LoadBindings()
