@@ -9,13 +9,15 @@ public class VillageGrid : SGrid
     public GameObject caveDoorEntrance;
     public GameObject caveDoorRocks;
     public GameObject particleSpawner;
-    public GameObject chad;
-    public GameObject flashlight;
+
+    [SerializeField] private GameObject chad;
+    [SerializeField] private GameObject flashlight;
+    private Transform oldFlashParent;
+    private bool chadFell;
+    private bool chadMet;
 
     private bool fishOn;
-    private bool chadFell;
 
-    private Coroutine chadFallCoroutine;
     private Coroutine shuffleBuildUpCoroutine;
     private bool checkCompletion = false; // TODO: serialize
 
@@ -30,6 +32,7 @@ public class VillageGrid : SGrid
         base.Init();
 
         chadFell = false;
+        chadMet = false;
 
         if (fishOn)
         {
@@ -178,23 +181,43 @@ public class VillageGrid : SGrid
 
     // Mini-Puzzle - Chad Flashlight
     public void CheckChadMoved(object sender, SGridAnimator.OnTileMoveArgs e) {
-        if (GetStile(8).isTileActive && e.stile.islandId == 8 && !chadFell) {
+        if (GetStile(8).isTileActive && e.stile.islandId == 8 && !chadFell && chadMet) {
             chadFell = true;
             chad.transform.GetChild(0).GetComponent<Animator>().SetBool("isFalling", true);
-            chadFallCoroutine = StartCoroutine(ChadFall());
+            StartCoroutine(ChadFall());
         }
     }
 
     public void ChadPickUpFlashLight() {
-        if (!chadFell) {
+        if (!chadMet) {
+            chadMet = true;
             Transform pickUpLocation = new GameObject().transform;
             pickUpLocation.position = chad.transform.position + Vector3.up * 0.5f;
-            flashlight.GetComponent<Item>().PickUpItem(pickUpLocation, callback:null);
+            flashlight.GetComponent<Item>().PickUpItem(pickUpLocation, callback:AfterChadPickup);
         }
     }
+    private void AfterChadPickup() {
+        oldFlashParent = flashlight.transform.parent;
+        flashlight.transform.parent = chad.transform;
+        StartCoroutine(ChadJump());
+    }
 
-    public void ChadJump() {
+    // Animates Chad Jumping
+    public IEnumerator ChadJump() {
+        var chadimator = chad.transform.GetChild(0).GetComponent<Animator>();
+        chadimator.SetBool("isJumping", true);
+        var moveVector = new Vector3(-.1f, -.1f, 0);
+        Vector3 currPos = chad.transform.localPosition;
+        Vector3 targetPos = currPos + new Vector3(-1f, -1f, 0);
+        while (currPos.x > targetPos.x && currPos.y > targetPos.y) {
+            chad.transform.localPosition += moveVector;
+            //flashlight.transform.localPosition += moveVector;
+            currPos = chad.transform.localPosition;
+            yield return new WaitForSeconds(0.05f);
+        }
 
+        chadimator.SetBool("isJumping", false);
+        yield return null;
     }
 
     // Animates Chad Falling
@@ -202,23 +225,22 @@ public class VillageGrid : SGrid
         var chadimator = chad.transform.GetChild(0).GetComponent<Animator>();
         chadimator.SetBool("isFalling", true);
         var moveVector = new Vector3(-.1f, -.1f, 0);
-        Vector3 currPos = chad.transform.position;
+        Vector3 currPos = chad.transform.localPosition;
         Vector3 targetPos = currPos + new Vector3(-1f, -1f, 0);
         while (currPos.x > targetPos.x && currPos.y > targetPos.y) {
-            chad.transform.position += moveVector;
-            flashlight.transform.position += moveVector;
-            currPos = chad.transform.position;
+            chad.transform.localPosition += moveVector;
+            //flashlight.transform.localPosition += moveVector;
+            currPos = chad.transform.localPosition;
             yield return new WaitForSeconds(0.05f);
         }
         chadimator.SetBool("isFallen", true);
         chadimator.SetBool("isFalling", false);
         
+        flashlight.transform.parent = oldFlashParent;
         flashlight.GetComponent<Item>().DropItem(chad.transform.position + Vector3.left, callback:ChadFinishFall);
     }
-
     private void ChadFinishFall() {
         var flashlight_item = flashlight.GetComponent<Item>();
         flashlight_item.SetCollider(true);
-        Destroy(flashlight_item);
     }
 }
