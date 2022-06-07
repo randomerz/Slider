@@ -1750,6 +1750,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2824224475968117142, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
+      propertyPath: isMenuScene
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8750917147391358172, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
       propertyPath: m_Name
       value: GameManager
@@ -1798,7 +1802,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6531386949380389835, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
 --- !u!1 &1845861509
 GameObject:
