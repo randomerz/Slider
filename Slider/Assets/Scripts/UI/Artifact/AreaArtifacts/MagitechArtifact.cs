@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class MagitechArtifact : UIArtifact
 {
@@ -14,6 +15,9 @@ public class MagitechArtifact : UIArtifact
 
     //C: likewise this is the ID of the *opposite* Stile
     public int desynchIslandId = -1; 
+
+    public UnityEvent onDesynchStart;
+    public UnityEvent onDesynchEnd;
 
     public bool isInPast = false;
 
@@ -52,22 +56,15 @@ public class MagitechArtifact : UIArtifact
             {
                 desynchLocation = new Vector2Int(FindAlt(dropTile.x,3), dropTile.y);
                 desynchIslandId = FindAlt(dropTile.islandId, 9);
-                //UIArtifact.SetLightningPos(dropTile.x, dropTile.y);
-                //C: If you want to do anything when a desynch starts, make a method and call it here 
+                onDesynchStart.Invoke();
             }
         }
         else
         {
+            onDesynchEnd.Invoke();
             RestoreOnEndDesynch();
-            //UIArtifact.DisableLightning();
-            /*foreach(ArtifactTileButton b in UIArtifact.GetInstance().buttons)
-            {
-                if (b.islandId == desynchIslandId)
-                    b.Flicker(3);
-            }*/
             desynchLocation = new Vector2Int(-1, -1);
             desynchIslandId = -1;
-            //C: If you want to do anything when a desynch ends, make a method and call it here
         }
     }
 
@@ -98,7 +95,8 @@ public class MagitechArtifact : UIArtifact
                 newGrid[x + offset, y] = FindAlt(currGrid[x - offset + 3,y], 9); 
             }
         }
-/*
+
+        /* C: you can uncomment this if desynching isn't working, it might help locate the source of the problem
         string output = "";
         
         for(int y = 2; y >=0 ; y--)
@@ -123,6 +121,7 @@ public class MagitechArtifact : UIArtifact
         }
         Debug.Log(output);
         */
+
         SGrid.current.SetGrid(newGrid);
     }
 
