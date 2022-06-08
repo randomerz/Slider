@@ -7,7 +7,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance { get; private set; }
 
     private static SaveSystem saveSystem;
-    public SceneInitializer sceneInitializer;
+    public GameUI gameUI;
+    public SceneInitializer sceneInitializer; // this script makes me sad
 
     private void Awake() {
         if (instance == null) {
@@ -24,6 +25,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        gameUI.Init();
         sceneInitializer?.Init();
     }
 

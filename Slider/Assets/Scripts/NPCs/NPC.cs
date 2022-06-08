@@ -33,6 +33,7 @@ public class NPC : MonoBehaviour
 
     public string characterName;
     [SerializeField] private float speed;
+    public NPCAnimatorController animator;
     public List<DialogueConditionals> dconds;
 
     [SerializeField] private DialogueDisplay dialogueDisplay;
@@ -108,6 +109,7 @@ public class NPC : MonoBehaviour
         currentStileUnderneath = STile.GetSTileUnderneath(transform, currentStileUnderneath);
         // Debug.Log("Currently on: " + currentStileUnderneath);
 
+        /*  Don't reparent right away bc this causes some problems with NPCs that are childs of other moving objects (boats, etc.)
         if (currentStileUnderneath != null)
         {
             transform.SetParent(currentStileUnderneath.transform);
@@ -116,6 +118,7 @@ public class NPC : MonoBehaviour
         {
             transform.SetParent(null);
         }
+        */
     }
 
     #region Dialogue
@@ -395,7 +398,7 @@ public class NPC : MonoBehaviour
     public IEnumerator DoCurrentWalk(bool resumed)
     {
         walking = true;
-
+        animator.SetBoolToTrue("isWalking");
         if (resumed)
         {
             currWalk.onPathResumed?.Invoke();
@@ -426,6 +429,7 @@ public class NPC : MonoBehaviour
                 if (remainingStileCrossings.Count > 0 && remainingStileCrossings[0].to == currentStileUnderneath)
                 {
                     remainingStileCrossings.RemoveAt(0);
+                    transform.SetParent(currentStileUnderneath == null ? null : currentStileUnderneath.transform);
                 }
                 yield return new WaitForEndOfFrame();
             }
@@ -434,6 +438,7 @@ public class NPC : MonoBehaviour
         }
 
         walking = false;
+        animator.SetBoolToFalse("isWalking");
         currWalk.onPathFinished?.Invoke();
         currWalk = null;
     }
@@ -452,6 +457,7 @@ public class NPC : MonoBehaviour
                     StopCoroutine(walkCoroutine);
                     walkCoroutine = null;
                     walking = false;
+                    animator.SetBoolToFalse("isWalking");
                     currWalk.onPathBroken?.Invoke();
                 }
             }

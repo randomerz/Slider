@@ -39,7 +39,7 @@ public class DiscordController : MonoBehaviour
 
     void Update()
     {
-        // "homie really told discord shush be quiet" — Lord Boomo
+        // "homie really told discord shush be quiet" ï¿½ Lord Boomo
         try
         {
             discord?.RunCallbacks();
@@ -58,7 +58,7 @@ public class DiscordController : MonoBehaviour
         var state = "At the Start Screen";
         if (SGrid.current != null)
         {
-            state = $"{SGrid.current.MyArea.GetDisplayName()} ({SGrid.current.GetNumTilesCollected()} / {SGrid.current.GetTotalNumTiles()})";
+            state = $"{SGrid.current.MyArea.GetDiscordName()} ({SGrid.current.GetNumTilesCollected()} / {SGrid.current.GetTotalNumTiles()})";
         }
         var activity = new Discord.Activity
         {

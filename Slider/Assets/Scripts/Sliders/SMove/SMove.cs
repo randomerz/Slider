@@ -182,6 +182,33 @@ public class SMoveLayerSwap: SMove
     }
 }
 
+//C: used in magitech to move a tile in the past/present at the same time
+public class SMoveSyncedMove : SMove
+{
+    public SMoveSyncedMove(int x1, int y1, int x2, int y2, int islandId1, int islandId2)
+    {
+        foreach (Movement m in (new SMoveSwap(x1, y1, x2, y2, islandId1, islandId2)).moves)
+        {
+            moves.Add(m);
+        }
+        foreach (Movement m in (new SMoveSwap(FindAlt(x1, 3), y1, FindAlt(x2, 3), y2, FindAlt(islandId1, 9), FindAlt(islandId2, 9))).moves)
+        {
+            moves.Add(m);
+        }
+    }
+
+    //C: basically just modulus. Used to find corresponding values on either side of the grid
+    private int FindAlt(int num, int offset)
+    {
+        return (num + offset) % (offset * 2);
+    }
+
+    public Movement GetSwapAsVector()
+    {
+        return moves[0];
+    }
+}
+
 public class SMoveLinkedSwap : SMove
 {
     public SMoveLinkedSwap(int x1, int y1, int x2, int y2, 

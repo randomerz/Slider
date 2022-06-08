@@ -257,6 +257,8 @@ public class Player : MonoBehaviour, ISavable
 
     public static Vector3 GetPosition()
     {
+        if (!_instance)
+            return Vector3.zero;
         return _instance.transform.position;
     }
 

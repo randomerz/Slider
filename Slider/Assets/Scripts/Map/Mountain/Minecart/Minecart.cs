@@ -138,6 +138,12 @@ public class Minecart : Item
         currentSTile = null;
     }
 
+    private void OnCollisionEnter2D(Collision2D other) 
+    {
+        Debug.Log("bonk");
+        StopMoving(true);
+    }
+
 
 
 
@@ -150,10 +156,10 @@ public class Minecart : Item
         } 
     }
 
-    public void StopMoving()
+    public void StopMoving(bool onTrack = false)
     {
         isMoving = false;
-        isOnTrack = false;
+        isOnTrack = onTrack? isOnTrack: false;
         minecartAnimator.SetBool("isMoving", false);
     }
 
