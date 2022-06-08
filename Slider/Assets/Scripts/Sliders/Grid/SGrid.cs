@@ -258,7 +258,7 @@ public class SGrid : MonoBehaviour, ISavable
     /// Returns the number of STiles collected in the current SGrid.
     /// </summary>
     /// <returns></returns>
-    public int GetNumTilesCollected() {
+    public virtual int GetNumTilesCollected() {
         int numCollected = 0;
         foreach (STile tile in stiles)
         {
@@ -273,7 +273,7 @@ public class SGrid : MonoBehaviour, ISavable
     /// Returns the number of STiles available in the current SGrid.
     /// </summary>
     /// <returns></returns>
-    public int GetTotalNumTiles()
+    public virtual int GetTotalNumTiles()
     {
         return width * height;
     }

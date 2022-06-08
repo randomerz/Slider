@@ -68,4 +68,21 @@ public class MagiTechGrid : SGrid
             }
         }
     }
+
+    public override int GetNumTilesCollected() {
+        int numCollected = 0;
+        foreach (STile tile in stiles)
+        {
+            if (tile.isTileCollected)
+            {
+                numCollected++;
+            }
+        }
+        return numCollected / 2;
+    }
+    
+    public override int GetTotalNumTiles()
+    {
+        return width * height / 2;
+    }
 }

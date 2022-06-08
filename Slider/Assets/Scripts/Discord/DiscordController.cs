@@ -58,10 +58,7 @@ public class DiscordController : MonoBehaviour
         var state = "At the Start Screen";
         if (SGrid.current != null)
         {
-            if(SGrid.current.MyArea != Area.MagiTech)
-                state = $"{SGrid.current.MyArea.GetDiscordName()} ({SGrid.current.GetNumTilesCollected()} / {SGrid.current.GetTotalNumTiles()})";
-            else
-                state = $"{SGrid.current.MyArea.GetDiscordName()} ({SGrid.current.GetNumTilesCollected()/2} / {SGrid.current.GetTotalNumTiles()/2})";
+            state = $"{SGrid.current.MyArea.GetDiscordName()} ({SGrid.current.GetNumTilesCollected()} / {SGrid.current.GetTotalNumTiles()})";
         }
         var activity = new Discord.Activity
         {
