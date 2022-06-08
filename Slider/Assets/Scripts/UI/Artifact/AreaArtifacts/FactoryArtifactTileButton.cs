@@ -1,6 +1,10 @@
-﻿using UnityEngine;
+﻿//using UnityEngine;
 
 
+//This is literally just to update the Conveyor icons under the buttons lol.
+//Also I don't wanna replace every button and this is pretty small, so I'm just gonna add the functionality to ArtifactTileButton
+
+/*
 class FactoryArtifactTileButton : ArtifactTileButton
 {
     [SerializeField]
@@ -36,12 +40,6 @@ class FactoryArtifactTileButton : ArtifactTileButton
         {
             conveyor.OnPowered.RemoveListener(OnConveyorPowered);
         }
-    }
-
-    public override void SetPosition(int x, int y)
-    {
-        base.SetPosition(x, y);
-        UpdateEmptySprite();
     }
 
     private void OnConveyorPowered(ElectricalNode.OnPoweredArgs e)
@@ -84,3 +82,4 @@ class FactoryArtifactTileButton : ArtifactTileButton
         return null;
     }
 }
+*/
