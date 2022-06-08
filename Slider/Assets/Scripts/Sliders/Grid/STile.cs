@@ -329,6 +329,7 @@ public class STile : MonoBehaviour
         STile stileUnderneath = null;
         foreach (STile s in grid)
         {
+           // Debug.Log("Null? " + (s == null));
             if (s.isTileActive && PosInSTileBounds(entity.position, s.transform.position, offset, housingOffset))
             {
                 if (prevUnderneath != null && s.islandId == prevUnderneath.islandId)

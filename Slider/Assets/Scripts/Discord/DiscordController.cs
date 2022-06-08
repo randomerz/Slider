@@ -39,7 +39,7 @@ public class DiscordController : MonoBehaviour
 
     void Update()
     {
-        // "homie really told discord shush be quiet" — Lord Boomo
+        // "homie really told discord shush be quiet" ï¿½ Lord Boomo
         try
         {
             discord?.RunCallbacks();

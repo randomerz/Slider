@@ -66,7 +66,7 @@ public class DynamicMusic : MonoBehaviour
 
     private void UpdateMountain()
     {
-        float value = Player.GetPosition().y > -75 ? 0 : 1;
+        float value = Player.GetPosition().y > 62.5 ? 0 : 1;
         emitter.SetParameter("Temperature", value);
     }
 }

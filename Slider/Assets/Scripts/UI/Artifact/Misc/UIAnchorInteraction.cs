@@ -26,7 +26,8 @@ public class UIAnchorInteraction : MonoBehaviour
         if(dropTile != null)
         {
             ArtifactTileButton anchorbutton = uiArtifactMenus.uiArtifact.GetButton(dropTile.islandId);
-            anchorbutton.buttonAnimator.SetAnchored(interactArgs.drop);
+            if(anchorbutton != null)
+                anchorbutton.buttonAnimator.SetAnchored(interactArgs.drop);
         }
         
 
@@ -38,7 +39,8 @@ public class UIAnchorInteraction : MonoBehaviour
         if(dropTile != null && dropTile.hasAnchor)
         {
             ArtifactTileButton anchorbutton = uiArtifactMenus.uiArtifact.GetButton(dropTile.islandId);
-            anchorbutton.buttonAnimator.SetAnchored(true);
+            if(anchorbutton != null)
+                anchorbutton.buttonAnimator.SetAnchored(true);
         }
     }
     
