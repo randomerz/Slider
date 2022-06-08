@@ -263,8 +263,8 @@ public class DebugUIManager : MonoBehaviour
 
     public void NoClip()
     {
-        Collider2D c = GameObject.Find("Player").GetComponent<Collider2D>();
-        c.enabled = !c.enabled;
+        Player p = GameObject.Find("Player").GetComponent<Player>();
+        p.toggleCollision();
     }
 
     public void EarthQuake()
