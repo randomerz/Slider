@@ -57,20 +57,29 @@ public class UIRotateParams : MonoBehaviour
 
     private void CalcMousePos() 
     {
-        // get mouse position
-        Vector2 viewportPos = Camera.main.ScreenToViewportPoint(Mouse.current.position.ReadValue());
-        
-        Vector2 proportionalPos = new Vector2(viewportPos.x * canvasRectTransform.sizeDelta.x, 
-                                              viewportPos.y * canvasRectTransform.sizeDelta.y);
+        // Screen Space Pos -> Viewport Pos
+        Vector2 mousePos = Mouse.current.position.ReadValue();
+        Vector2 normalizedPos = new Vector2(mousePos.x / Screen.width, mousePos.y / Screen.height);
+
+        //Viewport point -> Canvas Space Pt.
+        Vector2 proportionalPos = new Vector2(normalizedPos.x * canvasRectTransform.sizeDelta.x,
+                                              normalizedPos.y * canvasRectTransform.sizeDelta.y);
          
+        //The position relative to the center of the rotation gizmo thingy.
         Vector2 offsetPos = proportionalPos - uiOffset - myRectTransform.anchoredPosition;
 
         // if it's the bottom right area, then ccw is true
         SelectArrow(offsetPos.x > offsetPos.y);
-        
-        // Debug.Log("hovering, is ccw: " + (offsetPos.x > offsetPos.y));
-        // Debug.Log("hovering, offsetPos: " + offsetPos);
-        // Debug.Log("hovering, proportionalPos: " + proportionalPos + " viewportPos.x " + viewportPos.x + " mcpv " + Mouse.current.position.ReadValue());
+
+        //Debug.Log($"hovering over {gameObject.name}, is ccw: {(offsetPos.x > offsetPos.y)}");
+        //Debug.Log($"hovering over {gameObject.name}, offsetPos: {offsetPos}");
+        //Debug.Log($"hovering over {gameObject.name}, proportionalPos: {proportionalPos}");
+        //Debug.Log($"Camera Dimensions: {Camera.main.pixelWidth}, {Camera.main.pixelHeight}");
+        //Debug.Log($"hovering over {gameObject.name}, normalizedPos: {normalizedPos}");
+        //Debug.Log($"hovering over {gameObject.name}, mcpv: {Mouse.current.position.ReadValue()}");
+        //Debug.Log($"Size Delta: {canvasRectTransform.sizeDelta}");
+        //Debug.Log($"uiOffset: {uiOffset}");
+        //Debug.Log($"Anchored Position: {myRectTransform.anchoredPosition}");
     }
 
     public void OnHoverExit() 
