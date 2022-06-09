@@ -12,7 +12,16 @@ public class VillageGrid : SGrid
 
     [SerializeField] private GameObject chad;
     [SerializeField] private GameObject flashlight;
+    [SerializeField] private AnimationCurve xJumpMotion;
+    [SerializeField] private AnimationCurve yJumpMotion;
+    [SerializeField] private SpriteRenderer chadRenderer;
+    [SerializeField] private SpriteRenderer flashRenderer;
+    [SerializeField] private float jumpDuration;
+    [SerializeField] private GameObject chadPickUpPoint;
+    private Collider2D chadllider;
     private Transform oldFlashParent;
+    private Vector3 flashlightPadding;
+    private bool chadJumped;
     private bool chadFell;
     private bool chadMet;
 
@@ -31,8 +40,15 @@ public class VillageGrid : SGrid
 
         base.Init();
 
+        // === Chad Stuff ===
         chadFell = false;
         chadMet = false;
+        chadJumped = false;
+        flashlightPadding = Vector3.up * 0.5f;
+        // Finds the non-trigger collider in chad
+        var colliders = chad.GetComponents(typeof(Collider2D));
+        chadllider = ((Collider2D)colliders[0]).isTrigger? (Collider2D)colliders[1] : (Collider2D)colliders[0];
+        // === Chad Stuff ===
 
         if (fishOn)
         {
@@ -192,29 +208,51 @@ public class VillageGrid : SGrid
         if (!chadMet) {
             chadMet = true;
             Transform pickUpLocation = new GameObject().transform;
-            pickUpLocation.position = chad.transform.position + Vector3.up * 0.5f;
+            pickUpLocation.position = chad.transform.position + flashlightPadding;
             flashlight.GetComponent<Item>().PickUpItem(pickUpLocation, callback:AfterChadPickup);
         }
     }
     private void AfterChadPickup() {
         oldFlashParent = flashlight.transform.parent;
-        flashlight.transform.parent = chad.transform;
-        StartCoroutine(ChadJump());
+        flashlight.transform.parent = chadPickUpPoint.transform;
+        //StartCoroutine(ChadJump());
+    }
+
+    // So that the dcond can call after dialogue ends
+    public void ChadJumpStarter() {
+        if (!chadJumped) {
+            StartCoroutine(ChadJump());
+            chadJumped = !chadJumped;
+        }
     }
 
     // Animates Chad Jumping
     public IEnumerator ChadJump() {
-        var chadimator = chad.transform.GetChild(0).GetComponent<Animator>();
+        var chadform = chad.transform;
+        var chadimator = chadform.GetChild(0).GetComponent<Animator>();
+        var target = new GameObject().transform;
+        target.position = chadform.position + Vector3.left + Vector3.up;
         chadimator.SetBool("isJumping", true);
-        var moveVector = new Vector3(-.1f, .1f, 0);
-        Vector3 currPos = chad.transform.localPosition;
-        Vector3 targetPos = currPos + new Vector3(-1f, 1f, 0);
-        while (currPos.y < targetPos.y) {
-            chad.transform.localPosition += moveVector;
-            //flashlight.transform.localPosition += moveVector;
-            currPos = chad.transform.localPosition;
-            yield return new WaitForSeconds(0.05f);
+
+        float t = 0;
+
+        Vector3 start = new Vector3(chadform.position.x, chadform.position.y);
+        while (t < jumpDuration)
+        {
+            float x = xJumpMotion.Evaluate(t / jumpDuration);
+            float y = yJumpMotion.Evaluate(t / jumpDuration);
+            Vector3 pos = new Vector3(Mathf.Lerp(start.x, target.transform.position.x, x),
+                                      Mathf.Lerp(start.y, target.transform.position.y, y));
+            
+            chadRenderer.transform.position = pos;
+
+            yield return null;
+            t += Time.deltaTime;
         }
+
+        chadform.position = target.position;
+        chadRenderer.transform.position = target.position;
+        chadllider.enabled = false;
 
         chadimator.SetBool("isJumping", false);
         yield return null;
@@ -222,17 +260,39 @@ public class VillageGrid : SGrid
 
     // Animates Chad Falling
     private IEnumerator ChadFall() {
-        var chadimator = chad.transform.GetChild(0).GetComponent<Animator>();
+        var chadform = chad.transform;
+        var chadimator = chadform.GetChild(0).GetComponent<Animator>();
+        var target = new GameObject().transform;
+        target.position = chadform.position + Vector3.left + Vector3.down;
         chadimator.SetBool("isFalling", true);
-        var moveVector = new Vector3(-.1f, -.1f, 0);
-        Vector3 currPos = chad.transform.localPosition;
-        Vector3 targetPos = currPos + new Vector3(-1f, -1f, 0);
-        while (currPos.x > targetPos.x && currPos.y > targetPos.y) {
-            chad.transform.localPosition += moveVector;
-            //flashlight.transform.localPosition += moveVector;
-            currPos = chad.transform.localPosition;
-            yield return new WaitForSeconds(0.05f);
+
+        float t = jumpDuration;
+
+        //Create 2 dummy transforms for the animation.
+        GameObject start = new GameObject();
+        start.transform.position = chadform.position;
+        GameObject end = new GameObject();
+        end.transform.position = target.position;
+
+        //transform.position = target;
+        while (t >= 0)
+        {
+            float x = xJumpMotion.Evaluate(t / jumpDuration);
+            float y = yJumpMotion.Evaluate(t / jumpDuration);
+            Vector3 pos = new Vector3(Mathf.Lerp(end.transform.position.x, start.transform.position.x, x),
+                                      Mathf.Lerp(end.transform.position.y, start.transform.position.y, y));
+            
+            chadRenderer.transform.position = pos;
+
+            yield return null;
+            t -= Time.deltaTime;
         }
+
+        chadllider.enabled = true;
+        chadform.position = end.transform.position;
+        chadRenderer.transform.position = end.transform.position;
+
+
         chadimator.SetBool("isFallen", true);
         chadimator.SetBool("isFalling", false);
         
@@ -242,5 +302,10 @@ public class VillageGrid : SGrid
     private void ChadFinishFall() {
         var flashlight_item = flashlight.GetComponent<Item>();
         flashlight_item.SetCollider(true);
+        chadllider.enabled = true;
+    }
+
+    public void ChadFell(Conditionals.Condition cond) {
+        cond.SetSpec(chadFell);
     }
 }
