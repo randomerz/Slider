@@ -18,6 +18,9 @@ public class Conveyor : ElectricalNode
 
     private Coroutine gettingMoveCoroutine; //Only should have one coroutine running at a time.
 
+    public Vector2Int StartPos => start;
+    public Vector2Int Dir => dir;
+
     #region Unity Events
     private new void Awake()
     {

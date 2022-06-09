@@ -105,14 +105,14 @@ public class Item : MonoBehaviour
         float t = pickUpDuration;
 
         //Create 2 dummy transforms for the animation.
-        GameObject start = new GameObject();
+        GameObject start = new GameObject("ItemDropStart");
         start.transform.position = transform.position;
-        GameObject end = new GameObject();
+        GameObject end = new GameObject("ItemDropEnd");
         end.transform.position = target;
 
         STile hitStile = SGrid.current.GetStileUnderneath(end);
-        start.transform.parent = hitStile.transform;
-        end.transform.parent = hitStile.transform;
+        start.transform.parent = hitStile == null ? null : hitStile.transform;
+        end.transform.parent = hitStile == null ? null : hitStile.transform;
 
         //transform.position = target;
         while (t >= 0)
@@ -132,7 +132,8 @@ public class Item : MonoBehaviour
         transform.position = end.transform.position;
         spriteRenderer.transform.position = end.transform.position;
         callback();
-
+        Destroy(start);
+        Destroy(end);
     }
     
     public virtual void dropCallback()
