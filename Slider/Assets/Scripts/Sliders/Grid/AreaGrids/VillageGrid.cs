@@ -197,7 +197,7 @@ public class VillageGrid : SGrid
 
     // Mini-Puzzle - Chad Flashlight
     public void CheckChadMoved(object sender, SGridAnimator.OnTileMoveArgs e) {
-        if (GetStile(8).isTileActive && e.stile.islandId == 8 && !chadFell && chadMet) {
+        if (GetStile(8).isTileActive && e.stile.islandId == 8 && !chadFell && chadMet && chadJumped) {
             chadFell = true;
             chad.transform.GetChild(0).GetComponent<Animator>().SetBool("isFalling", true);
             StartCoroutine(ChadFall());
@@ -222,7 +222,6 @@ public class VillageGrid : SGrid
     public void ChadJumpStarter() {
         if (!chadJumped) {
             StartCoroutine(ChadJump());
-            chadJumped = !chadJumped;
         }
     }
 
@@ -231,30 +230,31 @@ public class VillageGrid : SGrid
         var chadform = chad.transform;
         var chadimator = chadform.GetChild(0).GetComponent<Animator>();
         var target = new GameObject().transform;
-        target.position = chadform.position + Vector3.left + Vector3.up;
+        target.parent = GetStile(8).transform;
+        target.localPosition = chadform.localPosition + Vector3.left + Vector3.up;
         chadimator.SetBool("isJumping", true);
 
         float t = 0;
 
-        Vector3 start = new Vector3(chadform.position.x, chadform.position.y);
+        Vector3 start = new Vector3(chadform.localPosition.x, chadform.localPosition.y);
         while (t < jumpDuration)
         {
             float x = xJumpMotion.Evaluate(t / jumpDuration);
             float y = yJumpMotion.Evaluate(t / jumpDuration);
-            Vector3 pos = new Vector3(Mathf.Lerp(start.x, target.transform.position.x, x),
-                                      Mathf.Lerp(start.y, target.transform.position.y, y));
+            Vector3 pos = new Vector3(Mathf.Lerp(start.x, target.transform.localPosition.x, x),
+                                      Mathf.Lerp(start.y, target.transform.localPosition.y, y));
             
-            chadRenderer.transform.position = pos;
+            chadform.localPosition = pos;
 
             yield return null;
             t += Time.deltaTime;
         }
 
-        chadform.position = target.position;
-        chadRenderer.transform.position = target.position;
+        //chadform.localPosition = target.localPosition;
         chadllider.enabled = false;
 
         chadimator.SetBool("isJumping", false);
+        chadJumped = true;
         yield return null;
     }
 
@@ -263,35 +263,20 @@ public class VillageGrid : SGrid
         var chadform = chad.transform;
         var chadimator = chadform.GetChild(0).GetComponent<Animator>();
         var target = new GameObject().transform;
-        target.position = chadform.position + Vector3.left + Vector3.down;
+        target.localPosition = chadform.localPosition + Vector3.left + Vector3.down;
         chadimator.SetBool("isFalling", true);
 
         float t = jumpDuration;
 
-        //Create 2 dummy transforms for the animation.
-        GameObject start = new GameObject();
-        start.transform.position = chadform.position;
-        GameObject end = new GameObject();
-        end.transform.position = target.position;
-
-        //transform.position = target;
-        while (t >= 0)
-        {
-            float x = xJumpMotion.Evaluate(t / jumpDuration);
-            float y = yJumpMotion.Evaluate(t / jumpDuration);
-            Vector3 pos = new Vector3(Mathf.Lerp(end.transform.position.x, start.transform.position.x, x),
-                                      Mathf.Lerp(end.transform.position.y, start.transform.position.y, y));
-            
-            chadRenderer.transform.position = pos;
-
-            yield return null;
-            t -= Time.deltaTime;
+        var moveVector = new Vector3(-.1f, -.1f, 0);
+        Vector3 currPos = chad.transform.localPosition;
+        Vector3 targetPos = currPos + new Vector3(-1f, -1f, 0);
+        while (currPos.x > targetPos.x && currPos.y > targetPos.y) {
+            chad.transform.localPosition += moveVector;
+            //flashlight.transform.localPosition += moveVector;
+            currPos = chad.transform.localPosition;
+            yield return new WaitForSeconds(0.05f);
         }
-
-        chadllider.enabled = true;
-        chadform.position = end.transform.position;
-        chadRenderer.transform.position = end.transform.position;
-
 
         chadimator.SetBool("isFallen", true);
         chadimator.SetBool("isFalling", false);
