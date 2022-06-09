@@ -30,9 +30,15 @@ public class ArtifactTileButton : MonoBehaviour
     public ArtifactTileButtonAnimator buttonAnimator;
     public UIArtifact buttonManager;
 
-    private void Awake() 
+    [SerializeField]
+    private ConveyorUIData conveyorData;
+
+    private Conveyor[] conveyors;
+
+    protected void Awake() 
     {
         islandSprite = buttonAnimator.sliderImage.sprite;
+        conveyors = FindObjectsOfType<Conveyor>();
     }
 
     protected virtual void Start()
@@ -58,6 +64,16 @@ public class ArtifactTileButton : MonoBehaviour
         // update artifact button
     }
 
+    private void OnEnable()
+    {
+        foreach (Conveyor conveyor in conveyors)
+        {
+            conveyor.OnPowered.AddListener(OnConveyorPowered);
+        }
+
+        UpdateEmptySprite();
+    }
+
     public void OnDisable()
     {
         if (myStile != null && myStile.isTileActive)
@@ -67,17 +83,24 @@ public class ArtifactTileButton : MonoBehaviour
                 ResetToIslandSprite();
             }
         }
+
+        foreach (Conveyor conveyor in conveyors)
+        {
+            conveyor.OnPowered.RemoveListener(OnConveyorPowered);
+        }
     }
 
     public virtual void SetPosition(int x, int y)
     {
         //Debug.Log("Current position: " + this.x + "," + this.y);
-        this.x = x;
+        this.x = x; 
         this.y = y;
         //Debug.Log("New position: " + this.x + "," + this.y);
 
-        Vector3 pos = new Vector3(x - 1, y - 1) * UI_OFFSET;
+        Vector3 pos = new Vector3((x % SGrid.current.height) - 1, y - 1) * UI_OFFSET; //C: i refuse to make everything into MT buttons
         GetComponent<RectTransform>().anchoredPosition = pos;
+
+        UpdateEmptySprite();
     }
 
     public void SelectButton()
@@ -200,4 +223,49 @@ public class ArtifactTileButton : MonoBehaviour
         if (e.stile.islandId == islandId)
             SetPushedDown(false);
     }
+
+    #region Conveyor BS
+    private void OnConveyorPowered(ElectricalNode.OnPoweredArgs e)
+    {
+        UpdateEmptySprite();
+    }
+
+    private void UpdateEmptySprite()
+    {
+        if (conveyorData != null)
+        {
+            if (!isTileActive)
+            {
+                Conveyor conveyor = ConveyorAt(x, y);
+                if (conveyor != null)
+                {
+                    foreach (var item in conveyorData.conveyors)
+                    {
+                        if (item.pos.Equals(conveyor.StartPos))
+                        {
+                            buttonAnimator.sliderImage.sprite = conveyor.Powered ? item.emptyPowered : item.emptyUnpowered;
+                        }
+                    }
+                }
+                else
+                {
+                    buttonAnimator.sliderImage.sprite = emptySprite;
+                }
+            }
+        }
+    }
+
+    private Conveyor ConveyorAt(int x, int y)
+    {
+        foreach (Conveyor conveyor in conveyors)
+        {
+            if (conveyor.StartPos.Equals(new Vector2Int(x, y)))
+            {
+                return conveyor;
+            }
+        }
+
+        return null;
+    }
+    #endregion
 }

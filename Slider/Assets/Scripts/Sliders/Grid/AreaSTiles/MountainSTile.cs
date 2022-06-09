@@ -10,9 +10,6 @@ public class MountainSTile : STile
         base.Init();
     }
 
-
-
-
     public override Vector3 calculatePosition(int x, int y) 
     {
         return new Vector3(x * STILE_WIDTH, y/2 * ((MountainGrid) SGrid.current).layerOffset + y % 2 * STILE_WIDTH);
