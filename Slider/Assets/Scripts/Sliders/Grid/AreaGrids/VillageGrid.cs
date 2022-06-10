@@ -10,6 +10,7 @@ public class VillageGrid : SGrid
     public GameObject caveDoorRocks;
     public GameObject particleSpawner;
 
+    [Header("Chad Animation stuff")]
     [SerializeField] private GameObject chad;
     [SerializeField] private GameObject flashlight;
     [SerializeField] private AnimationCurve xJumpMotion;
