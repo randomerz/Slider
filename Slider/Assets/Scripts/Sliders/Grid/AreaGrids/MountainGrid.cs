@@ -8,7 +8,7 @@ public class MountainGrid : SGrid
 
     public static MountainGrid instance;
 
-    /* The mountian sgrid is a 2 by 4 grid. The top 4 tiles represent the top layer,
+    /* C: The mountian sgrid is a 2 by 4 grid. The top 4 tiles represent the top layer,
         while the bottom 4 tiles represent the bottom layer. For example, the following grid
 
                 5 1
@@ -44,6 +44,11 @@ public class MountainGrid : SGrid
 
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs interactArgs)
     {
+        /*STile dropTile = dropArgs.stile;
+        if(!dropTile || dropTile.y < 2)
+            return; //currently using the anchor on the bottom layer does nothing
+        STile lower = SGrid.current.GetGrid()[dropTile.x, dropTile.y - 2];
+        if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile*/
         if (interactArgs.drop)
         {
             STile dropTile = interactArgs.stile;

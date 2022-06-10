@@ -169,17 +169,19 @@ public class DebugUIManager : MonoBehaviour
         }
     }
 
+    //C: modified to work for any size grid
     public void GiveAllSliders()
     {
         //Also make sure the sliders are in the right positions!
-        string target = SGrid.current.TargetGrid;
-        int[,] grid = new int[3, 3];
+        SGrid sgrid = SGrid.current;
+        string target = sgrid.TargetGrid;
+        int[,] grid = new int[sgrid.width, sgrid.height];
         
 
         // dc: if there's a * in the TargetGrid, then we just set them all on and are done w it lol
         if (target.Contains("*"))
         {
-            for (int j = 1; j <= 9; j++)
+            for (int j = 1; j <= sgrid.width * sgrid.height; j++)
             {
                 SGrid.current.EnableStile(j);
             }
@@ -192,10 +194,10 @@ public class DebugUIManager : MonoBehaviour
             char c = target[0];
             target = target.Substring(1);
             int islandId = (int) c  - '0';
-            if (islandId >= 1 && islandId <= 9)
+            if (islandId >= 1 && islandId <= sgrid.width * sgrid.height)
             {
-                int x = i % 3;
-                int y = 2 - i / 3;
+                int x = i % sgrid.width;
+                int y = sgrid.height - 1 - i / sgrid.width;
                 grid[x, y] = islandId;
                 SGrid.current.EnableStile(islandId);
                 i++;
@@ -261,8 +263,8 @@ public class DebugUIManager : MonoBehaviour
 
     public void NoClip()
     {
-        Collider2D c = GameObject.Find("Player").GetComponent<Collider2D>();
-        c.enabled = !c.enabled;
+        Player p = GameObject.Find("Player").GetComponent<Player>();
+        p.toggleCollision();
     }
 
     public void EarthQuake()

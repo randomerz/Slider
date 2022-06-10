@@ -10,6 +10,22 @@ public class VillageGrid : SGrid
     public GameObject caveDoorRocks;
     public GameObject particleSpawner;
 
+    [Header("Chad Animation stuff")]
+    [SerializeField] private GameObject chad;
+    [SerializeField] private GameObject flashlight;
+    [SerializeField] private AnimationCurve xJumpMotion;
+    [SerializeField] private AnimationCurve yJumpMotion;
+    [SerializeField] private SpriteRenderer chadRenderer;
+    [SerializeField] private SpriteRenderer flashRenderer;
+    [SerializeField] private float jumpDuration;
+    [SerializeField] private GameObject chadPickUpPoint;
+    private Collider2D chadllider;
+    private Transform oldFlashParent;
+    private Vector3 flashlightPadding;
+    private bool chadJumped;
+    private bool chadFell;
+    private bool chadMet;
+
     private bool fishOn;
 
     private Coroutine shuffleBuildUpCoroutine;
@@ -24,6 +40,16 @@ public class VillageGrid : SGrid
         }
 
         base.Init();
+
+        // === Chad Stuff ===
+        chadFell = false;
+        chadMet = false;
+        chadJumped = false;
+        flashlightPadding = Vector3.up * 0.5f;
+        // Finds the non-trigger collider in chad
+        var colliders = chad.GetComponents(typeof(Collider2D));
+        chadllider = ((Collider2D)colliders[0]).isTrigger? (Collider2D)colliders[1] : (Collider2D)colliders[0];
+        // === Chad Stuff ===
 
         if (fishOn)
         {
@@ -42,9 +68,13 @@ public class VillageGrid : SGrid
         if (checkCompletion) {
             UpdateButtonCompletions(this, null);
         }
+
+        // Set the flashlight collider to be disabled from the beginning so that the player can't collect it
+        flashlight.GetComponent<Item>().SetCollider(false);
     }
     
     private void OnEnable() {
+        SGridAnimator.OnSTileMoveEnd += CheckChadMoved;
         if (checkCompletion) {
             Debug.Log("OnEnable checkCompletion");
             SGrid.OnGridMove += SGrid.UpdateButtonCompletions; // this is probably not needed
@@ -54,6 +84,7 @@ public class VillageGrid : SGrid
     }
 
     private void OnDisable() {
+        SGridAnimator.OnSTileMoveEnd -= CheckChadMoved;
         if (checkCompletion) {
             SGrid.OnGridMove -= SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
@@ -164,5 +195,104 @@ public class VillageGrid : SGrid
         caveDoorRocks.SetActive(false);
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");
+    }
+
+    // Mini-Puzzle - Chad Flashlight
+    public void CheckChadMoved(object sender, SGridAnimator.OnTileMoveArgs e) {
+        if (GetStile(8).isTileActive && e.stile.islandId == 8 && !chadFell && chadMet && chadJumped) {
+            chadFell = true;
+            chad.transform.GetChild(0).GetComponent<Animator>().SetBool("isFalling", true);
+            StartCoroutine(ChadFall());
+        }
+    }
+
+    public void ChadPickUpFlashLight() {
+        if (!chadMet) {
+            chadMet = true;
+            Transform pickUpLocation = new GameObject().transform;
+            pickUpLocation.position = chad.transform.position + flashlightPadding;
+            flashlight.GetComponent<Item>().PickUpItem(pickUpLocation, callback:AfterChadPickup);
+        }
+    }
+    private void AfterChadPickup() {
+        oldFlashParent = flashlight.transform.parent;
+        flashlight.transform.parent = chadPickUpPoint.transform;
+        //StartCoroutine(ChadJump());
+    }
+
+    // So that the dcond can call after dialogue ends
+    public void ChadJumpStarter() {
+        if (!chadJumped) {
+            StartCoroutine(ChadJump());
+        }
+    }
+
+    // Animates Chad Jumping
+    public IEnumerator ChadJump() {
+        var chadform = chad.transform;
+        var chadimator = chadform.GetChild(0).GetComponent<Animator>();
+        var target = new GameObject().transform;
+        target.parent = GetStile(8).transform;
+        target.localPosition = chadform.localPosition + Vector3.left + Vector3.up;
+        chadimator.SetBool("isJumping", true);
+
+        float t = 0;
+
+        Vector3 start = new Vector3(chadform.localPosition.x, chadform.localPosition.y);
+        while (t < jumpDuration)
+        {
+            float x = xJumpMotion.Evaluate(t / jumpDuration);
+            float y = yJumpMotion.Evaluate(t / jumpDuration);
+            Vector3 pos = new Vector3(Mathf.Lerp(start.x, target.transform.localPosition.x, x),
+                                      Mathf.Lerp(start.y, target.transform.localPosition.y, y));
+            
+            chadform.localPosition = pos;
+
+            yield return null;
+            t += Time.deltaTime;
+        }
+
+        //chadform.localPosition = target.localPosition;
+        chadllider.enabled = false;
+
+        chadimator.SetBool("isJumping", false);
+        chadJumped = true;
+        yield return null;
+    }
+
+    // Animates Chad Falling
+    private IEnumerator ChadFall() {
+        var chadform = chad.transform;
+        var chadimator = chadform.GetChild(0).GetComponent<Animator>();
+        var target = new GameObject().transform;
+        target.localPosition = chadform.localPosition + Vector3.left + Vector3.down;
+        chadimator.SetBool("isFalling", true);
+
+        float t = jumpDuration;
+
+        var moveVector = new Vector3(-.1f, -.1f, 0);
+        Vector3 currPos = chad.transform.localPosition;
+        Vector3 targetPos = currPos + new Vector3(-1f, -1f, 0);
+        while (currPos.x > targetPos.x && currPos.y > targetPos.y) {
+            chad.transform.localPosition += moveVector;
+            //flashlight.transform.localPosition += moveVector;
+            currPos = chad.transform.localPosition;
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        chadimator.SetBool("isFallen", true);
+        chadimator.SetBool("isFalling", false);
+        
+        flashlight.transform.parent = oldFlashParent;
+        flashlight.GetComponent<Item>().DropItem(chad.transform.position + (Vector3.left * 1.5f), callback:ChadFinishFall);
+    }
+    private void ChadFinishFall() {
+        var flashlight_item = flashlight.GetComponent<Item>();
+        flashlight_item.SetCollider(true);
+        chadllider.enabled = true;
+    }
+
+    public void ChadFell(Conditionals.Condition cond) {
+        cond.SetSpec(chadFell);
     }
 }

@@ -109,6 +109,7 @@ public class NPC : MonoBehaviour
         currentStileUnderneath = STile.GetSTileUnderneath(transform, currentStileUnderneath);
         // Debug.Log("Currently on: " + currentStileUnderneath);
 
+        /*  Don't reparent right away bc this causes some problems with NPCs that are childs of other moving objects (boats, etc.)
         if (currentStileUnderneath != null)
         {
             transform.SetParent(currentStileUnderneath.transform);
@@ -117,6 +118,7 @@ public class NPC : MonoBehaviour
         {
             transform.SetParent(null);
         }
+        */
     }
 
     #region Dialogue
@@ -427,6 +429,7 @@ public class NPC : MonoBehaviour
                 if (remainingStileCrossings.Count > 0 && remainingStileCrossings[0].to == currentStileUnderneath)
                 {
                     remainingStileCrossings.RemoveAt(0);
+                    transform.SetParent(currentStileUnderneath == null ? null : currentStileUnderneath.transform);
                 }
                 yield return new WaitForEndOfFrame();
             }

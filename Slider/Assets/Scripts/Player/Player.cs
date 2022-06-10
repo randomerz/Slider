@@ -13,6 +13,7 @@ public class Player : MonoBehaviour, ISavable
     [SerializeField] private float moveSpeed = 5;
     private float moveSpeedMultiplier = 1;
     private bool canMove = true;
+    private bool collision = true;
     [SerializeField] private bool isOnWater = false;
     private bool isInHouse = false;
 
@@ -108,41 +109,42 @@ public class Player : MonoBehaviour, ISavable
         {
             //currently checks everything in the default layer, also does not hit triggers
             Vector3 target = transform.position + moveSpeed * moveSpeedMultiplier * inputDir.normalized * Time.deltaTime;
-            Physics2D.queriesHitTriggers = false;
-            RaycastHit2D raycasthit = Physics2D.Raycast(transform.position, inputDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
-            
-            if (raycasthit.collider == null || raycasthit.collider.Equals(this.GetComponent<BoxCollider2D>()))
+            if (!collision)
             {
                 transform.position = target;
             }
             else
             {
-                Vector3 testMoveDir = new Vector3(inputDir.x, 0f).normalized;
-                target = transform.position + moveSpeed * moveSpeedMultiplier * testMoveDir * Time.deltaTime;
-                RaycastHit2D raycasthitX = Physics2D.Raycast(transform.position, testMoveDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
-                if (raycasthitX.collider == null)
+                Physics2D.queriesHitTriggers = false;
+                RaycastHit2D raycasthit = Physics2D.Raycast(transform.position, inputDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
+
+                if (raycasthit.collider == null || raycasthit.collider.Equals(this.GetComponent<BoxCollider2D>()))
                 {
                     transform.position = target;
                 }
                 else
                 {
-                    testMoveDir = new Vector3(0f, inputDir.y).normalized;
+                    Vector3 testMoveDir = new Vector3(inputDir.x, 0f).normalized;
                     target = transform.position + moveSpeed * moveSpeedMultiplier * testMoveDir * Time.deltaTime;
-                    RaycastHit2D raycasthitY = Physics2D.Raycast(transform.position, testMoveDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
-                    if (raycasthitY.collider == null)
+                    RaycastHit2D raycasthitX = Physics2D.Raycast(transform.position, testMoveDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
+                    if (raycasthitX.collider == null)
                     {
                         transform.position = target;
                     }
+                    else
+                    {
+                        testMoveDir = new Vector3(0f, inputDir.y).normalized;
+                        target = transform.position + moveSpeed * moveSpeedMultiplier * testMoveDir * Time.deltaTime;
+                        RaycastHit2D raycasthitY = Physics2D.Raycast(transform.position, testMoveDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
+                        if (raycasthitY.collider == null)
+                        {
+                            transform.position = target;
+                        }
+                    }
                 }
+                Physics2D.queriesHitTriggers = true;
             }
-            Physics2D.queriesHitTriggers = true;
-
-            // rb.velocity = moveSpeed * moveSpeedMultiplier * inputDir.normalized;
         }
-        // } else
-        // {
-        //     rb.velocity = Vector2.zero;
-        // }
 
         // updating childing
         currentStileUnderneath = STile.GetSTileUnderneath(transform, currentStileUnderneath);
@@ -246,6 +248,13 @@ public class Player : MonoBehaviour, ISavable
 
     public static void SetCanMove(bool value) {
         _instance.canMove = value;
+    }
+
+    public void toggleCollision()
+    {
+        _instance.collision = !_instance.collision;
+        Collider2D collider = GetComponent<Collider2D>();
+        collider.enabled = collision;
     }
 
 
