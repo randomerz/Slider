@@ -4764,6 +4764,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5049116215420832305}
     m_Modifications:
+    - target: {fileID: 4476111964976586664, guid: 06a8947534134dc41adac2fed051b7f5, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4476111964976586665, guid: 06a8947534134dc41adac2fed051b7f5, type: 3}
       propertyPath: m_Name
       value: EventSystem

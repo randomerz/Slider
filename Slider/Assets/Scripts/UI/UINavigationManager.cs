@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 /// <summary>
@@ -17,7 +19,7 @@ public class UINavigationManager : MonoBehaviour
     [Tooltip("Match each UI panel GameObject with all the navigatable buttons inside of it.")]
     [SerializeField] private ButtonSet[] selectableSets;
 
-    // We convert our buttonSets into a dictionary at start (dictionaries are not serializable and therefore invis in the inspector)
+    // We convert our buttonSets into a dictionary at start (dictionaries are not serializable and therefore invisible in the inspector)
     private Dictionary<GameObject, Selectable[]> selectableSetDictionary;
 
     /// <summary>
@@ -26,6 +28,27 @@ public class UINavigationManager : MonoBehaviour
     /// </summary>
     public static GameObject CurrentMenu { get => _instance._currentMenu; set => _instance._currentMenu = value; }
     [SerializeField] private GameObject _currentMenu;
+
+    /// <summary>
+    /// Making a keyboard input switches to keyboard mode and clicking with the mouse switches to mouse mode. The key
+    /// distinction is that buttons will not be put into the Selected state when we are in mouse mode.
+    /// </summary>
+    private static bool _inMouseControlMode = true;
+    public static bool InMouseControlMode
+    {
+        get { return _inMouseControlMode; }
+        set
+        {
+            _inMouseControlMode = value;
+            if (_inMouseControlMode) { ClearSelectable(); }
+            else 
+            {
+                SelectBestButtonInCurrentMenu();
+            }
+        }
+    }
+
+    private InputSettings controls;
 
     /// <summary>
     /// Call this to deslect the currently selected button. No, there isn't a better approach to this. Yes, that drives me insane.
@@ -45,6 +68,55 @@ public class UINavigationManager : MonoBehaviour
         {
             selectableSetDictionary[set.menu] = set.selectables;
         }
+
+        _instance.controls = new InputSettings();
+        LoadBindings();
+    }
+
+    private void OnEnable()
+    {
+        controls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        controls.Disable();
+    }
+
+    InputSystemUIInputModule inputSystemUIInputModule;
+
+    public static void LoadBindings()
+    {
+        if (_instance == null)
+        {
+            return;
+        }
+
+        _instance.inputSystemUIInputModule = _instance.GetComponent<InputSystemUIInputModule>();
+
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+        {
+            _instance.controls.LoadBindingOverridesFromJson(rebinds);
+        }
+        _instance.controls.UI.Navigate.performed += context =>
+        {
+            if (CurrentMenu != null && InMouseControlMode) { 
+                InMouseControlMode = false;
+            }
+        };
+        _instance.controls.UI.Submit.performed += context =>
+        {
+            if (CurrentMenu != null && InMouseControlMode) { 
+                InMouseControlMode = false;
+            }
+        };
+        _instance.controls.UI.Click.performed += context =>
+        {
+            if (CurrentMenu != null && !InMouseControlMode) { 
+                InMouseControlMode = true;
+            }
+        };
     }
 
     /// <summary>
@@ -80,11 +152,12 @@ public class UINavigationManager : MonoBehaviour
 
     /// <summary>
     /// Selects the first selectable button inside of the buttons array for the currentMenu in buttonSets 
-    /// based on the ordering in the inspector. Higher-up buttons are chosen first.
+    /// based on the ordering in the inspector. Higher-up buttons are chosen first. Does nothing if the
+    /// UI is currently in mouse control mode.
     /// </summary>
     public static void SelectBestButtonInCurrentMenu()
     {
-        if (_instance._currentMenu == null)
+        if (_inMouseControlMode || _instance._currentMenu == null)
         {
             return;
         }

@@ -67,7 +67,7 @@ public class MainMenuManager : MonoBehaviour
 
         _instance.controls.UI.Back.performed += context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); };
 
-        // Pressing a navigation key selects a button is one is not already selected
+        // Pressing a navigation key selects a button if one is not already selected
         _instance.controls.UI.Navigate.performed += context => 
         {
             if (!UINavigationManager.ButtonInCurrentMenuIsSelected())
@@ -189,7 +189,7 @@ public class MainMenuManager : MonoBehaviour
             QuitGame();
         }
 
-        StartCoroutine(ISelectTopmostButton());
+        SelectTopmostButton();
     }
 
     public void CloseAllPanels()
@@ -202,7 +202,7 @@ public class MainMenuManager : MonoBehaviour
         creditsPanel.SetActive(false);
 
         UINavigationManager.CurrentMenu = mainMenuPanel;
-        StartCoroutine(ISelectTopmostButton());
+        SelectTopmostButton();
     }
 
     public void OpenSaves()
@@ -263,7 +263,7 @@ public class MainMenuManager : MonoBehaviour
         CloseAllPanels();
         optionsPanel.SetActive(true);
         UINavigationManager.CurrentMenu = optionsPanel;
-        StartCoroutine(ISelectTopmostButton());
+        SelectTopmostButton();
 
         musicSlider.value = SettingsManager.MusicVolume;
         sfxSlider.value = SettingsManager.SFXVolume;
@@ -278,7 +278,7 @@ public class MainMenuManager : MonoBehaviour
         screenShakeSlider.value = SettingsManager.ScreenShake;
         bigTextToggle.isOn = SettingsManager.BigTextEnabled;
 
-        StartCoroutine(ISelectTopmostButton());
+        SelectTopmostButton();
     }
 
     public void OpenControls()
@@ -286,7 +286,7 @@ public class MainMenuManager : MonoBehaviour
         CloseAllPanels();
         controlsPanel.SetActive(true);
         UINavigationManager.CurrentMenu = controlsPanel;
-        StartCoroutine(ISelectTopmostButton());
+        SelectTopmostButton();
     }
 
     public void OpenCredits()
@@ -294,7 +294,7 @@ public class MainMenuManager : MonoBehaviour
         CloseAllPanels();
         creditsPanel.SetActive(true);
         UINavigationManager.CurrentMenu = creditsPanel;
-        StartCoroutine(ISelectTopmostButton());
+        SelectTopmostButton();
     }
 
     #endregion

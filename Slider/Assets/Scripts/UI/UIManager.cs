@@ -125,6 +125,8 @@ public class UIManager : MonoBehaviour
         isGamePaused = false;
         
         OnResume?.Invoke(this, null);
+
+        UINavigationManager.CurrentMenu = null;
     }
 
     // DC: this is really bad code haha
