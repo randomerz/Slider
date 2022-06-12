@@ -11,6 +11,7 @@ public class SGrid : MonoBehaviour, ISavable
 
     public class OnGridMoveArgs : System.EventArgs
     {
+        public STile[,] oldGrid;
         public STile[,] grid;
     }
     public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
@@ -202,13 +203,34 @@ public class SGrid : MonoBehaviour, ISavable
     //        (0, 0) ->  4 . 5
     public static string GetGridString()
     {
+        return GetGridString(current.grid);
+        //string s = "";
+        //for (int y = current.height - 1; y >= 0; y--)
+        //{
+        //    for (int x = 0; x < current.width; x++)
+        //    {
+        //        if (current.grid[x, y].isTileActive)
+        //            s += IntToChar(current.grid[x, y].islandId);
+        //        else
+        //            s += "#";
+        //    }
+        //    if (y != 0)
+        //    {
+        //        s += "_";
+        //    }
+        //}
+        //return s;
+    }
+
+    public static string GetGridString(STile[,] grid)
+    {
         string s = "";
-        for (int y = current.height - 1; y >= 0; y--)
+        for (int y = grid.GetLength(1) - 1; y >= 0; y--)
         {
-            for (int x = 0; x < current.width; x++)
+            for (int x = 0; x < grid.GetLength(0); x++)
             {
-                if (current.grid[x, y].isTileActive)
-                    s += IntToChar(current.grid[x, y].islandId);
+                if (grid[x, y].isTileActive)
+                    s += IntToChar(grid[x, y].islandId);
                 else
                     s += "#";
             }
@@ -397,9 +419,10 @@ public class SGrid : MonoBehaviour, ISavable
             newGrid[m.endLoc.x, m.endLoc.y] = grid[m.startLoc.x, m.startLoc.y];
             //Debug.Log("Setting " + m.x + " " + m.y + " to " + m.z + " " + m.w);
         }
+        STile[,] oldGrid = grid;
         grid = newGrid;
 
-        OnGridMove?.Invoke(this, new OnGridMoveArgs { grid = grid });
+        OnGridMove?.Invoke(this, new OnGridMoveArgs { oldGrid = oldGrid, grid = grid });
     }
 
 
