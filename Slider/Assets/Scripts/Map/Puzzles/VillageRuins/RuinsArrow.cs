@@ -14,6 +14,8 @@ public class RuinsArrow : MonoBehaviour
     [SerializeField] private ParticleSystem arrowParticles;
     [SerializeField] private RuinsMapIcons mapIcons;
 
+    private bool anyRodsOn;
+
     private void Awake()
     {
         SGrid.OnGridMove += UpdateArrowOnStart;
@@ -165,6 +167,7 @@ public class RuinsArrow : MonoBehaviour
             rod3.SetRod(true);
             mapIcons.SetMapIcon(1, true);
             mapIcons.SetMapIcon(3, true);
+            anyRodsOn = true;
         }
         if (CheckGrid.contains(gridString, "62"))
         {
@@ -172,6 +175,7 @@ public class RuinsArrow : MonoBehaviour
             rod6.SetRod(true);
             mapIcons.SetMapIcon(2, true);
             mapIcons.SetMapIcon(6, true);
+            anyRodsOn = true;
         }
         if (CheckGrid.contains(gridString, "3...6"))
         {
@@ -179,6 +183,7 @@ public class RuinsArrow : MonoBehaviour
             rod6.SetRod(true);
             mapIcons.SetMapIcon(3, true);
             mapIcons.SetMapIcon(6, true);
+            anyRodsOn = true;
         }
         if (CheckGrid.contains(gridString, "1...2"))
         {
@@ -186,6 +191,7 @@ public class RuinsArrow : MonoBehaviour
             rod2.SetRod(true);
             mapIcons.SetMapIcon(1, true);
             mapIcons.SetMapIcon(2, true);
+            anyRodsOn = true;
         }
     }
 
@@ -195,5 +201,11 @@ public class RuinsArrow : MonoBehaviour
         rod2.SetRod(false);
         rod3.SetRod(false);
         rod6.SetRod(false);
+        anyRodsOn = false;
+    }
+
+    public void CheckActiveRods(Conditionals.Condition c)
+    {
+        c.SetSpec(anyRodsOn);
     }
 }

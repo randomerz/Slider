@@ -31,9 +31,6 @@ public class ArtifactTabManager : MonoBehaviour
     private ArtifactTileButton middle;
     public void SetCurrentScreen(int screenIndex)
     {
-        //Debug.Log("Checked stuff");
-        //Debug.Log(SGrid.current.GetActiveTiles().Count + " " + SGrid.GetNumButtonCompletions());
-        //Debug.Log(PlayerInventory.Contains("Scroll of Realigning", Area.Desert));
         if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert)
             && SGrid.current.GetActiveTiles().Count == SGrid.current.GetTotalNumTiles()
             && SGrid.GetNumButtonCompletions() != SGrid.current.GetTotalNumTiles())
@@ -42,8 +39,7 @@ public class ArtifactTabManager : MonoBehaviour
             saveTab.SetIsVisible(false);
             loadTab.SetIsVisible(false);
         }
-        else if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert)
-                 && SGrid.GetNumButtonCompletions() != SGrid.current.GetTotalNumTiles())
+        else if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
         {
             saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
             loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
