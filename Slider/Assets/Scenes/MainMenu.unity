@@ -743,6 +743,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &526525263 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8017564828789371741, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
+  m_PrefabInstance: {fileID: 2047741095}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &533794801 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6285492530584628488, guid: a251bed476ecbe741969521e66693b15, type: 3}
@@ -1899,6 +1910,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
   m_PrefabInstance: {fileID: 6943651184120002341}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1291141388 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8017564828789371741, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
+  m_PrefabInstance: {fileID: 971112474}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1299817382 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
@@ -3397,6 +3419,8 @@ MonoBehaviour:
     - {fileID: 1842977511}
     - {fileID: 1299817382}
     - {fileID: 1575932757}
+    - {fileID: 526525263}
+    - {fileID: 1291141388}
   - menu: {fileID: 1949098307}
     selectables:
     - {fileID: 2083773582}
@@ -3753,8 +3777,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8017564828789371741, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8017564828789371741, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
+      propertyPath: m_SpriteState.m_PressedSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5472d8bbf77c5a64f81e001c32a08e65, type: 3}
+    - target: {fileID: 8017564828789371741, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
+      propertyPath: m_SpriteState.m_SelectedSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: bf0c1c99c1db39649aca0dc268565044, type: 3}
     - target: {fileID: 8017564828789371741, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

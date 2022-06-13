@@ -15,7 +15,6 @@ public class UIArtifactInventory : MonoBehaviour
 
 
     [Header("Special Collectible Counters")] // could be refactored
-    public TextMeshProUGUI villagePagesCount;
     public TextMeshProUGUI flashlightCount;
 
     private void OnEnable() 
@@ -53,16 +52,6 @@ public class UIArtifactInventory : MonoBehaviour
 
     private void UpdateCollectibleCounters(object sender, PlayerInventory.InventoryEvent e)
     {
-        int numPages = 0;
-        if (PlayerInventory.Contains("Page 1", Area.Village)) numPages += 1;
-        if (PlayerInventory.Contains("Page 2", Area.Village)) numPages += 1;
-        if (PlayerInventory.Contains("Page 3", Area.Village)) numPages += 1;
-        if (PlayerInventory.Contains("Page 4", Area.Village)) numPages += 1;
-        
-        villagePagesCount.text = numPages.ToString();
-        villagePagesCount.gameObject.SetActive(numPages > 1);
-
-        
         int numFlashlight = 0;
         if (PlayerInventory.Contains("Flashlight", Area.Village)) numFlashlight += 1;
         if (PlayerInventory.Contains("Flashlight", Area.Caves))   numFlashlight += 1;
