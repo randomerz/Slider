@@ -417,6 +417,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Caps
       objectReference: {fileID: 0}
+    - target: {fileID: 6285492530584628491, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 6285492530584628491, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 24
+      objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -3855,6 +3863,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Done
       objectReference: {fileID: 0}
+    - target: {fileID: 6285492530584628491, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 6285492530584628491, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 24
+      objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -4257,6 +4273,14 @@ PrefabInstance:
     - target: {fileID: 6285492530584628488, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_text
       value: Del
+      objectReference: {fileID: 0}
+    - target: {fileID: 6285492530584628491, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 6285492530584628491, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_Pivot.x
@@ -11322,7 +11346,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8017564828789371740, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8017564828789371740, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
       propertyPath: m_AnchorMax.x
