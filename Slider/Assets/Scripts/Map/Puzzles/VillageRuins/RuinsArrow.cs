@@ -12,6 +12,7 @@ public class RuinsArrow : MonoBehaviour
 
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private ParticleSystem arrowParticles;
+    [SerializeField] private FlashWhite arrowFlash;
     [SerializeField] private RuinsMapIcons mapIcons;
 
     private bool anyRodsOn;
@@ -89,6 +90,7 @@ public class RuinsArrow : MonoBehaviour
         }
 
         Vector2Int dif = t5 - t2;
+        Sprite oldSprite = spriteRenderer.sprite;
         
         if (dif.y == 2)
         {
@@ -127,7 +129,14 @@ public class RuinsArrow : MonoBehaviour
             }
         }
 
+        bool oldFlipX = spriteRenderer.flipX;
         spriteRenderer.flipX = (dif.x < 0);
+
+        if (oldSprite != spriteRenderer.sprite || oldFlipX != spriteRenderer.flipX)
+        {
+            // doesnt look good :/ but if we wanna do something else when it transitions
+            //arrowFlash.Flash(1);
+        }
     }
 
     private void UpdateMap(string gridString)
