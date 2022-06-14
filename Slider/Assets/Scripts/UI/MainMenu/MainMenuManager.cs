@@ -16,6 +16,7 @@ public class MainMenuManager : MonoBehaviour
     public string cutsceneSceneName;
 
     private int newSaveProfileIndex = -1;
+    private int continueProfileIndex = -1;
 
     [Header("Animators")]
     public Animator titleAnimator;
@@ -62,6 +63,10 @@ public class MainMenuManager : MonoBehaviour
     void Start()
     {
         StartCoroutine(OpenCutscene());
+
+        bool isContinueButtonOn = CheckContinueButton();
+        continueButton.interactable = isContinueButtonOn;
+        continueText.color = isContinueButtonOn ? GameSettings.white : GameSettings.lightGray;
 
         listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
 
@@ -118,6 +123,21 @@ public class MainMenuManager : MonoBehaviour
     private bool AreAnyProfilesLoaded()
     {
         return SaveSystem.GetProfile(0) != null || SaveSystem.GetProfile(1) != null || SaveSystem.GetProfile(2) != null;
+    }
+
+    private bool CheckContinueButton()
+    {
+        if (!AreAnyProfilesLoaded())
+        {
+            return false;
+        }
+        continueProfileIndex = SaveSystem.GetRecentlyPlayedIndex();
+        return true;
+    }
+
+    public void ContinueGame()
+    {
+        SaveSystem.LoadSaveProfile(continueProfileIndex);
     }
 
     private IEnumerator OpenCutscene()

@@ -981,7 +981,7 @@ PrefabInstance:
       objectReference: {fileID: 901309740}
     - target: {fileID: 8175251183880460350, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartGameWithCurrentSave
+      value: ContinueGame
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460350, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
