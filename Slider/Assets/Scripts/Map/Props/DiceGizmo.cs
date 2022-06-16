@@ -22,7 +22,10 @@ public class DiceGizmo : MonoBehaviour
         }
         if (shouldDisableAtStart)
             gameObject.SetActive(false); 
-        NumberDialogue.dialogue = value.ToString();
+
+        NumberDialogue.dialogueChain.Clear();
+        NumberDialogue.dialogueChain.Add(new DialogueConditionals.Dialogue());
+        NumberDialogue.dialogueChain[0].dialogue = value.ToString();
         npcScript.dconds.Add(NumberDialogue);
     }
 
@@ -33,7 +36,7 @@ public class DiceGizmo : MonoBehaviour
             value = 1;
         }
         this.GetComponent<SpriteRenderer>().sprite = sprites[value - 1];
-        NumberDialogue.dialogue = value.ToString();
+        NumberDialogue.dialogueChain[0].dialogue = value.ToString();
         npcScript.TypeNextDialogue();
     }
 
