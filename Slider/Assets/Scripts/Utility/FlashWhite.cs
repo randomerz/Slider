@@ -22,6 +22,11 @@ public class FlashWhite : MonoBehaviour
         StartCoroutine(_Flash(n));
     }
 
+    public void SetSpriteActive(bool value)
+    {
+        mySprite.enabled = value;
+    }
+
     private IEnumerator _Flash(int n)
     {
         for (int i = 0; i < n; i++)

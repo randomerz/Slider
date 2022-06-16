@@ -330,10 +330,10 @@ public class MainMenuManager : MonoBehaviour
     {
         string profileName = profileNameTextField.text;
 
-        Debug.Log("Starting new game with profile: " + profileName);
-
         if (profileName.Length == 0)
             return;
+
+        Debug.Log("Starting new game with profile: " + profileName);
 
         SaveSystem.SetProfile(newSaveProfileIndex, new SaveProfile(profileName));
         SaveSystem.SetCurrentProfile(newSaveProfileIndex);
