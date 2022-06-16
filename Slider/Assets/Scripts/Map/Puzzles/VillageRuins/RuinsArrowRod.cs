@@ -14,6 +14,11 @@ public class RuinsArrowRod : MonoBehaviour
 
     private bool onLastFrame;
 
+    private void Awake()
+    {
+        SetRod(false);
+    }
+
     private void LateUpdate()
     {
         onLastFrame = runesSpriteRenderer.enabled;
