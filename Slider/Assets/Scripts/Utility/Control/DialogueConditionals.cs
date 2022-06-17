@@ -7,19 +7,6 @@ using UnityEngine.Serialization;
 [System.Serializable]
 public class DialogueConditionals : Conditionals
 {
-    [Header("Dialogue Conditionals")]
-    [TextArea(1, 4)]
-    public string dialogue; //If you just have a single message, you can put it here, otherwise you can use dialogue chains for all the new functionality.
-    public int priority;
-
-    [FormerlySerializedAs("onDialogue")]    //Omg Thank You Unity :O:
-    public UnityEvent onDialogueStart;
-    public UnityEvent onDialogueEnd;
-    public UnityEvent onDialogueChanged;
-
-
-    private int currentprio = 0;
-
     [System.Serializable]
     public class Dialogue
     {
@@ -35,11 +22,17 @@ public class DialogueConditionals : Conditionals
         public UnityEvent onDialogueEnd;
     }
 
+    [Header("Dialogue Conditionals")]
+    public int priority;
+
     //We might want to expand this to include all possible NPC actions (Dialogue, Walking, Starting Quests, etc.)
     public List<Dialogue> dialogueChain;
+    public UnityEvent onDialogueChanged;
     public UnityEvent onDialogueChainExhausted;
 
     public List<NPC.NPCWalk> walks;
+
+    private int currentprio = 0;
 
     public new bool CheckConditions()
     {
@@ -58,12 +51,7 @@ public class DialogueConditionals : Conditionals
         return true;
     }
 
-    public string GetDialogue()
-    {
-        return dialogue;
-    }
-
-    public string GetDialogueChain(int index)
+    public string GetDialogue(int index)
     {
         if (index < 0 || index >= dialogueChain.Count)
         {
@@ -84,23 +72,21 @@ public class DialogueConditionals : Conditionals
         return currentprio;
     }
 
-    public void OnDialogueStart()
-    {
-        onDialogueStart?.Invoke();   //This is for legacy purposes
-    }
-
-    public void OnDialogueEnd()
-    {
-        onDialogueEnd?.Invoke();   //This is for legacy purposes
-    }
-
     public void OnDialogueChainStart(int index)
     {
+        if (index < 0 || index >= dialogueChain.Count)
+        {
+            Debug.LogError("Attempted to access nonexistent dialogue in chain.");
+        }
         dialogueChain[index].onDialogueStart?.Invoke();
     }
 
     public void OnDialogueChainEnd(int index)
     {
+        if (index < 0 || index >= dialogueChain.Count)
+        {
+            Debug.LogError("Attempted to access nonexistent dialogue in chain.");
+        }
         dialogueChain[index].onDialogueEnd?.Invoke();
     }
 
