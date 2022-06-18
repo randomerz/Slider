@@ -168,18 +168,10 @@ public class NPC : MonoBehaviour
     //Player entering the trigger and also from moving to the next dialogue in the chain.
     public void TypeNextDialogue()
     {
-        if (dialogueEnabled)
+        if (dialogueEnabled && dconds[currDconds].dialogueChain.Count > 0)
         {
-            if (dconds[currDconds].dialogueChain.Count == 0)
-            {
-                dconds[currDconds].OnDialogueStart();
-                dialogueDisplay.DisplaySentence(dconds[currDconds].GetDialogue());
-            }
-            else
-            {
-                dconds[currDconds].OnDialogueChainStart(currDialogueInChain);
-                dialogueDisplay.DisplaySentence(dconds[currDconds].GetDialogueChain(currDialogueInChain));
-            }
+            dconds[currDconds].OnDialogueChainStart(currDialogueInChain);
+            dialogueDisplay.DisplaySentence(dconds[currDconds].GetDialogue(currDialogueInChain));
 
             startedTyping = true;
             dialogueActive = true;
@@ -215,7 +207,7 @@ public class NPC : MonoBehaviour
     {
         currDconds = newDialogue;
         currDialogueInChain = 0;
-        if (!dconds[newDialogue].dialogue.Equals("") || dconds[newDialogue].dialogueChain.Count > 0)
+        if (dconds[newDialogue].dialogueChain.Count > 0)
         {
             //Show new message ping if the dialogue actually exists.
             dialogueDisplay.NewMessagePing();
@@ -262,14 +254,8 @@ public class NPC : MonoBehaviour
 
     private void FinishDialogue()
     {
-        if (dconds[currDconds].dialogueChain.Count == 0)
-        {
-            dconds[currDconds].OnDialogueEnd();
-        } else
-        {
-            dconds[currDconds].OnDialogueChainEnd(currDialogueInChain);
-            waitNextDialogueCoroutine = StartCoroutine(WaitForNextDialogue());
-        }
+        dconds[currDconds].OnDialogueChainEnd(currDialogueInChain);
+        waitNextDialogueCoroutine = StartCoroutine(WaitForNextDialogue());
     }
 
     public void ClearDialogue()

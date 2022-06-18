@@ -46,7 +46,7 @@ public class ArtifactScreenHider : MonoBehaviour
         if (debugSkipHiding)
             return;
 
-        if (!PlayerHasCoffeeOrPages()) 
+        if (!PlayerHasCoffee()) 
         {
             // remove inventory + map
             screenAnimator.screens.RemoveRange(1, screens.Count - 1);
@@ -114,7 +114,7 @@ public class ArtifactScreenHider : MonoBehaviour
 
     private void CheckAddInventoryScreen(object sender, PlayerInventory.InventoryEvent e)
     {
-        if (PlayerHasCoffeeOrPages())
+        if (PlayerHasCoffee())
         {
             AddInventoryScreen();
             PlayerInventory.OnPlayerGetCollectible -= CheckAddInventoryScreen;
@@ -126,12 +126,8 @@ public class ArtifactScreenHider : MonoBehaviour
         }
     }
 
-    private bool PlayerHasCoffeeOrPages()
+    private bool PlayerHasCoffee()
     {
-        return  PlayerInventory.Contains("Coffee", Area.Village) ||
-                PlayerInventory.Contains("Page 1", Area.Village) ||
-                PlayerInventory.Contains("Page 2", Area.Village) ||
-                PlayerInventory.Contains("Page 3", Area.Village) ||
-                PlayerInventory.Contains("Page 4", Area.Village);
+        return  PlayerInventory.Contains("Coffee", Area.Village);
     }
 }

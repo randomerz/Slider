@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 546197226409398654}
   - component: {fileID: 4309223551648304125}
   - component: {fileID: 3922700303012106220}
+  - component: {fileID: 2742300041687911766}
   m_Layer: 0
   m_Name: Village RuinRod
   m_TagString: Untagged
@@ -28,7 +29,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 2703131801352176688}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -99,3 +101,118 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -0.25}
   serializedVersion: 2
   m_Radius: 0.1
+--- !u!114 &2742300041687911766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2444773918057312464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa9afbc0e8b044d4dbb54bbbbbf831da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 4309223551648304125}
+  offSprite: {fileID: -8108964878281749846, guid: 6a808599ab753684db3b68e50b541cfb, type: 3}
+  onSprite: {fileID: -4978384251898531634, guid: 6a808599ab753684db3b68e50b541cfb, type: 3}
+  rodParticles: {fileID: 2703131801352176690}
+--- !u!1001 &7646745185868880315
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 546197226409398654}
+    m_Modifications:
+    - target: {fileID: 5736959436829498761, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: ForceModule.y.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498761, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: ClampVelocityModule.dampen
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498761, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: ClampVelocityModule.drag.scalar
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498761, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498761, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498761, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: InitialModule.startSpeed.minScalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498761, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: EmissionModule.rateOverTime.minScalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498761, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498763, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498763, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498763, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498763, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498763, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498763, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498763, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498763, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498763, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498763, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498763, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736959436829498767, guid: db05955d533e5754281674b97619c4ce, type: 3}
+      propertyPath: m_Name
+      value: RuinsSparklesConstant Variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: db05955d533e5754281674b97619c4ce, type: 3}
+--- !u!4 &2703131801352176688 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5736959436829498763, guid: db05955d533e5754281674b97619c4ce, type: 3}
+  m_PrefabInstance: {fileID: 7646745185868880315}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2703131801352176690 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5736959436829498761, guid: db05955d533e5754281674b97619c4ce, type: 3}
+  m_PrefabInstance: {fileID: 7646745185868880315}
+  m_PrefabAsset: {fileID: 0}

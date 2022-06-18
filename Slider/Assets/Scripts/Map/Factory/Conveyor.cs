@@ -61,6 +61,7 @@ public class Conveyor : ElectricalNode
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
+        base.OnPoweredHandler(e);
         animator.SetFloat("speed", e.powered ? 2 : 0);
 
         if (e.powered && gettingMoveCoroutine == null)

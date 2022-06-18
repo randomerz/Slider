@@ -93,7 +93,7 @@ public class TimedGate : ElectricalNode
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
         //Once the timed gate is powered, it essentially acts as an input source to it's outputs, so we only care about when it is powered.
-
+        base.OnPoweredHandler(e);
         if (e.powered)
         {
             PushSignalToOutput(true, new HashSet<ElectricalNode>(), 1);
