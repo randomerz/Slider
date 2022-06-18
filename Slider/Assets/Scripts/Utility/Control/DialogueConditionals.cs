@@ -22,10 +22,10 @@ public class DialogueConditionals : Conditionals
         public UnityEvent onDialogueEnd;
     }
 
-    [Header("Dialogue Conditionals")]
-    public int priority;
+    [HideInInspector] public int priority;
 
     //We might want to expand this to include all possible NPC actions (Dialogue, Walking, Starting Quests, etc.)
+    [Header("Dialogue Conditionals")]
     public List<Dialogue> dialogueChain;
     public UnityEvent onDialogueChanged;
     public UnityEvent onDialogueChainExhausted;

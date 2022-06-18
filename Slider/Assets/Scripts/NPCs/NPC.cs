@@ -65,6 +65,11 @@ public class NPC : MonoBehaviour
         nav = GetComponent<WorldNavAgent>();
         dialogueEnabled = true;
         waitNextDialogueCoroutine = null;
+
+        for(int i = 0; i < dconds.Count; i++)
+        {
+            dconds[i].priority = i+1;
+        }
     }
 
     private void OnEnable()
