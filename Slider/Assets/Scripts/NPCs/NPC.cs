@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -58,7 +59,7 @@ public class NPC : MonoBehaviour
     private List<Transform> remainingPath;
     private Coroutine walkCoroutine;
 
-
+    private GameObject poofParticles;
 
     private void Awake()
     {
@@ -77,6 +78,8 @@ public class NPC : MonoBehaviour
         PlayerAction.OnAction += OnPlayerAction;
         SGridAnimator.OnSTileMoveStart += OnSTileMoveStart;
         SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
+
+        poofParticles = Resources.Load<GameObject>("SmokePoof Variant");
     }
 
     private void OnDisable()
@@ -336,6 +339,7 @@ public class NPC : MonoBehaviour
 
     public void Teleport(Transform trans)
     {
+        Instantiate(poofParticles, transform.position, Quaternion.identity);
         transform.position = trans.position;
         transform.parent = trans.parent;
     }
