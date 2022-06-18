@@ -43,6 +43,9 @@ public class ElectricalNode : MonoBehaviour
     [SerializeField]
     public UnityEvent<OnPoweredArgs> OnPowered;
 
+    public UnityEvent OnPoweredOn;
+    public UnityEvent OnPoweredOff;
+
     protected void Awake()
     {
         powerPathPrevs = new HashSet<ElectricalNode>();
@@ -68,7 +71,15 @@ public class ElectricalNode : MonoBehaviour
         }
     }
 
-    public virtual void OnPoweredHandler(OnPoweredArgs e) { }
+    public virtual void OnPoweredHandler(OnPoweredArgs e) { 
+        if (e.powered)
+        {
+            OnPoweredOn?.Invoke();
+        } else
+        {
+            OnPoweredOff?.Invoke();
+        }
+    }
 
     public virtual void StartSignal(bool input)
     {
@@ -129,11 +140,30 @@ public class ElectricalNode : MonoBehaviour
         //An assumption is made here that value is a newly updated value, otherwise the refCount strategy does not work.
         if (value)
         {
+
+            if (!powerPathPrevs.Contains(prev))
+            {
+                //This should probably be in ConductiveElectricalNode, but that's kinda a pain.
+                var prevConduct = prev as ConductiveElectricalNode;
+                var thisConduct = this as ConductiveElectricalNode;
+                if (thisConduct != null && prevConduct != null && (thisConduct.isConductiveObject || prevConduct.isConductiveObject))
+                {
+                    thisConduct.CreateElectricalLineEffect(prevConduct);
+                }
+            }
+
             powerRefs = powerRefs + numRefs;
             powerPathPrevs.Add(prev);
         }
         else
         {
+            var prevConduct = prev as ConductiveElectricalNode;
+            var thisConduct = this as ConductiveElectricalNode;
+            if (thisConduct != null && prevConduct != null)
+            {
+                thisConduct.DeleteElectricalLineEffect(prevConduct);
+            }
+
             powerRefs = Mathf.Max(powerRefs - numRefs, 0);
             powerPathPrevs.Remove(prev);
         }
@@ -187,18 +217,18 @@ public class ElectricalNode : MonoBehaviour
 
     //Target Complexity: O(n * p) p is the number of paths in this node as well as other (i.e. refs)
     //This method needs to not only add the neighbor, but update the state and ref counts of other nodes to reflect the change (which can get more complicated).
-    public virtual void AddNeighbor(ElectricalNode other)
+    public virtual bool AddNeighbor(ElectricalNode other)
     {
         if (other == null)
         {
             Debug.LogError("You cannot add a null neighbor to ElectricalNode");
-            return;
+            return false;
         }
         //The neighbor is already added, this prevents double counting.
         if (neighbors.Contains(other) || other.neighbors.Contains(this))
         {
             //Debug.Log($"{gameObject.name} already has an edge including {other.gameObject.name}. This method does nothing.");
-            return;
+            return false;
         }
 
         //Debug.Log($"Adding Node {other.gameObject} to node {this.gameObject}");
@@ -255,18 +285,20 @@ public class ElectricalNode : MonoBehaviour
         {
             //Any other cases are essentially not allowed.
             Debug.LogError("Attempted to create a connection going out of an output node or into an input node, this is not allowed.");
+            return false;
         }
 
+        return true;
     }
 
     //Target Complexity : O(n) p is the number of paths in this node as well as other (i.e. refs)
-    public virtual void RemoveNeighbor(ElectricalNode other)
+    public virtual bool RemoveNeighbor(ElectricalNode other)
     {
         //The neighbor is already removed, this prevents double counting.
         if (!neighbors.Contains(other) && !other.neighbors.Contains(this))
         {
             //Debug.Log($"{gameObject.name} does not have an edge including {other.gameObject.name}. This method does nothing.");
-            return;
+            return false;
         }
 
         //Debug.Log($"Removing Node {other.gameObject} from node {this.gameObject}");
@@ -329,6 +361,9 @@ public class ElectricalNode : MonoBehaviour
         {
             //Any other cases are essentially not allowed.
             Debug.LogError("Attempted to remove a connection going out of an output node or into an input node, this is not allowed.");
+            return false;
         }
+
+        return true;
     }
 }
