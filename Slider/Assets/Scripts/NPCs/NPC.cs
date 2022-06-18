@@ -154,6 +154,11 @@ public class NPC : MonoBehaviour
             //Don't retype the don't interrupt dialogue if it's already been typed.
             return;
         }
+
+        if (dconds[currDconds].alwaysStartFromBeginning)
+        {
+            currDialogueInChain = 0;
+        }
         
         TypeNextDialogue();
     }

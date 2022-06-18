@@ -27,6 +27,7 @@ public class DialogueConditionals : Conditionals
     //We might want to expand this to include all possible NPC actions (Dialogue, Walking, Starting Quests, etc.)
     [Header("Dialogue Conditionals")]
     public List<Dialogue> dialogueChain;
+    public bool alwaysStartFromBeginning;
     public UnityEvent onDialogueChanged;
     public UnityEvent onDialogueChainExhausted;
 
