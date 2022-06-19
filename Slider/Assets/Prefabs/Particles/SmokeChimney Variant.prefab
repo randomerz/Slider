@@ -152,6 +152,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8847753119295245062, guid: e8a5a5c8f3da82b469ac93a43accf240, type: 3}
+      propertyPath: EmissionModule.rateOverDistance.scalar
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8847753119295245062, guid: e8a5a5c8f3da82b469ac93a43accf240, type: 3}
       propertyPath: EmissionModule.rateOverTime.minMaxState
       value: 3
       objectReference: {fileID: 0}
