@@ -40,19 +40,23 @@ public class NPC : MonoBehaviour
     [SerializeField] private DialogueDisplay dialogueDisplay;
 
 
-
     //Dialogue
+    public bool DialogueEnabled => gDialogueEnabled && dialogueEnabled;
+
+    public static bool gDialogueEnabled = true; //Dialogue Enabling for all NPCs.
+    private bool dialogueEnabled;   //The NPC can give dialogue
+
     private int currDconds;    //indices to get the right dialogue
     private int currDialogueInChain;
-    private bool dialogueEnabled;   //The NPC can give dialogue
+
     private bool dialogueActive;    //The NPC is in the process of giving dialogue (regardless of if it's finished)
     private bool startedTyping;     //The NPC is in the middle of typing the dialogue
     private bool waitingForPlayerContinue;  //The NPC is waiting for the player to press e to continue its chain.
+
     private Coroutine waitNextDialogueCoroutine;
 
     //Walking
     private STile currentStileUnderneath;
-    private WorldNavAgent nav;
     private bool walking;   //NPC is in the process of following a path.
     private NPCWalk currWalk;   //Current walk the NPC is performing, null otherwise.
     private List<STileCrossing> remainingStileCrossings;
@@ -63,7 +67,6 @@ public class NPC : MonoBehaviour
 
     private void Awake()
     {
-        nav = GetComponent<WorldNavAgent>();
         dialogueEnabled = true;
         waitNextDialogueCoroutine = null;
 
@@ -99,7 +102,7 @@ public class NPC : MonoBehaviour
 
         //Poll for the new dialogue, and update it if it is different.
         int newDialogue = CurrentDialogue();
-        if (currDconds != newDialogue && dialogueEnabled)
+        if (currDconds != newDialogue && DialogueEnabled)
         {
             ChangeDialogue(newDialogue);
             //StartCoroutine(WaitThenChangeDialogue());
@@ -184,7 +187,7 @@ public class NPC : MonoBehaviour
     //Player entering the trigger and also from moving to the next dialogue in the chain.
     public void TypeNextDialogue()
     {
-        if (dialogueEnabled && dconds[currDconds].dialogueChain.Count > 0)
+        if (DialogueEnabled && dconds[currDconds].dialogueChain.Count > 0)
         {
             dconds[currDconds].OnDialogueChainStart(currDialogueInChain);
             dialogueDisplay.DisplaySentence(dconds[currDconds].GetDialogue(currDialogueInChain));
@@ -207,7 +210,7 @@ public class NPC : MonoBehaviour
         }
     }
 
-    public void DialogueEnabled(bool value)
+    public void SetDialogueEnabled(bool value)
     {
         dialogueEnabled = value;
     }
