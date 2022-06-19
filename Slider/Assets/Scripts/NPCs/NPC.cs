@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -58,13 +59,18 @@ public class NPC : MonoBehaviour
     private List<Transform> remainingPath;
     private Coroutine walkCoroutine;
 
-
+    private GameObject poofParticles;
 
     private void Awake()
     {
         nav = GetComponent<WorldNavAgent>();
         dialogueEnabled = true;
         waitNextDialogueCoroutine = null;
+
+        for(int i = 0; i < dconds.Count; i++)
+        {
+            dconds[i].priority = i+1;
+        }
     }
 
     private void OnEnable()
@@ -72,6 +78,8 @@ public class NPC : MonoBehaviour
         PlayerAction.OnAction += OnPlayerAction;
         SGridAnimator.OnSTileMoveStart += OnSTileMoveStart;
         SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
+
+        poofParticles = Resources.Load<GameObject>("SmokePoof Variant");
     }
 
     private void OnDisable()
@@ -148,6 +156,11 @@ public class NPC : MonoBehaviour
         {
             //Don't retype the don't interrupt dialogue if it's already been typed.
             return;
+        }
+
+        if (dconds[currDconds].alwaysStartFromBeginning)
+        {
+            currDialogueInChain = 0;
         }
         
         TypeNextDialogue();
@@ -326,6 +339,7 @@ public class NPC : MonoBehaviour
 
     public void Teleport(Transform trans)
     {
+        Instantiate(poofParticles, transform.position, Quaternion.identity);
         transform.position = trans.position;
         transform.parent = trans.parent;
     }

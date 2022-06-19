@@ -22,11 +22,12 @@ public class DialogueConditionals : Conditionals
         public UnityEvent onDialogueEnd;
     }
 
-    [Header("Dialogue Conditionals")]
-    public int priority;
+    [HideInInspector] public int priority;
 
     //We might want to expand this to include all possible NPC actions (Dialogue, Walking, Starting Quests, etc.)
+    [Header("Dialogue Conditionals")]
     public List<Dialogue> dialogueChain;
+    public bool alwaysStartFromBeginning;
     public UnityEvent onDialogueChanged;
     public UnityEvent onDialogueChainExhausted;
 
@@ -61,7 +62,7 @@ public class DialogueConditionals : Conditionals
         string dialogue = dialogueChain[index].dialogue;
         if (dialogueChain[index].waitUntilPlayerAction)
         {
-            dialogue = string.Concat(dialogue, "<type>. . .</type>");
+            dialogue = string.Concat(dialogue, "<type> . . .</type>");
         }
 
         return dialogue;
