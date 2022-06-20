@@ -7,9 +7,8 @@ using System.Linq;
 public class SerializableSaveProfile
 {
     public string profileName;
-    public bool completionStatus;
     public float playTimeInSeconds;
-    public System.DateTime lastSaved;
+    public bool completionStatus;
 
     public SerializablePlayer serializablePlayer;
     public Area lastArea;
@@ -32,9 +31,8 @@ public class SerializableSaveProfile
         SerializableSaveProfile ssp = new SerializableSaveProfile();
 
         ssp.profileName = saveProfile.GetProfileName();
-        ssp.completionStatus = saveProfile.GetCompletionStatus();
         ssp.playTimeInSeconds = saveProfile.GetPlayTimeInSeconds();
-        ssp.lastSaved = saveProfile.GetLastSaved();
+        ssp.completionStatus = saveProfile.GetCompletionStatus();
 
         ssp.serializablePlayer = saveProfile.GetSerializablePlayer();
         ssp.lastArea = saveProfile.GetLastArea();
@@ -54,9 +52,8 @@ public class SerializableSaveProfile
     {
         SaveProfile sp = new SaveProfile(profileName);
         
-        sp.SetCompletionStatus(completionStatus);
         sp.SetPlayTimeInSeconds(playTimeInSeconds);
-        sp.SetLastSaved(lastSaved);
+        sp.SetCompletionStatus(completionStatus);
 
         sp.SetSerializeablePlayer(serializablePlayer);
         sp.SetLastArea(lastArea);

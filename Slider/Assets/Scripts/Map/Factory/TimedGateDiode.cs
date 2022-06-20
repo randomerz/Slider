@@ -24,7 +24,6 @@ public class TimedGateDiode : PoweredLightNew
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        base.OnPoweredHandler(e);
         if (e.powered && gate.GateActive)
         {
             swapper.TurnOn();

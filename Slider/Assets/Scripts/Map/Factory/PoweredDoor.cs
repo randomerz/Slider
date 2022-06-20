@@ -19,7 +19,6 @@ public class PoweredDoor : ElectricalNode
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
         //Debug.Log($"We Powered? {e.powered}");
-        base.OnPoweredHandler(e);
         animator.SetBool("Powered", e.powered);
     }
 }

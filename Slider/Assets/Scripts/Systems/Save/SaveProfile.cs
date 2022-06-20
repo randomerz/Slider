@@ -6,9 +6,8 @@ public class SaveProfile
 {
     // profile-specific metadata
     private string profileName;
-    private bool completionStatus;
     private float playTimeInSeconds;
-    private System.DateTime lastSaved;
+    private bool completionStatus;
 
     private SerializablePlayer serializablePlayer;
     private Area lastArea;
@@ -34,16 +33,6 @@ public class SaveProfile
         return profileName;
     }
 
-    public bool GetCompletionStatus()
-    {
-        return completionStatus;
-    }
-
-    public void SetCompletionStatus(bool value)
-    {
-        completionStatus = value;
-    }
-
     public float GetPlayTimeInSeconds()
     {
         return playTimeInSeconds;
@@ -54,14 +43,14 @@ public class SaveProfile
         playTimeInSeconds = value;
     }
 
-    public System.DateTime GetLastSaved()
+    public bool GetCompletionStatus()
     {
-        return lastSaved;
+        return completionStatus;
     }
 
-    public void SetLastSaved(System.DateTime value)
+    public void SetCompletionStatus(bool value)
     {
-        lastSaved = value;
+        completionStatus = value;
     }
 
     public SerializablePlayer GetSerializablePlayer()
@@ -120,8 +109,6 @@ public class SaveProfile
     {
         // Responsible for going around and saving all the data
 
-        lastSaved = System.DateTime.Now;
-        SetBool("isDemoBuild", true);
         SaveSavablesData();
     }
 

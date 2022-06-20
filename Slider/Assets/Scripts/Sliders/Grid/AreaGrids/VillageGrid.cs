@@ -28,9 +28,8 @@ public class VillageGrid : SGrid
 
     private bool fishOn;
 
-    [SerializeField] private RuinsSymbols ruinsSymbols;
     private Coroutine shuffleBuildUpCoroutine;
-    private bool checkCompletion = false;
+    private bool checkCompletion = false; // TODO: serialize
 
     public override void Init() {
         myArea = Area.Village;
@@ -138,37 +137,24 @@ public class VillageGrid : SGrid
         //AudioManager.Play("Puzzle Complete");
 
         //yield return new WaitForSeconds(0.5f);
-        
+
         CameraShake.Shake(0.25f, 0.25f);
         AudioManager.Play("Slide Rumble");
-        ruinsSymbols.FlashSymbol(0);
 
         yield return new WaitForSeconds(1f);
-        
-        CameraShake.Shake(0.25f, 0.25f);
-        AudioManager.Play("Slide Rumble");
-        ruinsSymbols.FlashSymbol(1);
 
-        yield return new WaitForSeconds(1f);
-        
         CameraShake.Shake(0.75f, 0.5f);
         AudioManager.Play("Slide Rumble");
-        ruinsSymbols.FlashSymbol(2);
 
         yield return new WaitForSeconds(1f);
-        
+
         CameraShake.Shake(1.5f, 2.5f);
         AudioManager.Play("Slide Explosion");
-        ruinsSymbols.FlashSymbol(3);
 
         yield return new WaitForSeconds(0.25f);
 
         UIEffects.FlashWhite();
         DoShuffle();
-
-        yield return new WaitForSeconds(0.75f);
-
-        CameraShake.Shake(2, 0.9f);
     }
 
     private void DoShuffle()
@@ -214,7 +200,7 @@ public class VillageGrid : SGrid
     public void CheckChadMoved(object sender, SGridAnimator.OnTileMoveArgs e) {
         if (GetStile(8).isTileActive && e.stile.islandId == 8 && !chadFell && chadMet && chadJumped) {
             chadFell = true;
-            chad.transform.GetChild(0).GetComponent<Animator>().SetBool("isTipping", true);
+            chad.transform.GetChild(0).GetComponent<Animator>().SetBool("isFalling", true);
             StartCoroutine(ChadFall());
         }
     }
@@ -222,7 +208,15 @@ public class VillageGrid : SGrid
     public void ChadPickUpFlashLight() {
         if (!chadMet) {
             chadMet = true;
+            Transform pickUpLocation = new GameObject().transform;
+            pickUpLocation.position = chad.transform.position + flashlightPadding;
+            flashlight.GetComponent<Item>().PickUpItem(pickUpLocation, callback:AfterChadPickup);
         }
+    }
+    private void AfterChadPickup() {
+        oldFlashParent = flashlight.transform.parent;
+        flashlight.transform.parent = chadPickUpPoint.transform;
+        //StartCoroutine(ChadJump());
     }
 
     // So that the dcond can call after dialogue ends
@@ -238,7 +232,7 @@ public class VillageGrid : SGrid
         var chadimator = chadform.GetChild(0).GetComponent<Animator>();
         var target = new GameObject().transform;
         target.parent = GetStile(8).transform;
-        target.localPosition = chadform.localPosition + new Vector3(1.5f, 1);
+        target.localPosition = chadform.localPosition + Vector3.left + Vector3.up;
         chadimator.SetBool("isJumping", true);
 
         float t = 0;
@@ -270,29 +264,26 @@ public class VillageGrid : SGrid
         var chadform = chad.transform;
         var chadimator = chadform.GetChild(0).GetComponent<Animator>();
         var target = new GameObject().transform;
-        target.localPosition = chadform.localPosition + new Vector3(1f, -1);
-        chadimator.SetBool("isTipping", true);
+        target.localPosition = chadform.localPosition + Vector3.left + Vector3.down;
+        chadimator.SetBool("isFalling", true);
 
-        yield return new WaitForSeconds(0.5f);
+        float t = jumpDuration;
 
-        chadimator.SetBool("isFallen", true);
-        Vector3 startPos = chad.transform.localPosition;
-        Vector3 targetPos = target.transform.localPosition;
-
-        float fallDuration = 0.5f;
-        float t = 0;
-        while (t < fallDuration) {
-            chadform.localPosition = Vector3.Lerp(startPos, targetPos, t / fallDuration);
-
-            yield return null;
-            t += Time.deltaTime;
+        var moveVector = new Vector3(-.1f, -.1f, 0);
+        Vector3 currPos = chad.transform.localPosition;
+        Vector3 targetPos = currPos + new Vector3(-1f, -1f, 0);
+        while (currPos.x > targetPos.x && currPos.y > targetPos.y) {
+            chad.transform.localPosition += moveVector;
+            //flashlight.transform.localPosition += moveVector;
+            currPos = chad.transform.localPosition;
+            yield return new WaitForSeconds(0.05f);
         }
 
-        chadimator.SetBool("isTipping", false);
-        chadform.localPosition = targetPos;
-
-        flashlight.transform.parent = GetStile(8).transform;
-        flashlight.GetComponent<Item>().DropItem(chad.transform.position + (Vector3.right * 1f), callback: ChadFinishFall);
+        chadimator.SetBool("isFallen", true);
+        chadimator.SetBool("isFalling", false);
+        
+        flashlight.transform.parent = oldFlashParent;
+        flashlight.GetComponent<Item>().DropItem(chad.transform.position + (Vector3.left * 1.5f), callback:ChadFinishFall);
     }
     private void ChadFinishFall() {
         var flashlight_item = flashlight.GetComponent<Item>();

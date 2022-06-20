@@ -43,21 +43,6 @@ public class SaveSystem
         return saveProfiles[index];
     }
 
-    public static int GetRecentlyPlayedIndex()
-    {
-        int ret = -1;
-        System.DateTime mostRecent = System.DateTime.MinValue;
-        for (int i = 0; i < 3; i++)
-        {
-            if (saveProfiles[i] != null && saveProfiles[i].GetLastSaved() > mostRecent)
-            {
-                ret = i;
-                mostRecent = saveProfiles[i].GetLastSaved();
-            }
-        }
-        return ret;
-    }
-
     public static void SetProfile(int index, SaveProfile profile)
     {
         saveProfiles[index] = profile;
@@ -65,7 +50,6 @@ public class SaveSystem
 
     public static void SetCurrentProfile(int index)
     {
-        currentIndex = index;
         Current = GetProfile(index);
     }
 
@@ -176,7 +160,7 @@ public class SaveSystem
         }
     }
 
-    public static string GetFilePath(int index)
+    private static string GetFilePath(int index)
     {
         return Application.persistentDataPath + string.Format("/slider{0}.cat", index);
     }

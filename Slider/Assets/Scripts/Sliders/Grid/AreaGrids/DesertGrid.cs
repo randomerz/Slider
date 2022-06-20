@@ -17,15 +17,17 @@ public class DesertGrid : SGrid
 
     private bool jackalBoned = false;
     private bool jackalOasis = false;
-    private bool archDino = false;
 
     public DiceGizmo dice1;
     public DiceGizmo dice2;
+    private bool challengedChad = false;
+    private bool startDice = false;
     private bool diceWon = false;
 
     private bool VIPHelped = false;
 
-    private bool gazelleOasis = false;
+    private bool GazelleQuest = false;
+    private bool GazelleOasis = false;
 
     private bool checkCompletion = false;
     private bool checkMonkey = false;
@@ -50,7 +52,7 @@ public class DesertGrid : SGrid
         if (dice1 == null && dice2 == null) Debug.LogWarning("Die have not been set!");
         if (log == null) Debug.LogWarning("Log has not been set!");
 
-        if (!campfireIsLit)
+        if (campfire == false)
         {
             log.gameObject.SetActive(true);
             campfire.SetBoolToTrue("isDying");
@@ -103,31 +105,12 @@ public class DesertGrid : SGrid
 
         //Bool Fun
         SaveSystem.Current.SetBool("desertCamp", campfireIsLit);
-        SaveSystem.Current.SetBool("desertCrocoOasis", crocoOasis);
-        SaveSystem.Current.SetBool("desertMonkeyOasis", monkeyOasis);
-        SaveSystem.Current.SetBool("desertJackalBoned", jackalBoned);
-        SaveSystem.Current.SetBool("desertJackalOasis", jackalOasis);
-        SaveSystem.Current.SetBool("desertVIP", VIPHelped);
-        SaveSystem.Current.SetBool("desertGazelleOasis", gazelleOasis);
-        SaveSystem.Current.SetBool("desertCheckCompletion", checkCompletion);
-        SaveSystem.Current.SetBool("desertCheckMonkey", checkMonkey);
-        SaveSystem.Current.SetBool("desertArchDino", archDino);
+
     }
 
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
-
-        campfireIsLit = profile.GetBool("desertCamp");
-        crocoOasis = profile.GetBool("desertCrocoOasis");
-        monkeyOasis = profile.GetBool("desertMonkeyOasis");
-        jackalBoned = profile.GetBool("desertJackalBoned");
-        jackalOasis = profile.GetBool("desertJackalOasis");
-        archDino = profile.GetBool("desertArchDino");
-        VIPHelped = profile.GetBool("desertVIP");
-        gazelleOasis = profile.GetBool("desertGazelleOasis");
-        checkCompletion = profile.GetBool("desertCheckCompletion");
-        checkMonkey = profile.GetBool("desertCheckMonkey");
     }
 
     // === Desert puzzle specific ===
@@ -146,6 +129,14 @@ public class DesertGrid : SGrid
     public void SetCrocoOasis(bool b)
     {
         crocoOasis = b;
+    }
+    public void CheckArchTip(Conditionals.Condition c)
+    {
+        c.SetSpec(!crocoOasis);
+    }
+    public void CheckCrocoOasis(Conditionals.Condition c)
+    {
+        c.SetSpec(crocoOasis);
     }
     public void EnableMonkeyShake()
     {
@@ -178,6 +169,7 @@ public class DesertGrid : SGrid
             SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
         }
     }
+    //cond for monkey dialogue
     public void SetMonkeyOasis(bool b)
     {
         monkeyOasis = b;
@@ -190,6 +182,10 @@ public class DesertGrid : SGrid
     public void IsMonkeyNearOasis(Conditionals.Condition c)
     {
         c.SetSpec(CheckGrid.contains(GetGridString(), "(3|2)(2|3)") || CheckGrid.contains(GetGridString(), "(3|2)...(2|3)"));
+    }
+    public void IsMonkeyInOasis(Conditionals.Condition c)
+    {
+        c.SetSpec(monkeyOasis);
     }
     public void IsFirstShake(Conditionals.Condition c)
     {
@@ -211,9 +207,13 @@ public class DesertGrid : SGrid
     {
         jackalOasis = b;
     }
-    public void SetArchDino(bool b)
+    public void CheckJackalBoned(Conditionals.Condition c)
     {
-        archDino = b;
+        c.SetSpec(jackalBoned);
+    }
+    public void CheckJackalOasis(Conditionals.Condition c)
+    {
+        c.SetSpec(jackalOasis);
     }
     public void CheckJackalNearOasis(Conditionals.Condition c)
     {
@@ -297,9 +297,14 @@ public class DesertGrid : SGrid
             c.SetSpec(false);
         }
     }
+    public void CheckVIPHelped(Conditionals.Condition c)
+    {
+        c.SetSpec(VIPHelped);
+    }
     public void SpawnShades()
     {
         Collectible c = GetCollectible("Sunglasses");
+        Debug.Log("Shades creep up to your neck");
         VIPHelped = true;
         if (!PlayerInventory.Contains(c))
         {
@@ -311,13 +316,25 @@ public class DesertGrid : SGrid
 
     #region Gazelle
     //Puzzle 6: Shady Gazelle
+    public void SetGazelleQuest(bool b)
+    {
+        GazelleQuest = b;
+    }
     public void SetGazelleOasis(bool b)
     {
-        gazelleOasis = b;
+        GazelleOasis = b;
+    }
+    public void CheckGazelleQuest(Conditionals.Condition c)
+    {
+        c.SetSpec(GazelleQuest);
     }
     public void CheckGazelleNearOasis(Conditionals.Condition c)
     {
         c.SetSpec(CheckGrid.contains(GetGridString(), "26") || CheckGrid.contains(GetGridString(), "6...2"));
+    }
+    public void CheckGazelleOasis(Conditionals.Condition c)
+    {
+        c.SetSpec(GazelleOasis);
     }
 
     #endregion

@@ -23,7 +23,6 @@ public class Wire : ConductiveElectricalNode
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        base.OnPoweredHandler(e);
         SetTiles();
     }
 

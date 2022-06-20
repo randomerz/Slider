@@ -52,38 +52,6 @@ MonoBehaviour:
   OnPowered:
     m_PersistentCalls:
       m_Calls: []
-  OnPoweredOn:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8919005992056777909}
-        m_TargetAssemblyTypeName: UnityEngine.SpriteRenderer, UnityEngine
-        m_MethodName: set_sprite
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: -71710897039486304, guid: ba1cca9a305be6442832fb7612032d69, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Sprite, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnPoweredOff:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8919005992056777909}
-        m_TargetAssemblyTypeName: UnityEngine.SpriteRenderer, UnityEngine
-        m_MethodName: set_sprite
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1029078488505346688, guid: ba1cca9a305be6442832fb7612032d69, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Sprite, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  electricalLinePrefab: {fileID: 5414989969745396199, guid: affbcdc620b4a2e4ca4c6feec8831df5, type: 3}
-  isConductiveObject: 1
 --- !u!58 &1490788914983603484
 CircleCollider2D:
   m_ObjectHideFlags: 0
