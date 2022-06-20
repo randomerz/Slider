@@ -199,6 +199,7 @@ public class VillageGrid : SGrid
             StartCoroutine(CheckCompletionsAfterDelay(1.1f));
 
             AudioManager.Play("Puzzle Complete");
+            SettingsManager.AutoMove = false;
             UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
