@@ -9,6 +9,8 @@ public class Wire : ConductiveElectricalNode
     private GameObject sparks;
     private List<GameObject> sparkInstances;
 
+
+
     private new void Awake()
     {
         base.Awake();
@@ -36,7 +38,9 @@ public class Wire : ConductiveElectricalNode
             {
                 if (tm.GetTile(pos) != null)
                 {
-                    sparkInstances.Add(Instantiate(sparks, tm.CellToWorld(pos) + new Vector3(0.5f, 0.5f), Quaternion.identity, transform));
+                    GameObject sparkInstance = Instantiate(sparks, tm.CellToWorld(pos) + new Vector3(0.5f, 0.5f), Quaternion.identity, transform);
+                    sparkInstance.GetComponent<WireSparks>().StartSparks(WireDatabase.Instance.Sparks[tm.GetSprite(pos)]);
+                    sparkInstances.Add(sparkInstance);
                 }
             }
         } else
