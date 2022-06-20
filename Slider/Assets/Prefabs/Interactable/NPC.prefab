@@ -206,7 +206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: TutorialSign
-  speed: 3
+  speed: 4
   animator: {fileID: 898760068327470465}
   dconds:
   - onSuccess:
@@ -216,18 +216,11 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     conditions: []
-    dialogue: Hello, I am sign!
     priority: 1
-    onDialogueStart:
-      m_PersistentCalls:
-        m_Calls: []
-    onDialogueEnd:
-      m_PersistentCalls:
-        m_Calls: []
+    dialogueChain: []
     onDialogueChanged:
       m_PersistentCalls:
         m_Calls: []
-    dialogueChain: []
     onDialogueChainExhausted:
       m_PersistentCalls:
         m_Calls: []
