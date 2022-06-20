@@ -137,13 +137,13 @@ public class AudioManager : MonoBehaviour
             Debug.LogError("Sound: " + name + " not found!");
             return;
         }
-        s.source.pitch = s.pitch;
-        s.source.volume = s.volume * volume;
+
         if (s.doRandomPitch)
             s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
         else
-            
+            s.source.pitch = s.pitch;
 
+        s.source.volume = s.volume * volume;
         s.source.Play();
     }
 

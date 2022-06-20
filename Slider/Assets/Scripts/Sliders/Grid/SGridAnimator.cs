@@ -228,7 +228,7 @@ public class SGridAnimator : MonoBehaviour
     protected IEnumerator StartCameraShakeEffect()
     {
         CameraShake.ShakeConstant(movementDuration + 0.1f, 0.15f);
-        AudioManager.Play("Slide Rumble");
+        AudioManager.PlayWithVolume("Slide Rumble", movementDuration);
 
         yield return new WaitForSeconds(movementDuration);
 
