@@ -12,7 +12,10 @@ public class RuinsArrow : MonoBehaviour
 
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private ParticleSystem arrowParticles;
+    [SerializeField] private FlashWhite arrowFlash;
     [SerializeField] private RuinsMapIcons mapIcons;
+
+    private bool anyRodsOn;
 
     private void Awake()
     {
@@ -87,6 +90,7 @@ public class RuinsArrow : MonoBehaviour
         }
 
         Vector2Int dif = t5 - t2;
+        Sprite oldSprite = spriteRenderer.sprite;
         
         if (dif.y == 2)
         {
@@ -125,7 +129,14 @@ public class RuinsArrow : MonoBehaviour
             }
         }
 
+        bool oldFlipX = spriteRenderer.flipX;
         spriteRenderer.flipX = (dif.x < 0);
+
+        if (oldSprite != spriteRenderer.sprite || oldFlipX != spriteRenderer.flipX)
+        {
+            // doesnt look good :/ but if we wanna do something else when it transitions
+            //arrowFlash.Flash(1);
+        }
     }
 
     private void UpdateMap(string gridString)
@@ -165,6 +176,7 @@ public class RuinsArrow : MonoBehaviour
             rod3.SetRod(true);
             mapIcons.SetMapIcon(1, true);
             mapIcons.SetMapIcon(3, true);
+            anyRodsOn = true;
         }
         if (CheckGrid.contains(gridString, "62"))
         {
@@ -172,6 +184,7 @@ public class RuinsArrow : MonoBehaviour
             rod6.SetRod(true);
             mapIcons.SetMapIcon(2, true);
             mapIcons.SetMapIcon(6, true);
+            anyRodsOn = true;
         }
         if (CheckGrid.contains(gridString, "3...6"))
         {
@@ -179,6 +192,7 @@ public class RuinsArrow : MonoBehaviour
             rod6.SetRod(true);
             mapIcons.SetMapIcon(3, true);
             mapIcons.SetMapIcon(6, true);
+            anyRodsOn = true;
         }
         if (CheckGrid.contains(gridString, "1...2"))
         {
@@ -186,6 +200,7 @@ public class RuinsArrow : MonoBehaviour
             rod2.SetRod(true);
             mapIcons.SetMapIcon(1, true);
             mapIcons.SetMapIcon(2, true);
+            anyRodsOn = true;
         }
     }
 
@@ -195,5 +210,11 @@ public class RuinsArrow : MonoBehaviour
         rod2.SetRod(false);
         rod3.SetRod(false);
         rod6.SetRod(false);
+        anyRodsOn = false;
+    }
+
+    public void CheckActiveRods(Conditionals.Condition c)
+    {
+        c.SetSpec(anyRodsOn);
     }
 }

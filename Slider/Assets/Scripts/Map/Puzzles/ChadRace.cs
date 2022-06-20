@@ -55,7 +55,9 @@ public class ChadRace : MonoBehaviour
         chadimator.SetBool("isSad", false);
 
         // Setting the first time dialogue
-        countDownDialogue.dialogue = "Bet I could beat you to the bell (e to start)";
+        countDownDialogue.dialogueChain.Clear();
+        countDownDialogue.dialogueChain.Add(new DialogueConditionals.Dialogue());
+        countDownDialogue.dialogueChain[0].dialogue = "Bet I could beat you to the bell (e to start)";
         npcScript.dconds.Add(countDownDialogue);
     }
 
@@ -100,7 +102,7 @@ public class ChadRace : MonoBehaviour
                 break;
             case State.ChadWon:
                 chadimator.SetBool("isWalking", false);
-                countDownDialogue.dialogue = "Pfft, too easy. Come back when you're fast enough to compete with me. (e to start)";
+                countDownDialogue.dialogueChain[0].dialogue = "Pfft, too easy. Come back when you're fast enough to compete with me. (e to start)";
                 transform.localPosition = chadEndLocal;
 
                 // AudioManager.SetMusicParameter("Jungle", "JungleChadStarted", 0);
@@ -179,7 +181,7 @@ public class ChadRace : MonoBehaviour
     }
 
     private void DisplayAndTriggerDialogue(string message) {
-        countDownDialogue.dialogue = message;
+        countDownDialogue.dialogueChain[0].dialogue = message;
         npcScript.TypeNextDialogue();
     }
 

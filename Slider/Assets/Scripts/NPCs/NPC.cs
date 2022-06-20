@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -39,32 +40,40 @@ public class NPC : MonoBehaviour
     [SerializeField] private DialogueDisplay dialogueDisplay;
 
 
-
     //Dialogue
+    public bool DialogueEnabled => gDialogueEnabled && dialogueEnabled;
+
+    public static bool gDialogueEnabled = true; //Dialogue Enabling for all NPCs.
+    private bool dialogueEnabled;   //The NPC can give dialogue
+
     private int currDconds;    //indices to get the right dialogue
     private int currDialogueInChain;
-    private bool dialogueEnabled;   //The NPC can give dialogue
+
     private bool dialogueActive;    //The NPC is in the process of giving dialogue (regardless of if it's finished)
     private bool startedTyping;     //The NPC is in the middle of typing the dialogue
     private bool waitingForPlayerContinue;  //The NPC is waiting for the player to press e to continue its chain.
+
     private Coroutine waitNextDialogueCoroutine;
 
     //Walking
     private STile currentStileUnderneath;
-    private WorldNavAgent nav;
     private bool walking;   //NPC is in the process of following a path.
     private NPCWalk currWalk;   //Current walk the NPC is performing, null otherwise.
     private List<STileCrossing> remainingStileCrossings;
     private List<Transform> remainingPath;
     private Coroutine walkCoroutine;
 
-
+    private GameObject poofParticles;
 
     private void Awake()
     {
-        nav = GetComponent<WorldNavAgent>();
         dialogueEnabled = true;
         waitNextDialogueCoroutine = null;
+
+        for(int i = 0; i < dconds.Count; i++)
+        {
+            dconds[i].priority = i+1;
+        }
     }
 
     private void OnEnable()
@@ -72,6 +81,8 @@ public class NPC : MonoBehaviour
         PlayerAction.OnAction += OnPlayerAction;
         SGridAnimator.OnSTileMoveStart += OnSTileMoveStart;
         SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
+
+        poofParticles = Resources.Load<GameObject>("SmokePoof Variant");
     }
 
     private void OnDisable()
@@ -91,9 +102,10 @@ public class NPC : MonoBehaviour
 
         //Poll for the new dialogue, and update it if it is different.
         int newDialogue = CurrentDialogue();
-        if (currDconds != newDialogue && dialogueEnabled)
+        if (currDconds != newDialogue && DialogueEnabled)
         {
-            StartCoroutine(WaitThenChangeDialogue());
+            ChangeDialogue(newDialogue);
+            //StartCoroutine(WaitThenChangeDialogue());
         }
 
         if (startedTyping && dialogueDisplay.textTyperText.finishedTyping)
@@ -122,6 +134,37 @@ public class NPC : MonoBehaviour
     }
 
     #region Dialogue
+
+    //OnTriggerEnter and OnTriggerExit handlers.
+    public void DialogueTriggerEnter()
+    {
+        var dChain = dconds[currDconds].dialogueChain;
+        if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt && dialogueActive)
+        {
+            //Don't retype the don't interrupt dialogue if it's already been typed.
+            return;
+        }
+
+        if (dconds[currDconds].alwaysStartFromBeginning)
+        {
+            currDialogueInChain = 0;
+        }
+
+        TypeNextDialogue();
+    }
+
+    public void DialogueTriggerExit()
+    {
+        var dChain = dconds[currDconds].dialogueChain;
+        if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt)
+        {
+            //Dialogue keeps playing even if the player exits
+            return;
+        }
+
+        FadeDialogue();
+    }
+
     public int CurrentDialogue()
     {
         int curr = -1;
@@ -141,52 +184,38 @@ public class NPC : MonoBehaviour
         return curr;
     }
 
-    public void DialogueTriggerEnter()
-    {
-        var dChain = dconds[currDconds].dialogueChain;
-        if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt && dialogueActive)
-        {
-            //Don't retype the don't interrupt dialogue if it's already been typed.
-            return;
-        }
-        
-        TypeNextDialogue();
-    }
-
-    public void DialogueTriggerExit()
-    {
-        var dChain = dconds[currDconds].dialogueChain;
-        if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt)
-        {
-            //Dialogue keeps playing even if the player exits
-            return;
-        }
-
-        FadeDialogue();
-    }
-
     //Player entering the trigger and also from moving to the next dialogue in the chain.
     public void TypeNextDialogue()
     {
-        if (dialogueEnabled)
+        if (DialogueEnabled && dconds[currDconds].dialogueChain.Count > 0)
         {
-            if (dconds[currDconds].dialogueChain.Count == 0)
-            {
-                dconds[currDconds].OnDialogueStart();
-                dialogueDisplay.DisplaySentence(dconds[currDconds].GetDialogue());
-            }
-            else
-            {
-                dconds[currDconds].OnDialogueChainStart(currDialogueInChain);
-                dialogueDisplay.DisplaySentence(dconds[currDconds].GetDialogueChain(currDialogueInChain));
-            }
+            dconds[currDconds].OnDialogueChainStart(currDialogueInChain);
+            dialogueDisplay.DisplaySentence(dconds[currDconds].GetDialogue(currDialogueInChain));
 
             startedTyping = true;
             dialogueActive = true;
         }
     }
 
-    public void FadeDialogue()
+    public void ClearDialogue()
+    {
+        dconds[currDconds].KillDialogue();
+    }
+
+    public void SetNextDialogue()
+    {
+        if (currDconds < dconds.Count - 1)
+        {
+            dconds[currDconds + 1].SetPrio(dconds[currDconds].GetPrio());
+        }
+    }
+
+    public void SetDialogueEnabled(bool value)
+    {
+        dialogueEnabled = value;
+    }
+
+    private void FadeDialogue()
     {
         dialogueDisplay.FadeAwayDialogue();
 
@@ -211,11 +240,11 @@ public class NPC : MonoBehaviour
         dialogueActive = false;
     }
 
-    private void ChangeDialogue(int newDialogue, bool triggerOnChange = false)
+    private void ChangeDialogue(int newDialogue)
     {
         currDconds = newDialogue;
         currDialogueInChain = 0;
-        if (!dconds[newDialogue].dialogue.Equals("") || dconds[newDialogue].dialogueChain.Count > 0)
+        if (dconds[newDialogue].dialogueChain.Count > 0)
         {
             //Show new message ping if the dialogue actually exists.
             dialogueDisplay.NewMessagePing();
@@ -227,67 +256,31 @@ public class NPC : MonoBehaviour
         if (dialogueActive)
         {
             //If there was dialogue playing before, get rid of it.
-            FadeDialogue();
-        }
-
-        
-        if (triggerOnChange)    //Use this if we immediately want to go into the next dialogue.
-        {
             TypeNextDialogue();
-        }
+        }    
         
         dconds[currDconds].onDialogueChanged?.Invoke();
     }
 
-    //Waits until the player has exited the trigger before retrieving the next dialogue (idk if this is necessary, might be annoying/confusing to the player).
-    private IEnumerator WaitThenChangeDialogue()
-    {
-        yield return new WaitUntil(() =>
-        {
-            var dChain = dconds[currDconds].dialogueChain;
-            if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt && dialogueDisplay.textTyperText.finishedTyping)
-            {
-                return true;
-            }
-            return !dialogueActive;
-        });
-
-        //Make sure the dialogue didn't change while we were waiting
-        int newDialogue = CurrentDialogue();
-        if (currDconds != newDialogue && dialogueEnabled)
-        {
-            ChangeDialogue(newDialogue);
-        }
-    }
-
     private void FinishDialogue()
     {
-        if (dconds[currDconds].dialogueChain.Count == 0)
+        dconds[currDconds].OnDialogueChainEnd(currDialogueInChain);
+        waitNextDialogueCoroutine = StartCoroutine(WaitForNextDialogue());
+    }
+
+    private IEnumerator WaitForNextDialogue()
+    {
+        DialogueConditionals.Dialogue curr = dconds[currDconds].dialogueChain[currDialogueInChain];
+        if (curr.waitUntilPlayerAction)
         {
-            dconds[currDconds].OnDialogueEnd();
-        } else
-        {
-            dconds[currDconds].OnDialogueChainEnd(currDialogueInChain);
-            waitNextDialogueCoroutine = StartCoroutine(WaitForNextDialogue());
+            waitingForPlayerContinue = true;
+            yield return null;
         }
-    }
-
-    public void ClearDialogue()
-    {
-        dconds[currDconds].KillDialogue();
-    }
-
-    public void SetNextDialogue()
-    {
-        if (currDconds < dconds.Count - 1)
+        else
         {
-            dconds[currDconds+1].SetPrio(dconds[currDconds].GetPrio());
+            yield return new WaitForSeconds(curr.delayAfterFinishedTyping);
+            SetNextDialogueInChain(true);
         }
-    }
-
-    public void DialogueEnabled(bool value)
-    {
-        dialogueEnabled = value;
     }
 
     private void SetNextDialogueInChain(bool triggerNext = false)
@@ -321,25 +314,11 @@ public class NPC : MonoBehaviour
             dialogueDisplay.textTyperBG.TrySkipText();
         }  
     }
-
-    private IEnumerator WaitForNextDialogue()
-    {
-        DialogueConditionals.Dialogue curr = dconds[currDconds].dialogueChain[currDialogueInChain];
-        if (curr.waitUntilPlayerAction)
-        {
-            //Might want to loop an animation here of the ... per this card: https://trello.com/c/MMGJR8Ra/143-new-npc-dialogue-features
-            waitingForPlayerContinue = true;
-            yield return null;
-        } else
-        {
-            yield return new WaitForSeconds(curr.delayAfterFinishedTyping);
-            SetNextDialogueInChain(true);
-        }
-    }
     #endregion Dialogue
 
     public void Teleport(Transform trans)
     {
+        Instantiate(poofParticles, transform.position, Quaternion.identity);
         transform.position = trans.position;
         transform.parent = trans.parent;
     }
