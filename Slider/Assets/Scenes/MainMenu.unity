@@ -3231,6 +3231,10 @@ PrefabInstance:
       propertyPath: isMenuScene
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2824224475968117142, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
+      propertyPath: UICanvasPrefab.activeInMenuScenes
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8750917147391358172, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
       propertyPath: m_Name
       value: GameManager
@@ -3458,7 +3462,6 @@ MonoBehaviour:
     - {fileID: 346731898}
   - menu: {fileID: 60457618}
     selectables: []
-  _currentMenu: {fileID: 0}
 --- !u!224 &1909759397 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}

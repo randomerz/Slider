@@ -10,9 +10,9 @@ using UnityEngine.UI;
 /// Make sure to setup buttonSets properly — each menu should be matched with all of the navigatable buttons inside of it. Also make sure to
 /// properly update CurrentMenu based on which menu is currently active to keep navigation working properly.
 /// </summary>
-public class UINavigationManager : Singleton<UINavigationManager>
+public class UINavigationManager : MonoBehaviour
 {
-    //private static UINavigationManager _instance;
+    private static UINavigationManager _instance;
 
     private UnityEngine.EventSystems.EventSystem eventSystem;
 
@@ -27,7 +27,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     /// or navigation won't work properly.
     /// </summary>
     public static GameObject CurrentMenu { get => _instance._currentMenu; set => _instance._currentMenu = value; }
-    [SerializeField] private GameObject _currentMenu;
+    private GameObject _currentMenu;
 
     /// <summary>
     /// Making a keyboard input switches to keyboard mode and clicking with the mouse switches to mouse mode. The key
@@ -60,9 +60,8 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     private void Awake()
     {
-        base.Awake();
-
-        //_instance = this;
+        //InitializeSingleton(allowActiveDuplicates: true);
+        _instance = this;
 
         _instance.eventSystem = GetComponent<UnityEngine.EventSystems.EventSystem>();
 
@@ -74,10 +73,17 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
         _instance.controls = new InputSettings();
         LoadBindings();
+
+        Debug.Log(selectableSetDictionary.Keys.Count);
     }
 
     private void OnEnable()
     {
+        selectableSetDictionary = new Dictionary<GameObject, Selectable[]>();
+        foreach (ButtonSet set in selectableSets)
+        {
+            selectableSetDictionary[set.menu] = set.selectables;
+        }
         controls.Enable();
     }
 
