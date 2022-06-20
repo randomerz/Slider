@@ -10,9 +10,9 @@ using UnityEngine.UI;
 /// Make sure to setup buttonSets properly — each menu should be matched with all of the navigatable buttons inside of it. Also make sure to
 /// properly update CurrentMenu based on which menu is currently active to keep navigation working properly.
 /// </summary>
-public class UINavigationManager : MonoBehaviour
+public class UINavigationManager : Singleton<UINavigationManager>
 {
-    private static UINavigationManager _instance;
+    //private static UINavigationManager _instance;
 
     private UnityEngine.EventSystems.EventSystem eventSystem;
 
@@ -60,7 +60,10 @@ public class UINavigationManager : MonoBehaviour
 
     private void Awake()
     {
-        _instance = this;
+        base.Awake();
+
+        //_instance = this;
+
         _instance.eventSystem = GetComponent<UnityEngine.EventSystems.EventSystem>();
 
         selectableSetDictionary = new Dictionary<GameObject, Selectable[]>();
