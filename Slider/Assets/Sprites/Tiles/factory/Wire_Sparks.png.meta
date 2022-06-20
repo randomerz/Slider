@@ -32,9 +32,6 @@ TextureImporter:
   - first:
       213: 6529106333278668318
     second: Wire_Sparks_9
-  - first:
-      213: -2871694777457352192
-    second: Wire_Sparks_10
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -151,8 +148,8 @@ TextureImporter:
       name: Wire_Sparks_0
       rect:
         serializedVersion: 2
-        x: 48
-        y: 64
+        x: 0
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -172,8 +169,8 @@ TextureImporter:
       name: Wire_Sparks_1
       rect:
         serializedVersion: 2
-        x: 176
-        y: 64
+        x: 16
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -193,8 +190,8 @@ TextureImporter:
       name: Wire_Sparks_2
       rect:
         serializedVersion: 2
-        x: 304
-        y: 64
+        x: 32
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -214,8 +211,8 @@ TextureImporter:
       name: Wire_Sparks_3
       rect:
         serializedVersion: 2
-        x: 432
-        y: 64
+        x: 48
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -235,8 +232,8 @@ TextureImporter:
       name: Wire_Sparks_4
       rect:
         serializedVersion: 2
-        x: 560
-        y: 64
+        x: 64
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -256,8 +253,8 @@ TextureImporter:
       name: Wire_Sparks_5
       rect:
         serializedVersion: 2
-        x: 688
-        y: 64
+        x: 0
+        y: 0
         width: 16
         height: 16
       alignment: 0
@@ -277,8 +274,8 @@ TextureImporter:
       name: Wire_Sparks_6
       rect:
         serializedVersion: 2
-        x: 816
-        y: 64
+        x: 16
+        y: 0
         width: 16
         height: 16
       alignment: 0
@@ -298,8 +295,8 @@ TextureImporter:
       name: Wire_Sparks_7
       rect:
         serializedVersion: 2
-        x: 944
-        y: 64
+        x: 32
+        y: 0
         width: 16
         height: 16
       alignment: 0
@@ -319,8 +316,8 @@ TextureImporter:
       name: Wire_Sparks_8
       rect:
         serializedVersion: 2
-        x: 1072
-        y: 64
+        x: 48
+        y: 0
         width: 16
         height: 16
       alignment: 0
@@ -340,8 +337,8 @@ TextureImporter:
       name: Wire_Sparks_9
       rect:
         serializedVersion: 2
-        x: 1200
-        y: 64
+        x: 64
+        y: 0
         width: 16
         height: 16
       alignment: 0
@@ -353,27 +350,6 @@ TextureImporter:
       bones: []
       spriteID: e1604df0e9b0c9a50800000000000000
       internalID: 6529106333278668318
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Wire_Sparks_10
-      rect:
-        serializedVersion: 2
-        x: 1328
-        y: 64
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0026f4690d0b528d0800000000000000
-      internalID: -2871694777457352192
       vertices: []
       indices: 
       edges: []

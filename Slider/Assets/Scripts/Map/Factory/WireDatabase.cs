@@ -8,7 +8,7 @@ public struct WireTile
 {
     public TileBase offWire;
     public TileBase onWire;
-    public ParticleSystem sparks;
+    public GameObject sparks;
 }
 
 public class WireDatabase : MonoBehaviour
@@ -54,10 +54,7 @@ public class WireDatabase : MonoBehaviour
     {
         foreach (WireTile wire in wireTiles)
         {
-
             tm.SwapTile(powered ? wire.offWire : wire.onWire, powered ? wire.onWire : wire.offWire);
-            
-
         }
     }
 }
