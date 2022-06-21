@@ -6,10 +6,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CutsceneManager : MonoBehaviour
 {
-    public Animator blackBoxAnimator;
+    public Image blackBox;
     [SerializeField] private int i = 0;
     public string sceneToLoad;
     public List<GameObject> images;
@@ -34,6 +35,7 @@ public class CutsceneManager : MonoBehaviour
         }
         images[0].SetActive(true);
         textboxes[0].SetActive(true);
+        StartCoroutine(BoxFadeOut());
         StartCoroutine(scrolltext(textboxes[0]));
 
 
@@ -51,13 +53,12 @@ public class CutsceneManager : MonoBehaviour
 
     void advanceCutscene()
     {
-        blackBoxAnimator.SetBool("advance", true);
         skipImages = true;
     }
 
     void stopAdvance()
     {
-        blackBoxAnimator.SetBool("advance", false);
+
     }
 
     public void exitCutscene()
@@ -66,14 +67,16 @@ public class CutsceneManager : MonoBehaviour
         SceneManager.LoadScene(sceneToLoad);
     }
 
-    public void showImages()
+    public void advanceImages()
     {
+        skipImages = false;
         if (i + 1 < images.Count)
         {
             images[i].SetActive(false);
             textboxes[i].SetActive(false);
             i++;
             images[i].SetActive(true);
+            StartCoroutine(BoxFadeOut());
             StartCoroutine(scrolltext(textboxes[i]));
             textboxes[i].SetActive(true);
             
@@ -106,7 +109,46 @@ public class CutsceneManager : MonoBehaviour
 
             yield return new WaitForSeconds(2 * GameSettings.textSpeed);
         }
+        StartCoroutine(WaitToAdvance());
+    }
 
-        advanceCutscene();
+    IEnumerator BoxFadeIn()
+    {
+        Color color = blackBox.color;
+        while (color.a < 1f)
+        {
+            color.a += .2f;
+            blackBox.color = color;
+            yield return new WaitForSeconds(.1f);
+        }
+    }
+
+    IEnumerator BoxFadeOut()
+    {
+        Color color = blackBox.color;
+        while (color.a > 0f)
+        {
+            color.a -= .2f;
+            blackBox.color = color;
+            yield return new WaitForSeconds(.1f);
+        }
+        Debug.Log("Box faded out!");
+    }
+
+    IEnumerator WaitToAdvance()
+    {
+        StartCoroutine(BoxFadeOut());
+        Debug.Log("Waiting!");
+        skipImages = false;
+        for (float time = 2f; time >= 0; time -= .2f)
+        {
+            if (!skipImages)
+            {
+                yield return new WaitForSeconds(.2f);
+            }
+        }
+        StartCoroutine(BoxFadeIn());
+        yield return new WaitForSeconds(2f);
+        advanceImages();
     }
 }
