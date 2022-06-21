@@ -44,8 +44,8 @@ public class ConductiveElectricalNode : ElectricalNode
                     other.conductionPoints[this] = collision.gameObject.transform.position;
                 }
 
-                Debug.Log(thisCol.gameObject.transform.position);
-                Debug.Log(collision.gameObject.transform.position);
+                //Debug.Log(thisCol.gameObject.transform.position);
+                //Debug.Log(collision.gameObject.transform.position);
             }
 
             if (AddNeighbor(other))
@@ -115,7 +115,7 @@ public class ConductiveElectricalNode : ElectricalNode
         return minCol;
     }
 
-    public void CreateElectricalLineEffect(ConductiveElectricalNode prev)
+    public virtual void CreateElectricalLineEffect(ConductiveElectricalNode prev)
     {
         if (electricalLines == null)
         {
@@ -141,14 +141,36 @@ public class ConductiveElectricalNode : ElectricalNode
         lr.SetPosition(0, prev.conductionPoints[this]);
         lr.SetPosition(1, this.conductionPoints[prev]);
         electricalLines[prev] = electricalLineInstance;
+
+        Wire prevWire = prev as Wire;
+        Wire thisWire = this as Wire;
+        if (prevWire != null)
+        {
+            prevWire.ChangeToAlt((Vector3Int) TileUtil.WorldToTileCoords(prev.conductionPoints[this]), true);
+        }
+        if (thisWire != null)
+        {
+            thisWire.ChangeToAlt((Vector3Int)TileUtil.WorldToTileCoords(this.conductionPoints[prev]), true);
+        }
     }
 
-    public void DeleteElectricalLineEffect(ConductiveElectricalNode other)
+    public virtual void DeleteElectricalLineEffect(ConductiveElectricalNode other)
     {
         if (electricalLines != null && electricalLines.ContainsKey(other))
         {
             Destroy(electricalLines[other]);
             electricalLines.Remove(other);
+
+            Wire otherWire = other as Wire;
+            Wire thisWire = this as Wire;
+            if (otherWire != null)
+            {
+                otherWire.ChangeToAlt((Vector3Int)TileUtil.WorldToTileCoords(other.conductionPoints[this]), false);
+            }
+            if (thisWire != null)
+            {
+                thisWire.ChangeToAlt((Vector3Int)TileUtil.WorldToTileCoords(this.conductionPoints[other]), false);
+            }
         }
     }
 }
