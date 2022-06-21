@@ -145,7 +145,7 @@ public class ConductiveElectricalNode : ElectricalNode
 
     public void DeleteElectricalLineEffect(ConductiveElectricalNode other)
     {
-        if (electricalLines.ContainsKey(other))
+        if (electricalLines != null && electricalLines.ContainsKey(other))
         {
             Destroy(electricalLines[other]);
             electricalLines.Remove(other);

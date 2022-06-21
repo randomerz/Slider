@@ -9,9 +9,25 @@ public class WireSparks : MonoBehaviour
     //[SerializeField] [Range(0f, 1f)] private float probSmall;
     [SerializeField] private Animator anim;
 
+    private string sparkType;
+
+    private void OnEnable()
+    {
+        if (sparkType != null && !sparkType.Equals(""))
+        {
+            StartCoroutine(DoSparks(sparkType));
+        }
+    }
+
     public void StartSparks(string type)
     {
-        StartCoroutine(DoSparks(type));
+        sparkType = type;
+
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(DoSparks(type));
+        }
+
     }
 
     private IEnumerator DoSparks(string type)

@@ -38,8 +38,14 @@ public class Wire : ConductiveElectricalNode
             {
                 if (tm.GetTile(pos) != null)
                 {
-                    GameObject sparkInstance = Instantiate(sparks, tm.CellToWorld(pos) + new Vector3(0.5f, 0.5f), Quaternion.identity, transform);
+                    GameObject sparkInstance = Instantiate(sparks, tm.CellToWorld(pos) + tm.tileAnchor, Quaternion.identity, transform);
                     sparkInstance.GetComponent<WireSparks>().StartSparks(WireDatabase.Instance.Sparks[tm.GetSprite(pos)]);
+
+                    SpriteRenderer sr = sparkInstance.GetComponent<SpriteRenderer>();
+                    TilemapRenderer tr = GetComponent<TilemapRenderer>();
+                    sr.sortingLayerID = tr.sortingLayerID;
+                    sr.sortingOrder = tr.sortingOrder;
+
                     sparkInstances.Add(sparkInstance);
                 }
             }
