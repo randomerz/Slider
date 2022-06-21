@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 29474515}
   - component: {fileID: 29474518}
   - component: {fileID: 29474517}
+  - component: {fileID: 29474519}
   - component: {fileID: 29474516}
   m_Layer: 5
   m_Name: Text (4)
@@ -161,25 +162,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -60}
   m_SizeDelta: {x: 220, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!95 &29474516
-Animator:
-  serializedVersion: 3
+--- !u!114 &29474516
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 29474514}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f3740a2eefdf014c8799dba4f92eae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jitterMultiplier: 1
+  shakeMultiplier: 1
+  waveAmplitude: 1
+  wavePeriod: 1
+  typeLoopSpeed: 0.05
 --- !u!114 &29474517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,6 +276,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 29474514}
   m_CullTransparentMesh: 1
+--- !u!114 &29474519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 29474514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbe7e1e212663649aad033efbc87b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invisibleAtStart: 1
+  fadeTextIn: 0
+  rolloverCharacterSpread: 10
+  finishedTyping: 0
 --- !u!1 &193926854
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,6 +345,7 @@ GameObject:
   - component: {fileID: 245771920}
   - component: {fileID: 245771923}
   - component: {fileID: 245771922}
+  - component: {fileID: 245771924}
   - component: {fileID: 245771921}
   m_Layer: 5
   m_Name: Text (3)
@@ -357,25 +373,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -60}
   m_SizeDelta: {x: 220, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!95 &245771921
-Animator:
-  serializedVersion: 3
+--- !u!114 &245771921
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 245771919}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f3740a2eefdf014c8799dba4f92eae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jitterMultiplier: 1
+  shakeMultiplier: 1
+  waveAmplitude: 1
+  wavePeriod: 1
+  typeLoopSpeed: 0.05
 --- !u!114 &245771922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,6 +487,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 245771919}
   m_CullTransparentMesh: 1
+--- !u!114 &245771924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245771919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbe7e1e212663649aad033efbc87b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invisibleAtStart: 1
+  fadeTextIn: 0
+  rolloverCharacterSpread: 10
+  finishedTyping: 0
 --- !u!1 &349456164
 GameObject:
   m_ObjectHideFlags: 0
@@ -559,6 +589,7 @@ GameObject:
   - component: {fileID: 427150016}
   - component: {fileID: 427150015}
   - component: {fileID: 427150014}
+  - component: {fileID: 427150017}
   - component: {fileID: 427150013}
   m_Layer: 5
   m_Name: Text (7)
@@ -567,25 +598,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!95 &427150013
-Animator:
-  serializedVersion: 3
+--- !u!114 &427150013
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 427150012}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f3740a2eefdf014c8799dba4f92eae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jitterMultiplier: 1
+  shakeMultiplier: 1
+  waveAmplitude: 1
+  wavePeriod: 1
+  typeLoopSpeed: 0.05
 --- !u!114 &427150014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -702,6 +731,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -60}
   m_SizeDelta: {x: 220, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &427150017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 427150012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbe7e1e212663649aad033efbc87b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invisibleAtStart: 1
+  fadeTextIn: 0
+  rolloverCharacterSpread: 10
+  finishedTyping: 0
 --- !u!1 &482716681
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,6 +758,7 @@ GameObject:
   - component: {fileID: 482716682}
   - component: {fileID: 482716685}
   - component: {fileID: 482716684}
+  - component: {fileID: 482716686}
   - component: {fileID: 482716683}
   m_Layer: 5
   m_Name: Text (5)
@@ -740,25 +786,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -60}
   m_SizeDelta: {x: 220, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!95 &482716683
-Animator:
-  serializedVersion: 3
+--- !u!114 &482716683
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 482716681}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f3740a2eefdf014c8799dba4f92eae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jitterMultiplier: 1
+  shakeMultiplier: 1
+  waveAmplitude: 1
+  wavePeriod: 1
+  typeLoopSpeed: 0.05
 --- !u!114 &482716684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -858,6 +902,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 482716681}
   m_CullTransparentMesh: 1
+--- !u!114 &482716686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482716681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbe7e1e212663649aad033efbc87b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invisibleAtStart: 1
+  fadeTextIn: 0
+  rolloverCharacterSpread: 10
+  finishedTyping: 0
 --- !u!1 &564813603
 GameObject:
   m_ObjectHideFlags: 0
@@ -1370,7 +1430,6 @@ GameObject:
   - component: {fileID: 1481655390}
   - component: {fileID: 1481655389}
   - component: {fileID: 1481655395}
-  - component: {fileID: 1481655393}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1462,25 +1521,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!95 &1481655393
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1481655388}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d291bdea06fb4f44c8c752bbd23af1d7, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &1481655395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1525,6 +1565,7 @@ GameObject:
   - component: {fileID: 1616900070}
   - component: {fileID: 1616900073}
   - component: {fileID: 1616900072}
+  - component: {fileID: 1616900074}
   - component: {fileID: 1616900071}
   m_Layer: 5
   m_Name: Text (6)
@@ -1552,25 +1593,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -60}
   m_SizeDelta: {x: 220, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!95 &1616900071
-Animator:
-  serializedVersion: 3
+--- !u!114 &1616900071
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616900069}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f3740a2eefdf014c8799dba4f92eae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jitterMultiplier: 1
+  shakeMultiplier: 1
+  waveAmplitude: 1
+  wavePeriod: 1
+  typeLoopSpeed: 0.05
 --- !u!114 &1616900072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1591,7 +1630,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ' '
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
   m_sharedMaterial: {fileID: 7572966130275077912, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
@@ -1668,6 +1707,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616900069}
   m_CullTransparentMesh: 1
+--- !u!114 &1616900074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1616900069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbe7e1e212663649aad033efbc87b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invisibleAtStart: 1
+  fadeTextIn: 0
+  rolloverCharacterSpread: 10
+  finishedTyping: 0
 --- !u!1 &1683060849
 GameObject:
   m_ObjectHideFlags: 0
@@ -1921,6 +1976,7 @@ GameObject:
   - component: {fileID: 1851664231}
   - component: {fileID: 1851664234}
   - component: {fileID: 1851664233}
+  - component: {fileID: 1851664235}
   - component: {fileID: 1851664232}
   m_Layer: 5
   m_Name: Text (2)
@@ -1948,25 +2004,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -60}
   m_SizeDelta: {x: 220, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!95 &1851664232
-Animator:
-  serializedVersion: 3
+--- !u!114 &1851664232
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1851664230}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f3740a2eefdf014c8799dba4f92eae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jitterMultiplier: 1
+  shakeMultiplier: 1
+  waveAmplitude: 1
+  wavePeriod: 1
+  typeLoopSpeed: 0.05
 --- !u!114 &1851664233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2064,6 +2118,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1851664230}
   m_CullTransparentMesh: 1
+--- !u!114 &1851664235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851664230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbe7e1e212663649aad033efbc87b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invisibleAtStart: 1
+  fadeTextIn: 0
+  rolloverCharacterSpread: 10
+  finishedTyping: 0
 --- !u!1 &1909894687
 GameObject:
   m_ObjectHideFlags: 0
@@ -2421,6 +2491,7 @@ GameObject:
   - component: {fileID: 2112424057}
   - component: {fileID: 2112424060}
   - component: {fileID: 2112424059}
+  - component: {fileID: 2112424061}
   - component: {fileID: 2112424058}
   m_Layer: 5
   m_Name: Text (1)
@@ -2448,25 +2519,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -60}
   m_SizeDelta: {x: 220, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!95 &2112424058
-Animator:
-  serializedVersion: 3
+--- !u!114 &2112424058
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112424056}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f3740a2eefdf014c8799dba4f92eae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jitterMultiplier: 1
+  shakeMultiplier: 1
+  waveAmplitude: 1
+  wavePeriod: 1
+  typeLoopSpeed: 0.05
 --- !u!114 &2112424059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2564,6 +2633,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112424056}
   m_CullTransparentMesh: 1
+--- !u!114 &2112424061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112424056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbe7e1e212663649aad033efbc87b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invisibleAtStart: 1
+  fadeTextIn: 0
+  rolloverCharacterSpread: 10
+  finishedTyping: 0
 --- !u!1001 &2593583166293356120
 PrefabInstance:
   m_ObjectHideFlags: 0

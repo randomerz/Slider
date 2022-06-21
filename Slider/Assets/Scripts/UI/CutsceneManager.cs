@@ -45,12 +45,6 @@ public class CutsceneManager : MonoBehaviour
         //StartCoroutine(cutscene());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void advanceCutscene()
     {
         skipImages = true;
@@ -90,25 +84,21 @@ public class CutsceneManager : MonoBehaviour
     IEnumerator scrolltext(GameObject text)
     {
         skipImages = false;
-        TMP_Text tmp = text.GetComponent<TMP_Text>();
-
-        string s1 = tmp.text;
-        string s2 = "";
-        tmp.text = "";
+        TMPTextTyper tmp_typer = text.GetComponent<TMPTextTyper>();
+        string s1 = textboxes[i].GetComponent<TextMeshProUGUI>().text;
+        textboxes[i].GetComponent<TextMeshProUGUI>().text = "";
         //wait a bit so it doesnt start during fadein
         yield return new WaitForSeconds(0.2f);
-        foreach (char letter in s1)
+        tmp_typer.StartTyping(s1);
+        while (!tmp_typer.finishedTyping)
         {
             if (skipImages)
             {
-                tmp.text = s1;
-                break;
+                if (tmp_typer.TrySkipText()) break;
             }
-            s2 += letter;
-            tmp.text = (s2);
-
-            yield return new WaitForSeconds(2 * GameSettings.textSpeed);
+            yield return null;
         }
+        skipImages = false;
         StartCoroutine(WaitToAdvance());
     }
 
@@ -117,10 +107,19 @@ public class CutsceneManager : MonoBehaviour
         Color color = blackBox.color;
         while (color.a < 1f)
         {
-            color.a += .2f;
+            Debug.Log("Skip: " + skipImages);
+            if (skipImages)
+            {
+                color.a += .3f;
+            }
+            else
+            {
+                color.a += .1f;
+            }
             blackBox.color = color;
-            yield return new WaitForSeconds(.1f);
+            yield return null;
         }
+        skipImages = false;
     }
 
     IEnumerator BoxFadeOut()
@@ -128,16 +127,24 @@ public class CutsceneManager : MonoBehaviour
         Color color = blackBox.color;
         while (color.a > 0f)
         {
-            color.a -= .2f;
+            Debug.Log("Skip: " + skipImages);
+            if (skipImages)
+            {
+                color.a -= .3f;
+            }
+            else
+            {
+                color.a -= .1f;
+            }
             blackBox.color = color;
-            yield return new WaitForSeconds(.1f);
+            yield return null;
         }
         Debug.Log("Box faded out!");
+        skipImages = false;
     }
 
     IEnumerator WaitToAdvance()
     {
-        StartCoroutine(BoxFadeOut());
         Debug.Log("Waiting!");
         skipImages = false;
         for (float time = 2f; time >= 0; time -= .2f)
@@ -147,8 +154,9 @@ public class CutsceneManager : MonoBehaviour
                 yield return new WaitForSeconds(.2f);
             }
         }
+        skipImages = false;
         StartCoroutine(BoxFadeIn());
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
         advanceImages();
     }
 }
