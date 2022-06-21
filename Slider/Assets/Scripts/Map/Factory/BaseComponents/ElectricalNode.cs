@@ -140,30 +140,11 @@ public class ElectricalNode : MonoBehaviour
         //An assumption is made here that value is a newly updated value, otherwise the refCount strategy does not work.
         if (value)
         {
-
-            if (!powerPathPrevs.Contains(prev))
-            {
-                //This should probably be in ConductiveElectricalNode, but that's kinda a pain.
-                var prevConduct = prev as ConductiveElectricalNode;
-                var thisConduct = this as ConductiveElectricalNode;
-                if (thisConduct != null && prevConduct != null && (thisConduct.isConductiveObject || prevConduct.isConductiveObject))
-                {
-                    thisConduct.CreateElectricalLineEffect(prevConduct);
-                }
-            }
-
             powerRefs = powerRefs + numRefs;
             powerPathPrevs.Add(prev);
         }
         else
         {
-            var prevConduct = prev as ConductiveElectricalNode;
-            var thisConduct = this as ConductiveElectricalNode;
-            if (thisConduct != null && prevConduct != null)
-            {
-                thisConduct.DeleteElectricalLineEffect(prevConduct);
-            }
-
             powerRefs = Mathf.Max(powerRefs - numRefs, 0);
             powerPathPrevs.Remove(prev);
         }

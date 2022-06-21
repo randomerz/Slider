@@ -33,7 +33,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LURDSparks
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6446735076131787326}
@@ -60,7 +60,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LURSparks
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6776503111511648450}
@@ -109,7 +109,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: DLUSparks
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6127068313031261231}
@@ -252,7 +252,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RDSparks
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6261928746618515450}
@@ -329,7 +329,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Vertical
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6198427607188327098}
@@ -406,7 +406,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: URDSparks
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6783495881260755437}
@@ -439,79 +439,79 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: v
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: ur
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: rd
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: dl
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: lu
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: lur
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: urd
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: rdl
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: dlu
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: lurd
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: pr
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: pl
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -564,7 +564,7 @@ AnimatorStateMachine:
     m_Position: {x: 510, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4121095330264501523}
-    m_Position: {x: 520, y: 330, z: 0}
+    m_Position: {x: 520, y: 360, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4559504970302566267}
     m_Position: {x: 210, y: -350, z: 0}
@@ -616,7 +616,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Horizontal
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 7006884507643129251}
@@ -643,7 +643,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PRSparks
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6543706068209701836}
@@ -670,7 +670,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LUSparks
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 4562995935546707325}
@@ -747,7 +747,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: URSparks
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 8464218744896635681}
@@ -1067,7 +1067,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PLSparks
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6676983315150796285}
@@ -1094,7 +1094,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RDLSparks
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -8047777186043737997}
@@ -1121,7 +1121,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: DLSparks
-  m_Speed: 2.5
+  m_Speed: 4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 91813595655497353}

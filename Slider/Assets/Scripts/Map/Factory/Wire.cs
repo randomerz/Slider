@@ -58,29 +58,12 @@ public class Wire : ConductiveElectricalNode
 
                 }
             }
-
-            foreach (var n in neighbors)
-            {
-                if (conductionPoints != null && conductionPoints.ContainsKey(n))
-                {
-                    ChangeToAlt((Vector3Int) TileUtil.WorldToTileCoords(conductionPoints[n]), true);
-                }
-            }
         } else
         {
             foreach (GameObject go in sparkInstances)
             {
                 Destroy(go);
             }
-
-            foreach (Vector3Int pos in tm.cellBounds.allPositionsWithin)
-            {
-                if (tm.GetTile(pos) != null)
-                {
-                    ChangeToAlt(pos, false);
-                }
-            }
-
             sparkInstances.Clear();
         }
   
@@ -89,38 +72,5 @@ public class Wire : ConductiveElectricalNode
     private void SetTiles()
     {
         WireDatabase.Instance.SwapTiles(tm, Powered);
-    }
-
-    //L: This is the sketchiest code I've written in a while.
-    public void ChangeToAlt(Vector3Int pos, bool useAlt)
-    {
-        TileBase alt = null;
-
-        //Check directions near the position because it might be off by 1 (Yes IK this is stupid)
-        Vector3Int[] dirs = { Vector3Int.zero, Vector3Int.left, Vector3Int.right, Vector3Int.up, Vector3Int.down, 
-                                Vector3Int.down + Vector3Int.left, Vector3Int.left + Vector3Int.up, Vector3Int.up + Vector3Int.right, Vector3Int.right + Vector3Int.down};
-        
-        foreach (Vector3Int dir in dirs)
-        {
-            Vector3Int currPos = pos + dir;
-            TileBase tile = tm.GetTile(currPos);
-            if (useAlt && tile != null && WireDatabase.Instance.ConductingAltOn.ContainsKey(tile))
-            {
-                alt = WireDatabase.Instance.ConductingAltOn[tile];
-            }
-
-
-            if (!useAlt && tile != null && WireDatabase.Instance.ConductingAltOff.ContainsKey(tile))
-            {
-                alt = WireDatabase.Instance.ConductingAltOff[tile];
-            }
-
-            if (alt != null)
-            {
-                tm.SetTile(currPos, alt);
-                break;
-            }
-        }
-        
     }
 }

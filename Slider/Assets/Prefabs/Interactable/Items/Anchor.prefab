@@ -48,7 +48,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 2
+  m_Radius: 2.5
 --- !u!114 &4775528935428077422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,8 +110,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  electricalLinePrefab: {fileID: 5414989969745396199, guid: affbcdc620b4a2e4ca4c6feec8831df5, type: 3}
-  isConductiveObject: 1
 --- !u!50 &1641171343835192531
 Rigidbody2D:
   serializedVersion: 4
