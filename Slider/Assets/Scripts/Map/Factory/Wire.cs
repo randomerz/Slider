@@ -61,7 +61,7 @@ public class Wire : ConductiveElectricalNode
 
             foreach (var n in neighbors)
             {
-                if (conductionPoints.ContainsKey(n))
+                if (conductionPoints != null && conductionPoints.ContainsKey(n))
                 {
                     ChangeToAlt((Vector3Int) TileUtil.WorldToTileCoords(conductionPoints[n]), true);
                 }
