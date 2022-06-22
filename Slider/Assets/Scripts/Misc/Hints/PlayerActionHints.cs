@@ -107,6 +107,8 @@ public class Hint
             {
                 var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
                 varResult = action.GetBindingDisplayString().ToUpper();
+                if(varResult.IndexOf("PRESS") > -1)
+                    varResult = varResult.Remove(varResult.IndexOf("PRESS"), 6); //weird workaround
             }
             message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
         }
