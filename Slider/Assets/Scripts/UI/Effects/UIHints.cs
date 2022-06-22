@@ -8,10 +8,11 @@ public class UIHints : MonoBehaviour
     public static UIHints instance { get; private set; }
 
     // I would make this a queue but you can't queue.Remove
-    private List<string> hintTexts = new List<string>(); 
+    public List<string> hintTexts = new List<string>(); 
 
     private bool isVisible;
     public float fadeDuration;
+    public float hintDisplayDuration = 5.0f;
 
     // References
     public CanvasGroup canvasGroup;
@@ -58,6 +59,7 @@ public class UIHints : MonoBehaviour
                 // StopAllCoroutines();
                 StartCoroutine(FadeHintBox(0, 1));
                 isVisible = true;
+                StartCoroutine(EndHintDisplay(hintDisplayDuration));
             }
             
         }
@@ -97,5 +99,11 @@ public class UIHints : MonoBehaviour
         canvasGroup.alpha = to;
 
         callback?.Invoke();
+    }
+
+    private IEnumerator EndHintDisplay(float t)
+    {
+        yield return new WaitForSeconds(t);
+        RemoveHint(hintTexts[0]);
     }
 }
