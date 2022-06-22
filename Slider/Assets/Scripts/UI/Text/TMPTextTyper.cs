@@ -299,4 +299,9 @@ public class TMPTextTyper : MonoBehaviour
 
         return false;
     }
+
+    public void SetTextSpeed(float speed)
+    {
+        textSpeed = speed;
+    }
 }

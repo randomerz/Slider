@@ -32,6 +32,7 @@ public class CutsceneManager : MonoBehaviour
         {
             images[x].SetActive(false);
             textboxes[x].SetActive(false);
+            textboxes[x].GetComponent<TMPTextTyper>().SetTextSpeed(GameSettings.textSpeed * 1.5f);
         }
         images[0].SetActive(true);
         textboxes[0].SetActive(true);
@@ -48,11 +49,6 @@ public class CutsceneManager : MonoBehaviour
     void advanceCutscene()
     {
         skipImages = true;
-    }
-
-    void stopAdvance()
-    {
-
     }
 
     public void exitCutscene()
@@ -110,11 +106,11 @@ public class CutsceneManager : MonoBehaviour
             Debug.Log("Skip: " + skipImages);
             if (skipImages)
             {
-                color.a += .3f;
+                color.a += Time.deltaTime * 3f;
             }
             else
             {
-                color.a += .1f;
+                color.a += Time.deltaTime;
             }
             blackBox.color = color;
             yield return null;
@@ -130,11 +126,11 @@ public class CutsceneManager : MonoBehaviour
             Debug.Log("Skip: " + skipImages);
             if (skipImages)
             {
-                color.a -= .3f;
+                color.a -= Time.deltaTime * 3f;
             }
             else
             {
-                color.a -= .1f;
+                color.a -= Time.deltaTime;
             }
             blackBox.color = color;
             yield return null;
