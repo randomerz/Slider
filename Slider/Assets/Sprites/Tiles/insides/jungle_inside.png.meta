@@ -127,10 +127,10 @@ TextureImporter:
       name: jungle_inside_0
       rect:
         serializedVersion: 2
-        x: 3
-        y: 49
-        width: 26
-        height: 14
+        x: 0
+        y: 48
+        width: 32
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -148,10 +148,10 @@ TextureImporter:
       name: jungle_inside_1
       rect:
         serializedVersion: 2
-        x: 35
-        y: 49
-        width: 26
-        height: 14
+        x: 32
+        y: 48
+        width: 32
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,12 +169,12 @@ TextureImporter:
       name: jungle_inside_2
       rect:
         serializedVersion: 2
-        x: 67
-        y: 35
-        width: 10
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 64
+        y: 32
+        width: 16
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -190,10 +190,10 @@ TextureImporter:
       name: jungle_inside_3
       rect:
         serializedVersion: 2
-        x: 3
-        y: 33
-        width: 42
-        height: 15
+        x: 0
+        y: 32
+        width: 48
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -211,12 +211,12 @@ TextureImporter:
       name: jungle_inside_4
       rect:
         serializedVersion: 2
-        x: 19
-        y: 2
-        width: 10
-        height: 22
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 16
+        y: 0
+        width: 16
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -232,10 +232,10 @@ TextureImporter:
       name: jungle_inside_5
       rect:
         serializedVersion: 2
-        x: 35
-        y: 18
-        width: 10
-        height: 12
+        x: 32
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -253,10 +253,10 @@ TextureImporter:
       name: jungle_inside_7
       rect:
         serializedVersion: 2
-        x: 50
-        y: 19
-        width: 13
-        height: 8
+        x: 48
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -274,12 +274,12 @@ TextureImporter:
       name: jungle_inside_8
       rect:
         serializedVersion: 2
-        x: 2
-        y: 3
-        width: 13
-        height: 16
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 0
+        y: 0
+        width: 16
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -295,11 +295,11 @@ TextureImporter:
       name: jungle_inside_9
       rect:
         serializedVersion: 2
-        x: 36
-        y: 3
-        width: 8
-        height: 12
-      alignment: 0
+        x: 32
+        y: 0
+        width: 16
+        height: 16
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
@@ -316,10 +316,10 @@ TextureImporter:
       name: jungle_inside_10
       rect:
         serializedVersion: 2
-        x: 50
-        y: 1
-        width: 13
-        height: 14
+        x: 48
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
