@@ -76,7 +76,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: BeginSparkles
+          m_StringArgument: BeginSparks
           m_BoolArgument: 0
         m_CallState: 2
   OnPoweredOff:
@@ -103,7 +103,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: StopSparkles
+          m_StringArgument: StopSparks
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!58 &1490788914983603484
@@ -422,7 +422,7 @@ Animator:
   m_GameObject: {fileID: 6452720972823350865}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bca6fd565ae532b47af8afe55c739afb, type: 2}
+  m_Controller: {fileID: 9100000, guid: e26f140b1f62682498b134e60a8025c0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
