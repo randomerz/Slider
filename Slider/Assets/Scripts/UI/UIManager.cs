@@ -42,10 +42,6 @@ public class UIManager : MonoBehaviour
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
     }
 
-    public static UIManager GetInstance()
-    {
-        return _instance;
-    }
 
     public static void LoadBindings()
     {
