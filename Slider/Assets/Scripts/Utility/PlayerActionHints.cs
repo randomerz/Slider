@@ -6,7 +6,6 @@ public class PlayerActionHints : MonoBehaviour
 {
     //C: Im trying to write this in a way that is as modular as possible. Good luck me.
     public List<Hint> hintsList;
-    private List<Hint> hintQueue;
     private double currHintTimer = 0;
     // Start is called before the first frame update
     void Start()
@@ -35,7 +34,7 @@ public class PlayerActionHints : MonoBehaviour
         foreach(Hint h in hintsList)
             if(string.Equals(h.hintName, hint))
             {
-                hintQueue.Add(h);
+                h.TriggerHint();
             }
             
     }

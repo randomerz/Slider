@@ -78,6 +78,7 @@ public class UIHints : MonoBehaviour
             {
                 // switch hints text, maybe we want to have text fade between later
                 tmproText.text= hintTexts[0];
+                StartCoroutine(EndHintDisplay(hintDisplayDuration));
             }
         }
     }
