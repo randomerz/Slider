@@ -49,8 +49,44 @@ public class UIHints : MonoBehaviour
     }
 
     private void UpdateHint()
+    {   
+        if(!isVisible)
+        {
+            if (hintTexts.Count > 0)
+            {
+            // fade hint box in
+            isVisible = true;
+            tmproText.text = hintTexts[0];
+            // StopAllCoroutines();
+            StartCoroutine(FadeHintBox(0, 1));
+            StartCoroutine(EndHintDisplay(hintDisplayDuration));
+            }
+        }
+        else
+        {
+        if (hintTexts.Count > 0 && tmproText.text.Equals("") )
+        {
+            // fade hint box in
+            tmproText.text = hintTexts[0];
+            // StopAllCoroutines();
+            StartCoroutine(FadeHintBox(0, 1));
+            StartCoroutine(EndHintDisplay(hintDisplayDuration));
+        }
+            if (hintTexts.Count == 0)
+            {
+                // no more hints to display, fade out
+                StopAllCoroutines();
+                StartCoroutine(FadeHintBox(1, 0, () => {
+                    tmproText.text = "";
+                }));
+                isVisible = false;
+            }
+        }
+}
+/*
+    private void UpdateHint()
     {
-        if (!isVisible)
+        if (!isVisible) //C: bug: adding a hint while the last hint is fading out = big sadge
         {
             if (hintTexts.Count > 0)
             {
@@ -82,7 +118,7 @@ public class UIHints : MonoBehaviour
             }
         }
     }
-
+*/
     private IEnumerator FadeHintBox(float from, float to, System.Action callback=null)
     {
         float t = Mathf.Lerp(from, to, canvasGroup.alpha);
@@ -105,6 +141,10 @@ public class UIHints : MonoBehaviour
     private IEnumerator EndHintDisplay(float t)
     {
         yield return new WaitForSeconds(t);
+        StartCoroutine(FadeHintBox(1, 0, () => {
+                    tmproText.text = "";
+                }));
+        yield return new WaitForSeconds(fadeDuration);
         RemoveHint(hintTexts[0]);
     }
 }

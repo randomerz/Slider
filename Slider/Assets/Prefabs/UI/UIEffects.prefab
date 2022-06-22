@@ -1130,6 +1130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255bb59980d728f468da10fc380a3c0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDuration: 2
+  hintTexts: []
+  fadeDuration: 0.5
+  hintDisplayDuration: 5
   canvasGroup: {fileID: 7685592946410807128}
   tmproText: {fileID: 2507698560058707884}
