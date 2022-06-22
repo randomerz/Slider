@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ConductiveElectricalNode : ElectricalNode
 {
+    [SerializeField]
+    private bool isConductiveItem;
 
     private new void Awake()
     {
@@ -14,7 +16,8 @@ public class ConductiveElectricalNode : ElectricalNode
     {
         ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
 
-        if (other != null && BothNodesNotMoving(other))
+        //Disallow connections btw 2 conductive items (for now)
+        if (other != null && BothNodesNotMoving(other) && !(isConductiveItem && other.isConductiveItem))
         {
             if (AddNeighbor(other) && other is WirePilon)
             {

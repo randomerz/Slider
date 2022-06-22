@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5721591233379736590}
   - component: {fileID: 3501832411120084381}
-  - component: {fileID: 1490788914983603484}
   - component: {fileID: 7346633303750058602}
   m_Layer: 0
   m_Name: Conducting Part
@@ -29,7 +28,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 945855043435644328}
   m_Father: {fileID: 4607457495645169288}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeType: 0
   powerRefs: 0
+  powerPathPrevs: []
   neighbors: []
   invertSignal: 0
   OnPowered:
@@ -106,22 +107,7 @@ MonoBehaviour:
           m_StringArgument: StopSparks
           m_BoolArgument: 0
         m_CallState: 2
---- !u!58 &1490788914983603484
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 255418467045388141}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 2
+  isConductiveItem: 1
 --- !u!50 &7346633303750058602
 Rigidbody2D:
   serializedVersion: 4
@@ -190,6 +176,53 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!1 &2593100706689104682
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 945855043435644328}
+  - component: {fileID: 6957879073281480624}
+  m_Layer: 0
+  m_Name: ConductTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &945855043435644328
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2593100706689104682}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5721591233379736590}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &6957879073281480624
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2593100706689104682}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 2
 --- !u!1 &4607457495645169290
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,7 +345,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   enableOnDrop:
   - {fileID: 718312118525715025}
-  - {fileID: 255418467045388141}
+  - {fileID: 2593100706689104682}
   OnPickUp:
     m_PersistentCalls:
       m_Calls:
