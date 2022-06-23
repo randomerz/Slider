@@ -77,7 +77,6 @@ public class VillageGrid : SGrid
     private void OnEnable() {
         SGridAnimator.OnSTileMoveEnd += CheckChadMoved;
         if (checkCompletion) {
-            Debug.Log("OnEnable checkCompletion");
             SGrid.OnGridMove += SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;

@@ -40,6 +40,8 @@ public class SaveSystem
 
     public static SaveProfile GetProfile(int index)
     {
+        if (index == -1)
+            return null;
         return saveProfiles[index];
     }
 
@@ -145,7 +147,7 @@ public class SaveSystem
 
     private static SerializableSaveProfile LoadFromFile(int index)
     {
-        Debug.Log("Loading data from file...");
+        Debug.Log("Loading data from file " + index + "...");
 
         string path = GetFilePath(index);
         if (File.Exists(path))
