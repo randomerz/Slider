@@ -619,9 +619,9 @@ public class UIArtifact : MonoBehaviour
         return s;
     }
 
-    public static void AddButton(STile stile, bool shouldFlicker=true)
+    public virtual void AddButton(STile stile, bool shouldFlicker=true)
     {
-        foreach (ArtifactTileButton b in _instance.buttons)
+        foreach (ArtifactTileButton b in buttons)
         {
             if (b.islandId == stile.islandId)
             {

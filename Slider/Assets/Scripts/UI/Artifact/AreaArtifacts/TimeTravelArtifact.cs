@@ -211,6 +211,12 @@ public class TimeTravelArtifact : UIArtifact
         }
     }
 
+    public override void AddButton(STile stile, bool shouldFlicker = true)
+    {
+        base.AddButton(stile, shouldFlicker);
+        SetButtonsAndBackground();
+    }
+
     public void SetButtonsAndBackground()
     {
         foreach (ArtifactTileButton b in buttons)
