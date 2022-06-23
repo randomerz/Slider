@@ -329,6 +329,7 @@ public class MainMenuManager : MonoBehaviour
     public void StartNewGame()
     {
         string profileName = profileNameTextField.text;
+        Debug.Log("sussy");
 
         if (profileName.Length == 0)
             return;

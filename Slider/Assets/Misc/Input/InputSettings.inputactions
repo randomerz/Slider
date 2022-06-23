@@ -202,6 +202,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Submit (No Space/E)",
+                    "type": "Button",
+                    "id": "29ded7da-09f0-41c8-a4d1-91d01e633d92",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Cancel",
                     "type": "Button",
                     "id": "a5ab3b82-6390-4e1a-8e28-dcf4ba0b6716",
@@ -812,6 +821,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5c4911c-acb7-46ed-92ba-1b60c8b2a7b9",
+                    "path": "*/{Submit}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard Mouse",
+                    "action": "Submit (No Space/E)",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
