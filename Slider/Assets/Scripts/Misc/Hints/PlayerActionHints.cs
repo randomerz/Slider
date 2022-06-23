@@ -9,6 +9,13 @@ public class PlayerActionHints : MonoBehaviour
     public List<Hint> hintsList;
     public InputActionAsset inputActions;
 
+
+    private void Awake() 
+    {
+        foreach(Hint h in hintsList)
+            h.inputActions = inputActions;
+    }
+
     //Because the hint objects are never actually instantiated I need to do timer logic up here
     void Update()
     {
@@ -24,7 +31,6 @@ public class PlayerActionHints : MonoBehaviour
             }
        }
     }
-
 
     //C: triggers the countdown for the given hint to begin
     public void TriggerHint(string hint)
@@ -43,6 +49,10 @@ public class PlayerActionHints : MonoBehaviour
     }
 
     //C: Allows the given hint to be disabled. Needed because multiple hints can be tied to the same action/button
+    // Hints always become disablable once triggered, so only use this if you want to make a hint disablable earlier
+    // for example, the "press E to pick up items" hint is disablable when tile 4 is collected, but the hint
+    // itself isn't triggered until you talk to Kevin
+    // This is almost always just for convienience for repeat playthroughs
     public void EnableDisabling(string hint) 
     {
         foreach(Hint h in hintsList)
@@ -61,14 +71,14 @@ public class Hint
     public bool isInCountdown = false; //is this hint counting down until display? You can set this to true to begin counting down as soon as the scene loads
     public bool shouldDisplay = true; //should this hint display?
     public List<InputRebindButton.Control> controlBinds; //list of control binds to replace in order
+    public InputActionAsset inputActions;
 
-    public bool TriggerHint()
+
+    public void TriggerHint()
     {
-        if(timeUntilTrigger >= 0)
-        {
+        canDisableHint = true;
+        if(shouldDisplay)
             isInCountdown = true;
-        }
-        return timeUntilTrigger >= 0;
     }
 
     public void DisableHint(InputActionAsset inputActions)
@@ -81,15 +91,14 @@ public class Hint
     public void Display(InputActionAsset inputActions) {
         isInCountdown = false;
         if(shouldDisplay)
-        {
-            UIHints.AddHint(ConvertVariablesToStrings(hintText, inputActions), hintName);
-        }
+            UIHints.AddHint(ConvertVariablesToStrings(hintText), hintName);
     }
 
     //C: Yoinked from DialogueDisplay, modified to work with rebinds instead of save variables
-    private string ConvertVariablesToStrings(string message, InputActionAsset inputActions)
+    private string ConvertVariablesToStrings(string message)
     {
         string rebinds = PlayerPrefs.GetString("rebinds");
+        
         int startIndex = 0;
         int numBinds = 0;
         while (message.IndexOf('<', startIndex) != -1)
@@ -122,15 +131,10 @@ public class Hint
                 var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
                 varResult = action.GetBindingDisplayString().ToUpper();
                 if(varResult.IndexOf("PRESS") > -1)
-                    varResult = varResult.Remove(varResult.IndexOf("PRESS"), 6); //weird workaround
+                    varResult = varResult.Remove(varResult.IndexOf("PRESS"), 6); //C: weird workaround
             }
             message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
         }
         return message;
-    }
-
-    private void OnDisable()
-    {
-
     }
 }

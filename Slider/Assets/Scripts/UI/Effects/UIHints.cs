@@ -52,8 +52,13 @@ public class UIHints : MonoBehaviour
         if (!hintTexts.Remove(hint))
             Debug.LogWarning("Tried and failed to remove hint: " + hint);
         hintIDs.Remove(hintID);
-        UpdateHint();
+        hintTexts.Remove(hint);
+        if(index == 0) {
+            StartCoroutine(EndHint()); //hint displaying, fade out box
+        }
     }
+
+   
 
     private void UpdateHint()
     {   
@@ -64,7 +69,7 @@ public class UIHints : MonoBehaviour
                 // fade hint box in
                 isVisible = true;
                 tmproText.text = hintTexts[0];
-                StartCoroutine(DisplayHint(hintDisplayDuration));
+                StartCoroutine(FadeHintBox(0, 1));
             }
         }
         else
@@ -72,7 +77,7 @@ public class UIHints : MonoBehaviour
             if (hintTexts.Count > 0 && tmproText.text.Equals("") )
             {
                 tmproText.text = hintTexts[0];
-                StartCoroutine(DisplayHint(hintDisplayDuration));
+                StartCoroutine(FadeHintBox(0, 1));
             }
             if (hintTexts.Count == 0)
             {
@@ -100,7 +105,16 @@ public class UIHints : MonoBehaviour
         callback?.Invoke();
     }
 
-    private IEnumerator DisplayHint(float t)
+    private IEnumerator EndHint()
+    {
+        StartCoroutine(FadeHintBox(1, 0, () => {
+                    tmproText.text = "";
+                }));
+        yield return new WaitForSeconds(fadeDuration);
+        UpdateHint();
+    }
+
+    /*private IEnumerator DisplayHint(float t)
     {
         StartCoroutine(FadeHintBox(0, 1));
         yield return new WaitForSeconds(t + fadeDuration);
@@ -109,5 +123,5 @@ public class UIHints : MonoBehaviour
                 }));
         yield return new WaitForSeconds(fadeDuration);
         RemoveHint(hintTexts[0]);
-    }
+    }*/
 }
