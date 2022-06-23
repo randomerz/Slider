@@ -354,7 +354,7 @@ public class MainMenuManager : MonoBehaviour
     public void LoadCutscene()
     {
         // SceneManager.LoadSceneAsync(cutsceneSceneName, LoadSceneMode.Additive);
-        UIEffects.FadeToBlack(() => {SceneManager.LoadScene(cutsceneSceneName);});
+        UIEffects.FadeToBlack(() => {SceneManager.LoadScene(cutsceneSceneName);}, 1, false);
     }
 
 
