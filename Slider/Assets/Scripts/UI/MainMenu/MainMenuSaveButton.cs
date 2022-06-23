@@ -41,7 +41,7 @@ public class MainMenuSaveButton : MonoBehaviour
             float seconds = profile.GetPlayTimeInSeconds();
             int minutes = (int)seconds / 60;
             timeText.text = string.Format("{0}h{1:D2}", minutes / 60, minutes % 60);
-            catSticker.enabled = profile.GetCompletionStatus();
+            catSticker.enabled = true;//profile.GetCompletionStatus();
         }
         else
         {
