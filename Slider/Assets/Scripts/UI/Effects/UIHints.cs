@@ -46,11 +46,13 @@ public class UIHints : MonoBehaviour
     public void _RemoveHint(string hintID)
     {
         int index = hintIDs.IndexOf(hintID);
-        if (index == -1)
-            Debug.LogWarning("Tried and failed to remove hint with ID: " + hintID);
+        if (index == -1) 
+            return; //C: This happens often and is okay
         string hint = hintTexts[index];
-        if (!hintTexts.Remove(hint))
-            Debug.LogWarning("Tried and failed to remove hint: " + hint);
+        if (!hintTexts.Remove(hint)) {
+            Debug.LogWarning("Tried and failed to remove hint: " + hint); //C: This should not happen
+            return;
+        }
         hintIDs.Remove(hintID);
         hintTexts.Remove(hint);
         if(index == 0) {
@@ -113,15 +115,4 @@ public class UIHints : MonoBehaviour
         yield return new WaitForSeconds(fadeDuration);
         UpdateHint();
     }
-
-    /*private IEnumerator DisplayHint(float t)
-    {
-        StartCoroutine(FadeHintBox(0, 1));
-        yield return new WaitForSeconds(t + fadeDuration);
-        StartCoroutine(FadeHintBox(1, 0, () => {
-                    tmproText.text = "";
-                }));
-        yield return new WaitForSeconds(fadeDuration);
-        RemoveHint(hintTexts[0]);
-    }*/
 }

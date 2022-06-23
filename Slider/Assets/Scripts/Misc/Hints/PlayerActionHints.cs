@@ -5,15 +5,23 @@ using UnityEngine.InputSystem;
 
 public class PlayerActionHints : MonoBehaviour
 {
-    //C: Im trying to write this in a way that is as modular as possible. Good luck me.
     public List<Hint> hintsList;
     public InputActionAsset inputActions;
-
 
     private void Awake() 
     {
         foreach(Hint h in hintsList)
             h.inputActions = inputActions;
+    }
+
+    private void OnEnable() {
+        foreach(Hint h in hintsList)
+            h.Load(SaveSystem.Current);
+    }
+
+    private void OnDisable() {
+        foreach(Hint h in hintsList)
+            h.Save();
     }
 
     //Because the hint objects are never actually instantiated I need to do timer logic up here
@@ -62,7 +70,7 @@ public class PlayerActionHints : MonoBehaviour
 }
 
 [System.Serializable]
-public class Hint
+public class Hint : ISavable
 { 
     public string hintName;  //used when searching through hints
     public string hintText; //the text of the hint
@@ -73,6 +81,16 @@ public class Hint
     public List<InputRebindButton.Control> controlBinds; //list of control binds to replace in order
     public InputActionAsset inputActions;
 
+    public void Save()
+    {
+        SaveSystem.Current.SetBool("Hint " + hintName, shouldDisplay);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        shouldDisplay = profile.GetBool("Hint " + hintName);
+        TriggerHint();
+    }
 
     public void TriggerHint()
     {
