@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
-public class MagitechArtifact : UIArtifact
+//L: Changed name bc I plan to use the same system for Factory stuff.
+public class TimeTravelArtifact : UIArtifact
 {
     /*C: Note that this is on the *opposite* side of the grid from the anchor.
     *   IE if the anchor is dropped at (2,1), in the present, this vector will be (5, 1),
@@ -14,12 +16,20 @@ public class MagitechArtifact : UIArtifact
     public Vector2Int desynchLocation = new Vector2Int(-1, -1);
 
     //C: likewise this is the ID of the *opposite* Stile
-    public int desynchIslandId = -1; 
+    public int desynchIslandId = -1;
 
     public UnityEvent onDesynchStart;
     public UnityEvent onDesynchEnd;
 
-    public bool isInPast = false;
+    public bool PlayerIsInPast
+    {
+        get
+        {
+            //67 is roughly between the end of the present map and the beginning of the past map, so it should be a safe value.
+            return Player.GetInstance().transform.position.x > 67;
+        }
+    }
+    private bool isInPast = false;
 
     public Image background;
     public Sprite presentBackgroundSprite;
@@ -40,9 +50,9 @@ public class MagitechArtifact : UIArtifact
 
     private void Update()
     {
-        if(isInPast && Player.GetInstance().transform.position.x < 34 || !isInPast && Player.GetInstance().transform.position.x > 34)
+        if(isInPast != PlayerIsInPast)
         {
-            isInPast = !isInPast;
+            isInPast = PlayerIsInPast;
             SetButtonsAndBackground();
         }
     }
@@ -52,14 +62,14 @@ public class MagitechArtifact : UIArtifact
         if (interactArgs.drop)
         {
             STile dropTile = interactArgs.stile;
-            if(dropTile!= null)
+            if(dropTile != null)
             {
-                desynchLocation = new Vector2Int(FindAlt(dropTile.x,3), dropTile.y);
-                desynchIslandId = FindAlt(dropTile.islandId, 9);
+                desynchLocation = FindAltCoords(dropTile.x, dropTile.y);
+                desynchIslandId = FindAltId(dropTile.islandId);
                 onDesynchStart.Invoke();
             }
         }
-        else
+        else if (desynchIslandId != -1) //L: Might break smth, but techincally desync only ends if it began in the first place.
         {
             onDesynchEnd.Invoke();
             RestoreOnEndDesynch();
@@ -87,12 +97,12 @@ public class MagitechArtifact : UIArtifact
             }
         }
         
-        int offset = (desynchLocation.x / 3) * 3 ;
+        int offset = (desynchLocation.x / 3) * 3;
         for(int x = 0; x < 3; x++)
         {
             for(int y = 0; y < 3; y++)
             {
-                newGrid[x + offset, y] = FindAlt(currGrid[x - offset + 3,y], 9); 
+                newGrid[x + offset, y] = FindAltId(currGrid[x - offset + 3,y]); 
             }
         }
 
@@ -127,44 +137,44 @@ public class MagitechArtifact : UIArtifact
 
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
-        moveOptionButtons.Clear();
+        List<ArtifactTileButton> options = base.GetMoveOptions(button);
 
-        Vector2Int[] dirs = {
-            Vector2Int.right,
-            Vector2Int.up,
-            Vector2Int.left,
-            Vector2Int.down
-        };
+        for (int i = 0; i < options.Count; ) {
+            ArtifactTileButton option = options[i];
 
-        foreach (Vector2Int dir in dirs)
-        {
-            ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
-            int i = 1;
-            while (b != null && !b.isTileActive && (b.x/3 == button.x/3) ) //C: check that x/3 is the same to not count moves on the other side of the grid as valid
+            bool differentTimePeriod = button.x / 3 != option.x / 3; //C: check that x/3 is the same to not count moves on the other side of the grid as valid
+            if (differentTimePeriod || CheckDesynch(button, option))    //C: Check anchor on opposite tile.
             {
-                if(CheckDesynch(button, b)) //C: check for anchor on opposite tile
-                    moveOptionButtons.Add(b);
-                b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
+                options.RemoveAt(i);
+            } else
+            {
                 i++;
             }
         }
 
-        return moveOptionButtons;
+        return options;
     }
 
-    private bool CheckDesynch(ArtifactTileButton b1, ArtifactTileButton b2)
+    //L: Negating this so that it returns true when there is a desync.
+    private bool CheckDesynch(ArtifactTileButton selected, ArtifactTileButton empty)
     {
         if(desynchLocation.x != -1)
         {
-            return (b1.islandId == desynchIslandId || !(b2.x == desynchLocation.x && b2.y == desynchLocation.y));
+            //If we're trying to 
+            return !(selected.islandId == desynchIslandId) && (empty.x == desynchLocation.x && empty.y == desynchLocation.y);
         }
-        return true; //C: No desynch active, so valid move
+        return false; //C: No desynch active, so valid move
     }
 
     //C: basically just modulus. Used to find corresponding values on either side of the grid
-    private int FindAlt(int num, int offset)
+    private Vector2Int FindAltCoords(int x, int y)
     {
-        return (num + offset) % (offset * 2);
+        return new Vector2Int((x + 3) % 6, y);
+    }
+
+    private int FindAltId(int islandId)
+    {
+        return (islandId + 9) % 18;
     }
 
 
