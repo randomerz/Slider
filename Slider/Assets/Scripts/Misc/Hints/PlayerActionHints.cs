@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerActionHints : MonoBehaviour
+public class PlayerActionHints : MonoBehaviour, ISavable
 {
     public List<Hint> hintsList;
     public InputActionAsset inputActions;
 
-    private void OnEnable() {
+    public void Save() {
+        foreach(Hint h in hintsList)
+            h.Save();
+    }
+
+    public void Load(SaveProfile profile) {
         foreach(Hint h in hintsList)
         {
             h.Load(SaveSystem.Current);
@@ -16,9 +21,10 @@ public class PlayerActionHints : MonoBehaviour
         }
     }
 
-    private void OnDisable() {
+    private void OnEnable()
+    {
         foreach(Hint h in hintsList)
-            h.Save();
+            h.SetBools();
     }
 
     //Because the hint objects are never actually instantiated I need to do timer logic up here
@@ -31,7 +37,7 @@ public class PlayerActionHints : MonoBehaviour
                 h.timeUntilTrigger -= Time.deltaTime;
                 if(h.timeUntilTrigger < 0)
                 {
-                    h.Display(inputActions);
+                    h.Display();
                 }
             }
        }
@@ -50,7 +56,7 @@ public class PlayerActionHints : MonoBehaviour
     {
         foreach(Hint h in hintsList)
             if(string.Equals(h.hintName, hint) && h.canDisableHint)
-                h.DisableHint(inputActions);
+                h.DisableHint();
     }
 
     //C: Allows the given hint to be disabled. Needed because multiple hints can be tied to the same action/button
@@ -94,6 +100,10 @@ public class Hint : ISavable
         shouldDisplay = profile.GetBool("Hint " + hintName, true);
         isInCountdown = profile.GetBool("HintCountdown " + hintName);
         hasBeenCompleted = profile.GetBool("HintComplete " + hintName);
+    }
+
+    public void SetBools()
+    {
         if(triggerOnLoad)
             isInCountdown = true;
         if(isInCountdown)
@@ -109,7 +119,7 @@ public class Hint : ISavable
             isInCountdown = true;
     }
 
-    public void DisableHint(InputActionAsset inputActions)
+    public void DisableHint()
     {
         shouldDisplay = false;
         isInCountdown = false;
@@ -117,7 +127,7 @@ public class Hint : ISavable
         UIHints.RemoveHint(hintName);
     }
 
-    public void Display(InputActionAsset inputActions) {
+    public void Display() {
         if(shouldDisplay && !hasBeenCompleted && !hasBeenAddedToDisplay)
         {
             UIHints.AddHint(ConvertVariablesToStrings(hintText), hintName);
