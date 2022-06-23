@@ -62,7 +62,7 @@ public class DialogueConditionals : Conditionals
         string dialogue = dialogueChain[index].dialogue;
         if (dialogueChain[index].waitUntilPlayerAction)
         {
-            dialogue = string.Concat(dialogue, "<type> . . .</type>");
+            dialogue = string.Concat(dialogue, "<type> ...</type>");
         }
 
         return dialogue;

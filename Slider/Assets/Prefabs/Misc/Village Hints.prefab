@@ -1,0 +1,481 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5345849782307375397
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5345849782307375399}
+  - component: {fileID: 5345849782307375398}
+  - component: {fileID: 5345849782307375401}
+  m_Layer: 0
+  m_Name: Village Hints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5345849782307375399
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5345849782307375397}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 5345849782777180393}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5345849782307375398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5345849782307375397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dd4c45cbade45940b08d7cc6ad78cd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hintsList:
+  - hintName: move
+    hintText: Use <U>/<L>/<D>/<R> to move around
+    canDisableHint: 1
+    timeUntilTrigger: 8
+    isInCountdown: 1
+    shouldDisplay: 1
+    controlBinds: 00000000020000000100000003000000
+    inputActions: {fileID: 0}
+  - hintName: interact
+    hintText: Press <Action> to interact with objects
+    canDisableHint: 1
+    timeUntilTrigger: 7
+    isInCountdown: 0
+    shouldDisplay: 1
+    controlBinds: 04000000
+    inputActions: {fileID: 0}
+  - hintName: tab
+    hintText: Press <Tab> to open the Artifact
+    canDisableHint: 1
+    timeUntilTrigger: 4
+    isInCountdown: 0
+    shouldDisplay: 1
+    controlBinds: 06000000
+    inputActions: {fileID: 0}
+  - hintName: tiles
+    hintText: Click to select a tile, then click again, drag, or use <>/<>/<>/<>
+      to move it
+    canDisableHint: 0
+    timeUntilTrigger: 6
+    isInCountdown: 0
+    shouldDisplay: 1
+    controlBinds: 00000000020000000100000003000000
+    inputActions: {fileID: 0}
+  - hintName: items
+    hintText: Press <Action> to pick up items
+    canDisableHint: 0
+    timeUntilTrigger: 4
+    isInCountdown: 0
+    shouldDisplay: 1
+    controlBinds: 04000000
+    inputActions: {fileID: 0}
+  - hintName: cycle
+    hintText: Press <Q> to cycle through the artifact
+    canDisableHint: 0
+    timeUntilTrigger: 4
+    isInCountdown: 0
+    shouldDisplay: 1
+    controlBinds: 05000000
+    inputActions: {fileID: 0}
+  inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
+--- !u!114 &5345849782307375401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5345849782307375397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: SetShouldDisplayFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: move
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: SetShouldDisplayFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: tiles
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: cf18d7ce-8f49-4150-b967-e8023a799788
+    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: SetShouldDisplayFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: items
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: SetShouldDisplayFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: interact
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: ccbac3c9-f0b9-4af1-8184-803fa4e169f1
+    m_ActionName: Player/Action[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: SetShouldDisplayFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: cycle
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 52b230cb-9771-4133-bcfd-836e72be56f5
+    m_ActionName: Player/CycleEquip[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cdd4b000-4549-48be-9bb2-0e3ceccf7964
+    m_ActionName: UI/Navigate[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 06785bf7-3f60-4699-b8dc-bb7c7a912ee4
+    m_ActionName: UI/Submit[/Keyboard/enter,/Keyboard/e,/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a5ab3b82-6390-4e1a-8e28-dcf4ba0b6716
+    m_ActionName: UI/Cancel[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 84f4cea9-c586-49ad-abc8-d1c188225027
+    m_ActionName: UI/Point[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: SetShouldDisplayFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: tiles
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8f20e2e1-60a9-4b79-95b0-c1dd6ce61863
+    m_ActionName: UI/Click[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 02e6d0f3-dd7f-42ef-accb-3641b4ffa0d0
+    m_ActionName: UI/ScrollWheel[/Mouse/scroll]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 83c65667-43d3-49b5-ab74-0f06769eaaec
+    m_ActionName: UI/MiddleClick[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 67307b84-2bcc-4825-b71e-cd608021e784
+    m_ActionName: UI/RightClick[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 382695b7-3953-47ec-91d8-293704b4540e
+    m_ActionName: UI/TrackedDevicePosition
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 24f127fe-797d-4d19-9adf-7e3a1ab6aa17
+    m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 45e496bc-03d4-4053-9ddd-ca577203eef5
+    m_ActionName: UI/Pause[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: SetShouldDisplayFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: tab
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: TriggerHint
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: tiles
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: c5270572-600f-4305-8e4d-d0921e699d76
+    m_ActionName: UI/OpenArtifact[/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fa9c8498-e65b-42c0-924a-98cb961b7464
+    m_ActionName: UI/ArtifactRight[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 413523ca-12eb-46da-bcb8-4b26d4dc964b
+    m_ActionName: UI/ArtifactLeft[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f844606a-4ae4-4f72-9988-45d387a8ba92
+    m_ActionName: UI/Back[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f9420b3e-a8e6-42ad-b409-2392ef2d5749
+    m_ActionName: Debug/OpenDebug[/Keyboard/backquote]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e69a3341-a842-425f-b125-787b7ae182c3
+    m_ActionName: Debug/CycleCommand[/Keyboard/downArrow,/Keyboard/upArrow]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!1 &5345849782777180391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5345849782777180393}
+  - component: {fileID: 5345849782777180392}
+  m_Layer: 0
+  m_Name: UI Hints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5345849782777180393
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5345849782777180391}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.597964, y: -131.791, z: -11234.673}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5345849782307375399}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5345849782777180392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5345849782777180391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cf18d7ce-8f49-4150-b967-e8023a799788
+    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ccbac3c9-f0b9-4af1-8184-803fa4e169f1
+    m_ActionName: Player/Action[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 52b230cb-9771-4133-bcfd-836e72be56f5
+    m_ActionName: Player/CycleEquip[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cdd4b000-4549-48be-9bb2-0e3ceccf7964
+    m_ActionName: UI/Navigate[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 06785bf7-3f60-4699-b8dc-bb7c7a912ee4
+    m_ActionName: UI/Submit[/Keyboard/enter,/Keyboard/e,/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a5ab3b82-6390-4e1a-8e28-dcf4ba0b6716
+    m_ActionName: UI/Cancel[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 84f4cea9-c586-49ad-abc8-d1c188225027
+    m_ActionName: UI/Point[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: SetShouldDisplayFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: tiles
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8f20e2e1-60a9-4b79-95b0-c1dd6ce61863
+    m_ActionName: UI/Click[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 02e6d0f3-dd7f-42ef-accb-3641b4ffa0d0
+    m_ActionName: UI/ScrollWheel[/Mouse/scroll]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 83c65667-43d3-49b5-ab74-0f06769eaaec
+    m_ActionName: UI/MiddleClick[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 67307b84-2bcc-4825-b71e-cd608021e784
+    m_ActionName: UI/RightClick[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 382695b7-3953-47ec-91d8-293704b4540e
+    m_ActionName: UI/TrackedDevicePosition
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 24f127fe-797d-4d19-9adf-7e3a1ab6aa17
+    m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 45e496bc-03d4-4053-9ddd-ca577203eef5
+    m_ActionName: UI/Pause[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: TriggerHint
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: tiles
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: SetShouldDisplayFalse
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: tab
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: c5270572-600f-4305-8e4d-d0921e699d76
+    m_ActionName: UI/OpenArtifact[/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fa9c8498-e65b-42c0-924a-98cb961b7464
+    m_ActionName: UI/ArtifactRight[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 413523ca-12eb-46da-bcb8-4b26d4dc964b
+    m_ActionName: UI/ArtifactLeft[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f844606a-4ae4-4f72-9988-45d387a8ba92
+    m_ActionName: UI/Back[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f9420b3e-a8e6-42ad-b409-2392ef2d5749
+    m_ActionName: Debug/OpenDebug[/Keyboard/backquote]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e69a3341-a842-425f-b125-787b7ae182c3
+    m_ActionName: Debug/CycleCommand[/Keyboard/downArrow,/Keyboard/upArrow]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: UI
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
