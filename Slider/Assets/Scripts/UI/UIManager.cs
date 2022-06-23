@@ -42,6 +42,7 @@ public class UIManager : MonoBehaviour
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
     }
 
+
     public static void LoadBindings()
     {
         if (_instance == null)
@@ -263,4 +264,5 @@ public class UIManager : MonoBehaviour
         Application.Quit();
         Debug.Log("Quitting game!");
     }
+
 }
