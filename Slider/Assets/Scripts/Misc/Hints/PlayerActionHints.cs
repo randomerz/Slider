@@ -24,7 +24,10 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     private void OnEnable()
     {
         foreach(Hint h in hintsList)
+        {
             h.SetBools();
+            h.inputActions = inputActions;
+        }
     }
 
     //Because the hint objects are never actually instantiated I need to do timer logic up here
