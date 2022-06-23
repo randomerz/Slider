@@ -9,10 +9,10 @@ public class UIHints : MonoBehaviour
 
     // I would make this a queue but you can't queue.Remove
     public List<string> hintTexts = new List<string>(); 
+    public List<string> hintIDs = new List<string>(); //C: fixes some potential issues w/ exact hint text
 
     private bool isVisible;
     public float fadeDuration;
-    public float hintDisplayDuration = 5.0f;
 
     // References
     public CanvasGroup canvasGroup;
@@ -27,24 +27,31 @@ public class UIHints : MonoBehaviour
     /// Adds a hint to the list of hints to be displayed, shown in order added
     /// </summary>
     /// <param name="hint">String of the hint</param>
-    public static void AddHint(string hint) { instance._AddHint(hint); }
+    /// <param name="hintID">String ID of the hint</param>
+    public static void AddHint(string hint, string id) { instance._AddHint(hint, id); }
 
-    public void _AddHint(string hint)
+    public void _AddHint(string hint, string id)
     {
         hintTexts.Add(hint);
+        hintIDs.Add(id);
         UpdateHint();
     }
 
     /// <summary>
     /// Removes a hint from the list of hints
     /// </summary>
-    /// <param name="hint">String of the hint that was added</param>
-    public static void RemoveHint(string hint) { instance._RemoveHint(hint); }
+    /// <param name="hintID">ID of the hint that was added</param>
+    public static void RemoveHint(string hintID) { instance._RemoveHint(hintID); }
 
-    public void _RemoveHint(string hint)
+    public void _RemoveHint(string hintID)
     {
+        int index = hintIDs.IndexOf(hintID);
+        if (index == -1)
+            Debug.LogWarning("Tried and failed to remove hint with ID: " + hintID);
+        string hint = hintTexts[index];
         if (!hintTexts.Remove(hint))
             Debug.LogWarning("Tried and failed to remove hint: " + hint);
+        hintIDs.Remove(hintID);
         UpdateHint();
     }
 
@@ -54,10 +61,10 @@ public class UIHints : MonoBehaviour
         {
             if (hintTexts.Count > 0)
             {
-            // fade hint box in
-            isVisible = true;
-            tmproText.text = hintTexts[0];
-            StartCoroutine(DisplayHint(hintDisplayDuration));
+                // fade hint box in
+                isVisible = true;
+                tmproText.text = hintTexts[0];
+                StartCoroutine(DisplayHint(hintDisplayDuration));
             }
         }
         else

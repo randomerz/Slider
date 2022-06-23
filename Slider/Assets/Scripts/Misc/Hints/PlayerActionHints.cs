@@ -7,7 +7,6 @@ public class PlayerActionHints : MonoBehaviour
 {
     //C: Im trying to write this in a way that is as modular as possible. Good luck me.
     public List<Hint> hintsList;
-    private double currHintTimer = 0;
     public InputActionAsset inputActions;
 
     //Because the hint objects are never actually instantiated I need to do timer logic up here
@@ -15,7 +14,7 @@ public class PlayerActionHints : MonoBehaviour
     {
        foreach(Hint h in hintsList)
        {
-            if(h.isInCountdown)
+            if(h.isInCountdown && h.shouldDisplay)
             {
                 h.timeUntilTrigger -= Time.deltaTime;
                 if(h.timeUntilTrigger < 0)
@@ -26,21 +25,29 @@ public class PlayerActionHints : MonoBehaviour
        }
     }
 
+
+    //C: triggers the countdown for the given hint to begin
     public void TriggerHint(string hint)
     {
         foreach(Hint h in hintsList)
             if(string.Equals(h.hintName, hint))
-            {
                 h.TriggerHint();
-            }
-            
     }
 
-    public void SetShouldDisplayFalse(string hint) 
+    //C: Disables the given hint (if the hint can be disabled)
+    public void DisableHint(string hint) 
     {
         foreach(Hint h in hintsList)
-            if(string.Equals(h.hintName, hint) && h.isInCountdown)
-               h.shouldDisplay = false;
+            if(string.Equals(h.hintName, hint) && h.canDisableHint)
+                h.DisableHint(inputActions);
+    }
+
+    //C: Allows the given hint to be disabled. Needed because multiple hints can be tied to the same action/button
+    public void EnableDisabling(string hint) 
+    {
+        foreach(Hint h in hintsList)
+            if(string.Equals(h.hintName, hint))
+               h.canDisableHint = true;
     }
 }
 
@@ -64,11 +71,18 @@ public class Hint
         return timeUntilTrigger >= 0;
     }
 
+    public void DisableHint(InputActionAsset inputActions)
+    {
+        shouldDisplay = false;
+        isInCountdown = false;
+        UIHints.RemoveHint(hintName);
+    }
+
     public void Display(InputActionAsset inputActions) {
         isInCountdown = false;
         if(shouldDisplay)
         {
-            UIHints.AddHint(ConvertVariablesToStrings(hintText, inputActions));
+            UIHints.AddHint(ConvertVariablesToStrings(hintText, inputActions), hintName);
         }
     }
 
