@@ -8,15 +8,12 @@ public class PlayerActionHints : MonoBehaviour
     public List<Hint> hintsList;
     public InputActionAsset inputActions;
 
-    private void Awake() 
-    {
-        foreach(Hint h in hintsList)
-            h.inputActions = inputActions;
-    }
-
     private void OnEnable() {
         foreach(Hint h in hintsList)
+        {
             h.Load(SaveSystem.Current);
+            h.inputActions = inputActions;
+        }
     }
 
     private void OnDisable() {
@@ -79,6 +76,8 @@ public class Hint : ISavable
     public bool isInCountdown = false; //is this hint counting down until display? 
     public bool triggerOnLoad = false; //should this hint start counting down when the scene is loaded?
     public bool shouldDisplay = true; //should this hint display?
+    public bool hasBeenCompleted; //has this hint been completed?
+    public bool hasBeenAddedToDisplay;
     public List<InputRebindButton.Control> controlBinds; //list of control binds to replace in order
     public InputActionAsset inputActions;
 
@@ -86,16 +85,21 @@ public class Hint : ISavable
     {
         SaveSystem.Current.SetBool("Hint " + hintName, shouldDisplay);
         SaveSystem.Current.SetBool("HintCountdown " + hintName, isInCountdown);
+        SaveSystem.Current.SetBool("HintComplete " + hintName, hasBeenCompleted);
+        hasBeenAddedToDisplay = false;
     }
 
     public void Load(SaveProfile profile)
     {
         shouldDisplay = profile.GetBool("Hint " + hintName, true);
         isInCountdown = profile.GetBool("HintCountdown " + hintName);
+        hasBeenCompleted = profile.GetBool("HintComplete " + hintName);
         if(triggerOnLoad)
             isInCountdown = true;
         if(isInCountdown)
             canDisableHint = true;
+        if(hasBeenCompleted)
+            shouldDisplay = false;
     }
 
     public void TriggerHint()
@@ -109,19 +113,26 @@ public class Hint : ISavable
     {
         shouldDisplay = false;
         isInCountdown = false;
+        hasBeenCompleted = true;
         UIHints.RemoveHint(hintName);
     }
 
     public void Display(InputActionAsset inputActions) {
-        isInCountdown = false;
-        if(shouldDisplay)
+        if(shouldDisplay && !hasBeenCompleted && !hasBeenAddedToDisplay)
+        {
             UIHints.AddHint(ConvertVariablesToStrings(hintText), hintName);
+            hasBeenAddedToDisplay = true;
+        }
     }
 
     //C: Yoinked from DialogueDisplay, modified to work with rebinds instead of save variables
     private string ConvertVariablesToStrings(string message)
     {
-        string rebinds = PlayerPrefs.GetString("rebinds");
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+        {
+            inputActions.LoadBindingOverridesFromJson(rebinds);
+        }
         
         int startIndex = 0;
         int numBinds = 0;

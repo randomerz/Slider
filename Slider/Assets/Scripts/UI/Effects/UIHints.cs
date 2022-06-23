@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIHints : MonoBehaviour
 {
@@ -21,6 +22,19 @@ public class UIHints : MonoBehaviour
     private void Awake() 
     {
         instance = this;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.activeSceneChanged += Clear;
+    }
+
+    private void Clear(Scene current, Scene next) 
+    {
+        hintIDs.Clear();
+        hintTexts.Clear();
+        canvasGroup.alpha = 0;    
+        isVisible = false;
     }
 
     /// <summary>
@@ -91,8 +105,6 @@ public class UIHints : MonoBehaviour
     private IEnumerator FadeHintBox(float from, float to, System.Action callback=null)
     {
         float t = Mathf.Lerp(from, to, canvasGroup.alpha);
-        Debug.Log("going from " + from + " to " + to + " start at " + t);
-
         while (t < fadeDuration)
         {
             canvasGroup.alpha = Mathf.Lerp(from, to, t / fadeDuration);

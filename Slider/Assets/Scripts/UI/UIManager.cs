@@ -254,7 +254,8 @@ public class UIManager : MonoBehaviour
     public void LoadMainMenu()
     {
         SaveSystem.SaveGame();
-        SaveSystem.SetCurrentProfile(-1);
+        StartCoroutine(delayedSave());
+        //SaveSystem.SetCurrentProfile(-1);
         ResumeGame();
         SceneManager.LoadScene("MainMenu");
     }
@@ -263,5 +264,11 @@ public class UIManager : MonoBehaviour
     {
         Application.Quit();
         Debug.Log("Quitting game!");
+    }
+
+    private IEnumerator delayedSave()
+    {
+        yield return new WaitForSeconds(0.5f);
+        SaveSystem.SetCurrentProfile(-1);
     }
 }
