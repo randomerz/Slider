@@ -190,7 +190,6 @@ public class Player : MonoBehaviour, ISavable
         // Player
         sp.position = new float[3];
         Vector3 pos = GetPosition();
-        Debug.Log("Saved position: " + pos);
         sp.position[0] = pos.x;
         sp.position[1] = pos.y;
         sp.position[2] = pos.z;

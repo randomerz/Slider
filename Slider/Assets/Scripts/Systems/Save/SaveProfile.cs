@@ -25,6 +25,7 @@ public class SaveProfile
     {
         this.profileName = profileName;
         strings["Cat"] = profileName;
+        lastArea = Area.Village;
     }
 
     #region Getters / Setters
