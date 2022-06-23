@@ -42,6 +42,7 @@ public class UIManager : MonoBehaviour
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
     }
 
+
     public static void LoadBindings()
     {
         if (_instance == null)
@@ -252,6 +253,8 @@ public class UIManager : MonoBehaviour
 
     public void LoadMainMenu()
     {
+        SaveSystem.SaveGame();
+        SaveSystem.SetCurrentProfile(-1);
         ResumeGame();
         SceneManager.LoadScene("MainMenu");
     }
@@ -261,4 +264,5 @@ public class UIManager : MonoBehaviour
         Application.Quit();
         Debug.Log("Quitting game!");
     }
+
 }

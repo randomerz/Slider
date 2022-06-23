@@ -89,7 +89,7 @@ public class GameUI : MonoBehaviour
 
     public void Singlify()
     {
-        Debug.Log("Singlifying");
+        //Debug.Log("Singlifying");
         foreach (GameUICanvas c in uiCanvases)
         {
             c.Singlify();
