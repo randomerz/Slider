@@ -70,7 +70,11 @@ public class UIHints : MonoBehaviour
         hintIDs.Remove(hintID);
         hintTexts.Remove(hint);
         if(index == 0) {
-            StartCoroutine(EndHint()); //hint displaying, fade out box
+            //StartCoroutine(EndHint()); //hint displaying, fade out box
+            //C: Switched UpdateHint to be in callback
+            StartCoroutine(FadeHintBox(1, 0, () => {
+                    tmproText.text = ""; UpdateHint();
+                }));
         }
     }
 

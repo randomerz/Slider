@@ -38,7 +38,6 @@ public class UIEffects : MonoBehaviour
         if(scene.name.Equals(MainMenuManager.GetInstance().cutsceneSceneName))
         {
             _instance.blackPanel.SetActive(false);
-            Debug.Log("does this work");
         }
     }
 
