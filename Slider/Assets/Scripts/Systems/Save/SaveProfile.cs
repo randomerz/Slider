@@ -212,16 +212,16 @@ public class SaveProfile
     // }
 
     /// <summary>
-    /// Returns false if bools dictionary doesn't contain "name" in keys.
+    /// Returns the value associated with "name" in keys. If no such value exists, this method returns false by defualt, but can also return true if passed as an argument 
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public bool GetBool(string name)
+    public bool GetBool(string name, bool defaultVal = false)
     {
         if (!bools.ContainsKey(name))
         {
             //Debug.LogWarning("Couldn't find saved variable of name: " + name);
-            return false;
+            return defaultVal;
         }
         // add a null check here?
         return bools[name];

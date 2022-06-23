@@ -76,7 +76,8 @@ public class Hint : ISavable
     public string hintText; //the text of the hint
     public bool canDisableHint; //can this hint be disabled?
     public double timeUntilTrigger; //how long from triggering the hint until it displays
-    public bool isInCountdown = false; //is this hint counting down until display? You can set this to true to begin counting down as soon as the scene loads
+    public bool isInCountdown = false; //is this hint counting down until display? 
+    public bool triggerOnLoad = false; //should this hint start counting down when the scene is loaded?
     public bool shouldDisplay = true; //should this hint display?
     public List<InputRebindButton.Control> controlBinds; //list of control binds to replace in order
     public InputActionAsset inputActions;
@@ -84,12 +85,17 @@ public class Hint : ISavable
     public void Save()
     {
         SaveSystem.Current.SetBool("Hint " + hintName, shouldDisplay);
+        SaveSystem.Current.SetBool("HintCountdown " + hintName, isInCountdown);
     }
 
     public void Load(SaveProfile profile)
     {
-        shouldDisplay = profile.GetBool("Hint " + hintName);
-        TriggerHint();
+        shouldDisplay = profile.GetBool("Hint " + hintName, true);
+        isInCountdown = profile.GetBool("HintCountdown " + hintName);
+        if(triggerOnLoad)
+            isInCountdown = true;
+        if(isInCountdown)
+            canDisableHint = true;
     }
 
     public void TriggerHint()
