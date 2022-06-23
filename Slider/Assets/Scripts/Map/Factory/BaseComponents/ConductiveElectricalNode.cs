@@ -4,70 +4,41 @@ using UnityEngine;
 
 public class ConductiveElectricalNode : ElectricalNode
 {
-    //Conductive Line Effects
-    [SerializeField] protected GameObject electricalLinePrefab;
-
-    [SerializeField] public bool isConductiveObject;
-
-    protected Dictionary<ElectricalNode, GameObject> electricalLines;
-
-    protected Dictionary<ElectricalNode, Vector2> conductionPoints;
+    [SerializeField]
+    private bool isConductiveItem;
 
     private new void Awake()
     {
         base.Awake();
-
-        conductionPoints = new Dictionary<ElectricalNode,Vector2>();
-        electricalLines = new Dictionary<ElectricalNode, GameObject>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
 
-        if (other != null && BothNodesNotMoving(other))
+        //Disallow connections btw 2 conductive items (for now)
+        if (other != null && BothNodesNotMoving(other) && !(isConductiveItem && other.isConductiveItem))
         {
-            if (conductionPoints == null)
+            if (AddNeighbor(other) && other is WirePilon)
             {
-                conductionPoints = new Dictionary<ElectricalNode, Vector2>();
-            }
-            if (other.conductionPoints == null)
-            {
-                other.conductionPoints = new Dictionary<ElectricalNode, Vector2>();
-            }
-            if (!(neighbors.Contains(other) || other.neighbors.Contains(this)))
-            {
-                Collider2D thisCol = ClosestColliderToPoint(collision.gameObject.transform.position);
-                if (thisCol != null)
-                {
-                    conductionPoints[other] = thisCol.gameObject.transform.position;
-                    other.conductionPoints[this] = collision.gameObject.transform.position;
-                }
-
-                Debug.Log(thisCol.gameObject.transform.position);
-                Debug.Log(collision.gameObject.transform.position);
-            }
-
-            if (AddNeighbor(other))
-            {
+                (other as WirePilon).AddConductingNode(this);
             }
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    protected virtual void OnTriggerStay2D(Collider2D collision)
     {
         OnTriggerEnter2D(collision);
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected virtual void OnTriggerExit2D(Collider2D collision)
     {
         ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
         if (other != null)
         {
-            if (RemoveNeighbor(other))
+            if (RemoveNeighbor(other) && other is WirePilon)
             {
-                conductionPoints.Remove(other);
-                other.conductionPoints.Remove(this);
+                (other as WirePilon).RemoveConductingNode(this);
             }
         }
     }
@@ -77,7 +48,7 @@ public class ConductiveElectricalNode : ElectricalNode
         base.OnPoweredHandler(e);
     }
 
-    private bool BothNodesNotMoving(ConductiveElectricalNode other)
+    protected bool BothNodesNotMoving(ConductiveElectricalNode other)
     {
         STile thisStile = GetComponentInParent<STile>();
         STile otherStile = other.GetComponentInParent<STile>();
@@ -95,6 +66,7 @@ public class ConductiveElectricalNode : ElectricalNode
         return thisStay && otherStay;
     }
 
+    /*
     private Collider2D ClosestColliderToPoint(Vector2 otherPos)
     {
         Collider2D[] thisColliders = GetComponentsInChildren<Collider2D>();
@@ -114,41 +86,5 @@ public class ConductiveElectricalNode : ElectricalNode
 
         return minCol;
     }
-
-    public void CreateElectricalLineEffect(ConductiveElectricalNode prev)
-    {
-        if (electricalLines == null)
-        {
-            electricalLines = new Dictionary<ElectricalNode, GameObject>();
-        }
-        if (this.conductionPoints == null)
-        {
-            this.conductionPoints = new Dictionary<ElectricalNode, Vector2>();
-        }
-        if (prev.conductionPoints == null)
-        {
-            prev.conductionPoints = new Dictionary<ElectricalNode, Vector2>();
-        }
-        if (prev.conductionPoints[this] == null || this.conductionPoints[prev] == null)
-        {
-            Debug.LogWarning("Tried to create electrical lines without conduction points.");
-            return;
-        }
-
-        GameObject electricalLineInstance = Instantiate(electricalLinePrefab);
-        LineRenderer lr = electricalLineInstance.GetComponent<LineRenderer>();
-        lr.positionCount = 2;
-        lr.SetPosition(0, prev.conductionPoints[this]);
-        lr.SetPosition(1, this.conductionPoints[prev]);
-        electricalLines[prev] = electricalLineInstance;
-    }
-
-    public void DeleteElectricalLineEffect(ConductiveElectricalNode other)
-    {
-        if (electricalLines.ContainsKey(other))
-        {
-            Destroy(electricalLines[other]);
-            electricalLines.Remove(other);
-        }
-    }
+    */
 }
