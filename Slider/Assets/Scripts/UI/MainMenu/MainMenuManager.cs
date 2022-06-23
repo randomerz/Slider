@@ -52,6 +52,8 @@ public class MainMenuManager : MonoBehaviour
     private static MainMenuManager _instance;
 
     private bool skippedSavePicking;
+
+    public bool keyboardEnabled {get; private set;}
     
     private void Awake() {
         _instance = this;
@@ -80,6 +82,10 @@ public class MainMenuManager : MonoBehaviour
                 UINavigationManager.SelectBestButtonInCurrentMenu();
             }
         };
+    }
+
+    public static MainMenuManager GetInstance(){
+        return _instance;
     }
 
     private void OnEnable() {
@@ -267,6 +273,7 @@ public class MainMenuManager : MonoBehaviour
         profileNameTextField.ActivateInputField();
         profileNameTextField.text = "";
         UINavigationManager.CurrentMenu = newSavePanel;
+        keyboardEnabled = true;
     }
 
     public void OnTextFieldChangeText(string text)
@@ -325,21 +332,23 @@ public class MainMenuManager : MonoBehaviour
         Application.Quit(0);
     }
 
-
     public void StartNewGame()
     {
-        string profileName = profileNameTextField.text;
-        Debug.Log("sussy");
+        if(keyboardEnabled)
+        {
+            string profileName = profileNameTextField.text;
 
-        if (profileName.Length == 0)
-            return;
+            if (profileName.Length == 0)
+                return;
 
-        Debug.Log("Starting new game with profile: " + profileName);
+            keyboardEnabled = false;
+            Debug.Log("Starting new game with profile: " + profileName);
 
-        SaveSystem.SetProfile(newSaveProfileIndex, new SaveProfile(profileName));
-        SaveSystem.SetCurrentProfile(newSaveProfileIndex);
+            SaveSystem.SetProfile(newSaveProfileIndex, new SaveProfile(profileName));
+            SaveSystem.SetCurrentProfile(newSaveProfileIndex);
 
-        LoadCutscene();
+            LoadCutscene();
+        }
     }
 
     public void LoadCutscene()
