@@ -14,20 +14,21 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     }
 
     public void Load(SaveProfile profile) {
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+        {
+            inputActions.LoadBindingOverridesFromJson(rebinds);
+        }
         foreach(Hint h in hintsList)
         {
-            h.Load(SaveSystem.Current);
+            h.Load(profile);
             h.inputActions = inputActions;
         }
     }
 
     private void OnEnable()
     {
-        foreach(Hint h in hintsList)
-        {
-            h.SetBools();
-            h.inputActions = inputActions;
-        }
+        Load(SaveSystem.Current);
     }
 
     //Because the hint objects are never actually instantiated I need to do timer logic up here
@@ -57,7 +58,6 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     //C: Disables the given hint (if the hint can be disabled)
     public void DisableHint(string hint) 
     {
-        Debug.Log("attempting to disable "+hint);
         foreach(Hint h in hintsList)
             if(string.Equals(h.hintName, hint) && h.canDisableHint)
                 h.DisableHint();
@@ -109,6 +109,7 @@ public class Hint : ISavable
         shouldDisplay = profile.GetBool("Hint " + hintName, true);
         isInCountdown = profile.GetBool("HintCountdown " + hintName);
         hasBeenCompleted = profile.GetBool("HintComplete " + hintName);
+        SetBools();
     }
 
     
@@ -131,7 +132,6 @@ public class Hint : ISavable
 
     public void DisableHint()
     {
-        Debug.Log("disabling "+hintName);
         shouldDisplay = false;
         isInCountdown = false;
         hasBeenCompleted = true;
