@@ -275,6 +275,7 @@ public class VillageGrid : SGrid
         yield return new WaitForSeconds(0.5f);
 
         chadimator.SetBool("isFallen", true);
+        AudioManager.Play("Fall");
         Vector3 startPos = chad.transform.localPosition;
         Vector3 targetPos = target.transform.localPosition;
 
@@ -288,6 +289,7 @@ public class VillageGrid : SGrid
         }
 
         chadimator.SetBool("isTipping", false);
+        AudioManager.Play("Hurt");
         chadform.localPosition = targetPos;
 
         flashlight.transform.parent = GetStile(8).transform;
