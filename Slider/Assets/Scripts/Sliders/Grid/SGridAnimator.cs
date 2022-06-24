@@ -8,7 +8,7 @@ public class SGridAnimator : MonoBehaviour
 
     // set in inspector
     public AnimationCurve movementCurve;
-    public float movementDuration = 1;
+    protected float movementDuration = 1;
 
     public class OnTileMoveArgs : System.EventArgs
     {
@@ -18,6 +18,19 @@ public class SGridAnimator : MonoBehaviour
     }
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
+
+
+    public void ChangeMovementDuration(float value)
+    {
+        movementDuration =value;
+    }
+
+
+    public float GetMovementDuration()
+    {
+        return movementDuration;
+    }
+
 
     public virtual void Move(SMove move, STile[,] grid = null)
     {
@@ -215,12 +228,12 @@ public class SGridAnimator : MonoBehaviour
     protected IEnumerator StartCameraShakeEffect()
     {
         CameraShake.ShakeConstant(movementDuration + 0.1f, 0.15f);
-        AudioManager.Play("Slide Rumble");
+        AudioManager.PlayWithVolume("Slide Rumble", movementDuration);
 
         yield return new WaitForSeconds(movementDuration);
 
-        CameraShake.Shake(0.5f, 1.0f); // todo: base this on movementDuration so that less camera shake if duration is lower
-        AudioManager.Play("Slide Explosion");
+        CameraShake.Shake(movementDuration/2, 1.0f);
+        AudioManager.PlayWithVolume("Slide Explosion", movementDuration);
 
     }
 

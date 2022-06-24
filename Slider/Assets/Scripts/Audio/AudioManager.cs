@@ -125,6 +125,28 @@ public class AudioManager : MonoBehaviour
         s.source.Play();
     }
 
+
+    public static void PlayWithVolume(string name, float volume) //Used in village 8 puzzle
+    {
+        if (_sounds == null)
+            return;
+        Sound s = Array.Find(_sounds, sound => sound.name == name);
+
+        if (s == null)
+        {
+            Debug.LogError("Sound: " + name + " not found!");
+            return;
+        }
+
+        if (s.doRandomPitch)
+            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
+        else
+            s.source.pitch = s.pitch;
+
+        s.source.volume = s.volume * volume;
+        s.source.Play();
+    }
+
     public static void Stop(string name)
     {
         if (_sounds == null)

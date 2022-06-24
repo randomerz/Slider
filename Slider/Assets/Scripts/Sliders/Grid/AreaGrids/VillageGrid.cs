@@ -176,7 +176,8 @@ public class VillageGrid : SGrid
                                                 { 6, 4, 8 },
                                                 { 5, 3, 2 } };
         SetGrid(shuffledPuzzle);
-
+        base.gridAnimator.ChangeMovementDuration(0.5f);
+        SettingsManager.AutoMove = true;
         checkCompletion = true;
         OnGridMove += UpdateButtonCompletions; // this is probably not needed
         UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
@@ -197,6 +198,7 @@ public class VillageGrid : SGrid
             StartCoroutine(CheckCompletionsAfterDelay(1.1f));
 
             AudioManager.Play("Puzzle Complete");
+            SettingsManager.AutoMove = false;
             UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
