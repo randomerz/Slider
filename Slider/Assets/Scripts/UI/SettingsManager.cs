@@ -64,10 +64,22 @@ public class SettingsManager : MonoBehaviour
     }
     public static bool AutoMove
     {
-        get => _instance.currentSettings.autoMove;
+        get => _instance.currentSettings.autoMove || _instance.currentSettings.forceAutoMove;
         set
         {
             _instance.currentSettings.autoMove = value;
+            if (!value) _instance.currentSettings.forceAutoMove = false;
+
+            WriteCurrentSettingsToPlayerPrefs();
+        }
+    }
+    public static bool ForceAutoMove
+    {
+        get => _instance.currentSettings.forceAutoMove;
+        set
+        {
+            _instance.currentSettings.forceAutoMove = value;
+
             WriteCurrentSettingsToPlayerPrefs();
         }
     }
@@ -114,6 +126,7 @@ struct Settings
     public float screenShake;
     public bool bigTextEnabled;
     public bool autoMove;
+    public bool forceAutoMove;
 
     /// <summary>
     /// Returns an instance of Settings with volumes set to 50% and big text disabled.
@@ -131,5 +144,6 @@ struct Settings
         this.screenShake = screenShake;
         this.bigTextEnabled = bigTextEnabled;
         this.autoMove = autoMove;
+        this.forceAutoMove = autoMove;
     }
 }
