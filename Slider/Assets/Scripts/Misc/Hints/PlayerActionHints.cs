@@ -189,11 +189,11 @@ public class Hint : ISavable
             else
             {
                 var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
-                varResult = action.GetBindingDisplayString().ToUpper();
-                if(varResult.IndexOf("PRESS") > -1)
+                varResult = action.GetBindingDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
+                /*if(varResult.IndexOf("PRESS") > -1)
                     varResult = varResult.Replace("PRESS ", "");
                 if(varResult.IndexOf(" ARROW") > -1)
-                    varResult = varResult.Replace(" ARROW", ""); 
+                    varResult = varResult.Replace(" ARROW", ""); */
             }
             message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
         }
