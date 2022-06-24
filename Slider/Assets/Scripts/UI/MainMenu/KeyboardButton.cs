@@ -20,13 +20,16 @@ public class KeyboardButton : MonoBehaviour
     }
     public void Click()
     {
-        AudioManager.Play("UI Click");
-        inputField.text += character.text;
+        if(MainMenuManager.GetInstance().keyboardEnabled) 
+        {
+            AudioManager.Play("UI Click");
+            inputField.text += character.text;
+        }
     }
 
     public void DeleteClick()
     {
-        if (inputField.text.Length  > 0)
+        if (inputField.text.Length  > 0 && MainMenuManager.GetInstance().keyboardEnabled)
         {
             inputField.text = inputField.text.Substring(0, inputField.text.Length - 1);
         }

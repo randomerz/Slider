@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
 
+    public static System.EventHandler<System.EventArgs> OnSceneChange;
+
     private static SaveSystem saveSystem;
     public GameUI gameUI;
     public SceneInitializer sceneInitializer; // this script makes me sad
@@ -27,11 +29,8 @@ public class GameManager : MonoBehaviour
 
         gameUI.Init();
         sceneInitializer?.Init();
-    }
 
-    private void OnApplicationQuit()
-    {
-        SaveSystem.SaveGame();
+        OnSceneChange?.Invoke(this, null);
     }
 
     public static SaveSystem GetSaveSystem() 

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8750917147391358173}
   - component: {fileID: 8750917147391358174}
   - component: {fileID: 2824224475968117142}
+  - component: {fileID: 5142951399898862476}
   - component: {fileID: 3751631789337053834}
   - component: {fileID: 3313838020138531838}
   - component: {fileID: 1929425032060230202}
@@ -75,6 +76,18 @@ MonoBehaviour:
   SceneTransitionOverlayPrefab:
     prefab: {fileID: 3600424238744718540, guid: 59e7490e38c44a74886316dac45c29fd, type: 3}
     activeInMenuScenes: 1
+--- !u!114 &5142951399898862476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8750917147391358172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2f2cfad5874ef9448c7b0ddb9975608, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3751631789337053834
 MonoBehaviour:
   m_ObjectHideFlags: 0
