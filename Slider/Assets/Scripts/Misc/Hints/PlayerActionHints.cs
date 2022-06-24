@@ -180,20 +180,12 @@ public class Hint : ISavable
             if (keybind == InputRebindButton.Control.Move_Left || keybind == InputRebindButton.Control.Move_Right || keybind == InputRebindButton.Control.Move_Up || keybind == InputRebindButton.Control.Move_Down)
             {
                 var action = inputActions.FindAction("Move");
-                varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper();
-                if(varResult.IndexOf("PRESS") > -1)
-                    varResult = varResult.Replace("PRESS ", "");
-                if(varResult.IndexOf(" ARROW") > -1)
-                    varResult = varResult.Replace(" ARROW", ""); 
+                varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
             }
             else
             {
                 var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
                 varResult = action.GetBindingDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
-                /*if(varResult.IndexOf("PRESS") > -1)
-                    varResult = varResult.Replace("PRESS ", "");
-                if(varResult.IndexOf(" ARROW") > -1)
-                    varResult = varResult.Replace(" ARROW", ""); */
             }
             message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
         }
@@ -201,4 +193,6 @@ public class Hint : ISavable
                     message = message.Replace("W/A/S/D", "WASD");
         return message;
     }
+
+    
 }
