@@ -35,7 +35,7 @@ public class UIEffects : MonoBehaviour
 
     private void OnSceneChange(Scene scene, LoadSceneMode mode)
     {
-        if(scene.name.Equals(MainMenuManager.GetInstance().cutsceneSceneName))
+        if (scene.name.Equals(MainMenuManager.GetInstance()?.cutsceneSceneName))
         {
             _instance.blackPanel.SetActive(false);
         }

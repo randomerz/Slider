@@ -195,7 +195,7 @@ public class VillageGrid : SGrid
             UIArtifact.ClearQueues();
 
             // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
-            StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+            StartCoroutine(CheckCompletionsAfterDelay(1.2f));
 
             AudioManager.Play("Puzzle Complete");
             SettingsManager.AutoMove = false;
