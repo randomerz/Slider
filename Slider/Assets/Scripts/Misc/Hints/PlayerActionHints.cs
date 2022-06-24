@@ -57,6 +57,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     //C: Disables the given hint (if the hint can be disabled)
     public void DisableHint(string hint) 
     {
+        Debug.Log("attempting to disable "+hint);
         foreach(Hint h in hintsList)
             if(string.Equals(h.hintName, hint) && h.canDisableHint)
                 h.DisableHint();
@@ -73,6 +74,11 @@ public class PlayerActionHints : MonoBehaviour, ISavable
             if(string.Equals(h.hintName, hint))
                h.canDisableHint = true;
     }
+
+    public void DebugLog(string s){
+        Debug.Log(s);
+    }
+
 }
 
 [System.Serializable]
@@ -105,6 +111,7 @@ public class Hint : ISavable
         hasBeenCompleted = profile.GetBool("HintComplete " + hintName);
     }
 
+    
     public void SetBools()
     {
         if(triggerOnLoad)
@@ -118,12 +125,13 @@ public class Hint : ISavable
     public void TriggerHint()
     {
         canDisableHint = true;
-        if(shouldDisplay)
+        if(shouldDisplay && !hasBeenCompleted)
             isInCountdown = true;
     }
 
     public void DisableHint()
     {
+        Debug.Log("disabling "+hintName);
         shouldDisplay = false;
         isInCountdown = false;
         hasBeenCompleted = true;
