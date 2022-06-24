@@ -106,6 +106,9 @@ public class VillageGrid : SGrid
         
         checkCompletion = profile.GetBool("villageCompletion");
         fishOn = profile.GetBool("villageFishOn");
+
+        if (checkCompletion)
+            gridAnimator.ChangeMovementDuration(0.5f);
     }
 
 
@@ -176,8 +179,10 @@ public class VillageGrid : SGrid
                                                 { 6, 4, 8 },
                                                 { 5, 3, 2 } };
         SetGrid(shuffledPuzzle);
-        base.gridAnimator.ChangeMovementDuration(0.5f);
-        SettingsManager.AutoMove = true;
+
+        gridAnimator.ChangeMovementDuration(0.5f);
+        SettingsManager.ForceAutoMove = true;
+
         checkCompletion = true;
         OnGridMove += UpdateButtonCompletions; // this is probably not needed
         UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
@@ -198,7 +203,7 @@ public class VillageGrid : SGrid
             StartCoroutine(CheckCompletionsAfterDelay(1.2f));
 
             AudioManager.Play("Puzzle Complete");
-            SettingsManager.AutoMove = false;
+            SettingsManager.ForceAutoMove = false;
             UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
