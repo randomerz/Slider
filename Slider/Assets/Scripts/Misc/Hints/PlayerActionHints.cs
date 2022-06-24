@@ -173,16 +173,24 @@ public class Hint : ISavable
             {
                 var action = inputActions.FindAction("Move");
                 varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper();
+                if(varResult.IndexOf("PRESS") > -1)
+                    varResult = varResult.Replace("PRESS ", "");
+                if(varResult.IndexOf(" ARROW") > -1)
+                    varResult = varResult.Replace(" ARROW", ""); 
             }
             else
             {
                 var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
                 varResult = action.GetBindingDisplayString().ToUpper();
                 if(varResult.IndexOf("PRESS") > -1)
-                    varResult = varResult.Remove(varResult.IndexOf("PRESS"), 6); //C: weird workaround
+                    varResult = varResult.Replace("PRESS ", "");
+                if(varResult.IndexOf(" ARROW") > -1)
+                    varResult = varResult.Replace(" ARROW", ""); 
             }
             message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
         }
+        if(message.IndexOf("W/A/S/D") > -1)
+                    message = message.Replace("W/A/S/D", "WASD");
         return message;
     }
 }
