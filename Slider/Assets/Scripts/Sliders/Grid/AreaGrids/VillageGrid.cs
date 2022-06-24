@@ -106,6 +106,9 @@ public class VillageGrid : SGrid
         
         checkCompletion = profile.GetBool("villageCompletion");
         fishOn = profile.GetBool("villageFishOn");
+
+        if (checkCompletion)
+            gridAnimator.ChangeMovementDuration(0.5f);
     }
 
 
@@ -177,6 +180,9 @@ public class VillageGrid : SGrid
                                                 { 5, 3, 2 } };
         SetGrid(shuffledPuzzle);
 
+        gridAnimator.ChangeMovementDuration(0.5f);
+        SettingsManager.ForceAutoMove = true;
+
         checkCompletion = true;
         OnGridMove += UpdateButtonCompletions; // this is probably not needed
         UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
@@ -194,9 +200,10 @@ public class VillageGrid : SGrid
             UIArtifact.ClearQueues();
 
             // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
-            StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+            StartCoroutine(CheckCompletionsAfterDelay(1.2f));
 
             AudioManager.Play("Puzzle Complete");
+            SettingsManager.ForceAutoMove = false;
             UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
@@ -275,6 +282,7 @@ public class VillageGrid : SGrid
         yield return new WaitForSeconds(0.5f);
 
         chadimator.SetBool("isFallen", true);
+        AudioManager.Play("Fall");
         Vector3 startPos = chad.transform.localPosition;
         Vector3 targetPos = target.transform.localPosition;
 
@@ -288,6 +296,7 @@ public class VillageGrid : SGrid
         }
 
         chadimator.SetBool("isTipping", false);
+        AudioManager.Play("Hurt");
         chadform.localPosition = targetPos;
 
         flashlight.transform.parent = GetStile(8).transform;

@@ -100,6 +100,13 @@ MonoBehaviour:
     loop: 0
     doRandomPitch: 1
     source: {fileID: 0}
+  - name: Fall
+    clip: {fileID: 8300000, guid: 2620fbaec52ed4748aa6bec6e7ee61cb, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
   - name: Power On
     clip: {fileID: 8300000, guid: 63ed6873c5cde2d4bab704f4f53bcd65, type: 3}
     volume: 1

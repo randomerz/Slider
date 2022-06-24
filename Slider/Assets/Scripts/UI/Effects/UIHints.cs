@@ -70,7 +70,10 @@ public class UIHints : MonoBehaviour
         hintIDs.Remove(hintID);
         hintTexts.Remove(hint);
         if(index == 0) {
-            StartCoroutine(EndHint()); //hint displaying, fade out box
+            //C: Switched UpdateHint to be in callback
+            StartCoroutine(FadeHintBox(1, 0, () => {
+                    tmproText.text = ""; UpdateHint();
+                }));
         }
     }
 
@@ -117,14 +120,5 @@ public class UIHints : MonoBehaviour
         canvasGroup.alpha = to;
 
         callback?.Invoke();
-    }
-
-    private IEnumerator EndHint()
-    {
-        StartCoroutine(FadeHintBox(1, 0, () => {
-                    tmproText.text = "";
-                }));
-        yield return new WaitForSeconds(fadeDuration);
-        UpdateHint();
     }
 }

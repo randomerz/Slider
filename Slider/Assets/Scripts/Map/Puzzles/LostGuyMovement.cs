@@ -171,7 +171,7 @@ public class LostGuyMovement : MonoBehaviour
     {
         if (!isBeaching)
         {
-            StartCoroutine(StartLostGuyAnimation(end, dir, animator.movementDuration));
+            StartCoroutine(StartLostGuyAnimation(end, dir, animator.GetMovementDuration()));
         }
 
         else

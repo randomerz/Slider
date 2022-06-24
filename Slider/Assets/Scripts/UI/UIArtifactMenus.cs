@@ -14,6 +14,7 @@ public class UIArtifactMenus : MonoBehaviour
     public UIArtifactWorldMap artifactWorldMap;
 
     private bool isArtifactOpen;
+    private bool isClosing;
     private InputSettings controls;
 
     private void Awake() 
@@ -84,7 +85,7 @@ public class UIArtifactMenus : MonoBehaviour
 
     public void OpenArtifact()
     {
-        if (!UIManager.canOpenMenus)
+        if (!UIManager.canOpenMenus || isClosing)
             return;
 
         if (Player.IsSafe()) // always true for now
@@ -120,7 +121,7 @@ public class UIArtifactMenus : MonoBehaviour
             UIManager.canOpenMenus = true;
             
             artifactAnimator.SetBool("isVisible", false);
-            StartCoroutine(CloseArtPanel());
+            isClosing = true;
         }
     }
 
@@ -129,9 +130,9 @@ public class UIArtifactMenus : MonoBehaviour
         CloseArtifact();
     }
 
-    private IEnumerator CloseArtPanel()
+    public void DisableArtPanel()
     {
-        yield return new WaitForSeconds(0.34f);
         artifactPanel.SetActive(false);
+        isClosing = false;
     }
 }
