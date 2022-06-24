@@ -224,6 +224,15 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Submit (No Space/E)"",
+                    ""type"": ""Button"",
+                    ""id"": ""29ded7da-09f0-41c8-a4d1-91d01e633d92"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""a5ab3b82-6390-4e1a-8e28-dcf4ba0b6716"",
@@ -836,6 +845,17 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                     ""action"": ""Back"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a5c4911c-acb7-46ed-92ba-1b60c8b2a7b9"",
+                    ""path"": ""*/{Submit}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard Mouse"",
+                    ""action"": ""Submit (No Space/E)"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -949,6 +969,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
         m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
+        m_UI_SubmitNoSpaceE = m_UI.FindAction("Submit (No Space/E)", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
         m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
         m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
@@ -1076,6 +1097,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
     private IUIActions m_UIActionsCallbackInterface;
     private readonly InputAction m_UI_Navigate;
     private readonly InputAction m_UI_Submit;
+    private readonly InputAction m_UI_SubmitNoSpaceE;
     private readonly InputAction m_UI_Cancel;
     private readonly InputAction m_UI_Point;
     private readonly InputAction m_UI_Click;
@@ -1095,6 +1117,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         public UIActions(@InputSettings wrapper) { m_Wrapper = wrapper; }
         public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
         public InputAction @Submit => m_Wrapper.m_UI_Submit;
+        public InputAction @SubmitNoSpaceE => m_Wrapper.m_UI_SubmitNoSpaceE;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
         public InputAction @Point => m_Wrapper.m_UI_Point;
         public InputAction @Click => m_Wrapper.m_UI_Click;
@@ -1123,6 +1146,9 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 @Submit.started -= m_Wrapper.m_UIActionsCallbackInterface.OnSubmit;
                 @Submit.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnSubmit;
                 @Submit.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnSubmit;
+                @SubmitNoSpaceE.started -= m_Wrapper.m_UIActionsCallbackInterface.OnSubmitNoSpaceE;
+                @SubmitNoSpaceE.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnSubmitNoSpaceE;
+                @SubmitNoSpaceE.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnSubmitNoSpaceE;
                 @Cancel.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
                 @Cancel.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
                 @Cancel.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
@@ -1172,6 +1198,9 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 @Submit.started += instance.OnSubmit;
                 @Submit.performed += instance.OnSubmit;
                 @Submit.canceled += instance.OnSubmit;
+                @SubmitNoSpaceE.started += instance.OnSubmitNoSpaceE;
+                @SubmitNoSpaceE.performed += instance.OnSubmitNoSpaceE;
+                @SubmitNoSpaceE.canceled += instance.OnSubmitNoSpaceE;
                 @Cancel.started += instance.OnCancel;
                 @Cancel.performed += instance.OnCancel;
                 @Cancel.canceled += instance.OnCancel;
@@ -1284,6 +1313,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
     {
         void OnNavigate(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);
+        void OnSubmitNoSpaceE(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnPoint(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
