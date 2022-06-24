@@ -491,7 +491,7 @@ public class TMPSpecialText : MonoBehaviour
         while (!allCharsVisible)
         {
             allCharsVisible = true;
-            for (int i = start; i < end; i++)
+            for (int i = start; i <= end; i++)
             {
                 if (textInfo.characterInfo[i].color.a == 0)
                 {
@@ -500,6 +500,8 @@ public class TMPSpecialText : MonoBehaviour
             }
             yield return null;
         }
+
+        yield return new WaitForSeconds(0.2f);
 
         while (true)
         {

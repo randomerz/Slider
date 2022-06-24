@@ -44,6 +44,7 @@ public class UIManager : MonoBehaviour
         autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
     }
 
+
     public static void LoadBindings()
     {
         if (_instance == null)
@@ -259,8 +260,11 @@ public class UIManager : MonoBehaviour
 
     public void LoadMainMenu()
     {
+        SaveSystem.SaveGame();
+        SaveSystem.SetCurrentProfile(-1);
         ResumeGame();
         SceneManager.LoadScene("MainMenu");
+        AudioManager.PlayMusic("Main Menu"); //doesn't work yet, need to add main menu track to FMOD but thats outside my paygrade -C
     }
 
     public void QuitGame()
@@ -268,4 +272,5 @@ public class UIManager : MonoBehaviour
         Application.Quit();
         Debug.Log("Quitting game!");
     }
+
 }
