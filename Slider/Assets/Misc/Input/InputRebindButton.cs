@@ -13,6 +13,7 @@ public class InputRebindButton : MonoBehaviour
     [SerializeField] private TMP_Text buttonText;
     [SerializeField] private InputActionAsset inputActions;
     [SerializeField] private int maxLineLength = 19;
+    [SerializeField] private bool isPauseMenu;
 
     private void OnEnable()
     {
@@ -153,6 +154,8 @@ public class InputRebindButton : MonoBehaviour
 
     private string ShrinkFontSizeIfNeeded(string s1, string s2) 
         {
+            if(isPauseMenu)
+                s1 = "";
             int length = (s1 + s2).Length;
             if(length > maxLineLength) {
             buttonText.fontSize = 9.5f;
