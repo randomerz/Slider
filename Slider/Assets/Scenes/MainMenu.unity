@@ -7217,23 +7217,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!1 &1821100813 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8750917147391358172, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
-  m_PrefabInstance: {fileID: 1825336809}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1821100814
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1821100813}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 051978d5f7cc9f44489c12ee766b4338, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1823129407 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1388496677168054973, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
@@ -9206,6 +9189,7 @@ MonoBehaviour:
   buttonText: {fileID: 262822656}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
   maxLineLength: 19
+  isPauseMenu: 0
 --- !u!114 &346018782355660380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9222,6 +9206,7 @@ MonoBehaviour:
   buttonText: {fileID: 1422840662}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
   maxLineLength: 19
+  isPauseMenu: 0
 --- !u!222 &494278160964682048
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9465,6 +9450,7 @@ MonoBehaviour:
   buttonText: {fileID: 915101617}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
   maxLineLength: 19
+  isPauseMenu: 0
 --- !u!224 &1401160684489750849
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12942,6 +12928,7 @@ MonoBehaviour:
   buttonText: {fileID: 790019225}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
   maxLineLength: 19
+  isPauseMenu: 0
 --- !u!114 &6881510534384447465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12958,6 +12945,7 @@ MonoBehaviour:
   buttonText: {fileID: 799809466}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
   maxLineLength: 19
+  isPauseMenu: 0
 --- !u!224 &6884891706454281585
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13204,6 +13192,7 @@ MonoBehaviour:
   buttonText: {fileID: 533794801}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
   maxLineLength: 19
+  isPauseMenu: 0
 --- !u!1 &7018804964818966486
 GameObject:
   m_ObjectHideFlags: 0
@@ -13691,6 +13680,7 @@ MonoBehaviour:
   buttonText: {fileID: 227735826}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
   maxLineLength: 19
+  isPauseMenu: 0
 --- !u!224 &8100995928011218158
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14275,6 +14265,7 @@ MonoBehaviour:
   buttonText: {fileID: 1081294479}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
   maxLineLength: 19
+  isPauseMenu: 0
 --- !u!222 &8967048056876839824
 CanvasRenderer:
   m_ObjectHideFlags: 0
