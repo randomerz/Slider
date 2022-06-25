@@ -19,10 +19,10 @@ public class GameSaver : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        SaveGame();
+        SaveGame(true);
     }
 
-    private void SaveGame()
+    private void SaveGame(bool outOfGame = false)
     {
         SaveSystem.SaveGame();
     }
