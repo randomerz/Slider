@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -40,6 +41,16 @@ public class UINavigationManager : MonoBehaviour
         _instance = this;
         _instance.eventSystem = GetComponent<UnityEngine.EventSystems.EventSystem>();
 
+        _instance.SetupSelectableSets();
+    }
+
+    private void OnEnable()
+    {
+        _instance = this;
+    }
+
+    private void SetupSelectableSets()
+    {
         selectableSetDictionary = new Dictionary<GameObject, Selectable[]>();
         foreach (ButtonSet set in selectableSets)
         {
@@ -90,7 +101,14 @@ public class UINavigationManager : MonoBehaviour
         }
         if (!_instance.selectableSetDictionary.ContainsKey(_instance._currentMenu))
         {
-            Debug.LogError($"EventSystemManager could not find ButtonSet for Menu Object {_instance._currentMenu.name}. Did you remember to setup this menu in the Button Sets?");
+            string output = $"EventSystemManager could not find ButtonSet for Menu Object {_instance._currentMenu.name}. Did you remember to setup this menu in the Button Sets?";
+
+            output += "\nHere is a list of menus inside of the ButtonSets dictionary:\n";
+            foreach (GameObject menu in _instance.selectableSetDictionary.Keys)
+            {
+                output += $"{menu.name} ({menu.GetInstanceID()})\n";
+            }
+            Debug.LogError(output);
             return;
         }
         foreach (Selectable selectable in _instance.selectableSetDictionary[_instance._currentMenu])
