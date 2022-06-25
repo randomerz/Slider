@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerBox : ElectricalNode
+public class PowerBox : ConductiveElectricalNode
 {
 
     private new void Awake()

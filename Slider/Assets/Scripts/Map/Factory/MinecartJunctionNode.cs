@@ -16,7 +16,6 @@ public class MinecartJunctionNode : ElectricalNode
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        base.OnPoweredHandler(e);
         rm.ChangeTile(loc);
     }
 }

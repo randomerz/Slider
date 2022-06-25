@@ -27,7 +27,6 @@ public class PoweredLightNew : ElectricalNode
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        base.OnPoweredHandler(e);
         if (e.powered)
         {
             swapper.TurnOn();

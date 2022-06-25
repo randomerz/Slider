@@ -44,7 +44,6 @@ public class UIManager : Singleton<UIManager>
         autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
     }
 
-
     public static void LoadBindings()
     {
         if (_instance == null)
@@ -128,6 +127,8 @@ public class UIManager : Singleton<UIManager>
         isGamePaused = false;
         
         OnResume?.Invoke(this, null);
+
+        UINavigationManager.CurrentMenu = null;
     }
 
     // DC: this is really bad code haha
@@ -260,11 +261,8 @@ public class UIManager : Singleton<UIManager>
 
     public void LoadMainMenu()
     {
-        SaveSystem.SaveGame();
-        SaveSystem.SetCurrentProfile(-1);
         ResumeGame();
         SceneManager.LoadScene("MainMenu");
-        AudioManager.PlayMusic("Main Menu"); //doesn't work yet, need to add main menu track to FMOD but thats outside my paygrade -C
     }
 
     public void QuitGame()
@@ -272,5 +270,4 @@ public class UIManager : Singleton<UIManager>
         Application.Quit();
         Debug.Log("Quitting game!");
     }
-
 }

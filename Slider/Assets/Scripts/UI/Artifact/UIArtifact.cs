@@ -664,9 +664,4 @@ public class UIArtifact : MonoBehaviour
             b.Flicker(1);
         }
     }
-
-    public void MoveQueueEmpty(Conditionals.Condition c)
-    {
-        c.SetSpec(moveQueue.Count == 0 && activeMoves.Count == 0);
-    }
 }

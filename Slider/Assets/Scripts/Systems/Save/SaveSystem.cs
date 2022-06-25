@@ -40,24 +40,7 @@ public class SaveSystem
 
     public static SaveProfile GetProfile(int index)
     {
-        if (index == -1)
-            return null;
         return saveProfiles[index];
-    }
-
-    public static int GetRecentlyPlayedIndex()
-    {
-        int ret = -1;
-        System.DateTime mostRecent = System.DateTime.MinValue;
-        for (int i = 0; i < 3; i++)
-        {
-            if (saveProfiles[i] != null && saveProfiles[i].GetLastSaved() > mostRecent)
-            {
-                ret = i;
-                mostRecent = saveProfiles[i].GetLastSaved();
-            }
-        }
-        return ret;
     }
 
     public static void SetProfile(int index, SaveProfile profile)
@@ -67,7 +50,6 @@ public class SaveSystem
 
     public static void SetCurrentProfile(int index)
     {
-        currentIndex = index;
         Current = GetProfile(index);
     }
 
@@ -147,7 +129,7 @@ public class SaveSystem
 
     private static SerializableSaveProfile LoadFromFile(int index)
     {
-        Debug.Log("Loading data from file " + index + "...");
+        Debug.Log("Loading data from file...");
 
         string path = GetFilePath(index);
         if (File.Exists(path))
@@ -178,7 +160,7 @@ public class SaveSystem
         }
     }
 
-    public static string GetFilePath(int index)
+    private static string GetFilePath(int index)
     {
         return Application.persistentDataPath + string.Format("/slider{0}.cat", index);
     }
