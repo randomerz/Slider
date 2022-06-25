@@ -36,7 +36,6 @@ public class SerializableSaveProfile
         ssp.profileName = saveProfile.GetProfileName();
         ssp.completionStatus = saveProfile.GetCompletionStatus();
         ssp.playTimeInSeconds = saveProfile.GetPlayTimeInSeconds();
-        ssp.inGame = saveProfile.GetInGame();
         ssp.lastSaved = saveProfile.GetLastSaved();
 
         ssp.serializablePlayer = saveProfile.GetSerializablePlayer();
@@ -59,7 +58,6 @@ public class SerializableSaveProfile
         
         sp.SetCompletionStatus(completionStatus);
         sp.SetPlayTimeInSeconds(playTimeInSeconds);
-        sp.SetInGame(inGame);
         sp.SetLastSaved(lastSaved);
 
         sp.SetSerializeablePlayer(serializablePlayer);

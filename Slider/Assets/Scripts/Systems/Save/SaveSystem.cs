@@ -75,14 +75,13 @@ public class SaveSystem
     /// <summary>
     /// Saves the game to the current loaded profile index (either 1, 2, or 3). If the profile index is -1, then no data will be saved.
     /// </summary>
-    public static void SaveGame(bool outOfGame = false)
+    public static void SaveGame()
     {
         if (currentIndex == -1)
             return;
 
         current.Save();
-        if(outOfGame)
-            current.SetInGame(false);
+
         SerializableSaveProfile profile = SerializableSaveProfile.FromSaveProfile(current);
 
         SaveToFile(profile, currentIndex);

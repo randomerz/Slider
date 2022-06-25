@@ -24,7 +24,7 @@ public class GameSaver : MonoBehaviour
 
     private void SaveGame(bool outOfGame = false)
     {
-        SaveSystem.SaveGame(outOfGame);
+        SaveSystem.SaveGame();
     }
 
     private void SaveGame(object sender, System.EventArgs e)
