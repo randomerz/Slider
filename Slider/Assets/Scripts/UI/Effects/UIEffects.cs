@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIEffects : MonoBehaviour
 {
@@ -22,14 +23,32 @@ public class UIEffects : MonoBehaviour
         _instance = this;
     }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneChange;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneChange;
+    }
+
+    private void OnSceneChange(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name.Equals(MainMenuManager.GetInstance()?.cutsceneSceneName))
+        {
+            _instance.blackPanel.SetActive(false);
+        }
+    }
+
     public static void FadeFromBlack(System.Action callback=null, float speed=1)
     {
         StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 1, 0, callback, speed));
     }
 
-    public static void FadeToBlack(System.Action callback=null, float speed=1)
+    public static void FadeToBlack(System.Action callback=null, float speed=1, bool disableAtEnd = true)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, 1, callback, speed));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, 1, callback, speed, disableAtEnd));
     }
 
     public static void FadeFromWhite(System.Action callback=null, float speed=1)
@@ -65,7 +84,7 @@ public class UIEffects : MonoBehaviour
     }
 
 
-    private IEnumerator FadeCoroutine(GameObject gameObject, CanvasGroup group, float startAlpha, float endAlpha, System.Action callback=null, float speed=1)
+    private IEnumerator FadeCoroutine(GameObject gameObject, CanvasGroup group, float startAlpha, float endAlpha, System.Action callback=null, float speed=1, bool disableAtEnd = true)
     {
         float t = 0;
         gameObject.SetActive(true);
@@ -80,7 +99,8 @@ public class UIEffects : MonoBehaviour
         }
 
         group.alpha = endAlpha;
-        gameObject.SetActive(false);
+        if(disableAtEnd)
+            gameObject.SetActive(false);
 
         callback?.Invoke();
     }

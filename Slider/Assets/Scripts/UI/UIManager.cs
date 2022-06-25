@@ -28,6 +28,7 @@ public class UIManager : MonoBehaviour
     public Slider musicSlider;
     public Slider screenShakeSlider;
     public Toggle bigTextToggle;
+    public Toggle autoMoveToggle;
 
     private void Awake()
     {
@@ -40,6 +41,7 @@ public class UIManager : MonoBehaviour
         musicSlider.value = AudioManager.GetMusicVolume();
 
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
+        autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
     }
 
     public static void LoadBindings()
@@ -203,7 +205,7 @@ public class UIManager : MonoBehaviour
     public void OpenAdvOptions()
     {
         bigTextToggle.isOn = SettingsManager.BigTextEnabled;
-
+        autoMoveToggle.isOn = SettingsManager.AutoMove;
         if (!couldOpenMenusLastFrame)
             return;
 
@@ -250,6 +252,11 @@ public class UIManager : MonoBehaviour
         //DialogueManager.doubleSizeMode = value;
 
         SettingsManager.BigTextEnabled = bigTextToggle.isOn;
+    }
+
+    public void UpdateAutoMove()
+    {
+        SettingsManager.AutoMove = autoMoveToggle.isOn;
     }
 
     public void LoadMainMenu()
