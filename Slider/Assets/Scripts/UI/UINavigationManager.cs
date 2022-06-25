@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -101,6 +102,14 @@ public class UINavigationManager : MonoBehaviour
             }
         );
 
+        // Have you tried turning the EventSystem off and on again?
+        SceneManager.sceneLoaded += (Scene s1, LoadSceneMode mode) => {
+            if (this != null && gameObject != null)
+            {
+                gameObject.SetActive(false);
+                gameObject.SetActive(true);
+            }
+        };
     }
 
     private void OnEnable()
