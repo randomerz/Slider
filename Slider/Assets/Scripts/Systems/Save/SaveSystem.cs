@@ -114,6 +114,7 @@ public class SaveSystem
 
     public static void LoadSaveProfile(int index)
     {
+        
         SerializableSaveProfile ssp = null;
 
         ssp = GetSerializableSaveProfile(index);
@@ -131,8 +132,7 @@ public class SaveSystem
 
         current = profile;
         currentIndex = index;
-
-
+        
         // This makes it so the profile gets loaded first thing in the new scene
         SceneInitializer.profileToLoad = current;
 

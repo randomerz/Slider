@@ -12,6 +12,8 @@ public class InputRebindButton : MonoBehaviour
     [SerializeField] private Control keybind;
     [SerializeField] private TMP_Text buttonText;
     [SerializeField] private InputActionAsset inputActions;
+    [SerializeField] private int maxLineLength = 19;
+    [SerializeField] private bool isPauseMenu;
 
     private void OnEnable()
     {
@@ -107,7 +109,8 @@ public class InputRebindButton : MonoBehaviour
              * Control.Left = 0 and Control.Right = 1. 
             */
             var action = inputActions.FindAction("Move");
-            buttonText.text = buttonText.text = $"{keybind.ToString().ToUpper().Replace("_", " ")}: {action.bindings[1 + (int)keybind].ToDisplayString().ToUpper()}";
+            //buttonText.text = buttonText.text = $"{keybind.ToString().ToUpper().Replace("_", " ")}: {action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "")}";
+            buttonText.text = buttonText.text = ShrinkFontSizeIfNeeded(keybind.ToString().ToUpper().Replace("_", " ") + ": " , action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", ""));
 
             // Save our bindings
             var rebinds = inputActions.SaveBindingOverridesAsJson();
@@ -117,8 +120,21 @@ public class InputRebindButton : MonoBehaviour
         }
         else
         {
+            Debug.Log("update text");
             var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
-            buttonText.text = buttonText.text = $"{keybind.ToString().ToUpper().Replace("_", " ")}: {action.GetBindingDisplayString().ToUpper()}";
+            string display = keybind.ToString().Replace("_", " ");
+            int upperInd = 0;
+            for (int i=1; i < display.Length; i++)
+            {
+                if (char.IsUpper(display.ToCharArray()[i]))
+                    upperInd = i;
+            }
+            if(upperInd > 0) {
+                 display = display.Substring(0, upperInd) + ' ' + display.Substring(upperInd);
+            }
+            Debug.Log(display);
+           // buttonText.text = buttonText.text = $"{display.ToUpper()}: {action.GetBindingDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "")}";
+            buttonText.text = buttonText.text = ShrinkFontSizeIfNeeded(display.ToUpper() + ": " , action.GetBindingDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", ""));
             var rebinds = inputActions.SaveBindingOverridesAsJson();
             PlayerPrefs.SetString("rebinds", rebinds);
             
@@ -135,6 +151,23 @@ public class InputRebindButton : MonoBehaviour
             }
         }
     }
+
+    private string ShrinkFontSizeIfNeeded(string s1, string s2) 
+        {
+            if(isPauseMenu)
+                s1 = "";
+            int length = (s1 + s2).Length;
+            if(length > maxLineLength) {
+            buttonText.fontSize = 9.5f;
+            return s1 + "\n" + s2;
+            }
+            else {
+            buttonText.fontSize = 14;
+            return s1 + s2;
+            }
+        }
+
+   
 
     public enum Control
     {
