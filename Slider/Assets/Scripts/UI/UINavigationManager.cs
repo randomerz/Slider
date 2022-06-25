@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 /// <summary>
-/// Singleton component that handles everything related to UI keyboard navigation. This should be attached to the EventSystem in every scene.
+/// Handles everything related to UI keyboard navigation. This should be attached to the EventSystem in every scene.
 /// Make sure to setup buttonSets properly — each menu should be matched with all of the navigatable buttons inside of it. Also make sure to
 /// properly update CurrentMenu based on which menu is currently active to keep navigation working properly.
 /// </summary>
@@ -18,7 +19,7 @@ public class UINavigationManager : MonoBehaviour
     [Tooltip("Match each UI panel GameObject with all the navigatable buttons inside of it.")]
     [SerializeField] private ButtonSet[] selectableSets;
 
-    // We convert our buttonSets into a dictionary at start (dictionaries are not serializable and therefore invis in the inspector)
+    // We convert our buttonSets into a dictionary at start (dictionaries are not serializable and therefore invisible in the inspector)
     private Dictionary<GameObject, Selectable[]> selectableSetDictionary;
 
     /// <summary>
@@ -26,7 +27,26 @@ public class UINavigationManager : MonoBehaviour
     /// or navigation won't work properly.
     /// </summary>
     public static GameObject CurrentMenu { get => _instance._currentMenu; set => _instance._currentMenu = value; }
-    [SerializeField] private GameObject _currentMenu;
+    private GameObject _currentMenu;
+
+    /// <summary>
+    /// Making a keyboard input switches to keyboard mode and clicking with the mouse switches to mouse mode. The key
+    /// distinction is that buttons will not be put into the Selected state when we are in mouse mode.
+    /// </summary>
+    private static bool _inMouseControlMode = true;
+    public static bool InMouseControlMode
+    {
+        get { return _inMouseControlMode; }
+        set
+        {
+            _inMouseControlMode = value;
+            if (_inMouseControlMode) { ClearSelectable(); }
+            else
+            {
+                SelectBestButtonInCurrentMenu();
+            }
+        }
+    }
 
     /// <summary>
     /// Call this to deslect the currently selected button. No, there isn't a better approach to this. Yes, that drives me insane.
@@ -39,18 +59,53 @@ public class UINavigationManager : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+
         _instance.eventSystem = GetComponent<UnityEngine.EventSystems.EventSystem>();
 
-        _instance.SetupSelectableSets();
+        selectableSetDictionary = new Dictionary<GameObject, Selectable[]>();
+        foreach (ButtonSet set in selectableSets)
+        {
+            selectableSetDictionary[set.menu] = set.selectables;
+        }
+
+        if (_instance == null)
+        {
+            return;
+        }
+
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, 
+            context =>
+            {
+                if (CurrentMenu != null && InMouseControlMode)
+                {
+                    InMouseControlMode = false;
+                }
+            }
+        );
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Submit,
+            context =>
+            {
+                if (CurrentMenu != null && InMouseControlMode)
+                {
+                    InMouseControlMode = false;
+                }
+            }
+        );
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Click,
+            context =>
+            {
+                if (CurrentMenu != null && !InMouseControlMode)
+                {
+                    InMouseControlMode = true;
+                }
+            }
+        );
+
     }
 
     private void OnEnable()
     {
         _instance = this;
-    }
-
-    private void SetupSelectableSets()
-    {
         selectableSetDictionary = new Dictionary<GameObject, Selectable[]>();
         foreach (ButtonSet set in selectableSets)
         {
@@ -91,24 +146,18 @@ public class UINavigationManager : MonoBehaviour
 
     /// <summary>
     /// Selects the first selectable button inside of the buttons array for the currentMenu in buttonSets 
-    /// based on the ordering in the inspector. Higher-up buttons are chosen first.
+    /// based on the ordering in the inspector. Higher-up buttons are chosen first. Does nothing if the
+    /// UI is currently in mouse control mode.
     /// </summary>
     public static void SelectBestButtonInCurrentMenu()
     {
-        if (_instance._currentMenu == null)
+        if (_inMouseControlMode || _instance._currentMenu == null)
         {
             return;
         }
         if (!_instance.selectableSetDictionary.ContainsKey(_instance._currentMenu))
         {
-            string output = $"EventSystemManager could not find ButtonSet for Menu Object {_instance._currentMenu.name}. Did you remember to setup this menu in the Button Sets?";
-
-            output += "\nHere is a list of menus inside of the ButtonSets dictionary:\n";
-            foreach (GameObject menu in _instance.selectableSetDictionary.Keys)
-            {
-                output += $"{menu.name} ({menu.GetInstanceID()})\n";
-            }
-            Debug.LogError(output);
+            Debug.LogError($"EventSystemManager could not find ButtonSet for Menu Object {_instance._currentMenu.name}. Did you remember to setup this menu in the Button Sets?");
             return;
         }
         foreach (Selectable selectable in _instance.selectableSetDictionary[_instance._currentMenu])
