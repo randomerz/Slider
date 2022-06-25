@@ -75,12 +75,14 @@ public class SaveSystem
     /// <summary>
     /// Saves the game to the current loaded profile index (either 1, 2, or 3). If the profile index is -1, then no data will be saved.
     /// </summary>
-    public static void SaveGame()
+    public static void SaveGame(bool toMainMenu = false)
     {
         if (currentIndex == -1)
             return;
 
         current.Save();
+        if(toMainMenu)
+            current.SetInGame(false);
 
         SerializableSaveProfile profile = SerializableSaveProfile.FromSaveProfile(current);
 
@@ -114,6 +116,7 @@ public class SaveSystem
 
     public static void LoadSaveProfile(int index)
     {
+        
         SerializableSaveProfile ssp = null;
 
         ssp = GetSerializableSaveProfile(index);
@@ -131,8 +134,7 @@ public class SaveSystem
 
         current = profile;
         currentIndex = index;
-
-
+        
         // This makes it so the profile gets loaded first thing in the new scene
         SceneInitializer.profileToLoad = current;
 

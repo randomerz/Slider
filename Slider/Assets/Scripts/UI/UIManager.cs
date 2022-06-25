@@ -260,7 +260,7 @@ public class UIManager : MonoBehaviour
 
     public void LoadMainMenu()
     {
-        SaveSystem.SaveGame();
+        SaveSystem.SaveGame(true);
         SaveSystem.SetCurrentProfile(-1);
         ResumeGame();
         SceneManager.LoadScene("MainMenu");

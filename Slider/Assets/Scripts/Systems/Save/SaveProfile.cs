@@ -9,6 +9,7 @@ public class SaveProfile
     private bool completionStatus;
     private float playTimeInSeconds;
     private System.DateTime lastSaved;
+    private bool inGame;
 
     private SerializablePlayer serializablePlayer;
     private Area lastArea;
@@ -115,13 +116,28 @@ public class SaveProfile
         strings = value;
     }
 
+    public void SetInGame(bool value)
+    {
+        inGame = value;
+    }
+
+    public bool GetInGame()
+    {
+        return inGame;
+    }
+
     #endregion
 
     public void Save()
     {
         // Responsible for going around and saving all the data
-
+        System.DateTime prevSave = lastSaved;
         lastSaved = System.DateTime.Now;
+        if(inGame)
+            playTimeInSeconds += lastSaved.Subtract(prevSave).Seconds;
+        else
+            inGame = true;
+        Debug.Log(playTimeInSeconds);
         SetBool("isDemoBuild", true);
         SaveSavablesData();
     }
