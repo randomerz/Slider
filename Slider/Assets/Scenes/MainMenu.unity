@@ -7217,6 +7217,23 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &1821100813 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8750917147391358172, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
+  m_PrefabInstance: {fileID: 1825336809}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1821100814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1821100813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 051978d5f7cc9f44489c12ee766b4338, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1823129407 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1388496677168054973, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
@@ -7620,7 +7637,6 @@ MonoBehaviour:
     - {fileID: 346731898}
   - menu: {fileID: 60457618}
     selectables: []
-  _currentMenu: {fileID: 0}
 --- !u!1001 &1875150452
 PrefabInstance:
   m_ObjectHideFlags: 0
