@@ -147,7 +147,7 @@ public class InputRebindButton : MonoBehaviour
                 UIManager.LoadBindings();
                 ShopManager.LoadBindings(); // for Ocean shop UI
                 UIArtifactMenus.LoadBindings(); // for artiface menus
-                MainMenuManager.LoadBindings(); // for main menu
+                //MainMenuManager.LoadBindings(); // for main menu
             }
         }
     }

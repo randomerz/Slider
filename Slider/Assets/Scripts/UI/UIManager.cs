@@ -6,12 +6,12 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
     public static System.EventHandler<System.EventArgs> OnPause;
     public static System.EventHandler<System.EventArgs> OnResume;
     public static System.EventHandler<System.EventArgs> OnCloseAllMenus;
-    private static UIManager _instance;
+    //private static UIManager _instance;
     
     public bool isGamePaused;
     // public bool isArtifactOpen;

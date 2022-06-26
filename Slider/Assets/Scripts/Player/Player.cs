@@ -4,9 +4,10 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour, ISavable
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TRAVIS AND/OR DANIEL! **
+public class Player : Singleton<Player>, ISavable
 {
-    private static Player _instance;
+    //private static Player _instance;
     private bool didInit;
 
     // Movement
@@ -34,7 +35,8 @@ public class Player : MonoBehaviour, ISavable
 
     void Awake()
     {
-        _instance = this;
+        //_instance = this;
+        InitializeSingleton(overrideExistingInstance: true);
         _instance.controls = new InputSettings();
         LoadBindings();
 
