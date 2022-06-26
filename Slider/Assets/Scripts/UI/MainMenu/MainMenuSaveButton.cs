@@ -73,7 +73,6 @@ public class MainMenuSaveButton : MonoBehaviour
         {
             if (deleteMode)
             {
-                Debug.Log("Deleteing profile " + profileIndex);
                 DeleteThisProfile();
             }
             else

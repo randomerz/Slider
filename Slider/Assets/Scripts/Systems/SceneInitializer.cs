@@ -44,8 +44,9 @@ public class SceneInitializer : MonoBehaviour
         uiArtifact?.Init();
         sgrid?.Init(); // sgrid.Load is dependent on UIArtifact singleton
         player?.Init(); // getStileUnderneath is dependent on sgrid singleton
-        
+
         // Load anything else needed
+        Debug.Log("Scene initializer's profile to load: " + profileToLoad);
         if (profileToLoad != null)
         {
             profileToLoad.Load();

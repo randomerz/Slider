@@ -54,7 +54,13 @@ public class Player : Singleton<Player>, ISavable
 
         UpdatePlayerSpeed();
     }
-    
+
+    // Here is where we pay for all our Singleton Sins
+    public void ResetInventory()
+    {
+        playerInventory.Reset();
+    }
+
     private void Start() 
     {
         UITrackerManager.AddNewTracker(gameObject, UITrackerManager.DefaultSprites.circle1, UITrackerManager.DefaultSprites.circleEmpty, 3f);
@@ -178,15 +184,20 @@ public class Player : Singleton<Player>, ISavable
 
         SaveSystem.Current.SetSerializeablePlayer(sp);
 
-        Debug.Log("Saved player position to: " + pos);
+        //Debug.Log("Saved player position to: " + pos);
     }
 
     public void Load(SaveProfile profile)
     {
         if (profile == null || profile.GetSerializablePlayer() == null)
+        {
+            Debug.Log("i am null...............");
             return;
+        }
 
         SerializablePlayer sp = profile.GetSerializablePlayer();
+
+        Debug.Log("i am not null!");
 
         // Player
 
@@ -195,7 +206,7 @@ public class Player : Singleton<Player>, ISavable
         transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
         STile stileUnderneath = STile.GetSTileUnderneath(transform, null);
         transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
-        Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
+        //Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
 
         SetIsOnWater(sp.isOnWater);
         SetIsInHouse(sp.isInHouse);
