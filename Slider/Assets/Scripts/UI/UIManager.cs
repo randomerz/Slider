@@ -264,7 +264,6 @@ public class UIManager : Singleton<UIManager>
         SaveSystem.SetCurrentProfile(-1);
         ResumeGame();
         SceneManager.LoadScene("MainMenu");
-        AudioManager.PlayMusic("Main Menu"); //doesn't work yet, need to add main menu track to FMOD but thats outside my paygrade -C
     }
 
     public void QuitGame()

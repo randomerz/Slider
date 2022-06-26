@@ -70,6 +70,8 @@ public class MainMenuManager : Singleton<MainMenuManager>
         continueButton.interactable = isContinueButtonOn;
         continueText.color = isContinueButtonOn ? GameSettings.white : GameSettings.lightGray;
 
+        AudioManager.PlayMusic("Main Menu");
+
         listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
     }
 
