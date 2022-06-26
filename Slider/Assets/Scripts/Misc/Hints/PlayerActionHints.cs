@@ -180,13 +180,11 @@ public class Hint : ISavable
             if (keybind == InputRebindButton.Control.Move_Left || keybind == InputRebindButton.Control.Move_Right || keybind == InputRebindButton.Control.Move_Up || keybind == InputRebindButton.Control.Move_Down)
             {
                 var action = inputActions.FindAction("Move");
-                //var action = rebinds.FindAction("Move");
                 varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
             }
             else
             {
-                //var action = rebinds.FindAction(keybind.ToString().Replace("_", string.Empty));
-               var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
+                var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
                 varResult = action.GetBindingDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
             }
             message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
