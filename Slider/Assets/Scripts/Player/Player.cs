@@ -4,10 +4,9 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TRAVIS AND/OR DANIEL! **
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class Player : Singleton<Player>, ISavable
 {
-    //private static Player _instance;
     private bool didInit;
 
     // Movement
@@ -20,7 +19,6 @@ public class Player : Singleton<Player>, ISavable
 
     private STile currentStileUnderneath;
 
-    private InputSettings controls;
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
     
@@ -35,15 +33,14 @@ public class Player : Singleton<Player>, ISavable
 
     void Awake()
     {
-        //_instance = this;
         InitializeSingleton(overrideExistingInstance: true);
-        _instance.controls = new InputSettings();
-        LoadBindings();
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
 
         if (!didInit)
             Init();
     }
 
+    // ** Look at this later given that we're trying to use the new Singleton now **
     public void SetSingleton()
     {
         _instance = this;
@@ -61,29 +58,6 @@ public class Player : Singleton<Player>, ISavable
     private void Start() 
     {
         UITrackerManager.AddNewTracker(gameObject, UITrackerManager.DefaultSprites.circle1, UITrackerManager.DefaultSprites.circleEmpty, 3f);
-    }
-
-    public static void LoadBindings()
-    {
-        if (_instance == null)
-        {
-            return;
-        }
-
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            _instance.controls.LoadBindingOverridesFromJson(rebinds);
-        }
-        _instance.controls.Player.Move.performed += context => _instance.UpdateMove(context.ReadValue<Vector2>());
-    }
-
-    private void OnEnable() {
-        controls.Enable();
-    }
-
-    private void OnDisable() {
-        controls.Disable();
     }
     
     void Update()

@@ -348,6 +348,15 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CycleArtifactScreens"",
+                    ""type"": ""Button"",
+                    ""id"": ""0896a051-afd3-4d4c-8287-d7e1f3613bfd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -878,6 +887,17 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                     ""action"": ""Submit (No Space/E)"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b9265f95-b89e-46e5-a393-124706c2c1ab"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CycleArtifactScreens"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1005,6 +1025,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         m_UI_ArtifactRight = m_UI.FindAction("ArtifactRight", throwIfNotFound: true);
         m_UI_ArtifactLeft = m_UI.FindAction("ArtifactLeft", throwIfNotFound: true);
         m_UI_Back = m_UI.FindAction("Back", throwIfNotFound: true);
+        m_UI_CycleArtifactScreens = m_UI.FindAction("CycleArtifactScreens", throwIfNotFound: true);
         // Debug
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_OpenDebug = m_Debug.FindAction("OpenDebug", throwIfNotFound: true);
@@ -1133,6 +1154,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_ArtifactRight;
     private readonly InputAction m_UI_ArtifactLeft;
     private readonly InputAction m_UI_Back;
+    private readonly InputAction m_UI_CycleArtifactScreens;
     public struct UIActions
     {
         private @InputSettings m_Wrapper;
@@ -1153,6 +1175,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         public InputAction @ArtifactRight => m_Wrapper.m_UI_ArtifactRight;
         public InputAction @ArtifactLeft => m_Wrapper.m_UI_ArtifactLeft;
         public InputAction @Back => m_Wrapper.m_UI_Back;
+        public InputAction @CycleArtifactScreens => m_Wrapper.m_UI_CycleArtifactScreens;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1210,6 +1233,9 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 @Back.started -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
                 @Back.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
                 @Back.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
+                @CycleArtifactScreens.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCycleArtifactScreens;
+                @CycleArtifactScreens.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCycleArtifactScreens;
+                @CycleArtifactScreens.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCycleArtifactScreens;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1262,6 +1288,9 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 @Back.started += instance.OnBack;
                 @Back.performed += instance.OnBack;
                 @Back.canceled += instance.OnBack;
+                @CycleArtifactScreens.started += instance.OnCycleArtifactScreens;
+                @CycleArtifactScreens.performed += instance.OnCycleArtifactScreens;
+                @CycleArtifactScreens.canceled += instance.OnCycleArtifactScreens;
             }
         }
     }
@@ -1349,6 +1378,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
         void OnArtifactRight(InputAction.CallbackContext context);
         void OnArtifactLeft(InputAction.CallbackContext context);
         void OnBack(InputAction.CallbackContext context);
+        void OnCycleArtifactScreens(InputAction.CallbackContext context);
     }
     public interface IDebugActions
     {

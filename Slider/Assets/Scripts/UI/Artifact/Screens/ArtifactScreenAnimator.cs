@@ -79,6 +79,12 @@ public class ArtifactScreenAnimator : MonoBehaviour
         targetScreenIndex = index;
     }
 
+    public void CycleScreen()
+    {
+        targetScreenIndex = (targetScreenIndex + 1) % screens.Count;
+        SetScreen(targetScreenIndex);
+    }
+
     private void UpdateArrowVisibility(bool immediate)
     {
         rightArrowAnimator.SetBool("isVisible", targetScreenIndex < screens.Count - 1);

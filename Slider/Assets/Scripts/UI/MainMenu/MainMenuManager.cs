@@ -11,7 +11,7 @@ using TMPro;
 //  - refactor options into an options panel -- for now the options buttons are dead
 //  - fix Continue button (see in Update())
 
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TRAVIS AND/OR DANIEL! **
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class MainMenuManager : Singleton<MainMenuManager>
 {
     public string cutsceneSceneName;
