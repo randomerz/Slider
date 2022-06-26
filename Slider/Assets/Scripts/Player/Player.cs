@@ -177,6 +177,8 @@ public class Player : Singleton<Player>, ISavable
         sp.hasCollectedAnchor = GetPlayerInventory().GetHasCollectedAnchor();
 
         SaveSystem.Current.SetSerializeablePlayer(sp);
+
+        Debug.Log("Saved player position to: " + pos);
     }
 
     public void Load(SaveProfile profile)
@@ -193,10 +195,10 @@ public class Player : Singleton<Player>, ISavable
         transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
         STile stileUnderneath = STile.GetSTileUnderneath(transform, null);
         transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
-        //Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
+        Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
 
-        isOnWater = sp.isOnWater;
-        isInHouse = sp.isInHouse;
+        SetIsOnWater(sp.isOnWater);
+        SetIsInHouse(sp.isInHouse);
 
         // PlayerInventory
         playerInventory.SetCollectiblesList(sp.collectibles);

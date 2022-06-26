@@ -118,11 +118,8 @@ public class ArtifactScreenHider : MonoBehaviour
         {
             AddInventoryScreen();
             PlayerInventory.OnPlayerGetCollectible -= CheckAddInventoryScreen;
-
-
+            
             StartCoroutine(IAddScreensAndShow(0));
-            // show hint about pressing Q and E here
-            Debug.Log("Press [Q] and [E] to switch screens on The Artifact!");
         }
     }
 

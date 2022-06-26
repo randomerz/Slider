@@ -66,9 +66,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     {
         StartCoroutine(OpenCutscene());
 
-        bool isContinueButtonOn = CheckContinueButton();
-        continueButton.interactable = isContinueButtonOn;
-        continueText.color = isContinueButtonOn ? GameSettings.white : GameSettings.lightGray;
+        CheckContinueButton();
 
         AudioManager.PlayMusic("Main Menu");
         AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 0);
@@ -105,9 +103,14 @@ public class MainMenuManager : Singleton<MainMenuManager>
     {
         if (!AreAnyProfilesLoaded())
         {
+            continueProfileIndex = -1;
+            continueButton.interactable = false;
+            continueText.color = GameSettings.lightGray;
             return false;
         }
         continueProfileIndex = SaveSystem.GetRecentlyPlayedIndex();
+        continueButton.interactable = true;
+        continueText.color = GameSettings.white;
         return true;
     }
 
@@ -142,7 +145,6 @@ public class MainMenuManager : Singleton<MainMenuManager>
         textAnimator.SetBool("isVisible", false);
 
         AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 1);
-        Debug.Log("Start!");
 
         UINavigationManager.CurrentMenu = mainMenuPanel;
         UINavigationManager.LockoutSelectablesInCurrentMenu(SelectTopmostButton, 1);
@@ -181,6 +183,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         else if (savesPanel.activeSelf || optionsPanel.activeSelf || creditsPanel.activeSelf)
         {
             CloseAllPanels();
+            CheckContinueButton();
             UINavigationManager.CurrentMenu = mainMenuPanel;
         }
         else
