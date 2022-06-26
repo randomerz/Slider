@@ -191,13 +191,11 @@ public class Player : Singleton<Player>, ISavable
     {
         if (profile == null || profile.GetSerializablePlayer() == null)
         {
-            Debug.Log("i am null...............");
+            playerInventory.Reset();
             return;
         }
 
         SerializablePlayer sp = profile.GetSerializablePlayer();
-
-        Debug.Log("i am not null!");
 
         // Player
 

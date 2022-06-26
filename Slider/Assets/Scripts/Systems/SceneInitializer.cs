@@ -46,7 +46,6 @@ public class SceneInitializer : MonoBehaviour
         player?.Init(); // getStileUnderneath is dependent on sgrid singleton
 
         // Load anything else needed
-        Debug.Log("Scene initializer's profile to load: " + profileToLoad);
         if (profileToLoad != null)
         {
             profileToLoad.Load();

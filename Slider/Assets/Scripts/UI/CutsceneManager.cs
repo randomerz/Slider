@@ -52,9 +52,11 @@ public class CutsceneManager : MonoBehaviour
 
     public void exitCutscene()
     {
-        Debug.Log("Exiting");
+        Debug.Log("Exiting Cutscene");
         canvas.alpha = 0;
         listener.Dispose();
+
+        SceneInitializer.profileToLoad = SaveSystem.Current;
         SceneManager.LoadScene(sceneToLoad);
     }
 
