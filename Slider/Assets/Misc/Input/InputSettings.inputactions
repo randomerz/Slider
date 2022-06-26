@@ -782,11 +782,33 @@
                 },
                 {
                     "name": "",
+                    "id": "a741799f-1f36-4c14-b143-863969b4db28",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8bcec618-573c-4774-b79e-f206b2798215",
                     "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard Mouse",
+                    "action": "OpenArtifact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cf0401e5-e829-4785-a25a-a8ced2c0dbbf",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "OpenArtifact",
                     "isComposite": false,
                     "isPartOfComposite": false

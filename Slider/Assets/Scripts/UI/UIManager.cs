@@ -6,12 +6,12 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
     public static System.EventHandler<System.EventArgs> OnPause;
     public static System.EventHandler<System.EventArgs> OnResume;
     public static System.EventHandler<System.EventArgs> OnCloseAllMenus;
-    private static UIManager _instance;
+    //private static UIManager _instance;
     
     public bool isGamePaused;
     // public bool isArtifactOpen;
@@ -126,6 +126,7 @@ public class UIManager : MonoBehaviour
         pausePanel.SetActive(false);
         Time.timeScale = 1;
         isGamePaused = false;
+        UINavigationManager.CurrentMenu = null;
         
         OnResume?.Invoke(this, null);
     }
@@ -264,7 +265,6 @@ public class UIManager : MonoBehaviour
         SaveSystem.SetCurrentProfile(-1);
         ResumeGame();
         SceneManager.LoadScene("MainMenu");
-        AudioManager.PlayMusic("Main Menu"); //doesn't work yet, need to add main menu track to FMOD but thats outside my paygrade -C
     }
 
     public void QuitGame()

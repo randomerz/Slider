@@ -11,7 +11,8 @@ using TMPro;
 //  - refactor options into an options panel -- for now the options buttons are dead
 //  - fix Continue button (see in Update())
 
-public class MainMenuManager : MonoBehaviour
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TRAVIS AND/OR DANIEL! **
+public class MainMenuManager : Singleton<MainMenuManager>
 {
     public string cutsceneSceneName;
 
@@ -47,19 +48,18 @@ public class MainMenuManager : MonoBehaviour
     public Toggle bigTextToggle;
 
     private System.IDisposable listener;
-    private InputSettings controls;
-
-    private static MainMenuManager _instance;
 
     private bool skippedSavePicking;
 
     public bool keyboardEnabled {get; private set;}
     
     private void Awake() {
-        _instance = this;
-        
-        _instance.controls = new InputSettings();
-        LoadBindings();
+        InitializeSingleton();
+
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context 
+            => { if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); } });
     }
 
     void Start()
@@ -70,30 +70,16 @@ public class MainMenuManager : MonoBehaviour
         continueButton.interactable = isContinueButtonOn;
         continueText.color = isContinueButtonOn ? GameSettings.white : GameSettings.lightGray;
 
+        AudioManager.PlayMusic("Main Menu");
+
         listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
-
-        _instance.controls.UI.Back.performed += context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); };
-
-        // Pressing a navigation key selects a button is one is not already selected
-        _instance.controls.UI.Navigate.performed += context => 
-        {
-            if (!UINavigationManager.ButtonInCurrentMenuIsSelected())
-            {
-                UINavigationManager.SelectBestButtonInCurrentMenu();
-            }
-        };
     }
 
     public static MainMenuManager GetInstance(){
         return _instance;
     }
 
-    private void OnEnable() {
-        controls.Enable();
-    }
-
     private void OnDisable() {
-        controls.Disable();
         listener?.Dispose();
     }
 
@@ -102,23 +88,6 @@ public class MainMenuManager : MonoBehaviour
         // continueButton.interactable = SaveSystem.Current != null;
         // continueText.color = SaveSystem.Current != null ? GameSettings.white : GameSettings.darkGray;
     }
-
-    public static void LoadBindings()
-    {
-        if (_instance == null)
-        {
-            return;
-        }
-
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            _instance.controls.LoadBindingOverridesFromJson(rebinds);
-        }
-
-        _instance.controls.UI.Pause.performed += context => _instance.CloseCurrentPanel();
-    }
-
 
     private void OnAnyButtonPress() 
     {
