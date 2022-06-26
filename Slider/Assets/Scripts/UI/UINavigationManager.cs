@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Handles everything related to UI keyboard navigation. This should be attached to the EventSystem in every scene.
-/// Make sure to setup buttonSets properly — each menu should be matched with all of the navigatable buttons inside of it. Also make sure to
+/// Make sure to setup buttonSets properly â€” each menu should be matched with all of the navigatable buttons inside of it. Also make sure to
 /// properly update CurrentMenu based on which menu is currently active to keep navigation working properly.
 /// <para/>
 /// <b>Note: It is recommended that we transition away from setting up our button sets on this component and instead use the <see cref="SelectableSet"/>
