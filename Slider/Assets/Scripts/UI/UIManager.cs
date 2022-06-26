@@ -126,6 +126,7 @@ public class UIManager : Singleton<UIManager>
         pausePanel.SetActive(false);
         Time.timeScale = 1;
         isGamePaused = false;
+        UINavigationManager.CurrentMenu = null;
         
         OnResume?.Invoke(this, null);
     }

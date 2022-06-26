@@ -40,6 +40,7 @@ public class UINavigationManager : MonoBehaviour
         get { return _inMouseControlMode; }
         set
         {
+            Debug.Log("Mouse Control Mode: " + value);
             _inMouseControlMode = value;
             if (_inMouseControlMode) { ClearSelectable(); }
             else
@@ -114,12 +115,7 @@ public class UINavigationManager : MonoBehaviour
 
     private void OnEnable()
     {
-        _instance = this;
-        selectableSetDictionary = new Dictionary<GameObject, Selectable[]>();
-        foreach (ButtonSet set in selectableSets)
-        {
-            selectableSetDictionary[set.menu] = set.selectables;
-        }
+        Awake();
     }
 
     /// <summary>
