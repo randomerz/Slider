@@ -1430,6 +1430,7 @@ GameObject:
   - component: {fileID: 1481655390}
   - component: {fileID: 1481655389}
   - component: {fileID: 1481655395}
+  - component: {fileID: 1481655393}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1521,6 +1522,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!225 &1481655393
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481655388}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!114 &1481655395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1533,7 +1546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c73ad924b9562e42a4129205b8bf67e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blackBox: {fileID: 863612623}
+  canvas: {fileID: 1481655393}
   i: 0
   sceneToLoad: Village
   images:

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public class CutsceneManager : MonoBehaviour
 {
-    public Image blackBox;
+    public CanvasGroup canvas;
     [SerializeField] private int i = 0;
     public string sceneToLoad;
     public List<GameObject> images;
@@ -32,16 +32,15 @@ public class CutsceneManager : MonoBehaviour
         {
             images[x].SetActive(false);
             textboxes[x].SetActive(false);
-            textboxes[x].GetComponent<TMPTextTyper>().SetTextSpeed(GameSettings.textSpeed * 1.5f);
+            textboxes[x].GetComponent<TMPTextTyper>().SetTextSpeed(GameSettings.textSpeed * 2f);
         }
         images[0].SetActive(true);
         textboxes[0].SetActive(true);
-        StartCoroutine(BoxFadeOut());
+        StartCoroutine(FadeIn());
         StartCoroutine(scrolltext(textboxes[0]));
 
 
         listener = InputSystem.onAnyButtonPress.Call(ctrl => advanceCutscene());
-        
         
         //StartCoroutine(cutscene());
     }
@@ -53,6 +52,8 @@ public class CutsceneManager : MonoBehaviour
 
     public void exitCutscene()
     {
+        Debug.Log("Exiting");
+        canvas.alpha = 0;
         listener.Dispose();
         SceneManager.LoadScene(sceneToLoad);
     }
@@ -66,7 +67,7 @@ public class CutsceneManager : MonoBehaviour
             textboxes[i].SetActive(false);
             i++;
             images[i].SetActive(true);
-            StartCoroutine(BoxFadeOut());
+            StartCoroutine(FadeIn());
             StartCoroutine(scrolltext(textboxes[i]));
             textboxes[i].SetActive(true);
             
@@ -98,61 +99,53 @@ public class CutsceneManager : MonoBehaviour
         StartCoroutine(WaitToAdvance());
     }
 
-    IEnumerator BoxFadeIn()
+    IEnumerator FadeIn()
     {
-        Color color = blackBox.color;
-        while (color.a < 1f)
+        while (canvas.alpha < 1f)
         {
-            Debug.Log("Skip: " + skipImages);
             if (skipImages)
             {
-                color.a += Time.deltaTime * 3f;
+                break;
             }
             else
             {
-                color.a += Time.deltaTime;
+                canvas.alpha += Time.deltaTime;
             }
-            blackBox.color = color;
             yield return null;
         }
-        skipImages = false;
+        canvas.alpha = 1f;
+        skipImages = false; 
     }
 
-    IEnumerator BoxFadeOut()
+    IEnumerator FadeOut(System.Action callback = null)
     {
-        Color color = blackBox.color;
-        while (color.a > 0f)
+        while (canvas.alpha > 0f)
         {
-            Debug.Log("Skip: " + skipImages);
             if (skipImages)
             {
-                color.a -= Time.deltaTime * 3f;
+                break;
             }
             else
             {
-                color.a -= Time.deltaTime;
+                canvas.alpha -= Time.deltaTime;
             }
-            blackBox.color = color;
             yield return null;
         }
-        Debug.Log("Box faded out!");
+        canvas.alpha = 0f;
         skipImages = false;
+        callback?.Invoke();
     }
 
     IEnumerator WaitToAdvance()
     {
-        Debug.Log("Waiting!");
         skipImages = false;
-        for (float time = 2f; time >= 0; time -= .2f)
+        float time = 0;
+        while (!skipImages && time < 3f)
         {
-            if (!skipImages)
-            {
-                yield return new WaitForSeconds(.2f);
-            }
+            time += Time.deltaTime;
+            yield return null;
         }
         skipImages = false;
-        StartCoroutine(BoxFadeIn());
-        yield return new WaitForSeconds(1.5f);
-        advanceImages();
+        StartCoroutine(FadeOut(() => advanceImages()));
     }
 }
