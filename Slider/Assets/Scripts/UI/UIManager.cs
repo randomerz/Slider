@@ -6,19 +6,17 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class UIManager : Singleton<UIManager>
 {
     public static System.EventHandler<System.EventArgs> OnPause;
     public static System.EventHandler<System.EventArgs> OnResume;
     public static System.EventHandler<System.EventArgs> OnCloseAllMenus;
-    //private static UIManager _instance;
     
     public bool isGamePaused;
     // public bool isArtifactOpen;
     public static bool canOpenMenus = true;
     private static bool couldOpenMenusLastFrame = true; // DC: maximum jank because timing
-
-    private InputSettings controls;
 
     public GameObject pausePanel;
     public GameObject optionsPanel;
@@ -32,10 +30,9 @@ public class UIManager : Singleton<UIManager>
 
     private void Awake()
     {
-        _instance = this;
+        InitializeSingleton();
 
-        _instance.controls = new InputSettings();
-        LoadBindings();
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.OnPressPause());
 
         sfxSlider.value = AudioManager.GetSFXVolume();
         musicSlider.value = AudioManager.GetMusicVolume();
@@ -44,29 +41,7 @@ public class UIManager : Singleton<UIManager>
         autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
     }
 
-
-    public static void LoadBindings()
-    {
-        if (_instance == null)
-        {
-            return;
-        }
-
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            _instance.controls.LoadBindingOverridesFromJson(rebinds);
-        }
-        _instance.controls.UI.Pause.performed += context => _instance.OnPressPause();
-    }
-
-    private void OnEnable() {
-        controls.Enable();
-    }
-
     private void OnDisable() {
-        controls.Disable();
-
         if (!canOpenMenus)
         {
             Debug.LogWarning("UIManager was disabled without closing the menu!");

@@ -27,26 +27,12 @@ public class PlayerAction : MonoBehaviour
     {
         _instance = this;
         _instance.controls = new InputSettings();
-        LoadBindings();
+
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => _instance.Action());
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.CycleEquip, context => _instance.CycleEquip());
 
         LayerMask StileLayerMask = LayerMask.GetMask("Slider");
         LayerFilter.SetLayerMask(StileLayerMask);
-    }
-
-    public static void LoadBindings()
-    {
-        if (_instance == null)
-        {
-            return;
-        }
-
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            _instance.controls.LoadBindingOverridesFromJson(rebinds);
-        }
-        _instance.controls.Player.Action.performed += context => _instance.Action();
-        _instance.controls.Player.CycleEquip.performed += context => _instance.CycleEquip();
     }
 
     private void OnEnable() 
