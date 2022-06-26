@@ -40,7 +40,7 @@ public class UINavigationManager : MonoBehaviour
         get { return _inMouseControlMode; }
         set
         {
-            Debug.Log("Mouse Control Mode: " + value);
+            //Debug.Log("Mouse Control Mode: " + value);
             _inMouseControlMode = value;
             if (_inMouseControlMode) { ClearSelectable(); }
             else

@@ -78,7 +78,7 @@ public class AudioManager : MonoBehaviour
 
         if (m == null)
         {
-            Debug.LogError("Music: " + name + " not found!");
+            //Debug.LogError("Music: " + name + " not found!");
             return null;
         }
 

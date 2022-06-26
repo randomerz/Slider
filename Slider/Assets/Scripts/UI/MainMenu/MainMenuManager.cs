@@ -71,6 +71,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         continueText.color = isContinueButtonOn ? GameSettings.white : GameSettings.lightGray;
 
         AudioManager.PlayMusic("Main Menu");
+        AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 0);
 
         listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
     }
@@ -139,6 +140,9 @@ public class MainMenuManager : Singleton<MainMenuManager>
         playerAnimator.SetBool("isUp", true);
         mainMenuButtonsAnimator.SetBool("isUp", true);
         textAnimator.SetBool("isVisible", false);
+
+        AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 1);
+        Debug.Log("Start!");
 
         UINavigationManager.CurrentMenu = mainMenuPanel;
         UINavigationManager.LockoutSelectablesInCurrentMenu(SelectTopmostButton, 1);
