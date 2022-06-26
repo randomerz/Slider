@@ -25,10 +25,15 @@ public class Controls : Singleton<Controls>
     private static InputSettings _bindings;
 
     /// <summary>
+    /// <b>Revisit this when we start looking into controller support!</b>
+    /// </summary>
+    [SerializeField] private string currentControlScheme = "Keyboard Mouse";
+
+    /// <summary>
     /// Returns an instance of InputSettings containing our current bindings. If the bindings are not yet loaded, this will load them 
-    /// before returning. However, this will not update the bindings to match the latest ones stored inside of PlayerPrefs. If you wish
-    /// to do this, call <see cref="LoadBindings"/> first. This should not be necessary unless you are writing new bindings to PlayerPrefs 
-    /// in your code.
+    /// before returning. However, this will not update the bindings to match the latest ones stored inside of PlayerPrefs if the bindings 
+    /// were already loaded previously. If you wish to do this, call <see cref="LoadBindings"/> first. This should not be necessary unless 
+    /// you are writing new bindings to PlayerPrefs in your code.
     /// </summary>
     public static InputSettings Bindings
     {
@@ -44,6 +49,8 @@ public class Controls : Singleton<Controls>
 
     private void OnEnable()
     {
+        InitializeSingleton(overrideExistingInstance: true);
+
         if (_bindings == null)
         {
             LoadBindings();
@@ -61,7 +68,10 @@ public class Controls : Singleton<Controls>
     /// </summary>
     public static void LoadBindings()
     {
-        _bindings = new InputSettings();
+        if (_bindings == null)
+        {
+            _bindings = new InputSettings();
+        }
         var rebinds = PlayerPrefs.GetString("rebinds");
         if (!string.IsNullOrEmpty(rebinds))
         {
@@ -77,8 +87,8 @@ public class Controls : Singleton<Controls>
     /// in all cases where it is possible, which should be pretty much all of them.
     /// </summary>
     /// <param name="owner">While this MonoBehavior is disabled, the binding will be removed the next time the control is triggered.</param>
-    /// <param name="binding">Use Controls.Bindings.&lt;Binding Path&gt;</param>
-    /// <param name="behavior">eg: context => { DoThing(); }</param>
+    /// <param name="binding">Use Controls.Bindings.&lt;Binding Path&gt; (eg: Controls.Bindings.UI.Pause)</param>
+    /// <param name="behavior">eg: context => DoThing();</param>
     /// <returns>The constructed <see cref="ManagedBindingBehavior"/></returns>
     public static ManagedBindingBehavior RegisterBindingBehavior(MonoBehaviour owner, InputAction binding, System.Action<InputAction.CallbackContext> behavior)
     {
@@ -111,6 +121,18 @@ public class Controls : Singleton<Controls>
     {
         InputAction action = _bindings.FindAction(managedBindingBehavior.binding.name);
         action.performed -= managedBindingBehavior.Invoke;
+    }
+
+    /// <summary>
+    /// Use this to get a UI-ready display string for the bindings on the passed in action.
+    /// <para/>
+    /// <b>Use this instead of action.GetBindingDisplayString because this method considers the current control scheme.</b>
+    /// </summary>
+    /// <param name="action"></param>
+    /// <returns></returns>
+    public static string GetBindingDisplayString(InputAction action)
+    {
+        return action.GetBindingDisplayString(group:_instance.currentControlScheme);
     }
 }
 

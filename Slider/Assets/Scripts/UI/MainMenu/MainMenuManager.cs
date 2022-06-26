@@ -11,7 +11,7 @@ using TMPro;
 //  - refactor options into an options panel -- for now the options buttons are dead
 //  - fix Continue button (see in Update())
 
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TRAVIS AND/OR DANIEL! **
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class MainMenuManager : Singleton<MainMenuManager>
 {
     public string cutsceneSceneName;
@@ -71,6 +71,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         continueText.color = isContinueButtonOn ? GameSettings.white : GameSettings.lightGray;
 
         AudioManager.PlayMusic("Main Menu");
+        AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 0);
 
         listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
     }
@@ -139,6 +140,9 @@ public class MainMenuManager : Singleton<MainMenuManager>
         playerAnimator.SetBool("isUp", true);
         mainMenuButtonsAnimator.SetBool("isUp", true);
         textAnimator.SetBool("isVisible", false);
+
+        AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 1);
+        Debug.Log("Start!");
 
         UINavigationManager.CurrentMenu = mainMenuPanel;
         UINavigationManager.LockoutSelectablesInCurrentMenu(SelectTopmostButton, 1);

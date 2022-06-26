@@ -127,7 +127,7 @@ public class SaveProfile
     {
         
         lastSaved = System.DateTime.Now;
-        Debug.Log(playTimeInSeconds);
+        //Debug.Log(playTimeInSeconds);
         SetBool("isDemoBuild", true);
         SaveSavablesData();
     }
