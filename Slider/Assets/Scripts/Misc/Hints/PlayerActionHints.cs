@@ -181,6 +181,7 @@ public class Hint : ISavable
             {
                 var action = inputActions.FindAction("Move");
                 varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
+                //C: not sure how to do this for movement and this is low priority so i'll deal with it later
                 //varResult = Controls.GetBindingDisplayString()action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
             }
             else
