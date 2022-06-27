@@ -80,6 +80,7 @@ public class DebugUIManager : MonoBehaviour
 
         if (IsSceneInBuild(sceneName))
         {
+            SaveSystem.Current.Save();
             SceneManager.LoadScene(sceneName);
         }
         else

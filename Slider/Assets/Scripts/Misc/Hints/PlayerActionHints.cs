@@ -181,11 +181,14 @@ public class Hint : ISavable
             {
                 var action = inputActions.FindAction("Move");
                 varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
+                //varResult = Controls.GetBindingDisplayString()action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
             }
             else
             {
+                
                 var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
                 varResult = action.GetBindingDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
+                //varResult = Controls.GetBindingDisplayString(inputActions.FindAction(keybind.ToString().Replace("_", string.Empty))).ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
             }
             message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
         }
