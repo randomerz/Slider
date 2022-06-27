@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 // This is for the village, to initially hide the first 2 artifact screens
 public class ArtifactScreenHider : MonoBehaviour 
@@ -12,6 +13,8 @@ public class ArtifactScreenHider : MonoBehaviour
 
     private List<RectTransform> screens;
     private List<Animator> animators;
+
+    public UnityEvent onInventoryEnable;
 
     // public ArtifactWorldMapGifAnimation gifAnimation;
 
@@ -76,6 +79,7 @@ public class ArtifactScreenHider : MonoBehaviour
 
         screenAnimator.screens = new List<RectTransform>(screens.GetRange(0, 2));
         screenAnimator.animators = new List<Animator>(animators.GetRange(0, 2));
+        onInventoryEnable.Invoke();
     }
 
     public void AddScreensAndShow()
