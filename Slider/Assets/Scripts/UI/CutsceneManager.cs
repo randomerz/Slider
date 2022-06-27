@@ -6,10 +6,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CutsceneManager : MonoBehaviour
 {
-    public Animator blackBoxAnimator;
+    public CanvasGroup canvas;
     [SerializeField] private int i = 0;
     public string sceneToLoad;
     public List<GameObject> images;
@@ -31,49 +32,44 @@ public class CutsceneManager : MonoBehaviour
         {
             images[x].SetActive(false);
             textboxes[x].SetActive(false);
+            textboxes[x].GetComponent<TMPTextTyper>().SetTextSpeed(GameSettings.textSpeed * 2f);
         }
         images[0].SetActive(true);
         textboxes[0].SetActive(true);
+        StartCoroutine(FadeIn());
         StartCoroutine(scrolltext(textboxes[0]));
 
 
         listener = InputSystem.onAnyButtonPress.Call(ctrl => advanceCutscene());
         
-        
         //StartCoroutine(cutscene());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     void advanceCutscene()
     {
-        blackBoxAnimator.SetBool("advance", true);
         skipImages = true;
-    }
-
-    void stopAdvance()
-    {
-        blackBoxAnimator.SetBool("advance", false);
     }
 
     public void exitCutscene()
     {
+        Debug.Log("Exiting Cutscene");
+        canvas.alpha = 0;
         listener.Dispose();
+
+        SceneInitializer.profileToLoad = SaveSystem.Current;
         SceneManager.LoadScene(sceneToLoad);
     }
 
-    public void showImages()
+    public void advanceImages()
     {
+        skipImages = false;
         if (i + 1 < images.Count)
         {
             images[i].SetActive(false);
             textboxes[i].SetActive(false);
             i++;
             images[i].SetActive(true);
+            StartCoroutine(FadeIn());
             StartCoroutine(scrolltext(textboxes[i]));
             textboxes[i].SetActive(true);
             
@@ -87,26 +83,71 @@ public class CutsceneManager : MonoBehaviour
     IEnumerator scrolltext(GameObject text)
     {
         skipImages = false;
-        TMP_Text tmp = text.GetComponent<TMP_Text>();
-
-        string s1 = tmp.text;
-        string s2 = "";
-        tmp.text = "";
+        TMPTextTyper tmp_typer = text.GetComponent<TMPTextTyper>();
+        string s1 = textboxes[i].GetComponent<TextMeshProUGUI>().text;
+        textboxes[i].GetComponent<TextMeshProUGUI>().text = "";
         //wait a bit so it doesnt start during fadein
         yield return new WaitForSeconds(0.2f);
-        foreach (char letter in s1)
+        tmp_typer.StartTyping(s1);
+        while (!tmp_typer.finishedTyping)
         {
             if (skipImages)
             {
-                tmp.text = s1;
+                if (tmp_typer.TrySkipText()) break;
+            }
+            yield return null;
+        }
+        skipImages = false;
+        StartCoroutine(WaitToAdvance());
+    }
+
+    IEnumerator FadeIn()
+    {
+        while (canvas.alpha < 1f)
+        {
+            if (skipImages)
+            {
                 break;
             }
-            s2 += letter;
-            tmp.text = (s2);
-
-            yield return new WaitForSeconds(2 * GameSettings.textSpeed);
+            else
+            {
+                canvas.alpha += Time.deltaTime;
+            }
+            yield return null;
         }
+        canvas.alpha = 1f;
+        skipImages = false; 
+    }
 
-        advanceCutscene();
+    IEnumerator FadeOut(System.Action callback = null)
+    {
+        while (canvas.alpha > 0f)
+        {
+            if (skipImages)
+            {
+                break;
+            }
+            else
+            {
+                canvas.alpha -= Time.deltaTime;
+            }
+            yield return null;
+        }
+        canvas.alpha = 0f;
+        skipImages = false;
+        callback?.Invoke();
+    }
+
+    IEnumerator WaitToAdvance()
+    {
+        skipImages = false;
+        float time = 0;
+        while (!skipImages && time < 3f)
+        {
+            time += Time.deltaTime;
+            yield return null;
+        }
+        skipImages = false;
+        StartCoroutine(FadeOut(() => advanceImages()));
     }
 }

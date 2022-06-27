@@ -37,7 +37,8 @@ public class WorldNavAgent : MonoBehaviour
         nav = GetComponentInParent<WorldNavigation>();
         if (nav == null)
         {
-            Debug.LogWarning("WorldNavAgent detected in scene without a WorldNavigation component. This entity will not use navigation.");
+            // DC: silence, warning
+            //Debug.LogWarning("WorldNavAgent detected in scene without a WorldNavigation component. This entity will not use navigation.");
         }
     }
 

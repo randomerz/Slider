@@ -113,7 +113,6 @@
 	</object>
 	<object class="GroupTrack" id="{322679db-250e-4430-9cfb-77f8bb0dc14c}">
 		<relationship name="modules">
-			<destination>{70f17ac2-553c-4466-a464-8143c8b66170}</destination>
 			<destination>{867771e1-ffc0-41d0-bf73-86aaa6eae6da}</destination>
 			<destination>{1c8eec05-9e82-427c-9316-9c4bcd8335f5}</destination>
 		</relationship>
@@ -197,7 +196,6 @@
 			<destination>{9e1e05b5-c59a-4661-8a70-ca36d10f20c7}</destination>
 			<destination>{baef9e9d-4c89-4b2f-b905-0b594809862d}</destination>
 			<destination>{d06f12bc-697e-4433-981e-f82bd4dae639}</destination>
-			<destination>{70f17ac2-553c-4466-a464-8143c8b66170}</destination>
 			<destination>{1ab7e0bc-3077-43d7-9ff8-eeb889302cc6}</destination>
 			<destination>{7c6f937f-945a-4bb2-af5d-601054843d7a}</destination>
 			<destination>{d5493070-dbfd-45b5-980a-bb74b1479d7f}</destination>
@@ -379,17 +377,6 @@
 		</relationship>
 		<relationship name="output">
 			<destination>{19645eb9-196d-40a9-a707-645b31cb63a9}</destination>
-		</relationship>
-	</object>
-	<object class="SingleSound" id="{70f17ac2-553c-4466-a464-8143c8b66170}">
-		<property name="start">
-			<value>332.62204081632655</value>
-		</property>
-		<property name="length">
-			<value>144.03918367346938</value>
-		</property>
-		<relationship name="audioFile">
-			<destination>{2371ae00-5305-4d25-b078-44adb707c330}</destination>
 		</relationship>
 	</object>
 	<object class="TransitionSourceSound" id="{867771e1-ffc0-41d0-bf73-86aaa6eae6da}">

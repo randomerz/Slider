@@ -13,6 +13,8 @@ public class SerializableSaveProfile
 
     public SerializablePlayer serializablePlayer;
     public Area lastArea;
+    public bool inGame;
+
 
     //private Dictionary<Area, SGridData> areaToSGridData = new Dictionary<Area, SGridData>();
     public Area[] areaToSGridData_Keys;

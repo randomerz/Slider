@@ -1,5 +1,48 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4404432341135296491
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5670670320237888563}
+  - component: {fileID: 1070775186625838661}
+  m_Layer: 0
+  m_Name: AutoSaver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5670670320237888563
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4404432341135296491}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8750917147391358173}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1070775186625838661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4404432341135296491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2f2cfad5874ef9448c7b0ddb9975608, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8750917147391358172
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,11 +54,11 @@ GameObject:
   - component: {fileID: 8750917147391358173}
   - component: {fileID: 8750917147391358174}
   - component: {fileID: 2824224475968117142}
-  - component: {fileID: 5142951399898862476}
   - component: {fileID: 3751631789337053834}
   - component: {fileID: 3313838020138531838}
   - component: {fileID: 1929425032060230202}
   - component: {fileID: 6531386949380389835}
+  - component: {fileID: 8091794286791977582}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -33,7 +76,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 5670670320237888563}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -51,6 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameUI: {fileID: 2824224475968117142}
   sceneInitializer: {fileID: 6531386949380389835}
+  gameAutoSaver: {fileID: 1070775186625838661}
 --- !u!114 &2824224475968117142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,18 +121,6 @@ MonoBehaviour:
   SceneTransitionOverlayPrefab:
     prefab: {fileID: 3600424238744718540, guid: 59e7490e38c44a74886316dac45c29fd, type: 3}
     activeInMenuScenes: 1
---- !u!114 &5142951399898862476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8750917147391358172}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2f2cfad5874ef9448c7b0ddb9975608, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3751631789337053834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,3 +172,16 @@ MonoBehaviour:
   player: {fileID: 0}
   sgrid: {fileID: 0}
   uiArtifact: {fileID: 0}
+--- !u!114 &8091794286791977582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8750917147391358172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 051978d5f7cc9f44489c12ee766b4338, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentControlScheme: Keyboard Mouse

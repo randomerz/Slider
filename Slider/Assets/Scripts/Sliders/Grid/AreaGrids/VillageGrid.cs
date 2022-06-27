@@ -106,6 +106,9 @@ public class VillageGrid : SGrid
         
         checkCompletion = profile.GetBool("villageCompletion");
         fishOn = profile.GetBool("villageFishOn");
+
+        if (checkCompletion)
+            gridAnimator.ChangeMovementDuration(0.5f);
     }
 
 
@@ -177,7 +180,12 @@ public class VillageGrid : SGrid
                                                 { 5, 3, 2 } };
         SetGrid(shuffledPuzzle);
 
+        gridAnimator.ChangeMovementDuration(0.5f);
+
         checkCompletion = true;
+        SaveSystem.Current.SetBool("forceAutoMove", true);
+        SaveSystem.Current.SetBool("villageCompletion", checkCompletion);
+
         OnGridMove += UpdateButtonCompletions; // this is probably not needed
         UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
         SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
@@ -194,9 +202,10 @@ public class VillageGrid : SGrid
             UIArtifact.ClearQueues();
 
             // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
-            StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+            StartCoroutine(CheckCompletionsAfterDelay(1.2f));
 
             AudioManager.Play("Puzzle Complete");
+            SaveSystem.Current.SetBool("forceAutoMove", false);
             UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }
     }

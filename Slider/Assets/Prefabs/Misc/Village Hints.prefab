@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5345849782307375399}
   - component: {fileID: 5345849782307375398}
   - component: {fileID: 5345849782307375401}
+  - component: {fileID: 1124459295}
   m_Layer: 0
   m_Name: Village Hints
   m_TagString: Untagged
@@ -47,19 +48,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hintsList:
   - hintName: move
-    hintText: Use <U>/<L>/<D>/<R> to move around
+    hintText: Use <U>/<L>/<D>/<R> to move
     canDisableHint: 1
     timeUntilTrigger: 8
-    isInCountdown: 1
+    isInCountdown: 0
+    triggerOnLoad: 1
     shouldDisplay: 1
+    hasBeenCompleted: 0
+    hasBeenAddedToDisplay: 0
     controlBinds: 00000000020000000100000003000000
     inputActions: {fileID: 0}
   - hintName: interact
-    hintText: Press <Action> to interact with objects
+    hintText: Press <Action> to interact
     canDisableHint: 1
     timeUntilTrigger: 7
     isInCountdown: 0
+    triggerOnLoad: 0
     shouldDisplay: 1
+    hasBeenCompleted: 0
+    hasBeenAddedToDisplay: 0
     controlBinds: 04000000
     inputActions: {fileID: 0}
   - hintName: tab
@@ -67,16 +74,21 @@ MonoBehaviour:
     canDisableHint: 1
     timeUntilTrigger: 4
     isInCountdown: 0
+    triggerOnLoad: 0
     shouldDisplay: 1
+    hasBeenCompleted: 0
+    hasBeenAddedToDisplay: 0
     controlBinds: 06000000
     inputActions: {fileID: 0}
   - hintName: tiles
-    hintText: Click to select a tile, then click again, drag, or use <>/<>/<>/<>
-      to move it
+    hintText: Use the mouse or <>/<>/<>/<> to move tiles
     canDisableHint: 0
-    timeUntilTrigger: 6
+    timeUntilTrigger: 3
     isInCountdown: 0
+    triggerOnLoad: 0
     shouldDisplay: 1
+    hasBeenCompleted: 0
+    hasBeenAddedToDisplay: 0
     controlBinds: 00000000020000000100000003000000
     inputActions: {fileID: 0}
   - hintName: items
@@ -84,7 +96,10 @@ MonoBehaviour:
     canDisableHint: 0
     timeUntilTrigger: 4
     isInCountdown: 0
+    triggerOnLoad: 0
     shouldDisplay: 1
+    hasBeenCompleted: 0
+    hasBeenAddedToDisplay: 0
     controlBinds: 04000000
     inputActions: {fileID: 0}
   - hintName: cycle
@@ -92,7 +107,10 @@ MonoBehaviour:
     canDisableHint: 0
     timeUntilTrigger: 4
     isInCountdown: 0
+    triggerOnLoad: 0
     shouldDisplay: 1
+    hasBeenCompleted: 0
+    hasBeenAddedToDisplay: 0
     controlBinds: 05000000
     inputActions: {fileID: 0}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
@@ -125,7 +143,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5345849782307375398}
         m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
-        m_MethodName: SetShouldDisplayFalse
+        m_MethodName: DisableHint
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -135,25 +153,13 @@ MonoBehaviour:
           m_StringArgument: move
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5345849782307375398}
-        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
-        m_MethodName: SetShouldDisplayFalse
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: tiles
-          m_BoolArgument: 0
-        m_CallState: 2
     m_ActionId: cf18d7ce-8f49-4150-b967-e8023a799788
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5345849782307375398}
         m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
-        m_MethodName: SetShouldDisplayFalse
+        m_MethodName: DisableHint
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -165,7 +171,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 5345849782307375398}
         m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
-        m_MethodName: SetShouldDisplayFalse
+        m_MethodName: DisableHint
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -181,7 +187,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5345849782307375398}
         m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
-        m_MethodName: SetShouldDisplayFalse
+        m_MethodName: DisableHint
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -210,19 +216,7 @@ MonoBehaviour:
     m_ActionId: 84f4cea9-c586-49ad-abc8-d1c188225027
     m_ActionName: UI/Point[/Mouse/position]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5345849782307375398}
-        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
-        m_MethodName: SetShouldDisplayFalse
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: tiles
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 8f20e2e1-60a9-4b79-95b0-c1dd6ce61863
     m_ActionName: UI/Click[/Mouse/leftButton]
   - m_PersistentCalls:
@@ -250,31 +244,7 @@ MonoBehaviour:
     m_ActionId: 45e496bc-03d4-4053-9ddd-ca577203eef5
     m_ActionName: UI/Pause[/Keyboard/escape]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5345849782307375398}
-        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
-        m_MethodName: SetShouldDisplayFalse
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: tab
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 5345849782307375398}
-        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
-        m_MethodName: TriggerHint
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: tiles
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: c5270572-600f-4305-8e4d-d0921e699d76
     m_ActionName: UI/OpenArtifact[/Keyboard/tab]
   - m_PersistentCalls:
@@ -297,11 +267,43 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: e69a3341-a842-425f-b125-787b7ae182c3
     m_ActionName: Debug/CycleCommand[/Keyboard/downArrow,/Keyboard/upArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 29ded7da-09f0-41c8-a4d1-91d01e633d92
+    m_ActionName: UI/Submit (No Space/E)[/Keyboard/enter]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1124459295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5345849782307375397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3469d6520049ca498777d65976c849d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stile: {fileID: 0}
+  OnStileMove:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: DisableHint
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: tiles
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5345849782777180391
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,19 +389,7 @@ MonoBehaviour:
     m_ActionId: 84f4cea9-c586-49ad-abc8-d1c188225027
     m_ActionName: UI/Point[/Mouse/position]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5345849782307375398}
-        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
-        m_MethodName: SetShouldDisplayFalse
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: tiles
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 8f20e2e1-60a9-4b79-95b0-c1dd6ce61863
     m_ActionName: UI/Click[/Mouse/leftButton]
   - m_PersistentCalls:
@@ -430,6 +420,18 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5345849782307375398}
         m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
+        m_MethodName: DisableHint
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: tab
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5345849782307375398}
+        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
         m_MethodName: TriggerHint
         m_Mode: 5
         m_Arguments:
@@ -438,18 +440,6 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: tiles
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 5345849782307375398}
-        m_TargetAssemblyTypeName: PlayerActionHints, Assembly-CSharp
-        m_MethodName: SetShouldDisplayFalse
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: tab
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: c5270572-600f-4305-8e4d-d0921e699d76
@@ -474,6 +464,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: e69a3341-a842-425f-b125-787b7ae182c3
     m_ActionName: Debug/CycleCommand[/Keyboard/downArrow,/Keyboard/upArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 29ded7da-09f0-41c8-a4d1-91d01e633d92
+    m_ActionName: UI/Submit (No Space/E)[/Keyboard/enter]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: UI

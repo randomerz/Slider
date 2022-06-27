@@ -73,7 +73,7 @@ public class SaveSystem
 
 
     /// <summary>
-    /// Saves the game to the current loaded profile index (either 1, 2, or 3). If the profile index is -1, then no data will be saved.
+    /// Saves the game to the current loaded profile index (either 0, 1, or 2). If the profile index is -1, then no data will be saved.
     /// </summary>
     public static void SaveGame()
     {
@@ -89,7 +89,7 @@ public class SaveSystem
 
     private static void SaveToFile(SerializableSaveProfile profile, int index)
     {
-        Debug.Log("Saving data to file...");
+        Debug.Log("Saving data to file " + index + "...");
 
         BinaryFormatter formatter = new BinaryFormatter();
         string path = GetFilePath(index);
@@ -114,6 +114,7 @@ public class SaveSystem
 
     public static void LoadSaveProfile(int index)
     {
+        
         SerializableSaveProfile ssp = null;
 
         ssp = GetSerializableSaveProfile(index);
@@ -131,8 +132,7 @@ public class SaveSystem
 
         current = profile;
         currentIndex = index;
-
-
+        
         // This makes it so the profile gets loaded first thing in the new scene
         SceneInitializer.profileToLoad = current;
 
@@ -170,6 +170,8 @@ public class SaveSystem
     public static void DeleteSaveProfile(int index)
     {
         Debug.Log("Deleting Save profile #" + index + "!");
+
+        saveProfiles[index] = null;
 
         string path = GetFilePath(index);
         if (File.Exists(path))

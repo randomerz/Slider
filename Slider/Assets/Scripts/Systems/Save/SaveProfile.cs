@@ -55,6 +55,11 @@ public class SaveProfile
         playTimeInSeconds = value;
     }
 
+    public void AddPlayTimeInSeconds(float time)
+    {
+        playTimeInSeconds += time;
+    }
+
     public System.DateTime GetLastSaved()
     {
         return lastSaved;
@@ -115,13 +120,14 @@ public class SaveProfile
         strings = value;
     }
 
+
     #endregion
 
     public void Save()
     {
-        // Responsible for going around and saving all the data
-
+        
         lastSaved = System.DateTime.Now;
+        //Debug.Log(playTimeInSeconds);
         SetBool("isDemoBuild", true);
         SaveSavablesData();
     }
