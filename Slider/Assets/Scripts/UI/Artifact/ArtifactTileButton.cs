@@ -224,6 +224,7 @@ public class ArtifactTileButton : MonoBehaviour
             SetPushedDown(false);
     }
 
+    //L: i refuse to make everything into Factory buttons
     #region Conveyor BS
     private void OnConveyorPowered(ElectricalNode.OnPoweredArgs e)
     {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FactoryGrid : SGrid
+public class FactoryGrid : TimeTravelGrid
 {
     public static FactoryGrid instance;
 
@@ -17,14 +17,13 @@ public class FactoryGrid : SGrid
         base.Init();
 
         instance = this;
+        SetSingleton();
     }
 
 
     protected override void Start()
     {
         base.Start();
-
-        //GetCollectible("Slider 5").gameObject.SetActive(false); // gameboy puzzle
 
         AudioManager.PlayMusic("Factory");
         UIEffects.FadeFromBlack();

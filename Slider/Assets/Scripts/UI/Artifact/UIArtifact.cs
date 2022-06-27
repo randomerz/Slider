@@ -309,7 +309,7 @@ public class UIArtifact : MonoBehaviour
     // replaces adjacentButtons
     protected virtual List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
-        moveOptionButtons.Clear();
+        var options = new List<ArtifactTileButton>();
 
         //Vector2 buttPos = new Vector2(button.x, button.y);
         // foreach (ArtifactTileButton b in buttons)
@@ -334,14 +334,14 @@ public class UIArtifact : MonoBehaviour
             int i = 2;
             while (b != null && !b.isTileActive)
             {
-                moveOptionButtons.Add(b);
+                options.Add(b);
                 b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
 
                 i++;
             }
         }
 
-        return moveOptionButtons;
+        return options;
     }
 
     //L: Swaps the buttons on the UI, but not the actual grid.
@@ -632,9 +632,9 @@ public class UIArtifact : MonoBehaviour
         return s;
     }
 
-    public static void AddButton(STile stile, bool shouldFlicker=true)
+    public virtual void AddButton(STile stile, bool shouldFlicker=true)
     {
-        foreach (ArtifactTileButton b in _instance.buttons)
+        foreach (ArtifactTileButton b in buttons)
         {
             if (b.islandId == stile.islandId)
             {

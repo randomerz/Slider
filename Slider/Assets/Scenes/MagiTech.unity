@@ -7561,7 +7561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 380634037254267601, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.79
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 380634037254267601, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -11742,7 +11742,6 @@ MonoBehaviour:
   onDesynchEnd:
     m_PersistentCalls:
       m_Calls: []
-  isInPast: 0
   background: {fileID: 219591446}
   presentBackgroundSprite: {fileID: 21300000, guid: e691f9f426a56a44eb4fe71e7f7c642c, type: 3}
   pastBackgroundSprite: {fileID: 21300000, guid: 2c35140652ea653418fada9d39ebb463, type: 3}
