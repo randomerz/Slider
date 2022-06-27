@@ -222,7 +222,6 @@ public class NPC : MonoBehaviour
         //Don't allow player to continue conversation.
         if (waitNextDialogueCoroutine != null)
         {
-            waitingForPlayerContinue = false;
             StopCoroutine(waitNextDialogueCoroutine);
             waitNextDialogueCoroutine = null;
         }
@@ -237,7 +236,9 @@ public class NPC : MonoBehaviour
             }
         }
 
+        waitingForPlayerContinue = false;
         dialogueActive = false;
+        startedTyping = false;
     }
 
     private void ChangeDialogue(int newDialogue)
@@ -302,17 +303,21 @@ public class NPC : MonoBehaviour
 
     private void OnPlayerAction(object sender, System.EventArgs e)
     {
-        if (waitingForPlayerContinue)
+        if (dialogueActive)
         {
-            //Player triggered next dialogue.
-            SetNextDialogueInChain(true);
-            waitingForPlayerContinue = false;
-        } else if (startedTyping && !dialogueDisplay.textTyperText.finishedTyping)
-        {
-            //Player skipped through text.
-            dialogueDisplay.textTyperText.TrySkipText();
-            dialogueDisplay.textTyperBG.TrySkipText();
-        }  
+            if (waitingForPlayerContinue)
+            {
+                //Player triggered next dialogue.
+                SetNextDialogueInChain(true);
+                waitingForPlayerContinue = false;
+            }
+            else if (startedTyping && !dialogueDisplay.textTyperText.finishedTyping)
+            {
+                //Player skipped through text.
+                dialogueDisplay.textTyperText.TrySkipText();
+                dialogueDisplay.textTyperBG.TrySkipText();
+            }
+        }
     }
     #endregion Dialogue
 
