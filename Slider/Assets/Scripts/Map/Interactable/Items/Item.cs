@@ -98,6 +98,7 @@ public class Item : MonoBehaviour
         transform.position = target.position;
         spriteRenderer.transform.position = target.position;
         myCollider.enabled = false;
+        OnPickUp?.Invoke();
         callback();
     }
 
@@ -134,6 +135,7 @@ public class Item : MonoBehaviour
         myCollider.enabled = true;
         transform.position = end.transform.position;
         spriteRenderer.transform.position = end.transform.position;
+        OnDrop?.Invoke();
         callback();
         Destroy(start);
         Destroy(end);

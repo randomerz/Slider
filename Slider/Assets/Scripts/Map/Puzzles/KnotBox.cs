@@ -9,6 +9,8 @@ public class KnotBox : MonoBehaviour
     public Color bad, good;
     public LineRenderer[] lines;
 
+    public ParticleSystem[] particles;
+
     // Update is called once per frame
     void Update()
     {
@@ -131,6 +133,18 @@ public class KnotBox : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void CheckParticles()
+    {
+        Debug.Log("Checking particles");
+        if (CheckLines() == 0 && particles != null)
+        {
+            foreach (ParticleSystem ps in particles)
+            {
+                ps.Play();
+            }
+        }
     }
 
     public void CheckPuzzle(Conditionals.Condition c)
