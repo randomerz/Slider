@@ -417,6 +417,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 60457618}
   m_CullTransparentMesh: 1
+--- !u!1 &64657716 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8750917147391358172, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
+  m_PrefabInstance: {fileID: 1825336809}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &64657717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 64657716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e375ac279d3e1d4abf0147aff7a52be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &85366318
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7298,10 +7315,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8750917147391358174, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
-      propertyPath: sceneInitializer
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6531386949380389835, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
@@ -8667,7 +8680,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnDeselect:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2083773582}
+        m_TargetAssemblyTypeName: TMPro.TMP_InputField, Unity.TextMeshPro
+        m_MethodName: ActivateInputField
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnTextSelection:
     m_PersistentCalls:
       m_Calls: []
@@ -8692,16 +8717,16 @@ MonoBehaviour:
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_CustomCaretColor: 0
-  m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
+  m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0}
+  m_CustomCaretColor: 1
+  m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0}
   m_Text: 
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
   m_GlobalFontAsset: {fileID: 11400000, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
-  m_OnFocusSelectAll: 1
+  m_OnFocusSelectAll: 0
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
   m_isRichTextEditingAllowed: 0

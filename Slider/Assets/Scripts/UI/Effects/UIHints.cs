@@ -69,6 +69,7 @@ public class UIHints : MonoBehaviour
         }
         hintIDs.Remove(hintID);
         hintTexts.Remove(hint);
+        //UpdateHint();
         if(index == 0) {
             //C: Switched UpdateHint to be in callback
             StartCoroutine(FadeHintBox(1, 0, () => {
