@@ -52,8 +52,17 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
+    public void Reset()
+    {
+        collectibles.Clear();
+        equipables.Clear();
+        itemIterator = equipables.GetEnumerator();
+        currentItem = null;
+    }
+
     public void SetCollectiblesList(List<Collectible.CollectibleData> value)
     {
+        Debug.Log("orig: " + collectibles.Count + ", new: " + value.Count);
         collectibles = value;
     }
 

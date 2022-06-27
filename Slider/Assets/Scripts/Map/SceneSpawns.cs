@@ -85,6 +85,8 @@ public class SceneSpawns : MonoBehaviour
             {
                 wlcManager?.SetOnWater(false);
             }
+
+            nextSpawn = SpawnLocation.Default;
         }
     }
 }

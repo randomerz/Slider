@@ -326,6 +326,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "CycleArtifactScreens",
+                    "type": "Button",
+                    "id": "0896a051-afd3-4d4c-8287-d7e1f3613bfd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -854,6 +863,17 @@
                     "processors": "",
                     "groups": "Keyboard Mouse",
                     "action": "Submit (No Space/E)",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b9265f95-b89e-46e5-a393-124706c2c1ab",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CycleArtifactScreens",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -4,10 +4,9 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TRAVIS AND/OR DANIEL! **
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class Player : Singleton<Player>, ISavable
 {
-    //private static Player _instance;
     private bool didInit;
 
     // Movement
@@ -20,7 +19,6 @@ public class Player : Singleton<Player>, ISavable
 
     private STile currentStileUnderneath;
 
-    private InputSettings controls;
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
     
@@ -35,15 +33,14 @@ public class Player : Singleton<Player>, ISavable
 
     void Awake()
     {
-        //_instance = this;
         InitializeSingleton(overrideExistingInstance: true);
-        _instance.controls = new InputSettings();
-        LoadBindings();
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
 
         if (!didInit)
             Init();
     }
 
+    // ** Look at this later given that we're trying to use the new Singleton now **
     public void SetSingleton()
     {
         _instance = this;
@@ -57,33 +54,16 @@ public class Player : Singleton<Player>, ISavable
 
         UpdatePlayerSpeed();
     }
-    
+
+    // Here is where we pay for all our Singleton Sins
+    public void ResetInventory()
+    {
+        playerInventory.Reset();
+    }
+
     private void Start() 
     {
         UITrackerManager.AddNewTracker(gameObject, UITrackerManager.DefaultSprites.circle1, UITrackerManager.DefaultSprites.circleEmpty, 3f);
-    }
-
-    public static void LoadBindings()
-    {
-        if (_instance == null)
-        {
-            return;
-        }
-
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            _instance.controls.LoadBindingOverridesFromJson(rebinds);
-        }
-        _instance.controls.Player.Move.performed += context => _instance.UpdateMove(context.ReadValue<Vector2>());
-    }
-
-    private void OnEnable() {
-        controls.Enable();
-    }
-
-    private void OnDisable() {
-        controls.Disable();
     }
     
     void Update()
@@ -203,12 +183,17 @@ public class Player : Singleton<Player>, ISavable
         sp.hasCollectedAnchor = GetPlayerInventory().GetHasCollectedAnchor();
 
         SaveSystem.Current.SetSerializeablePlayer(sp);
+
+        //Debug.Log("Saved player position to: " + pos);
     }
 
     public void Load(SaveProfile profile)
     {
         if (profile == null || profile.GetSerializablePlayer() == null)
+        {
+            playerInventory.Reset();
             return;
+        }
 
         SerializablePlayer sp = profile.GetSerializablePlayer();
 
@@ -221,8 +206,8 @@ public class Player : Singleton<Player>, ISavable
         transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
         //Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
 
-        isOnWater = sp.isOnWater;
-        isInHouse = sp.isInHouse;
+        SetIsOnWater(sp.isOnWater);
+        SetIsInHouse(sp.isInHouse);
 
         // PlayerInventory
         playerInventory.SetCollectiblesList(sp.collectibles);

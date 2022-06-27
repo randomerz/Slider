@@ -8,9 +8,14 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Handles everything related to UI keyboard navigation. This should be attached to the EventSystem in every scene.
-/// Make sure to setup buttonSets properly — each menu should be matched with all of the navigatable buttons inside of it. Also make sure to
+/// Make sure to setup buttonSets properly â€” each menu should be matched with all of the navigatable buttons inside of it. Also make sure to
 /// properly update CurrentMenu based on which menu is currently active to keep navigation working properly.
+/// <para/>
+/// <b>Note: It is recommended that we transition away from setting up our button sets on this component and instead use the <see cref="SelectableSet"/>
+/// component attached to UI GameObjects. This will be far more robust, especially in regards to switching scenes and in scenes where there
+/// are lots of different unique UI elements such as the Ocean Shop.</b>
 /// </summary>
+/// <remarks>Author: Travis</remarks>
 public class UINavigationManager : MonoBehaviour
 {
     private static UINavigationManager _instance;
@@ -24,10 +29,30 @@ public class UINavigationManager : MonoBehaviour
     private Dictionary<GameObject, Selectable[]> selectableSetDictionary;
 
     /// <summary>
-    /// This should be set to a GameObject inside of buttonSets. Make sure this matches the currently active menu panel 
+    /// This should be set to a GameObject inside of buttonSets or a GameObject which has a SelectableSet component. Make sure this matches the currently active menu panel 
     /// or navigation won't work properly.
     /// </summary>
-    public static GameObject CurrentMenu { get => _instance._currentMenu; set => _instance._currentMenu = value; }
+    public static GameObject CurrentMenu 
+    { 
+        get => _instance._currentMenu; 
+        set
+        {
+            _instance._currentMenu = value;
+            if (value != null && !_instance.selectableSetDictionary.ContainsKey(value))
+            {
+                SelectableSet selectableSet = value.GetComponent<SelectableSet>();
+                if (selectableSet == null)
+                {
+                    Debug.LogError($"CurrentMenu was set to {value.name} ({value.GetInstanceID()}), which was not registered in button sets and did " +
+                        $"not contain a SelectableSet component. You need to either add and setup a SelectableSet component on this object or add it " +
+                        $"to the button sets list on UINavigationManager.");
+                } else
+                {
+                    _instance.selectableSetDictionary[value] = value.GetComponent<SelectableSet>().Selectables;
+                }
+            }
+        }
+    }
     private GameObject _currentMenu;
 
     /// <summary>
@@ -40,7 +65,6 @@ public class UINavigationManager : MonoBehaviour
         get { return _inMouseControlMode; }
         set
         {
-            //Debug.Log("Mouse Control Mode: " + value);
             _inMouseControlMode = value;
             if (_inMouseControlMode) { ClearSelectable(); }
             else
@@ -177,7 +201,7 @@ public class UINavigationManager : MonoBehaviour
 
     /// <summary>
     /// Apply a temporary lockout to all selectables in the current menu panel, making them
-    /// un-interactable for the passed in duration. This has no effect is currentMenu
+    /// un-interactable for the passed in duration. This has no effect if currentMenu
     /// is null.
     /// </summary>
     public static void LockoutSelectablesInCurrentMenu(System.Action callback = null, float duration = 1)
