@@ -16,6 +16,7 @@ public class AudioManager : MonoBehaviour
 
     private static float sfxVolume = 0.5f; // [0..1]
     private static float musicVolume = 0.5f;
+    private static float musicVolumeMultiplier = 1; // for music effects
 
     private static FMOD.Studio.Bus sfxBus;
     private static FMOD.Studio.Bus musicBus;
@@ -227,8 +228,19 @@ public class AudioManager : MonoBehaviour
 
     public static void SetMusicVolume(float value)
     {
-        value = Mathf.Clamp(value, 0, 1);
-        musicVolume = value;
+        musicVolume = Mathf.Clamp(value, 0, 1);
+        UpdateMusicVolume();
+    }
+
+    public static void SetMusicVolumeMultiplier(float value)
+    {
+        musicVolumeMultiplier = value;
+        UpdateMusicVolume();
+    }
+
+    private static void UpdateMusicVolume()
+    {
+        float vol = Mathf.Clamp(musicVolume * musicVolumeMultiplier, 0, 1);
 
         if (_music == null)
             return;
@@ -239,15 +251,7 @@ public class AudioManager : MonoBehaviour
             // m.emitter. = m.volume * value;
         }
 
-        // if (value == 0)
-        // {
-        //     foreach (Music music in _music)
-        //     {
-        //         music.emitter.Stop(); //FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        //     }
-        // }
-        
-        musicBus.setVolume(value);
+        musicBus.setVolume(vol);
     }
 
     public static float GetSFXVolume()

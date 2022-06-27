@@ -64,21 +64,11 @@ public class SettingsManager : MonoBehaviour
     }
     public static bool AutoMove
     {
-        get => _instance.currentSettings.autoMove || _instance.currentSettings.forceAutoMove;
+        get => _instance.currentSettings.autoMove || SaveSystem.Current.GetBool("forceAutoMove");
         set
         {
             _instance.currentSettings.autoMove = value;
-            if (!value) _instance.currentSettings.forceAutoMove = false;
-
-            WriteCurrentSettingsToPlayerPrefs();
-        }
-    }
-    public static bool ForceAutoMove
-    {
-        get => _instance.currentSettings.forceAutoMove;
-        set
-        {
-            _instance.currentSettings.forceAutoMove = value;
+            if (!value) SaveSystem.Current.SetBool("forceAutoMove", false);
 
             WriteCurrentSettingsToPlayerPrefs();
         }
