@@ -32,6 +32,7 @@ public class UIHints : MonoBehaviour
 
     private void Clear(Scene current, Scene next) 
     {
+        StopAllCoroutines();
         hintIDs.Clear();
         hintTexts.Clear();
         canvasGroup.alpha = 0;    
