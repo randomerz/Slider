@@ -83,6 +83,10 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         //_instance.controls.UI.ArtifactLeft.performed += context => _instance.screenAnimator.PrevScreen();
     }*/
 
+    public static bool IsArtifactOpen()
+    {
+        return _instance.isArtifactOpen;
+    }
 
     private void OnPressArtifact()
     {
@@ -90,7 +94,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         {
             CloseArtifact();
         }
-        else
+        else if(!UIManager.IsUIOpen())
         {
             OpenArtifact();
         }
