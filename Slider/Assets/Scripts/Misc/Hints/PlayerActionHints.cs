@@ -179,17 +179,19 @@ public class Hint : ISavable
             string varResult;
             if (keybind == InputRebindButton.Control.Move_Left || keybind == InputRebindButton.Control.Move_Right || keybind == InputRebindButton.Control.Move_Up || keybind == InputRebindButton.Control.Move_Down)
             {
-                var action = inputActions.FindAction("Move");
+                var action = Controls.Bindings.FindAction("Move");
                 varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
+                //var action = inputActions.FindAction("Move");
+                //varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
                 //C: not sure how to do this for movement and this is low priority so i'll deal with it later
                 //varResult = Controls.GetBindingDisplayString()action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
             }
             else
             {
-                
-                var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
-                varResult = action.GetBindingDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
-                //varResult = Controls.GetBindingDisplayString(inputActions.FindAction(keybind.ToString().Replace("_", string.Empty))).ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
+                var action = Controls.Bindings.FindAction(keybind.ToString().Replace("_", string.Empty));
+               // var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
+              //  varResult = action.GetBindingDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
+                varResult = Controls.GetBindingDisplayString(action).ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
             }
             message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
         }
