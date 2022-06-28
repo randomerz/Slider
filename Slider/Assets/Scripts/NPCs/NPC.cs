@@ -53,6 +53,7 @@ public class NPC : MonoBehaviour
     private bool playerInTrigger;   //The player is in the dialogue trigger.
     private bool startedTyping;     //The NPC is in the middle of typing the dialogue
     private bool waitingForPlayerContinue;  //The NPC is waiting for the player to press e to continue its chain.
+    private bool dChainExhausted;
 
     private int currDconds;    //indices to get the right dialogue
     private int currDialogueInChain;
@@ -114,9 +115,18 @@ public class NPC : MonoBehaviour
             d.CheckConditions();
         }
 
+        bool lastDialogueFinished = dconds[currDconds].dialogueChain.Count > 0 && dconds[currDconds].dialogueChain.Count - 1 == currDialogueInChain && dialogueDisplay.textTyperText.finishedTyping;
+        bool canUpdateDialogue = (dconds[currDconds].dialogueChain.Count > 0 && !dconds[currDconds].dialogueChain[currDialogueInChain].dontInterrupt) || lastDialogueFinished;
+
+        if (dChainExhausted && !playerInTrigger)
+        {
+            dChainExhausted = false;
+            DeactivateDialogue();
+        }
+
         //Poll for the new dialogue, and update it if it is different.
         int newDialogue = CurrentDialogue();
-        if (currDconds != newDialogue && DialogueEnabled && dconds[currDconds].dialogueChain.Count > 0 && !dconds[currDconds].dialogueChain[currDialogueInChain].dontInterrupt)
+        if (currDconds != newDialogue && DialogueEnabled && canUpdateDialogue)
         {
             ChangeDialogue(newDialogue);
             if (dialogueActive)
@@ -139,9 +149,9 @@ public class NPC : MonoBehaviour
 
         if (dialogueActive && !playerInTrigger)
         {
-            if (dconds[currDconds].dialogueChain.Count > 0 && !dconds[currDconds].dialogueChain[currDialogueInChain].dontInterrupt)
+            if (canUpdateDialogue)
             {
-                //Keep going until the player reaches the first non-don't interrupt before disabling dialogue.
+                //Keep going until the player reaches the first non-don't interrupt (or last dialogue) before disabling dialogue.
                 DeactivateDialogue();
             }
         }
@@ -327,11 +337,8 @@ public class NPC : MonoBehaviour
         }
         else
         {
-            if (!playerInTrigger)
-            {
-                DeactivateDialogue();   //Fail safe in case the last dialogue is don't interrupt (we don't want the dialogue box to linger)
-            }
             dconds[currDconds].OnDialogueChainExhausted();
+            dChainExhausted = true;
         }
     }
 
