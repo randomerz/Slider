@@ -9,7 +9,6 @@ public struct WireTile
 {
     public TileBase offWire;
     public TileBase onWire;
-    public TileBase conductingAlt;
 }
 
 //The sparks are based on sprite instead of tile bc of rule tiles.
@@ -31,12 +30,6 @@ public class WireDatabase : MonoBehaviour
     private Dictionary<Sprite, string> _sparkTypes;
     public Dictionary<Sprite, string> Sparks => _sparkTypes;
 
-    public Dictionary<TileBase, TileBase> ConductingAltOn { get; private set; }
-    public Dictionary<TileBase, TileBase> ConductingAltOff { get; private set; }
-
-
-
-
     private static WireDatabase _instance;
 
     public static WireDatabase Instance
@@ -56,18 +49,6 @@ public class WireDatabase : MonoBehaviour
         {
             _sparkTypes[pair.wireSprite] = pair.sparkType;
         }
-
-        ConductingAltOn = new Dictionary<TileBase, TileBase>();
-        ConductingAltOff = new Dictionary<TileBase, TileBase>();
-        foreach (WireTile wire in wireTiles)
-        {
-            if (wire.onWire != null && wire.conductingAlt != null)
-            {
-                ConductingAltOn[wire.onWire] = wire.conductingAlt;
-                ConductingAltOff[wire.conductingAlt] = wire.onWire;
-            }
-        }
-
     }
 
     private void OnDisable()

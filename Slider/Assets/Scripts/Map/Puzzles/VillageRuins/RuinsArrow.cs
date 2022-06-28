@@ -19,20 +19,21 @@ public class RuinsArrow : MonoBehaviour
 
     private void Start()
     {
-        SetArrowActive(AreRuinsAssembled(SGrid.GetGridString()), SGrid.current.GetGrid()); // probably doesnt matter which grid
-        UpdateMap(SGrid.GetGridString());
+        UpdateArrowGeneral();
     }
 
     private void OnEnable()
     {
         SGrid.OnGridMove += UpdateArrowOnStart;
         SGridAnimator.OnSTileMoveEnd += UpdateArrowOnEnd;
+        SGrid.OnSTileEnabled += UpdateArrowOnCollect;
     }
 
     private void OnDestroy()
     {
         SGrid.OnGridMove -= UpdateArrowOnStart;
         SGridAnimator.OnSTileMoveEnd -= UpdateArrowOnEnd;
+        SGrid.OnSTileEnabled -= UpdateArrowOnCollect;
     }
 
     private void UpdateArrowOnStart(object sender, SGrid.OnGridMoveArgs e) // SGrid
@@ -54,6 +55,20 @@ public class RuinsArrow : MonoBehaviour
         );
 
         UpdateRods(SGrid.GetGridString(SGrid.current.GetGrid()));
+    }
+
+    private void UpdateArrowOnCollect(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        UpdateArrowGeneral();
+    }
+
+    private void UpdateArrowGeneral()
+    {
+        SetArrowActive(AreRuinsAssembled(SGrid.GetGridString()), SGrid.current.GetGrid()); // probably doesnt matter which grid
+        UpdateMap(SGrid.GetGridString());
+        UpdateRods(SGrid.GetGridString());
+
+        Debug.Log("update: " + SGrid.GetGridString());
     }
 
     private bool AreRuinsAssembled(string gridString)

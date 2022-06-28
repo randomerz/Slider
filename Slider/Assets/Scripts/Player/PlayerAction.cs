@@ -111,7 +111,7 @@ public class PlayerAction : MonoBehaviour
 
     private void CycleEquip()
     {
-        if (isPicking) 
+        if (isPicking || UIManager.IsUIOpen()) 
         {
             return;
         }
