@@ -14,15 +14,14 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     }
 
     public void Load(SaveProfile profile) {
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            inputActions.LoadBindingOverridesFromJson(rebinds);
-        }
+       // var rebinds = PlayerPrefs.GetString("rebinds");
+       // if (!string.IsNullOrEmpty(rebinds))
+        //{
+          //  inputActions.LoadBindingOverridesFromJson(rebinds);
+       // }
         foreach(Hint h in hintsList)
         {
             h.Load(profile);
-            h.inputActions = inputActions;
         }
     }
 
@@ -94,7 +93,6 @@ public class Hint : ISavable
     public bool hasBeenCompleted; //has this hint been completed?
     public bool hasBeenAddedToDisplay;
     public List<InputRebindButton.Control> controlBinds; //list of control binds to replace in order
-    public InputActionAsset inputActions;
 
     public void Save()
     {
@@ -149,11 +147,6 @@ public class Hint : ISavable
     //C: Yoinked from DialogueDisplay, modified to work with rebinds instead of save variables
     private string ConvertVariablesToStrings(string message)
     {
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            inputActions.LoadBindingOverridesFromJson(rebinds);
-        }
         
         int startIndex = 0;
         int numBinds = 0;
