@@ -218,6 +218,7 @@ MonoBehaviour:
     conditions: []
     priority: 1
     dialogueChain: []
+    alwaysStartFromBeginning: 0
     onDialogueChanged:
       m_PersistentCalls:
         m_Calls: []
@@ -226,6 +227,8 @@ MonoBehaviour:
         m_Calls: []
     walks: []
   dialogueDisplay: {fileID: 8260142248798685880}
+  sr: {fileID: 6774723380247666992}
+  spriteDefaultFacingLeft: 0
 --- !u!114 &8260142248798685880
 MonoBehaviour:
   m_ObjectHideFlags: 0
