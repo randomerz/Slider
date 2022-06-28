@@ -47,14 +47,17 @@ public class NPC : MonoBehaviour
     public bool DialogueEnabled => gDialogueEnabled && dialogueEnabled;
 
     public static bool gDialogueEnabled = true; //Dialogue Enabling for all NPCs.
+
     private bool dialogueEnabled;   //The NPC can give dialogue
+    private bool dialogueActive;    //The NPC is in the process of giving dialogue (regardless of if it's finished)
+    private bool playerInTrigger;   //The player is in the dialogue trigger.
+    private bool startedTyping;     //The NPC is in the middle of typing the dialogue
+    private bool waitingForPlayerContinue;  //The NPC is waiting for the player to press e to continue its chain.
 
     private int currDconds;    //indices to get the right dialogue
     private int currDialogueInChain;
 
-    private bool dialogueActive;    //The NPC is in the process of giving dialogue (regardless of if it's finished)
-    private bool startedTyping;     //The NPC is in the middle of typing the dialogue
-    private bool waitingForPlayerContinue;  //The NPC is waiting for the player to press e to continue its chain.
+
 
     private Coroutine waitNextDialogueCoroutine;
 
@@ -108,13 +111,32 @@ public class NPC : MonoBehaviour
         if (currDconds != newDialogue && DialogueEnabled)
         {
             ChangeDialogue(newDialogue);
-            //StartCoroutine(WaitThenChangeDialogue());
+            if (dialogueActive)
+            {
+                if (playerInTrigger)
+                {
+                    TypeNextDialogue();
+                } else
+                {
+                    //If we switched conditions, exit the dialogue immediately (even if it was a don't interrupt)
+                    DeactivateDialogue();
+                }
+            }
         }
 
         if (startedTyping && dialogueDisplay.textTyperText.finishedTyping)
         {
             startedTyping = false;
             FinishDialogue();
+        }
+
+        if (dialogueActive && !playerInTrigger)
+        {
+            if (dconds[currDconds].dialogueChain.Count > 0 && !dconds[currDconds].dialogueChain[currDialogueInChain].dontInterrupt)
+            {
+                //Keep going until the player reaches the first non-don't interrupt before disabling dialogue.
+                DeactivateDialogue();
+            }
         }
     }
 
@@ -141,6 +163,8 @@ public class NPC : MonoBehaviour
     //OnTriggerEnter and OnTriggerExit handlers.
     public void DialogueTriggerEnter()
     {
+        playerInTrigger = true;
+
         var dChain = dconds[currDconds].dialogueChain;
         if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt && dialogueActive)
         {
@@ -158,14 +182,13 @@ public class NPC : MonoBehaviour
 
     public void DialogueTriggerExit()
     {
-        var dChain = dconds[currDconds].dialogueChain;
-        if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt)
-        {
-            //Dialogue keeps playing even if the player exits
-            return;
-        }
+        playerInTrigger = false;
 
-        FadeDialogue();
+        var dChain = dconds[currDconds].dialogueChain;
+        if (!(dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt))
+        {
+            DeactivateDialogue();
+        }
     }
 
     public int CurrentDialogue()
@@ -218,7 +241,7 @@ public class NPC : MonoBehaviour
         dialogueEnabled = value;
     }
 
-    private void FadeDialogue()
+    private void DeactivateDialogue()
     {
         dialogueDisplay.FadeAwayDialogue();
 
@@ -256,12 +279,6 @@ public class NPC : MonoBehaviour
         {
             dialogueDisplay.ReadMessagePing();
         }
-
-        if (dialogueActive)
-        {
-            //If there was dialogue playing before, get rid of it.
-            TypeNextDialogue();
-        }    
         
         dconds[currDconds].onDialogueChanged?.Invoke();
     }
