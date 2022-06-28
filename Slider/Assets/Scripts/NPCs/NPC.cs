@@ -57,6 +57,8 @@ public class NPC : MonoBehaviour
     private int currDconds;    //indices to get the right dialogue
     private int currDialogueInChain;
 
+    private Dictionary<int, int> currDialogueInDconds;  //Keeps track of each dialogue in the given dconds.
+
 
 
     private Coroutine waitNextDialogueCoroutine;
@@ -79,6 +81,12 @@ public class NPC : MonoBehaviour
         for(int i = 0; i < dconds.Count; i++)
         {
             dconds[i].priority = i+1;
+        }
+
+        currDialogueInDconds = new Dictionary<int, int>();
+        for (int i = 0; i < dconds.Count; i++)
+        {
+            currDialogueInDconds[i] = 0;
         }
     }
 
@@ -108,7 +116,7 @@ public class NPC : MonoBehaviour
 
         //Poll for the new dialogue, and update it if it is different.
         int newDialogue = CurrentDialogue();
-        if (currDconds != newDialogue && DialogueEnabled)
+        if (currDconds != newDialogue && DialogueEnabled && dconds[currDconds].dialogueChain.Count > 0 && !dconds[currDconds].dialogueChain[currDialogueInChain].dontInterrupt)
         {
             ChangeDialogue(newDialogue);
             if (dialogueActive)
@@ -118,7 +126,6 @@ public class NPC : MonoBehaviour
                     TypeNextDialogue();
                 } else
                 {
-                    //If we switched conditions, exit the dialogue immediately (even if it was a don't interrupt)
                     DeactivateDialogue();
                 }
             }
@@ -175,6 +182,7 @@ public class NPC : MonoBehaviour
         if (dconds[currDconds].alwaysStartFromBeginning)
         {
             currDialogueInChain = 0;
+            currDialogueInDconds[currDconds] = currDialogueInChain;
         }
 
         TypeNextDialogue();
@@ -191,25 +199,6 @@ public class NPC : MonoBehaviour
         }
     }
 
-    public int CurrentDialogue()
-    {
-        int curr = -1;
-        int max = 0;
-        for (int i = 0; i< dconds.Count; i++)
-        {
-            if (dconds[i].GetPrio() > max)
-            {
-                curr = i;
-                max = dconds[i].GetPrio();
-            }
-        }
-        if (curr == -1)
-        {
-            Debug.LogError("No suitable dialogue can be displayed!");
-        }
-        return curr;
-    }
-
     //Player entering the trigger and also from moving to the next dialogue in the chain.
     public void TypeNextDialogue()
     {
@@ -223,25 +212,7 @@ public class NPC : MonoBehaviour
         }
     }
 
-    public void ClearDialogue()
-    {
-        dconds[currDconds].KillDialogue();
-    }
-
-    public void SetNextDialogue()
-    {
-        if (currDconds < dconds.Count - 1)
-        {
-            dconds[currDconds + 1].SetPrio(dconds[currDconds].GetPrio());
-        }
-    }
-
-    public void SetDialogueEnabled(bool value)
-    {
-        dialogueEnabled = value;
-    }
-
-    private void DeactivateDialogue()
+    public void DeactivateDialogue()
     {
         dialogueDisplay.FadeAwayDialogue();
 
@@ -267,10 +238,47 @@ public class NPC : MonoBehaviour
         startedTyping = false;
     }
 
+    public int CurrentDialogue()
+    {
+        int curr = -1;
+        int max = 0;
+        for (int i = 0; i< dconds.Count; i++)
+        {
+            if (dconds[i].GetPrio() > max)
+            {
+                curr = i;
+                max = dconds[i].GetPrio();
+            }
+        }
+        if (curr == -1)
+        {
+            Debug.LogError("No suitable dialogue can be displayed!");
+        }
+        return curr;
+    }
+
+    public void ClearDialogue()
+    {
+        dconds[currDconds].KillDialogue();
+    }
+
+    public void SetNextDialogue()
+    {
+        if (currDconds < dconds.Count - 1)
+        {
+            dconds[currDconds + 1].SetPrio(dconds[currDconds].GetPrio());
+        }
+    }
+
+    public void SetDialogueEnabled(bool value)
+    {
+        dialogueEnabled = value;
+    }
+
     private void ChangeDialogue(int newDialogue)
     {
         currDconds = newDialogue;
-        currDialogueInChain = 0;
+        currDialogueInChain = currDialogueInDconds[currDconds];
         if (dconds[newDialogue].dialogueChain.Count > 0)
         {
             //Show new message ping if the dialogue actually exists.
@@ -307,9 +315,11 @@ public class NPC : MonoBehaviour
     private void SetNextDialogueInChain(bool triggerNext = false)
     {
         //The dialogue will just chill on the last line if it's already been exhausted (could maybe customize to repeat the last line or start from the beginning).
-        if (currDialogueInChain < dconds[currDconds].dialogueChain.Count - 1)
+        var dChain = dconds[currDconds].dialogueChain;
+        if (currDialogueInChain < dChain.Count - 1)
         {
             currDialogueInChain++;
+            currDialogueInDconds[currDconds] = currDialogueInChain;
             if (triggerNext)
             {
                 TypeNextDialogue();
@@ -317,6 +327,10 @@ public class NPC : MonoBehaviour
         }
         else
         {
+            if (!playerInTrigger)
+            {
+                DeactivateDialogue();   //Fail safe in case the last dialogue is don't interrupt (we don't want the dialogue box to linger)
+            }
             dconds[currDconds].OnDialogueChainExhausted();
         }
     }
@@ -343,9 +357,12 @@ public class NPC : MonoBehaviour
 
     public void Teleport(Transform trans)
     {
-        Instantiate(poofParticles, transform.position, Quaternion.identity);
-        transform.position = trans.position;
-        transform.parent = trans.parent;
+        if (transform.position != trans.position)
+        {
+            Instantiate(poofParticles, transform.position, Quaternion.identity);
+            transform.position = trans.position;
+            transform.parent = trans.parent;
+        }
     }
 
     #region Walking
