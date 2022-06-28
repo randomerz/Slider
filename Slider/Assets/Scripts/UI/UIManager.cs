@@ -102,7 +102,7 @@ public class UIManager : Singleton<UIManager>
         Time.timeScale = 1;
         isGamePaused = false;
         UINavigationManager.CurrentMenu = null;
-        
+       // UIManager.canOpenMenus = true;
         OnResume?.Invoke(this, null);
     }
 
@@ -136,6 +136,7 @@ public class UIManager : Singleton<UIManager>
 
     public void OpenPause()
     {
+       // UIManager.canOpenMenus = false;
         if (!couldOpenMenusLastFrame)
             return;
 

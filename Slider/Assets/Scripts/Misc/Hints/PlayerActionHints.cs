@@ -2,11 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
 public class PlayerActionHints : MonoBehaviour, ISavable
 {
     public List<Hint> hintsList;
-    public InputActionAsset inputActions;
+
+    public UnityEvent ArtifactOpen;
+    public UnityEvent PlayerMove;
+    public UnityEvent PlayerAction;
+    public UnityEvent PlayerCycle;
+
+    private void Awake() {
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => ArtifactOpen?.Invoke());
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => PlayerAction?.Invoke());
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.CycleEquip, context => PlayerCycle?.Invoke());
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => PlayerMove?.Invoke());
+    }
 
     public void Save() {
         foreach(Hint h in hintsList)
@@ -14,11 +26,6 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     }
 
     public void Load(SaveProfile profile) {
-       // var rebinds = PlayerPrefs.GetString("rebinds");
-       // if (!string.IsNullOrEmpty(rebinds))
-        //{
-          //  inputActions.LoadBindingOverridesFromJson(rebinds);
-       // }
         foreach(Hint h in hintsList)
         {
             h.Load(profile);
@@ -30,7 +37,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
         Load(SaveSystem.Current);
     }
 
-    //Because the hint objects are never actually instantiated I need to do timer logic up here
+    //C: Because the hint objects are never actually instantiated I need to do timer logic up here
     void Update()
     {
        foreach(Hint h in hintsList)
@@ -81,7 +88,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
 }
 
 [System.Serializable]
-public class Hint : ISavable
+public class Hint
 { 
     public string hintName;  //used when searching through hints
     public string hintText; //the text of the hint
@@ -91,7 +98,7 @@ public class Hint : ISavable
     public bool triggerOnLoad = false; //should this hint start counting down when the scene is loaded?
     public bool shouldDisplay = true; //should this hint display?
     public bool hasBeenCompleted; //has this hint been completed?
-    public bool hasBeenAddedToDisplay;
+    public bool hasBeenAddedToDisplay; //has this hint been displayed?
     public List<InputRebindButton.Control> controlBinds; //list of control binds to replace in order
 
     public void Save()
@@ -174,16 +181,10 @@ public class Hint : ISavable
             {
                 var action = Controls.Bindings.FindAction("Move");
                 varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
-                //var action = inputActions.FindAction("Move");
-                //varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
-                //C: not sure how to do this for movement and this is low priority so i'll deal with it later
-                //varResult = Controls.GetBindingDisplayString()action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
             }
             else
             {
                 var action = Controls.Bindings.FindAction(keybind.ToString().Replace("_", string.Empty));
-               // var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
-              //  varResult = action.GetBindingDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
                 varResult = Controls.GetBindingDisplayString(action).ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
             }
             message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
