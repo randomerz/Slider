@@ -417,6 +417,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 60457618}
   m_CullTransparentMesh: 1
+--- !u!1 &64657716 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8750917147391358172, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
+  m_PrefabInstance: {fileID: 1825336809}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &64657717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 64657716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e375ac279d3e1d4abf0147aff7a52be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &85366318
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6176,27 +6193,34 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Max Zhang
+  m_text: 'Maddie King
+
+    Max Zhang
 
     Muskaan Gupta
 
     Nathaniel Koehler
 
+    Nia
+    Bellamy
+
     Nicolas Cai
 
-    Pawan
-    Jayakumar
+    Pawan Jayakumar
 
     Reinart Realina
+
+    Sara
+    Inani
 
     Sudharshan Srinivasan
 
     Thomas Dayton
 
-    Travis
-    Bittel
+    Travis Bittel
 
-    Tristan Ziegler
+    Tristan
+    Ziegler
 
     Zhenyu Wu
 
@@ -6227,8 +6251,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 8
+  m_fontSizeBase: 8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -7239,6 +7263,10 @@ PrefabInstance:
       propertyPath: isMenuScene
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8091794286791977582, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
+      propertyPath: currentControlScheme
+      value: Keyboard Mouse
+      objectReference: {fileID: 0}
     - target: {fileID: 8750917147391358172, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
       propertyPath: m_Name
       value: GameManager
@@ -7286,10 +7314,6 @@ PrefabInstance:
     - target: {fileID: 8750917147391358173, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750917147391358174, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
-      propertyPath: sceneInitializer
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6531386949380389835, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
@@ -7620,7 +7644,6 @@ MonoBehaviour:
     - {fileID: 346731898}
   - menu: {fileID: 60457618}
     selectables: []
-  _currentMenu: {fileID: 0}
 --- !u!1001 &1875150452
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8657,7 +8680,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnDeselect:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2083773582}
+        m_TargetAssemblyTypeName: TMPro.TMP_InputField, Unity.TextMeshPro
+        m_MethodName: ActivateInputField
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnTextSelection:
     m_PersistentCalls:
       m_Calls: []
@@ -8682,16 +8717,16 @@ MonoBehaviour:
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_CustomCaretColor: 0
-  m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
+  m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0}
+  m_CustomCaretColor: 1
+  m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0}
   m_Text: 
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
   m_GlobalFontAsset: {fileID: 11400000, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
-  m_OnFocusSelectAll: 1
+  m_OnFocusSelectAll: 0
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
   m_isRichTextEditingAllowed: 0
@@ -8938,18 +8973,25 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Chase O''Brien
+  m_text: 'Allison Lu
+
+    Chase O''Brien
+
+    Cynthia Peng
 
     Drew Busch
 
-    Eli Corley
+    Eli
+    Corley
+
+    Elizabeth Liu
 
     Elliott Chen (Applejack)
 
-    Ethan
-    Aristanto
+    Ethan Aristanto
 
-    Gazal Mathur
+    Gazal
+    Mathur
 
     Jamie Lee
 
@@ -8957,14 +8999,14 @@ MonoBehaviour:
 
     Kate Tran
 
+    Kenneth Wang
+
     Koushik
     Thiyagarajan
 
     Kristian Chappell
 
-    Logan Bowers
-
-    Maddie King'
+    Logan Bowers'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
   m_sharedMaterial: {fileID: 7572966130275077912, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
@@ -8991,8 +9033,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 8
+  m_fontSizeBase: 8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -9189,6 +9231,8 @@ MonoBehaviour:
   keybind: 4
   buttonText: {fileID: 262822656}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
+  maxLineLength: 19
+  isPauseMenu: 0
 --- !u!114 &346018782355660380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9204,6 +9248,8 @@ MonoBehaviour:
   keybind: 2
   buttonText: {fileID: 1422840662}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
+  maxLineLength: 19
+  isPauseMenu: 0
 --- !u!222 &494278160964682048
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9446,6 +9492,8 @@ MonoBehaviour:
   keybind: 5
   buttonText: {fileID: 915101617}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
+  maxLineLength: 19
+  isPauseMenu: 0
 --- !u!224 &1401160684489750849
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12922,6 +12970,8 @@ MonoBehaviour:
   keybind: 0
   buttonText: {fileID: 790019225}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
+  maxLineLength: 19
+  isPauseMenu: 0
 --- !u!114 &6881510534384447465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12937,6 +12987,8 @@ MonoBehaviour:
   keybind: 7
   buttonText: {fileID: 799809466}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
+  maxLineLength: 19
+  isPauseMenu: 0
 --- !u!224 &6884891706454281585
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13182,6 +13234,8 @@ MonoBehaviour:
   keybind: 3
   buttonText: {fileID: 533794801}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
+  maxLineLength: 19
+  isPauseMenu: 0
 --- !u!1 &7018804964818966486
 GameObject:
   m_ObjectHideFlags: 0
@@ -13668,6 +13722,8 @@ MonoBehaviour:
   keybind: 6
   buttonText: {fileID: 227735826}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
+  maxLineLength: 19
+  isPauseMenu: 0
 --- !u!224 &8100995928011218158
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14251,6 +14307,8 @@ MonoBehaviour:
   keybind: 1
   buttonText: {fileID: 1081294479}
   inputActions: {fileID: -944628639613478452, guid: d3629fafec86eb14ea940f8dd59d2234, type: 3}
+  maxLineLength: 19
+  isPauseMenu: 0
 --- !u!222 &8967048056876839824
 CanvasRenderer:
   m_ObjectHideFlags: 0

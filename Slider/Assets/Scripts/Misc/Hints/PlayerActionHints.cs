@@ -14,20 +14,21 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     }
 
     public void Load(SaveProfile profile) {
+        var rebinds = PlayerPrefs.GetString("rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+        {
+            inputActions.LoadBindingOverridesFromJson(rebinds);
+        }
         foreach(Hint h in hintsList)
         {
-            h.Load(SaveSystem.Current);
+            h.Load(profile);
             h.inputActions = inputActions;
         }
     }
 
     private void OnEnable()
     {
-        foreach(Hint h in hintsList)
-        {
-            h.SetBools();
-            h.inputActions = inputActions;
-        }
+        Load(SaveSystem.Current);
     }
 
     //Because the hint objects are never actually instantiated I need to do timer logic up here
@@ -73,6 +74,11 @@ public class PlayerActionHints : MonoBehaviour, ISavable
             if(string.Equals(h.hintName, hint))
                h.canDisableHint = true;
     }
+
+    public void DebugLog(string s){
+        Debug.Log(s);
+    }
+
 }
 
 [System.Serializable]
@@ -103,8 +109,10 @@ public class Hint : ISavable
         shouldDisplay = profile.GetBool("Hint " + hintName, true);
         isInCountdown = profile.GetBool("HintCountdown " + hintName);
         hasBeenCompleted = profile.GetBool("HintComplete " + hintName);
+        SetBools();
     }
 
+    
     public void SetBools()
     {
         if(triggerOnLoad)
@@ -118,7 +126,7 @@ public class Hint : ISavable
     public void TriggerHint()
     {
         canDisableHint = true;
-        if(shouldDisplay)
+        if(shouldDisplay && !hasBeenCompleted)
             isInCountdown = true;
     }
 
@@ -172,17 +180,23 @@ public class Hint : ISavable
             if (keybind == InputRebindButton.Control.Move_Left || keybind == InputRebindButton.Control.Move_Right || keybind == InputRebindButton.Control.Move_Up || keybind == InputRebindButton.Control.Move_Down)
             {
                 var action = inputActions.FindAction("Move");
-                varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper();
+                varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
+                //C: not sure how to do this for movement and this is low priority so i'll deal with it later
+                //varResult = Controls.GetBindingDisplayString()action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
             }
             else
             {
+                
                 var action = inputActions.FindAction(keybind.ToString().Replace("_", string.Empty));
-                varResult = action.GetBindingDisplayString().ToUpper();
-                if(varResult.IndexOf("PRESS") > -1)
-                    varResult = varResult.Remove(varResult.IndexOf("PRESS"), 6); //C: weird workaround
+                varResult = action.GetBindingDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
+                //varResult = Controls.GetBindingDisplayString(inputActions.FindAction(keybind.ToString().Replace("_", string.Empty))).ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
             }
             message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
         }
+        if(message.IndexOf("W/A/S/D") > -1)
+                    message = message.Replace("W/A/S/D", "WASD");
         return message;
     }
+
+    
 }

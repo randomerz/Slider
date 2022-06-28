@@ -25,6 +25,7 @@ public class NPC : MonoBehaviour
         //public bool usePathfinding;
         public List<Transform> path;
         public List<STileCrossing> stileCrossings;
+        public bool turnAroundAfterWalking;
 
         public UnityEvent onPathStarted;
         public UnityEvent onPathFinished;
@@ -38,6 +39,8 @@ public class NPC : MonoBehaviour
     public List<DialogueConditionals> dconds;
 
     [SerializeField] private DialogueDisplay dialogueDisplay;
+    [SerializeField] private SpriteRenderer sr;
+    [SerializeField] private bool spriteDefaultFacingLeft;
 
 
     //Dialogue
@@ -222,7 +225,6 @@ public class NPC : MonoBehaviour
         //Don't allow player to continue conversation.
         if (waitNextDialogueCoroutine != null)
         {
-            waitingForPlayerContinue = false;
             StopCoroutine(waitNextDialogueCoroutine);
             waitNextDialogueCoroutine = null;
         }
@@ -237,7 +239,9 @@ public class NPC : MonoBehaviour
             }
         }
 
+        waitingForPlayerContinue = false;
         dialogueActive = false;
+        startedTyping = false;
     }
 
     private void ChangeDialogue(int newDialogue)
@@ -302,17 +306,21 @@ public class NPC : MonoBehaviour
 
     private void OnPlayerAction(object sender, System.EventArgs e)
     {
-        if (waitingForPlayerContinue)
+        if (dialogueActive)
         {
-            //Player triggered next dialogue.
-            SetNextDialogueInChain(true);
-            waitingForPlayerContinue = false;
-        } else if (startedTyping && !dialogueDisplay.textTyperText.finishedTyping)
-        {
-            //Player skipped through text.
-            dialogueDisplay.textTyperText.TrySkipText();
-            dialogueDisplay.textTyperBG.TrySkipText();
-        }  
+            if (waitingForPlayerContinue)
+            {
+                //Player triggered next dialogue.
+                SetNextDialogueInChain(true);
+                waitingForPlayerContinue = false;
+            }
+            else if (startedTyping && !dialogueDisplay.textTyperText.finishedTyping)
+            {
+                //Player skipped through text.
+                dialogueDisplay.textTyperText.TrySkipText();
+                dialogueDisplay.textTyperBG.TrySkipText();
+            }
+        }
     }
     #endregion Dialogue
 
@@ -405,6 +413,10 @@ public class NPC : MonoBehaviour
                 transform.position = Vector3.Lerp(remainingPath[0].position, remainingPath[1].position, t);
                 t += s * Time.deltaTime;
 
+                //dot > 0 if player is moving in their default direction, so we want to flip it if this is not the case.`
+                float dot = Vector2.Dot((remainingPath[1].position - remainingPath[0].position), spriteDefaultFacingLeft ? Vector2.left : Vector2.right);
+                sr.flipX = sr.flipX ? dot <= 0 : dot < 0;   //Don't change directions if dot == 0
+
                 if (remainingStileCrossings.Count > 0 && remainingStileCrossings[0].to == currentStileUnderneath)
                 {
                     remainingStileCrossings.RemoveAt(0);
@@ -414,6 +426,11 @@ public class NPC : MonoBehaviour
             }
             transform.position = remainingPath[1].position;
             remainingPath.RemoveAt(0);
+        }
+
+        if (currWalk.turnAroundAfterWalking)
+        {
+            sr.flipX = !sr.flipX;
         }
 
         walking = false;

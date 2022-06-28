@@ -277,6 +277,19 @@ public class UIArtifact : MonoBehaviour
                 //L: Player tried to click a locked tile (or tile that otherwise had no move options)
                 return;
             }
+            //tile can only go one location so just auto move 
+            else if(moveOptionButtons.Count == 1 && SettingsManager.AutoMove)
+            {
+                currentButton = button;
+                currentButton.SetSelected(true);
+                foreach(ArtifactTileButton b in moveOptionButtons)
+                {
+                    if(b != currentButton)
+                        button = b;
+                }
+                CheckAndSwap(currentButton, button);
+                DeselectCurrentButton();
+            }
             else
             {
                 //L: Player clicked a tile with movement options
@@ -296,7 +309,7 @@ public class UIArtifact : MonoBehaviour
     // replaces adjacentButtons
     protected virtual List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
-        moveOptionButtons.Clear();
+        var options = new List<ArtifactTileButton>();
 
         //Vector2 buttPos = new Vector2(button.x, button.y);
         // foreach (ArtifactTileButton b in buttons)
@@ -318,17 +331,17 @@ public class UIArtifact : MonoBehaviour
         foreach (Vector2Int dir in dirs)
         {
             ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
-            int i = 1;
+            int i = 2;
             while (b != null && !b.isTileActive)
             {
-                moveOptionButtons.Add(b);
+                options.Add(b);
                 b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
 
                 i++;
             }
         }
 
-        return moveOptionButtons;
+        return options;
     }
 
     //L: Swaps the buttons on the UI, but not the actual grid.
@@ -619,9 +632,9 @@ public class UIArtifact : MonoBehaviour
         return s;
     }
 
-    public static void AddButton(STile stile, bool shouldFlicker=true)
+    public virtual void AddButton(STile stile, bool shouldFlicker=true)
     {
-        foreach (ArtifactTileButton b in _instance.buttons)
+        foreach (ArtifactTileButton b in buttons)
         {
             if (b.islandId == stile.islandId)
             {

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ShopManager : MonoBehaviour
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
+public class ShopManager : Singleton<ShopManager>
 {
-    private static ShopManager _instance;
+    //private static ShopManager _instance;
     private int totalCreditCount;
     private int credits; // TODO: serialize
     private bool turnedInAnchor;
@@ -46,8 +47,6 @@ public class ShopManager : MonoBehaviour
     public GameObject[] buyItemButtons;
     public GameObject[] talkSubPanels;
 
-    private InputSettings controls;
-
     public enum States
     {
         None,
@@ -67,48 +66,18 @@ public class ShopManager : MonoBehaviour
 
     private void Awake()
     {
-        _instance = this;
-        _instance.controls = new InputSettings();
-        LoadBindings();
-    }
+        InitializeSingleton();
 
-    private void OnEnable()
-    {
-        controls.Enable();
-    }
-
-    private void OnDisable()
-    {
-        controls.Disable();
-    }
-
-    public static void LoadBindings()
-    {
-        if (_instance == null)
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.ExitCurrentPanel());
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context =>
         {
-            return;
-        }
-
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            _instance.controls.LoadBindingOverridesFromJson(rebinds);
-        }
-        _instance.controls.UI.Pause.performed += context => _instance.ExitCurrentPanel();
+            if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); }
+        });
 
         // Using PlayerAction, UIClick, or OpenArtifact skips text typewriter effect or advances to the next dialogue
-        _instance.controls.UI.OpenArtifact.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
-        _instance.controls.UI.Click.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
-        _instance.controls.Player.Action.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
-
-        // Pressing a navigation key selects a button is one is not already selected
-        _instance.controls.UI.Navigate.performed += context =>
-        {
-            if (!UINavigationManager.ButtonInCurrentMenuIsSelected())
-            {
-                UINavigationManager.SelectBestButtonInCurrentMenu();
-            }
-        };
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => _instance.shopDialogueManager.OnActionPressed(context));
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Click, context => _instance.shopDialogueManager.OnActionPressed(context));
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => _instance.shopDialogueManager.OnActionPressed(context));
     }
 
     public void CheckTavernKeep()

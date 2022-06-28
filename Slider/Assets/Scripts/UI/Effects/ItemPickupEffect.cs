@@ -73,16 +73,14 @@ public class ItemPickupEffect : MonoBehaviour
     {
         float t = 0;
 
-        float origVolume = AudioManager.GetMusicVolume();
-
         while (t < soundDampenLength)
         {
-            AudioManager.SetMusicVolume(origVolume * soundDampenCurve.Evaluate(t / soundDampenLength));
+            AudioManager.SetMusicVolumeMultiplier(soundDampenCurve.Evaluate(t / soundDampenLength));
 
             yield return null;
             t += Time.deltaTime;
         }
 
-        AudioManager.SetMusicVolume(origVolume);
+        AudioManager.SetMusicVolumeMultiplier(1);
     }
 }

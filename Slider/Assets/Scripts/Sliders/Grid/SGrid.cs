@@ -381,8 +381,6 @@ public class SGrid : MonoBehaviour, ISavable
     {
         if (!PlayerInventory.Contains("Slider " + sliderId, myArea)) 
         {
-            //Debug.Log("Activated Collectible?");
-            //Debug.Log(GetCollectible("Slider " + sliderId).gameObject.name);
             GetCollectible("Slider " + sliderId)?.gameObject.SetActive(true);
             AudioManager.Play("Puzzle Complete");
         }
@@ -454,7 +452,7 @@ public class SGrid : MonoBehaviour, ISavable
     public virtual void EnableStile(STile stile, bool flickerButton=true)
     {
         stile.SetTileActive(true);
-        UIArtifact.AddButton(stile, flickerButton);
+        UIArtifact.GetInstance().AddButton(stile, flickerButton);
         OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
     }
     // See STile.isTileCollected for an explanation

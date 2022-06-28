@@ -9,6 +9,8 @@ public class KnotBox : MonoBehaviour
     public Color bad, good;
     public LineRenderer[] lines;
 
+    public ParticleSystem[] particles;
+
     // Update is called once per frame
     void Update()
     {
@@ -133,6 +135,18 @@ public class KnotBox : MonoBehaviour
         return false;
     }
 
+    public void CheckParticles()
+    {
+        Debug.Log("Checking particles");
+        if (CheckLines() == 0 && particles != null)
+        {
+            foreach (ParticleSystem ps in particles)
+            {
+                ps.Play();
+            }
+        }
+    }
+
     public void CheckPuzzle(Conditionals.Condition c)
     {
         c.SetSpec(CheckLines() == 0);
@@ -141,5 +155,17 @@ public class KnotBox : MonoBehaviour
     public void CheckPuzzlePartial(Conditionals.Condition c)
     {
         c.SetSpec(CheckLines() <= 3);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        for (int i = 0; i < lines.Length; i++)
+        {
+            if (i < knotnodes.Length - 1)
+                Gizmos.DrawLine(knotnodes[i].transform.position, knotnodes[i + 1].transform.position);
+            else
+                Gizmos.DrawLine(knotnodes[i].transform.position, knotnodes[0].transform.position);
+        }
     }
 }

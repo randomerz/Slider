@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class UIEffects : MonoBehaviour
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
+public class UIEffects : Singleton<UIEffects>
 {
     public GameObject blackPanel;
     public CanvasGroup blackPanelCanvasGroup;
@@ -13,14 +14,15 @@ public class UIEffects : MonoBehaviour
     public CanvasGroup whitePanelCanvasGroup;
     public float flashDuration = 1;
 
-    private static UIEffects _instance;
+    //private static UIEffects _instance;
 
     // Holds the last flashing/black fade coroutine called so we can end it when starting a new one
     private static Coroutine previousCoroutine;
 
     private void Awake()
     {
-        _instance = this;
+        //_instance = this;
+        InitializeSingleton();
     }
 
     private void OnEnable()
@@ -35,7 +37,7 @@ public class UIEffects : MonoBehaviour
 
     private void OnSceneChange(Scene scene, LoadSceneMode mode)
     {
-        if(scene.name.Equals(MainMenuManager.GetInstance().cutsceneSceneName))
+        if (scene.name.Equals(MainMenuManager.GetInstance()?.cutsceneSceneName))
         {
             _instance.blackPanel.SetActive(false);
         }

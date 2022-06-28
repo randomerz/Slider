@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 
-public class UIArtifactMenus : MonoBehaviour
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
+public class UIArtifactMenus : Singleton<UIArtifactMenus>
 {
-    public static UIArtifactMenus _instance;
+    //public static UIArtifactMenus _instance;
 
     public GameObject artifactPanel;
     public UIArtifact uiArtifact;
@@ -14,11 +15,13 @@ public class UIArtifactMenus : MonoBehaviour
     public UIArtifactWorldMap artifactWorldMap;
 
     private bool isArtifactOpen;
-    private InputSettings controls;
+    private bool isClosing;
+    //private InputSettings controls;
 
     private void Awake() 
     {
-        _instance = this;
+        //_instance = this;
+        InitializeSingleton();
 
         artifactWorldMap.Init();
 
@@ -27,14 +30,25 @@ public class UIArtifactMenus : MonoBehaviour
         {
             Debug.LogWarning("You might need to update my UIArtifact reference!");
         }
-        
-        _instance.controls = new InputSettings();
-        LoadBindings();
+
+        //_instance.controls = new InputSettings();
+        //LoadBindings();
+
+        //_instance.controls.UI.Pause.performed += context => _instance.CloseArtifact();
+        //_instance.controls.UI.OpenArtifact.performed += context => _instance.OnPressArtifact();
+        //_instance.controls.UI.ArtifactRight.performed += context => _instance.screenAnimator.NextScreen();
+        //_instance.controls.UI.ArtifactLeft.performed += context => _instance.screenAnimator.PrevScreen();
+
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.CloseArtifact());
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => _instance.OnPressArtifact());
+        //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.ArtifactRight, context => _instance.screenAnimator.NextScreen());
+        //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.ArtifactLeft, context => _instance.screenAnimator.PrevScreen());
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.CycleArtifactScreens, context => _instance.screenAnimator.CycleScreen());
     }
 
     private void OnEnable() 
     {
-        controls.Enable();
+        //controls.Enable();
 
         PlayerInventory.OnPlayerGetCollectible += CloseArtifactListener;
         UIManager.OnCloseAllMenus += CloseArtifactListener;
@@ -42,13 +56,13 @@ public class UIArtifactMenus : MonoBehaviour
 
     private void OnDisable() 
     {
-        controls.Disable();    
+        //controls.Disable();    
 
         PlayerInventory.OnPlayerGetCollectible -= CloseArtifactListener;
         UIManager.OnCloseAllMenus -= CloseArtifactListener;
     }
 
-    public static void LoadBindings()
+    /*public static void LoadBindings()
     {
         if (_instance == null)
         {
@@ -67,7 +81,7 @@ public class UIArtifactMenus : MonoBehaviour
         // Disabled for now, we should add key rebinding for this and maybe make it like Next Panel Left and Next Panel Right
         //_instance.controls.UI.ArtifactRight.performed += context => _instance.screenAnimator.NextScreen();
         //_instance.controls.UI.ArtifactLeft.performed += context => _instance.screenAnimator.PrevScreen();
-    }
+    }*/
 
 
     private void OnPressArtifact()
@@ -84,7 +98,7 @@ public class UIArtifactMenus : MonoBehaviour
 
     public void OpenArtifact()
     {
-        if (!UIManager.canOpenMenus)
+        if (!UIManager.canOpenMenus || isClosing)
             return;
 
         if (Player.IsSafe()) // always true for now
@@ -120,7 +134,7 @@ public class UIArtifactMenus : MonoBehaviour
             UIManager.canOpenMenus = true;
             
             artifactAnimator.SetBool("isVisible", false);
-            StartCoroutine(CloseArtPanel());
+            isClosing = true;
         }
     }
 
@@ -129,9 +143,9 @@ public class UIArtifactMenus : MonoBehaviour
         CloseArtifact();
     }
 
-    private IEnumerator CloseArtPanel()
+    public void DisableArtPanel()
     {
-        yield return new WaitForSeconds(0.34f);
         artifactPanel.SetActive(false);
+        isClosing = false;
     }
 }

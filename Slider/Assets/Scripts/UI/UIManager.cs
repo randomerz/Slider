@@ -6,19 +6,17 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-public class UIManager : MonoBehaviour
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
+public class UIManager : Singleton<UIManager>
 {
     public static System.EventHandler<System.EventArgs> OnPause;
     public static System.EventHandler<System.EventArgs> OnResume;
     public static System.EventHandler<System.EventArgs> OnCloseAllMenus;
-    private static UIManager _instance;
     
     public bool isGamePaused;
     // public bool isArtifactOpen;
     public static bool canOpenMenus = true;
     private static bool couldOpenMenusLastFrame = true; // DC: maximum jank because timing
-
-    private InputSettings controls;
 
     public GameObject pausePanel;
     public GameObject optionsPanel;
@@ -28,43 +26,22 @@ public class UIManager : MonoBehaviour
     public Slider musicSlider;
     public Slider screenShakeSlider;
     public Toggle bigTextToggle;
+    public Toggle autoMoveToggle;
 
     private void Awake()
     {
-        _instance = this;
+        InitializeSingleton();
 
-        _instance.controls = new InputSettings();
-        LoadBindings();
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.OnPressPause());
 
         sfxSlider.value = AudioManager.GetSFXVolume();
         musicSlider.value = AudioManager.GetMusicVolume();
 
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
-    }
-
-
-    public static void LoadBindings()
-    {
-        if (_instance == null)
-        {
-            return;
-        }
-
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            _instance.controls.LoadBindingOverridesFromJson(rebinds);
-        }
-        _instance.controls.UI.Pause.performed += context => _instance.OnPressPause();
-    }
-
-    private void OnEnable() {
-        controls.Enable();
+        autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
     }
 
     private void OnDisable() {
-        controls.Disable();
-
         if (!canOpenMenus)
         {
             Debug.LogWarning("UIManager was disabled without closing the menu!");
@@ -124,6 +101,7 @@ public class UIManager : MonoBehaviour
         pausePanel.SetActive(false);
         Time.timeScale = 1;
         isGamePaused = false;
+        UINavigationManager.CurrentMenu = null;
         
         OnResume?.Invoke(this, null);
     }
@@ -202,7 +180,7 @@ public class UIManager : MonoBehaviour
     public void OpenAdvOptions()
     {
         bigTextToggle.isOn = SettingsManager.BigTextEnabled;
-
+        autoMoveToggle.isOn = SettingsManager.AutoMove;
         if (!couldOpenMenusLastFrame)
             return;
 
@@ -251,13 +229,21 @@ public class UIManager : MonoBehaviour
         SettingsManager.BigTextEnabled = bigTextToggle.isOn;
     }
 
+    public void UpdateAutoMove()
+    {
+        SettingsManager.AutoMove = autoMoveToggle.isOn;
+    }
+
     public void LoadMainMenu()
     {
         SaveSystem.SaveGame();
         SaveSystem.SetCurrentProfile(-1);
         ResumeGame();
+
+        // Undo lazy singletons
+        Player.GetInstance().ResetInventory();
+
         SceneManager.LoadScene("MainMenu");
-        AudioManager.PlayMusic("Main Menu"); //doesn't work yet, need to add main menu track to FMOD but thats outside my paygrade -C
     }
 
     public void QuitGame()

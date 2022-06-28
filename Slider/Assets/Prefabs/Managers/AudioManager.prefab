@@ -129,6 +129,15 @@ MonoBehaviour:
     doRandomPitch: 1
     source: {fileID: 0}
   music:
+  - name: Main Menu
+    fmodEvent:
+      Guid:
+        Data1: 201355452
+        Data2: 1138045708
+        Data3: 1843739281
+        Data4: 935380880
+      Path: event:/Music/MainMenu BGM
+    emitter: {fileID: 0}
   - name: Village
     fmodEvent:
       Guid:

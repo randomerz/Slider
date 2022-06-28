@@ -8,10 +8,10 @@ public class DesertArtifact : UIArtifact
     //Chen: getMoveOptions will add buttons even if they're active for Desert sliding
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
-        moveOptionButtons.Clear();
+        var options = new List<ArtifactTileButton>();
         if (button == null)
         {
-            return moveOptionButtons;
+            return options;
         }
         //Vector2 buttPos = new Vector2(button.x, button.y);
         // foreach (ArtifactTileButton b in buttons)
@@ -36,14 +36,14 @@ public class DesertArtifact : UIArtifact
             int i = 1;
             while (b != null)
             {
-                moveOptionButtons.Add(b);
+                options.Add(b);
                 b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
 
                 i++;
             }
         }
 
-        return moveOptionButtons;
+        return options;
     }
     //Chen: Override for dragndrop since desert GetMoveOPtions include  active tiles
     public override void ButtonDragEnd(BaseEventData eventData)
