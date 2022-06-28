@@ -11,9 +11,10 @@ public class UIHints : MonoBehaviour
     // I would make this a queue but you can't queue.Remove
     public List<string> hintTexts = new List<string>(); 
     public List<string> hintIDs = new List<string>(); //C: fixes some potential issues w/ exact hint text
-
+    public List<string> hintRemovalQueue = new List<string>();
     private bool isVisible;
     public float fadeDuration;
+    private bool isFading;
 
     // References
     public CanvasGroup canvasGroup;
@@ -55,31 +56,42 @@ public class UIHints : MonoBehaviour
     /// Removes a hint from the list of hints
     /// </summary>
     /// <param name="hintID">ID of the hint that was added</param>
-    public static void RemoveHint(string hintID) { instance._RemoveHint(hintID); }
+    public static void RemoveHint(string hintID = "") { instance._RemoveHint(hintID); }
 
     public void _RemoveHint(string hintID)
     {
+        if(hintID.Equals("") && hintRemovalQueue.Count > 0)
+        {
+            hintID = hintRemovalQueue[0];
+            hintRemovalQueue.Remove(hintID);
+        }
         int index = hintIDs.IndexOf(hintID);
         if (index == -1) 
             return; //C: This happens often and is okay
-        string hint = hintTexts[index];
-        if (!hintTexts.Remove(hint)) {
-            Debug.LogWarning("Tried and failed to remove hint: " + hint); //C: This should not happen
-            return;
+
+        if(isFading)
+        {
+            hintRemovalQueue.Add(hintID);
+            StartCoroutine(WaitForRemoval());
         }
-        hintIDs.Remove(hintID);
-        hintTexts.Remove(hint);
-        //UpdateHint();
-        if(index == 0) {
+        else
+        {
+            string hint = hintTexts[index];
+            if (!hintTexts.Remove(hint)) {
+                Debug.LogWarning("Tried and failed to remove hint: " + hint); //C: This should not happen
+                return;
+            }
+            hintIDs.Remove(hintID);
+            if(index == 0) {
             //C: Switched UpdateHint to be in callback
             StartCoroutine(FadeHintBox(1, 0, () => {
-                    tmproText.text = ""; UpdateHint();
+                    tmproText.text = "";
                 }));
         }
+        }
+        
     }
-
    
-
     private void UpdateHint()
     {   
         if(!isVisible)
@@ -94,6 +106,10 @@ public class UIHints : MonoBehaviour
         }
         else
         {
+            if(hintRemovalQueue.Count > 0 && !isFading)
+            {
+                RemoveHint();
+            }
             if (hintTexts.Count > 0 && tmproText.text.Equals("") )
             {
                 tmproText.text = hintTexts[0];
@@ -102,12 +118,17 @@ public class UIHints : MonoBehaviour
             if (hintTexts.Count == 0)
             {
                 isVisible = false;
+                StartCoroutine(FadeHintBox(1, 0, () => {
+                    tmproText.text = "";
+                }));
             }
         }
     }
 
-    private IEnumerator FadeHintBox(float from, float to, System.Action callback=null)
+
+    private IEnumerator FadeHintBox(float from, float to, System.Action callback= null)
     {
+        isFading = true;
         float t = Mathf.Lerp(from, to, canvasGroup.alpha);
         while (t < fadeDuration)
         {
@@ -120,6 +141,17 @@ public class UIHints : MonoBehaviour
 
         canvasGroup.alpha = to;
 
+        isFading = false;
         callback?.Invoke();
+        UpdateHint();
+    }
+
+    private IEnumerator WaitForRemoval()
+    {
+        while(isFading)
+        {
+            yield return null;
+        }
+        UpdateHint();
     }
 }
