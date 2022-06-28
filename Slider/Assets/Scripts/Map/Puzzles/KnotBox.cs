@@ -156,4 +156,16 @@ public class KnotBox : MonoBehaviour
     {
         c.SetSpec(CheckLines() <= 3);
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        for (int i = 0; i < lines.Length; i++)
+        {
+            if (i < knotnodes.Length - 1)
+                Gizmos.DrawLine(knotnodes[i].transform.position, knotnodes[i + 1].transform.position);
+            else
+                Gizmos.DrawLine(knotnodes[i].transform.position, knotnodes[0].transform.position);
+        }
+    }
 }

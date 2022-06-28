@@ -17,7 +17,13 @@ public class RuinsArrow : MonoBehaviour
 
     private bool anyRodsOn;
 
-    private void Awake()
+    private void Start()
+    {
+        SetArrowActive(AreRuinsAssembled(SGrid.GetGridString()), SGrid.current.GetGrid()); // probably doesnt matter which grid
+        UpdateMap(SGrid.GetGridString());
+    }
+
+    private void OnEnable()
     {
         SGrid.OnGridMove += UpdateArrowOnStart;
         SGridAnimator.OnSTileMoveEnd += UpdateArrowOnEnd;
@@ -60,11 +66,14 @@ public class RuinsArrow : MonoBehaviour
         // check if arrow should be on or not
         if (value)
         {
+            if (!spriteRenderer.enabled)
+            {
+                // if was false before
+                arrowParticles.Play();
+                SGrid.current.ActivateSliderCollectible(7);
+            }
             spriteRenderer.enabled = true;
-            arrowParticles.Play();
             UpdateArrowDirection(grid);
-
-            SGrid.current.ActivateSliderCollectible(7);
         }
         else
         {
@@ -136,6 +145,7 @@ public class RuinsArrow : MonoBehaviour
         {
             // doesnt look good :/ but if we wanna do something else when it transitions
             //arrowFlash.Flash(1);
+            arrowParticles.Play();
         }
     }
 

@@ -381,8 +381,6 @@ public class SGrid : MonoBehaviour, ISavable
     {
         if (!PlayerInventory.Contains("Slider " + sliderId, myArea)) 
         {
-            //Debug.Log("Activated Collectible?");
-            //Debug.Log(GetCollectible("Slider " + sliderId).gameObject.name);
             GetCollectible("Slider " + sliderId)?.gameObject.SetActive(true);
             AudioManager.Play("Puzzle Complete");
         }
