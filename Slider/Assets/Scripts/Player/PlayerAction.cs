@@ -100,7 +100,7 @@ public class PlayerAction : MonoBehaviour
 
     private void Action() 
     {
-        if (UIManager.IsUIOpen())
+        if (UIManager.IsUIOpen() || UIArtifactMenus.IsArtifactOpen())
             return;
 
         if (TryPick())
@@ -111,7 +111,7 @@ public class PlayerAction : MonoBehaviour
 
     private void CycleEquip()
     {
-        if (isPicking || UIManager.IsUIOpen()) 
+        if (isPicking || UIManager.IsUIOpen() || UIArtifactMenus.IsArtifactOpen()) 
         {
             return;
         }

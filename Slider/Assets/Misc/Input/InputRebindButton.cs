@@ -36,7 +36,7 @@ public class InputRebindButton : MonoBehaviour
     /// <returns></returns>
     private IEnumerator IRemapMovementKeybind()
     {
-        var action = inputActions.FindAction("Move");
+        var action = Controls.Bindings.FindAction("Move");
         action.Disable();
 
         var rebindOperation = action.PerformInteractiveRebinding()
@@ -74,7 +74,10 @@ public class InputRebindButton : MonoBehaviour
         rebindOperation.Dispose(); // Stop memory leaks
         action.Enable();
 
-        PlayerPrefs.SetString("rebinds", inputActions.SaveBindingOverridesAsJson());
+        //PlayerPrefs.SetString("rebinds", inputActions.SaveBindingOverridesAsJson());
+        PlayerPrefs.SetString("rebinds", Controls.Bindings.SaveBindingOverridesAsJson());
+                Controls.LoadBindings();
+
     }
 
     private void UpdateButtonText()
@@ -109,8 +112,8 @@ public class InputRebindButton : MonoBehaviour
                 + ": " , Controls.GetBindingDisplayString(action).ToUpper().Replace("PRESS ", "").Replace(" ARROW", ""));
         }
 
-        PlayerPrefs.SetString("rebinds", inputActions.SaveBindingOverridesAsJson());
-        Controls.LoadBindings();
+       // PlayerPrefs.SetString("rebinds", inputActions.SaveBindingOverridesAsJson());
+       // Controls.LoadBindings();
     }
 
     private string ShrinkFontSizeIfNeeded(string s1, string s2) 
