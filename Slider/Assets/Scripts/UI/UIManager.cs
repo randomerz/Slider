@@ -243,7 +243,8 @@ public class UIManager : Singleton<UIManager>
         ResumeGame();
 
         // Undo lazy singletons
-        Player.GetInstance().ResetInventory();
+        if(Player.GetInstance() != null)
+            Player.GetInstance().ResetInventory();
 
         SceneManager.LoadScene("MainMenu");
     }

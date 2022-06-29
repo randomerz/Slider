@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
+
 
 public class CutsceneManager : MonoBehaviour
 {
@@ -40,12 +42,35 @@ public class CutsceneManager : MonoBehaviour
         StartCoroutine(FadeIn());
         StartCoroutine(scrolltext(textboxes[0]));
 
+       // listener = InputSystem.onAnyButtonPress.Call(ctrl => advanceCutscene());
+        listener = InputSystem.onEvent
+                        .Where(e => e.HasButtonPress())
+                        .Call(eventPtr =>
+                        {
+                            foreach (var button in InputControlExtensions.GetAllButtonPresses(eventPtr))
+                            {
+                    
+                                    if(!makeAlphaNumeric(Controls.Bindings.UI.Pause.bindings[0].path)
+                                    .Equals(makeAlphaNumeric(button.path)))
+                                    {
+                                        advanceCutscene();
+                                    }
 
-        listener = InputSystem.onAnyButtonPress.Call(ctrl => advanceCutscene());
         
+                                    Debug.Log($"Button {makeAlphaNumeric(button.path)} was pressed");
+                                    Debug.Log(makeAlphaNumeric(Controls.Bindings.UI.Pause.bindings[0].path));
+                                    Debug.Log(makeAlphaNumeric(Controls.Bindings.UI.Pause.bindings[0].path)
+                                    .Equals(makeAlphaNumeric(button.path)));
+                            }
+                        });
         //StartCoroutine(cutscene());
     }
 
+    private string makeAlphaNumeric(string input)
+    {
+        return Regex.Replace(input, "[^a-zA-Z0-9]", String.Empty);
+    }
+    
     void advanceCutscene()
     {
         skipImages = true;
