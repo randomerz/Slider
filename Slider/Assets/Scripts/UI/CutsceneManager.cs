@@ -55,12 +55,6 @@ public class CutsceneManager : MonoBehaviour
                                     {
                                         advanceCutscene();
                                     }
-
-        
-                                    Debug.Log($"Button {makeAlphaNumeric(button.path)} was pressed");
-                                    Debug.Log(makeAlphaNumeric(Controls.Bindings.UI.Pause.bindings[0].path));
-                                    Debug.Log(makeAlphaNumeric(Controls.Bindings.UI.Pause.bindings[0].path)
-                                    .Equals(makeAlphaNumeric(button.path)));
                             }
                         });
         //StartCoroutine(cutscene());
