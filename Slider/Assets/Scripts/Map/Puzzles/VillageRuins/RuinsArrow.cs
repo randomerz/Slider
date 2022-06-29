@@ -67,8 +67,6 @@ public class RuinsArrow : MonoBehaviour
         SetArrowActive(AreRuinsAssembled(SGrid.GetGridString()), SGrid.current.GetGrid()); // probably doesnt matter which grid
         UpdateMap(SGrid.GetGridString());
         UpdateRods(SGrid.GetGridString());
-
-        Debug.Log("update: " + SGrid.GetGridString());
     }
 
     private bool AreRuinsAssembled(string gridString)
