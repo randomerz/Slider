@@ -62,7 +62,7 @@ public class SaveSystem
 
     public static bool IsCurrentProfileNull()
     {
-        return Current == null;
+        return current == null;
     }
 
     public static void SetProfile(int index, SaveProfile profile)

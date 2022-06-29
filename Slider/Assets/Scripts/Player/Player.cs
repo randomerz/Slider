@@ -171,7 +171,7 @@ public class Player : Singleton<Player>, ISavable
 
         // Player
         sp.position = new float[3];
-        Vector3 pos = GetPosition();
+        Vector3 pos = GetSavePosition();
         sp.position[0] = pos.x;
         sp.position[1] = pos.y;
         sp.position[2] = pos.z;
@@ -185,6 +185,46 @@ public class Player : Singleton<Player>, ISavable
         SaveSystem.Current.SetSerializeablePlayer(sp);
 
         //Debug.Log("Saved player position to: " + pos);
+    }
+
+    private Vector3 GetSavePosition()
+    {
+        // We need this in case an STile is moving while the player is on it!
+
+        // Player positions
+        Vector3 pos = transform.position;
+        Vector3 localPos = transform.localPosition;
+
+        // STile postitions
+        STile stile = SGrid.current.GetStileUnderneath(gameObject);
+        if (stile == null)
+        {
+            return pos;
+        }
+        else
+        {
+            Vector2Int stileEndCoords = GetEndStileLocation(stile.islandId);
+            Vector3 stilePos = SGrid.current.GetStileUnderneath(gameObject).calculatePosition(stileEndCoords.x, stileEndCoords.y);
+
+            return stilePos + localPos;
+        }
+    }
+
+    private Vector2Int GetEndStileLocation(int myStileId)
+    {
+        STile[,] grid = SGrid.current.GetGrid();
+        for (int x = 0; x < SGrid.current.width; x++)
+        {
+            for (int y = 0; y < SGrid.current.height; y++)
+            {
+                if (grid[x, y].islandId == myStileId)
+                {
+                    return new Vector2Int(x, y);
+                }
+            }
+        }
+        Debug.LogError("Could not find STile of id " + myStileId);
+        return Vector2Int.zero;
     }
 
     public void Load(SaveProfile profile)
