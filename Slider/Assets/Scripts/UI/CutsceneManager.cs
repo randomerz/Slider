@@ -17,7 +17,8 @@ public class CutsceneManager : MonoBehaviour
     public List<GameObject> textboxes;
     public GameObject skipbox;
     public float dialoguePause;
-    bool skipImages = false;//for skipping dialogue
+    bool skipImages = false; //for skipping dialogue
+    bool speedFadeOut = false;
     private IDisposable listener;
 
 
@@ -82,7 +83,6 @@ public class CutsceneManager : MonoBehaviour
 
     IEnumerator scrolltext(GameObject text)
     {
-        skipImages = false;
         TMPTextTyper tmp_typer = text.GetComponent<TMPTextTyper>();
         string s1 = textboxes[i].GetComponent<TextMeshProUGUI>().text;
         textboxes[i].GetComponent<TextMeshProUGUI>().text = "";
@@ -116,7 +116,6 @@ public class CutsceneManager : MonoBehaviour
             yield return null;
         }
         canvas.alpha = 1f;
-        skipImages = false; 
     }
 
     IEnumerator FadeOut(System.Action callback = null)
@@ -127,6 +126,10 @@ public class CutsceneManager : MonoBehaviour
             {
                 break;
             }
+            else if (speedFadeOut)
+            {
+                canvas.alpha -= Time.deltaTime * 2;
+            }
             else
             {
                 canvas.alpha -= Time.deltaTime;
@@ -135,6 +138,7 @@ public class CutsceneManager : MonoBehaviour
         }
         canvas.alpha = 0f;
         skipImages = false;
+        speedFadeOut = false;
         callback?.Invoke();
     }
 
@@ -147,6 +151,7 @@ public class CutsceneManager : MonoBehaviour
             time += Time.deltaTime;
             yield return null;
         }
+        speedFadeOut = skipImages ? true : false;
         skipImages = false;
         StartCoroutine(FadeOut(() => advanceImages()));
     }
