@@ -49,23 +49,27 @@ public class CutsceneManager : MonoBehaviour
                         {
                             foreach (var button in InputControlExtensions.GetAllButtonPresses(eventPtr))
                             {
-                    
-                                    if(!makeAlphaNumeric(Controls.Bindings.UI.Pause.bindings[0].path)
-                                    .Equals(makeAlphaNumeric(button.path)))
-                                    {
-                                        advanceCutscene();
-                                    }
+                                int pauseBindCount = Controls.Bindings.UI.Pause.bindings.Count;
+                                bool advCut = true;
+                                for(int i = 0; i < pauseBindCount; i++)
+                                {
+                                    if(MakeAlphaNumeric(Controls.Bindings.UI.Pause.bindings[0].path)
+                                    .Equals(MakeAlphaNumeric(button.path)))
+                                        advCut = false;
+                                }
+                                if(advCut)
+                                    AdvanceCutscene();
                             }
                         });
         //StartCoroutine(cutscene());
     }
 
-    private string makeAlphaNumeric(string input)
+    private string MakeAlphaNumeric(string input)
     {
         return Regex.Replace(input, "[^a-zA-Z0-9]", String.Empty);
     }
     
-    void advanceCutscene()
+    void AdvanceCutscene()
     {
         skipImages = true;
     }
