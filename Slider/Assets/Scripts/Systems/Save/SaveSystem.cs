@@ -60,6 +60,11 @@ public class SaveSystem
         return ret;
     }
 
+    public static bool IsCurrentProfileNull()
+    {
+        return Current == null;
+    }
+
     public static void SetProfile(int index, SaveProfile profile)
     {
         saveProfiles[index] = profile;

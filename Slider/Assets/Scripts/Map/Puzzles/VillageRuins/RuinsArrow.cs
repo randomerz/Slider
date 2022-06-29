@@ -17,16 +17,23 @@ public class RuinsArrow : MonoBehaviour
 
     private bool anyRodsOn;
 
-    private void Awake()
+    private void Start()
+    {
+        UpdateArrowGeneral();
+    }
+
+    private void OnEnable()
     {
         SGrid.OnGridMove += UpdateArrowOnStart;
         SGridAnimator.OnSTileMoveEnd += UpdateArrowOnEnd;
+        SGrid.OnSTileEnabled += UpdateArrowOnCollect;
     }
 
     private void OnDestroy()
     {
         SGrid.OnGridMove -= UpdateArrowOnStart;
         SGridAnimator.OnSTileMoveEnd -= UpdateArrowOnEnd;
+        SGrid.OnSTileEnabled -= UpdateArrowOnCollect;
     }
 
     private void UpdateArrowOnStart(object sender, SGrid.OnGridMoveArgs e) // SGrid
@@ -50,6 +57,18 @@ public class RuinsArrow : MonoBehaviour
         UpdateRods(SGrid.GetGridString(SGrid.current.GetGrid()));
     }
 
+    private void UpdateArrowOnCollect(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        UpdateArrowGeneral();
+    }
+
+    private void UpdateArrowGeneral()
+    {
+        SetArrowActive(AreRuinsAssembled(SGrid.GetGridString()), SGrid.current.GetGrid()); // probably doesnt matter which grid
+        UpdateMap(SGrid.GetGridString());
+        UpdateRods(SGrid.GetGridString());
+    }
+
     private bool AreRuinsAssembled(string gridString)
     {
         return CheckGrid.contains(gridString, "31..62");
@@ -60,11 +79,14 @@ public class RuinsArrow : MonoBehaviour
         // check if arrow should be on or not
         if (value)
         {
+            if (!spriteRenderer.enabled)
+            {
+                // if was false before
+                arrowParticles.Play();
+                SGrid.current.ActivateSliderCollectible(7);
+            }
             spriteRenderer.enabled = true;
-            arrowParticles.Play();
             UpdateArrowDirection(grid);
-
-            SGrid.current.ActivateSliderCollectible(7);
         }
         else
         {
@@ -136,6 +158,7 @@ public class RuinsArrow : MonoBehaviour
         {
             // doesnt look good :/ but if we wanna do something else when it transitions
             //arrowFlash.Flash(1);
+            arrowParticles.Play();
         }
     }
 

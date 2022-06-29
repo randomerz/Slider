@@ -14,7 +14,7 @@ public class UIManager : Singleton<UIManager>
     public static System.EventHandler<System.EventArgs> OnCloseAllMenus;
     
     public bool isGamePaused;
-    // public bool isArtifactOpen;
+    public bool isArtifactOpen;
     public static bool canOpenMenus = true;
     private static bool couldOpenMenusLastFrame = true; // DC: maximum jank because timing
 
@@ -91,6 +91,7 @@ public class UIManager : Singleton<UIManager>
         return _instance.isGamePaused;// || _instance.isArtifactOpen;
     }
 
+
     public static void CloseUI()
     {
         _instance.ResumeGame();
@@ -102,7 +103,7 @@ public class UIManager : Singleton<UIManager>
         Time.timeScale = 1;
         isGamePaused = false;
         UINavigationManager.CurrentMenu = null;
-        
+       // UIManager.canOpenMenus = true;
         OnResume?.Invoke(this, null);
     }
 
@@ -136,6 +137,7 @@ public class UIManager : Singleton<UIManager>
 
     public void OpenPause()
     {
+       // UIManager.canOpenMenus = false;
         if (!couldOpenMenusLastFrame)
             return;
 
