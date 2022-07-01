@@ -540,7 +540,7 @@ MonoBehaviour:
     m_Bits: 512
   dropCollidingMask:
     serializedVersion: 2
-    m_Bits: 529
+    m_Bits: 2705
   actionAvailableIndicator: {fileID: 862667734}
 --- !u!114 &3255215873672854460
 MonoBehaviour:
@@ -554,7 +554,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e18baec568b2f7a48bdf3a705beb682a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hasCollectedAnchor: 0
   anchorPrefab: {fileID: 7895592663859285606, guid: 943cb2ed11f603141a66c99e265099d4, type: 3}
 --- !u!50 &380634037254267615
 Rigidbody2D:
