@@ -129,6 +129,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
     public void CloseArtifact()
     {
+        Debug.Log("close artifact");
         if (isArtifactOpen)
         {
             isArtifactOpen = false;

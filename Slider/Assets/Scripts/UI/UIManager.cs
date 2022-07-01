@@ -58,7 +58,9 @@ public class UIManager : Singleton<UIManager>
 
     private void OnPressPause()
     {
-        Debug.Log("1");
+        Debug.Log("ui manager press pause");
+        if(SceneManager.GetActiveScene().name.Equals("MainMenu"))
+            return;
         if (isGamePaused && pausePanel.activeSelf)
         {
             ResumeGame();
