@@ -58,6 +58,7 @@ public class UIManager : Singleton<UIManager>
 
     private void OnPressPause()
     {
+        Debug.Log("1");
         if (isGamePaused && pausePanel.activeSelf)
         {
             ResumeGame();
