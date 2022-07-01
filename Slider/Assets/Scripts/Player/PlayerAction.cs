@@ -30,9 +30,6 @@ public class PlayerAction : MonoBehaviour
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => _instance.Action());
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.CycleEquip, context => _instance.CycleEquip());
-
-        LayerMask StileLayerMask = LayerMask.GetMask("Slider");
-        LayerFilter.SetLayerMask(StileLayerMask);
     }
 
     private void OnEnable() 
@@ -60,42 +57,41 @@ public class PlayerAction : MonoBehaviour
             pickedItem.gameObject.transform.position = itemPickupLocation.position;
             itemDropIndicator.transform.position = GetIndicatorLocation();
 
-            // check raycast hitting items, npcs, houses, etc.
-            Vector3 raycastDir = GetIndicatorLocation() - transform.position;
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, raycastDir, 1.5f, dropCollidingMask);
-            if (hit && hit.collider.gameObject != pickedItem.gameObject) {  //Need to make sure the item isn't itself!
-                canDrop = false;
-                itemDropIndicator.SetActive(false);
-            }
-            else 
-            {
-                canDrop = true;
-                itemDropIndicator.SetActive(true);
+            bool dropCastHit = DoesDropRaycastIntersect();
 
-                // check raycast hitting tiles that aren't active
-                int NumOfRayCastResult = Physics2D.Raycast(transform.position, raycastDir, LayerFilter, RayCastResults, 1.5f);
-                if (NumOfRayCastResult != 0) 
-                {
-                    for (int i = 0; i < NumOfRayCastResult; i++)
-                    {
-                        STile stile = RayCastResults[i].collider.gameObject.GetComponent<STile>();
-                        if (stile != null)
-                        {
-                            if (!stile.isTileActive) 
-                            {
-                                canDrop = false;
-                                itemDropIndicator.SetActive(false);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+            // We can drop if the path is clear
+            canDrop = !dropCastHit;
+            itemDropIndicator.SetActive(!dropCastHit);
         }
         else if (pickedItem == null)
         {
             itemDropIndicator.SetActive(false);
         }
+    }
+
+    private bool DoesDropRaycastIntersect()
+    {
+        // check raycast hitting items, npcs, houses, etc.
+        Vector3 raycastDir = GetIndicatorLocation() - transform.position;
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, raycastDir, 1.5f, dropCollidingMask);
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (hit.collider.gameObject != pickedItem.gameObject && !hit.collider.isTrigger)
+            {
+                // hit something
+                return true;
+            }
+
+            STile stile = hit.collider.gameObject.GetComponent<STile>();
+            if (stile != null && !stile.isTileActive)
+            {
+                // hit an inactive stile
+                return true;
+            }
+        }
+
+        // hit nothing
+        return false;
     }
 
     private void Action() 
