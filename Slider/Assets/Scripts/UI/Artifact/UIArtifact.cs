@@ -476,14 +476,17 @@ public class UIArtifact : MonoBehaviour
             return false;
         }
     }
+
     public void UpdatePushedDowns(object sender, System.EventArgs e)
     {
+        Debug.Log("Updating pushed downs!");
        foreach (ArtifactTileButton b in _instance.buttons)
        {
             if(b.gameObject.activeSelf)
             {
                 if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
                 {
+                    //Debug.Log(b.islandId);
                     b.SetIsInMove(true);
                 }
                 else if(b.myStile.hasAnchor)
@@ -577,8 +580,13 @@ public class UIArtifact : MonoBehaviour
     }
     public static void DisableLightning()
     {
-            _instance.lightning.gameObject.SetActive(false);
-            _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
+        if (!_instance.lightning.gameObject.activeInHierarchy)
+        {
+            Debug.LogWarning("Attempted to disable lightning when already disabled!");
+            return;
+        }
+        _instance.lightning.gameObject.SetActive(false);
+        _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
     }
     public static ArtifactTileButton GetButton(int x, int y)
     {
