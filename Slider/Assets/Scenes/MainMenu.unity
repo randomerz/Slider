@@ -7626,14 +7626,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2824224475968117142, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
-      propertyPath: isMenuScene
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2824224475968117142, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
-      propertyPath: UICanvasPrefab.activeInMenuScenes
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8091794286791977582, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
       propertyPath: currentControlScheme
       value: Keyboard Mouse
@@ -7641,6 +7633,10 @@ PrefabInstance:
     - target: {fileID: 8750917147391358172, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
       propertyPath: m_Name
       value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8750917147391358172, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
+      propertyPath: m_TagString
+      value: GameUI
       objectReference: {fileID: 0}
     - target: {fileID: 8750917147391358173, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
       propertyPath: m_RootOrder

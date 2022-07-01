@@ -22,6 +22,7 @@ public class UIManager : Singleton<UIManager>
     public GameObject optionsPanel;
     public GameObject controlsPanel;
     public GameObject advOptionsPanel;
+    public GameObject eventSystem;
     public Slider sfxSlider;
     public Slider musicSlider;
     public Slider screenShakeSlider;
@@ -40,8 +41,19 @@ public class UIManager : Singleton<UIManager>
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
         autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
     }
+    private void OnEnable() {
+        SceneManager.activeSceneChanged += OnSceneChange;
+        eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(SceneManager.GetActiveScene().name));
+    }
+
+
+    private void OnSceneChange (Scene curr, Scene next)
+    {
+        eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(next.name));
+    }
 
     private void OnDisable() {
+        SceneManager.activeSceneChanged -= OnSceneChange;
         if (!canOpenMenus)
         {
             Debug.LogWarning("UIManager was disabled without closing the menu!");
@@ -58,8 +70,7 @@ public class UIManager : Singleton<UIManager>
 
     private void OnPressPause()
     {
-        Debug.Log("ui manager press pause");
-        if(SceneManager.GetActiveScene().name.Equals("MainMenu"))
+        if(GameUI.instance.isMenuScene)
             return;
         if (isGamePaused && pausePanel.activeSelf)
         {
