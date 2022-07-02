@@ -214,6 +214,7 @@ public class VillageGrid : SGrid
     {
         caveDoorEntrance.SetActive(true);
         caveDoorRocks.SetActive(false);
+        SaveSystem.Current.SetBool("caveDoorExploded", true);
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");
     }
@@ -311,6 +312,6 @@ public class VillageGrid : SGrid
     }
 
     public void ChadFell(Conditionals.Condition cond) {
-        cond.SetSpec(chadFell);
+        cond.SetSpec(chadFell || PlayerInventory.Contains("Flashlight"));
     }
 }

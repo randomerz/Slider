@@ -8,16 +8,14 @@ using UnityEngine;
 /// actually updates them in the process. Those values are also written to PlayerPrefs
 /// to persist between play sessions and loaded by the SettingsManager at the start of the game.
 /// </summary>
-public class SettingsManager : MonoBehaviour
+public class SettingsManager : Singleton<SettingsManager>
 {
-    private static SettingsManager _instance;
-
     private Settings currentSettings;
 
     // Start is called before the first frame update
     void Awake()
     {
-        _instance = this;
+        InitializeSingleton(overrideExistingInstanceWith: this);
         LoadSettings();
     }
 

@@ -18,6 +18,7 @@ using UnityEngine.UI;
 /// <remarks>Author: Travis</remarks>
 public class UINavigationManager : MonoBehaviour
 {
+    // ** This class cannot be converted to Singleton without tons of issues :( **
     private static UINavigationManager _instance;
 
     private UnityEngine.EventSystems.EventSystem eventSystem;
@@ -84,6 +85,11 @@ public class UINavigationManager : MonoBehaviour
 
     private void Awake()
     {
+        //_instance = this;
+    }
+
+    private void OnEnable()
+    {
         _instance = this;
 
         _instance.eventSystem = GetComponent<UnityEngine.EventSystems.EventSystem>();
@@ -99,7 +105,7 @@ public class UINavigationManager : MonoBehaviour
             return;
         }
 
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, 
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate,
             context =>
             {
                 if (CurrentMenu != null && InMouseControlMode)
@@ -135,11 +141,6 @@ public class UINavigationManager : MonoBehaviour
                 gameObject.SetActive(true);
             }
         };
-    }
-
-    private void OnEnable()
-    {
-        Awake();
     }
 
     /// <summary>

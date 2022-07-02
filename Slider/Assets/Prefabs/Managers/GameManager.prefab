@@ -109,6 +109,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMenuScene: 0
+  menuScenes:
+  - MainMenu
   UICanvasPrefab:
     prefab: {fileID: 5049116215420832315, guid: 898b250fe0c06464293cf5013d6eb685, type: 3}
     activeInMenuScenes: 0

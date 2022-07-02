@@ -142,7 +142,10 @@ public class SaveSystem
         SceneInitializer.profileToLoad = current;
 
         // Load last scene the player was in
-        SceneManager.LoadScene(current.GetLastArea().ToString());
+        string sceneToLoad = current.GetLastArea().ToString();
+        if (current.GetBool("isDemoBuild") && sceneToLoad == "Caves")
+            sceneToLoad = "Demo Caves";
+        SceneManager.LoadScene(sceneToLoad);
     }
 
     public static SerializableSaveProfile GetSerializableSaveProfile(int index)

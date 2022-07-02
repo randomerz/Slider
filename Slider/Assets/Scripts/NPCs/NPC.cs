@@ -326,7 +326,8 @@ public class NPC : MonoBehaviour
 
     public void Teleport(Transform trans)
     {
-        Instantiate(poofParticles, transform.position, Quaternion.identity);
+        if (trans.position != transform.position)
+            Instantiate(poofParticles, transform.position, Quaternion.identity);
         transform.position = trans.position;
         transform.parent = trans.parent;
     }
