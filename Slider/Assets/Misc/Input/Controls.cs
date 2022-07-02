@@ -49,7 +49,7 @@ public class Controls : Singleton<Controls>
 
     private void OnEnable()
     {
-        InitializeSingleton(overrideExistingInstance: true);
+        InitializeSingleton(overrideExistingInstanceWith:this);
 
         if (_bindings == null)
         {

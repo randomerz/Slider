@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : Singleton<AudioManager>
 {
     [SerializeField]
     private Sound[] sounds;
@@ -21,25 +21,11 @@ public class AudioManager : MonoBehaviour
     private static FMOD.Studio.Bus sfxBus;
     private static FMOD.Studio.Bus musicBus;
 
-    //[SerializeField]
-    //private GameObject audioListenerObj;
-    //private static AudioLowPassFilter menuLowPass;
-
     public static AudioManager instance;
-
-    private static string currentMusic;
 
     void Awake()
     {
-        if (instance == null)
-            instance = this;
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        DontDestroyOnLoad(gameObject);
+        InitializeSingleton();
 
         _sounds = sounds;
         _music = music;
@@ -66,9 +52,9 @@ public class AudioManager : MonoBehaviour
         SetMusicVolume(musicVolume);
     }
 
-    private void Start()
+    private void OnDestroy()
     {
-
+        StopAllSoundAndMusic();
     }
 
     private static Music GetMusic(string name)
@@ -79,7 +65,6 @@ public class AudioManager : MonoBehaviour
 
         if (m == null)
         {
-            //Debug.LogError("Music: " + name + " not found!");
             return null;
         }
 
@@ -148,21 +133,6 @@ public class AudioManager : MonoBehaviour
         s.source.Play();
     }
 
-    public static void Stop(string name)
-    {
-        if (_sounds == null)
-            return;
-        Sound s = Array.Find(_sounds, sound => sound.name == name);
-
-        if (s == null)
-        {
-            Debug.LogError("Sound: " + name + " not found!");
-            return;
-        }
-
-        s.source.Stop();
-    }
-
     public static void PlayMusic(string name, bool stopOtherTracks=true)
     {
         Music m = GetMusic(name);
@@ -174,7 +144,7 @@ public class AudioManager : MonoBehaviour
         {
             foreach (Music music in _music)
             {
-                music.emitter.Stop(); //FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                music.emitter.Stop();
             }
         }
 
@@ -191,6 +161,33 @@ public class AudioManager : MonoBehaviour
         m.emitter.Stop();
     }
 
+    public static void StopSound(string name)
+    {
+        if (_sounds == null)
+            return;
+        Sound s = Array.Find(_sounds, sound => sound.name == name);
+
+        if (s == null)
+        {
+            Debug.LogError("Sound: " + name + " not found!");
+            return;
+        }
+
+        s.source.Stop();
+    }
+
+    public static void StopAllSoundAndMusic()
+    {
+        foreach (Music m in _instance.music)
+        {
+            m.emitter.Stop();
+        }
+        foreach (Sound s in _instance.sounds)
+        {
+            s.source.Stop();
+        }
+    }
+
     public static void SetMusicParameter(string name, string parameterName, float value)
     {
         // for global parameters
@@ -204,9 +201,6 @@ public class AudioManager : MonoBehaviour
         // for track-specific parameters
         m.emitter.SetParameter(parameterName, value);
     }
-
-
-
 
 
     public static void SetSFXVolume(float value)
@@ -244,12 +238,6 @@ public class AudioManager : MonoBehaviour
 
         if (_music == null)
             return;
-        foreach (Music m in _music)
-        {
-            if (m == null || m.emitter == null)
-                continue;
-            // m.emitter. = m.volume * value;
-        }
 
         musicBus.setVolume(vol);
     }
@@ -267,7 +255,6 @@ public class AudioManager : MonoBehaviour
     public static void SetSFXPitch(float value)
     {
         value = Mathf.Clamp(value, 0.3f, 3f);
-        //volume = value;
 
         if (_sounds == null)
             return;
@@ -278,9 +265,4 @@ public class AudioManager : MonoBehaviour
             s.source.pitch = s.pitch * value;
         }
     }
-
-    //public static void SetLowPassEnabled(bool value)
-    //{
-    //    menuLowPass.enabled = value;
-    //}
 }
