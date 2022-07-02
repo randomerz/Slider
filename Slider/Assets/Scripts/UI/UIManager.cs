@@ -43,13 +43,13 @@ public class UIManager : Singleton<UIManager>
     }
     private void OnEnable() {
         SceneManager.activeSceneChanged += OnSceneChange;
-        eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(SceneManager.GetActiveScene().name));
+        //eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(SceneManager.GetActiveScene().name));
     }
 
 
     private void OnSceneChange (Scene curr, Scene next)
     {
-        eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(next.name));
+        //eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(next.name));
     }
 
     private void OnDisable() {
