@@ -479,7 +479,6 @@ public class UIArtifact : MonoBehaviour
 
     public void UpdatePushedDowns(object sender, System.EventArgs e)
     {
-        Debug.Log("Updating pushed downs!");
        foreach (ArtifactTileButton b in _instance.buttons)
        {
             if(b.gameObject.activeSelf)
