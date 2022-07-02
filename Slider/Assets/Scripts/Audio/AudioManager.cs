@@ -129,7 +129,7 @@ public class AudioManager : Singleton<AudioManager>
         else
             s.source.pitch = s.pitch;
 
-        s.source.volume = s.volume * volume;
+        s.source.volume = s.volume * sfxVolume * volume;
         s.source.Play();
     }
 
