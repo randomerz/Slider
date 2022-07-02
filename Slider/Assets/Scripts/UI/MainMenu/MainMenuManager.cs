@@ -166,7 +166,6 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     public void CloseCurrentPanel()
     {
-        Debug.Log("main menu manager close current panel");
         if (advancedOptionsPanel.activeSelf || controlsPanel.activeSelf)
         {
             OpenOptions();
