@@ -29,6 +29,10 @@ public abstract class Singleton<T> : MonoBehaviour
     {
         if (overrideExistingInstanceWith != null)
         {
+            if (allowInactiveDuplicates && !overrideExistingInstanceWith.isActiveAndEnabled)
+            {
+                return;
+            }
             if (overrideExistingInstanceWith != _instance)
             {
                 Destroy(_instance);
