@@ -57,7 +57,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         InitializeSingleton();
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
+        //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context 
             => { if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); } });
     }
@@ -166,6 +166,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     public void CloseCurrentPanel()
     {
+        Debug.Log("main menu manager close current panel");
         if (advancedOptionsPanel.activeSelf || controlsPanel.activeSelf)
         {
             OpenOptions();
@@ -330,7 +331,9 @@ public class MainMenuManager : Singleton<MainMenuManager>
     public void LoadCutscene()
     {
         // SceneManager.LoadSceneAsync(cutsceneSceneName, LoadSceneMode.Additive);
-        UIEffects.FadeToBlack(() => {SceneManager.LoadScene(cutsceneSceneName);}, 1, false);
+        UIEffects.FadeToBlack(() => {SceneManager.LoadScene(cutsceneSceneName);  
+                                    UINavigationManager.CurrentMenu = null;}, 1, false);
+        
     }
 
 
