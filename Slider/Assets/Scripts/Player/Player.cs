@@ -33,17 +33,18 @@ public class Player : Singleton<Player>, ISavable
 
     void Awake()
     {
-        InitializeSingleton(overrideExistingInstance: true);
+        InitializeSingleton(overrideExistingInstanceWith:this);
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
 
         if (!didInit)
             Init();
     }
 
-    // ** Look at this later given that we're trying to use the new Singleton now **
+    // This is no longer necessary from my testing, but I'm leaving it in. When we (hopefully) go back to look at SceneInitializer we
+    // can probably eliminate this
     public void SetSingleton()
     {
-        _instance = this;
+        InitializeSingleton(overrideExistingInstanceWith:this);
     }
 
     public void Init()
@@ -229,6 +230,8 @@ public class Player : Singleton<Player>, ISavable
 
     public void Load(SaveProfile profile)
     {
+        InitializeSingleton(overrideExistingInstanceWith: this);
+
         if (profile == null || profile.GetSerializablePlayer() == null)
         {
             playerInventory.Reset();

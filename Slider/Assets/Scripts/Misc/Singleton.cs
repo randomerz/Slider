@@ -22,32 +22,52 @@ public abstract class Singleton<T> : MonoBehaviour
     /// </summary>
     /// <param name="allowInactiveDuplicates">If this is true, inactive duplicates of this singleton component will not be deleted, 
     /// nor will errors be logged because of them</param>
-    /// <param name="overrideExistingInstance">If this is true, this method will overwrite an existing _instance with the calling instance.
-    /// This can be useful if you have a singleton present in multiple scenes which does not persist as _instance will be updated to refer
-    /// to the current one when Awake is called during the scene transition.</param>
-    protected virtual void InitializeSingleton(bool allowInactiveDuplicates = false, bool overrideExistingInstance = false)
+    /// <param name="overrideExistingInstanceWith">If this is true, this method will overwrite an existing _instance with the passed 
+    /// in instance (which should probably be the calling instance.) This can be useful if you have a singleton present in multiple scenes 
+    /// which does not persist as _instance will be updated to refer to the current one when Awake is called during the scene transition.</param>
+    protected virtual void InitializeSingleton(bool allowInactiveDuplicates = false, T overrideExistingInstanceWith = null)
     {
-        if (_instance != null && !overrideExistingInstance)
+        if (overrideExistingInstanceWith != null)
         {
-            Debug.LogError($"Multiple Singleton components of type {typeof(T)} were detected. The latest one was deleted.");
-            Destroy(this);
-        }
+            if (overrideExistingInstanceWith != _instance)
+            {
+                Destroy(_instance);
+                _instance = overrideExistingInstanceWith;
+            }
+        } 
         else
         {
-            // I'm using LINQ here for funsies, regular for loops would be fine (and probably easier to read) :)
-            IEnumerable<T> instances = FindObjectsOfType<T>();
-            if (allowInactiveDuplicates)
+            if (_instance != null)
             {
-                instances = instances.Where(instance => instance.isActiveAndEnabled);
+                Debug.LogError($"Multiple Singleton components of type {typeof(T)} were detected. The latest one was deleted.");
+                Destroy(this);
             }
-            if (instances.Count() > 1)
+            else
             {
-                Debug.LogError($"Multiple Singleton components of type {typeof(T)} were detected. An arbitrary one was chosen " +
-                    "to keep. This needs to be fixed immediately to avoid catastrophic consequences. Don't make us come after you. " +
-                    "We will not forgive your sins.");
+                CheckForAndDestroyDuplicates(allowInactiveDuplicates);
+                _instance = FindObjectOfType<T>();
             }
-            _instance = instances.First();
-            instances.Skip(1).ToList().ForEach(instance => Destroy(instance));
         }
+    }
+
+    private void CheckForAndDestroyDuplicates(bool allowInactiveDuplicates)
+    {
+        // I'm using LINQ here for funsies, regular for loops would be fine (and probably easier to read) :)
+        IEnumerable<T> instances = FindObjectsOfType<T>();
+        if (allowInactiveDuplicates)
+        {
+            instances = instances.Where(instance => instance.isActiveAndEnabled);
+        }
+        if (instances.Count() > 1)
+        {
+            Debug.LogError($"{instances.Count()} Singleton components of type {typeof(T)} were detected. An arbitrary one was chosen " +
+                "to keep. This needs to be fixed immediately to avoid catastrophic consequences. Don't make us come after you. " +
+                "We will not forgive your sins.");
+            foreach (T instance in instances)
+            {
+                Debug.Log(instance.gameObject.name);
+            }
+        }
+        instances.Skip(1).ToList().ForEach(instance => Destroy(instance));
     }
 }
