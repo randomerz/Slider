@@ -500,18 +500,22 @@ public class SGrid : MonoBehaviour, ISavable
 
         // setting grids... similar to initialization
         STile[,] newGrid = new STile[width, height];
-        int[,] idGrid = new int[width, height];
         foreach (SGridData.STileData td in sgridData.grid) 
         {
             STile stile = GetStile(td.islandId); 
             newGrid[td.x, td.y] = stile;
-            idGrid[td.x, td.y] = td.islandId;
-            stile.SetSTile(td.isTileActive, td.x, td.y);
 
             UIArtifact.SetButtonPos(td.islandId, td.x, td.y);
         }
         grid = newGrid;
         realigningGrid = sgridData.realigningGrid;
+
+        // After updating grid, set the grids to active/not, calls events, etc.
+        foreach (SGridData.STileData td in sgridData.grid)
+        {
+            STile stile = GetStile(td.islandId);
+            stile.SetSTile(td.isTileActive, td.x, td.y);
+        }
     }
 
     public virtual void SaveRealigningGrid()

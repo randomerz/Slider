@@ -26,7 +26,7 @@ public class RuinsArrow : MonoBehaviour
     {
         SGrid.OnGridMove += UpdateArrowOnStart;
         SGridAnimator.OnSTileMoveEnd += UpdateArrowOnEnd;
-        SGrid.OnSTileEnabled += UpdateArrowOnCollect;
+        SGrid.OnSTileEnabled += UpdateArrowOnCollect; // May cause issues on loading when STiles get enabled
     }
 
     private void OnDestroy()
