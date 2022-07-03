@@ -1,64 +1,46 @@
 using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.InputSystem;
-public class PlayerAction : MonoBehaviour 
+
+public class PlayerAction : Singleton<PlayerAction>
 {
-    private static PlayerAction _instance;
     public static System.EventHandler<System.EventArgs> OnAction;
 
     public Item pickedItem;
-    private Item lastDroppedItem;
-    private bool isPicking; //Picking up animation is happening
-    private bool isDropping;    //Drop animation is happening.
-    private bool canDrop;
-    [SerializeField] private Transform itemPickupLocation;
+
+    [SerializeField] private Transform pickedItemLocation;
     [SerializeField] private GameObject itemDropIndicator;
     [SerializeField] private LayerMask itemMask;
     [SerializeField] private LayerMask dropCollidingMask;
-    private List<RaycastHit2D> RayCastResults = new List<RaycastHit2D>();
-    private ContactFilter2D LayerFilter;
+
+    [SerializeField] private float minimumDropDistance = 0.5f;
+    [SerializeField] private float maximumDropDistance = 1.5f;
+    [SerializeField] private float dropCirclecastRadius = 0.5f;
+
+    private Item lastDroppedItem;
+    private bool isPicking;  //Picking up animation is happening
+    private bool isDropping; //Drop animation is happening
+    private bool canDrop;
 
     private int actionsAvailable = 0;
     [SerializeField] private GameObject actionAvailableIndicator;
-    private InputSettings controls;
-    // private GameObject[] objects;
 
     private void Awake() 
     {
-        _instance = this;
-        _instance.controls = new InputSettings();
+        InitializeSingleton(overrideExistingInstanceWith: this);
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => _instance.Action());
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.CycleEquip, context => _instance.CycleEquip());
     }
 
-    private void OnEnable() 
-    {
-        controls.Enable();
-    }
-
-    private void OnDisable() 
-    {
-        controls.Disable();
-    }
-
-    private void OnDestroy() 
-    {
-        
-    }
-
-    //L: :(
     private void Update()
     {
         pickedItem = PlayerInventory.GetCurrentItem();
-        if (pickedItem != null && !isPicking) 
+        if (pickedItem != null && !isPicking)
         {
-
-            pickedItem.gameObject.transform.position = itemPickupLocation.position;
+            pickedItem.gameObject.transform.position = pickedItemLocation.position;
 
             Vector2 furthestValidDropPosition = GetFurthestValidDropPosition();
 
-            canDrop = Vector2.Distance(transform.position, furthestValidDropPosition) > 0.5f;
+            canDrop = Vector2.Distance(transform.position, furthestValidDropPosition) > minimumDropDistance;
             itemDropIndicator.SetActive(canDrop);
             itemDropIndicator.transform.position = furthestValidDropPosition;
         }
@@ -70,31 +52,23 @@ public class PlayerAction : MonoBehaviour
 
     private Vector2 GetFurthestValidDropPosition()
     {
-        Vector3 raycastDirection = GetIndicatorLocation() - transform.position;
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, 0.5f, raycastDirection, 1.5f, layerMask:dropCollidingMask);
+        Vector3 raycastDirection = Player.GetLastMoveDirection().normalized;
+
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, dropCirclecastRadius, raycastDirection, maximumDropDistance, 
+            layerMask:dropCollidingMask);
 
         Vector2 furthestPossibleDropPosition = transform.position;
-        bool hitCollider = false;
+        bool collisionOccured = false;
 
         foreach (RaycastHit2D hit in hits)
         {
-            if (hit.collider.gameObject != pickedItem.gameObject && !hit.collider.isTrigger)
+            Collider2D hitCollider = hit.collider;
+            STile stile = hitCollider.gameObject.GetComponent<STile>();
+
+            // Hit an obstacle or an inactive STile
+            if ((hitCollider.gameObject != pickedItem.gameObject && !hitCollider.isTrigger) || (stile != null && !stile.isTileActive))
             {
-                hitCollider = true;
-
-                // Hit an obstacle
-                if (Vector2.Distance(hit.centroid, transform.position) > Vector2.Distance(furthestPossibleDropPosition, transform.position))
-                {
-                    furthestPossibleDropPosition = hit.centroid;
-                }
-            }
-
-            STile stile = hit.collider.gameObject.GetComponent<STile>();
-            if (stile != null && !stile.isTileActive)
-            {
-                hitCollider = false;
-
-                // Hit an inactive stile
+                collisionOccured = true;
                 if (Vector2.Distance(hit.centroid, transform.position) > Vector2.Distance(furthestPossibleDropPosition, transform.position))
                 {
                     furthestPossibleDropPosition = hit.centroid;
@@ -102,51 +76,14 @@ public class PlayerAction : MonoBehaviour
             }
         }
 
-        if (furthestPossibleDropPosition == (Vector2) transform.position)
+        // Use maximum distance if there is no collision
+        if (!collisionOccured)
         {
-            if (hitCollider)
-            {
-                // There was a collision, but it wasn't a valid drop location
-                furthestPossibleDropPosition = transform.position;
-            } 
-            else
-            {
-                // Use furthest location if there is no collision
-                Vector3 moveDir = Player.GetLastMoveDir().normalized;
-                if (moveDir.x != 0 && moveDir.y != 0)
-                {
-                    moveDir = moveDir * 0.75f * Mathf.Sqrt(2);
-                }
-                furthestPossibleDropPosition = transform.position + moveDir;
-                Debug.Log("MAX DISTANCE");
-            }
+            Vector3 moveDir = Player.GetLastMoveDirection().normalized;
+            furthestPossibleDropPosition = transform.position + moveDir * maximumDropDistance;
         }
+
         return furthestPossibleDropPosition;
-    }
-
-    private bool DoesDropRaycastIntersect()
-    {
-        // check raycast hitting items, npcs, houses, etc.
-        Vector3 raycastDir = GetIndicatorLocation() - transform.position;
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, raycastDir, 1.5f, dropCollidingMask);
-        foreach (RaycastHit2D hit in hits)
-        {
-            if (hit.collider.gameObject != pickedItem.gameObject && !hit.collider.isTrigger)
-            {
-                // hit something
-                return true;
-            }
-
-            STile stile = hit.collider.gameObject.GetComponent<STile>();
-            if (stile != null && !stile.isTileActive)
-            {
-                // hit an inactive stile
-                return true;
-            }
-        }
-
-        // hit nothing
-        return false;
     }
 
     private void Action() 
@@ -154,7 +91,7 @@ public class PlayerAction : MonoBehaviour
         if (UIManager.IsUIOpen() || UIArtifactMenus.IsArtifactOpen())
             return;
 
-        if (TryPick())
+        if (TryPickOrDrop())
             return; // if succesfully picked something up, return
 
         OnAction?.Invoke(this, new System.EventArgs());
@@ -177,7 +114,7 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
-    public bool TryPick() 
+    public bool TryPickOrDrop() 
     {
         if (isPicking || isDropping) 
         {
@@ -188,7 +125,6 @@ public class PlayerAction : MonoBehaviour
         if (pickedItem == null) 
         {
             //Try picking an item up
-
             if (nodes.Length > 0)
             {
                 isPicking = true;
@@ -209,12 +145,12 @@ public class PlayerAction : MonoBehaviour
                 }
 
                 PlayerInventory.AddItem(pickedItem);
-                pickedItem.PickUpItem(itemPickupLocation.transform, callback:FinishPicking);
+                pickedItem.PickUpItem(pickedItemLocation.transform, callback:FinishPicking);
 
                 return true;
             } 
         }
-        else // pickedItem != null
+        else
         {
             // Try dropping the item
             if (canDrop) 
@@ -246,16 +182,6 @@ public class PlayerAction : MonoBehaviour
         itemDropIndicator.SetActive(false);
     }
 
-    private Vector3 GetIndicatorLocation() 
-    {
-        Vector3 moveDir = Player.GetLastMoveDir().normalized;
-        if (moveDir.x != 0 && moveDir.y != 0) 
-        {
-            moveDir = moveDir * 0.75f * Mathf.Sqrt(2);
-        }
-        return transform.position + moveDir;
-    }
-
     public bool HasItem() {
         return pickedItem != null;
     }
@@ -278,6 +204,4 @@ public class PlayerAction : MonoBehaviour
             actionAvailableIndicator.SetActive(false);
         }
     }
-
-
 }

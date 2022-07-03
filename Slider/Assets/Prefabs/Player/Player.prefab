@@ -533,7 +533,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickedItem: {fileID: 0}
-  itemPickupLocation: {fileID: 5563323968977859811}
+  pickedItemLocation: {fileID: 5563323968977859811}
   itemDropIndicator: {fileID: 224774816551553932}
   itemMask:
     serializedVersion: 2
@@ -541,6 +541,9 @@ MonoBehaviour:
   dropCollidingMask:
     serializedVersion: 2
     m_Bits: 2705
+  minimumDropDistance: 0.35
+  maximumDropDistance: 1
+  dropCirclecastRadius: 0.35
   actionAvailableIndicator: {fileID: 862667734}
 --- !u!114 &3255215873672854460
 MonoBehaviour:
@@ -877,7 +880,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5563323968977859811}
   m_Layer: 8
-  m_Name: Item Pickup Location
+  m_Name: Picked Item Location
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
