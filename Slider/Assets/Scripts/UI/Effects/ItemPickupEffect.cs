@@ -32,7 +32,7 @@ public class ItemPickupEffect : MonoBehaviour
         _instance.itemText.text = itemName + " Acquired!";
         _instance.itemImage.sprite = itemSprite;
         _instance.StartCoroutine(_instance.Cutscene(onTextVisibleCallback));
-        AudioManager.DampenMusic(0, _instance.soundDampenLength);
+        AudioManager.DampenMusic(0.2f, _instance.soundDampenLength);
         _instance.StartCoroutine(_instance.DampenMusic());
     }
 
