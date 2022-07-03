@@ -270,7 +270,7 @@ public class Player : Singleton<Player>, ISavable
         }
     }
 
-    public static Vector3 GetLastMoveDir() 
+    public static Vector3 GetLastMoveDirection()
     {
         return _instance.lastMoveDir;
     }
