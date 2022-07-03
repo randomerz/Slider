@@ -62,6 +62,8 @@ public class CutsceneManager : MonoBehaviour
                             }
                         });
         //StartCoroutine(cutscene());
+
+        AudioManager.DampenMusic(0.4f, 36000);
     }
 
     private string MakeAlphaNumeric(string input)
@@ -79,6 +81,8 @@ public class CutsceneManager : MonoBehaviour
         Debug.Log("Exiting Cutscene");
         canvas.alpha = 0;
         listener.Dispose();
+
+        AudioManager.StopDampen();
 
         SceneInitializer.profileToLoad = SaveSystem.Current;
         SceneManager.LoadScene(sceneToLoad);

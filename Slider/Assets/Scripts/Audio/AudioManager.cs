@@ -14,6 +14,11 @@ public class AudioManager : Singleton<AudioManager>
     private Music[] music;
     private static Music[] _music;
 
+    [SerializeField]
+    private AnimationCurve soundDampenCurve;
+    private static AnimationCurve _soundDampenCurve;
+    private static Coroutine soundDampenCoroutine;
+
     private static float sfxVolume = 0.5f; // [0..1]
     private static float musicVolume = 0.5f;
     private static float musicVolumeMultiplier = 1; // for music effects
@@ -25,10 +30,17 @@ public class AudioManager : Singleton<AudioManager>
 
     void Awake()
     {
+        if (_instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
         InitializeSingleton();
 
         _sounds = sounds;
         _music = music;
+        _soundDampenCurve = soundDampenCurve;
 
         foreach (Sound s in _sounds)
         {
@@ -50,11 +62,6 @@ public class AudioManager : Singleton<AudioManager>
         musicBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/Music");
         SetSFXVolume(sfxVolume);
         SetMusicVolume(musicVolume);
-    }
-
-    private void OnDestroy()
-    {
-        StopAllSoundAndMusic();
     }
 
     private static Music GetMusic(string name)
@@ -112,7 +119,7 @@ public class AudioManager : Singleton<AudioManager>
     }
 
 
-    public static void PlayWithVolume(string name, float volume) //Used in village 8 puzzle
+    public static void PlayWithVolume(string name, float volumeMultiplier)
     {
         if (_sounds == null)
             return;
@@ -129,7 +136,7 @@ public class AudioManager : Singleton<AudioManager>
         else
             s.source.pitch = s.pitch;
 
-        s.source.volume = s.volume * sfxVolume * volume;
+        s.source.volume = s.volume * sfxVolume * volumeMultiplier;
         s.source.Play();
     }
 
@@ -240,6 +247,37 @@ public class AudioManager : Singleton<AudioManager>
             return;
 
         musicBus.setVolume(vol);
+    }
+
+    public static void DampenMusic(float amount, float length)
+    {
+        StopDampen();
+        soundDampenCoroutine = _instance.StartCoroutine(_DampenMusic(amount, length));
+    }
+
+    public static void StopDampen()
+    {
+        if (soundDampenCoroutine != null)
+        {
+            _instance.StopCoroutine(soundDampenCoroutine);
+            soundDampenCoroutine = null;
+        }
+    }
+
+    private static IEnumerator _DampenMusic(float amount, float length)
+    {
+        float t = 0;
+
+        while (t < length)
+        {
+            SetMusicVolumeMultiplier(Mathf.Lerp(1, amount, _soundDampenCurve.Evaluate(t / length)));
+
+            yield return null;
+            t += Time.deltaTime;
+        }
+
+        SetMusicVolumeMultiplier(1);
+        soundDampenCoroutine = null;
     }
 
     public static float GetSFXVolume()

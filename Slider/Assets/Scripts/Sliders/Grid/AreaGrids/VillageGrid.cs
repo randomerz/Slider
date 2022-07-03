@@ -160,7 +160,8 @@ public class VillageGrid : SGrid
         yield return new WaitForSeconds(1f);
         
         CameraShake.Shake(1.5f, 2.5f);
-        AudioManager.Play("Slide Explosion");
+        AudioManager.PlayWithVolume("Slide Explosion", 0.2f);
+        AudioManager.Play("TFT Bell");
         ruinsSymbols.FlashSymbol(3);
 
         yield return new WaitForSeconds(0.25f);
