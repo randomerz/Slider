@@ -11,7 +11,7 @@ using System.Linq;
 /// Second, call the <see cref="InitializeSingleton"/> method inside of Awake, using the optional arguments to customize the behavior of your singleton.
 /// </summary>
 /// <remarks>Author: Travis</remarks>
-public abstract class Singleton<T> : MonoBehaviour
+public abstract class Singleton<T> : MonoBehaviour 
     where T : Singleton<T>
 {
     protected static T _instance;
@@ -21,23 +21,24 @@ public abstract class Singleton<T> : MonoBehaviour
     /// enforces singleton-ness, and logs an error if one or more duplicates of the component are detected.
     /// </summary>
     /// <param name="allowInactiveDuplicates">If this is true, inactive duplicates of this singleton component will not be deleted, 
-    /// nor will errors be logged because of them</param>
+    /// nor will errors be logged because of them.</param>
     /// <param name="overrideExistingInstanceWith">If this is true, this method will overwrite an existing _instance with the passed 
     /// in instance (which should probably be the calling instance.) This can be useful if you have a singleton present in multiple scenes 
     /// which does not persist as _instance will be updated to refer to the current one when Awake is called during the scene transition.</param>
-    protected virtual void InitializeSingleton(bool allowInactiveDuplicates = false, T overrideExistingInstanceWith = null)
+    /// <returns>True if _instance was successfully updated, false otherwise</returns>
+    protected virtual bool InitializeSingleton(bool allowInactiveDuplicates = false, T overrideExistingInstanceWith = null)
     {
         if (overrideExistingInstanceWith != null)
         {
-            if (allowInactiveDuplicates && !overrideExistingInstanceWith.isActiveAndEnabled)
-            {
-                return;
-            }
-            if (overrideExistingInstanceWith != _instance)
+            // If we allowInactiveDuplicates, then we won't override the existing instance if the passed in new instance isn't active...
+            // this should probably just not be supported to be honest, but I'll clean this up later(tm)
+            if (!(allowInactiveDuplicates && !overrideExistingInstanceWith.isActiveAndEnabled) && overrideExistingInstanceWith != _instance)
             {
                 Destroy(_instance);
                 _instance = overrideExistingInstanceWith;
+                return true;
             }
+            return false;
         } 
         else
         {
@@ -45,12 +46,36 @@ public abstract class Singleton<T> : MonoBehaviour
             {
                 Debug.LogError($"Multiple Singleton components of type {typeof(T)} were detected. The latest one was deleted.");
                 Destroy(this);
+                return false;
             }
             else
             {
                 CheckForAndDestroyDuplicates(allowInactiveDuplicates);
                 _instance = FindObjectOfType<T>();
+                return true;
             }
+        }
+    }
+
+    /// <summary>
+    /// This should be called in Awake inside of all singleton components. This sets up _instance to be the component instance,
+    /// enforces singleton-ness, and logs an error if one or more duplicates of the component are detected.
+    /// </summary>
+    /// /// <param name="destroyIfInstanceIsAlreadySet">If _instance is already set, the passed in GameObject will be destroyed.</param>
+    /// <param name="allowInactiveDuplicates">If this is true, inactive duplicates of this singleton component will not be deleted, 
+    /// nor will errors be logged because of them</param>
+    /// <returns>True if _instance was successfully updated, false otherwise</returns>
+    protected virtual bool InitializeSingleton(GameObject destroyIfInstanceIsAlreadySet, bool allowInactiveDuplicates = false)
+    {
+        if (destroyIfInstanceIsAlreadySet != null && _instance != null)
+        {
+            Destroy(destroyIfInstanceIsAlreadySet);
+            return true;
+        } else
+        {
+            CheckForAndDestroyDuplicates(allowInactiveDuplicates);
+            _instance = FindObjectOfType<T>();
+            return false;
         }
     }
 

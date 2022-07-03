@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -18,9 +16,6 @@ using UnityEngine.UI;
 /// <remarks>Author: Travis</remarks>
 public class UINavigationManager : Singleton<UINavigationManager>
 {
-    // ** This class cannot be converted to Singleton without tons of issues :( **
-    //private static UINavigationManager _instance;
-
     private UnityEngine.EventSystems.EventSystem eventSystem;
 
     [Tooltip("Match each UI panel GameObject with all the navigatable buttons inside of it.")]

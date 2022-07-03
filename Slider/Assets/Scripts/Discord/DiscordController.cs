@@ -33,7 +33,7 @@ public class DiscordController : MonoBehaviour
 
             UpdateActivity();
 
-            Debug.Log("Starting Rich Presence");
+            //Debug.Log("Starting Rich Presence");
         }
     }
 
