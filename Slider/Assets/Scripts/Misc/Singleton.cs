@@ -61,15 +61,27 @@ public abstract class Singleton<T> : MonoBehaviour
     /// This should be called in Awake inside of all singleton components. This sets up _instance to be the component instance,
     /// enforces singleton-ness, and logs an error if one or more duplicates of the component are detected.
     /// </summary>
-    /// /// <param name="destroyIfInstanceIsAlreadySet">If _instance is already set, the passed in GameObject will be destroyed.</param>
+    /// /// <param name="ifInstanceAlreadySetThenDestroy">If _instance is already set, the passed in GameObject or MonoBehaviour will be destroyed.</param>
     /// <param name="allowInactiveDuplicates">If this is true, inactive duplicates of this singleton component will not be deleted, 
     /// nor will errors be logged because of them</param>
     /// <returns>True if _instance was successfully updated, false otherwise</returns>
-    protected virtual bool InitializeSingleton(GameObject destroyIfInstanceIsAlreadySet, bool allowInactiveDuplicates = false)
+    protected virtual bool InitializeSingleton(object ifInstanceAlreadySetThenDestroy, bool allowInactiveDuplicates = false)
     {
-        if (destroyIfInstanceIsAlreadySet != null && _instance != null)
+        if (ifInstanceAlreadySetThenDestroy != null && _instance != null)
         {
-            Destroy(destroyIfInstanceIsAlreadySet);
+            if (ifInstanceAlreadySetThenDestroy is MonoBehaviour behaviour)
+            {
+                Destroy(behaviour);
+            }
+            else if (ifInstanceAlreadySetThenDestroy is GameObject gObject)
+            {
+                Destroy(gObject);
+            }
+            else
+            {
+                Debug.Log("The parameter ifInstanceAlreadySetThenDestroy was neither a MonoBehaviour nor a GameObject, which is not allowed.");
+                return false;
+            }
             return true;
         } else
         {

@@ -8,11 +8,16 @@ using UnityEngine.SceneManagement;
 /// Handles Discord Rich Presence. Should probably be attached to GameManager or
 /// some other object which exists at game start and persists through scenes.
 /// </summary>
-public class DiscordController : MonoBehaviour
+public class DiscordController : Singleton<DiscordController>
 {
     private const long CLIENT_ID = 953335446056882186;
     private Discord.Discord discord; // This looks hilarious but it's how the SDK works
     private long secondsSinceEpoch; // Used for tracking time elapsed
+
+    private void Awake()
+    {
+        InitializeSingleton(ifInstanceAlreadySetThenDestroy:this);
+    }
 
     void Start()
     {
@@ -20,7 +25,7 @@ public class DiscordController : MonoBehaviour
         {
             // Going with not requiring Discord seems like the safer option to me.
             // Not entirely sure of the consequences here to be honest
-            discord = new Discord.Discord(CLIENT_ID, (ulong)Discord.CreateFlags.NoRequireDiscord);
+            discord = new Discord.Discord(CLIENT_ID, (ulong) Discord.CreateFlags.NoRequireDiscord);
             //InvokeRepeating("UpdateActivity", 0, 5);
 
             // We need our epoch time for tracking time elapsed

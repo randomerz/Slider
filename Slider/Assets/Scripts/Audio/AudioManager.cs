@@ -30,7 +30,7 @@ public class AudioManager : Singleton<AudioManager>
 
     void Awake()
     {
-        if (InitializeSingleton(destroyIfInstanceIsAlreadySet:gameObject))
+        if (InitializeSingleton(ifInstanceAlreadySetThenDestroy:gameObject))
         {
             return;
         }
