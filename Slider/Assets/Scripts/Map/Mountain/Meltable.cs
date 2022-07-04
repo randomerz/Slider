@@ -9,7 +9,10 @@ public class Meltable : MonoBehaviour
     public Sprite frozenSprite; //C: switch to animation later maybe? but that doesn't sound fun
     public Sprite meltedSprite;
     public SpriteRenderer spriteRenderer;
+
+#pragma warning disable
     public Collider2D collider;
+#pragma warning restore
 
     public bool isFrozen = true;
 
