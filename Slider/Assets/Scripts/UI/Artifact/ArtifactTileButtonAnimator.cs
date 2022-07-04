@@ -34,7 +34,8 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             isPushedDown = false;
             sliderImage.rectTransform.anchoredPosition = new Vector3(0, 0);
             highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, 0);
-            pushedDownFrame.gameObject.SetActive(false);
+            this.gameObject.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+            this.gameObject.transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
         }
     }
 
@@ -66,7 +67,8 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         else if (isHighlighted && !value && !isLightning)
         {
             isHighlighted = false;
-            highlightedFrame.gameObject.SetActive(false);
+            this.gameObject.transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
+            this.gameObject.transform.GetChild(2).GetChild(1).gameObject.SetActive(false);
         }
     }
 
