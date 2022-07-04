@@ -36,7 +36,7 @@ public class InputRebindButton : MonoBehaviour
     /// <returns></returns>
     private IEnumerator IRemapMovementKeybind()
     {
-        var action = inputActions.FindAction("Move");
+        var action = Controls.Bindings.FindAction("Move");
         action.Disable();
 
         var rebindOperation = action.PerformInteractiveRebinding()
@@ -74,7 +74,9 @@ public class InputRebindButton : MonoBehaviour
         rebindOperation.Dispose(); // Stop memory leaks
         action.Enable();
 
-        PlayerPrefs.SetString("rebinds", inputActions.SaveBindingOverridesAsJson());
+        PlayerPrefs.SetString("rebinds", Controls.Bindings.SaveBindingOverridesAsJson());
+        Controls.LoadBindings();
+
     }
 
     private void UpdateButtonText()
@@ -109,24 +111,26 @@ public class InputRebindButton : MonoBehaviour
                 + ": " , Controls.GetBindingDisplayString(action).ToUpper().Replace("PRESS ", "").Replace(" ARROW", ""));
         }
 
-        PlayerPrefs.SetString("rebinds", inputActions.SaveBindingOverridesAsJson());
+        PlayerPrefs.SetString("rebinds", Controls.Bindings.SaveBindingOverridesAsJson());
         Controls.LoadBindings();
     }
 
     private string ShrinkFontSizeIfNeeded(string s1, string s2) 
+    {
+        if(isPauseMenu)
+            s1 = "";
+        int length = (s1 + s2).Length;
+        if(length > maxLineLength) 
         {
-            if(isPauseMenu)
-                s1 = "";
-            int length = (s1 + s2).Length;
-            if(length > maxLineLength) {
             buttonText.fontSize = 9.5f;
             return s1 + "\n" + s2;
-            }
-            else {
+        }
+        else 
+        {
             buttonText.fontSize = 14;
             return s1 + s2;
-            }
         }
+    }
 
     public enum Control
     {

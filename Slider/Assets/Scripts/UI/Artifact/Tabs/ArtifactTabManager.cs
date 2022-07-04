@@ -218,10 +218,9 @@ public class ArtifactTabManager : MonoBehaviour
             return;
         }
         uiArtifactMenus.uiArtifact.FragRealignCheckAndSwap(middle, empty);
+        uiArtifactMenus.uiArtifact.UpdatePushedDowns(null, null);
         uiArtifactMenus.uiArtifact.DeselectCurrentButton();
-        middle.FragLightningPreview(false);
-        empty.FragLightningPreview(false);
-        UIArtifact.DisableLightning();
+        //FragRearrangeOnHoverExit();
     }
 
     public void FragRearrangeOnHoverEnter()
@@ -231,8 +230,10 @@ public class ArtifactTabManager : MonoBehaviour
         middle = UIArtifact.GetButton(1, 1);
         empty = uiArtifactMenus.uiArtifact.GetButton(9);
         if (middle.isTileActive) UIArtifact.SetLightningPos(1, 1);
-        middle.FragLightningPreview(true);
-        empty.FragLightningPreview(true);
+        middle.SetLightning(true);
+        empty.SetLightning(true);        
+        //middle.FragLightningPreview(true);
+        //empty.FragLightningPreview(true);
     }
 
     public void FragRearrangeOnHoverExit()
@@ -240,8 +241,10 @@ public class ArtifactTabManager : MonoBehaviour
         rearrangingFragTabAnimator.SetFloat("speed", 1);
         //Reset preview
         UIArtifact.DisableLightning();
-        middle.FragLightningPreview(false);
-        empty.FragLightningPreview(false);
+        middle.SetLightning(false);
+        empty.SetLightning(false);
+        //middle.FragLightningPreview(false);
+        //empty.FragLightningPreview(false);
     }
     #endregion
 }

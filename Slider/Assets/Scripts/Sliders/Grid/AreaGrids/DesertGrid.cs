@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class DesertGrid : SGrid
 {
     public static DesertGrid instance;
@@ -21,7 +22,10 @@ public class DesertGrid : SGrid
 
     public DiceGizmo dice1;
     public DiceGizmo dice2;
+
+#pragma warning disable
     private bool diceWon = false;
+#pragma warning restore
 
     private bool VIPHelped = false;
 

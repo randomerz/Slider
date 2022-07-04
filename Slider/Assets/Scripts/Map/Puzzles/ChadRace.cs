@@ -34,8 +34,10 @@ public class ChadRace : MonoBehaviour
     private bool inStart;
     private float startTime;
 
+#pragma warning disable
     // Keeps track if this is the first time the play has tried the race with the current tile positions
     private bool firstTime;
+#pragma warning restore
 
     private float jungleChadEnd;
 

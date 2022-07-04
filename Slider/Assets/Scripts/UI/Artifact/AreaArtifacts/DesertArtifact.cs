@@ -162,8 +162,6 @@ public class DesertArtifact : UIArtifact
         // Debug.Log(last);
         return last;
     }
-    //L: updateGrid - if this is false, it will just update the UI without actually moving the tiles.
-    //L: Returns if the swap was successful.
     //Chen: CheckAndSwap now calls each of the Slide() functions
     protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
@@ -197,6 +195,7 @@ public class DesertArtifact : UIArtifact
             {
                 return false;
             }
+            MoveMadeOnArtifact?.Invoke(this, null);
             QueueCheckAndAdd(swap);
             QueueCheckAfterMove(this, null);
             DeselectCurrentButton();
@@ -210,6 +209,7 @@ public class DesertArtifact : UIArtifact
         }
     }
 
+    #region SSlideSwap
     private List<Movement> GetSlideMoves(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
     {
         Vector2Int lastSwap = new Vector2Int(-1, -1);
@@ -242,7 +242,6 @@ public class DesertArtifact : UIArtifact
 
         return swaps;
     }
-
     //Chen: Below are the 4 methods for sliding all tiles. UI swapping is handled here
     public SSlideSwap SlideRight()
     {
@@ -308,4 +307,5 @@ public class DesertArtifact : UIArtifact
         }
         return new SSlideSwap(swaps);
     }
+    #endregion
 }

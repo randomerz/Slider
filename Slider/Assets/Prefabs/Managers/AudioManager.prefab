@@ -107,6 +107,13 @@ MonoBehaviour:
     loop: 0
     doRandomPitch: 1
     source: {fileID: 0}
+  - name: TFT Bell
+    clip: {fileID: 8300000, guid: 4cad7f9ba00cc6c41bf0f4d532ee6903, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
   - name: Power On
     clip: {fileID: 8300000, guid: 63ed6873c5cde2d4bab704f4f53bcd65, type: 3}
     volume: 1
@@ -246,3 +253,36 @@ MonoBehaviour:
         Data4: 0
       Path: 
     emitter: {fileID: 0}
+  soundDampenCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -2
+      outSlope: -2
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 0
+      inSlope: -0.011235956
+      outSlope: -0.011235956
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 1
+      outWeight: 1
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

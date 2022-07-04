@@ -14,7 +14,7 @@ public class UIManager : Singleton<UIManager>
     public static System.EventHandler<System.EventArgs> OnCloseAllMenus;
     
     public bool isGamePaused;
-    // public bool isArtifactOpen;
+    public bool isArtifactOpen;
     public static bool canOpenMenus = true;
     private static bool couldOpenMenusLastFrame = true; // DC: maximum jank because timing
 
@@ -22,6 +22,7 @@ public class UIManager : Singleton<UIManager>
     public GameObject optionsPanel;
     public GameObject controlsPanel;
     public GameObject advOptionsPanel;
+    public GameObject eventSystem;
     public Slider sfxSlider;
     public Slider musicSlider;
     public Slider screenShakeSlider;
@@ -40,8 +41,19 @@ public class UIManager : Singleton<UIManager>
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
         autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
     }
+    private void OnEnable() {
+        SceneManager.activeSceneChanged += OnSceneChange;
+        //eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(SceneManager.GetActiveScene().name));
+    }
+
+
+    private void OnSceneChange (Scene curr, Scene next)
+    {
+        //eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(next.name));
+    }
 
     private void OnDisable() {
+        SceneManager.activeSceneChanged -= OnSceneChange;
         if (!canOpenMenus)
         {
             Debug.LogWarning("UIManager was disabled without closing the menu!");
@@ -58,6 +70,8 @@ public class UIManager : Singleton<UIManager>
 
     private void OnPressPause()
     {
+        if(GameUI.instance.isMenuScene)
+            return;
         if (isGamePaused && pausePanel.activeSelf)
         {
             ResumeGame();
@@ -91,6 +105,7 @@ public class UIManager : Singleton<UIManager>
         return _instance.isGamePaused;// || _instance.isArtifactOpen;
     }
 
+
     public static void CloseUI()
     {
         _instance.ResumeGame();
@@ -102,7 +117,7 @@ public class UIManager : Singleton<UIManager>
         Time.timeScale = 1;
         isGamePaused = false;
         UINavigationManager.CurrentMenu = null;
-        
+       // UIManager.canOpenMenus = true;
         OnResume?.Invoke(this, null);
     }
 
@@ -136,6 +151,7 @@ public class UIManager : Singleton<UIManager>
 
     public void OpenPause()
     {
+       // UIManager.canOpenMenus = false;
         if (!couldOpenMenusLastFrame)
             return;
 
@@ -241,7 +257,8 @@ public class UIManager : Singleton<UIManager>
         ResumeGame();
 
         // Undo lazy singletons
-        Player.GetInstance().ResetInventory();
+        if(Player.GetInstance() != null)
+            Player.GetInstance().ResetInventory();
 
         SceneManager.LoadScene("MainMenu");
     }

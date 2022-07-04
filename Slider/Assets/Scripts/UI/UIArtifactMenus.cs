@@ -43,7 +43,8 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => _instance.OnPressArtifact());
         //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.ArtifactRight, context => _instance.screenAnimator.NextScreen());
         //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.ArtifactLeft, context => _instance.screenAnimator.PrevScreen());
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.CycleArtifactScreens, context => _instance.screenAnimator.CycleScreen());
+        //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.CycleArtifactScreens, context => _instance.screenAnimator.CycleScreen());
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.CycleEquip, context => _instance.screenAnimator.CycleScreen());
     }
 
     private void OnEnable() 
@@ -83,6 +84,10 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         //_instance.controls.UI.ArtifactLeft.performed += context => _instance.screenAnimator.PrevScreen();
     }*/
 
+    public static bool IsArtifactOpen()
+    {
+        return _instance.isArtifactOpen;
+    }
 
     private void OnPressArtifact()
     {
@@ -90,7 +95,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         {
             CloseArtifact();
         }
-        else
+        else if(!UIManager.IsUIOpen())
         {
             OpenArtifact();
         }
