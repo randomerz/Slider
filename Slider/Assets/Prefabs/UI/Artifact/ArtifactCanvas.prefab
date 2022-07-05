@@ -5193,6 +5193,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2620790811287915176}
     m_Modifications:
+    - target: {fileID: 137426807531386564, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 173327934864171174, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -5285,6 +5289,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button1
       objectReference: {fileID: 0}
+    - target: {fileID: 3751887385133121226, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 3939992796814276472, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
       propertyPath: x
       value: 0
@@ -5317,6 +5325,14 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 829623158035367200, guid: 0385927757527f94e88f3aa90bfa9870, type: 3}
+    - target: {fileID: 4833714464752738808, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
+      propertyPath: isForcedDown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5255975379809269057, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7803031415129755747, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}
       propertyPath: m_Delegates.Array.size
       value: 4
