@@ -129,7 +129,7 @@ public class UIArtifact : MonoBehaviour
         }
         else
         {
-            SelectButton(dragged);
+            SelectButton(dragged, true);
         }
 
         ArtifactTileButton hovered = null;
@@ -206,14 +206,14 @@ public class UIArtifact : MonoBehaviour
             // b.buttonAnimator.sliderImage.sprite = b.emptySprite;
             if(b == hovered && !swapped) 
             {
-                SelectButton(hovered);
+                SelectButton(hovered, true);
                 // CheckAndSwap(dragged, hovered);
                 // SGridAnimator.OnSTileMoveEnd += dragged.AfterStileMoveDragged;
                 swapped = true;
             }
         }
         if (!swapped) {
-            SelectButton(dragged);
+            SelectButton(dragged, true);
         }
         else
         {
@@ -239,7 +239,7 @@ public class UIArtifact : MonoBehaviour
         //OnButtonInteract?.Invoke(this, null);
     }
     
-    public virtual void SelectButton(ArtifactTileButton button)
+    public virtual void SelectButton(ArtifactTileButton button, bool isDragged = false)
     {
         // Check if on movement cooldown
         //if (SGrid.GetStile(button.islandId).isMoving)
@@ -278,7 +278,7 @@ public class UIArtifact : MonoBehaviour
                 return;
             }
             //tile can only go one location so just auto move 
-            else if(moveOptionButtons.Count == 1 && SettingsManager.AutoMove)
+            else if(moveOptionButtons.Count == 1 && SettingsManager.AutoMove && !isDragged)
             {
                 currentButton = button;
                 currentButton.SetSelected(true);
