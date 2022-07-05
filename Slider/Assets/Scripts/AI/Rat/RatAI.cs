@@ -114,7 +114,10 @@ public class RatAI : MonoBehaviour
     private void Start()
     {
         ConstructBehaviourTree();
-        StealPiece();
+        if (objectToSteal == null)
+            Debug.LogWarning("ObjectToSteal is null!");
+        else
+            StealPiece();
     }
 
     private void OnEnable()
