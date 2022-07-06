@@ -224,7 +224,6 @@ public class VillageGrid : SGrid
     public void CheckChadMoved(object sender, SGridAnimator.OnTileMoveArgs e) {
         if (GetStile(8).isTileActive && e.stile.islandId == 8 && !chadFell && chadMet && chadJumped) {
             chadFell = true;
-            chad.transform.GetChild(0).GetComponent<Animator>().SetBool("isTipping", true);
             StartCoroutine(ChadFall());
         }
     }
