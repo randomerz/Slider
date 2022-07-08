@@ -240,7 +240,7 @@ public class ArtifactTabManager : MonoBehaviour
     {
         rearrangingFragTabAnimator.SetFloat("speed", 1);
         //Reset preview
-        UIArtifact.DisableLightning();
+        UIArtifact.DisableLightning(true);
         middle.SetLightning(false);
         empty.SetLightning(false);
         //middle.FragLightningPreview(false);

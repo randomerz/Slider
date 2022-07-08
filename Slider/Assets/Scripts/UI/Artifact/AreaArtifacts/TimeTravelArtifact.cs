@@ -55,26 +55,42 @@ public class TimeTravelArtifact : UIArtifact
             isInPast = PlayerIsInPast;
             SetButtonsAndBackground();
         }
+        if (desynchIslandId != -1)
+        {
+            ArtifactTileButton desyncedButton = GetButton(desynchIslandId);
+            //Debug.Log(desyncedButton.x + " " + desyncedButton.y + ", " + desynchLocation.x + " " + desynchLocation.y);
+            if (desynchLocation.x != desyncedButton.x || desynchLocation.y != desyncedButton.y)
+            {
+                ArtifactTileButton pastButton = desynchIslandId <= 9 ? GetButton(FindAltId(desynchIslandId)) : GetButton(desynchIslandId);
+                if (isInPast) SetLightningPos(pastButton);
+                else SetLightningPos(GetButton(FindAltId(desynchIslandId)));
+            }
+            else DisableLightning(false);
+        }
+        else DisableLightning(true);
     }
 
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs interactArgs)
     {
-        if (interactArgs.drop)
+        STile dropTile = interactArgs.stile;
+        if (dropTile != null)
         {
-            STile dropTile = interactArgs.stile;
-            if(dropTile != null)
+            if(interactArgs.drop)
             {
                 desynchLocation = FindAltCoords(dropTile.x, dropTile.y);
                 desynchIslandId = FindAltId(dropTile.islandId);
+                GetButton(desynchIslandId).SetLightning(true);
+                GetButton(dropTile.islandId).SetLightning(true);
                 onDesynchStart.Invoke();
             }
-        }
-        else if (desynchIslandId != -1) //L: Might break smth, but techincally desync only ends if it began in the first place.
-        {
-            onDesynchEnd.Invoke();
-            RestoreOnEndDesynch();
-            desynchLocation = new Vector2Int(-1, -1);
-            desynchIslandId = -1;
+            else if (desynchIslandId != -1) //L: Might break smth, but techincally desync only ends if it began in the first place.
+            {
+                onDesynchEnd.Invoke();
+                RestoreOnEndDesynch();
+                desynchLocation = new Vector2Int(-1, -1);
+                desynchIslandId = -1;
+            }
+            GetButton(dropTile.islandId).buttonAnimator.SetAnchored(interactArgs.drop);
         }
     }
 
@@ -105,6 +121,9 @@ public class TimeTravelArtifact : UIArtifact
                 newGrid[x + offset, y] = FindAltId(currGrid[x - offset + 3,y]); 
             }
         }
+        DisableLightning(true);
+        GetButton(desynchIslandId).SetLightning(false);
+        GetButton(FindAltId(desynchIslandId)).SetLightning(false);
 
         /* C: you can uncomment this if desynching isn't working, it might help locate the source of the problem
         string output = "";
