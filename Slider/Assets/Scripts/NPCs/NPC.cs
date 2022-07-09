@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class NPC : MonoBehaviour
 {
@@ -13,7 +15,7 @@ public class NPC : MonoBehaviour
         public STile to;
 
         //Use if from or to is null.
-        public Vector2Int fromPos;  
+        public Vector2Int fromPos;
         public Vector2Int toPos;
 
         public Vector2Int[] dirs;  //Check from + dir = to in order to check the crossing is valid.
@@ -36,33 +38,28 @@ public class NPC : MonoBehaviour
     public string characterName;
     [SerializeField] private float speed;
     public NPCAnimatorController animator;
-    public List<DialogueConditionals> dconds;
+    [FormerlySerializedAs("dconds")]
+    public List<NPCAction> npcActions;
 
     [SerializeField] private DialogueDisplay dialogueDisplay;
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private bool spriteDefaultFacingLeft;
 
+    //Dconds
+    private int currDcondIndex;
+    private Dictionary<NPCAction, int> dcondToCurrDchainIndex;
 
     //Dialogue
-    public bool DialogueEnabled => gDialogueEnabled && dialogueEnabled;
+    public static bool dialogueEnabledAllNPC = true;
 
-    public static bool gDialogueEnabled = true; //Dialogue Enabling for all NPCs.
+    private bool canGiveDialogue;
+    private bool dialogueBoxIsActive;
+    private bool currDchainExhausted;
+    private bool playerInDialogueTrigger;
+    private bool isTypingDialogue;
+    private bool waitingForPlayerAction;
 
-    private bool dialogueEnabled;   //The NPC can give dialogue
-    private bool dialogueActive;    //The NPC is in the process of giving dialogue (regardless of if it's finished)
-    private bool playerInTrigger;   //The player is in the dialogue trigger.
-    private bool startedTyping;     //The NPC is in the middle of typing the dialogue
-    private bool waitingForPlayerContinue;  //The NPC is waiting for the player to press e to continue its chain.
-    private bool dChainExhausted;
-
-    private int currDconds;    //indices to get the right dialogue
-    private int currDialogueInChain;
-
-    private Dictionary<int, int> currDialogueInDconds;  //Keeps track of each dialogue in the given dconds.
-
-
-
-    private Coroutine waitNextDialogueCoroutine;
+    private Coroutine delayBeforeNextDialogueCoroutine;
 
     //Walking
     private STile currentStileUnderneath;
@@ -71,24 +68,30 @@ public class NPC : MonoBehaviour
     private List<STileCrossing> remainingStileCrossings;
     private List<Transform> remainingPath;
     private Coroutine walkCoroutine;
-
     private GameObject poofParticles;
+
+    private bool DialogueEnabled => dialogueEnabledAllNPC && canGiveDialogue;
+
+    private NPCAction CurrDcond => npcActions[currDcondIndex];
+
+    private int CurrDchainIndex {
+        get {
+            return dcondToCurrDchainIndex[CurrDcond];
+        }
+
+        set
+        {
+            dcondToCurrDchainIndex[CurrDcond] = value;
+        }
+    }
 
     private void Awake()
     {
-        dialogueEnabled = true;
-        waitNextDialogueCoroutine = null;
+        canGiveDialogue = true;
 
-        for(int i = 0; i < dconds.Count; i++)
-        {
-            dconds[i].priority = i+1;
-        }
+        SetDcondPrioritiesToArrayPos();
 
-        currDialogueInDconds = new Dictionary<int, int>();
-        for (int i = 0; i < dconds.Count; i++)
-        {
-            currDialogueInDconds[i] = 0;
-        }
+        InitializeCurrDchainIndices();
     }
 
     private void OnEnable()
@@ -107,258 +110,270 @@ public class NPC : MonoBehaviour
         SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
     }
 
-    // might need optimizing
     void Update()
     {
-        foreach (DialogueConditionals d in dconds)
+        CheckAllDconds();
+
+        if (CanUpdateDialogue())
         {
-            d.CheckConditions();
+            PollForNewDialogue();
         }
 
-        bool lastDialogueFinished = dconds[currDconds].dialogueChain.Count > 0 && dconds[currDconds].dialogueChain.Count - 1 == currDialogueInChain && dialogueDisplay.textTyperText.finishedTyping;
-        bool canUpdateDialogue = (dconds[currDconds].dialogueChain.Count > 0 && !dconds[currDconds].dialogueChain[currDialogueInChain].dontInterrupt) || lastDialogueFinished;
-
-        if (dChainExhausted && !playerInTrigger)
+        bool finishedTypingCurrDialogue = isTypingDialogue && dialogueDisplay.textTyperText.finishedTyping;
+        if (finishedTypingCurrDialogue)
         {
-            dChainExhausted = false;
-            DeactivateDialogue();
+            HandleDialogueFinished();
         }
 
-        //Poll for the new dialogue, and update it if it is different.
-        int newDialogue = CurrentDialogue();
-        if (currDconds != newDialogue && DialogueEnabled && canUpdateDialogue)
+        if (DialogueShouldDeactivate())
         {
-            ChangeDialogue(newDialogue);
-            if (dialogueActive)
-            {
-                if (playerInTrigger)
-                {
-                    TypeNextDialogue();
-                } else
-                {
-                    DeactivateDialogue();
-                }
-            }
-        }
-
-        if (startedTyping && dialogueDisplay.textTyperText.finishedTyping)
-        {
-            startedTyping = false;
-            FinishDialogue();
-        }
-
-        if (dialogueActive && !playerInTrigger)
-        {
-            if (canUpdateDialogue)
-            {
-                //Keep going until the player reaches the first non-don't interrupt (or last dialogue) before disabling dialogue.
-                DeactivateDialogue();
-            }
+            DeactivateDialogueBox();
         }
     }
 
     private void FixedUpdate()
     {
-        // updating childing
         currentStileUnderneath = STile.GetSTileUnderneath(transform, currentStileUnderneath);
-        // Debug.Log("Currently on: " + currentStileUnderneath);
-
-        /*  Don't reparent right away bc this causes some problems with NPCs that are childs of other moving objects (boats, etc.)
-        if (currentStileUnderneath != null)
-        {
-            transform.SetParent(currentStileUnderneath.transform);
-        }
-        else
-        {
-            transform.SetParent(null);
-        }
-        */
     }
 
     #region Dialogue
-
-    //OnTriggerEnter and OnTriggerExit handlers.
     public void DialogueTriggerEnter()
     {
-        playerInTrigger = true;
+        playerInDialogueTrigger = true;
 
-        var dChain = dconds[currDconds].dialogueChain;
-        if (dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt && dialogueActive)
+        bool shouldStartTypingDialogue = !CurrDchainIsEmpty() && !NPCGivingDontInterruptDialogue();
+        if (shouldStartTypingDialogue)
         {
-            //Don't retype the don't interrupt dialogue if it's already been typed.
-            return;
-        }
+            if (CurrDcond.alwaysStartFromBeginning)
+            {
+                CurrDchainIndex = 0;
+                currDchainExhausted = false;
+            }
 
-        if (dconds[currDconds].alwaysStartFromBeginning)
-        {
-            currDialogueInChain = 0;
-            currDialogueInDconds[currDconds] = currDialogueInChain;
+            TypeCurrentDialogue();
         }
-
-        TypeNextDialogue();
     }
 
     public void DialogueTriggerExit()
     {
-        playerInTrigger = false;
+        playerInDialogueTrigger = false;
 
-        var dChain = dconds[currDconds].dialogueChain;
-        if (!(dChain.Count > 0 && dChain[currDialogueInChain].dontInterrupt))
+        if (DialogueShouldDeactivate())
         {
-            DeactivateDialogue();
-        }
-    }
-
-    //Player entering the trigger and also from moving to the next dialogue in the chain.
-    public void TypeNextDialogue()
-    {
-        if (DialogueEnabled && dconds[currDconds].dialogueChain.Count > 0)
-        {
-            dconds[currDconds].OnDialogueChainStart(currDialogueInChain);
-            dialogueDisplay.DisplaySentence(dconds[currDconds].GetDialogue(currDialogueInChain));
-
-            startedTyping = true;
-            dialogueActive = true;
-        }
-    }
-
-    public void DeactivateDialogue()
-    {
-        dialogueDisplay.FadeAwayDialogue();
-
-        //Don't allow player to continue conversation.
-        if (waitNextDialogueCoroutine != null)
-        {
-            StopCoroutine(waitNextDialogueCoroutine);
-            waitNextDialogueCoroutine = null;
-        }
-
-        //Dialogue that doesn't repeat should be skipped now.
-        var dChain = dconds[currDconds].dialogueChain;
-        if (dChain.Count > 0)
-        {
-            if (dChain[currDialogueInChain].doNotRepeatAfterTriggered)
-            {
-                SetNextDialogueInChain();
-            }
-        }
-
-        waitingForPlayerContinue = false;
-        dialogueActive = false;
-        startedTyping = false;
-    }
-
-    public int CurrentDialogue()
-    {
-        int curr = -1;
-        int max = 0;
-        for (int i = 0; i< dconds.Count; i++)
-        {
-            if (dconds[i].GetPrio() > max)
-            {
-                curr = i;
-                max = dconds[i].GetPrio();
-            }
-        }
-        if (curr == -1)
-        {
-            Debug.LogError("No suitable dialogue can be displayed!");
-        }
-        return curr;
-    }
-
-    public void ClearDialogue()
-    {
-        dconds[currDconds].KillDialogue();
-    }
-
-    public void SetNextDialogue()
-    {
-        if (currDconds < dconds.Count - 1)
-        {
-            dconds[currDconds + 1].SetPrio(dconds[currDconds].GetPrio());
+            DeactivateDialogueBox();
         }
     }
 
     public void SetDialogueEnabled(bool value)
     {
-        dialogueEnabled = value;
+        canGiveDialogue = value;
     }
 
-    private void ChangeDialogue(int newDialogue)
+    public void TypeCurrentDialogue()
     {
-        currDconds = newDialogue;
-        currDialogueInChain = currDialogueInDconds[currDconds];
-        if (dconds[newDialogue].dialogueChain.Count > 0)
+        if (DialogueEnabled && !CurrDchainIsEmpty())
         {
-            //Show new message ping if the dialogue actually exists.
-            dialogueDisplay.NewMessagePing();
-        } else
-        {
-            dialogueDisplay.ReadMessagePing();
-        }
-        
-        dconds[currDconds].onDialogueChanged?.Invoke();
-    }
+            dialogueDisplay.DisplaySentence(CurrDcond.GetDialogueString(CurrDchainIndex));
 
-    private void FinishDialogue()
-    {
-        dconds[currDconds].OnDialogueChainEnd(currDialogueInChain);
-        waitNextDialogueCoroutine = StartCoroutine(WaitForNextDialogue());
-    }
+            isTypingDialogue = true;
+            dialogueBoxIsActive = true;
 
-    private IEnumerator WaitForNextDialogue()
-    {
-        DialogueConditionals.Dialogue curr = dconds[currDconds].dialogueChain[currDialogueInChain];
-        if (curr.waitUntilPlayerAction)
-        {
-            waitingForPlayerContinue = true;
-            yield return null;
-        }
-        else
-        {
-            yield return new WaitForSeconds(curr.delayAfterFinishedTyping);
-            SetNextDialogueInChain(true);
-        }
-    }
-
-    private void SetNextDialogueInChain(bool triggerNext = false)
-    {
-        //The dialogue will just chill on the last line if it's already been exhausted (could maybe customize to repeat the last line or start from the beginning).
-        var dChain = dconds[currDconds].dialogueChain;
-        if (currDialogueInChain < dChain.Count - 1)
-        {
-            currDialogueInChain++;
-            currDialogueInDconds[currDconds] = currDialogueInChain;
-            if (triggerNext)
-            {
-                TypeNextDialogue();
-            }
-        }
-        else
-        {
-            dconds[currDconds].OnDialogueChainExhausted();
-            dChainExhausted = true;
+            CurrDcond.OnDialogueChainStart(CurrDchainIndex);
         }
     }
 
     private void OnPlayerAction(object sender, System.EventArgs e)
     {
-        if (dialogueActive)
+        if (dialogueBoxIsActive)
         {
-            if (waitingForPlayerContinue)
+            if (waitingForPlayerAction)
             {
-                //Player triggered next dialogue.
+                waitingForPlayerAction = false;
                 SetNextDialogueInChain(true);
-                waitingForPlayerContinue = false;
             }
-            else if (startedTyping && !dialogueDisplay.textTyperText.finishedTyping)
+            else if (isTypingDialogue)
             {
-                //Player skipped through text.
-                dialogueDisplay.textTyperText.TrySkipText();
-                dialogueDisplay.textTyperBG.TrySkipText();
+                SkipText();
             }
         }
+    }
+
+    private void DeactivateDialogueBox()
+    {
+        dialogueDisplay.FadeAwayDialogue();
+
+        DontAllowDialogueToContinue();
+
+        //Dialogue that doesn't repeat should be skipped now.
+        if (!CurrDchainIsEmpty() && CurrentDialogue().doNotRepeatAfterTriggered)
+        {
+            SetNextDialogueInChain();
+        }
+
+        dialogueBoxIsActive = false;
+        isTypingDialogue = false;
+    }
+
+    private void PollForNewDialogue()
+    {
+        int maxPrioDialogue = GetDcondIndexWithMaxPriority();
+        bool dialogueIsNew = currDcondIndex != maxPrioDialogue;
+        if (dialogueIsNew)
+        {
+            ChangeDialogue(maxPrioDialogue);
+
+            if (dialogueBoxIsActive && playerInDialogueTrigger)
+            {
+                TypeCurrentDialogue();
+            }
+        }
+    }
+
+    private void ChangeDialogue(int newDialogue)
+    {
+        currDcondIndex = newDialogue;
+        currDchainExhausted = false;
+
+        dialogueDisplay.SetMessagePing(!CurrDchainIsEmpty());
+
+        CurrDcond.onDialogueChanged?.Invoke();
+    }
+
+    private void HandleDialogueFinished()
+    {
+        isTypingDialogue = false;
+        CurrDcond.OnDialogueChainEnd(CurrDchainIndex);
+
+        if (CurrentDialogue().waitUntilPlayerAction)
+        {
+            waitingForPlayerAction = true;
+        }
+        else
+        {
+            delayBeforeNextDialogueCoroutine = StartCoroutine(SetNextDialogueInChainAfterDelay(CurrentDialogue().delayAfterFinishedTyping));
+            SetNextDialogueInChain(true);
+        } 
+    }
+
+    private IEnumerator SetNextDialogueInChainAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SetNextDialogueInChain(true);
+    }
+
+    private void SetNextDialogueInChain(bool typeNextDialogue = false)
+    {
+        var dChain = CurrDcond.dialogueChain;
+        if (CurrDchainIndex < dChain.Count - 1)
+        {
+            CurrDchainIndex++;
+            if (typeNextDialogue)
+            {
+                TypeCurrentDialogue();
+            }
+        }
+        else
+        {
+            currDchainExhausted = true;
+            CurrDcond.OnDialogueChainExhausted();
+        }
+    }
+
+    private void DontAllowDialogueToContinue()
+    {
+        waitingForPlayerAction = false;
+
+        if (delayBeforeNextDialogueCoroutine != null)
+        {
+            StopCoroutine(delayBeforeNextDialogueCoroutine);
+            delayBeforeNextDialogueCoroutine = null;
+        }
+    }
+
+    private void SkipText()
+    {
+        dialogueDisplay.textTyperText.TrySkipText();
+        dialogueDisplay.textTyperBG.TrySkipText();
+    }
+
+    private int GetDcondIndexWithMaxPriority()
+    {
+        int maxPrioIndex = -1;
+        int maxPrio = 0;
+        for (int i = 0; i < npcActions.Count; i++)
+        {
+            if (npcActions[i].GetPrio() > maxPrio)
+            {
+                maxPrioIndex = i;
+                maxPrio = npcActions[i].GetPrio();
+            }
+        }
+        if (maxPrioIndex == -1)
+        {
+            Debug.LogError("No suitable dialogue can be displayed!");
+        }
+        return maxPrioIndex;
+    }
+
+    private void SetDcondPrioritiesToArrayPos()
+    {
+        for (int i = 0; i < npcActions.Count; i++)
+        {
+            npcActions[i].priority = i + 1;
+        }
+    }
+
+    private void InitializeCurrDchainIndices()
+    {
+        dcondToCurrDchainIndex = new Dictionary<NPCAction, int>();
+        foreach (var dcond in npcActions)
+        {
+            dcondToCurrDchainIndex[dcond] = 0;
+        }
+    }
+
+    private void CheckAllDconds()
+    {
+        foreach (NPCAction d in npcActions)
+        {
+            d.CheckConditions();
+        }
+    }
+
+    private bool CanUpdateDialogue()
+    {
+        return DialogueEnabled && !NPCGivingDontInterruptDialogue();
+    }
+
+    private bool DialogueShouldDeactivate()
+    {
+        return dialogueBoxIsActive && !playerInDialogueTrigger && !NPCGivingDontInterruptDialogue();
+    }
+
+    private bool NPCGivingDontInterruptDialogue()
+    {
+        if (CurrDchainIsEmpty())
+        {
+            return false;
+        }
+
+        bool givingDialogue = dialogueBoxIsActive && !currDchainExhausted;
+        return givingDialogue && CurrentDialogue().dontInterrupt;
+    }
+
+    private NPCAction.Dialogue CurrentDialogue()
+    {
+        if (CurrDchainIsEmpty())
+        {
+            return null;
+        }
+
+        return CurrDcond.dialogueChain[CurrDchainIndex];
+    }
+
+    private bool CurrDchainIsEmpty()
+    {
+        return CurrDcond.dialogueChain.Count == 0;
     }
     #endregion Dialogue
 
@@ -376,7 +391,7 @@ public class NPC : MonoBehaviour
 
     public void StartCurrentWalk(int walkInd)
     {
-        if (walkInd < 0 || walkInd >= dconds[currDconds].walks.Count)
+        if (walkInd < 0 || walkInd >= CurrDcond.walks.Count)
         {
             Debug.LogError($"Tried to start a walk event for NPC {gameObject.name} that did not exist.");
             return;
@@ -384,7 +399,7 @@ public class NPC : MonoBehaviour
 
         if (currWalk == null)
         {
-            currWalk = dconds[currDconds].walks[walkInd];
+            currWalk = CurrDcond.walks[walkInd];
             remainingStileCrossings = new List<STileCrossing>(currWalk.stileCrossings);
             remainingPath = new List<Transform>(currWalk.path);
             walkCoroutine = StartCoroutine(DoCurrentWalk(false));
@@ -407,7 +422,7 @@ public class NPC : MonoBehaviour
         }
 
         bool validWalkFound = false;
-        for (int i = 0; i < dconds[currDconds].walks.Count; i++)
+        for (int i = 0; i < CurrDcond.walks.Count; i++)
         {
             if (CurrentPathExistsAndValid(i))
             {
@@ -515,7 +530,7 @@ public class NPC : MonoBehaviour
 
     public bool CurrentPathExistsAndValid(int walkInd)
     {
-        return (walkInd < 0 || walkInd >= dconds[currDconds].walks.Count) ? false : PathExistsAndValid(dconds[currDconds].walks[walkInd].path, dconds[currDconds].walks[walkInd].stileCrossings);
+        return (walkInd < 0 || walkInd >= CurrDcond.walks.Count) ? false : PathExistsAndValid(CurrDcond.walks[walkInd].path, CurrDcond.walks[walkInd].stileCrossings);
     }
 
     private bool PathExistsAndValid(List<Transform> path, List<STileCrossing> stileCrossings)
@@ -549,17 +564,5 @@ public class NPC : MonoBehaviour
 
         return true;
     }
-
-    /*  Old Walking
-    public void WalkTo(Transform trans)
-    {
-        //NPCs can't talkie while they walkie (under normal circumstances)
-        dialogueEnabled = false;
-        nav.SetDestination(TileUtil.WorldToTileCoords(trans.position), null, (pos) =>
-        {
-            dialogueEnabled = true;
-        });
-    }
-    */
     #endregion
 }

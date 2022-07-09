@@ -4,14 +4,14 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 
-[CustomPropertyDrawer(typeof(Conditionals.Condition))]
+[CustomPropertyDrawer(typeof(Condition))]
 public class ConditionalsEditor : PropertyDrawer
 {
     /*
     public override VisualElement CreatePropertyGUI(SerializedProperty property)
     {
         var container = new VisualElement();
-        var categoryToDisplay = (Conditionals.Condition.ConditionType) property.FindPropertyRelative("type").enumValueIndex;
+        var categoryToDisplay = (Condition.ConditionType) property.FindPropertyRelative("type").enumValueIndex;
         var itemField = new PropertyField(property.FindPropertyRelative("item"));
         var patternField = new PropertyField(property.FindPropertyRelative("pattern"));
         var checkBoolField = new PropertyField(property.FindPropertyRelative("checkBool"));
@@ -19,13 +19,13 @@ public class ConditionalsEditor : PropertyDrawer
         // Check the value of the enum and display variables based on it
         switch (categoryToDisplay)
         {
-            case Conditionals.Condition.ConditionType.item:
+            case Condition.ConditionType.item:
                 container.Add(itemField);
                 break;
-            case Conditionals.Condition.ConditionType.grid:
+            case Condition.ConditionType.grid:
                 container.Add(patternField);
                 break;
-            case Conditionals.Condition.ConditionType.spec:
+            case Condition.ConditionType.spec:
                 container.Add(checkBoolField);
                 break;
         }
@@ -65,25 +65,25 @@ public class ConditionalsEditor : PropertyDrawer
         {
             EditorGUI.PropertyField(categoryFieldRect, categoryProperty);
 
-            switch ((Conditionals.Condition.ConditionType)categoryProperty.enumValueIndex)
+            switch ((Condition.ConditionType)categoryProperty.enumValueIndex)
             {
-                case Conditionals.Condition.ConditionType.item:
+                case Condition.ConditionType.item:
                     EditorGUI.PropertyField(fieldRect, itemProperty, true);
                     break;
-                case Conditionals.Condition.ConditionType.grid:
+                case Condition.ConditionType.grid:
                     EditorGUI.PropertyField(fieldRect, patternProperty);
                     break;
-                case Conditionals.Condition.ConditionType.gridStationary:
+                case Condition.ConditionType.gridStationary:
                     EditorGUI.PropertyField(fieldRect, patternProperty);
                     EditorGUI.PropertyField(field2Rect, stationaryTilesProperty, true);
                     break;
-                case Conditionals.Condition.ConditionType.spec:
+                case Condition.ConditionType.spec:
                     EditorGUI.PropertyField(fieldRect, checkBoolProperty);
                     break;
-                case Conditionals.Condition.ConditionType.playerCarryingItem:
+                case Condition.ConditionType.playerCarryingItem:
                     EditorGUI.PropertyField(fieldRect, playerItemNameProperty);
                     break;
-                case Conditionals.Condition.ConditionType.flag:
+                case Condition.ConditionType.flag:
                     EditorGUI.PropertyField(fieldRect, flagNameProperty);
                     break;
             }

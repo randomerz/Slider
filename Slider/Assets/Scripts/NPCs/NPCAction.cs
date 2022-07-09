@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 [System.Serializable]
-public class DialogueConditionals : Conditionals
+public class NPCAction
 {
     [System.Serializable]
     public class Dialogue
@@ -22,9 +22,8 @@ public class DialogueConditionals : Conditionals
         public UnityEvent onDialogueEnd;
     }
 
-    [HideInInspector] public int priority;
+    public List<Condition> conditions;
 
-    //We might want to expand this to include all possible NPC actions (Dialogue, Walking, Starting Quests, etc.)
     [Header("Dialogue Conditionals")]
     public List<Dialogue> dialogueChain;
     public bool alwaysStartFromBeginning;
@@ -33,26 +32,24 @@ public class DialogueConditionals : Conditionals
 
     public List<NPC.NPCWalk> walks;
 
+    [HideInInspector] public int priority;
     private int currentprio = 0;
 
-    public new bool CheckConditions()
+    public bool CheckConditions()
     {
         foreach (Condition cond in conditions)
         {
             if (!cond.CheckCondition())
             {
-                //priority is negative, so this dialogue will not be chosen.
-                onFail?.Invoke();
-                currentprio = -1 * priority;
+                currentprio = -1 * priority;    //priority is negative so that the dialogue will not be chosen.
                 return false;
             }
         }
-        onSuccess?.Invoke();
         currentprio = priority;
         return true;
     }
 
-    public string GetDialogue(int index)
+    public string GetDialogueString(int index)
     {
         if (index < 0 || index >= dialogueChain.Count)
         {
@@ -91,7 +88,6 @@ public class DialogueConditionals : Conditionals
         dialogueChain[index].onDialogueEnd?.Invoke();
     }
 
-    //This can be used to start new events after an input when the dialogue is completely exhausted (For Ex: Starting the Chad Race)
     public void OnDialogueChainExhausted()
     {
         onDialogueChainExhausted?.Invoke();

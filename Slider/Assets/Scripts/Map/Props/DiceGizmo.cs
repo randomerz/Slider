@@ -6,7 +6,7 @@ public class DiceGizmo : MonoBehaviour
 {
     public STile myStile;
     public NPC npcScript;
-    public DialogueConditionals NumberDialogue;
+    public NPCAction NumberDialogue;
 
     public int value;
     public Sprite[] sprites;
@@ -24,9 +24,9 @@ public class DiceGizmo : MonoBehaviour
             gameObject.SetActive(false); 
 
         NumberDialogue.dialogueChain.Clear();
-        NumberDialogue.dialogueChain.Add(new DialogueConditionals.Dialogue());
+        NumberDialogue.dialogueChain.Add(new NPCAction.Dialogue());
         NumberDialogue.dialogueChain[0].dialogue = value.ToString();
-        npcScript.dconds.Add(NumberDialogue);
+        npcScript.npcActions.Add(NumberDialogue);
     }
 
     private void Update()
@@ -37,7 +37,7 @@ public class DiceGizmo : MonoBehaviour
         }
         this.GetComponent<SpriteRenderer>().sprite = sprites[value - 1];
         NumberDialogue.dialogueChain[0].dialogue = value.ToString();
-        npcScript.TypeNextDialogue();
+        npcScript.TypeCurrentDialogue();
     }
 
     private void OnEnable()

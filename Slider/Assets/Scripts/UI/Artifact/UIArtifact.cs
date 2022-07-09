@@ -672,7 +672,7 @@ public class UIArtifact : MonoBehaviour
         }
     }
 
-    public void MoveQueueEmpty(Conditionals.Condition c)
+    public void MoveQueueEmpty(Condition c)
     {
         c.SetSpec(moveQueue.Count == 0 && activeMoves.Count == 0);
     }
