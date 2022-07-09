@@ -139,7 +139,7 @@ public class ChadJump : MonoBehaviour
         flashlightItem.SetCollider(true);
     }
 
-    public void ChadFell(Conditionals.Condition cond)
+    public void ChadFell(Condition cond)
     {
         cond.SetSpec(jumpState == JumpState.fell || PlayerInventory.Contains("Flashlight"));
     }

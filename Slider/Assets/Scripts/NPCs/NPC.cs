@@ -100,7 +100,7 @@ public class NPC : MonoBehaviour
         SGridAnimator.OnSTileMoveStart += OnSTileMoveStart;
         SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
 
-        poofParticles = Resources.Load<GameObject>();
+        poofParticles = Resources.Load<GameObject>(poofParticleName);
     }
 
     private void OnDisable()
