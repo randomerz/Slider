@@ -1,0 +1,129 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4354161261044769909
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4354161261044769911}
+  - component: {fileID: 4354161261044769910}
+  m_Layer: 0
+  m_Name: WiresDatabase
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4354161261044769911
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4354161261044769909}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 24.099243, y: 37.813503, z: -23.331732}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4354161261044769910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4354161261044769909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a45fe59a94ff24486553319e625f6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wireTiles:
+  - offWire: {fileID: 11400000, guid: 02a49b2aaf7d7314fabbe2830c7f4d67, type: 2}
+    onWire: {fileID: 11400000, guid: ee11c05e0ac74d2438f99148f6b94547, type: 2}
+  - offWire: {fileID: 11400000, guid: fe9bff4a3fa6a0f499f16c69036e2c2d, type: 2}
+    onWire: {fileID: 11400000, guid: e96679150759b694f90714d7eb67fc64, type: 2}
+  - offWire: {fileID: 11400000, guid: b02002804c490d742bd3991639ce91e6, type: 2}
+    onWire: {fileID: 11400000, guid: 6c934483b3522244aa7c24dfe63b0ff1, type: 2}
+  - offWire: {fileID: 11400000, guid: fef83842c0187e545859e2bd14d4475b, type: 2}
+    onWire: {fileID: 11400000, guid: 9694d6e934047934189b976a4c246f81, type: 2}
+  - offWire: {fileID: 11400000, guid: 27b3b34c341f7c447bbb1a01725e068b, type: 2}
+    onWire: {fileID: 11400000, guid: 8f7f39b095d70834d9fa974af4102b63, type: 2}
+  - offWire: {fileID: 11400000, guid: 79569d1693ae9d74c805c719efc7179a, type: 2}
+    onWire: {fileID: 11400000, guid: b700590f7dad65447b13b7fd442facce, type: 2}
+  - offWire: {fileID: 11400000, guid: f736154daf1a8ee4aa29d245d6ae6ee2, type: 2}
+    onWire: {fileID: 11400000, guid: 2a60dd6212aa4e04ebd0c5b1b1dfef29, type: 2}
+  - offWire: {fileID: 11400000, guid: 5f08cdc0f8a3f3446b9df045818def19, type: 2}
+    onWire: {fileID: 11400000, guid: c7bae19ea6770944590d804203edb94e, type: 2}
+  - offWire: {fileID: 11400000, guid: 6d7d04db597c7ed4eaec697bdf271720, type: 2}
+    onWire: {fileID: 11400000, guid: ddebade3d76462846b84a3be2aa07b0b, type: 2}
+  - offWire: {fileID: 11400000, guid: 0cb1f1fa644ef4e458dc1440cc972d17, type: 2}
+    onWire: {fileID: 11400000, guid: 5b3e890fe9fcb664eb690f6f1bec1cf9, type: 2}
+  - offWire: {fileID: 11400000, guid: 437af3f9aa586374e8d98f7488b1546b, type: 2}
+    onWire: {fileID: 11400000, guid: 4ad7bc64107d0f1478922216f198a68a, type: 2}
+  - offWire: {fileID: 11400000, guid: 5a9eb614bf81cd04890092299bfbc719, type: 2}
+    onWire: {fileID: 11400000, guid: 9ddda74bb66fbb040bd8d1a163796f56, type: 2}
+  - offWire: {fileID: 11400000, guid: 7072647d406773e42a3ade795e45beb7, type: 2}
+    onWire: {fileID: 11400000, guid: 4c52c9d017726fa4d93f0284fee93939, type: 2}
+  - offWire: {fileID: 11400000, guid: f3f7394c2a92667428bf0f6d0669430c, type: 2}
+    onWire: {fileID: 11400000, guid: d054568e7988e5e44843283c0369e2bd, type: 2}
+  - offWire: {fileID: 11400000, guid: 22852317977a91445b2abb4e3bff8da3, type: 2}
+    onWire: {fileID: 11400000, guid: 8ddbb9fbf89eb714289f1f6c9762b3d6, type: 2}
+  - offWire: {fileID: 11400000, guid: 74ab5d2070e072f4984c37409229a727, type: 2}
+    onWire: {fileID: 11400000, guid: 9f8418e1f3f41c545be298b326cdb197, type: 2}
+  - offWire: {fileID: 11400000, guid: 96d4d5e5ecb7f6d4a86ea8a2b4ede1d4, type: 2}
+    onWire: {fileID: 11400000, guid: c16293fe22e0a8748a53f688be28967c, type: 2}
+  - offWire: {fileID: 11400000, guid: c5d9bbd8620ccf04ba9238d68bc73851, type: 2}
+    onWire: {fileID: 11400000, guid: 7425975fafc32ad49b95b9d002ed5d02, type: 2}
+  - offWire: {fileID: 11400000, guid: 529c9aeb631eeeb45ba8211ef7cb7032, type: 2}
+    onWire: {fileID: 11400000, guid: 330b0da610b7af642b76dd47c092bce6, type: 2}
+  - offWire: {fileID: 11400000, guid: 5f18fcf9f9063314c96dabafe367a90f, type: 2}
+    onWire: {fileID: 11400000, guid: 4237883278bcec946a67a06783a1d8e6, type: 2}
+  sparks:
+  - wireSprite: {fileID: -5326084079847229461, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: v
+  - wireSprite: {fileID: -6892655470663506644, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: ur
+  - wireSprite: {fileID: -4947590413986326504, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: rd
+  - wireSprite: {fileID: 7311601061131672236, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: rdl
+  - wireSprite: {fileID: 2202263419058439535, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: lurd
+  - wireSprite: {fileID: 4009846341720392039, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: h
+  - wireSprite: {fileID: 1930671093170426343, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: lu
+  - wireSprite: {fileID: 66729698408968564, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: dl
+  - wireSprite: {fileID: 5258963264078075157, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: lur
+  - wireSprite: {fileID: 4930584620180446160, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: v
+  - wireSprite: {fileID: -8045280394393542767, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: pr
+  - wireSprite: {fileID: -5401230312293483767, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: pl
+  - wireSprite: {fileID: -6632861003519377312, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: urd
+  - wireSprite: {fileID: -315995042440561357, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: dlu
+  - wireSprite: {fileID: -4734846160566711853, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: v
+  - wireSprite: {fileID: 7757171610159889169, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: h
+  - wireSprite: {fileID: 6332178259833024937, guid: 2d3905f9a73252048b7a26ab45cd24b8, type: 3}
+    sparkType: h
+  - wireSprite: {fileID: -3124052884837581905, guid: fb5b2eb6132030c42958bb86a82ab4ed, type: 3}
+    sparkType: pr
+  - wireSprite: {fileID: 3463841809908580754, guid: fb5b2eb6132030c42958bb86a82ab4ed, type: 3}
+    sparkType: pr
+  - wireSprite: {fileID: -9199935029174745646, guid: fb5b2eb6132030c42958bb86a82ab4ed, type: 3}
+    sparkType: pl
+  - wireSprite: {fileID: -2652401888722466428, guid: fb5b2eb6132030c42958bb86a82ab4ed, type: 3}
+    sparkType: pl

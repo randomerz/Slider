@@ -116,6 +116,9 @@ public class Item : MonoBehaviour
         start.transform.parent = hitStile == null ? null : hitStile.transform;
         end.transform.parent = hitStile == null ? null : hitStile.transform;
 
+        myCollider.enabled = true;
+        transform.position = end.transform.position;
+
         //transform.position = target;
         while (t >= 0)
         {
@@ -132,8 +135,6 @@ public class Item : MonoBehaviour
 
         spriteRenderer.sortingOrder = 0; // bring object to render below others
 
-        myCollider.enabled = true;
-        transform.position = end.transform.position;
         spriteRenderer.transform.position = end.transform.position;
         OnDrop?.Invoke();
         callback();

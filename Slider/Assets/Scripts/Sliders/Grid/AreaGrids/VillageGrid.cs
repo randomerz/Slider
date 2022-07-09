@@ -160,7 +160,8 @@ public class VillageGrid : SGrid
         yield return new WaitForSeconds(1f);
         
         CameraShake.Shake(1.5f, 2.5f);
-        AudioManager.Play("Slide Explosion");
+        AudioManager.PlayWithVolume("Slide Explosion", 0.2f);
+        AudioManager.Play("TFT Bell");
         ruinsSymbols.FlashSymbol(3);
 
         yield return new WaitForSeconds(0.25f);
@@ -214,6 +215,7 @@ public class VillageGrid : SGrid
     {
         caveDoorEntrance.SetActive(true);
         caveDoorRocks.SetActive(false);
+        SaveSystem.Current.SetBool("caveDoorExploded", true);
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");
     }
@@ -222,7 +224,6 @@ public class VillageGrid : SGrid
     public void CheckChadMoved(object sender, SGridAnimator.OnTileMoveArgs e) {
         if (GetStile(8).isTileActive && e.stile.islandId == 8 && !chadFell && chadMet && chadJumped) {
             chadFell = true;
-            chad.transform.GetChild(0).GetComponent<Animator>().SetBool("isTipping", true);
             StartCoroutine(ChadFall());
         }
     }
@@ -311,6 +312,6 @@ public class VillageGrid : SGrid
     }
 
     public void ChadFell(Conditionals.Condition cond) {
-        cond.SetSpec(chadFell);
+        cond.SetSpec(chadFell || PlayerInventory.Contains("Flashlight"));
     }
 }

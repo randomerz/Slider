@@ -81,7 +81,9 @@ public class Conditionals
                     }
                     return true;
                 case ConditionType.flag:
-                    return SaveSystem.Current.GetBool(flagName);
+                    if (SaveSystem.IsCurrentProfileNull())
+                        return false;
+                    return SaveSystem.Current.GetBool(flagName);    
                 case ConditionType.spec:
                 default:
                     checkBool.Invoke(this);

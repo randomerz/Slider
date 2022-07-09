@@ -24,6 +24,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     public Animator textAnimator;
     public Animator playerAnimator;
     public Animator mainMenuButtonsAnimator;
+    public Animator mainMenuQuitButtonAnimator;
 
     [Header("Panels")]
     public GameObject mainMenuPanel;
@@ -57,7 +58,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         InitializeSingleton();
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
+        //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context 
             => { if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); } });
     }
@@ -71,7 +72,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         AudioManager.PlayMusic("Main Menu");
         AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 0);
 
-        listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
+        // any key listener moved to OpenCutscene()
     }
 
     public static MainMenuManager GetInstance(){
@@ -121,6 +122,10 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     private IEnumerator OpenCutscene()
     {
+        yield return null;
+
+        listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
+
         yield return new WaitForSeconds(1f);
             
         CameraShake.ShakeIncrease(2.1f, 0.1f);
@@ -142,6 +147,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         titleAnimator.SetBool("isUp", true);
         playerAnimator.SetBool("isUp", true);
         mainMenuButtonsAnimator.SetBool("isUp", true);
+        mainMenuQuitButtonAnimator.SetBool("isVisible", true);
         textAnimator.SetBool("isVisible", false);
 
         AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 1);
@@ -330,7 +336,9 @@ public class MainMenuManager : Singleton<MainMenuManager>
     public void LoadCutscene()
     {
         // SceneManager.LoadSceneAsync(cutsceneSceneName, LoadSceneMode.Additive);
-        UIEffects.FadeToBlack(() => {SceneManager.LoadScene(cutsceneSceneName);}, 1, false);
+        UIEffects.FadeToBlack(() => {SceneManager.LoadScene(cutsceneSceneName);  
+                                    UINavigationManager.CurrentMenu = null;}, 1, false);
+        
     }
 
 

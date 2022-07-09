@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -16,10 +14,8 @@ using UnityEngine.UI;
 /// are lots of different unique UI elements such as the Ocean Shop.</b>
 /// </summary>
 /// <remarks>Author: Travis</remarks>
-public class UINavigationManager : MonoBehaviour
+public class UINavigationManager : Singleton<UINavigationManager>
 {
-    private static UINavigationManager _instance;
-
     private UnityEngine.EventSystems.EventSystem eventSystem;
 
     [Tooltip("Match each UI panel GameObject with all the navigatable buttons inside of it.")]
@@ -43,9 +39,7 @@ public class UINavigationManager : MonoBehaviour
                 SelectableSet selectableSet = value.GetComponent<SelectableSet>();
                 if (selectableSet == null)
                 {
-                    Debug.LogError($"CurrentMenu was set to {value.name} ({value.GetInstanceID()}), which was not registered in button sets and did " +
-                        $"not contain a SelectableSet component. You need to either add and setup a SelectableSet component on this object or add it " +
-                        $"to the button sets list on UINavigationManager.");
+                    LogSelectableNotFoundError();
                 } else
                 {
                     _instance.selectableSetDictionary[value] = value.GetComponent<SelectableSet>().Selectables;
@@ -84,22 +78,23 @@ public class UINavigationManager : MonoBehaviour
 
     private void Awake()
     {
-        _instance = this;
+        InitializeSingleton();
 
         _instance.eventSystem = GetComponent<UnityEngine.EventSystems.EventSystem>();
 
+        if (selectableSets.Length > 0)
+        {
+            Debug.LogWarning("UINavigationManager's ButtonSets field is deprecated. You should be attaching SelectableSet components to " +
+                "your menu objects instead.");
+        }
         selectableSetDictionary = new Dictionary<GameObject, Selectable[]>();
         foreach (ButtonSet set in selectableSets)
         {
             selectableSetDictionary[set.menu] = set.selectables;
         }
 
-        if (_instance == null)
-        {
-            return;
-        }
 
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, 
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate,
             context =>
             {
                 if (CurrentMenu != null && InMouseControlMode)
@@ -137,11 +132,6 @@ public class UINavigationManager : MonoBehaviour
         };
     }
 
-    private void OnEnable()
-    {
-        Awake();
-    }
-
     /// <summary>
     /// Use this to check if a button in the current menu panel is selected (such as for selecting a default button when a
     /// navigation key is pressed and none is currently selected.)
@@ -158,7 +148,7 @@ public class UINavigationManager : MonoBehaviour
         }
         if (!_instance.selectableSetDictionary.ContainsKey(_instance._currentMenu))
         {
-            Debug.LogError($"EventSystemManager could not find ButtonSet for Menu Object {_instance._currentMenu.name}. Did you remember to setup this menu in the Button Sets?");
+            LogSelectableNotFoundError();
             return false;
         }
 
@@ -186,7 +176,7 @@ public class UINavigationManager : MonoBehaviour
         }
         if (!_instance.selectableSetDictionary.ContainsKey(_instance._currentMenu))
         {
-            Debug.LogError($"EventSystemManager could not find ButtonSet for Menu Object {_instance._currentMenu.name}. Did you remember to setup this menu in the Button Sets?");
+            LogSelectableNotFoundError();
             return;
         }
         foreach (Selectable selectable in _instance.selectableSetDictionary[_instance._currentMenu])
@@ -237,6 +227,12 @@ public class UINavigationManager : MonoBehaviour
             selectable.interactable = true;
         }
         callback?.Invoke();
+    }
+
+    private static void LogSelectableNotFoundError()
+    {
+        Debug.LogError($"UINavigationManager could not find a SelectableSet for {_instance._currentMenu.name} ({_instance._currentMenu.GetInstanceID()}). " +
+                $"Make sure this menu object has a SelectableSet component that is properly setup with its child selectables.");
     }
 }
 

@@ -40,6 +40,8 @@ public class DebugUIManager : MonoBehaviour
 
     private void OnPressDebug() 
     {
+        if (Player.GetInstance() == null || !GameManager.instance.debugModeActive)
+            return;
         isDebugOpen = !isDebugOpen;
         Player.SetCanMove(!isDebugOpen);
         debugPanel.SetActive(isDebugOpen);

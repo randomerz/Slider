@@ -39,7 +39,7 @@ public class OceanArtifact : UIArtifact
         // do nothing
     }
     
-    public override void SelectButton(ArtifactTileButton button) 
+    public override void SelectButton(ArtifactTileButton button, bool isDragged = false) 
     {
         // do nothing
     }
