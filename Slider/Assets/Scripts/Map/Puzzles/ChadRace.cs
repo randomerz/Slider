@@ -58,9 +58,8 @@ public class ChadRace : MonoBehaviour
 
         // Setting the first time dialogue
         countDownDialogue.dialogueChain.Clear();
-        countDownDialogue.dialogueChain.Add(new NPCConditionals.Dialogue());
-        countDownDialogue.dialogueChain[0].dialogue = "Bet I could beat you to the bell (e to start)";
-        npcScript.conds.Add(countDownDialogue);
+        countDownDialogue.dialogueChain.Add(ConstructChadDialogueStart());
+        npcScript.AddNewConditionals(countDownDialogue);
     }
 
     // Update is called once per frame
@@ -187,7 +186,6 @@ public class ChadRace : MonoBehaviour
         npcScript.TypeCurrentDialogue();
     }
 
-
     private IEnumerator SetParameterTemporary(string parameterName, float value1, float value2)
     {
         Debug.Log("Param update to " + value1);
@@ -197,6 +195,13 @@ public class ChadRace : MonoBehaviour
         
         Debug.Log("Param update to " + value2);
         AudioManager.SetMusicParameter("Jungle", parameterName, value2);
+    }
+
+    private DialogueData ConstructChadDialogueStart()
+    {
+        var dialogue = new DialogueData();
+        dialogue.dialogue = "Bet I could beat you to the bell (e to start)";
+        return dialogue;
     }
 
     public void UpdateChadEnd()

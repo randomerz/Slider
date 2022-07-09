@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,48 +7,20 @@ using UnityEngine.Serialization;
 
 public class NPC : MonoBehaviour
 {
-    [System.Serializable]
-    public class STileCrossing
-    {
-        public STile from;
-        public STile to;
-
-        //Use if from or to is null.
-        public Vector2Int fromPos;
-        public Vector2Int toPos;
-
-        public Vector2Int[] dirs;  //Check from + dir = to in order to check the crossing is valid.
-    }
-
-    [System.Serializable]
-    public class NPCWalk
-    {
-        //public bool usePathfinding;
-        public List<Transform> path;
-        public List<STileCrossing> stileCrossings;
-        public bool turnAroundAfterWalking;
-
-        public UnityEvent onPathStarted;
-        public UnityEvent onPathFinished;
-        public UnityEvent onPathBroken;
-        public UnityEvent onPathResumed;
-    }
-
     private readonly string poofParticleName = "SmokePoof Variant";
 
-    public string characterName;
-    [SerializeField] private float speed;
-    public NPCAnimatorController animator;
-    [FormerlySerializedAs("dconds")]
-    public List<NPCConditionals> conds;
+    public float speed;
+    [SerializeField] private NPCAnimatorController animator;
+    [SerializeField] private string characterName;
+    [FormerlySerializedAs("dconds")] [SerializeField] private List<NPCConditionals> conds;
 
     [SerializeField] private DialogueDisplay dialogueDisplay;
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private bool spriteDefaultFacingLeft;
 
     //Dconds
-    private int currDcondIndex;
-    private Dictionary<NPCConditionals, int> dcondToCurrDchainIndex;
+    private int currCondIndex;
+    private Dictionary<NPCConditionals, int> condToCurrDchainIndex;
 
     //Dialogue
     public static bool dialogueEnabledAllNPC = true;
@@ -63,25 +36,21 @@ public class NPC : MonoBehaviour
 
     //Walking
     private STile currentStileUnderneath;
-    private bool walking;   //NPC is in the process of following a path.
-    private NPCWalk currWalk;   //Current walk the NPC is performing, null otherwise.
-    private List<STileCrossing> remainingStileCrossings;
-    private List<Transform> remainingPath;
-    private Coroutine walkCoroutine;
+    NPCWalkController walkController;
+
     private GameObject poofParticles;
 
+    public NPCConditionals CurrCond => conds[currCondIndex];
+    public STile CurrentSTileUnderneath => currentStileUnderneath;
     private bool DialogueEnabled => dialogueEnabledAllNPC && canGiveDialogue;
-
-    private NPCConditionals CurrDcond => conds[currDcondIndex];
-
     private int CurrDchainIndex {
         get {
-            return dcondToCurrDchainIndex[CurrDcond];
+            return condToCurrDchainIndex[CurrCond];
         }
 
         set
         {
-            dcondToCurrDchainIndex[CurrDcond] = value;
+            condToCurrDchainIndex[CurrCond] = value;
         }
     }
 
@@ -89,35 +58,35 @@ public class NPC : MonoBehaviour
     {
         canGiveDialogue = true;
 
-        SetDcondPrioritiesToArrayPos();
+        SetCondPrioritiesToArrayPos();
 
+        InitializeCondControllers();
         InitializeCurrDchainIndices();
     }
 
     private void OnEnable()
     {
+        walkController.OnEnable();
         PlayerAction.OnAction += OnPlayerAction;
-        SGridAnimator.OnSTileMoveStart += OnSTileMoveStart;
-        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
-
         poofParticles = Resources.Load<GameObject>(poofParticleName);
     }
 
     private void OnDisable()
     {
+        walkController.OnDisable();
         PlayerAction.OnAction -= OnPlayerAction;
-        SGridAnimator.OnSTileMoveStart -= OnSTileMoveStart;
-        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
     }
 
     void Update()
     {
-        CheckAllDconds();
+        CheckAllConditionals();
 
-        if (CanUpdateDialogue())
+        if (CanUpdateConditionals())
         {
-            PollForNewDialogue();
+            PollForNewConditional();
         }
+
+        UpdateCondControllers();
 
         bool finishedTypingCurrDialogue = isTypingDialogue && dialogueDisplay.textTyperText.finishedTyping;
         if (finishedTypingCurrDialogue)
@@ -136,6 +105,21 @@ public class NPC : MonoBehaviour
         currentStileUnderneath = STile.GetSTileUnderneath(transform, currentStileUnderneath);
     }
 
+    public void AddNewConditionals(NPCConditionals cond)
+    {
+        conds.Add(cond);
+    }
+
+    private void InitializeCondControllers()
+    {
+        walkController = new NPCWalkController(this, animator, sr, spriteDefaultFacingLeft);
+    }
+
+    private void UpdateCondControllers()
+    {
+        walkController.Update();
+    }
+
     #region Dialogue
     public void DialogueTriggerEnter()
     {
@@ -144,7 +128,7 @@ public class NPC : MonoBehaviour
         bool shouldStartTypingDialogue = !CurrDchainIsEmpty() && !NPCGivingDontInterruptDialogue();
         if (shouldStartTypingDialogue)
         {
-            if (CurrDcond.alwaysStartFromBeginning)
+            if (CurrCond.alwaysStartFromBeginning)
             {
                 CurrDchainIndex = 0;
                 currDchainExhausted = false;
@@ -173,12 +157,12 @@ public class NPC : MonoBehaviour
     {
         if (DialogueEnabled && !CurrDchainIsEmpty())
         {
-            dialogueDisplay.DisplaySentence(CurrDcond.GetDialogueString(CurrDchainIndex));
+            dialogueDisplay.DisplaySentence(CurrCond.GetDialogueString(CurrDchainIndex));
 
             isTypingDialogue = true;
             dialogueBoxIsActive = true;
 
-            CurrDcond.OnDialogueChainStart(CurrDchainIndex);
+            CurrCond.OnDialogueChainStart(CurrDchainIndex);
         }
     }
 
@@ -213,13 +197,13 @@ public class NPC : MonoBehaviour
         isTypingDialogue = false;
     }
 
-    private void PollForNewDialogue()
+    private void PollForNewConditional()
     {
-        int maxPrioDialogue = GetDcondIndexWithMaxPriority();
-        bool dialogueIsNew = currDcondIndex != maxPrioDialogue;
-        if (dialogueIsNew)
+        int maxPrioCond = GetCondIndexWithMaxPriority();
+        bool condIsNew = currCondIndex != maxPrioCond;
+        if (condIsNew)
         {
-            ChangeDialogue(maxPrioDialogue);
+            ChangeCurrentConditional(maxPrioCond);
 
             if (dialogueBoxIsActive && playerInDialogueTrigger)
             {
@@ -228,20 +212,20 @@ public class NPC : MonoBehaviour
         }
     }
 
-    private void ChangeDialogue(int newDialogue)
+    private void ChangeCurrentConditional(int newDialogue)
     {
-        currDcondIndex = newDialogue;
+        currCondIndex = newDialogue;
         currDchainExhausted = false;
 
         dialogueDisplay.SetMessagePing(!CurrDchainIsEmpty());
 
-        CurrDcond.onDialogueChanged?.Invoke();
+        CurrCond.onConditionalEnter?.Invoke();
     }
 
     private void HandleDialogueFinished()
     {
         isTypingDialogue = false;
-        CurrDcond.OnDialogueChainEnd(CurrDchainIndex);
+        CurrCond.OnDialogueChainEnd(CurrDchainIndex);
 
         if (CurrentDialogue().waitUntilPlayerAction)
         {
@@ -249,7 +233,8 @@ public class NPC : MonoBehaviour
         }
         else
         {
-            delayBeforeNextDialogueCoroutine = StartCoroutine(SetNextDialogueInChainAfterDelay(CurrentDialogue().delayAfterFinishedTyping));
+            float delay = CurrentDialogue().delayAfterFinishedTyping;
+            delayBeforeNextDialogueCoroutine = StartCoroutine(SetNextDialogueInChainAfterDelay(delay));
             SetNextDialogueInChain(true);
         } 
     }
@@ -262,7 +247,7 @@ public class NPC : MonoBehaviour
 
     private void SetNextDialogueInChain(bool typeNextDialogue = false)
     {
-        var dChain = CurrDcond.dialogueChain;
+        var dChain = CurrCond.dialogueChain;
         if (CurrDchainIndex < dChain.Count - 1)
         {
             CurrDchainIndex++;
@@ -274,7 +259,7 @@ public class NPC : MonoBehaviour
         else
         {
             currDchainExhausted = true;
-            CurrDcond.OnDialogueChainExhausted();
+            CurrCond.OnDialogueChainExhausted();
         }
     }
 
@@ -295,7 +280,7 @@ public class NPC : MonoBehaviour
         dialogueDisplay.textTyperBG.TrySkipText();
     }
 
-    private int GetDcondIndexWithMaxPriority()
+    private int GetCondIndexWithMaxPriority()
     {
         int maxPrioIndex = -1;
         int maxPrio = 0;
@@ -314,7 +299,7 @@ public class NPC : MonoBehaviour
         return maxPrioIndex;
     }
 
-    private void SetDcondPrioritiesToArrayPos()
+    private void SetCondPrioritiesToArrayPos()
     {
         for (int i = 0; i < conds.Count; i++)
         {
@@ -324,14 +309,14 @@ public class NPC : MonoBehaviour
 
     private void InitializeCurrDchainIndices()
     {
-        dcondToCurrDchainIndex = new Dictionary<NPCConditionals, int>();
+        condToCurrDchainIndex = new Dictionary<NPCConditionals, int>();
         foreach (var dcond in conds)
         {
-            dcondToCurrDchainIndex[dcond] = 0;
+            condToCurrDchainIndex[dcond] = 0;
         }
     }
 
-    private void CheckAllDconds()
+    private void CheckAllConditionals()
     {
         foreach (NPCConditionals d in conds)
         {
@@ -339,7 +324,7 @@ public class NPC : MonoBehaviour
         }
     }
 
-    private bool CanUpdateDialogue()
+    private bool CanUpdateConditionals()
     {
         return DialogueEnabled && !NPCGivingDontInterruptDialogue();
     }
@@ -360,19 +345,20 @@ public class NPC : MonoBehaviour
         return givingDialogue && CurrentDialogue().dontInterrupt;
     }
 
-    private NPCConditionals.Dialogue CurrentDialogue()
+    private DialogueData CurrentDialogue()
     {
-        if (CurrDchainIsEmpty())
+        if (CurrDchainIndex < 0 || CurrDchainIndex >= CurrCond.dialogueChain.Count)
         {
+            Debug.LogError($"Attempted to Access Dialogue at invalid index: {CurrDchainIndex}");
             return null;
         }
 
-        return CurrDcond.dialogueChain[CurrDchainIndex];
+        return CurrCond.dialogueChain[CurrDchainIndex];
     }
 
     private bool CurrDchainIsEmpty()
     {
-        return CurrDcond.dialogueChain.Count == 0;
+        return CurrCond.dialogueChain.Count == 0;
     }
     #endregion Dialogue
 
@@ -387,181 +373,14 @@ public class NPC : MonoBehaviour
     }
 
     #region Walking
-
-    public void StartCurrentWalk(int walkInd)
+    public void StartWalkAtIndex(int walkInd)
     {
-        if (walkInd < 0 || walkInd >= CurrDcond.walks.Count)
-        {
-            Debug.LogError($"Tried to start a walk event for NPC {gameObject.name} that did not exist.");
-            return;
-        }
-
-        if (currWalk == null)
-        {
-            currWalk = CurrDcond.walks[walkInd];
-            remainingStileCrossings = new List<STileCrossing>(currWalk.stileCrossings);
-            remainingPath = new List<Transform>(currWalk.path);
-            walkCoroutine = StartCoroutine(DoCurrentWalk(false));
-        }
+        walkController.TryStartWalkAtIndex(walkInd);
     }
 
     public void StartValidWalk()
     {
-        if (currWalk == null)
-        {
-            StartCoroutine(WaitThenCheckValidWalk());
-        }
-    }
-
-    private IEnumerator WaitThenCheckValidWalk()
-    {
-        if (SGrid.current.TilesMoving())
-        {
-            yield return new WaitUntil(() => !SGrid.current.TilesMoving());
-        }
-
-        bool validWalkFound = false;
-        for (int i = 0; i < CurrDcond.walks.Count; i++)
-        {
-            if (CurrentPathExistsAndValid(i))
-            {
-                validWalkFound = true;
-                StartCurrentWalk(i);
-                break;
-            }
-        }
-
-        if (!validWalkFound)
-        {
-            Debug.LogError($"Valid Walk Not Found For {gameObject.name}");
-        }
-    }
-
-    public IEnumerator DoCurrentWalk(bool resumed)
-    {
-        walking = true;
-        animator.SetBoolToTrue("isWalking");
-        if (resumed)
-        {
-            currWalk.onPathResumed?.Invoke();
-            //Create a dummy transform that matches the NPC's current position
-            remainingPath[0] = ((GameObject) Instantiate(remainingPath[0].gameObject, transform.position, transform.rotation, transform.parent)).transform;
-        } else
-        {
-            currWalk.onPathStarted?.Invoke();
-        }
-
-        if (SGrid.current.TilesMoving())
-        {
-
-        }
-
-        //Lerp positions until we go through the whole path.
-        float s;
-        float t;
-        while(remainingPath.Count >= 2)
-        {
-            s = speed / Vector3.Distance(remainingPath[0].position, remainingPath[1].position);    //This factor ensures that the speed traveled is scaled properly to the distance btw points.
-            t = 0;
-            while (t < 1f)
-            {
-                transform.position = Vector3.Lerp(remainingPath[0].position, remainingPath[1].position, t);
-                t += s * Time.deltaTime;
-
-                //dot > 0 if player is moving in their default direction, so we want to flip it if this is not the case.`
-                float dot = Vector2.Dot((remainingPath[1].position - remainingPath[0].position), spriteDefaultFacingLeft ? Vector2.left : Vector2.right);
-                sr.flipX = sr.flipX ? dot <= 0 : dot < 0;   //Don't change directions if dot == 0
-
-                if (remainingStileCrossings.Count > 0 && remainingStileCrossings[0].to == currentStileUnderneath)
-                {
-                    remainingStileCrossings.RemoveAt(0);
-                    transform.SetParent(currentStileUnderneath == null ? null : currentStileUnderneath.transform);
-                }
-                yield return new WaitForEndOfFrame();
-            }
-            transform.position = remainingPath[1].position;
-            remainingPath.RemoveAt(0);
-        }
-
-        if (currWalk.turnAroundAfterWalking)
-        {
-            sr.flipX = !sr.flipX;
-        }
-
-        walking = false;
-        animator.SetBoolToFalse("isWalking");
-        currWalk.onPathFinished?.Invoke();
-        currWalk = null;
-    }
-
-    //Check if the path is broken.
-    private void OnSTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (currWalk != null && walking)
-        {
-            //Handle STile moved while the NPC was walking
-            foreach (STileCrossing cross in remainingStileCrossings)
-            {
-                if (e.stile == cross.from || e.stile == cross.to)
-                {
-                    //Stop the routine if a tile is moved that is part of the remaining path.
-                    StopCoroutine(walkCoroutine);
-                    walkCoroutine = null;
-                    walking = false;
-                    animator.SetBoolToFalse("isWalking");
-                    currWalk.onPathBroken?.Invoke();
-                }
-            }
-        }
-    }
-
-    //Check if the path can be resumed.
-    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (currWalk != null && remainingPath.Count > 0 && !walking)
-        {
-            if (PathExistsAndValid(remainingPath, remainingStileCrossings))
-            {
-                walkCoroutine = StartCoroutine(DoCurrentWalk(true));
-            }
-        }
-    }
-
-    public bool CurrentPathExistsAndValid(int walkInd)
-    {
-        return (walkInd < 0 || walkInd >= CurrDcond.walks.Count) ? false : PathExistsAndValid(CurrDcond.walks[walkInd].path, CurrDcond.walks[walkInd].stileCrossings);
-    }
-
-    private bool PathExistsAndValid(List<Transform> path, List<STileCrossing> stileCrossings)
-    {
-        if (path.Count <= 0)
-        {
-            return false;
-        }
-
-        //If all the crossings are valid, the path is valid.
-        foreach (STileCrossing cross in stileCrossings)
-        {
-            bool crossGood = false;
-            Vector2Int from = cross.from ? new Vector2Int(cross.from.x, cross.from.y) : cross.fromPos;
-            Vector2Int to = cross.to ? new Vector2Int(cross.to.x, cross.to.y) : cross.toPos;
-
-            //If any of the directions are good, the crossing is good.
-            foreach (Vector2Int dir in cross.dirs)
-            {
-                if ((to - from).Equals(dir))
-                {
-                    crossGood = true;
-                }
-            }
-
-            if (!crossGood)
-            {
-                return false;
-            }
-        }
-
-        return true;
+        walkController.TryStartValidWalk();
     }
     #endregion
 }

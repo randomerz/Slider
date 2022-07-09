@@ -7,30 +7,16 @@ using UnityEngine.Serialization;
 [System.Serializable]
 public class NPCConditionals
 {
-    [System.Serializable]
-    public class Dialogue
-    {
-        [TextArea(1, 4)]
-        public string dialogue;
-
-        public float delayAfterFinishedTyping = 0.5f;
-        public bool waitUntilPlayerAction;  //Player has to press e to continue.
-        public bool doNotRepeatAfterTriggered;
-        public bool dontInterrupt;
-
-        public UnityEvent onDialogueStart;
-        public UnityEvent onDialogueEnd;
-    }
-
     public List<Condition> conditions;
 
     [Header("Dialogue")]
-    public List<Dialogue> dialogueChain;
+    public List<DialogueData> dialogueChain;
     public bool alwaysStartFromBeginning;
-    public UnityEvent onDialogueChanged;
+    [FormerlySerializedAs("onDialogueChanged")]
+    public UnityEvent onConditionalEnter;
     public UnityEvent onDialogueChainExhausted;
 
-    public List<NPC.NPCWalk> walks;
+    public List<NPCWalkData> walks;
 
     [HideInInspector] public int priority;
     private int currentprio = 0;
