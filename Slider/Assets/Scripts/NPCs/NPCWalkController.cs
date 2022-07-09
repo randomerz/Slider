@@ -176,12 +176,12 @@ public class NPCWalkController : NPCCondsController
             spriteRenderer.flipX = !spriteRenderer.flipX;
         }
 
+        animator.SetBoolToFalse("isWalking");
+        currWalk.onPathFinished?.Invoke();
+
         isWalking = false;
         currWalk = null;
         walkCoroutine = null;
-
-        animator.SetBoolToFalse("isWalking");
-        currWalk.onPathFinished?.Invoke();
     }
 
     private void SetPathStartToCurrNPCPos()

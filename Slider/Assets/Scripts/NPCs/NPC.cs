@@ -18,9 +18,8 @@ public class NPC : MonoBehaviour
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private bool spriteDefaultFacingLeft;
 
-    //Dconds
     private int currCondIndex;
-    private Dictionary<NPCConditionals, int> condToCurrDchainIndex;
+    private Dictionary<int, int> condIndexToCurrDchainIndex;
 
     //Dialogue
     public static bool dialogueEnabledAllNPC = true;
@@ -34,10 +33,8 @@ public class NPC : MonoBehaviour
 
     private Coroutine delayBeforeNextDialogueCoroutine;
 
-    //Walking
     private STile currentStileUnderneath;
     NPCWalkController walkController;
-
     private GameObject poofParticles;
 
     public NPCConditionals CurrCond => conds[currCondIndex];
@@ -45,12 +42,12 @@ public class NPC : MonoBehaviour
     private bool DialogueEnabled => dialogueEnabledAllNPC && canGiveDialogue;
     private int CurrDchainIndex {
         get {
-            return condToCurrDchainIndex[CurrCond];
+            return condIndexToCurrDchainIndex[currCondIndex];
         }
 
         set
         {
-            condToCurrDchainIndex[CurrCond] = value;
+            condIndexToCurrDchainIndex[currCondIndex] = value;
         }
     }
 
@@ -77,7 +74,12 @@ public class NPC : MonoBehaviour
         PlayerAction.OnAction -= OnPlayerAction;
     }
 
-    void Update()
+    private void Start()
+    {
+        dialogueDisplay.SetMessagePing(!CurrDchainIsEmpty());
+    }
+
+    private void Update()
     {
         CheckAllConditionals();
 
@@ -108,6 +110,7 @@ public class NPC : MonoBehaviour
     public void AddNewConditionals(NPCConditionals cond)
     {
         conds.Add(cond);
+        condIndexToCurrDchainIndex[conds.Count - 1] = 0;
     }
 
     private void InitializeCondControllers()
@@ -212,9 +215,9 @@ public class NPC : MonoBehaviour
         }
     }
 
-    private void ChangeCurrentConditional(int newDialogue)
+    private void ChangeCurrentConditional(int newCond)
     {
-        currCondIndex = newDialogue;
+        currCondIndex = newCond;
         currDchainExhausted = false;
 
         dialogueDisplay.SetMessagePing(!CurrDchainIsEmpty());
@@ -235,7 +238,6 @@ public class NPC : MonoBehaviour
         {
             float delay = CurrentDialogue().delayAfterFinishedTyping;
             delayBeforeNextDialogueCoroutine = StartCoroutine(SetNextDialogueInChainAfterDelay(delay));
-            SetNextDialogueInChain(true);
         } 
     }
 
@@ -309,10 +311,10 @@ public class NPC : MonoBehaviour
 
     private void InitializeCurrDchainIndices()
     {
-        condToCurrDchainIndex = new Dictionary<NPCConditionals, int>();
-        foreach (var dcond in conds)
+        condIndexToCurrDchainIndex = new Dictionary<int, int>();
+        for (int i = 0; i < conds.Count; i++)
         {
-            condToCurrDchainIndex[dcond] = 0;
+            condIndexToCurrDchainIndex[i] = 0;
         }
     }
 
