@@ -38,7 +38,7 @@ public class ItemPickupEffect : MonoBehaviour
 
     private IEnumerator Cutscene(System.Action onTextVisibleCallback=null)
     {
-        NPC.dialogueEnabledAllNPC = false;
+        NPCDialogueContext.dialogueEnabledAllNPC = false;
         maskObject.SetActive(true);
         animator.SetBool("isVisible", true);
         AudioManager.Play("Item Pick Up");
@@ -67,7 +67,7 @@ public class ItemPickupEffect : MonoBehaviour
         UIManager.canOpenMenus = true;
         Player.SetCanMove(true);
         Player.GetSpriteRenderer().sortingLayerName = "Entity";
-        NPC.dialogueEnabledAllNPC = true;
+        NPCDialogueContext.dialogueEnabledAllNPC = true;
     }
 
     private IEnumerator DampenMusic()

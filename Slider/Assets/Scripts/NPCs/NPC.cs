@@ -13,70 +13,48 @@ public class NPC : MonoBehaviour
     [SerializeField] private NPCAnimatorController animator;
     [SerializeField] private string characterName;
     [FormerlySerializedAs("dconds")] [SerializeField] private List<NPCConditionals> conds;
-
     [SerializeField] private DialogueDisplay dialogueDisplay;
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private bool spriteDefaultFacingLeft;
 
     private int currCondIndex;
-    private Dictionary<int, int> condIndexToCurrDchainIndex;
-
-    //Dialogue
-    public static bool dialogueEnabledAllNPC = true;
-
-    private bool canGiveDialogue;
-    private bool dialogueBoxIsActive;
-    private bool currDchainExhausted;
-    private bool playerInDialogueTrigger;
-    private bool isTypingDialogue;
-    private bool waitingForPlayerAction;
-
-    private Coroutine delayBeforeNextDialogueCoroutine;
-
+    private NPCDialogueContext dialogueCtx;
+    private NPCWalkingContext walkingCtx;
     private STile currentStileUnderneath;
-    NPCWalkController walkController;
     private GameObject poofParticles;
 
+    public List<NPCConditionals> Conds => conds;
+    public int CurrCondIndex => currCondIndex;
     public NPCConditionals CurrCond => conds[currCondIndex];
     public STile CurrentSTileUnderneath => currentStileUnderneath;
-    private bool DialogueEnabled => dialogueEnabledAllNPC && canGiveDialogue;
-    private int CurrDchainIndex {
-        get {
-            return condIndexToCurrDchainIndex[currCondIndex];
-        }
-
-        set
-        {
-            condIndexToCurrDchainIndex[currCondIndex] = value;
-        }
-    }
 
     private void Awake()
     {
-        canGiveDialogue = true;
-
         SetCondPrioritiesToArrayPos();
+        InitializeContexts();
 
-        InitializeCondControllers();
-        InitializeCurrDchainIndices();
+        dialogueCtx.Awake();
+        walkingCtx.Awake();
     }
 
     private void OnEnable()
     {
-        walkController.OnEnable();
-        PlayerAction.OnAction += OnPlayerAction;
         poofParticles = Resources.Load<GameObject>(poofParticleName);
+
+        dialogueCtx.OnEnable();
+        walkingCtx.OnEnable();
     }
 
     private void OnDisable()
     {
-        walkController.OnDisable();
-        PlayerAction.OnAction -= OnPlayerAction;
+        dialogueCtx.OnDisable();
+        walkingCtx.OnDisable();
     }
 
     private void Start()
     {
-        dialogueDisplay.SetMessagePing(!CurrDchainIsEmpty());
+        dialogueCtx.Start();
+        walkingCtx.Start();
     }
 
     private void Update()
@@ -90,16 +68,8 @@ public class NPC : MonoBehaviour
 
         UpdateCondControllers();
 
-        bool finishedTypingCurrDialogue = isTypingDialogue && dialogueDisplay.textTyperText.finishedTyping;
-        if (finishedTypingCurrDialogue)
-        {
-            HandleDialogueFinished();
-        }
-
-        if (DialogueShouldDeactivate())
-        {
-            DeactivateDialogueBox();
-        }
+        dialogueCtx.Update();
+        walkingCtx.Update();
     }
 
     private void FixedUpdate()
@@ -110,94 +80,58 @@ public class NPC : MonoBehaviour
     public void AddNewConditionals(NPCConditionals cond)
     {
         conds.Add(cond);
-        condIndexToCurrDchainIndex[conds.Count - 1] = 0;
-    }
-
-    private void InitializeCondControllers()
-    {
-        walkController = new NPCWalkController(this, animator, sr, spriteDefaultFacingLeft);
-    }
-
-    private void UpdateCondControllers()
-    {
-        walkController.Update();
     }
 
     #region Dialogue
-    public void DialogueTriggerEnter()
+    public void OnDialogueTriggerEnter()
     {
-        playerInDialogueTrigger = true;
-
-        bool shouldStartTypingDialogue = !CurrDchainIsEmpty() && !NPCGivingDontInterruptDialogue();
-        if (shouldStartTypingDialogue)
-        {
-            if (CurrCond.alwaysStartFromBeginning)
-            {
-                CurrDchainIndex = 0;
-                currDchainExhausted = false;
-            }
-
-            TypeCurrentDialogue();
-        }
+        dialogueCtx.OnDialogueTriggerEnter();
     }
 
-    public void DialogueTriggerExit()
+    public void OnDialogueTriggerExit()
     {
-        playerInDialogueTrigger = false;
-
-        if (DialogueShouldDeactivate())
-        {
-            DeactivateDialogueBox();
-        }
-    }
-
-    public void SetDialogueEnabled(bool value)
-    {
-        canGiveDialogue = value;
+        dialogueCtx.OnDialogueTriggerExit();
     }
 
     public void TypeCurrentDialogue()
     {
-        if (DialogueEnabled && !CurrDchainIsEmpty())
-        {
-            dialogueDisplay.DisplaySentence(CurrCond.GetDialogueString(CurrDchainIndex));
+        dialogueCtx.TypeCurrentDialogue();
+    }
+    #endregion Dialogue
 
-            isTypingDialogue = true;
-            dialogueBoxIsActive = true;
-
-            CurrCond.OnDialogueChainStart(CurrDchainIndex);
-        }
+    #region Walking
+    public void StartWalkAtIndex(int walkInd)
+    {
+        walkingCtx.TryStartWalkAtIndex(walkInd);
     }
 
-    private void OnPlayerAction(object sender, System.EventArgs e)
+    public void StartValidWalk()
     {
-        if (dialogueBoxIsActive)
+        walkingCtx.TryStartValidWalk();
+    }
+    #endregion
+
+    #region Teleportation
+    public void Teleport(Transform trans)
+    {
+        if (transform.position != trans.position)
         {
-            if (waitingForPlayerAction)
-            {
-                waitingForPlayerAction = false;
-                SetNextDialogueInChain(true);
-            }
-            else if (isTypingDialogue)
-            {
-                SkipText();
-            }
+            Instantiate(poofParticles, transform.position, Quaternion.identity);
+            transform.position = trans.position;
+            transform.parent = trans.parent;
         }
     }
+    #endregion
 
-    private void DeactivateDialogueBox()
+    private void InitializeContexts()
     {
-        dialogueDisplay.FadeAwayDialogue();
+        dialogueCtx = new NPCDialogueContext(this, dialogueDisplay);
+        walkingCtx = new NPCWalkingContext(this, animator, sr, spriteDefaultFacingLeft);
+    }
 
-        DontAllowDialogueToContinue();
-
-        if (!CurrDchainIsEmpty() && CurrentDialogue().doNotRepeatAfterTriggered)
-        {
-            SetNextDialogueInChain();
-        }
-
-        dialogueBoxIsActive = false;
-        isTypingDialogue = false;
+    private void UpdateCondControllers()
+    {
+        walkingCtx.Update();
     }
 
     private void PollForNewConditional()
@@ -208,78 +142,14 @@ public class NPC : MonoBehaviour
         {
             ChangeCurrentConditional(maxPrioCond);
 
-            if (dialogueBoxIsActive && playerInDialogueTrigger)
-            {
-                TypeCurrentDialogue();
-            }
+            dialogueCtx.OnConditionalsChanged();
         }
     }
 
     private void ChangeCurrentConditional(int newCond)
     {
         currCondIndex = newCond;
-        currDchainExhausted = false;
-
-        dialogueDisplay.SetMessagePing(!CurrDchainIsEmpty());
-
         CurrCond.onConditionalEnter?.Invoke();
-    }
-
-    private void HandleDialogueFinished()
-    {
-        isTypingDialogue = false;
-        CurrCond.OnDialogueChainEnd(CurrDchainIndex);
-
-        if (CurrentDialogue().waitUntilPlayerAction)
-        {
-            waitingForPlayerAction = true;
-        }
-        else
-        {
-            float delay = CurrentDialogue().delayAfterFinishedTyping;
-            delayBeforeNextDialogueCoroutine = StartCoroutine(SetNextDialogueInChainAfterDelay(delay));
-        } 
-    }
-
-    private IEnumerator SetNextDialogueInChainAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        SetNextDialogueInChain(true);
-    }
-
-    private void SetNextDialogueInChain(bool typeNextDialogue = false)
-    {
-        var dChain = CurrCond.dialogueChain;
-        if (CurrDchainIndex < dChain.Count - 1)
-        {
-            CurrDchainIndex++;
-            if (typeNextDialogue)
-            {
-                TypeCurrentDialogue();
-            }
-        }
-        else
-        {
-            currDchainExhausted = true;
-            CurrCond.OnDialogueChainExhausted();
-        }
-    }
-
-    private void DontAllowDialogueToContinue()
-    {
-        waitingForPlayerAction = false;
-
-        if (delayBeforeNextDialogueCoroutine != null)
-        {
-            StopCoroutine(delayBeforeNextDialogueCoroutine);
-            delayBeforeNextDialogueCoroutine = null;
-        }
-    }
-
-    private void SkipText()
-    {
-        dialogueDisplay.textTyperText.TrySkipText();
-        dialogueDisplay.textTyperBG.TrySkipText();
     }
 
     private int GetCondIndexWithMaxPriority()
@@ -309,15 +179,6 @@ public class NPC : MonoBehaviour
         }
     }
 
-    private void InitializeCurrDchainIndices()
-    {
-        condIndexToCurrDchainIndex = new Dictionary<int, int>();
-        for (int i = 0; i < conds.Count; i++)
-        {
-            condIndexToCurrDchainIndex[i] = 0;
-        }
-    }
-
     private void CheckAllConditionals()
     {
         foreach (NPCConditionals d in conds)
@@ -328,61 +189,6 @@ public class NPC : MonoBehaviour
 
     private bool CanUpdateConditionals()
     {
-        return DialogueEnabled && !NPCGivingDontInterruptDialogue();
+        return dialogueCtx.DialogueEnabled && !dialogueCtx.NPCGivingDontInterruptDialogue();
     }
-
-    private bool DialogueShouldDeactivate()
-    {
-        return dialogueBoxIsActive && !playerInDialogueTrigger && !NPCGivingDontInterruptDialogue();
-    }
-
-    private bool NPCGivingDontInterruptDialogue()
-    {
-        if (CurrDchainIsEmpty())
-        {
-            return false;
-        }
-
-        bool givingDialogue = dialogueBoxIsActive && !currDchainExhausted;
-        return givingDialogue && CurrentDialogue().dontInterrupt;
-    }
-
-    private DialogueData CurrentDialogue()
-    {
-        if (CurrDchainIndex < 0 || CurrDchainIndex >= CurrCond.dialogueChain.Count)
-        {
-            Debug.LogError($"Attempted to Access Dialogue at invalid index: {CurrDchainIndex}");
-            return null;
-        }
-
-        return CurrCond.dialogueChain[CurrDchainIndex];
-    }
-
-    private bool CurrDchainIsEmpty()
-    {
-        return CurrCond.dialogueChain.Count == 0;
-    }
-    #endregion Dialogue
-
-    public void Teleport(Transform trans)
-    {
-        if (transform.position != trans.position)
-        {
-            Instantiate(poofParticles, transform.position, Quaternion.identity);
-            transform.position = trans.position;
-            transform.parent = trans.parent;
-        }
-    }
-
-    #region Walking
-    public void StartWalkAtIndex(int walkInd)
-    {
-        walkController.TryStartWalkAtIndex(walkInd);
-    }
-
-    public void StartValidWalk()
-    {
-        walkController.TryStartValidWalk();
-    }
-    #endregion
 }

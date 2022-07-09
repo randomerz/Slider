@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class NPCWalkController : NPCCondsController
+internal class NPCWalkingContext : NPCContext
 {
 
     private bool isWalking;
@@ -16,7 +16,7 @@ public class NPCWalkController : NPCCondsController
     private SpriteRenderer spriteRenderer;
     private bool spriteDefaultFacingLeft;
 
-    public NPCWalkController(NPC context, NPCAnimatorController animator, SpriteRenderer sr, bool spriteDefaultFacingLeft) : base(context)
+    public NPCWalkingContext(NPC context, NPCAnimatorController animator, SpriteRenderer sr, bool spriteDefaultFacingLeft) : base(context)
     {
         this.animator = animator;
         this.spriteRenderer = sr;
@@ -41,7 +41,7 @@ public class NPCWalkController : NPCCondsController
     {
         if (!WalkIndexInBounds(walkInd))
         {
-            Debug.LogError($"Tried to start a walk event for NPC {npcContext.gameObject.name} that did not exist.");
+            Debug.LogError($"Tried to start a walk event for NPC {context.gameObject.name} that did not exist.");
         }
         else
         {
@@ -51,13 +51,13 @@ public class NPCWalkController : NPCCondsController
 
     public void TryStartValidWalk()
     {
-        npcContext.StartCoroutine(WaitForTilesToStopMoving(() =>
+        context.StartCoroutine(WaitForTilesToStopMoving(() =>
         {
             int validWalkIndex = FindValidWalkIndex();
 
             if (validWalkIndex < 0)
             {
-                Debug.LogError($"Valid Walk Not Found For {npcContext.gameObject.name}");
+                Debug.LogError($"Valid Walk Not Found For {context.gameObject.name}");
             }
             else
             {
@@ -87,10 +87,10 @@ public class NPCWalkController : NPCCondsController
     {
         if (walkCoroutine != null)
         {
-            npcContext.StopCoroutine(walkCoroutine);
+            context.StopCoroutine(walkCoroutine);
         }
 
-        currWalk = npcContext.CurrCond.walks[walkInd];
+        currWalk = context.CurrCond.walks[walkInd];
         remainingStileCrossings = new List<STileCrossing>(currWalk.stileCrossings);
         remainingPath = new List<Transform>(currWalk.path);
 
@@ -98,7 +98,7 @@ public class NPCWalkController : NPCCondsController
         animator.SetBoolToTrue("isWalking");
         currWalk.onPathStarted?.Invoke();
 
-        walkCoroutine = npcContext.StartCoroutine(DoCurrentWalk());
+        walkCoroutine = context.StartCoroutine(DoCurrentWalk());
     }
 
     private void ResumeWalk()
@@ -106,12 +106,12 @@ public class NPCWalkController : NPCCondsController
         currWalk.onPathResumed?.Invoke();
         SetPathStartToCurrNPCPos();
 
-        walkCoroutine = npcContext.StartCoroutine(DoCurrentWalk());
+        walkCoroutine = context.StartCoroutine(DoCurrentWalk());
     }
 
     private void InterruptWalk()
     {
-        npcContext.StopCoroutine(walkCoroutine);
+        context.StopCoroutine(walkCoroutine);
         walkCoroutine = null;
         isWalking = false;
         animator.SetBoolToFalse("isWalking");
@@ -124,11 +124,11 @@ public class NPCWalkController : NPCCondsController
         float t;
         while (remainingPath.Count >= 2)
         {
-            scaledSpeed = npcContext.speed / Vector3.Distance(remainingPath[0].position, remainingPath[1].position);
+            scaledSpeed = context.speed / Vector3.Distance(remainingPath[0].position, remainingPath[1].position);
             t = 0;
             while (t < 1f)
             {
-                npcContext.transform.position = Vector3.Lerp(remainingPath[0].position, remainingPath[1].position, t);
+                context.transform.position = Vector3.Lerp(remainingPath[0].position, remainingPath[1].position, t);
                 t += scaledSpeed * Time.deltaTime;
 
                 UpdateSpriteFacingDir();
@@ -136,7 +136,7 @@ public class NPCWalkController : NPCCondsController
 
                 yield return new WaitForEndOfFrame();
             }
-            npcContext.transform.position = remainingPath[1].position;
+            context.transform.position = remainingPath[1].position;
             remainingPath.RemoveAt(0);
         }
 
@@ -162,10 +162,10 @@ public class NPCWalkController : NPCCondsController
 
     private void UpdateSTileCrossings()
     {
-        if (remainingStileCrossings.Count > 0 && remainingStileCrossings[0].to == npcContext.CurrentSTileUnderneath)
+        if (remainingStileCrossings.Count > 0 && remainingStileCrossings[0].to == context.CurrentSTileUnderneath)
         {
             remainingStileCrossings.RemoveAt(0);
-            npcContext.transform.SetParent(npcContext.CurrentSTileUnderneath == null ? null : npcContext.CurrentSTileUnderneath.transform);
+            context.transform.SetParent(context.CurrentSTileUnderneath == null ? null : context.CurrentSTileUnderneath.transform);
         }
     }
 
@@ -186,14 +186,14 @@ public class NPCWalkController : NPCCondsController
 
     private void SetPathStartToCurrNPCPos()
     {
-        Transform trans = npcContext.transform;
+        Transform trans = context.transform;
         GameObject objectAtNPCPos = Object.Instantiate(remainingPath[0].gameObject, trans.position, trans.rotation, trans.parent);
         remainingPath[0] = objectAtNPCPos.transform;
     }
 
     private int FindValidWalkIndex()
     {
-        for (int i = 0; i < npcContext.CurrCond.walks.Count; i++)
+        for (int i = 0; i < context.CurrCond.walks.Count; i++)
         {
             if (PathExistsAndValid(i))
             {
@@ -221,7 +221,7 @@ public class NPCWalkController : NPCCondsController
     {
         if (WalkIndexInBounds(walkInd))
         {
-            NPCWalkData walk = npcContext.CurrCond.walks[walkInd];
+            NPCWalkData walk = context.CurrCond.walks[walkInd];
             return PathExistsAndValid(walk.path, walk.stileCrossings);
         }
         return false;
@@ -247,7 +247,6 @@ public class NPCWalkController : NPCCondsController
 
     private bool WalkIndexInBounds(int walkInd)
     {
-        return walkInd >= 0 && walkInd < npcContext.CurrCond.walks.Count;
+        return walkInd >= 0 && walkInd < context.CurrCond.walks.Count;
     }
 }
-
