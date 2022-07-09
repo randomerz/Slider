@@ -24,7 +24,7 @@ public class ChadRace : MonoBehaviour
     public bool tilesAdjacent;
     public Animator chadimator;
     public NPC npcScript;
-    public NPCAction countDownDialogue;
+    public NPCConditionals countDownDialogue;
 
     private Vector2 chadStartLocal;
     private Vector2 playerStart;
@@ -58,9 +58,9 @@ public class ChadRace : MonoBehaviour
 
         // Setting the first time dialogue
         countDownDialogue.dialogueChain.Clear();
-        countDownDialogue.dialogueChain.Add(new NPCAction.Dialogue());
+        countDownDialogue.dialogueChain.Add(new NPCConditionals.Dialogue());
         countDownDialogue.dialogueChain[0].dialogue = "Bet I could beat you to the bell (e to start)";
-        npcScript.npcActions.Add(countDownDialogue);
+        npcScript.conds.Add(countDownDialogue);
     }
 
     // Update is called once per frame

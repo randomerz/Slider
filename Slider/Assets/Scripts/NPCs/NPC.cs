@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -35,11 +33,13 @@ public class NPC : MonoBehaviour
         public UnityEvent onPathResumed;
     }
 
+    private readonly string poofParticleName = "SmokePoof Variant";
+
     public string characterName;
     [SerializeField] private float speed;
     public NPCAnimatorController animator;
     [FormerlySerializedAs("dconds")]
-    public List<NPCAction> npcActions;
+    public List<NPCConditionals> conds;
 
     [SerializeField] private DialogueDisplay dialogueDisplay;
     [SerializeField] private SpriteRenderer sr;
@@ -47,7 +47,7 @@ public class NPC : MonoBehaviour
 
     //Dconds
     private int currDcondIndex;
-    private Dictionary<NPCAction, int> dcondToCurrDchainIndex;
+    private Dictionary<NPCConditionals, int> dcondToCurrDchainIndex;
 
     //Dialogue
     public static bool dialogueEnabledAllNPC = true;
@@ -72,7 +72,7 @@ public class NPC : MonoBehaviour
 
     private bool DialogueEnabled => dialogueEnabledAllNPC && canGiveDialogue;
 
-    private NPCAction CurrDcond => npcActions[currDcondIndex];
+    private NPCConditionals CurrDcond => conds[currDcondIndex];
 
     private int CurrDchainIndex {
         get {
@@ -100,7 +100,7 @@ public class NPC : MonoBehaviour
         SGridAnimator.OnSTileMoveStart += OnSTileMoveStart;
         SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
 
-        poofParticles = Resources.Load<GameObject>("SmokePoof Variant");
+        poofParticles = Resources.Load<GameObject>();
     }
 
     private void OnDisable()
@@ -204,7 +204,6 @@ public class NPC : MonoBehaviour
 
         DontAllowDialogueToContinue();
 
-        //Dialogue that doesn't repeat should be skipped now.
         if (!CurrDchainIsEmpty() && CurrentDialogue().doNotRepeatAfterTriggered)
         {
             SetNextDialogueInChain();
@@ -300,12 +299,12 @@ public class NPC : MonoBehaviour
     {
         int maxPrioIndex = -1;
         int maxPrio = 0;
-        for (int i = 0; i < npcActions.Count; i++)
+        for (int i = 0; i < conds.Count; i++)
         {
-            if (npcActions[i].GetPrio() > maxPrio)
+            if (conds[i].GetPrio() > maxPrio)
             {
                 maxPrioIndex = i;
-                maxPrio = npcActions[i].GetPrio();
+                maxPrio = conds[i].GetPrio();
             }
         }
         if (maxPrioIndex == -1)
@@ -317,16 +316,16 @@ public class NPC : MonoBehaviour
 
     private void SetDcondPrioritiesToArrayPos()
     {
-        for (int i = 0; i < npcActions.Count; i++)
+        for (int i = 0; i < conds.Count; i++)
         {
-            npcActions[i].priority = i + 1;
+            conds[i].priority = i + 1;
         }
     }
 
     private void InitializeCurrDchainIndices()
     {
-        dcondToCurrDchainIndex = new Dictionary<NPCAction, int>();
-        foreach (var dcond in npcActions)
+        dcondToCurrDchainIndex = new Dictionary<NPCConditionals, int>();
+        foreach (var dcond in conds)
         {
             dcondToCurrDchainIndex[dcond] = 0;
         }
@@ -334,7 +333,7 @@ public class NPC : MonoBehaviour
 
     private void CheckAllDconds()
     {
-        foreach (NPCAction d in npcActions)
+        foreach (NPCConditionals d in conds)
         {
             d.CheckConditions();
         }
@@ -361,7 +360,7 @@ public class NPC : MonoBehaviour
         return givingDialogue && CurrentDialogue().dontInterrupt;
     }
 
-    private NPCAction.Dialogue CurrentDialogue()
+    private NPCConditionals.Dialogue CurrentDialogue()
     {
         if (CurrDchainIsEmpty())
         {

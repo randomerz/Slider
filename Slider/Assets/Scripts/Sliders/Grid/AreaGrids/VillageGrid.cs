@@ -10,29 +10,14 @@ public class VillageGrid : SGrid
     public GameObject caveDoorRocks;
     public GameObject particleSpawner;
 
-    [Header("Chad Animation stuff")]
-    [SerializeField] private GameObject chad;
-    [SerializeField] private GameObject flashlight;
-    [SerializeField] private AnimationCurve xJumpMotion;
-    [SerializeField] private AnimationCurve yJumpMotion;
-    [SerializeField] private SpriteRenderer chadRenderer;
-    [SerializeField] private SpriteRenderer flashRenderer;
-    [SerializeField] private float jumpDuration;
-    [SerializeField] private GameObject chadPickUpPoint;
-    private Collider2D chadllider;
-    private Transform oldFlashParent;
-    private Vector3 flashlightPadding;
-    private bool chadJumped;
-    private bool chadFell;
-    private bool chadMet;
-
     private bool fishOn;
 
     [SerializeField] private RuinsSymbols ruinsSymbols;
     private Coroutine shuffleBuildUpCoroutine;
     private bool checkCompletion = false;
 
-    public override void Init() {
+    public override void Init()
+    {
         myArea = Area.Village;
 
         foreach (Collectible c in collectibles)
@@ -41,16 +26,6 @@ public class VillageGrid : SGrid
         }
 
         base.Init();
-
-        // === Chad Stuff ===
-        chadFell = false;
-        chadMet = false;
-        chadJumped = false;
-        flashlightPadding = Vector3.up * 0.5f;
-        // Finds the non-trigger collider in chad
-        var colliders = chad.GetComponents(typeof(Collider2D));
-        chadllider = ((Collider2D)colliders[0]).isTrigger? (Collider2D)colliders[1] : (Collider2D)colliders[0];
-        // === Chad Stuff ===
 
         if (fishOn)
         {
@@ -65,34 +40,34 @@ public class VillageGrid : SGrid
 
         AudioManager.PlayMusic("Village");
         UIEffects.FadeFromBlack();
-        
-        if (checkCompletion) {
+
+        if (checkCompletion)
+        {
             UpdateButtonCompletions(this, null);
         }
-
-        // Set the flashlight collider to be disabled from the beginning so that the player can't collect it
-        flashlight.GetComponent<Item>().SetCollider(false);
     }
-    
-    private void OnEnable() {
-        SGridAnimator.OnSTileMoveEnd += CheckChadMoved;
-        if (checkCompletion) {
+
+    private void OnEnable()
+    {
+        if (checkCompletion)
+        {
             SGrid.OnGridMove += SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
         }
     }
 
-    private void OnDisable() {
-        SGridAnimator.OnSTileMoveEnd -= CheckChadMoved;
-        if (checkCompletion) {
+    private void OnDisable()
+    {
+        if (checkCompletion)
+        {
             SGrid.OnGridMove -= SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;
         }
     }
 
-    public override void Save() 
+    public override void Save()
     {
         base.Save();
 
@@ -103,7 +78,7 @@ public class VillageGrid : SGrid
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
-        
+
         checkCompletion = profile.GetBool("villageCompletion");
         fishOn = profile.GetBool("villageFishOn");
 
@@ -128,7 +103,8 @@ public class VillageGrid : SGrid
     }
 
     // Puzzle 8 - 8puzzle
-    public void ShufflePuzzle() {
+    public void ShufflePuzzle()
+    {
         if (shuffleBuildUpCoroutine == null)
         {
             shuffleBuildUpCoroutine = StartCoroutine(ShuffleBuildUp());
@@ -140,25 +116,25 @@ public class VillageGrid : SGrid
         //AudioManager.Play("Puzzle Complete");
 
         //yield return new WaitForSeconds(0.5f);
-        
+
         CameraShake.Shake(0.25f, 0.25f);
         AudioManager.Play("Slide Rumble");
         ruinsSymbols.FlashSymbol(0);
 
         yield return new WaitForSeconds(1f);
-        
+
         CameraShake.Shake(0.25f, 0.25f);
         AudioManager.Play("Slide Rumble");
         ruinsSymbols.FlashSymbol(1);
 
         yield return new WaitForSeconds(1f);
-        
+
         CameraShake.Shake(0.75f, 0.5f);
         AudioManager.Play("Slide Rumble");
         ruinsSymbols.FlashSymbol(2);
 
         yield return new WaitForSeconds(1f);
-        
+
         CameraShake.Shake(1.5f, 2.5f);
         AudioManager.PlayWithVolume("Slide Explosion", 0.2f);
         AudioManager.Play("TFT Bell");
@@ -176,6 +152,12 @@ public class VillageGrid : SGrid
 
     private void DoShuffle()
     {
+        if (GetNumTilesCollected() != 8)
+        {
+            Debug.LogError("Tried to shuffle village when not 8 tiles were collected! Detected " + GetNumTilesCollected() + " tiles.");
+            return;
+        }
+
         int[,] shuffledPuzzle = new int[3, 3] { { 7, 0, 1 },
                                                 { 6, 4, 8 },
                                                 { 5, 3, 2 } };
@@ -218,100 +200,5 @@ public class VillageGrid : SGrid
         SaveSystem.Current.SetBool("caveDoorExploded", true);
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");
-    }
-
-    // Mini-Puzzle - Chad Flashlight
-    public void CheckChadMoved(object sender, SGridAnimator.OnTileMoveArgs e) {
-        if (GetStile(8).isTileActive && e.stile.islandId == 8 && !chadFell && chadMet && chadJumped) {
-            chadFell = true;
-            StartCoroutine(ChadFall());
-        }
-    }
-
-    public void ChadPickUpFlashLight() {
-        if (!chadMet) {
-            chadMet = true;
-        }
-    }
-
-    // So that the dcond can call after dialogue ends
-    public void ChadJumpStarter() {
-        if (!chadJumped) {
-            StartCoroutine(ChadJump());
-        }
-    }
-
-    // Animates Chad Jumping
-    public IEnumerator ChadJump() {
-        var chadform = chad.transform;
-        var chadimator = chadform.GetChild(0).GetComponent<Animator>();
-        var target = new GameObject().transform;
-        target.parent = GetStile(8).transform;
-        target.localPosition = chadform.localPosition + new Vector3(1.5f, 1);
-        chadimator.SetBool("isJumping", true);
-
-        float t = 0;
-
-        Vector3 start = new Vector3(chadform.localPosition.x, chadform.localPosition.y);
-        while (t < jumpDuration)
-        {
-            float x = xJumpMotion.Evaluate(t / jumpDuration);
-            float y = yJumpMotion.Evaluate(t / jumpDuration);
-            Vector3 pos = new Vector3(Mathf.Lerp(start.x, target.transform.localPosition.x, x),
-                                      Mathf.Lerp(start.y, target.transform.localPosition.y, y));
-            
-            chadform.localPosition = pos;
-
-            yield return null;
-            t += Time.deltaTime;
-        }
-
-        //chadform.localPosition = target.localPosition;
-        chadllider.enabled = false;
-
-        chadimator.SetBool("isJumping", false);
-        chadJumped = true;
-        yield return null;
-    }
-
-    // Animates Chad Falling
-    private IEnumerator ChadFall() {
-        var chadform = chad.transform;
-        var chadimator = chadform.GetChild(0).GetComponent<Animator>();
-        var target = new GameObject().transform;
-        target.localPosition = chadform.localPosition + new Vector3(1f, -1);
-        chadimator.SetBool("isTipping", true);
-
-        yield return new WaitForSeconds(0.5f);
-
-        chadimator.SetBool("isFallen", true);
-        AudioManager.Play("Fall");
-        Vector3 startPos = chad.transform.localPosition;
-        Vector3 targetPos = target.transform.localPosition;
-
-        float fallDuration = 0.5f;
-        float t = 0;
-        while (t < fallDuration) {
-            chadform.localPosition = Vector3.Lerp(startPos, targetPos, t / fallDuration);
-
-            yield return null;
-            t += Time.deltaTime;
-        }
-
-        chadimator.SetBool("isTipping", false);
-        AudioManager.Play("Hurt");
-        chadform.localPosition = targetPos;
-
-        flashlight.transform.parent = GetStile(8).transform;
-        flashlight.GetComponent<Item>().DropItem(chad.transform.position + (Vector3.right * 1f), callback: ChadFinishFall);
-    }
-    private void ChadFinishFall() {
-        var flashlight_item = flashlight.GetComponent<Item>();
-        flashlight_item.SetCollider(true);
-        chadllider.enabled = true;
-    }
-
-    public void ChadFell(Condition cond) {
-        cond.SetSpec(chadFell || PlayerInventory.Contains("Flashlight"));
     }
 }
