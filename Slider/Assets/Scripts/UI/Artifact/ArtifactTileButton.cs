@@ -128,10 +128,6 @@ public class ArtifactTileButton : MonoBehaviour
         buttonAnimator.SetLightning(v);
     }
 
-    public void FragLightningPreview(bool v)
-    {
-        buttonAnimator.FragLightningPreview(v);
-    }
     public void SetSelected(bool v)
     {
         buttonAnimator.SetSelected(v);

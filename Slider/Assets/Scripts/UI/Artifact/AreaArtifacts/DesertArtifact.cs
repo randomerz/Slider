@@ -199,6 +199,7 @@ public class DesertArtifact : UIArtifact
             QueueCheckAndAdd(swap);
             QueueCheckAfterMove(this, null);
             DeselectCurrentButton();
+            UpdatePushedDowns(null, null);
             return true;
         }
         else
