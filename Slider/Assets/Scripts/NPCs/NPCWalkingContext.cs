@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-internal class NPCWalkingContext : NPCContext
+internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
 {
 
     private bool isWalking;
@@ -12,7 +12,7 @@ internal class NPCWalkingContext : NPCContext
     private List<Transform> remainingPath;
     private Coroutine walkCoroutine;
 
-    private NPCAnimatorController animator; 
+    private NPCAnimatorController animator;
     private SpriteRenderer spriteRenderer;
     private bool spriteDefaultFacingLeft;
 

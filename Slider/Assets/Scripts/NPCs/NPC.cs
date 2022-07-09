@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
-public class NPC : MonoBehaviour
+public class NPC : MonoBehaviourContextSubscriber<NPC>
 {
     private readonly string poofParticleName = "SmokePoof Variant";
 
@@ -28,48 +28,27 @@ public class NPC : MonoBehaviour
     public NPCConditionals CurrCond => conds[currCondIndex];
     public STile CurrentSTileUnderneath => currentStileUnderneath;
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         SetCondPrioritiesToArrayPos();
-        InitializeContexts();
-
-        dialogueCtx.Awake();
-        walkingCtx.Awake();
     }
 
-    private void OnEnable()
+    private new void OnEnable()
     {
+        base.OnEnable();
         poofParticles = Resources.Load<GameObject>(poofParticleName);
-
-        dialogueCtx.OnEnable();
-        walkingCtx.OnEnable();
     }
 
-    private void OnDisable()
+    private new void Update()
     {
-        dialogueCtx.OnDisable();
-        walkingCtx.OnDisable();
-    }
-
-    private void Start()
-    {
-        dialogueCtx.Start();
-        walkingCtx.Start();
-    }
-
-    private void Update()
-    {
+        base.Update();
         CheckAllConditionals();
 
         if (CanUpdateConditionals())
         {
             PollForNewConditional();
         }
-
-        UpdateCondControllers();
-
-        dialogueCtx.Update();
-        walkingCtx.Update();
     }
 
     private void FixedUpdate()
@@ -123,26 +102,29 @@ public class NPC : MonoBehaviour
     }
     #endregion
 
-    private void InitializeContexts()
+    #region MonoBehaviourContextSubscriber
+    protected override void InitializeContexts()
     {
         dialogueCtx = new NPCDialogueContext(this, dialogueDisplay);
         walkingCtx = new NPCWalkingContext(this, animator, sr, spriteDefaultFacingLeft);
-    }
 
-    private void UpdateCondControllers()
-    {
-        walkingCtx.Update();
+        RegisterProvider(dialogueCtx);
+        RegisterProvider(walkingCtx);
     }
+    #endregion
 
     private void PollForNewConditional()
     {
-        int maxPrioCond = GetCondIndexWithMaxPriority();
-        bool condIsNew = currCondIndex != maxPrioCond;
+        int maxPrioIndex = GetCondIndexWithMaxPriority();
+        if (maxPrioIndex == -1)
+        {
+            Debug.LogError("No suitable dialogue can be displayed!");
+        }
+
+        bool condIsNew = currCondIndex != maxPrioIndex;
         if (condIsNew)
         {
-            ChangeCurrentConditional(maxPrioCond);
-
-            dialogueCtx.OnConditionalsChanged();
+            ChangeCurrentConditional(maxPrioIndex);
         }
     }
 
@@ -150,6 +132,7 @@ public class NPC : MonoBehaviour
     {
         currCondIndex = newCond;
         CurrCond.onConditionalEnter?.Invoke();
+        dialogueCtx.OnConditionalsChanged();
     }
 
     private int GetCondIndexWithMaxPriority()
@@ -163,10 +146,6 @@ public class NPC : MonoBehaviour
                 maxPrioIndex = i;
                 maxPrio = conds[i].GetPrio();
             }
-        }
-        if (maxPrioIndex == -1)
-        {
-            Debug.LogError("No suitable dialogue can be displayed!");
         }
         return maxPrioIndex;
     }

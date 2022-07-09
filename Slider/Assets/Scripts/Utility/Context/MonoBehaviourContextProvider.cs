@@ -1,9 +1,10 @@
-﻿//L: This is mainly for organization, as a way of breaking up the entire behaviour of the NPC script.
-internal abstract class NPCContext
-{
-    protected NPC context;
+﻿using UnityEngine;
 
-    public NPCContext(NPC context)
+public class MonoBehaviourContextProvider<T> where T : MonoBehaviour
+{
+    protected T context;
+
+    public MonoBehaviourContextProvider(T context)
     {
         this.context = context;
     }
@@ -16,3 +17,4 @@ internal abstract class NPCContext
     public virtual void Start() { }
     public virtual void Update() { }
 }
+

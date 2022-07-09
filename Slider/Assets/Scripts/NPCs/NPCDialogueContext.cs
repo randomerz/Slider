@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-internal class NPCDialogueContext : NPCContext
+internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 {
     public static bool dialogueEnabledAllNPC = true;
 
