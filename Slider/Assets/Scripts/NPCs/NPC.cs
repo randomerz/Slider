@@ -116,7 +116,7 @@ public class NPC : MonoBehaviour
         }
 
         bool lastDialogueFinished = dconds[currDconds].dialogueChain.Count > 0 && dconds[currDconds].dialogueChain.Count - 1 == currDialogueInChain && dialogueDisplay.textTyperText.finishedTyping;
-        bool canUpdateDialogue = (dconds[currDconds].dialogueChain.Count > 0 && !dconds[currDconds].dialogueChain[currDialogueInChain].dontInterrupt) || lastDialogueFinished;
+        bool canUpdateDialogue = (dconds[currDconds].dialogueChain.Count > 0 && !dconds[currDconds].dialogueChain[currDialogueInChain].dontInterrupt) || lastDialogueFinished || !dialogueActive;
 
         if (dChainExhausted && !playerInTrigger)
         {

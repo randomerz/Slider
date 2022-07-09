@@ -452,6 +452,7 @@ public class SGrid : MonoBehaviour, ISavable
     public virtual void EnableStile(STile stile, bool flickerButton=true)
     {
         stile.SetTileActive(true);
+        stile.isTileCollected = true;
         UIArtifact.GetInstance().AddButton(stile, flickerButton);
         OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
     }
