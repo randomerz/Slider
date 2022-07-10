@@ -6,7 +6,7 @@ public class DiceGizmo : MonoBehaviour
 {
     public STile myStile;
     public NPC npcScript;
-    public DialogueConditionals NumberDialogue;
+    public NPCConditionals NumberDialogue;
 
     public int value;
     public Sprite[] sprites;
@@ -21,12 +21,11 @@ public class DiceGizmo : MonoBehaviour
             FindSTile();
         }
         if (shouldDisableAtStart)
-            gameObject.SetActive(false); 
+            gameObject.SetActive(false);
 
         NumberDialogue.dialogueChain.Clear();
-        NumberDialogue.dialogueChain.Add(new DialogueConditionals.Dialogue());
-        NumberDialogue.dialogueChain[0].dialogue = value.ToString();
-        npcScript.dconds.Add(NumberDialogue);
+        NumberDialogue.dialogueChain.Add(ConstructDiceDialogue());
+        npcScript.AddNewConditionals(NumberDialogue);
     }
 
     private void Update()
@@ -37,7 +36,7 @@ public class DiceGizmo : MonoBehaviour
         }
         this.GetComponent<SpriteRenderer>().sprite = sprites[value - 1];
         NumberDialogue.dialogueChain[0].dialogue = value.ToString();
-        npcScript.TypeNextDialogue();
+        npcScript.TypeCurrentDialogue();
     }
 
     private void OnEnable()
@@ -90,5 +89,12 @@ public class DiceGizmo : MonoBehaviour
 
         if (i == 100)
             Debug.LogWarning("something went wrong in finding stile!");
+    }
+
+    private DialogueData ConstructDiceDialogue()
+    {
+        var dialogue = new DialogueData();
+        dialogue.dialogue = value.ToString();
+        return dialogue;
     }
 }

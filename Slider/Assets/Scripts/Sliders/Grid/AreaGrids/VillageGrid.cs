@@ -88,7 +88,7 @@ public class VillageGrid : SGrid
 
 
     // === Village puzzle specific ===
-    public void CheckFishOn(Conditionals.Condition c)
+    public void CheckFishOn(Condition c)
     {
         c.SetSpec(fishOn);
     }

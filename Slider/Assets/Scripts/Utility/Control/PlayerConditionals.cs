@@ -65,7 +65,7 @@ public class PlayerConditionals : MonoBehaviour
         }
     }
 
-    public void CheckConditionSpec(Conditionals.Condition c)
+    public void CheckConditionSpec(Condition c)
     {
         c.SetSpec(CheckCondition(false));
     }

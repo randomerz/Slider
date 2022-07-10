@@ -186,7 +186,7 @@ public class OceanGrid : SGrid
         return knotBox.CheckLines() == 0;
     }
 
-    public void BuoyAllFound(Conditionals.Condition c)
+    public void BuoyAllFound(Condition c)
     {
         if (!AllBuoy())
         {
@@ -203,7 +203,7 @@ public class OceanGrid : SGrid
         return GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive;
     }
 
-    public void knotBoxEnabled(Conditionals.Condition c)
+    public void knotBoxEnabled(Condition c)
     {
         if (!knotBox.isActiveAndEnabled && (GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
         {
@@ -215,7 +215,7 @@ public class OceanGrid : SGrid
         }
     }
 
-    public void BuoyCheck(Conditionals.Condition c)
+    public void BuoyCheck(Condition c)
     {
         c.SetSpec(BuoyConditions());
     }
@@ -242,7 +242,7 @@ public class OceanGrid : SGrid
         }
     }
 
-    public void IsCompleted(Conditionals.Condition c)
+    public void IsCompleted(Condition c)
     {
         c?.SetSpec(checkCompletion && IsFinalPuzzleMatching());
     }
@@ -252,7 +252,7 @@ public class OceanGrid : SGrid
         return CheckGrid.contains(GetGridString(), "412_[^1248]{2}8_[^1248]{3}");
     }
 
-    public void IsLostGuyBeached(Conditionals.Condition c)
+    public void IsLostGuyBeached(Condition c)
     {
         c.SetSpec(lostGuyMovement.hasBeached);
     }

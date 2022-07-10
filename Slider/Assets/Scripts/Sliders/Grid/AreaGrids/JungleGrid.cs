@@ -81,7 +81,7 @@ public class JungleGrid : SGrid
         }
     }
 
-    public void PlayerCollectedRaceRewards(Conditionals.Condition c) {
+    public void PlayerCollectedRaceRewards(Condition c) {
         c.SetSpec(PlayerInventory.Contains(GetCollectible("Boots")));
     }
 }

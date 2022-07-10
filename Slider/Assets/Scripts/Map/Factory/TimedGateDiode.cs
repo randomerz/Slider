@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimedGateDiode : PoweredLightNew
+public class TimedGateDiode : PoweredLight
 {
     [SerializeField] private TimedGate gate;
 

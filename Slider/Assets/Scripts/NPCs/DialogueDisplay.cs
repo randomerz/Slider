@@ -5,21 +5,17 @@ using TMPro;
 
 public class DialogueDisplay : MonoBehaviour
 {
+    public static bool doubleSizeMode = false;
+    public static bool highContrastMode = false;
+
     public TMPTextTyper textTyperText;
     public TMPTextTyper textTyperBG;
     public TMPSpecialText textSpecialText;
     public TMPSpecialText textSpecialBG;
 
-
-    // public TextMeshProUGUI dialogueText;
-    // public TextMeshProUGUI dialogueBG;
     public GameObject ping;
-
     public GameObject canvas;
     public GameObject highContrastBG;
-
-    public static bool doubleSizeMode = false;
-    public static bool highContrastMode = false;
 
     void Start()
     {
@@ -30,7 +26,7 @@ public class DialogueDisplay : MonoBehaviour
     {
         CheckContrast();
         CheckSize();
-        ReadMessagePing();
+        DeactivateMessagePing();
         canvas.SetActive(true);
         StopAllCoroutines();
         message = message.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
@@ -42,64 +38,24 @@ public class DialogueDisplay : MonoBehaviour
         // StartCoroutine(TypeSentence(message.ToCharArray()));
     }
 
-    private string ConvertVariablesToStrings(string message)
-    {
-        int startIndex = 0;
-        while (message.IndexOf('<', startIndex) != -1)
-        {
-            startIndex = message.IndexOf('<', startIndex);
-            // case with \<
-            if (startIndex != 0 && message[startIndex - 1] == '\\')
-            {
-                // continue
-                startIndex += 1;
-                continue;
-            }
-
-            int endIndex = message.IndexOf('>', startIndex);
-            if (endIndex == -1)
-            {
-                // no more ends!
-                break;
-            }
-            string varName = message.Substring(startIndex + 1, endIndex - startIndex - 1);
-            string varResult = SaveSystem.Current.GetString(varName);
-            message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
-            // startIndex = endIndex;
-        }
-
-        return message;
-    }
-
-    // IEnumerator TypeSentence(char[] charArray)
-    // {
-    //     dialogueText.text = "";
-    //     dialogueBG.text = "";
-    //     foreach (char letter in charArray)
-    //     {
-    //         dialogueText.text += letter;
-    //         dialogueBG.text += letter;
-
-    //         if (GameSettings.punctuation.IndexOf(letter) != -1)
-    //             yield return new WaitForSeconds(GameSettings.textSpeed);
-
-    //         yield return new WaitForSeconds(GameSettings.textSpeed);
-    //     }
-    // }
-
     public void FadeAwayDialogue()
     {
         canvas.SetActive(false);
     }
 
-    public void NewMessagePing()
+    public void ActivateMessagePing()
     {
         ping.SetActive(true);
     }
 
-    public void ReadMessagePing()
+    public void DeactivateMessagePing()
     {
         ping.SetActive(false);
+    }
+
+    public void SetMessagePing(bool value)
+    {
+        ping.SetActive(value);
     }
 
     private void CheckContrast()

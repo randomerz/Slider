@@ -116,7 +116,7 @@ public class CaveGrid : SGrid
         }
     }
 
-    public void SetCavesCompleteCondition(Conditionals.Condition c)
+    public void SetCavesCompleteCondition(Condition c)
     {
         c.SetSpec(checkLightingCompletion && allTilesLit);
     }

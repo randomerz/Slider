@@ -147,12 +147,12 @@ public class KnotBox : MonoBehaviour
         }
     }
 
-    public void CheckPuzzle(Conditionals.Condition c)
+    public void CheckPuzzle(Condition c)
     {
         c.SetSpec(CheckLines() == 0);
     }
 
-    public void CheckPuzzlePartial(Conditionals.Condition c)
+    public void CheckPuzzlePartial(Condition c)
     {
         c.SetSpec(CheckLines() <= 3);
     }
