@@ -67,18 +67,44 @@ public class ShopManager : Singleton<ShopManager>
     private void Awake()
     {
         InitializeSingleton();
-
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.ExitCurrentPanel());
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context =>
-        {
-            if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); }
-        });
-
-        // Using PlayerAction, UIClick, or OpenArtifact skips text typewriter effect or advances to the next dialogue
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => _instance.shopDialogueManager.OnActionPressed(context));
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Click, context => _instance.shopDialogueManager.OnActionPressed(context));
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => _instance.shopDialogueManager.OnActionPressed(context));
+        SetupBindingBehaviors();
     }
+
+    #region SPECIAL BINDING BEHAVIOR SETUP
+    // We need to special case this and use the unmanaged binding behaviors because pressing Action to open the shop also removes the binding behavior
+    private List<BindingBehavior> bindingBehaviors = new List<BindingBehavior>();
+
+    private void SetupBindingBehaviors()
+    {
+        bindingBehaviors = new List<BindingBehavior>();
+        bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.ExitCurrentPanel()));
+        bindingBehaviors.Add(
+            Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context =>
+            {
+                if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); }
+            })
+        );
+        // Using PlayerAction, UIClick, or OpenArtifact skips text typewriter effect or advances to the next dialogue
+        bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => _instance.shopDialogueManager.OnActionPressed(context)));
+        bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Click, context => _instance.shopDialogueManager.OnActionPressed(context)));
+        bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => _instance.shopDialogueManager.OnActionPressed(context)));
+    }
+
+    private void OnEnable()
+    {
+        bindingBehaviors.ForEach(bindingBehavior => bindingBehavior.isEnabled = true);
+    }
+
+    private void OnDisable()
+    {
+        bindingBehaviors.ForEach(bindingBehavior => bindingBehavior.isEnabled = false);
+    }
+
+    private void OnDestroy()
+    {
+        bindingBehaviors.ForEach(bindingBehavior => Controls.UnregisterBindingBehavior(bindingBehavior));
+    }
+    #endregion
 
     public void CheckTavernKeep()
     {
