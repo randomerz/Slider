@@ -90,9 +90,9 @@ public class Controls : Singleton<Controls>
     /// <param name="binding">Use Controls.Bindings.&lt;Binding Path&gt; (eg: Controls.Bindings.UI.Pause)</param>
     /// <param name="behavior">eg: context => DoThing();</param>
     /// <returns>The constructed <see cref="ManagedBindingBehavior"/></returns>
-    public static ManagedBindingBehavior RegisterBindingBehavior(MonoBehaviour owner, InputAction binding, System.Action<InputAction.CallbackContext> behavior)
+    public static BindingBehavior RegisterBindingBehavior(MonoBehaviour owner, InputAction binding, System.Action<InputAction.CallbackContext> behavior)
     {
-        ManagedBindingBehavior managedBindingBehavior = new ManagedBindingBehavior(owner, binding, behavior);
+        BindingBehavior managedBindingBehavior = new ManagedBindingBehavior(owner, binding, behavior);
         RegisterBindingBehavior(managedBindingBehavior);
         return managedBindingBehavior;
     }
@@ -102,12 +102,15 @@ public class Controls : Singleton<Controls>
     /// <para/>
     /// This provides a safer and cleaner way to attach behavior to controls than manual subscription. I recommend using this
     /// in all cases where it is possible, which should be pretty much all of them.
+    /// <para/>
+    /// Note: a null owner means that the binding behavior will never be automatically
+    /// removed. <b>If you add a ManagedBindingBehavior with a null owner, you must remove it manually.</b>
     /// </summary>
-    public static ManagedBindingBehavior RegisterBindingBehavior(ManagedBindingBehavior managedBindingBehavior)
+    public static BindingBehavior RegisterBindingBehavior(BindingBehavior bindingBehavior)
     {
-        InputAction action = _bindings.FindAction(managedBindingBehavior.binding.name);
-        action.performed += managedBindingBehavior.Invoke;
-        return managedBindingBehavior;
+        InputAction action = _bindings.FindAction(bindingBehavior.binding.name);
+        action.performed += bindingBehavior.Invoke;
+        return bindingBehavior;
     }
 
     /// <summary>
@@ -116,11 +119,11 @@ public class Controls : Singleton<Controls>
     /// <see cref="RegisterBindingBehavior(MonoBehaviour, InputAction, System.Action{InputAction.CallbackContext})"/> returns
     /// the <see cref="ManagedBindingBehavior"/>, so save that and pass that in here to remove it.
     /// </summary>
-    /// <param name="managedBindingBehavior"></param>
-    public static void UnregisterBindingBehavior(ManagedBindingBehavior managedBindingBehavior)
+    /// <param name="bindingBehavior"></param>
+    public static void UnregisterBindingBehavior(BindingBehavior bindingBehavior)
     {
-        InputAction action = _bindings.FindAction(managedBindingBehavior.binding.name);
-        action.performed -= managedBindingBehavior.Invoke;
+        InputAction action = _bindings.FindAction(bindingBehavior.binding.name);
+        action.performed -= bindingBehavior.Invoke;
     }
 
     /// <summary>
@@ -138,30 +141,59 @@ public class Controls : Singleton<Controls>
 
 /// <summary>
 /// Represents a behavior which will be bound to an input binding. In simple terms, use this to add some behavior when a control is triggered.
-/// You should probably not need to use this, but it's here just in case. 
+/// This binding will be automatically removed the first time the binding is triggered while the owner MonoBehavior is null or disabled.
 /// <para/>
 /// Add binding behaviors using <see cref="Controls.RegisterBindingBehavior(MonoBehaviour, InputAction, System.Action{InputAction.CallbackContext})"/>.
 /// </summary>
-public class ManagedBindingBehavior
+public class ManagedBindingBehavior : BindingBehavior
 {
     public MonoBehaviour owner;
-    public InputAction binding;
-    public System.Action<InputAction.CallbackContext> behavior;
-
-    public ManagedBindingBehavior(MonoBehaviour owner, InputAction binding, System.Action<InputAction.CallbackContext> behavior)
+    public ManagedBindingBehavior(MonoBehaviour owner, InputAction binding, System.Action<InputAction.CallbackContext> behavior, bool isEnabled = true)
+        : base(binding, behavior, isEnabled)
     {
         this.owner = owner;
-        this.binding = binding;
-        this.behavior = behavior;
     }
 
-    public void Invoke(InputAction.CallbackContext context)
+    public override void Invoke(InputAction.CallbackContext context)
     {
-        if (owner == null || !owner.isActiveAndEnabled)
+        if (isEnabled)
         {
-            Controls.UnregisterBindingBehavior(this);
-            return;
+            if (owner == null || !owner.isActiveAndEnabled)
+            {
+                Controls.UnregisterBindingBehavior(this);
+                return;
+            }
+            behavior?.Invoke(context);
         }
-        behavior?.Invoke(context);
+    }
+}
+
+/// <summary>
+/// Represents a behavior which will be bound to an input binding. In simple terms, use this to add some behavior when a control is triggered.
+/// <para/>
+/// If you want this binding behavior to be automatically removed when an owner MonoBehavior is disabled, use <see cref="ManagedBindingBehavior"/>.
+/// <br/>Generally speaking, you should prefer <see cref="ManagedBindingBehavior"/> and only use this when the managed option does not work for your use case.
+/// <para/>
+/// Add binding behaviors using <see cref="Controls.RegisterBindingBehavior(MonoBehaviour, InputAction, System.Action{InputAction.CallbackContext})"/>.
+/// </summary>
+public class BindingBehavior
+{
+    public InputAction binding;
+    public System.Action<InputAction.CallbackContext> behavior;
+    public bool isEnabled;
+
+    public BindingBehavior(InputAction binding, System.Action<InputAction.CallbackContext> behavior, bool isEnabled = true)
+    {
+        this.binding = binding;
+        this.behavior = behavior;
+        this.isEnabled = isEnabled;
+    }
+
+    public virtual void Invoke(InputAction.CallbackContext context)
+    {
+        if (isEnabled)
+        {
+            behavior?.Invoke(context);
+        }
     }
 }
