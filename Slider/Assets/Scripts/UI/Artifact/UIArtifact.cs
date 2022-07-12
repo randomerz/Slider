@@ -57,12 +57,12 @@ public class UIArtifact : MonoBehaviour
         // Debug.Log(this is JungleArtifact);
     }
 
-    public virtual void OnEnable()
+    protected virtual void OnEnable()
     {
 
     }
 
-    public virtual void OnDisable()
+    protected virtual void OnDisable()
     {
         ClearQueues();
 
@@ -583,7 +583,6 @@ public class UIArtifact : MonoBehaviour
     {
         if (!_instance.lightning.gameObject.activeInHierarchy)
         {
-            Debug.LogWarning("Attempted to disable lightning when already disabled!");
             return;
         }
         _instance.lightning.gameObject.SetActive(false);

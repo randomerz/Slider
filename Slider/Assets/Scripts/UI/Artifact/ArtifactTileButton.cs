@@ -38,30 +38,8 @@ public class ArtifactTileButton : MonoBehaviour
     protected void Awake() 
     {
         islandSprite = buttonAnimator.sliderImage.sprite;
-        conveyors = FindObjectsOfType<Conveyor>();
-    }
-
-    protected virtual void Start()
-    {
-        myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
-        
-        SetTileActive(myStile.isTileActive);
-        SetPosition(myStile.x, myStile.y);
-
-        linkButton = null;
-        foreach (ArtifactTileButton b in buttonManager.buttons) {
-            if (myStile.linkTile != null && myStile.linkTile == b.myStile)
-            {
-                linkButton = b;
-                b.linkButton = this;
-            }
-        }
-
-        // if (!isTileActive)
-        // {
-        //    //buttonAnimator.sliderImage.sprite = emptySprite;
-        // }
-        // update artifact button
+        conveyors = FindObjectsOfType<Conveyor>(true);
+        Debug.Log($"Conveyors Awake: {conveyors}");
     }
 
     private void OnEnable()
@@ -88,6 +66,29 @@ public class ArtifactTileButton : MonoBehaviour
         {
             conveyor.OnPowered.RemoveListener(OnConveyorPowered);
         }
+    }
+
+    protected virtual void Start()
+    {
+        myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
+        
+        SetTileActive(myStile.isTileActive);
+        SetPosition(myStile.x, myStile.y);
+
+        linkButton = null;
+        foreach (ArtifactTileButton b in buttonManager.buttons) {
+            if (myStile.linkTile != null && myStile.linkTile == b.myStile)
+            {
+                linkButton = b;
+                b.linkButton = this;
+            }
+        }
+
+        // if (!isTileActive)
+        // {
+        //    //buttonAnimator.sliderImage.sprite = emptySprite;
+        // }
+        // update artifact button
     }
 
     public virtual void SetPosition(int x, int y)
@@ -254,6 +255,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     private Conveyor ConveyorAt(int x, int y)
     {
+        Debug.Log($"Conveyors ConveyorAt: {conveyors}");
         foreach (Conveyor conveyor in conveyors)
         {
             if (conveyor.StartPos.Equals(new Vector2Int(x, y)))

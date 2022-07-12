@@ -65,7 +65,7 @@ public class Wire : ConductiveElectricalNode
                 sparkInstance.GetComponent<WireSparks>().StartSparks(WireDatabase.Instance.Sparks[tm.GetSprite(pos)]);
 
                 SpriteRenderer sr = sparkInstance.GetComponent<SpriteRenderer>();
-                TilemapRenderer tr = GetComponent<TilemapRenderer>();
+                TilemapRenderer tr = wireTilemap.GetComponent<TilemapRenderer>();
                 sr.sortingLayerID = tr.sortingLayerID;
                 sr.sortingOrder = tr.sortingOrder;
 
