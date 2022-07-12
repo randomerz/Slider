@@ -31,25 +31,11 @@ public class ArtifactTileButton : MonoBehaviour
     public UIArtifact buttonManager;
 
     [SerializeField]
-    private ConveyorUIData conveyorData;
-
-    private Conveyor[] conveyors;
+    private List<ArtifactTBPlugin> plugins;
 
     protected void Awake() 
     {
         islandSprite = buttonAnimator.sliderImage.sprite;
-        conveyors = FindObjectsOfType<Conveyor>(true);
-        Debug.Log($"Conveyors Awake: {conveyors}");
-    }
-
-    private void OnEnable()
-    {
-        foreach (Conveyor conveyor in conveyors)
-        {
-            conveyor.OnPowered.AddListener(OnConveyorPowered);
-        }
-
-        UpdateEmptySprite();
     }
 
     public void OnDisable()
@@ -60,11 +46,6 @@ public class ArtifactTileButton : MonoBehaviour
             {
                 ResetToIslandSprite();
             }
-        }
-
-        foreach (Conveyor conveyor in conveyors)
-        {
-            conveyor.OnPowered.RemoveListener(OnConveyorPowered);
         }
     }
 
@@ -101,7 +82,10 @@ public class ArtifactTileButton : MonoBehaviour
         Vector3 pos = new Vector3((x % SGrid.current.height) - 1, y - 1) * UI_OFFSET; //C: i refuse to make everything into MT buttons
         GetComponent<RectTransform>().anchoredPosition = pos;
 
-        UpdateEmptySprite();
+        plugins.ForEach(plugin =>
+        {
+            plugin.OnPosChanged();
+        });
     }
 
     public void SelectButton()
@@ -220,51 +204,4 @@ public class ArtifactTileButton : MonoBehaviour
         if (e.stile.islandId == islandId)
             SetPushedDown(false);
     }
-
-    //L: i refuse to make everything into Factory buttons
-    #region Conveyor BS
-    private void OnConveyorPowered(ElectricalNode.OnPoweredArgs e)
-    {
-        UpdateEmptySprite();
-    }
-
-    private void UpdateEmptySprite()
-    {
-        if (conveyorData != null)
-        {
-            if (!isTileActive)
-            {
-                Conveyor conveyor = ConveyorAt(x, y);
-                if (conveyor != null)
-                {
-                    foreach (var item in conveyorData.conveyors)
-                    {
-                        if (item.pos.Equals(conveyor.StartPos))
-                        {
-                            buttonAnimator.sliderImage.sprite = conveyor.Powered ? item.emptyPowered : item.emptyUnpowered;
-                        }
-                    }
-                }
-                else
-                {
-                    buttonAnimator.sliderImage.sprite = emptySprite;
-                }
-            }
-        }
-    }
-
-    private Conveyor ConveyorAt(int x, int y)
-    {
-        Debug.Log($"Conveyors ConveyorAt: {conveyors}");
-        foreach (Conveyor conveyor in conveyors)
-        {
-            if (conveyor.StartPos.Equals(new Vector2Int(x, y)))
-            {
-                return conveyor;
-            }
-        }
-
-        return null;
-    }
-    #endregion
 }

@@ -26,6 +26,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         {
             Debug.LogWarning("You might need to update my UIArtifact reference!");
         }
+        DisableArtPanel();
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.CloseArtifact());
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => _instance.OnPressArtifact());
@@ -100,7 +101,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
             UIManager.CloseUI();
             UIManager.canOpenMenus = true;
-            
+
             artifactAnimator.SetBool("isVisible", false);
             isClosing = true;
         }

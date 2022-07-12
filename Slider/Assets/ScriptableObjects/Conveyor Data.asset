@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e890c2f59a26bbe43a1d26c73d7fef3d, type: 3}
+  m_Name: Conveyor Data
+  m_EditorClassIdentifier: 
+  conveyors:
+  - pos: {x: 0, y: 2}
+    emptyPowered: {fileID: -4528786749296469183, guid: 5c5d299302b77d045a0f9c531b6598b1, type: 3}
+    emptyUnpowered: {fileID: 8575672161871386233, guid: 5c5d299302b77d045a0f9c531b6598b1, type: 3}
+  - pos: {x: 2, y: 2}
+    emptyPowered: {fileID: -539219023217082086, guid: 5c5d299302b77d045a0f9c531b6598b1, type: 3}
+    emptyUnpowered: {fileID: 7822836072362760321, guid: 5c5d299302b77d045a0f9c531b6598b1, type: 3}
+  - pos: {x: 2, y: 0}
+    emptyPowered: {fileID: 8134717598302996716, guid: 5c5d299302b77d045a0f9c531b6598b1, type: 3}
+    emptyUnpowered: {fileID: -8654883902165062782, guid: 5c5d299302b77d045a0f9c531b6598b1, type: 3}
+  - pos: {x: 0, y: 0}
+    emptyPowered: {fileID: 1846914300276952454, guid: 5c5d299302b77d045a0f9c531b6598b1, type: 3}
+    emptyUnpowered: {fileID: -955056725521051819, guid: 5c5d299302b77d045a0f9c531b6598b1, type: 3}
