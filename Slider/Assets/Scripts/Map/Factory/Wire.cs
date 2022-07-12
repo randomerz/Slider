@@ -5,7 +5,9 @@ using UnityEngine.Tilemaps;
 
 public class Wire : ConductiveElectricalNode
 {
-    private Tilemap tm;
+    [SerializeField] private Tilemap wireTilemap;
+    [SerializeField] private Tilemap dottedWireTilemap;
+
     private GameObject sparks;
     private List<GameObject> sparkInstances;
 
@@ -16,7 +18,6 @@ public class Wire : ConductiveElectricalNode
         base.Awake();
         nodeType = NodeType.IO;
 
-        tm = GetComponent<Tilemap>();
         sparks = Resources.Load<GameObject>("WireSparks");
         sparkInstances = new List<GameObject>();
     }
@@ -34,30 +35,7 @@ public class Wire : ConductiveElectricalNode
 
         if (e.powered)
         {
-            //Do Sparks
-            foreach (Vector3Int pos in tm.cellBounds.allPositionsWithin)
-            {
-
-                if (tm.GetTile(pos) != null)
-                {
-                    if (WireDatabase.Instance.Sparks.ContainsKey(tm.GetSprite(pos)))
-                    {
-                        GameObject sparkInstance = Instantiate(sparks, tm.CellToWorld(pos) + tm.tileAnchor, Quaternion.identity, transform);
-                        sparkInstance.GetComponent<WireSparks>().StartSparks(WireDatabase.Instance.Sparks[tm.GetSprite(pos)]);
-
-                        SpriteRenderer sr = sparkInstance.GetComponent<SpriteRenderer>();
-                        TilemapRenderer tr = GetComponent<TilemapRenderer>();
-                        sr.sortingLayerID = tr.sortingLayerID;
-                        sr.sortingOrder = tr.sortingOrder;
-
-                        sparkInstances.Add(sparkInstance);
-                    } else
-                    {
-                        Debug.LogError($"Sparks not found for tile at position {pos} with sprite {tm.GetSprite(pos)}");
-                    }
-
-                }
-            }
+            CreateSparks();
         } else
         {
             foreach (GameObject go in sparkInstances)
@@ -69,8 +47,41 @@ public class Wire : ConductiveElectricalNode
   
     }
 
+    private void CreateSparks()
+    {
+        foreach (Vector3Int pos in wireTilemap.cellBounds.allPositionsWithin)
+        {
+            CreateSparksForTile(wireTilemap, pos);
+        }
+    }
+
+    private void CreateSparksForTile(Tilemap tm, Vector3Int pos)
+    {
+        if (tm.GetTile(pos) != null)
+        {
+            if (WireDatabase.Instance.Sparks.ContainsKey(tm.GetSprite(pos)))
+            {
+                GameObject sparkInstance = Instantiate(sparks, tm.CellToWorld(pos) + tm.tileAnchor, Quaternion.identity, transform);
+                sparkInstance.GetComponent<WireSparks>().StartSparks(WireDatabase.Instance.Sparks[tm.GetSprite(pos)]);
+
+                SpriteRenderer sr = sparkInstance.GetComponent<SpriteRenderer>();
+                TilemapRenderer tr = GetComponent<TilemapRenderer>();
+                sr.sortingLayerID = tr.sortingLayerID;
+                sr.sortingOrder = tr.sortingOrder;
+
+                sparkInstances.Add(sparkInstance);
+            }
+            else
+            {
+                Debug.LogError($"Sparks not found for tile at position {pos} with sprite {tm.GetSprite(pos)}");
+            }
+
+        }
+    }
+
     private void SetTiles()
     {
-        WireDatabase.Instance.SwapTiles(tm, Powered);
+        WireDatabase.Instance.SwapTiles(wireTilemap, Powered);
+        WireDatabase.Instance.SwapTiles(dottedWireTilemap, Powered);
     }
 }
