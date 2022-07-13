@@ -32,7 +32,7 @@ public class MountainArtifact : UIArtifact
         foreach (Vector3Int dir in dirs)
         {
             ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
-            if(b != null && !b.isTileActive)
+            if(b != null && !b.TileIsActive)
                 moveOptionButtons.Add(b);
         }
 

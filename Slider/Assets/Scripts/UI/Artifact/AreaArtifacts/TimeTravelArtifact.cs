@@ -244,8 +244,7 @@ public class TimeTravelArtifact : UIArtifact
             {
                 b.gameObject.SetActive(true);
                 STile myStile = SGrid.current.GetStile(b.islandId);
-                b.SetTileActive(myStile.isTileActive);
-                b.SetPosition(myStile.x, myStile.y);
+                b.UpdateTileActive();
             }
             else
                 b.gameObject.SetActive(false);

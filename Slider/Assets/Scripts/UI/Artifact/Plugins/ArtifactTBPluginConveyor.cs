@@ -56,30 +56,42 @@ public class ArtifactTBPluginConveyor : ArtifactTBPlugin
 
     private void UpdateEmptySprite()
     {
-        if (!button.isTileActive)
+        if (!TrySetEmptySpriteToConveyor())
         {
-            Conveyor conveyor = ConveyorAt(button.x, button.y);
-            if (conveyor != null)
-            {
-                UpdateSpriteToConveyor(conveyor);
-            }
-            else
-            {
-                button.buttonAnimator.sliderImage.sprite = button.emptySprite;
-            }
+            button.UseDefaultEmptySprite();
         }
+
+        button.SetSpriteToIslandOrEmpty();
     }
 
-    private void UpdateSpriteToConveyor(Conveyor conveyor)
+    private bool TrySetEmptySpriteToConveyor()
     {
-        foreach (var item in conveyorData.conveyors)
+        Conveyor conveyor = ConveyorAt(button.x, button.y);
+        if (conveyor != null)
         {
-            if (item.pos.Equals(conveyor.StartPos))
+            Sprite conveyorSprite = GetConveyorButtonSprite(conveyor);
+            if (conveyorSprite != null)
             {
-                Sprite conveyorSprite = conveyor.Powered ? item.emptyPowered : item.emptyUnpowered;
-                button.buttonAnimator.sliderImage.sprite = conveyorSprite;
+                button.SetEmptySprite(conveyorSprite);
+                return true;
             }
         }
+
+        return false;
+    }
+
+    private Sprite GetConveyorButtonSprite(Conveyor conveyor)
+    {
+        foreach (var conveyorData in conveyorData.conveyors)
+        {
+            if (conveyorData.pos.Equals(conveyor.StartPos))
+            {
+                return conveyor.Powered ? conveyorData.emptyPowered : conveyorData.emptyUnpowered;
+            }
+        }
+
+        Debug.LogError($"Conveyor data does not exist for conveyor at {conveyor.StartPos}");
+        return null;
     }
 
     private Conveyor ConveyorAt(int x, int y)

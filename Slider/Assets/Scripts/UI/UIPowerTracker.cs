@@ -32,7 +32,7 @@ public class UIPowerTracker : MonoBehaviour
 
     private void SetActiveStatus()
     {
-        bool onDisabledButton = button != null && !button.isTileActive;
+        bool onDisabledButton = button != null && !button.TileIsActive;
         if (onDisabledButton)
         {
             poweredImage.enabled = false;
