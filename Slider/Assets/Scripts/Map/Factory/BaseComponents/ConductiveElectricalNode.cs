@@ -4,36 +4,51 @@ using UnityEngine;
 
 public class ConductiveElectricalNode : ElectricalNode
 {
+    [SerializeField]
+    private bool isConductiveItem;
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private new void Awake()
+    {
+        base.Awake();
+    }
+
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
-        STile stile = GetComponent<STile>();
-        if (other != null && BothNodesNotMoving(other))
+
+        //Disallow connections btw 2 conductive items (for now)
+        if (other != null && BothNodesNotMoving(other) && !(isConductiveItem && other.isConductiveItem))
         {
-            AddNeighbor(other);
+            if (AddNeighbor(other) && other is WirePilon)
+            {
+                (other as WirePilon).AddConductingNode(this);
+            }
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    protected virtual void OnTriggerStay2D(Collider2D collision)
     {
-        ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
-        if (other != null && !(neighbors.Contains(other) || other.neighbors.Contains(this)) && BothNodesNotMoving(other))
-        {
-            AddNeighbor(other);
-        }
+        OnTriggerEnter2D(collision);
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    protected virtual void OnTriggerExit2D(Collider2D collision)
     {
         ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
         if (other != null)
         {
-            RemoveNeighbor(other);
+            if (RemoveNeighbor(other) && other is WirePilon)
+            {
+                (other as WirePilon).RemoveConductingNode(this);
+            }
         }
     }
 
-    private bool BothNodesNotMoving(ConductiveElectricalNode other)
+    public override void OnPoweredHandler(OnPoweredArgs e)
+    {
+        base.OnPoweredHandler(e);
+    }
+
+    protected bool BothNodesNotMoving(ConductiveElectricalNode other)
     {
         STile thisStile = GetComponentInParent<STile>();
         STile otherStile = other.GetComponentInParent<STile>();
@@ -51,4 +66,25 @@ public class ConductiveElectricalNode : ElectricalNode
         return thisStay && otherStay;
     }
 
+    /*
+    private Collider2D ClosestColliderToPoint(Vector2 otherPos)
+    {
+        Collider2D[] thisColliders = GetComponentsInChildren<Collider2D>();
+        //Vector2 minPt = thisColliders[0].ClosestPoint(otherPos);
+        float minDist = float.MaxValue;
+        Collider2D minCol = null;
+        foreach (Collider2D col in thisColliders)
+        {
+            Vector2 pt = col.ClosestPoint(otherPos);
+            float dist = Vector2.Distance(otherPos, pt);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                minCol = col;
+            }
+        }
+
+        return minCol;
+    }
+    */
 }

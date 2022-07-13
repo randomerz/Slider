@@ -40,6 +40,8 @@ public class DebugUIManager : MonoBehaviour
 
     private void OnPressDebug() 
     {
+        if (Player.GetInstance() == null || !GameManager.instance.debugModeActive)
+            return;
         isDebugOpen = !isDebugOpen;
         Player.SetCanMove(!isDebugOpen);
         debugPanel.SetActive(isDebugOpen);
@@ -80,6 +82,7 @@ public class DebugUIManager : MonoBehaviour
 
         if (IsSceneInBuild(sceneName))
         {
+            SaveSystem.Current.Save();
             SceneManager.LoadScene(sceneName);
         }
         else

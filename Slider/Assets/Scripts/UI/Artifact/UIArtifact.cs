@@ -129,7 +129,7 @@ public class UIArtifact : MonoBehaviour
         }
         else
         {
-            SelectButton(dragged);
+            SelectButton(dragged, true);
         }
 
         ArtifactTileButton hovered = null;
@@ -206,14 +206,14 @@ public class UIArtifact : MonoBehaviour
             // b.buttonAnimator.sliderImage.sprite = b.emptySprite;
             if(b == hovered && !swapped) 
             {
-                SelectButton(hovered);
+                SelectButton(hovered, true);
                 // CheckAndSwap(dragged, hovered);
                 // SGridAnimator.OnSTileMoveEnd += dragged.AfterStileMoveDragged;
                 swapped = true;
             }
         }
         if (!swapped) {
-            SelectButton(dragged);
+            SelectButton(dragged, true);
         }
         else
         {
@@ -239,7 +239,7 @@ public class UIArtifact : MonoBehaviour
         //OnButtonInteract?.Invoke(this, null);
     }
     
-    public virtual void SelectButton(ArtifactTileButton button)
+    public virtual void SelectButton(ArtifactTileButton button, bool isDragged = false)
     {
         // Check if on movement cooldown
         //if (SGrid.GetStile(button.islandId).isMoving)
@@ -277,6 +277,19 @@ public class UIArtifact : MonoBehaviour
                 //L: Player tried to click a locked tile (or tile that otherwise had no move options)
                 return;
             }
+            //tile can only go one location so just auto move 
+            else if(moveOptionButtons.Count == 1 && SettingsManager.AutoMove && !isDragged)
+            {
+                currentButton = button;
+                currentButton.SetSelected(true);
+                foreach(ArtifactTileButton b in moveOptionButtons)
+                {
+                    if(b != currentButton)
+                        button = b;
+                }
+                CheckAndSwap(currentButton, button);
+                DeselectCurrentButton();
+            }
             else
             {
                 //L: Player clicked a tile with movement options
@@ -296,7 +309,7 @@ public class UIArtifact : MonoBehaviour
     // replaces adjacentButtons
     protected virtual List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
-        moveOptionButtons.Clear();
+        var options = new List<ArtifactTileButton>();
 
         //Vector2 buttPos = new Vector2(button.x, button.y);
         // foreach (ArtifactTileButton b in buttons)
@@ -318,17 +331,17 @@ public class UIArtifact : MonoBehaviour
         foreach (Vector2Int dir in dirs)
         {
             ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
-            int i = 1;
+            int i = 2;
             while (b != null && !b.isTileActive)
             {
-                moveOptionButtons.Add(b);
+                options.Add(b);
                 b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
 
                 i++;
             }
         }
 
-        return moveOptionButtons;
+        return options;
     }
 
     //L: Swaps the buttons on the UI, but not the actual grid.
@@ -463,6 +476,7 @@ public class UIArtifact : MonoBehaviour
             return false;
         }
     }
+
     public void UpdatePushedDowns(object sender, System.EventArgs e)
     {
        foreach (ArtifactTileButton b in _instance.buttons)
@@ -471,6 +485,7 @@ public class UIArtifact : MonoBehaviour
             {
                 if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
                 {
+                    //Debug.Log(b.islandId);
                     b.SetIsInMove(true);
                 }
                 else if(b.myStile.hasAnchor)
@@ -542,17 +557,6 @@ public class UIArtifact : MonoBehaviour
             }
         }
     }
-
-    public static void SetLightningPos(int x, int y)
-    {
-        //Debug.Log("Set Lightning Pos!");
-        if (_instance.lightning == null) Debug.LogError("Lightning was not found! Set in inspector?");
-        ArtifactTileButton b = GetButton(x, y);
-        _instance.lightning.transform.SetParent(b.transform);
-        _instance.lightning.transform.position = b.transform.position;
-        _instance.lightning.gameObject.SetActive(true);
-        b.SetLightning(true);
-    }
     public static void SetLightningPos(ArtifactTileButton b)
     {
         //Debug.Log("Set Lightning Pos!");
@@ -562,11 +566,30 @@ public class UIArtifact : MonoBehaviour
         _instance.lightning.gameObject.SetActive(true);
         b.SetLightning(true);
     }
-    public static void DisableLightning()
+
+    public static void SetLightningPos(int x, int y)
     {
-            _instance.lightning.gameObject.SetActive(false);
-            _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
+        ArtifactTileButton b = GetButton(x, y);
+        SetLightningPos(b);
     }
+
+    public static void SetLightningPos(int islandId)
+    {
+        ArtifactTileButton b = _instance.GetButton(islandId);
+        SetLightningPos(b);
+    }
+
+    public static void DisableLightning(bool disableHighlight)
+    {
+        if (!_instance.lightning.gameObject.activeInHierarchy)
+        {
+            Debug.LogWarning("Attempted to disable lightning when already disabled!");
+            return;
+        }
+        _instance.lightning.gameObject.SetActive(false);
+        if (disableHighlight) _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
+    }
+
     public static ArtifactTileButton GetButton(int x, int y)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
@@ -619,9 +642,9 @@ public class UIArtifact : MonoBehaviour
         return s;
     }
 
-    public static void AddButton(STile stile, bool shouldFlicker=true)
+    public virtual void AddButton(STile stile, bool shouldFlicker=true)
     {
-        foreach (ArtifactTileButton b in _instance.buttons)
+        foreach (ArtifactTileButton b in buttons)
         {
             if (b.islandId == stile.islandId)
             {
@@ -650,5 +673,10 @@ public class UIArtifact : MonoBehaviour
         {
             b.Flicker(1);
         }
+    }
+
+    public void MoveQueueEmpty(Condition c)
+    {
+        c.SetSpec(moveQueue.Count == 0 && activeMoves.Count == 0);
     }
 }

@@ -40,7 +40,29 @@ public class SaveSystem
 
     public static SaveProfile GetProfile(int index)
     {
+        if (index == -1)
+            return null;
         return saveProfiles[index];
+    }
+
+    public static int GetRecentlyPlayedIndex()
+    {
+        int ret = -1;
+        System.DateTime mostRecent = System.DateTime.MinValue;
+        for (int i = 0; i < 3; i++)
+        {
+            if (saveProfiles[i] != null && saveProfiles[i].GetLastSaved() > mostRecent)
+            {
+                ret = i;
+                mostRecent = saveProfiles[i].GetLastSaved();
+            }
+        }
+        return ret;
+    }
+
+    public static bool IsCurrentProfileNull()
+    {
+        return current == null;
     }
 
     public static void SetProfile(int index, SaveProfile profile)
@@ -50,12 +72,13 @@ public class SaveSystem
 
     public static void SetCurrentProfile(int index)
     {
+        currentIndex = index;
         Current = GetProfile(index);
     }
 
 
     /// <summary>
-    /// Saves the game to the current loaded profile index (either 1, 2, or 3). If the profile index is -1, then no data will be saved.
+    /// Saves the game to the current loaded profile index (either 0, 1, or 2). If the profile index is -1, then no data will be saved.
     /// </summary>
     public static void SaveGame()
     {
@@ -71,7 +94,7 @@ public class SaveSystem
 
     private static void SaveToFile(SerializableSaveProfile profile, int index)
     {
-        Debug.Log("Saving data to file...");
+        Debug.Log("Saving data to file " + index + "...");
 
         BinaryFormatter formatter = new BinaryFormatter();
         string path = GetFilePath(index);
@@ -96,6 +119,7 @@ public class SaveSystem
 
     public static void LoadSaveProfile(int index)
     {
+        
         SerializableSaveProfile ssp = null;
 
         ssp = GetSerializableSaveProfile(index);
@@ -113,13 +137,15 @@ public class SaveSystem
 
         current = profile;
         currentIndex = index;
-
-
+        
         // This makes it so the profile gets loaded first thing in the new scene
         SceneInitializer.profileToLoad = current;
 
         // Load last scene the player was in
-        SceneManager.LoadScene(current.GetLastArea().ToString());
+        string sceneToLoad = current.GetLastArea().ToString();
+        if (current.GetBool("isDemoBuild") && sceneToLoad == "Caves")
+            sceneToLoad = "Demo Caves";
+        SceneManager.LoadScene(sceneToLoad);
     }
 
     public static SerializableSaveProfile GetSerializableSaveProfile(int index)
@@ -129,7 +155,7 @@ public class SaveSystem
 
     private static SerializableSaveProfile LoadFromFile(int index)
     {
-        Debug.Log("Loading data from file...");
+        Debug.Log("Loading data from file " + index + "...");
 
         string path = GetFilePath(index);
         if (File.Exists(path))
@@ -153,6 +179,8 @@ public class SaveSystem
     {
         Debug.Log("Deleting Save profile #" + index + "!");
 
+        saveProfiles[index] = null;
+
         string path = GetFilePath(index);
         if (File.Exists(path))
         {
@@ -160,7 +188,7 @@ public class SaveSystem
         }
     }
 
-    private static string GetFilePath(int index)
+    public static string GetFilePath(int index)
     {
         return Application.persistentDataPath + string.Format("/slider{0}.cat", index);
     }

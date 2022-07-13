@@ -9,7 +9,10 @@ public class Meltable : MonoBehaviour
     public Sprite frozenSprite; //C: switch to animation later maybe? but that doesn't sound fun
     public Sprite meltedSprite;
     public SpriteRenderer spriteRenderer;
+
+#pragma warning disable
     public Collider2D collider;
+#pragma warning restore
 
     public bool isFrozen = true;
 
@@ -42,11 +45,11 @@ public class Meltable : MonoBehaviour
         numLavaSources--;
     }
 
-    public void IsFrozen(Conditionals.Condition c) {
+    public void IsFrozen(Condition c) {
         c.SetSpec(isFrozen);
     }
 
-    public void IsNotFrozen(Conditionals.Condition c) {
+    public void IsNotFrozen(Condition c) {
         c.SetSpec(!isFrozen);
     }
 

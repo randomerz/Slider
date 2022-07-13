@@ -32,11 +32,13 @@ public class ItemPickupEffect : MonoBehaviour
         _instance.itemText.text = itemName + " Acquired!";
         _instance.itemImage.sprite = itemSprite;
         _instance.StartCoroutine(_instance.Cutscene(onTextVisibleCallback));
+        AudioManager.DampenMusic(0.2f, _instance.soundDampenLength);
         _instance.StartCoroutine(_instance.DampenMusic());
     }
 
     private IEnumerator Cutscene(System.Action onTextVisibleCallback=null)
     {
+        NPCDialogueContext.dialogueEnabledAllNPC = false;
         maskObject.SetActive(true);
         animator.SetBool("isVisible", true);
         AudioManager.Play("Item Pick Up");
@@ -65,22 +67,21 @@ public class ItemPickupEffect : MonoBehaviour
         UIManager.canOpenMenus = true;
         Player.SetCanMove(true);
         Player.GetSpriteRenderer().sortingLayerName = "Entity";
+        NPCDialogueContext.dialogueEnabledAllNPC = true;
     }
 
     private IEnumerator DampenMusic()
     {
         float t = 0;
 
-        float origVolume = AudioManager.GetMusicVolume();
-
         while (t < soundDampenLength)
         {
-            AudioManager.SetMusicVolume(origVolume * soundDampenCurve.Evaluate(t / soundDampenLength));
+            AudioManager.SetMusicVolumeMultiplier(soundDampenCurve.Evaluate(t / soundDampenLength));
 
             yield return null;
             t += Time.deltaTime;
         }
 
-        AudioManager.SetMusicVolume(origVolume);
+        AudioManager.SetMusicVolumeMultiplier(1);
     }
 }

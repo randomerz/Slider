@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     private static SaveSystem saveSystem;
     public GameUI gameUI;
     public SceneInitializer sceneInitializer; // this script makes me sad
+    public GameSaver gameAutoSaver;
+
+    public bool debugModeActive;
 
     private void Awake() {
         if (instance == null) {
@@ -22,16 +25,12 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            gameAutoSaver.SaveAndDestroyAfterStart();
             Destroy(gameObject);
         }
 
         gameUI.Init();
         sceneInitializer?.Init();
-    }
-
-    private void OnApplicationQuit()
-    {
-        SaveSystem.SaveGame();
     }
 
     public static SaveSystem GetSaveSystem() 

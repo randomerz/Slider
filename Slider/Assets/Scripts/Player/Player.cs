@@ -4,9 +4,9 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour, ISavable
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
+public class Player : Singleton<Player>, ISavable
 {
-    private static Player _instance;
     private bool didInit;
 
     // Movement
@@ -19,7 +19,6 @@ public class Player : MonoBehaviour, ISavable
 
     private STile currentStileUnderneath;
 
-    private InputSettings controls;
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
     
@@ -34,17 +33,18 @@ public class Player : MonoBehaviour, ISavable
 
     void Awake()
     {
-        _instance = this;
-        _instance.controls = new InputSettings();
-        LoadBindings();
+        InitializeSingleton(overrideExistingInstanceWith:this);
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
 
         if (!didInit)
             Init();
     }
 
+    // This is no longer necessary from my testing, but I'm leaving it in. When we (hopefully) go back to look at SceneInitializer we
+    // can probably eliminate this
     public void SetSingleton()
     {
-        _instance = this;
+        InitializeSingleton(overrideExistingInstanceWith:this);
     }
 
     public void Init()
@@ -55,33 +55,16 @@ public class Player : MonoBehaviour, ISavable
 
         UpdatePlayerSpeed();
     }
-    
+
+    // Here is where we pay for all our Singleton Sins
+    public void ResetInventory()
+    {
+        playerInventory.Reset();
+    }
+
     private void Start() 
     {
         UITrackerManager.AddNewTracker(gameObject, UITrackerManager.DefaultSprites.circle1, UITrackerManager.DefaultSprites.circleEmpty, 3f);
-    }
-
-    public static void LoadBindings()
-    {
-        if (_instance == null)
-        {
-            return;
-        }
-
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            _instance.controls.LoadBindingOverridesFromJson(rebinds);
-        }
-        _instance.controls.Player.Move.performed += context => _instance.UpdateMove(context.ReadValue<Vector2>());
-    }
-
-    private void OnEnable() {
-        controls.Enable();
-    }
-
-    private void OnDisable() {
-        controls.Disable();
     }
     
     void Update()
@@ -189,8 +172,7 @@ public class Player : MonoBehaviour, ISavable
 
         // Player
         sp.position = new float[3];
-        Vector3 pos = GetPosition();
-        Debug.Log("Saved position: " + pos);
+        Vector3 pos = GetSavePosition();
         sp.position[0] = pos.x;
         sp.position[1] = pos.y;
         sp.position[2] = pos.z;
@@ -202,12 +184,59 @@ public class Player : MonoBehaviour, ISavable
         sp.hasCollectedAnchor = GetPlayerInventory().GetHasCollectedAnchor();
 
         SaveSystem.Current.SetSerializeablePlayer(sp);
+
+        //Debug.Log("Saved player position to: " + pos);
+    }
+
+    private Vector3 GetSavePosition()
+    {
+        // We need this in case an STile is moving while the player is on it!
+
+        // Player positions
+        Vector3 pos = transform.position;
+        Vector3 localPos = transform.localPosition;
+
+        // STile postitions
+        STile stile = SGrid.current.GetStileUnderneath(gameObject);
+        if (stile == null)
+        {
+            return pos;
+        }
+        else
+        {
+            Vector2Int stileEndCoords = GetEndStileLocation(stile.islandId);
+            Vector3 stilePos = SGrid.current.GetStileUnderneath(gameObject).calculatePosition(stileEndCoords.x, stileEndCoords.y);
+
+            return stilePos + localPos;
+        }
+    }
+
+    private Vector2Int GetEndStileLocation(int myStileId)
+    {
+        STile[,] grid = SGrid.current.GetGrid();
+        for (int x = 0; x < SGrid.current.width; x++)
+        {
+            for (int y = 0; y < SGrid.current.height; y++)
+            {
+                if (grid[x, y].islandId == myStileId)
+                {
+                    return new Vector2Int(x, y);
+                }
+            }
+        }
+        Debug.LogError("Could not find STile of id " + myStileId);
+        return Vector2Int.zero;
     }
 
     public void Load(SaveProfile profile)
     {
+        InitializeSingleton(overrideExistingInstanceWith: this);
+
         if (profile == null || profile.GetSerializablePlayer() == null)
+        {
+            playerInventory.Reset();
             return;
+        }
 
         SerializablePlayer sp = profile.GetSerializablePlayer();
 
@@ -220,8 +249,8 @@ public class Player : MonoBehaviour, ISavable
         transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
         //Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
 
-        isOnWater = sp.isOnWater;
-        isInHouse = sp.isInHouse;
+        SetIsOnWater(sp.isOnWater);
+        SetIsInHouse(sp.isInHouse);
 
         // PlayerInventory
         playerInventory.SetCollectiblesList(sp.collectibles);
@@ -241,7 +270,7 @@ public class Player : MonoBehaviour, ISavable
         }
     }
 
-    public static Vector3 GetLastMoveDir() 
+    public static Vector3 GetLastMoveDirection()
     {
         return _instance.lastMoveDir;
     }
@@ -322,7 +351,7 @@ public class Player : MonoBehaviour, ISavable
         return isOnWater;
     }
 
-    public void GetIsOnWater(Conditionals.Condition c)
+    public void GetIsOnWater(Condition c)
     {
         c.SetSpec(isOnWater);
     }

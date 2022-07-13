@@ -1,41 +1,40 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
 guid: df9f80348fe2750459a2ee4294e9a627
-=======
-guid: e21f3626c6bce9746941278f2ab57d0c
->>>>>>> randomerz-main
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: 4418206670206528776
     second: jungle_inside_0
   - first:
+      213: 999130466667243437
+    second: jungle_inside_1
+  - first:
       213: 4942383006694408821
     second: jungle_inside_2
+  - first:
+      213: -6781760510077398016
+    second: jungle_inside_3
+  - first:
+      213: -281938063390358392
+    second: jungle_inside_4
   - first:
       213: 6484914673682118864
     second: jungle_inside_5
   - first:
+      213: 7667859051250348191
+    second: jungle_inside_6
+  - first:
+      213: -6526250452086789605
+    second: jungle_inside_7
+  - first:
       213: -4730107791125804913
     second: jungle_inside_8
   - first:
-      213: -4843378564202262390
-    second: jungle_inside_11
+      213: -1428509413427337478
+    second: jungle_inside_9
   - first:
-      213: 1271395677007545097
-    second: jungle_inside_12
-  - first:
-      213: -2704620633493555927
-    second: jungle_inside_13
-  - first:
-      213: 3626362878980084863
-    second: jungle_inside_14
-  - first:
-      213: 4001266042219933007
-    second: jungle_inside_15
-  - first:
-      213: -3611240105671772792
-    second: jungle_inside_16
+      213: -7639378815096555335
+    second: jungle_inside_10
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -71,7 +70,7 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -95,7 +94,7 @@ TextureImporter:
   compressionQualitySet: 0
   textureFormatSet: 0
   ignorePngGamma: 0
-  applyGammaDecoding: 0
+  applyGammaDecoding: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -133,7 +132,7 @@ TextureImporter:
         width: 32
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -146,7 +145,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: jungle_inside_2
+      name: jungle_inside_1
       rect:
         serializedVersion: 2
         x: 32
@@ -154,7 +153,28 @@ TextureImporter:
         width: 32
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da7a8f5addf9ddd00800000000000000
+      internalID: 999130466667243437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_inside_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 16
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -167,7 +187,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: jungle_inside_5
+      name: jungle_inside_3
       rect:
         serializedVersion: 2
         x: 0
@@ -175,7 +195,49 @@ TextureImporter:
         width: 48
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00490155fb852e1a0800000000000000
+      internalID: -6781760510077398016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_inside_4
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 884c4fa33da561cf0800000000000000
+      internalID: -281938063390358392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_inside_5
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -188,11 +250,32 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
+      name: jungle_inside_7
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1a62289ac91e65a0800000000000000
+      internalID: -6526250452086789605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
       name: jungle_inside_8
       rect:
         serializedVersion: 2
-        x: 64
-        y: 32
+        x: 0
+        y: 0
         width: 16
         height: 32
       alignment: 9
@@ -209,112 +292,28 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: jungle_inside_11
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a809bff6bdcd8ccb0800000000000000
-      internalID: -4843378564202262390
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: jungle_inside_12
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9038001d1a7e4a110800000000000000
-      internalID: 1271395677007545097
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: jungle_inside_13
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 16
-        height: 32
-      alignment: 9
-      pivot: {x: 0.5, y: 0.25}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 925bc601dd1477ad0800000000000000
-      internalID: -2704620633493555927
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: jungle_inside_14
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 0
-        width: 16
-        height: 32
-      alignment: 9
-      pivot: {x: 0.5, y: 0.25}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f74554c33dd635230800000000000000
-      internalID: 3626362878980084863
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: jungle_inside_15
+      name: jungle_inside_9
       rect:
         serializedVersion: 2
         x: 32
         y: 0
         width: 16
         height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f4d2a5a044a578730800000000000000
-      internalID: 4001266042219933007
+      spriteID: af6ac5ec14aec2ce0800000000000000
+      internalID: -1428509413427337478
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: jungle_inside_16
+      name: jungle_inside_10
       rect:
         serializedVersion: 2
         x: 48
@@ -322,14 +321,14 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8853acec14c42edc0800000000000000
-      internalID: -3611240105671772792
+      spriteID: 9b8768d51797bf590800000000000000
+      internalID: -7639378815096555335
       vertices: []
       indices: 
       edges: []

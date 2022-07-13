@@ -47,9 +47,9 @@ public class CaveGrid : SGrid
     {
         base.Start();
 
-        GetCollectible("Slider 5").gameObject.SetActive(false); // gameboy puzzle
-        GetCollectible("Slider 6").gameObject.SetActive(false); // flashlight puzzle
-        GetCollectible("Slider 9").gameObject.SetActive(false); // final puzzle
+        GetCollectible("Slider 5")?.gameObject.SetActive(false); // gameboy puzzle
+        GetCollectible("Slider 6")?.gameObject.SetActive(false); // flashlight puzzle
+        GetCollectible("Slider 9")?.gameObject.SetActive(false); // final puzzle
 
         AudioManager.PlayMusic("Caves");
         UIEffects.FadeFromBlack();
@@ -116,7 +116,7 @@ public class CaveGrid : SGrid
         }
     }
 
-    public void SetCavesCompleteCondition(Conditionals.Condition c)
+    public void SetCavesCompleteCondition(Condition c)
     {
         c.SetSpec(checkLightingCompletion && allTilesLit);
     }

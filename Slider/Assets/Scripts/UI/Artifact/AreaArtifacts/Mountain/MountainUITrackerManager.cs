@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class MountainUITrackerManager : UITrackerManager
 {
+#pragma warning disable
     public static MountainUITrackerManager _instance;
+#pragma warning restore
 
     private Vector2 xOffset = new Vector2(35f/50f, -16f/50f);
     private Vector2 yOffset = new Vector2(35f/50f, 16f/50f);

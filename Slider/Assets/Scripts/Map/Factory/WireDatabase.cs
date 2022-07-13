@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 [System.Serializable]
@@ -10,11 +11,24 @@ public struct WireTile
     public TileBase onWire;
 }
 
+//The sparks are based on sprite instead of tile bc of rule tiles.
+[System.Serializable]
+struct SparkPair
+{
+    public Sprite wireSprite;
+    [FormerlySerializedAs("sparkResName")]
+    public string sparkType;
+}
+
 public class WireDatabase : MonoBehaviour
 {
-    [SerializeField]
-    private List<WireTile> wireTiles;
+    public List<WireTile> wireTiles;
 
+    [SerializeField]
+    private List<SparkPair> sparks;
+
+    private Dictionary<Sprite, string> _sparkTypes;
+    public Dictionary<Sprite, string> Sparks => _sparkTypes;
 
     private static WireDatabase _instance;
 
@@ -29,6 +43,12 @@ public class WireDatabase : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+        Debug.Log("Instance Created");
+        _sparkTypes = new Dictionary<Sprite, string>();
+        foreach (SparkPair pair in sparks)
+        {
+            _sparkTypes[pair.wireSprite] = pair.sparkType;
+        }
     }
 
     private void OnDisable()
@@ -53,8 +73,7 @@ public class WireDatabase : MonoBehaviour
     {
         foreach (WireTile wire in wireTiles)
         {
-
-            tm.SwapTile(powered ? wire.offWire : wire.onWire, powered ? wire.onWire : wire.offWire);            
+            tm.SwapTile(powered ? wire.offWire : wire.onWire, powered ? wire.onWire : wire.offWire);
         }
     }
 }

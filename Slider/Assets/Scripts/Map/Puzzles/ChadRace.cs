@@ -24,7 +24,7 @@ public class ChadRace : MonoBehaviour
     public bool tilesAdjacent;
     public Animator chadimator;
     public NPC npcScript;
-    public DialogueConditionals countDownDialogue;
+    public NPCConditionals countDownDialogue;
 
     private Vector2 chadStartLocal;
     private Vector2 playerStart;
@@ -34,8 +34,10 @@ public class ChadRace : MonoBehaviour
     private bool inStart;
     private float startTime;
 
+#pragma warning disable
     // Keeps track if this is the first time the play has tried the race with the current tile positions
     private bool firstTime;
+#pragma warning restore
 
     private float jungleChadEnd;
 
@@ -55,8 +57,9 @@ public class ChadRace : MonoBehaviour
         chadimator.SetBool("isSad", false);
 
         // Setting the first time dialogue
-        countDownDialogue.dialogue = "Bet I could beat you to the bell (e to start)";
-        npcScript.dconds.Add(countDownDialogue);
+        countDownDialogue.dialogueChain.Clear();
+        countDownDialogue.dialogueChain.Add(ConstructChadDialogueStart());
+        npcScript.AddNewConditionals(countDownDialogue);
     }
 
     // Update is called once per frame
@@ -100,7 +103,7 @@ public class ChadRace : MonoBehaviour
                 break;
             case State.ChadWon:
                 chadimator.SetBool("isWalking", false);
-                countDownDialogue.dialogue = "Pfft, too easy. Come back when you're fast enough to compete with me. (e to start)";
+                countDownDialogue.dialogueChain[0].dialogue = "Pfft, too easy. Come back when you're fast enough to compete with me. (e to start)";
                 transform.localPosition = chadEndLocal;
 
                 // AudioManager.SetMusicParameter("Jungle", "JungleChadStarted", 0);
@@ -155,15 +158,15 @@ public class ChadRace : MonoBehaviour
     }
 
     // Conditionals stuff for Chad Dialogue
-    public void CurrentlyRunning(Conditionals.Condition cond) {
+    public void CurrentlyRunning(Condition cond) {
         cond.SetSpec(raceState == State.Running);
     }
 
-    public void PlayerWon(Conditionals.Condition cond) {
+    public void PlayerWon(Condition cond) {
         cond.SetSpec(raceState == State.PlayerWon);
     }
 
-    public void Cheated(Conditionals.Condition cond) {
+    public void Cheated(Condition cond) {
         cond.SetSpec(raceState == State.Cheated);
     }
 
@@ -179,10 +182,9 @@ public class ChadRace : MonoBehaviour
     }
 
     private void DisplayAndTriggerDialogue(string message) {
-        countDownDialogue.dialogue = message;
-        npcScript.TypeNextDialogue();
+        countDownDialogue.dialogueChain[0].dialogue = message;
+        npcScript.TypeCurrentDialogue();
     }
-
 
     private IEnumerator SetParameterTemporary(string parameterName, float value1, float value2)
     {
@@ -193,6 +195,13 @@ public class ChadRace : MonoBehaviour
         
         Debug.Log("Param update to " + value2);
         AudioManager.SetMusicParameter("Jungle", parameterName, value2);
+    }
+
+    private DialogueData ConstructChadDialogueStart()
+    {
+        var dialogue = new DialogueData();
+        dialogue.dialogue = "Bet I could beat you to the bell (e to start)";
+        return dialogue;
     }
 
     public void UpdateChadEnd()

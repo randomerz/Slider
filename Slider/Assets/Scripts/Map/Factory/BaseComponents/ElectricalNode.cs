@@ -24,7 +24,7 @@ public class ElectricalNode : MonoBehaviour
     [SerializeField]
     protected int powerRefs;
     [SerializeField]
-    protected HashSet<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
+    protected List<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
 
     //NEIGHBORS ARE OUTGOING EDGES (or undirected)
     [SerializeField]
@@ -43,9 +43,12 @@ public class ElectricalNode : MonoBehaviour
     [SerializeField]
     public UnityEvent<OnPoweredArgs> OnPowered;
 
+    public UnityEvent OnPoweredOn;
+    public UnityEvent OnPoweredOff;
+
     protected void Awake()
     {
-        powerPathPrevs = new HashSet<ElectricalNode>();
+        powerPathPrevs = new List<ElectricalNode>();
         powerRefs = 0;  //Always start off and let things turn on.
     }
 
@@ -68,7 +71,15 @@ public class ElectricalNode : MonoBehaviour
         }
     }
 
-    public virtual void OnPoweredHandler(OnPoweredArgs e) { }
+    public virtual void OnPoweredHandler(OnPoweredArgs e) { 
+        if (e.powered)
+        {
+            OnPoweredOn?.Invoke();
+        } else
+        {
+            OnPoweredOff?.Invoke();
+        }
+    }
 
     public virtual void StartSignal(bool input)
     {
@@ -156,117 +167,119 @@ public class ElectricalNode : MonoBehaviour
         recStack.Remove(this);
     }
 
-    //Target Complexity : O(n)
-    //Note: this isn't cached from propagate because we only want to get the path when necessary (not for every node on every update)
-    //Returns the number of paths found
-    public int GetPathNodes(out HashSet<ElectricalNode> nodes)
+    //Complexity is O(n * p) where p is the number of paths (which shouldn't be too many usually)
+    public void GetPathNodes(out List<HashSet<ElectricalNode>> nodes)
     {
-        //Recursively get the path nodes by traversing the prev references made in propagation
-        nodes = new HashSet<ElectricalNode>();
+        nodes = new List<HashSet<ElectricalNode>>();
 
-        return GetPathNodesRecursive(nodes);
+        if (powerPathPrevs.Count > 0)
+        {
+            nodes.Add(new HashSet<ElectricalNode>());
+
+            GetPathNodesRecursive(nodes);
+        }
     }
 
-    private int GetPathNodesRecursive(HashSet<ElectricalNode> nodes)
+    private void GetPathNodesRecursive(List<HashSet<ElectricalNode>> allPathNodes)
     {
-        nodes.Add(this);
+        HashSet<ElectricalNode> currPathNodes = allPathNodes[allPathNodes.Count-1];
+        currPathNodes.Add(this);
 
-        int refs = powerPathPrevs.Count == 0 ? 1 : 0;   //If a node doesn't have a prev, then it is the origin of the signal.
-
-        //Make sure the chain of prevs has no cycles (which is should) or else this will cause stack overflow
-        foreach (ElectricalNode prev in powerPathPrevs)
+        if (powerPathPrevs.Count > 1)
         {
-            if (!nodes.Contains(prev))  //Need to add this to prevent stack overflow w/ more than 1 power source.
+            //Path Branches
+            var rootPath = new HashSet<ElectricalNode>(currPathNodes);
+
+            allPathNodes.RemoveAt(allPathNodes.Count - 1);
+            foreach (var node in powerPathPrevs)
             {
-                refs += prev.GetPathNodesRecursive(nodes);
+                if (!currPathNodes.Contains(node))
+                {
+                    allPathNodes.Add(new HashSet<ElectricalNode>(rootPath));
+                    node.GetPathNodesRecursive(allPathNodes);
+                }
+
+            }
+        } else
+        {
+            //Continue current path
+            foreach (var node in powerPathPrevs)
+            {
+                if (!currPathNodes.Contains(node))
+                {
+                    node.GetPathNodesRecursive(allPathNodes);
+                }
+
             }
         }
-
-        return refs;
     }
 
     //Target Complexity: O(n * p) p is the number of paths in this node as well as other (i.e. refs)
-    //This method needs to not only add the neighbor, but update the state and ref counts of other nodes to reflect the change (which can get more complicated).
-    public virtual void AddNeighbor(ElectricalNode other)
+    //This method needs to add the neighbor AND update the power refs/paths of other nodes.
+    public virtual bool AddNeighbor(ElectricalNode other)
     {
         if (other == null)
         {
             Debug.LogError("You cannot add a null neighbor to ElectricalNode");
-            return;
-        }
-        //The neighbor is already added, this prevents double counting.
-        if (neighbors.Contains(other) || other.neighbors.Contains(this))
-        {
-            //Debug.Log($"{gameObject.name} already has an edge including {other.gameObject.name}. This method does nothing.");
-            return;
+            return false;
         }
 
-        //Debug.Log($"Adding Node {other.gameObject} to node {this.gameObject}");
+        if (neighbors.Contains(other) || other.neighbors.Contains(this))
+        {
+            return false;
+        }
 
         if (this.nodeType == NodeType.IO && other.nodeType == NodeType.IO)
         {
             //Undirected case (Note: I'm using "this" mainly for readability to distinguish from other and show the parallelism)
 
-            //We only propagate "On's" for adding since paths can only be formed, not broken.
-            //Essentially, since we created a new edge, there are now new possible paths from a power source to nodes that are reachable from this to other.
-            //In order to account for these new paths, we need to propagate "across the edge" in both directions, so other's refs are propagated to this's neighbors and vice-versa.
-            //BOTH propagations happen BEFORE we update the nodes themselves in order to avoid double counting refs.
-            int oldThisRefs = this.powerRefs;   //If we don't do this, and power is coming from both directions, it will double count refs.
-            bool oldPowered = this.Powered;
-            if (other.Powered)
+            //Get all of the possible paths from power sources to the two nodes BEFORE 
+            List<HashSet<ElectricalNode>> pathsFromOther;
+            other.GetPathNodes(out pathsFromOther);
+            List<HashSet<ElectricalNode>> pathsFromThis;
+            this.GetPathNodes(out pathsFromThis);
+
+            //Propagate each path individually
+            foreach (var path in pathsFromOther)
             {
-                HashSet<ElectricalNode> otherNodes;
-                other.GetPathNodes(out otherNodes);
-                this.PropagateSignal(true, other, otherNodes, other.powerRefs);
+                this.PropagateSignal(true, other, path, 1);
             }
-            if (oldPowered)
+            foreach (var path in pathsFromThis)
             {
-                HashSet<ElectricalNode> thisNodes;
-                this.GetPathNodes(out thisNodes);
-                other.PropagateSignal(true, this, thisNodes, oldThisRefs);
+                other.PropagateSignal(true, this, path, 1);
             }
 
-            //Create an undirected edge between the two
+            //Create an undirected edge between the two nodes
             this.neighbors.Add(other);
             other.neighbors.Add(this);
         } else if (this.nodeType != NodeType.OUTPUT && other.nodeType != NodeType.INPUT)
         {
             //Directed edge from this to other.
-            if (this.Powered)
-            {
-                HashSet<ElectricalNode> thisNodes;
-                this.GetPathNodes(out thisNodes);
-
-                other.PropagateSignal(true, this, thisNodes, this.powerRefs);
-            }
+            PropagateAllPathsFromTo(true, this, other);
             this.neighbors.Add(other);
         } else if (this.nodeType != NodeType.INPUT && other.nodeType != NodeType.OUTPUT)
         {
             //Directed edge from other to this
-            if (other.Powered)
-            {
-                HashSet<ElectricalNode> otherNodes;
-                other.GetPathNodes(out otherNodes);
-
-                this.PropagateSignal(true, other, otherNodes, other.powerRefs);
-            }
+            PropagateAllPathsFromTo(true, other, this);
             other.neighbors.Add(this);
         } else
         {
             //Any other cases are essentially not allowed.
             Debug.LogError("Attempted to create a connection going out of an output node or into an input node, this is not allowed.");
+            return false;
         }
 
+        return true;
     }
 
     //Target Complexity : O(n) p is the number of paths in this node as well as other (i.e. refs)
-    public virtual void RemoveNeighbor(ElectricalNode other)
+    public virtual bool RemoveNeighbor(ElectricalNode other)
     {
         //The neighbor is already removed, this prevents double counting.
         if (!neighbors.Contains(other) && !other.neighbors.Contains(this))
         {
             //Debug.Log($"{gameObject.name} does not have an edge including {other.gameObject.name}. This method does nothing.");
-            return;
+            return false;
         }
 
         //Debug.Log($"Removing Node {other.gameObject} from node {this.gameObject}");
@@ -279,56 +292,56 @@ public class ElectricalNode : MonoBehaviour
             this.neighbors.Remove(other);
             other.neighbors.Remove(this);
 
-            bool powerPathFromOtherToThis = this.powerPathPrevs.Remove(other);  //false
-            bool powerPathFromThisToOther = other.powerPathPrevs.Remove(this);   //true
+            this.powerPathPrevs.Remove(other);
+            other.powerPathPrevs.Remove(this);
 
+            List<HashSet<ElectricalNode>> pathsFromOther;
+            other.GetPathNodes(out pathsFromOther);
+            List<HashSet<ElectricalNode>> pathsFromThis;
+            this.GetPathNodes(out pathsFromThis);
 
-            if (powerPathFromOtherToThis)
+            foreach (var path in pathsFromOther)
             {
-                HashSet<ElectricalNode> otherNodes;
-                int otherRefsNew = other.GetPathNodes(out otherNodes);
-                other.powerRefs = otherRefsNew;
-
                 //Deletes ("Breaks") the paths that pass from other to this
-                this.PropagateSignal(false, other, otherNodes, otherRefsNew);
+                this.PropagateSignal(false, other, path, 1);
             }
-            if (powerPathFromThisToOther)
-            {
-                HashSet<ElectricalNode> thisNodes;
-                int thisRefsNew = this.GetPathNodes(out thisNodes);
-                this.powerRefs = thisRefsNew;
 
-                other.PropagateSignal(false, this, thisNodes, thisRefsNew);
+            foreach (var path in pathsFromThis)
+            {
+                other.PropagateSignal(false, this, path, 1);
             }
         }
         else if (this.nodeType != NodeType.OUTPUT && other.nodeType != NodeType.INPUT)
         {
             //Directed edge from this to other.
             this.neighbors.Remove(other);
-            if (other.powerPathPrevs.Remove(this))
-            {
-                //Don't need to update this.powerRefs since it can't change.
-                HashSet<ElectricalNode> thisNodes;
-                this.GetPathNodes(out thisNodes);
-                other.PropagateSignal(false, this, thisNodes, this.powerRefs);
-            }
+            PropagateAllPathsFromTo(false, this, other);
         }
         else if (this.nodeType != NodeType.INPUT && other.nodeType != NodeType.OUTPUT)
         {
             //Directed edge from other to this
             other.neighbors.Remove(this);
-            if (this.powerPathPrevs.Remove(other))
-            {
-                //Don't need to update this.powerRefs since it can't change.
-                HashSet<ElectricalNode> otherNodes;
-                other.GetPathNodes(out otherNodes);
-                this.PropagateSignal(false, other, otherNodes, other.powerRefs);
-            }
+            PropagateAllPathsFromTo(false, other, this);
         }
         else
         {
             //Any other cases are essentially not allowed.
             Debug.LogError("Attempted to remove a connection going out of an output node or into an input node, this is not allowed.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private static void PropagateAllPathsFromTo(bool value, ElectricalNode from, ElectricalNode to)
+    {
+        List<HashSet<ElectricalNode>> pathsFrom;
+        from.GetPathNodes(out pathsFrom);
+
+        //Propagate each path individually
+        foreach (var path in pathsFrom)
+        {
+            to.PropagateSignal(true, from, path, 1);
         }
     }
 }

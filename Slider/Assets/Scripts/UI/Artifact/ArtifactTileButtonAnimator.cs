@@ -34,7 +34,8 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             isPushedDown = false;
             sliderImage.rectTransform.anchoredPosition = new Vector3(0, 0);
             highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, 0);
-            pushedDownFrame.gameObject.SetActive(false);
+            this.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
+            this.transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
         }
     }
 
@@ -63,10 +64,11 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             isHighlighted = true;
             highlightedFrame.gameObject.SetActive(true);
         }
-        else if (isHighlighted && !value && !isLightning)
+        else if (isHighlighted && !value && !isLightning) //If lightning is active, tile should never be unhighlighted
         {
             isHighlighted = false;
-            highlightedFrame.gameObject.SetActive(false);
+            this.gameObject.transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
+            this.gameObject.transform.GetChild(2).GetChild(1).gameObject.SetActive(false);
         }
     }
 
@@ -75,12 +77,18 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         if (!isLightning && value)
         {
             highlightedFrame.gameObject.SetActive(false);
+            pushedDownFrame.gameObject.SetActive(false);
             Image lightningPushedDown = this.gameObject.transform.GetChild(1).GetChild(1).GetComponent<Image>();
             Image lightningHighlight = this.gameObject.transform.GetChild(2).GetChild(1).GetComponent<Image>();
             pushedDownFrame = lightningPushedDown;
             highlightedFrame = lightningHighlight;
-            isHighlighted = true; //When lightning is active, tile should always be highlighted
-            highlightedFrame.gameObject.SetActive(true);
+            if (isForcedDown) pushedDownFrame.gameObject.SetActive(true);
+            else
+            {
+                pushedDownFrame.gameObject.SetActive(false);
+                isHighlighted = true; //When lightning is active, tile should always be highlighted
+                highlightedFrame.gameObject.SetActive(true);
+            }
         }
         else if (isLightning && !value)
         {
@@ -91,10 +99,5 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             highlightedFrame = Highlighted;
         }
         isLightning = value;
-    }
-    //Chen: This just enables the lightning highlights for use in Desert
-    public void FragLightningPreview(bool value)
-    {
-        this.gameObject.transform.GetChild(2).GetChild(1).gameObject.SetActive(value);
     }
 }

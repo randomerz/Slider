@@ -11,17 +11,20 @@ using TMPro;
 //  - refactor options into an options panel -- for now the options buttons are dead
 //  - fix Continue button (see in Update())
 
-public class MainMenuManager : MonoBehaviour
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
+public class MainMenuManager : Singleton<MainMenuManager>
 {
     public string cutsceneSceneName;
 
     private int newSaveProfileIndex = -1;
+    private int continueProfileIndex = -1;
 
     [Header("Animators")]
     public Animator titleAnimator;
     public Animator textAnimator;
     public Animator playerAnimator;
     public Animator mainMenuButtonsAnimator;
+    public Animator mainMenuQuitButtonAnimator;
 
     [Header("Panels")]
     public GameObject mainMenuPanel;
@@ -46,43 +49,37 @@ public class MainMenuManager : MonoBehaviour
     public Toggle bigTextToggle;
 
     private System.IDisposable listener;
-    private InputSettings controls;
-
-    private static MainMenuManager _instance;
 
     private bool skippedSavePicking;
+
+    public bool keyboardEnabled {get; private set;}
     
     private void Awake() {
-        _instance = this;
-        
-        _instance.controls = new InputSettings();
-        LoadBindings();
+        InitializeSingleton();
+
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
+        //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context 
+            => { if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); } });
     }
 
     void Start()
     {
         StartCoroutine(OpenCutscene());
 
-        listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
+        CheckContinueButton();
 
-        _instance.controls.UI.Back.performed += context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); };
+        AudioManager.PlayMusic("Main Menu");
+        AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 0);
 
-        // Pressing a navigation key selects a button is one is not already selected
-        _instance.controls.UI.Navigate.performed += context => 
-        {
-            if (!UINavigationManager.ButtonInCurrentMenuIsSelected())
-            {
-                UINavigationManager.SelectBestButtonInCurrentMenu();
-            }
-        };
+        // any key listener moved to OpenCutscene()
     }
 
-    private void OnEnable() {
-        controls.Enable();
+    public static MainMenuManager GetInstance(){
+        return _instance;
     }
 
     private void OnDisable() {
-        controls.Disable();
         listener?.Dispose();
     }
 
@@ -91,23 +88,6 @@ public class MainMenuManager : MonoBehaviour
         // continueButton.interactable = SaveSystem.Current != null;
         // continueText.color = SaveSystem.Current != null ? GameSettings.white : GameSettings.darkGray;
     }
-
-    public static void LoadBindings()
-    {
-        if (_instance == null)
-        {
-            return;
-        }
-
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            _instance.controls.LoadBindingOverridesFromJson(rebinds);
-        }
-
-        _instance.controls.UI.Pause.performed += context => _instance.CloseCurrentPanel();
-    }
-
 
     private void OnAnyButtonPress() 
     {
@@ -120,8 +100,32 @@ public class MainMenuManager : MonoBehaviour
         return SaveSystem.GetProfile(0) != null || SaveSystem.GetProfile(1) != null || SaveSystem.GetProfile(2) != null;
     }
 
+    private bool CheckContinueButton()
+    {
+        if (!AreAnyProfilesLoaded())
+        {
+            continueProfileIndex = -1;
+            continueButton.interactable = false;
+            continueText.color = GameSettings.lightGray;
+            return false;
+        }
+        continueProfileIndex = SaveSystem.GetRecentlyPlayedIndex();
+        continueButton.interactable = true;
+        continueText.color = GameSettings.white;
+        return true;
+    }
+
+    public void ContinueGame()
+    {
+        SaveSystem.LoadSaveProfile(continueProfileIndex);
+    }
+
     private IEnumerator OpenCutscene()
     {
+        yield return null;
+
+        listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
+
         yield return new WaitForSeconds(1f);
             
         CameraShake.ShakeIncrease(2.1f, 0.1f);
@@ -143,7 +147,10 @@ public class MainMenuManager : MonoBehaviour
         titleAnimator.SetBool("isUp", true);
         playerAnimator.SetBool("isUp", true);
         mainMenuButtonsAnimator.SetBool("isUp", true);
+        mainMenuQuitButtonAnimator.SetBool("isVisible", true);
         textAnimator.SetBool("isVisible", false);
+
+        AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 1);
 
         UINavigationManager.CurrentMenu = mainMenuPanel;
         UINavigationManager.LockoutSelectablesInCurrentMenu(SelectTopmostButton, 1);
@@ -182,6 +189,7 @@ public class MainMenuManager : MonoBehaviour
         else if (savesPanel.activeSelf || optionsPanel.activeSelf || creditsPanel.activeSelf)
         {
             CloseAllPanels();
+            CheckContinueButton();
             UINavigationManager.CurrentMenu = mainMenuPanel;
         }
         else
@@ -247,6 +255,7 @@ public class MainMenuManager : MonoBehaviour
         profileNameTextField.ActivateInputField();
         profileNameTextField.text = "";
         UINavigationManager.CurrentMenu = newSavePanel;
+        keyboardEnabled = true;
     }
 
     public void OnTextFieldChangeText(string text)
@@ -305,26 +314,31 @@ public class MainMenuManager : MonoBehaviour
         Application.Quit(0);
     }
 
-
     public void StartNewGame()
     {
-        string profileName = profileNameTextField.text;
+        if(keyboardEnabled)
+        {
+            string profileName = profileNameTextField.text;
 
-        Debug.Log("Starting new game with profile: " + profileName);
+            if (profileName.Length == 0)
+                return;
 
-        if (profileName.Length == 0)
-            return;
+            keyboardEnabled = false;
+            Debug.Log("Starting new game with profile: " + profileName);
 
-        SaveSystem.SetProfile(newSaveProfileIndex, new SaveProfile(profileName));
-        SaveSystem.SetCurrentProfile(newSaveProfileIndex);
+            SaveSystem.SetProfile(newSaveProfileIndex, new SaveProfile(profileName));
+            SaveSystem.SetCurrentProfile(newSaveProfileIndex);
 
-        LoadCutscene();
+            LoadCutscene();
+        }
     }
 
     public void LoadCutscene()
     {
         // SceneManager.LoadSceneAsync(cutsceneSceneName, LoadSceneMode.Additive);
-        UIEffects.FadeToBlack(() => {SceneManager.LoadScene(cutsceneSceneName);});
+        UIEffects.FadeToBlack(() => {SceneManager.LoadScene(cutsceneSceneName);  
+                                    UINavigationManager.CurrentMenu = null;}, 1, false);
+        
     }
 
 

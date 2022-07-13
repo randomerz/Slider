@@ -12,10 +12,12 @@ public class VillageGrid : SGrid
 
     private bool fishOn;
 
+    [SerializeField] private RuinsSymbols ruinsSymbols;
     private Coroutine shuffleBuildUpCoroutine;
-    private bool checkCompletion = false; // TODO: serialize
+    private bool checkCompletion = false;
 
-    public override void Init() {
+    public override void Init()
+    {
         myArea = Area.Village;
 
         foreach (Collectible c in collectibles)
@@ -38,30 +40,34 @@ public class VillageGrid : SGrid
 
         AudioManager.PlayMusic("Village");
         UIEffects.FadeFromBlack();
-        
-        if (checkCompletion) {
+
+        if (checkCompletion)
+        {
             UpdateButtonCompletions(this, null);
         }
     }
-    
-    private void OnEnable() {
-        if (checkCompletion) {
-            Debug.Log("OnEnable checkCompletion");
+
+    private void OnEnable()
+    {
+        if (checkCompletion)
+        {
             SGrid.OnGridMove += SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
         }
     }
 
-    private void OnDisable() {
-        if (checkCompletion) {
+    private void OnDisable()
+    {
+        if (checkCompletion)
+        {
             SGrid.OnGridMove -= SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;
         }
     }
 
-    public override void Save() 
+    public override void Save()
     {
         base.Save();
 
@@ -72,14 +78,17 @@ public class VillageGrid : SGrid
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
-        
+
         checkCompletion = profile.GetBool("villageCompletion");
         fishOn = profile.GetBool("villageFishOn");
+
+        if (checkCompletion)
+            gridAnimator.ChangeMovementDuration(0.5f);
     }
 
 
     // === Village puzzle specific ===
-    public void CheckFishOn(Conditionals.Condition c)
+    public void CheckFishOn(Condition c)
     {
         c.SetSpec(fishOn);
     }
@@ -94,7 +103,8 @@ public class VillageGrid : SGrid
     }
 
     // Puzzle 8 - 8puzzle
-    public void ShufflePuzzle() {
+    public void ShufflePuzzle()
+    {
         if (shuffleBuildUpCoroutine == null)
         {
             shuffleBuildUpCoroutine = StartCoroutine(ShuffleBuildUp());
@@ -109,31 +119,56 @@ public class VillageGrid : SGrid
 
         CameraShake.Shake(0.25f, 0.25f);
         AudioManager.Play("Slide Rumble");
+        ruinsSymbols.FlashSymbol(0);
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(0.25f, 0.25f);
+        AudioManager.Play("Slide Rumble");
+        ruinsSymbols.FlashSymbol(1);
 
         yield return new WaitForSeconds(1f);
 
         CameraShake.Shake(0.75f, 0.5f);
         AudioManager.Play("Slide Rumble");
+        ruinsSymbols.FlashSymbol(2);
 
         yield return new WaitForSeconds(1f);
 
         CameraShake.Shake(1.5f, 2.5f);
-        AudioManager.Play("Slide Explosion");
+        AudioManager.PlayWithVolume("Slide Explosion", 0.2f);
+        AudioManager.Play("TFT Bell");
+        ruinsSymbols.FlashSymbol(3);
 
         yield return new WaitForSeconds(0.25f);
 
         UIEffects.FlashWhite();
         DoShuffle();
+
+        yield return new WaitForSeconds(0.75f);
+
+        CameraShake.Shake(2, 0.9f);
     }
 
     private void DoShuffle()
     {
+        if (GetNumTilesCollected() != 8)
+        {
+            Debug.LogError("Tried to shuffle village when not 8 tiles were collected! Detected " + GetNumTilesCollected() + " tiles.");
+            return;
+        }
+
         int[,] shuffledPuzzle = new int[3, 3] { { 7, 0, 1 },
                                                 { 6, 4, 8 },
                                                 { 5, 3, 2 } };
         SetGrid(shuffledPuzzle);
 
+        gridAnimator.ChangeMovementDuration(0.5f);
+
         checkCompletion = true;
+        SaveSystem.Current.SetBool("forceAutoMove", true);
+        SaveSystem.Current.SetBool("villageCompletion", checkCompletion);
+
         OnGridMove += UpdateButtonCompletions; // this is probably not needed
         UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
         SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
@@ -150,9 +185,10 @@ public class VillageGrid : SGrid
             UIArtifact.ClearQueues();
 
             // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
-            StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+            StartCoroutine(CheckCompletionsAfterDelay(1.2f));
 
             AudioManager.Play("Puzzle Complete");
+            SaveSystem.Current.SetBool("forceAutoMove", false);
             UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
@@ -161,6 +197,7 @@ public class VillageGrid : SGrid
     {
         caveDoorEntrance.SetActive(true);
         caveDoorRocks.SetActive(false);
+        SaveSystem.Current.SetBool("caveDoorExploded", true);
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");
     }

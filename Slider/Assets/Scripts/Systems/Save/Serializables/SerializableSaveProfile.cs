@@ -7,11 +7,14 @@ using System.Linq;
 public class SerializableSaveProfile
 {
     public string profileName;
-    public float playTimeInSeconds;
     public bool completionStatus;
+    public float playTimeInSeconds;
+    public System.DateTime lastSaved;
 
     public SerializablePlayer serializablePlayer;
     public Area lastArea;
+    public bool inGame;
+
 
     //private Dictionary<Area, SGridData> areaToSGridData = new Dictionary<Area, SGridData>();
     public Area[] areaToSGridData_Keys;
@@ -31,8 +34,9 @@ public class SerializableSaveProfile
         SerializableSaveProfile ssp = new SerializableSaveProfile();
 
         ssp.profileName = saveProfile.GetProfileName();
-        ssp.playTimeInSeconds = saveProfile.GetPlayTimeInSeconds();
         ssp.completionStatus = saveProfile.GetCompletionStatus();
+        ssp.playTimeInSeconds = saveProfile.GetPlayTimeInSeconds();
+        ssp.lastSaved = saveProfile.GetLastSaved();
 
         ssp.serializablePlayer = saveProfile.GetSerializablePlayer();
         ssp.lastArea = saveProfile.GetLastArea();
@@ -52,8 +56,9 @@ public class SerializableSaveProfile
     {
         SaveProfile sp = new SaveProfile(profileName);
         
-        sp.SetPlayTimeInSeconds(playTimeInSeconds);
         sp.SetCompletionStatus(completionStatus);
+        sp.SetPlayTimeInSeconds(playTimeInSeconds);
+        sp.SetLastSaved(lastSaved);
 
         sp.SetSerializeablePlayer(serializablePlayer);
         sp.SetLastArea(lastArea);

@@ -75,6 +75,7 @@ public class Item : MonoBehaviour
         {
             go.SetActive(false);
         }
+        spriteRenderer.sortingOrder = 1; // bring object to render above others
 
         float t = 0;
 
@@ -97,6 +98,7 @@ public class Item : MonoBehaviour
         transform.position = target.position;
         spriteRenderer.transform.position = target.position;
         myCollider.enabled = false;
+        OnPickUp?.Invoke();
         callback();
     }
 
@@ -114,6 +116,9 @@ public class Item : MonoBehaviour
         start.transform.parent = hitStile == null ? null : hitStile.transform;
         end.transform.parent = hitStile == null ? null : hitStile.transform;
 
+        myCollider.enabled = true;
+        transform.position = end.transform.position;
+
         //transform.position = target;
         while (t >= 0)
         {
@@ -128,9 +133,10 @@ public class Item : MonoBehaviour
             t -= Time.deltaTime;
         }
 
-        myCollider.enabled = true;
-        transform.position = end.transform.position;
+        spriteRenderer.sortingOrder = 0; // bring object to render below others
+
         spriteRenderer.transform.position = end.transform.position;
+        OnDrop?.Invoke();
         callback();
         Destroy(start);
         Destroy(end);

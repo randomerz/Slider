@@ -66,6 +66,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnPoweredOn:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoweredOff:
+    m_PersistentCalls:
+      m_Calls: []
+  isConductiveObject: 0
 --- !u!50 &8207227139567865597
 Rigidbody2D:
   serializedVersion: 4
@@ -97,15 +104,43 @@ Tilemap:
   m_Enabled: 1
   m_Tiles: {}
   m_AnimatedTiles: {}
-  m_TileAssetArray: []
-  m_TileSpriteArray: []
-  m_TileMatrixArray: []
-  m_TileColorArray: []
+  m_TileAssetArray:
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  m_TileSpriteArray:
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  m_TileMatrixArray:
+  - m_RefCount: 0
+    m_Data:
+      e00: -2.5244127e-29
+      e01: -7.0971693e-22
+      e02: -2.4628146e+29
+      e03: 0.0000000050419864
+      e10: 7.89e-43
+      e11: 4.5905e-41
+      e12: 7.9e-43
+      e13: 7.89e-43
+      e20: 6e-45
+      e21: -37809.78
+      e22: -37806.188
+      e23: -37806.188
+      e30: 0
+      e31: 1.61e-43
+      e32: 1.61e-43
+      e33: 1.61e-43
+  m_TileColorArray:
+  - m_RefCount: 0
+    m_Data: {r: -2.4628146e+29, g: -2.4628146e+29, b: -2.4628146e+29, a: -2.4628146e+29}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: 0, y: 0, z: 0}
-  m_Size: {x: 0, y: 0, z: 1}
+  m_Origin: {x: -1, y: 0, z: 0}
+  m_Size: {x: 2, y: 1, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:

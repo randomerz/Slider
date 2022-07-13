@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ShopManager : MonoBehaviour
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
+public class ShopManager : Singleton<ShopManager>
 {
-    private static ShopManager _instance;
+    //private static ShopManager _instance;
     private int totalCreditCount;
     private int credits; // TODO: serialize
     private bool turnedInAnchor;
@@ -46,8 +47,6 @@ public class ShopManager : MonoBehaviour
     public GameObject[] buyItemButtons;
     public GameObject[] talkSubPanels;
 
-    private InputSettings controls;
-
     public enum States
     {
         None,
@@ -67,49 +66,45 @@ public class ShopManager : MonoBehaviour
 
     private void Awake()
     {
-        _instance = this;
-        _instance.controls = new InputSettings();
-        LoadBindings();
+        InitializeSingleton();
+        SetupBindingBehaviors();
+    }
+
+    #region SPECIAL BINDING BEHAVIOR SETUP
+    // We need to special case this and use the unmanaged binding behaviors because pressing Action to open the shop also removes the binding behavior
+    private List<BindingBehavior> bindingBehaviors = new List<BindingBehavior>();
+
+    private void SetupBindingBehaviors()
+    {
+        bindingBehaviors = new List<BindingBehavior>();
+        bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.ExitCurrentPanel()));
+        bindingBehaviors.Add(
+            Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context =>
+            {
+                if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); }
+            })
+        );
+        // Using PlayerAction, UIClick, or OpenArtifact skips text typewriter effect or advances to the next dialogue
+        bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => _instance.shopDialogueManager.OnActionPressed(context)));
+        bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Click, context => _instance.shopDialogueManager.OnActionPressed(context)));
+        bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => _instance.shopDialogueManager.OnActionPressed(context)));
     }
 
     private void OnEnable()
     {
-        controls.Enable();
+        bindingBehaviors.ForEach(bindingBehavior => bindingBehavior.isEnabled = true);
     }
 
     private void OnDisable()
     {
-        controls.Disable();
+        bindingBehaviors.ForEach(bindingBehavior => bindingBehavior.isEnabled = false);
     }
 
-    public static void LoadBindings()
+    private void OnDestroy()
     {
-        if (_instance == null)
-        {
-            return;
-        }
-
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            _instance.controls.LoadBindingOverridesFromJson(rebinds);
-        }
-        _instance.controls.UI.Pause.performed += context => _instance.ExitCurrentPanel();
-
-        // Using PlayerAction, UIClick, or OpenArtifact skips text typewriter effect or advances to the next dialogue
-        _instance.controls.UI.OpenArtifact.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
-        _instance.controls.UI.Click.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
-        _instance.controls.Player.Action.performed += context => _instance.shopDialogueManager.OnActionPressed(context);
-
-        // Pressing a navigation key selects a button is one is not already selected
-        _instance.controls.UI.Navigate.performed += context =>
-        {
-            if (!UINavigationManager.ButtonInCurrentMenuIsSelected())
-            {
-                UINavigationManager.SelectBestButtonInCurrentMenu();
-            }
-        };
+        bindingBehaviors.ForEach(bindingBehavior => Controls.UnregisterBindingBehavior(bindingBehavior));
     }
+    #endregion
 
     public void CheckTavernKeep()
     {

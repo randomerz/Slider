@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class DesertGrid : SGrid
 {
     public static DesertGrid instance;
@@ -10,24 +11,10 @@ public class DesertGrid : SGrid
     public Item log; //Right now the animator for the campfire doesn't stay alive if scene transitions
     public NPCAnimatorController campfire;
 
-    private bool crocoOasis = false;
-
     private int monkeShake = 0;
-    private bool monkeyOasis = false;
-
-    private bool jackalBoned = false;
-    private bool jackalOasis = false;
 
     public DiceGizmo dice1;
     public DiceGizmo dice2;
-    private bool challengedChad = false;
-    private bool startDice = false;
-    private bool diceWon = false;
-
-    private bool VIPHelped = false;
-
-    private bool GazelleQuest = false;
-    private bool GazelleOasis = false;
 
     private bool checkCompletion = false;
     private bool checkMonkey = false;
@@ -52,7 +39,7 @@ public class DesertGrid : SGrid
         if (dice1 == null && dice2 == null) Debug.LogWarning("Die have not been set!");
         if (log == null) Debug.LogWarning("Log has not been set!");
 
-        if (campfire == false)
+        if (!campfireIsLit)
         {
             log.gameObject.SetActive(true);
             campfire.SetBoolToTrue("isDying");
@@ -105,12 +92,17 @@ public class DesertGrid : SGrid
 
         //Bool Fun
         SaveSystem.Current.SetBool("desertCamp", campfireIsLit);
-
+        SaveSystem.Current.SetBool("desertCheckCompletion", checkCompletion);
+        SaveSystem.Current.SetBool("desertCheckMonkey", checkMonkey);
     }
 
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
+
+        campfireIsLit = profile.GetBool("desertCamp");
+        checkCompletion = profile.GetBool("desertCheckCompletion");
+        checkMonkey = profile.GetBool("desertCheckMonkey");
     }
 
     // === Desert puzzle specific ===
@@ -122,21 +114,9 @@ public class DesertGrid : SGrid
         PlayerInventory.RemoveItem();
         log.gameObject.SetActive(false);
     }
-    public void CheckCampfire(Conditionals.Condition c)
+    public void CheckCampfire(Condition c)
     {
         c.SetSpec(campfireIsLit);
-    }
-    public void SetCrocoOasis(bool b)
-    {
-        crocoOasis = b;
-    }
-    public void CheckArchTip(Conditionals.Condition c)
-    {
-        c.SetSpec(!crocoOasis);
-    }
-    public void CheckCrocoOasis(Conditionals.Condition c)
-    {
-        c.SetSpec(crocoOasis);
     }
     public void EnableMonkeyShake()
     {
@@ -169,29 +149,21 @@ public class DesertGrid : SGrid
             SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
         }
     }
-    //cond for monkey dialogue
-    public void SetMonkeyOasis(bool b)
-    {
-        monkeyOasis = b;
-    }
-    public void IsAwake(Conditionals.Condition c)
+
+    public void IsAwake(Condition c)
     {
         c.SetSpec(monkeShake >= 3);
         checkMonkey = !(monkeShake >= 3);
     }
-    public void IsMonkeyNearOasis(Conditionals.Condition c)
+    public void IsMonkeyNearOasis(Condition c)
     {
-        c.SetSpec(CheckGrid.contains(GetGridString(), "(3|2)(2|3)") || CheckGrid.contains(GetGridString(), "(3|2)...(2|3)"));
+        c.SetSpec(CheckGrid.contains(GetGridString(), "23") || CheckGrid.contains(GetGridString(), "(3|2)...(2|3)"));
     }
-    public void IsMonkeyInOasis(Conditionals.Condition c)
-    {
-        c.SetSpec(monkeyOasis);
-    }
-    public void IsFirstShake(Conditionals.Condition c)
+    public void IsFirstShake(Condition c)
     {
         c.SetSpec(monkeShake >= 1);
     }
-    public void IsSecondShake(Conditionals.Condition c)
+    public void IsSecondShake(Condition c)
     {
         c.SetSpec(monkeShake >= 2);
     }
@@ -199,27 +171,11 @@ public class DesertGrid : SGrid
 
     #region Jackal
     //Puzzle 3: Jackal Bone
-    public void SetJackalBoned(bool b)
-    {
-        jackalBoned = b;
-    }
-    public void SetJackalOasis(bool b)
-    {
-        jackalOasis = b;
-    }
-    public void CheckJackalBoned(Conditionals.Condition c)
-    {
-        c.SetSpec(jackalBoned);
-    }
-    public void CheckJackalOasis(Conditionals.Condition c)
-    {
-        c.SetSpec(jackalOasis);
-    }
-    public void CheckJackalNearOasis(Conditionals.Condition c)
+    public void CheckJackalNearOasis(Condition c)
     {
        c.SetSpec(CheckGrid.contains(GetGridString(), "24") || CheckGrid.contains(GetGridString(), "2...4"));
     }
-    public void CheckDinoNearArch(Conditionals.Condition c)
+    public void CheckDinoNearArch(Condition c)
     {
         c.SetSpec(CheckGrid.contains(GetGridString(), "14") || CheckGrid.contains(GetGridString(), "1...4"));
     }
@@ -227,22 +183,16 @@ public class DesertGrid : SGrid
 
     #region DicePuzzle
     //Puzzle 4: Dice. Should not start checking until after both tiles have been activated
-    public void CheckRolledDice(Conditionals.Condition c)
+    public void CheckRolledDice(Condition c)
     {
         c.SetSpec(dice1.isActiveAndEnabled && dice2.isActiveAndEnabled);
     }
 
-    public void CheckDiceValues(Conditionals.Condition c)
+    public void CheckDiceValues(Condition c)
     {
-        if (CheckCasinoTogether() && dice1.value + dice2.value == 11)
-        {
-            c.SetSpec(true);
-            diceWon = true;
-        }
-        else
-        {
-            c.SetSpec(false);
-        }
+        if (CheckCasinoTogether() && dice1.value + dice2.value == 11) c.SetSpec(true);
+        else if (SaveSystem.Current.GetBool("desertDice")) c.SetSpec(true);
+        else c.SetSpec(false);
     }
     public bool CheckCasinoTogether()
     {
@@ -253,12 +203,11 @@ public class DesertGrid : SGrid
 
     #region VIPWater
     //Puzzle 5: Cactus Juice
-    public void HasBottle(Conditionals.Condition c)
+    public void HasBottle(Condition c)
     {
         c.SetSpec(Player.GetPlayerAction().pickedItem != null && Player.GetPlayerAction().pickedItem.itemName.Equals("Bottle"));
     }
-    //Chen: Dcond tests for bottle type
-    public void IsCactusJuice(Conditionals.Condition c)
+    public void IsCactusJuice(Condition c)
     {
         Item item = Player.GetPlayerAction().pickedItem;
         if (item != null && item.itemName.Equals("Bottle"))
@@ -271,7 +220,7 @@ public class DesertGrid : SGrid
             c.SetSpec(false);
         }
     }
-    public void IsDirtyWater(Conditionals.Condition c)
+    public void IsDirtyWater(Condition c)
     {
         Item item = Player.GetPlayerAction().pickedItem;
         if (item != null && item.itemName.Equals("Bottle"))
@@ -284,57 +233,31 @@ public class DesertGrid : SGrid
             c.SetSpec(false);
         }
     }
-    public void IsCleanWater(Conditionals.Condition c)
+    public void IsCleanWater(Condition c)
     {
         Item item = Player.GetPlayerAction().pickedItem;
         if (item != null && item.itemName.Equals("Bottle"))
         {
             Bottle cast = (Bottle)item;
             c.SetSpec(cast.state == bottleState.clean);
+            return;
+        }
+        if (SaveSystem.Current.GetBool("desertVIP"))
+        {
+            c.SetSpec(true);
         }
         else
         {
             c.SetSpec(false);
         }
     }
-    public void CheckVIPHelped(Conditionals.Condition c)
-    {
-        c.SetSpec(VIPHelped);
-    }
-    public void SpawnShades()
-    {
-        Collectible c = GetCollectible("Sunglasses");
-        Debug.Log("Shades creep up to your neck");
-        VIPHelped = true;
-        if (!PlayerInventory.Contains(c))
-        {
-            c.gameObject.SetActive(true);
-        }
-    }
-
     #endregion
 
     #region Gazelle
     //Puzzle 6: Shady Gazelle
-    public void SetGazelleQuest(bool b)
-    {
-        GazelleQuest = b;
-    }
-    public void SetGazelleOasis(bool b)
-    {
-        GazelleOasis = b;
-    }
-    public void CheckGazelleQuest(Conditionals.Condition c)
-    {
-        c.SetSpec(GazelleQuest);
-    }
-    public void CheckGazelleNearOasis(Conditionals.Condition c)
+    public void CheckGazelleNearOasis(Condition c)
     {
         c.SetSpec(CheckGrid.contains(GetGridString(), "26") || CheckGrid.contains(GetGridString(), "6...2"));
-    }
-    public void CheckGazelleOasis(Conditionals.Condition c)
-    {
-        c.SetSpec(GazelleOasis);
     }
 
     #endregion
@@ -367,7 +290,7 @@ public class DesertGrid : SGrid
             StartCoroutine(CheckCompletionsAfterDelay(1.1f));
 
             AudioManager.Play("Puzzle Complete");
-            UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
+            UIArtifactWorldMap.SetAreaStatus(Area.Desert, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
     #endregion

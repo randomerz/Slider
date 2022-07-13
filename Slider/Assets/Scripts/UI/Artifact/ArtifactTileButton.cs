@@ -128,10 +128,6 @@ public class ArtifactTileButton : MonoBehaviour
         buttonAnimator.SetLightning(v);
     }
 
-    public void FragLightningPreview(bool v)
-    {
-        buttonAnimator.FragLightningPreview(v);
-    }
     public void SetSelected(bool v)
     {
         buttonAnimator.SetSelected(v);
@@ -224,6 +220,7 @@ public class ArtifactTileButton : MonoBehaviour
             SetPushedDown(false);
     }
 
+    //L: i refuse to make everything into Factory buttons
     #region Conveyor BS
     private void OnConveyorPowered(ElectricalNode.OnPoweredArgs e)
     {

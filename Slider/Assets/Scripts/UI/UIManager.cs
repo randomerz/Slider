@@ -6,64 +6,54 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-public class UIManager : MonoBehaviour
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
+public class UIManager : Singleton<UIManager>
 {
     public static System.EventHandler<System.EventArgs> OnPause;
     public static System.EventHandler<System.EventArgs> OnResume;
     public static System.EventHandler<System.EventArgs> OnCloseAllMenus;
-    private static UIManager _instance;
     
     public bool isGamePaused;
-    // public bool isArtifactOpen;
+    public bool isArtifactOpen;
     public static bool canOpenMenus = true;
     private static bool couldOpenMenusLastFrame = true; // DC: maximum jank because timing
-
-    private InputSettings controls;
 
     public GameObject pausePanel;
     public GameObject optionsPanel;
     public GameObject controlsPanel;
     public GameObject advOptionsPanel;
+    public GameObject eventSystem;
     public Slider sfxSlider;
     public Slider musicSlider;
     public Slider screenShakeSlider;
     public Toggle bigTextToggle;
+    public Toggle autoMoveToggle;
 
     private void Awake()
     {
-        _instance = this;
+        InitializeSingleton();
 
-        _instance.controls = new InputSettings();
-        LoadBindings();
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.OnPressPause());
 
         sfxSlider.value = AudioManager.GetSFXVolume();
         musicSlider.value = AudioManager.GetMusicVolume();
 
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
+        autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
     }
-
-    public static void LoadBindings()
-    {
-        if (_instance == null)
-        {
-            return;
-        }
-
-        var rebinds = PlayerPrefs.GetString("rebinds");
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            _instance.controls.LoadBindingOverridesFromJson(rebinds);
-        }
-        _instance.controls.UI.Pause.performed += context => _instance.OnPressPause();
-    }
-
     private void OnEnable() {
-        controls.Enable();
+        SceneManager.activeSceneChanged += OnSceneChange;
+        //eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(SceneManager.GetActiveScene().name));
+    }
+
+
+    private void OnSceneChange (Scene curr, Scene next)
+    {
+        //eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(next.name));
     }
 
     private void OnDisable() {
-        controls.Disable();
-
+        SceneManager.activeSceneChanged -= OnSceneChange;
         if (!canOpenMenus)
         {
             Debug.LogWarning("UIManager was disabled without closing the menu!");
@@ -80,6 +70,8 @@ public class UIManager : MonoBehaviour
 
     private void OnPressPause()
     {
+        if(GameUI.instance.isMenuScene)
+            return;
         if (isGamePaused && pausePanel.activeSelf)
         {
             ResumeGame();
@@ -113,6 +105,7 @@ public class UIManager : MonoBehaviour
         return _instance.isGamePaused;// || _instance.isArtifactOpen;
     }
 
+
     public static void CloseUI()
     {
         _instance.ResumeGame();
@@ -123,7 +116,8 @@ public class UIManager : MonoBehaviour
         pausePanel.SetActive(false);
         Time.timeScale = 1;
         isGamePaused = false;
-        
+        UINavigationManager.CurrentMenu = null;
+       // UIManager.canOpenMenus = true;
         OnResume?.Invoke(this, null);
     }
 
@@ -157,6 +151,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenPause()
     {
+       // UIManager.canOpenMenus = false;
         if (!couldOpenMenusLastFrame)
             return;
 
@@ -201,7 +196,7 @@ public class UIManager : MonoBehaviour
     public void OpenAdvOptions()
     {
         bigTextToggle.isOn = SettingsManager.BigTextEnabled;
-
+        autoMoveToggle.isOn = SettingsManager.AutoMove;
         if (!couldOpenMenusLastFrame)
             return;
 
@@ -250,9 +245,21 @@ public class UIManager : MonoBehaviour
         SettingsManager.BigTextEnabled = bigTextToggle.isOn;
     }
 
+    public void UpdateAutoMove()
+    {
+        SettingsManager.AutoMove = autoMoveToggle.isOn;
+    }
+
     public void LoadMainMenu()
     {
+        SaveSystem.SaveGame();
+        SaveSystem.SetCurrentProfile(-1);
         ResumeGame();
+
+        // Undo lazy singletons
+        if(Player.GetInstance() != null)
+            Player.GetInstance().ResetInventory();
+
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -261,4 +268,5 @@ public class UIManager : MonoBehaviour
         Application.Quit();
         Debug.Log("Quitting game!");
     }
+
 }

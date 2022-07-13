@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimedGateDiode : PoweredLightNew
+public class TimedGateDiode : PoweredLight
 {
     [SerializeField] private TimedGate gate;
 
@@ -24,6 +24,7 @@ public class TimedGateDiode : PoweredLightNew
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
+        base.OnPoweredHandler(e);
         if (e.powered && gate.GateActive)
         {
             swapper.TurnOn();

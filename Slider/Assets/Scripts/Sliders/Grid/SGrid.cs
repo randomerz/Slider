@@ -11,6 +11,7 @@ public class SGrid : MonoBehaviour, ISavable
 
     public class OnGridMoveArgs : System.EventArgs
     {
+        public STile[,] oldGrid;
         public STile[,] grid;
     }
     public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
@@ -202,13 +203,34 @@ public class SGrid : MonoBehaviour, ISavable
     //        (0, 0) ->  4 . 5
     public static string GetGridString()
     {
+        return GetGridString(current.grid);
+        //string s = "";
+        //for (int y = current.height - 1; y >= 0; y--)
+        //{
+        //    for (int x = 0; x < current.width; x++)
+        //    {
+        //        if (current.grid[x, y].isTileActive)
+        //            s += IntToChar(current.grid[x, y].islandId);
+        //        else
+        //            s += "#";
+        //    }
+        //    if (y != 0)
+        //    {
+        //        s += "_";
+        //    }
+        //}
+        //return s;
+    }
+
+    public static string GetGridString(STile[,] grid)
+    {
         string s = "";
-        for (int y = current.height - 1; y >= 0; y--)
+        for (int y = grid.GetLength(1) - 1; y >= 0; y--)
         {
-            for (int x = 0; x < current.width; x++)
+            for (int x = 0; x < grid.GetLength(0); x++)
             {
-                if (current.grid[x, y].isTileActive)
-                    s += IntToChar(current.grid[x, y].islandId);
+                if (grid[x, y].isTileActive)
+                    s += IntToChar(grid[x, y].islandId);
                 else
                     s += "#";
             }
@@ -359,8 +381,6 @@ public class SGrid : MonoBehaviour, ISavable
     {
         if (!PlayerInventory.Contains("Slider " + sliderId, myArea)) 
         {
-            //Debug.Log("Activated Collectible?");
-            //Debug.Log(GetCollectible("Slider " + sliderId).gameObject.name);
             GetCollectible("Slider " + sliderId)?.gameObject.SetActive(true);
             AudioManager.Play("Puzzle Complete");
         }
@@ -397,9 +417,10 @@ public class SGrid : MonoBehaviour, ISavable
             newGrid[m.endLoc.x, m.endLoc.y] = grid[m.startLoc.x, m.startLoc.y];
             //Debug.Log("Setting " + m.x + " " + m.y + " to " + m.z + " " + m.w);
         }
+        STile[,] oldGrid = grid;
         grid = newGrid;
 
-        OnGridMove?.Invoke(this, new OnGridMoveArgs { grid = grid });
+        OnGridMove?.Invoke(this, new OnGridMoveArgs { oldGrid = oldGrid, grid = grid });
     }
 
 
@@ -431,7 +452,8 @@ public class SGrid : MonoBehaviour, ISavable
     public virtual void EnableStile(STile stile, bool flickerButton=true)
     {
         stile.SetTileActive(true);
-        UIArtifact.AddButton(stile, flickerButton);
+        stile.isTileCollected = true;
+        UIArtifact.GetInstance().AddButton(stile, flickerButton);
         OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
     }
     // See STile.isTileCollected for an explanation
@@ -479,18 +501,22 @@ public class SGrid : MonoBehaviour, ISavable
 
         // setting grids... similar to initialization
         STile[,] newGrid = new STile[width, height];
-        int[,] idGrid = new int[width, height];
         foreach (SGridData.STileData td in sgridData.grid) 
         {
             STile stile = GetStile(td.islandId); 
             newGrid[td.x, td.y] = stile;
-            idGrid[td.x, td.y] = td.islandId;
-            stile.SetSTile(td.isTileActive, td.x, td.y);
 
             UIArtifact.SetButtonPos(td.islandId, td.x, td.y);
         }
         grid = newGrid;
         realigningGrid = sgridData.realigningGrid;
+
+        // After updating grid, set the grids to active/not, calls events, etc.
+        foreach (SGridData.STileData td in sgridData.grid)
+        {
+            STile stile = GetStile(td.islandId);
+            stile.SetSTile(td.isTileActive, td.x, td.y);
+        }
     }
 
     public virtual void SaveRealigningGrid()
