@@ -79,7 +79,7 @@ public class OceanArtifact : UIArtifact
             int curX = SMoveRotateArr[i].x;
             int curY = SMoveRotateArr[i].y;
 
-            STile[,] grid = SGrid.current.GetGrid();
+            STile[,] grid = SGrid.Current.GetGrid();
 
             if (grid[curX, curY].isTileActive)
             {

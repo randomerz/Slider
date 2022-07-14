@@ -2,58 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System;
-using UnityEngine.UI;
 
-public class UIArtifact : MonoBehaviour
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
+public class UIArtifact : Singleton<UIArtifact>
 {
+
+    public ArtifactTileButton[] buttons;
+    [SerializeField] protected int maxMoveQueueSize = 3;
+    [SerializeField] private GameObject lightning;
+
+    protected ArtifactTileButton currentButton;
+    protected List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
+    protected List<SMove> activeMoves = new List<SMove>();    // DC: Current list of moves being performed 
+    protected Queue<SMove> moveQueue = new Queue<SMove>();    //L: Queue of moves to perform on the grid from the artifact
+
+    private bool didInit;
+
     public static System.EventHandler<System.EventArgs> OnButtonInteract;
     public static System.EventHandler<System.EventArgs> MoveMadeOnArtifact;
 
-    public ArtifactTileButton[] buttons;
-    public GameObject lightning;
-    //L: The button the user has clicked on
-    protected ArtifactTileButton currentButton;
-    //L: The available buttons the player has to move to from currentButton
-    protected List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
-
-    // DC: Current list of moves being performed 
-    protected List<SMove> activeMoves = new List<SMove>();
-    //L: Queue of moves to perform on the grid from the artifact
-    protected Queue<SMove> moveQueue = new Queue<SMove>();
     public bool PlayerCanQueue
     {
-        get;
+        protected get;
         set;
     }
-    public int maxMoveQueueSize = 3;
-
-    protected static UIArtifact _instance;
     
-    public void Awake()
+    protected void Awake()
     {
-        SetSingleton();
-        Init();
-    }
-
-    public void SetSingleton()
-    {
-        _instance = this;
+        if (!didInit)
+        {
+            Init();
+        }
     }
 
     public void Init()
     {
+        didInit = true;
+        InitializeSingleton();
+
         PlayerCanQueue = true;
-    }
-
-    public void Start()
-    {
-        SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
-
-        OnButtonInteract += UpdatePushedDowns;
-        SGridAnimator.OnSTileMoveEnd += UpdatePushedDowns;
-
-        // Debug.Log(this is JungleArtifact);
     }
 
     protected virtual void OnEnable()
@@ -64,8 +51,14 @@ public class UIArtifact : MonoBehaviour
     protected virtual void OnDisable()
     {
         ClearQueues();
+    }
 
-        //Debug.Log("Queue Cleared!");
+    private void Start()
+    {
+        SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
+
+        OnButtonInteract += UpdatePushedDowns;
+        SGridAnimator.OnSTileMoveEnd += UpdatePushedDowns;
     }
 
     public static UIArtifact GetInstance()
@@ -76,11 +69,11 @@ public class UIArtifact : MonoBehaviour
     //This is in case we have situations where the grid is modified without interacting with the artifact (Factory conveyors, Mountain anchor, MagiTech Desyncs.
     public void SetArtifactToGrid()
     {
-        STile[,] grid = SGrid.current.GetGrid();
+        STile[,] grid = SGrid.Current.GetGrid();
 
-        for (int x = 0; x < SGrid.current.width; x++)
+        for (int x = 0; x < SGrid.Current.Width; x++)
         {
-            for (int y = 0; y < SGrid.current.height; y++)
+            for (int y = 0; y < SGrid.Current.Height; y++)
             {
                 //If there is a tile at the position, set the corresponding button to that position, otherwise set an empty tile to that position
                 if (grid[x, y] != null)
@@ -358,7 +351,7 @@ public class UIArtifact : MonoBehaviour
     //L: Returns if the swap was successful.
     protected virtual bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        STile[,] currGrid = SGrid.current.GetGrid();
+        STile[,] currGrid = SGrid.Current.GetGrid();
 
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
@@ -366,7 +359,7 @@ public class UIArtifact : MonoBehaviour
  
         // Debug.Log(SGrid.current.CanMove(swap) + " " + moveQueue.Count + " " + maxMoveQueueSize);
         // Debug.Log(buttonCurrent + " " + buttonEmpty);
-        if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize && PlayerCanQueue)
+        if (SGrid.Current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize && PlayerCanQueue)
         {
             //L: Do the move
             MoveMadeOnArtifact?.Invoke(this, null);
@@ -434,7 +427,7 @@ public class UIArtifact : MonoBehaviour
             //Debug.Log("Move doesn't conflict! Performing move.");
 
             // doesn't interfere! so do the move
-            SGrid.current.Move(peekedMove);
+            SGrid.Current.Move(peekedMove);
             activeMoves.Add(moveQueue.Dequeue());
             QueueCheckAfterMove(this, null);
         }
@@ -457,13 +450,13 @@ public class UIArtifact : MonoBehaviour
 
     public bool FragRealignCheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        STile[,] currGrid = SGrid.current.GetGrid();
+        STile[,] currGrid = SGrid.Current.GetGrid();
 
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
         SMove swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
 
-        if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
+        if (SGrid.Current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
         {
             MoveMadeOnArtifact?.Invoke(this, null);
             QueueCheckAndAdd(swap);

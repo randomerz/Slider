@@ -85,9 +85,9 @@ public class LostGuyMovement : MonoBehaviour
 
     private Vector2Int GetGridPosition(STile[,] grid, STile curr)
     {
-        for(int x = 0; x < SGrid.current.width; x++)
+        for(int x = 0; x < SGrid.Current.Width; x++)
         {
-            for(int y = 0; y < SGrid.current.height; y++)
+            for(int y = 0; y < SGrid.Current.Height; y++)
             {
                 if (grid[x,y].islandId == curr.islandId)
                 {
@@ -114,12 +114,12 @@ public class LostGuyMovement : MonoBehaviour
 
         
 
-        if ((x < 0 || x >= SGrid.current.width))
+        if ((x < 0 || x >= SGrid.Current.Width))
         {
             return null;
         }
 
-        if (y < 0 || y >= SGrid.current.height)
+        if (y < 0 || y >= SGrid.Current.Height)
         {
             return null;
         }

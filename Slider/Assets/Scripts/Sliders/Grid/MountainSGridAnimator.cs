@@ -13,12 +13,12 @@ public class MountainSGridAnimator : SGridAnimator
     {
         if (grid == null)
         {
-            grid = SGrid.current.GetGrid();
+            grid = SGrid.Current.GetGrid();
         }
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
    
         //STile[,] grid = SGrid.current.GetGrid();
-        StartCoroutine(DisableBordersAndColliders(grid, SGrid.current.GetBGGrid(), move.positions, borders));
+        StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move.positions, borders));
 
         foreach (Movement m in move.moves)
         {

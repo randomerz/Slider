@@ -234,7 +234,7 @@ public class Minecart : Item
      */
     private void LookForRailManager()
     {
-        List<STile> stileList = SGrid.current.GetActiveTiles();
+        List<STile> stileList = SGrid.Current.GetActiveTiles();
         List<RailManager> rmList = new List<RailManager>();
         Vector3Int targetLoc;
         foreach(STile tile in stileList)
@@ -254,11 +254,11 @@ public class Minecart : Item
                     return;
                 }
                 //C: Check if the minecart can drop down to the tile below
-                else if(MountainGrid.instance && rm.railLocations.Contains(targetLoc + new Vector3Int(0,-1 * MountainGrid.instance.layerOffset, 0)))
+                else if(MountainGrid.Instance && rm.railLocations.Contains(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)))
                 {
                     railManager = rm;
-                    transform.position += new Vector3Int(0,-1 * MountainGrid.instance.layerOffset, 0);
-                    SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.instance.layerOffset, 0)); //give seperate method for between layers?
+                    transform.position += new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0);
+                    SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)); //give seperate method for between layers?
                     gameObject.transform.parent = rm.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
                     return;
                 }

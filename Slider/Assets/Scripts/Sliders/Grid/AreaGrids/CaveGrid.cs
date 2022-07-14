@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class CaveGrid : SGrid
 {
-    public static CaveGrid instance;
-
     private bool[,] lightMap;
 
     public class OnLightMapUpdateArgs
@@ -20,19 +18,9 @@ public class CaveGrid : SGrid
 
     static System.EventHandler<SGridAnimator.OnTileMoveArgs> checkCompletionsOnMoveFunc;
 
-    //events
-
     public override void Init() {
-        myArea = Area.Caves;
-
-        foreach (Collectible c in collectibles)
-        {
-            c.SetArea(myArea);
-        }
-
+        InitArea(Area.Caves);
         base.Init();
-
-        instance = this;
 
         lightMap = new bool[3, 3] { { false, false, true},
                                     { false, false, false},
@@ -95,12 +83,12 @@ public class CaveGrid : SGrid
     private void CheckLightingCompletions()
     {
         //L: Scuffy me Luffy
-        if (SGrid.current != null && (SGrid.current as CaveGrid) != null)
+        if (SGrid.Current != null && (SGrid.Current as CaveGrid) != null)
         {
             allTilesLit = true;
-            for (int x = 0; x < current.width; x++)
+            for (int x = 0; x < Current.Width; x++)
             {
-                for (int y = 0; y < current.width; y++)
+                for (int y = 0; y < Current.Width; y++)
                 {
                     if (grid[x, y].isTileActive)
                     {

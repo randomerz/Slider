@@ -61,9 +61,9 @@ public class DiscordController : Singleton<DiscordController>
         var activityManager = discord.GetActivityManager();
 
         var state = "At the Start Screen";
-        if (SGrid.current != null)
+        if (SGrid.Current != null)
         {
-            state = $"{SGrid.current.MyArea.GetDiscordName()} ({SGrid.current.GetNumTilesCollected()} / {SGrid.current.GetTotalNumTiles()})";
+            state = $"{SGrid.Current.MyArea.GetDiscordName()} ({SGrid.Current.GetNumTilesCollected()} / {SGrid.Current.GetTotalNumTiles()})";
         }
         var activity = new Discord.Activity
         {

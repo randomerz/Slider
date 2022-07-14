@@ -45,7 +45,7 @@ public class CaveSTile : STile
 
     private new void Start()
     {
-        grid = SGrid.current as CaveGrid;
+        grid = SGrid.Current as CaveGrid;
 
         base.Start();
     }
@@ -93,9 +93,9 @@ public class CaveSTile : STile
             }
 
             //Check position is in the grid
-            if (posToCheck.x >= 0 && posToCheck.x < SGrid.current.width && posToCheck.y >= 0 && posToCheck.y < SGrid.current.height)
+            if (posToCheck.x >= 0 && posToCheck.x < SGrid.Current.Width && posToCheck.y >= 0 && posToCheck.y < SGrid.Current.Height)
             {
-                CaveSTile tile = (CaveSTile)SGrid.current.GetGrid()[posToCheck.x, posToCheck.y];
+                CaveSTile tile = (CaveSTile)SGrid.Current.GetGrid()[posToCheck.x, posToCheck.y];
                 CaveLight light = tile.GetComponentInChildren<CaveLight>();
                 if (tile.isTileActive && light != null && light.LightOn)
                 {

@@ -134,7 +134,7 @@ public class Conveyor : ElectricalNode
     private SMoveConveyor ConstructMove()
     {
         List<Movement> moves = new List<Movement>();
-        STile[,] stiles = SGrid.current.GetGrid();
+        STile[,] stiles = SGrid.Current.GetGrid();
 
 
         //Check if a tile is on the conveyor belt
@@ -159,7 +159,7 @@ public class Conveyor : ElectricalNode
         List<Vector2Int> emptyTiles = new List<Vector2Int>();
         int moveLength = 0;
         bool passedFirstEmpty = false;
-        while (moveLength < length && curr.x >= 0 && curr.y >= 0 && curr.x < SGrid.current.width && curr.y < SGrid.current.height)
+        while (moveLength < length && curr.x >= 0 && curr.y >= 0 && curr.x < SGrid.Current.Width && curr.y < SGrid.Current.Height)
         {
             if (stiles[curr.x, curr.y].isTileActive && !passedFirstEmpty)
             {

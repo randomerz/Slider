@@ -52,7 +52,7 @@ public class STile : MonoBehaviour
         // DC: this is so that we can call any other relevant functions when STiles are enabled in SGrid
         if (isTileActive) 
         {
-            SGrid.current.EnableStile(this, false);
+            SGrid.Current.EnableStile(this, false);
         }
         else
         {
@@ -318,12 +318,12 @@ public class STile : MonoBehaviour
         // }
         // currentStileUnderneath = stileUnderneath;
 
-        STile[,] grid = SGrid.current.GetGrid();
+        STile[,] grid = SGrid.Current.GetGrid();
         float offset = grid[0, 0].STILE_WIDTH / 2f;
         float housingOffset = -150;
 
         //C: The housing offset in the mountain is -250 due to the map's large size
-        if (SGrid.current is MountainGrid)
+        if (SGrid.Current is MountainGrid)
             housingOffset -= 100;
 
         STile stileUnderneath = null;

@@ -34,19 +34,8 @@ public class OceanGrid : SGrid
     public GameObject fogIsland;
 
     public override void Init() {
-        myArea = Area.Ocean;
-
-        foreach (Collectible c in collectibles)
-        {
-            c.SetArea(myArea);
-        }
-
+        InitArea(Area.Ocean);
         base.Init();
-
-
-        // instance = this;
-
-        // StartCoroutine(test());
     }
 
 
@@ -394,8 +383,8 @@ public class OceanGrid : SGrid
 
     protected override void UpdateButtonCompletionsHelper()
     {
-        for (int x = 0; x < current.width; x++) {
-            for (int y = 0; y < current.width; y++) {
+        for (int x = 0; x < Current.Width; x++) {
+            for (int y = 0; y < Current.Width; y++) {
                 // int tid = current.targetGrid[x, y];
                 string tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);

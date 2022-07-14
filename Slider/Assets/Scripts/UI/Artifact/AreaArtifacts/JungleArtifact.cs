@@ -18,7 +18,7 @@ public class JungleArtifact : UIArtifact
         else
         {
             //L: Below is to handle the case for if you have linked tiles.
-            STile[,] currGrid = SGrid.current.GetGrid();
+            STile[,] currGrid = SGrid.Current.GetGrid();
             int x = buttonCurrent.x;
             int y = buttonCurrent.y;
 
@@ -33,7 +33,7 @@ public class JungleArtifact : UIArtifact
                                                     buttonCurrent.islandId, buttonCurrent.LinkButton.islandId);
 
             Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy, buttonCurrent.islandId);
-            if (SGrid.current.CanMove(linkedSwap) && (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && moveQueue.Count < maxMoveQueueSize)
+            if (SGrid.Current.CanMove(linkedSwap) && (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && moveQueue.Count < maxMoveQueueSize)
             {
                 QueueCheckAndAdd(linkedSwap);
 

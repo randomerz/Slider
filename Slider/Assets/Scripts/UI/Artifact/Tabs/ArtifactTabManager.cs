@@ -32,8 +32,8 @@ public class ArtifactTabManager : MonoBehaviour
     public void SetCurrentScreen(int screenIndex)
     {
         if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert)
-            && SGrid.current.GetActiveTiles().Count == SGrid.current.GetTotalNumTiles()
-            && SGrid.GetNumButtonCompletions() != SGrid.current.GetTotalNumTiles())
+            && SGrid.Current.GetActiveTiles().Count == SGrid.Current.GetTotalNumTiles()
+            && SGrid.GetNumButtonCompletions() != SGrid.Current.GetTotalNumTiles())
         {
             RealignTab.SetIsVisible(screenIndex == RealignTab.homeScreen);
             saveTab.SetIsVisible(false);
@@ -43,10 +43,10 @@ public class ArtifactTabManager : MonoBehaviour
         {
             saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
             loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
-            SetSaveLoadTabSprites(SGrid.current.HasRealigningGrid());
+            SetSaveLoadTabSprites(SGrid.Current.HasRealigningGrid());
             fragRealignTab.SetIsVisible(false);
         }
-        else if (SGrid.current.GetArea() == Area.Desert
+        else if (SGrid.Current.GetArea() == Area.Desert
                  && PlayerInventory.Contains("Scroll Frag", Area.Desert)
                  && !PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
         {
@@ -88,7 +88,7 @@ public class ArtifactTabManager : MonoBehaviour
         UIEffects.FlashWhite(callbackMiddle: () => {
             // Do the rearranging!
             //Debug.Log("Rearranged!");
-            SGrid.current.RearrangeGrid();
+            SGrid.Current.RearrangeGrid();
 
 
             UIManager.canOpenMenus = true;
@@ -114,7 +114,7 @@ public class ArtifactTabManager : MonoBehaviour
 
     public void SaveOnClick()
     {
-        SGrid.current.SaveRealigningGrid();
+        SGrid.Current.SaveRealigningGrid();
         uiArtifactMenus.uiArtifact.FlickerAllOnce();
         SetSaveLoadTabSprites(true);
     }
@@ -123,10 +123,10 @@ public class ArtifactTabManager : MonoBehaviour
 
     public void LoadOnClick()
     {
-        if (SGrid.current.realigningGrid != null)
+        if (SGrid.Current.realigningGrid != null)
         {
             // Do the rearranging!
-            SGrid.current.LoadRealigningGrid();
+            SGrid.Current.LoadRealigningGrid();
             foreach (ArtifactTileButton button in uiArtifactMenus.uiArtifact.buttons)
             {
                 button.SetHighlighted(false);
@@ -155,20 +155,20 @@ public class ArtifactTabManager : MonoBehaviour
     public void LoadOnHoverEnter()
     {
         //get the realignGrid, put the button stuff in the order based on that, then call bggrid set
-        if(SGrid.current.realigningGrid != null)
+        if(SGrid.Current.realigningGrid != null)
         {
             Debug.Log("Previewed!");
             uiArtifactMenus.uiArtifact.DeselectCurrentButton();
-            originalGrid = new int[SGrid.current.width, SGrid.current.height];
-            for (int x = 0; x < SGrid.current.width; x++)
+            originalGrid = new int[SGrid.Current.Width, SGrid.Current.Height];
+            for (int x = 0; x < SGrid.Current.Width; x++)
             {
-                for (int y = 0; y < SGrid.current.height; y++)
+                for (int y = 0; y < SGrid.Current.Height; y++)
                 {
                     //Debug.Log(SGrid.current.saveGrid[x, y] + " button array index: " + (SGrid.current.saveGrid[x, y] - 1) + " " + x + " " + y);
-                    int tid = SGrid.current.GetGrid()[x, y].islandId;
+                    int tid = SGrid.Current.GetGrid()[x, y].islandId;
                     originalGrid[x, y] = tid;
-                    uiArtifactMenus.uiArtifact.GetButton(SGrid.current.realigningGrid[x, y]).SetPosition(x, y);
-                    uiArtifactMenus.uiArtifact.GetButton(SGrid.current.realigningGrid[x, y]).SetHighlighted(true);
+                    uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]).SetPosition(x, y);
+                    uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]).SetHighlighted(true);
                 }
             }
         }
@@ -178,12 +178,12 @@ public class ArtifactTabManager : MonoBehaviour
     {
         //reset
         //get the id's from the grid
-        if (SGrid.current.realigningGrid != null)
+        if (SGrid.Current.realigningGrid != null)
         {
             //Debug.Log("Reset!");
-            for (int x = 0; x < SGrid.current.width; x++)
+            for (int x = 0; x < SGrid.Current.Width; x++)
             {
-                for (int y = 0; y < SGrid.current.height; y++)
+                for (int y = 0; y < SGrid.Current.Height; y++)
                 {
                     int tid = originalGrid[x, y];
                     uiArtifactMenus.uiArtifact.GetButton(tid).SetPosition(x, y);

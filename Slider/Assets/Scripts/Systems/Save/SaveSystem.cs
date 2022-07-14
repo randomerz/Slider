@@ -14,7 +14,7 @@ public class SaveSystem
     // returns the current SaveProfile being used
     public static SaveProfile Current {
         get {
-            if (current == null && SGrid.current != null) // SGrid.current != null meas we are in play
+            if (current == null && SGrid.Current != null) // SGrid.current != null meas we are in play
             {
                 Debug.LogWarning("Save System is not using a profile! Creating a default profile for now...");
                 current = new SaveProfile("Boomo");

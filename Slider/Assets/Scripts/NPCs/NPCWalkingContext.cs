@@ -145,9 +145,9 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
 
     private IEnumerator WaitForTilesToStopMoving(System.Action callback = null)
     {
-        if (SGrid.current.TilesMoving())
+        if (SGrid.Current.TilesMoving())
         {
-            yield return new WaitUntil(() => !SGrid.current.TilesMoving());
+            yield return new WaitUntil(() => !SGrid.Current.TilesMoving());
         }
 
         callback();

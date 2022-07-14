@@ -3,61 +3,60 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SGrid : MonoBehaviour, ISavable
+// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
+public class SGrid : Singleton<SGrid>, ISavable
 {
-    //L: The grid the player is currently interacting with (only 1 active at a time)
-    public static SGrid current { get; private set; }
-    private bool didInit;
-
     public class OnGridMoveArgs : System.EventArgs
     {
         public STile[,] oldGrid;
         public STile[,] grid;
     }
-    public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
 
     public class OnSTileEnabledArgs : System.EventArgs
     {
         public STile stile;
     }
-    public static event System.EventHandler<OnSTileEnabledArgs> OnSTileEnabled;
 
     public class OnSTileCollectedArgs : System.EventArgs
     {
         public STile stile;
     }
-    public static event System.EventHandler<OnSTileCollectedArgs> OnSTileCollected;
+
+    public int[,] realigningGrid;
+
+    [SerializeField] protected int width;
+    [SerializeField] protected int height;
+    [SerializeField] protected STile[] stiles;
+    [SerializeField] protected SGridBackground[] bgGridTiles;
+    [SerializeField] protected Collectible[] collectibles;
+    [SerializeField] protected SGridAnimator gridAnimator;
+    [SerializeField] protected string targetGrid = "*********";     //L: This is the end goal for the slider puzzle.
+                                                                    //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)
+                                                                    // format: 123456789 for 1 2 3
+                                                                    //                       4 5 6
+                                                                    //                       7 8 9
+    [Tooltip("Don't forget to set me!")] [SerializeField] protected Area myArea;
 
     protected STile[,] grid;
     protected SGridBackground[,] bgGrid;
-    public int[,] realigningGrid;
 
-    // Set in inspector 
-    public int width;
-    public int height;
-    [SerializeField] protected STile[] stiles;
-    [SerializeField] private SGridBackground[] bgGridTiles;
-    [SerializeField] protected SGridAnimator gridAnimator;
-    //L: This is the end goal for the slider puzzle, set in the inspector.
-    //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)
-    [SerializeField] protected string targetGrid = "*********"; // format: 123456789 for  1 2 3
-                                                  //                                      4 5 6
-                                                  //              (0, 0) ->               7 8 9
+    private bool didInit;
 
+    public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
+    public static event System.EventHandler<OnSTileEnabledArgs> OnSTileEnabled;
+    public static event System.EventHandler<OnSTileCollectedArgs> OnSTileCollected;
+
+    public static SGrid Current => _instance;
+    public int Width => width;
+    public int Height => height;
+    public Area MyArea { get => myArea; }
     public string TargetGrid
     {
         get { return targetGrid; }
     }
 
-    public Collectible[] collectibles;
-    [SerializeField] protected Area myArea; // don't forget to set me!
-    public Area MyArea { get => myArea; }
-
-
     protected void Awake()
     {
-        current = this;
-
         if (!didInit)
             Init();
     }
@@ -76,14 +75,11 @@ public class SGrid : MonoBehaviour, ISavable
         UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.oneBit);
     }
 
-    public void SetSingleton()
-    {
-        current = this;
-    }
-
+    //For deriving classes: Make sure InitArea is called before Init!
     public virtual void Init()
     {
         didInit = true;
+        InitializeSingleton(this);
 
         SaveSystem.Current.SetLastArea(myArea);
 
@@ -99,6 +95,15 @@ public class SGrid : MonoBehaviour, ISavable
         // OnGridMove += CheckCompletions;
     }
 
+    public void InitArea(Area area)
+    {
+        myArea = area;
+        foreach (Collectible c in collectibles)
+        {
+            c.SetArea(area);
+        }
+    }
+
     public STile[,] GetGrid()
     {
         return grid;
@@ -109,33 +114,34 @@ public class SGrid : MonoBehaviour, ISavable
         return bgGrid;
     }
 
-    /*L: Sets the position of STiles in the grid according to their ids.
-    Note: This updates all of the STiles according to the ids in the given array (unlike the other imp., which leaves the STiles in the same positions)
-    * 
-    * This is useful for reshuffling the grid.
-    * 
-    */
-    public void SetGrid(int[,] puzzle)
+
+/*L: Sets the position of STiles in the grid according to their ids.
+Note: This updates all of the STiles according to the ids in the given array (unlike the other imp., which leaves the STiles in the same positions)
+* 
+* This is useful for reshuffling the grid.
+* 
+*/
+public void SetGrid(int[,] puzzle)
     {
         if (puzzle.Length != grid.Length)
         {
             Debug.LogWarning("Tried to SetGrid(int[,]), but provided puzzle was of a different length!");
         }
 
-        STile[,] newGrid = new STile[width, height];
+        STile[,] newGrid = new STile[Width, Height];
         STile next = null;
 
         // We might not need this getunderstile stuff anymore now that we actually child player to STiles!
         STile playerSTile = Player.GetStileUnderneath();
         Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
 
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 //Debug.Log(puzzle[x, y]);
                 if (puzzle[x, y] == 0)
-                    next = GetStile(width * height);
+                    next = GetStile(Width * Height);
                 else
                     next = GetStile(puzzle[x, y]);
 
@@ -159,14 +165,14 @@ public class SGrid : MonoBehaviour, ISavable
      */
     private void SetGrid(STile[] stiles)
     {
-        if (stiles.Length != width * height)
+        if (stiles.Length != Width * Height)
         {
             Debug.LogError("Only " + stiles.Length + " found when initializing grid! " +
-                "Expected " + width * height + ".");
+                "Expected " + Width * Height + ".");
             return;
         }
 
-        grid = new STile[width, height];
+        grid = new STile[Width, Height];
         foreach (STile t in stiles)
         {
             grid[t.x, t.y] = t;
@@ -175,10 +181,10 @@ public class SGrid : MonoBehaviour, ISavable
 
     private void SetBGGrid(SGridBackground[] bgGridTiles) 
     {
-        bgGrid = new SGridBackground[width, height];
+        bgGrid = new SGridBackground[Width, Height];
         for (int i = 0; i < bgGridTiles.Length; i++)
         {
-            bgGrid[i % width, i / width] = bgGridTiles[i];
+            bgGrid[i % Width, i / Width] = bgGridTiles[i];
         }
     }
 
@@ -203,7 +209,7 @@ public class SGrid : MonoBehaviour, ISavable
     //        (0, 0) ->  4 . 5
     public static string GetGridString()
     {
-        return GetGridString(current.grid);
+        return GetGridString(Current.grid);
         //string s = "";
         //for (int y = current.height - 1; y >= 0; y--)
         //{
@@ -245,12 +251,12 @@ public class SGrid : MonoBehaviour, ISavable
     public static int[,] GridStringToSetGridFormat(string gridstring)
     {
         //Chen: This in theory should work for other grids? This is mostly used with Scroll of Realigning stuff.
-        int[,] gridFormat = new int[current.width, current.height];
-        for (int x = current.width - 1; x >= 0; x--)
+        int[,] gridFormat = new int[Current.Width, Current.Height];
+        for (int x = Current.Width - 1; x >= 0; x--)
         {
-            for (int y = 0; y < current.height; y++)
+            for (int y = 0; y < Current.Height; y++)
             {
-                gridFormat[y, (current.width - 1 - x)] = CharToInt(gridstring[(x * current.height) + y]);
+                gridFormat[y, (Current.Width - 1 - x)] = CharToInt(gridstring[(x * Current.Height) + y]);
             }
         }
         return gridFormat;
@@ -297,7 +303,7 @@ public class SGrid : MonoBehaviour, ISavable
     /// <returns></returns>
     public virtual int GetTotalNumTiles()
     {
-        return width * height;
+        return Width * Height;
     }
 
     //S: copy of Player's GetStileUnderneath for the tracker
@@ -409,8 +415,8 @@ public class SGrid : MonoBehaviour, ISavable
 
         gridAnimator.Move(move);
 
-        STile[,] newGrid = new STile[width, height];
-        System.Array.Copy(grid, newGrid, width * height);
+        STile[,] newGrid = new STile[Width, Height];
+        System.Array.Copy(grid, newGrid, Width * Height);
         foreach (Movement m in move.moves)
         {
             //grid[m.x, m.y].SetGridPosition(m.z, m.w);
@@ -466,7 +472,7 @@ public class SGrid : MonoBehaviour, ISavable
 
     public virtual bool TilesMoving()
     {
-        List<STile> stiles = SGrid.current.GetActiveTiles();
+        List<STile> stiles = SGrid.Current.GetActiveTiles();
         bool tilesAreMoving = false;
         foreach (STile stile in stiles)
         {
@@ -500,7 +506,7 @@ public class SGrid : MonoBehaviour, ISavable
         Debug.Log("Loading saved data for " + myArea + "...");
 
         // setting grids... similar to initialization
-        STile[,] newGrid = new STile[width, height];
+        STile[,] newGrid = new STile[Width, Height];
         foreach (SGridData.STileData td in sgridData.grid) 
         {
             STile stile = GetStile(td.islandId); 
@@ -522,11 +528,11 @@ public class SGrid : MonoBehaviour, ISavable
     public virtual void SaveRealigningGrid()
     {
         //Debug.Log("Saved!");
-        realigningGrid = new int[current.width, current.height];
+        realigningGrid = new int[Current.Width, Current.Height];
         //GedGridString but turns it to SetGrid format
-        for (int x = 0; x < current.width; x++)
+        for (int x = 0; x < Current.Width; x++)
         {
-            for (int y = 0; y < current.height; y++)
+            for (int y = 0; y < Current.Height; y++)
             {
                 //Debug.Log(current.grid[x, y].islandId);
                 realigningGrid[x,y] = grid[x, y].islandId;
@@ -551,11 +557,11 @@ public class SGrid : MonoBehaviour, ISavable
     public virtual void RearrangeGrid()
     {
         //Convert the target grid into the proper int[] and pass into setgrid
-        current.SetGrid(GridStringToSetGridFormat(targetGrid));
+        Current.SetGrid(GridStringToSetGridFormat(targetGrid));
 
-        for (int x = 0; x < current.width; x++)
+        for (int x = 0; x < Current.Width; x++)
         {
-            for (int y = 0; y < current.height; y++)
+            for (int y = 0; y < Current.Height; y++)
             {
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
                 UIArtifact.SetButtonComplete(artifactButton.islandId, true);
@@ -568,13 +574,13 @@ public class SGrid : MonoBehaviour, ISavable
     }
     protected static void UpdateButtonCompletions(object sender, System.EventArgs e)
     {
-        current.UpdateButtonCompletionsHelper();
+        Current.UpdateButtonCompletionsHelper();
     }
 
     protected virtual void UpdateButtonCompletionsHelper()
     {
-        for (int x = 0; x < current.width; x++) {
-            for (int y = 0; y < current.height; y++) {
+        for (int x = 0; x < Current.Width; x++) {
+            for (int y = 0; y < Current.Height; y++) {
                 // int tid = current.targetGrid[x, y];
                 string tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
@@ -594,14 +600,14 @@ public class SGrid : MonoBehaviour, ISavable
 
     public static int GetNumButtonCompletions()
     {
-        return current.GetNumButtonCompletionsHelper();
+        return Current.GetNumButtonCompletionsHelper();
     }
 
     protected virtual int GetNumButtonCompletionsHelper()
     {
         int numComplete = 0;
-        for (int x = 0; x < current.width; x++) {
-            for (int y = 0; y < current.height; y++) {
+        for (int x = 0; x < Current.Width; x++) {
+            for (int y = 0; y < Current.Height; y++) {
                 string tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
                 Debug.Log(x + " " + y);
@@ -630,6 +636,6 @@ public class SGrid : MonoBehaviour, ISavable
 
     protected static string GetTileIdAt(int x, int y)
     {
-        return current.targetGrid[(current.height - y - 1) * current.width + x].ToString();
+        return Current.targetGrid[(Current.Height - y - 1) * Current.Width + x].ToString();
     }
 }

@@ -59,7 +59,7 @@ public class Condition
                 {
                     foreach (int i in stationaryTiles)
                     {
-                        if (SGrid.current.GetStile(i).GetMovingDirection() != Vector2.zero)
+                        if (SGrid.Current.GetStile(i).GetMovingDirection() != Vector2.zero)
                         {
                             return false;
                         }

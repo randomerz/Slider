@@ -101,7 +101,7 @@ public class TimeTravelArtifact : UIArtifact
      */
     private void RestoreOnEndDesynch()
     {
-        STile[,] temp = SGrid.current.GetGrid();
+        STile[,] temp = SGrid.Current.GetGrid();
         int[,] currGrid = new int[6,3];
         int[,] newGrid = new int[6,3];
         for(int x = 0; x < 6; x++)
@@ -151,7 +151,7 @@ public class TimeTravelArtifact : UIArtifact
         Debug.Log(output);
         */
 
-        SGrid.current.SetGrid(newGrid);
+        SGrid.Current.SetGrid(newGrid);
     }
 
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
@@ -199,7 +199,7 @@ public class TimeTravelArtifact : UIArtifact
 
     protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        STile[,] currGrid = SGrid.current.GetGrid();
+        STile[,] currGrid = SGrid.Current.GetGrid();
 
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
@@ -214,7 +214,7 @@ public class TimeTravelArtifact : UIArtifact
             swap = new SMoveSyncedMove(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
         }
       
-        if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize && PlayerCanQueue)
+        if (SGrid.Current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize && PlayerCanQueue)
         {
             MoveMadeOnArtifact?.Invoke(this, null);
             QueueCheckAndAdd(swap);
@@ -243,7 +243,7 @@ public class TimeTravelArtifact : UIArtifact
             if (b.islandId > 9 && isInPast || b.islandId <= 9 && !isInPast)
             {
                 b.gameObject.SetActive(true);
-                STile myStile = SGrid.current.GetStile(b.islandId);
+                STile myStile = SGrid.Current.GetStile(b.islandId);
                 b.UpdateTileActive();
             }
             else

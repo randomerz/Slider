@@ -41,7 +41,7 @@ public class MountainArtifact : UIArtifact
 
     protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        STile[,] currGrid = SGrid.current.GetGrid();
+        STile[,] currGrid = SGrid.Current.GetGrid();
 
         int x = buttonCurrent.x;
         int y = buttonCurrent.y;
@@ -54,7 +54,7 @@ public class MountainArtifact : UIArtifact
             swap = new SMoveLayerSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
         }
  
-        if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
+        if (SGrid.Current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
         {
             //L: Do the move
 

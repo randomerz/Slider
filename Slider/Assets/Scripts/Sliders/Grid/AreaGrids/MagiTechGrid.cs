@@ -4,25 +4,14 @@ using UnityEngine;
 
 public class MagiTechGrid : TimeTravelGrid
 {
-    public static MagiTechGrid instance;
-
     //[SerializeField] private STile[] altStiles;
 
     //[SerializeField] private STile[,] altGrid;
 
     public override void Init()
     {
-        myArea = Area.MagiTech;
-
-        foreach (Collectible c in collectibles)
-        {
-            c.SetArea(myArea);
-        }
-
+        InitArea(Area.MagiTech);
         base.Init();
-
-        instance = this;
-        SetSingleton();
     }
 
     protected override void Start()

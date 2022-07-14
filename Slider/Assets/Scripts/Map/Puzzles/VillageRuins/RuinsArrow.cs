@@ -50,11 +50,11 @@ public class RuinsArrow : MonoBehaviour
     private void UpdateArrowOnEnd(object sender, SGridAnimator.OnTileMoveArgs e) // SGridAnimator
     {
         SetArrowActive(
-            AreRuinsAssembled(SGrid.GetGridString(SGrid.current.GetGrid())), 
-            SGrid.current.GetGrid()
+            AreRuinsAssembled(SGrid.GetGridString(SGrid.Current.GetGrid())), 
+            SGrid.Current.GetGrid()
         );
 
-        UpdateRods(SGrid.GetGridString(SGrid.current.GetGrid()));
+        UpdateRods(SGrid.GetGridString(SGrid.Current.GetGrid()));
     }
 
     private void UpdateArrowOnCollect(object sender, SGrid.OnSTileEnabledArgs e)
@@ -64,7 +64,7 @@ public class RuinsArrow : MonoBehaviour
 
     private void UpdateArrowGeneral()
     {
-        SetArrowActive(AreRuinsAssembled(SGrid.GetGridString()), SGrid.current.GetGrid()); // probably doesnt matter which grid
+        SetArrowActive(AreRuinsAssembled(SGrid.GetGridString()), SGrid.Current.GetGrid()); // probably doesnt matter which grid
         UpdateMap(SGrid.GetGridString());
         UpdateRods(SGrid.GetGridString());
     }
@@ -83,7 +83,7 @@ public class RuinsArrow : MonoBehaviour
             {
                 // if was false before
                 arrowParticles.Play();
-                SGrid.current.ActivateSliderCollectible(7);
+                SGrid.Current.ActivateSliderCollectible(7);
             }
             spriteRenderer.enabled = true;
             UpdateArrowDirection(grid);

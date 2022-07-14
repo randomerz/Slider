@@ -27,7 +27,7 @@ public class ShopCoinToBeHadManager : MonoBehaviour
     public void UpdateButtons()
     {
         // Shipwreck
-        if (SGrid.current.GetStile(4).isTileActive && !PlayerInventory.Contains("Treasure Chest"))
+        if (SGrid.Current.GetStile(4).isTileActive && !PlayerInventory.Contains("Treasure Chest"))
         {
             shipwreck.transform.parent.gameObject.SetActive(true);
         }
@@ -37,7 +37,7 @@ public class ShopCoinToBeHadManager : MonoBehaviour
         }
         
         // Down with the Ship
-        if (SGrid.current.GetStile(5).isTileActive && !PlayerInventory.Contains("Treasure Map"))
+        if (SGrid.Current.GetStile(5).isTileActive && !PlayerInventory.Contains("Treasure Map"))
         {
             downWithTheShip.transform.parent.gameObject.SetActive(true);
         }
@@ -47,7 +47,7 @@ public class ShopCoinToBeHadManager : MonoBehaviour
         }
         
         // The Veil
-        if (SGrid.current.GetStile(6).isTileActive && SGrid.current.GetStile(7).isTileActive && 
+        if (SGrid.Current.GetStile(6).isTileActive && SGrid.Current.GetStile(7).isTileActive && 
             !PlayerInventory.Contains("Mushroom"))
         {
             theVeil.transform.parent.gameObject.SetActive(true);
@@ -58,9 +58,9 @@ public class ShopCoinToBeHadManager : MonoBehaviour
         }
         
         // Tangled Up
-        if (SGrid.current.GetStile(1).isTileActive && SGrid.current.GetStile(3).isTileActive && 
-            SGrid.current.GetStile(4).isTileActive && SGrid.current.GetStile(8).isTileActive && 
-            SGrid.current.GetStile(9).isTileActive && !PlayerInventory.Contains("Golden Fish"))
+        if (SGrid.Current.GetStile(1).isTileActive && SGrid.Current.GetStile(3).isTileActive && 
+            SGrid.Current.GetStile(4).isTileActive && SGrid.Current.GetStile(8).isTileActive && 
+            SGrid.Current.GetStile(9).isTileActive && !PlayerInventory.Contains("Golden Fish"))
         {
             tangledUp.transform.parent.gameObject.SetActive(true);
         }
@@ -70,9 +70,9 @@ public class ShopCoinToBeHadManager : MonoBehaviour
         }
         
         // Eruption
-        if (SGrid.current.GetStile(3).isTileActive && SGrid.current.GetStile(4).isTileActive && 
-            SGrid.current.GetStile(5).isTileActive && SGrid.current.GetStile(8).isTileActive && 
-            SGrid.current.GetStile(9).isTileActive && !PlayerInventory.Contains("Rock"))
+        if (SGrid.Current.GetStile(3).isTileActive && SGrid.Current.GetStile(4).isTileActive && 
+            SGrid.Current.GetStile(5).isTileActive && SGrid.Current.GetStile(8).isTileActive && 
+            SGrid.Current.GetStile(9).isTileActive && !PlayerInventory.Contains("Rock"))
         {
             eruption.transform.parent.gameObject.SetActive(true);
         }

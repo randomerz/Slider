@@ -131,7 +131,7 @@ public class DesertArtifact : UIArtifact
         ArtifactTileButton last = null;
 
         //Anchor Case: Don't move if the tile has anchor or if it's blocked by an anchor
-        STile[,] grid = SGrid.current.GetGrid();
+        STile[,] grid = SGrid.Current.GetGrid();
         if (grid[button.x, button.y].hasAnchor || grid[curr.x, curr.y].hasAnchor)
         {
             return null;
@@ -162,7 +162,7 @@ public class DesertArtifact : UIArtifact
     //Chen: CheckAndSwap now calls each of the Slide() functions
     protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        STile[,] currGrid = SGrid.current.GetGrid();
+        STile[,] currGrid = SGrid.Current.GetGrid();
 
         int dx = buttonEmpty.x - buttonCurrent.x;
         int dy = buttonEmpty.y - buttonCurrent.y;
