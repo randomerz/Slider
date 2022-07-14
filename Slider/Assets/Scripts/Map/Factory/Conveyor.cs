@@ -21,7 +21,6 @@ public class Conveyor : ElectricalNode
     public Vector2Int StartPos => start;
     public Vector2Int Dir => dir;
 
-    #region Unity Events
     private new void Awake()
     {
         base.Awake();
@@ -57,7 +56,6 @@ public class Conveyor : ElectricalNode
         SGridAnimator.OnSTileMoveEnd -= OnTileMove;
         SGrid.OnSTileEnabled -= OnTileEnabled;
     }
-    #endregion
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {

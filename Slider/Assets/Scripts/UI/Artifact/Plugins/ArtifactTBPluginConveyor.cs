@@ -23,6 +23,8 @@ public class ArtifactTBPluginConveyor : ArtifactTBPlugin
 
     private void OnEnable()
     {
+        UpdateEmptySprite();
+        button.SetSpriteToIslandOrEmpty();
         foreach (Conveyor conveyor in conveyors)
         {
             conveyor.OnPowered.AddListener(OnConveyorPowered);
@@ -37,11 +39,6 @@ public class ArtifactTBPluginConveyor : ArtifactTBPlugin
         }
     }
 
-    private void Start()
-    {
-        UpdateEmptySprite();
-    }
-
     #region ArtifactTBPlugin Implementation
     public override void OnPosChanged()
     {
@@ -49,9 +46,11 @@ public class ArtifactTBPluginConveyor : ArtifactTBPlugin
     }
     #endregion
 
+    //Remember that this won't run if the artifact is disabled!
     private void OnConveyorPowered(ElectricalNode.OnPoweredArgs e)
     {
         UpdateEmptySprite();
+        button.SetSpriteToIslandOrEmpty();
     }
 
     private void UpdateEmptySprite()
@@ -60,8 +59,6 @@ public class ArtifactTBPluginConveyor : ArtifactTBPlugin
         {
             button.UseDefaultEmptySprite();
         }
-
-        button.SetSpriteToIslandOrEmpty();
     }
 
     private bool TrySetEmptySpriteToConveyor()

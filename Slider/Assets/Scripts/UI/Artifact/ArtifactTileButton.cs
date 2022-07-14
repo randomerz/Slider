@@ -13,6 +13,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     [FormerlySerializedAs("emptySprite")]
     [SerializeField] private Sprite emptySpriteDefault;
+    [SerializeField] private Sprite islandSpriteDefault;
     [SerializeField] private Sprite completedSprite;
     [SerializeField] private Sprite hoverSprite;
     [SerializeField] private Sprite blankSprite;
@@ -30,9 +31,16 @@ public class ArtifactTileButton : MonoBehaviour
     protected Sprite islandSprite;
     protected Sprite emptySprite;
 
-    private bool hasInit;
-
-    public STile MyStile { get; private set; }
+    public STile MyStile {
+        get
+        {
+            if (SGrid.current == null)
+            {
+                return null;
+            }
+            return SGrid.current.GetStile(islandId);
+        }
+    }
     public bool TileIsActive { 
         get
         {
@@ -47,7 +55,8 @@ public class ArtifactTileButton : MonoBehaviour
 
     protected void Awake() 
     {
-        islandSprite = buttonAnimator.sliderImage.sprite;
+        Init();
+        UseDefaultIslandSprite();
         UseDefaultEmptySprite();
     }
 
@@ -61,16 +70,11 @@ public class ArtifactTileButton : MonoBehaviour
 
     protected virtual void Start()
     {
-        Init();
         UpdateTileActive();
     }
 
     public void UpdateTileActive()
     {
-        if (!hasInit)
-        {
-            Init();
-        }
         SetSpriteToIslandOrEmpty();
         SetPosition(MyStile.x, MyStile.y);
     }
@@ -86,15 +90,12 @@ public class ArtifactTileButton : MonoBehaviour
         {
             plugin.OnPosChanged();
         });
+
+        SetSpriteToIslandOrEmpty();
     }
 
     public void SetSpriteToIslandOrEmpty()
     {
-        if (!hasInit)
-        {
-            Init();
-        }
-
         if (TileIsActive)
         {
             buttonAnimator.sliderImage.sprite = isComplete ? completedSprite : islandSprite;
@@ -113,6 +114,11 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetSpriteToHover()
     {
         buttonAnimator.sliderImage.sprite = hoverSprite;
+    }
+
+    public void UseDefaultIslandSprite()
+    {
+        islandSprite = islandSpriteDefault;
     }
 
     public void UseDefaultEmptySprite()
@@ -184,22 +190,20 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void Flicker(int numFlickers) 
     {
-        if (!hasInit)
-        {
-            Init();
-        }
         shouldFlicker = false;
         StartCoroutine(NewButtonFlicker(numFlickers));
     }
 
     public void FlickerImmediate(int numFlickers)
     {
-        if (!hasInit)
-        {
-            Init();
-        }
         shouldFlicker = false;
         StartCoroutine(NewButtonFlicker(numFlickers, true));
+    }
+
+    protected virtual void SetAnchoredPos(int x, int y)
+    {
+        Vector3 pos = new Vector3((x % SGrid.current.height) - 1, y - 1) * UI_OFFSET; //C: i refuse to make everything into MT buttons
+        GetComponent<RectTransform>().anchoredPosition = pos;
     }
 
     private IEnumerator NewButtonFlicker(int numFlickers, bool startOnBlank=false) {
@@ -220,27 +224,14 @@ public class ArtifactTileButton : MonoBehaviour
 
     private void Init()
     {
-        hasInit = true;
-        MyStile = SGrid.current.GetStile(islandId);
-        islandSprite = buttonAnimator.sliderImage.sprite;
-        InitLinkButton();
-    }
-
-    private void InitLinkButton()
-    {
         LinkButton = null;
         foreach (ArtifactTileButton b in buttonManager.buttons)
         {
-            if (MyStile.linkTile != null && MyStile.linkTile == b.MyStile)
+            if (MyStile != null && MyStile.linkTile != null && MyStile.linkTile == b.MyStile)
             {
                 LinkButton = b;
                 b.LinkButton = this;
             }
         }
-    }
-    private void SetAnchoredPos(int x, int y)
-    {
-        Vector3 pos = new Vector3((x % SGrid.current.height) - 1, y - 1) * UI_OFFSET; //C: i refuse to make everything into MT buttons
-        GetComponent<RectTransform>().anchoredPosition = pos;
     }
 }
