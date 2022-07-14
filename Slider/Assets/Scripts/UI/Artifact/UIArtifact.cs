@@ -20,14 +20,13 @@ public class UIArtifact : MonoBehaviour
     // DC: Current list of moves being performed 
     protected List<SMove> activeMoves = new List<SMove>();
     //L: Queue of moves to perform on the grid from the artifact
-    //L: IMPORTANT NOTE: The top element in the queue is always the current move being executed.
     protected Queue<SMove> moveQueue = new Queue<SMove>();
     public bool PlayerCanQueue
     {
         get;
         set;
     }
-    public int maxMoveQueueSize = 3;    //L: Max size of the queue.
+    public int maxMoveQueueSize = 3;
 
     protected static UIArtifact _instance;
     
