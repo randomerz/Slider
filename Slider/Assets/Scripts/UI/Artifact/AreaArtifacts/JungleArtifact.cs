@@ -8,22 +8,20 @@ public class JungleArtifact : UIArtifact
 {
     // private static STile prevLinkTile = null;
 
-    protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    protected override bool TryDoMove(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         if (buttonCurrent.LinkButton == null)
         {
             //L: Just a normal move
-            return base.CheckAndSwap(buttonCurrent, buttonEmpty);
+            return base.TryDoMove(buttonCurrent, buttonEmpty);
         } 
         else
         {
             //L: Below is to handle the case for if you have linked tiles.
-            STile[,] currGrid = SGrid.Current.GetGrid();
             int x = buttonCurrent.x;
             int y = buttonCurrent.y;
 
             //L: Make sure that all checks/swaps are with respect to the UI and NOT the grid (bc the grid can be behind due to queuing)
-            //Debug.Log("Linked Move!");
             int linkx = buttonCurrent.LinkButton.x;
             int linky = buttonCurrent.LinkButton.y;
             int dx = buttonEmpty.x - x;

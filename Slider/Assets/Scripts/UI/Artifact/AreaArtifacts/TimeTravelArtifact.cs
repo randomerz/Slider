@@ -197,7 +197,7 @@ public class TimeTravelArtifact : UIArtifact
     }
 
 
-    protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    protected override bool TryDoMove(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         STile[,] currGrid = SGrid.Current.GetGrid();
 

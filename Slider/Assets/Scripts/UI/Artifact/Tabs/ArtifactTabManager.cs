@@ -158,7 +158,7 @@ public class ArtifactTabManager : MonoBehaviour
         if(SGrid.Current.realigningGrid != null)
         {
             Debug.Log("Previewed!");
-            uiArtifactMenus.uiArtifact.DeselectButton();
+            uiArtifactMenus.uiArtifact.DeselectSelectedButton();
             originalGrid = new int[SGrid.Current.Width, SGrid.Current.Height];
             for (int x = 0; x < SGrid.Current.Width; x++)
             {
@@ -219,7 +219,7 @@ public class ArtifactTabManager : MonoBehaviour
         }
         uiArtifactMenus.uiArtifact.FragRealignCheckAndSwap(middle, empty);
         uiArtifactMenus.uiArtifact.UpdatePushedDowns(null, null);
-        uiArtifactMenus.uiArtifact.DeselectButton();
+        uiArtifactMenus.uiArtifact.DeselectSelectedButton();
         //FragRearrangeOnHoverExit();
     }
 

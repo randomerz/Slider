@@ -141,7 +141,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SelectButton()
     {
-        buttonManager.TrySelectButton(this);
+        buttonManager.SelectButton(this);
     }
 
     //public void UpdatePushedDown()

@@ -105,7 +105,7 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         PointerEventData data = (PointerEventData)eventData;
 
-        DeselectButton();
+        DeselectSelectedButton();
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
         if (!dragged.TileIsActive || dragged.MyStile.hasAnchor)// || dragged.isForcedDown)
@@ -114,7 +114,7 @@ public class UIArtifact : Singleton<UIArtifact>
         }
         else
         {
-            TrySelectButton(dragged, true);
+            SelectButton(dragged, true);
         }
 
         ArtifactTileButton hovered = GetButtonHovered(data);
@@ -147,7 +147,7 @@ public class UIArtifact : Singleton<UIArtifact>
     }
     #endregion
 
-    public virtual void TrySelectButton(ArtifactTileButton button, bool isDragged = false)
+    public virtual void SelectButton(ArtifactTileButton button, bool isDragged = false)
     {
         // Check if on movement cooldown
         //if (SGrid.GetStile(button.islandId).isMoving)
@@ -156,11 +156,11 @@ public class UIArtifact : Singleton<UIArtifact>
         {
             if (moveOptionButtons.Contains(button))
             {
-                CheckAndSwap(buttonSelected, button);
+                TryDoMove(buttonSelected, button);
             } else 
             {
                 bool sameButton = buttonSelected == button;
-                DeselectButton();
+                DeselectSelectedButton();
                 if (sameButton)
                 {
                     return;
@@ -187,8 +187,8 @@ public class UIArtifact : Singleton<UIArtifact>
             bool autoMove = moveOptionButtons.Count == 1 && SettingsManager.AutoMove && !isDragged;
             if (autoMove)
             {
-                CheckAndSwap(buttonSelected, moveOptionButtons[0]);
-                DeselectButton();
+                TryDoMove(buttonSelected, moveOptionButtons[0]);
+                DeselectSelectedButton();
             }
             else
             {
@@ -199,7 +199,7 @@ public class UIArtifact : Singleton<UIArtifact>
         OnButtonInteract?.Invoke(this, null);
     }
 
-    public void DeselectButton()
+    public void DeselectSelectedButton()
     {
         if (buttonSelected == null)
             return;
@@ -248,7 +248,7 @@ public class UIArtifact : Singleton<UIArtifact>
     }
 
     //L: Returns if the swap was successful.
-    protected virtual bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    protected virtual bool TryDoMove(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         STile[,] currGrid = SGrid.Current.GetGrid();
 
@@ -654,12 +654,12 @@ public class UIArtifact : Singleton<UIArtifact>
             b.SetHighlighted(false);
             if (b == hovered)
             {
-                TrySelectButton(hovered, true);
-                DeselectButton();
+                SelectButton(hovered, true);
+                DeselectSelectedButton();
                 return;
             }
         }
-        TrySelectButton(dragged, true);
+        SelectButton(dragged, true);
 
         OnButtonInteract?.Invoke(this, null);
     }
