@@ -376,6 +376,7 @@ public void SetGrid(int[,] puzzle)
 
     public void ActivateCollectible(string name)
     {
+        Debug.Log($"Called ActivateCollectible({name})");
         if (!PlayerInventory.Contains(name, myArea))
         {
             GetCollectible(name)?.gameObject.SetActive(true);

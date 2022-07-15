@@ -81014,47 +81014,47 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: 62b664e0175d98f4994e31a84b944aaa, type: 2}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
-      propertyPath: dconds.Array.data[0].dialogueChain.Array.size
+      propertyPath: conds.Array.data[0].dialogueChain.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
-      propertyPath: dconds.Array.data[0].dialogueChain.Array.data[0].dialogue
+      propertyPath: conds.Array.data[0].dialogueChain.Array.data[0].dialogue
       value: Haha! You won't best me... this time.....
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
-      propertyPath: dconds.Array.data[0].dialogueChain.Array.data[1].dialogue
+      propertyPath: conds.Array.data[0].dialogueChain.Array.data[1].dialogue
       value: Sigh... Just take it...
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
-      propertyPath: dconds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.size
+      propertyPath: conds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
-      propertyPath: dconds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      propertyPath: conds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
-      propertyPath: dconds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      propertyPath: conds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1324462117}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
-      propertyPath: dconds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      propertyPath: conds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
-      propertyPath: dconds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      propertyPath: conds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ActivateSliderCollectible
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
-      propertyPath: dconds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      propertyPath: conds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: SGrid, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
-      propertyPath: dconds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      propertyPath: conds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3652435011426292518, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
-      propertyPath: dconds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      propertyPath: conds.Array.data[0].dialogueChain.Array.data[1].onDialogueEnd.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6774723380247666992, guid: eb8cd11432469439eb214403b87b5b92, type: 3}

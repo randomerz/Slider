@@ -22,11 +22,6 @@ public class CaveGrid : SGrid
         InitArea(Area.Caves);
         base.Init();
 
-        lightMap = new bool[3, 3] { { false, false, true},
-                                    { false, false, false},
-                                    { false, false, true},
-                                  };
-
         checkCompletionsOnMoveFunc = (sender, e) => { CheckLightingCompletions(); };
     }
 
@@ -34,10 +29,6 @@ public class CaveGrid : SGrid
     protected override void Start()
     {
         base.Start();
-
-        GetCollectible("Slider 5")?.gameObject.SetActive(false); // gameboy puzzle
-        GetCollectible("Slider 6")?.gameObject.SetActive(false); // flashlight puzzle
-        GetCollectible("Slider 9")?.gameObject.SetActive(false); // final puzzle
 
         AudioManager.PlayMusic("Caves");
         UIEffects.FadeFromBlack();
@@ -60,18 +51,6 @@ public class CaveGrid : SGrid
         {
             SGridAnimator.OnSTileMoveEnd -= checkCompletionsOnMoveFunc;
         }
-    }
-
-    public bool GetLit(int x, int y)
-    {
-        return lightMap[x, y];
-    }
-
-    public void SetLit(int x, int y, bool value)
-    {
-        lightMap[x, y] = value;
-
-        OnLightMapUpdate?.Invoke(this, new OnLightMapUpdateArgs { lightMap = this.lightMap });
     }
 
     public void StartFinalPuzzle() {

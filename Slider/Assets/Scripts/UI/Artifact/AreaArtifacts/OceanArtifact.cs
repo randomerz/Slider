@@ -124,7 +124,7 @@ public class OceanArtifact : UIArtifact
         }
         else 
         {
-            Debug.Log("Couldn't perform move! (queue full?)");
+            LogMoveFailure();
         }
 
         OnButtonInteract?.Invoke(this, null);

@@ -21,7 +21,17 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 
     private Dictionary<int, int> condIndexToCurrDchainIndex;
 
-    private List<DialogueData> CurrDchain => context.CurrCond.dialogueChain;
+    private List<DialogueData> CurrDchain
+    {
+        get
+        {
+            if (context.CurrCond == null)
+            {
+                return null;
+            }
+            return context.CurrCond.dialogueChain;
+        }
+    }
 
     private int CurrDchainIndex
     {
@@ -252,17 +262,17 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 
     private DialogueData CurrentDialogue()
     {
-        if (CurrDchainIndex < 0 || CurrDchainIndex >= CurrDchain.Count)
+        if (CurrDchain == null || CurrDchainIndex < 0 || CurrDchainIndex >= CurrDchain.Count)
         {
             Debug.LogError($"Attempted to Access Dialogue at invalid index: {CurrDchainIndex}");
             return null;
         }
 
-        return context.CurrCond.dialogueChain[CurrDchainIndex];
+        return CurrDchain[CurrDchainIndex];
     }
 
     private bool CurrDchainIsEmpty()
     {
-        return CurrDchain.Count == 0;
+        return CurrDchain == null || CurrDchain.Count == 0;
     }
 }
