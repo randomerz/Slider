@@ -113,8 +113,8 @@ public class Conveyor : ElectricalNode
             if (Powered)
             {
                 //Queue the move, then immediately unqueue it so that it becomes the next active move.
-                artifact.QueueCheckAndAdd(move);
-                artifact.QueueCheckAfterMove(this, null);
+                artifact.QueueAdd(move);
+                artifact.ProcessQueue();
 
                 //We need to update the UI since the move was initiated by the conveyor belt instead of the player clicking buttons.
                 artifact.SetButtonPositionsToMatchGrid();

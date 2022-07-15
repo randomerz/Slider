@@ -217,7 +217,7 @@ public class ArtifactTabManager : MonoBehaviour
             AudioManager.Play("Artifact Error");
             return;
         }
-        uiArtifactMenus.uiArtifact.FragRealignCheckAndSwap(middle, empty);
+        uiArtifactMenus.uiArtifact.TryQueueMoveFromButtonPair(middle, empty);
         uiArtifactMenus.uiArtifact.UpdatePushedDowns(null, null);
         uiArtifactMenus.uiArtifact.DeselectSelectedButton();
         //FragRearrangeOnHoverExit();

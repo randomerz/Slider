@@ -110,7 +110,7 @@ public class OceanArtifact : UIArtifact
         {
             SMoveRotate rotate = new SMoveRotate(SMoveRotateArr, islandIds, rotateCCW);
             rotate.anchoredPositions = anchoredPositions;
-            QueueCheckAndAdd(rotate);
+            QueueAdd(rotate);
             // SwapButtons(buttonCurrent, buttonEmpty);
             // update UI button positions
             for (int i = 0; i < tb.Count; i++)
@@ -119,7 +119,7 @@ public class OceanArtifact : UIArtifact
             }
 
             // SGrid.current.Move(rotate);
-            QueueCheckAfterMove(this, null);
+            ProcessQueue();
             
         }
         else 
@@ -131,27 +131,15 @@ public class OceanArtifact : UIArtifact
     }
 
     // DC: this plays the animation when the tiles actually move... should we keep track of UI similarly?
-    public override void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    public override void ProcessQueue()
     {
-        if (e != null)
-        {
-            if (activeMoves.Contains(e.smove))
-            {
-                activeMoves.Remove(e.smove);
-            }
-        }
-
         if (moveQueue.Count > 0)
         {
             SMoveRotate peekedMove = moveQueue.Peek() as SMoveRotate;
             // check if the peekedMove interferes with any of current moves
-            foreach (SMove m in activeMoves)
+            if (MoveOverlapsWithActiveMove(peekedMove))
             {
-                if (m.Overlaps(peekedMove))
-                {
-                    // Debug.Log("Move conflicts!");
-                    return;
-                }
+                return;
             }
 
             int minX = peekedMove.moves[0].startLoc.x;
@@ -166,7 +154,7 @@ public class OceanArtifact : UIArtifact
             rotateParams[minY * 2 + minX].RotateArrow(peekedMove.isCCW);
         }
 
-        base.QueueCheckAfterMove(sender, e);
+        base.ProcessQueue();
     }
 
     public void UpdateHighlights(object sender, System.EventArgs e)

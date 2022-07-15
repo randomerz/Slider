@@ -48,52 +48,62 @@ public class DesertArtifact : UIArtifact
     //Chen: Override for dragndrop since desert GetMoveOPtions include  active tiles
     //L: Deleted ButtonDragEnd override because the code was exactly the same and GetMoveOptions is marked virtual so it will automatically call the right one.
 
-    //Chen: CheckAndSwap now calls each of the Slide() functions
-    protected override bool TryDoMove(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    //Chen: TryQueueMoveFromButtonPair now calls each of the Slide() functions
+    public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        STile[,] currGrid = SGrid.Current.GetGrid();
+        SMove move;
 
-        int dx = buttonEmpty.x - buttonCurrent.x;
-        int dy = buttonEmpty.y - buttonCurrent.y;
-        SSlideSwap swap;
-        //Chen: Check to see if we can add a move. Nested logic pain time.
         if (moveQueue.Count < maxMoveQueueSize)
         {
-            
-            if (dx > 0)
-            {
-                swap = SlideRight();
-            }
-            else if (dx < 0)
-            {
-                swap = SlideLeft();
-            }
-            else if (dy > 0)
-            {
-                swap = SlideUp();
-            }
-            else
-            {
-                swap = SlideDown();
-            }
-            //Chen: If the returned swap has nothing in it (tiles won't move) return false before it can be added.
-            if (swap.moves.Count == 0)
+            move = ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
+            if (move.moves.Count == 0)
             {
                 return false;
             }
-            MoveMadeOnArtifact?.Invoke(this, null);
-            QueueCheckAndAdd(swap);
-            QueueCheckAfterMove(this, null);
-            DeselectSelectedButton();
-            UpdatePushedDowns(null, null);
+            QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
             return true;
         }
         else
         {
-            string debug = playerCanQueue ? "Player Queueing is disabled" : "Queue was full";
-            Debug.Log($"Couldn't perform move! {debug}");
+            LogMoveFailure();
             return false;
         }
+    }
+
+    protected override void QueueMoveFromButtonPair(SMove move, ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    {
+        MoveMadeOnArtifact?.Invoke(this, null);
+        QueueAdd(move);
+        ProcessQueue();
+        SetButtonPositionsToMatchGrid();
+        DeselectSelectedButton();
+        UpdatePushedDowns(null, null);
+    }
+
+    protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    {
+        //Chen: Nested logic pain time.
+        SSlideSwap move;
+        int dx = buttonEmpty.x - buttonCurrent.x;
+        int dy = buttonEmpty.y - buttonCurrent.y;
+        if (dx > 0)
+        {
+            move = SlideRight();
+        }
+        else if (dx < 0)
+        {
+            move = SlideLeft();
+        }
+        else if (dy > 0)
+        {
+            move = SlideUp();
+        }
+        else
+        {
+            move = SlideDown();
+        }
+
+        return move;
     }
 
     #region SSlideSwap
@@ -110,7 +120,7 @@ public class DesertArtifact : UIArtifact
             GetButton(0, col)
             };
 
-            GetSlideMoves(swaps, tiles, Vector2Int.right);
+            UpdateSwaps(swaps, tiles, Vector2Int.right);
         }
         return new SSlideSwap(swaps);
     }
@@ -126,7 +136,7 @@ public class DesertArtifact : UIArtifact
             GetButton(1, col),
             GetButton(2, col)
             };
-            GetSlideMoves(swaps, tiles, Vector2Int.left);
+            UpdateSwaps(swaps, tiles, Vector2Int.left);
         }
         return new SSlideSwap(swaps);
     }
@@ -142,7 +152,7 @@ public class DesertArtifact : UIArtifact
             GetButton(row, 1),
             GetButton(row, 0)
             };
-            GetSlideMoves(swaps, tiles, Vector2Int.up);
+            UpdateSwaps(swaps, tiles, Vector2Int.up);
         }
         return new SSlideSwap(swaps);
     }
@@ -158,12 +168,12 @@ public class DesertArtifact : UIArtifact
             GetButton(row, 1),
             GetButton(row, 2),
             };
-            GetSlideMoves(swaps, tiles, Vector2Int.down);
+            UpdateSwaps(swaps, tiles, Vector2Int.down);
         }
         return new SSlideSwap(swaps);
     }
 
-    private List<Movement> GetSlideMoves(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
+    private void UpdateSwaps(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
     {
         Vector2Int lastSwap = new Vector2Int(-1, -1);
         Vector2Int firstSwap = new Vector2Int(-1, -1);
@@ -183,7 +193,7 @@ public class DesertArtifact : UIArtifact
                         firstIslandId = furthest.islandId;
                     }
                     swaps.Add(new Movement(button.x, button.y, furthest.x, furthest.y, button.islandId));
-                    SwapButtons(button, furthest);
+                    //SwapButtons(button, furthest);  //L: Elliot, I love you, but this is a cardinal sin.
                 }
             }
         }
@@ -192,8 +202,6 @@ public class DesertArtifact : UIArtifact
             //print(firstSwap.x);
             swaps.Add(new Movement(firstSwap.x, firstSwap.y, lastSwap.x, lastSwap.y, firstIslandId));
         }
-
-        return swaps;
     }
 
     //Chen: finds the furthest button a given button can go to given a direction

@@ -196,38 +196,18 @@ public class TimeTravelArtifact : UIArtifact
         return (islandId + 9) % 18;
     }
 
-
-    protected override bool TryDoMove(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        STile[,] currGrid = SGrid.Current.GetGrid();
-
-        int x = buttonCurrent.x;
-        int y = buttonCurrent.y;
-        
-        SMove swap;
+        SMove move;
         if(buttonCurrent.islandId == desynchIslandId)
         {
-            swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+            move = base.ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
         }
         else
         {
-            swap = new SMoveSyncedMove(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+            move = new SMoveSyncedMove(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
         }
-      
-        if (SGrid.Current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize && playerCanQueue)
-        {
-            MoveMadeOnArtifact?.Invoke(this, null);
-            QueueCheckAndAdd(swap);
-            SwapButtons(buttonCurrent, buttonEmpty);
-            QueueCheckAfterMove(this, null);
-            return true;
-        }
-        else
-        {
-            string debug = playerCanQueue ? "Player Queueing is disabled" : "Queue was full";
-            Debug.Log($"Couldn't perform move! {debug}");
-            return false;
-        }
+        return move;
     }
 
     public override void AddButton(STile stile, bool shouldFlicker = true)

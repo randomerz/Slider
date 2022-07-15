@@ -39,49 +39,26 @@ public class MountainArtifact : UIArtifact
         return moveOptionButtons;
     }
 
-    protected override bool TryDoMove(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        STile[,] currGrid = SGrid.Current.GetGrid();
-
-        int x = buttonCurrent.x;
-        int y = buttonCurrent.y;
-        SMove swap;
+        SMove move;
         //If swapping layers, the difference in y values will be 2
         if(Mathf.Abs(buttonCurrent.y - buttonEmpty.y) < 2) {
-            swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+            move = new SMoveSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
         }
         else {
-            swap = new SMoveLayerSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+            move = new SMoveLayerSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
         }
- 
-        if (SGrid.Current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize)
-        {
-            //L: Do the move
-
-            QueueCheckAndAdd(swap);
-            SwapButtons(buttonCurrent, buttonEmpty);
-
-            // Debug.Log("Added move to queue: current length " + moveQueue.Count);
-            QueueCheckAfterMove(this, null);
-            // if (moveQueue.Count == 1)
-            // {
-            //     SGrid.current.Move(moveQueue.Peek());
-            // }
-            return true;
-        }
-        else
-        {
-            Debug.Log("Couldn't perform move! (queue full?)");
-            return false;
-        }
+        return move;
     }
 
     public void AnchorSwap(STile s1, STile s2)
     {
         //We can't just call CheckandSwap because CanMove will return false due to the anchor
-        SMove swap = new SMoveLayerSwap(s1.x, s1.y, s2.x, s2.y, s1.islandId, s2.islandId);
-        QueueCheckAndAdd(swap);
+        SMove move = new SMoveLayerSwap(s1.x, s1.y, s2.x, s2.y, s1.islandId, s2.islandId);
+        QueueMoveFromButtonPair(move, GetButton(s1.islandId), GetButton(s2.islandId));
+        QueueAdd(move);
         SwapButtons(GetButton(s1.islandId), GetButton(s2.islandId));
-        QueueCheckAfterMove(this, null);
+        ProcessQueue();
     }
 }

@@ -8,12 +8,12 @@ public class JungleArtifact : UIArtifact
 {
     // private static STile prevLinkTile = null;
 
-    protected override bool TryDoMove(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         if (buttonCurrent.LinkButton == null)
         {
             //L: Just a normal move
-            return base.TryDoMove(buttonCurrent, buttonEmpty);
+            return base.TryQueueMoveFromButtonPair(buttonCurrent, buttonEmpty);
         } 
         else
         {
@@ -33,23 +33,18 @@ public class JungleArtifact : UIArtifact
             Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy, buttonCurrent.islandId);
             if (SGrid.Current.CanMove(linkedSwap) && (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && moveQueue.Count < maxMoveQueueSize)
             {
-                QueueCheckAndAdd(linkedSwap);
+                QueueAdd(linkedSwap);
 
                 //L: Swap the current button and the link button
                 SwapButtons(buttonCurrent, buttonEmpty);
                 SwapButtons(buttonCurrent.LinkButton, GetButton(linkx + dx, linky + dy));
-
-                QueueCheckAfterMove(this, null);
-                // if (moveQueue.Count == 1)
-                // {
-                //     SGrid.current.Move(moveQueue.Peek());
-                // }
+                ProcessQueue();
 
                 return true;
             }
             else
             {
-                // Debug.Log("illegal");
+                LogMoveFailure();
                 AudioManager.Play("Artifact Error");
                 return false;
             }
@@ -63,7 +58,6 @@ public class JungleArtifact : UIArtifact
         List<Vector2Int> checkedCoords = new List<Vector2Int>();
         int dx = move.endLoc.x - move.startLoc.x;
         int dy = move.endLoc.y - move.startLoc.y;
-        // Debug.Log(move.x+" "+move.y+" "+move.z+" "+move.w);
         int toCheck = Math.Max(Math.Abs(dx), Math.Abs(dy));
         if (dx == 0)
         {
