@@ -52,6 +52,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeType: 0
   powerRefs: 0
+  powerPathPrevs: []
   neighbors: []
   invertSignal: 0
   OnPowered:
@@ -69,6 +70,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnPoweredOn:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoweredOff:
+    m_PersistentCalls:
+      m_Calls: []
   numTurns: 1
   numInputs: 2
   countdownSprite:
@@ -182,15 +189,15 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1558999443
-  m_SortingLayer: 1
-  m_SortingOrder: 1
+  m_SortingLayerID: 529684183
+  m_SortingLayer: 5
+  m_SortingOrder: 0
   m_Sprite: {fileID: 4661998333126539131, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.16, y: 0.16}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -214,7 +221,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1, y: 1}
-    newSize: {x: 0.16, y: 0.16}
+    newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -240,7 +247,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1, y: 1}
-    newSize: {x: 0.16, y: 0.16}
+    newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -276,6 +283,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3412255915355598675}
     m_Modifications:
+    - target: {fileID: 863580826205369219, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
+      propertyPath: m_SortingLayer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 863580826205369219, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 529684183
+      objectReference: {fileID: 0}
     - target: {fileID: 5921995312595147166, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
       propertyPath: m_Name
       value: Diode (1)
@@ -353,6 +368,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3412255915355598675}
     m_Modifications:
+    - target: {fileID: 863580826205369219, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
+      propertyPath: m_SortingLayer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 863580826205369219, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 529684183
+      objectReference: {fileID: 0}
     - target: {fileID: 5921995312595147166, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
       propertyPath: m_Name
       value: Diode

@@ -10,7 +10,7 @@ public class JungleArtifact : UIArtifact
 
     protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        if (buttonCurrent.linkButton == null)
+        if (buttonCurrent.LinkButton == null)
         {
             //L: Just a normal move
             return base.CheckAndSwap(buttonCurrent, buttonEmpty);
@@ -24,13 +24,13 @@ public class JungleArtifact : UIArtifact
 
             //L: Make sure that all checks/swaps are with respect to the UI and NOT the grid (bc the grid can be behind due to queuing)
             //Debug.Log("Linked Move!");
-            int linkx = buttonCurrent.linkButton.x;
-            int linky = buttonCurrent.linkButton.y;
+            int linkx = buttonCurrent.LinkButton.x;
+            int linky = buttonCurrent.LinkButton.y;
             int dx = buttonEmpty.x - x;
             int dy = buttonEmpty.y - y;
 
             SMove linkedSwap = new SMoveLinkedSwap(x, y, buttonEmpty.x, buttonEmpty.y, linkx, linky,
-                                                    buttonCurrent.islandId, buttonCurrent.linkButton.islandId);
+                                                    buttonCurrent.islandId, buttonCurrent.LinkButton.islandId);
 
             Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy, buttonCurrent.islandId);
             if (SGrid.current.CanMove(linkedSwap) && (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && moveQueue.Count < maxMoveQueueSize)
@@ -39,7 +39,7 @@ public class JungleArtifact : UIArtifact
 
                 //L: Swap the current button and the link button
                 SwapButtons(buttonCurrent, buttonEmpty);
-                SwapButtons(buttonCurrent.linkButton, GetButton(linkx + dx, linky + dy));
+                SwapButtons(buttonCurrent.LinkButton, GetButton(linkx + dx, linky + dy));
 
                 QueueCheckAfterMove(this, null);
                 // if (moveQueue.Count == 1)
@@ -72,7 +72,7 @@ public class JungleArtifact : UIArtifact
             int dir = dy / Math.Abs(dy);
             for (int i = 1; i <= toCheck; i++)
             {
-                if (GetButton(move.startLoc.x, move.startLoc.y + i * dir).isTileActive)
+                if (GetButton(move.startLoc.x, move.startLoc.y + i * dir).TileIsActive)
                 {
                     return false;
                 }
@@ -83,7 +83,7 @@ public class JungleArtifact : UIArtifact
             int dir = dx / Math.Abs(dx);
             for (int i = 1; i <= toCheck; i++)
             {
-                if (GetButton(move.startLoc.x + i * dir, move.startLoc.y).isTileActive)
+                if (GetButton(move.startLoc.x + i * dir, move.startLoc.y).TileIsActive)
                 {
                     return false;
                 }

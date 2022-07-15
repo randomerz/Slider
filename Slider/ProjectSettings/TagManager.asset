@@ -44,14 +44,35 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 3256626599
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: AboveTiles
-    uniqueID: 2735967853
+  - name: Floor
+    uniqueID: 3988747165
+    locked: 0
+  - name: Walls
+    uniqueID: 3322194137
+    locked: 0
+  - name: DecorativeTiles
+    uniqueID: 2654053679
+    locked: 0
+  - name: Wires&Rails
+    uniqueID: 4104053181
+    locked: 0
+  - name: OnFloor
+    uniqueID: 3521479827
     locked: 0
   - name: Entity
     uniqueID: 529684183
+    locked: 0
+  - name: Ceiling
+    uniqueID: 2735967853
+    locked: 0
+  - name: DottedWires
+    uniqueID: 3274293505
     locked: 0
   - name: UI_Particle
     uniqueID: 414317947
