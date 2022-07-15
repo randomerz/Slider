@@ -105,7 +105,7 @@ public class DesertArtifact : UIArtifact
             // b.buttonAnimator.sliderImage.sprite = b.emptySprite;
             if (b == hovered && !swapped)
             {
-                SelectButton(hovered);
+                TrySelectButton(hovered);
                 // CheckAndSwap(dragged, hovered);
                 // SGridAnimator.OnSTileMoveEnd += dragged.AfterStileMoveDragged;
                 swapped = true;
@@ -113,11 +113,11 @@ public class DesertArtifact : UIArtifact
         }
         if (!swapped)
         {
-            SelectButton(dragged);
+            TrySelectButton(dragged);
         }
         else
         {
-            DeselectCurrentButton();
+            DeselectButton();
         }
 
         OnButtonInteract?.Invoke(this, null);
@@ -195,13 +195,13 @@ public class DesertArtifact : UIArtifact
             MoveMadeOnArtifact?.Invoke(this, null);
             QueueCheckAndAdd(swap);
             QueueCheckAfterMove(this, null);
-            DeselectCurrentButton();
+            DeselectButton();
             UpdatePushedDowns(null, null);
             return true;
         }
         else
         {
-            string debug = PlayerCanQueue ? "Player Queueing is disabled" : "Queue was full";
+            string debug = playerCanQueue ? "Player Queueing is disabled" : "Queue was full";
             Debug.Log($"Couldn't perform move! {debug}");
             return false;
         }

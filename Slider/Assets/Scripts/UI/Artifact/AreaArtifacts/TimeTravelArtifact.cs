@@ -214,7 +214,7 @@ public class TimeTravelArtifact : UIArtifact
             swap = new SMoveSyncedMove(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
         }
       
-        if (SGrid.Current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize && PlayerCanQueue)
+        if (SGrid.Current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize && playerCanQueue)
         {
             MoveMadeOnArtifact?.Invoke(this, null);
             QueueCheckAndAdd(swap);
@@ -224,7 +224,7 @@ public class TimeTravelArtifact : UIArtifact
         }
         else
         {
-            string debug = PlayerCanQueue ? "Player Queueing is disabled" : "Queue was full";
+            string debug = playerCanQueue ? "Player Queueing is disabled" : "Queue was full";
             Debug.Log($"Couldn't perform move! {debug}");
             return false;
         }
