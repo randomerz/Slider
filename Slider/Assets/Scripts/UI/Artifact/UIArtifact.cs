@@ -20,14 +20,13 @@ public class UIArtifact : MonoBehaviour
     // DC: Current list of moves being performed 
     protected List<SMove> activeMoves = new List<SMove>();
     //L: Queue of moves to perform on the grid from the artifact
-    //L: IMPORTANT NOTE: The top element in the queue is always the current move being executed.
     protected Queue<SMove> moveQueue = new Queue<SMove>();
     public bool PlayerCanQueue
     {
         get;
         set;
     }
-    public int maxMoveQueueSize = 3;    //L: Max size of the queue.
+    public int maxMoveQueueSize = 3;
 
     protected static UIArtifact _instance;
     
@@ -57,12 +56,12 @@ public class UIArtifact : MonoBehaviour
         // Debug.Log(this is JungleArtifact);
     }
 
-    public virtual void OnEnable()
+    protected virtual void OnEnable()
     {
 
     }
 
-    public virtual void OnDisable()
+    protected virtual void OnDisable()
     {
         ClearQueues();
 
@@ -123,7 +122,7 @@ public class UIArtifact : MonoBehaviour
         }
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
-        if (!dragged.isTileActive || dragged.myStile.hasAnchor)// || dragged.isForcedDown)
+        if (!dragged.TileIsActive || dragged.MyStile.hasAnchor)// || dragged.isForcedDown)
         {
             return;
         }
@@ -143,12 +142,12 @@ public class UIArtifact : MonoBehaviour
             if (b == hovered) 
             {
                 b.SetHighlighted(false);
-                b.buttonAnimator.sliderImage.sprite = b.hoverSprite; // = blankSprite
+                b.SetSpriteToHover();
             }
             else 
             {
                 b.SetHighlighted(true);
-                b.ResetToIslandSprite();
+                b.SetSpriteToIslandOrEmpty();
             }
         }
 
@@ -170,7 +169,7 @@ public class UIArtifact : MonoBehaviour
         // }
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
-        if (!dragged.isTileActive)// || dragged.isForcedDown)
+        if (!dragged.TileIsActive)// || dragged.isForcedDown)
         {
             return;
         }
@@ -178,7 +177,10 @@ public class UIArtifact : MonoBehaviour
         // reset move options visual
         List<ArtifactTileButton> moveOptions = GetMoveOptions(dragged);
         foreach (ArtifactTileButton b in moveOptions) {
-            b.buttonAnimator.sliderImage.sprite = b.emptySprite;
+            if (!b.TileIsActive)
+            {
+                b.SetSpriteToEmpty();
+            }
         }
         
         ArtifactTileButton hovered = null;
@@ -192,10 +194,10 @@ public class UIArtifact : MonoBehaviour
             // SelectButton(dragged);
             return;
         }
-        
-        if (!hovered.isTileActive)
+
+        if (!hovered.TileIsActive)
         {
-            hovered.buttonAnimator.sliderImage.sprite = hovered.emptySprite;
+            hovered.SetSpriteToEmpty();
         }
         //Debug.Log("dragged" + dragged.islandId + "hovered" + hovered.islandId);
         
@@ -265,14 +267,14 @@ public class UIArtifact : MonoBehaviour
         if (currentButton == null)
         {
 
-            if (!button.isTileActive || oldCurrButton == button)
+            if (!button.TileIsActive || oldCurrButton == button)
             {
                 //L: Player tried to click an empty tile
                 return;
             }
 
             moveOptionButtons = GetMoveOptions(button);
-            if (moveOptionButtons.Count == 0 || button.myStile.hasAnchor)
+            if (moveOptionButtons.Count == 0 || button.MyStile.hasAnchor)
             {
                 //L: Player tried to click a locked tile (or tile that otherwise had no move options)
                 return;
@@ -332,7 +334,7 @@ public class UIArtifact : MonoBehaviour
         {
             ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
             int i = 2;
-            while (b != null && !b.isTileActive)
+            while (b != null && !b.TileIsActive)
             {
                 options.Add(b);
                 b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
@@ -488,7 +490,7 @@ public class UIArtifact : MonoBehaviour
                     //Debug.Log(b.islandId);
                     b.SetIsInMove(true);
                 }
-                else if(b.myStile.hasAnchor)
+                else if(b.MyStile.hasAnchor)
                 {
                     continue;
                 }
@@ -583,7 +585,6 @@ public class UIArtifact : MonoBehaviour
     {
         if (!_instance.lightning.gameObject.activeInHierarchy)
         {
-            Debug.LogWarning("Attempted to disable lightning when already disabled!");
             return;
         }
         _instance.lightning.gameObject.SetActive(false);
@@ -629,7 +630,7 @@ public class UIArtifact : MonoBehaviour
             for (int x = 0; x < 3; x++)
             {
                 ArtifactTileButton b = GetButton(x, y);
-                if (b.isTileActive)
+                if (b.TileIsActive)
                     s += b.islandId;
                 else
                     s += "#";
@@ -646,12 +647,11 @@ public class UIArtifact : MonoBehaviour
     {
         foreach (ArtifactTileButton b in buttons)
         {
-            if (b.islandId == stile.islandId)
+            if (b.MyStile == stile)
             {
-                b.SetTileActive(true);
-                b.SetPosition(stile.x, stile.y);
+                b.UpdateTileActive();
                 b.SetShouldFlicker(shouldFlicker);
-                return;
+                break;
             }
         }
     }

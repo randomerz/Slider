@@ -10,19 +10,19 @@ public class OceanArtifact : UIArtifact
 
     private bool canRotate = true;
 
-    public new void Awake()
+    private new void Awake()
     {
         base.Awake();
     }
 
-    public override void OnEnable()
+    protected override void OnEnable()
     {
         base.OnEnable();
 
         OnButtonInteract += UpdateHighlights;
     }
 
-    public override void OnDisable()
+    protected override void OnDisable()
     {
         base.OnDisable();
 

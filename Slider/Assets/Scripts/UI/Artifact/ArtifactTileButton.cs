@@ -2,105 +2,141 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 public class ArtifactTileButton : MonoBehaviour
 {
+    private const int UI_OFFSET = 37;
+
+    public ArtifactTileButtonAnimator buttonAnimator;
+    [SerializeField] private UIArtifact buttonManager;
+
+    [FormerlySerializedAs("emptySprite")]
+    [SerializeField] private Sprite emptySpriteDefault;
+    [SerializeField] private Sprite islandSpriteDefault;
+    [SerializeField] private Sprite completedSprite;
+    [SerializeField] private Sprite hoverSprite;
+    [SerializeField] private Sprite blankSprite;
+    [SerializeField] private List<ArtifactTBPlugin> plugins;
+
     // public static bool canComplete = false;
     public bool isComplete = false;
     // public bool isInMove = false;
-
-    public bool isTileActive = false;
     public int islandId = -1;
     public int x;
     public int y;
 
     public bool shouldFlicker = false;
 
-    private const int UI_OFFSET = 37;
-
-    public STile myStile { get; private set; }
-    public ArtifactTileButton linkButton;
-
     protected Sprite islandSprite;
-    public Sprite completedSprite;
-    public Sprite emptySprite;
-    public Sprite hoverSprite;
-    public Sprite blankSprite;
-    public ArtifactTileButtonAnimator buttonAnimator;
-    public UIArtifact buttonManager;
+    protected Sprite emptySprite;
 
-    [SerializeField]
-    private ConveyorUIData conveyorData;
-
-    private Conveyor[] conveyors;
+    public STile MyStile {
+        get
+        {
+            if (SGrid.current == null)
+            {
+                return null;
+            }
+            return SGrid.current.GetStile(islandId);
+        }
+    }
+    public bool TileIsActive { 
+        get
+        {
+            if (MyStile != null)
+            {
+                return MyStile.isTileActive;
+            }
+            return false;
+        } 
+    }
+    public ArtifactTileButton LinkButton { get; private set; }
 
     protected void Awake() 
     {
-        islandSprite = buttonAnimator.sliderImage.sprite;
-        conveyors = FindObjectsOfType<Conveyor>();
+        Init();
+        UseDefaultIslandSprite();
+        UseDefaultEmptySprite();
+    }
+
+    protected void OnDisable()
+    {
+        if (MyStile != null && MyStile.isTileActive)
+        {
+            SetSpriteToIslandOrEmpty();
+        }
     }
 
     protected virtual void Start()
     {
-        myStile = SGrid.current.GetStile(islandId); // happens in SGrid.Awake()
-        
-        SetTileActive(myStile.isTileActive);
-        SetPosition(myStile.x, myStile.y);
-
-        linkButton = null;
-        foreach (ArtifactTileButton b in buttonManager.buttons) {
-            if (myStile.linkTile != null && myStile.linkTile == b.myStile)
-            {
-                linkButton = b;
-                b.linkButton = this;
-            }
-        }
-
-        // if (!isTileActive)
-        // {
-        //    //buttonAnimator.sliderImage.sprite = emptySprite;
-        // }
-        // update artifact button
+        UpdateTileActive();
     }
 
-    private void OnEnable()
+    public void UpdateTileActive()
     {
-        foreach (Conveyor conveyor in conveyors)
-        {
-            conveyor.OnPowered.AddListener(OnConveyorPowered);
-        }
-
-        UpdateEmptySprite();
-    }
-
-    public void OnDisable()
-    {
-        if (myStile != null && myStile.isTileActive)
-        {
-            if (buttonAnimator.sliderImage.sprite == emptySprite || buttonAnimator.sliderImage.sprite == blankSprite)
-            {
-                ResetToIslandSprite();
-            }
-        }
-
-        foreach (Conveyor conveyor in conveyors)
-        {
-            conveyor.OnPowered.RemoveListener(OnConveyorPowered);
-        }
+        SetSpriteToIslandOrEmpty();
+        SetPosition(MyStile.x, MyStile.y);
     }
 
     public virtual void SetPosition(int x, int y)
     {
-        //Debug.Log("Current position: " + this.x + "," + this.y);
-        this.x = x; 
+        this.x = x;
         this.y = y;
-        //Debug.Log("New position: " + this.x + "," + this.y);
 
-        Vector3 pos = new Vector3((x % SGrid.current.height) - 1, y - 1) * UI_OFFSET; //C: i refuse to make everything into MT buttons
-        GetComponent<RectTransform>().anchoredPosition = pos;
+        SetAnchoredPos(x, y);
 
-        UpdateEmptySprite();
+        plugins.ForEach(plugin =>
+        {
+            plugin.OnPosChanged();
+        });
+
+        SetSpriteToIslandOrEmpty();
+    }
+
+    public void SetSpriteToIslandOrEmpty()
+    {
+        if (TileIsActive)
+        {
+            buttonAnimator.sliderImage.sprite = isComplete ? completedSprite : islandSprite;
+        }
+        else
+        {
+            SetSpriteToEmpty();
+        }
+    }
+
+    public void SetSpriteToEmpty()
+    {
+        buttonAnimator.sliderImage.sprite = emptySprite;
+    }
+
+    public void SetSpriteToHover()
+    {
+        buttonAnimator.sliderImage.sprite = hoverSprite;
+    }
+
+    public void UseDefaultIslandSprite()
+    {
+        islandSprite = islandSpriteDefault;
+    }
+
+    public void UseDefaultEmptySprite()
+    {
+        emptySprite = emptySpriteDefault;
+    }
+
+    public void SetEmptySprite(Sprite s)
+    {
+        emptySprite = s;
+    }
+
+    public void AfterStileMoveDragged(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (e.stile.islandId == islandId)
+        {
+            SetPushedDown(false);
+        }
     }
 
     public void SelectButton()
@@ -135,55 +171,21 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SetIsInMove(bool v)
     {
-        buttonAnimator.SetIsForcedDown(v && isTileActive);
+        buttonAnimator.SetIsForcedDown(v && TileIsActive);
+    }
+
+    public void SetComplete(bool value)
+    {
+        if (!TileIsActive)
+            return;
+
+        isComplete = value;
+        SetSpriteToIslandOrEmpty();
     }
 
     public void SetShouldFlicker(bool shouldFlicker)
     {
         this.shouldFlicker = shouldFlicker;
-    }
-
-    public void SetTileActive(bool v)
-    {
-        if (islandSprite == null)
-        {
-            islandSprite = buttonAnimator.sliderImage.sprite;
-        }
-
-        isTileActive = v;
-        if (v)
-        {
-            buttonAnimator.sliderImage.sprite = isComplete ? completedSprite : islandSprite;
-        }
-        else
-        {
-            buttonAnimator.sliderImage.sprite = emptySprite;
-        }
-    }
-
-    public void SetComplete(bool value)
-    {
-        if (!isTileActive)
-            return;
-
-        isComplete = value;
-        ResetToIslandSprite();
-    }
-
-    public virtual void ResetToIslandSprite()
-    {
-        if (!isTileActive)
-        {
-            buttonAnimator.sliderImage.sprite = emptySprite;
-        }
-        else if (isComplete)
-        {
-            buttonAnimator.sliderImage.sprite = completedSprite;
-        }
-        else
-        {
-            buttonAnimator.sliderImage.sprite = islandSprite;
-        }
     }
 
     public void Flicker(int numFlickers) 
@@ -198,10 +200,16 @@ public class ArtifactTileButton : MonoBehaviour
         StartCoroutine(NewButtonFlicker(numFlickers, true));
     }
 
-    private IEnumerator NewButtonFlicker(int numFlickers, bool blankImmediately=false) {
-        if (!blankImmediately)
+    protected virtual void SetAnchoredPos(int x, int y)
+    {
+        Vector3 pos = new Vector3((x % SGrid.current.height) - 1, y - 1) * UI_OFFSET; //C: i refuse to make everything into MT buttons
+        GetComponent<RectTransform>().anchoredPosition = pos;
+    }
+
+    private IEnumerator NewButtonFlicker(int numFlickers, bool startOnBlank=false) {
+        if (!startOnBlank)
         {
-            ResetToIslandSprite();
+            SetSpriteToIslandOrEmpty();
             yield return new WaitForSeconds(.25f);
         }
         
@@ -209,60 +217,21 @@ public class ArtifactTileButton : MonoBehaviour
         {
             buttonAnimator.sliderImage.sprite = blankSprite;
             yield return new WaitForSeconds(.25f);
-            ResetToIslandSprite();
+            SetSpriteToIslandOrEmpty();
             yield return new WaitForSeconds(.25f);
         }
     }
 
-    public void AfterStileMoveDragged(object sender, SGridAnimator.OnTileMoveArgs e) 
+    private void Init()
     {
-        if (e.stile.islandId == islandId)
-            SetPushedDown(false);
-    }
-
-    //L: i refuse to make everything into Factory buttons
-    #region Conveyor BS
-    private void OnConveyorPowered(ElectricalNode.OnPoweredArgs e)
-    {
-        UpdateEmptySprite();
-    }
-
-    private void UpdateEmptySprite()
-    {
-        if (conveyorData != null)
+        LinkButton = null;
+        foreach (ArtifactTileButton b in buttonManager.buttons)
         {
-            if (!isTileActive)
+            if (MyStile != null && MyStile.linkTile != null && MyStile.linkTile == b.MyStile)
             {
-                Conveyor conveyor = ConveyorAt(x, y);
-                if (conveyor != null)
-                {
-                    foreach (var item in conveyorData.conveyors)
-                    {
-                        if (item.pos.Equals(conveyor.StartPos))
-                        {
-                            buttonAnimator.sliderImage.sprite = conveyor.Powered ? item.emptyPowered : item.emptyUnpowered;
-                        }
-                    }
-                }
-                else
-                {
-                    buttonAnimator.sliderImage.sprite = emptySprite;
-                }
+                LinkButton = b;
+                b.LinkButton = this;
             }
         }
     }
-
-    private Conveyor ConveyorAt(int x, int y)
-    {
-        foreach (Conveyor conveyor in conveyors)
-        {
-            if (conveyor.StartPos.Equals(new Vector2Int(x, y)))
-            {
-                return conveyor;
-            }
-        }
-
-        return null;
-    }
-    #endregion
 }

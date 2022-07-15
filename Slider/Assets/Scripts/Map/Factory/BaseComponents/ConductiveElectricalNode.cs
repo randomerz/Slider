@@ -65,26 +65,4 @@ public class ConductiveElectricalNode : ElectricalNode
         }
         return thisStay && otherStay;
     }
-
-    /*
-    private Collider2D ClosestColliderToPoint(Vector2 otherPos)
-    {
-        Collider2D[] thisColliders = GetComponentsInChildren<Collider2D>();
-        //Vector2 minPt = thisColliders[0].ClosestPoint(otherPos);
-        float minDist = float.MaxValue;
-        Collider2D minCol = null;
-        foreach (Collider2D col in thisColliders)
-        {
-            Vector2 pt = col.ClosestPoint(otherPos);
-            float dist = Vector2.Distance(otherPos, pt);
-            if (dist < minDist)
-            {
-                minDist = dist;
-                minCol = col;
-            }
-        }
-
-        return minCol;
-    }
-    */
 }

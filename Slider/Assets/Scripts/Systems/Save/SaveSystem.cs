@@ -16,7 +16,7 @@ public class SaveSystem
         get {
             if (current == null && SGrid.current != null) // SGrid.current != null meas we are in play
             {
-                Debug.LogError("Save System is not using a profile! Creating a default profile for now...");
+                Debug.LogWarning("Save System is not using a profile! Creating a default profile for now...");
                 current = new SaveProfile("Boomo");
                 currentIndex = -1;
             }
