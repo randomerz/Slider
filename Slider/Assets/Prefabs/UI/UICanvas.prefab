@@ -1843,7 +1843,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5049116214901676855
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4069,19 +4069,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9999985
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -0.0017453891
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -4101,7 +4101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -0.2
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_SpriteState.m_SelectedSprite
@@ -4191,6 +4191,14 @@ PrefabInstance:
       value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -4204,7 +4212,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9999976
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalRotation.x
@@ -4216,7 +4224,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.002181689
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -4224,7 +4232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: -48
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4236,7 +4244,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_SpriteState.m_SelectedSprite
@@ -4339,7 +4347,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9999966
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalRotation.x
@@ -4351,7 +4359,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.0026179885
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -4371,7 +4379,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541330, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_SpriteState.m_SelectedSprite
