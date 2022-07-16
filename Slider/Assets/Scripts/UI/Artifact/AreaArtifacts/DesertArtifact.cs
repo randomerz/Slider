@@ -62,7 +62,7 @@ public class DesertArtifact : UIArtifact
         // }
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
-        if (!dragged.isTileActive)// || dragged.isForcedDown)
+        if (!dragged.TileIsActive)// || dragged.isForcedDown)
         {
             return;
         }
@@ -72,9 +72,9 @@ public class DesertArtifact : UIArtifact
         foreach (ArtifactTileButton b in moveOptions)
         {
             //Chen: Only resets to empty if tile is inactive since active tiles are included in desert GetMoveOptions
-            if (!b.isTileActive)
+            if (!b.TileIsActive)
             {
-                b.buttonAnimator.sliderImage.sprite = b.emptySprite;
+                b.SetSpriteToEmpty();
             }
         }
 
@@ -90,14 +90,11 @@ public class DesertArtifact : UIArtifact
             return;
         }
 
-        if (!hovered.isTileActive)
+        if (!hovered.TileIsActive)
         {
-            hovered.buttonAnimator.sliderImage.sprite = hovered.emptySprite;
+            hovered.SetSpriteToEmpty();
         }
-        else
-        {
-            hovered.ResetToIslandSprite();
-        }
+
         //Debug.Log("dragged" + dragged.islandId + "hovered" + hovered.islandId);
 
         bool swapped = false;
@@ -144,11 +141,11 @@ public class DesertArtifact : UIArtifact
             if (curr != null)
             {
                 //Case 1: Tile slides 2 spaces
-                if (!curr.isTileActive)
+                if (!curr.TileIsActive)
                 {
                     last = curr;
                 } //Edge Case: A tile on the edge will slide to the middle
-                else if (GetButton(curr.x + dir.x, curr.y + dir.y) != null && !GetButton(curr.x + dir.x, curr.y + dir.y).isTileActive) {
+                else if (GetButton(curr.x + dir.x, curr.y + dir.y) != null && !GetButton(curr.x + dir.x, curr.y + dir.y).TileIsActive) {
                     last = curr;
                     break;
                 }
@@ -219,7 +216,7 @@ public class DesertArtifact : UIArtifact
 
         foreach (ArtifactTileButton button in tiles)
         {
-            if (button.isTileActive)
+            if (button.TileIsActive)
             {
                 ArtifactTileButton furthest = GetLastEmpty(button, dir);
                 if (furthest != null)

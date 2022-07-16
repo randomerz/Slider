@@ -50,9 +50,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeType: 1
   powerRefs: 0
+  powerPathPrevs: []
   neighbors: []
   invertSignal: 0
   OnPowered:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoweredOn:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoweredOff:
     m_PersistentCalls:
       m_Calls: []
   animator: {fileID: 326881589742247708}

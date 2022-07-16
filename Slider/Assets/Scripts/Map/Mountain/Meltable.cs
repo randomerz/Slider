@@ -45,11 +45,11 @@ public class Meltable : MonoBehaviour
         numLavaSources--;
     }
 
-    public void IsFrozen(Conditionals.Condition c) {
+    public void IsFrozen(Condition c) {
         c.SetSpec(isFrozen);
     }
 
-    public void IsNotFrozen(Conditionals.Condition c) {
+    public void IsNotFrozen(Condition c) {
         c.SetSpec(!isFrozen);
     }
 

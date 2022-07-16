@@ -15,10 +15,25 @@ EditorBuildSettings:
     path: Assets/Scenes/Village.unity
     guid: 3c9717930684a2144a5722268b39257b
   - enabled: 1
-    path: Assets/Scenes/Demo/Demo Caves.unity
-    guid: 8f43685319fab5e45b4d63dc9c720a8a
+    path: Assets/Scenes/Caves.unity
+    guid: 7df3df70c099dc7438b43a6f83733841
   - enabled: 1
-    path: Assets/Scenes/Demo/EndOfDemo.unity
-    guid: 76c5f19d7c2f6654aade75b1fedcb770
+    path: Assets/Scenes/Ocean.unity
+    guid: 1a3e425e016f144409ee33723b010951
+  - enabled: 1
+    path: Assets/Scenes/Jungle.unity
+    guid: 9c5c355f5ef7cc14baf34da585f0cc55
+  - enabled: 1
+    path: Assets/Scenes/Desert.unity
+    guid: adde00b227d82664383fe34f99dfbf41
+  - enabled: 1
+    path: Assets/Scenes/Factory.unity
+    guid: 2d419ab7726e52c4ea19b35b2085d1b4
+  - enabled: 1
+    path: Assets/Scenes/Mountain.unity
+    guid: be021a18ee384d049894f0276461acb3
+  - enabled: 1
+    path: Assets/Scenes/MagiTech.unity
+    guid: a9aa449262e19e14482d6376d38658aa
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 84f1309155c25994fa9256899015a77a, type: 2}

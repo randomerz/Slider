@@ -351,7 +351,7 @@ public class Player : Singleton<Player>, ISavable
         return isOnWater;
     }
 
-    public void GetIsOnWater(Conditionals.Condition c)
+    public void GetIsOnWater(Condition c)
     {
         c.SetSpec(isOnWater);
     }

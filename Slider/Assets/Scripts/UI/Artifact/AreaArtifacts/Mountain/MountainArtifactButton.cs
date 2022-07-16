@@ -15,10 +15,8 @@ public class MountainArtifactButton : ArtifactTileButton
         base.Start();
         this.GetComponent<Image>().alphaHitTestMinimumThreshold = 0.5f;
     }
-    public override void SetPosition(int x, int y)
+    protected override void SetAnchoredPos(int x, int y)
     {
-        this.x = x;
-        this.y = y;
         Vector3 pos = button1Position + x * xOffset + (y % 2) * yOffset + (y / 2) * zOffset;
         GetComponent<RectTransform>().anchoredPosition = pos;
     }

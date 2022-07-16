@@ -205,27 +205,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c35107e74e42e43689c493fa51c13bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterName: TutorialSign
   speed: 4
   animator: {fileID: 898760068327470465}
-  dconds:
-  - onSuccess:
-      m_PersistentCalls:
-        m_Calls: []
-    onFail:
-      m_PersistentCalls:
-        m_Calls: []
-    conditions: []
-    priority: 1
+  characterName: TutorialSign
+  conds:
+  - conditions: []
     dialogueChain: []
     alwaysStartFromBeginning: 0
-    onDialogueChanged:
+    onConditionalEnter:
       m_PersistentCalls:
         m_Calls: []
     onDialogueChainExhausted:
       m_PersistentCalls:
         m_Calls: []
     walks: []
+    priority: 1
   dialogueDisplay: {fileID: 8260142248798685880}
   sr: {fileID: 6774723380247666992}
   spriteDefaultFacingLeft: 0
@@ -266,7 +260,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3652435011426292518}
         m_TargetAssemblyTypeName: NPC, Assembly-CSharp
-        m_MethodName: DialogueTriggerEnter
+        m_MethodName: OnDialogueTriggerEnter
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -281,7 +275,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3652435011426292518}
         m_TargetAssemblyTypeName: NPC, Assembly-CSharp
-        m_MethodName: DialogueTriggerExit
+        m_MethodName: OnDialogueTriggerExit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -236,7 +236,7 @@ public class RuinsArrow : MonoBehaviour
         anyRodsOn = false;
     }
 
-    public void CheckActiveRods(Conditionals.Condition c)
+    public void CheckActiveRods(Condition c)
     {
         c.SetSpec(anyRodsOn);
     }
