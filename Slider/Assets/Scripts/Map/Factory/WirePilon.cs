@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class WirePilon : ConductiveElectricalNode
 {
-    //Conductive Line Effects
 
     //(Node that the pilon is connected to, instantiation of the effect)
     protected Dictionary<ConductiveElectricalNode, GameObject> electricalLines;
 
     protected HashSet<ConductiveElectricalNode> nodesConducting;
 
-    private GameObject electricLine;
+    private GameObject electricLinePrefab;
 
     [SerializeField] private Transform lineStart;
     [SerializeField] private Animator anim;
@@ -21,7 +20,7 @@ public class WirePilon : ConductiveElectricalNode
     {
         electricalLines = new Dictionary<ConductiveElectricalNode, GameObject>();
         nodesConducting = new HashSet<ConductiveElectricalNode>();
-        electricLine = Resources.Load<GameObject>("ElectricLine");
+        electricLinePrefab = Resources.Load<GameObject>("ElectricLine");
 
         base.Awake();
     }
@@ -74,7 +73,6 @@ public class WirePilon : ConductiveElectricalNode
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Called This?");
         ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
         if (other != null && BothNodesNotMoving(other))
         {
@@ -105,7 +103,7 @@ public class WirePilon : ConductiveElectricalNode
     private void CreateElectricLineEffect(ConductiveElectricalNode other)
     {
         if (!electricalLines.ContainsKey(other)) {
-            GameObject electricLineInstance = Instantiate(electricLine);
+            GameObject electricLineInstance = Instantiate(electricLinePrefab);
             LineRenderer lr = electricLineInstance.GetComponent<LineRenderer>();
             lr.positionCount = 2;
             lr.SetPosition(0, lineStart.position);

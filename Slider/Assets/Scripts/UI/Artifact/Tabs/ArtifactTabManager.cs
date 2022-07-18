@@ -229,7 +229,7 @@ public class ArtifactTabManager : MonoBehaviour
         //Preview!
         middle = UIArtifact.GetButton(1, 1);
         empty = uiArtifactMenus.uiArtifact.GetButton(9);
-        if (middle.isTileActive) UIArtifact.SetLightningPos(1, 1);
+        if (middle.TileIsActive) UIArtifact.SetLightningPos(1, 1);
         middle.SetLightning(true);
         empty.SetLightning(true);        
         //middle.FragLightningPreview(true);
