@@ -91,6 +91,18 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
         }
 
         currWalk = context.CurrCond.walks[walkInd];
+
+        if (currWalk.path.Count == 0)
+        {
+            Debug.LogError($"You forgot to set a path for walk for {context.gameObject.name} at cond {context.CurrCondIndex} walk index {walkInd}");
+            return;
+        }
+
+        if (context.transform.position != currWalk.path[0].position)
+        {
+            Debug.LogError("NPC transform does not match start, did not start walk in order to prevent rubberbanding. (You're probably calling it multiple times in an inspector event.)");
+            return;
+        }
         remainingStileCrossings = new List<STileCrossing>(currWalk.stileCrossings);
         remainingPath = new List<Transform>(currWalk.path);
 
@@ -168,20 +180,26 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
             context.transform.SetParent(context.CurrentSTileUnderneath == null ? null : context.CurrentSTileUnderneath.transform);
         }
     }
-
+    
     private void FinishWalk()
     {
-        if (currWalk.turnAroundAfterWalking)
+        if (currWalk != null)
         {
-            spriteRenderer.flipX = !spriteRenderer.flipX;
+            if (currWalk.turnAroundAfterWalking)
+            {
+                spriteRenderer.flipX = !spriteRenderer.flipX;
+            }
+
+            NPCWalkData oldWalk = currWalk;
+            isWalking = false;
+            currWalk = null;
+            walkCoroutine = null;
+            animator.SetBoolToFalse("isWalking");
+            oldWalk.onPathFinished?.Invoke();   //This needs to be called after we've safely handled finishing the previous walk.
+        } else
+        {
+            Debug.LogError("Current Walk was null? This should never happen. Report bug to Logan immediately.");
         }
-
-        animator.SetBoolToFalse("isWalking");
-        currWalk.onPathFinished?.Invoke();
-
-        isWalking = false;
-        currWalk = null;
-        walkCoroutine = null;
     }
 
     private void SetPathStartToCurrNPCPos()

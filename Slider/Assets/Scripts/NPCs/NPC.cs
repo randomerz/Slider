@@ -68,6 +68,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         conds.Add(cond);
     }
 
+    //These are all interfaces to the various contexts to be used in inspector events and such. Implementation details are in NPCDialogueContext/NPCWalkingCOntext
     #region Dialogue
     public void OnDialogueTriggerEnter()
     {
@@ -82,6 +83,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     public void TypeCurrentDialogue()
     {
         dialogueCtx.TypeCurrentDialogue();
+    }
+
+    public void AdvanceDialogueChain()
+    {
+        dialogueCtx.TypeNextDialogueInChain();
     }
     #endregion Dialogue
 

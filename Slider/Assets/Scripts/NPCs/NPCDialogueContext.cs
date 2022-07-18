@@ -5,21 +5,37 @@ using UnityEngine;
 
 internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 {
+    public class DialogueEventFlags
+    {
+        public bool startInvoked;
+        public bool endInvoked;
+
+        public DialogueEventFlags(bool start, bool end)
+        {
+            startInvoked = start;
+            endInvoked = end;
+        }
+    }
+
     public static bool dialogueEnabledAllNPC = true;
 
+    //L: This should be a state machine now that I think about it.
     private bool canGiveDialogue;
     private bool dialogueBoxIsActive;
     private bool currDchainExhausted;
     private bool playerInDialogueTrigger;
     private bool isTypingDialogue;
     private bool waitingForPlayerAction;
+
     private Coroutine delayBeforeNextDialogueCoroutine;
 
     private DialogueDisplay display;
 
     public bool DialogueEnabled => dialogueEnabledAllNPC && canGiveDialogue;
 
-    private Dictionary<int, int> condIndexToCurrDchainIndex;
+    private Dictionary<int, int> cachedDchainIndices;    //(CondIndex, CurrDchainIndex)
+
+    private Dictionary<int, Dictionary<int, DialogueEventFlags>> cachedEventFlags; //(CondIndex, DchainIndex, flags)
 
     private List<DialogueData> CurrDchain
     {
@@ -37,12 +53,12 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
     {
         get
         {
-            return condIndexToCurrDchainIndex[context.CurrCondIndex];
+            return cachedDchainIndices[context.CurrCondIndex];
         }
 
         set
         {
-            condIndexToCurrDchainIndex[context.CurrCondIndex] = value;
+            cachedDchainIndices[context.CurrCondIndex] = value;
         }
     }
 
@@ -57,6 +73,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         base.Awake();
         canGiveDialogue = true;
         InitializeCurrDchainIndices();
+        cachedEventFlags = new Dictionary<int, Dictionary<int, DialogueEventFlags>>();
     }
 
     public override void OnEnable()
@@ -108,7 +125,6 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
             if (context.CurrCond.alwaysStartFromBeginning)
             {
                 CurrDchainIndex = 0;
-                currDchainExhausted = false;
             }
 
             TypeCurrentDialogue();
@@ -127,7 +143,6 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 
     public void OnConditionalsChanged()
     {
-        currDchainExhausted = false;
         display.SetMessagePing(!CurrDchainIsEmpty());
         if (dialogueBoxIsActive && playerInDialogueTrigger)
         {
@@ -144,7 +159,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
             isTypingDialogue = true;
             dialogueBoxIsActive = true;
 
-            context.CurrCond.OnDialogueChainStart(CurrDchainIndex);
+            OnDialogueStart();
         }
     }
 
@@ -155,7 +170,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
             if (waitingForPlayerAction)
             {
                 waitingForPlayerAction = false;
-                SetNextDialogueInChain(true);
+                TypeNextDialogueInChain();
             }
             else if (isTypingDialogue)
             {
@@ -171,56 +186,58 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
             return false;
         }
 
-        bool givingDialogue = dialogueBoxIsActive && !currDchainExhausted;
-        return givingDialogue && CurrentDialogue().dontInterrupt;
+        return dialogueBoxIsActive && CurrentDialogue().dontInterrupt;
+    }
+
+    public void TypeNextDialogueInChain()
+    {
+        if (CurrDchainIndex < CurrDchain.Count - 1)
+        {
+            CurrDchainIndex++;
+            TypeCurrentDialogue();
+        }
+        else   
+        {
+            //Dialogue Chain Ended
+            if (CurrDchainIndex == CurrDchain.Count - 1 && CurrDchain[CurrDchainIndex].dontInterrupt)
+            {
+                //This is so the dialogue automatically ends after the delay or whatever for don't interrupt's so that it doesn't just stay there until the end of time. 
+                DeactivateDialogueBox();
+            }
+            context.CurrCond.OnDialogueChainExhausted();
+        }
     }
 
     private void InitializeCurrDchainIndices()
     {
-        condIndexToCurrDchainIndex = new Dictionary<int, int>();
+        cachedDchainIndices = new Dictionary<int, int>();
         for (int i = 0; i < context.Conds.Count; i++)
         {
-            condIndexToCurrDchainIndex[i] = 0;
+            cachedDchainIndices[i] = 0;
         }
     }
 
     private IEnumerator SetNextDialogueInChainAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        SetNextDialogueInChain(true);
-    }
-
-    private void SetNextDialogueInChain(bool typeNextDialogue = false)
-    {
-        if (CurrDchainIndex < CurrDchain.Count - 1)
-        {
-            CurrDchainIndex++;
-            if (typeNextDialogue)
-            {
-                TypeCurrentDialogue();
-            }
-        }
-        else
-        {
-            currDchainExhausted = true;
-            context.CurrCond.OnDialogueChainExhausted();
-        }
+        TypeNextDialogueInChain();
     }
 
     private void HandleDialogueFinished()
     {
         isTypingDialogue = false;
-        context.CurrCond.OnDialogueChainEnd(CurrDchainIndex);
 
         if (CurrentDialogue().waitUntilPlayerAction)
         {
             waitingForPlayerAction = true;
         }
-        else
+        else if (!CurrentDialogue().advanceDialogueManually)
         {
             float delay = CurrentDialogue().delayAfterFinishedTyping;
             delayBeforeNextDialogueCoroutine = context.StartCoroutine(SetNextDialogueInChainAfterDelay(delay));
         }
+
+        OnDialogueEnd();
     }
 
     private void DeactivateDialogueBox()
@@ -228,11 +245,6 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         display.FadeAwayDialogue();
 
         DontAllowDialogueToContinue();
-
-        if (!CurrDchainIsEmpty() && CurrentDialogue().doNotRepeatAfterTriggered)
-        {
-            SetNextDialogueInChain();
-        }
 
         dialogueBoxIsActive = false;
         isTypingDialogue = false;
@@ -253,6 +265,66 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
     {
         display.textTyperText.TrySkipText();
         display.textTyperBG.TrySkipText();
+    }
+
+    private void OnDialogueStart()
+    {
+        //Handle event caching (only cache doNotRepeatEvents)
+        if (!CurrDchainIsEmpty() && CurrDchain[CurrDchainIndex].doNotRepeatEvents)
+        {
+            if (CheckEventInCacheAndUpdate(true, false))
+            {
+                return;
+            }
+        }
+
+        context.CurrCond.OnDialogueChainStart(CurrDchainIndex);
+    }
+
+    private void OnDialogueEnd()
+    {
+        //Handle event caching (only cache doNotRepeatEvents)
+        if (!CurrDchainIsEmpty() && CurrDchain[CurrDchainIndex].doNotRepeatEvents)
+        {
+            if (CheckEventInCacheAndUpdate(false, true))
+            {
+                return;
+            }
+        }
+
+        context.CurrCond.OnDialogueChainEnd(CurrDchainIndex);
+    }
+
+    //Returns if the cache already had the value
+    private bool CheckEventInCacheAndUpdate(bool startInvoked, bool endInvoked)
+    {
+        //L: Dictionary nested if logic pain.
+        if (CachedFlagsContainsCurrDialogue())
+        {
+            bool startAlreadyIn = startInvoked && cachedEventFlags[context.CurrCondIndex][CurrDchainIndex].startInvoked;
+            bool endAlreadyIn = endInvoked && cachedEventFlags[context.CurrCondIndex][CurrDchainIndex].endInvoked;
+            if (startAlreadyIn || endAlreadyIn)
+            {
+                return true;
+            }
+            cachedEventFlags[context.CurrCondIndex][CurrDchainIndex].startInvoked = startInvoked || cachedEventFlags[context.CurrCondIndex][CurrDchainIndex].startInvoked;
+            cachedEventFlags[context.CurrCondIndex][CurrDchainIndex].endInvoked = endInvoked || cachedEventFlags[context.CurrCondIndex][CurrDchainIndex].endInvoked;
+        }
+        else
+        {
+            if (!cachedEventFlags.ContainsKey(context.CurrCondIndex))
+            {
+                cachedEventFlags[context.CurrCondIndex] = new Dictionary<int, DialogueEventFlags>();
+            }
+            cachedEventFlags[context.CurrCondIndex][CurrDchainIndex] = new DialogueEventFlags(startInvoked, endInvoked);
+        }
+
+        return false;
+    }
+
+    private bool CachedFlagsContainsCurrDialogue()
+    {
+        return cachedEventFlags.ContainsKey(context.CurrCondIndex) && cachedEventFlags[context.CurrCondIndex].ContainsKey(CurrDchainIndex);
     }
 
     private bool DialogueShouldDeactivate()
