@@ -165,9 +165,9 @@ public class DesertArtifact : UIArtifact
 
     private void UpdateSwapsAndUI(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
     {
-        Vector2Int lastSwap = new Vector2Int(-1, -1);
-        Vector2Int firstSwap = new Vector2Int(-1, -1);
-        int firstIslandId = -1;
+        Vector2Int emptyButtonStart = new Vector2Int(-1, -1);
+        Vector2Int emptyButtonEnd = new Vector2Int(-1, -1);
+        int emptyIslandId = -1;
 
         foreach (ArtifactTileButton button in tiles)
         {
@@ -176,21 +176,22 @@ public class DesertArtifact : UIArtifact
                 ArtifactTileButton furthest = GetLastEmpty(button, dir);
                 if (furthest != null)
                 {
-                    lastSwap = new Vector2Int(button.x, button.y);
-                    if (firstSwap.x == -1)
+                    if (emptyButtonStart.x == -1)
                     {
-                        firstSwap = new Vector2Int(furthest.x, furthest.y);
-                        firstIslandId = furthest.islandId;
+                        emptyButtonStart = new Vector2Int(furthest.x, furthest.y);
+                        emptyIslandId = furthest.islandId;
                     }
+                    emptyButtonEnd = new Vector2Int(button.x, button.y);
+
+
                     swaps.Add(new Movement(button.x, button.y, furthest.x, furthest.y, button.islandId));
                     SwapButtons(button, furthest);  //L: This is kinda bad to do here since it's a side effect of constructing the move, but I don't want to break it (since I already did)
                 }
             }
         }
-        if (lastSwap.x != -1 && firstSwap.x != -1)
+        if (emptyButtonStart.x != -1 && emptyButtonEnd.x != -1)
         {
-            //print(firstSwap.x);
-            swaps.Add(new Movement(firstSwap.x, firstSwap.y, lastSwap.x, lastSwap.y, firstIslandId));
+            swaps.Add(new Movement(emptyButtonStart.x, emptyButtonStart.y, emptyButtonEnd.x, emptyButtonEnd.y, emptyIslandId));
         }
     }
 
@@ -199,8 +200,7 @@ public class DesertArtifact : UIArtifact
     {
 
         ArtifactTileButton curr = GetButton(button.x + dir.x, button.y + dir.y);
-        //ArtifactTileButton next = GetButton(curr.x + dir.x, curr.y + dir.y);
-        ArtifactTileButton last = null;
+        ArtifactTileButton furthest = null;
 
         //Anchor Case: Don't move if the tile has anchor or if it's blocked by an anchor
         STile[,] grid = SGrid.Current.GetGrid();
@@ -208,29 +208,18 @@ public class DesertArtifact : UIArtifact
         {
             return null;
         }
-        for (int i = 0; i < 2; i++)
+
+        while (curr != null)
         {
-            if (curr != null)
+            if (!curr.TileIsActive)
             {
-                //Case 1: Tile slides 2 spaces
-                if (!curr.TileIsActive)
-                {
-                    last = curr;
-                } //Edge Case: A tile on the edge will slide to the middle
-                else if (GetButton(curr.x + dir.x, curr.y + dir.y) != null && !GetButton(curr.x + dir.x, curr.y + dir.y).TileIsActive)
-                {
-                    last = curr;
-                    break;
-                }
-            }
-            else
-            {
-                break;
-            }
+                //Case 1: Tile slides to the empty space
+                furthest = curr;
+            } 
+
             curr = GetButton(curr.x + dir.x, curr.y + dir.y);
         }
-        // Debug.Log(last);
-        return last;
+        return furthest;
     }
     #endregion
 }
