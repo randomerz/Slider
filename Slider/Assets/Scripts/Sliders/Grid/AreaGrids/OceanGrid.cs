@@ -110,6 +110,19 @@ public class OceanGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker=true)
     {
+
+        //GetNumTilesCollected() for number of tiles
+        //GetGridString to look at where all the tiles are IG
+        //###_12#_###
+        if (GetNumTilesCollected() == 3)
+        {
+            char[] gridstate = GetGridString().ToCharArray();
+            if(gridstate[6] == '1' || gridstate[10] == '1'){
+                grid[0, 0].SetGridPosition(0, 3);
+                stile.SetGridPosition(0, 0);
+            }
+        }
+
         base.EnableStile(stile, shouldFlicker);
 
         stile.GetComponentInChildren<SpriteMask>().enabled = false; // on STile/SlideableArea
@@ -119,6 +132,7 @@ public class OceanGrid : SGrid
             CheckShipwreck(this, null);
             CheckVolcano(this, null);
         }
+        print(GetGridString());
     }
 
 
