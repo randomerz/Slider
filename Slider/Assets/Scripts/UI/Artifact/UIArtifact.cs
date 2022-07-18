@@ -369,7 +369,7 @@ public class UIArtifact : Singleton<UIArtifact>
 
     //L: Consider moving queue stuff to separate class (probably not at this point)
     #region Queue
-    //L: Returns if the move was successfully added or not.
+    //L: This is the new CheckAndSwap
     public virtual bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         SMove move = ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
@@ -406,6 +406,7 @@ public class UIArtifact : Singleton<UIArtifact>
         moveQueue.Enqueue(move);
     }
 
+    //DON'T CALL DIRECTLY ANYMORE (call process queue instead)
     public virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (e != null)
@@ -419,6 +420,7 @@ public class UIArtifact : Singleton<UIArtifact>
         ProcessQueue();
     }
 
+    //
     public virtual void ProcessQueue()
     {
         if (moveQueue.Count > 0)

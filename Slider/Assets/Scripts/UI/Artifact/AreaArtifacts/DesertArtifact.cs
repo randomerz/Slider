@@ -13,15 +13,6 @@ public class DesertArtifact : UIArtifact
         {
             return options;
         }
-        //Vector2 buttPos = new Vector2(button.x, button.y);
-        // foreach (ArtifactTileButton b in buttons)
-        // {
-        //     //if (!b.isTileActive && (buttPos - new Vector2(b.x, b.y)).magnitude == 1)
-        //     if (!b.isTileActive && (button.x == b.x || button.y == b.y))
-        //     {
-        //         adjacentButtons.Add(b);
-        //     }
-        // }
 
         Vector2Int[] dirs = {
             Vector2Int.right,
@@ -33,7 +24,7 @@ public class DesertArtifact : UIArtifact
         foreach (Vector2Int dir in dirs)
         {
             ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
-            int i = 2;
+            int i = 2;  //i=1 is checked in the above line, otherwise it will add the same option twice.
             while (b != null)
             {
                 options.Add(b);
@@ -45,10 +36,10 @@ public class DesertArtifact : UIArtifact
 
         return options;
     }
+
     //Chen: Override for dragndrop since desert GetMoveOPtions include  active tiles
     //L: Deleted ButtonDragEnd override because the code was exactly the same and GetMoveOptions is marked virtual so it will automatically call the right one.
 
-    //Chen: TryQueueMoveFromButtonPair now calls each of the Slide() functions
     public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         SMove move;
@@ -75,7 +66,6 @@ public class DesertArtifact : UIArtifact
         MoveMadeOnArtifact?.Invoke(this, null);
         QueueAdd(move);
         ProcessQueue();
-        SetButtonPositionsToMatchGrid();
         DeselectSelectedButton();
         UpdatePushedDowns(null, null);
     }
@@ -120,7 +110,7 @@ public class DesertArtifact : UIArtifact
             GetButton(0, col)
             };
 
-            UpdateSwaps(swaps, tiles, Vector2Int.right);
+            UpdateSwapsAndUI(swaps, tiles, Vector2Int.right);
         }
         return new SSlideSwap(swaps);
     }
@@ -136,7 +126,7 @@ public class DesertArtifact : UIArtifact
             GetButton(1, col),
             GetButton(2, col)
             };
-            UpdateSwaps(swaps, tiles, Vector2Int.left);
+            UpdateSwapsAndUI(swaps, tiles, Vector2Int.left);
         }
         return new SSlideSwap(swaps);
     }
@@ -152,7 +142,7 @@ public class DesertArtifact : UIArtifact
             GetButton(row, 1),
             GetButton(row, 0)
             };
-            UpdateSwaps(swaps, tiles, Vector2Int.up);
+            UpdateSwapsAndUI(swaps, tiles, Vector2Int.up);
         }
         return new SSlideSwap(swaps);
     }
@@ -168,12 +158,12 @@ public class DesertArtifact : UIArtifact
             GetButton(row, 1),
             GetButton(row, 2),
             };
-            UpdateSwaps(swaps, tiles, Vector2Int.down);
+            UpdateSwapsAndUI(swaps, tiles, Vector2Int.down);
         }
         return new SSlideSwap(swaps);
     }
 
-    private void UpdateSwaps(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
+    private void UpdateSwapsAndUI(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
     {
         Vector2Int lastSwap = new Vector2Int(-1, -1);
         Vector2Int firstSwap = new Vector2Int(-1, -1);
@@ -193,7 +183,7 @@ public class DesertArtifact : UIArtifact
                         firstIslandId = furthest.islandId;
                     }
                     swaps.Add(new Movement(button.x, button.y, furthest.x, furthest.y, button.islandId));
-                    //SwapButtons(button, furthest);  //L: Elliot, I love you, but this is a cardinal sin.
+                    SwapButtons(button, furthest);  //L: This is kinda bad to do here since it's a side effect of constructing the move, but I don't want to break it (since I already did)
                 }
             }
         }
