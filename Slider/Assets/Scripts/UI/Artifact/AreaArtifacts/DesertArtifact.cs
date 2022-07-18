@@ -216,6 +216,7 @@ public class DesertArtifact : UIArtifact
                 //Case 1: Tile slides to the empty space
                 furthest = curr;
             } 
+            //L: Removed Case 2 because it is never used and doesn't return an empty button.
 
             curr = GetButton(curr.x + dir.x, curr.y + dir.y);
         }
