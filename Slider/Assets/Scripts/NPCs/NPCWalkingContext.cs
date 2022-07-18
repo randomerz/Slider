@@ -90,27 +90,33 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
             context.StopCoroutine(walkCoroutine);
         }
 
-        currWalk = context.CurrCond.walks[walkInd];
-
-        if (currWalk.path.Count == 0)
+        if (currWalk == null)
         {
-            Debug.LogError($"You forgot to set a path for walk for {context.gameObject.name} at cond {context.CurrCondIndex} walk index {walkInd}");
-            return;
-        }
+            currWalk = context.CurrCond.walks[walkInd];
 
-        if (context.transform.position != currWalk.path[0].position)
+            if (currWalk.path.Count == 0)
+            {
+                Debug.LogError($"You forgot to set a path for walk for {context.gameObject.name} at cond {context.CurrCondIndex} walk index {walkInd}");
+                return;
+            }
+
+            if (context.transform.position != currWalk.path[0].position)
+            {
+                Debug.LogWarning("NPC transform does not match start of walk, this will cause rubberbanding. (You're might be calling it multiple times in an inspector event!)");
+                //return;
+            }
+            remainingStileCrossings = new List<STileCrossing>(currWalk.stileCrossings);
+            remainingPath = new List<Transform>(currWalk.path);
+
+            isWalking = true;
+            animator.SetBoolToTrue("isWalking");
+            currWalk.onPathStarted?.Invoke();
+
+            walkCoroutine = context.StartCoroutine(DoCurrentWalk());
+        } else
         {
-            Debug.LogError("NPC transform does not match start, did not start walk in order to prevent rubberbanding. (You're probably calling it multiple times in an inspector event.)");
-            return;
+            Debug.LogError("Did not start NPC walk because one was already occurring!");
         }
-        remainingStileCrossings = new List<STileCrossing>(currWalk.stileCrossings);
-        remainingPath = new List<Transform>(currWalk.path);
-
-        isWalking = true;
-        animator.SetBoolToTrue("isWalking");
-        currWalk.onPathStarted?.Invoke();
-
-        walkCoroutine = context.StartCoroutine(DoCurrentWalk());
     }
 
     private void ResumeWalk()
