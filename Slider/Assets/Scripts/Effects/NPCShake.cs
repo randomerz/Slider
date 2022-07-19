@@ -11,20 +11,17 @@ public class NPCShake : MonoBehaviour
 
     public void StartShake(float duration)
     {
-        StartCoroutine(Shake(duration, .5f));
+        StartCoroutine(Shake(duration));
     }
 
-    public IEnumerator Shake(float duration, float amount)
+    public IEnumerator Shake(float duration)
     {
         float curTime = 0;
-        Vector3 origPos = transform.position;
 
         while (curTime <= duration)
         {
             if (Time.timeScale == 0)
                 break;
-
-            float curIntensity = Mathf.Lerp(amount, 0, curTime / duration);
             transform.position = baseTransform.position + Random.insideUnitSphere *.4f;
 
             curTime += .025f  ;

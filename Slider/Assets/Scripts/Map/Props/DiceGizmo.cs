@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class DiceGizmo : MonoBehaviour
 {
     public STile myStile;
-    public NPC npcScript;
-    public NPCConditionals NumberDialogue;
+    [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private TextMeshProUGUI bgText;
 
     public int value;
     public Sprite[] sprites;
     //public Animator animator; // this is only based on Tree animator controller rn
     //Chen: Should the above be changed to the Dice animator controller or something?
-    [SerializeField] private bool shouldDisableAtStart = true;
 
     private void Awake()
     {
@@ -20,12 +20,6 @@ public class DiceGizmo : MonoBehaviour
         {
             FindSTile();
         }
-        if (shouldDisableAtStart)
-            gameObject.SetActive(false);
-
-        NumberDialogue.dialogueChain.Clear();
-        NumberDialogue.dialogueChain.Add(ConstructDiceDialogue());
-        npcScript.AddNewConditionals(NumberDialogue);
     }
 
     private void Update()
@@ -34,9 +28,6 @@ public class DiceGizmo : MonoBehaviour
         {
             value = 1;
         }
-        this.GetComponent<SpriteRenderer>().sprite = sprites[value - 1];
-        NumberDialogue.dialogueChain[0].dialogue = value.ToString();
-        npcScript.TypeCurrentDialogue();
     }
 
     private void OnEnable()
@@ -56,8 +47,6 @@ public class DiceGizmo : MonoBehaviour
     }
     public void OnStileChangeDir(object sender, STile.STileMoveArgs e)
     {
-        //Debug.Log("Dice stuff");
-        //Debug.Log(e.moveDir);
         if (e.moveDir != Vector2.zero)
         {
             value++;
@@ -65,9 +54,11 @@ public class DiceGizmo : MonoBehaviour
             {
                 value = 1;
             }
+            Debug.Log(this.name);
+            GetComponent<SpriteRenderer>().sprite = sprites[value - 1];
+            text.text = value.ToString();
+            bgText.text = value.ToString();
         }
-        //Debug.Log(value);
-        // Debug.Log("Updated!");
     }
 
     private void FindSTile()

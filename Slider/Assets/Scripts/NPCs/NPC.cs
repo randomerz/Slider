@@ -68,6 +68,15 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         conds.Add(cond);
     }
 
+    public void ModifyConditional(NPCConditionals cond, int index)
+    {
+        Debug.Log(conds.Count);
+        if (index < 0 || index >= conds.Count) throw new ArgumentOutOfRangeException("Index " + index + " is out of range of conds list!");
+        conds[index] = cond;
+    }
+
+    
+
     //These are all interfaces to the various contexts to be used in inspector events and such. Implementation details are in NPCDialogueContext/NPCWalkingCOntext
     #region Dialogue
     public void OnDialogueTriggerEnter()
