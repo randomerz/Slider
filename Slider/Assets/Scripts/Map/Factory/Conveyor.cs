@@ -91,7 +91,7 @@ public class Conveyor : ElectricalNode
         if (move != null)
         {
             //Do not allow the player to queue any moves at this point!
-            artifact.PlayerCanQueue = false;
+            artifact.DisableQueueing();
             UIArtifact.ClearQueues();
 
             foreach (SMove activeMove in UIArtifact.GetActiveMoves())
@@ -113,17 +113,14 @@ public class Conveyor : ElectricalNode
             if (Powered)
             {
                 //Queue the move, then immediately unqueue it so that it becomes the next active move.
-                artifact.QueueCheckAndAdd(move);
-                artifact.QueueCheckAfterMove(this, null);
+                artifact.QueueAdd(move);
+                artifact.ProcessQueue();
 
                 //We need to update the UI since the move was initiated by the conveyor belt instead of the player clicking buttons.
-                artifact.SetArtifactToGrid();
-                artifact.UpdateMoveOptions();
-
-
+                artifact.SetButtonPositionsToMatchGrid();
             }
             //Now that the UI has updated to reflect the conveyor move, we can reenable queueing for the player
-            artifact.PlayerCanQueue = true;
+            artifact.EnableQueueing();
         }
 
         gettingMoveCoroutine = null;
@@ -134,7 +131,7 @@ public class Conveyor : ElectricalNode
     private SMoveConveyor ConstructMove()
     {
         List<Movement> moves = new List<Movement>();
-        STile[,] stiles = SGrid.current.GetGrid();
+        STile[,] stiles = SGrid.Current.GetGrid();
 
 
         //Check if a tile is on the conveyor belt
@@ -159,7 +156,7 @@ public class Conveyor : ElectricalNode
         List<Vector2Int> emptyTiles = new List<Vector2Int>();
         int moveLength = 0;
         bool passedFirstEmpty = false;
-        while (moveLength < length && curr.x >= 0 && curr.y >= 0 && curr.x < SGrid.current.width && curr.y < SGrid.current.height)
+        while (moveLength < length && curr.x >= 0 && curr.y >= 0 && curr.x < SGrid.Current.Width && curr.y < SGrid.Current.Height)
         {
             if (stiles[curr.x, curr.y].isTileActive && !passedFirstEmpty)
             {

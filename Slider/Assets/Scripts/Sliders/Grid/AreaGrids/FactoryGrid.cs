@@ -4,20 +4,10 @@ using UnityEngine;
 
 public class FactoryGrid : TimeTravelGrid
 {
-    public static FactoryGrid instance;
 
     public override void Init() {
-        myArea = Area.Factory;
-
-        foreach (Collectible c in collectibles)
-        {
-            c.SetArea(myArea);
-        }
-
+        InitArea(Area.Factory);
         base.Init();
-
-        instance = this;
-        SetSingleton();
     }
 
 

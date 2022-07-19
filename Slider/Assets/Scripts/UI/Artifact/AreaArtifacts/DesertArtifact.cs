@@ -13,15 +13,6 @@ public class DesertArtifact : UIArtifact
         {
             return options;
         }
-        //Vector2 buttPos = new Vector2(button.x, button.y);
-        // foreach (ArtifactTileButton b in buttons)
-        // {
-        //     //if (!b.isTileActive && (buttPos - new Vector2(b.x, b.y)).magnitude == 1)
-        //     if (!b.isTileActive && (button.x == b.x || button.y == b.y))
-        //     {
-        //         adjacentButtons.Add(b);
-        //     }
-        // }
 
         Vector2Int[] dirs = {
             Vector2Int.right,
@@ -33,7 +24,7 @@ public class DesertArtifact : UIArtifact
         foreach (Vector2Int dir in dirs)
         {
             ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
-            int i = 1;
+            int i = 2;  //i=1 is checked in the above line, otherwise it will add the same option twice.
             while (b != null)
             {
                 options.Add(b);
@@ -45,201 +36,67 @@ public class DesertArtifact : UIArtifact
 
         return options;
     }
+
     //Chen: Override for dragndrop since desert GetMoveOPtions include  active tiles
-    public override void ButtonDragEnd(BaseEventData eventData)
+    //L: Deleted ButtonDragEnd override because the code was exactly the same and GetMoveOptions is marked virtual so it will automatically call the right one.
+
+    public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        PointerEventData data = (PointerEventData)eventData;
+        SMove move;
 
-
-        // Debug.Log("Sent drag end");
-        // if (currentButton != null) 
-        // {
-        //     foreach (ArtifactTileButton b in GetMoveOptions(currentButton)) 
-        //     {
-        //         b.buttonAnimator.sliderImage.sprite = b.emptySprite;
-        //     }
-        //     return;
-        // }
-
-        ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
-        if (!dragged.TileIsActive)// || dragged.isForcedDown)
-        {
-            return;
-        }
-
-        // reset move options visual
-        List<ArtifactTileButton> moveOptions = GetMoveOptions(dragged);
-        foreach (ArtifactTileButton b in moveOptions)
-        {
-            //Chen: Only resets to empty if tile is inactive since active tiles are included in desert GetMoveOptions
-            if (!b.TileIsActive)
-            {
-                b.SetSpriteToEmpty();
-            }
-        }
-
-        ArtifactTileButton hovered = null;
-        if (data.pointerEnter != null && data.pointerEnter.name == "Image")
-        {
-            hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton>();
-        }
-        else
-        {
-            // dragged should already be selected
-            // SelectButton(dragged);
-            return;
-        }
-
-        if (!hovered.TileIsActive)
-        {
-            hovered.SetSpriteToEmpty();
-        }
-
-        //Debug.Log("dragged" + dragged.islandId + "hovered" + hovered.islandId);
-
-        bool swapped = false;
-        for (int i = 0; i < moveOptions.Count; i++)
-        {
-            ArtifactTileButton b = moveOptions[i];
-            b.SetHighlighted(false);
-            // b.buttonAnimator.sliderImage.sprite = b.emptySprite;
-            if (b == hovered && !swapped)
-            {
-                SelectButton(hovered);
-                // CheckAndSwap(dragged, hovered);
-                // SGridAnimator.OnSTileMoveEnd += dragged.AfterStileMoveDragged;
-                swapped = true;
-            }
-        }
-        if (!swapped)
-        {
-            SelectButton(dragged);
-        }
-        else
-        {
-            DeselectCurrentButton();
-        }
-
-        OnButtonInteract?.Invoke(this, null);
-    }
-    //Chen: finds the furthest button a given button can go to given a direction
-    private ArtifactTileButton GetLastEmpty(ArtifactTileButton button, Vector2Int dir)
-    {
-        
-        ArtifactTileButton curr = GetButton(button.x + dir.x, button.y + dir.y);
-        //ArtifactTileButton next = GetButton(curr.x + dir.x, curr.y + dir.y);
-        ArtifactTileButton last = null;
-
-        //Anchor Case: Don't move if the tile has anchor or if it's blocked by an anchor
-        STile[,] grid = SGrid.current.GetGrid();
-        if (grid[button.x, button.y].hasAnchor || grid[curr.x, curr.y].hasAnchor)
-        {
-            return null;
-        }
-        for (int i = 0; i < 2; i++)
-        {
-            if (curr != null)
-            {
-                //Case 1: Tile slides 2 spaces
-                if (!curr.TileIsActive)
-                {
-                    last = curr;
-                } //Edge Case: A tile on the edge will slide to the middle
-                else if (GetButton(curr.x + dir.x, curr.y + dir.y) != null && !GetButton(curr.x + dir.x, curr.y + dir.y).TileIsActive) {
-                    last = curr;
-                    break;
-                }
-            }
-            else
-            {
-                break;
-            }
-            curr = GetButton(curr.x + dir.x, curr.y + dir.y);
-        }
-        // Debug.Log(last);
-        return last;
-    }
-    //Chen: CheckAndSwap now calls each of the Slide() functions
-    protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
-    {
-        STile[,] currGrid = SGrid.current.GetGrid();
-
-        int dx = buttonEmpty.x - buttonCurrent.x;
-        int dy = buttonEmpty.y - buttonCurrent.y;
-        SSlideSwap swap;
-        //Chen: Check to see if we can add a move. Nested logic pain time.
         if (moveQueue.Count < maxMoveQueueSize)
         {
-            
-            if (dx > 0)
-            {
-                swap = SlideRight();
-            }
-            else if (dx < 0)
-            {
-                swap = SlideLeft();
-            }
-            else if (dy > 0)
-            {
-                swap = SlideUp();
-            }
-            else
-            {
-                swap = SlideDown();
-            }
-            //Chen: If the returned swap has nothing in it (tiles won't move) return false before it can be added.
-            if (swap.moves.Count == 0)
+            move = ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
+            if (move.moves.Count == 0)
             {
                 return false;
             }
-            MoveMadeOnArtifact?.Invoke(this, null);
-            QueueCheckAndAdd(swap);
-            QueueCheckAfterMove(this, null);
-            DeselectCurrentButton();
-            UpdatePushedDowns(null, null);
+            QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
             return true;
         }
         else
         {
-            string debug = PlayerCanQueue ? "Player Queueing is disabled" : "Queue was full";
-            Debug.Log($"Couldn't perform move! {debug}");
+            LogMoveFailure();
             return false;
         }
     }
 
-    #region SSlideSwap
-    private List<Movement> GetSlideMoves(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
+    protected override void QueueMoveFromButtonPair(SMove move, ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        Vector2Int lastSwap = new Vector2Int(-1, -1);
-        Vector2Int firstSwap = new Vector2Int(-1, -1);
-        int firstIslandId = -1;
-
-        foreach (ArtifactTileButton button in tiles)
-        {
-            if (button.TileIsActive)
-            {
-                ArtifactTileButton furthest = GetLastEmpty(button, dir);
-                if (furthest != null)
-                {
-                    lastSwap = new Vector2Int(button.x, button.y);
-                    if (firstSwap.x == -1)
-                    {
-                        firstSwap = new Vector2Int(furthest.x, furthest.y);
-                        firstIslandId = furthest.islandId;
-                    }
-                    swaps.Add(new Movement(button.x, button.y, furthest.x, furthest.y, button.islandId));
-                    SwapButtons(button, furthest);
-                }
-            }
-        }
-        if (lastSwap.x != -1 && firstSwap.x != -1)
-        {
-            //print(firstSwap.x);
-            swaps.Add(new Movement(firstSwap.x, firstSwap.y, lastSwap.x, lastSwap.y, firstIslandId));
-        }
-
-        return swaps;
+        MoveMadeOnArtifact?.Invoke(this, null);
+        QueueAdd(move);
+        ProcessQueue();
+        DeselectSelectedButton();
+        UpdatePushedDowns(null, null);
     }
+
+    protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    {
+        //Chen: Nested logic pain time.
+        SSlideSwap move;
+        int dx = buttonEmpty.x - buttonCurrent.x;
+        int dy = buttonEmpty.y - buttonCurrent.y;
+        if (dx > 0)
+        {
+            move = SlideRight();
+        }
+        else if (dx < 0)
+        {
+            move = SlideLeft();
+        }
+        else if (dy > 0)
+        {
+            move = SlideUp();
+        }
+        else
+        {
+            move = SlideDown();
+        }
+
+        return move;
+    }
+
+    #region SSlideSwap
     //Chen: Below are the 4 methods for sliding all tiles. UI swapping is handled here
     public SSlideSwap SlideRight()
     {
@@ -253,7 +110,7 @@ public class DesertArtifact : UIArtifact
             GetButton(0, col)
             };
 
-            GetSlideMoves(swaps, tiles, Vector2Int.right);
+            UpdateSwapsAndUI(swaps, tiles, Vector2Int.right);
         }
         return new SSlideSwap(swaps);
     }
@@ -269,7 +126,7 @@ public class DesertArtifact : UIArtifact
             GetButton(1, col),
             GetButton(2, col)
             };
-            GetSlideMoves(swaps, tiles, Vector2Int.left);
+            UpdateSwapsAndUI(swaps, tiles, Vector2Int.left);
         }
         return new SSlideSwap(swaps);
     }
@@ -285,7 +142,7 @@ public class DesertArtifact : UIArtifact
             GetButton(row, 1),
             GetButton(row, 0)
             };
-            GetSlideMoves(swaps, tiles, Vector2Int.up);
+            UpdateSwapsAndUI(swaps, tiles, Vector2Int.up);
         }
         return new SSlideSwap(swaps);
     }
@@ -301,9 +158,69 @@ public class DesertArtifact : UIArtifact
             GetButton(row, 1),
             GetButton(row, 2),
             };
-            GetSlideMoves(swaps, tiles, Vector2Int.down);
+            UpdateSwapsAndUI(swaps, tiles, Vector2Int.down);
         }
         return new SSlideSwap(swaps);
+    }
+
+    private void UpdateSwapsAndUI(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
+    {
+        Vector2Int emptyButtonStart = new Vector2Int(-1, -1);
+        Vector2Int emptyButtonEnd = new Vector2Int(-1, -1);
+        int emptyIslandId = -1;
+
+        foreach (ArtifactTileButton button in tiles)
+        {
+            if (button.TileIsActive)
+            {
+                ArtifactTileButton furthest = GetLastEmpty(button, dir);
+                if (furthest != null)
+                {
+                    if (emptyButtonStart.x == -1)
+                    {
+                        emptyButtonStart = new Vector2Int(furthest.x, furthest.y);
+                        emptyIslandId = furthest.islandId;
+                    }
+                    emptyButtonEnd = new Vector2Int(button.x, button.y);
+
+
+                    swaps.Add(new Movement(button.x, button.y, furthest.x, furthest.y, button.islandId));
+                    SwapButtons(button, furthest);  //L: This is kinda bad to do here since it's a side effect of constructing the move, but I don't want to break it (since I already did)
+                }
+            }
+        }
+        if (emptyButtonStart.x != -1 && emptyButtonEnd.x != -1)
+        {
+            swaps.Add(new Movement(emptyButtonStart.x, emptyButtonStart.y, emptyButtonEnd.x, emptyButtonEnd.y, emptyIslandId));
+        }
+    }
+
+    //Chen: finds the furthest button a given button can go to given a direction
+    private ArtifactTileButton GetLastEmpty(ArtifactTileButton button, Vector2Int dir)
+    {
+
+        ArtifactTileButton curr = GetButton(button.x + dir.x, button.y + dir.y);
+        ArtifactTileButton furthest = null;
+
+        //Anchor Case: Don't move if the tile has anchor or if it's blocked by an anchor
+        STile[,] grid = SGrid.Current.GetGrid();
+        if (grid[button.x, button.y].hasAnchor || grid[curr.x, curr.y].hasAnchor)
+        {
+            return null;
+        }
+
+        while (curr != null)
+        {
+            if (!curr.TileIsActive)
+            {
+                //Case 1: Tile slides to the empty space
+                furthest = curr;
+            } 
+            //L: Removed Case 2 because it is never used and doesn't return an empty button.
+
+            curr = GetButton(curr.x + dir.x, curr.y + dir.y);
+        }
+        return furthest;
     }
     #endregion
 }

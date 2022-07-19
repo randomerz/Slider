@@ -23,7 +23,7 @@ public class Collectible : MonoBehaviour
     private void Start() 
     {
         if (cData.area == Area.None)
-            cData.area = SGrid.current.GetArea();
+            cData.area = SGrid.Current.GetArea();
         if (shouldDisableAtStart)
             gameObject.SetActive(false);
     }
@@ -79,7 +79,7 @@ public class Collectible : MonoBehaviour
     // common methods for onCollect
     public void ActivateSTile(int stileId) 
     {
-        SGrid.current.CollectSTile(stileId);
+        SGrid.Current.CollectSTile(stileId);
     }
 
 

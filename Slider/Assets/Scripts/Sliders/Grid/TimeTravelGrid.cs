@@ -45,6 +45,6 @@ public abstract class TimeTravelGrid : SGrid
 
     public override int GetTotalNumTiles()
     {
-        return width * height / 2;
+        return Width * Height / 2;
     }
 }

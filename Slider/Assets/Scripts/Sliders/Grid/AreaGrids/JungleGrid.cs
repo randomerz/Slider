@@ -4,21 +4,11 @@ using UnityEngine;
 
 public class JungleGrid : SGrid
 {
-    public static JungleGrid instance;
-
     public ChadRace chadRace;
 
     public override void Init() {
-        myArea = Area.Jungle;
-
-        foreach (Collectible c in collectibles) 
-        {
-            c.SetArea(myArea);
-        }
-
+        InitArea(Area.Jungle);
         base.Init();
-
-        instance = this;
     }
     
 
@@ -58,7 +48,7 @@ public class JungleGrid : SGrid
     
     // Puzzle 5 - Chad Race
     public void CheckChad(object sender, SGrid.OnGridMoveArgs e) {
-        if (current.GetGrid() != null)
+        if (Current.GetGrid() != null)
             chadRace.tilesAdjacent = CheckGrid.row(GetGridString(), "523") && GetStile(5).isTileActive && GetStile(2).isTileActive && GetStile(3).isTileActive;
     }
     

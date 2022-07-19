@@ -8,22 +8,20 @@ public class JungleArtifact : UIArtifact
 {
     // private static STile prevLinkTile = null;
 
-    protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         if (buttonCurrent.LinkButton == null)
         {
             //L: Just a normal move
-            return base.CheckAndSwap(buttonCurrent, buttonEmpty);
+            return base.TryQueueMoveFromButtonPair(buttonCurrent, buttonEmpty);
         } 
         else
         {
             //L: Below is to handle the case for if you have linked tiles.
-            STile[,] currGrid = SGrid.current.GetGrid();
             int x = buttonCurrent.x;
             int y = buttonCurrent.y;
 
             //L: Make sure that all checks/swaps are with respect to the UI and NOT the grid (bc the grid can be behind due to queuing)
-            //Debug.Log("Linked Move!");
             int linkx = buttonCurrent.LinkButton.x;
             int linky = buttonCurrent.LinkButton.y;
             int dx = buttonEmpty.x - x;
@@ -33,25 +31,20 @@ public class JungleArtifact : UIArtifact
                                                     buttonCurrent.islandId, buttonCurrent.LinkButton.islandId);
 
             Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy, buttonCurrent.islandId);
-            if (SGrid.current.CanMove(linkedSwap) && (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && moveQueue.Count < maxMoveQueueSize)
+            if (SGrid.Current.CanMove(linkedSwap) && (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && moveQueue.Count < maxMoveQueueSize)
             {
-                QueueCheckAndAdd(linkedSwap);
+                QueueAdd(linkedSwap);
 
                 //L: Swap the current button and the link button
                 SwapButtons(buttonCurrent, buttonEmpty);
                 SwapButtons(buttonCurrent.LinkButton, GetButton(linkx + dx, linky + dy));
-
-                QueueCheckAfterMove(this, null);
-                // if (moveQueue.Count == 1)
-                // {
-                //     SGrid.current.Move(moveQueue.Peek());
-                // }
+                ProcessQueue();
 
                 return true;
             }
             else
             {
-                // Debug.Log("illegal");
+                LogMoveFailure();
                 AudioManager.Play("Artifact Error");
                 return false;
             }
@@ -65,7 +58,6 @@ public class JungleArtifact : UIArtifact
         List<Vector2Int> checkedCoords = new List<Vector2Int>();
         int dx = move.endLoc.x - move.startLoc.x;
         int dy = move.endLoc.y - move.startLoc.y;
-        // Debug.Log(move.x+" "+move.y+" "+move.z+" "+move.w);
         int toCheck = Math.Max(Math.Abs(dx), Math.Abs(dy));
         if (dx == 0)
         {

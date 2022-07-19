@@ -134,7 +134,7 @@ public class CaveMossManager : MonoBehaviour
 
     private void UpdateMoss()
     {
-        if (SGrid.current != null && SGrid.current as CaveGrid != null)
+        if (SGrid.Current != null && SGrid.Current as CaveGrid != null)
         {
             if (LightManager.instance != null)
             {
