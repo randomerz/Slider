@@ -136,7 +136,7 @@ public class TimedGate : ElectricalNode
         bool tilesAreMoving = true;
         while (tilesAreMoving)
         {
-            tilesAreMoving = SGrid.current.TilesMoving();
+            tilesAreMoving = SGrid.Current.TilesMoving();
 
             if (!tilesAreMoving)
             {
@@ -144,7 +144,7 @@ public class TimedGate : ElectricalNode
                 //This gives the player enough leeway to complete the puzzle at the last second (i.e. puzzle 3c)
                 yield return new WaitForSeconds(0.4f);
 
-                tilesAreMoving = SGrid.current.TilesMoving();
+                tilesAreMoving = SGrid.Current.TilesMoving();
             } else
             {
                 yield return null;  //Resume doing other stuff, or else this will spinlock.

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class VillageGrid : SGrid
 {
-    public static VillageGrid instance;
-
     public GameObject caveDoorEntrance;
     public GameObject caveDoorRocks;
     public GameObject particleSpawner;
@@ -18,20 +16,13 @@ public class VillageGrid : SGrid
 
     public override void Init()
     {
-        myArea = Area.Village;
-
-        foreach (Collectible c in collectibles)
-        {
-            c.SetArea(myArea);
-        }
-
+        InitArea(Area.Village);
         base.Init();
 
         if (fishOn)
         {
             particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
         }
-        instance = this;
     }
 
     protected override void Start()

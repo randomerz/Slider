@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // I exist to try and fix run order because everything depends on each other :(
+//L: This is disgusting, but ok.
 public class SceneInitializer : MonoBehaviour
 {
     public Player player;
@@ -35,12 +36,7 @@ public class SceneInitializer : MonoBehaviour
         if (uiArtifact == null)
             uiArtifact = GameObject.FindObjectOfType<UIArtifact>();
 
-        // Set singletons
-        player?.SetSingleton();
-        sgrid?.SetSingleton();
-        uiArtifact?.SetSingleton();
-
-        // Run inits
+        // Run inits (automatically sets singletons)
         uiArtifact?.Init();
         sgrid?.Init(); // sgrid.Load is dependent on UIArtifact singleton
         player?.Init(); // getStileUnderneath is dependent on sgrid singleton

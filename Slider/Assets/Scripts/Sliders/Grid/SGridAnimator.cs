@@ -36,12 +36,12 @@ public class SGridAnimator : MonoBehaviour
     {
         if (grid == null)
         {
-            grid = SGrid.current.GetGrid();
+            grid = SGrid.Current.GetGrid();
         }
         //STile[,] grid = SGrid.current.GetGrid();
 
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
-        StartCoroutine(DisableBordersAndColliders(grid, SGrid.current.GetBGGrid(), move.positions, borders));
+        StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move.positions, borders));
 
         foreach (Movement m in move.moves)
         {

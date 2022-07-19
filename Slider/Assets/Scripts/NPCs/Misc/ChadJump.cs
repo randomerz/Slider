@@ -50,8 +50,8 @@ public class ChadJump : MonoBehaviour
     // Mini-Puzzle - Chad Flashlight
     public void OnTileMoved(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (SGrid.current.GetStile(islandId) != null &&
-            SGrid.current.GetStile(islandId).isTileActive &&
+        if (SGrid.Current.GetStile(islandId) != null &&
+            SGrid.Current.GetStile(islandId).isTileActive &&
             e.stile.islandId == islandId && 
             jumpState == JumpState.jumped)
         {
@@ -128,7 +128,7 @@ public class ChadJump : MonoBehaviour
         npcAnimator.SetBool("isTipping", false);
         AudioManager.Play("Hurt");
 
-        flashlightItem.transform.parent = SGrid.current.GetStile(islandId).transform;
+        flashlightItem.transform.parent = SGrid.Current.GetStile(islandId).transform;
         flashlightItem.DropItem(transform.position + (Vector3.right * 1f), callback: FinishFall);
         flashlightItem.SetCollider(false);
     }

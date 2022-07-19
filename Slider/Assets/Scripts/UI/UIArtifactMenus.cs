@@ -96,7 +96,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         if (isArtifactOpen)
         {
             isArtifactOpen = false;
-            uiArtifact.DeselectCurrentButton();
+            uiArtifact.DeselectSelectedButton();
             Player.SetCanMove(true);
 
             UIManager.CloseUI();

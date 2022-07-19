@@ -64,7 +64,7 @@ public class UITracker : MonoBehaviour
     }
 
     public STile GetSTile() {
-        return SGrid.current.GetStileUnderneath(target);
+        return SGrid.Current.GetStileUnderneath(target);
     }
 
     public Vector2 GetPosition() {

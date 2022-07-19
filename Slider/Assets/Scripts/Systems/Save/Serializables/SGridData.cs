@@ -33,9 +33,9 @@ public class SGridData
 
     public void UpdateGrid(SGrid sgrid) {
         grid.Clear();
-        for (int x = 0; x < sgrid.width; x++)
+        for (int x = 0; x < sgrid.Width; x++)
         {
-            for (int y = 0; y < sgrid.height; y++)
+            for (int y = 0; y < sgrid.Height; y++)
             {
                 STileData std = new STileData(sgrid.GetGrid()[x, y]);
                 std.x = x;
