@@ -102,13 +102,18 @@ public class OceanGrid : SGrid
 
         //GetNumTilesCollected() for number of tiles
         //GetGridString to look at where all the tiles are IG
-        //###_12#_###
         if (GetNumTilesCollected() == 3)
         {
             char[] gridstate = GetGridString().ToCharArray();
             if(gridstate[6] == '1' || gridstate[10] == '1'){
-                grid[0, 0].SetGridPosition(0, 3);
+                STile other = grid[0, 0];
+                other.SetGridPosition(stile.x, stile.y);
                 stile.SetGridPosition(0, 0);
+                grid[other.x, other.y] = grid[0, 0];
+                grid[0, 0] = stile;
+                
+                UIArtifact.SetButtonPos(3, 0, 0);
+                UIArtifact.SetButtonPos(other.islandId, other.x, other.y);
             }
         }
 
@@ -121,7 +126,6 @@ public class OceanGrid : SGrid
             CheckShipwreck(this, null);
             CheckVolcano(this, null);
         }
-        print(GetGridString());
     }
 
 

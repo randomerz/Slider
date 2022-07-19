@@ -9,7 +9,7 @@ public class OceanArtifact : UIArtifact
     public OceanArtifactHighlights oceanHighlights;
 
     private bool canRotate = true;
-
+    
     private new void Awake()
     {
         base.Awake();
