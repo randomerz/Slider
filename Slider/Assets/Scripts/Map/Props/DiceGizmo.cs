@@ -11,6 +11,8 @@ public class DiceGizmo : MonoBehaviour
 
     public int value;
     public Sprite[] sprites;
+
+    private SpriteRenderer sr;
     //public Animator animator; // this is only based on Tree animator controller rn
     //Chen: Should the above be changed to the Dice animator controller or something?
 
@@ -20,6 +22,7 @@ public class DiceGizmo : MonoBehaviour
         {
             FindSTile();
         }
+        sr = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -33,29 +36,31 @@ public class DiceGizmo : MonoBehaviour
     private void OnEnable()
     {
         if (myStile != null)
-            myStile.onChangeMove += OnStileChangeDir;
+            SGridAnimator.OnSTileMoveEnd += OnStileChangeDir;
     }
 
     private void OnDisable()
     {
         if (myStile != null)
-            myStile.onChangeMove -= OnStileChangeDir;
+            SGridAnimator.OnSTileMoveEnd -= OnStileChangeDir;
     }
     public void changeValue(int num)
     {
         value = num;
+        sr.sprite = sprites[value - 1];
+        text.text = value.ToString();
+        bgText.text = value.ToString();
     }
-    public void OnStileChangeDir(object sender, STile.STileMoveArgs e)
+    public void OnStileChangeDir(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (e.moveDir != Vector2.zero)
+        if (e.stile.islandId == myStile.islandId)
         {
             value++;
             if (value == 7)
             {
                 value = 1;
             }
-            Debug.Log(this.name);
-            GetComponent<SpriteRenderer>().sprite = sprites[value - 1];
+            sr.sprite = sprites[value - 1];
             text.text = value.ToString();
             bgText.text = value.ToString();
         }
@@ -80,12 +85,5 @@ public class DiceGizmo : MonoBehaviour
 
         if (i == 100)
             Debug.LogWarning("something went wrong in finding stile!");
-    }
-
-    private DialogueData ConstructDiceDialogue()
-    {
-        var dialogue = new DialogueData();
-        dialogue.dialogue = value.ToString();
-        return dialogue;
     }
 }
