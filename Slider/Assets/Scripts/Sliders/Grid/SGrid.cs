@@ -285,6 +285,19 @@ public void SetGrid(int[,] puzzle)
         return null;
     }
 
+    protected void SwapTiles(STile one, STile two)
+    {
+        int x = two.x;
+        int y = two.y;
+        two.SetGridPosition(one.x, one.y);
+        one.SetGridPosition(x, y);
+        grid[one.x, one.y] = two;
+        grid[x, y] = one;
+
+        UIArtifact.SetButtonPos(one.islandId, x, y);
+        UIArtifact.SetButtonPos(two.islandId, two.x, two.y);
+    }
+
     //C: returns a list of active stiles
     public List<STile> GetActiveTiles()
     {

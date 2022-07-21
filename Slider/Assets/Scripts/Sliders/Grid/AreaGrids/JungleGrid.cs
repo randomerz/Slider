@@ -51,9 +51,6 @@ public class JungleGrid : SGrid
             bool doubleSwap = false;
             if (!CheckGrid.contains(s, "23"))
             {
-                print("swapping");
-
-                //we also have to check for occupancy AHHHHH
                 if (x2 == 2 && stile.x == 0)
                 {
                     doubleSwap = true;
@@ -66,15 +63,7 @@ public class JungleGrid : SGrid
                     }
                     else
                     {
-                        int x = other.x;
-                        int y = other.y;
-                        other.SetGridPosition(stile.x, stile.y);
-                        stile.SetGridPosition(x, y);
-                        grid[other.x, other.y] = grid[x, y];
-                        grid[x, y] = stile;
-
-                        UIArtifact.SetButtonPos(3, x, y);
-                        UIArtifact.SetButtonPos(other.islandId, other.x, other.y);
+                        SwapTiles(stile, other);
                     }
                 } else
                 {
@@ -85,16 +74,7 @@ public class JungleGrid : SGrid
                     }
                     else
                     {
-                        int x = other.x;
-                        int y = other.y;
-
-                        other.SetGridPosition(x2, y2);
-                        two.SetGridPosition(x, y);
-                        grid[x, y] = two;
-                        grid[x2, y2] = other;
-
-                        UIArtifact.SetButtonPos(2, x, y);
-                        UIArtifact.SetButtonPos(other.islandId, other.x, other.y);
+                        SwapTiles(two, other);
                     }
                 }
             } else if (CheckGrid.contains(s, "23") && x2 == 2 && stile.x == 0)
@@ -104,7 +84,34 @@ public class JungleGrid : SGrid
 
             if (doubleSwap)
             {
+                List<STile> tiles = new List<STile>();
+                //options for tile 2
+                for (int i = 0; i < 2; i ++)
+                {
+                    for (int j = 0; j < 3; j++)
+                    {
+                        tiles.Add(grid[i, j]);
+                    }
+                }
 
+                foreach (STile tile in tiles)
+                {
+                    if (tile.isTileActive)
+                    {
+                        continue;
+                    }
+                    if (grid[tile.x + 1, tile.y].isTileActive)
+                    {
+                        continue;
+                    }
+
+                    STile other2 = tile;
+                    STile other3 = grid[tile.x + 1, tile.y];
+
+                    SwapTiles(other2, two);
+                    SwapTiles(other3, stile);
+                    break;
+                }
             }
         }
         base.EnableStile(stile, shouldFlicker);

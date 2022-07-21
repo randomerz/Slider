@@ -110,45 +110,37 @@ public class OceanGrid : SGrid
             if (CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
                 || CheckGrid.contains(s, "1[0-9]{2}3") || CheckGrid.contains(s, "3[0-9]{2}1"))
             {
-                List<STile> corners = new List<STile>();
+                List<STile> tiles = new List<STile>();
                 foreach (STile tile in grid)
                 {
-                    corners.Add(tile);
+                    tiles.Add(tile);
                 }
 
                 bool firstRun = true;
 
-                STile other = corners[corners.Count - 1];
-                while (corners.Count > 0 && ((CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
+                STile other = tiles[tiles.Count - 1];
+                while (tiles.Count > 0 && ((CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
                      || CheckGrid.contains(s, "1[0-9]{2}3") || CheckGrid.contains(s, "3[0-9]{2}1"))))
                 {
                     if (!firstRun) {
-                        corners.Remove(other); 
+                        tiles.Remove(other); 
                     }
                     firstRun = false;
 
-                    for (int i = corners.Count - 1; i >= 0; i--)
+                    for (int i = tiles.Count - 1; i >= 0; i--)
                     {
-                        other = corners[i];
+                        other = tiles[i];
                         if (!other.isTileActive)
                         {
                             break;
                         }
                         else
                         {
-                            corners.Remove(other);
+                            tiles.Remove(other);
                         }
                     }
 
-                    int x = other.x;
-                    int y = other.y;
-                    other.SetGridPosition(stile.x, stile.y);
-                    stile.SetGridPosition(x, y);
-                    grid[other.x, other.y] = grid[x, y];
-                    grid[x, y] = stile;
-
-                    UIArtifact.SetButtonPos(3, x, y);
-                    UIArtifact.SetButtonPos(other.islandId, other.x, other.y);
+                    SwapTiles(stile, other);
 
                     s = GetGridString(true);
                 }
