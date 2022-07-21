@@ -1,18 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class DiceGizmo : MonoBehaviour
 {
     public STile myStile;
-    public NPC npcScript;
-    public NPCConditionals NumberDialogue;
+    [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private TextMeshProUGUI bgText;
 
     public int value;
     public Sprite[] sprites;
+
+    private SpriteRenderer sr;
     //public Animator animator; // this is only based on Tree animator controller rn
     //Chen: Should the above be changed to the Dice animator controller or something?
-    [SerializeField] private bool shouldDisableAtStart = true;
 
     private void Awake()
     {
@@ -20,12 +22,7 @@ public class DiceGizmo : MonoBehaviour
         {
             FindSTile();
         }
-        if (shouldDisableAtStart)
-            gameObject.SetActive(false);
-
-        NumberDialogue.dialogueChain.Clear();
-        NumberDialogue.dialogueChain.Add(ConstructDiceDialogue());
-        npcScript.AddNewConditionals(NumberDialogue);
+        sr = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -34,40 +31,39 @@ public class DiceGizmo : MonoBehaviour
         {
             value = 1;
         }
-        this.GetComponent<SpriteRenderer>().sprite = sprites[value - 1];
-        NumberDialogue.dialogueChain[0].dialogue = value.ToString();
-        npcScript.TypeCurrentDialogue();
     }
 
     private void OnEnable()
     {
         if (myStile != null)
-            myStile.onChangeMove += OnStileChangeDir;
+            SGridAnimator.OnSTileMoveEnd += OnStileChangeDir;
     }
 
     private void OnDisable()
     {
         if (myStile != null)
-            myStile.onChangeMove -= OnStileChangeDir;
+            SGridAnimator.OnSTileMoveEnd -= OnStileChangeDir;
     }
     public void changeValue(int num)
     {
         value = num;
+        sr.sprite = sprites[value - 1];
+        text.text = value.ToString();
+        bgText.text = value.ToString();
     }
-    public void OnStileChangeDir(object sender, STile.STileMoveArgs e)
+    public void OnStileChangeDir(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        //Debug.Log("Dice stuff");
-        //Debug.Log(e.moveDir);
-        if (e.moveDir != Vector2.zero)
+        if (e.stile.islandId == myStile.islandId)
         {
             value++;
             if (value == 7)
             {
                 value = 1;
             }
+            sr.sprite = sprites[value - 1];
+            text.text = value.ToString();
+            bgText.text = value.ToString();
         }
-        //Debug.Log(value);
-        // Debug.Log("Updated!");
     }
 
     private void FindSTile()
@@ -89,12 +85,5 @@ public class DiceGizmo : MonoBehaviour
 
         if (i == 100)
             Debug.LogWarning("something went wrong in finding stile!");
-    }
-
-    private DialogueData ConstructDiceDialogue()
-    {
-        var dialogue = new DialogueData();
-        dialogue.dialogue = value.ToString();
-        return dialogue;
     }
 }
