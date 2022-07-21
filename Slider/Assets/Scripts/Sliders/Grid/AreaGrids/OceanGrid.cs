@@ -102,10 +102,21 @@ public class OceanGrid : SGrid
 
         //GetNumTilesCollected() for number of tiles
         //GetGridString to look at where all the tiles are IG
+
+        string s = "";
+        for (int y = grid.GetLength(1) - 1; y >= 0; y--)
+        {
+            for (int x = 0; x < grid.GetLength(0); x++)
+            {
+                 s += IntToChar(grid[x, y].islandId);
+            }  
+        }
+
         if (GetNumTilesCollected() == 3)
         {
-            char[] gridstate = GetGridString().ToCharArray();
-            if(gridstate[6] == '1' || gridstate[10] == '1'){
+            if(CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
+                || CheckGrid.contains(s, "1[0-9]{2}3") || CheckGrid.contains(s, "3[0-9]{2}1"))
+            {
                 STile other = grid[0, 0];
                 other.SetGridPosition(stile.x, stile.y);
                 stile.SetGridPosition(0, 0);
