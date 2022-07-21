@@ -77,10 +77,7 @@ public class JungleGrid : SGrid
                         SwapTiles(two, other);
                     }
                 }
-            } else if (CheckGrid.contains(s, "23") && x2 == 2 && stile.x == 0)
-            {
-                doubleSwap = true;
-            }
+            } 
 
             if (doubleSwap)
             {

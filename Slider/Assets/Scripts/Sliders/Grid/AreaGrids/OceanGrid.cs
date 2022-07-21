@@ -108,7 +108,7 @@ public class OceanGrid : SGrid
             string s = GetGridString(true);
 
             if (CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
-                || CheckGrid.contains(s, "1[0-9]{2}3") || CheckGrid.contains(s, "3[0-9]{2}1"))
+                || CheckGrid.contains(s, "1...3") || CheckGrid.contains(s, "3...1"))
             {
                 List<STile> tiles = new List<STile>();
                 foreach (STile tile in grid)
@@ -120,7 +120,7 @@ public class OceanGrid : SGrid
 
                 STile other = tiles[tiles.Count - 1];
                 while (tiles.Count > 0 && ((CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
-                     || CheckGrid.contains(s, "1[0-9]{2}3") || CheckGrid.contains(s, "3[0-9]{2}1"))))
+                     || CheckGrid.contains(s, "1...3") || CheckGrid.contains(s, "3...1"))))
                 {
                     if (!firstRun) {
                         tiles.Remove(other); 

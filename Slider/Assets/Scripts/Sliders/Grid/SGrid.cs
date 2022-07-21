@@ -239,6 +239,10 @@ public void SetGrid(int[,] puzzle)
                 {
                     s += IntToChar(grid[x, y].islandId);
                 }
+                if (y != 0)
+                {
+                    s += "_";
+                }
             }
         }
         else
