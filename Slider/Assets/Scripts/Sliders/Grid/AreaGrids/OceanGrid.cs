@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class OceanGrid : SGrid
@@ -33,7 +34,8 @@ public class OceanGrid : SGrid
     public GameObject fog7;
     public GameObject fogIsland;
 
-    public override void Init() {
+    public override void Init()
+    {
         InitArea(Area.Ocean);
         base.Init();
     }
@@ -55,7 +57,8 @@ public class OceanGrid : SGrid
 
     private void OnEnable()
     {
-        if (checkCompletion) {
+        if (checkCompletion)
+        {
             UpdateButtonCompletions(this, null);
             OnGridMove += UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
@@ -68,7 +71,8 @@ public class OceanGrid : SGrid
 
     private void OnDisable()
     {
-        if (checkCompletion) {
+        if (checkCompletion)
+        {
             OnGridMove -= UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
@@ -97,8 +101,60 @@ public class OceanGrid : SGrid
     }
 
 
-    public override void EnableStile(STile stile, bool shouldFlicker=true)
+    public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
+        if (GetNumTilesCollected() == 3)
+        {
+            string s = GetGridString(true);
+
+            if (CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
+                || CheckGrid.contains(s, "1[0-9]{2}3") || CheckGrid.contains(s, "3[0-9]{2}1"))
+            {
+                List<STile> corners = new List<STile>();
+                foreach (STile tile in grid)
+                {
+                    corners.Add(tile);
+                }
+
+                bool firstRun = true;
+
+                STile other = corners[corners.Count - 1];
+                while (corners.Count > 0 && ((CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
+                     || CheckGrid.contains(s, "1[0-9]{2}3") || CheckGrid.contains(s, "3[0-9]{2}1"))))
+                {
+                    if (!firstRun) {
+                        corners.Remove(other); 
+                    }
+                    firstRun = false;
+
+                    for (int i = corners.Count - 1; i >= 0; i--)
+                    {
+                        other = corners[i];
+                        if (!other.isTileActive)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            corners.Remove(other);
+                        }
+                    }
+
+                    int x = other.x;
+                    int y = other.y;
+                    other.SetGridPosition(stile.x, stile.y);
+                    stile.SetGridPosition(x, y);
+                    grid[other.x, other.y] = grid[x, y];
+                    grid[x, y] = stile;
+
+                    UIArtifact.SetButtonPos(3, x, y);
+                    UIArtifact.SetButtonPos(other.islandId, other.x, other.y);
+
+                    s = GetGridString(true);
+                }
+            }
+        }
+
         base.EnableStile(stile, shouldFlicker);
 
         stile.GetComponentInChildren<SpriteMask>().enabled = false; // on STile/SlideableArea
@@ -152,9 +208,9 @@ public class OceanGrid : SGrid
 
     public bool IsVolcanoSet()
     {
-        return CheckGrid.contains(GetGridString(),".4._895_.3.");
+        return CheckGrid.contains(GetGridString(), ".4._895_.3.");
     }
-    
+
     public void ActivateBurriedNPC()
     {
         burriedGuyNPC.SetActive(true);
@@ -211,7 +267,7 @@ public class OceanGrid : SGrid
 
     public void ToggleKnotBox()
     {
-        if(AllBuoy())
+        if (AllBuoy())
         {
             knotBox.enabled = !knotBox.enabled;
             if (knotBox.enabled)
@@ -247,7 +303,7 @@ public class OceanGrid : SGrid
     }
 
     // Foggy Seas
-    
+
     public void CheckFoggySeas(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         FoggyCorrectMovement();
@@ -260,9 +316,9 @@ public class OceanGrid : SGrid
             if (Player.GetStileUnderneath().islandId == 6)
             {
                 fog6.SetActive(false);
-                
+
             }
-            else 
+            else
             {
                 fog7.SetActive(false);
             }
@@ -278,7 +334,7 @@ public class OceanGrid : SGrid
         }
 
         int currentIslandId = Player.GetStileUnderneath().islandId;
-        
+
         if (currentIslandId != lastIslandId && (lastIslandId == 6 || lastIslandId == 7))
         {
             fog7.SetActive(true);
@@ -320,7 +376,7 @@ public class OceanGrid : SGrid
             playerIndex++;
             FoggySeasAudio();
         }
-        else 
+        else
         {
             failFoggy();
         }
@@ -376,19 +432,21 @@ public class OceanGrid : SGrid
 
             AudioManager.Play("Puzzle Complete");
             oceanArtifact.FlickerAllOnce();
-            
+
             UIArtifactWorldMap.SetAreaStatus(Area.Ocean, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
 
     protected override void UpdateButtonCompletionsHelper()
     {
-        for (int x = 0; x < Current.Width; x++) {
-            for (int y = 0; y < Current.Width; y++) {
+        for (int x = 0; x < Current.Width; x++)
+        {
+            for (int y = 0; y < Current.Width; y++)
+            {
                 // int tid = current.targetGrid[x, y];
                 string tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
-                if (tids == "*") 
+                if (tids == "*")
                 {
                     int abid = artifactButton.islandId;
                     bool isLand = abid == 1 || abid == 2 || abid == 4 || abid == 8; // this is scuffed
@@ -396,7 +454,8 @@ public class OceanGrid : SGrid
                     // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, !isLand);
                 }
-                else {
+                else
+                {
                     int tid = int.Parse(tids);
                     // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
