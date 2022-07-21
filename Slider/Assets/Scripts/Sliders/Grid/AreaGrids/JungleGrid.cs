@@ -40,6 +40,73 @@ public class JungleGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker=true)
     {
+        if (GetNumTilesCollected() == 3)
+        {
+            string s = GetGridString(true);
+            int location2 = s.IndexOf("2");
+            int x2 = 2 - (location2 % 3);
+            int y2 = 2 - (location2 / 3);
+            STile two = grid[x2, y2];
+
+            bool doubleSwap = false;
+            if (!CheckGrid.contains(s, "23"))
+            {
+                print("swapping");
+
+                //we also have to check for occupancy AHHHHH
+                if (x2 == 2 && stile.x == 0)
+                {
+                    doubleSwap = true;
+                } else if (stile.x == 0)
+                {
+                    STile other = grid[x2 + 1, y2];
+                    if (other.isTileActive)
+                    {
+                        doubleSwap = true;
+                    }
+                    else
+                    {
+                        int x = other.x;
+                        int y = other.y;
+                        other.SetGridPosition(stile.x, stile.y);
+                        stile.SetGridPosition(x, y);
+                        grid[other.x, other.y] = grid[x, y];
+                        grid[x, y] = stile;
+
+                        UIArtifact.SetButtonPos(3, x, y);
+                        UIArtifact.SetButtonPos(other.islandId, other.x, other.y);
+                    }
+                } else
+                {
+                    STile other = grid[stile.x - 1, stile.y];
+                    if (other.isTileActive)
+                    {
+                        doubleSwap = true;
+                    }
+                    else
+                    {
+                        int x = other.x;
+                        int y = other.y;
+
+                        other.SetGridPosition(x2, y2);
+                        two.SetGridPosition(x, y);
+                        grid[x, y] = two;
+                        grid[x2, y2] = other;
+
+                        UIArtifact.SetButtonPos(2, x, y);
+                        UIArtifact.SetButtonPos(other.islandId, other.x, other.y);
+                    }
+                }
+            } else if (CheckGrid.contains(s, "23") && x2 == 2 && stile.x == 0)
+            {
+                doubleSwap = true;
+            }
+
+            if (doubleSwap)
+            {
+
+            }
+        }
         base.EnableStile(stile, shouldFlicker);
         CheckChad(this, null);
     }
