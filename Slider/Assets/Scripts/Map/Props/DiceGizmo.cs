@@ -6,6 +6,7 @@ using TMPro;
 public class DiceGizmo : MonoBehaviour
 {
     public STile myStile;
+    [SerializeField] private DiceGizmo otherDice;
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private TextMeshProUGUI bgText;
 
@@ -44,6 +45,12 @@ public class DiceGizmo : MonoBehaviour
         if (myStile != null)
             SGridAnimator.OnSTileMoveEnd -= OnStileChangeDir;
     }
+
+    public void CheckElevens(Condition c)
+    {
+        c.SetSpec(value + otherDice.value == 11);
+    }
+
     public void changeValue(int num)
     {
         value = num;
@@ -86,4 +93,5 @@ public class DiceGizmo : MonoBehaviour
         if (i == 100)
             Debug.LogWarning("something went wrong in finding stile!");
     }
+
 }
