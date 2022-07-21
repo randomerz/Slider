@@ -44,15 +44,15 @@ public class JungleGrid : SGrid
         {
             string s = GetGridString(true);
             int location2 = s.IndexOf("2");
-            int x2 = 2 - (location2 % 3);
+            int x2 = location2 % 3;
             int y2 = 2 - (location2 / 3);
             STile two = grid[x2, y2];
 
             bool doubleSwap = false;
             if (!CheckGrid.contains(s, "23"))
             {
-                if (x2 == 2 && stile.x == 0)
-                {
+                if (x2 == 2 && stile.x == 0) { 
+
                     doubleSwap = true;
                 } else if (stile.x == 0)
                 {

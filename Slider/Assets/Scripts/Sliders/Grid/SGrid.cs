@@ -291,7 +291,7 @@ public void SetGrid(int[,] puzzle)
         int y = two.y;
         two.SetGridPosition(one.x, one.y);
         one.SetGridPosition(x, y);
-        grid[one.x, one.y] = two;
+        grid[two.x, two.y] = two;
         grid[x, y] = one;
 
         UIArtifact.SetButtonPos(one.islandId, x, y);
