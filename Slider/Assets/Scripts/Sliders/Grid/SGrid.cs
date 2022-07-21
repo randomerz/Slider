@@ -248,6 +248,26 @@ public void SetGrid(int[,] puzzle)
         return s;
     }
 
+    public static string GetGridString(bool numsOnly = false)
+    {
+        if (numsOnly)
+        {
+            STile[,] grid = Current.grid;
+            string s = "";
+            for (int y = grid.GetLength(1) - 1; y >= 0; y--)
+            {
+                for (int x = 0; x < grid.GetLength(0); x++)
+                {
+                    s += IntToChar(grid[x, y].islandId);
+                }
+            }
+            return s;
+        } else
+        {
+            return GetGridString();
+        }
+    }
+
     public static int[,] GridStringToSetGridFormat(string gridstring)
     {
         //Chen: This in theory should work for other grids? This is mostly used with Scroll of Realigning stuff.
