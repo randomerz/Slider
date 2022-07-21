@@ -207,9 +207,9 @@ public void SetGrid(int[,] puzzle)
     // for a grid like:  1 2 3
     //                   6 . .
     //        (0, 0) ->  4 . 5
-    public static string GetGridString()
+    public static string GetGridString(bool numsOnly = false)
     {
-        return GetGridString(Current.grid);
+        return GetGridString(Current.grid, numsOnly);
         //string s = "";
         //for (int y = current.height - 1; y >= 0; y--)
         //{
@@ -228,32 +228,11 @@ public void SetGrid(int[,] puzzle)
         //return s;
     }
 
-    public static string GetGridString(STile[,] grid)
+    public static string GetGridString(STile[,] grid, bool numsOnly = false)
     {
         string s = "";
-        for (int y = grid.GetLength(1) - 1; y >= 0; y--)
-        {
-            for (int x = 0; x < grid.GetLength(0); x++)
-            {
-                if (grid[x, y].isTileActive)
-                    s += IntToChar(grid[x, y].islandId);
-                else
-                    s += "#";
-            }
-            if (y != 0)
-            {
-                s += "_";
-            }
-        }
-        return s;
-    }
-
-    public static string GetGridString(bool numsOnly = false)
-    {
         if (numsOnly)
         {
-            STile[,] grid = Current.grid;
-            string s = "";
             for (int y = grid.GetLength(1) - 1; y >= 0; y--)
             {
                 for (int x = 0; x < grid.GetLength(0); x++)
@@ -261,11 +240,25 @@ public void SetGrid(int[,] puzzle)
                     s += IntToChar(grid[x, y].islandId);
                 }
             }
-            return s;
-        } else
-        {
-            return GetGridString();
         }
+        else
+        {
+            for (int y = grid.GetLength(1) - 1; y >= 0; y--)
+            {
+                for (int x = 0; x < grid.GetLength(0); x++)
+                {
+                    if (grid[x, y].isTileActive)
+                        s += IntToChar(grid[x, y].islandId);
+                    else
+                        s += "#";
+                }
+                if (y != 0)
+                {
+                    s += "_";
+                }
+            }
+        }
+        return s;
     }
 
     public static int[,] GridStringToSetGridFormat(string gridstring)
