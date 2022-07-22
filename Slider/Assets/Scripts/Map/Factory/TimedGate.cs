@@ -20,7 +20,7 @@ public class TimedGate : ElectricalNode
     public UnityEvent OnGateActivated;
     public UnityEvent OnGateDeactivated;
 
-    private Sprite nextSprite;  //The next sprite to show (queue up) after a blink
+    private Sprite queuedNextSprite;
 
     private HashSet<ElectricalNode> inputsPowered;
 
@@ -49,7 +49,7 @@ public class TimedGate : ElectricalNode
 
         inputsPowered = new HashSet<ElectricalNode>();
         waitingToEndGate = null;
-        nextSprite = waitingSprite;
+        queuedNextSprite = waitingSprite;
         sr.sprite = waitingSprite;
 
         if (numTurns > 5)
@@ -63,13 +63,13 @@ public class TimedGate : ElectricalNode
     private new void OnEnable()
     {
         base.OnEnable();
-        UIArtifact.MoveMadeOnArtifact += OnMoveMade;
+        UIArtifact.MoveMadeOnArtifact += MoveMadeOnArtifact;
     }
 
     private new void OnDisable()
     {
         base.OnDisable();
-        UIArtifact.MoveMadeOnArtifact -= OnMoveMade;
+        UIArtifact.MoveMadeOnArtifact -= MoveMadeOnArtifact;
     }
     #endregion
 
@@ -90,120 +90,26 @@ public class TimedGate : ElectricalNode
     }
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        //Once the timed gate is powered, it essentially acts as an input source to it's outputs, so we only care about when it is powered.
+
         base.OnPoweredHandler(e);
         if (e.powered)
         {
+            //Once the timed gate is powered, it essentially acts as an input source to it's outputs, so we only care about when it is powered.
             PushSignalToOutput(true, new HashSet<ElectricalNode>(), 1);
             EvaluateGate();
-            StartCoroutine(BlinkThenShowNext());
         }
     }
     #endregion
 
-    private void OnMoveMade(object sender, System.EventArgs e)
-    {
-        if (gateActive && !Powered)
-        {
-            countdown--;
-
-            if (countdown > 0)
-            {
-                nextSprite = countdownSprite[countdown];
-                StartCoroutine(BlinkThenShowNext());
-            } else if (countdown == 0)
-            {
-                nextSprite = countdownSprite[countdown];
-                StartCoroutine(BlinkUntilNextSpriteChange());
-                waitingToEndGate = StartCoroutine(WaitAfterMoveThenEvaluateGate());
-            } else if (countdown < 0)
-            {
-                //If player tries to queue another move, just stop the gate immediately. (avoids some nasty edge cases)
-                if (waitingToEndGate != null)
-                {
-                    StopCoroutine(waitingToEndGate);
-                }
-
-                EvaluateGate();
-            }
-        }
-    }
-
-    private IEnumerator WaitAfterMoveThenEvaluateGate()
-    {
-        bool tilesAreMoving = true;
-        while (tilesAreMoving)
-        {
-            tilesAreMoving = SGrid.Current.TilesMoving();
-
-            if (!tilesAreMoving)
-            {
-                //Wait a bit, and then check again. If there's still no movement, then we can safely turn off the gate.
-                //This gives the player enough leeway to complete the puzzle at the last second (i.e. puzzle 3c)
-                yield return new WaitForSeconds(0.4f);
-
-                tilesAreMoving = SGrid.Current.TilesMoving();
-            } else
-            {
-                yield return null;  //Resume doing other stuff, or else this will spinlock.
-            }
-        }
-        EvaluateGate();
-    }
-
-    private IEnumerator BlinkThenShowNext(int numBlinks = 1)
-    {
-        if (!blinking)
-        {
-            blinking = true;
-            int currBlinks = numBlinks;
-            while (currBlinks > 0)
-            {
-                sr.sprite = blinkSprite;
-                yield return new WaitForSeconds(0.25f);
-                sr.sprite = nextSprite;
-                currBlinks--;
-                if (currBlinks > 0)
-                {
-                    yield return new WaitForSeconds(0.25f);
-                }
-            }
-
-            sr.sprite = nextSprite;
-            blinking = false;
-        }
-    }
-
-    private IEnumerator BlinkUntilNextSpriteChange()
-    {
-        if (!blinking)
-        {
-            blinking = true;
-            Sprite currSprite = nextSprite;
-            while (nextSprite == currSprite)
-            {
-                sr.sprite = blinkSprite;
-                yield return new WaitForSeconds(0.25f);
-                sr.sprite = nextSprite;
-                if (currSprite == nextSprite)
-                {
-                    yield return new WaitForSeconds(0.25f);
-                }
-            }
-            sr.sprite = nextSprite;
-            blinking = false;
-        }
-    }
 
     //This is called via player interaction
     public void ActivateGate()
     {
-        //You can restart the gate in the middle, but once it succeeds you can't restart it.
         if (!Powered)
         {
             gateActive = true;
             countdown = numTurns;
-            nextSprite = countdownSprite[numTurns];
+            queuedNextSprite = countdownSprite[numTurns];
 
             bool oldPowered = Powered;
             foreach (ElectricalNode input in powerPathPrevs)
@@ -223,9 +129,6 @@ public class TimedGate : ElectricalNode
 
     public void EvaluateGate()
     {
-        nextSprite = Powered ? successSprite : failureSprite;
-        StartCoroutine(BlinkThenShowNext());
-
         if (!Powered)
         {
             //Player failed to power the inputs in time.
@@ -234,5 +137,102 @@ public class TimedGate : ElectricalNode
             OnGateDeactivated?.Invoke();
         }
 
+        queuedNextSprite = Powered ? successSprite : failureSprite;
+        StartCoroutine(BlinkThenShowNext());
+    }
+
+    private void MoveMadeOnArtifact(object sender, System.EventArgs e)
+    {
+        if (gateActive && !Powered)
+        {
+            countdown--;
+
+            if (countdown > 0)
+            {
+                queuedNextSprite = countdownSprite[countdown];
+                StartCoroutine(BlinkThenShowNext());
+            } else if (countdown == 0)
+            {
+                queuedNextSprite = countdownSprite[countdown];
+                StartCoroutine(BlinkUntilNextSpriteChange());
+                waitingToEndGate = StartCoroutine(WaitAfterMove(EvaluateGate));
+            } else if (countdown < 0)
+            {
+                //If player tries to queue another move, just stop the gate immediately. (avoids some nasty edge cases)
+                if (waitingToEndGate != null)
+                {
+                    StopCoroutine(waitingToEndGate);
+                }
+
+                EvaluateGate();
+            }
+        }
+    }
+
+    private IEnumerator WaitAfterMove(System.Action callback)
+    {
+        bool tilesAreMoving = true;
+        while (tilesAreMoving)
+        {
+            tilesAreMoving = SGrid.Current.TilesMoving();
+
+            if (!tilesAreMoving)
+            {
+                //Wait a bit, and then check again. If there's still no movement, then we can safely turn off the gate.
+                //This gives the player enough leeway to complete the puzzle at the last second (i.e. puzzle 3c)
+                yield return new WaitForSeconds(0.4f);
+
+                tilesAreMoving = SGrid.Current.TilesMoving();
+            } else
+            {
+                yield return null;
+            }
+        }
+
+        callback();
+    }
+
+    private IEnumerator BlinkThenShowNext(int numBlinks = 1)
+    {
+        if (!blinking)
+        {
+            blinking = true;
+            int currBlinks = numBlinks;
+            while (currBlinks > 0)
+            {
+                sr.sprite = blinkSprite;
+                yield return new WaitForSeconds(0.25f);
+                sr.sprite = queuedNextSprite;
+                currBlinks--;
+                if (currBlinks > 0)
+                {
+                    yield return new WaitForSeconds(0.25f);
+                }
+            }
+
+            sr.sprite = queuedNextSprite;
+            blinking = false;
+        }
+    }
+
+    private IEnumerator BlinkUntilNextSpriteChange()
+    {
+        if (!blinking)
+        {
+            blinking = true;
+            Sprite currSprite = queuedNextSprite;
+            while (queuedNextSprite == currSprite)
+            {
+                sr.sprite = blinkSprite;
+                yield return new WaitForSeconds(0.25f);
+                sr.sprite = queuedNextSprite;
+                if (currSprite == queuedNextSprite)
+                {
+                    yield return new WaitForSeconds(0.25f);
+                }
+            }
+            sr.sprite = queuedNextSprite;
+            blinking = false;
+        }
     }
 }
