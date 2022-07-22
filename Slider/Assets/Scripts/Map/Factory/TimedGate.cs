@@ -6,18 +6,19 @@ using UnityEngine.Events;
 
 public class TimedGate : ElectricalNode
 {
+    [Header("Timed Gate")]
+
     [SerializeField] private int numTurns;
     [SerializeField] private int numInputs;
-
-    //[SerializeField] private Animator anim;
-
-    //All the various things the gate can display
     [SerializeField] private Sprite[] countdownSprite;
     [SerializeField] private Sprite successSprite;
     [SerializeField] private Sprite failureSprite;
     [SerializeField] private Sprite waitingSprite;
     [SerializeField] private Sprite blinkSprite;
     [SerializeField] private SpriteRenderer sr;
+
+    public UnityEvent OnGateActivated;
+    public UnityEvent OnGateDeactivated;
 
     private Sprite nextSprite;  //The next sprite to show (queue up) after a blink
 
@@ -28,9 +29,6 @@ public class TimedGate : ElectricalNode
 
     private Coroutine waitingToEndGate;
     private bool blinking;  //Ensures that only one blink coroutine is executing at a time.
-
-    public UnityEvent OnGateActivated;
-    public UnityEvent OnGateDeactivated;
 
     public bool GateActive => gateActive;
 
@@ -43,7 +41,7 @@ public class TimedGate : ElectricalNode
         }
     }
 
-    #region Unity Events
+    #region Unity Callbacks
     private new void Awake()
     {
         base.Awake();
@@ -117,7 +115,7 @@ public class TimedGate : ElectricalNode
             {
                 nextSprite = countdownSprite[countdown];
                 StartCoroutine(BlinkUntilNextSpriteChange());
-                waitingToEndGate = StartCoroutine(WaitToEvaluateGate());
+                waitingToEndGate = StartCoroutine(WaitAfterMoveThenEvaluateGate());
             } else if (countdown < 0)
             {
                 //If player tries to queue another move, just stop the gate immediately. (avoids some nasty edge cases)
@@ -131,7 +129,7 @@ public class TimedGate : ElectricalNode
         }
     }
 
-    private IEnumerator WaitToEvaluateGate()
+    private IEnumerator WaitAfterMoveThenEvaluateGate()
     {
         bool tilesAreMoving = true;
         while (tilesAreMoving)
