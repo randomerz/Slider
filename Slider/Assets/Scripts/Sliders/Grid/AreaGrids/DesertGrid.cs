@@ -9,6 +9,7 @@ public class DesertGrid : SGrid
     public NPCAnimatorController campfire;
     public DiceGizmo dice1;
     public DiceGizmo dice2;
+    [SerializeField] private GameObject[] zlist;
 
     private int monkeShake = 0;
     private bool campfireIsLit = false;
@@ -124,11 +125,15 @@ public class DesertGrid : SGrid
             {
                 //Shake the monkey. Logic for monkey stages of awake?
                 monkeShake++;
+                if (monkeShake == 1) zlist[2].SetActive(false);
+                else if (monkeShake == 2) zlist[1].SetActive(false);
+                else if (monkeShake == 3) zlist[0].SetActive(false);
                 Debug.Log("The monkey got shook");
             }
             else
             {
                 monkeShake = 0;
+                foreach (GameObject z in zlist) z.SetActive(true);
                 Debug.Log("Monkey shakes reset!");
             }
         }
@@ -146,14 +151,6 @@ public class DesertGrid : SGrid
     public void IsMonkeyNearOasis(Condition c)
     {
         c.SetSpec(CheckGrid.contains(GetGridString(), "23") || CheckGrid.contains(GetGridString(), "(3|2)...(2|3)"));
-    }
-    public void IsFirstShake(Condition c)
-    {
-        c.SetSpec(monkeShake >= 1);
-    }
-    public void IsSecondShake(Condition c)
-    {
-        c.SetSpec(monkeShake >= 2);
     }
     #endregion
 
