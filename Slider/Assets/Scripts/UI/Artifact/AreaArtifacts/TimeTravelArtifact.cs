@@ -63,7 +63,7 @@ public class TimeTravelArtifact : UIArtifact
             {
                 ArtifactTileButton pastButton = desynchIslandId <= 9 ? GetButton(FindAltId(desynchIslandId)) : GetButton(desynchIslandId);
                 if (isInPast) SetLightningPos(pastButton);
-                else SetLightningPos(GetButton(FindAltId(desynchIslandId)));
+                else SetLightningPos(GetButton(FindAltId(pastButton.islandId)));
             }
             else DisableLightning(false);
         }
