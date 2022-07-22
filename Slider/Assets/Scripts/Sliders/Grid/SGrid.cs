@@ -239,6 +239,10 @@ public void SetGrid(int[,] puzzle)
                 {
                     s += IntToChar(grid[x, y].islandId);
                 }
+                if (y != 0)
+                {
+                    s += "_";
+                }
             }
         }
         else
@@ -283,6 +287,19 @@ public void SetGrid(int[,] puzzle)
                 return t;
                 
         return null;
+    }
+
+    protected void SwapTiles(STile one, STile two)
+    {
+        int x = two.x;
+        int y = two.y;
+        two.SetGridPosition(one.x, one.y);
+        one.SetGridPosition(x, y);
+        grid[two.x, two.y] = two;
+        grid[x, y] = one;
+
+        UIArtifact.SetButtonPos(one.islandId, x, y);
+        UIArtifact.SetButtonPos(two.islandId, two.x, two.y);
     }
 
     //C: returns a list of active stiles
