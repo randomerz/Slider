@@ -231,7 +231,7 @@ public void SetGrid(int[,] puzzle)
     public static string GetGridString(STile[,] grid, bool numsOnly = false)
     {
         string s = "";
-        if (numsOnly)
+        /*if (numsOnly)
         {
             for (int y = grid.GetLength(1) - 1; y >= 0; y--)
             {
@@ -246,12 +246,12 @@ public void SetGrid(int[,] puzzle)
             }
         }
         else
-        {
+        {*/
             for (int y = grid.GetLength(1) - 1; y >= 0; y--)
             {
                 for (int x = 0; x < grid.GetLength(0); x++)
                 {
-                    if (grid[x, y].isTileActive)
+                    if (numsOnly || grid[x, y].isTileActive)
                         s += IntToChar(grid[x, y].islandId);
                     else
                         s += "#";
@@ -261,7 +261,7 @@ public void SetGrid(int[,] puzzle)
                     s += "_";
                 }
             }
-        }
+        //}
         return s;
     }
 
