@@ -18,6 +18,7 @@ public class ElectricalNode : MonoBehaviour
         //Directed edges go from INPUT to IO, IO to OUTPUT, and INPUT to OUTPUT
     }
 
+    [Header("Electrical Node")]
     public NodeType nodeType;
 
     //These are serialized for debugging purposes. They should not need to be set in the inspector.

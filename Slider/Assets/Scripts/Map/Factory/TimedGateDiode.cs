@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimedGateDiode : PoweredLight
+public class TimedGateDiode : ElectricalNode
 {
+    [Header("Timed Gate Diode")]
     [SerializeField] private TimedGate gate;
+    [SerializeField] private SpriteSwapper swapper;
 
 
     private new void OnEnable()
@@ -33,6 +35,7 @@ public class TimedGateDiode : PoweredLight
 
     public void GateActivatedHandler()
     {
+        Debug.Log($"Timed Gate for Diode {gameObject.name} activated.");
         if (Powered)
         {
             swapper.TurnOn();
@@ -42,6 +45,7 @@ public class TimedGateDiode : PoweredLight
 
     public void GateDeactivatedHandler()
     {
+        Debug.Log($"Timed Gate for Diode {gameObject.name} deactivated.");
         swapper.TurnOff();
     }
 }

@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 // ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
-//L: I removed A LOT of boilerplate code btw this class and inherited classes. I'm like 80% sure that nothing broke, but it might be worth testing the artifacts in all the areas to make sure.
-//L: Also this class is getting really big.
 public class UIArtifact : Singleton<UIArtifact>
 {
 

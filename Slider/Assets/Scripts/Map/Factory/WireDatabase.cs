@@ -43,7 +43,6 @@ public class WireDatabase : MonoBehaviour
     private void Awake()
     {
         _instance = this;
-        Debug.Log("Instance Created");
         _sparkTypes = new Dictionary<Sprite, string>();
         foreach (SparkPair pair in sparks)
         {
