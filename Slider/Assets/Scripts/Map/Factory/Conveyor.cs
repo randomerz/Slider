@@ -102,11 +102,7 @@ public class Conveyor : ElectricalNode
             SMoveConveyor move = ConstructMove();
             if (move != null)
             {
-                //UIArtifact.DisableQueueing();
-                //UIArtifact.ClearQueues();
-
                 StartCoroutine(WaitOutOverlappingActiveMoves(move, QueueConveyorMove));
-                //QueueMoveCallback(move);
             }
         }
     }
