@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Conveyor : ElectricalNode
 {
-
     [SerializeField] private Vector2Int start;
 
     [SerializeField] private Vector2Int dir;
@@ -32,6 +31,12 @@ public class Conveyor : ElectricalNode
             HandleConveyorPoweredStatus();
         }
     }
+
+    //public bool CheckingInterruptMove
+    //{
+    //    get;
+    //    private set;
+    //}
 
     private bool ConveyorPowered => ConveyorEnabled && Powered;
     private bool waitingToDoMove = false;
@@ -61,14 +66,16 @@ public class Conveyor : ElectricalNode
     private new void OnEnable()
     {
         base.OnEnable();
-        SGridAnimator.OnSTileMoveEnd += OnTileMove;
+        SGridAnimator.OnSTileMoveStart += OnTileMoveStart;
+        SGridAnimator.OnSTileMoveEnd += OnTileMoveEnd;
         SGrid.OnSTileEnabled += OnTileEnabled;
     }
 
     private new void OnDisable()
     {
         base.OnDisable();
-        SGridAnimator.OnSTileMoveEnd -= OnTileMove;
+        SGridAnimator.OnSTileMoveStart -= OnTileMoveStart;
+        SGridAnimator.OnSTileMoveEnd -= OnTileMoveEnd;
         SGrid.OnSTileEnabled -= OnTileEnabled;
     }
 
@@ -90,7 +97,13 @@ public class Conveyor : ElectricalNode
         TryQueueConveyorMove();
     }
 
-    private void OnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    private void OnTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        //CheckingInterruptMove = true;
+        //TryQueueConveyorMove();
+    }
+
+    private void OnTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         TryQueueConveyorMove();
     }
@@ -102,45 +115,25 @@ public class Conveyor : ElectricalNode
             SMoveConveyor move = ConstructMove();
             if (move != null)
             {
-                StartCoroutine(WaitOutOverlappingActiveMoves(move, QueueConveyorMove));
-            }
-        }
-    }
-
-    //This might cause race conditions for multiple conveyor belts affecting the same tiles, might need to revisit. (static ref. counter for Conveyors)
-    private IEnumerator WaitOutOverlappingActiveMoves(SMove move, System.Action<SMoveConveyor> callback = null)
-    {
-        waitingToDoMove = true;
-
-        //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
-        yield return new WaitForSeconds(0.2f);
-
-        List<SMove> currActiveMoves = UIArtifact.GetActiveMoves();
-        foreach (SMove activeMove in currActiveMoves)
-        {
-            if (activeMove.Overlaps(move))
+                waitingToDoMove = true;
+                StartCoroutine(FactoryArtifact.WaitOutOverlappingActiveMoves(move, QueueConveyorMove));
+            } else
             {
-                while (currActiveMoves.Contains(activeMove))
-                {
-                    yield return null;
-                }
-                break;
+                //CheckingInterruptMove = false;
             }
-        }
-        waitingToDoMove = false;
-
-        if (callback != null)
-        {
-            callback(ConstructMove());  //Construct a brand new move because it might have changed! (ex: tile moving in front of conveyor, so have to push both tiles).
         }
     }
 
-    private void QueueConveyorMove(SMoveConveyor move)
+    private void QueueConveyorMove()
     {
-        if (ConveyorPowered && move != null)
+        //Construct a brand new move because it might have changed! (ex: tile moving in front of conveyor, so have to push both tiles).
+        waitingToDoMove = false;
+        SMoveConveyor newMove = ConstructMove();
+        if (ConveyorPowered && newMove != null)
         {
-            artifact.QueueMoveToFront(move);
+            artifact.QueueMoveToFront(newMove);
         }
+        //CheckingInterruptMove = false;
     }              
 
     //This method covers conveyor belts that stretch over multiple tiles as well as arbitrary grid size, which is a lot more than we needed lol.

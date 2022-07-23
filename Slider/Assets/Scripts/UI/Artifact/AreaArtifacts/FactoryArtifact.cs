@@ -5,6 +5,19 @@ using UnityEngine;
 //L: Used to handle queue interrupts with conveyors and separate process queue things.
 public class FactoryArtifact : UIArtifact
 {
+    private Conveyor[] conveyors;
+
+    private new void Awake()
+    {
+        base.Awake();
+        conveyors = GameObject.FindObjectsOfType<Conveyor>();
+    }
+
+    //public override void ProcessQueue()
+    //{
+    //    StartCoroutine(WaitUntilConveyorCheckCleared(base.ProcessQueue)); 
+    //}
+
     public void QueueMoveToFront(SMove move)
     {
         //L: Conveyor moves always "Cut the line" per se.
@@ -19,8 +32,50 @@ public class FactoryArtifact : UIArtifact
 
 
         moveQueue = new Queue<SMove>(newMoveQueue);
-        ProcessQueue();
+        base.ProcessQueue();
+        //StartCoroutine(WaitOutOverlappingActiveMoves(move, base.ProcessQueue));
     }
+
+    public static IEnumerator WaitOutOverlappingActiveMoves(SMove move, System.Action callback = null)
+    {
+        //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
+        yield return new WaitForSeconds(0.2f);
+
+        List<SMove> currActiveMoves = GetActiveMoves();
+        foreach (SMove activeMove in currActiveMoves)
+        {
+            if (activeMove.Overlaps(move))
+            {
+                while (currActiveMoves.Contains(activeMove))
+                {
+                    yield return null;
+                }
+                break;
+            }
+        }
+
+        if (callback != null)
+        {
+            callback();
+        }
+    }
+
+    //private IEnumerator WaitUntilConveyorCheckCleared(System.Action callback)
+    //{
+    //    //This is a way to ensure that conveyors are processed BEFORE any other moves in the queue (so that they happen as immediately as possible)
+    //    yield return new WaitUntil(() =>
+    //    {
+    //        foreach (var conveyor in conveyors)
+    //        {
+    //            if (conveyor.CheckingInterruptMove)
+    //            {
+    //                return false;
+    //            }
+    //        }
+    //        return true;
+    //    });
+    //    callback();
+    //}
 
     private void UndoMovesAfterOverlap(List<SMove> newMoveQueue, SMove moveToCheck) {
                 //Undo moves

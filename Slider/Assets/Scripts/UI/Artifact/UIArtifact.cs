@@ -481,7 +481,6 @@ public class UIArtifact : Singleton<UIArtifact>
     private bool CheckMoveHasAnActiveTile(SMove move)
     {
         STile[,] grid = SGrid.Current.GetGrid();
-        bool activeTiles = false; 
         foreach (var movement in move.moves)
         {
             if (grid[movement.startLoc.x, movement.startLoc.y].isTileActive)
