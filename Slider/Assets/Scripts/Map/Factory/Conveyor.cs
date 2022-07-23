@@ -11,7 +11,7 @@ public class Conveyor : ElectricalNode
 
     [SerializeField] private int length;
 
-    [SerializeField] private UIArtifact artifact;
+    [SerializeField] private FactoryArtifact artifact;
 
     [SerializeField] private Animator animator;
 
@@ -54,7 +54,7 @@ public class Conveyor : ElectricalNode
 
         if (artifact == null)
         {
-            artifact = UIArtifact.GetInstance();
+            artifact = UIArtifact.GetInstance() as FactoryArtifact;
         }
     }
 
@@ -105,14 +105,14 @@ public class Conveyor : ElectricalNode
                 //UIArtifact.DisableQueueing();
                 //UIArtifact.ClearQueues();
 
-                StartCoroutine(WaitOutOverlappingActiveMoves(move, QueueMoveCallback));
+                StartCoroutine(WaitOutOverlappingActiveMoves(move, artifact.QueueMoveToFront));
                 //QueueMoveCallback(move);
             }
         }
     }
 
     //This might cause race conditions for multiple conveyor belts affecting the same tiles, might need to revisit. (static ref. counter for Conveyors)
-    private IEnumerator WaitOutOverlappingActiveMoves(SMove move, System.Action<SMove> callback = null)
+    private IEnumerator WaitOutOverlappingActiveMoves(SMove move, System.Action<SMove> callback)
     {
         waitingToDoMove = true;
         foreach (SMove activeMove in UIArtifact.GetActiveMoves())
@@ -130,23 +130,13 @@ public class Conveyor : ElectricalNode
         //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
         yield return new WaitForSeconds(0.2f);
         waitingToDoMove = false;
-        callback(move);
-    }
 
-    private void QueueMoveCallback(SMove move)
-    {
+        //L: The Move Might've Changed! (for example if a tile moved in front).
+        SMoveConveyor newMove = ConstructMove();
         if (ConveyorPowered)
         {
-            //Queue the move, then immediately unqueue it so that it becomes the next active move.
-            artifact.QueueAdd(move);
-            artifact.ProcessQueue();
-
-            //We need to update the UI since the move was initiated by the conveyor belt instead of the player clicking buttons.
-            //artifact.SetButtonPositionsToMatchGrid();
+            artifact.QueueMoveToFront(newMove);
         }
-
-        //Now that the UI has updated to reflect the conveyor move, we can reenable queueing for the player
-        //UIArtifact.EnableQueueing();
     }
                     
 
