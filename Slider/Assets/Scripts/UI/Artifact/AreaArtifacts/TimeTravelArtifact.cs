@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
-//L: Changed name bc I plan to use the same system for Factory stuff.
+//C: tried renaming back to Magitech but that boofed all the references and im lazy
 public class TimeTravelArtifact : UIArtifact
 {
     /*C: Note that this is on the *opposite* side of the grid from the anchor.
