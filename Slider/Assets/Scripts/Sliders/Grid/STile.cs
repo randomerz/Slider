@@ -12,7 +12,7 @@ public class STile : MonoBehaviour
     public static int housingOffset = -150;
 
     public bool hasAnchor;
-    public STile linkTile; // Probably should be a list, set in instpector
+    public STile linkTile; //C: is this still needed?
 
     private Vector2 movingDirection; // zero, right, up, left, down
     public class STileMoveArgs : System.EventArgs
@@ -224,10 +224,7 @@ public class STile : MonoBehaviour
         transform.position = newPos;
         SetTileMapPositions(newPos);
     }
-
-
-
-
+    
     protected void SetTileMapPositions(Vector3 pos)
     {
         pos = pos + new Vector3(-0.5f, -0.5f);
