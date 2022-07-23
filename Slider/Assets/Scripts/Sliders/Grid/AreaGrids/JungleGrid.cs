@@ -120,7 +120,7 @@ public class JungleGrid : SGrid
     // Puzzle 5 - Chad Race
     public void CheckChad(object sender, SGrid.OnGridMoveArgs e) {
         if (Current.GetGrid() != null)
-            chadRace.tilesAdjacent = CheckGrid.row(GetGridString(), "523") && GetStile(5).isTileActive && GetStile(2).isTileActive && GetStile(3).isTileActive;
+            chadRace.tilesAdjacent = CheckGrid.row(GetGridString(), "523");
     }
     
     public void OnRaceWon() {

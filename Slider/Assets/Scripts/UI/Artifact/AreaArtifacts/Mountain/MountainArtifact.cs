@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class MountainArtifact : UIArtifact
 {
-    
 
     // replaces adjacentButtons
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)

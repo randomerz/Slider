@@ -119,7 +119,7 @@ public class Player : Singleton<Player>, ISavable
         }
 
         // updating childing
-        currentStileUnderneath = STile.GetSTileUnderneath(transform, currentStileUnderneath);
+        currentStileUnderneath = SGrid.GetSTileUnderneath(transform, currentStileUnderneath);
         // Debug.Log("Currently on: " + currentStileUnderneath);
 
         if (currentStileUnderneath != null)
@@ -189,7 +189,7 @@ public class Player : Singleton<Player>, ISavable
         Vector3 localPos = transform.localPosition;
 
         // STile postitions
-        STile stile = SGrid.Current.GetStileUnderneath(gameObject);
+        STile stile = SGrid.GetStileUnderneath(gameObject);
         if (stile == null)
         {
             return pos;
@@ -197,7 +197,7 @@ public class Player : Singleton<Player>, ISavable
         else
         {
             Vector2Int stileEndCoords = GetEndStileLocation(stile.islandId);
-            Vector3 stilePos = SGrid.Current.GetStileUnderneath(gameObject).calculatePosition(stileEndCoords.x, stileEndCoords.y);
+            Vector3 stilePos = SGrid.GetStileUnderneath(gameObject).calculatePosition(stileEndCoords.x, stileEndCoords.y);
 
             return stilePos + localPos;
         }
@@ -237,7 +237,7 @@ public class Player : Singleton<Player>, ISavable
         // Update position
         transform.SetParent(null);
         transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
-        STile stileUnderneath = STile.GetSTileUnderneath(transform, null);
+        STile stileUnderneath = SGrid.GetSTileUnderneath(transform, null);
         transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
         //Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
 
@@ -304,7 +304,7 @@ public class Player : Singleton<Player>, ISavable
 
     public static STile GetStileUnderneath()
     {
-        _instance.currentStileUnderneath = STile.GetSTileUnderneath(_instance.transform, _instance.currentStileUnderneath);
+        _instance.currentStileUnderneath = SGrid.GetSTileUnderneath(_instance.transform, _instance.currentStileUnderneath);
         return _instance.currentStileUnderneath;
     }
 

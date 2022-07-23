@@ -24,6 +24,13 @@ public class MountainGrid : SGrid
         InitArea(Area.Mountain);
         base.Init();
     }
+
+    protected override void Start()
+    {
+        base.Start();
+        AudioManager.PlayMusic("Mountain");
+        UIEffects.FadeFromBlack();
+    }
     
     private void OnEnable()
     {
@@ -37,18 +44,13 @@ public class MountainGrid : SGrid
 
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs interactArgs)
     {
-        /*STile dropTile = dropArgs.stile;
-        if(!dropTile || dropTile.y < 2)
-            return; //currently using the anchor on the bottom layer does nothing
-        STile lower = SGrid.current.GetGrid()[dropTile.x, dropTile.y - 2];
-        if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile*/
         if (interactArgs.drop)
         {
             STile dropTile = interactArgs.stile;
-            if(dropTile!= null)
+            if(dropTile != null)
             {
                 if(dropTile.y < 2)
-                return; //currently using the anchor on the bottom layer does nothing
+                    return; //currently using the anchor on the bottom layer does nothing
                 STile lower = SGrid.Current.GetGrid()[dropTile.x, dropTile.y - 2];
                 if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile
                 {
@@ -57,17 +59,6 @@ public class MountainGrid : SGrid
                     uiArtifact.AnchorSwap(dropTile, lower);
                 }
             }
-            
-        }
-        //PJ: define behavior for anchor pick up?
-        
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-        AudioManager.PlayMusic("Mountain");
-        UIEffects.FadeFromBlack();
-
+        }        
     }
 }

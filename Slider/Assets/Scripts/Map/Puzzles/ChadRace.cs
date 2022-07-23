@@ -178,7 +178,7 @@ public class ChadRace : MonoBehaviour
         transform.position += + speed * targetDirection * Time.deltaTime;
 
         // Assigns chad's current parent to the objects of the stile that he is currently over
-        transform.parent = jungleGrid.GetStileUnderneath(gameObject).transform.GetChild(0);
+        transform.parent = SGrid.GetStileUnderneath(gameObject).transform.GetChild(0);
     }
 
     private void DisplayAndTriggerDialogue(string message) {
