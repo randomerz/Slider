@@ -291,9 +291,7 @@ public void SetGrid(int[,] puzzle)
         foreach (STile tile in stiles)
         {
             if (tile.isTileCollected)
-            {
                 numCollected++;
-            }
         }
         return numCollected;
     }
@@ -446,7 +444,7 @@ public void SetGrid(int[,] puzzle)
             }
         }
     }
-    // See STile.isTileCollected for an explanation
+
     public virtual void CollectSTile(int islandId)
     {
         foreach (STile s in grid)
@@ -466,7 +464,7 @@ public void SetGrid(int[,] puzzle)
         UIArtifact.GetInstance().AddButton(stile, flickerButton);
         OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
     }
-    // See STile.isTileCollected for an explanation
+
     public virtual void CollectStile(STile stile)
     {
         stile.isTileCollected = true;

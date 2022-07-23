@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MagitechSTile : TimeTravelSTile
+public class MagitechSTile : STile
 {
     public override Vector3 calculatePosition(int x, int y)
     {
-        return new Vector3(x / 3 * ((TimeTravelGrid)SGrid.Current).gridOffset + x % 3 * STILE_WIDTH, y * STILE_WIDTH);
+        return new Vector3(x / 3 * MagiTechGrid.Instance.gridOffset + x % 3 * STILE_WIDTH, y * STILE_WIDTH);
     }
 
     public override Vector3 calculateMovingPosition(float x, float y)
@@ -14,7 +14,7 @@ public class MagitechSTile : TimeTravelSTile
         Vector3 newPos = STILE_WIDTH * new Vector3(x, y);
 
         if (x >= 3)
-            newPos += new Vector3(((TimeTravelGrid)SGrid.Current).gridOffset - 3 * STILE_WIDTH, 0);
+            newPos += new Vector3(MagiTechGrid.Instance.gridOffset - 3 * STILE_WIDTH, 0);
         return newPos;
     }
 }

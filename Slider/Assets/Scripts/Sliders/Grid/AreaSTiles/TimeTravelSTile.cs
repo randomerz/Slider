@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimeTravelSTile : STile
+/*public class TimeTravelSTile : STile
 {
-    public override Vector3 calculatePosition(int x, int y)
+   /* public override Vector3 calculatePosition(int x, int y)
     {
         return new Vector3(x / 3 * ((TimeTravelGrid)SGrid.Current).gridOffset + x % 3 * STILE_WIDTH, y * STILE_WIDTH);
     }
@@ -17,4 +17,4 @@ public class TimeTravelSTile : STile
             newPos += new Vector3(((TimeTravelGrid)SGrid.Current).gridOffset - 3 * STILE_WIDTH, 0);
         return newPos;
     }
-}
+}*/

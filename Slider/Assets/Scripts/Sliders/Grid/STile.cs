@@ -25,8 +25,7 @@ public class STile : MonoBehaviour
 
     private int sliderColliderDisableCount; // each enable gives this +1, disable does -1
 
-    // Whether we have picked up this tile or not. Used in MagiTech so that only collected tiles
-    // are enabled when swapping grids.
+    // Whether we have picked up this tile or not
     public bool isTileCollected;
     private int[] borderColliderDisableCount = new int[4];
     
@@ -153,7 +152,6 @@ public class STile : MonoBehaviour
 
     public void SetBorderCollider(int index, bool isActive)
     {
-        // borderColliders[index].SetActive(isActive);
         if (isActive)
             borderColliderDisableCount[index] += 1;
         else
@@ -188,21 +186,6 @@ public class STile : MonoBehaviour
 
         transform.position = newPos;
         SetTileMapPositions(newPos);
-
-        /*if (isTileActive)
-        {
-            // animations and style => physics on tile
-            Vector3 dr = newPos - transform.position;
-           // UpdateTilePhysics(dr);
-
-            transform.position = newPos;
-            SetTileMapPositions(newPos);
-        }
-        else
-        {
-            transform.position = newPos;
-            SetTileMapPositions(newPos);
-        }*/
     }
 
     public virtual Vector3 calculatePosition(int x, int y) 
@@ -223,8 +206,6 @@ public class STile : MonoBehaviour
         transform.position = newPos;
         SetTileMapPositions(newPos);
     }
-
-
 
     public void SetMovingDirection(Vector2 direction)
     {

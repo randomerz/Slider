@@ -5,6 +5,7 @@ using UnityEngine;
 public class MagiTechGrid : SGrid
 {
     
+    public static MagiTechGrid Instance => SGrid.Current as MagiTechGrid;
 
     public int gridOffset = 100; //C: The X distance between the present and past grid
 
@@ -53,15 +54,7 @@ public class MagiTechGrid : SGrid
 
     public override int GetNumTilesCollected()
     {
-        int numCollected = 0;
-        foreach (STile tile in stiles)
-        {
-            if (tile.isTileCollected)
-            {
-                numCollected++;
-            }
-        }
-        return numCollected / 2;
+        return base.GetNumTilesCollected() / 2;
     }
 
     public override int GetTotalNumTiles()
