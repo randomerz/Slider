@@ -47,14 +47,12 @@ public class Minecart : Item
         }
         UITrackerManager.AddNewTracker(gameObject, trackerSprite);
         minecartAnimator ??= GetComponent<Animator>();
-
     }
 
     private void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += OnMoveStart;
         SGridAnimator.OnSTileMoveEnd += OnMoveEnd;
-
     }
 
     private void OnDisable()
