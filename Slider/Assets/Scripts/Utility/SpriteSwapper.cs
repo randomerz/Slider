@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-//This is a really common operation, so why not.
+//L: This is a stupid class, but I got tired of adding the same fields over and over.
 public class SpriteSwapper : MonoBehaviour
 {
     [SerializeField] private Sprite on;
@@ -29,6 +29,7 @@ public class SpriteSwapper : MonoBehaviour
 
     public void TurnOff()
     {
+        Debug.Log("Sprite Swapper Off");
         sr.sprite = off;
     }
 }

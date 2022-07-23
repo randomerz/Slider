@@ -4,22 +4,37 @@ using UnityEngine;
 
 public class Conveyor : ElectricalNode
 {
-    //Probably want to do an animation later instead of sprite swapping
 
     [SerializeField] private Vector2Int start;
 
     [SerializeField] private Vector2Int dir;
 
-    [SerializeField] private int length; //This is probably going to be 1 for all of them
+    [SerializeField] private int length;
 
     [SerializeField] private UIArtifact artifact;   //We need reference to the artifact for the queue and to update the UI
 
     [SerializeField] private Animator animator;
 
-    private Coroutine gettingMoveCoroutine; //Only should have one coroutine running at a time.
+    private bool _conveyorEnabled = true;
+    private Coroutine gettingMoveCoroutine;
 
     public Vector2Int StartPos => start;
     public Vector2Int Dir => dir;
+
+    public bool ConveyorEnabled
+    {
+        get {
+            return _conveyorEnabled;
+        }
+
+        set
+        {
+            _conveyorEnabled = value;
+            HandleConveyorPoweredStatus();
+        }
+    }
+
+    private bool ConveyorPowered => ConveyorEnabled && Powered;
 
     private new void Awake()
     {
@@ -35,7 +50,7 @@ public class Conveyor : ElectricalNode
     private void Start()
     {
 
-        animator.SetFloat("speed", Powered ? 2 : 0);
+        animator.SetFloat("speed", ConveyorPowered ? 2 : 0);
 
         if (artifact == null)
         {
@@ -60,9 +75,14 @@ public class Conveyor : ElectricalNode
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
         base.OnPoweredHandler(e);
-        animator.SetFloat("speed", e.powered ? 2 : 0);
+        HandleConveyorPoweredStatus();
+    }
 
-        if (e.powered && gettingMoveCoroutine == null)
+    private void HandleConveyorPoweredStatus()
+    {
+        animator.SetFloat("speed", ConveyorPowered ? 2 : 0);
+
+        if (ConveyorPowered && gettingMoveCoroutine == null)
         {
             gettingMoveCoroutine = StartCoroutine(WaitForCurrentAndCheckForMove());
         }
@@ -70,7 +90,7 @@ public class Conveyor : ElectricalNode
 
     private void OnTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
-        if (Powered && gettingMoveCoroutine == null)
+        if (ConveyorPowered && gettingMoveCoroutine == null)
         {
             gettingMoveCoroutine = StartCoroutine(WaitForCurrentAndCheckForMove());
         }
@@ -78,7 +98,7 @@ public class Conveyor : ElectricalNode
 
     private void OnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (Powered && gettingMoveCoroutine == null)
+        if (ConveyorPowered && gettingMoveCoroutine == null)
         {
             gettingMoveCoroutine = StartCoroutine(WaitForCurrentAndCheckForMove());
         }
@@ -108,9 +128,9 @@ public class Conveyor : ElectricalNode
                 }
             }
 
-            //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones)
+            //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
             yield return new WaitForSeconds(0.2f);
-            if (Powered)
+            if (ConveyorPowered)
             {
                 //Queue the move, then immediately unqueue it so that it becomes the next active move.
                 artifact.QueueAdd(move);

@@ -279,7 +279,6 @@ public void SetGrid(int[,] puzzle)
         return gridFormat;
     }
 
-    //L: islandId is the id of the corresponding tile in the puzzle doc
     public STile GetStile(int islandId)
     {
         foreach (STile t in stiles)

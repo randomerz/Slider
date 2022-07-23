@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class Wire : ConductiveElectricalNode
 {
+    [Header("Wire")]
     [SerializeField] private Tilemap wireTilemap;
     [SerializeField] private Tilemap dottedWireTilemap;
 

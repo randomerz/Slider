@@ -17,14 +17,6 @@ public class PoweredLight : ElectricalNode
         }
     }
 
-    /*
-    protected override void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
-    {
-        //L: I was gonna do other stuff here, but I didn't ...
-        base.PropagateSignal(value, prev, recStack, numRefs);
-    }
-    */
-
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
         base.OnPoweredHandler(e);
@@ -36,16 +28,4 @@ public class PoweredLight : ElectricalNode
             swapper.TurnOff();
         }
     }
-
-    /*
-    public void SetLightOn(bool value, bool playSound = true)
-    {
-        spriteRenderer.sprite = value ? onSprite : offSprite;
-
-        if (playSound)
-        {
-            AudioManager.Play(value ? "Power On" : "Power Off");
-        }
-    }
-    */
 }

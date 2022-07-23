@@ -42,28 +42,33 @@ public class PlayerPositionChanger : MonoBehaviour
         Player.SetIsInHouse(tpToHouse);
     }
 
-    private void OnDrawGizmos() 
+    private void OnDrawGizmosSelected() 
     {
-        Gizmos.color = Color.blue;
-        Vector3 pos = Vector3.zero;
+        Vector3 startPos = Vector3.zero;
+        Vector3 endPos = Vector3.zero;
         switch (gizmoType) 
         {
             case GizmoType.None:
                 return;
             case GizmoType.Hard:
-                pos = dPos;
+                endPos = dPos;
                 break;
             case GizmoType.RelativePlayer:
-                pos = GameObject.Find("Player").transform.position + dPos;
+                startPos = GameObject.Find("Player").transform.position;
+                endPos = GameObject.Find("Player").transform.position + dPos;
                 break;
             case GizmoType.RelativeMe:
-                pos = transform.position + dPos;
+                startPos = transform.position;
+                endPos = transform.position + dPos;
                 break;
             case GizmoType.Transform:
-                pos = goTo.position + dPos;
+                endPos = goTo.position + dPos;
                 break;
         }
         // Gizmos.DrawSphere(pos, 0.4f);
-        Gizmos.DrawWireCube(pos, new Vector3(0.75f, 0.75f, 0.75f));
+        Vector3 cubeSize = new Vector3(0.75f, 0.75f, 0.75f);
+        Gizmos.color = Color.blue;  //L: Swap Beam
+        Gizmos.DrawWireCube(endPos, cubeSize);
+
     }
 }

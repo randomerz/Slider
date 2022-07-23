@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ConductiveElectricalNode : ElectricalNode
 {
-    [SerializeField]
-    private bool isConductiveItem;
+    [Header("Conductive Electrical Node")]
+    [SerializeField] private bool isConductiveItem;
 
     private new void Awake()
     {

@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class CaveGrid : SGrid
 {
-    private bool[,] lightMap;
-
-    public class OnLightMapUpdateArgs
-    {
-        public bool[,] lightMap;
-    }
-    public static event System.EventHandler<OnLightMapUpdateArgs> OnLightMapUpdate;
-
     private static bool checkLightingCompletion = false;
 
     private bool allTilesLit = false;
@@ -32,8 +24,6 @@ public class CaveGrid : SGrid
 
         AudioManager.PlayMusic("Caves");
         UIEffects.FadeFromBlack();
-
-        //SGrid.OnGridMove += (sender, e) => { Debug.Log(GetGridString()); };
     }
 
     private void OnEnable()

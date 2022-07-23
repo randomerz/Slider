@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class STile : MonoBehaviour
 {
     public bool isTileActive;
-    public int islandId = -1;
+    public int islandId = -1;    //L: islandId is the id of the corresponding tile in the puzzle doc
     public int x = -1;
     public int y = -1;
 
@@ -64,14 +64,6 @@ public class STile : MonoBehaviour
         SetTileMapPositions(defaultPos);
         sliderColliderDisableCount = 0;
     }
-    
-
-    // Update is called once per frame
-    protected void Update()
-    {
-        
-    }
-
 
     public void SetSTile(STile other) {
         isTileActive = other.isTileActive;
