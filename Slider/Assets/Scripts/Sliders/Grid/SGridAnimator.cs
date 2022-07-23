@@ -63,9 +63,9 @@ public class SGridAnimator : MonoBehaviour
     }
 
     // move is only here so we can pass it into the event
-    // C: if lerp is true, will animate to destination (this is the case 99% of the time)
-    // if lerp is false, will wait and then TP to destination
-    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool lerp = true)
+    // C: if animate is true, will animate to destination (this is the case 99% of the time)
+    // if animate is false, will wait and then TP to destination
+    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true)
     {
         float t = 0;
         //isMoving = true;
@@ -92,7 +92,7 @@ public class SGridAnimator : MonoBehaviour
         {
             t += Time.deltaTime;    //L: This needs to be before evaluate, or else t won't reach 1 before loop exits.
             
-            if(lerp)
+            if(animate)
             {
                 float s = movementCurve.Evaluate(Mathf.Min(t / movementDuration, 1));
                 Vector2 pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
