@@ -30,6 +30,8 @@ public class TimeTravelArtifact : UIArtifact
         }
     }
     private bool isInPast = false;
+    private bool isPreview = false;
+    private bool artifactInPast = false;
 
     public Image background;
     public Sprite presentBackgroundSprite;
@@ -39,7 +41,7 @@ public class TimeTravelArtifact : UIArtifact
     {
         base.OnEnable();
         Anchor.OnAnchorInteract += OnAnchorInteract;
-        SetButtonsAndBackground();
+        SetButtonsAndBackground(isInPast);
     }
 
     protected override void OnDisable()
@@ -50,19 +52,22 @@ public class TimeTravelArtifact : UIArtifact
 
     private void Update()
     {
-        if(isInPast != PlayerIsInPast)
+        if (isInPast != PlayerIsInPast)
         {
             isInPast = PlayerIsInPast;
-            SetButtonsAndBackground();
+            SetButtonsAndBackground(isInPast);
         }
+        //Lightning stuff
         if (desynchIslandId != -1)
         {
             ArtifactTileButton desyncedButton = GetButton(desynchIslandId);
-            //Debug.Log(desyncedButton.x + " " + desyncedButton.y + ", " + desynchLocation.x + " " + desynchLocation.y);
+            UpdateButtonPositions();
+            Debug.Log(desyncedButton.islandId + " " + desyncedButton.x + " " + desyncedButton.y + " " + desynchLocation.x + " " + desynchLocation.y);
+            Debug.Log((desynchLocation.x != desyncedButton.x) + " " + (desynchLocation.y != desyncedButton.y));
             if (desynchLocation.x != desyncedButton.x || desynchLocation.y != desyncedButton.y)
             {
                 ArtifactTileButton pastButton = desynchIslandId <= 9 ? GetButton(FindAltId(desynchIslandId)) : GetButton(desynchIslandId);
-                if (isInPast) SetLightningPos(pastButton);
+                if (isInPast != isPreview) SetLightningPos(pastButton);
                 else SetLightningPos(GetButton(FindAltId(pastButton.islandId)));
             }
             else DisableLightning(false);
@@ -213,14 +218,14 @@ public class TimeTravelArtifact : UIArtifact
     public override void AddButton(STile stile, bool shouldFlicker = true)
     {
         base.AddButton(stile, shouldFlicker);
-        SetButtonsAndBackground();
+        SetButtonsAndBackground(isInPast);
     }
 
-    public void SetButtonsAndBackground()
+    public void SetButtonsAndBackground(bool past)
     {
         foreach (ArtifactTileButton b in buttons)
         {
-            if (b.islandId > 9 && isInPast || b.islandId <= 9 && !isInPast)
+            if (b.islandId > 9 && past || b.islandId <= 9 && !past)
             {
                 b.gameObject.SetActive(true);
                 STile myStile = SGrid.Current.GetStile(b.islandId);
@@ -229,6 +234,24 @@ public class TimeTravelArtifact : UIArtifact
             else
                 b.gameObject.SetActive(false);
         }
-        background.sprite = isInPast ? pastBackgroundSprite : presentBackgroundSprite;
+        background.sprite = past ? pastBackgroundSprite : presentBackgroundSprite;
+        artifactInPast = past;
+    }
+
+    public void SetPreview(bool enable)
+    {
+        SetButtonsAndBackground(isInPast != enable);
+        isPreview = enable;
+    }
+
+    private void UpdateButtonPositions()
+    {
+        foreach (ArtifactTileButton b in buttons)
+        {
+            if (b.islandId > 9 && !isInPast || b.islandId <= 9 && isInPast)
+            {
+                b.UpdateTileActive();
+            }
+        }
     }
 }
