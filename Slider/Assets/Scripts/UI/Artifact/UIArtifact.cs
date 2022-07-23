@@ -418,21 +418,27 @@ public class UIArtifact : Singleton<UIArtifact>
         ProcessQueue();
     }
 
-    //
     public virtual void ProcessQueue()
     {
         if (moveQueue.Count > 0)
         {
             //Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
 
-            SMove peekedMove = moveQueue.Peek();
-
-            if (MoveOverlapsWithActiveMove(peekedMove))
+            if (MoveOverlapsWithActiveMove(moveQueue.Peek()))
             {
                 return;
             }
 
-            DoMove(peekedMove);
+            SMove move = moveQueue.Dequeue();
+            if (CheckMoveHasAnActiveTile(move)) //L: If we don't do this, we risk adding an active move that never dequeues, overflowing the queue, and BREAKING THE ENTIRE GAME.
+            {
+                SGrid.Current.Move(move);
+                activeMoves.Add(move);
+            }
+            else
+            {
+                Debug.LogError("The last dequeued move did not happen because it only contained empty tiles. THIS IS PROBABLY BECAUSE THE UI IS OUT OF SYNC WITH THE GRID.");
+            }
             ProcessQueue();
         }
     }
@@ -457,14 +463,14 @@ public class UIArtifact : Singleton<UIArtifact>
         return moveQueue.Count >= maxMoveQueueSize;
     }
 
-    public void EnableQueueing()
+    public static void EnableQueueing()
     {
-        playerCanQueue = true;
+        _instance.playerCanQueue = true;
     }
 
-    public void DisableQueueing()
+    public static void DisableQueueing()
     {
-        playerCanQueue = false;
+        _instance.playerCanQueue = false;
     }
 
     public void MoveQueueEmpty(Condition c)
@@ -472,11 +478,18 @@ public class UIArtifact : Singleton<UIArtifact>
         c.SetSpec(moveQueue.Count == 0 && activeMoves.Count == 0);
     }
 
-    private void DoMove(SMove move)
+    private bool CheckMoveHasAnActiveTile(SMove move)
     {
-        //Debug.Log("Move doesn't conflict! Performing move.");
-        SGrid.Current.Move(move);
-        activeMoves.Add(moveQueue.Dequeue());
+        STile[,] grid = SGrid.Current.GetGrid();
+        bool activeTiles = false; 
+        foreach (var movement in move.moves)
+        {
+            if (grid[movement.startLoc.x, movement.startLoc.y].isTileActive)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     #endregion
 

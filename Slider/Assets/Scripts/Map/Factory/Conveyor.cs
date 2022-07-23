@@ -11,12 +11,11 @@ public class Conveyor : ElectricalNode
 
     [SerializeField] private int length;
 
-    [SerializeField] private UIArtifact artifact;   //We need reference to the artifact for the queue and to update the UI
+    [SerializeField] private UIArtifact artifact;
 
     [SerializeField] private Animator animator;
 
     private bool _conveyorEnabled = true;
-    private Coroutine gettingMoveCoroutine;
 
     public Vector2Int StartPos => start;
     public Vector2Int Dir => dir;
@@ -35,6 +34,7 @@ public class Conveyor : ElectricalNode
     }
 
     private bool ConveyorPowered => ConveyorEnabled && Powered;
+    private bool waitingToDoMove = false;
 
     private new void Awake()
     {
@@ -82,86 +82,88 @@ public class Conveyor : ElectricalNode
     {
         animator.SetFloat("speed", ConveyorPowered ? 2 : 0);
 
-        if (ConveyorPowered && gettingMoveCoroutine == null)
-        {
-            gettingMoveCoroutine = StartCoroutine(WaitForCurrentAndCheckForMove());
-        }
+        TryQueueConveyorMove();
     }
 
     private void OnTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
-        if (ConveyorPowered && gettingMoveCoroutine == null)
-        {
-            gettingMoveCoroutine = StartCoroutine(WaitForCurrentAndCheckForMove());
-        }
+        TryQueueConveyorMove();
     }
 
     private void OnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (ConveyorPowered && gettingMoveCoroutine == null)
+        TryQueueConveyorMove();
+    }
+
+    private void TryQueueConveyorMove()
+    {
+        if (ConveyorPowered && !waitingToDoMove)
         {
-            gettingMoveCoroutine = StartCoroutine(WaitForCurrentAndCheckForMove());
+            SMoveConveyor move = ConstructMove();
+            if (move != null)
+            {
+                //UIArtifact.DisableQueueing();
+                //UIArtifact.ClearQueues();
+
+                StartCoroutine(WaitOutOverlappingActiveMoves(move, QueueMoveCallback));
+                //QueueMoveCallback(move);
+            }
         }
     }
 
     //This might cause race conditions for multiple conveyor belts affecting the same tiles, might need to revisit. (static ref. counter for Conveyors)
-    private IEnumerator WaitForCurrentAndCheckForMove()
+    private IEnumerator WaitOutOverlappingActiveMoves(SMove move, System.Action<SMove> callback = null)
     {
-        SMoveConveyor move = ConstructMove();
-        if (move != null)
+        waitingToDoMove = true;
+        foreach (SMove activeMove in UIArtifact.GetActiveMoves())
         {
-            //Do not allow the player to queue any moves at this point!
-            artifact.DisableQueueing();
-            UIArtifact.ClearQueues();
-
-            foreach (SMove activeMove in UIArtifact.GetActiveMoves())
+            if (activeMove.Overlaps(move))
             {
-                if (activeMove.Overlaps(move))
+                while (UIArtifact.ActiveMovesExist())
                 {
-                    //We need to make sure that none of the active moves are interfering with the conveyor belt moves.
-                    //Wait out the active moves
-                    while (UIArtifact.ActiveMovesExist())
-                    {
-                        yield return null;
-                    }
-                    break;
+                    yield return null;
                 }
+                break;
             }
-
-            //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
-            yield return new WaitForSeconds(0.2f);
-            if (ConveyorPowered)
-            {
-                //Queue the move, then immediately unqueue it so that it becomes the next active move.
-                artifact.QueueAdd(move);
-                artifact.ProcessQueue();
-
-                //We need to update the UI since the move was initiated by the conveyor belt instead of the player clicking buttons.
-                artifact.SetButtonPositionsToMatchGrid();
-            }
-            //Now that the UI has updated to reflect the conveyor move, we can reenable queueing for the player
-            artifact.EnableQueueing();
         }
 
-        gettingMoveCoroutine = null;
+        //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
+        yield return new WaitForSeconds(0.2f);
+        waitingToDoMove = false;
+        callback(move);
     }
 
-    //This could be put in SMove.cs. Idk. I thought it made more sense here.
+    private void QueueMoveCallback(SMove move)
+    {
+        if (ConveyorPowered)
+        {
+            //Queue the move, then immediately unqueue it so that it becomes the next active move.
+            artifact.QueueAdd(move);
+            artifact.ProcessQueue();
+
+            //We need to update the UI since the move was initiated by the conveyor belt instead of the player clicking buttons.
+            //artifact.SetButtonPositionsToMatchGrid();
+        }
+
+        //Now that the UI has updated to reflect the conveyor move, we can reenable queueing for the player
+        //UIArtifact.EnableQueueing();
+    }
+                    
+
     //This method covers conveyor belts that stretch over multiple tiles as well as arbitrary grid size, which is a lot more than we needed lol.
     private SMoveConveyor ConstructMove()
     {
         List<Movement> moves = new List<Movement>();
         STile[,] stiles = SGrid.Current.GetGrid();
-
-
-        //Check if a tile is on the conveyor belt
         int count = 0;
         Vector2Int curr = start;
+
+
+        //Get to the start of the move
         while (!stiles[curr.x, curr.y].isTileActive)
         {
             curr += dir;
             count++;
-
 
             if (count >= length)
             {
@@ -169,38 +171,35 @@ public class Conveyor : ElectricalNode
                 return null;
             }
         }
-
         Vector2Int moveStart = curr;
 
         List<Vector2Int> movingTiles = new List<Vector2Int>();
         List<Vector2Int> emptyTiles = new List<Vector2Int>();
         int moveLength = 0;
         bool passedFirstEmpty = false;
-        while (moveLength < length && curr.x >= 0 && curr.y >= 0 && curr.x < SGrid.Current.Width && curr.y < SGrid.Current.Height)
+        while (moveLength < length && PosInSGridBounds(curr))
         {
             if (stiles[curr.x, curr.y].isTileActive && !passedFirstEmpty)
             {
                 //Add all tiles on the conveyor belt and tiles pushed by those on the conveyor belt.
                 movingTiles.Add(curr);
             }
-            else if (!stiles[curr.x, curr.y].isTileActive)
+            else if (!stiles[curr.x, curr.y].isTileActive)  //Check that there's space at the end of the conveyor belt.
             {
-                //Check that there's space at the end of the conveyor belt.
-                //This only happens once for length 1 conveyors (i.e. Factory)
+                
                 emptyTiles.Add(curr);
                 moveLength++;   
                 passedFirstEmpty = true;
             } else
             {
                 //Tile is active, and we've already passed at least one empty tile
-                //NOTE: There is an edge case where if length is more than one, it could push into an empty square and then push into another chain, but our grids are small enough that this case doesn't occur.
                 break;
             }
 
             curr += dir;
         }
 
-        if (!passedFirstEmpty) //&& (curr.x >= SGrid.current.width || curr.y >= SGrid.current.height || curr.x < 0 || curr.y < 0))
+        if (!passedFirstEmpty)
         {
             //Belt is locked, so this move isn't possible.
             return null;
@@ -218,5 +217,10 @@ public class Conveyor : ElectricalNode
         }
 
         return new SMoveConveyor(moves);
+    }
+
+    private bool PosInSGridBounds(Vector2Int pos)
+    {
+        return pos.x >= 0 && pos.y >= 0 && pos.x < SGrid.Current.Width && pos.y < SGrid.Current.Height;
     }
 }
