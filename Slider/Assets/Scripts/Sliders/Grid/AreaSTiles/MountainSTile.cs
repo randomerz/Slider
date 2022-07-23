@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class MountainSTile : STile
 {
+    
     public override void Init()
     {
         STILE_WIDTH = 25;
         base.Init();
+        housingOffset = -250;
     }
 
     public override Vector3 calculatePosition(int x, int y) 

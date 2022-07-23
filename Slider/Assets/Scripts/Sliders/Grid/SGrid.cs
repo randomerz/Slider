@@ -26,6 +26,7 @@ public class SGrid : Singleton<SGrid>, ISavable
 
     [SerializeField] protected int width;
     [SerializeField] protected int height;
+    [SerializeField] protected int housingOffset = -150;
     [SerializeField] protected STile[] stiles;
     [SerializeField] protected SGridBackground[] bgGridTiles;
     [SerializeField] protected Collectible[] collectibles;
@@ -306,23 +307,28 @@ public void SetGrid(int[,] puzzle)
         return Width * Height;
     }
 
-    //S: copy of Player's GetStileUnderneath for the tracker
-    // DC: This will prefer an GameObjs parented STile if it has one
-    public STile GetStileUnderneath(GameObject target)
+    
+
+    // C: result of consolidating 2 versions of this method
+    // and i don't wanna rewrite method calls
+    public static STile GetStileUnderneath(GameObject target)
     {
+        return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>());
+    }
+
+    // DC: This will prefer an GameObjs parented STile if it has one
+    public static STile GetSTileUnderneath(Transform entity, STile stileUnderneath)
+    {
+        STile[,] grid = SGrid.Current.GetGrid();
         float offset = grid[0, 0].STILE_WIDTH / 2f;
-        float housingOffset = -150;
-        
-        STile stileUnderneath = null;
-        STile currentStileUnderneath = target.GetComponentInParent<STile>(); // in case this obj is parented to something
         foreach (STile s in grid)
         {
-            if (s.isTileActive && IsObjectInSTileBounds(target.transform.position, s.transform.position, offset, housingOffset))
+            if (s.isTileActive && PosInSTileBounds(entity.position, s.transform.position, offset))
             {
-                if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
+                if (stileUnderneath  != null && s.islandId == stileUnderneath .islandId)
                 {
                     // we are still on top of the same one
-                    return currentStileUnderneath;
+                    return stileUnderneath;
                 }
                 
                 if (stileUnderneath == null || s.islandId < stileUnderneath.islandId)
@@ -335,11 +341,11 @@ public void SetGrid(int[,] puzzle)
         return stileUnderneath;
     }
 
-    private bool IsObjectInSTileBounds(Vector3 targetPos, Vector3 stilePos, float offset, float housingOffset)
+    public static bool PosInSTileBounds(Vector3 pos, Vector3 stilePos, float offset)
     {
-        if (stilePos.x - offset < targetPos.x && targetPos.x < stilePos.x + offset &&
-           (stilePos.y - offset < targetPos.y && targetPos.y < stilePos.y + offset || 
-            stilePos.y - offset + housingOffset < targetPos.y && targetPos.y < stilePos.y + offset + housingOffset))
+        if (stilePos.x - offset < pos.x && pos.x < stilePos.x + offset &&
+           (stilePos.y - offset < pos.y && pos.y < stilePos.y + offset ||
+            stilePos.y - offset + Current.housingOffset < pos.y && pos.y < stilePos.y + offset + Current.housingOffset))
         {
             return true;
         }
@@ -413,16 +419,13 @@ public void SetGrid(int[,] puzzle)
     //L: Updates internal state (the grid[,]) based on result of SMove. See Move in SGridAnimator for the actual moving of the tiles.
     public virtual void Move(SMove move)
     {
-
         gridAnimator.Move(move);
 
         STile[,] newGrid = new STile[Width, Height];
         System.Array.Copy(grid, newGrid, Width * Height);
         foreach (Movement m in move.moves)
         {
-            //grid[m.x, m.y].SetGridPosition(m.z, m.w);
             newGrid[m.endLoc.x, m.endLoc.y] = grid[m.startLoc.x, m.startLoc.y];
-            //Debug.Log("Setting " + m.x + " " + m.y + " to " + m.z + " " + m.w);
         }
         STile[,] oldGrid = grid;
         grid = newGrid;

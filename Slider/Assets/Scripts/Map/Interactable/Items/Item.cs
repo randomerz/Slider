@@ -40,7 +40,7 @@ public class Item : MonoBehaviour
         // }
 
         // STile hitTile = hit.GetComponent<STile>();
-        STile hitStile = SGrid.Current.GetStileUnderneath(gameObject);
+        STile hitStile = SGrid.GetStileUnderneath(gameObject);
         
         if (hitStile == null) 
         {
@@ -112,7 +112,7 @@ public class Item : MonoBehaviour
         GameObject end = new GameObject("ItemDropEnd");
         end.transform.position = target;
 
-        STile hitStile = SGrid.Current.GetStileUnderneath(end);
+        STile hitStile = SGrid.GetStileUnderneath(end);
         start.transform.parent = hitStile == null ? null : hitStile.transform;
         end.transform.parent = hitStile == null ? null : hitStile.transform;
 

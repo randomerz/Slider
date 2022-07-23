@@ -60,7 +60,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
 
     private void FixedUpdate()
     {
-        currentStileUnderneath = STile.GetSTileUnderneath(transform, currentStileUnderneath);
+        currentStileUnderneath = SGrid.GetSTileUnderneath(transform, currentStileUnderneath);
     }
 
     public void AddNewConditionals(NPCConditionals cond)
