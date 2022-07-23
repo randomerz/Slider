@@ -125,7 +125,15 @@ public class TimeTravelArtifact : UIArtifact
         GetButton(desynchIslandId).SetLightning(false);
         GetButton(FindAltId(desynchIslandId)).SetLightning(false);
 
-        /* C: you can uncomment this if desynching isn't working, it might help locate the source of the problem
+        // C: you can uncomment this if desynching isn't working, it might help locate the source of the problem
+        // PrintGrid(currGrid, newGrid);
+
+        SGrid.Current.SetGrid(newGrid);
+    }
+
+    //C: debugging tool if desynch gets broken
+    public void PrintGrid(int[,] currGrid, int[,] newGrid)
+    {
         string output = "";
         
         for(int y = 2; y >=0 ; y--)
@@ -149,9 +157,6 @@ public class TimeTravelArtifact : UIArtifact
             output+="\n";
         }
         Debug.Log(output);
-        */
-
-        SGrid.Current.SetGrid(newGrid);
     }
 
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
