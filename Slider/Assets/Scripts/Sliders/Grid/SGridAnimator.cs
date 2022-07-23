@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SGridAnimator : MonoBehaviour
 {
-    //public bool isMoving = false;
 
     // set in inspector
     public AnimationCurve movementCurve;
@@ -22,7 +21,7 @@ public class SGridAnimator : MonoBehaviour
 
     public void ChangeMovementDuration(float value)
     {
-        movementDuration =value;
+        movementDuration = value;
     }
 
 
@@ -38,7 +37,6 @@ public class SGridAnimator : MonoBehaviour
         {
             grid = SGrid.Current.GetGrid();
         }
-        //STile[,] grid = SGrid.current.GetGrid();
 
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
         StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move.positions, borders));
@@ -46,13 +44,9 @@ public class SGridAnimator : MonoBehaviour
         foreach (Movement m in move.moves)
         {
             if (grid[m.startLoc.x, m.startLoc.y].isTileActive)
-            {
-                StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move));
-            }
+                DetermineMoveType(move, grid, m);        
             else
-            {
                 grid[m.startLoc.x, m.startLoc.y].SetGridPosition(m.endLoc.x, m.endLoc.y);
-            }
         }
 
         // DC: bug involving anchoring a tile in a rotate, lets you walk into void
@@ -62,8 +56,16 @@ public class SGridAnimator : MonoBehaviour
         }
     }
 
+    //C: Added to avoid duplicated code in mountian section
+    protected virtual void DetermineMoveType(SMove move, STile[,] grid, Movement m)
+    {
+        StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move));
+    }
+
     // move is only here so we can pass it into the event
-    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move)
+    // C: if lerp is true, will animate to destination (this is the case 99% of the time)
+    // if lerp is false, will wait and then TP to destination
+    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool lerp = true)
     {
         float t = 0;
         //isMoving = true;
@@ -89,30 +91,20 @@ public class SGridAnimator : MonoBehaviour
         while (t < movementDuration)
         {
             t += Time.deltaTime;    //L: This needs to be before evaluate, or else t won't reach 1 before loop exits.
-            //Idk if Evaluate actually clamps or not
-            float s = movementCurve.Evaluate(Mathf.Min(t / movementDuration, 1));
-            Vector2 pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
-            //Vector3 pos = (1 - s) * orig + s * target;
             
-            stile.SetMovingPosition(pos);
-
+            if(lerp)
+            {
+                float s = movementCurve.Evaluate(Mathf.Min(t / movementDuration, 1));
+                Vector2 pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
+                stile.SetMovingPosition(pos);
+            }
             yield return null;
         }
-
-        //isMoving = false;
         
         if (isPlayerOnStile)
         {
             stile.SetBorderColliders(false);
         }
-        //for (int i = 0; i < collidersInactive.Count; i++)
-        //{
-        //    if (collidersInactive[i].SetSliderCollider(true))
-        //    {
-        //        collidersInactive.RemoveAt(i);
-        //        i--;
-        //    }
-        //}
 
         stile.SetGridPosition(moveCoords.endLoc);
         stile.SetMovingDirection(Vector2.zero);
@@ -199,30 +191,10 @@ public class SGridAnimator : MonoBehaviour
         stile.SetBorderColliders(false);
     }
 
-    protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) // include magnitude?
+    protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) 
     {
         Vector2 dif = start - end;
-        if (dif.x > 0)
-        {
-            return Vector2.right;
-        }
-        else if (dif.x < 0)
-        {
-            return Vector2.left;
-        }
-        else if (dif.y > 0)
-        {
-            return Vector2.up;
-        }
-        else if (dif.y < 0)
-        {
-            return Vector2.down;
-        }
-        else
-        {
-            Debug.LogError("Moving Tile to the same spot!");
-            return Vector2.zero;
-        }
+        return dif.magnitude > 0.1 ? dif : Vector2.zero; //C: in case of float jank
     }
 
     protected IEnumerator StartCameraShakeEffect()
