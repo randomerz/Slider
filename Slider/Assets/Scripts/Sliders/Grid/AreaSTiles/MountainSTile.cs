@@ -9,7 +9,6 @@ public class MountainSTile : STile
     {
         STILE_WIDTH = 25;
         base.Init();
-        housingOffset = -250;
     }
 
     public override Vector3 calculatePosition(int x, int y) 

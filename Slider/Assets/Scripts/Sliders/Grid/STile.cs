@@ -9,7 +9,6 @@ public class STile : MonoBehaviour
     public int islandId = -1;    //L: islandId is the id of the corresponding tile in the puzzle doc
     public int x = -1;
     public int y = -1;
-    public static int housingOffset = -150;
 
     public bool hasAnchor;
     public STile linkTile; //C: is this still needed?
@@ -224,7 +223,7 @@ public class STile : MonoBehaviour
         transform.position = newPos;
         SetTileMapPositions(newPos);
     }
-    
+
     protected void SetTileMapPositions(Vector3 pos)
     {
         pos = pos + new Vector3(-0.5f, -0.5f);
