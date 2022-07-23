@@ -210,58 +210,28 @@ public void SetGrid(int[,] puzzle)
     public static string GetGridString(bool numsOnly = false)
     {
         return GetGridString(Current.grid, numsOnly);
-        //string s = "";
-        //for (int y = current.height - 1; y >= 0; y--)
-        //{
-        //    for (int x = 0; x < current.width; x++)
-        //    {
-        //        if (current.grid[x, y].isTileActive)
-        //            s += IntToChar(current.grid[x, y].islandId);
-        //        else
-        //            s += "#";
-        //    }
-        //    if (y != 0)
-        //    {
-        //        s += "_";
-        //    }
-        //}
-        //return s;
     }
+
+    //C: If numsOnly is true, then the grid string will contain all tile IDs. 
+    // If false, then inactive tiles will be represented by #s
 
     public static string GetGridString(STile[,] grid, bool numsOnly = false)
     {
         string s = "";
-        /*if (numsOnly)
+        for (int y = grid.GetLength(1) - 1; y >= 0; y--)
         {
-            for (int y = grid.GetLength(1) - 1; y >= 0; y--)
+            for (int x = 0; x < grid.GetLength(0); x++)
             {
-                for (int x = 0; x < grid.GetLength(0); x++)
-                {
+                if (numsOnly || grid[x, y].isTileActive)
                     s += IntToChar(grid[x, y].islandId);
-                }
-                if (y != 0)
-                {
-                    s += "_";
-                }
+                else
+                    s += "#";
+            }
+            if (y != 0)
+            {
+                s += "_";
             }
         }
-        else
-        {*/
-            for (int y = grid.GetLength(1) - 1; y >= 0; y--)
-            {
-                for (int x = 0; x < grid.GetLength(0); x++)
-                {
-                    if (numsOnly || grid[x, y].isTileActive)
-                        s += IntToChar(grid[x, y].islandId);
-                    else
-                        s += "#";
-                }
-                if (y != 0)
-                {
-                    s += "_";
-                }
-            }
-        //}
         return s;
     }
 
@@ -327,6 +297,7 @@ public void SetGrid(int[,] puzzle)
         }
         return numCollected;
     }
+    
     /// <summary>
     /// Returns the number of STiles available in the current SGrid.
     /// </summary>

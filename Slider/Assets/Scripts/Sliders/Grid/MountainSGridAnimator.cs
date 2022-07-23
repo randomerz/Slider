@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class MountainSGridAnimator : SGridAnimator
 {
-     //public bool isMoving = false;
-
-    // set in inspector
- 
-
     public override void Move(SMove move, STile[,] grid = null)
     {
         if (grid == null)
@@ -17,7 +12,6 @@ public class MountainSGridAnimator : SGridAnimator
         }
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
    
-        //STile[,] grid = SGrid.current.GetGrid();
         StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move.positions, borders));
 
         foreach (Movement m in move.moves)
@@ -65,14 +59,6 @@ public class MountainSGridAnimator : SGridAnimator
         {
             stile.SetBorderColliders(false);
         }
-        //for (int i = 0; i < collidersInactive.Count; i++)
-        //{
-        //    if (collidersInactive[i].SetSliderCollider(true))
-        //    {
-        //        collidersInactive.RemoveAt(i);
-        //        i--;
-        //    }
-        //}
 
         stile.SetMovingDirection(Vector2.zero);
         stile.SetGridPosition(moveCoords.endLoc);
