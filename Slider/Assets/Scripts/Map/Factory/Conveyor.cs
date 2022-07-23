@@ -105,40 +105,47 @@ public class Conveyor : ElectricalNode
                 //UIArtifact.DisableQueueing();
                 //UIArtifact.ClearQueues();
 
-                StartCoroutine(WaitOutOverlappingActiveMoves(move, artifact.QueueMoveToFront));
+                StartCoroutine(WaitOutOverlappingActiveMoves(move, QueueConveyorMove));
                 //QueueMoveCallback(move);
             }
         }
     }
 
     //This might cause race conditions for multiple conveyor belts affecting the same tiles, might need to revisit. (static ref. counter for Conveyors)
-    private IEnumerator WaitOutOverlappingActiveMoves(SMove move, System.Action<SMove> callback)
+    private IEnumerator WaitOutOverlappingActiveMoves(SMove move, System.Action<SMoveConveyor> callback = null)
     {
         waitingToDoMove = true;
-        foreach (SMove activeMove in UIArtifact.GetActiveMoves())
+
+        //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
+        yield return new WaitForSeconds(0.2f);
+
+        List<SMove> currActiveMoves = UIArtifact.GetActiveMoves();
+        foreach (SMove activeMove in currActiveMoves)
         {
             if (activeMove.Overlaps(move))
             {
-                while (UIArtifact.ActiveMovesExist())
+                while (currActiveMoves.Contains(activeMove))
                 {
                     yield return null;
                 }
                 break;
             }
         }
-
-        //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
-        yield return new WaitForSeconds(0.2f);
         waitingToDoMove = false;
 
-        //L: The Move Might've Changed! (for example if a tile moved in front).
-        SMoveConveyor newMove = ConstructMove();
-        if (ConveyorPowered)
+        if (callback != null)
         {
-            artifact.QueueMoveToFront(newMove);
+            callback(ConstructMove());  //Construct a brand new move because it might have changed! (ex: tile moving in front of conveyor, so have to push both tiles).
         }
     }
-                    
+
+    private void QueueConveyorMove(SMoveConveyor move)
+    {
+        if (ConveyorPowered && move != null)
+        {
+            artifact.QueueMoveToFront(move);
+        }
+    }              
 
     //This method covers conveyor belts that stretch over multiple tiles as well as arbitrary grid size, which is a lot more than we needed lol.
     private SMoveConveyor ConstructMove()

@@ -578,7 +578,7 @@ public class UIArtifact : Singleton<UIArtifact>
         button.SetSelected(true);
     }
 
-    private void UpdateMoveOptions()
+    protected void UpdateMoveOptions()
     {
         if (buttonSelected != null)
         {
