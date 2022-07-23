@@ -156,21 +156,27 @@ public class TimeTravelArtifact : UIArtifact
 
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
-        List<ArtifactTileButton> options = base.GetMoveOptions(button);
+        var options = new List<ArtifactTileButton>();
 
-        for (int i = 0; i < options.Count; ) {
-            ArtifactTileButton option = options[i];
+        Vector2Int[] dirs = {
+            Vector2Int.right,
+            Vector2Int.up,
+            Vector2Int.left,
+            Vector2Int.down
+        };
 
-            bool differentTimePeriod = button.x / 3 != option.x / 3; //C: check that x/3 is the same to not count moves on the other side of the grid as valid
-            if (differentTimePeriod || CheckDesynch(button, option))    //C: Check anchor on opposite tile.
+        foreach (Vector2Int dir in dirs)
+        {
+            ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
+            int i = 2;
+            while (b != null && !b.TileIsActive && !CheckDesynch(button, b)
+            && button.x / 3 == b.x / 3)
             {
-                options.RemoveAt(i);
-            } else
-            {
+                options.Add(b);
+                b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
                 i++;
             }
         }
-
         return options;
     }
 
