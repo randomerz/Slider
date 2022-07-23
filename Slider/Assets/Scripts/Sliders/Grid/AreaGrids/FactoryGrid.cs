@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FactoryGrid : TimeTravelGrid
+public class FactoryGrid : SGrid
 {
 
     public override void Init() {

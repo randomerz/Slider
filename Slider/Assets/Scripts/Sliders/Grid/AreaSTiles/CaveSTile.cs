@@ -50,9 +50,9 @@ public class CaveSTile : STile
         base.Start();
     }
 
-    private new void Update()
+    private void Update()
     {
-        base.Update();
+        //base.Update();
 
         if (LightManager.instance != null && this.GetMovingDirection() != Vector2.zero)
         {

@@ -10,14 +10,13 @@ public class PlayerConditionals : MonoBehaviour
 
     public bool addToOnAction;
 
-    private bool isEnabled = true;
-
-
     public bool isCarryingItem;
     public string itemNameCheck;
 
-    // caves
     public bool triggerIsLit;
+
+    private bool actionAdded;
+    private bool onActionEnabled = true;
     private LightManager lm;
 
     private void Awake()
@@ -36,10 +35,9 @@ public class PlayerConditionals : MonoBehaviour
             // Debug.Log("Adding listener!");
             if (addToOnAction)
             {
-                if (isEnabled)
+                if (onActionEnabled)
                 {
-                    PlayerAction.OnAction += OnActionListener;
-                    Player.GetPlayerAction().IncrementActionsAvailable();
+                    AddAction();
                 }
             }
             else
@@ -56,10 +54,9 @@ public class PlayerConditionals : MonoBehaviour
             // Debug.Log("Removing listener!");
             if (addToOnAction)
             {
-                if (isEnabled)
+                if (onActionEnabled)
                 {
-                    PlayerAction.OnAction -= OnActionListener;
-                    Player.GetPlayerAction().DecrementActionsAvailable();
+                    RemoveAction();
                 }
             }
         }
@@ -72,12 +69,12 @@ public class PlayerConditionals : MonoBehaviour
 
     public bool CheckCondition(bool invoke=true)
     {
-        if (!isEnabled)
+        if (!onActionEnabled)
         {
             return false;
         }
 
-        // caves
+        // Caves power station door
         if (triggerIsLit)
         {
             if (lm != null)
@@ -113,17 +110,37 @@ public class PlayerConditionals : MonoBehaviour
         onSuccess?.Invoke();
     }
 
+    public void DisableConditionals()
+    {
+        if (addToOnAction && onActionEnabled)
+        {
+            RemoveAction();
+            onActionEnabled = false;
+        }
+    }
+
     private void OnActionListener(object sender, System.EventArgs e)
     {
         CheckCondition();
     }
 
-    public void DisableConditionals()
+    private void AddAction()
     {
-        PlayerAction.OnAction -= OnActionListener;
-        Player.GetPlayerAction().DecrementActionsAvailable();
-        addToOnAction = false;
-        isEnabled = false;
+        if (!actionAdded)
+        {
+            actionAdded = true;
+            PlayerAction.OnAction += OnActionListener;
+            Player.GetPlayerAction().IncrementActionsAvailable();
+        }
     }
 
+    private void RemoveAction()
+    {
+        if (actionAdded)
+        {
+            actionAdded = false;
+            PlayerAction.OnAction -= OnActionListener;
+            Player.GetPlayerAction().DecrementActionsAvailable();
+        }
+    }
 }
