@@ -37,7 +37,7 @@ public class TimedGate : ElectricalNode
         get
         {
             bool normal = inputsPowered != null && inputsPowered.Count >= numInputs;
-            return invertSignal ? !normal : normal;
+            return (invertSignal ? !normal : normal) || debugAsPoweredOn;
         }
     }
 
@@ -63,12 +63,18 @@ public class TimedGate : ElectricalNode
     private new void OnEnable()
     {
         base.OnEnable();
+
+        if (Powered)
+        {
+            EvaluateGate();
+        }
         UIArtifact.MoveMadeOnArtifact += MoveMadeOnArtifact;
     }
 
     private new void OnDisable()
     {
         base.OnDisable();
+        blinking = false;   //L: Coroutines are stopped when game objects are disabled.
         UIArtifact.MoveMadeOnArtifact -= MoveMadeOnArtifact;
     }
     #endregion
@@ -94,9 +100,8 @@ public class TimedGate : ElectricalNode
         base.OnPoweredHandler(e);
         if (e.powered)
         {
-            //Once the timed gate is powered, it essentially acts as an input source to it's outputs, so we only care about when it is powered.
-            PushSignalToOutput(true, new HashSet<ElectricalNode>(), 1);
-            EvaluateGate();
+            //Once the timed gate is powered, it essentially acts as an input source to it's outputs. It will not turn off
+            PowerGate();
         }
     }
     #endregion
@@ -167,6 +172,12 @@ public class TimedGate : ElectricalNode
                 EvaluateGate();
             }
         }
+    }
+
+    private void PowerGate()
+    {
+        PushSignalToOutput(true, new HashSet<ElectricalNode>(), 1);
+        EvaluateGate();
     }
 
     private IEnumerator WaitAfterMove(System.Action callback)
