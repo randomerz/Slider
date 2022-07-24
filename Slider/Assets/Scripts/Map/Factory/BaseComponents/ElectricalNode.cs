@@ -92,7 +92,7 @@ public class ElectricalNode : MonoBehaviour
             Debug.LogError("Can only start a signal from an INPUT node.");
         }
 
-        if (Powered != input)    //This ensures we don't double propagate
+        if (Powered != input && !(PowerCrystal.Blackout && input))    //This ensures we don't double propagate
         {
             powerRefs = input ? 1 : 0;
 
