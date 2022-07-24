@@ -430,6 +430,7 @@ public class UIArtifact : Singleton<UIArtifact>
             SMove move = moveQueue.Dequeue();
             if (CheckMoveHasAnActiveTile(move)) //L: If we don't do this, we risk adding an active move that never dequeues, overflowing the queue, and BREAKING THE ENTIRE GAME.
             {
+                move.duration *= 1f - moveQueue.Count / 10f;   //Queuing more moves will make it go faster.
                 SGrid.Current.Move(move);
                 activeMoves.Add(move);
             }

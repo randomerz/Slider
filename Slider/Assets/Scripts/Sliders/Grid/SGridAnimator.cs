@@ -7,7 +7,7 @@ public class SGridAnimator : MonoBehaviour
 
     // set in inspector
     public AnimationCurve movementCurve;
-    protected float movementDuration = 1;
+    protected float movementDuration = 1f;
 
     public class OnTileMoveArgs : System.EventArgs
     {
@@ -18,6 +18,8 @@ public class SGridAnimator : MonoBehaviour
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndEarly;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
+
+    private float currMoveDuration = 1f;
 
 
     public void ChangeMovementDuration(float value)
@@ -38,6 +40,7 @@ public class SGridAnimator : MonoBehaviour
         {
             grid = SGrid.Current.GetGrid();
         }
+        currMoveDuration = movementDuration * move.duration;
 
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
         StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move.positions, borders));
@@ -89,13 +92,13 @@ public class SGridAnimator : MonoBehaviour
 
         StartCoroutine(StartCameraShakeEffect());
 
-        while (t < movementDuration)
+        while (t < currMoveDuration)
         {
-            t += Time.deltaTime;    //L: This needs to be before evaluate, or else t won't reach 1 before loop exits.
+            t += Time.deltaTime;
             
             if(animate)
             {
-                float s = movementCurve.Evaluate(Mathf.Min(t / movementDuration, 1));
+                float s = movementCurve.Evaluate(Mathf.Min(t / currMoveDuration, 1));
                 Vector2 pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
                 stile.SetMovingPosition(pos);
             }
@@ -171,7 +174,7 @@ public class SGridAnimator : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(movementDuration); // ideally this should be called with an event, not after time
+        yield return new WaitForSeconds(currMoveDuration); // ideally this should be called with an event, not after time
 
         foreach (Vector2Int p in borders.Keys)
         {
@@ -194,9 +197,21 @@ public class SGridAnimator : MonoBehaviour
     {
         stile.SetBorderColliders(true);
 
-        yield return new WaitForSeconds(movementDuration);
+        yield return new WaitForSeconds(currMoveDuration);
 
         stile.SetBorderColliders(false);
+    }
+
+    protected IEnumerator StartCameraShakeEffect()
+    {
+        CameraShake.ShakeConstant(currMoveDuration + 0.1f, 0.15f);
+        AudioManager.PlayWithVolume("Slide Rumble", currMoveDuration);
+
+        yield return new WaitForSeconds(currMoveDuration);
+
+        CameraShake.Shake(currMoveDuration / 2, 1.0f);
+        AudioManager.PlayWithVolume("Slide Explosion", currMoveDuration);
+
     }
 
     protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) 
@@ -204,22 +219,6 @@ public class SGridAnimator : MonoBehaviour
         Vector2 dif = start - end;
         return dif.magnitude > 0.1 ? dif : Vector2.zero; //C: in case of float jank
     }
-
-    protected IEnumerator StartCameraShakeEffect()
-    {
-        CameraShake.ShakeConstant(movementDuration + 0.1f, 0.15f);
-        AudioManager.PlayWithVolume("Slide Rumble", movementDuration);
-
-        yield return new WaitForSeconds(movementDuration);
-
-        CameraShake.Shake(movementDuration/2, 1.0f);
-        AudioManager.PlayWithVolume("Slide Explosion", movementDuration);
-
-    }
-
-
-
-    
 
     private void CheckAnchorInRotate(SMoveRotate move, STile[,] grid)
     {

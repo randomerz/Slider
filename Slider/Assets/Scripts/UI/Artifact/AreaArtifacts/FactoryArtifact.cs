@@ -45,7 +45,7 @@ public class FactoryArtifact : UIArtifact
     public static IEnumerator WaitOutOverlappingActiveMoves(SMove move, System.Action callback = null)
     {
         //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.05f);
 
         List<SMove> currActiveMoves = GetActiveMoves();
         foreach (SMove activeMove in currActiveMoves)
