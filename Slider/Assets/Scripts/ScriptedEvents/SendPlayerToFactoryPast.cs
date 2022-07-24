@@ -17,6 +17,21 @@ public class SendPlayerToFactoryPast : MonoBehaviour
     {
         //Do Cool Cutscene Stuff (see Trello design card)
 
+        UIEffects.FadeToWhite( () =>
+        {
+            StartCoroutine(SendThenFadeIn());
+        }, 3.0f, false);
+    }
+
+    private IEnumerator SendThenFadeIn()
+    {
+        SpawnPlayerInPast();
+        yield return new WaitForSeconds(2.0f);
+        UIEffects.FadeFromWhite();
+    }
+
+    private void SpawnPlayerInPast()
+    {
         foreach (Conveyor conv in conveyors)
         {
             conv.ConveyorEnabled = false;
@@ -27,7 +42,6 @@ public class SendPlayerToFactoryPast : MonoBehaviour
             go.SetActive(true);
         }
 
-        //Might want to change to fixed position at RelativeMe so that player isn't OOB.
-        ppChanger.UPPRelativePlayer();
+        ppChanger.UPPTransform();
     }
 }
