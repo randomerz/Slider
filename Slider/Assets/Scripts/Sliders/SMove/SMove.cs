@@ -5,13 +5,10 @@ using UnityEngine;
 //L: A representation of a move made on the artifact, as well as the borders around the move that prevent the player from clipping.
 public class SMove
 {
-    public List<Movement> moves = new List<Movement>(); // move tile at (x1, y1) to (x2, y2)
-
-    //L: Every (x, y) position that is touched by moves
+    public float duration = 1.0f;   //Normalized to movement duration in SGridAnimator
+    public List<Movement> moves = new List<Movement>();
     public HashSet<Vector2Int> positions = new HashSet<Vector2Int>();   
-    //L: key - (x, y) position of a tile
-    //L: Value - A list of values taken from 0, 1, 2, 3 (maximum of 4 values) for each tile side denoting which borderse are on.
-    public Dictionary<Vector2Int, List<int>> borders = new Dictionary<Vector2Int, List<int>>();
+    public Dictionary<Vector2Int, List<int>> borders = new Dictionary<Vector2Int, List<int>>(); //(pos of tile, borders {0, 1, 2, 3})
 
     public virtual Dictionary<Vector2Int, List<int>> GenerateBorders()
     {
@@ -98,7 +95,7 @@ public class SMove
     }
 }
 
-//C: a movment between 2 points, stored as a pair of vector 2s
+//C: a movement between 2 points, stored as a pair of vector 2s
 public class Movement 
 {
     public Vector2Int startLoc;
@@ -128,11 +125,6 @@ public class SMoveSwap : SMove
         moves.Add(new Movement(x1, y1, x2, y2, islandId1));
         moves.Add(new Movement(x2, y2, x1, y1, islandId2));
     }
-
-    public Movement GetSwapAsVector()
-    {
-        return moves[0];
-    }
 }
 
 public class SMoveLayerSwap: SMove
@@ -141,11 +133,6 @@ public class SMoveLayerSwap: SMove
     {
         moves.Add(new Movement(x1, y1, x2, y2, islandId1));
         moves.Add(new Movement(x2, y2, x1, y1, islandId2));
-    }
-
-    public Movement GetSwapAsVector()
-    {
-        return moves[0];
     }
 
     public override Dictionary<Vector2Int, List<int>> GenerateBorders()
@@ -259,6 +246,7 @@ public class SMoveConveyor : SMove
     public SMoveConveyor(List<Movement> moves)
     {
         this.moves = new List<Movement>(moves);
+        this.duration = 0.5f;
     }
 }
 
