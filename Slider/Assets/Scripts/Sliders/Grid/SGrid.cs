@@ -315,18 +315,20 @@ public void SetGrid(int[,] puzzle)
     }
 
     // DC: This will prefer an GameObjs parented STile if it has one
-    public static STile GetSTileUnderneath(Transform entity, STile stileUnderneath)
+    public static STile GetSTileUnderneath(Transform entity, STile currentStileUnderneath)
     {
         STile[,] grid = SGrid.Current.GetGrid();
         float offset = grid[0, 0].STILE_WIDTH / 2f;
+
+        STile stileUnderneath = null;
         foreach (STile s in grid)
         {
             if (s.isTileActive && PosInSTileBounds(entity.position, s.transform.position, offset))
             {
-                if (stileUnderneath  != null && s.islandId == stileUnderneath .islandId)
+                if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
                 {
                     // we are still on top of the same one
-                    return stileUnderneath;
+                    return currentStileUnderneath;
                 }
                 
                 if (stileUnderneath == null || s.islandId < stileUnderneath.islandId)

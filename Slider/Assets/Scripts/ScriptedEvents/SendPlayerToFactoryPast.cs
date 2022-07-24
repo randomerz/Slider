@@ -27,6 +27,7 @@ public class SendPlayerToFactoryPast : MonoBehaviour
             go.SetActive(true);
         }
 
+        //Might want to change to fixed position at RelativeMe so that player isn't OOB.
         ppChanger.UPPRelativePlayer();
     }
 }
