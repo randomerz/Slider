@@ -14,6 +14,7 @@ public class OceanGrid : SGrid
     public LostGuyMovement lostGuyMovement;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
+    public List<int> buoytiles = new List<int> {1, 3, 4, 8, 9};
 
     private Vector2Int[] correctPath =
     {
@@ -210,7 +211,8 @@ public class OceanGrid : SGrid
 
     private bool BuoyConditions()
     {
-        if (!(GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
+        return (AllBuoy() && knotBox.isActiveAndEnabled && (knotBox.CheckLines() == 0));
+        /*if (!(GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
         {
             return false;
         }
@@ -220,36 +222,40 @@ public class OceanGrid : SGrid
             return false;
         }
 
-        return knotBox.CheckLines() == 0;
+        return knotBox.CheckLines() == 0;*/
     }
 
     public void BuoyAllFound(Condition c)
     {
-        if (!AllBuoy())
+        c.SetSpec(AllBuoy());
+      /*  if (!AllBuoy())
         {
             c.SetSpec(false);
         }
         else
         {
             c.SetSpec(true);
-        }
+        }*/
     }
 
+    //C: Returns if all the required buoy tiles are active
     public bool AllBuoy()
     {
-        return GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive;
+        return STile.AreAllTilesActive(GetStiles(buoytiles));
+        //return GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive;
     }
 
     public void knotBoxEnabled(Condition c)
     {
-        if (!knotBox.isActiveAndEnabled && (GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
-        {
-            c.SetSpec(true);
-        }
-        else
-        {
-            c.SetSpec(false);
-        }
+        c.SetSpec(!knotBox.isActiveAndEnabled && AllBuoy());
+       // if (!knotBox.isActiveAndEnabled && (GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
+        //{
+        //    c.SetSpec(true);
+        //}
+        //else
+       // {
+       //     c.SetSpec(false);
+      //  }
     }
 
     public void BuoyCheck(Condition c)
@@ -388,7 +394,7 @@ public class OceanGrid : SGrid
 
     public bool FoggyCompleted()
     {
-        return playerIndex == 9;
+        return playerIndex == correctPath.Length;
     }
 
     // Final puzzle

@@ -259,6 +259,15 @@ public void SetGrid(int[,] puzzle)
         return null;
     }
 
+    public List<STile> GetStiles(List<int> idList)
+    {
+        List<STile> returnList = new List<STile>();
+        foreach (STile t in stiles)
+            if (idList.Contains(t.islandId))
+                returnList.Add(t);
+        return returnList;
+    }
+
     protected void SwapTiles(STile one, STile two)
     {
         int x = two.x;
