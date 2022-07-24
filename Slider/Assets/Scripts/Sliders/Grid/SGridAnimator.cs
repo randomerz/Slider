@@ -16,6 +16,7 @@ public class SGridAnimator : MonoBehaviour
         public SMove smove; // the SMove this Move() was a part of
     }
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
+    public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndEarly;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
 
 
@@ -108,6 +109,13 @@ public class SGridAnimator : MonoBehaviour
 
         stile.SetGridPosition(moveCoords.endLoc);
         stile.SetMovingDirection(Vector2.zero);
+
+        OnSTileMoveEndEarly?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = moveCoords.startLoc,
+            smove = move
+        });
 
         OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
         {

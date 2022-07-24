@@ -5,6 +5,8 @@ using UnityEngine;
 //L: Used to handle queue interrupts with conveyors and separate process queue things.
 public class FactoryArtifact : UIArtifact
 {
+    public static bool DequeueLocked = false;
+
     private Conveyor[] conveyors;
 
     private new void Awake()
@@ -13,10 +15,13 @@ public class FactoryArtifact : UIArtifact
         conveyors = GameObject.FindObjectsOfType<Conveyor>();
     }
 
-    //public override void ProcessQueue()
-    //{
-    //    StartCoroutine(WaitUntilConveyorCheckCleared(base.ProcessQueue)); 
-    //}
+    public override void ProcessQueue()
+    {
+        if (!DequeueLocked)
+        {
+            base.ProcessQueue();
+        }
+    }
 
     public void QueueMoveToFront(SMove move)
     {
@@ -32,6 +37,7 @@ public class FactoryArtifact : UIArtifact
 
 
         moveQueue = new Queue<SMove>(newMoveQueue);
+        DequeueLocked = false;
         base.ProcessQueue();
         //StartCoroutine(WaitOutOverlappingActiveMoves(move, base.ProcessQueue));
     }
@@ -85,6 +91,7 @@ public class FactoryArtifact : UIArtifact
             if (newMoveQueue[i].Overlaps(moveToCheck))
             {
                 cutIndex = i;
+                break;
             }
         }
 

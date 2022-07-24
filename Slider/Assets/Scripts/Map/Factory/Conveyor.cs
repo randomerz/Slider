@@ -66,17 +66,15 @@ public class Conveyor : ElectricalNode
     private new void OnEnable()
     {
         base.OnEnable();
-        SGridAnimator.OnSTileMoveStart += OnTileMoveStart;
-        SGridAnimator.OnSTileMoveEnd += OnTileMoveEnd;
-        SGrid.OnSTileEnabled += OnTileEnabled;
+        SGridAnimator.OnSTileMoveEndEarly += OnSTileMoveEndEarly;
+        SGrid.OnSTileEnabled += OnSTileEnabled;
     }
 
     private new void OnDisable()
     {
         base.OnDisable();
-        SGridAnimator.OnSTileMoveStart -= OnTileMoveStart;
-        SGridAnimator.OnSTileMoveEnd -= OnTileMoveEnd;
-        SGrid.OnSTileEnabled -= OnTileEnabled;
+        SGridAnimator.OnSTileMoveEndEarly -= OnSTileMoveEndEarly;
+        SGrid.OnSTileEnabled -= OnSTileEnabled;
     }
 
     public override void OnPoweredHandler(OnPoweredArgs e)
@@ -92,18 +90,12 @@ public class Conveyor : ElectricalNode
         TryQueueConveyorMove();
     }
 
-    private void OnTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
+    private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
         TryQueueConveyorMove();
     }
 
-    private void OnTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        //CheckingInterruptMove = true;
-        //TryQueueConveyorMove();
-    }
-
-    private void OnTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    private void OnSTileMoveEndEarly(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         TryQueueConveyorMove();
     }
@@ -116,6 +108,7 @@ public class Conveyor : ElectricalNode
             if (move != null)
             {
                 waitingToDoMove = true;
+                FactoryArtifact.DequeueLocked = true;
                 StartCoroutine(FactoryArtifact.WaitOutOverlappingActiveMoves(move, QueueConveyorMove));
             } else
             {

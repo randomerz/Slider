@@ -21,8 +21,6 @@ public class UIArtifact : Singleton<UIArtifact>
 
     public static System.EventHandler<System.EventArgs> OnButtonInteract;
     public static System.EventHandler<System.EventArgs> MoveMadeOnArtifact;
-
-
     
     protected void Awake()
     {
