@@ -55,7 +55,13 @@ public class ArtifactTabManager : MonoBehaviour
             saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
             loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
             SetSaveLoadTabSprites(SGrid.Current.HasRealigningGrid());
-            if (SGrid.Current.GetArea() == Area.MagiTech) previewTab.SetIsVisible(true);
+            if (SGrid.Current.GetArea() == Area.MagiTech)
+            {
+                previewTab.SetIsVisible(true);
+                MagiTechArtifact artifact = (MagiTechArtifact)uiArtifactMenus.uiArtifact;
+                int direction = artifact.PlayerIsInPast ? -1 : 1;
+                previewTabAnimator.SetFloat("speed", direction);
+            }
             fragRealignTab.SetIsVisible(false);
         }
         else if (SGrid.Current.GetArea() == Area.Desert
@@ -269,12 +275,16 @@ public class ArtifactTabManager : MonoBehaviour
     {
         MagiTechArtifact artifact = (MagiTechArtifact) uiArtifactMenus.uiArtifact;
         artifact.SetPreview(true);
+        previewTabAnimator.SetBool("isHovered", true);
+        previewTabAnimator.SetFloat("speed", previewTabAnimator.GetFloat("speed") * -1);
     }
 
-    public void PreviewOnHoeverExit()
+    public void PreviewOnHoverExit()
     {
         MagiTechArtifact artifact = (MagiTechArtifact)uiArtifactMenus.uiArtifact;
         artifact.SetPreview(false);
+        previewTabAnimator.SetBool("isHovered", false);
+        previewTabAnimator.SetFloat("speed", previewTabAnimator.GetFloat("speed") * -1);
     }
 
     #endregion

@@ -60,8 +60,6 @@ public class MagiTechArtifact : UIArtifact
         {
             ArtifactTileButton desyncedButton = GetButton(desynchIslandId);
             UpdateButtonPositions();
-            Debug.Log(desyncedButton.islandId + " " + desyncedButton.x + " " + desyncedButton.y + " " + desynchLocation.x + " " + desynchLocation.y);
-            Debug.Log((desynchLocation.x != desyncedButton.x) + " " + (desynchLocation.y != desyncedButton.y));
             if (desynchLocation.x != desyncedButton.x || desynchLocation.y != desyncedButton.y)
             {
                 ArtifactTileButton pastButton = desynchIslandId <= 9 ? GetButton(FindAltId(desynchIslandId)) : GetButton(desynchIslandId);
