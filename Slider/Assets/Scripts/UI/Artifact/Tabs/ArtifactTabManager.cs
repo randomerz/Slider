@@ -267,13 +267,13 @@ public class ArtifactTabManager : MonoBehaviour
 
     public void PreviewOnHoverEnter()
     {
-        TimeTravelArtifact artifact = (TimeTravelArtifact) uiArtifactMenus.uiArtifact;
+        MagiTechArtifact artifact = (MagiTechArtifact) uiArtifactMenus.uiArtifact;
         artifact.SetPreview(true);
     }
 
     public void PreviewOnHoeverExit()
     {
-        TimeTravelArtifact artifact = (TimeTravelArtifact)uiArtifactMenus.uiArtifact;
+        MagiTechArtifact artifact = (MagiTechArtifact)uiArtifactMenus.uiArtifact;
         artifact.SetPreview(false);
     }
 
