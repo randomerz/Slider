@@ -125,7 +125,7 @@ public class MagiTechArtifact : UIArtifact
         DisableLightning(true);
         GetButton(desynchIslandId).SetLightning(false);
         GetButton(FindAltId(desynchIslandId)).SetLightning(false);
-
+        UpdatePushedDowns(null, null);
         // C: you can uncomment this if desynching isn't working, it might help locate the source of the problem
         // PrintGrid(currGrid, newGrid);
 
@@ -221,7 +221,17 @@ public class MagiTechArtifact : UIArtifact
         }
         return move;
     }
-
+    protected override void QueueMoveFromButtonPair(SMove move, ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    {
+        MoveMadeOnArtifact?.Invoke(this, null);
+        QueueAdd(move);
+        SwapButtons(buttonCurrent, buttonEmpty);
+        ArtifactTileButton currAlt = GetButton(FindAltId(buttonCurrent.islandId));
+        ArtifactTileButton emptyAlt = GetButton(FindAltId(buttonEmpty.islandId));
+        SwapButtons(currAlt, emptyAlt);
+        ProcessQueue();
+        UpdateMoveOptions();
+    }
     public override void AddButton(STile stile, bool shouldFlicker = true)
     {
         base.AddButton(stile, shouldFlicker);
@@ -234,9 +244,7 @@ public class MagiTechArtifact : UIArtifact
         {
             if (b.islandId > 9 && past || b.islandId <= 9 && !past)
             {
-                b.gameObject.SetActive(true);
-                STile myStile = SGrid.Current.GetStile(b.islandId);
-                b.UpdateTileActive();
+                b.gameObject.SetActive(true);             
             }
             else
                 b.gameObject.SetActive(false);
@@ -258,6 +266,26 @@ public class MagiTechArtifact : UIArtifact
             if (b.islandId > 9 && !isInPast || b.islandId <= 9 && isInPast)
             {
                 b.UpdateTileActive();
+            }
+        }
+    }
+
+    public override void UpdatePushedDowns(object sender, System.EventArgs e)
+    {
+        foreach (ArtifactTileButton b in _instance.buttons)
+        {
+            if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
+            {
+                //Debug.Log(b.islandId);
+                b.SetIsInMove(true);
+            }
+            else if (b.MyStile.hasAnchor)
+            {
+                continue;
+            }
+            else
+            {
+                b.SetIsInMove(false);
             }
         }
     }

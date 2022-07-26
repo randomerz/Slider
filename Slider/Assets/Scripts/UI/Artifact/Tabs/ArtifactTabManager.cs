@@ -277,6 +277,7 @@ public class ArtifactTabManager : MonoBehaviour
         artifact.SetPreview(true);
         previewTabAnimator.SetBool("isHovered", true);
         previewTabAnimator.SetFloat("speed", previewTabAnimator.GetFloat("speed") * -1);
+        artifact.DeselectSelectedButton();
     }
 
     public void PreviewOnHoverExit()
