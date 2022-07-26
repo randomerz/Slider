@@ -5,6 +5,14 @@ using UnityEngine;
 
 public class FezziwigOceanMagicPuzzle : MonoBehaviour
 {
+    enum SpellState {
+        start,
+        jumping,
+        casting,
+        falling,
+        finished
+    }
+
     [SerializeField] private int islandId;
     [SerializeField] private Collider2D npcCollider;
     [SerializeField] private Transform startTransform;
@@ -13,7 +21,15 @@ public class FezziwigOceanMagicPuzzle : MonoBehaviour
     [SerializeField] private AnimationCurve yJumpMotion;
     [SerializeField] private float jumpDuration;
     [SerializeField] private float fallDuration;
-    [SerializeField] protected SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private OceanArtifact oceanArtifact;
+
+    private SpellState state;
+
+    void Start() { 
+        transform.localPosition = startTransform.localPosition; 
+        state = SpellState.start;
+    }
 
     private void OnEnable() { SGridAnimator.OnSTileMoveEnd += OnTileMoved; }
 
@@ -22,18 +38,54 @@ public class FezziwigOceanMagicPuzzle : MonoBehaviour
     private void OnTileMoved(object sender, SGridAnimator.OnTileMoveArgs e) {
         if (SGrid.current.GetStile(islandId) != null &&
             SGrid.current.GetStile(islandId).isTileActive &&
-            e.stile.islandId == islandId)
+            e.stile.islandId == islandId &&
+            state == SpellState.casting)
         {
             Fall();
         }
     }
 
-    private void Jump() {
-        spriteRenderer.sortingOrder = 5;
-        StartCoroutine(AnimateSmoothMove(jumpDuration, startTransform.localPosition, jumpTransform.localPosition));
+    /// <summary>
+    /// Starts the spell jumping process
+    /// </summary>
+    public void Jump() {
+        if (state == SpellState.start) {
+            state = SpellState.jumping;
+            spriteRenderer.sortingOrder = 5;
+            StartCoroutine(AnimateSmoothMove(jumpDuration, startTransform.localPosition, jumpTransform.localPosition));
+        }
+    }
+
+    /// <summary>
+    /// Starts the spell casting process
+    /// </summary>
+    public void CastSpell() {
+        state = SpellState.casting;
+        StartCoroutine(RotateTiles());
+    }
+
+    private IEnumerator RotateTiles() {
+        Vector2Int[] rotateButtons = {
+            new Vector2Int(0,0),
+            new Vector2Int(1,0),
+            new Vector2Int(0,1),
+            new Vector2Int(1,1)
+        };
+        foreach(Vector2Int currButton in rotateButtons) {
+            if (state == SpellState.falling) break;
+            oceanArtifact.RotateTiles(currButton.x, currButton.y, false);
+            yield return new WaitForSeconds(1f);
+        }
+
+        if (state == SpellState.falling) {
+            state = SpellState.start;
+        } else {
+            Debug.Log("Spell Complete");
+        }
     }
 
     private void Fall() {
+        state = SpellState.falling;
         StartCoroutine(AnimateSmoothMove(fallDuration, jumpTransform.localPosition, startTransform.localPosition, -1));
     }
 
@@ -79,5 +131,8 @@ public class FezziwigOceanMagicPuzzle : MonoBehaviour
 
         transform.localPosition = target;
     }
+
+    // Methods that check for the current state
+
 
 }
