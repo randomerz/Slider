@@ -145,4 +145,14 @@ public class ChadJump : MonoBehaviour
     {
         cond.SetSpec(jumpState == JumpState.fell || PlayerInventory.Contains("Flashlight"));
     }
+
+    public bool ChadFell() { return jumpState == JumpState.fell; }
+
+    /// <summary>
+    /// ONLY TO BE USED FOR FEZZIWIG
+    /// </summary>
+    public void ResetJump() {
+        jumpState = JumpState.standing;
+        transform.localPosition = startTransform.localPosition;
+    }
 }
