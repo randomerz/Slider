@@ -90,7 +90,7 @@ public class SGridAnimator : MonoBehaviour
             smove = move
         });
 
-        StartCoroutine(StartCameraShakeEffect());
+        EffectOnMoveStart(move is SMoveConveyor);
 
         while (t < currMoveDuration)
         {
@@ -126,6 +126,8 @@ public class SGridAnimator : MonoBehaviour
             prevPos = moveCoords.startLoc,
             smove = move
         });
+
+        EffectOnMoveFinish();
     }
 
     protected void InvokeOnStileMoveStart(STile stile, Movement moveCoords, SMove move) {
@@ -202,16 +204,27 @@ public class SGridAnimator : MonoBehaviour
         stile.SetBorderColliders(false);
     }
 
-    protected IEnumerator StartCameraShakeEffect()
+    protected void EffectOnMoveStart(bool isConveyor)
     {
         CameraShake.ShakeConstant(currMoveDuration + 0.1f, 0.15f);
-        AudioManager.PlayWithVolume("Slide Rumble", currMoveDuration);
+        AudioManager.PlayWithVolume(isConveyor ? "Conveyor" : "Slide Rumble", currMoveDuration);
+    }
 
-        yield return new WaitForSeconds(currMoveDuration);
+    protected void EffectOnMoveFinish()
+    {
+        //L: Bruh I can't
+        //bool moveToConveyor = false;
+        //List<SMove> activeMoves = UIArtifact.GetActiveMoves();
+        //activeMoves.ForEach(move =>
+        //{
+        //    if (move is SMoveConveyor)
+        //    {
+        //        moveToConveyor = true;
+        //    }
+        //});
 
         CameraShake.Shake(currMoveDuration / 2, 1.0f);
         AudioManager.PlayWithVolume("Slide Explosion", currMoveDuration);
-
     }
 
     protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) 

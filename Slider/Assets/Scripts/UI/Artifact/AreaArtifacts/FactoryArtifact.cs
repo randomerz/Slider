@@ -7,12 +7,9 @@ public class FactoryArtifact : UIArtifact
 {
     public static bool DequeueLocked = false;
 
-    private Conveyor[] conveyors;
-
     private new void Awake()
     {
         base.Awake();
-        conveyors = GameObject.FindObjectsOfType<Conveyor>();
     }
 
     public override void ProcessQueue()
@@ -37,15 +34,18 @@ public class FactoryArtifact : UIArtifact
 
 
         moveQueue = new Queue<SMove>(newMoveQueue);
-        DequeueLocked = false;
         base.ProcessQueue();
         //StartCoroutine(WaitOutOverlappingActiveMoves(move, base.ProcessQueue));
     }
 
-    public static IEnumerator WaitOutOverlappingActiveMoves(SMove move, System.Action callback = null)
+    public static IEnumerator WaitUntilCanQueueMoveSafely(SMove move, System.Action callback = null)
     {
         //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
         yield return new WaitForSeconds(0.05f);
+
+        yield return new WaitUntil(() => !DequeueLocked);   //Mutex locks, woo hoo!
+
+        DequeueLocked = true;
 
         List<SMove> currActiveMoves = GetActiveMoves();
         foreach (SMove activeMove in currActiveMoves)
@@ -66,38 +66,22 @@ public class FactoryArtifact : UIArtifact
         }
     }
 
-    //private IEnumerator WaitUntilConveyorCheckCleared(System.Action callback)
-    //{
-    //    //This is a way to ensure that conveyors are processed BEFORE any other moves in the queue (so that they happen as immediately as possible)
-    //    yield return new WaitUntil(() =>
-    //    {
-    //        foreach (var conveyor in conveyors)
-    //        {
-    //            if (conveyor.CheckingInterruptMove)
-    //            {
-    //                return false;
-    //            }
-    //        }
-    //        return true;
-    //    });
-    //    callback();
-    //}
-
     private void UndoMovesAfterOverlap(List<SMove> newMoveQueue, SMove moveToCheck) {
-                //Undo moves
         int cutIndex = newMoveQueue.Count;
         for (int i = 1; i < newMoveQueue.Count; i++)
         {
-            if (newMoveQueue[i].Overlaps(moveToCheck))
+            //SMoveConveyor should never interfere, but just in case we don't want them to be undone.
+            if (!(newMoveQueue[i] is SMoveConveyor) && newMoveQueue[i].Overlaps(moveToCheck))
             {
                 cutIndex = i;
                 break;
             }
         }
 
+        //Undo the moves on the artifact in the reverse order that they were made.
         for (int i = newMoveQueue.Count-1; i >= cutIndex; i--)
         {
-            SwapButtonsBasedOnMove(newMoveQueue[i]);
+            ReverseButtonSwapBasedOnMove(newMoveQueue[i]);
             newMoveQueue.RemoveAt(i);
         }
     }
@@ -109,6 +93,23 @@ public class FactoryArtifact : UIArtifact
         {
             ArtifactTileButton b = GetButton(m.startLoc.x, m.startLoc.y);
             buttonToNewPos[b] = m.endLoc;
+        }
+
+        foreach (var b in buttonToNewPos.Keys)
+        {
+            b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y);
+        }
+
+        UpdateMoveOptions();
+    }
+
+    private void ReverseButtonSwapBasedOnMove(SMove move)
+    {
+        var buttonToNewPos = new Dictionary<ArtifactTileButton, Vector2Int>();
+        foreach (Movement m in move.moves)
+        {
+            ArtifactTileButton b = GetButton(m.endLoc.x, m.endLoc.y);
+            buttonToNewPos[b] = m.startLoc;
         }
 
         foreach (var b in buttonToNewPos.Keys)

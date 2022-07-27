@@ -58,9 +58,9 @@ public class UIEffects : Singleton<UIEffects>
         StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0.9f, 0, callback, speed));
     }
 
-    public static void FadeToWhite(System.Action callback=null, float speed=1)
+    public static void FadeToWhite(System.Action callback=null, float speed=1, bool disableAtEnd = true)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, 1, callback, speed));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, 1, callback, speed, disableAtEnd));
     }
 
     public static void FlashWhite(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1)
