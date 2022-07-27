@@ -57,6 +57,7 @@ public class ArtifactTabManager : MonoBehaviour
             SetSaveLoadTabSprites(SGrid.Current.HasRealigningGrid());
             if (SGrid.Current.GetArea() == Area.MagiTech)
             {
+                //This enables the preview tab!
                 previewTab.SetIsVisible(true);
                 MagiTechArtifact artifact = (MagiTechArtifact)uiArtifactMenus.uiArtifact;
                 int direction = artifact.PlayerIsInPast ? -1 : 1;
