@@ -7,12 +7,9 @@ public class FactoryArtifact : UIArtifact
 {
     public static bool DequeueLocked = false;
 
-    private Conveyor[] conveyors;
-
     private new void Awake()
     {
         base.Awake();
-        conveyors = GameObject.FindObjectsOfType<Conveyor>();
     }
 
     public override void ProcessQueue()
@@ -37,15 +34,18 @@ public class FactoryArtifact : UIArtifact
 
 
         moveQueue = new Queue<SMove>(newMoveQueue);
-        DequeueLocked = false;
         base.ProcessQueue();
         //StartCoroutine(WaitOutOverlappingActiveMoves(move, base.ProcessQueue));
     }
 
-    public static IEnumerator WaitOutOverlappingActiveMoves(SMove move, System.Action callback = null)
+    public static IEnumerator WaitUntilCanQueueMoveSafely(SMove move, System.Action callback = null)
     {
         //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
         yield return new WaitForSeconds(0.05f);
+
+        yield return new WaitUntil(() => !DequeueLocked);   //Mutex locks, woo hoo!
+
+        DequeueLocked = true;
 
         List<SMove> currActiveMoves = GetActiveMoves();
         foreach (SMove activeMove in currActiveMoves)
@@ -65,23 +65,6 @@ public class FactoryArtifact : UIArtifact
             callback();
         }
     }
-
-    //private IEnumerator WaitUntilConveyorCheckCleared(System.Action callback)
-    //{
-    //    //This is a way to ensure that conveyors are processed BEFORE any other moves in the queue (so that they happen as immediately as possible)
-    //    yield return new WaitUntil(() =>
-    //    {
-    //        foreach (var conveyor in conveyors)
-    //        {
-    //            if (conveyor.CheckingInterruptMove)
-    //            {
-    //                return false;
-    //            }
-    //        }
-    //        return true;
-    //    });
-    //    callback();
-    //}
 
     private void UndoMovesAfterOverlap(List<SMove> newMoveQueue, SMove moveToCheck) {
                 //Undo moves
