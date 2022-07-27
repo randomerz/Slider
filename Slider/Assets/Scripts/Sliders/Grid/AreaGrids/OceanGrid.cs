@@ -15,14 +15,12 @@ public class OceanGrid : SGrid
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
 
+    [SerializeField]
     private Vector2Int[] correctPath =
     {
         Vector2Int.left,
         Vector2Int.down,
         Vector2Int.left,
-        Vector2Int.up,
-        Vector2Int.left,
-        Vector2Int.down,
         Vector2Int.left,
         Vector2Int.up,
         Vector2Int.left,
