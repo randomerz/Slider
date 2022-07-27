@@ -89,6 +89,15 @@ public class UIArtifact : Singleton<UIArtifact>
     }
     #endregion
 
+    public static SMove GetNextMove()
+    {
+        if (_instance.moveQueue.Count > 0)
+        {
+            return _instance.moveQueue.Peek();
+        }
+        return null;
+    }
+
     // Returns a string like:   123_6##_4#5
     // for a grid like:  1 2 3
     //                   6 . .
@@ -431,8 +440,8 @@ public class UIArtifact : Singleton<UIArtifact>
             if (CheckMoveHasAnActiveTile(move)) //L: If we don't do this, we risk adding an active move that never dequeues, overflowing the queue, and BREAKING THE ENTIRE GAME.
             {
                 move.duration *= 1f - moveQueue.Count / 10f;   //Queuing more moves will make it go faster.
-                SGrid.Current.Move(move);
                 activeMoves.Add(move);
+                SGrid.Current.Move(move);
             }
             else
             {
