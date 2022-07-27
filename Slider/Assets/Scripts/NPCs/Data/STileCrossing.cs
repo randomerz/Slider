@@ -16,11 +16,12 @@ public class STileCrossing
 
     public bool CrossingIsValid()
     {
-        Vector2Int fromPos = from ? new Vector2Int(from.x, from.y) : fromPosIfNull;
-        Vector2Int toPos = to ? new Vector2Int(to.x, to.y) : toPosIfNull;
+        Vector2Int fromPos = from != null ? new Vector2Int(from.x, from.y) : fromPosIfNull;
+        Vector2Int toPos = to != null ? new Vector2Int(to.x, to.y) : toPosIfNull;
 
         foreach (Vector2Int dir in dirs)
         {
+            Debug.Log(fromPos + " " + toPos);
             if (DirValid(dir, fromPos, toPos))
             {
                 return true;

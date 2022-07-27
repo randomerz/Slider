@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class SGridAnimator : MonoBehaviour
 {
-    //public bool isMoving = false;
 
     // set in inspector
     public AnimationCurve movementCurve;
-    protected float movementDuration = 1;
+    protected float movementDuration = 1f;
 
     public class OnTileMoveArgs : System.EventArgs
     {
@@ -17,12 +16,15 @@ public class SGridAnimator : MonoBehaviour
         public SMove smove; // the SMove this Move() was a part of
     }
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
+    public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndEarly;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
+
+    private float currMoveDuration = 1f;
 
 
     public void ChangeMovementDuration(float value)
     {
-        movementDuration =value;
+        movementDuration = value;
     }
 
 
@@ -36,23 +38,19 @@ public class SGridAnimator : MonoBehaviour
     {
         if (grid == null)
         {
-            grid = SGrid.current.GetGrid();
+            grid = SGrid.Current.GetGrid();
         }
-        //STile[,] grid = SGrid.current.GetGrid();
+        currMoveDuration = movementDuration * move.duration;
 
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
-        StartCoroutine(DisableBordersAndColliders(grid, SGrid.current.GetBGGrid(), move.positions, borders));
+        StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move.positions, borders));
 
         foreach (Movement m in move.moves)
         {
             if (grid[m.startLoc.x, m.startLoc.y].isTileActive)
-            {
-                StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move));
-            }
+                DetermineMoveType(move, grid, m);        
             else
-            {
                 grid[m.startLoc.x, m.startLoc.y].SetGridPosition(m.endLoc.x, m.endLoc.y);
-            }
         }
 
         // DC: bug involving anchoring a tile in a rotate, lets you walk into void
@@ -62,8 +60,16 @@ public class SGridAnimator : MonoBehaviour
         }
     }
 
+    //C: Added to avoid duplicated code in mountian section
+    protected virtual void DetermineMoveType(SMove move, STile[,] grid, Movement m)
+    {
+        StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move));
+    }
+
     // move is only here so we can pass it into the event
-    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move)
+    // C: if animate is true, will animate to destination (this is the case 99% of the time)
+    // if animate is false, will wait and then TP to destination
+    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true)
     {
         float t = 0;
         //isMoving = true;
@@ -86,36 +92,33 @@ public class SGridAnimator : MonoBehaviour
 
         StartCoroutine(StartCameraShakeEffect());
 
-        while (t < movementDuration)
+        while (t < currMoveDuration)
         {
-            t += Time.deltaTime;    //L: This needs to be before evaluate, or else t won't reach 1 before loop exits.
-            //Idk if Evaluate actually clamps or not
-            float s = movementCurve.Evaluate(Mathf.Min(t / movementDuration, 1));
-            Vector2 pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
-            //Vector3 pos = (1 - s) * orig + s * target;
+            t += Time.deltaTime;
             
-            stile.SetMovingPosition(pos);
-
+            if(animate)
+            {
+                float s = movementCurve.Evaluate(Mathf.Min(t / currMoveDuration, 1));
+                Vector2 pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
+                stile.SetMovingPosition(pos);
+            }
             yield return null;
         }
-
-        //isMoving = false;
         
         if (isPlayerOnStile)
         {
             stile.SetBorderColliders(false);
         }
-        //for (int i = 0; i < collidersInactive.Count; i++)
-        //{
-        //    if (collidersInactive[i].SetSliderCollider(true))
-        //    {
-        //        collidersInactive.RemoveAt(i);
-        //        i--;
-        //    }
-        //}
 
         stile.SetGridPosition(moveCoords.endLoc);
         stile.SetMovingDirection(Vector2.zero);
+
+        OnSTileMoveEndEarly?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = moveCoords.startLoc,
+            smove = move
+        });
 
         OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
         {
@@ -171,7 +174,7 @@ public class SGridAnimator : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(movementDuration); // ideally this should be called with an event, not after time
+        yield return new WaitForSeconds(currMoveDuration); // ideally this should be called with an event, not after time
 
         foreach (Vector2Int p in borders.Keys)
         {
@@ -194,52 +197,28 @@ public class SGridAnimator : MonoBehaviour
     {
         stile.SetBorderColliders(true);
 
-        yield return new WaitForSeconds(movementDuration);
+        yield return new WaitForSeconds(currMoveDuration);
 
         stile.SetBorderColliders(false);
     }
 
-    protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) // include magnitude?
-    {
-        Vector2 dif = start - end;
-        if (dif.x > 0)
-        {
-            return Vector2.right;
-        }
-        else if (dif.x < 0)
-        {
-            return Vector2.left;
-        }
-        else if (dif.y > 0)
-        {
-            return Vector2.up;
-        }
-        else if (dif.y < 0)
-        {
-            return Vector2.down;
-        }
-        else
-        {
-            Debug.LogError("Moving Tile to the same spot!");
-            return Vector2.zero;
-        }
-    }
-
     protected IEnumerator StartCameraShakeEffect()
     {
-        CameraShake.ShakeConstant(movementDuration + 0.1f, 0.15f);
-        AudioManager.PlayWithVolume("Slide Rumble", movementDuration);
+        CameraShake.ShakeConstant(currMoveDuration + 0.1f, 0.15f);
+        AudioManager.PlayWithVolume("Slide Rumble", currMoveDuration);
 
-        yield return new WaitForSeconds(movementDuration);
+        yield return new WaitForSeconds(currMoveDuration);
 
-        CameraShake.Shake(movementDuration/2, 1.0f);
-        AudioManager.PlayWithVolume("Slide Explosion", movementDuration);
+        CameraShake.Shake(currMoveDuration / 2, 1.0f);
+        AudioManager.PlayWithVolume("Slide Explosion", currMoveDuration);
 
     }
 
-
-
-    
+    protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) 
+    {
+        Vector2 dif = start - end;
+        return dif.magnitude > 0.1 ? dif : Vector2.zero; //C: in case of float jank
+    }
 
     private void CheckAnchorInRotate(SMoveRotate move, STile[,] grid)
     {

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class OceanGrid : SGrid
@@ -10,7 +11,7 @@ public class OceanGrid : SGrid
 
     public GameObject burriedGuyNPC;
     public KnotBox knotBox;
-    public LostGuyMovement lostGuyMovement;
+    //public LostGuyMovement lostGuyMovement;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
 
@@ -33,20 +34,10 @@ public class OceanGrid : SGrid
     public GameObject fog7;
     public GameObject fogIsland;
 
-    public override void Init() {
-        myArea = Area.Ocean;
-
-        foreach (Collectible c in collectibles)
-        {
-            c.SetArea(myArea);
-        }
-
+    public override void Init()
+    {
+        InitArea(Area.Ocean);
         base.Init();
-
-
-        // instance = this;
-
-        // StartCoroutine(test());
     }
 
 
@@ -58,15 +49,16 @@ public class OceanGrid : SGrid
         fogIsland.SetActive(false);
 
         AudioManager.PlayMusic("Ocean");
-        AudioManager.PlayMusic("Ocean Tavern", false);
-        AudioManager.PlayMusic("Ocean uwu", false);
+        AudioManager.PlayMusic("Ocean Tavern", false); // for FMOD effects
+        AudioManager.PlayMusic("Ocean uwu", false); // for FMOD effects
         UIEffects.FadeFromBlack();
 
     }
 
     private void OnEnable()
     {
-        if (checkCompletion) {
+        if (checkCompletion)
+        {
             UpdateButtonCompletions(this, null);
             OnGridMove += UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
@@ -79,7 +71,8 @@ public class OceanGrid : SGrid
 
     private void OnDisable()
     {
-        if (checkCompletion) {
+        if (checkCompletion)
+        {
             OnGridMove -= UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
@@ -108,8 +101,13 @@ public class OceanGrid : SGrid
     }
 
 
-    public override void EnableStile(STile stile, bool shouldFlicker=true)
+    public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
+        if (stile.islandId == 3)
+        {
+            CheckTile3Placement(stile);
+        }
+
         base.EnableStile(stile, shouldFlicker);
 
         stile.GetComponentInChildren<SpriteMask>().enabled = false; // on STile/SlideableArea
@@ -118,6 +116,51 @@ public class OceanGrid : SGrid
         {
             CheckShipwreck(this, null);
             CheckVolcano(this, null);
+        }
+    }
+
+    private void CheckTile3Placement(STile stile)
+    {
+        string s = GetGridString(true);
+
+        if (CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
+            || CheckGrid.contains(s, "1...3") || CheckGrid.contains(s, "3...1"))
+        {
+            List<STile> tiles = new List<STile>();
+            foreach (STile tile in grid)
+            {
+                tiles.Add(tile);
+            }
+
+            bool firstRun = true;
+
+            STile other = tiles[tiles.Count - 1];
+            while (tiles.Count > 0 && ((CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
+                 || CheckGrid.contains(s, "1...3") || CheckGrid.contains(s, "3...1"))))
+            {
+                if (!firstRun)
+                {
+                    tiles.Remove(other);
+                }
+                firstRun = false;
+
+                for (int i = tiles.Count - 1; i >= 0; i--)
+                {
+                    other = tiles[i];
+                    if (!other.isTileActive)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        tiles.Remove(other);
+                    }
+                }
+
+                SwapTiles(stile, other);
+
+                s = GetGridString(true);
+            }
         }
     }
 
@@ -163,9 +206,9 @@ public class OceanGrid : SGrid
 
     public bool IsVolcanoSet()
     {
-        return CheckGrid.contains(GetGridString(),".4._895_.3.");
+        return CheckGrid.contains(GetGridString(), ".4._895_.3.");
     }
-    
+
     public void ActivateBurriedNPC()
     {
         burriedGuyNPC.SetActive(true);
@@ -222,7 +265,7 @@ public class OceanGrid : SGrid
 
     public void ToggleKnotBox()
     {
-        if(AllBuoy())
+        if (AllBuoy())
         {
             knotBox.enabled = !knotBox.enabled;
             if (knotBox.enabled)
@@ -242,23 +285,13 @@ public class OceanGrid : SGrid
         }
     }
 
-    public void IsCompleted(Condition c)
-    {
-        c?.SetSpec(checkCompletion && IsFinalPuzzleMatching());
-    }
-
-    private bool IsFinalPuzzleMatching()
-    {
-        return CheckGrid.contains(GetGridString(), "412_[^1248]{2}8_[^1248]{3}");
-    }
-
-    public void IsLostGuyBeached(Condition c)
-    {
-        c.SetSpec(lostGuyMovement.hasBeached);
-    }
+    //public void IsLostGuyBeached(Condition c)
+    //{
+    //    c.SetSpec(lostGuyMovement.hasBeached);
+    //}
 
     // Foggy Seas
-    
+
     public void CheckFoggySeas(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         FoggyCorrectMovement();
@@ -271,9 +304,9 @@ public class OceanGrid : SGrid
             if (Player.GetStileUnderneath().islandId == 6)
             {
                 fog6.SetActive(false);
-                
+
             }
-            else 
+            else
             {
                 fog7.SetActive(false);
             }
@@ -289,7 +322,7 @@ public class OceanGrid : SGrid
         }
 
         int currentIslandId = Player.GetStileUnderneath().islandId;
-        
+
         if (currentIslandId != lastIslandId && (lastIslandId == 6 || lastIslandId == 7))
         {
             fog7.SetActive(true);
@@ -331,7 +364,7 @@ public class OceanGrid : SGrid
             playerIndex++;
             FoggySeasAudio();
         }
-        else 
+        else
         {
             failFoggy();
         }
@@ -355,6 +388,17 @@ public class OceanGrid : SGrid
     }
 
     // Final puzzle
+
+    public void IsCompleted(Condition c)
+    {
+        c?.SetSpec(checkCompletion && IsFinalPuzzleMatching());
+    }
+
+    private bool IsFinalPuzzleMatching()
+    {
+        return CheckGrid.contains(GetGridString(), "412_[^1248]{2}8_[^1248]{3}");
+    }
+
     public bool GetCheckCompletion()
     {
         return checkCompletion;
@@ -387,19 +431,21 @@ public class OceanGrid : SGrid
 
             AudioManager.Play("Puzzle Complete");
             oceanArtifact.FlickerAllOnce();
-            
+
             UIArtifactWorldMap.SetAreaStatus(Area.Ocean, ArtifactWorldMapArea.AreaStatus.color);
         }
     }
 
     protected override void UpdateButtonCompletionsHelper()
     {
-        for (int x = 0; x < current.width; x++) {
-            for (int y = 0; y < current.width; y++) {
+        for (int x = 0; x < Current.Width; x++)
+        {
+            for (int y = 0; y < Current.Width; y++)
+            {
                 // int tid = current.targetGrid[x, y];
                 string tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
-                if (tids == "*") 
+                if (tids == "*")
                 {
                     int abid = artifactButton.islandId;
                     bool isLand = abid == 1 || abid == 2 || abid == 4 || abid == 8; // this is scuffed
@@ -407,7 +453,8 @@ public class OceanGrid : SGrid
                     // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, !isLand);
                 }
-                else {
+                else
+                {
                     int tid = int.Parse(tids);
                     // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);

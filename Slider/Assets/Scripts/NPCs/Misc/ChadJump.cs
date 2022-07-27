@@ -18,7 +18,6 @@ public class ChadJump : MonoBehaviour
     [SerializeField] private Animator npcAnimator;
     [SerializeField] private Collider2D npcCollider; // non-trigger collider
     [SerializeField] private Item flashlightItem;
-    [SerializeField] private SpriteRenderer flashRenderer;
     [SerializeField] private int islandId;
 
     [SerializeField] private Transform startTransform;
@@ -34,7 +33,7 @@ public class ChadJump : MonoBehaviour
     
     void Start()
     {
-        flashlightItem.SetCollider(false);
+        flashlightItem?.SetCollider(false);
     }
 
     private void OnEnable()
@@ -50,8 +49,8 @@ public class ChadJump : MonoBehaviour
     // Mini-Puzzle - Chad Flashlight
     public void OnTileMoved(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (SGrid.current.GetStile(islandId) != null &&
-            SGrid.current.GetStile(islandId).isTileActive &&
+        if (SGrid.Current.GetStile(islandId) != null &&
+            SGrid.Current.GetStile(islandId).isTileActive &&
             e.stile.islandId == islandId && 
             jumpState == JumpState.jumped)
         {
@@ -128,15 +127,18 @@ public class ChadJump : MonoBehaviour
         npcAnimator.SetBool("isTipping", false);
         AudioManager.Play("Hurt");
 
-        flashlightItem.transform.parent = SGrid.current.GetStile(islandId).transform;
-        flashlightItem.DropItem(transform.position + (Vector3.right * 1f), callback: FinishFall);
-        flashlightItem.SetCollider(false);
+        if (flashlightItem != null)
+        {
+            flashlightItem.transform.parent = SGrid.Current.GetStile(islandId).transform;
+            flashlightItem.DropItem(transform.position + (Vector3.right * 1f), callback: FinishFall);
+            flashlightItem.SetCollider(false);
+        }
     }
 
     private void FinishFall()
     {
         npcCollider.enabled = true;
-        flashlightItem.SetCollider(true);
+        flashlightItem?.SetCollider(true);
     }
 
     public void ChadFell(Condition cond)

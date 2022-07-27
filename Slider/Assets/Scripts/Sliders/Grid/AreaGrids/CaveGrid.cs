@@ -4,40 +4,15 @@ using UnityEngine;
 
 public class CaveGrid : SGrid
 {
-    public static CaveGrid instance;
-
-    private bool[,] lightMap;
-
-    public class OnLightMapUpdateArgs
-    {
-        public bool[,] lightMap;
-    }
-    public static event System.EventHandler<OnLightMapUpdateArgs> OnLightMapUpdate;
-
     private static bool checkLightingCompletion = false;
 
     private bool allTilesLit = false;
 
     static System.EventHandler<SGridAnimator.OnTileMoveArgs> checkCompletionsOnMoveFunc;
 
-    //events
-
     public override void Init() {
-        myArea = Area.Caves;
-
-        foreach (Collectible c in collectibles)
-        {
-            c.SetArea(myArea);
-        }
-
+        InitArea(Area.Caves);
         base.Init();
-
-        instance = this;
-
-        lightMap = new bool[3, 3] { { false, false, true},
-                                    { false, false, false},
-                                    { false, false, true},
-                                  };
 
         checkCompletionsOnMoveFunc = (sender, e) => { CheckLightingCompletions(); };
     }
@@ -47,14 +22,8 @@ public class CaveGrid : SGrid
     {
         base.Start();
 
-        GetCollectible("Slider 5")?.gameObject.SetActive(false); // gameboy puzzle
-        GetCollectible("Slider 6")?.gameObject.SetActive(false); // flashlight puzzle
-        GetCollectible("Slider 9")?.gameObject.SetActive(false); // final puzzle
-
         AudioManager.PlayMusic("Caves");
         UIEffects.FadeFromBlack();
-
-        //SGrid.OnGridMove += (sender, e) => { Debug.Log(GetGridString()); };
     }
 
     private void OnEnable()
@@ -74,18 +43,6 @@ public class CaveGrid : SGrid
         }
     }
 
-    public bool GetLit(int x, int y)
-    {
-        return lightMap[x, y];
-    }
-
-    public void SetLit(int x, int y, bool value)
-    {
-        lightMap[x, y] = value;
-
-        OnLightMapUpdate?.Invoke(this, new OnLightMapUpdateArgs { lightMap = this.lightMap });
-    }
-
     public void StartFinalPuzzle() {
         SGridAnimator.OnSTileMoveEnd += checkCompletionsOnMoveFunc;
         checkLightingCompletion = true;
@@ -95,12 +52,12 @@ public class CaveGrid : SGrid
     private void CheckLightingCompletions()
     {
         //L: Scuffy me Luffy
-        if (SGrid.current != null && (SGrid.current as CaveGrid) != null)
+        if (SGrid.Current != null && (SGrid.Current as CaveGrid) != null)
         {
             allTilesLit = true;
-            for (int x = 0; x < current.width; x++)
+            for (int x = 0; x < Current.Width; x++)
             {
-                for (int y = 0; y < current.width; y++)
+                for (int y = 0; y < Current.Width; y++)
                 {
                     if (grid[x, y].isTileActive)
                     {

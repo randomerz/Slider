@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
-//L: Changed name bc I plan to use the same system for Factory stuff.
+//C: tried renaming back to Magitech but that boofed all the references and im lazy
 public class TimeTravelArtifact : UIArtifact
 {
     /*C: Note that this is on the *opposite* side of the grid from the anchor.
@@ -101,7 +101,7 @@ public class TimeTravelArtifact : UIArtifact
      */
     private void RestoreOnEndDesynch()
     {
-        STile[,] temp = SGrid.current.GetGrid();
+        STile[,] temp = SGrid.Current.GetGrid();
         int[,] currGrid = new int[6,3];
         int[,] newGrid = new int[6,3];
         for(int x = 0; x < 6; x++)
@@ -125,7 +125,15 @@ public class TimeTravelArtifact : UIArtifact
         GetButton(desynchIslandId).SetLightning(false);
         GetButton(FindAltId(desynchIslandId)).SetLightning(false);
 
-        /* C: you can uncomment this if desynching isn't working, it might help locate the source of the problem
+        // C: you can uncomment this if desynching isn't working, it might help locate the source of the problem
+        // PrintGrid(currGrid, newGrid);
+
+        SGrid.Current.SetGrid(newGrid);
+    }
+
+    //C: debugging tool if desynch gets broken
+    public void PrintGrid(int[,] currGrid, int[,] newGrid)
+    {
         string output = "";
         
         for(int y = 2; y >=0 ; y--)
@@ -149,28 +157,31 @@ public class TimeTravelArtifact : UIArtifact
             output+="\n";
         }
         Debug.Log(output);
-        */
-
-        SGrid.current.SetGrid(newGrid);
     }
 
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
-        List<ArtifactTileButton> options = base.GetMoveOptions(button);
+        var options = new List<ArtifactTileButton>();
 
-        for (int i = 0; i < options.Count; ) {
-            ArtifactTileButton option = options[i];
+        Vector2Int[] dirs = {
+            Vector2Int.right,
+            Vector2Int.up,
+            Vector2Int.left,
+            Vector2Int.down
+        };
 
-            bool differentTimePeriod = button.x / 3 != option.x / 3; //C: check that x/3 is the same to not count moves on the other side of the grid as valid
-            if (differentTimePeriod || CheckDesynch(button, option))    //C: Check anchor on opposite tile.
+        foreach (Vector2Int dir in dirs)
+        {
+            ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
+            int i = 2;
+            while (b != null && !b.TileIsActive && !CheckDesynch(button, b)
+            && button.x / 3 == b.x / 3)
             {
-                options.RemoveAt(i);
-            } else
-            {
+                options.Add(b);
+                b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
                 i++;
             }
         }
-
         return options;
     }
 
@@ -196,38 +207,18 @@ public class TimeTravelArtifact : UIArtifact
         return (islandId + 9) % 18;
     }
 
-
-    protected override bool CheckAndSwap(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        STile[,] currGrid = SGrid.current.GetGrid();
-
-        int x = buttonCurrent.x;
-        int y = buttonCurrent.y;
-        
-        SMove swap;
+        SMove move;
         if(buttonCurrent.islandId == desynchIslandId)
         {
-            swap = new SMoveSwap(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+            move = base.ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
         }
         else
         {
-            swap = new SMoveSyncedMove(x, y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+            move = new SMoveSyncedMove(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
         }
-      
-        if (SGrid.current.CanMove(swap) && moveQueue.Count < maxMoveQueueSize && PlayerCanQueue)
-        {
-            MoveMadeOnArtifact?.Invoke(this, null);
-            QueueCheckAndAdd(swap);
-            SwapButtons(buttonCurrent, buttonEmpty);
-            QueueCheckAfterMove(this, null);
-            return true;
-        }
-        else
-        {
-            string debug = PlayerCanQueue ? "Player Queueing is disabled" : "Queue was full";
-            Debug.Log($"Couldn't perform move! {debug}");
-            return false;
-        }
+        return move;
     }
 
     public override void AddButton(STile stile, bool shouldFlicker = true)
@@ -243,7 +234,7 @@ public class TimeTravelArtifact : UIArtifact
             if (b.islandId > 9 && isInPast || b.islandId <= 9 && !isInPast)
             {
                 b.gameObject.SetActive(true);
-                STile myStile = SGrid.current.GetStile(b.islandId);
+                STile myStile = SGrid.Current.GetStile(b.islandId);
                 b.UpdateTileActive();
             }
             else

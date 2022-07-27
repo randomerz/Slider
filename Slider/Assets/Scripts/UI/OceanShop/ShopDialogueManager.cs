@@ -204,10 +204,10 @@ public class ShopDialogueManager : MonoBehaviour
             return;
         }
 
-        if ((SGrid.current as OceanGrid).GetCheckCompletion()) 
+        if ((SGrid.Current as OceanGrid).GetCheckCompletion()) 
         {
 
-            if ((SGrid.current as OceanGrid).GetIsCompleted())
+            if ((SGrid.Current as OceanGrid).GetIsCompleted())
             {
                 UpdateDialogue("Ocean Complete");
                 return;
@@ -387,7 +387,7 @@ public class ShopDialogueManager : MonoBehaviour
                     () => {
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
-                        (SGrid.current as OceanGrid).StartFinalChallenge();
+                        (SGrid.Current as OceanGrid).StartFinalChallenge();
                     },
                     "Looks like you've about explored the whole darned ocean. Time to put things in their rightful places.",
                     TKSprite.Normal,
@@ -418,7 +418,7 @@ public class ShopDialogueManager : MonoBehaviour
                     TKSprite.Normal,
                     () => {
                         // Cutscene stuff???
-                        (SGrid.current as OceanGrid).ClearTreesToJungle();
+                        (SGrid.Current as OceanGrid).ClearTreesToJungle();
                         shopManager.OpenMainPanel();
 
                         isVisiting = true;

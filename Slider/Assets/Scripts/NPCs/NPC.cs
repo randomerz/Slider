@@ -12,7 +12,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     public float speed;
     [SerializeField] private NPCAnimatorController animator;
     [SerializeField] private string characterName;
-    [FormerlySerializedAs("dconds")] [SerializeField] private List<NPCConditionals> conds;
+    [SerializeField] private List<NPCConditionals> conds;
     [SerializeField] private DialogueDisplay dialogueDisplay;
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private bool spriteDefaultFacingLeft;
@@ -25,7 +25,14 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
 
     public List<NPCConditionals> Conds => conds;
     public int CurrCondIndex => currCondIndex;
-    public NPCConditionals CurrCond => conds[currCondIndex];
+    public NPCConditionals CurrCond {
+        get {
+            if (conds.Count == 0) {
+                return null;
+            }
+            return conds[currCondIndex];
+        }
+    }
     public STile CurrentSTileUnderneath => currentStileUnderneath;
 
     private new void Awake()
@@ -53,7 +60,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
 
     private void FixedUpdate()
     {
-        currentStileUnderneath = STile.GetSTileUnderneath(transform, currentStileUnderneath);
+        currentStileUnderneath = SGrid.GetSTileUnderneath(transform, currentStileUnderneath);
     }
 
     public void AddNewConditionals(NPCConditionals cond)
@@ -61,6 +68,16 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         conds.Add(cond);
     }
 
+    public void ModifyConditional(NPCConditionals cond, int index)
+    {
+        Debug.Log(conds.Count);
+        if (index < 0 || index >= conds.Count) throw new ArgumentOutOfRangeException("Index " + index + " is out of range of conds list!");
+        conds[index] = cond;
+    }
+
+    
+
+    //These are all interfaces to the various contexts to be used in inspector events and such. Implementation details are in NPCDialogueContext/NPCWalkingCOntext
     #region Dialogue
     public void OnDialogueTriggerEnter()
     {
@@ -75,6 +92,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     public void TypeCurrentDialogue()
     {
         dialogueCtx.TypeCurrentDialogue();
+    }
+
+    public void AdvanceDialogueChain()
+    {
+        dialogueCtx.TypeNextDialogueInChain();
     }
     #endregion Dialogue
 
@@ -119,6 +141,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         if (maxPrioIndex == -1)
         {
             Debug.LogError("No suitable dialogue can be displayed!");
+            return;
         }
 
         bool condIsNew = currCondIndex != maxPrioIndex;

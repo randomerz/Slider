@@ -5,23 +5,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 // ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
+//L: I moved the STile underneath stuff to static method in STile since it's used in other places.
 public class Player : Singleton<Player>, ISavable
 {
-    private bool didInit;
 
-    // Movement
+    [Header("Movement")]
     [SerializeField] private float moveSpeed = 5;
-    private float moveSpeedMultiplier = 1;
-    private bool canMove = true;
-    private bool collision = true;
     [SerializeField] private bool isOnWater = false;
-    private bool isInHouse = false;
 
-    private STile currentStileUnderneath;
-
-    private Vector3 lastMoveDir;
-    private Vector3 inputDir;
-    
     [Header("References")]
     // [SerializeField] private Sprite trackerSprite;
     [SerializeField] private PlayerAction playerAction;
@@ -31,35 +22,33 @@ public class Player : Singleton<Player>, ISavable
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Rigidbody2D rb;
 
-    void Awake()
-    {
-        InitializeSingleton(overrideExistingInstanceWith:this);
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
+    private float moveSpeedMultiplier = 1;
+    private bool canMove = true;
+    private bool collision = true;
 
+    private bool isInHouse = false;
+
+    private STile currentStileUnderneath;
+
+    private Vector3 lastMoveDir;
+    private Vector3 inputDir;
+
+    private bool didInit;
+
+    protected void Awake()
+    {
         if (!didInit)
             Init();
-    }
-
-    // This is no longer necessary from my testing, but I'm leaving it in. When we (hopefully) go back to look at SceneInitializer we
-    // can probably eliminate this
-    public void SetSingleton()
-    {
-        InitializeSingleton(overrideExistingInstanceWith:this);
     }
 
     public void Init()
     {
         didInit = true;
+        InitializeSingleton(overrideExistingInstanceWith: this);
 
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
         playerInventory.Init();
-
         UpdatePlayerSpeed();
-    }
-
-    // Here is where we pay for all our Singleton Sins
-    public void ResetInventory()
-    {
-        playerInventory.Reset();
     }
 
     private void Start() 
@@ -130,7 +119,7 @@ public class Player : Singleton<Player>, ISavable
         }
 
         // updating childing
-        currentStileUnderneath = STile.GetSTileUnderneath(transform, currentStileUnderneath);
+        currentStileUnderneath = SGrid.GetSTileUnderneath(transform, currentStileUnderneath);
         // Debug.Log("Currently on: " + currentStileUnderneath);
 
         if (currentStileUnderneath != null)
@@ -143,8 +132,11 @@ public class Player : Singleton<Player>, ISavable
         }
     }
 
-    //L: I moved the STile underneath stuff to static method in STile since it's used in other places.
-
+    // Here is where we pay for all our Singleton Sins
+    public void ResetInventory()
+    {
+        playerInventory.Reset();
+    }
 
     public static Player GetInstance()
     {
@@ -197,7 +189,7 @@ public class Player : Singleton<Player>, ISavable
         Vector3 localPos = transform.localPosition;
 
         // STile postitions
-        STile stile = SGrid.current.GetStileUnderneath(gameObject);
+        STile stile = SGrid.GetStileUnderneath(gameObject);
         if (stile == null)
         {
             return pos;
@@ -205,7 +197,7 @@ public class Player : Singleton<Player>, ISavable
         else
         {
             Vector2Int stileEndCoords = GetEndStileLocation(stile.islandId);
-            Vector3 stilePos = SGrid.current.GetStileUnderneath(gameObject).calculatePosition(stileEndCoords.x, stileEndCoords.y);
+            Vector3 stilePos = SGrid.GetStileUnderneath(gameObject).calculatePosition(stileEndCoords.x, stileEndCoords.y);
 
             return stilePos + localPos;
         }
@@ -213,10 +205,10 @@ public class Player : Singleton<Player>, ISavable
 
     private Vector2Int GetEndStileLocation(int myStileId)
     {
-        STile[,] grid = SGrid.current.GetGrid();
-        for (int x = 0; x < SGrid.current.width; x++)
+        STile[,] grid = SGrid.Current.GetGrid();
+        for (int x = 0; x < SGrid.Current.Width; x++)
         {
-            for (int y = 0; y < SGrid.current.height; y++)
+            for (int y = 0; y < SGrid.Current.Height; y++)
             {
                 if (grid[x, y].islandId == myStileId)
                 {
@@ -245,7 +237,7 @@ public class Player : Singleton<Player>, ISavable
         // Update position
         transform.SetParent(null);
         transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
-        STile stileUnderneath = STile.GetSTileUnderneath(transform, null);
+        STile stileUnderneath = SGrid.GetSTileUnderneath(transform, null);
         transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
         //Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
 
@@ -312,7 +304,7 @@ public class Player : Singleton<Player>, ISavable
 
     public static STile GetStileUnderneath()
     {
-        _instance.currentStileUnderneath = STile.GetSTileUnderneath(_instance.transform, _instance.currentStileUnderneath);
+        _instance.currentStileUnderneath = SGrid.GetSTileUnderneath(_instance.transform, _instance.currentStileUnderneath);
         return _instance.currentStileUnderneath;
     }
 

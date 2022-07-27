@@ -202,6 +202,7 @@ public class PlayerAction : Singleton<PlayerAction>
         if (actionsAvailable <= 0)
         {
             actionAvailableIndicator.SetActive(false);
+            actionsAvailable = 0;
         }
     }
 }

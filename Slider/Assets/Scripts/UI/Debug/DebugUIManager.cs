@@ -176,17 +176,17 @@ public class DebugUIManager : MonoBehaviour
     public void GiveAllSliders()
     {
         //Also make sure the sliders are in the right positions!
-        SGrid sgrid = SGrid.current;
+        SGrid sgrid = SGrid.Current;
         string target = sgrid.TargetGrid;
-        int[,] grid = new int[sgrid.width, sgrid.height];
+        int[,] grid = new int[sgrid.Width, sgrid.Height];
         
 
         // dc: if there's a * in the TargetGrid, then we just set them all on and are done w it lol
         if (target.Contains("*"))
         {
-            for (int j = 1; j <= sgrid.width * sgrid.height; j++)
+            for (int j = 1; j <= sgrid.Width * sgrid.Height; j++)
             {
-                SGrid.current.EnableStile(j);
+                SGrid.Current.EnableStile(j);
             }
             return;
         }
@@ -197,17 +197,17 @@ public class DebugUIManager : MonoBehaviour
             char c = target[0];
             target = target.Substring(1);
             int islandId = (int) c  - '0';
-            if (islandId >= 1 && islandId <= sgrid.width * sgrid.height)
+            if (islandId >= 1 && islandId <= sgrid.Width * sgrid.Height)
             {
-                int x = i % sgrid.width;
-                int y = sgrid.height - 1 - i / sgrid.width;
+                int x = i % sgrid.Width;
+                int y = sgrid.Height - 1 - i / sgrid.Width;
                 grid[x, y] = islandId;
-                SGrid.current.EnableStile(islandId);
+                SGrid.Current.EnableStile(islandId);
                 i++;
             }
         }
 
-        SGrid.current.SetGrid(grid);
+        SGrid.Current.SetGrid(grid);
     }
 
     public void SpawnAnchor()
@@ -222,12 +222,12 @@ public class DebugUIManager : MonoBehaviour
 
     public void GPTC(string collectibleName)
     {
-        SGrid.current.GivePlayerTheCollectible(collectibleName);
+        SGrid.Current.GivePlayerTheCollectible(collectibleName);
     }
 
     public void Give(string collectibleName)
     {
-        SGrid.current.GivePlayerTheCollectible(collectibleName);
+        SGrid.Current.GivePlayerTheCollectible(collectibleName);
     }
 
     public void ES(string num)
@@ -235,16 +235,16 @@ public class DebugUIManager : MonoBehaviour
         int n = int.Parse(num);
         for (int i = 1; i <= n; i++)
         {
-            SGrid.current.GetCollectible("Slider " + i)?.DoPickUp();
+            SGrid.Current.GetCollectible("Slider " + i)?.DoPickUp();
         }
     }
 
     //C: make sure pattern is the same length as the current sgrid
     public void SetGrid(string pattern)
     {
-        SGrid grid = SGrid.current;
-        int width = grid.width;
-        int height = grid.height;
+        SGrid grid = SGrid.Current;
+        int width = grid.Width;
+        int height = grid.Height;
 
         if (pattern.Length != width * height)
         {
@@ -261,7 +261,7 @@ public class DebugUIManager : MonoBehaviour
             puzzle[x, y] = int.Parse(pattern[i].ToString());
         }
 
-        SGrid.current.SetGrid(puzzle);
+        SGrid.Current.SetGrid(puzzle);
     }
 
     public void NoClip()

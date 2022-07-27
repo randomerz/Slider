@@ -5,31 +5,20 @@ using UnityEngine;
 
 public class DesertGrid : SGrid
 {
-    public static DesertGrid instance;
-
-    private bool campfireIsLit = false;
     public Item log; //Right now the animator for the campfire doesn't stay alive if scene transitions
     public NPCAnimatorController campfire;
-
-    private int monkeShake = 0;
-
     public DiceGizmo dice1;
     public DiceGizmo dice2;
+    [SerializeField] private GameObject[] zlist;
 
+    private int monkeShake = 0;
+    private bool campfireIsLit = false;
     private bool checkCompletion = false;
     private bool checkMonkey = false;
 
     public override void Init() {
-        myArea = Area.Desert;
-
-        foreach (Collectible c in collectibles)
-        {
-            c.SetArea(myArea);
-        }
-
+        InitArea(Area.Desert);
         base.Init();
-
-        instance = this;
     }
 
     protected override void Start()
@@ -77,10 +66,10 @@ public class DesertGrid : SGrid
     {
         // For Casino music
         
-        STile s5 = SGrid.current.GetStile(5);
+        STile s5 = SGrid.Current.GetStile(5);
         float dist1 = s5.isTileActive ? (Player.GetPosition() - s5.transform.position).magnitude : 17; // center
         float dist2 = s5.isTileActive ? (Player.GetPosition() - (s5.transform.position + Vector3.right * 8.5f)).magnitude : 17; // right
-        STile s6 = SGrid.current.GetStile(6);
+        STile s6 = SGrid.Current.GetStile(6);
         float dist3 = s6.isTileActive ? (Player.GetPosition() - s6.transform.position).magnitude : 17; // center
         float dist4 = s6.isTileActive ? (Player.GetPosition() - (s6.transform.position + Vector3.left * 8.5f)).magnitude : 17; // left
         AudioManager.SetMusicParameter("Desert", "DesertDistToCasino", Mathf.Min(dist1, dist2, dist3, dist4));
@@ -129,18 +118,22 @@ public class DesertGrid : SGrid
     //Puzzle 2: Baboon tree shake
     public void CheckMonkeyShakeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        STile monkeyTile = SGrid.current.GetStile(3);
-        if (e.stile == SGrid.current.GetStile(3))
+        STile monkeyTile = SGrid.Current.GetStile(3);
+        if (e.stile == SGrid.Current.GetStile(3))
         {
             if (Mathf.Abs(e.prevPos.x - monkeyTile.x) == 2 || Mathf.Abs(e.prevPos.y - monkeyTile.y) == 2)
             {
                 //Shake the monkey. Logic for monkey stages of awake?
                 monkeShake++;
+                if (monkeShake == 1) zlist[2].SetActive(false);
+                else if (monkeShake == 2) zlist[1].SetActive(false);
+                else if (monkeShake == 3) zlist[0].SetActive(false);
                 Debug.Log("The monkey got shook");
             }
             else
             {
                 monkeShake = 0;
+                foreach (GameObject z in zlist) z.SetActive(true);
                 Debug.Log("Monkey shakes reset!");
             }
         }
@@ -158,14 +151,6 @@ public class DesertGrid : SGrid
     public void IsMonkeyNearOasis(Condition c)
     {
         c.SetSpec(CheckGrid.contains(GetGridString(), "23") || CheckGrid.contains(GetGridString(), "(3|2)...(2|3)"));
-    }
-    public void IsFirstShake(Condition c)
-    {
-        c.SetSpec(monkeShake >= 1);
-    }
-    public void IsSecondShake(Condition c)
-    {
-        c.SetSpec(monkeShake >= 2);
     }
     #endregion
 

@@ -34,11 +34,11 @@ public class ArtifactTileButton : MonoBehaviour
     public STile MyStile {
         get
         {
-            if (SGrid.current == null)
+            if (SGrid.Current == null)
             {
                 return null;
             }
-            return SGrid.current.GetStile(islandId);
+            return SGrid.Current.GetStile(islandId);
         }
     }
     public bool TileIsActive { 
@@ -202,7 +202,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     protected virtual void SetAnchoredPos(int x, int y)
     {
-        Vector3 pos = new Vector3((x % SGrid.current.height) - 1, y - 1) * UI_OFFSET; //C: i refuse to make everything into MT buttons
+        Vector3 pos = new Vector3((x % SGrid.Current.Height) - 1, y - 1) * UI_OFFSET; //C: i refuse to make everything into MT buttons
         GetComponent<RectTransform>().anchoredPosition = pos;
     }
 

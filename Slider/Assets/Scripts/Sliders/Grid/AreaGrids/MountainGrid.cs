@@ -6,7 +6,7 @@ public class MountainGrid : SGrid
 {
     public int layerOffset; //the y offset of the top layer from the bottom (used to calculate top tile y position)
 
-    public static MountainGrid instance;
+    public static MountainGrid Instance => SGrid.Current as MountainGrid;
 
     /* C: The mountian sgrid is a 2 by 4 grid. The top 4 tiles represent the top layer,
         while the bottom 4 tiles represent the bottom layer. For example, the following grid
@@ -21,15 +21,15 @@ public class MountainGrid : SGrid
     */
 
     public override void Init() {
-        myArea = Area.Mountain;
-
-        foreach (Collectible c in collectibles)
-        {
-            c.SetArea(myArea);
-        }
-
+        InitArea(Area.Mountain);
         base.Init();
-        instance = this;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        AudioManager.PlayMusic("Mountain");
+        UIEffects.FadeFromBlack();
     }
     
     private void OnEnable()
@@ -44,19 +44,14 @@ public class MountainGrid : SGrid
 
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs interactArgs)
     {
-        /*STile dropTile = dropArgs.stile;
-        if(!dropTile || dropTile.y < 2)
-            return; //currently using the anchor on the bottom layer does nothing
-        STile lower = SGrid.current.GetGrid()[dropTile.x, dropTile.y - 2];
-        if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile*/
         if (interactArgs.drop)
         {
             STile dropTile = interactArgs.stile;
-            if(dropTile!= null)
+            if(dropTile != null)
             {
                 if(dropTile.y < 2)
-                return; //currently using the anchor on the bottom layer does nothing
-                STile lower = SGrid.current.GetGrid()[dropTile.x, dropTile.y - 2];
+                    return; //currently using the anchor on the bottom layer does nothing
+                STile lower = SGrid.Current.GetGrid()[dropTile.x, dropTile.y - 2];
                 if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile
                 {
                     MountainArtifact uiArtifact = (MountainArtifact) MountainArtifact.GetInstance();
@@ -64,17 +59,6 @@ public class MountainGrid : SGrid
                     uiArtifact.AnchorSwap(dropTile, lower);
                 }
             }
-            
-        }
-        //PJ: define behavior for anchor pick up?
-        
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-        AudioManager.PlayMusic("Mountain");
-        UIEffects.FadeFromBlack();
-
+        }        
     }
 }

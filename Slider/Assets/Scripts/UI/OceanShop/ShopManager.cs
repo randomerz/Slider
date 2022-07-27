@@ -108,13 +108,6 @@ public class ShopManager : Singleton<ShopManager>
 
     public void CheckTavernKeep()
     {
-        // first talk
-        // SGrid.current.ActivateSliderCollectible(3);
-        if (!PlayerInventory.Contains("Slider 3", Area.Ocean))
-        {
-            collectibleToActivateOnClose = SGrid.current.GetCollectible("Slider 3");
-        }
-
         // rest of rewards
         if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
         {
@@ -213,7 +206,7 @@ public class ShopManager : Singleton<ShopManager>
     {
         if (sliderNumber == 4 && !wasSliderOrDrinkCollectibleBought[0])
         {
-          Collectible c = SGrid.current.GetCollectible("Slider " + 4);
+          Collectible c = SGrid.Current.GetCollectible("Slider " + 4);
           c.DoOnCollect();
           wasSliderOrDrinkCollectibleBought[0] = true;
           AudioManager.Play("Puzzle Complete");
@@ -222,7 +215,7 @@ public class ShopManager : Singleton<ShopManager>
         else if (sliderNumber <= 9 && !wasSliderOrDrinkCollectibleBought[sliderNumber - 4] && credits > 0)
         {
           SpendCredits(1);
-          Collectible c = SGrid.current.GetCollectible("Slider " + sliderNumber);
+          Collectible c = SGrid.Current.GetCollectible("Slider " + sliderNumber);
           c.DoOnCollect();
           wasSliderOrDrinkCollectibleBought[sliderNumber - 4] = true;
           AudioManager.Play("Puzzle Complete");

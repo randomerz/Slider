@@ -12,6 +12,6 @@ public class DesertArtifactRandomizer
             "319754826", "791825643", "834597621", "241936578", "485691237"};
         int random = Random.Range(0, 20);
         Debug.Log("Shuffled Puzzle Index: " + random);
-        SGrid.current.SetGrid(SGrid.GridStringToSetGridFormat(puzzle[random]));
+        SGrid.Current.SetGrid(SGrid.GridStringToSetGridFormat(puzzle[random]));
     }
 }

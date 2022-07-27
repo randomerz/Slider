@@ -32,7 +32,7 @@ public class ArtifactWorldMapArea : MonoBehaviour
 
     private void Start() 
     {
-        playerPin.gameObject.SetActive(SGrid.current.GetArea() == myArea);
+        playerPin.gameObject.SetActive(SGrid.Current.GetArea() == myArea);
     }
 
     private void OnDisable() 

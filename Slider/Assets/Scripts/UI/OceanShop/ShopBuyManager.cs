@@ -18,7 +18,7 @@ public class ShopBuyManager : MonoBehaviour
             }
             shopManager.SpendCredits(1);
         }
-        SGrid.current.ActivateSliderCollectible(sliderId);
+        SGrid.Current.ActivateSliderCollectible(sliderId);
         sliderButtons[sliderId - 1].SetActive(false);
     }
 }
