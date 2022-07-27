@@ -110,6 +110,14 @@ public class PlayerConditionals : MonoBehaviour
         onSuccess?.Invoke();
     }
 
+    public void EnableConditionals()
+    {
+        if (addToOnAction)
+        {
+            onActionEnabled = true;
+        }
+    }
+
     public void DisableConditionals()
     {
         if (addToOnAction && onActionEnabled)

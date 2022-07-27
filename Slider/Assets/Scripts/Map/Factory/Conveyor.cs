@@ -108,8 +108,7 @@ public class Conveyor : ElectricalNode
             if (move != null)
             {
                 waitingToDoMove = true;
-                FactoryArtifact.DequeueLocked = true;
-                StartCoroutine(FactoryArtifact.WaitOutOverlappingActiveMoves(move, QueueConveyorMove));
+                StartCoroutine(FactoryArtifact.WaitUntilCanQueueMoveSafely(move, QueueConveyorMove));
             } else
             {
                 //CheckingInterruptMove = false;
@@ -126,7 +125,7 @@ public class Conveyor : ElectricalNode
         {
             artifact.QueueMoveToFront(newMove);
         }
-        //CheckingInterruptMove = false;
+        FactoryArtifact.DequeueLocked = false;  //Make sure the key is released or else we will spinlock.
     }              
 
     //This method covers conveyor belts that stretch over multiple tiles as well as arbitrary grid size, which is a lot more than we needed lol.

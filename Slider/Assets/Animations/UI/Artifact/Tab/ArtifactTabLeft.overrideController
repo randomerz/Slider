@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ArtifactTabLeft
+  m_Controller: {fileID: 9100000, guid: 583cb0dc1f454574b99b523ad8ab75f1, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 10fdd738cf15e7641afffcf1a6202033, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 4244349d89c08894da84268caa4519ca, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 79ac0c8a39dec6b488846aa1838d6ca3, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 2ee7ddd9a240bc34ebe20fd6d08c17d7, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: deaa294c69768be4ebd3cbecc722a571, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 8dbc66d5718c5f44eb46ef287be43b98, type: 2}

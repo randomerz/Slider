@@ -20,7 +20,7 @@ public class UIArtifactInventory : MonoBehaviour
     private void OnEnable() 
     {
         UpdateIcons();
-        UpdateText("Inventory");
+        UpdateText("Collection");
 
         UpdateCollectibleCounters(this, null);
         PlayerInventory.OnPlayerGetCollectible += UpdateCollectibleCounters;

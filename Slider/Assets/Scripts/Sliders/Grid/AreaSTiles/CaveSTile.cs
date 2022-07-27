@@ -28,9 +28,9 @@ public class CaveSTile : STile
     }
     private Texture2D _heightMask;
 
-    private void Awake()
+    private new void Awake()
     {
-        // base.Awake();
+        base.Awake();
 
         objectsThatBlockLight = new List<GameObject>();
         Transform[] objects = GetComponentsInChildren<Transform>(true); // true -> include inactive components

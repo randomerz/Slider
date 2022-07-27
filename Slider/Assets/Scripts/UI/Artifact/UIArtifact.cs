@@ -89,6 +89,15 @@ public class UIArtifact : Singleton<UIArtifact>
     }
     #endregion
 
+    public static SMove GetNextMove()
+    {
+        if (_instance.moveQueue.Count > 0)
+        {
+            return _instance.moveQueue.Peek();
+        }
+        return null;
+    }
+
     // Returns a string like:   123_6##_4#5
     // for a grid like:  1 2 3
     //                   6 . .
@@ -340,7 +349,7 @@ public class UIArtifact : Singleton<UIArtifact>
         //OnButtonInteract?.Invoke(this, null);
     }
 
-    public void UpdatePushedDowns(object sender, System.EventArgs e)
+    public virtual void UpdatePushedDowns(object sender, System.EventArgs e)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
         {
@@ -431,8 +440,8 @@ public class UIArtifact : Singleton<UIArtifact>
             if (CheckMoveHasAnActiveTile(move)) //L: If we don't do this, we risk adding an active move that never dequeues, overflowing the queue, and BREAKING THE ENTIRE GAME.
             {
                 move.duration *= 1f - moveQueue.Count / 10f;   //Queuing more moves will make it go faster.
-                SGrid.Current.Move(move);
                 activeMoves.Add(move);
+                SGrid.Current.Move(move);
             }
             else
             {
@@ -535,6 +544,7 @@ public class UIArtifact : Singleton<UIArtifact>
 
     protected void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
+        Debug.Log(buttonCurrent.islandId + ", " + buttonEmpty.islandId);
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
         buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
@@ -554,7 +564,7 @@ public class UIArtifact : Singleton<UIArtifact>
         return false;
     }
 
-    private bool IsStileInActiveMoves(int islandId)
+    protected bool IsStileInActiveMoves(int islandId)
     {
         foreach (SMove smove in activeMoves)
         {
