@@ -54,6 +54,7 @@ public class MountainGrid : SGrid
                 STile lower = SGrid.Current.GetGrid()[dropTile.x, dropTile.y - 2];
                 if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile
                 {
+                    //C TODO: look at how logan did conveyers and copy that because rn this cancels the whole queue
                     MountainArtifact uiArtifact = (MountainArtifact) MountainArtifact.GetInstance();
                     UIArtifact.ClearQueues();
                     uiArtifact.AnchorSwap(dropTile, lower);
