@@ -349,7 +349,7 @@ public class UIArtifact : Singleton<UIArtifact>
         //OnButtonInteract?.Invoke(this, null);
     }
 
-    public void UpdatePushedDowns(object sender, System.EventArgs e)
+    public virtual void UpdatePushedDowns(object sender, System.EventArgs e)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
         {
@@ -544,6 +544,7 @@ public class UIArtifact : Singleton<UIArtifact>
 
     protected void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
+        Debug.Log(buttonCurrent.islandId + ", " + buttonEmpty.islandId);
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
         buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
@@ -563,7 +564,7 @@ public class UIArtifact : Singleton<UIArtifact>
         return false;
     }
 
-    private bool IsStileInActiveMoves(int islandId)
+    protected bool IsStileInActiveMoves(int islandId)
     {
         foreach (SMove smove in activeMoves)
         {

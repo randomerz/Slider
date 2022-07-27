@@ -93,10 +93,12 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         else if (isLightning && !value)
         {
             highlightedFrame.gameObject.SetActive(false);
+            pushedDownFrame.gameObject.SetActive(false);
             Image PushedDown = this.gameObject.transform.GetChild(1).GetChild(0).GetComponent<Image>();
             Image Highlighted = this.gameObject.transform.GetChild(2).GetChild(0).GetComponent<Image>();
             pushedDownFrame = PushedDown;
             highlightedFrame = Highlighted;
+            if (isPushedDown) pushedDownFrame.gameObject.SetActive(true);
         }
         isLightning = value;
     }
