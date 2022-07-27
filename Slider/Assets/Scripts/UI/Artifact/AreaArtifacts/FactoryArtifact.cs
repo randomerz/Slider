@@ -67,20 +67,21 @@ public class FactoryArtifact : UIArtifact
     }
 
     private void UndoMovesAfterOverlap(List<SMove> newMoveQueue, SMove moveToCheck) {
-                //Undo moves
         int cutIndex = newMoveQueue.Count;
         for (int i = 1; i < newMoveQueue.Count; i++)
         {
-            if (newMoveQueue[i].Overlaps(moveToCheck))
+            //SMoveConveyor should never interfere, but just in case we don't want them to be undone.
+            if (!(newMoveQueue[i] is SMoveConveyor) && newMoveQueue[i].Overlaps(moveToCheck))
             {
                 cutIndex = i;
                 break;
             }
         }
 
+        //Undo the moves on the artifact in the reverse order that they were made.
         for (int i = newMoveQueue.Count-1; i >= cutIndex; i--)
         {
-            SwapButtonsBasedOnMove(newMoveQueue[i]);
+            ReverseButtonSwapBasedOnMove(newMoveQueue[i]);
             newMoveQueue.RemoveAt(i);
         }
     }
@@ -92,6 +93,23 @@ public class FactoryArtifact : UIArtifact
         {
             ArtifactTileButton b = GetButton(m.startLoc.x, m.startLoc.y);
             buttonToNewPos[b] = m.endLoc;
+        }
+
+        foreach (var b in buttonToNewPos.Keys)
+        {
+            b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y);
+        }
+
+        UpdateMoveOptions();
+    }
+
+    private void ReverseButtonSwapBasedOnMove(SMove move)
+    {
+        var buttonToNewPos = new Dictionary<ArtifactTileButton, Vector2Int>();
+        foreach (Movement m in move.moves)
+        {
+            ArtifactTileButton b = GetButton(m.endLoc.x, m.endLoc.y);
+            buttonToNewPos[b] = m.startLoc;
         }
 
         foreach (var b in buttonToNewPos.Keys)
