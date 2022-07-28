@@ -19,20 +19,27 @@ public class DesyncItem : Item
 
     private void OnEnable()
     {
-        Portal.OnTimeChange += DisablePresentOnTeleport;
+        Portal.OnTimeChange += CheckItemsOnTeleport;
+        Anchor.OnAnchorInteract += CheckItemsOnAnchorInteract;
     }
 
-    private void DisablePresentOnTeleport(object sender, Portal.OnTimeChangeArgs e)
+    private void CheckItemsOnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
+    {
+        if (!isItemInPast && !originTile.hasAnchor)
+        {
+            itemPair.gameObject.SetActive(false);
+        }
+        else itemPair.gameObject.SetActive(true);
+    }
+
+    private void CheckItemsOnTeleport(object sender, Portal.OnTimeChangeArgs e)
     {
         if (PlayerInventory.GetCurrentItem() != null && PlayerInventory.GetCurrentItem().name == name) isItemInPast = !e.fromPast;
         //Debug.Log("isItemInPast: " + isItemInPast + " originTile: " + originTile.hasAnchor);
-        if (e.fromPast)
+        if (!isItemInPast && !originTile.hasAnchor)
         {
-            if (!isItemInPast && !originTile.hasAnchor)
-            {
-                itemPair.gameObject.SetActive(false);
-            }
-            else itemPair.gameObject.SetActive(true);
+            itemPair.gameObject.SetActive(false);
         }
+        else itemPair.gameObject.SetActive(true);
     }
 }
