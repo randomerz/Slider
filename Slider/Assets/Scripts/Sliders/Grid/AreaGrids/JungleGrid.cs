@@ -40,6 +40,77 @@ public class JungleGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker=true)
     {
+        if (GetNumTilesCollected() == 3)
+        {
+            string s = GetGridString(true);
+            int location2 = s.IndexOf("2");
+            int x2 = location2 % 3;
+            int y2 = 2 - (location2 / 3);
+            STile two = grid[x2, y2];
+
+            bool doubleSwap = false;
+            if (!CheckGrid.contains(s, "23"))
+            {
+                if (x2 == 2 && stile.x == 0) { 
+
+                    doubleSwap = true;
+                } else if (stile.x == 0)
+                {
+                    STile other = grid[x2 + 1, y2];
+                    if (other.isTileActive)
+                    {
+                        doubleSwap = true;
+                    }
+                    else
+                    {
+                        SwapTiles(stile, other);
+                    }
+                } else
+                {
+                    STile other = grid[stile.x - 1, stile.y];
+                    if (other.isTileActive)
+                    {
+                        doubleSwap = true;
+                    }
+                    else
+                    {
+                        SwapTiles(two, other);
+                    }
+                }
+            } 
+
+            if (doubleSwap)
+            {
+                List<STile> tiles = new List<STile>();
+                //options for tile 2
+                for (int i = 0; i < 2; i ++)
+                {
+                    for (int j = 0; j < 3; j++)
+                    {
+                        tiles.Add(grid[i, j]);
+                    }
+                }
+
+                foreach (STile tile in tiles)
+                {
+                    if (tile.isTileActive)
+                    {
+                        continue;
+                    }
+                    if (grid[tile.x + 1, tile.y].isTileActive)
+                    {
+                        continue;
+                    }
+
+                    STile other2 = tile;
+                    STile other3 = grid[tile.x + 1, tile.y];
+
+                    SwapTiles(other2, two);
+                    SwapTiles(other3, stile);
+                    break;
+                }
+            }
+        }
         base.EnableStile(stile, shouldFlicker);
         CheckChad(this, null);
     }
@@ -49,7 +120,7 @@ public class JungleGrid : SGrid
     // Puzzle 5 - Chad Race
     public void CheckChad(object sender, SGrid.OnGridMoveArgs e) {
         if (Current.GetGrid() != null)
-            chadRace.tilesAdjacent = CheckGrid.row(GetGridString(), "523") && GetStile(5).isTileActive && GetStile(2).isTileActive && GetStile(3).isTileActive;
+            chadRace.tilesAdjacent = CheckGrid.row(GetGridString(), "523");
     }
     
     public void OnRaceWon() {

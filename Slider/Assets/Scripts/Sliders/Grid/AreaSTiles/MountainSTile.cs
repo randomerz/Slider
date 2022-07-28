@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MountainSTile : STile
 {
+    
     public override void Init()
     {
         STILE_WIDTH = 25;

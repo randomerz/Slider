@@ -4,22 +4,42 @@ using UnityEngine;
 
 public class Conveyor : ElectricalNode
 {
-    //Probably want to do an animation later instead of sprite swapping
-
     [SerializeField] private Vector2Int start;
 
     [SerializeField] private Vector2Int dir;
 
-    [SerializeField] private int length; //This is probably going to be 1 for all of them
+    [SerializeField] private int length;
 
-    [SerializeField] private UIArtifact artifact;   //We need reference to the artifact for the queue and to update the UI
+    [SerializeField] private FactoryArtifact artifact;
 
     [SerializeField] private Animator animator;
 
-    private Coroutine gettingMoveCoroutine; //Only should have one coroutine running at a time.
+    private bool _conveyorEnabled = true;
 
     public Vector2Int StartPos => start;
     public Vector2Int Dir => dir;
+
+    public bool ConveyorEnabled
+    {
+        get {
+            return _conveyorEnabled;
+        }
+
+        set
+        {
+            _conveyorEnabled = value;
+            HandleConveyorPoweredStatus();
+        }
+    }
+
+    //public bool CheckingInterruptMove
+    //{
+    //    get;
+    //    private set;
+    //}
+
+    private bool ConveyorPowered => ConveyorEnabled && Powered;
+    private bool waitingToDoMove = false;
 
     private new void Awake()
     {
@@ -35,113 +55,93 @@ public class Conveyor : ElectricalNode
     private void Start()
     {
 
-        animator.SetFloat("speed", Powered ? 2 : 0);
+        animator.SetFloat("speed", ConveyorPowered ? 2 : 0);
 
         if (artifact == null)
         {
-            artifact = UIArtifact.GetInstance();
+            artifact = UIArtifact.GetInstance() as FactoryArtifact;
         }
     }
 
     private new void OnEnable()
     {
         base.OnEnable();
-        SGridAnimator.OnSTileMoveEnd += OnTileMove;
-        SGrid.OnSTileEnabled += OnTileEnabled;
+        SGridAnimator.OnSTileMoveEndEarly += OnSTileMoveEndEarly;
+        SGrid.OnSTileEnabled += OnSTileEnabled;
     }
 
     private new void OnDisable()
     {
         base.OnDisable();
-        SGridAnimator.OnSTileMoveEnd -= OnTileMove;
-        SGrid.OnSTileEnabled -= OnTileEnabled;
+        SGridAnimator.OnSTileMoveEndEarly -= OnSTileMoveEndEarly;
+        SGrid.OnSTileEnabled -= OnSTileEnabled;
     }
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
         base.OnPoweredHandler(e);
-        animator.SetFloat("speed", e.powered ? 2 : 0);
-
-        if (e.powered && gettingMoveCoroutine == null)
-        {
-            gettingMoveCoroutine = StartCoroutine(WaitForCurrentAndCheckForMove());
-        }
+        HandleConveyorPoweredStatus();
     }
 
-    private void OnTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
+    private void HandleConveyorPoweredStatus()
     {
-        if (Powered && gettingMoveCoroutine == null)
-        {
-            gettingMoveCoroutine = StartCoroutine(WaitForCurrentAndCheckForMove());
-        }
+        animator.SetFloat("speed", ConveyorPowered ? 2 : 0);
+
+        TryQueueConveyorMove();
     }
 
-    private void OnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
-        if (Powered && gettingMoveCoroutine == null)
-        {
-            gettingMoveCoroutine = StartCoroutine(WaitForCurrentAndCheckForMove());
-        }
+        TryQueueConveyorMove();
     }
 
-    //This might cause race conditions for multiple conveyor belts affecting the same tiles, might need to revisit. (static ref. counter for Conveyors)
-    private IEnumerator WaitForCurrentAndCheckForMove()
+    private void OnSTileMoveEndEarly(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        SMoveConveyor move = ConstructMove();
-        if (move != null)
-        {
-            //Do not allow the player to queue any moves at this point!
-            artifact.DisableQueueing();
-            UIArtifact.ClearQueues();
+        TryQueueConveyorMove();
+    }
 
-            foreach (SMove activeMove in UIArtifact.GetActiveMoves())
+    private void TryQueueConveyorMove()
+    {
+        if (ConveyorPowered && !waitingToDoMove)
+        {
+            SMoveConveyor move = ConstructMove();
+            if (move != null)
             {
-                if (activeMove.Overlaps(move))
-                {
-                    //We need to make sure that none of the active moves are interfering with the conveyor belt moves.
-                    //Wait out the active moves
-                    while (UIArtifact.ActiveMovesExist())
-                    {
-                        yield return null;
-                    }
-                    break;
-                }
-            }
-
-            //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones)
-            yield return new WaitForSeconds(0.2f);
-            if (Powered)
+                waitingToDoMove = true;
+                StartCoroutine(FactoryArtifact.WaitUntilCanQueueMoveSafely(move, QueueConveyorMove));
+            } else
             {
-                //Queue the move, then immediately unqueue it so that it becomes the next active move.
-                artifact.QueueAdd(move);
-                artifact.ProcessQueue();
-
-                //We need to update the UI since the move was initiated by the conveyor belt instead of the player clicking buttons.
-                artifact.SetButtonPositionsToMatchGrid();
+                //CheckingInterruptMove = false;
             }
-            //Now that the UI has updated to reflect the conveyor move, we can reenable queueing for the player
-            artifact.EnableQueueing();
         }
-
-        gettingMoveCoroutine = null;
     }
 
-    //This could be put in SMove.cs. Idk. I thought it made more sense here.
+    private void QueueConveyorMove()
+    {
+        //Construct a brand new move because it might have changed! (ex: tile moving in front of conveyor, so have to push both tiles).
+        waitingToDoMove = false;
+        SMoveConveyor newMove = ConstructMove();
+        if (ConveyorPowered && newMove != null)
+        {
+            artifact.QueueMoveToFront(newMove);
+        }
+        FactoryArtifact.DequeueLocked = false;  //Make sure the key is released or else we will spinlock.
+    }              
+
     //This method covers conveyor belts that stretch over multiple tiles as well as arbitrary grid size, which is a lot more than we needed lol.
     private SMoveConveyor ConstructMove()
     {
         List<Movement> moves = new List<Movement>();
         STile[,] stiles = SGrid.Current.GetGrid();
-
-
-        //Check if a tile is on the conveyor belt
         int count = 0;
         Vector2Int curr = start;
+
+
+        //Get to the start of the move
         while (!stiles[curr.x, curr.y].isTileActive)
         {
             curr += dir;
             count++;
-
 
             if (count >= length)
             {
@@ -149,38 +149,35 @@ public class Conveyor : ElectricalNode
                 return null;
             }
         }
-
         Vector2Int moveStart = curr;
 
         List<Vector2Int> movingTiles = new List<Vector2Int>();
         List<Vector2Int> emptyTiles = new List<Vector2Int>();
         int moveLength = 0;
         bool passedFirstEmpty = false;
-        while (moveLength < length && curr.x >= 0 && curr.y >= 0 && curr.x < SGrid.Current.Width && curr.y < SGrid.Current.Height)
+        while (moveLength < length && PosInSGridBounds(curr))
         {
             if (stiles[curr.x, curr.y].isTileActive && !passedFirstEmpty)
             {
                 //Add all tiles on the conveyor belt and tiles pushed by those on the conveyor belt.
                 movingTiles.Add(curr);
             }
-            else if (!stiles[curr.x, curr.y].isTileActive)
+            else if (!stiles[curr.x, curr.y].isTileActive)  //Check that there's space at the end of the conveyor belt.
             {
-                //Check that there's space at the end of the conveyor belt.
-                //This only happens once for length 1 conveyors (i.e. Factory)
+                
                 emptyTiles.Add(curr);
                 moveLength++;   
                 passedFirstEmpty = true;
             } else
             {
                 //Tile is active, and we've already passed at least one empty tile
-                //NOTE: There is an edge case where if length is more than one, it could push into an empty square and then push into another chain, but our grids are small enough that this case doesn't occur.
                 break;
             }
 
             curr += dir;
         }
 
-        if (!passedFirstEmpty) //&& (curr.x >= SGrid.current.width || curr.y >= SGrid.current.height || curr.x < 0 || curr.y < 0))
+        if (!passedFirstEmpty)
         {
             //Belt is locked, so this move isn't possible.
             return null;
@@ -198,5 +195,10 @@ public class Conveyor : ElectricalNode
         }
 
         return new SMoveConveyor(moves);
+    }
+
+    private bool PosInSGridBounds(Vector2Int pos)
+    {
+        return pos.x >= 0 && pos.y >= 0 && pos.x < SGrid.Current.Width && pos.y < SGrid.Current.Height;
     }
 }

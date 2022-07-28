@@ -26,6 +26,7 @@ public class SGrid : Singleton<SGrid>, ISavable
 
     [SerializeField] protected int width;
     [SerializeField] protected int height;
+    [SerializeField] protected int housingOffset = -150;
     [SerializeField] protected STile[] stiles;
     [SerializeField] protected SGridBackground[] bgGridTiles;
     [SerializeField] protected Collectible[] collectibles;
@@ -210,52 +211,26 @@ public void SetGrid(int[,] puzzle)
     public static string GetGridString(bool numsOnly = false)
     {
         return GetGridString(Current.grid, numsOnly);
-        //string s = "";
-        //for (int y = current.height - 1; y >= 0; y--)
-        //{
-        //    for (int x = 0; x < current.width; x++)
-        //    {
-        //        if (current.grid[x, y].isTileActive)
-        //            s += IntToChar(current.grid[x, y].islandId);
-        //        else
-        //            s += "#";
-        //    }
-        //    if (y != 0)
-        //    {
-        //        s += "_";
-        //    }
-        //}
-        //return s;
     }
+
+    //C: If numsOnly is true, then the grid string will contain all tile IDs. 
+    // If false, then inactive tiles will be represented by #s
 
     public static string GetGridString(STile[,] grid, bool numsOnly = false)
     {
         string s = "";
-        if (numsOnly)
+        for (int y = grid.GetLength(1) - 1; y >= 0; y--)
         {
-            for (int y = grid.GetLength(1) - 1; y >= 0; y--)
+            for (int x = 0; x < grid.GetLength(0); x++)
             {
-                for (int x = 0; x < grid.GetLength(0); x++)
-                {
+                if (numsOnly || grid[x, y].isTileActive)
                     s += IntToChar(grid[x, y].islandId);
-                }
+                else
+                    s += "#";
             }
-        }
-        else
-        {
-            for (int y = grid.GetLength(1) - 1; y >= 0; y--)
+            if (y != 0)
             {
-                for (int x = 0; x < grid.GetLength(0); x++)
-                {
-                    if (grid[x, y].isTileActive)
-                        s += IntToChar(grid[x, y].islandId);
-                    else
-                        s += "#";
-                }
-                if (y != 0)
-                {
-                    s += "_";
-                }
+                s += "_";
             }
         }
         return s;
@@ -275,7 +250,6 @@ public void SetGrid(int[,] puzzle)
         return gridFormat;
     }
 
-    //L: islandId is the id of the corresponding tile in the puzzle doc
     public STile GetStile(int islandId)
     {
         foreach (STile t in stiles)
@@ -283,6 +257,19 @@ public void SetGrid(int[,] puzzle)
                 return t;
                 
         return null;
+    }
+
+    protected void SwapTiles(STile one, STile two)
+    {
+        int x = two.x;
+        int y = two.y;
+        two.SetGridPosition(one.x, one.y);
+        one.SetGridPosition(x, y);
+        grid[two.x, two.y] = two;
+        grid[x, y] = one;
+
+        UIArtifact.SetButtonPos(one.islandId, x, y);
+        UIArtifact.SetButtonPos(two.islandId, two.x, two.y);
     }
 
     //C: returns a list of active stiles
@@ -304,12 +291,11 @@ public void SetGrid(int[,] puzzle)
         foreach (STile tile in stiles)
         {
             if (tile.isTileCollected)
-            {
                 numCollected++;
-            }
         }
         return numCollected;
     }
+    
     /// <summary>
     /// Returns the number of STiles available in the current SGrid.
     /// </summary>
@@ -319,18 +305,25 @@ public void SetGrid(int[,] puzzle)
         return Width * Height;
     }
 
-    //S: copy of Player's GetStileUnderneath for the tracker
-    // DC: This will prefer an GameObjs parented STile if it has one
-    public STile GetStileUnderneath(GameObject target)
+    
+
+    // C: result of consolidating 2 versions of this method
+    // and i don't wanna rewrite method calls
+    public static STile GetStileUnderneath(GameObject target)
     {
+        return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>());
+    }
+
+    // DC: This will prefer an GameObjs parented STile if it has one
+    public static STile GetSTileUnderneath(Transform entity, STile currentStileUnderneath)
+    {
+        STile[,] grid = SGrid.Current.GetGrid();
         float offset = grid[0, 0].STILE_WIDTH / 2f;
-        float housingOffset = -150;
-        
+
         STile stileUnderneath = null;
-        STile currentStileUnderneath = target.GetComponentInParent<STile>(); // in case this obj is parented to something
         foreach (STile s in grid)
         {
-            if (s.isTileActive && IsObjectInSTileBounds(target.transform.position, s.transform.position, offset, housingOffset))
+            if (s.isTileActive && PosInSTileBounds(entity.position, s.transform.position, offset))
             {
                 if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
                 {
@@ -348,11 +341,11 @@ public void SetGrid(int[,] puzzle)
         return stileUnderneath;
     }
 
-    private bool IsObjectInSTileBounds(Vector3 targetPos, Vector3 stilePos, float offset, float housingOffset)
+    public static bool PosInSTileBounds(Vector3 pos, Vector3 stilePos, float offset)
     {
-        if (stilePos.x - offset < targetPos.x && targetPos.x < stilePos.x + offset &&
-           (stilePos.y - offset < targetPos.y && targetPos.y < stilePos.y + offset || 
-            stilePos.y - offset + housingOffset < targetPos.y && targetPos.y < stilePos.y + offset + housingOffset))
+        if (stilePos.x - offset < pos.x && pos.x < stilePos.x + offset &&
+           (stilePos.y - offset < pos.y && pos.y < stilePos.y + offset ||
+            stilePos.y - offset + Current.housingOffset < pos.y && pos.y < stilePos.y + offset + Current.housingOffset))
         {
             return true;
         }
@@ -426,16 +419,13 @@ public void SetGrid(int[,] puzzle)
     //L: Updates internal state (the grid[,]) based on result of SMove. See Move in SGridAnimator for the actual moving of the tiles.
     public virtual void Move(SMove move)
     {
-
         gridAnimator.Move(move);
 
         STile[,] newGrid = new STile[Width, Height];
         System.Array.Copy(grid, newGrid, Width * Height);
         foreach (Movement m in move.moves)
         {
-            //grid[m.x, m.y].SetGridPosition(m.z, m.w);
             newGrid[m.endLoc.x, m.endLoc.y] = grid[m.startLoc.x, m.startLoc.y];
-            //Debug.Log("Setting " + m.x + " " + m.y + " to " + m.z + " " + m.w);
         }
         STile[,] oldGrid = grid;
         grid = newGrid;
@@ -456,7 +446,7 @@ public void SetGrid(int[,] puzzle)
             }
         }
     }
-    // See STile.isTileCollected for an explanation
+
     public virtual void CollectSTile(int islandId)
     {
         foreach (STile s in grid)
@@ -476,7 +466,7 @@ public void SetGrid(int[,] puzzle)
         UIArtifact.GetInstance().AddButton(stile, flickerButton);
         OnSTileEnabled?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
     }
-    // See STile.isTileCollected for an explanation
+
     public virtual void CollectStile(STile stile)
     {
         stile.isTileCollected = true;

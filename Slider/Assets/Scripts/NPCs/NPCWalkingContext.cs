@@ -85,11 +85,6 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
 
     private void StartWalkAtIndex(int walkInd)
     {
-        if (walkCoroutine != null)
-        {
-            context.StopCoroutine(walkCoroutine);
-        }
-
         if (currWalk == null)
         {
             currWalk = context.CurrCond.walks[walkInd];
@@ -115,7 +110,7 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
             walkCoroutine = context.StartCoroutine(DoCurrentWalk());
         } else
         {
-            Debug.LogError("Did not start NPC walk because one was already occurring!");
+            Debug.LogWarning("Did not start NPC walk because one was already occurring!");
         }
     }
 
@@ -150,8 +145,12 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
                 t += scaledSpeed * Time.deltaTime;
 
                 UpdateSpriteFacingDir();
-                UpdateSTileCrossings();
-
+                if (remainingStileCrossings.Count > 0 && remainingStileCrossings[0].to == context.CurrentSTileUnderneath)
+                {
+                    UpdateSTileCrossings();
+                    t = 0;
+                    scaledSpeed = context.speed / Vector3.Distance(remainingPath[0].position, remainingPath[1].position);
+                }
                 yield return new WaitForEndOfFrame();
             }
             context.transform.position = remainingPath[1].position;
@@ -180,11 +179,10 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
 
     private void UpdateSTileCrossings()
     {
-        if (remainingStileCrossings.Count > 0 && remainingStileCrossings[0].to == context.CurrentSTileUnderneath)
-        {
+       
             remainingStileCrossings.RemoveAt(0);
             context.transform.SetParent(context.CurrentSTileUnderneath == null ? null : context.CurrentSTileUnderneath.transform);
-        }
+            SetPathStartToCurrNPCPos();
     }
     
     private void FinishWalk()

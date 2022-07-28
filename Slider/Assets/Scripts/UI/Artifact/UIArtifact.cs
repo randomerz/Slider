@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 // ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
-//L: I removed A LOT of boilerplate code btw this class and inherited classes. I'm like 80% sure that nothing broke, but it might be worth testing the artifacts in all the areas to make sure.
-//L: Also this class is getting really big.
 public class UIArtifact : Singleton<UIArtifact>
 {
 
@@ -23,8 +21,8 @@ public class UIArtifact : Singleton<UIArtifact>
 
     public static System.EventHandler<System.EventArgs> OnButtonInteract;
     public static System.EventHandler<System.EventArgs> MoveMadeOnArtifact;
-
-
+    
+    private int moveCounter;
     
     protected void Awake()
     {
@@ -92,6 +90,15 @@ public class UIArtifact : Singleton<UIArtifact>
         if (disableHighlight) _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
     }
     #endregion
+
+    public static SMove GetNextMove()
+    {
+        if (_instance.moveQueue.Count > 0)
+        {
+            return _instance.moveQueue.Peek();
+        }
+        return null;
+    }
 
     // Returns a string like:   123_6##_4#5
     // for a grid like:  1 2 3
@@ -270,12 +277,71 @@ public class UIArtifact : Singleton<UIArtifact>
         ResetButtonsToEmptyIfInactive(moveOptions);
 
         ArtifactTileButton hovered = GetButtonHovered(data);
-        if (hovered == null)
+        if(dragged == hovered && SettingsManager.AutoMove)
         {
-            return; //player didn't release mouse on a button, don't do anything.
+            SelectButton(dragged);
+            return;
+        }
+        //player didnt release their mouse on a tile so we assume they dont actually want to move the tile
+        if(hovered == null)
+        {
+            DeselectSelectedButton();
+            return; 
+        }
+        DoButtonDrag(dragged, hovered, moveOptions);
+    }
+    #endregion
+
+    #region Drag and Drop Private
+
+    private ArtifactTileButton GetButtonHovered(PointerEventData data)
+    {
+        ArtifactTileButton hovered = null;
+        if (data.pointerEnter != null && data.pointerEnter.name == "Image")
+        {
+            hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton>();
+        }
+        return hovered;
+    }
+
+    private void SetButtonVisualsDuringMouseDrag(ArtifactTileButton dragged, ArtifactTileButton hovered)
+    {
+        foreach (ArtifactTileButton b in GetMoveOptions(dragged))
+        {
+            if (b == hovered)
+            {
+                b.SetHighlighted(false);
+                b.SetSpriteToHover();
+            }
+            else
+            {
+                b.SetHighlighted(true);
+                b.SetSpriteToIslandOrEmpty();
+            }
+        }
+    }
+
+    private void DoButtonDrag(ArtifactTileButton dragged, ArtifactTileButton hovered, List<ArtifactTileButton> moveOptions)
+    {
+        //Debug.Log($"dragged: {dragged.islandId} hovered: {hovered.islandId}");
+        if (!hovered.TileIsActive)
+        {
+            hovered.SetSpriteToEmpty();
         }
 
-        DoButtonDrag(dragged, hovered, moveOptions);
+        foreach (ArtifactTileButton b in moveOptions)
+        {
+            b.SetHighlighted(false);
+            if (b == hovered)
+            {
+                SelectButton(hovered, true);
+                DeselectSelectedButton();
+                return;
+            }
+        }
+        SelectButton(dragged, true);
+
+        OnButtonInteract?.Invoke(this, null);
     }
     #endregion
 
@@ -344,7 +410,7 @@ public class UIArtifact : Singleton<UIArtifact>
         //OnButtonInteract?.Invoke(this, null);
     }
 
-    public void UpdatePushedDowns(object sender, System.EventArgs e)
+    public virtual void UpdatePushedDowns(object sender, System.EventArgs e)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
         {
@@ -420,22 +486,36 @@ public class UIArtifact : Singleton<UIArtifact>
         ProcessQueue();
     }
 
-    //
     public virtual void ProcessQueue()
     {
         if (moveQueue.Count > 0)
         {
             //Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
 
-            SMove peekedMove = moveQueue.Peek();
-
-            if (MoveOverlapsWithActiveMove(peekedMove))
+            if (MoveOverlapsWithActiveMove(moveQueue.Peek()))
             {
                 return;
             }
 
-            DoMove(peekedMove);
+            SMove move = moveQueue.Dequeue();
+            if (CheckMoveHasAnActiveTile(move)) //L: If we don't do this, we risk adding an active move that never dequeues, overflowing the queue, and BREAKING THE ENTIRE GAME.
+            {
+                //PJ: If only one move is in the queue then moveCounter gets reset to 0 cuz of the recursive call
+                //PJ: but generally we want queing alot of moves to result in increasingly faster execution of said moves
+                move.duration = Mathf.Max(1f - (moveCounter) / 10f, 0.5f);   
+                moveCounter += 1;
+                activeMoves.Add(move);
+                SGrid.Current.Move(move);
+            }
+            else
+            {
+                Debug.LogError("The last dequeued move did not happen because it only contained empty tiles. THIS IS PROBABLY BECAUSE THE UI IS OUT OF SYNC WITH THE GRID.");
+            }
             ProcessQueue();
+        }
+        else
+        {
+            moveCounter = 0;
         }
     }
 
@@ -459,14 +539,14 @@ public class UIArtifact : Singleton<UIArtifact>
         return moveQueue.Count >= maxMoveQueueSize;
     }
 
-    public void EnableQueueing()
+    public static void EnableQueueing()
     {
-        playerCanQueue = true;
+        _instance.playerCanQueue = true;
     }
 
-    public void DisableQueueing()
+    public static void DisableQueueing()
     {
-        playerCanQueue = false;
+        _instance.playerCanQueue = false;
     }
 
     public void MoveQueueEmpty(Condition c)
@@ -474,11 +554,17 @@ public class UIArtifact : Singleton<UIArtifact>
         c.SetSpec(moveQueue.Count == 0 && activeMoves.Count == 0);
     }
 
-    private void DoMove(SMove move)
+    private bool CheckMoveHasAnActiveTile(SMove move)
     {
-        //Debug.Log("Move doesn't conflict! Performing move.");
-        SGrid.Current.Move(move);
-        activeMoves.Add(moveQueue.Dequeue());
+        STile[,] grid = SGrid.Current.GetGrid();
+        foreach (var movement in move.moves)
+        {
+            if (grid[movement.startLoc.x, movement.startLoc.y].isTileActive)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     #endregion
 
@@ -545,7 +631,7 @@ public class UIArtifact : Singleton<UIArtifact>
         return false;
     }
 
-    private bool IsStileInActiveMoves(int islandId)
+    protected bool IsStileInActiveMoves(int islandId)
     {
         foreach (SMove smove in activeMoves)
         {
@@ -567,7 +653,7 @@ public class UIArtifact : Singleton<UIArtifact>
         button.SetSelected(true);
     }
 
-    private void UpdateMoveOptions()
+    protected void UpdateMoveOptions()
     {
         if (buttonSelected != null)
         {
@@ -599,57 +685,5 @@ public class UIArtifact : Singleton<UIArtifact>
             }
         }
     }
-
-    #region Drag and Drop Private
-
-    private ArtifactTileButton GetButtonHovered(PointerEventData data)
-    {
-        ArtifactTileButton hovered = null;
-        if (data.pointerEnter != null && data.pointerEnter.name == "Image")
-        {
-            hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton>();
-        }
-        return hovered;
-    }
-
-    private void SetButtonVisualsDuringMouseDrag(ArtifactTileButton dragged, ArtifactTileButton hovered)
-    {
-        foreach (ArtifactTileButton b in GetMoveOptions(dragged))
-        {
-            if (b == hovered)
-            {
-                b.SetHighlighted(false);
-                b.SetSpriteToHover();
-            }
-            else
-            {
-                b.SetHighlighted(true);
-                b.SetSpriteToIslandOrEmpty();
-            }
-        }
-    }
-
-    private void DoButtonDrag(ArtifactTileButton dragged, ArtifactTileButton hovered, List<ArtifactTileButton> moveOptions)
-    {
-        //Debug.Log($"dragged: {dragged.islandId} hovered: {hovered.islandId}");
-        if (!hovered.TileIsActive)
-        {
-            hovered.SetSpriteToEmpty();
-        }
-
-        foreach (ArtifactTileButton b in moveOptions)
-        {
-            b.SetHighlighted(false);
-            if (b == hovered)
-            {
-                SelectButton(hovered, true);
-                DeselectSelectedButton();
-                return;
-            }
-        }
-        SelectButton(dragged, true);
-
-        OnButtonInteract?.Invoke(this, null);
-    }
 }
-#endregion
+

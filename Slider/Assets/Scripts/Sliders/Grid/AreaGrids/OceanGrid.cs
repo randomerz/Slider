@@ -11,7 +11,7 @@ public class OceanGrid : SGrid
 
     public GameObject burriedGuyNPC;
     public KnotBox knotBox;
-    public LostGuyMovement lostGuyMovement;
+    //public LostGuyMovement lostGuyMovement;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
 
@@ -49,8 +49,8 @@ public class OceanGrid : SGrid
         fogIsland.SetActive(false);
 
         AudioManager.PlayMusic("Ocean");
-        AudioManager.PlayMusic("Ocean Tavern", false);
-        AudioManager.PlayMusic("Ocean uwu", false);
+        AudioManager.PlayMusic("Ocean Tavern", false); // for FMOD effects
+        AudioManager.PlayMusic("Ocean uwu", false); // for FMOD effects
         UIEffects.FadeFromBlack();
 
     }
@@ -103,56 +103,9 @@ public class OceanGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
-        if (GetNumTilesCollected() == 3)
+        if (stile.islandId == 3)
         {
-            string s = GetGridString(true);
-
-            if (CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
-                || CheckGrid.contains(s, "1[0-9]{2}3") || CheckGrid.contains(s, "3[0-9]{2}1"))
-            {
-                List<STile> corners = new List<STile>();
-                foreach (STile tile in grid)
-                {
-                    corners.Add(tile);
-                }
-
-                bool firstRun = true;
-
-                STile other = corners[corners.Count - 1];
-                while (corners.Count > 0 && ((CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
-                     || CheckGrid.contains(s, "1[0-9]{2}3") || CheckGrid.contains(s, "3[0-9]{2}1"))))
-                {
-                    if (!firstRun) {
-                        corners.Remove(other); 
-                    }
-                    firstRun = false;
-
-                    for (int i = corners.Count - 1; i >= 0; i--)
-                    {
-                        other = corners[i];
-                        if (!other.isTileActive)
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            corners.Remove(other);
-                        }
-                    }
-
-                    int x = other.x;
-                    int y = other.y;
-                    other.SetGridPosition(stile.x, stile.y);
-                    stile.SetGridPosition(x, y);
-                    grid[other.x, other.y] = grid[x, y];
-                    grid[x, y] = stile;
-
-                    UIArtifact.SetButtonPos(3, x, y);
-                    UIArtifact.SetButtonPos(other.islandId, other.x, other.y);
-
-                    s = GetGridString(true);
-                }
-            }
+            CheckTile3Placement(stile);
         }
 
         base.EnableStile(stile, shouldFlicker);
@@ -163,6 +116,51 @@ public class OceanGrid : SGrid
         {
             CheckShipwreck(this, null);
             CheckVolcano(this, null);
+        }
+    }
+
+    private void CheckTile3Placement(STile stile)
+    {
+        string s = GetGridString(true);
+
+        if (CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
+            || CheckGrid.contains(s, "1...3") || CheckGrid.contains(s, "3...1"))
+        {
+            List<STile> tiles = new List<STile>();
+            foreach (STile tile in grid)
+            {
+                tiles.Add(tile);
+            }
+
+            bool firstRun = true;
+
+            STile other = tiles[tiles.Count - 1];
+            while (tiles.Count > 0 && ((CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
+                 || CheckGrid.contains(s, "1...3") || CheckGrid.contains(s, "3...1"))))
+            {
+                if (!firstRun)
+                {
+                    tiles.Remove(other);
+                }
+                firstRun = false;
+
+                for (int i = tiles.Count - 1; i >= 0; i--)
+                {
+                    other = tiles[i];
+                    if (!other.isTileActive)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        tiles.Remove(other);
+                    }
+                }
+
+                SwapTiles(stile, other);
+
+                s = GetGridString(true);
+            }
         }
     }
 
@@ -287,20 +285,10 @@ public class OceanGrid : SGrid
         }
     }
 
-    public void IsCompleted(Condition c)
-    {
-        c?.SetSpec(checkCompletion && IsFinalPuzzleMatching());
-    }
-
-    private bool IsFinalPuzzleMatching()
-    {
-        return CheckGrid.contains(GetGridString(), "412_[^1248]{2}8_[^1248]{3}");
-    }
-
-    public void IsLostGuyBeached(Condition c)
-    {
-        c.SetSpec(lostGuyMovement.hasBeached);
-    }
+    //public void IsLostGuyBeached(Condition c)
+    //{
+    //    c.SetSpec(lostGuyMovement.hasBeached);
+    //}
 
     // Foggy Seas
 
@@ -400,6 +388,17 @@ public class OceanGrid : SGrid
     }
 
     // Final puzzle
+
+    public void IsCompleted(Condition c)
+    {
+        c?.SetSpec(checkCompletion && IsFinalPuzzleMatching());
+    }
+
+    private bool IsFinalPuzzleMatching()
+    {
+        return CheckGrid.contains(GetGridString(), "412_[^1248]{2}8_[^1248]{3}");
+    }
+
     public bool GetCheckCompletion()
     {
         return checkCompletion;

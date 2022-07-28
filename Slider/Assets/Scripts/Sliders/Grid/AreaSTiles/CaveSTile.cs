@@ -28,9 +28,9 @@ public class CaveSTile : STile
     }
     private Texture2D _heightMask;
 
-    private void Awake()
+    private new void Awake()
     {
-        // base.Awake();
+        base.Awake();
 
         objectsThatBlockLight = new List<GameObject>();
         Transform[] objects = GetComponentsInChildren<Transform>(true); // true -> include inactive components
@@ -50,9 +50,9 @@ public class CaveSTile : STile
         base.Start();
     }
 
-    private new void Update()
+    private void Update()
     {
-        base.Update();
+        //base.Update();
 
         if (LightManager.instance != null && this.GetMovingDirection() != Vector2.zero)
         {

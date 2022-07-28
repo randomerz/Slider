@@ -6,6 +6,11 @@ using UnityEngine.UI;
 public class ArtifactTabManager : MonoBehaviour 
 {
     public List<ArtifactTab> tabs = new List<ArtifactTab>();
+    private ArtifactTab fragRealignTab;
+    private ArtifactTab realignTab;
+    private ArtifactTab saveTab;
+    private ArtifactTab loadTab;
+    private ArtifactTab previewTab;
 
     private bool isRearranging;
 
@@ -17,25 +22,31 @@ public class ArtifactTabManager : MonoBehaviour
     // Tabs -- this is not a good solution but we only have one set of tabs so it's fine lol
     public Animator rearrangingTabAnimator;
     public Animator rearrangingFragTabAnimator;
-    public ArtifactTab fragRealignTab;
-    public ArtifactTab RealignTab;
-    public ArtifactTab saveTab;
-    public ArtifactTab loadTab;
-    private int[,] originalGrid;
+    public Animator previewTabAnimator;
     public Sprite saveTabSprite;
     public Sprite loadTabSprite;
     public Sprite saveEmptyTabSprite;
     public Sprite loadEmptyTabSprite;
 
+    private int[,] originalGrid;
     private ArtifactTileButton empty;
     private ArtifactTileButton middle;
+
+    private void Awake()
+    {
+        realignTab = tabs[0];
+        saveTab = tabs[1];
+        loadTab = tabs[2];
+        fragRealignTab = tabs[3];
+        previewTab = tabs[4];
+    }
     public void SetCurrentScreen(int screenIndex)
     {
         if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert)
             && SGrid.Current.GetActiveTiles().Count == SGrid.Current.GetTotalNumTiles()
             && SGrid.GetNumButtonCompletions() != SGrid.Current.GetTotalNumTiles())
         {
-            RealignTab.SetIsVisible(screenIndex == RealignTab.homeScreen);
+            realignTab.SetIsVisible(screenIndex == realignTab.homeScreen);
             saveTab.SetIsVisible(false);
             loadTab.SetIsVisible(false);
         }
@@ -44,6 +55,14 @@ public class ArtifactTabManager : MonoBehaviour
             saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
             loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
             SetSaveLoadTabSprites(SGrid.Current.HasRealigningGrid());
+            if (SGrid.Current.GetArea() == Area.MagiTech)
+            {
+                //This enables the preview tab!
+                previewTab.SetIsVisible(true);
+                MagiTechArtifact artifact = (MagiTechArtifact)uiArtifactMenus.uiArtifact;
+                int direction = artifact.PlayerIsInPast ? -1 : 1;
+                previewTabAnimator.SetFloat("speed", direction);
+            }
             fragRealignTab.SetIsVisible(false);
         }
         else if (SGrid.Current.GetArea() == Area.Desert
@@ -54,10 +73,11 @@ public class ArtifactTabManager : MonoBehaviour
         }
         else
         {
-            RealignTab.SetIsVisible(false);
+            realignTab.SetIsVisible(false);
             fragRealignTab.SetIsVisible(false);
             saveTab.SetIsVisible(false);
             loadTab.SetIsVisible(false);
+            previewTab.SetIsVisible(false);
         }
     }
 
@@ -110,6 +130,8 @@ public class ArtifactTabManager : MonoBehaviour
         rearrangingTabAnimator.SetFloat("speed", 1);
     }
 
+
+    #region Save and Load
     // Save tab
 
     public void SaveOnClick()
@@ -206,6 +228,7 @@ public class ArtifactTabManager : MonoBehaviour
             loadTab.GetComponentInChildren<Image>().sprite = loadEmptyTabSprite;
         }
     }
+    #endregion
 
     //Rearranging Fragment
     public void FragRearrangeOnClick()
@@ -217,9 +240,10 @@ public class ArtifactTabManager : MonoBehaviour
             AudioManager.Play("Artifact Error");
             return;
         }
-        uiArtifactMenus.uiArtifact.TryQueueMoveFromButtonPair(middle, empty);
-        uiArtifactMenus.uiArtifact.UpdatePushedDowns(null, null);
-        uiArtifactMenus.uiArtifact.DeselectSelectedButton();
+        DesertArtifact artifact = (DesertArtifact) uiArtifactMenus.uiArtifact;
+        artifact.TryFragQueueMoveFromButtonPair(middle, empty);
+        artifact.UpdatePushedDowns(null, null);
+        artifact.DeselectSelectedButton();
         //FragRearrangeOnHoverExit();
     }
 
@@ -232,8 +256,6 @@ public class ArtifactTabManager : MonoBehaviour
         if (middle.TileIsActive) UIArtifact.SetLightningPos(1, 1);
         middle.SetLightning(true);
         empty.SetLightning(true);        
-        //middle.FragLightningPreview(true);
-        //empty.FragLightningPreview(true);
     }
 
     public void FragRearrangeOnHoverExit()
@@ -243,8 +265,26 @@ public class ArtifactTabManager : MonoBehaviour
         UIArtifact.DisableLightning(true);
         middle.SetLightning(false);
         empty.SetLightning(false);
-        //middle.FragLightningPreview(false);
-        //empty.FragLightningPreview(false);
     }
+
+    //Preview Tab
+
+    public void PreviewOnHoverEnter()
+    {
+        MagiTechArtifact artifact = (MagiTechArtifact) uiArtifactMenus.uiArtifact;
+        artifact.SetPreview(true);
+        previewTabAnimator.SetBool("isHovered", true);
+        previewTabAnimator.SetFloat("speed", previewTabAnimator.GetFloat("speed") * -1);
+        artifact.DeselectSelectedButton();
+    }
+
+    public void PreviewOnHoverExit()
+    {
+        MagiTechArtifact artifact = (MagiTechArtifact)uiArtifactMenus.uiArtifact;
+        artifact.SetPreview(false);
+        previewTabAnimator.SetBool("isHovered", false);
+        previewTabAnimator.SetFloat("speed", previewTabAnimator.GetFloat("speed") * -1);
+    }
+
     #endregion
 }

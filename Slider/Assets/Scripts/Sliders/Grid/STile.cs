@@ -6,12 +6,12 @@ using UnityEngine.Tilemaps;
 public class STile : MonoBehaviour
 {
     public bool isTileActive;
-    public int islandId = -1;
+    public int islandId = -1;    //L: islandId is the id of the corresponding tile in the puzzle doc
     public int x = -1;
     public int y = -1;
 
     public bool hasAnchor;
-    public STile linkTile; // Probably should be a list, set in instpector
+    public STile linkTile; //C: is this still needed?
 
     private Vector2 movingDirection; // zero, right, up, left, down
     public class STileMoveArgs : System.EventArgs
@@ -24,8 +24,7 @@ public class STile : MonoBehaviour
 
     private int sliderColliderDisableCount; // each enable gives this +1, disable does -1
 
-    // Whether we have picked up this tile or not. Used in MagiTech so that only collected tiles
-    // are enabled when swapping grids.
+    // Whether we have picked up this tile or not
     public bool isTileCollected;
     private int[] borderColliderDisableCount = new int[4];
     
@@ -40,15 +39,19 @@ public class STile : MonoBehaviour
     // these borders follow the tile and generally all activate/deactive together
     public GameObject[] borderColliders; // right top left bottom
 
+    protected void Awake()
+    {
+        //L: Added so that Start is only called on objects within tiles that are enabled.
+        SetTileActive(isTileActive);
+    }
+
     protected void Start()
     {
         Init();
-        // Debug.Log(STILE_WIDTH);
     }
 
     public virtual void Init()
     {
-        // SetTileActive(isTileActive);
         // DC: this is so that we can call any other relevant functions when STiles are enabled in SGrid
         if (isTileActive) 
         {
@@ -64,14 +67,6 @@ public class STile : MonoBehaviour
         SetTileMapPositions(defaultPos);
         sliderColliderDisableCount = 0;
     }
-    
-
-    // Update is called once per frame
-    protected void Update()
-    {
-        
-    }
-
 
     public void SetSTile(STile other) {
         isTileActive = other.isTileActive;
@@ -162,7 +157,6 @@ public class STile : MonoBehaviour
 
     public void SetBorderCollider(int index, bool isActive)
     {
-        // borderColliders[index].SetActive(isActive);
         if (isActive)
             borderColliderDisableCount[index] += 1;
         else
@@ -180,13 +174,8 @@ public class STile : MonoBehaviour
 
     public bool CanMove(int x, int y)
     {
-        if (hasAnchor)
-            return false;
-
-        return true;
+        return !hasAnchor;
     }
-
-    // CanRotate() => no anchor and not linked
 
     public void SetGridPosition(Vector2Int v)
     {
@@ -200,22 +189,8 @@ public class STile : MonoBehaviour
         this.y = y;
         Vector3 newPos = calculatePosition(x, y);
 
-        //StartCoroutine(StartCameraShakeEffect());
-
-        if (isTileActive)
-        {
-            // animations and style => physics on tile
-            Vector3 dr = newPos - transform.position;
-            UpdateTilePhysics(dr);
-
-            transform.position = newPos;
-            SetTileMapPositions(newPos);
-        }
-        else
-        {
-            transform.position = newPos;
-            SetTileMapPositions(newPos);
-        }
+        transform.position = newPos;
+        SetTileMapPositions(newPos);
     }
 
     public virtual Vector3 calculatePosition(int x, int y) 
@@ -237,21 +212,9 @@ public class STile : MonoBehaviour
         SetTileMapPositions(newPos);
     }
 
-
-
     public void SetMovingDirection(Vector2 direction)
     {
-        if (direction == Vector2.zero)
-        {
-            // stop moving
-            movingDirection = direction;
-        }
-        else
-        {
-            // start moving
-            movingDirection = direction;
-        }
-
+        movingDirection = direction;
         onChangeMove?.Invoke(this, new STileMoveArgs {moveDir = movingDirection} );
     }
 
@@ -263,100 +226,14 @@ public class STile : MonoBehaviour
     public void SetMovingPosition(Vector2 position)
     {
         Vector3 newPos = calculateMovingPosition(position.x, position.y);
-        // physics
-        Vector3 dr = newPos - transform.position;
-        UpdateTilePhysics(dr);
-
-
         transform.position = newPos;
         SetTileMapPositions(newPos);
     }
-
-    protected void UpdateTilePhysics(Vector3 dr)
-    {
-        // if player is on stile, move them
-        //              THIS IS TEMPORARY, REPLACE WITH PROPPER CHECK ON ALL SLIDEABLES
-        // int playerIsland = Player.GetStileUnderneath().islandId;
-        // if (playerIsland == islandId)
-        // {
-        //     Player.SetPosition(Player.GetPosition() + dr);
-        // }
-    }
-
 
     protected void SetTileMapPositions(Vector3 pos)
     {
         pos = pos + new Vector3(-0.5f, -0.5f);
 
         allTileMaps.transform.position = pos;
-    }
-
-    // DC: a better way of calculating which stile the player is on, accounting for overlapping stiles
-    public static STile GetSTileUnderneath(Transform entity, STile prevUnderneath)
-    {
-        // this doesnt work when you queue a move and stand at the edge. for some reason, on the moment of impact hits does not overlap with anything??
-        // Collider2D[] hits = Physics2D.OverlapPointAll(_instance.transform.position, LayerMask.GetMask("Slider"));
-        // Debug.Log("Hit " + hits.Length + " at " + _instance.transform.position);
-
-        // STile stileUnderneath = null;
-        // for (int i = 0; i < hits.Length; i++)
-        // {
-        //     STile s = hits[i].GetComponent<STile>();
-        //     if (s != null && s.isTileActive)
-        //     {
-        //         if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
-        //         {
-        //             // we are still on top of the same one
-        //             return;
-        //         }
-        //         if (stileUnderneath == null)
-        //         {
-        //             // otherwise we only care about the first hit
-        //             stileUnderneath = s;
-        //         }
-        //     }
-        // }
-        // currentStileUnderneath = stileUnderneath;
-
-        STile[,] grid = SGrid.Current.GetGrid();
-        float offset = grid[0, 0].STILE_WIDTH / 2f;
-        float housingOffset = -150;
-
-        //C: The housing offset in the mountain is -250 due to the map's large size
-        if (SGrid.Current is MountainGrid)
-            housingOffset -= 100;
-
-        STile stileUnderneath = null;
-        foreach (STile s in grid)
-        {
-           // Debug.Log("Null? " + (s == null));
-            if (s.isTileActive && PosInSTileBounds(entity.position, s.transform.position, offset, housingOffset))
-            {
-                if (prevUnderneath != null && s.islandId == prevUnderneath.islandId)
-                {
-                    // we are still on top of the same one
-                    return prevUnderneath;
-                }
-
-                if (stileUnderneath == null || s.islandId < stileUnderneath.islandId)
-                {
-                    // in case where multiple overlap and none are picked, take the lowest number?
-                    stileUnderneath = s;
-                }
-            }
-        }
-
-        return stileUnderneath;
-    }
-
-    private static bool PosInSTileBounds(Vector3 pos, Vector3 stilePos, float offset, float housingOffset)
-    {
-        if (stilePos.x - offset < pos.x && pos.x < stilePos.x + offset &&
-           (stilePos.y - offset < pos.y && pos.y < stilePos.y + offset ||
-            stilePos.y - offset + housingOffset < pos.y && pos.y < stilePos.y + offset + housingOffset))
-        {
-            return true;
-        }
-        return false;
     }
 }

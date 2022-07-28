@@ -147,7 +147,7 @@ public class RatAI : MonoBehaviour
     private void FixedUpdate()
     {
         // updating childing
-        currentStileUnderneath = STile.GetSTileUnderneath(transform, currentStileUnderneath);
+        currentStileUnderneath = SGrid.GetSTileUnderneath(transform, currentStileUnderneath);
         // Debug.Log("Currently on: " + currentStileUnderneath);
 
         if (currentStileUnderneath != null)

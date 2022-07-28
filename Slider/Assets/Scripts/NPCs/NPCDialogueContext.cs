@@ -53,6 +53,10 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
     {
         get
         {
+            if (!cachedDchainIndices.ContainsKey(context.CurrCondIndex))
+            {
+                cachedDchainIndices[context.CurrCondIndex] = 0;
+            }
             return cachedDchainIndices[context.CurrCondIndex];
         }
 
@@ -72,7 +76,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
     {
         base.Awake();
         canGiveDialogue = true;
-        InitializeCurrDchainIndices();
+        cachedDchainIndices = new Dictionary<int, int>();
         cachedEventFlags = new Dictionary<int, Dictionary<int, DialogueEventFlags>>();
     }
 
@@ -154,6 +158,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
     {
         if (DialogueEnabled && !CurrDchainIsEmpty())
         {
+            //Debug.Log(context.CurrCond.GetDialogueString(CurrDchainIndex));
             display.DisplaySentence(context.CurrCond.GetDialogueString(CurrDchainIndex));
 
             isTypingDialogue = true;
@@ -208,15 +213,6 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         }
     }
 
-    private void InitializeCurrDchainIndices()
-    {
-        cachedDchainIndices = new Dictionary<int, int>();
-        for (int i = 0; i < context.Conds.Count; i++)
-        {
-            cachedDchainIndices[i] = 0;
-        }
-    }
-
     private IEnumerator SetNextDialogueInChainAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -227,17 +223,19 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
     {
         isTypingDialogue = false;
 
-        if (CurrentDialogue().waitUntilPlayerAction)
+        if (!CurrDchainIsEmpty())
         {
-            waitingForPlayerAction = true;
+            if (CurrentDialogue().waitUntilPlayerAction)
+            {
+                waitingForPlayerAction = true;
+            }
+            else if (!CurrentDialogue().advanceDialogueManually)
+            {
+                float delay = CurrentDialogue().delayAfterFinishedTyping;
+                delayBeforeNextDialogueCoroutine = context.StartCoroutine(SetNextDialogueInChainAfterDelay(delay));
+            }
+            OnDialogueEnd();
         }
-        else if (!CurrentDialogue().advanceDialogueManually)
-        {
-            float delay = CurrentDialogue().delayAfterFinishedTyping;
-            delayBeforeNextDialogueCoroutine = context.StartCoroutine(SetNextDialogueInChainAfterDelay(delay));
-        }
-
-        OnDialogueEnd();
     }
 
     private void DeactivateDialogueBox()
@@ -334,11 +332,17 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 
     private DialogueData CurrentDialogue()
     {
-        if (CurrDchain == null || CurrDchainIndex < 0 || CurrDchainIndex >= CurrDchain.Count)
+        if (CurrDchain == null)
+        {
+            Debug.Log("CuurDchain is null");
+            return null;
+        }
+        if (CurrDchainIndex < 0 || CurrDchainIndex >= CurrDchain.Count)
         {
             Debug.LogError($"Attempted to Access Dialogue at invalid index: {CurrDchainIndex}");
             return null;
         }
+
 
         return CurrDchain[CurrDchainIndex];
     }

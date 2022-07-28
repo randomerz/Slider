@@ -108,13 +108,6 @@ public class ShopManager : Singleton<ShopManager>
 
     public void CheckTavernKeep()
     {
-        // first talk
-        // SGrid.current.ActivateSliderCollectible(3);
-        if (!PlayerInventory.Contains("Slider 3", Area.Ocean))
-        {
-            collectibleToActivateOnClose = SGrid.Current.GetCollectible("Slider 3");
-        }
-
         // rest of rewards
         if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
         {
