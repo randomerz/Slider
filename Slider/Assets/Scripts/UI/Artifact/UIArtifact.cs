@@ -544,7 +544,6 @@ public class UIArtifact : Singleton<UIArtifact>
 
     protected void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        Debug.Log(buttonCurrent.islandId + ", " + buttonEmpty.islandId);
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
         buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);

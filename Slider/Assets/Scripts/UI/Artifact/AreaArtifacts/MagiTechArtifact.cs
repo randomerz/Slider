@@ -29,7 +29,6 @@ public class MagiTechArtifact : UIArtifact
     }
     private bool isInPast = false;
     private bool isPreview = false;
-    private bool artifactInPast = false;
 
     public Image background;
     public Sprite presentBackgroundSprite;
@@ -250,7 +249,6 @@ public class MagiTechArtifact : UIArtifact
                 b.gameObject.SetActive(false);
         }
         background.sprite = past ? pastBackgroundSprite : presentBackgroundSprite;
-        artifactInPast = past;
     }
 
     public void SetPreview(bool enable)
