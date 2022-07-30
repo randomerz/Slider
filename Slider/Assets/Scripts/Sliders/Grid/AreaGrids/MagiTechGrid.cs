@@ -71,4 +71,9 @@ public class MagiTechGrid : SGrid
     {
         base.Load(profile);
     }
+
+    public static bool IsInPast(Transform transform)
+    {
+        return transform.position.x > 67;
+    }
 }

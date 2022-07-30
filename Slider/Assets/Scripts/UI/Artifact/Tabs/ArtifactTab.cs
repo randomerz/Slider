@@ -26,7 +26,7 @@ public class ArtifactTab : MonoBehaviour
         return isVisible && isActive;
     }
 
-    public void SetIsVisible(bool value)
+    public virtual void SetIsVisible(bool value)
     {
         isActive = value;
         gameObject.SetActive(isActive);

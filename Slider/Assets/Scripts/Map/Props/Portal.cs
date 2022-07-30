@@ -14,7 +14,7 @@ public class Portal : MonoBehaviour
 
     private void Start()
     {
-        isInPast = transform.position.x > 67;
+        isInPast = MagiTechGrid.IsInPast(transform);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
