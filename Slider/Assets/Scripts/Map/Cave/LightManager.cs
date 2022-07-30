@@ -11,6 +11,8 @@ using UnityEngine.Tilemaps;
 */
 public class LightManager : MonoBehaviour
 {
+    private const string caveShaderName = "Shader Graphs/CaveTileLightShader";
+
     public CaveLight[] lights;
     public CaveSTile[] stiles;
 
@@ -129,7 +131,7 @@ public class LightManager : MonoBehaviour
     private void FindMaterials()
     {
         _caveLightMaterials = new List<Material>();
-        caveShader = Shader.Find("Shader Graphs/CaveTileLightShader");
+        caveShader = Shader.Find(caveShaderName);
 
         Renderer[] allRenderers = FindObjectsOfType<Renderer>(true);
         foreach (Renderer r in allRenderers)

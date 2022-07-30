@@ -39,6 +39,12 @@ public class STile : MonoBehaviour
     // these borders follow the tile and generally all activate/deactive together
     public GameObject[] borderColliders; // right top left bottom
 
+    protected void Awake()
+    {
+        //L: Added so that Start is only called on objects within tiles that are enabled.
+        SetTileActive(isTileActive);
+    }
+
     protected void Start()
     {
         Init();
