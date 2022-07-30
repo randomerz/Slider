@@ -37,7 +37,6 @@ public class DesertArtifact : UIArtifact
         return options;
     }
 
-    //Chen: Override for dragndrop since desert GetMoveOPtions include  active tiles
     //L: Deleted ButtonDragEnd override because the code was exactly the same and GetMoveOptions is marked virtual so it will automatically call the right one.
 
     public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
@@ -94,6 +93,29 @@ public class DesertArtifact : UIArtifact
         }
 
         return move;
+    }
+
+    //C: Literally the same thing, except uses base.ConstructMoveFromButtonPair and tosses in a SwapButtons because UI bandaid fixes
+    public bool TryFragQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    {
+        SMove move;
+
+        if (moveQueue.Count < maxMoveQueueSize)
+        {
+            move = base.ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
+            if (move.moves.Count == 0)
+            {
+                return false;
+            }
+            QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
+            SwapButtons(buttonCurrent, buttonEmpty); //I have zero idea where to put this since the buttons aren't swapping in frag properly ;-;
+            return true;
+        }
+        else
+        {
+            LogMoveFailure();
+            return false;
+        }
     }
 
     #region SSlideSwap

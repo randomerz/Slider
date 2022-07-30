@@ -57,6 +57,7 @@ public class ArtifactTabManager : MonoBehaviour
             SetSaveLoadTabSprites(SGrid.Current.HasRealigningGrid());
             if (SGrid.Current.GetArea() == Area.MagiTech)
             {
+                //This enables the preview tab!
                 previewTab.SetIsVisible(true);
                 MagiTechArtifact artifact = (MagiTechArtifact)uiArtifactMenus.uiArtifact;
                 int direction = artifact.PlayerIsInPast ? -1 : 1;
@@ -239,9 +240,10 @@ public class ArtifactTabManager : MonoBehaviour
             AudioManager.Play("Artifact Error");
             return;
         }
-        uiArtifactMenus.uiArtifact.TryQueueMoveFromButtonPair(middle, empty);
-        uiArtifactMenus.uiArtifact.UpdatePushedDowns(null, null);
-        uiArtifactMenus.uiArtifact.DeselectSelectedButton();
+        DesertArtifact artifact = (DesertArtifact) uiArtifactMenus.uiArtifact;
+        artifact.TryFragQueueMoveFromButtonPair(middle, empty);
+        artifact.UpdatePushedDowns(null, null);
+        artifact.DeselectSelectedButton();
         //FragRearrangeOnHoverExit();
     }
 
@@ -254,8 +256,6 @@ public class ArtifactTabManager : MonoBehaviour
         if (middle.TileIsActive) UIArtifact.SetLightningPos(1, 1);
         middle.SetLightning(true);
         empty.SetLightning(true);        
-        //middle.FragLightningPreview(true);
-        //empty.FragLightningPreview(true);
     }
 
     public void FragRearrangeOnHoverExit()
@@ -265,8 +265,6 @@ public class ArtifactTabManager : MonoBehaviour
         UIArtifact.DisableLightning(true);
         middle.SetLightning(false);
         empty.SetLightning(false);
-        //middle.FragLightningPreview(false);
-        //empty.FragLightningPreview(false);
     }
 
     //Preview Tab
