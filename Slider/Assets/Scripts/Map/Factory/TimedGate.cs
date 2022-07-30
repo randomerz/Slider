@@ -32,6 +32,8 @@ public class TimedGate : ElectricalNode
 
     public bool GateActive => gateActive;
 
+    public int Countdown => countdown;
+
     public override bool Powered
     {
         get
