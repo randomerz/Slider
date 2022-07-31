@@ -62,7 +62,7 @@ public class ChadJump : MonoBehaviour
     // So that the dcond can call after dialogue ends
     public void JumpStarter()
     {
-        if (jumpState != JumpState.jumping)
+        if (jumpState != JumpState.jumping && jumpState != JumpState.jumped)
         {
             StartCoroutine(Jump());
         }
@@ -153,6 +153,8 @@ public class ChadJump : MonoBehaviour
     /// </summary>
     public void ResetJump() {
         jumpState = JumpState.standing;
+        npcAnimator.SetBool("isTipping", false);
+        npcAnimator.SetBool("isFallen", false);
         transform.localPosition = startTransform.localPosition;
     }
 }

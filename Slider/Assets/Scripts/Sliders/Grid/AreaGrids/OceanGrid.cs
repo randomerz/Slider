@@ -469,4 +469,12 @@ public class OceanGrid : SGrid
         CameraShake.Shake(1, 2);
         AudioManager.Play("Slide Explosion");
     }
+
+    public void SpawnFezziwigReward() {
+        Collectible c = GetCollectible("Strawberry");
+        if (!PlayerInventory.Contains(c)) {
+            c.gameObject.SetActive(true);
+            AudioManager.Play("Puzzle Complete");
+        }
+    }
 }
