@@ -17,4 +17,14 @@ public class Path : MonoBehaviour
     {
         
     }
+
+    public void Activate()
+    {
+
+    }
+
+    public void Deactivate()
+    {
+
+    }
 }

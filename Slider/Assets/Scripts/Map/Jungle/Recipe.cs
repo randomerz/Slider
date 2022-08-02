@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Recipe : ScriptableObject
 {
+    Shape result;
+    List<Shape> ingredients = new List<Shape>();
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +16,15 @@ public class Recipe : ScriptableObject
     void Update()
     {
         
+    }
+
+    public Shape Check(List<Shape> shapes)
+    {
+        if (shapes.Equals(ingredients))
+        {
+            return result;
+        }
+
+        return null;
     }
 }

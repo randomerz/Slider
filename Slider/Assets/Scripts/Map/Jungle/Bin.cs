@@ -17,8 +17,8 @@ public class Bin : MonoBehaviour
         
     }
 
-    public void RecieveShape()
+    public void RecieveShape(Shape shape)
     {
-
+        //broadcast the shape has been made
     }
 }
