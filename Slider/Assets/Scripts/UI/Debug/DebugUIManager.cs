@@ -21,6 +21,8 @@ public class DebugUIManager : MonoBehaviour
     public GameObject anchorPrefab;
     public GameObject minecartPrefab;
 
+    private bool playerCouldMove;
+
     private void Awake()
     {
         controls = new InputSettings();
@@ -43,13 +45,15 @@ public class DebugUIManager : MonoBehaviour
         if (Player.GetInstance() == null || !GameManager.instance.debugModeActive)
             return;
         isDebugOpen = !isDebugOpen;
-        Player.SetCanMove(!isDebugOpen);
         debugPanel.SetActive(isDebugOpen);
 
         if (isDebugOpen)
         {
             UIManager.PauseGameGlobal();
             UIManager.canOpenMenus = false;
+
+            playerCouldMove = Player.GetCanMove();
+            Player.SetCanMove(false);
 
             consoleText.Select();
             consoleText.ActivateInputField();
@@ -60,6 +64,8 @@ public class DebugUIManager : MonoBehaviour
         {
             UIManager.CloseUI();
             UIManager.canOpenMenus = true;
+
+            Player.SetCanMove(playerCouldMove);
         }
     }
 
