@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 5.5, y: 0.5}
+  m_AnchoredPosition: {x: 6.5, y: 0}
   m_SizeDelta: {x: 1, y: 11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7101821670484598002
@@ -112,7 +112,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 16, y: 16}
+  m_SizeDelta: {x: 15, y: 11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9071306830604615022
 CanvasRenderer:
@@ -246,17 +246,18 @@ MonoBehaviour:
   OnHoverExit:
     m_PersistentCalls:
       m_Calls: []
+  isVisible: 0
   isActive: 0
   homeScreen: 0
   tabAnimator: {fileID: 7509675006745042303}
   gate: {fileID: 0}
   countdownSprite:
-  - {fileID: -7737521283505794906, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  - {fileID: 983346854917613154, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  - {fileID: -5405932048687707892, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  - {fileID: -9178972454052903182, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  - {fileID: 2384347535599915884, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  - {fileID: -1147608325574132425, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  successSprite: {fileID: -6096239707695861182, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  failureSprite: {fileID: -3171331807334548094, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
+  - {fileID: -1281765255, guid: d8a8ccea3ef19634b913487b83058af5, type: 3}
+  - {fileID: -465317020, guid: d8a8ccea3ef19634b913487b83058af5, type: 3}
+  - {fileID: 985434475, guid: d8a8ccea3ef19634b913487b83058af5, type: 3}
+  - {fileID: 1858248805, guid: d8a8ccea3ef19634b913487b83058af5, type: 3}
+  - {fileID: 1279757823, guid: d8a8ccea3ef19634b913487b83058af5, type: 3}
+  successSprite: {fileID: -1294891088, guid: d8a8ccea3ef19634b913487b83058af5, type: 3}
+  failureSprite: {fileID: 926281354, guid: d8a8ccea3ef19634b913487b83058af5, type: 3}
+  blinkSprite: {fileID: -1487984887, guid: d8a8ccea3ef19634b913487b83058af5, type: 3}
   image: {fileID: 4887999301387854664}

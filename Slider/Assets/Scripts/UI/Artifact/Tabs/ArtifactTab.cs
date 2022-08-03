@@ -9,8 +9,8 @@ public class ArtifactTab : MonoBehaviour
     public UnityEvent OnHoverEnter;
     public UnityEvent OnHoverExit;
 
-    private bool isVisible; // for when you are on a separate screen
-    [SerializeField] private bool isActive; // if the tab works or not
+    [SerializeField] protected bool isVisible; // for when you are on a separate screen
+    [SerializeField] protected bool isActive; // if the tab works or not
     public int homeScreen = 0; // default screen = artifact screen
 
     public Animator tabAnimator;
@@ -28,15 +28,31 @@ public class ArtifactTab : MonoBehaviour
 
     public virtual void SetIsVisible(bool value)
     {
-        isActive = value;
-        gameObject.SetActive(isActive);
-        isVisible = value;
-        UpdateVisibility();
+        if (!value && isActive)
+        {
+            StartCoroutine(SetVisibleThenDisable());
+        }
+        else
+        {
+            isActive = value;
+            isVisible = value;
+            gameObject.SetActive(isActive);
+            UpdateVisibility();
+        }
     }
 
-    private void UpdateVisibility()
+    protected void UpdateVisibility()
     {
         tabAnimator.SetBool("isVisible", GetIsVisible());
+    }
+
+    protected virtual IEnumerator SetVisibleThenDisable()
+    {
+        isVisible = false;
+        isActive = false;
+        UpdateVisibility();
+        yield return new WaitForSeconds(.5f);
+        gameObject.SetActive(false);
     }
 
     public void Click()

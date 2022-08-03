@@ -78,6 +78,14 @@ public class ArtifactTabManager : MonoBehaviour
             saveTab.SetIsVisible(false);
             loadTab.SetIsVisible(false);
         }
+        if (SGrid.Current.MyArea == Area.Factory)
+        {
+            timedGateTabs[0].SetIsVisible(screenIndex == timedGateTabs[0].homeScreen);
+            timedGateTabs[1].SetIsVisible(screenIndex == timedGateTabs[1].homeScreen);
+            timedGateTabs[2].SetIsVisible(screenIndex == timedGateTabs[2].homeScreen);
+            timedGateTabs[3].SetIsVisible(screenIndex == timedGateTabs[3].homeScreen);
+        }
+        //Debug.Log(timedGateTabs[2].tabAnimator.GetBool("isVisible"));
     }
 
 
@@ -289,13 +297,6 @@ public class ArtifactTabManager : MonoBehaviour
     }
 
     #endregion
-
-    //Factory Crap
-    public void ActivateDisplay(int index)
-    {
-        if (index >= timedGateTabs.Count || index < 0) Debug.LogError("TimedGateTabs index was out of range!");
-        timedGateTabs[index].SetIsVisible();
-    }
 
     #endregion
 }

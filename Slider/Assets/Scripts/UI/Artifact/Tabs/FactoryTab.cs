@@ -9,10 +9,11 @@ public class FactoryTab : ArtifactTab
     [SerializeField] private List<Sprite> countdownSprite;
     [SerializeField] private Sprite successSprite;
     [SerializeField] private Sprite failureSprite;
+    [SerializeField] private Sprite blinkSprite;
     [SerializeField] private Image image;
 
-    private bool shownComplete;
     private Sprite queuedNextSprite;
+    private bool blinking = false;
 
     public bool Activated { get { return gate.GateActive; } }
 
@@ -27,17 +28,25 @@ public class FactoryTab : ArtifactTab
         UIArtifact.MoveMadeOnArtifact -= MoveMadeOnArtifact;
     }
 
-    public void SetIsVisible()
+    public override void SetIsVisible(bool value)
     {
-        if (gate.GateActive && (!gate.Powered || !shownComplete))
+        isActive = !value ? false : gate.GateActive && !gate.Powered;
+        isVisible = isActive;
+        if (!value && gameObject.activeInHierarchy)
+        {
+            StartCoroutine(SetVisibleThenDisable());
+        }
+        else
+        {
+            gameObject.SetActive(isActive);
+            UpdateVisibility();
+        }
+        if (gate.GateActive && !gate.Powered)
         {
             queuedNextSprite = gate.Powered ? successSprite : countdownSprite[gate.Countdown];
-            shownComplete = gate.Powered;
             image.sprite = queuedNextSprite;
-            base.SetIsVisible(true);
         }
-        else base.SetIsVisible(false);
-
+ 
     }
 
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
@@ -47,7 +56,7 @@ public class FactoryTab : ArtifactTab
             if (gate.Countdown > 0)
             {
                 queuedNextSprite = countdownSprite[gate.Countdown];
-                //Insert Cosmetic coroutine to advance image
+                StartCoroutine(BlinkThenShowNext());
             }
             else if (gate.Countdown == 0)
             {
@@ -67,11 +76,33 @@ public class FactoryTab : ArtifactTab
 
                 EvaluateGate();
                 */
-                queuedNextSprite = gate.Powered ? successSprite : failureSprite;
+                SetIsVisible(false);
             }
-            Debug.Log(image);
-            Debug.Log(queuedNextSprite);
             image.sprite = queuedNextSprite;
+        }
+    }
+
+    private IEnumerator BlinkThenShowNext(int numBlinks = 1)
+    {
+        if (!blinking)
+        {
+            Debug.Log("Entered Blink!");
+            blinking = true;
+            int currBlinks = numBlinks;
+            while (currBlinks > 0)
+            {
+                image.sprite = blinkSprite;
+                yield return new WaitForSeconds(0.25f);
+                image.sprite = queuedNextSprite;
+                currBlinks--;
+                if (currBlinks > 0)
+                {
+                    yield return new WaitForSeconds(0.25f);
+                }
+            }
+
+            image.sprite = queuedNextSprite;
+            blinking = false;
         }
     }
 }
