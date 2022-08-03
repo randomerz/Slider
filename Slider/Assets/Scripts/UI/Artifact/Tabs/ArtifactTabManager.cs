@@ -35,12 +35,11 @@ public class ArtifactTabManager : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("Awake called!");
         realignTab = tabs[0];
         saveTab = tabs[1];
         loadTab = tabs[2];
         fragRealignTab = tabs[3];
-        previewTab = tabs[4];
+        if (SGrid.Current.MyArea == Area.MagiTech) previewTab = tabs[4];
     }
     public void SetCurrentScreen(int screenIndex)
     {
@@ -74,21 +73,10 @@ public class ArtifactTabManager : MonoBehaviour
         }
         else
         {
-            Debug.Log(realignTab);
             realignTab.SetIsVisible(false);
             fragRealignTab.SetIsVisible(false);
             saveTab.SetIsVisible(false);
             loadTab.SetIsVisible(false);
-            previewTab.SetIsVisible(false);
-        }
-
-        //Factory Crap
-        if (SGrid.Current.MyArea == Area.Factory)
-        {
-            timedGateTabs[0].SetIsVisible();
-            timedGateTabs[1].SetIsVisible();
-            timedGateTabs[2].SetIsVisible();
-            timedGateTabs[3].SetIsVisible();
         }
     }
 
