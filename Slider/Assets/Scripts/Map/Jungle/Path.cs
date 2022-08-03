@@ -5,6 +5,7 @@ using UnityEngine;
 public class Path : MonoBehaviour
 {
     bool active = false;
+    bool defaultAnim = true; //left, or down (animation will have default and non default for direciton
     //Animation thing
     // Start is called before the first frame update
     void Start()

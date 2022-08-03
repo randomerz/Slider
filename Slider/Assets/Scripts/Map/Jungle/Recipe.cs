@@ -2,27 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "Recipe", menuName = "Scriptable Objects/Recipe")]
 public class Recipe : ScriptableObject
 {
-    Shape result;
-    List<Shape> ingredients = new List<Shape>();
-    // Start is called before the first frame update
-    void Start()
+    [System.Serializable]
+    public class Shapes
     {
-        
+        public List<Shape> ingredients;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public  Shape result;
+    public List<Shapes> combinations = new List<Shapes>();
 
     public Shape Check(List<Shape> shapes)
     {
-        if (shapes.Equals(ingredients))
-        {
-            return result;
+        foreach (Shapes stuff in combinations) {
+            if (shapes.Equals(stuff.ingredients)) //not sure if this works since idk if order matters
+            {
+                return result;
+            }
         }
 
         return null;
