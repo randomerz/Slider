@@ -13,6 +13,7 @@ public class FactoryTab : ArtifactTab
     [SerializeField] private Image image;
 
     private Sprite queuedNextSprite;
+    private Coroutine waitingToEndGate;
     private bool blinking = false;
 
     public bool Activated { get { return gate.GateActive; } }
@@ -64,11 +65,11 @@ public class FactoryTab : ArtifactTab
             {
                 queuedNextSprite = countdownSprite[gate.Countdown]; //set to 0
                 StartCoroutine(BlinkUntilNextSpriteChange());
-                StartCoroutine(WaitAfterMove());
+                waitingToEndGate = StartCoroutine(WaitAfterMove());
             }
             else if (gate.Countdown < 0)
             {
-                StopAllCoroutines();
+                if (waitingToEndGate != null) StopCoroutine(WaitAfterMove());
                 SetIsVisible(false);
             }
         }

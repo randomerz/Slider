@@ -51,7 +51,7 @@ public class ArtifactTab : MonoBehaviour
         isVisible = false;
         isActive = false;
         UpdateVisibility();
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.25f);
         gameObject.SetActive(false);
     }
 
