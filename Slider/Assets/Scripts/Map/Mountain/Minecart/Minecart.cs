@@ -259,9 +259,10 @@ public class Minecart : Item
         Vector3Int targetLoc;
         foreach(STile tile in stileList)
         {
-            RailManager otherRM = tile.allTileMaps.GetComponentInChildren<RailManager>();
-                if(otherRM != null)
-                    rmList.Add(otherRM);
+            RailManager[] otherRMs = tile.allTileMaps.GetComponentsInChildren<RailManager>();
+            foreach(RailManager railManager in otherRMs)
+                if(railManager != null)
+                    rmList.Add(railManager);
         }
         
         foreach(RailManager rm in rmList) //look and see if the next location overlaps with a location of a rail on another STile
