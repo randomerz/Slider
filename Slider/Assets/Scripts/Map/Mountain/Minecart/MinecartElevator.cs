@@ -4,15 +4,32 @@ using UnityEngine;
 
 public class MinecartElevator : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private bool isFixed;
+    public GameObject topPosition;
+    public GameObject bottomPosition;
+  //  public RailManager borderRM;
+
+
+
+    public void FixElevator()
     {
-        
+        isFixed = true;
+        //update sprites/animate/whatnot
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SendMinecartDown(Minecart mc)
     {
-        
+        if(!isFixed)
+            return;
+        mc.StopMoving();
+        mc.SnapToRailElevator(bottomPosition.transform.position);
+    }
+
+    public void SendMinecartUp(Minecart mc)
+    {
+        if(!isFixed)
+            return;
+        mc.StopMoving();
+        mc.SnapToRailElevator(topPosition.transform.position);
     }
 }

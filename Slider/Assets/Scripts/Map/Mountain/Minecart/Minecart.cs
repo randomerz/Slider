@@ -185,12 +185,12 @@ public class Minecart : Item
     }
 
     //Places the minecart on the tile at the given position
-    public void SnapToRail(Vector3Int pos)
+    public void SnapToRail(Vector3Int pos, int direction = -1)
     {
         transform.position = railManager.railMap.layoutGrid.CellToWorld(pos) + offSet;
         currentTile = railManager.railMap.GetTile(pos) as RailTile;
         currentTilePos = pos;
-        currentDirection = currentTile.defaultDir;
+        currentDirection = direction == -1? currentTile.defaultDir: direction;
         if(railManager.railLocations.Contains(pos))
         {
             targetTilePos = currentTilePos + GetTileOffsetVector(currentDirection);
@@ -200,6 +200,13 @@ public class Minecart : Item
         }
         else
             ResetTiles();
+    }
+
+    public void SnapToRailElevator(Vector3 pos)
+    {
+        railManager = borderRM;
+        Vector3Int newPos = railManager.railMap.WorldToCell(pos);
+        SnapToRail(newPos, 3);
     }
 
     
