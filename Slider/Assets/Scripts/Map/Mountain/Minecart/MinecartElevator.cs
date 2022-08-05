@@ -7,6 +7,7 @@ public class MinecartElevator : MonoBehaviour
     [SerializeField] private bool isFixed;
     public GameObject topPosition;
     public GameObject bottomPosition;
+    public Minecart mainMc;
   //  public RailManager borderRM;
 
 
@@ -14,6 +15,7 @@ public class MinecartElevator : MonoBehaviour
     public void FixElevator()
     {
         isFixed = true;
+        mainMc.UpdateState("Empty");
         //update sprites/animate/whatnot
     }
 
@@ -23,6 +25,7 @@ public class MinecartElevator : MonoBehaviour
             return;
         mc.StopMoving();
         mc.SnapToRail(bottomPosition.transform.position, 3);
+        mc.StartMoving();
     }
 
     public void SendMinecartUp(Minecart mc)
@@ -31,6 +34,7 @@ public class MinecartElevator : MonoBehaviour
             return;
         mc.StopMoving();
         mc.SnapToRail(topPosition.transform.position, 3);
+        mc.StartMoving();
     }
 
     public void CheckIsFixed(Condition c)

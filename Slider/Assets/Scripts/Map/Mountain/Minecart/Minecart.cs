@@ -274,8 +274,12 @@ public class Minecart : Item
                 UpdateParent();
                 return;
             }
-            //C: Check if the minecart can drop down to the tile below
-            else if(MountainGrid.Instance && rm.railLocations.Contains(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)))
+        }
+        foreach(RailManager rm in rmList) //look and see if the next location overlaps with a location of a rail on another STile
+        {
+            targetLoc = rm.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
+            //C: Check if the minecart can drop down to the tile below. Needs to be in seperate loop so will check after trying all non-drops first
+             if(MountainGrid.Instance && rm.railLocations.Contains(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)))
             {
                     railManager = rm;
                     transform.position += new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0);
