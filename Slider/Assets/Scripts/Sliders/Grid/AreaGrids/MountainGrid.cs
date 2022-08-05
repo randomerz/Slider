@@ -69,13 +69,17 @@ public class MountainGrid : SGrid
 
 
     #region Minecart Specs
+
     public void SetCrystalDelivered(bool value)
     {
         crystalDelivered = value;
     }
+
     public void CheckCrystalDelivery(Condition c)
     {
         c.SetSpec(crystalDelivered);
     }
+
+    
     #endregion
 }

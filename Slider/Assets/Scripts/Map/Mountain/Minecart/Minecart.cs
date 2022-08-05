@@ -95,17 +95,16 @@ public class Minecart : Item
         UITrackerManager.RemoveTracker(this.gameObject);
     }
 
-    
+
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
     {
         UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
-        Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
-        if (hit == null)
-            return null;
         
-        if(hit.GetComponent<STile>()) //Use Stile RM
+        STile hitTile = SGrid.GetStileUnderneath(gameObject);
+
+        if(hitTile != null) //Use Stile RM
         {
-            STile hitTile = hit.GetComponent<STile>();
+            Debug.Log('2');
             Tilemap railmap = hitTile.allTileMaps.GetComponentInChildren<STileTilemap>().minecartRails;
             railManager = railmap.GetComponent<RailManager>();
             if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation))) //C: If this is dropped onto rails, it will snap into position (change to station only later?)
@@ -120,10 +119,11 @@ public class Minecart : Item
             currentSTile = hitTile;
             return hitTile;
         }
-        else if(hit.GetComponent<STileTilemap>()) //use border RM
+        else if(borderRM) //use border RM
         {
-            Tilemap railmap = hit.GetComponent<STileTilemap>().minecartRails;
-            railManager = railmap.GetComponent<RailManager>();
+            Debug.Log("amogus");
+            railManager = borderRM;
+            Tilemap railmap = borderRM.railMap;
 
             if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation))) //C: If this is dropped onto rails, it will snap into position (change to station only later?)
             {
@@ -136,6 +136,8 @@ public class Minecart : Item
             UpdateParentBorder();
             currentSTile = null;
         }
+        else
+            base.DropItem(dropLocation, callback);
         return null;
 
     }
