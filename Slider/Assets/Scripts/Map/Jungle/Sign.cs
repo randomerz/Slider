@@ -38,15 +38,12 @@ public class Sign : Box
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public override void RecieveShape(Path path, Shape shape)
     {
         //somehow take in shapes and merge is needed
         // also be able to remove a shape when the box output diff stuff or the path stops
+        print("sign got shape");
         shapes[path] = shape;
         MergeShapes();
         CreateShape();
@@ -71,6 +68,6 @@ public class Sign : Box
                 return;
             }
         }
-        currentShape = shapesRecieved[0];
+        currentShape = shapesRecieved[0]; //supposed to just pass a shape
     }
 }

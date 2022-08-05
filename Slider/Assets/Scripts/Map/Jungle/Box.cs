@@ -12,7 +12,7 @@ public class Box : MonoBehaviour
     protected List<Path> paths = new List<Path>(); //vector2 key, path
     protected List<Vector2> directions = new List<Vector2>();
     protected int currentDirectionIndex = 0;
-    protected List<Shape> shapes;
+    public List<Shape> shapes;
     protected Shape currentShape;
 
     // Start is called before the first frame update
@@ -40,6 +40,7 @@ public class Box : MonoBehaviour
             paths.Add(bottom);
         }
 
+        currentShape = shapes[0];
         CreateShape();
 
         //initiate shapes here or above
@@ -53,28 +54,41 @@ public class Box : MonoBehaviour
 
     public void CreateShape()
     {
+        print("Box creating shape");
         //send racast in direction and then calls RecieveShape() of that obj on the boxes layer
         Physics2D.queriesHitTriggers = false;
-        RaycastHit2D raycasthit = Physics2D.Raycast(transform.position, directions[currentDirectionIndex].normalized, 100, LayerMask.GetMask("Box"));
+        Physics2D.queriesStartInColliders = false;
+        RaycastHit2D raycasthit = Physics2D.Raycast(transform.position, directions[currentDirectionIndex].normalized, 100, LayerMask.GetMask("Faeries"));
         if (raycasthit.collider != null)
         {
             //do something (it shouldnt be null O_O)
             Box other = raycasthit.collider.GetComponent<Box>();
+            Bin bin = raycasthit.collider.GetComponent<Bin>();
+
             if (other != null)
             {
                 //yay we got the next box
+                print("box sending shape");
                 other.RecieveShape(paths[currentDirectionIndex],currentShape);
+            } else if (bin != null)
+            {
+                print("sending shape to bin");
+                bin.RecieveShape(currentShape);
             }
 
         } else
         {
             print("im like 100% sure u messed up somehwere :(");
         }
+        Physics2D.queriesHitTriggers = true;
+        Physics2D.queriesStartInColliders = false;
     }
 
     public virtual void RecieveShape(Path path, Shape shape)
     {
         //what should a box do when it recieves a shape... like nothing right since it just produces what its told to
+        print("box recieved a shape");
+        print(this.gameObject.name);
     }
 
     public void Rotate()
