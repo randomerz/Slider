@@ -202,11 +202,11 @@ public class Minecart : Item
             ResetTiles();
     }
 
-    public void SnapToRailElevator(Vector3 pos)
+    public void SnapToRail(Vector3 pos, int dir = -1)
     {
         railManager = borderRM;
         Vector3Int newPos = railManager.railMap.WorldToCell(pos);
-        SnapToRail(newPos, 3);
+        SnapToRail(newPos, dir);
     }
 
     

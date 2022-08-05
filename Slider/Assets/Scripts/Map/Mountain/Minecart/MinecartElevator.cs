@@ -22,7 +22,7 @@ public class MinecartElevator : MonoBehaviour
         if(!isFixed)
             return;
         mc.StopMoving();
-        mc.SnapToRailElevator(bottomPosition.transform.position);
+        mc.SnapToRail(bottomPosition.transform.position, 3);
     }
 
     public void SendMinecartUp(Minecart mc)
@@ -30,6 +30,11 @@ public class MinecartElevator : MonoBehaviour
         if(!isFixed)
             return;
         mc.StopMoving();
-        mc.SnapToRailElevator(topPosition.transform.position);
+        mc.SnapToRail(topPosition.transform.position, 3);
+    }
+
+    public void CheckIsFixed(Condition c)
+    {
+        c.SetSpec(isFixed);
     }
 }
