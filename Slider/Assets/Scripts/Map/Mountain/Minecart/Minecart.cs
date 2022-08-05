@@ -402,5 +402,11 @@ public class Minecart : Item
             Debug.LogWarning("Invalid Minecart State. Should be Player, Lava, Empty, RepairParts, or Crystal");
     }
 
+    public void TryAddCrystals()
+    {
+        if(mcState == MinecartState.Empty)
+            mcState = MinecartState.Crystal;
+    }
+
     #endregion
 }
