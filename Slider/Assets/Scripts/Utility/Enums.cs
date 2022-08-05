@@ -63,3 +63,11 @@ public enum bottleState {
     dirty, 
     clean 
 }
+
+public enum MinecartState {
+    Empty,
+    Player,
+    Crystal,
+    Lava,
+    RepairParts
+}

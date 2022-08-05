@@ -37,12 +37,7 @@ public class Minecart : Item
     public Sprite trackerSprite;
 
 
-    public enum MinecartState {
-        Empty,
-        Player,
-        Crystal,
-        Lava
-    };
+    
 
     public void setCanStartMoving(bool canStart)
     {
@@ -399,8 +394,10 @@ public class Minecart : Item
             mcState = MinecartState.Crystal;
         else if (stateName.Equals("Empty"))
             mcState = MinecartState.Empty;
+        else if (stateName.Equals("RepairParts"))
+            mcState = MinecartState.RepairParts;
         else
-            Debug.LogWarning("Invalid Minecart State. Should be Player, Lava, Empty, or Crystal");
+            Debug.LogWarning("Invalid Minecart State. Should be Player, Lava, Empty, RepairParts, or Crystal");
     }
 
     #endregion

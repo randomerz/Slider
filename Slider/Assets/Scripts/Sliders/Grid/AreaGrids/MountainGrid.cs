@@ -20,6 +20,9 @@ public class MountainGrid : SGrid
         represents the grid with 5, 1, 2, and 8 on the top layer.
     */
 
+
+    public bool crystalDelivered = false;
+
     public override void Init() {
         InitArea(Area.Mountain);
         base.Init();
@@ -62,4 +65,17 @@ public class MountainGrid : SGrid
             }
         }        
     }
+
+
+
+    #region Minecart Specs
+    public void SetCrystalDelivered(bool value)
+    {
+        crystalDelivered = value;
+    }
+    public void CheckCrystalDelivery(Condition c)
+    {
+        c.SetSpec(crystalDelivered);
+    }
+    #endregion
 }
