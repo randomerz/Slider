@@ -52,36 +52,85 @@ public class Box : MonoBehaviour
         
     }
 
+
+    //TODO: change so that if the ray cast hits inactive tile its like no thanks ovo
     public void CreateShape()
     {
         print("Box creating shape");
         //send racast in direction and then calls RecieveShape() of that obj on the boxes layer
-        Physics2D.queriesHitTriggers = false;
-        Physics2D.queriesStartInColliders = false;
-        RaycastHit2D raycasthit = Physics2D.Raycast(transform.position, directions[currentDirectionIndex].normalized, 100, LayerMask.GetMask("Faeries"));
-        if (raycasthit.collider != null)
-        {
-            //do something (it shouldnt be null O_O)
-            Box other = raycasthit.collider.GetComponent<Box>();
-            Bin bin = raycasthit.collider.GetComponent<Bin>();
 
-            if (other != null)
+        Physics2D.queriesStartInColliders = false;
+
+        RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, directions[currentDirectionIndex].normalized, 100, LayerMask.GetMask("Slider"));
+
+        Physics2D.queriesStartInColliders = true;
+
+ //       RaycastHit2D raycasthit = Physics2D.Raycast(transform.position, directions[currentDirectionIndex].normalized, 100, LayerMask.GetMask("Faeries"));
+
+        Box nextBox = null;
+        Bin nextBin = null;
+        float distanceTo = 100;
+        float inactiveStileDistance = 100;
+
+        //want to find the closest bin or box and stile
+        foreach (RaycastHit2D raycasthit in tileCheck)
+        {
+            Collider2D hitcollider = raycasthit.collider;
+            if (raycasthit.collider != null)
+            {
+                //do something (it shouldnt be null O_O)
+                STile s = hitcollider.gameObject.GetComponent<STile>();
+                Box other = hitcollider.GetComponent<Box>();
+                Bin bin = hitcollider.GetComponent<Bin>();
+
+                if (s != null && !s.isTileActive)
+                {
+                    if (Vector2.Distance(raycasthit.centroid, transform.position) < inactiveStileDistance)
+                    {
+                        inactiveStileDistance = Vector2.Distance(raycasthit.centroid, transform.position);
+                    }
+                }
+
+                if (other != null || bin != null)
+                {
+                    if (Vector2.Distance(raycasthit.centroid, transform.position) < distanceTo)
+                    {
+                        distanceTo = Vector2.Distance(raycasthit.centroid, transform.position);
+
+                        //save the closest box/bin
+                        if (other != null)
+                        {
+                            nextBox = other;
+                        }
+                        else
+                        {
+                            nextBin = bin;
+                        }
+                    }
+                }
+            }
+
+            if (distanceTo > inactiveStileDistance)
+            {
+                print("inactive stile in the way");
+                nextBin = null;
+                nextBox = null;
+            }
+
+            //now see if there is an avaliable bin or box
+            if (nextBox != null)
             {
                 //yay we got the next box
                 print("box sending shape");
-                other.RecieveShape(paths[currentDirectionIndex],currentShape);
-            } else if (bin != null)
+                nextBox.RecieveShape(paths[currentDirectionIndex], currentShape);
+                //turn on the path as well!
+            }
+            else if (nextBin != null)
             {
                 print("sending shape to bin");
-                bin.RecieveShape(currentShape);
+                nextBin.RecieveShape(currentShape);
             }
-
-        } else
-        {
-            print("im like 100% sure u messed up somehwere :(");
         }
-        Physics2D.queriesHitTriggers = true;
-        Physics2D.queriesStartInColliders = false;
     }
 
     public virtual void RecieveShape(Path path, Shape shape)
@@ -91,6 +140,8 @@ public class Box : MonoBehaviour
         print(this.gameObject.name);
     }
 
+    //TODO: make this work now! and add path color changes so IK what path is being used!
+    //Then check shape combinations!
     public void Rotate()
     {
         paths[currentDirectionIndex].Deactivate();
