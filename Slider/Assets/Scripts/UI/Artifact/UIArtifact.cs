@@ -502,7 +502,7 @@ public class UIArtifact : Singleton<UIArtifact>
             {
                 //PJ: If only one move is in the queue then moveCounter gets reset to 0 cuz of the recursive call
                 //PJ: but generally we want queing alot of moves to result in increasingly faster execution of said moves
-                move.duration = Mathf.Max(1f - (moveCounter) / 10f, 0.5f);   
+                move.duration = Mathf.Max(move.duration - (moveCounter) / 10f, move.duration / 2);   
                 moveCounter += 1;
                 activeMoves.Add(move);
                 SGrid.Current.Move(move);
