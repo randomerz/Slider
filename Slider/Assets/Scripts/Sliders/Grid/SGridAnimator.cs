@@ -92,8 +92,6 @@ public class SGridAnimator : MonoBehaviour
 
         float t = 0;
         currMoveDuration = movementDuration * move.duration;
-        Debug.Log($"movementDuration {movementDuration}");
-        Debug.Log($"move.duration {move.duration}");
         while (t < currMoveDuration)
         {
             t += Time.deltaTime;

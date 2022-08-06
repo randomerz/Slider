@@ -22,10 +22,10 @@ public class PowerBox : ElectricalNode
         base.OnPoweredHandler(e);
         if (e.powered)
         {
-            swapper.TurnOn();
+            swapper?.TurnOn();
         } else
         {
-            swapper.TurnOff();
+            swapper?.TurnOff();
         }
     }
 }
