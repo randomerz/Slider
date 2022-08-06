@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class WirePilon : ConductiveElectricalNode
 {
+    [Header("Pilon")]
+    [SerializeField] private Transform lineStart;
+    [SerializeField] private Animator anim;
 
     //(Node that the pilon is connected to, instantiation of the effect)
     protected Dictionary<ConductiveElectricalNode, GameObject> electricalLines;
@@ -12,8 +15,7 @@ public class WirePilon : ConductiveElectricalNode
 
     private GameObject electricLinePrefab;
 
-    [SerializeField] private Transform lineStart;
-    [SerializeField] private Animator anim;
+
 
 
     private new void Awake()

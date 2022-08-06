@@ -81,7 +81,7 @@ public class FactoryArtifact : UIArtifact
         //Undo the moves on the artifact in the reverse order that they were made.
         for (int i = newMoveQueue.Count-1; i >= cutIndex; i--)
         {
-            ReverseButtonSwapBasedOnMove(newMoveQueue[i]);
+            UndoSwapsBasedOnMove(newMoveQueue[i]);
             newMoveQueue.RemoveAt(i);
         }
     }
@@ -103,7 +103,7 @@ public class FactoryArtifact : UIArtifact
         UpdateMoveOptions();
     }
 
-    private void ReverseButtonSwapBasedOnMove(SMove move)
+    private void UndoSwapsBasedOnMove(SMove move)
     {
         var buttonToNewPos = new Dictionary<ArtifactTileButton, Vector2Int>();
         foreach (Movement m in move.moves)
