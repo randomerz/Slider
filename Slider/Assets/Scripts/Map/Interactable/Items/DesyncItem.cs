@@ -30,7 +30,6 @@ public class DesyncItem : Item
     private void CheckItemsOnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
     {
         isDesynced = e.drop && originTile != null && originTile.hasAnchor;
-        Debug.Log(isItemInPast + " " + IsDesynced);
         itemPair.gameObject.SetActive(isItemInPast || IsDesynced);
         lightning.SetActive(IsDesynced);
     }
