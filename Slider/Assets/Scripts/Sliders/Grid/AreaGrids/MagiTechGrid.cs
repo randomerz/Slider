@@ -9,6 +9,9 @@ public class MagiTechGrid : SGrid
 
     public int gridOffset = 100; //C: The X distance between the present and past grid
 
+    [SerializeField] private NPC hungryBoi;
+    [SerializeField] private DesyncItem desyncBurger;
+
     /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
     and the right 9 STiles represent the past. The past tile will have an islandID
     exactly 9 more than its corresponding present tile. Note that in strings, the past tiles
@@ -39,7 +42,7 @@ public class MagiTechGrid : SGrid
         UIEffects.FadeFromBlack();
     }
 
-    //Magitech Mechanics 
+    #region Magitech Mechanics 
 
     public override void CollectSTile(int islandId)
     {
@@ -70,5 +73,46 @@ public class MagiTechGrid : SGrid
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
+    }
+
+    public static bool IsInPast(Transform transform)
+    {
+        return transform.position.x > 67;
+    }
+
+    #endregion
+
+    public void HasTwoBurgers(Condition c)
+    {
+        if (desyncBurger.IsDesynced)
+        {
+            BoxCollider2D collider = hungryBoi.GetComponent<BoxCollider2D>();
+
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.layerMask = LayerMask.GetMask("Item");
+            filter.useLayerMask = true;
+
+            Collider2D[] list = new Collider2D[5]; //Change this to however many items can be put inside hungry boi's collider
+            collider.OverlapCollider(filter, list);
+
+            bool hasBurger = false;
+            bool hasDesyncBurger = false;
+
+            foreach (Collider2D hit in list)
+            {
+                if (hit != null)
+                {
+                    Item item = hit.GetComponent<Item>();
+                    //Debug.Log(item.itemName);
+                    if (item.itemName == "Burger") hasBurger = true;
+                    else if (item.itemName == desyncBurger.itemName) hasDesyncBurger = true;
+                }
+            }
+            c.SetSpec(hasBurger && hasDesyncBurger);
+        }
+        else
+        {
+            c.SetSpec(false);
+        }
     }
 }
