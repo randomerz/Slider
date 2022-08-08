@@ -189,7 +189,7 @@ public class ArtifactTabManager : MonoBehaviour
                     //Debug.Log(SGrid.current.saveGrid[x, y] + " button array index: " + (SGrid.current.saveGrid[x, y] - 1) + " " + x + " " + y);
                     int tid = SGrid.Current.GetGrid()[x, y].islandId;
                     originalGrid[x, y] = tid;
-                    uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]).SetPosition(x, y);
+                    uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]).SetPosition(x, y, false);
                     uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]).SetHighlighted(true);
                 }
             }
@@ -208,7 +208,7 @@ public class ArtifactTabManager : MonoBehaviour
                 for (int y = 0; y < SGrid.Current.Height; y++)
                 {
                     int tid = originalGrid[x, y];
-                    uiArtifactMenus.uiArtifact.GetButton(tid).SetPosition(x, y);
+                    uiArtifactMenus.uiArtifact.GetButton(tid).SetPosition(x, y, false);
                     uiArtifactMenus.uiArtifact.GetButton(tid).SetHighlighted(false);
                 }
             }

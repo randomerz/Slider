@@ -19,6 +19,14 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     //Button has lightning highlight and pusheddown and has lightning effect around it
     [SerializeField] private bool isLightning;
 
+    private Coroutine positionAnimatorCoroutine;
+    [SerializeField] private float positionAnimationDuration;
+    [SerializeField] private AnimationCurve positionAnimationCurve;
+
+    [Header("Alt Styles")] // 0 - Normal, 1 - lightning
+    [SerializeField] private List<Image> frames;
+    [SerializeField] private List<Image> borders;
+
     public void SetPushedDown(bool value)
     {
         value = value || isForcedDown;
@@ -34,8 +42,10 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             isPushedDown = false;
             sliderImage.rectTransform.anchoredPosition = new Vector3(0, 0);
             highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, 0);
-            this.transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
-            this.transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
+            foreach (Image i in frames)
+            {
+                i.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -67,8 +77,10 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         else if (isHighlighted && !value && !isLightning) //If lightning is active, tile should never be unhighlighted
         {
             isHighlighted = false;
-            this.gameObject.transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
-            this.gameObject.transform.GetChild(2).GetChild(1).gameObject.SetActive(false);
+            foreach (Image i in borders)
+            {
+                i.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -78,8 +90,8 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         {
             highlightedFrame.gameObject.SetActive(false);
             pushedDownFrame.gameObject.SetActive(false);
-            Image lightningPushedDown = this.gameObject.transform.GetChild(1).GetChild(1).GetComponent<Image>();
-            Image lightningHighlight = this.gameObject.transform.GetChild(2).GetChild(1).GetComponent<Image>();
+            Image lightningPushedDown = frames[1];
+            Image lightningHighlight = borders[1];
             pushedDownFrame = lightningPushedDown;
             highlightedFrame = lightningHighlight;
             if (isForcedDown) pushedDownFrame.gameObject.SetActive(true);
@@ -94,12 +106,46 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         {
             highlightedFrame.gameObject.SetActive(false);
             pushedDownFrame.gameObject.SetActive(false);
-            Image PushedDown = this.gameObject.transform.GetChild(1).GetChild(0).GetComponent<Image>();
-            Image Highlighted = this.gameObject.transform.GetChild(2).GetChild(0).GetComponent<Image>();
+            Image PushedDown = frames[0];
+            Image Highlighted = borders[1];
             pushedDownFrame = PushedDown;
             highlightedFrame = Highlighted;
             if (isPushedDown) pushedDownFrame.gameObject.SetActive(true);
         }
         isLightning = value;
+    }
+
+    public void AnimatePositionFrom(Vector2 position)
+    {
+        // In cases where object spawns and moves before artifact is opened, i.e. Loading game into Factory conveyors
+        if (!gameObject.activeInHierarchy)
+            return;
+
+        if (positionAnimatorCoroutine != null)
+        {
+            StopCoroutine(positionAnimatorCoroutine);
+        }
+
+        positionAnimatorCoroutine = StartCoroutine(AnimatePosition(position, Vector2.zero));
+    }
+
+    private IEnumerator AnimatePosition(Vector2 from, Vector2 to)
+    {
+        RectTransform rectTransform = GetComponent<RectTransform>();
+
+        float t = 0;
+        while (t < positionAnimationDuration)
+        {
+            float c = positionAnimationCurve.Evaluate(t / positionAnimationDuration);
+            Vector2 pos = Vector2.Lerp(from, to, c);
+
+            rectTransform.anchoredPosition = pos;
+
+            yield return null;
+            t += Time.deltaTime;
+        }
+
+        rectTransform.anchoredPosition = to;
+        positionAnimatorCoroutine = null;
     }
 }
