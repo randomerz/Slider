@@ -97,7 +97,7 @@ public class FactoryArtifact : UIArtifact
 
         foreach (var b in buttonToNewPos.Keys)
         {
-            b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y);
+            b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y, true);
         }
 
         UpdateMoveOptions();
@@ -114,7 +114,8 @@ public class FactoryArtifact : UIArtifact
 
         foreach (var b in buttonToNewPos.Keys)
         {
-            b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y);
+            b.FlickerImmediate(1);
+            b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y, false);
         }
 
         UpdateMoveOptions();

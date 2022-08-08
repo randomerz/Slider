@@ -57,40 +57,6 @@ public class UIArtifact : Singleton<UIArtifact>
         EnableQueueing();
     }
 
-    #region Lightning Crap
-    public static void SetLightningPos(ArtifactTileButton b)
-    {
-        //Debug.Log("Set Lightning Pos!");
-        if (_instance.lightning == null) Debug.LogError("Lightning was not found! Set in inspector?");
-        _instance.lightning.transform.SetParent(b.transform);
-        _instance.lightning.transform.position = b.transform.position;
-        _instance.lightning.gameObject.SetActive(true);
-        b.SetLightning(true);
-    }
-
-    public static void SetLightningPos(int x, int y)
-    {
-        ArtifactTileButton b = GetButton(x, y);
-        SetLightningPos(b);
-    }
-
-    public static void SetLightningPos(int islandId)
-    {
-        ArtifactTileButton b = _instance.GetButton(islandId);
-        SetLightningPos(b);
-    }
-
-    public static void DisableLightning(bool disableHighlight)
-    {
-        if (!_instance.lightning.gameObject.activeInHierarchy)
-        {
-            return;
-        }
-        _instance.lightning.gameObject.SetActive(false);
-        if (disableHighlight) _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
-    }
-    #endregion
-
     public static SMove GetNextMove()
     {
         if (_instance.moveQueue.Count > 0)
@@ -143,7 +109,7 @@ public class UIArtifact : Singleton<UIArtifact>
         {
             if (b.islandId == islandId)
             {
-                b.SetPosition(x, y);
+                b.SetPosition(x, y, true);
                 return;
             }
         }
@@ -229,7 +195,7 @@ public class UIArtifact : Singleton<UIArtifact>
                     {
                         if (button.islandId == grid[x, y].islandId)
                         {
-                            button.SetPosition(x, y);
+                            button.SetPosition(x, y, false);
                         }
                     }
                 }
@@ -265,11 +231,13 @@ public class UIArtifact : Singleton<UIArtifact>
 
     public virtual void ButtonDragEnd(BaseEventData eventData)
     {
+        Debug.Log("Drag end");
         PointerEventData data = (PointerEventData)eventData;
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
         if (!dragged.TileIsActive)// || dragged.isForcedDown)
         {
+            Debug.Log("shlatt");
             return; //player didn't start drag on a button, don't do anything.
         }
 
@@ -285,6 +253,7 @@ public class UIArtifact : Singleton<UIArtifact>
         //player didnt release their mouse on a tile so we assume they dont actually want to move the tile
         if(hovered == null)
         {
+            Debug.Log("woah");
             DeselectSelectedButton();
             return; 
         }
@@ -299,7 +268,7 @@ public class UIArtifact : Singleton<UIArtifact>
         ArtifactTileButton hovered = null;
         if (data.pointerEnter != null && data.pointerEnter.name == "Image")
         {
-            hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton>();
+            hovered = data.pointerEnter.transform.GetComponentInParent<ArtifactTileButton>();
         }
         return hovered;
     }
@@ -614,8 +583,8 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
-        buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
-        buttonEmpty.SetPosition(oldCurrX, oldCurrY);
+        buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y, true);
+        buttonEmpty.SetPosition(oldCurrX, oldCurrY, true);
     }
 
     protected bool MoveOverlapsWithActiveMove(SMove move)
@@ -685,5 +654,40 @@ public class UIArtifact : Singleton<UIArtifact>
             }
         }
     }
+    
+    #region Lightning Crap
+    public static void SetLightningPos(ArtifactTileButton b)
+    {
+        //Debug.Log("Set Lightning Pos!");
+        if (_instance.lightning == null) Debug.LogError("Lightning was not found! Set in inspector?");
+        _instance.lightning.transform.SetParent(b.transform);
+        _instance.lightning.transform.position = b.transform.position;
+        _instance.lightning.gameObject.SetActive(true);
+        b.SetLightning(true);
+    }
+
+    public static void SetLightningPos(int x, int y)
+    {
+        ArtifactTileButton b = GetButton(x, y);
+        SetLightningPos(b);
+    }
+
+    public static void SetLightningPos(int islandId)
+    {
+        ArtifactTileButton b = _instance.GetButton(islandId);
+        SetLightningPos(b);
+    }
+
+    public static void DisableLightning(bool disableHighlight)
+    {
+        if (!_instance.lightning.gameObject.activeInHierarchy)
+        {
+            return;
+        }
+        _instance.lightning.gameObject.SetActive(false);
+        if (disableHighlight) _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
+    }
+    #endregion
+
 }
 
