@@ -8,7 +8,7 @@ public class Sign : Box
     Dictionary<Path, Shape> shapes = new Dictionary<Path, Shape>(); //idk if i sshould rename this i should think
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         if (left != null)
         {
@@ -31,9 +31,12 @@ public class Sign : Box
             paths.Add(bottom);
         }
 
-        foreach (Path path in paths)
+        if (shapes.Count == 0)
         {
-            shapes.Add(path, null);
+            foreach (Path path in paths)
+            {
+                shapes.Add(path, null);
+            }
         }
     }
 
@@ -43,7 +46,7 @@ public class Sign : Box
     {
         //somehow take in shapes and merge is needed
         // also be able to remove a shape when the box output diff stuff or the path stops
-        print("sign got shape");
+     //   print("sign got shape");
         shapes[path] = shape;
         MergeShapes();
         CreateShape();

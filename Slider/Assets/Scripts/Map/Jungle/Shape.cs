@@ -6,6 +6,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Shape", menuName = "Scriptable Objects/Shape")]
 public class Shape : ScriptableObject
 {
-    public string name;
+    public string type;
     public Sprite sprite;
 }

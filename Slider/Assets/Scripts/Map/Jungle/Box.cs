@@ -16,7 +16,7 @@ public class Box : MonoBehaviour
     protected Shape currentShape;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         //start a path here in a default direction
         if (left != null)
@@ -46,17 +46,37 @@ public class Box : MonoBehaviour
         //initiate shapes here or above
     }
 
+    private new void OnEnable()
+    {
+        SGrid.OnSTileEnabled += OnSTileEnabled;
+    }
+
+    private new void OnDisable()
+    {
+        SGrid.OnSTileEnabled -= OnSTileEnabled;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    //will need this
+/*    private void CreateShape(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        CreateShape();
+    }*/
+
+    private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        CreateShape();
     }
 
 
-    //TODO: change so that if the ray cast hits inactive tile its like no thanks ovo
     public void CreateShape()
     {
-        print("Box creating shape");
+       // print("Box creating shape");
         //send racast in direction and then calls RecieveShape() of that obj on the boxes layer
 
         Physics2D.queriesStartInColliders = false;
@@ -65,7 +85,7 @@ public class Box : MonoBehaviour
 
         Physics2D.queriesStartInColliders = true;
 
- //       RaycastHit2D raycasthit = Physics2D.Raycast(transform.position, directions[currentDirectionIndex].normalized, 100, LayerMask.GetMask("Faeries"));
+        //       RaycastHit2D raycasthit = Physics2D.Raycast(transform.position, directions[currentDirectionIndex].normalized, 100, LayerMask.GetMask("Faeries"));
 
         Box nextBox = null;
         Bin nextBin = null;
@@ -109,29 +129,30 @@ public class Box : MonoBehaviour
                     }
                 }
             }
+        }
 
-            if (distanceTo > inactiveStileDistance)
-            {
-                print("inactive stile in the way");
-                nextBin = null;
-                nextBox = null;
-            }
+        if (distanceTo > inactiveStileDistance)
+        {
+            print("inactive stile in the way");
+            nextBin = null;
+            nextBox = null;
+        }
 
-            //now see if there is an avaliable bin or box
-            if (nextBox != null)
-            {
-                //yay we got the next box
-                print("box sending shape");
-                nextBox.RecieveShape(paths[currentDirectionIndex], currentShape);
-                //turn on the path as well!
-            }
-            else if (nextBin != null)
-            {
-                print("sending shape to bin");
-                nextBin.RecieveShape(currentShape);
-            }
+        //now see if there is an avaliable bin or box
+        if (nextBox != null)
+        {
+            //yay we got the next box
+           // print("box sending shape");
+            nextBox.RecieveShape(paths[currentDirectionIndex], currentShape);
+            paths[currentDirectionIndex].Activate();
+        }
+        else if (nextBin != null)
+        {
+           // print("sending shape to bin");
+            nextBin.RecieveShape(currentShape);
         }
     }
+
 
     public virtual void RecieveShape(Path path, Shape shape)
     {
@@ -144,9 +165,9 @@ public class Box : MonoBehaviour
     //Then check shape combinations!
     public void Rotate()
     {
-        paths[currentDirectionIndex].Deactivate();
-        currentDirectionIndex = (currentDirectionIndex + 1) % paths.Count;
-        paths[currentDirectionIndex].Activate();
+        //paths[currentDirectionIndex].Deactivate();
+       //currentDirectionIndex = (currentDirectionIndex + 1) % paths.Count;
+       // paths[currentDirectionIndex].Activate();
         CreateShape();
     }
 
