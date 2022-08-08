@@ -117,7 +117,7 @@ public class UITrackerManager : MonoBehaviour
 
             currentButton = uiArtifactMenus.uiArtifact.GetButton(currentTile.islandId);
             // Debug.Log("Setting transform of " + t.name);
-            t.image.rectTransform.SetParent(currentButton.transform.Find("Image").GetComponent<RectTransform>());
+            t.image.rectTransform.SetParent(currentButton.imageRectTransform);
             
             if(t.GetIsInHouse())
             {
