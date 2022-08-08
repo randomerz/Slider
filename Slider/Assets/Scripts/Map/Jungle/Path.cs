@@ -21,11 +21,11 @@ public class Path : MonoBehaviour
 
     public void Activate()
     {
-        this.GetComponentInChildren<SpriteRenderer>().color = new Color(56, 161, 56, 1);
+        GetComponentInChildren<SpriteRenderer>().color = Color.green;
     }
 
     public void Deactivate()
     {
-        this.GetComponentInChildren<SpriteRenderer>().color = new Color(255, 255, 255, 1);
+        GetComponentInChildren<SpriteRenderer>().color = Color.white;
     }
 }

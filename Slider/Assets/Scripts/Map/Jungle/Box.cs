@@ -42,8 +42,6 @@ public class Box : MonoBehaviour
 
         currentShape = shapes[0];
         CreateShape();
-
-        //initiate shapes here or above
     }
 
     private new void OnEnable()
@@ -150,6 +148,7 @@ public class Box : MonoBehaviour
         {
            // print("sending shape to bin");
             nextBin.RecieveShape(currentShape);
+            paths[currentDirectionIndex].Activate();
         }
     }
 
