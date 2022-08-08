@@ -10,28 +10,30 @@ public class Meltable : MonoBehaviour
     public Sprite meltedSprite;
     public SpriteRenderer spriteRenderer;
 
-#pragma warning disable
-    public Collider2D collider;
-#pragma warning restore
-
     public bool isFrozen = true;
+  //  private bool canBeChanged = true;
 
     public UnityEvent onMelt;
     public UnityEvent onFreeze;
 
     public int numLavaSources = 0;
+    public bool anchorBroken = false;
+    public bool canBreakWithAnchor = true;
 
     // Update is called once per frame
     void Update()
     {
-        if(this.transform.position.y > 62 && !isFrozen && numLavaSources <= 0)
+        if(this.transform.position.y > 62 && !isFrozen && numLavaSources <= 0 && !anchorBroken)
             Freeze();
     }
 
-    public void Melt()
+    public void Melt(bool usingAnchor = false)
     {
-        numLavaSources++;
-        if(isFrozen && numLavaSources > 0) //C: the second check is pointless but maybe wacky things could happen
+        if(usingAnchor && canBreakWithAnchor)
+            anchorBroken = true;
+        else
+            numLavaSources++;
+        if(isFrozen && (anchorBroken || numLavaSources > 0)) //C: the second check is pointless but maybe wacky things could happen
         {
             if (spriteRenderer)
                 spriteRenderer.sprite = meltedSprite;
@@ -40,9 +42,19 @@ public class Meltable : MonoBehaviour
         }
     }
 
+   // public void SetCanBeChanged(bool value)
+  //  {
+   //     canBeChanged = value;
+  //  }
+
     public void RemoveLava()
     {
         numLavaSources--;
+    }
+
+    public void RemoveAnchor()
+    {
+        anchorBroken = false;
     }
 
     public void IsFrozen(Condition c) {
