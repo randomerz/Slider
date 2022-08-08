@@ -13,7 +13,7 @@ public class MountainArtifactButton : ArtifactTileButton
     protected override void Start()
     {
         base.Start();
-        this.GetComponent<Image>().alphaHitTestMinimumThreshold = 0.5f;
+        this.GetComponentInChildren<Image>().alphaHitTestMinimumThreshold = 0.5f;
     }
     protected override void SetAnchoredPos(int x, int y)
     {
