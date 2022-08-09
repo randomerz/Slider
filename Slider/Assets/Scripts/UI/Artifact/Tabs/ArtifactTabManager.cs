@@ -9,11 +9,8 @@ public class ArtifactTabManager : MonoBehaviour
     protected ArtifactTab realignTab;
     protected ArtifactTab saveTab;
     protected ArtifactTab loadTab;
-    [SerializeField] private List<FactoryTab> timedGateTabs = new List<FactoryTab>();
 
     private bool isRearranging;
-
-
 
     [Header("References")]
     public UIArtifactMenus uiArtifactMenus; // Access UIArtifact through me!
@@ -59,15 +56,6 @@ public class ArtifactTabManager : MonoBehaviour
             loadTab.SetIsVisible(false);
         }
         #endregion
-
-        if (SGrid.Current.MyArea == Area.Factory)
-        {
-            timedGateTabs[0].SetIsVisible(screenIndex == timedGateTabs[0].homeScreen);
-            timedGateTabs[1].SetIsVisible(screenIndex == timedGateTabs[1].homeScreen);
-            timedGateTabs[2].SetIsVisible(screenIndex == timedGateTabs[2].homeScreen);
-            timedGateTabs[3].SetIsVisible(screenIndex == timedGateTabs[3].homeScreen);
-        }
-        //Debug.Log(timedGateTabs[2].tabAnimator.GetBool("isVisible"));
     }
 
 
