@@ -37,34 +37,6 @@ public class FactoryArtifact : UIArtifact
         base.ProcessQueue();
     }
 
-    public static IEnumerator WaitUntilCanQueueMoveSafely(SMove move, System.Action callback = null)
-    {
-        //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
-        //yield return new WaitForSeconds(0.05f);
-
-        yield return new WaitUntil(() => !DequeueLocked);   //Mutex locks, woo hoo!
-
-        DequeueLocked = true;
-
-        List<SMove> currActiveMoves = GetActiveMoves();
-        foreach (SMove activeMove in currActiveMoves)
-        {
-            if (activeMove.Overlaps(move))
-            {
-                while (currActiveMoves.Contains(activeMove))
-                {
-                    yield return null;
-                }
-                break;
-            }
-        }
-
-        if (callback != null)
-        {
-            callback();
-        }
-    }
-
     private void UndoMovesAfterOverlap(List<SMove> newMoveQueue, SMove moveToCheck) {
         int cutIndex = newMoveQueue.Count;
         for (int i = 1; i < newMoveQueue.Count; i++)
@@ -113,7 +85,10 @@ public class FactoryArtifact : UIArtifact
 
         foreach (var b in buttonToNewPos.Keys)
         {
-            b.FlickerImmediate(1);
+            if (b.isActiveAndEnabled)   //Can't start coroutines on inactive button.
+            {
+                b.FlickerImmediate(1);
+            }
             b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y, false);
         }
 

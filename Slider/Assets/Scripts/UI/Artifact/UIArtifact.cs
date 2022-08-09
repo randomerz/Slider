@@ -471,7 +471,7 @@ public class UIArtifact : Singleton<UIArtifact>
         moveQueue.Enqueue(move);
     }
 
-    //DON'T CALL DIRECTLY ANYMORE (call process queue instead)
+    //DON'T CALL DIRECTLY ANYMORE (call ProcessQueue instead)
     public virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (e != null)
