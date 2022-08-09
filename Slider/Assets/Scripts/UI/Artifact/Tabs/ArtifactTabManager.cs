@@ -9,7 +9,6 @@ public class ArtifactTabManager : MonoBehaviour
     protected ArtifactTab realignTab;
     protected ArtifactTab saveTab;
     protected ArtifactTab loadTab;
-    private ArtifactTab previewTab;
     [SerializeField] private List<FactoryTab> timedGateTabs = new List<FactoryTab>();
 
     private bool isRearranging;
@@ -21,7 +20,6 @@ public class ArtifactTabManager : MonoBehaviour
 
     // Tabs -- this is not a good solution but we only have one set of tabs so it's fine lol
     public Animator rearrangingTabAnimator;
-    public Animator previewTabAnimator;
     public Sprite saveTabSprite;
     public Sprite loadTabSprite;
     public Sprite saveEmptyTabSprite;
@@ -34,7 +32,6 @@ public class ArtifactTabManager : MonoBehaviour
         realignTab = tabs[0];
         saveTab = tabs[1];
         loadTab = tabs[2];
-        if (SGrid.Current.MyArea == Area.MagiTech) previewTab = tabs[3];
     }
     public virtual void SetCurrentScreen(int screenIndex)
     {
@@ -63,13 +60,6 @@ public class ArtifactTabManager : MonoBehaviour
         }
         #endregion
 
-        if (SGrid.Current.GetArea() == Area.MagiTech)
-        {
-            //This enables the preview tab!
-            previewTab.SetIsVisible(true);
-            MagiTechArtifact artifact = (MagiTechArtifact)uiArtifactMenus.uiArtifact;
-            previewTabAnimator.SetFloat("speed", artifact.PlayerIsInPast ? -1 : 1);
-        }
         if (SGrid.Current.MyArea == Area.Factory)
         {
             timedGateTabs[0].SetIsVisible(screenIndex == timedGateTabs[0].homeScreen);
@@ -229,27 +219,5 @@ public class ArtifactTabManager : MonoBehaviour
         }
     }
     #endregion
-
-    #region Preview
-
-    public void PreviewOnHoverEnter()
-    {
-        MagiTechArtifact artifact = (MagiTechArtifact) uiArtifactMenus.uiArtifact;
-        artifact.SetPreview(true);
-        previewTabAnimator.SetBool("isHovered", true);
-        previewTabAnimator.SetFloat("speed", previewTabAnimator.GetFloat("speed") * -1);
-        artifact.DeselectSelectedButton();
-    }
-
-    public void PreviewOnHoverExit()
-    {
-        MagiTechArtifact artifact = (MagiTechArtifact)uiArtifactMenus.uiArtifact;
-        artifact.SetPreview(false);
-        previewTabAnimator.SetBool("isHovered", false);
-        previewTabAnimator.SetFloat("speed", previewTabAnimator.GetFloat("speed") * -1);
-    }
-
-    #endregion
-
     #endregion
 }
