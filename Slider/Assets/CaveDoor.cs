@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CaveDoor : MonoBehaviour
+public class CaveDoor : MonoBehaviour, ISavable
 {
     [SerializeField] private GameObject doorCollider;
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -20,5 +20,17 @@ public class CaveDoor : MonoBehaviour
         isOpen = false;
         doorCollider.SetActive(true);
         spriteRenderer.sprite = closedSprite;
+    }
+
+    public void Save()
+    {
+        SaveSystem.Current.SetBool("CaveDoorOpen", isOpen);
+    }
+
+    public void Load(SaveProfile s)
+    {
+        isOpen = s.GetBool("CaveDoorOpen");
+        if(isOpen)
+            OpenDoor();
     }
 }
