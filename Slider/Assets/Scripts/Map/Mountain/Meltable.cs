@@ -8,6 +8,7 @@ public class Meltable : MonoBehaviour
 {
     public Sprite frozenSprite; //C: switch to animation later maybe? but that doesn't sound fun
     public Sprite meltedSprite;
+    public Sprite anchorBrokenSprite;
     public SpriteRenderer spriteRenderer;
 
     public bool isFrozen = true;
@@ -27,16 +28,23 @@ public class Meltable : MonoBehaviour
             Freeze();
     }
 
-    public void Melt(bool usingAnchor = false)
+    public virtual void Melt(bool usingAnchor = false)
     {
         if(usingAnchor && canBreakWithAnchor)
+        {
             anchorBroken = true;
+        }
         else
             numLavaSources++;
         if(isFrozen && (anchorBroken || numLavaSources > 0)) //C: the second check is pointless but maybe wacky things could happen
         {
             if (spriteRenderer)
-                spriteRenderer.sprite = meltedSprite;
+            {
+                if(anchorBrokenSprite != null && anchorBroken)
+                    spriteRenderer.sprite = anchorBrokenSprite;
+                else
+                    spriteRenderer.sprite = meltedSprite;
+            }
             isFrozen = false;
             onMelt.Invoke();
         }
@@ -65,11 +73,22 @@ public class Meltable : MonoBehaviour
         c.SetSpec(!isFrozen);
     }
 
+    public void IsNotFrozenOrBroken(Condition c) {
+        c.SetSpec(!isFrozen && !anchorBroken);
+    }
+
     public void Freeze()
     {
         if (spriteRenderer)
             spriteRenderer.sprite = frozenSprite;
         isFrozen = true;
         onFreeze.Invoke();
+    }
+
+    public void Fix()
+    {
+        anchorBroken = false;
+        if (spriteRenderer)
+            spriteRenderer.sprite = meltedSprite;
     }
 }
