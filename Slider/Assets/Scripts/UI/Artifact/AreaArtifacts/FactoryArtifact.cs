@@ -25,7 +25,7 @@ public class FactoryArtifact : UIArtifact
         //L: Conveyor moves always "Cut the line" per se.
         //Unfortunately you can't queue a move at the front since C# queue is not a dequeue, so we have to do this list conversion instead
         List<SMove> newMoveQueue = new List<SMove>(moveQueue);
-        newMoveQueue.Insert(0, move);
+        newMoveQueue.Insert(0, move);   //This is inefficient, but like, there's 3 elements in the list.
 
         //L: We also have to make sure the interrupted move does not interfere with any of the subsequent moves that have already been made on the artifact.
         UndoMovesAfterOverlap(newMoveQueue, move);
@@ -35,13 +35,12 @@ public class FactoryArtifact : UIArtifact
 
         moveQueue = new Queue<SMove>(newMoveQueue);
         base.ProcessQueue();
-        //StartCoroutine(WaitOutOverlappingActiveMoves(move, base.ProcessQueue));
     }
 
     public static IEnumerator WaitUntilCanQueueMoveSafely(SMove move, System.Action callback = null)
     {
         //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
-        yield return new WaitForSeconds(0.05f);
+        //yield return new WaitForSeconds(0.05f);
 
         yield return new WaitUntil(() => !DequeueLocked);   //Mutex locks, woo hoo!
 

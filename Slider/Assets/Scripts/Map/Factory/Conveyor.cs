@@ -32,12 +32,6 @@ public class Conveyor : ElectricalNode
         }
     }
 
-    //public bool CheckingInterruptMove
-    //{
-    //    get;
-    //    private set;
-    //}
-
     private bool ConveyorPowered => ConveyorEnabled && Powered;
     private bool waitingToDoMove = false;
 
