@@ -433,7 +433,6 @@ public class UIArtifact : Singleton<UIArtifact>
         }
     }
 
-    //L: Consider moving queue stuff to separate class (probably not at this point)
     #region Queue
     //L: This is the new CheckAndSwap
     public virtual bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
