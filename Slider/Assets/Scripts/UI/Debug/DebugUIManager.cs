@@ -245,6 +245,18 @@ public class DebugUIManager : MonoBehaviour
         }
     }
 
+    //C: Gives all collectables for that area
+    public void AC()
+    {
+        SGrid.Current.ActivateAllCollectibles();
+    }
+
+    //C: Gives all collectables for that area, excluding Sliders
+    public void ACES()
+    {
+        SGrid.Current.ActivateAllCollectibles(true);
+    }
+
     //C: make sure pattern is the same length as the current sgrid
     public void SetGrid(string pattern)
     {

@@ -6,6 +6,8 @@ public class MountainGrid : SGrid
 {
     public int layerOffset; //the y offset of the top layer from the bottom (used to calculate top tile y position)
 
+    [SerializeField] private MountainCaveWall mountainCaveWall;
+
     public static MountainGrid Instance => SGrid.Current as MountainGrid;
 
     /* C: The mountian sgrid is a 2 by 4 grid. The top 4 tiles represent the top layer,
@@ -21,7 +23,7 @@ public class MountainGrid : SGrid
     */
 
 
-    public bool crystalDelivered = false;
+    private bool crystalDelivered = false;
 
     public override void Init() {
         InitArea(Area.Mountain);
@@ -80,6 +82,23 @@ public class MountainGrid : SGrid
         c.SetSpec(crystalDelivered);
     }
 
-    
+
+    #endregion
+
+
+    #region Save/Load
+
+    public override void Save()
+    {
+        base.Save();
+        mountainCaveWall.Save();
+    }
+
+    public override void Load(SaveProfile profile)
+    {
+        base.Load(profile);
+        mountainCaveWall.Load(profile);
+    }
+
     #endregion
 }

@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MountainCaveWall : MonoBehaviour
+public class MountainCaveWall : MonoBehaviour, ISavable
 {
-    public GameObject wall;
-    public List<GameObject> makeActive = new List<GameObject>();
+    public List<GameObject> makeActiveOnExplosion = new List<GameObject>();
+    public List<GameObject> deactivateOnExplosion = new List<GameObject>();
     public Minecart mc;
     public GameObject mcSpawn;
     public bool didBlowUp = false;
@@ -15,13 +15,37 @@ public class MountainCaveWall : MonoBehaviour
         if(didBlowUp)
             return;
         didBlowUp = true;
-        wall.SetActive(false);
+
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");
-        foreach (GameObject go in makeActive)
+
+        foreach (GameObject go in makeActiveOnExplosion)
             go.SetActive(true);
-        mc.SnapToRail(mcSpawn.transform.position, 0);
+        foreach (GameObject go in deactivateOnExplosion)
+            go.SetActive(false);
+
+        mc.gameObject.SetActive(true);
+        mc.SnapToRail(mcSpawn.transform.position, 2);
         mc.UpdateState("RepairParts");
         mc.StartMoving();
+    }
+
+    public void CheckBlownUp(Condition c)
+    {
+        c.SetSpec(didBlowUp);
+    }
+
+    public void Save()
+    {
+        SaveSystem.Current.SetBool("CaveMCWallExploded", didBlowUp);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        didBlowUp = profile.GetBool("CaveMCWallExploded");
+        foreach (GameObject go in makeActiveOnExplosion)
+            go.SetActive(didBlowUp);
+        foreach (GameObject go in deactivateOnExplosion)
+            go.SetActive(!didBlowUp);
     }
 }

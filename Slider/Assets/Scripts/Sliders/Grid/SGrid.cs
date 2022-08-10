@@ -419,6 +419,20 @@ public void SetGrid(int[,] puzzle)
         }
     }
 
+    public void ActivateAllCollectibles(bool excludeSliders = false)
+    {
+        foreach (Collectible c in collectibles)
+        {
+            if(excludeSliders && c.name.Contains("Slider")){}
+            else
+            {
+                c.gameObject.SetActive(true);
+                c.transform.position = Player.GetPosition(); 
+            }
+        }
+        UIManager.CloseUI();
+    }
+
     public Area GetArea() 
     {
         return myArea;
