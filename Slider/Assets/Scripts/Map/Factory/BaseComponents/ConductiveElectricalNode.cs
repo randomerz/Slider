@@ -17,7 +17,7 @@ public class ConductiveElectricalNode : ElectricalNode
         ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
 
         //Disallow connections btw 2 conductive items (for now)
-        if (other != null && BothNodesNotMoving(other) && !(isConductiveItem && other.isConductiveItem))
+        if (other != null && !(isConductiveItem && other.isConductiveItem))
         {
             if (AddNeighbor(other) && other is WirePilon)
             {

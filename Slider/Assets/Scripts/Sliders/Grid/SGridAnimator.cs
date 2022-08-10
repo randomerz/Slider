@@ -40,7 +40,6 @@ public class SGridAnimator : MonoBehaviour
         {
             grid = SGrid.Current.GetGrid();
         }
-        currMoveDuration = movementDuration * move.duration;
 
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
         StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move.positions, borders));
@@ -71,7 +70,6 @@ public class SGridAnimator : MonoBehaviour
     // if animate is false, will wait and then TP to destination
     protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true)
     {
-        float t = 0;
         //isMoving = true;
         bool isPlayerOnStile = (Player.GetStileUnderneath() != null &&
                                 Player.GetStileUnderneath().islandId == stile.islandId);
@@ -92,6 +90,8 @@ public class SGridAnimator : MonoBehaviour
 
         EffectOnMoveStart(move is SMoveConveyor);
 
+        float t = 0;
+        currMoveDuration = movementDuration * move.duration;
         while (t < currMoveDuration)
         {
             t += Time.deltaTime;
