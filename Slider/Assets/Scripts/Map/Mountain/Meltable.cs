@@ -35,9 +35,9 @@ public class Meltable : MonoBehaviour
 
     public void CheckFreezeOnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(e.stile == sTile)
+        if(sTile != null && e.stile == sTile)
             Debug.Log("amogus");
-        if(e.stile == sTile && sTile.y > 1 && !isFrozen && numLavaSources <= 0 && !anchorBroken)
+        if(sTile != null && e.stile == sTile && sTile.y > 1 && !isFrozen && numLavaSources <= 0 && !anchorBroken)
             Freeze();
     }
 
