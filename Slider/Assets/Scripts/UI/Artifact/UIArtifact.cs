@@ -231,13 +231,11 @@ public class UIArtifact : Singleton<UIArtifact>
 
     public virtual void ButtonDragEnd(BaseEventData eventData)
     {
-        Debug.Log("Drag end");
         PointerEventData data = (PointerEventData)eventData;
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
         if (!dragged.TileIsActive)// || dragged.isForcedDown)
         {
-            Debug.Log("shlatt");
             return; //player didn't start drag on a button, don't do anything.
         }
 
@@ -253,7 +251,6 @@ public class UIArtifact : Singleton<UIArtifact>
         //player didnt release their mouse on a tile so we assume they dont actually want to move the tile
         if(hovered == null)
         {
-            Debug.Log("woah");
             DeselectSelectedButton();
             return; 
         }
@@ -402,7 +399,6 @@ public class UIArtifact : Singleton<UIArtifact>
         }
     }
 
-    //L: Consider moving queue stuff to separate class (probably not at this point)
     #region Queue
     //L: This is the new CheckAndSwap
     public virtual bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
@@ -441,7 +437,7 @@ public class UIArtifact : Singleton<UIArtifact>
         moveQueue.Enqueue(move);
     }
 
-    //DON'T CALL DIRECTLY ANYMORE (call process queue instead)
+    //DON'T CALL DIRECTLY ANYMORE (call ProcessQueue instead)
     public virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (e != null)
@@ -471,7 +467,7 @@ public class UIArtifact : Singleton<UIArtifact>
             {
                 //PJ: If only one move is in the queue then moveCounter gets reset to 0 cuz of the recursive call
                 //PJ: but generally we want queing alot of moves to result in increasingly faster execution of said moves
-                move.duration = Mathf.Max(1f - (moveCounter) / 10f, 0.5f);   
+                move.duration = Mathf.Max(move.duration - (moveCounter) / 10f, move.duration / 2);   
                 moveCounter += 1;
                 activeMoves.Add(move);
                 SGrid.Current.Move(move);
@@ -654,7 +650,7 @@ public class UIArtifact : Singleton<UIArtifact>
             }
         }
     }
-    
+
     #region Lightning Crap
     public static void SetLightningPos(ArtifactTileButton b)
     {

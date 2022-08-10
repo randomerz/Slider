@@ -98,8 +98,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             else
             {
                 pushedDownFrame.gameObject.SetActive(false);
-                isHighlighted = true; //When lightning is active, tile should always be highlighted
-                highlightedFrame.gameObject.SetActive(true);
+                highlightedFrame.gameObject.SetActive(true);//When lightning is active, tile should always be highlighted
             }
         }
         else if (isLightning && !value)
@@ -107,7 +106,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             highlightedFrame.gameObject.SetActive(false);
             pushedDownFrame.gameObject.SetActive(false);
             Image PushedDown = frames[0];
-            Image Highlighted = borders[1];
+            Image Highlighted = borders[0];
             pushedDownFrame = PushedDown;
             highlightedFrame = Highlighted;
             if (isPushedDown) pushedDownFrame.gameObject.SetActive(true);
