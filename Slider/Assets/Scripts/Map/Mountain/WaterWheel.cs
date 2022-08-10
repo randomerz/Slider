@@ -9,6 +9,10 @@ public class WaterWheel : MonoBehaviour
     [SerializeField] private Meltable cog2;
 
     public void IsInPosition(Condition c) {
-        c.SetSpec(stile.x == 0 && stile.y > 2);
+        c.SetSpec(stile.x == 0 && stile.y > 1);
+    }
+
+    public void IsNotInPosition(Condition c) {
+        c.SetSpec(stile.x == 1 || stile.y < 2);
     }
 }

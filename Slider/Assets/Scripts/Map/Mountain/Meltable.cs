@@ -16,26 +16,38 @@ public class Meltable : MonoBehaviour
 
     public UnityEvent onMelt;
     public UnityEvent onFreeze;
+    public UnityEvent onFix;
 
     public int numLavaSources = 0;
     public bool anchorBroken = false;
     public bool canBreakWithAnchor = true;
+    private int numTimesBroken = 0;
+    public STile sTile;
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable() {
+        MountainSGridAnimator.OnSTileMoveEnd += CheckFreezeOnMoveEnd;
+        sTile = GetComponentInParent<MountainSTile>();
+    }
+
+    private void OnDisable() {
+        MountainSGridAnimator.OnSTileMoveEnd -= CheckFreezeOnMoveEnd;
+    }
+
+    public void CheckFreezeOnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(this.transform.position.y > 62 && !isFrozen && numLavaSources <= 0 && !anchorBroken)
+        if(e.stile == sTile)
+            Debug.Log("amogus");
+        if(e.stile == sTile && sTile.y > 1 && !isFrozen && numLavaSources <= 0 && !anchorBroken)
             Freeze();
     }
 
     public virtual void Melt(bool usingAnchor = false)
     {
-        if(usingAnchor && canBreakWithAnchor)
+        if(usingAnchor && canBreakWithAnchor && !anchorBroken)
         {
             anchorBroken = true;
+            numTimesBroken++;
         }
-        else
-            numLavaSources++;
         if(isFrozen && (anchorBroken || numLavaSources > 0)) //C: the second check is pointless but maybe wacky things could happen
         {
             if (spriteRenderer)
@@ -60,6 +72,12 @@ public class Meltable : MonoBehaviour
         numLavaSources--;
     }
 
+    public void AddLava()
+    {
+        numLavaSources++;
+        Melt();
+    }
+
     public void RemoveAnchor()
     {
         anchorBroken = false;
@@ -77,6 +95,10 @@ public class Meltable : MonoBehaviour
         c.SetSpec(!isFrozen && !anchorBroken);
     }
 
+    public void HasBeenBrokenMultipleTimes(Condition c){
+        c.SetSpec(numTimesBroken > 1);
+    }
+
     public void Freeze()
     {
         if (spriteRenderer)
@@ -90,5 +112,6 @@ public class Meltable : MonoBehaviour
         anchorBroken = false;
         if (spriteRenderer)
             spriteRenderer.sprite = meltedSprite;
+        onFix.Invoke();
     }
 }
