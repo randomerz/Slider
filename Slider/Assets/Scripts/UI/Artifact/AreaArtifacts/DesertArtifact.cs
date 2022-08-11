@@ -110,6 +110,7 @@ public class DesertArtifact : UIArtifact
             }
             QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
             SwapButtons(buttonCurrent, buttonEmpty); //I have zero idea where to put this since the buttons aren't swapping in frag properly ;-;
+            OnButtonInteract?.Invoke(this, null); //Since this is only called when you press a button technically
             return true;
         }
         else
