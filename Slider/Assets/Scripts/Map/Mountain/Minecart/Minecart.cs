@@ -9,7 +9,7 @@ public class Minecart : Item
     [SerializeField] private int currentDirection;
     public RailManager railManager;
     [SerializeField] private bool isOnTrack;
-    [SerializeField] private bool isMoving;
+    public bool isMoving {get; private set;}
     private bool canStartMoving = true;
     [SerializeField] public RailTile currentTile;
     [SerializeField] public RailTile targetTile;

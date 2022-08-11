@@ -17,7 +17,7 @@ public class MinecartStateChecker : MonoBehaviour
         if(other.GetComponent<Minecart>()){
             Minecart mc = other.GetComponent<Minecart>();
             MinecartState state = mc.mcState;
-            if(anyState || state == targetState)
+            if(mc.isMoving && (anyState || state == targetState))
                 OnTargetEnter.Invoke();
         }    
     }
@@ -27,7 +27,7 @@ public class MinecartStateChecker : MonoBehaviour
         if(other.GetComponent<Minecart>()){
             Minecart mc = other.GetComponent<Minecart>();
             MinecartState state = mc.mcState;
-            if(anyState || state == targetState)
+            if(mc.isMoving && (anyState || state == targetState))
                 OnTargetExit.Invoke();
         }    
     }
