@@ -95,6 +95,10 @@ public class Meltable : MonoBehaviour
         c.SetSpec(!isFrozen && !anchorBroken);
     }
 
+    public bool IsNotFrozenOrBroken() {
+        return(!isFrozen && !anchorBroken);
+    }
+
     public void HasBeenBrokenMultipleTimes(Condition c){
         c.SetSpec(numTimesBroken > 1);
     }

@@ -221,6 +221,7 @@ public class Minecart : Item
             else
                 transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * speed);
         }
+        minecartAnimator.SetInteger("State", ((int)mcState));
     }
 
     private void GetNextTile()

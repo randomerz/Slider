@@ -7,6 +7,7 @@ public class MinecartStateChecker : MonoBehaviour
 {
     //C: Used to check the state of the minecart and trigger certain actions
     public MinecartState targetState;
+    public bool anyState = false;
 
     public UnityEvent OnTargetEnter;
     public UnityEvent OnTargetExit;
@@ -16,7 +17,7 @@ public class MinecartStateChecker : MonoBehaviour
         if(other.GetComponent<Minecart>()){
             Minecart mc = other.GetComponent<Minecart>();
             MinecartState state = mc.mcState;
-            if(state == targetState)
+            if(anyState || state == targetState)
                 OnTargetEnter.Invoke();
         }    
     }
@@ -26,7 +27,7 @@ public class MinecartStateChecker : MonoBehaviour
         if(other.GetComponent<Minecart>()){
             Minecart mc = other.GetComponent<Minecart>();
             MinecartState state = mc.mcState;
-            if(state == targetState)
+            if(anyState || state == targetState)
                 OnTargetExit.Invoke();
         }    
     }

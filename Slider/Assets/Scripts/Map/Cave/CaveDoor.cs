@@ -33,4 +33,8 @@ public class CaveDoor : MonoBehaviour, ISavable
         if(isOpen)
             OpenDoor();
     }
+
+    public void IsDoorOpen(Condition c){
+        c.SetSpec(isOpen);
+    }
 }

@@ -66,8 +66,8 @@ public enum bottleState {
 
 public enum MinecartState {
     Empty,
-    Player,
     Crystal,
     Lava,
-    RepairParts
+    RepairParts,
+    Player
 }
