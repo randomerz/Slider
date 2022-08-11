@@ -221,7 +221,7 @@ public class SaveProfile
     /// <summary>
     /// Returns the value associated with "name" in keys. If no such value exists, this method returns false by defualt, but can also return true if passed as an argument 
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="name">The name of the string in the dictionary. Generally, try to follow: "areaBooleanName"</param>
     /// <returns></returns>
     public bool GetBool(string name, bool defaultVal = false)
     {
@@ -238,11 +238,11 @@ public class SaveProfile
     {
         bools[name] = value;
     }
-    
+
     /// <summary>
     /// Returns "name" if strings dictionary doesn't contain "name" in keys.
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="name">The name of the string in the dictionary. Generally, try to follow: "areaBooleanName"</param>
     /// <returns></returns>
     public string GetString(string name)
     {
