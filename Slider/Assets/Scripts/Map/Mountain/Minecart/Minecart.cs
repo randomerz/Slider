@@ -82,9 +82,12 @@ public class Minecart : Item
 
     private void OnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs)
     {
+        Debug.Log("mc end");
         if(tileMoveArgs.stile = currentSTile)
             canStartMoving = true;
         //recalculate target position
+        if(mcState == MinecartState.Crystal)
+            mcState = MinecartState.Empty;
     }
 
     #region Item
@@ -93,6 +96,8 @@ public class Minecart : Item
     {
         base.PickUpItem(pickLocation, callback);
         UITrackerManager.RemoveTracker(this.gameObject);
+        if(mcState == MinecartState.Crystal || mcState == MinecartState.Lava)
+            mcState = MinecartState.Empty;
     }
 
 

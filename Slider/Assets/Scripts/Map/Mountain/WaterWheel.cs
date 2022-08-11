@@ -15,33 +15,21 @@ public class WaterWheel : MonoBehaviour
     private bool hasAddedLava = false;
     private bool hasMovedTile = false;
 
-    public void IsInPosition(Condition c) {
-        c.SetSpec(stile.x == 0 && stile.y > 1);
+    private void OnEnable() {
+        SGridAnimator.OnSTileMoveStart += CheckMove;
     }
 
-    public void IsNotInPosition(Condition c) {
-        c.SetSpec(stile.x == 1 || stile.y < 2);
+    private void OnDisable() {
+        SGridAnimator.OnSTileMoveStart -= CheckMove;
     }
+
+    private void CheckMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if(e.stile == stile)
+            ResetOnMove();
+    }
+
     
-    public void IsWorking(Condition c) {
-        c.SetSpec(stile.x == 0 && stile.y > 1 && cog1.IsNotFrozenOrBroken() && cog2.IsNotFrozenOrBroken());
-    }
-
-    public void HasAddedLava(Condition c) {
-        c.SetSpec(hasAddedLava);
-    }
-
-    public void ActiveLava(Condition c) {
-        c.SetSpec(lavaCount > 0);
-    }
-
-    public void HasMovedTile(Condition c) {
-        c.SetSpec(hasMovedTile);
-    }
-
-    public void IsDone(Condition c){
-        c.SetSpec(lavaCount > 1 && powered);
-    }
 
     private void Update() {
         UpdatePower(); //C: Temporary
@@ -84,4 +72,37 @@ public class WaterWheel : MonoBehaviour
     public void ActivateLavaStage(){
         inLavaStage = true;
     }
+
+
+    #region specs
+
+    public void IsInPosition(Condition c) {
+        c.SetSpec(stile.x == 0 && stile.y > 1);
+    }
+
+    public void IsNotInPosition(Condition c) {
+        c.SetSpec(stile.x == 1 || stile.y < 2);
+    }
+    
+    public void IsWorking(Condition c) {
+        c.SetSpec(stile.x == 0 && stile.y > 1 && cog1.IsNotFrozenOrBroken() && cog2.IsNotFrozenOrBroken());
+    }
+
+    public void HasAddedLava(Condition c) {
+        c.SetSpec(hasAddedLava);
+    }
+
+    public void ActiveLava(Condition c) {
+        c.SetSpec(lavaCount > 0);
+    }
+
+    public void HasMovedTile(Condition c) {
+        c.SetSpec(hasMovedTile);
+    }
+
+    public void IsDone(Condition c){
+        c.SetSpec(lavaCount > 1 && powered);
+    }
+
+    #endregion
 }
