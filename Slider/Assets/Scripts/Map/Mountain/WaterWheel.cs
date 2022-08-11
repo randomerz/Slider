@@ -43,6 +43,10 @@ public class WaterWheel : MonoBehaviour
         c.SetSpec(lavaCount > 1 && powered);
     }
 
+    private void Update() {
+        UpdatePower(); //C: Temporary
+    }
+
 
     public void UpdatePower() {
         bool shouldPower = stile.x == 0 && stile.y > 1 && cog1.IsNotFrozenOrBroken() && cog2.IsNotFrozenOrBroken();
@@ -55,11 +59,23 @@ public class WaterWheel : MonoBehaviour
         lavaCount++;
         hasAddedLava = true;
         heaterAnimator.SetInteger("Lava",lavaCount);
+        if(lavaCount == 1) {
+            cog1.AddLava();
+            cog1.Melt();
+        }
+        if(lavaCount == 2){
+            cog2.AddLava();
+            cog2.Melt();
+        }
     }
 
     public void ResetOnMove()
     {
         if(!inLavaStage) return;
+        if(lavaCount > 1)
+            cog2.RemoveLava();
+        if(lavaCount > 0)
+            cog1.RemoveLava();
         lavaCount = 0;
         heaterAnimator.SetInteger("Lava",lavaCount);
         hasMovedTile = true;
