@@ -289,7 +289,7 @@ public class Minecart : Item
              if(MountainGrid.Instance && rm.railLocations.Contains(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)))
             {
                     railManager = rm;
-                    transform.position += new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0);
+                    transform.position += (getDirectionAsVector(currentDirection) + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
                     SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)); //give seperate method for between layers?
                     UpdateParent();
                     return;
