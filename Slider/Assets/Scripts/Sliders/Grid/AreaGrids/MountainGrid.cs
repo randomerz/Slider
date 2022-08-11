@@ -77,7 +77,7 @@ public class MountainGrid : SGrid
 
     public void CheckTile7Spawn()
     {
-        if(GetTileIdAt(0,0).Equals("7"))
+        if(GetTileIdAt(0,0).Equals("7") || GetTileIdAt(1,2).Equals("8"))
             return;
         SwapTiles(GetStile(7), GetStile(8));
     }

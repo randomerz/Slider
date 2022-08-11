@@ -16,7 +16,7 @@ public class Minecart : Item
     [SerializeField] private float speed = 2.0f;
     public Vector3 offSet = new Vector3(0.5f, 0.75f, 0.0f);
     [SerializeField] private RailManager borderRM;
-    private STile currentSTile;
+    public STile currentSTile;
     public MinecartState mcState;
 
 
@@ -385,11 +385,13 @@ public class Minecart : Item
     private void UpdateParent()
     {
         gameObject.transform.parent = railManager.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
+        currentSTile = railManager.gameObject.GetComponentInParent<STile>();
     }
 
     private void UpdateParentBorder()
     {
         gameObject.transform.parent = borderRM.gameObject.GetComponentInParent<STileTilemap>().transform.Find("Objects").transform;
+        currentSTile = null;
     }
 
     //C: returns a vector that can be added to the tile position in order to determine the location of the specified point
