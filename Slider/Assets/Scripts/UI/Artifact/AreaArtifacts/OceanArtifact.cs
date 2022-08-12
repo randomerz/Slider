@@ -43,6 +43,80 @@ public class OceanArtifact : UIArtifact
     {
         // do nothing
     }
+
+    public void RotateAllTiles() {
+        for (int x = 0; x < 2; x++) {
+            for (int y = 0; y < 2; y++) {
+                canRotate = false;
+        // logic for finding which tiles to rotate
+                List<Vector2Int> SMoveRotateArr = new List<Vector2Int> { 
+                        new Vector2Int(x, y),
+                        new Vector2Int(x, y + 1),
+                        new Vector2Int(x + 1, y + 1),
+                        new Vector2Int(x + 1, y),
+                    };
+                List<int> islandIds = new List<int>();
+                List<Vector2Int> anchoredPositions = new List<Vector2Int>();
+
+                List<ArtifactTileButton> tb = new List<ArtifactTileButton>{
+                    GetButton(x, y),
+                    GetButton(x, y + 1),
+                    GetButton(x + 1, y + 1),
+                    GetButton(x + 1, y)
+                };
+                
+                bool isAtLeastOneActive = false;
+                for (int i=3; i>=0; i--)
+                {
+                    int curX = SMoveRotateArr[i].x;
+                    int curY = SMoveRotateArr[i].y;
+
+                    STile[,] grid = SGrid.Current.GetGrid();
+
+                    if (grid[curX, curY].isTileActive)
+                    {
+                        if (grid[curX, curY].hasAnchor)
+                        {
+                            SMoveRotateArr.RemoveAt(i);
+                            tb.RemoveAt(i);
+                            anchoredPositions.Add(new Vector2Int(curX, curY));
+                            continue;
+                        }
+                        else
+                        {
+                            isAtLeastOneActive = true;
+                        }
+                    }
+                    islandIds.Add(grid[curX, curY].islandId);
+                }
+
+                if (!isAtLeastOneActive)
+                {
+                    return;
+                }
+
+                // performing the rotate smove
+                // todo: if can rotate
+                // if (SGrid.current.CanRotate)
+                if (moveQueue.Count < maxMoveQueueSize)
+                {
+                    SMoveRotate rotate = new SMoveRotate(SMoveRotateArr, islandIds, false);
+                    rotate.anchoredPositions = anchoredPositions;
+                    QueueAdd(rotate);
+                    // SwapButtons(buttonCurrent, buttonEmpty);
+                    // update UI button positions
+                    for (int i = 0; i < tb.Count; i++)
+                    {
+                        tb[i].SetPosition(SMoveRotateArr[(i + 1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y);
+                    }
+
+                    // SGrid.current.Move(rotate);
+                    ProcessQueue();
+                    
+                }
+            }
+        }
+    }
     
     // equivalent as CheckAndSwap in UIArtifact.cs but it doesn't remove
     public void RotateTiles(int x, int y, bool rotateCCW)
@@ -176,5 +250,10 @@ public class OceanArtifact : UIArtifact
             moveQueue.Clear();
             activeMoves.Clear();
         }
+    }
+
+    public void AllowRotations(bool value)
+    {
+        canRotate = value;
     }
 }

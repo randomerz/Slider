@@ -15,32 +15,35 @@ public class FezziwigOceanPuzzle : MonoBehaviour
 
     void Start() { 
         Finished = false;
-        CanStartCast = true; 
+        CanStartCast = true;
     }
-
 
     /// <summary>
     /// Starts the spell casting process
     /// </summary>
     public void CastSpell() {
+        //oceanArtifact.RotateAllTiles();
         RotateTilesRoutine = StartCoroutine(RotateTiles());
     }
 
     private IEnumerator RotateTiles() {
-        CanStartCast = false;
-        Vector2Int[] rotateButtons = {
-            new Vector2Int(0,0),
-            new Vector2Int(1,0),
-            new Vector2Int(0,1),
-            new Vector2Int(1,1)
-        };
-        foreach(Vector2Int currButton in rotateButtons) {
-            oceanArtifact.RotateTiles(currButton.x, currButton.y, false);
-            yield return new WaitForSeconds(1f);
+        oceanArtifact.AllowRotations(false);
+        while (!oceanArtifact.MoveQueueEmpty())
+        {
+            yield return null;
         }
-
-        if (!jumpScript.ChadFell()) Finished = true;
-        else CanStartCast = true;
+        var jumpRoutine = StartCoroutine(jumpScript.Jump());
+        while (!jumpScript.ChadJumped())
+        {
+            yield return null;
+        }
+        oceanArtifact.RotateAllTiles();
+        while (!oceanArtifact.MoveQueueEmpty())
+        {
+            yield return null;
+        }
+        oceanArtifact.AllowRotations(true);
+        Finished = !jumpScript.ChadFell() && !jumpScript.ChadFalling();
     }
 
     public void CanStartSpell(Condition cond) {

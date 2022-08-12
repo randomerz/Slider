@@ -64,6 +64,7 @@ public class ChadJump : MonoBehaviour
     {
         if (jumpState != JumpState.jumping && jumpState != JumpState.jumped)
         {
+            bool tmp;
             StartCoroutine(Jump());
         }
     }
@@ -147,6 +148,10 @@ public class ChadJump : MonoBehaviour
     }
 
     public bool ChadFell() { return jumpState == JumpState.fell; }
+
+    public bool ChadFalling() { return jumpState == JumpState.falling; }
+
+    public bool ChadJumped() { return jumpState == JumpState.jumped; }
 
     /// <summary>
     /// ONLY TO BE USED FOR FEZZIWIG
