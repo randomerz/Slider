@@ -73,6 +73,9 @@ public class WaterWheel : MonoBehaviour
         inLavaStage = true;
     }
 
+    public bool IsDone(){
+        return lavaCount > 1 && powered;
+    }
 
     #region specs
 

@@ -5,8 +5,17 @@ using UnityEngine;
 public class GemMachine : MonoBehaviour
 {
     private int numGems;
+    private STile sTile;
+
+    public WaterWheel waterWheel;
+
+    private void Start() {
+        sTile = GetComponentInParent<STile>();
+    }
 
     public void addGem(){
+        if(!waterWheel.IsDone())
+            return;
         numGems++;
         if(numGems == 2)
             SGrid.Current.EnableStile(8);

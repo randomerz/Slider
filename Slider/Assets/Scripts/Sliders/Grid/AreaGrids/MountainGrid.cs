@@ -8,6 +8,8 @@ public class MountainGrid : SGrid
 
     [SerializeField] private MountainCaveWall mountainCaveWall;
 
+    public Meltable iceRails;
+
     public static MountainGrid Instance => SGrid.Current as MountainGrid;
 
     /* C: The mountian sgrid is a 2 by 4 grid. The top 4 tiles represent the top layer,
@@ -114,4 +116,8 @@ public class MountainGrid : SGrid
     }
 
     #endregion
+
+    public static void FixIceRails(){
+        Instance.iceRails.Fix();
+    }
 }
