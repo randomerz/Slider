@@ -21,19 +21,21 @@ public class ElectricalNode : MonoBehaviour
     [Header("Electrical Node")]
     public NodeType nodeType;
 
-    //These are serialized for debugging purposes. They should not need to be set in the inspector.
-    [SerializeField]
-    protected int powerRefs;
-    [SerializeField]
-    protected List<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
-
-    //NEIGHBORS ARE OUTGOING EDGES (or undirected)
+    [Tooltip("NEIGHBORS ARE OUTGOING EDGES")]
     [SerializeField]
     protected List<ElectricalNode> neighbors;
 
     [SerializeField] protected bool invertSignal = false;
 
-    public virtual bool Powered => invertSignal ? powerRefs <= 0 : powerRefs > 0; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
+    [SerializeField] protected bool debugAsPoweredOn;
+
+    //These are serialized for debugging purposes. They should not need to be set in the inspector.
+    //[SerializeField]
+    protected int powerRefs;
+    //[SerializeField]
+    protected List<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
+
+    public virtual bool Powered => (invertSignal ? powerRefs <= 0 : powerRefs > 0) || debugAsPoweredOn; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
 
     public class OnPoweredArgs
     {
@@ -90,7 +92,7 @@ public class ElectricalNode : MonoBehaviour
             Debug.LogError("Can only start a signal from an INPUT node.");
         }
 
-        if (Powered != input)    //This ensures we don't double propagate
+        if (Powered != input && !(PowerCrystal.Blackout && input))    //This ensures we don't double propagate
         {
             powerRefs = input ? 1 : 0;
 

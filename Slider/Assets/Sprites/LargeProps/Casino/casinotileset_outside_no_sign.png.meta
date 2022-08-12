@@ -30,6 +30,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -117,7 +118,7 @@ TextureImporter:
         width: 218
         height: 300
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -138,7 +139,7 @@ TextureImporter:
         width: 218
         height: 300
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -146,6 +147,48 @@ TextureImporter:
       bones: []
       spriteID: 8a9a8925ba9dadc30800000000000000
       internalID: 4385056517046970792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casinotileset_outside_no_sign_2
+      rect:
+        serializedVersion: 2
+        x: 436
+        y: 0
+        width: 218
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ad972e5580fa3a4599603416c9fd1ff
+      internalID: -1364686401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casinotileset_outside_no_sign_3
+      rect:
+        serializedVersion: 2
+        x: 654
+        y: 0
+        width: 218
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0990e794843df424a934fb5ac9c34d9e
+      internalID: 1934483110
       vertices: []
       indices: 
       edges: []
@@ -160,6 +203,11 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      casinotileset_outside_no_sign_3: 1934483110
+      casinotileset_outside_no_sign_0: 1678965189027886647
+      casinotileset_outside_no_sign_1: 4385056517046970792
+      casinotileset_outside_no_sign_2: -1364686401
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -40,38 +40,37 @@ public class SGridAnimator : MonoBehaviour
         {
             grid = SGrid.Current.GetGrid();
         }
-        currMoveDuration = movementDuration * move.duration;
 
-        Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
-        StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move.positions, borders));
-
+        List<Coroutine> moveCoroutines = new List<Coroutine>();
         foreach (Movement m in move.moves)
         {
             if (grid[m.startLoc.x, m.startLoc.y].isTileActive)
-                DetermineMoveType(move, grid, m);        
+                moveCoroutines.Add(DetermineMoveType(move, grid, m));
             else
                 grid[m.startLoc.x, m.startLoc.y].SetGridPosition(m.endLoc.x, m.endLoc.y);
         }
+        
+        Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
+        StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move.positions, borders, moveCoroutines));
 
         // DC: bug involving anchoring a tile in a rotate, lets you walk into void
         if (move is SMoveRotate) 
         {
-            CheckAnchorInRotate(move as SMoveRotate, grid);
+            CheckAnchorInRotate(move as SMoveRotate, grid, moveCoroutines);
         }
     }
 
     //C: Added to avoid duplicated code in mountian section
-    protected virtual void DetermineMoveType(SMove move, STile[,] grid, Movement m)
+    protected virtual Coroutine DetermineMoveType(SMove move, STile[,] grid, Movement m)
     {
-        StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move));
+        return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move));
     }
 
     // move is only here so we can pass it into the event
     // C: if animate is true, will animate to destination (this is the case 99% of the time)
-    // if animate is false, will wait and then TP to destination
+    // if animate is false, will wait and then TP to destination (ex. mountain going up/down)
     protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true)
     {
-        float t = 0;
         //isMoving = true;
         bool isPlayerOnStile = (Player.GetStileUnderneath() != null &&
                                 Player.GetStileUnderneath().islandId == stile.islandId);
@@ -90,8 +89,10 @@ public class SGridAnimator : MonoBehaviour
             smove = move
         });
 
-        StartCoroutine(StartCameraShakeEffect());
+        EffectOnMoveStart(move is SMoveConveyor);
 
+        float t = 0;
+        currMoveDuration = movementDuration * move.duration;
         while (t < currMoveDuration)
         {
             t += Time.deltaTime;
@@ -126,28 +127,37 @@ public class SGridAnimator : MonoBehaviour
             prevPos = moveCoords.startLoc,
             smove = move
         });
+
+        EffectOnMoveFinish();
     }
 
-    protected void InvokeOnStileMoveStart(STile stile, Movement moveCoords, SMove move) {
-        OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
-        {
-            stile = stile,
-            prevPos = moveCoords.startLoc,
-            smove = move
-        });
-    }
+    // dc: next person who finds this can delete is bye bye o/
+    //protected void InvokeOnStileMoveStart(STile stile, Movement moveCoords, SMove move) {
+    //    OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
+    //    {
+    //        stile = stile,
+    //        prevPos = moveCoords.startLoc,
+    //        smove = move
+    //    });
+    //}
 
-    protected void InvokeOnStileMoveEnd(STile stile, Movement moveCoords, SMove move) {
-        OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
-        {
-            stile = stile,
-            prevPos = moveCoords.startLoc,
-            smove = move
-        });
-    }
+    //protected void InvokeOnStileMoveEnd(STile stile, Movement moveCoords, SMove move) {
+    //    OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
+    //    {
+    //        stile = stile,
+    //        prevPos = moveCoords.startLoc,
+    //        smove = move
+    //    });
+    //}
 
-
-    protected IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders)
+    // DC: this is a lot of parameters :)
+    protected IEnumerator DisableBordersAndColliders(
+        STile[,] grid, 
+        SGridBackground[,] bgGrid, 
+        HashSet<Vector2Int> positions, 
+        Dictionary<Vector2Int, List<int>> borders,
+        List<Coroutine> moveCoroutines
+        )
     {
         foreach (Vector2Int p in borders.Keys)
         {
@@ -174,7 +184,11 @@ public class SGridAnimator : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(currMoveDuration); // ideally this should be called with an event, not after time
+        foreach (Coroutine coroutine in moveCoroutines)
+        {
+            yield return coroutine;
+        }
+        //yield return new WaitForSeconds(currMoveDuration); // ideally this should be called with an event, not after time
 
         foreach (Vector2Int p in borders.Keys)
         {
@@ -193,25 +207,39 @@ public class SGridAnimator : MonoBehaviour
         }
     }
 
-    protected IEnumerator EnableTileBorderColliders(STile stile)
+    protected IEnumerator EnableTileBorderColliders(STile stile, List<Coroutine> moveCoroutines)
     {
         stile.SetBorderColliders(true);
-
-        yield return new WaitForSeconds(currMoveDuration);
+        
+        foreach (Coroutine coroutine in moveCoroutines)
+        {
+            yield return coroutine;
+        }
 
         stile.SetBorderColliders(false);
     }
 
-    protected IEnumerator StartCameraShakeEffect()
+    protected void EffectOnMoveStart(bool isConveyor)
     {
         CameraShake.ShakeConstant(currMoveDuration + 0.1f, 0.15f);
-        AudioManager.PlayWithVolume("Slide Rumble", currMoveDuration);
+        AudioManager.PlayWithVolume(isConveyor ? "Conveyor" : "Slide Rumble", currMoveDuration);
+    }
 
-        yield return new WaitForSeconds(currMoveDuration);
+    protected void EffectOnMoveFinish()
+    {
+        //L: Bruh I can't
+        //bool moveToConveyor = false;
+        //List<SMove> activeMoves = UIArtifact.GetActiveMoves();
+        //activeMoves.ForEach(move =>
+        //{
+        //    if (move is SMoveConveyor)
+        //    {
+        //        moveToConveyor = true;
+        //    }
+        //});
 
         CameraShake.Shake(currMoveDuration / 2, 1.0f);
         AudioManager.PlayWithVolume("Slide Explosion", currMoveDuration);
-
     }
 
     protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) 
@@ -220,7 +248,7 @@ public class SGridAnimator : MonoBehaviour
         return dif.magnitude > 0.1 ? dif : Vector2.zero; //C: in case of float jank
     }
 
-    private void CheckAnchorInRotate(SMoveRotate move, STile[,] grid)
+    private void CheckAnchorInRotate(SMoveRotate move, STile[,] grid, List<Coroutine> moveCoroutines)
     {
         // if player is on a stile that is anchored
         STile playerStile = Player.GetStileUnderneath();
@@ -233,7 +261,7 @@ public class SGridAnimator : MonoBehaviour
                 if (grid[p.x, p.y].isTileActive && grid[p.x, p.y].islandId == playerStile.islandId)
                 {
                     // enable colliders temporarily
-                    StartCoroutine(EnableTileBorderColliders(playerStile));
+                    StartCoroutine(EnableTileBorderColliders(playerStile, moveCoroutines));
                     return;
                 }
             }

@@ -9,6 +9,7 @@ public class ArtifactTileButton : MonoBehaviour
     private const int UI_OFFSET = 37;
 
     public ArtifactTileButtonAnimator buttonAnimator;
+    public RectTransform imageRectTransform;
     [SerializeField] private UIArtifact buttonManager;
 
     [FormerlySerializedAs("emptySprite")]
@@ -76,11 +77,18 @@ public class ArtifactTileButton : MonoBehaviour
     public void UpdateTileActive()
     {
         SetSpriteToIslandOrEmpty();
-        SetPosition(MyStile.x, MyStile.y);
+        SetPosition(MyStile.x, MyStile.y, false);
     }
 
-    public virtual void SetPosition(int x, int y)
+    public virtual void SetPosition(int x, int y, bool animateChange=false)
     {
+        if (animateChange && TileIsActive)
+        {
+            // The "Travel" direction
+            Vector2 dif = new Vector2(x - this.x, y - this.y).normalized;
+            buttonAnimator.AnimatePositionFrom(-dif * 2);
+        }
+
         this.x = x;
         this.y = y;
 

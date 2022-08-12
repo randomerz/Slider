@@ -22,6 +22,8 @@ public class UIArtifact : Singleton<UIArtifact>
     public static System.EventHandler<System.EventArgs> OnButtonInteract;
     public static System.EventHandler<System.EventArgs> MoveMadeOnArtifact;
     
+    private int moveCounter;
+    
     protected void Awake()
     {
         if (!didInit)
@@ -55,39 +57,14 @@ public class UIArtifact : Singleton<UIArtifact>
         EnableQueueing();
     }
 
-    #region Lightning Crap
-    public static void SetLightningPos(ArtifactTileButton b)
+    public static SMove GetNextMove()
     {
-        //Debug.Log("Set Lightning Pos!");
-        if (_instance.lightning == null) Debug.LogError("Lightning was not found! Set in inspector?");
-        _instance.lightning.transform.SetParent(b.transform);
-        _instance.lightning.transform.position = b.transform.position;
-        _instance.lightning.gameObject.SetActive(true);
-        b.SetLightning(true);
-    }
-
-    public static void SetLightningPos(int x, int y)
-    {
-        ArtifactTileButton b = GetButton(x, y);
-        SetLightningPos(b);
-    }
-
-    public static void SetLightningPos(int islandId)
-    {
-        ArtifactTileButton b = _instance.GetButton(islandId);
-        SetLightningPos(b);
-    }
-
-    public static void DisableLightning(bool disableHighlight)
-    {
-        if (!_instance.lightning.gameObject.activeInHierarchy)
+        if (_instance.moveQueue.Count > 0)
         {
-            return;
+            return _instance.moveQueue.Peek();
         }
-        _instance.lightning.gameObject.SetActive(false);
-        if (disableHighlight) _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
+        return null;
     }
-    #endregion
 
     // Returns a string like:   123_6##_4#5
     // for a grid like:  1 2 3
@@ -132,7 +109,7 @@ public class UIArtifact : Singleton<UIArtifact>
         {
             if (b.islandId == islandId)
             {
-                b.SetPosition(x, y);
+                b.SetPosition(x, y, true);
                 return;
             }
         }
@@ -218,7 +195,7 @@ public class UIArtifact : Singleton<UIArtifact>
                     {
                         if (button.islandId == grid[x, y].islandId)
                         {
-                            button.SetPosition(x, y);
+                            button.SetPosition(x, y, false);
                         }
                     }
                 }
@@ -266,12 +243,71 @@ public class UIArtifact : Singleton<UIArtifact>
         ResetButtonsToEmptyIfInactive(moveOptions);
 
         ArtifactTileButton hovered = GetButtonHovered(data);
-        if (hovered == null)
+        if(dragged == hovered && SettingsManager.AutoMove)
         {
-            return; //player didn't release mouse on a button, don't do anything.
+            SelectButton(dragged);
+            return;
+        }
+        //player didnt release their mouse on a tile so we assume they dont actually want to move the tile
+        if(hovered == null)
+        {
+            DeselectSelectedButton();
+            return; 
+        }
+        DoButtonDrag(dragged, hovered, moveOptions);
+    }
+    #endregion
+
+    #region Drag and Drop Private
+
+    private ArtifactTileButton GetButtonHovered(PointerEventData data)
+    {
+        ArtifactTileButton hovered = null;
+        if (data.pointerEnter != null && data.pointerEnter.name == "Image")
+        {
+            hovered = data.pointerEnter.transform.GetComponentInParent<ArtifactTileButton>();
+        }
+        return hovered;
+    }
+
+    private void SetButtonVisualsDuringMouseDrag(ArtifactTileButton dragged, ArtifactTileButton hovered)
+    {
+        foreach (ArtifactTileButton b in GetMoveOptions(dragged))
+        {
+            if (b == hovered)
+            {
+                b.SetHighlighted(false);
+                b.SetSpriteToHover();
+            }
+            else
+            {
+                b.SetHighlighted(true);
+                b.SetSpriteToIslandOrEmpty();
+            }
+        }
+    }
+
+    private void DoButtonDrag(ArtifactTileButton dragged, ArtifactTileButton hovered, List<ArtifactTileButton> moveOptions)
+    {
+        //Debug.Log($"dragged: {dragged.islandId} hovered: {hovered.islandId}");
+        if (!hovered.TileIsActive)
+        {
+            hovered.SetSpriteToEmpty();
         }
 
-        DoButtonDrag(dragged, hovered, moveOptions);
+        foreach (ArtifactTileButton b in moveOptions)
+        {
+            b.SetHighlighted(false);
+            if (b == hovered)
+            {
+                SelectButton(hovered, true);
+                DeselectSelectedButton();
+                return;
+            }
+        }
+        SelectButton(dragged, true);
+
+        OnButtonInteract?.Invoke(this, null);
     }
     #endregion
 
@@ -340,7 +376,7 @@ public class UIArtifact : Singleton<UIArtifact>
         //OnButtonInteract?.Invoke(this, null);
     }
 
-    public void UpdatePushedDowns(object sender, System.EventArgs e)
+    public virtual void UpdatePushedDowns(object sender, System.EventArgs e)
     {
         foreach (ArtifactTileButton b in _instance.buttons)
         {
@@ -363,7 +399,6 @@ public class UIArtifact : Singleton<UIArtifact>
         }
     }
 
-    //L: Consider moving queue stuff to separate class (probably not at this point)
     #region Queue
     //L: This is the new CheckAndSwap
     public virtual bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
@@ -402,7 +437,7 @@ public class UIArtifact : Singleton<UIArtifact>
         moveQueue.Enqueue(move);
     }
 
-    //DON'T CALL DIRECTLY ANYMORE (call process queue instead)
+    //DON'T CALL DIRECTLY ANYMORE (call ProcessQueue instead)
     public virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (e != null)
@@ -430,15 +465,22 @@ public class UIArtifact : Singleton<UIArtifact>
             SMove move = moveQueue.Dequeue();
             if (CheckMoveHasAnActiveTile(move)) //L: If we don't do this, we risk adding an active move that never dequeues, overflowing the queue, and BREAKING THE ENTIRE GAME.
             {
-                move.duration *= 1f - moveQueue.Count / 10f;   //Queuing more moves will make it go faster.
-                SGrid.Current.Move(move);
+                //PJ: If only one move is in the queue then moveCounter gets reset to 0 cuz of the recursive call
+                //PJ: but generally we want queing alot of moves to result in increasingly faster execution of said moves
+                move.duration = Mathf.Max(move.duration - (moveCounter) / 10f, move.duration / 2);   
+                moveCounter += 1;
                 activeMoves.Add(move);
+                SGrid.Current.Move(move);
             }
             else
             {
                 Debug.LogError("The last dequeued move did not happen because it only contained empty tiles. THIS IS PROBABLY BECAUSE THE UI IS OUT OF SYNC WITH THE GRID.");
             }
             ProcessQueue();
+        }
+        else
+        {
+            moveCounter = 0;
         }
     }
 
@@ -537,8 +579,8 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
-        buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y);
-        buttonEmpty.SetPosition(oldCurrX, oldCurrY);
+        buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y, true);
+        buttonEmpty.SetPosition(oldCurrX, oldCurrY, true);
     }
 
     protected bool MoveOverlapsWithActiveMove(SMove move)
@@ -554,7 +596,7 @@ public class UIArtifact : Singleton<UIArtifact>
         return false;
     }
 
-    private bool IsStileInActiveMoves(int islandId)
+    protected bool IsStileInActiveMoves(int islandId)
     {
         foreach (SMove smove in activeMoves)
         {
@@ -609,56 +651,39 @@ public class UIArtifact : Singleton<UIArtifact>
         }
     }
 
-    #region Drag and Drop Private
-
-    private ArtifactTileButton GetButtonHovered(PointerEventData data)
+    #region Lightning Crap
+    public static void SetLightningPos(ArtifactTileButton b)
     {
-        ArtifactTileButton hovered = null;
-        if (data.pointerEnter != null && data.pointerEnter.name == "Image")
-        {
-            hovered = data.pointerEnter.transform.parent.gameObject.GetComponent<ArtifactTileButton>();
-        }
-        return hovered;
+        //Debug.Log("Set Lightning Pos!");
+        if (_instance.lightning == null) Debug.LogError("Lightning was not found! Set in inspector?");
+        _instance.lightning.transform.SetParent(b.transform);
+        _instance.lightning.transform.position = b.transform.position;
+        _instance.lightning.gameObject.SetActive(true);
+        b.SetLightning(true);
     }
 
-    private void SetButtonVisualsDuringMouseDrag(ArtifactTileButton dragged, ArtifactTileButton hovered)
+    public static void SetLightningPos(int x, int y)
     {
-        foreach (ArtifactTileButton b in GetMoveOptions(dragged))
-        {
-            if (b == hovered)
-            {
-                b.SetHighlighted(false);
-                b.SetSpriteToHover();
-            }
-            else
-            {
-                b.SetHighlighted(true);
-                b.SetSpriteToIslandOrEmpty();
-            }
-        }
+        ArtifactTileButton b = GetButton(x, y);
+        SetLightningPos(b);
     }
 
-    private void DoButtonDrag(ArtifactTileButton dragged, ArtifactTileButton hovered, List<ArtifactTileButton> moveOptions)
+    public static void SetLightningPos(int islandId)
     {
-        //Debug.Log($"dragged: {dragged.islandId} hovered: {hovered.islandId}");
-        if (!hovered.TileIsActive)
-        {
-            hovered.SetSpriteToEmpty();
-        }
-
-        foreach (ArtifactTileButton b in moveOptions)
-        {
-            b.SetHighlighted(false);
-            if (b == hovered)
-            {
-                SelectButton(hovered, true);
-                DeselectSelectedButton();
-                return;
-            }
-        }
-        SelectButton(dragged, true);
-
-        OnButtonInteract?.Invoke(this, null);
+        ArtifactTileButton b = _instance.GetButton(islandId);
+        SetLightningPos(b);
     }
+
+    public static void DisableLightning(bool disableHighlight)
+    {
+        if (!_instance.lightning.gameObject.activeInHierarchy)
+        {
+            return;
+        }
+        _instance.lightning.gameObject.SetActive(false);
+        if (disableHighlight) _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
+    }
+    #endregion
+
 }
-#endregion
+

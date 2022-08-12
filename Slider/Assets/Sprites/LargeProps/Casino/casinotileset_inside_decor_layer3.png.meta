@@ -30,6 +30,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -113,7 +114,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 900
         width: 218
         height: 300
       alignment: 0
@@ -134,7 +135,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 218
-        y: 0
+        y: 900
         width: 218
         height: 300
       alignment: 0
@@ -150,6 +151,132 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: casinotileset_inside_decor_layer3_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 600
+        width: 218
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f3a39cb0dc4529408821a131e736f9f
+      internalID: 1491320562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casinotileset_inside_decor_layer3_3
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 600
+        width: 218
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da5b55ca33ab28f40ad3cf4dbced4153
+      internalID: -1250484831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casinotileset_inside_decor_layer3_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 300
+        width: 218
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c487b93d6c702644bab5e94efc8937c7
+      internalID: -1731450902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casinotileset_inside_decor_layer3_5
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 300
+        width: 218
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d170847fa02c8a4fa8f8fb0fdc0b0f4
+      internalID: 1249948276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casinotileset_inside_decor_layer3_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 218
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7a8f87619c0c1b4396976fb6f9edf14
+      internalID: 2002291575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casinotileset_inside_decor_layer3_7
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 0
+        width: 218
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c06baa9781c80d54f8d512cd0158593d
+      internalID: -492455569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -160,6 +287,15 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      casinotileset_inside_decor_layer3_4: -1731450902
+      casinotileset_inside_decor_layer3_0: 5825705148388620305
+      casinotileset_inside_decor_layer3_5: 1249948276
+      casinotileset_inside_decor_layer3_1: -7999811972579686801
+      casinotileset_inside_decor_layer3_6: 2002291575
+      casinotileset_inside_decor_layer3_2: 1491320562
+      casinotileset_inside_decor_layer3_7: -492455569
+      casinotileset_inside_decor_layer3_3: -1250484831
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
