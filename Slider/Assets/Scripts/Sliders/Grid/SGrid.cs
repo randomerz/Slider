@@ -313,7 +313,6 @@ public void SetGrid(int[,] puzzle)
     {
         return Width * Height;
     }
-
     
 
     // C: result of consolidating 2 versions of this method
@@ -664,5 +663,10 @@ public void SetGrid(int[,] puzzle)
     protected static string GetTileIdAt(int x, int y)
     {
         return Current.targetGrid[(Current.Height - y - 1) * Current.Width + x].ToString();
+    }
+
+    public static STile GetTileAt(int x, int y)
+    {
+        return Current.grid[x,y];
     }
 }

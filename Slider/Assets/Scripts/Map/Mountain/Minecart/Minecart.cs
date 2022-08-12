@@ -9,11 +9,11 @@ public class Minecart : Item
     [SerializeField] private int currentDirection;
     public RailManager railManager;
     [SerializeField] private bool isOnTrack;
-    public bool isMoving {get; private set;}
+    public bool isMoving {get; private set;} = false;
     private bool canStartMoving = true;
     [SerializeField] public RailTile currentTile;
     [SerializeField] public RailTile targetTile;
-    [SerializeField] private float speed = 2.0f;
+    [SerializeField] private float speed = 2.0f; 
     public Vector3 offSet = new Vector3(0.5f, 0.75f, 0.0f);
     [SerializeField] private RailManager borderRM;
     public STile currentSTile;
@@ -158,6 +158,8 @@ public class Minecart : Item
 
     private void OnCollisionEnter2D(Collision2D other) 
     {
+        if(other.gameObject.layer == 14) //C: 14 is MinecartIgnore
+            return;
         Debug.Log("bonk");
         StopMoving(true);
     }

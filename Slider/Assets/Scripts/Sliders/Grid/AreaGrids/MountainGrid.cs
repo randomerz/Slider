@@ -75,13 +75,12 @@ public class MountainGrid : SGrid
         base.EnableStile(stile, shouldFlicker);
     }
 
-    public void CheckTile7Spawn()
+    private void CheckTile7Spawn()
     {
-        if(GetTileIdAt(0,0).Equals("7") || GetTileIdAt(1,2).Equals("8"))
+        if(GetTileAt(0,0).islandId == 7 || GetTileAt(0,0).islandId == 8 )
             return;
         SwapTiles(GetStile(7), GetStile(8));
     }
-
 
 
     #region Minecart Specs

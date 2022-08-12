@@ -19,11 +19,10 @@ public class Lavafall : MonoBehaviour
 
     public void CheckLava(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        //if(e.stile == sTile)
-           CheckLava();
+        CheckLava();
     }
 
     public void CheckLava(){
-        fall.SetActive(sTile.y > 1);
+        fall.SetActive(sTile.y == 3 && !SGrid.GetTileAt(sTile.x, 2).isTileActive);
     }
 }

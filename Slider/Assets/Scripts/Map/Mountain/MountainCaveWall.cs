@@ -25,7 +25,7 @@ public class MountainCaveWall : MonoBehaviour, ISavable
             go.SetActive(false);
 
         mc.gameObject.SetActive(true);
-        mc.SnapToRail(mcSpawn.transform.position, 2);
+        mc.SnapToRail(mcSpawn.transform.position, 1);
         mc.UpdateState("RepairParts");
         mc.StartMoving();
     }
@@ -37,11 +37,13 @@ public class MountainCaveWall : MonoBehaviour, ISavable
 
     public void Save()
     {
+        Debug.Log("saving wall");
         SaveSystem.Current.SetBool("CaveMCWallExploded", didBlowUp);
     }
 
     public void Load(SaveProfile profile)
     {
+        Debug.Log("loading wall");
         didBlowUp = profile.GetBool("CaveMCWallExploded");
         foreach (GameObject go in makeActiveOnExplosion)
             go.SetActive(didBlowUp);
