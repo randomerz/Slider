@@ -42,7 +42,7 @@ public class ServerComputer : MonoBehaviour
     #endregion
 
     #region Send Player To Past
-    private void StartSendToPastEvent()
+    public void StartSendToPastEvent()
     {
         UIEffects.FadeToWhite( () =>
         {
