@@ -22,6 +22,7 @@ public class ElectricalNode : MonoBehaviour
 
     [Tooltip("NEIGHBORS ARE OUTGOING EDGES")]
     [SerializeField] protected List<ElectricalNode> neighbors;
+    [SerializeField] private bool powerOnStart;
     [SerializeField] protected bool invertSignal = false;
 
     [Header("DEBUG TOOLS")]
@@ -37,12 +38,15 @@ public class ElectricalNode : MonoBehaviour
     public UnityEvent OnPoweredOff;
 
     //These are serialized for debugging purposes. They should not need to be set in the inspector.
-    //[SerializeField]
+    [Header("EXPOSED FOR DEBUG")]
+    [SerializeField]
     protected int powerRefs;
-    //[SerializeField]
+    [SerializeField]
     protected List<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
 
     public virtual bool Powered => (invertSignal ? powerRefs <= 0 : powerRefs > 0) || debugAsPoweredOn; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
+
+    public bool Blackout => PowerCrystal.Blackout && !FactoryEntityPastChecker.IsInPast(gameObject);
 
     protected void Awake()
     {
@@ -62,7 +66,10 @@ public class ElectricalNode : MonoBehaviour
 
     private void Start()
     {
-        if (Powered)
+        if (powerOnStart)
+        {
+            StartSignal(true);
+        } else if (Powered)
         {
             //This is mainly for inverted power.
             OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
@@ -87,7 +94,7 @@ public class ElectricalNode : MonoBehaviour
             Debug.LogError("Can only start a signal from an INPUT node.");
         }
 
-        if (Powered != input && !(PowerCrystal.Blackout && input))    //This ensures we don't double propagate
+        if (Powered != input && !(Blackout && input))    //This ensures we don't double propagate
         {
             powerRefs = input ? 1 : 0;
 
@@ -175,6 +182,10 @@ public class ElectricalNode : MonoBehaviour
             nodes.Add(new HashSet<ElectricalNode>());
 
             GetPathNodesRecursive(nodes);
+        } else if (powerRefs > 0 && nodeType == NodeType.INPUT)   //This is an input powered node
+        {
+            nodes.Add(new HashSet<ElectricalNode>());
+            nodes[0].Add(this);
         }
     }
 

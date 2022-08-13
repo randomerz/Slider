@@ -65,6 +65,8 @@ public class ServerComputer : MonoBehaviour
         }
 
         ppChanger.UPPTransform();
+
+        FactoryLightManager.SwitchLights(true);
     }
     #endregion
 }
