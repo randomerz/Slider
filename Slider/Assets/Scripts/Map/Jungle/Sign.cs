@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Sign : Box
 {
-    List<Recipe> recipes = new List<Recipe>();
+    public RecipeList recipes;
     Dictionary<Path, Shape> shapes = new Dictionary<Path, Shape>(); //idk if i sshould rename this i should think
     
     // Start is called before the first frame update
@@ -62,8 +62,9 @@ public class Sign : Box
             }
         }
 
-        foreach (Recipe recipe in  recipes)
+        while (recipes.HasNext())
         {
+            Recipe recipe = recipes.GetNext();
             if (recipe.Check(shapesRecieved) != null)
             {
                 //we found the recipe
