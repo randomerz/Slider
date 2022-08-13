@@ -34,6 +34,7 @@ public class OceanGrid : SGrid
 
     [Header("Foggy Progress Notes")]
     [SerializeField] private List<SpriteRenderer> progressNotes;
+    [SerializeField] private Sprite emptyNote, fullNote;
 
     public override void Init()
     {
@@ -54,10 +55,7 @@ public class OceanGrid : SGrid
         AudioManager.PlayMusic("Ocean uwu", false); // for FMOD effects
         UIEffects.FadeFromBlack();
 
-        foreach (SpriteRenderer renderer in progressNotes)
-        {
-            renderer.enabled = false;
-        }
+        SetProgressRingActive(false);
 
     }
 
@@ -306,6 +304,7 @@ public class OceanGrid : SGrid
         {
             fogIsland.transform.position = Player.GetStileUnderneath().transform.position;
             fogIsland.SetActive(true);
+            SetProgressRingActive(false);
 
             if (Player.GetStileUnderneath().islandId == 6)
             {
@@ -328,17 +327,22 @@ public class OceanGrid : SGrid
         }
 
         int currentIslandId = Player.GetStileUnderneath().islandId;
-
+        if ((currentIslandId == 6 || currentIslandId == 7) && !FoggyCompleted())
+        {
+            SetProgressRingActive(true);
+        }
         if (currentIslandId != lastIslandId && (lastIslandId == 6 || lastIslandId == 7))
         {
 
             fog7.SetActive(true);
             fog6.SetActive(true);
             fogIsland.SetActive(false);
+            //SetProgressRingActive(true);
 
             if (currentIslandId != 6 && currentIslandId != 7)
             {
                 failFoggy();
+                SetProgressRingActive(false);
             }
             else
             {
@@ -371,6 +375,7 @@ public class OceanGrid : SGrid
             playerIndex++;
             FoggySeasAudio();
             Debug.Log($"You're doing great! Index: {playerIndex}");
+            progressNotes[playerIndex - 1].sprite = fullNote;
         }
         else
         {
@@ -389,6 +394,10 @@ public class OceanGrid : SGrid
 
         playerIndex = 0;
         AudioManager.SetMusicParameter("Ocean", "OceanFoggyProgress", 0);
+        foreach (SpriteRenderer note in progressNotes)
+        {
+            note.sprite = emptyNote;
+        }
     }
 
     public bool FoggyCompleted()
@@ -477,5 +486,13 @@ public class OceanGrid : SGrid
         treesToJungle.SetActive(false);
         CameraShake.Shake(1, 2);
         AudioManager.Play("Slide Explosion");
+    }
+
+    private void SetProgressRingActive(bool active)
+    {
+        foreach (SpriteRenderer note in progressNotes)
+        {
+            note.enabled = active;
+        }
     }
 }
