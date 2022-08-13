@@ -13,6 +13,7 @@ public class Box : MonoBehaviour
     protected List<Vector2> directions = new List<Vector2>();
     protected int currentDirectionIndex = 0;
     public List<Shape> shapes;
+    protected int currentShapeIndex = 0;
     protected Shape currentShape;
 
     // Start is called before the first frame update
@@ -40,7 +41,7 @@ public class Box : MonoBehaviour
             paths.Add(bottom);
         }
 
-        currentShape = shapes[0];
+        currentShape = shapes[currentShapeIndex];
         CreateShape();
     }
 
@@ -160,18 +161,23 @@ public class Box : MonoBehaviour
         print(this.gameObject.name);
     }
 
-    //TODO: make this work now! and add path color changes so IK what path is being used!
-    //Then check shape combinations!
-    public void Rotate()
+    public void ChangeShape()
     {
-        //paths[currentDirectionIndex].Deactivate();
-       //currentDirectionIndex = (currentDirectionIndex + 1) % paths.Count;
-       // paths[currentDirectionIndex].Activate();
+        print("Changing shape");
+        currentShapeIndex = (currentShapeIndex + 1) % shapes.Count;
+        currentShape = shapes[currentShapeIndex];
         CreateShape();
     }
 
-    public void ChangeShape()
+    public void Rotate()
     {
-
+        paths[currentDirectionIndex].Deactivate();
+        currentDirectionIndex = (currentDirectionIndex + 1) % paths.Count;
+        paths[currentDirectionIndex].Activate();
+        if (currentShape == null)
+        {
+            return;
+        }
+        CreateShape();
     }
 }
