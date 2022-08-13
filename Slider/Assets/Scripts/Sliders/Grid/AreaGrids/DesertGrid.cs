@@ -11,12 +11,13 @@ public class DesertGrid : SGrid
     public DiceGizmo dice1;
     public DiceGizmo dice2;
     public SpriteRenderer[] casinoCeilingSprites;
-    [SerializeField] private GameObject[] zlist;
+    [SerializeField] private GameObject[] zlist; //From smallest to largest
 
     private int monkeShake = 0;
     private bool campfireIsLit = false;
     private bool checkCompletion = false;
     private bool checkMonkey = false;
+    private Coroutine waitForZ; //Should be null if monkeShakes is 0
 
     public override void Init() {
         InitArea(Area.Desert);
@@ -136,29 +137,42 @@ public class DesertGrid : SGrid
     //Puzzle 2: Baboon tree shake
     public void CheckMonkeyShakeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        STile monkeyTile = SGrid.Current.GetStile(3);
-        if (e.stile == SGrid.Current.GetStile(3))
+        STile monkeyTile = Current.GetStile(3);
+        if (monkeyTile.isTileActive && e.stile == monkeyTile)
         {
-            if (Mathf.Abs(e.prevPos.x - monkeyTile.x) == 2 || Mathf.Abs(e.prevPos.y - monkeyTile.y) == 2)
-            {
-                //Shake the monkey. Logic for monkey stages of awake?
-                monkeShake++;
-                if (monkeShake == 1) zlist[2].SetActive(false);
-                else if (monkeShake == 2) zlist[1].SetActive(false);
-                else if (monkeShake == 3) zlist[0].SetActive(false);
-                Debug.Log("The monkey got shook");
-            }
-            else
-            {
-                monkeShake = 0;
-                foreach (GameObject z in zlist) z.SetActive(true);
-                Debug.Log("Monkey shakes reset!");
-            }
+            zlist[monkeShake].SetActive(false);
+            monkeShake++;
+            if (waitForZ == null) waitForZ = StartCoroutine(MokeZTimer()); //First shake starts countdown timer. waitForZ should be null if monkeShake is 0
         }
         if (monkeShake >= 3)
         {
             SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
+            if (waitForZ != null) StopCoroutine(MokeZTimer());
         }
+    }
+
+    private IEnumerator MokeZTimer()
+    {
+        float time = 0f;
+        int temp = 0;
+        while (monkeShake > 0 && monkeShake < 3) //This is OMEGA SUS but 
+        {
+            time += Time.deltaTime;
+            if (temp < monkeShake) //If monkeShake has changed, reset timer
+            {
+                time = 0f;
+                temp = monkeShake;
+            }
+            if (time >= 2f)
+            {
+                monkeShake = monkeShake == 0 ? 0 : monkeShake - 1;
+                temp = monkeShake;
+                zlist[monkeShake].SetActive(true);
+                time = 0f;
+            }
+            yield return null;
+        }
+        waitForZ = null;
     }
 
     public void IsAwake(Condition c)
