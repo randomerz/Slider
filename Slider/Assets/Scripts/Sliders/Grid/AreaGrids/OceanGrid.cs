@@ -32,6 +32,9 @@ public class OceanGrid : SGrid
     public GameObject fog7;
     public GameObject fogIsland;
 
+    [Header("Foggy Progress Notes")]
+    [SerializeField] private List<SpriteRenderer> progressNotes;
+
     public override void Init()
     {
         InitArea(Area.Ocean);
@@ -50,6 +53,11 @@ public class OceanGrid : SGrid
         AudioManager.PlayMusic("Ocean Tavern", false); // for FMOD effects
         AudioManager.PlayMusic("Ocean uwu", false); // for FMOD effects
         UIEffects.FadeFromBlack();
+
+        foreach (SpriteRenderer renderer in progressNotes)
+        {
+            renderer.enabled = false;
+        }
 
     }
 
@@ -323,6 +331,7 @@ public class OceanGrid : SGrid
 
         if (currentIslandId != lastIslandId && (lastIslandId == 6 || lastIslandId == 7))
         {
+
             fog7.SetActive(true);
             fog6.SetActive(true);
             fogIsland.SetActive(false);
@@ -361,10 +370,12 @@ public class OceanGrid : SGrid
         {
             playerIndex++;
             FoggySeasAudio();
+            Debug.Log($"You're doing great! Index: {playerIndex}");
         }
         else
         {
             failFoggy();
+            Debug.Log($"You did not good! Index: {playerIndex}");
         }
 
     }
@@ -382,7 +393,7 @@ public class OceanGrid : SGrid
 
     public bool FoggyCompleted()
     {
-        return playerIndex == 9;
+        return playerIndex == 6;
     }
 
     // Final puzzle
