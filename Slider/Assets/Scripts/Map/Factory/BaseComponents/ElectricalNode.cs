@@ -6,7 +6,6 @@ using UnityEngine.Events;
 //This is what controls the electrical system for the Factory/any other system that uses it.
 public class ElectricalNode : MonoBehaviour
 {
-
     public enum NodeType
     {
         //These determine what type of edges in the graph there are.
@@ -22,12 +21,20 @@ public class ElectricalNode : MonoBehaviour
     public NodeType nodeType;
 
     [Tooltip("NEIGHBORS ARE OUTGOING EDGES")]
-    [SerializeField]
-    protected List<ElectricalNode> neighbors;
-
+    [SerializeField] protected List<ElectricalNode> neighbors;
     [SerializeField] protected bool invertSignal = false;
 
+    [Header("DEBUG TOOLS")]
     [SerializeField] protected bool debugAsPoweredOn;
+
+    public class OnPoweredArgs
+    {
+        public bool powered;
+    }
+    [SerializeField]
+    public UnityEvent<OnPoweredArgs> OnPowered;
+    public UnityEvent OnPoweredOn;
+    public UnityEvent OnPoweredOff;
 
     //These are serialized for debugging purposes. They should not need to be set in the inspector.
     //[SerializeField]
@@ -36,18 +43,6 @@ public class ElectricalNode : MonoBehaviour
     protected List<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
 
     public virtual bool Powered => (invertSignal ? powerRefs <= 0 : powerRefs > 0) || debugAsPoweredOn; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
-
-    public class OnPoweredArgs
-    {
-        public bool powered;
-    }
-    //public static event System.EventHandler<OnPoweredArgs> OnPowered;
-
-    [SerializeField]
-    public UnityEvent<OnPoweredArgs> OnPowered;
-
-    public UnityEvent OnPoweredOn;
-    public UnityEvent OnPoweredOff;
 
     protected void Awake()
     {

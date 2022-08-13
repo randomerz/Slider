@@ -239,7 +239,7 @@ public class DebugUIManager : MonoBehaviour
         }
     }
 
-    public void FactoryPastDebug()
+    public void DebugFactoryPast()
     {
         if (SGrid.Current.GetArea() != Area.Factory)
         {
