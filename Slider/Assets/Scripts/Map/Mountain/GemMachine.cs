@@ -6,15 +6,14 @@ public class GemMachine : MonoBehaviour
 {
     private int numGems;
     private STile sTile;
-
-    public WaterWheel waterWheel;
+    public bool isPowered;
 
     private void Start() {
         sTile = GetComponentInParent<STile>();
     }
 
     public void addGem(){
-        if(!waterWheel.IsDone())
+        if(!isPowered)
             return;
         numGems++;
         if(numGems == 2)
@@ -27,5 +26,9 @@ public class GemMachine : MonoBehaviour
 
     public void ResetGems(){
         numGems = 0;
+    }
+
+    public void SetIsPowered(bool value){
+        isPowered = value;
     }
 }

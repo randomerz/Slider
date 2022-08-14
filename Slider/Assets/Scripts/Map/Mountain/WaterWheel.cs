@@ -8,7 +8,7 @@ public class WaterWheel : MonoBehaviour
     [SerializeField] private Meltable cog1;
     [SerializeField] private Meltable cog2;
     private bool powered = false;
-    //[SerializeField] private ElectricalNode powerNode;
+    [SerializeField] private ElectricalNode powerNode;
     public Animator heaterAnimator;
     private bool inLavaStage = false;
     private int lavaCount = 0;
@@ -39,7 +39,7 @@ public class WaterWheel : MonoBehaviour
     public void UpdatePower() {
         bool shouldPower = stile.x == 0 && stile.y > 1 && cog1.IsNotFrozenOrBroken() && cog2.IsNotFrozenOrBroken();
         powered = shouldPower;
-        //powerNode.StartSignal(shouldPower);
+        powerNode.StartSignal(shouldPower);
     }
 
     public void AddLava()
