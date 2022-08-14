@@ -35,6 +35,7 @@ public class OceanGrid : SGrid
     [Header("Foggy Progress Notes")]
     [SerializeField] private List<SpriteRenderer> progressNotes;
     [SerializeField] private Sprite emptyNote, fullNote;
+    [SerializeField] private GameObject sparklePrefab;
 
     public override void Init()
     {
@@ -55,7 +56,10 @@ public class OceanGrid : SGrid
         AudioManager.PlayMusic("Ocean uwu", false); // for FMOD effects
         UIEffects.FadeFromBlack();
 
-        SetProgressRingActive(false);
+        foreach (SpriteRenderer note in progressNotes)
+        {
+            note.enabled = false;
+        }
 
     }
 
@@ -493,6 +497,10 @@ public class OceanGrid : SGrid
         foreach (SpriteRenderer note in progressNotes)
         {
             note.enabled = active;
+            if (!active)
+            {
+                Instantiate(sparklePrefab, note.gameObject.transform.position, Quaternion.identity);
+            }
         }
     }
 }
