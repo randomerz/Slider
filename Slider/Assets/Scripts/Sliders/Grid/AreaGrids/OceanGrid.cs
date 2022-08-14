@@ -47,7 +47,6 @@ public class OceanGrid : SGrid
     protected override void Start()
     {
         base.Start();
-
         burriedGuyNPC.SetActive(false);
         fogIsland.SetActive(false);
 
@@ -60,6 +59,8 @@ public class OceanGrid : SGrid
         {
             note.enabled = false;
         }
+        var sparkleMain = sparklePrefab.GetComponent<ParticleSystem>().main;
+        sparkleMain.maxParticles = 500;
 
     }
 
@@ -499,6 +500,7 @@ public class OceanGrid : SGrid
             note.enabled = active;
             if (!active)
             {
+
                 Instantiate(sparklePrefab, note.gameObject.transform.position, Quaternion.identity);
             }
         }
