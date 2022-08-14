@@ -7,6 +7,7 @@ public class FezziwigOceanPuzzle : MonoBehaviour
 {
     [SerializeField] private OceanArtifact oceanArtifact;
     [SerializeField] private ChadJump jumpScript;
+    [SerializeField] private Animator npcAnimator;
 
     private bool CanStartCast;
 
@@ -27,6 +28,7 @@ public class FezziwigOceanPuzzle : MonoBehaviour
     }
 
     private IEnumerator RotateTiles() {
+        CanStartCast = false;
         oceanArtifact.AllowRotations(false);
         while (!oceanArtifact.MoveQueueEmpty())
         {
@@ -37,6 +39,7 @@ public class FezziwigOceanPuzzle : MonoBehaviour
         {
             yield return null;
         }
+        npcAnimator.SetBool("isCasting", true);
         oceanArtifact.RotateAllTiles();
         while (!oceanArtifact.MoveQueueEmpty())
         {
@@ -44,6 +47,9 @@ public class FezziwigOceanPuzzle : MonoBehaviour
         }
         oceanArtifact.AllowRotations(true);
         Finished = !jumpScript.ChadFell() && !jumpScript.ChadFalling();
+        CanStartCast = !Finished;
+        if (!Finished) jumpScript.FinishFall();
+        else npcAnimator.SetBool("isCasting", false);
     }
 
     public void CanStartSpell(Condition cond) {

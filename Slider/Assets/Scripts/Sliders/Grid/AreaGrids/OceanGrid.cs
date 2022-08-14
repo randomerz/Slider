@@ -477,4 +477,9 @@ public class OceanGrid : SGrid
             AudioManager.Play("Puzzle Complete");
         }
     }
+
+    public void CollectedFezziwigReward(Condition cond)
+    {
+        cond.SetSpec(PlayerInventory.Contains(GetCollectible("Strawberry")));
+    }
 }

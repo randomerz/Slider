@@ -64,7 +64,6 @@ public class ChadJump : MonoBehaviour
     {
         if (jumpState != JumpState.jumping && jumpState != JumpState.jumped)
         {
-            bool tmp;
             StartCoroutine(Jump());
         }
     }
@@ -103,6 +102,12 @@ public class ChadJump : MonoBehaviour
     private IEnumerator Fall()
     {
         jumpState = JumpState.falling;
+
+        foreach (AnimatorControllerParameter param in npcAnimator.parameters)
+        {
+            npcAnimator.SetBool(param.name, false);
+        }
+
         npcAnimator.SetBool("isTipping", true);
 
         yield return new WaitForSeconds(0.5f);
@@ -136,7 +141,7 @@ public class ChadJump : MonoBehaviour
         }
     }
 
-    private void FinishFall()
+    public void FinishFall()
     {
         npcCollider.enabled = true;
         flashlightItem?.SetCollider(true);

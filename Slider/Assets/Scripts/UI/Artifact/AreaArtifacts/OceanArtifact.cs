@@ -45,10 +45,10 @@ public class OceanArtifact : UIArtifact
     }
 
     public void RotateAllTiles() {
+        bool rotateCCW = false;
         for (int x = 0; x < 2; x++) {
             for (int y = 0; y < 2; y++) {
                 canRotate = false;
-        // logic for finding which tiles to rotate
                 List<Vector2Int> SMoveRotateArr = new List<Vector2Int> { 
                         new Vector2Int(x, y),
                         new Vector2Int(x, y + 1),
@@ -64,7 +64,13 @@ public class OceanArtifact : UIArtifact
                     GetButton(x + 1, y + 1),
                     GetButton(x + 1, y)
                 };
-                
+
+                //if (rotateCCW)
+                //{
+                //    SMoveRotateArr.Reverse();
+                //    tb.Reverse();
+                //}
+
                 bool isAtLeastOneActive = false;
                 for (int i=3; i>=0; i--)
                 {
@@ -92,30 +98,24 @@ public class OceanArtifact : UIArtifact
 
                 if (!isAtLeastOneActive)
                 {
-                    return;
+                    continue;
                 }
 
-                // performing the rotate smove
-                // todo: if can rotate
-                // if (SGrid.current.CanRotate)
                 if (moveQueue.Count < maxMoveQueueSize)
                 {
                     SMoveRotate rotate = new SMoveRotate(SMoveRotateArr, islandIds, false);
                     rotate.anchoredPositions = anchoredPositions;
                     QueueAdd(rotate);
-                    // SwapButtons(buttonCurrent, buttonEmpty);
-                    // update UI button positions
                     for (int i = 0; i < tb.Count; i++)
                     {
                         tb[i].SetPosition(SMoveRotateArr[(i + 1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y);
                     }
-
-                    // SGrid.current.Move(rotate);
                     ProcessQueue();
-                    
                 }
+                rotateCCW = !rotateCCW;
             }
         }
+        
     }
     
     // equivalent as CheckAndSwap in UIArtifact.cs but it doesn't remove
