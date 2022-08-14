@@ -42,7 +42,7 @@ public class ElectricalNode : MonoBehaviour
     [SerializeField]
     protected int powerRefs;
     [SerializeField]
-    protected List<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
+    protected Dictionary<ElectricalNode, int> powerPathPrevs;  //This is used for backtracking paths to a power source. (value is number of times referenced)
 
     public virtual bool Powered => (invertSignal ? powerRefs <= 0 : powerRefs > 0) || debugAsPoweredOn; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
 
@@ -50,7 +50,7 @@ public class ElectricalNode : MonoBehaviour
 
     protected void Awake()
     {
-        powerPathPrevs = new List<ElectricalNode>();
+        powerPathPrevs = new Dictionary<ElectricalNode, int>();
         powerRefs = 0;  //Always start off and let things turn on.
     }
 
@@ -139,19 +139,25 @@ public class ElectricalNode : MonoBehaviour
             return false;
         }
 
-        bool oldPowered = Powered;
-
-        //Update the reference counter
-        //An assumption is made here that value is a newly updated value, otherwise the refCount strategy does not work.
         if (value)
         {
             powerRefs = powerRefs + numRefs;
-            powerPathPrevs.Add(prev);
+            if (!powerPathPrevs.ContainsKey(prev))
+            {
+                powerPathPrevs.Add(prev, 0);
+            }
+            powerPathPrevs[prev] += numRefs;
         }
         else
         {
             powerRefs = Mathf.Max(powerRefs - numRefs, 0);
-            powerPathPrevs.Remove(prev);
+            if (powerPathPrevs.ContainsKey(prev)) {
+                powerPathPrevs[prev] -= numRefs;
+                if (powerPathPrevs[prev] <= 0)
+                {
+                    powerPathPrevs.Remove(prev);
+                }
+            }
         }
 
         return true;
@@ -200,7 +206,7 @@ public class ElectricalNode : MonoBehaviour
             var rootPath = new HashSet<ElectricalNode>(currPathNodes);
 
             allPathNodes.RemoveAt(allPathNodes.Count - 1);
-            foreach (var node in powerPathPrevs)
+            foreach (var node in powerPathPrevs.Keys)
             {
                 if (!currPathNodes.Contains(node))
                 {
@@ -212,7 +218,7 @@ public class ElectricalNode : MonoBehaviour
         } else
         {
             //Continue current path
-            foreach (var node in powerPathPrevs)
+            foreach (var node in powerPathPrevs.Keys)
             {
                 if (!currPathNodes.Contains(node))
                 {
@@ -342,6 +348,14 @@ public class ElectricalNode : MonoBehaviour
         return true;
     }
 
+    public void RemoveAllNeighbors()
+    {
+        while(neighbors.Count > 0) 
+        {
+            RemoveNeighbor(neighbors[0]);
+        }
+    }
+
     private static void PropagateAllPathsFromTo(bool value, ElectricalNode from, ElectricalNode to)
     {
         List<HashSet<ElectricalNode>> pathsFrom;
@@ -350,7 +364,7 @@ public class ElectricalNode : MonoBehaviour
         //Propagate each path individually
         foreach (var path in pathsFrom)
         {
-            to.PropagateSignal(true, from, path, 1);
+            to.PropagateSignal(value, from, path, 1);
         }
     }
 }

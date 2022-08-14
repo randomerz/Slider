@@ -59,6 +59,14 @@ public class ServerComputer : MonoBehaviour
 
     private void SpawnPlayerInPast()
     {
+        //Disable anchors so they don't interefere with the past section.
+        Anchor[] anchors = FindObjectsOfType<Anchor>(); 
+        foreach (var anchor in anchors)
+        {
+            anchor.UnanchorTile();
+            anchor.gameObject.SetActive(false);
+        }
+
         foreach (GameObject go in pastTileMaps)
         {
             go.SetActive(true);

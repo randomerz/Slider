@@ -45,7 +45,10 @@ public class ElectricLineCreator : MonoBehaviour
         {
             ConductiveElectricalNode other = e.from.gameObject == this.gameObject ? e.to : e.from;
             nodesConducting.Add(other);
-            anim.SetBool("Conducting", true);
+            if (anim != null)
+            {
+                anim.SetBool("Conducting", true);
+            }
 
             if (eNode.Powered)
             {
@@ -63,7 +66,10 @@ public class ElectricLineCreator : MonoBehaviour
             nodesConducting.Remove(other);
             if (nodesConducting.Count == 0)
             {
-                anim.SetBool("Conducting", false);
+                if (anim != null)
+                {
+                    anim.SetBool("Conducting", false);
+                }
             }
 
             DeleteElectricalLineEffect(other);
@@ -72,33 +78,43 @@ public class ElectricLineCreator : MonoBehaviour
 
     public void OnPoweredOn()
     {
-        anim.SetBool("Powered", true);
+        if (anim != null)
+        {
+            anim.SetBool("Powered", true);
+        }
 
         foreach (ConductiveElectricalNode node in nodesConducting)
         {
             if (!electricalLines.ContainsKey(node))
             {
                 CreateElectricLineEffect(node);
-                anim.SetBool("Conducting", true);
+                if (anim != null)
+                {
+                    anim.SetBool("Conducting", true);
+                }
             }
         }
     }
 
     public void OnPoweredOff()
     {
-        anim.SetBool("Powered", false);
-        anim.SetBool("Conducting", false);
+        if (anim != null)
+        {
+            anim.SetBool("Powered", false);
+            anim.SetBool("Conducting", false);
+        }
+
         ClearElectricalLines();
     }
 
     private void CreateElectricLineEffect(ConductiveElectricalNode other)
     {
         if (!electricalLines.ContainsKey(other)) {
-            GameObject electricLineInstance = Instantiate(electricLinePrefab);
+            GameObject electricLineInstance = Instantiate(electricLinePrefab, lineStart.transform);
             LineRenderer lr = electricLineInstance.GetComponent<LineRenderer>();
             lr.positionCount = 2;
-            lr.SetPosition(0, lineStart.position);
-            lr.SetPosition(1, other.transform.position);
+            lr.SetPosition(0, Vector3.zero);
+            lr.SetPosition(1, other.transform.position-lineStart.transform.position);
             electricalLines[other] = electricLineInstance;
         }
     }
