@@ -82,7 +82,6 @@ public class Minecart : Item
 
     private void OnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs)
     {
-        Debug.Log("mc end");
         if(tileMoveArgs.stile = currentSTile)
             canStartMoving = true;
         //recalculate target position

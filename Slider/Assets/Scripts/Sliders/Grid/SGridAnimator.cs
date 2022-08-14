@@ -127,7 +127,6 @@ public class SGridAnimator : MonoBehaviour
             prevPos = moveCoords.startLoc,
             smove = move
         });
-
         EffectOnMoveFinish();
     }
 

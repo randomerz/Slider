@@ -36,26 +36,28 @@ public class Meltable : MonoBehaviour
     private int numTimesBroken = 0;
     private STile sTile;
 
+
     private void OnEnable() {
         sTile = GetComponentInParent<MountainSTile>();
-        Debug.Log(gameObject.name + " " + sTile.islandId);
-        MountainSGridAnimator.OnSTileMoveEnd += CheckFreezeOnMoveEnd;
+        SGridAnimator.OnSTileMoveEnd += CheckFreezeOnMoveEnd;
     }
 
     private void OnDisable() {
-        MountainSGridAnimator.OnSTileMoveEnd -= CheckFreezeOnMoveEnd;
+        SGridAnimator.OnSTileMoveEnd -= CheckFreezeOnMoveEnd;
     }
 
     public void CheckFreezeOnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(sTile == null || e.stile == null)
-            return;
-        if(sTile != null && e.stile.islandId == sTile.islandId)
-        {
-            Debug.Log("same stile " + gameObject.name);
-            if(CheckFreeze())
+        if(e.stile == sTile)
+            StartCoroutine(WaitThenCheckFreeze());
+    }
+
+    //C: timing/collider jank
+    IEnumerator WaitThenCheckFreeze() 
+    {
+        yield return new WaitForSeconds(0.02f);
+        if(CheckFreeze())
                 Freeze();
-        }
     }
 
     public bool CheckFreeze()
