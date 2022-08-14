@@ -6,7 +6,22 @@ public class GemMachine : MonoBehaviour
 {
     private int numGems;
     private STile sTile;
-    public bool isPowered;
+    private bool isPowered;
+    private bool isDone;
+
+    private void OnEnable() {
+        SGridAnimator.OnSTileMoveStart += CheckMove;
+    }
+
+    private void OnDisable() {
+        SGridAnimator.OnSTileMoveStart -= CheckMove;
+    }
+
+    private void CheckMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if(e.stile == sTile)
+            ResetGems();
+    }
 
     private void Start() {
         sTile = GetComponentInParent<STile>();
@@ -16,8 +31,10 @@ public class GemMachine : MonoBehaviour
         if(!isPowered)
             return;
         numGems++;
-        if(numGems == 2)
+        if(numGems == 2){
+            isDone = true;
             SGrid.Current.EnableStile(8);
+        }
     }
 
     public void RemoveGem(){
@@ -30,5 +47,9 @@ public class GemMachine : MonoBehaviour
 
     public void SetIsPowered(bool value){
         isPowered = value;
+    }
+
+    public void CheckHasCrystals(Condition c){
+        c.SetSpec(isDone);
     }
 }

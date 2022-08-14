@@ -431,4 +431,21 @@ public class Minecart : Item
     }
 
     #endregion
+
+
+    public void CheckIsEmpty(Condition c){
+        c.SetSpec(mcState == MinecartState.Empty);
+    }
+
+    public void CheckCrystals(Condition c){
+        c.SetSpec(mcState == MinecartState.Crystal);
+    }
+
+    public void CheckIsMoving(Condition c){
+        c.SetSpec(isMoving);
+    }
+
+    public void CheckIsNotMoving(Condition c){
+        c.SetSpec(!isMoving);
+    }
 }
