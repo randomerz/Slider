@@ -283,7 +283,7 @@ TextureImporter:
         width: 16
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -291,6 +291,48 @@ TextureImporter:
       bones: []
       spriteID: 06d0640dec562c844ad32573ad5f4cf4
       internalID: 622421136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shelves_and_lockers_8
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 0
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31e9c0abc90098a4aa4c4326432f9997
+      internalID: 910249653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shelves_and_lockers_9
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27959f9046cc45d4fb5c56de3eeb3033
+      internalID: -188968138
       vertices: []
       indices: 
       edges: []
@@ -313,6 +355,8 @@ TextureImporter:
       shelves_and_lockers_5: 1530946270
       shelves_and_lockers_6: -963756093
       shelves_and_lockers_2: 258187149
+      shelves_and_lockers_8: 910249653
+      shelves_and_lockers_9: -188968138
       shelves_and_lockers_0: 526340089
   spritePackingTag: 
   pSDRemoveMatte: 0
