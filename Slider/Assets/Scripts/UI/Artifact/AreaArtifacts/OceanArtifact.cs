@@ -44,85 +44,31 @@ public class OceanArtifact : UIArtifact
         // do nothing
     }
 
-    public IEnumerator RotateAllTiles(System.Action callback = null) {
-
-        for (int x = 0; x < 2; x++) {
-            for (int y = 0; y < 2; y++) {
-                canRotate = false;
-                List<Vector2Int> SMoveRotateArr = new List<Vector2Int> { 
-                        new Vector2Int(x, y),
-                        new Vector2Int(x, y + 1),
-                        new Vector2Int(x + 1, y + 1),
-                        new Vector2Int(x + 1, y),
-                    };
-                List<int> islandIds = new List<int>();
-                List<Vector2Int> anchoredPositions = new List<Vector2Int>();
-
-                List<ArtifactTileButton> tb = new List<ArtifactTileButton>{
-                    GetButton(x, y),
-                    GetButton(x, y + 1),
-                    GetButton(x + 1, y + 1),
-                    GetButton(x + 1, y)
-                };
-
-                bool isAtLeastOneActive = false;
-                for (int i=3; i>=0; i--)
-                {
-                    int curX = SMoveRotateArr[i].x;
-                    int curY = SMoveRotateArr[i].y;
-
-                    STile[,] grid = SGrid.Current.GetGrid();
-
-                    if (grid[curX, curY].isTileActive)
-                    {
-                        if (grid[curX, curY].hasAnchor)
-                        {
-                            SMoveRotateArr.RemoveAt(i);
-                            tb.RemoveAt(i);
-                            anchoredPositions.Add(new Vector2Int(curX, curY));
-                            continue;
-                        }
-                        else
-                        {
-                            isAtLeastOneActive = true;
-                        }
-                    }
-                    islandIds.Add(grid[curX, curY].islandId);
-                }
-
-                if (!isAtLeastOneActive)
-                {
-                    continue;
-                }
-
-                if (moveQueue.Count < maxMoveQueueSize)
-                {
-                    SMoveRotate rotate = new SMoveRotate(SMoveRotateArr, islandIds, false);
-                    rotate.anchoredPositions = anchoredPositions;
-                    QueueAdd(rotate);
-
-                    ProcessQueue();
-
-                    while (moveQueue.Contains(rotate))
-                    {
-                        yield return null;
-                    }
-
-                    for (int i = 0; i < tb.Count; i++)
-                    {
-                        tb[i].SetPosition(SMoveRotateArr[(i + 1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y);
-                    }
-
-                }
+    /// <summary>
+    /// Routine that rotates all tiles in the ocean grid (for Fezziwig)
+    /// </summary>
+    /// <param name="callback"></param>
+    /// <returns></returns>
+    public IEnumerator RotateAllTiles(System.Action callback = null)
+    {
+        for (int x = 0; x < 2; x++)
+        {
+            for (int y = 0; y < 2; y++)
+            {
+                RotateTiles(x, y, false, false);
+                
+                //Waits for active moves to be clear to call rotate tiles again
+                //so the artifact buttons don't all change at once
+                yield return new WaitUntil(() => activeMoves.Count == 0);
             }
         }
         callback?.Invoke();
     }
     
     // equivalent as CheckAndSwap in UIArtifact.cs but it doesn't remove
-    public void RotateTiles(int x, int y, bool rotateCCW)
+    public void RotateTiles(int x, int y, bool rotateCCW, bool checkCanRotate = true)
     {
-        if (!canRotate)
+        if (checkCanRotate && !canRotate)
             return;
 
         // logic for finding which tiles to rotate
@@ -243,6 +189,10 @@ public class OceanArtifact : UIArtifact
         oceanHighlights.SetVolcanoSouth(CheckGrid.contains(gridString, "9...3"));
     }
 
+    /// <summary>
+    /// Sets the value of can rotate and clears queue if false
+    /// </summary>
+    /// <param name="value"></param>
     public void SetCanRotate(bool value)
     {
         canRotate = value;
@@ -253,7 +203,11 @@ public class OceanArtifact : UIArtifact
         }
     }
 
-    public void AllowRotations(bool value)
+    /// <summary>
+    /// Sets can rotate without clearing the queue
+    /// </summary>
+    /// <param name="value"></param>
+    public void AllowRotate(bool value)
     {
         canRotate = value;
     }

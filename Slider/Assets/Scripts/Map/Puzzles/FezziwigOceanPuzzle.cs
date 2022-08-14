@@ -23,38 +23,26 @@ public class FezziwigOceanPuzzle : MonoBehaviour
     /// Starts the spell casting process
     /// </summary>
     public void CastSpell() {
-        //oceanArtifact.RotateAllTiles();
-        RotateTilesRoutine = StartCoroutine(RotateTiles());
+        RotateTilesRoutine = StartCoroutine(CastRoutine());
     }
 
-    private IEnumerator RotateTiles() {
+    private IEnumerator CastRoutine() {
         CanStartCast = false;
-        oceanArtifact.AllowRotations(false);
-        while (!oceanArtifact.MoveQueueEmpty())
-        {
-            yield return null;
-        }
+        oceanArtifact.AllowRotate(false);
+
+        yield return new WaitUntil(() => oceanArtifact.MoveQueueEmpty());
+
         StartCoroutine(jumpScript.Jump());
-        while (!jumpScript.ChadJumped())
-        {
-            yield return null;
-        }
+
+        yield return new WaitUntil(() => jumpScript.ChadJumped());
+
         npcAnimator.SetBool("isCasting", true);
-        var rotateCoroutine = StartCoroutine(oceanArtifact.RotateAllTiles(RotateCallback));
-        //while (!oceanArtifact.MoveQueueEmpty())
-        //{
-        //    yield return null;
-        //}
-        //while (rotateCoroutine != null)
-        //{
-        //    yield return null;
-        //}
-        
+        StartCoroutine(oceanArtifact.RotateAllTiles(CastFinish));
     }
 
-    private void RotateCallback()
+    private void CastFinish()
     {
-        oceanArtifact.AllowRotations(true);
+        oceanArtifact.AllowRotate(true);
         Finished = !jumpScript.ChadFell() && !jumpScript.ChadFalling();
         CanStartCast = !Finished;
         if (!Finished) jumpScript.FinishFall();

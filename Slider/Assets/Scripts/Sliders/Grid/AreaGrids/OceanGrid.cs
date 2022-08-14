@@ -501,10 +501,6 @@ public class OceanGrid : SGrid
         }
     }
 
-    public void CollectedFezziwigReward(Condition cond)
-    {
-        cond.SetSpec(PlayerInventory.Contains(GetCollectible("Strawberry")));
-    }
     private void SetProgressRingActive(bool active)
     {
         foreach (SpriteRenderer note in progressNotes)
