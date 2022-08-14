@@ -45,6 +45,7 @@ public class Meltable : MonoBehaviour
 
     public virtual void Melt(bool usingAnchor = false)
     {
+        Debug.Log("melt");
         if(usingAnchor && canBreakWithAnchor && !anchorBroken)
         {
             anchorBroken = true;
@@ -107,6 +108,7 @@ public class Meltable : MonoBehaviour
 
     public void Freeze()
     {
+        Debug.Log("Freeze");
         if (spriteRenderer)
             spriteRenderer.sprite = frozenSprite;
         isFrozen = true;
