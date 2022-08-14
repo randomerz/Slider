@@ -9,6 +9,7 @@ public class ExplodingBarrel : MonoBehaviour
 
     [SerializeField] private ConditionChecker doorChecker;
     [SerializeField] private ElectricalNode eNode;
+    [SerializeField] private Transform[] explosionLocations;
 
     public UnityEvent OnExplode;
 
@@ -34,7 +35,10 @@ public class ExplodingBarrel : MonoBehaviour
     {
         //Do Ze Animation
         yield return new WaitForSeconds(2.0f);
-        Instantiate(explosionEffect, transform.position, Quaternion.identity);
+        foreach (var location in explosionLocations)
+        {
+            Instantiate(explosionEffect, location.position, Quaternion.identity);
+        }
         eNode.RemoveAllNeighbors();
         Destroy(gameObject);
 
