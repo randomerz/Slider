@@ -52,8 +52,8 @@ public class ServerComputer : MonoBehaviour
 
     private IEnumerator SendToPastThenFadeIn()
     {
-        SpawnPlayerInPast();
         yield return new WaitForSeconds(2.0f);
+        SpawnPlayerInPast();
         UIEffects.FadeFromWhite();
     }
 

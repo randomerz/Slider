@@ -1,15 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ExplodingBarrel : MonoBehaviour
 {
+    private readonly string explosionResName = "SmokePoof Variant";
+
     [SerializeField] private ConditionChecker doorChecker;
     [SerializeField] private ElectricalNode eNode;
+
+    public UnityEvent OnExplode;
+
+    private GameObject explosionEffect;
+
+
 
     private void Awake()
     {
         eNode = GetComponent<ElectricalNode>();
+    }
+
+    private void OnEnable()
+    {
+        explosionEffect = Resources.Load<GameObject>(explosionResName);
     }
     public void Explode()
     {
@@ -20,9 +34,10 @@ public class ExplodingBarrel : MonoBehaviour
     {
         //Do Ze Animation
         yield return new WaitForSeconds(2.0f);
-        SaveSystem.Current.SetBool("doorExploded", true);
-        doorChecker.CheckConditions();
+        Instantiate(explosionEffect, transform.position, Quaternion.identity);
         eNode.RemoveAllNeighbors();
         Destroy(gameObject);
+
+        OnExplode?.Invoke();
     }
 }
