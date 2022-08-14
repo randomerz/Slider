@@ -6,6 +6,7 @@ public class ConductiveElectricalNode : ElectricalNode
 {
     [Header("Conductive Electrical Node")]
     [SerializeField] private bool isConductiveItem;
+    [SerializeField] private bool ignoreNotMovingCheck;
 
     public struct NodeEventArgs
     {
@@ -32,11 +33,15 @@ public class ConductiveElectricalNode : ElectricalNode
         ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
 
         //Disallow connections btw 2 conductive items (for now)
-        if (other != null && !(isConductiveItem && other.isConductiveItem))
+        if (other != null)
         {
-            if (AddNeighbor(other))
+            bool bothConductiveItems = isConductiveItem && other.isConductiveItem;
+            if (BothNodesNotMoving(other) && !bothConductiveItems)
             {
-                onAddNode?.Invoke(this, new NodeEventArgs(this, other));
+                if (AddNeighbor(other))
+                {
+                    onAddNode?.Invoke(this, new NodeEventArgs(this, other));
+                }
             }
         }
     }
@@ -65,6 +70,11 @@ public class ConductiveElectricalNode : ElectricalNode
 
     protected bool BothNodesNotMoving(ConductiveElectricalNode other)
     {
+        if (ignoreNotMovingCheck)
+        {
+            return true;
+        }
+
         STile thisStile = GetComponentInParent<STile>();
         STile otherStile = other.GetComponentInParent<STile>();
 
