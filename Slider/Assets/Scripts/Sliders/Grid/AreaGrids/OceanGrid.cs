@@ -377,13 +377,11 @@ public class OceanGrid : SGrid
         {
             playerIndex++;
             FoggySeasAudio();
-            Debug.Log($"You're doing great! Index: {playerIndex}");
             progressNotes[playerIndex - 1].sprite = fullNote;
         }
         else
         {
             failFoggy();
-            Debug.Log($"You did not good! Index: {playerIndex}");
         }
 
     }
