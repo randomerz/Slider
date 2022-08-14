@@ -5,10 +5,12 @@ using UnityEngine;
 
 public class DesertGrid : SGrid
 {
+    [Header("Desert")]
     public Item log; //Right now the animator for the campfire doesn't stay alive if scene transitions
     public NPCAnimatorController campfire;
     public DiceGizmo dice1;
     public DiceGizmo dice2;
+    public SpriteRenderer[] casinoCeilingSprites;
     [SerializeField] private GameObject[] zlist;
 
     private int monkeShake = 0;
@@ -33,6 +35,7 @@ public class DesertGrid : SGrid
             log.gameObject.SetActive(true);
             campfire.SetBoolToTrue("isDying");
         }
+
         AudioManager.PlayMusic("Desert");
         AudioManager.PlayMusic("Desert Casino", false);
         UIEffects.FadeFromBlack();
@@ -64,15 +67,30 @@ public class DesertGrid : SGrid
 
     private void Update() 
     {
-        // For Casino music
-        
-        STile s5 = SGrid.Current.GetStile(5);
-        float dist1 = s5.isTileActive ? (Player.GetPosition() - s5.transform.position).magnitude : 17; // center
-        float dist2 = s5.isTileActive ? (Player.GetPosition() - (s5.transform.position + Vector3.right * 8.5f)).magnitude : 17; // right
-        STile s6 = SGrid.Current.GetStile(6);
-        float dist3 = s6.isTileActive ? (Player.GetPosition() - s6.transform.position).magnitude : 17; // center
-        float dist4 = s6.isTileActive ? (Player.GetPosition() - (s6.transform.position + Vector3.left * 8.5f)).magnitude : 17; // left
-        AudioManager.SetMusicParameter("Desert", "DesertDistToCasino", Mathf.Min(dist1, dist2, dist3, dist4));
+        // For Casino music / sprites
+        float distToCasino = GetDistanceToCasino();
+        AudioManager.SetMusicParameter("Desert", "DesertDistToCasino", distToCasino);
+
+        // map [6, 8] => [0, 1]
+        float alpha = Mathf.Clamp(Mathf.InverseLerp(6, 8, distToCasino), 0, 1);
+        Color c = new Color(1, 1, 1, alpha);
+        foreach (SpriteRenderer s in casinoCeilingSprites)
+        {
+            s.color = c;
+        }
+    }
+
+    private float GetDistanceToCasino()
+    {
+        Vector3 pp = Player.GetPosition();
+        STile s5 = GetStile(5);
+        float s5x = s5.transform.position.x + Mathf.Clamp(pp.x - s5.transform.position.x, 0, 8.5f);
+        float dist5 = s5.isTileActive ? (pp - new Vector3(s5x, s5.transform.position.y)).magnitude : 17; // center
+        STile s6 = GetStile(6);
+        float s6x = s6.transform.position.x + Mathf.Clamp(pp.x - s6.transform.position.x, -8.5f, 0);
+        float dist6 = s6.isTileActive ? (pp - new Vector3(s6x, s6.transform.position.y)).magnitude : 17; // center
+        return Mathf.Min(dist5, dist6);
+
     }
 
     public override void Save() 

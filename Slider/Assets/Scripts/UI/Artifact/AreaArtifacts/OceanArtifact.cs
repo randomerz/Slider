@@ -189,7 +189,7 @@ public class OceanArtifact : UIArtifact
             // update UI button positions
             for (int i = 0; i < tb.Count; i++)
             {
-                tb[i].SetPosition(SMoveRotateArr[(i + 1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y);
+                tb[i].SetPosition(SMoveRotateArr[(i + 1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y, true);
             }
 
             // SGrid.current.Move(rotate);
