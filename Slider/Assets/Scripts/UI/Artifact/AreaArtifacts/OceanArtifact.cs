@@ -44,8 +44,8 @@ public class OceanArtifact : UIArtifact
         // do nothing
     }
 
-    public void RotateAllTiles() {
-        bool rotateCCW = false;
+    public IEnumerator RotateAllTiles(System.Action callback = null) {
+
         for (int x = 0; x < 2; x++) {
             for (int y = 0; y < 2; y++) {
                 canRotate = false;
@@ -64,12 +64,6 @@ public class OceanArtifact : UIArtifact
                     GetButton(x + 1, y + 1),
                     GetButton(x + 1, y)
                 };
-
-                //if (rotateCCW)
-                //{
-                //    SMoveRotateArr.Reverse();
-                //    tb.Reverse();
-                //}
 
                 bool isAtLeastOneActive = false;
                 for (int i=3; i>=0; i--)
@@ -106,16 +100,23 @@ public class OceanArtifact : UIArtifact
                     SMoveRotate rotate = new SMoveRotate(SMoveRotateArr, islandIds, false);
                     rotate.anchoredPositions = anchoredPositions;
                     QueueAdd(rotate);
+
+                    ProcessQueue();
+
+                    while (moveQueue.Contains(rotate))
+                    {
+                        yield return null;
+                    }
+
                     for (int i = 0; i < tb.Count; i++)
                     {
                         tb[i].SetPosition(SMoveRotateArr[(i + 1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y);
                     }
-                    ProcessQueue();
+
                 }
-                rotateCCW = !rotateCCW;
             }
         }
-        
+        callback?.Invoke();
     }
     
     // equivalent as CheckAndSwap in UIArtifact.cs but it doesn't remove

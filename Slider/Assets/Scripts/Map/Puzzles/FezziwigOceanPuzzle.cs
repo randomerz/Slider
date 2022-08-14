@@ -34,17 +34,26 @@ public class FezziwigOceanPuzzle : MonoBehaviour
         {
             yield return null;
         }
-        var jumpRoutine = StartCoroutine(jumpScript.Jump());
+        StartCoroutine(jumpScript.Jump());
         while (!jumpScript.ChadJumped())
         {
             yield return null;
         }
         npcAnimator.SetBool("isCasting", true);
-        oceanArtifact.RotateAllTiles();
-        while (!oceanArtifact.MoveQueueEmpty())
-        {
-            yield return null;
-        }
+        var rotateCoroutine = StartCoroutine(oceanArtifact.RotateAllTiles(RotateCallback));
+        //while (!oceanArtifact.MoveQueueEmpty())
+        //{
+        //    yield return null;
+        //}
+        //while (rotateCoroutine != null)
+        //{
+        //    yield return null;
+        //}
+        
+    }
+
+    private void RotateCallback()
+    {
         oceanArtifact.AllowRotations(true);
         Finished = !jumpScript.ChadFell() && !jumpScript.ChadFalling();
         CanStartCast = !Finished;
