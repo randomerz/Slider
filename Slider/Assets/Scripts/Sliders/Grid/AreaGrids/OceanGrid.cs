@@ -59,8 +59,6 @@ public class OceanGrid : SGrid
         {
             note.enabled = false;
         }
-        var sparkleMain = sparklePrefab.GetComponent<ParticleSystem>().main;
-        sparkleMain.maxParticles = 500;
 
     }
 
@@ -401,6 +399,10 @@ public class OceanGrid : SGrid
         AudioManager.SetMusicParameter("Ocean", "OceanFoggyProgress", 0);
         foreach (SpriteRenderer note in progressNotes)
         {
+            if (note.sprite.Equals(fullNote))
+            {
+                Instantiate(sparklePrefab, note.gameObject.transform.position, Quaternion.identity);
+            }
             note.sprite = emptyNote;
         }
     }
