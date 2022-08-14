@@ -22,6 +22,8 @@ public class Player : Singleton<Player>, ISavable
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Rigidbody2D rb;
 
+    
+
     private float moveSpeedMultiplier = 1;
     public bool canMove = true;
     private bool collision = true;
