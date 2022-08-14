@@ -34,7 +34,7 @@ public class PowerCrystal : MonoBehaviour
         AudioManager.PlayWithVolume("Power Off", 1.0f);
         foreach (var node in allNodes)
         {
-            if (node.nodeType == ElectricalNode.NodeType.INPUT && !FactoryEntityPastChecker.IsInPast(node.gameObject))
+            if (node.nodeType == ElectricalNode.NodeType.INPUT && !FactoryGrid.IsInPast(node.gameObject))
             {
                 node.StartSignal(false);
             }

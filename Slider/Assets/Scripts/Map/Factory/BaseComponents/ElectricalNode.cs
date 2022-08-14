@@ -46,7 +46,7 @@ public class ElectricalNode : MonoBehaviour
 
     public virtual bool Powered => (invertSignal ? powerRefs <= 0 : powerRefs > 0) || debugAsPoweredOn; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
 
-    public bool Blackout => PowerCrystal.Blackout && !FactoryEntityPastChecker.IsInPast(gameObject);
+    public bool Blackout => PowerCrystal.Blackout && !FactoryGrid.IsInPast(gameObject);
 
     protected void Awake()
     {

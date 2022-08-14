@@ -35,6 +35,11 @@ public class FactoryGrid : SGrid
         base.Load(profile);
     }
 
+    public static bool IsInPast(GameObject entity)
+    {
+        return entity.transform.position.y < -50f;
+    }
+
     public void ExplodeDoor()
     {
         CameraShake.Shake(1.0f, 1.0f);
