@@ -8,6 +8,8 @@ public class ChadSrElectricPuzzle : MonoBehaviour
     [SerializeField] private ConductiveElectricalNode itemHoldingNode;
     [SerializeField] private Transform dropItemLoc;
 
+    private bool itemDropped = false;
+
     private void OnEnable()
     {
         itemHoldingNode.OnPoweredOn.AddListener(DropItemHolding);
@@ -18,7 +20,7 @@ public class ChadSrElectricPuzzle : MonoBehaviour
         itemHoldingNode.OnPoweredOn.RemoveListener(DropItemHolding);
     }
 
-    void Start()
+    private void Start()
     {
         itemHolding?.SetCollider(false);
     }
@@ -38,5 +40,11 @@ public class ChadSrElectricPuzzle : MonoBehaviour
         itemHolding?.SetCollider(true);
         itemHolding = null;
         itemHoldingNode = null;
+        SaveSystem.Current.SetBool("ChadSrPuzzleComplete", true);
+    }
+
+    public void CheckPuzzleComplete(Condition cond)
+    {
+        cond.SetSpec(SaveSystem.Current.GetBool("ChadSrPuzzleComplete"));
     }
 }
