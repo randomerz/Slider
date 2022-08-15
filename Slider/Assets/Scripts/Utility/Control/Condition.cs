@@ -13,6 +13,7 @@ public class Condition
         spec,
         playerCarryingItem,
         flag,
+        playerCarryingSpecItem,
     }
     [System.Serializable]
     public class ConditionEvent : UnityEvent<Condition>
