@@ -8,8 +8,6 @@ public class ChadSrElectricPuzzle : MonoBehaviour
     [SerializeField] private ConductiveElectricalNode itemHoldingNode;
     [SerializeField] private Transform dropItemLoc;
 
-    private bool itemDropped = false;
-
     private void OnEnable()
     {
         itemHoldingNode?.OnPoweredOn.AddListener(DropItemHolding);

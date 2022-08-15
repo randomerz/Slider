@@ -6,6 +6,7 @@ public class PastLargeCrystal : ConductiveElectricalNode
 {
     [Header("Past Large Crystal")]
     [SerializeField] private PlayerPositionChanger ppChanger;
+    [SerializeField] private PowerCrystal powerCrystal;
 
     public void CheckCrystalHasEnoughPower(Condition cond)
     {
@@ -25,6 +26,7 @@ public class PastLargeCrystal : ConductiveElectricalNode
     {
         yield return new WaitForSeconds(2.0f);
         SaveSystem.Current.SetBool("DidBTTF", true);
+        powerCrystal.TurnEverythingBackOn();
         ppChanger.UPPTransform();
         UIEffects.FadeFromWhite();
     }

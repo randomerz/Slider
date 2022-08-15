@@ -44,7 +44,7 @@ public class ElectricalNode : MonoBehaviour
     [SerializeField]
     protected Dictionary<ElectricalNode, int> powerPathPrevs;  //This is used for backtracking paths to a power source. (value is number of times referenced)
 
-    public virtual bool Powered => (invertSignal ? powerRefs <= 0 : powerRefs > 0) || debugAsPoweredOn; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
+    public virtual bool Powered => (!Blackout && (invertSignal ? powerRefs <= 0 : powerRefs > 0)) || debugAsPoweredOn; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
 
     public bool Blackout => SGrid.Current.GetArea() == Area.Factory && PowerCrystal.Blackout && !FactoryGrid.IsInPast(gameObject);
 
