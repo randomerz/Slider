@@ -27,6 +27,19 @@ public class PowerCrystal : MonoBehaviour
         StartCoroutine(CrystalPoweredBuildup());
     }
 
+    public void TurnEverythingBackOn()
+    {
+        AudioManager.PlayWithVolume("Power On", 1.0f);
+        Blackout = false;
+        foreach (var node in allNodes)
+        {
+            if (node.nodeType == ElectricalNode.NodeType.INPUT && !FactoryGrid.IsInPast(node.gameObject))
+            {
+                node.StartSignal(true);
+            }
+        }
+    }
+
     private IEnumerator CrystalPoweredBuildup()
     {
         yield return new WaitForSeconds(2.0f);

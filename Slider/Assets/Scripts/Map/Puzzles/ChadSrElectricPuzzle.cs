@@ -12,12 +12,12 @@ public class ChadSrElectricPuzzle : MonoBehaviour
 
     private void OnEnable()
     {
-        itemHoldingNode.OnPoweredOn.AddListener(DropItemHolding);
+        itemHoldingNode?.OnPoweredOn.AddListener(DropItemHolding);
     }
 
     private void OnDisable()
     {
-        itemHoldingNode.OnPoweredOn.RemoveListener(DropItemHolding);
+        itemHoldingNode?.OnPoweredOn.RemoveListener(DropItemHolding);
     }
 
     private void Start()
