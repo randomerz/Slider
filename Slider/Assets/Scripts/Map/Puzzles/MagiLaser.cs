@@ -7,14 +7,9 @@ public class MagiLaser : MonoBehaviour
     public Vector2 initDir;
 
     private RaycastHit2D hit;
-    private LineRenderer lineRenderer, lineRenderer2, lineRenderer3;
+    public LineRenderer lineRenderer, lineRenderer2, lineRenderer3;
     private Vector2 curDir, curDir2, curDir3;
     private Vector2 curPos, curPos2, curPos3;
-    private void Awake() {
-        lineRenderer = transform.GetChild(0).GetComponent<LineRenderer>();
-        lineRenderer2 = transform.GetChild(1).GetComponent<LineRenderer>();
-        lineRenderer3 = transform.GetChild(2).GetComponent<LineRenderer>();
-    }
     void Update()
     {
         MakeLaser();
@@ -28,6 +23,8 @@ public class MagiLaser : MonoBehaviour
         Vector3 initPos = transform.position + new Vector3(-3.0f,1.0f,0.0f);
         curDir = initDir;
         curPos = initPos;
+        lineRenderer2.positionCount = 1;
+        lineRenderer3.positionCount = 1;
         DrawLaser(curDir, curPos, lineRenderer);
     }
     private void MakeLaser2(Vector2 initDir2)
@@ -50,7 +47,8 @@ public class MagiLaser : MonoBehaviour
         lr.positionCount = 1;
         lr.SetPosition(0,pos);
         bool incomplete = true;
-        
+        bool tp1, tp2 = false;
+
         while(incomplete) {
             hit = Physics2D.Raycast(pos, dir, 40.0f, 4096);
             if(hit){
