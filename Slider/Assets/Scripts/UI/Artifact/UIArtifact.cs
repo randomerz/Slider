@@ -631,7 +631,7 @@ public class UIArtifact : Singleton<UIArtifact>
         }
     }
 
-    private void ClearMoveOptions()
+    protected void ClearMoveOptions()
     {
         foreach (ArtifactTileButton b in moveOptionButtons)
         {

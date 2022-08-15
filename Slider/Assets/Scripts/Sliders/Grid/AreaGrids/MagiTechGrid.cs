@@ -92,7 +92,7 @@ public class MagiTechGrid : SGrid
             filter.layerMask = LayerMask.GetMask("Item");
             filter.useLayerMask = true;
 
-            Collider2D[] list = new Collider2D[5]; //Change this to however many items can be put inside hungry boi's collider
+            List<Collider2D> list = new List<Collider2D>(); //Change this to however many items can be put inside hungry boi's collider
             collider.OverlapCollider(filter, list);
 
             bool hasBurger = false;
@@ -115,4 +115,6 @@ public class MagiTechGrid : SGrid
             c.SetSpec(false);
         }
     }
+
+
 }
