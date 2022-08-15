@@ -142,6 +142,7 @@ public class DesertGrid : SGrid
         {
             SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
             if (waitForZ != null) StopCoroutine(MokeZTimer());
+            checkMonkey = false;
         }
         else if (monkeyTile.isTileActive && e.stile == monkeyTile)
         {
