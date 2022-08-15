@@ -16,6 +16,11 @@ public class PowerCrystal : MonoBehaviour
         conveyors = GameObject.FindObjectsOfType<Conveyor>();
     }
 
+    public void CheckBlackout(Condition cond)
+    {
+        cond.SetSpec(Blackout);
+    }
+
     public void StartCrystalPoweredSequence()
     {
         AudioManager.StopMusic("Factory");
