@@ -7,6 +7,7 @@ public class MountainGrid : SGrid
     public int layerOffset; //the y offset of the top layer from the bottom (used to calculate top tile y position)
 
     [SerializeField] private MountainCaveWall mountainCaveWall;
+    [SerializeField] private GemMachine gemMachine;
 
     public Meltable iceRails;
 
@@ -90,6 +91,7 @@ public class MountainGrid : SGrid
     public void SetCrystalDelivered(bool value)
     {
         crystalDelivered = value;
+        SaveSystem.Current.SetBool("MountainCrystalDelivered", crystalDelivered);
     }
 
     public void CheckCrystalDelivery(Condition c)
@@ -103,16 +105,23 @@ public class MountainGrid : SGrid
 
     #region Save/Load
 
+    //C: for some reason the meltables save on their own but don't load
     public override void Save()
     {
         base.Save();
         mountainCaveWall.Save();
+        gemMachine.Save();
     }
 
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
         mountainCaveWall.Load(profile);
+        gemMachine.Load(profile);
+        crystalDelivered = profile.GetBool("MountainCrystalDelivered", crystalDelivered);
+        Meltable[] meltables = FindObjectsOfType<Meltable>();
+        foreach(Meltable m in meltables)
+            m.Load(profile);
     }
 
     #endregion

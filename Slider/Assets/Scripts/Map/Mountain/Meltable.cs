@@ -4,17 +4,16 @@ using UnityEngine;
 using UnityEngine.Events;
 
 
-public class Meltable : MonoBehaviour
+public class Meltable : MonoBehaviour, ISavable
 {
     [Header("Sprites")]
    // [SerializeField] private Animator animator; C: Will switch over later
     
-    public Sprite frozenSprite;
-    public Sprite meltedSprite;
-    public Sprite anchorBrokenSprite;
-    public SpriteRenderer spriteRenderer;
+    [SerializeField] private Sprite frozenSprite;
+    [SerializeField] private Sprite meltedSprite;
+    [SerializeField] private Sprite anchorBrokenSprite;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
-    public bool isFrozen = true;
 
     [Header("Events")]
     public UnityEvent onMelt;
@@ -24,15 +23,15 @@ public class Meltable : MonoBehaviour
 
 
     [Header("Properties")]
-    [SerializeField] private  bool canBreakWithAnchor = true;
-    [SerializeField] private  bool canBreakWhenNotFrozen = false;
-    [SerializeField] private  bool refreezeOnTop = true;
-    [SerializeField] private  bool refreezeFromBroken = false;
+    [SerializeField] private bool canBreakWithAnchor = true;
+    [SerializeField] private bool canBreakWhenNotFrozen = false;
+    [SerializeField] private bool refreezeOnTop = true;
+    [SerializeField] private bool refreezeFromBroken = false;
     [SerializeField] private bool fixBackToFrozen = false;
 
-
-    public int numLavaSources = 0;
-    public bool anchorBroken = false;
+    private bool isFrozen = true;
+    private int numLavaSources = 0;
+    private bool anchorBroken = false;
     private int numTimesBroken = 0;
     private STile sTile;
 
@@ -65,8 +64,8 @@ public class Meltable : MonoBehaviour
         return (!refreezeOnTop || sTile.y > 1) && (!anchorBroken || refreezeFromBroken) && numLavaSources <= 0;
     }
 
-    public void Break() {
-        if((isFrozen || canBreakWhenNotFrozen) && canBreakWithAnchor && !anchorBroken)
+    public void Break(bool fromLoad = false) {
+        if(fromLoad || ((isFrozen || canBreakWhenNotFrozen) && canBreakWithAnchor && !anchorBroken))
         {
             anchorBroken = true;
             numTimesBroken++;
@@ -78,9 +77,9 @@ public class Meltable : MonoBehaviour
         }
     }
 
-    public void Melt()
+    public void Melt(bool fromLoad = false)
     {
-        if(isFrozen && numLavaSources > 0) 
+        if(fromLoad || (isFrozen && numLavaSources > 0)) 
         {
             isFrozen = false;
             if(spriteRenderer)
@@ -90,9 +89,9 @@ public class Meltable : MonoBehaviour
         }
     }
 
-    public void Freeze()
+    public void Freeze(bool fromLoad = false)
     {
-        if(!isFrozen)
+        if(fromLoad || !isFrozen)
         {
             isFrozen = true;
             if(spriteRenderer)
@@ -111,7 +110,7 @@ public class Meltable : MonoBehaviour
             if(fixBackToFrozen)
                 Freeze();
             else if(spriteRenderer)
-                spriteRenderer.sprite = frozenSprite;
+                spriteRenderer.sprite = meltedSprite;
             onFix.Invoke();
         }
     }
@@ -125,6 +124,26 @@ public class Meltable : MonoBehaviour
     {
         numLavaSources++;
         Melt();
+    }
+
+    public void Save()
+    {
+        Debug.Log("Saving " + gameObject.name);
+        SaveSystem.Current.SetBool(gameObject.name + " frozen", isFrozen);
+        SaveSystem.Current.SetBool(gameObject.name + " broken", anchorBroken);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        Debug.Log("loading " + gameObject.name);
+        isFrozen = profile.GetBool(gameObject.name + " frozen", true);
+        anchorBroken = profile.GetBool(gameObject.name + " broken");
+        if(isFrozen)
+            Freeze(true);
+        else if(anchorBroken)
+            Break(true);
+        else
+            Melt(true);
     }
 
     public void IsFrozen(Condition c) {
