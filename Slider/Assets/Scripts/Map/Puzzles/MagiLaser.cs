@@ -32,13 +32,17 @@ public class MagiLaser : MonoBehaviour
     }
     private void MakeLaser2(Vector2 initDir2)
     {
-        
-        Vector3 initPos2 = GameObject.FindWithTag("Portal2").transform.position + (Vector3)(initDir2*0.8f);
-        
+        Vector3 initPos2 = GameObject.FindWithTag("Portal2").transform.position + (Vector3)(initDir2*0.8f); 
         curDir2 = initDir2;
         curPos2 = initPos2;
-
         DrawLaser(curDir2, curPos2, lineRenderer2);
+    }
+    private void MakeLaser3(Vector2 initDir3)
+    {
+        Vector3 initPos3 = GameObject.FindWithTag("Portal1").transform.position + (Vector3)(initDir3*0.8f); 
+        curDir3 = initDir3;
+        curPos3 = initPos3;
+        DrawLaser(curDir3, curPos3, lineRenderer3);
     }
 
     private void DrawLaser(Vector2 dir, Vector2 pos, LineRenderer lr) 
@@ -62,6 +66,7 @@ public class MagiLaser : MonoBehaviour
                     MakeLaser2(dir);
                     incomplete = false;
                 } else if(hit.collider.tag == "Portal2") {
+                    MakeLaser3(dir);
                     incomplete = false;
                 } else {
                     incomplete = false;
@@ -74,26 +79,10 @@ public class MagiLaser : MonoBehaviour
         }
     }
     private Vector2 MirrorOneReflect(Vector2 dir) {
-        if(dir ==  Vector2.up){
-            return Vector2.right;
-        } else if(dir ==  Vector2.right){
-            return Vector2.up;
-        } else if(dir ==  Vector2.down){
-            return Vector2.left;
-        } else {
-            return Vector2.down;
-        }
+        return new Vector2(dir.y, dir.x);
     }
     private Vector2 MirrorTwoReflect(Vector2 dir){
-        if(dir ==  Vector2.up){
-            return Vector2.left;
-        } else if(dir ==  Vector2.right){
-            return Vector2.down;
-        } else if(dir ==  Vector2.down){
-            return Vector2.right;
-        } else {
-            return Vector2.up;
-        }
+        return new Vector2(-dir.y, -dir.x);
     }
 }
 
