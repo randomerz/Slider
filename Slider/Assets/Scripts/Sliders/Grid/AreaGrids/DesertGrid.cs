@@ -138,16 +138,17 @@ public class DesertGrid : SGrid
     public void CheckMonkeyShakeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         STile monkeyTile = Current.GetStile(3);
-        if (monkeyTile.isTileActive && e.stile == monkeyTile)
-        {
-            zlist[monkeShake].SetActive(false);
-            monkeShake++;
-            if (waitForZ == null) waitForZ = StartCoroutine(MokeZTimer()); //First shake starts countdown timer. waitForZ should be null if monkeShake is 0
-        }
         if (monkeShake >= 3)
         {
             SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
             if (waitForZ != null) StopCoroutine(MokeZTimer());
+        }
+        else if (monkeyTile.isTileActive && e.stile == monkeyTile)
+        {
+            Debug.Log(monkeShake);
+            zlist[monkeShake].SetActive(false);
+            monkeShake++;
+            if (waitForZ == null) waitForZ = StartCoroutine(MokeZTimer()); //First shake starts countdown timer. waitForZ should be null if monkeShake is 0
         }
     }
 
