@@ -29,8 +29,8 @@ public class Meltable : MonoBehaviour, ISavable
     [SerializeField] private bool refreezeFromBroken = false;
     [SerializeField] private bool fixBackToFrozen = false;
 
-    private bool isFrozen = true;
-    private int numLavaSources = 0;
+    public bool isFrozen = true;
+    public int numLavaSources = 0;
     private bool anchorBroken = false;
     private int numTimesBroken = 0;
     private STile sTile;
@@ -47,6 +47,8 @@ public class Meltable : MonoBehaviour, ISavable
 
     public void CheckFreezeOnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        if(e.stile == null)
+            Debug.Log("meltable null STile from move " + gameObject.name);
         if(e.stile == sTile)
             StartCoroutine(WaitThenCheckFreeze());
     }
@@ -54,7 +56,7 @@ public class Meltable : MonoBehaviour, ISavable
     //C: timing/collider jank
     IEnumerator WaitThenCheckFreeze() 
     {
-        yield return new WaitForSeconds(0.02f);
+        yield return new WaitForSeconds(0.03f);
         if(CheckFreeze())
                 Freeze();
     }
@@ -128,14 +130,12 @@ public class Meltable : MonoBehaviour, ISavable
 
     public void Save()
     {
-        Debug.Log("Saving " + gameObject.name);
         SaveSystem.Current.SetBool(gameObject.name + " frozen", isFrozen);
         SaveSystem.Current.SetBool(gameObject.name + " broken", anchorBroken);
     }
 
     public void Load(SaveProfile profile)
     {
-        Debug.Log("loading " + gameObject.name);
         isFrozen = profile.GetBool(gameObject.name + " frozen", true);
         anchorBroken = profile.GetBool(gameObject.name + " broken");
         if(isFrozen)

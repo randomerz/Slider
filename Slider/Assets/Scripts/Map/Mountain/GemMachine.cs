@@ -55,7 +55,11 @@ public class GemMachine : MonoBehaviour, ISavable
 
     public void Load(SaveProfile profile)
     {
-        numGems = int.Parse(profile.GetString("MountainNumGems"));
+        string temp = profile.GetString("MountainNumGems");
+        if (temp.Equals("MountainNumGems"))
+            numGems = 0;
+        else
+            numGems = int.Parse(profile.GetString("MountainNumGems"));
     }
 
     public void CheckHasCrystals(Condition c){
