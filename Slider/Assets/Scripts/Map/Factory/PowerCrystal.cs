@@ -34,7 +34,7 @@ public class PowerCrystal : MonoBehaviour
         Blackout = false;
         foreach (var node in allNodes)
         {
-            if (!FactoryGrid.IsInPast(node.gameObject))
+            if (node != null && !FactoryGrid.IsInPast(node.gameObject))
             {
                 node.OnPowered?.Invoke(new ElectricalNode.OnPoweredArgs { powered = node.Powered });
             }

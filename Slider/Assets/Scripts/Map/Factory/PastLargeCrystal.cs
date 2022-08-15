@@ -15,11 +15,11 @@ public class PastLargeCrystal : ConductiveElectricalNode
 
     public void BTTFStarter()
     {
-        CameraShake.ShakeIncrease(1.0f, 0.5f);
+        CameraShake.ShakeIncrease(3.0f, 0.5f);
         UIEffects.FadeToWhite(() =>
         {
             StartCoroutine(BackToTheFuture());
-        }, 2.0f, false);
+        }, 3.0f, false);
     }
 
     private IEnumerator BackToTheFuture()
