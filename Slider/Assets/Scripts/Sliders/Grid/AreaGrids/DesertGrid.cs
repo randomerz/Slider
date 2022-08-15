@@ -149,26 +149,20 @@ public class DesertGrid : SGrid
             Debug.Log(monkeShake);
             zlist[monkeShake].SetActive(false);
             monkeShake++;
-            if (waitForZ == null) waitForZ = StartCoroutine(MokeZTimer()); //First shake starts countdown timer. waitForZ should be null if monkeShake is 0
+            if (waitForZ != null) StopCoroutine(MokeZTimer());
+            waitForZ = StartCoroutine(MokeZTimer()); //First shake starts countdown timer. waitForZ should be null if monkeShake is 0
         }
     }
 
     private IEnumerator MokeZTimer()
     {
         float time = 0f;
-        int temp = 0;
         while (monkeShake > 0 && monkeShake < 3) //This is OMEGA SUS but 
         {
             time += Time.deltaTime;
-            if (temp < monkeShake) //If monkeShake has changed, reset timer
-            {
-                time = 0f;
-                temp = monkeShake;
-            }
-            if (time >= 2f)
+            if (time >= 3f)
             {
                 monkeShake = monkeShake == 0 ? 0 : monkeShake - 1;
-                temp = monkeShake;
                 zlist[monkeShake].SetActive(true);
                 time = 0f;
             }
