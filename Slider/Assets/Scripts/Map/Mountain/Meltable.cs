@@ -38,19 +38,19 @@ public class Meltable : MonoBehaviour, ISavable
 
     private void OnEnable() {
         sTile = GetComponentInParent<MountainSTile>();
-        SGridAnimator.OnSTileMoveEnd += CheckFreezeOnMoveEnd;
+        SGridAnimator.OnSTileMoveEndEarly += CheckFreezeOnMoveEnd; //C: Has to be early + delay or else tile in args is null
     }
 
     private void OnDisable() {
-        SGridAnimator.OnSTileMoveEnd -= CheckFreezeOnMoveEnd;
+        SGridAnimator.OnSTileMoveEndEarly -= CheckFreezeOnMoveEnd;
     }
 
     public void CheckFreezeOnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if(e.stile == null)
             Debug.Log("meltable null STile from move " + gameObject.name);
-        if(e.stile == sTile)
-            StartCoroutine(WaitThenCheckFreeze());
+        if(e.stile == sTile){ //Debug.Log("same stile " + gameObject.name);
+            StartCoroutine(WaitThenCheckFreeze());}
     }
 
     //C: timing/collider jank
