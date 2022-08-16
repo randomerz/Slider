@@ -65,4 +65,8 @@ public class GemMachine : MonoBehaviour, ISavable
     public void CheckHasCrystals(Condition c){
         c.SetSpec(isDone);
     }
+
+    public void CheckIsPowered(Condition c){
+        c.SetSpec(isPowered);
+    }
 }

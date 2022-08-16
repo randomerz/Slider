@@ -80,7 +80,8 @@ public class MountainGrid : SGrid
 
     private void CheckTile7Spawn()
     {
-        if(GetTileAt(0,0).islandId == 7 || GetTileAt(0,0).islandId == 8 )
+        Debug.Log("Checking t7");
+        if(GetTileAt(0,0).islandId == 7 || GetTileAt(1,2).islandId == 8) //C: this only works with the "right" setup, need to antisoftlock fully
             return;
         SwapTiles(GetStile(7), GetStile(8));
     }
