@@ -22,6 +22,17 @@ public class SGridAnimator : MonoBehaviour
     private float currMoveDuration = 1f;
 
 
+    private void OnEnable() {
+        OnSTileMoveStart += LogStile;
+    }
+    private void OnDisable() {
+        OnSTileMoveStart -= LogStile;
+    }
+
+    public void LogStile(object Sender, OnTileMoveArgs e){
+        Debug.Log("Calling events for tile " + e.stile.islandId + " move");
+    }
+
     public void ChangeMovementDuration(float value)
     {
         movementDuration = value;
@@ -81,6 +92,8 @@ public class SGridAnimator : MonoBehaviour
         {
             stile.SetBorderColliders(true);
         }
+
+        Debug.Log("started move for stile " + stile.islandId);
 
         OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
         {

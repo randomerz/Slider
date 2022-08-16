@@ -21,7 +21,6 @@ public class DebugUIManager : MonoBehaviour
     public GameObject anchorPrefab;
     public GameObject minecartPrefab;
 
-    private bool playerCouldMove;
 
     private void Awake()
     {
@@ -52,7 +51,6 @@ public class DebugUIManager : MonoBehaviour
             UIManager.PauseGameGlobal();
             UIManager.canOpenMenus = false;
 
-            playerCouldMove = Player.GetCanMove();
             Player.SetCanMove(false);
 
             consoleText.Select();
@@ -64,8 +62,6 @@ public class DebugUIManager : MonoBehaviour
         {
             UIManager.CloseUI();
             UIManager.canOpenMenus = true;
-
-            Player.SetCanMove(playerCouldMove);
         }
     }
 
@@ -256,7 +252,7 @@ public class DebugUIManager : MonoBehaviour
     {
         SGrid.Current.ActivateAllCollectibles(true);
     }
-    
+
     public void DebugFactoryPast()
     {
         if (SGrid.Current.GetArea() != Area.Factory)

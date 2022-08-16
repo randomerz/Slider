@@ -66,13 +66,16 @@ public class Minecart : Item
     private void OnDisable()
     {
         SGridAnimator.OnSTileMoveStart -= OnMoveStart;
-        SGridAnimator.OnSTileMoveEnd += OnMoveEnd;
+        SGridAnimator.OnSTileMoveEnd -= OnMoveEnd;
     }
 
-    private void OnMoveStart(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs)
+    private void OnMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(tileMoveArgs.stile = currentSTile)
+        if(currentSTile == null || e.stile == null)
+            return;
+        if(e.stile = currentSTile)
         {
+            Debug.Log("Minecart stopped because tile " + e.stile.islandId + " was moved");
             if(isMoving)
                 Derail();
             else
