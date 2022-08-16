@@ -47,7 +47,6 @@ public class FactoryArtifact : UIArtifact
 
         SwapButtonsBasedOnMove(move);
 
-
         moveQueue = new Queue<SMove>(newMoveQueue);
         base.ProcessQueue();
     }
