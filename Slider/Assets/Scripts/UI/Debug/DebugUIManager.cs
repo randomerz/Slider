@@ -62,6 +62,7 @@ public class DebugUIManager : MonoBehaviour
         {
             UIManager.CloseUI();
             UIManager.canOpenMenus = true;
+            Player.SetCanMove(true);
         }
     }
 

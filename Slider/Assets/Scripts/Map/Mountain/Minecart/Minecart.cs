@@ -9,7 +9,7 @@ public class Minecart : Item
     [SerializeField] private int currentDirection;
     public RailManager railManager;
     [SerializeField] private bool isOnTrack;
-    public bool isMoving {get; private set;} = false;
+    [SerializeField] public bool isMoving {get; private set;} = false;
     private bool canStartMoving = true;
     [SerializeField] public RailTile currentTile;
     [SerializeField] public RailTile targetTile;
@@ -19,6 +19,8 @@ public class Minecart : Item
     public STile currentSTile;
     public MinecartState mcState;
 
+    [SerializeField] private bool dropOnNextMove = false;
+    [SerializeField] private RailManager savedRM = null;
 
     public Vector3Int currentTilePos;
     public Vector3Int targetTilePos; 
@@ -112,7 +114,6 @@ public class Minecart : Item
 
         if(hitTile != null) //Use Stile RM
         {
-            Debug.Log('2');
             Tilemap railmap = hitTile.allTileMaps.GetComponentInChildren<STileTilemap>().minecartRails;
             railManager = railmap.GetComponent<RailManager>();
             if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation))) //C: If this is dropped onto rails, it will snap into position (change to station only later?)
@@ -129,7 +130,6 @@ public class Minecart : Item
         }
         else if(borderRM) //use border RM
         {
-            Debug.Log("amogus");
             railManager = borderRM;
             Tilemap railmap = borderRM.railMap;
 
@@ -140,7 +140,6 @@ public class Minecart : Item
             }
             else
                 StartCoroutine(AnimateDrop(dropLocation, callback));
-            //decouple from RM
             UpdateParentBorder();
             currentSTile = null;
         }
@@ -161,9 +160,9 @@ public class Minecart : Item
 
     private void OnCollisionEnter2D(Collision2D other) 
     {
-        if(other.gameObject.layer == 14) //C: 14 is MinecartIgnore
+        if(other.gameObject.layer == 14 || other.gameObject.tag.Equals("McIgnore")) //C: 14 is MinecartIgnore
             return;
-        Debug.Log("bonk");
+        Debug.Log("bonk " + other.gameObject.name);
         StopMoving(true);
     }
 
@@ -236,6 +235,18 @@ public class Minecart : Item
 
     private void GetNextTile()
     {
+        if(dropOnNextMove)
+        {
+            Debug.Log("dropped");
+            Vector3Int targetLoc = savedRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
+            railManager = savedRM;
+            transform.position += (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
+            SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)); 
+            UpdateParent();
+            dropOnNextMove = false;
+            savedRM = null;
+            return;
+        }
         currentTile = targetTile;
         currentTilePos = targetTilePos;
         targetTilePos = currentTilePos + GetTileOffsetVector(currentDirection);
@@ -287,16 +298,20 @@ public class Minecart : Item
                 return;
             }
         }
-        foreach(RailManager rm in rmList) //look and see if the next location overlaps with a location of a rail on another STile
+        foreach(RailManager rm in rmList) //check dropping down
         {
             targetLoc = rm.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
             //C: Check if the minecart can drop down to the tile below. Needs to be in seperate loop so will check after trying all non-drops first
-             if(MountainGrid.Instance && rm.railLocations.Contains(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)))
+            if(MountainGrid.Instance && rm.railLocations.Contains(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)))
             {
-                    railManager = rm;
-                    transform.position += (getDirectionAsVector(currentDirection) + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
-                    SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)); //give seperate method for between layers?
-                    UpdateParent();
+                dropOnNextMove = true;
+                savedRM = rm;
+                targetWorldPos += getDirectionAsVector(currentDirection);
+
+                  //  railManager = rm;
+                    //transform.position += (getDirectionAsVector(currentDirection) + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
+                   // SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)); //give seperate method for between layers?
+                    //UpdateParent();
                     return;
             }
         }
@@ -365,25 +380,6 @@ public class Minecart : Item
 
     }
 
-
-    #region Player
-    
-
-    public void OnPlayerEnterMinecart()
-    {
-        Player.SetCanMove(false);
-        Player.SetPosition(playerPos.position);
-        Player.SetParent(playerPos);
-    }
-
-    public void OnPlayerExitMinecart()
-    {
-        Player.SetCanMove(true);
-    }
-
-
-
-    #endregion
 
     #region Utility
 

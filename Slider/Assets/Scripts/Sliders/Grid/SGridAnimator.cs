@@ -93,7 +93,6 @@ public class SGridAnimator : MonoBehaviour
             stile.SetBorderColliders(true);
         }
 
-        Debug.Log("started move for stile " + stile.islandId);
 
         OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
         {
@@ -102,7 +101,6 @@ public class SGridAnimator : MonoBehaviour
             smove = move
         });
 
-        Debug.Log("2 started move for stile " + stile.islandId);
 
 
         EffectOnMoveStart(move is SMoveConveyor);
@@ -145,25 +143,6 @@ public class SGridAnimator : MonoBehaviour
         });
         EffectOnMoveFinish();
     }
-
-    // dc: next person who finds this can delete is bye bye o/
-    //protected void InvokeOnStileMoveStart(STile stile, Movement moveCoords, SMove move) {
-    //    OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
-    //    {
-    //        stile = stile,
-    //        prevPos = moveCoords.startLoc,
-    //        smove = move
-    //    });
-    //}
-
-    //protected void InvokeOnStileMoveEnd(STile stile, Movement moveCoords, SMove move) {
-    //    OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
-    //    {
-    //        stile = stile,
-    //        prevPos = moveCoords.startLoc,
-    //        smove = move
-    //    });
-    //}
 
     // DC: this is a lot of parameters :)
     protected IEnumerator DisableBordersAndColliders(
