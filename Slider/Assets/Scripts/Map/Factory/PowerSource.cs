@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerBox : ElectricalNode
+public class PowerSource : ElectricalNode
 {
-    [Header("Power Box")]
+    [Header("Power Source")]
     [SerializeField] SpriteSwapper swapper;
     private new void Awake()
     {
@@ -20,12 +20,17 @@ public class PowerBox : ElectricalNode
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
         base.OnPoweredHandler(e);
-        if (e.powered)
+
+        if (swapper != null)
         {
-            swapper?.TurnOn();
-        } else
-        {
-            swapper?.TurnOff();
+            if (e.powered)
+            {
+                swapper?.TurnOn();
+            }
+            else
+            {
+                swapper?.TurnOff();
+            }
         }
     }
 }

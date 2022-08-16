@@ -134,6 +134,11 @@ public class ArtifactTileButton : MonoBehaviour
         emptySprite = emptySpriteDefault;
     }
 
+    public void SetIslandSprite(Sprite s)
+    {
+        islandSprite = s;
+    }
+
     public void SetEmptySprite(Sprite s)
     {
         emptySprite = s;
