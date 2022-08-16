@@ -71,9 +71,10 @@ public class Minecart : Item
 
     private void OnMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        Debug.Log("MC check for tile " + e.stile.islandId);
         if(currentSTile == null || e.stile == null)
             return;
-        if(e.stile = currentSTile)
+        if(e.stile == currentSTile)
         {
             Debug.Log("Minecart stopped because tile " + e.stile.islandId + " was moved");
             if(isMoving)

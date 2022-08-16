@@ -102,6 +102,9 @@ public class SGridAnimator : MonoBehaviour
             smove = move
         });
 
+        Debug.Log("2 started move for stile " + stile.islandId);
+
+
         EffectOnMoveStart(move is SMoveConveyor);
 
         float t = 0;
