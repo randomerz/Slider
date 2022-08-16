@@ -104,6 +104,12 @@ public class ChadJump : MonoBehaviour
     private IEnumerator Fall()
     {
         jumpState = JumpState.FALLING;
+        
+        foreach(AnimatorControllerParameter p in npcAnimator.parameters)
+        {
+            npcAnimator.SetBool(p.name, false);
+        }
+
         npcAnimator.SetBool("isTipping", true);
 
         yield return new WaitForSeconds(0.5f);
@@ -137,7 +143,18 @@ public class ChadJump : MonoBehaviour
         }
     }
 
-    private void FinishFall()
+    public void ResetJump()
+    {
+        jumpState = JumpState.STANDING;
+
+        foreach (AnimatorControllerParameter p in npcAnimator.parameters)
+        {
+            npcAnimator.SetBool(p.name, false);
+        }
+
+    }
+
+    public void FinishFall()
     {
         npcCollider.enabled = true;
         flashlightItem?.SetCollider(true);
@@ -145,6 +162,21 @@ public class ChadJump : MonoBehaviour
 
     public void ChadFell(Condition cond)
     {
-        cond.SetSpec(jumpState == JumpState.FELL || PlayerInventory.Contains("Flashlight"));
+        cond.SetSpec(ChadFell());
+    }
+
+    public bool ChadFell()
+    {
+        return jumpState == JumpState.FELL || PlayerInventory.Contains("Flashlight");
+    }
+
+    public bool ChadFalling()
+    {
+        return jumpState == JumpState.FALLING;
+    }
+
+    public bool ChadJumped()
+    {
+        return jumpState == JumpState.JUMPED;
     }
 }

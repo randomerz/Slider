@@ -32,7 +32,7 @@ public class FezziwigOceanPuzzle : MonoBehaviour
 
         yield return new WaitUntil(() => oceanArtifact.MoveQueueEmpty());
 
-        StartCoroutine(jumpScript.Jump());
+        jumpScript.JumpStarter();
 
         yield return new WaitUntil(() => jumpScript.ChadJumped());
 
