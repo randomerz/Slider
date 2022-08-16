@@ -499,6 +499,14 @@ public class OceanGrid : SGrid
         AudioManager.Play("Slide Explosion");
     }
 
+    public void SpawnFezziwigReward() {
+        Collectible c = GetCollectible("Strawberry");
+        if (!PlayerInventory.Contains(c)) {
+            c.gameObject.SetActive(true);
+            AudioManager.Play("Puzzle Complete");
+        }
+    }
+
     private void SetProgressRingActive(bool active)
     {
         foreach (SpriteRenderer note in progressNotes)

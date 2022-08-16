@@ -42,7 +42,7 @@ public class ServerComputer : MonoBehaviour
     #endregion
 
     #region Send Player To Past
-    private void StartSendToPastEvent()
+    public void StartSendToPastEvent()
     {
         UIEffects.FadeToWhite( () =>
         {
@@ -52,19 +52,29 @@ public class ServerComputer : MonoBehaviour
 
     private IEnumerator SendToPastThenFadeIn()
     {
-        SpawnPlayerInPast();
         yield return new WaitForSeconds(2.0f);
+        SpawnPlayerInPast();
         UIEffects.FadeFromWhite();
     }
 
     private void SpawnPlayerInPast()
     {
+        //Disable anchors so they don't interefere with the past section.
+        Anchor[] anchors = FindObjectsOfType<Anchor>(); 
+        foreach (var anchor in anchors)
+        {
+            anchor.UnanchorTile();
+            anchor.gameObject.SetActive(false);
+        }
+
         foreach (GameObject go in pastTileMaps)
         {
             go.SetActive(true);
         }
 
         ppChanger.UPPTransform();
+
+        FactoryLightManager.SwitchLights(true);
     }
     #endregion
 }

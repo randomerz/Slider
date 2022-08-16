@@ -1,15 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-//L: Used to handle queue interrupts with conveyors and separate process queue things.
 public class FactoryArtifact : UIArtifact
 {
+    [SerializeField] private Image background;
+    [SerializeField] private Sprite pastBackgroundSprite;
+    [SerializeField] private Sprite presentBackgroundSprite;
     public static bool DequeueLocked = false;
+
+    private bool usingPastButtons = false;
 
     private new void Awake()
     {
         base.Awake();
+    }
+
+    private void Update()
+    {
+        bool playerInPast = FactoryGrid.IsInPast(Player.GetInstance().gameObject);
+        if (usingPastButtons != playerInPast)
+        {
+            usingPastButtons = playerInPast;
+            UpdateButtonSpritesAndBackground(playerInPast);
+        }
     }
 
     public override void ProcessQueue()
@@ -93,5 +108,23 @@ public class FactoryArtifact : UIArtifact
         }
 
         UpdateMoveOptions();
+    }
+
+    private void UpdateButtonSpritesAndBackground(bool inPast)
+    {
+        foreach (var b in buttons)
+        {
+            if (inPast)
+            {
+                b.GetComponent<ArtifactTBPluginPast>().UsePastSprite();
+                b.UseDefaultEmptySprite();
+            } else
+            {
+                b.UseDefaultIslandSprite();
+                b.GetComponent<ArtifactTBPluginConveyor>().UpdateEmptySprite();
+            }
+            b.SetSpriteToIslandOrEmpty();
+        }
+        background.sprite = inPast ? pastBackgroundSprite : presentBackgroundSprite;
     }
 }

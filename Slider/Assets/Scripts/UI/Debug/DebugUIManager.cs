@@ -256,6 +256,17 @@ public class DebugUIManager : MonoBehaviour
     {
         SGrid.Current.ActivateAllCollectibles(true);
     }
+    
+    public void DebugFactoryPast()
+    {
+        if (SGrid.Current.GetArea() != Area.Factory)
+        {
+            Debug.LogWarning("FactoryPastDebug is only valid while in the Factory area.");
+        } else
+        {
+            StartCoroutine(FactoryGrid.SendPlayerToPastDebugSequence(this));
+        }
+    }
 
     //C: make sure pattern is the same length as the current sgrid
     public void SetGrid(string pattern)

@@ -516,7 +516,12 @@ public class UIArtifact : Singleton<UIArtifact>
 
     public void MoveQueueEmpty(Condition c)
     {
-        c.SetSpec(moveQueue.Count == 0 && activeMoves.Count == 0);
+        c.SetSpec(MoveQueueEmpty());
+    }
+
+    public bool MoveQueueEmpty()
+    {
+        return moveQueue.Count == 0 && activeMoves.Count == 0;
     }
 
     private bool CheckMoveHasAnActiveTile(SMove move)
@@ -631,7 +636,7 @@ public class UIArtifact : Singleton<UIArtifact>
         }
     }
 
-    private void ClearMoveOptions()
+    protected void ClearMoveOptions()
     {
         foreach (ArtifactTileButton b in moveOptionButtons)
         {

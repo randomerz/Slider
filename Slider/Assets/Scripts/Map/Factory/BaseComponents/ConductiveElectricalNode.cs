@@ -6,6 +6,22 @@ public class ConductiveElectricalNode : ElectricalNode
 {
     [Header("Conductive Electrical Node")]
     [SerializeField] private bool isConductiveItem;
+    [SerializeField] private bool ignoreNotMovingCheck;
+
+    public struct NodeEventArgs
+    {
+        public ConductiveElectricalNode from;
+        public ConductiveElectricalNode to;
+
+        public NodeEventArgs(ConductiveElectricalNode from, ConductiveElectricalNode to)
+        {
+            this.from = from;
+            this.to = to;
+        }
+    }
+
+    public static event System.EventHandler<NodeEventArgs> onAddNode;
+    public static event System.EventHandler<NodeEventArgs> onRemoveNode;
 
     private new void Awake()
     {
@@ -17,11 +33,15 @@ public class ConductiveElectricalNode : ElectricalNode
         ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
 
         //Disallow connections btw 2 conductive items (for now)
-        if (other != null && !(isConductiveItem && other.isConductiveItem))
+        if (other != null)
         {
-            if (AddNeighbor(other) && other is WirePilon)
+            bool bothConductiveItems = isConductiveItem && other.isConductiveItem;
+            if (BothNodesNotMoving(other) && !bothConductiveItems)
             {
-                (other as WirePilon).AddConductingNode(this);
+                if (AddNeighbor(other))
+                {
+                    onAddNode?.Invoke(this, new NodeEventArgs(this, other));
+                }
             }
         }
     }
@@ -36,9 +56,9 @@ public class ConductiveElectricalNode : ElectricalNode
         ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
         if (other != null)
         {
-            if (RemoveNeighbor(other) && other is WirePilon)
+            if (RemoveNeighbor(other))
             {
-                (other as WirePilon).RemoveConductingNode(this);
+                onRemoveNode?.Invoke(this, new NodeEventArgs(this, other));
             }
         }
     }
@@ -50,6 +70,11 @@ public class ConductiveElectricalNode : ElectricalNode
 
     protected bool BothNodesNotMoving(ConductiveElectricalNode other)
     {
+        if (ignoreNotMovingCheck)
+        {
+            return true;
+        }
+
         STile thisStile = GetComponentInParent<STile>();
         STile otherStile = other.GetComponentInParent<STile>();
 
