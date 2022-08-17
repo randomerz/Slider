@@ -136,7 +136,7 @@ public class SGridAnimator : MonoBehaviour
     }
 
 
-    protected IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders)
+    protected IEnumerator DisableBordersAndColliders(STile[,] grid, SGridBackground[,] bgGrid, HashSet<Vector2Int> positions, Dictionary<Vector2Int, List<int>> borders, List<Coroutine> moveCoroutines)
     {
         foreach (Vector2Int p in borders.Keys)
         {
