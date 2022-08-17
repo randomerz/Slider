@@ -1,5 +1,5 @@
 # Slider
-Unity 2020.3.26f
+Unity 2021.3.6f
 
 ![Image](production/steam/vgdev_demo_temp/main_capsule_temp.png?raw=true "Title")
 

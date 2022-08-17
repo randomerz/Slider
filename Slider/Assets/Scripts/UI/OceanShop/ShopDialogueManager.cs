@@ -534,7 +534,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "Tales tell of a song of three whole verses needed to navigate it. Think it started went \"West, South, West,\" but I forgot the rest. Maybe others remember.",
+                    "Tales tell of a song of three whole verses needed to navigate it. Think it started went \"West, South,\" but I forgot the rest. Maybe others remember.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;

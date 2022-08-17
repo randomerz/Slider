@@ -16,15 +16,11 @@ public class OceanGrid : SGrid
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
 
-
     private Vector2Int[] correctPath =
     {
         Vector2Int.left,
         Vector2Int.down,
         Vector2Int.left,
-        Vector2Int.up,
-        Vector2Int.left,
-        Vector2Int.down,
         Vector2Int.left,
         Vector2Int.up,
         Vector2Int.left,
@@ -36,6 +32,11 @@ public class OceanGrid : SGrid
     public GameObject fog7;
     public GameObject fogIsland;
 
+    [Header("Foggy Progress Notes")]
+    [SerializeField] private List<SpriteRenderer> progressNotes;
+    [SerializeField] private Sprite emptyNote, fullNote;
+    [SerializeField] private GameObject sparklePrefab;
+
     public override void Init()
     {
         InitArea(Area.Ocean);
@@ -46,7 +47,6 @@ public class OceanGrid : SGrid
     protected override void Start()
     {
         base.Start();
-
         burriedGuyNPC.SetActive(false);
         fogIsland.SetActive(false);
 
@@ -54,6 +54,11 @@ public class OceanGrid : SGrid
         AudioManager.PlayMusic("Ocean Tavern", false); // for FMOD effects
         AudioManager.PlayMusic("Ocean uwu", false); // for FMOD effects
         UIEffects.FadeFromBlack();
+
+        foreach (SpriteRenderer note in progressNotes)
+        {
+            note.enabled = false;
+        }
 
     }
 
@@ -168,7 +173,7 @@ public class OceanGrid : SGrid
 
 
     // === Ocean puzzle specific ===
-#region Ocean Puzzles
+
     public void CheckShipwreck(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (IsShipwreckAdjacent())
@@ -301,6 +306,7 @@ public class OceanGrid : SGrid
         {
             fogIsland.transform.position = Player.GetStileUnderneath().transform.position;
             fogIsland.SetActive(true);
+            SetProgressRingActive(false);
 
             if (Player.GetStileUnderneath().islandId == 6)
             {
@@ -314,7 +320,6 @@ public class OceanGrid : SGrid
         }
     }
 
-#endregion
     private void updatePlayerMovement()
     {
 
@@ -324,16 +329,22 @@ public class OceanGrid : SGrid
         }
 
         int currentIslandId = Player.GetStileUnderneath().islandId;
-
+        if ((currentIslandId == 6 || currentIslandId == 7) && !FoggyCompleted())
+        {
+            SetProgressRingActive(true);
+        }
         if (currentIslandId != lastIslandId && (lastIslandId == 6 || lastIslandId == 7))
         {
+
             fog7.SetActive(true);
             fog6.SetActive(true);
             fogIsland.SetActive(false);
+            //SetProgressRingActive(true);
 
             if (currentIslandId != 6 && currentIslandId != 7)
             {
                 failFoggy();
+                SetProgressRingActive(false);
             }
             else
             {
@@ -365,6 +376,7 @@ public class OceanGrid : SGrid
         {
             playerIndex++;
             FoggySeasAudio();
+            progressNotes[playerIndex - 1].sprite = fullNote;
         }
         else
         {
@@ -382,11 +394,19 @@ public class OceanGrid : SGrid
 
         playerIndex = 0;
         AudioManager.SetMusicParameter("Ocean", "OceanFoggyProgress", 0);
+        foreach (SpriteRenderer note in progressNotes)
+        {
+            if (note.sprite.Equals(fullNote))
+            {
+                Instantiate(sparklePrefab, note.gameObject.transform.position, Quaternion.identity);
+            }
+            note.sprite = emptyNote;
+        }
     }
 
     public bool FoggyCompleted()
     {
-        return playerIndex == 9;
+        return playerIndex == 6;
     }
 
     // Final puzzle
@@ -470,5 +490,26 @@ public class OceanGrid : SGrid
         treesToJungle.SetActive(false);
         CameraShake.Shake(1, 2);
         AudioManager.Play("Slide Explosion");
+    }
+
+    public void SpawnFezziwigReward() {
+        Collectible c = GetCollectible("Strawberry");
+        if (!PlayerInventory.Contains(c)) {
+            c.gameObject.SetActive(true);
+            AudioManager.Play("Puzzle Complete");
+        }
+    }
+
+    private void SetProgressRingActive(bool active)
+    {
+        foreach (SpriteRenderer note in progressNotes)
+        {
+            note.enabled = active;
+            if (!active)
+            {
+
+                Instantiate(sparklePrefab, note.gameObject.transform.position, Quaternion.identity);
+            }
+        }
     }
 }

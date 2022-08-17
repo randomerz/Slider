@@ -32,6 +32,8 @@ public class TimedGate : ElectricalNode
 
     public bool GateActive => gateActive;
 
+    public int Countdown => countdown;
+
     public override bool Powered
     {
         get
@@ -117,7 +119,7 @@ public class TimedGate : ElectricalNode
             queuedNextSprite = countdownSprite[numTurns];
 
             bool oldPowered = Powered;
-            foreach (ElectricalNode input in powerPathPrevs)
+            foreach (ElectricalNode input in powerPathPrevs.Keys)
             {
                 //Add all the nodes that were already connected to the gate when it was turned on.
                 inputsPowered.Add(input);

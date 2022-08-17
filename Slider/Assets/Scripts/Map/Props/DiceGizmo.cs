@@ -26,34 +26,29 @@ public class DiceGizmo : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
     }
 
-    private void Update()
-    {
-        if (myStile.hasAnchor)
-        {
-            value = 1;
-        }
-    }
-
     private void OnEnable()
     {
         if (myStile != null)
             SGridAnimator.OnSTileMoveEnd += OnStileChangeDir;
+        Anchor.OnAnchorInteract += UpdateDiceOnAnchorInteract;
     }
 
     private void OnDisable()
     {
         if (myStile != null)
             SGridAnimator.OnSTileMoveEnd -= OnStileChangeDir;
+        Anchor.OnAnchorInteract -= UpdateDiceOnAnchorInteract;
     }
 
     public void CheckElevens(Condition c)
     {
-        c.SetSpec(value + otherDice.value == 11);
+        c.SetSpec(otherDice != null && value + otherDice.value == 11);
     }
 
-    public void changeValue(int num)
+    public void changeValue(int num) //Don't want to change yet due to Desert/Ocean Scene references
     {
         value = num;
+        if (value >= 7) value = 1;
         sr.sprite = sprites[value - 1];
         text.text = value.ToString();
         bgText.text = value.ToString();
@@ -62,14 +57,15 @@ public class DiceGizmo : MonoBehaviour
     {
         if (e.stile.islandId == myStile.islandId)
         {
-            value++;
-            if (value == 7)
-            {
-                value = 1;
-            }
-            sr.sprite = sprites[value - 1];
-            text.text = value.ToString();
-            bgText.text = value.ToString();
+            changeValue(value + 1);
+        }
+    }
+
+    private void UpdateDiceOnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
+    {
+        if (myStile.hasAnchor) //There could be an edge case where hasAnchor hasn't quite updated but it's dice
+        {
+            changeValue(1);
         }
     }
 
