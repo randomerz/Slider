@@ -12,8 +12,10 @@ public class OceanGrid : SGrid
     public GameObject burriedGuyNPC;
     public KnotBox knotBox;
     //public LostGuyMovement lostGuyMovement;
+    public BottleManager bottleManager;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
+
 
     private Vector2Int[] correctPath =
     {
@@ -100,7 +102,6 @@ public class OceanGrid : SGrid
         base.Load(profile);
     }
 
-
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
         if (stile.islandId == 3)
@@ -167,7 +168,7 @@ public class OceanGrid : SGrid
 
 
     // === Ocean puzzle specific ===
-
+#region Ocean Puzzles
     public void CheckShipwreck(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (IsShipwreckAdjacent())
@@ -313,6 +314,7 @@ public class OceanGrid : SGrid
         }
     }
 
+#endregion
     private void updatePlayerMovement()
     {
 

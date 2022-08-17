@@ -14,6 +14,7 @@ public class SGridAnimator : MonoBehaviour
         public STile stile;
         public Vector2Int prevPos;
         public SMove smove; // the SMove this Move() was a part of
+        public float moveDuration; // base * smove.moveduration
     }
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndEarly;
@@ -87,7 +88,8 @@ public class SGridAnimator : MonoBehaviour
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
-            smove = move
+            smove = move,
+            moveDuration = currMoveDuration
         });
 
         EffectOnMoveStart(move is SMoveConveyor);
@@ -117,14 +119,16 @@ public class SGridAnimator : MonoBehaviour
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
-            smove = move
+            smove = move,
+            moveDuration = currMoveDuration
         });
 
         OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
-            smove = move
+            smove = move,
+            moveDuration = currMoveDuration
         });
 
         EffectOnMoveFinish();
@@ -135,7 +139,8 @@ public class SGridAnimator : MonoBehaviour
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
-            smove = move
+            smove = move,
+            moveDuration = currMoveDuration
         });
     }
 
@@ -144,7 +149,8 @@ public class SGridAnimator : MonoBehaviour
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
-            smove = move
+            smove = move,
+            moveDuration = currMoveDuration
         });
     }
 
