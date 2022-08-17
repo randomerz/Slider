@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -65,8 +66,8 @@ public class DesertArtifact : UIArtifact
         MoveMadeOnArtifact?.Invoke(this, null);
         QueueAdd(move);
         ProcessQueue();
-        DeselectSelectedButton();
         UpdatePushedDowns(null, null);
+        DeselectSelectedButton();
     }
 
     protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
@@ -109,12 +110,37 @@ public class DesertArtifact : UIArtifact
             }
             QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
             SwapButtons(buttonCurrent, buttonEmpty); //I have zero idea where to put this since the buttons aren't swapping in frag properly ;-;
+            OnButtonInteract?.Invoke(this, null); //Since this is only called when you press a button technically
             return true;
         }
         else
         {
             LogMoveFailure();
             return false;
+        }
+    }
+
+    public override void UpdatePushedDowns(object sender, EventArgs e)
+    {
+        foreach (ArtifactTileButton b in _instance.buttons)
+        {
+            if (b.gameObject.activeSelf)
+            {
+                if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
+                {
+                    //Debug.Log(b.islandId);
+                    b.SetIsInMove(true);
+                }
+                else if (b.MyStile.hasAnchor)
+                {
+                    continue;
+                }
+                else
+                {
+                    b.SetIsInMove(false);
+                    b.SetHighlighted(moveOptionButtons.Contains(b)); //Bug or feature? This is because you can select active tiles
+                }
+            }
         }
     }
 

@@ -7,13 +7,17 @@ public class DesyncItem : Item
     [SerializeField] private Sprite pastSprite;
     [SerializeField] private Sprite presentSprite;
     [SerializeField] private Item itemPair;
-
+    [SerializeField] private GameObject lightning;
     private bool isItemInPast;
     private STile originTile;
+    private bool isDesynced;
+
+    public bool IsDesynced { get => isDesynced; }
+
 
     private void Start()
     {
-        isItemInPast = transform.position.x > 67;
+        isItemInPast = MagiTechGrid.IsInPast(transform);
         originTile = SGrid.GetStileUnderneath(gameObject);
     }
 
@@ -25,11 +29,9 @@ public class DesyncItem : Item
 
     private void CheckItemsOnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
     {
-        if (!isItemInPast && !originTile.hasAnchor)
-        {
-            itemPair.gameObject.SetActive(false);
-        }
-        else itemPair.gameObject.SetActive(true);
+        isDesynced = e.drop && originTile != null && originTile.hasAnchor;
+        itemPair.gameObject.SetActive(isItemInPast || IsDesynced);
+        lightning.SetActive(IsDesynced);
     }
 
     private void CheckItemsOnTeleport(object sender, Portal.OnTimeChangeArgs e)

@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class PowerCrystal : MonoBehaviour
 {
-    private const string lightShaderName = "Shader Graphs/LightShaderBoolean";
-
     private ElectricalNode[] allNodes;
     private Conveyor[] conveyors;
-    private List<Material> lightMaterials;
 
     public static bool Blackout { get; private set; }
 
@@ -17,14 +14,36 @@ public class PowerCrystal : MonoBehaviour
         Blackout = false;
         allNodes = GameObject.FindObjectsOfType<ElectricalNode>();
         conveyors = GameObject.FindObjectsOfType<Conveyor>();
+    }
 
-        lightMaterials = FindMaterials();
+    public void CheckBlackout(Condition cond)
+    {
+        cond.SetSpec(Blackout);
     }
 
     public void StartCrystalPoweredSequence()
     {
         AudioManager.StopMusic("Factory");
         StartCoroutine(CrystalPoweredBuildup());
+    }
+
+    public void TurnEverythingBackOn()
+    {
+        AudioManager.PlayWithVolume("Power On", 1.0f);
+        AudioManager.PlayMusic("Factory");
+        Blackout = false;
+        foreach (var node in allNodes)
+        {
+            if (!FactoryGrid.IsInPast(node.gameObject))
+            {
+                node.OnPowered?.Invoke(new ElectricalNode.OnPoweredArgs { powered = node.Powered });
+            }
+        }
+
+        foreach (var conveyor in conveyors)
+        {
+            conveyor.ConveyorEnabled = true;
+        }
     }
 
     private IEnumerator CrystalPoweredBuildup()
@@ -39,9 +58,9 @@ public class PowerCrystal : MonoBehaviour
         AudioManager.PlayWithVolume("Power Off", 1.0f);
         foreach (var node in allNodes)
         {
-            if (node.nodeType == ElectricalNode.NodeType.INPUT)
+            if (!FactoryGrid.IsInPast(node.gameObject))
             {
-                node.StartSignal(false);
+                node.OnPowered?.Invoke(new ElectricalNode.OnPoweredArgs { powered = node.Powered });
             }
         }
 
@@ -50,27 +69,6 @@ public class PowerCrystal : MonoBehaviour
             conveyor.ConveyorEnabled = false;
         }
 
-        foreach (var mat in lightMaterials)
-        {
-            mat.SetInt("_LightOn", 0);  //L: No set bool? Ya serious?
-        }
-    }
-
-    private List<Material> FindMaterials()
-    {
-        List<Material> materials = new List<Material>();
-        Shader lightShader = Shader.Find(lightShaderName);
-
-        Renderer[] allRenderers = FindObjectsOfType<Renderer>(true);
-        foreach (Renderer r in allRenderers)
-        {
-            if (r.material.shader == lightShader)
-            {
-                materials.Add(r.material);
-                //Debug.Log(r.gameObject.name);
-            }
-        }
-
-        return materials;
+        FactoryLightManager.SwitchLights(false);
     }
 }
