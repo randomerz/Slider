@@ -8,9 +8,11 @@ public class PastLargeCrystal : ConductiveElectricalNode
     [SerializeField] private PlayerPositionChanger ppChanger;
     [SerializeField] private PowerCrystal powerCrystal;
 
+    private bool CrystalHasEnoughPower => Powered && powerPathPrevs.Keys.Count >= 2;
+
     public void CheckCrystalHasEnoughPower(Condition cond)
     {
-        cond.SetSpec(Powered && powerRefs >= 2);
+        cond.SetSpec(CrystalHasEnoughPower);
     }
 
     public void BTTFStarter()

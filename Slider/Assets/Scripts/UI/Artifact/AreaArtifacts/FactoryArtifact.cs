@@ -17,14 +17,9 @@ public class FactoryArtifact : UIArtifact
         base.Awake();
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        bool playerInPast = FactoryGrid.IsInPast(Player.GetInstance().gameObject);
-        if (usingPastButtons != playerInPast)
-        {
-            usingPastButtons = playerInPast;
-            UpdateButtonSpritesAndBackground(playerInPast);
-        }
+        FactoryGrid.playerPastChanged += UpdateButtonSpritesAndBackground;
     }
 
     public override void ProcessQueue()
