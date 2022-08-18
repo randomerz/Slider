@@ -1496,7 +1496,12 @@ namespace FMODUnity
         {
             if (!AssetDatabase.IsValidFolder(StagingFolder))
             {
-                ResetUpdateStage();
+                // DC: From https://qa.fmod.com/t/fmodstudiosettings-asset-keeps-appearing-in-version-control-with-no-changes/18594/4
+                if (Settings.Instance.SharedLibraryUpdateStage != Settings.SharedLibraryUpdateStages.Start
+                    || Settings.Instance.SharedLibraryTimeSinceStart != 0)
+                {
+                    ResetUpdateStage();
+                }
                 return null;
             }
 
