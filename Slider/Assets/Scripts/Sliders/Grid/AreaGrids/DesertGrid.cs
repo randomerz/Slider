@@ -7,7 +7,8 @@ public class DesertGrid : SGrid
 {
     [Header("Desert")]
     public Item log; //Right now the animator for the campfire doesn't stay alive if scene transitions
-    public NPCAnimatorController campfire;
+    public Animator crocodileAnimator;
+    public Animator campfire;
     public DiceGizmo dice1;
     public DiceGizmo dice2;
     public SpriteRenderer[] casinoCeilingSprites;
@@ -18,6 +19,9 @@ public class DesertGrid : SGrid
     private bool checkCompletion = false;
     private bool checkMonkey = false;
     private Coroutine waitForZ; //Should be null if monkeShakes is 0
+
+    private const string DESERT_PARTY_STARTED = "desertPartyStarted";
+    private const string DESERT_PARTY_FINISHED = "desertPartyFinished";
 
     public override void Init() {
         InitArea(Area.Desert);
@@ -34,7 +38,7 @@ public class DesertGrid : SGrid
         if (!campfireIsLit)
         {
             log.gameObject.SetActive(true);
-            campfire.SetBoolToTrue("isDying");
+            campfire.SetBool("isDying", true);
         }
 
         AudioManager.PlayMusic("Desert");
@@ -273,6 +277,31 @@ public class DesertGrid : SGrid
         c.SetSpec(CheckGrid.contains(GetGridString(), "26") || CheckGrid.contains(GetGridString(), "6...2"));
     }
 
+    #endregion
+
+    #region Party
+    public void StartParty()
+    {
+        if (SaveSystem.Current.GetBool(DESERT_PARTY_STARTED) || SaveSystem.Current.GetBool(DESERT_PARTY_FINISHED))
+            return;
+
+        SaveSystem.Current.SetBool(DESERT_PARTY_STARTED, true);
+
+        StartCoroutine(PartyCutscene());
+    }
+
+    private IEnumerator PartyCutscene()
+    {
+        crocodileAnimator.SetTrigger("grab");
+
+        CameraShake.ShakeIncrease(3, 0.4f);
+        AudioManager.DampenMusic(0.2f, 12);
+        AudioManager.Play("Crocodile Grab Sequence");
+
+        yield return new WaitForSeconds(11);
+
+        SaveSystem.Current.SetBool(DESERT_PARTY_FINISHED, true);
+    }
     #endregion
 
     #region 8puzzle

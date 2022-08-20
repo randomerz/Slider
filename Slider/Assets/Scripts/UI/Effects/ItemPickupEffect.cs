@@ -33,7 +33,6 @@ public class ItemPickupEffect : MonoBehaviour
         _instance.itemImage.sprite = itemSprite;
         _instance.StartCoroutine(_instance.Cutscene(onTextVisibleCallback));
         AudioManager.DampenMusic(0.2f, _instance.soundDampenLength);
-        _instance.StartCoroutine(_instance.DampenMusic());
     }
 
     private IEnumerator Cutscene(System.Action onTextVisibleCallback=null)
@@ -68,20 +67,5 @@ public class ItemPickupEffect : MonoBehaviour
         Player.SetCanMove(true);
         Player.GetSpriteRenderer().sortingLayerName = "Entity";
         NPCDialogueContext.dialogueEnabledAllNPC = true;
-    }
-
-    private IEnumerator DampenMusic()
-    {
-        float t = 0;
-
-        while (t < soundDampenLength)
-        {
-            AudioManager.SetMusicVolumeMultiplier(soundDampenCurve.Evaluate(t / soundDampenLength));
-
-            yield return null;
-            t += Time.deltaTime;
-        }
-
-        AudioManager.SetMusicVolumeMultiplier(1);
     }
 }
