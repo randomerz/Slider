@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PastLargeCrystal : ConductiveElectricalNode
+public class PastLargeCrystal : ElectricalNode
 {
     [Header("Past Large Crystal")]
     [SerializeField] private PlayerPositionChanger ppChanger;

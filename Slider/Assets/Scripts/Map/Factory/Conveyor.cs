@@ -34,7 +34,6 @@ public class Conveyor : ElectricalNode
 
     private bool ConveyorPowered => ConveyorEnabled && Powered;
     private bool waitingToQueueAndFinishMove = false;
-    private SMove activeMove;
 
     private new void Awake()
     {
@@ -92,17 +91,6 @@ public class Conveyor : ElectricalNode
 
     private void OnSTileMoveEndEarly(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (activeMove != null)
-        {
-            foreach (var move in activeMove.moves)
-            {
-                if (move.islandId == e.stile.islandId)
-                {
-                    waitingToQueueAndFinishMove = false;
-                    activeMove = null;
-                }
-            }
-        }
         TryQueueConveyorMove();
     }
 
@@ -113,6 +101,7 @@ public class Conveyor : ElectricalNode
             SMoveConveyor move = ConstructMove();
             if (move != null)
             {
+                waitingToQueueAndFinishMove = true;
                 StartCoroutine(WaitUntilCanQueueMoveSafely(move, QueueConveyorMove));
             }
         }
@@ -120,8 +109,6 @@ public class Conveyor : ElectricalNode
 
     public IEnumerator WaitUntilCanQueueMoveSafely(SMove move, System.Action callback = null)
     {
-        waitingToQueueAndFinishMove = true;
-
         if (FactoryArtifact.DequeueLocked)
         {
             yield return new WaitUntil(() => !FactoryArtifact.DequeueLocked);   //Mutex locks, woo hoo!
@@ -153,13 +140,9 @@ public class Conveyor : ElectricalNode
         SMoveConveyor newMove = ConstructMove();
         if (ConveyorPowered && newMove != null)
         {
-            activeMove = newMove;
             artifact.QueueMoveToFront(newMove);
-            //StartCoroutine(WaitToFreeQueue(newMove));
-        } else
-        {
-            waitingToQueueAndFinishMove = false;
         }
+        waitingToQueueAndFinishMove = false;
         FactoryArtifact.DequeueLocked = false;  //Make sure the key is released, even if we didn't do the move, or else we will spinlock.
     }
 
