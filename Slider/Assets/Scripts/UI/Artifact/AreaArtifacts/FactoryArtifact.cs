@@ -10,21 +10,15 @@ public class FactoryArtifact : UIArtifact
     [SerializeField] private Sprite presentBackgroundSprite;
     public static bool DequeueLocked = false;
 
-    private bool usingPastButtons = false;
-
     private new void Awake()
     {
         base.Awake();
     }
 
-    private void Update()
+    private new void OnEnable()
     {
-        bool playerInPast = FactoryGrid.IsInPast(Player.GetInstance().gameObject);
-        if (usingPastButtons != playerInPast)
-        {
-            usingPastButtons = playerInPast;
-            UpdateButtonSpritesAndBackground(playerInPast);
-        }
+        base.OnEnable();
+        FactoryGrid.playerPastChanged += UpdateButtonSpritesAndBackground;
     }
 
     public override void ProcessQueue()
@@ -40,13 +34,12 @@ public class FactoryArtifact : UIArtifact
         //L: Conveyor moves always "Cut the line" per se.
         //Unfortunately you can't queue a move at the front since C# queue is not a dequeue, so we have to do this list conversion instead
         List<SMove> newMoveQueue = new List<SMove>(moveQueue);
-        newMoveQueue.Insert(0, move);   //This is inefficient, but like, there's 3 elements in the list.
+        newMoveQueue.Insert(0, move);
 
-        //L: We also have to make sure the interrupted move does not interfere with any of the subsequent moves that have already been made on the artifact.
+        //L: We also have to make sure the queued move does not interfere with any of the subsequent moves that have already been made on the artifact.
         UndoMovesAfterOverlap(newMoveQueue, move);
 
         SwapButtonsBasedOnMove(move);
-
 
         moveQueue = new Queue<SMove>(newMoveQueue);
         base.ProcessQueue();
@@ -57,7 +50,7 @@ public class FactoryArtifact : UIArtifact
         for (int i = 1; i < newMoveQueue.Count; i++)
         {
             //SMoveConveyor should never interfere, but just in case we don't want them to be undone.
-            if (!(newMoveQueue[i] is SMoveConveyor) && newMoveQueue[i].Overlaps(moveToCheck))
+            if (newMoveQueue[i].Overlaps(moveToCheck))
             {
                 cutIndex = i;
                 break;

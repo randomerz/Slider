@@ -23,52 +23,44 @@ public class PowerCrystal : MonoBehaviour
 
     public void StartCrystalPoweredSequence()
     {
-        AudioManager.StopMusic("Factory");
         StartCoroutine(CrystalPoweredBuildup());
-    }
-
-    public void TurnEverythingBackOn()
-    {
-        AudioManager.PlayWithVolume("Power On", 1.0f);
-        AudioManager.PlayMusic("Factory");
-        Blackout = false;
-        foreach (var node in allNodes)
-        {
-            if (!FactoryGrid.IsInPast(node.gameObject))
-            {
-                node.OnPowered?.Invoke(new ElectricalNode.OnPoweredArgs { powered = node.Powered });
-            }
-        }
-
-        foreach (var conveyor in conveyors)
-        {
-            conveyor.ConveyorEnabled = true;
-        }
     }
 
     private IEnumerator CrystalPoweredBuildup()
     {
+        AudioManager.StopMusic("Factory");
         yield return new WaitForSeconds(2.0f);
         DoBlackout();
     }
 
     private void DoBlackout()
     {
-        Blackout = true;
         AudioManager.PlayWithVolume("Power Off", 1.0f);
+        SetBlackout(true);
+        FactoryLightManager.SwitchLights(false);
+    }
+
+    public void TurnEverythingBackOn()
+    {
+        AudioManager.PlayWithVolume("Power On", 1.0f);
+        AudioManager.PlayMusic("Factory");
+        SetBlackout(false);
+    }
+
+    private void SetBlackout(bool isBlackout)
+    {
+        Blackout = isBlackout;
         foreach (var node in allNodes)
         {
-            if (!FactoryGrid.IsInPast(node.gameObject))
+            if (node != null && node.AffectedByBlackout)
             {
-                node.OnPowered?.Invoke(new ElectricalNode.OnPoweredArgs { powered = node.Powered });
+                node.SetBlackout(isBlackout);
             }
         }
 
         foreach (var conveyor in conveyors)
         {
-            conveyor.ConveyorEnabled = false;
+            conveyor.ConveyorEnabled = !isBlackout;
         }
-
-        FactoryLightManager.SwitchLights(false);
     }
 }
