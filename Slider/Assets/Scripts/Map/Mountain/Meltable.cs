@@ -48,7 +48,7 @@ public class Meltable : MonoBehaviour, ISavable
     public void CheckFreezeOnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if(e.stile == null)
-            Debug.Log("meltable null STile from move " + gameObject.name);
+            return;
         if(e.stile == sTile){ //Debug.Log("same stile " + gameObject.name);
             StartCoroutine(WaitThenCheckFreeze());}
     }
@@ -87,7 +87,6 @@ public class Meltable : MonoBehaviour, ISavable
             if(spriteRenderer)
                 spriteRenderer.sprite = meltedSprite;
             onMelt.Invoke();
-            Debug.Log("Melt "+ gameObject.name);
         }
     }
 
@@ -99,7 +98,6 @@ public class Meltable : MonoBehaviour, ISavable
             if(spriteRenderer)
                 spriteRenderer.sprite = frozenSprite;
             onFreeze.Invoke();
-            Debug.Log("Freeze " + gameObject.name);
         }
     }
 

@@ -37,13 +37,11 @@ public class MountainCaveWall : MonoBehaviour, ISavable
 
     public void Save()
     {
-        Debug.Log("saving wall");
         SaveSystem.Current.SetBool("CaveMCWallExploded", didBlowUp);
     }
 
     public void Load(SaveProfile profile)
     {
-        Debug.Log("loading wall");
         didBlowUp = profile.GetBool("CaveMCWallExploded");
         foreach (GameObject go in makeActiveOnExplosion)
             go.SetActive(didBlowUp);

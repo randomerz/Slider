@@ -27,7 +27,6 @@ public class Lava : MonoBehaviour
     {
         if(other.gameObject.GetComponent<Meltable>()){
             other.gameObject.GetComponent<Meltable>().AddLava();
-            Debug.Log("added Lava");
         }
     }
 
