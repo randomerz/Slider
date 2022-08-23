@@ -164,8 +164,15 @@ MonoBehaviour:
     loop: 0
     doRandomPitch: 1
     source: {fileID: 0}
-  - name: Dice Board
-    clip: {fileID: 8300000, guid: 1ea83872740d6bd4daabfefad27db3de, type: 3}
+  - name: Dice Shake
+    clip: {fileID: 8300000, guid: 69ae3cff3d898e84084b4d571f2d7b9b, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
+  - name: Bottle Fill
+    clip: {fileID: 8300000, guid: 815e71289506ab24d9a4a828630be2f1, type: 3}
     volume: 1
     pitch: 1
     loop: 0

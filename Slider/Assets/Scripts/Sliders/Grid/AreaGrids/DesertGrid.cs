@@ -142,19 +142,28 @@ public class DesertGrid : SGrid
     public void CheckMonkeyShakeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         STile monkeyTile = Current.GetStile(3);
-        if (monkeShake >= 3)
+        if (monkeyTile.isTileActive && e.stile == monkeyTile)
         {
-            SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
-            if (waitForZ != null) StopCoroutine(MokeZTimer());
-            checkMonkey = false;
-        }
-        else if (monkeyTile.isTileActive && e.stile == monkeyTile)
-        {
-            Debug.Log(monkeShake);
             zlist[monkeShake].SetActive(false);
             monkeShake++;
-            if (waitForZ != null) StopCoroutine(MokeZTimer());
-            waitForZ = StartCoroutine(MokeZTimer()); //First shake starts countdown timer. waitForZ should be null if monkeShake is 0
+
+            if (monkeShake >= 3)
+            {
+                // puzzle complete
+                AudioManager.PlayWithPitch("Baboon Screech", 1.5f); // TODO: make this affected by distance
+
+                SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
+                checkMonkey = false;
+                if (waitForZ != null) StopCoroutine(MokeZTimer());
+                return;
+            }
+            else
+            {
+                AudioManager.Play("Baboon Screech"); // TODO: make this affected by distance
+
+                if (waitForZ != null) StopCoroutine(MokeZTimer());
+                waitForZ = StartCoroutine(MokeZTimer()); //First shake starts countdown timer. waitForZ should be null if monkeShake is 0
+            }
         }
     }
 
