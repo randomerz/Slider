@@ -6,14 +6,19 @@ using TMPro;
 public class DiceGizmo : MonoBehaviour
 {
     public STile myStile;
+    [SerializeField] private int diceIndex;
+    [SerializeField] private bool onlySoundInHouse;
     [SerializeField] private DiceGizmo otherDice;
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private TextMeshProUGUI bgText;
+    [SerializeField] private Transform baseTransform;
 
     public int value;
     public Sprite[] sprites;
+    public Sprite[] rotatedSprites;
 
     private SpriteRenderer sr;
+    private Coroutine diceShakeCoroutine;
     //public Animator animator; // this is only based on Tree animator controller rn
     //Chen: Should the above be changed to the Dice animator controller or something?
 
@@ -49,10 +54,46 @@ public class DiceGizmo : MonoBehaviour
     {
         value = num;
         if (value >= 7) value = 1;
+
+        if (!onlySoundInHouse || (onlySoundInHouse && Player.GetIsInHouse()))
+        {
+            if (value != 1) AudioManager.Play("Dice Shake");
+            else AudioManager.PlayWithPitch("Dice Shake", 0.75f);
+        }
+        
         sr.sprite = sprites[value - 1];
+
+        text.text = "";
+        bgText.text = "";
+
+        if (diceShakeCoroutine != null) StopCoroutine(diceShakeCoroutine);
+        diceShakeCoroutine = StartCoroutine(Shake(7));
+    }
+
+    public IEnumerator Shake(int times)
+    {
+        for (int i = 0; i < times; i++)
+        {
+            transform.position = baseTransform.position + Random.insideUnitSphere *.2f;
+            if ((i + diceIndex) % 2 == 0)
+                sr.sprite = rotatedSprites[Random.Range(0, 6)];
+            else
+                sr.sprite = sprites[Random.Range(0, 6)];
+
+            yield return new WaitForSeconds(.25f);
+        }
+        yield return new WaitForSeconds(.25f);
+
+        transform.position = baseTransform.position;
+        sr.sprite = sprites[value - 1];
+
         text.text = value.ToString();
         bgText.text = value.ToString();
+
+        diceShakeCoroutine = null;
     }
+
+
     public void OnStileChangeDir(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (e.stile.islandId == myStile.islandId)
@@ -63,7 +104,7 @@ public class DiceGizmo : MonoBehaviour
 
     private void UpdateDiceOnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
     {
-        if (myStile.hasAnchor) //There could be an edge case where hasAnchor hasn't quite updated but it's dice
+        if (myStile.hasAnchor && e.drop) //There could be an edge case where hasAnchor hasn't quite updated but it's dice
         {
             changeValue(1);
         }

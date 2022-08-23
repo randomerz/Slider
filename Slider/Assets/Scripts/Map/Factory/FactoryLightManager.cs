@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class FactoryLightManager : Singleton<FactoryLightManager>
 {
-    private const string lightShaderName = "Shader Graphs/LightShaderBoolean";
+    private const string lightShaderName = "Shader Graphs/FactoryLightShader";
 
-    [SerializeField] private SpriteRenderer playerSR;   //L: Not the kind of SR I'm used to.
+    //RIP SR
 
-    private List<Material> lightMaterials;
+    [SerializeField] private List<Material> lightMaterials;
 
     private void Awake()
     {

@@ -17,6 +17,9 @@ public class TimedGate : ElectricalNode
     [SerializeField] private Sprite blinkSprite;
     [SerializeField] private SpriteRenderer sr;
 
+    [Header("EXPOSED FOR DEBUG")]
+    [SerializeField] private int numInputsPowered;
+
     public UnityEvent OnGateActivated;
     public UnityEvent OnGateDeactivated;
 
@@ -42,6 +45,8 @@ public class TimedGate : ElectricalNode
             return (invertSignal ? !normal : normal) || debugAsPoweredOn;
         }
     }
+
+    public override bool AffectedByBlackout => affectedByBlackout;
 
     #region Unity Callbacks
     private new void Awake()
@@ -88,7 +93,7 @@ public class TimedGate : ElectricalNode
         bool oldPowered = Powered;
         if (EvaluateNodeInput(value, prev, recStack, numRefs) && value && gateActive)
         {
-            inputsPowered.Add(prev);
+            PowerInput(prev);
 
             if (Powered != oldPowered)
             {
@@ -122,7 +127,7 @@ public class TimedGate : ElectricalNode
             foreach (ElectricalNode input in powerPathPrevs.Keys)
             {
                 //Add all the nodes that were already connected to the gate when it was turned on.
-                inputsPowered.Add(input);
+                PowerInput(input);
             }
             if (Powered != oldPowered)
             {
@@ -247,5 +252,11 @@ public class TimedGate : ElectricalNode
             sr.sprite = queuedNextSprite;
             blinking = false;
         }
+    }
+
+    public void PowerInput(ElectricalNode prev)
+    {
+        inputsPowered.Add(prev);
+        numInputsPowered = inputsPowered.Count;
     }
 }

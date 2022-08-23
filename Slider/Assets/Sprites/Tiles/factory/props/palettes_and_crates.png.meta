@@ -136,7 +136,7 @@ TextureImporter:
         width: 48
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -157,7 +157,7 @@ TextureImporter:
         width: 48
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -170,15 +170,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: palettes_and_crates_2
+      name: Drivy_Handles
       rect:
         serializedVersion: 2
         x: 96
-        y: 0
-        width: 64
-        height: 64
+        y: 4
+        width: 27
+        height: 14
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -186,6 +186,48 @@ TextureImporter:
       bones: []
       spriteID: 4964ff38407457243abbb0fe1f931851
       internalID: 697854646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Drivy_bottom
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 0
+        width: 35
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad65c140740dfcb48af1b0222752ac58
+      internalID: -2098715945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Drivy_top
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 18
+        width: 19
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0bf67a3b01b41e45bd57da8bcaa6376
+      internalID: 513033079
       vertices: []
       indices: 
       edges: []
@@ -201,9 +243,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      Drivy_top: 513033079
       palettes_and_crates_1: -1914257793
+      Drivy_Handles: 697854646
+      Drivy_bottom: -2098715945
       palettes_and_crates_0: 597504987
-      palettes_and_crates_2: 697854646
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

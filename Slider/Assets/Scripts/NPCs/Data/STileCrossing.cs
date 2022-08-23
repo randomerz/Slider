@@ -21,7 +21,7 @@ public class STileCrossing
 
         foreach (Vector2Int dir in dirs)
         {
-            Debug.Log(fromPos + " " + toPos);
+            // Debug.Log(fromPos + " " + toPos);
             if (DirValid(dir, fromPos, toPos))
             {
                 return true;
