@@ -31,9 +31,4 @@ public class MinecartStateChecker : MonoBehaviour
                 OnTargetExit.Invoke();
         }    
     }
-
-    public void DebugLog(string text){
-        Debug.Log(text);
-    }
-
 }

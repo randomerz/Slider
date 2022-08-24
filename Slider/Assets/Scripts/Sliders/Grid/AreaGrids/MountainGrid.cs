@@ -40,7 +40,7 @@ public class MountainGrid : SGrid
         UIEffects.FadeFromBlack();
     }
     
-    private void OnEnable()
+    /*private void OnEnable()     C: Currently broken, will look into fixing later
     {
         Anchor.OnAnchorInteract += OnAnchorInteract;
     }
@@ -69,7 +69,7 @@ public class MountainGrid : SGrid
                 }
             }
         }        
-    }
+    }*/
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {

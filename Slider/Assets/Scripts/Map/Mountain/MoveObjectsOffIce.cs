@@ -12,7 +12,6 @@ public class MoveObjectsOffIce : MonoBehaviour
 
     private void Start() 
     {
-        
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         colliders = GetComponent<Tilemap>();
     }
@@ -37,7 +36,6 @@ public class MoveObjectsOffIce : MonoBehaviour
                 Minecart mc = t.GetComponent<Minecart>();
                 mc?.StopMoving();
                 t.position = playerRespawn.position + objCount * 2 * Vector3.right;
-                Debug.Log("moved " + t.gameObject.name);
                 objCount++;
             }
         }

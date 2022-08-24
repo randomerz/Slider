@@ -49,8 +49,8 @@ public class Meltable : MonoBehaviour, ISavable
     {
         if(e.stile == null)
             return;
-        if(e.stile == sTile){ //Debug.Log("same stile " + gameObject.name);
-            StartCoroutine(WaitThenCheckFreeze());}
+        if(e.stile == sTile)
+            StartCoroutine(WaitThenCheckFreeze());
     }
 
     //C: timing/collider jank
