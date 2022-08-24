@@ -25,7 +25,7 @@ public class Player : Singleton<Player>, ISavable
     
 
     private float moveSpeedMultiplier = 1;
-    public bool canMove = true;
+    private bool canMove = true;
     private bool collision = true;
 
     private bool isInHouse = false;
