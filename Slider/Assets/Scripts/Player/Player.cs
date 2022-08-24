@@ -126,8 +126,7 @@ public class Player : Singleton<Player>, ISavable
 
         if (currentStileUnderneath != null)
         {
-           // if(canMove); //C: to prevent player from falling out of minecart
-                transform.SetParent(currentStileUnderneath.transform);
+            transform.SetParent(currentStileUnderneath.transform);
         }
         else
         {
