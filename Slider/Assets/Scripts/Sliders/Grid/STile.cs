@@ -237,13 +237,4 @@ public class STile : MonoBehaviour
         allTileMaps.transform.position = pos;
     }
 
-    public static bool AreAllTilesActive(List<STile> tiles)
-    {
-        foreach (STile s in tiles)
-        {
-            if(!s.isTileActive)
-                return false;
-        }
-        return true;
-    }
 }

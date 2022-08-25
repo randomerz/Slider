@@ -160,7 +160,7 @@ public class Minecart : Item
 
     private void OnCollisionEnter2D(Collision2D other) 
     {
-        if(other.gameObject.layer == 14 || other.gameObject.tag.Equals("McIgnore")) //C: 14 is MinecartIgnore
+        if(other.gameObject.layer == 14 || other.gameObject.tag.Equals("MinecartIgnore")) //C: Layer 14 is MinecartIgnore
             return;
         Debug.Log("bonk " + other.gameObject.name);
         StopMoving(true);
@@ -237,7 +237,6 @@ public class Minecart : Item
     {
         if(dropOnNextMove)
         {
-            Debug.Log("dropped");
             Vector3Int targetLoc = savedRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
             railManager = savedRM;
             transform.position += (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
@@ -307,12 +306,7 @@ public class Minecart : Item
                 dropOnNextMove = true;
                 savedRM = rm;
                 targetWorldPos += getDirectionAsVector(currentDirection);
-
-                  //  railManager = rm;
-                    //transform.position += (getDirectionAsVector(currentDirection) + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
-                   // SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)); //give seperate method for between layers?
-                    //UpdateParent();
-                    return;
+                return;
             }
         }
         

@@ -53,7 +53,12 @@ public class Meltable : MonoBehaviour, ISavable
             StartCoroutine(WaitThenCheckFreeze());
     }
 
-    //C: timing/collider jank
+    /*C: We can't check for freezing directly at the end of the move because even though OnSTileMoveEndEarly and OnSTileMoveEnd
+         are both called after the tile is moved into place, it seems as if the colliders don't update quickly enough.
+         (might have something do with the fact that physics calculations happen early on, so maybe it isn't updated until next frame?)
+         Either way after copious amounts of testing this combination of OnSTileMoveEndEarly with this tiny delay
+         makes refreezing work as intended. 
+    */
     IEnumerator WaitThenCheckFreeze() 
     {
         yield return new WaitForSeconds(0.03f);
@@ -128,14 +133,14 @@ public class Meltable : MonoBehaviour, ISavable
 
     public void Save()
     {
-        SaveSystem.Current.SetBool(gameObject.name + " frozen", isFrozen);
-        SaveSystem.Current.SetBool(gameObject.name + " broken", anchorBroken);
+        SaveSystem.Current.SetBool(gameObject.name + "Frozen", isFrozen);
+        SaveSystem.Current.SetBool(gameObject.name + "Broken", anchorBroken);
     }
 
     public void Load(SaveProfile profile)
     {
-        isFrozen = profile.GetBool(gameObject.name + " frozen", true);
-        anchorBroken = profile.GetBool(gameObject.name + " broken");
+        isFrozen = profile.GetBool(gameObject.name + "Frozen", true);
+        anchorBroken = profile.GetBool(gameObject.name + "Broken");
         if(isFrozen)
             Freeze(true);
         else if(anchorBroken)

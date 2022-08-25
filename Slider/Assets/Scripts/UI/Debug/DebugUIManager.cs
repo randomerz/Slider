@@ -242,16 +242,30 @@ public class DebugUIManager : MonoBehaviour
         }
     }
 
+    public void ActivateAllCollectibles(bool excludeSliders = false)
+    {
+        foreach (Collectible c in SGrid.Current.GetCollectibles())
+        {
+            if(excludeSliders && c.name.Contains("Slider")){}
+            else
+            {
+                c.gameObject.SetActive(true);
+                c.transform.position = Player.GetPosition(); 
+            }
+        }
+        UIManager.CloseUI();
+    }
+
     //C: Gives all collectables for that area
     public void AC()
     {
-        SGrid.Current.ActivateAllCollectibles();
+        ActivateAllCollectibles();
     }
 
     //C: Gives all collectables for that area, excluding Sliders
     public void ACES()
     {
-        SGrid.Current.ActivateAllCollectibles(true);
+        ActivateAllCollectibles(true);
     }
 
     public void DebugFactoryPast()

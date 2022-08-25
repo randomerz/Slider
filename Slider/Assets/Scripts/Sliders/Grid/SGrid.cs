@@ -268,6 +268,16 @@ public void SetGrid(int[,] puzzle)
         return returnList;
     }
 
+    protected static string GetTileIdAt(int x, int y)
+    {
+        return Current.targetGrid[(Current.Height - y - 1) * Current.Width + x].ToString();
+    }
+
+    public static STile GetTileAt(int x, int y)
+    {
+        return Current.grid[x,y];
+    }
+
     protected void SwapTiles(STile one, STile two)
     {
         int x = two.x;
@@ -360,6 +370,17 @@ public void SetGrid(int[,] puzzle)
         return false;
     }
 
+    //C: Returns true if all tiles in the list are active, false otherwise
+    public static bool AreTilesActive(List<STile> tiles)
+    {
+        foreach (STile s in tiles)
+        {
+            if(!s.isTileActive)
+                return false;
+        }
+        return true;
+    }
+
 
     //L: This mainly checks if any of the tiles involved in SMove 
     //D: this is should also not really be relied on
@@ -386,6 +407,14 @@ public void SetGrid(int[,] puzzle)
         }
 
         return null;
+    }
+
+    public List<Collectible> GetCollectibles()
+    {
+        List<Collectible> list = new List<Collectible>();
+        foreach (Collectible c in collectibles)
+            list.Add(c);
+        return list;
     }
 
     public void ActivateCollectible(string name)
@@ -418,19 +447,6 @@ public void SetGrid(int[,] puzzle)
         }
     }
 
-    public void ActivateAllCollectibles(bool excludeSliders = false)
-    {
-        foreach (Collectible c in collectibles)
-        {
-            if(excludeSliders && c.name.Contains("Slider")){}
-            else
-            {
-                c.gameObject.SetActive(true);
-                c.transform.position = Player.GetPosition(); 
-            }
-        }
-        UIManager.CloseUI();
-    }
 
     public Area GetArea() 
     {
@@ -658,15 +674,5 @@ public void SetGrid(int[,] puzzle)
         yield return new WaitForSeconds(t);
 
         UpdateButtonCompletions(this, null); // sets the final one to be complete
-    }
-
-    protected static string GetTileIdAt(int x, int y)
-    {
-        return Current.targetGrid[(Current.Height - y - 1) * Current.Width + x].ToString();
-    }
-
-    public static STile GetTileAt(int x, int y)
-    {
-        return Current.grid[x,y];
     }
 }

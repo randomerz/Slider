@@ -225,50 +225,22 @@ public class OceanGrid : SGrid
     private bool BuoyConditions()
     {
         return (AllBuoy() && knotBox.isActiveAndEnabled && (knotBox.CheckLines() == 0));
-        /*if (!(GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
-        {
-            return false;
-        }
-
-        if (!knotBox.isActiveAndEnabled)
-        {
-            return false;
-        }
-
-        return knotBox.CheckLines() == 0;*/
     }
 
     public void BuoyAllFound(Condition c)
     {
         c.SetSpec(AllBuoy());
-      /*  if (!AllBuoy())
-        {
-            c.SetSpec(false);
-        }
-        else
-        {
-            c.SetSpec(true);
-        }*/
     }
 
     //C: Returns if all the required buoy tiles are active
     public bool AllBuoy()
     {
-        return STile.AreAllTilesActive(GetStiles(buoytiles));
-        //return GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive;
+        return SGrid.AreTilesActive(GetStiles(buoytiles));
     }
 
     public void knotBoxEnabled(Condition c)
     {
         c.SetSpec(!knotBox.isActiveAndEnabled && AllBuoy());
-       // if (!knotBox.isActiveAndEnabled && (GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
-        //{
-        //    c.SetSpec(true);
-        //}
-        //else
-       // {
-       //     c.SetSpec(false);
-      //  }
     }
 
     public void BuoyCheck(Condition c)

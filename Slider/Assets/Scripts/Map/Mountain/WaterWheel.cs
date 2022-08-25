@@ -32,7 +32,7 @@ public class WaterWheel : MonoBehaviour
     
 
     private void Update() {
-        UpdatePower(); //C: Temporary
+        UpdatePower();
     }
 
 
