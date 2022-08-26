@@ -153,6 +153,10 @@ public class Meltable : MonoBehaviour, ISavable
         c.SetSpec(isFrozen);
     }
 
+    public void IsBroken(Condition c) {
+        c.SetSpec(anchorBroken);
+    }
+
     public void IsNotFrozen(Condition c) {
         c.SetSpec(!isFrozen);
     }

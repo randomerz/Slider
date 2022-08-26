@@ -55,8 +55,6 @@ public class Minecart : Item
         }
         UITrackerManager.AddNewTracker(gameObject, trackerSprite);
         minecartAnimator ??= GetComponent<Animator>();
-
-        //Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => this.);
     }
 
     private void OnEnable()
@@ -73,7 +71,6 @@ public class Minecart : Item
 
     private void OnMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        Debug.Log("MC check for tile " + e.stile.islandId);
         if(currentSTile == null || e.stile == null)
             return;
         if(e.stile == currentSTile)

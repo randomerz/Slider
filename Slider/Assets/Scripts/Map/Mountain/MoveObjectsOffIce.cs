@@ -35,10 +35,11 @@ public class MoveObjectsOffIce : MonoBehaviour
             {
                 Minecart mc = t.GetComponent<Minecart>();
                 mc?.StopMoving();
-                t.position = playerRespawn.position + objCount * 2 * Vector3.right;
+                t.position = playerRespawn.position + (Mathf.Min(objCount,3)) * Vector3.right;
                 objCount++;
             }
         }
+        otherObjects.Clear();
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
