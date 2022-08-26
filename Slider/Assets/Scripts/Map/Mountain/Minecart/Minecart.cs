@@ -39,6 +39,8 @@ public class Minecart : Item
     public Sprite trackerSprite;
 
 
+    private List<GameObject> collidingObjects = new List<GameObject>();
+    private bool collisionPause = false;
     
 
     public void setCanStartMoving(bool canStart)
@@ -160,15 +162,26 @@ public class Minecart : Item
         if(other.gameObject.layer == 14 || other.gameObject.tag.Equals("MinecartIgnore")) //C: Layer 14 is MinecartIgnore
             return;
         Debug.Log("bonk " + other.gameObject.name);
-        StopMoving(true);
+        collidingObjects.Add(other.gameObject);
+        collisionPause = true;
     }
+
+    private void OnCollisionExit2D(Collision2D other) 
+    {
+        if(other.gameObject.layer == 14 || other.gameObject.tag.Equals("MinecartIgnore")) //C: Layer 14 is MinecartIgnore
+            return;
+        collidingObjects.Remove(other.gameObject);
+        if(collidingObjects.Count == 0) 
+            collisionPause = false;
+    }
+
 
 
     #region movement
 
     public void StartMoving() 
     {
-        if(isOnTrack && canStartMoving)
+        if(isOnTrack && canStartMoving && !collisionPause)
         {
             isMoving = true; 
             minecartAnimator.SetBool("isMoving", true);
@@ -180,6 +193,8 @@ public class Minecart : Item
         isMoving = false;
         isOnTrack = onTrack? isOnTrack: false;
         minecartAnimator.SetBool("isMoving", false);
+        collisionPause = false;
+        collidingObjects.Clear();
     }
 
     public void ResetTiles()
@@ -220,7 +235,7 @@ public class Minecart : Item
     private void Update() 
     {
         if(Time.timeScale == 0) return;
-        if(isMoving && isOnTrack)
+        if(isMoving && isOnTrack && !collisionPause)
         {
             if(Vector3.Distance(transform.position, targetWorldPos) < 0.01f)
                 GetNextTile();

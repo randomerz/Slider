@@ -8,6 +8,7 @@ public class GemMachine : MonoBehaviour, ISavable
     private STile sTile;
     private bool isPowered;
     private bool isDone;
+    private bool isBroken;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
@@ -28,7 +29,7 @@ public class GemMachine : MonoBehaviour, ISavable
     }
 
     public void addGem(){
-        if(!isPowered)
+        if(!isPowered || isBroken)
             return;
         numGems++;
         if(numGems == 2){
@@ -49,17 +50,24 @@ public class GemMachine : MonoBehaviour, ISavable
         isPowered = value;
     }
 
+    public void Fix()
+    {
+        isBroken = false;
+    }
+
     public void Save(){
-        SaveSystem.Current.SetString("MountainNumGems", numGems.ToString());
+        SaveSystem.Current.SetString("mountainNumGems", numGems.ToString());
+        SaveSystem.Current.SetBool("mountainGemMachineBroken", isBroken);
     }
 
     public void Load(SaveProfile profile)
     {
-        string temp = profile.GetString("MountainNumGems");
-        if (temp.Equals("MountainNumGems"))
+        string temp = profile.GetString("mountainNumGems");
+        if (temp.Equals("mountainNumGems"))
             numGems = 0;
         else
-            numGems = int.Parse(profile.GetString("MountainNumGems"));
+            numGems = int.Parse(profile.GetString("mountainNumGems"));
+        isBroken = profile.GetBool("mountainGemMachineBroken");
     }
 
     public void CheckHasCrystals(Condition c){
@@ -68,5 +76,9 @@ public class GemMachine : MonoBehaviour, ISavable
 
     public void CheckIsPowered(Condition c){
         c.SetSpec(isPowered);
+    }
+
+    public void CheckIsFixed(Condition c){
+        c.SetSpec(!isBroken);
     }
 }

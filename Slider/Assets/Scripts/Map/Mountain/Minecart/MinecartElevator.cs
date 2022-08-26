@@ -9,6 +9,7 @@ public class MinecartElevator : MonoBehaviour
     public GameObject bottomPosition;
     public Minecart mainMc;
   //  public RailManager borderRM;
+    private bool isOpen; //C: true if there are tiles in front of the elevator (top and bottom), false otherwise
 
 
 
@@ -38,6 +39,16 @@ public class MinecartElevator : MonoBehaviour
     public void CheckIsFixed(Condition c)
     {
         c.SetSpec(isFixed);
+    }
+
+    public void CheckIsValid(Condition c)
+    {
+        c.SetSpec(ValidElevator());
+    }
+
+    public bool ValidElevator()
+    {
+        return SGrid.Current.GetGrid()[0,1].isTileActive && SGrid.Current.GetGrid()[0,3].isTileActive;
     }
 
     private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir){
