@@ -11,6 +11,19 @@ public class MinecartElevator : MonoBehaviour
   //  public RailManager borderRM;
     private bool isOpen; //C: true if there are tiles in front of the elevator (top and bottom), false otherwise
 
+    private void OnEnable() {
+        SGridAnimator.OnSTileMoveEnd += CheckOpenOnMove;
+    }
+
+    private void OnDisable() {
+        SGridAnimator.OnSTileMoveEnd -= CheckOpenOnMove;
+    }
+
+    private void CheckOpenOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        isOpen = SGrid.Current.GetGrid()[0,1].isTileActive && SGrid.Current.GetGrid()[0,3].isTileActive;
+        //set bool in animator
+    }
 
 
     public void FixElevator()
@@ -22,7 +35,7 @@ public class MinecartElevator : MonoBehaviour
 
     public void SendMinecartDown(Minecart mc)
     {
-        if(!isFixed)
+        if(!isFixed || !isOpen)
             return;
         mc.StopMoving();
         StartCoroutine(WaitThenSend(mc, bottomPosition.transform.position, 3));
@@ -41,18 +54,13 @@ public class MinecartElevator : MonoBehaviour
         c.SetSpec(isFixed);
     }
 
-    public void CheckIsValid(Condition c)
+    public void CheckIsNotOpen(Condition c)
     {
-        c.SetSpec(ValidElevator());
-    }
-
-    public bool ValidElevator()
-    {
-        return SGrid.Current.GetGrid()[0,1].isTileActive && SGrid.Current.GetGrid()[0,3].isTileActive;
+        c.SetSpec(!isOpen);
     }
 
     private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir){
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(0.5f);
         mc.SnapToRail(position, dir);
         mc.StartMoving();
     }
