@@ -159,19 +159,17 @@ public class Minecart : Item
 
     private void OnCollisionEnter2D(Collision2D other) 
     {
-        if(other.gameObject.layer == 14 || other.gameObject.tag.Equals("MinecartIgnore")) //C: Layer 14 is MinecartIgnore
+        if(other.gameObject.CompareTag("Player"))
+            collisionPause = true;
+        else if(other.gameObject.layer == 14 || other.gameObject.tag.Equals("MinecartIgnore") || dropOnNextMove) //C: Layer 14 is MinecartIgnore, adding drop might break something lol
             return;
-        Debug.Log("bonk " + other.gameObject.name);
-        collidingObjects.Add(other.gameObject);
-        collisionPause = true;
+        else
+            StopMoving();
     }
 
     private void OnCollisionExit2D(Collision2D other) 
     {
-        if(other.gameObject.layer == 14 || other.gameObject.tag.Equals("MinecartIgnore")) //C: Layer 14 is MinecartIgnore
-            return;
-        collidingObjects.Remove(other.gameObject);
-        if(collidingObjects.Count == 0) 
+        if(other.gameObject.CompareTag("Player"))
             collisionPause = false;
     }
 
@@ -249,11 +247,19 @@ public class Minecart : Item
     {
         if(dropOnNextMove)
         {
-            Vector3Int targetLoc = savedRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
-            railManager = savedRM;
             transform.position += (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
-            SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)); 
-            UpdateParent();
+            if(savedRM != null)
+            {
+                Vector3Int targetLoc = savedRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
+                railManager = savedRM;
+                SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)); 
+                UpdateParent();
+            }
+            else
+            {
+                StopMoving();
+                gameObject.transform.SetParent(SGrid.GetSTileUnderneath(transform, null).transform);
+            }
             dropOnNextMove = false;
             savedRM = null;
             return;
@@ -333,6 +339,15 @@ public class Minecart : Item
                 return;
             }
         }
+        if(transform.position.y > 62.5)
+        {
+            targetWorldPos += getDirectionAsVector(currentDirection);
+            GameObject temp = gameObject;
+            temp.transform.position = targetWorldPos +  new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0);
+            if(SGrid.GetStileUnderneath(temp) != null) 
+                dropOnNextMove = true;
+            return;
+        }
         StopMoving();
     }
 
@@ -399,6 +414,11 @@ public class Minecart : Item
     {
         gameObject.transform.parent = borderRM.gameObject.GetComponentInParent<STileTilemap>().transform.Find("Objects").transform;
         currentSTile = null;
+    }
+
+    private void UpdateParent(GameObject go)
+    {
+        gameObject.transform.parent = railManager.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
     }
 
     //C: returns a vector that can be added to the tile position in order to determine the location of the specified point

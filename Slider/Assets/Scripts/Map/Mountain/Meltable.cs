@@ -81,7 +81,7 @@ public class Meltable : MonoBehaviour, ISavable
 
     public bool CheckFreeze()
     {
-        return (!refreezeOnTop || sTile.y > 1) && (!anchorBroken || refreezeFromBroken) && numLavaSources <= 0;
+        return (!refreezeOnTop || (sTile == null || sTile.y > 1) && (!anchorBroken || refreezeFromBroken) && numLavaSources <= 0);
     }
 
     public void Break(bool fromLoad = false) {

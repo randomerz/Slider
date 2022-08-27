@@ -8,7 +8,8 @@ public class GemMachine : MonoBehaviour, ISavable
     private STile sTile;
     private bool isPowered;
     private bool isDone;
-    private bool isBroken;
+    private bool isBroken = true;
+    public GameObject gemChecker;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
@@ -26,6 +27,10 @@ public class GemMachine : MonoBehaviour, ISavable
 
     private void Start() {
         sTile = GetComponentInParent<STile>();
+    }
+
+    private void Update() {
+        gemChecker.SetActive(isPowered && !isBroken);
     }
 
     public void addGem(){
@@ -67,7 +72,7 @@ public class GemMachine : MonoBehaviour, ISavable
             numGems = 0;
         else
             numGems = int.Parse(profile.GetString("mountainNumGems"));
-        isBroken = profile.GetBool("mountainGemMachineBroken");
+        isBroken = profile.GetBool("mountainGemMachineBroken", true);
     }
 
     public void CheckHasCrystals(Condition c){
