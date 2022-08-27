@@ -9,8 +9,6 @@ public class MountainGrid : SGrid
     [SerializeField] private MountainCaveWall mountainCaveWall;
     [SerializeField] private GemMachine gemMachine;
 
-    public Meltable iceRails;
-
     public static MountainGrid Instance => SGrid.Current as MountainGrid;
 
     /* C: The mountian sgrid is a 2 by 4 grid. The top 4 tiles represent the top layer,
@@ -80,10 +78,17 @@ public class MountainGrid : SGrid
 
     private void CheckTile7Spawn()
     {
-        Debug.Log("Checking t7");
-        if(GetTileAt(0,0).islandId == 7 || GetTileAt(1,2).islandId == 8) //C: this only works with the "right" setup, need to antisoftlock fully
-            return;
-        SwapTiles(GetStile(7), GetStile(8));
+        int[,] t7exact = new int[,]{{7,1,5,3},{2,6,8,4}};
+        if(!CheckGrid.contains(GetGridString(true), "34_58_16_72" )) 
+        {
+            if(!CheckGrid.contains(GetGridString(true), "34_57_16_82" ))
+            {
+                Minecart mc = FindObjectOfType<Minecart>();
+                mc.StopMoving();
+            }
+            UIArtifact.ClearQueues();
+            SetGrid(t7exact);
+        }
     }
 
 
@@ -126,8 +131,4 @@ public class MountainGrid : SGrid
     }
 
     #endregion
-
-    public static void FixIceRails(){
-        Instance.iceRails.Fix();
-    }
 }

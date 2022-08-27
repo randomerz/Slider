@@ -28,6 +28,7 @@ public class Meltable : MonoBehaviour, ISavable
     [SerializeField] private bool refreezeOnTop = true;
     [SerializeField] private bool refreezeFromBroken = false;
     [SerializeField] private bool fixBackToFrozen = false;
+    [SerializeField] private float freezeTime = 5.0f;
 
     public bool isFrozen = true;
     public int numLavaSources = 0;
@@ -35,14 +36,26 @@ public class Meltable : MonoBehaviour, ISavable
     private int numTimesBroken = 0;
     private STile sTile;
 
+    private float currFreezeTime;
 
     private void OnEnable() {
         sTile = GetComponentInParent<MountainSTile>();
-        SGridAnimator.OnSTileMoveEndEarly += CheckFreezeOnMoveEnd; //C: Has to be early + delay or else tile in args is null
+      //  SGridAnimator.OnSTileMoveEndEarly += CheckFreezeOnMoveEnd; //C: Has to be early + delay or else tile in args is null
+        currFreezeTime = freezeTime;
     }
 
     private void OnDisable() {
-        SGridAnimator.OnSTileMoveEndEarly -= CheckFreezeOnMoveEnd;
+       // SGridAnimator.OnSTileMoveEndEarly -= CheckFreezeOnMoveEnd;
+    }
+
+
+    private void Update() {
+        if(Time.timeScale != 0 && CheckFreeze())
+        {
+            currFreezeTime -= Time.deltaTime;
+            if(currFreezeTime < 0)
+                Freeze();
+        }
     }
 
     public void CheckFreezeOnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
@@ -81,6 +94,7 @@ public class Meltable : MonoBehaviour, ISavable
             if(spriteRenderer)
                 spriteRenderer.sprite = anchorBrokenSprite;
             onBreak.Invoke();
+            currFreezeTime = freezeTime;
         }
     }
 
@@ -92,6 +106,7 @@ public class Meltable : MonoBehaviour, ISavable
             if(spriteRenderer)
                 spriteRenderer.sprite = meltedSprite;
             onMelt.Invoke();
+            currFreezeTime = freezeTime;
         }
     }
 
@@ -103,6 +118,7 @@ public class Meltable : MonoBehaviour, ISavable
             if(spriteRenderer)
                 spriteRenderer.sprite = frozenSprite;
             onFreeze.Invoke();
+            currFreezeTime = freezeTime;
         }
     }
 

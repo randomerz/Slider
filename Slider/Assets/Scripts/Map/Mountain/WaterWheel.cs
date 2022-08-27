@@ -107,5 +107,9 @@ public class WaterWheel : MonoBehaviour
         c.SetSpec(lavaCount > 1 && powered);
     }
 
+    public void InLavaMode(Condition c){
+        c.SetSpec(inLavaStage);
+    }
+
     #endregion
 }
