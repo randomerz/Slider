@@ -5,16 +5,23 @@ using UnityEngine;
 
 public class DesertGrid : SGrid
 {
+    [Header("Desert")]
     public Item log; //Right now the animator for the campfire doesn't stay alive if scene transitions
-    public NPCAnimatorController campfire;
+    public Animator crocodileAnimator;
+    public Animator campfire;
     public DiceGizmo dice1;
     public DiceGizmo dice2;
-    [SerializeField] private GameObject[] zlist;
+    public SpriteRenderer[] casinoCeilingSprites;
+    [SerializeField] private GameObject[] zlist; //From smallest to largest
 
     private int monkeShake = 0;
     private bool campfireIsLit = false;
     private bool checkCompletion = false;
     private bool checkMonkey = false;
+    private Coroutine waitForZ; //Should be null if monkeShakes is 0
+
+    private const string DESERT_PARTY_STARTED = "desertPartyStarted";
+    private const string DESERT_PARTY_FINISHED = "desertPartyFinished";
 
     public override void Init() {
         InitArea(Area.Desert);
@@ -31,8 +38,9 @@ public class DesertGrid : SGrid
         if (!campfireIsLit)
         {
             log.gameObject.SetActive(true);
-            campfire.SetBoolToTrue("isDying");
+            campfire.SetBool("isDying", true);
         }
+
         AudioManager.PlayMusic("Desert");
         AudioManager.PlayMusic("Desert Casino", false);
         UIEffects.FadeFromBlack();
@@ -64,15 +72,30 @@ public class DesertGrid : SGrid
 
     private void Update() 
     {
-        // For Casino music
-        
-        STile s5 = SGrid.Current.GetStile(5);
-        float dist1 = s5.isTileActive ? (Player.GetPosition() - s5.transform.position).magnitude : 17; // center
-        float dist2 = s5.isTileActive ? (Player.GetPosition() - (s5.transform.position + Vector3.right * 8.5f)).magnitude : 17; // right
-        STile s6 = SGrid.Current.GetStile(6);
-        float dist3 = s6.isTileActive ? (Player.GetPosition() - s6.transform.position).magnitude : 17; // center
-        float dist4 = s6.isTileActive ? (Player.GetPosition() - (s6.transform.position + Vector3.left * 8.5f)).magnitude : 17; // left
-        AudioManager.SetMusicParameter("Desert", "DesertDistToCasino", Mathf.Min(dist1, dist2, dist3, dist4));
+        // For Casino music / sprites
+        float distToCasino = GetDistanceToCasino();
+        AudioManager.SetMusicParameter("Desert", "DesertDistToCasino", distToCasino);
+
+        // map [6, 8] => [0, 1]
+        float alpha = Mathf.Clamp(Mathf.InverseLerp(6, 8, distToCasino), 0, 1);
+        Color c = new Color(1, 1, 1, alpha);
+        foreach (SpriteRenderer s in casinoCeilingSprites)
+        {
+            s.color = c;
+        }
+    }
+
+    private float GetDistanceToCasino()
+    {
+        Vector3 pp = Player.GetPosition();
+        STile s5 = GetStile(5);
+        float s5x = s5.transform.position.x + Mathf.Clamp(pp.x - s5.transform.position.x, 0, 8.5f);
+        float dist5 = s5.isTileActive ? (pp - new Vector3(s5x, s5.transform.position.y)).magnitude : 17; // center
+        STile s6 = GetStile(6);
+        float s6x = s6.transform.position.x + Mathf.Clamp(pp.x - s6.transform.position.x, -8.5f, 0);
+        float dist6 = s6.isTileActive ? (pp - new Vector3(s6x, s6.transform.position.y)).magnitude : 17; // center
+        return Mathf.Min(dist5, dist6);
+
     }
 
     public override void Save() 
@@ -118,29 +141,47 @@ public class DesertGrid : SGrid
     //Puzzle 2: Baboon tree shake
     public void CheckMonkeyShakeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        STile monkeyTile = SGrid.Current.GetStile(3);
-        if (e.stile == SGrid.Current.GetStile(3))
+        STile monkeyTile = Current.GetStile(3);
+        if (monkeyTile.isTileActive && e.stile == monkeyTile)
         {
-            if (Mathf.Abs(e.prevPos.x - monkeyTile.x) == 2 || Mathf.Abs(e.prevPos.y - monkeyTile.y) == 2)
+            zlist[monkeShake].SetActive(false);
+            monkeShake++;
+
+            if (monkeShake >= 3)
             {
-                //Shake the monkey. Logic for monkey stages of awake?
-                monkeShake++;
-                if (monkeShake == 1) zlist[2].SetActive(false);
-                else if (monkeShake == 2) zlist[1].SetActive(false);
-                else if (monkeShake == 3) zlist[0].SetActive(false);
-                Debug.Log("The monkey got shook");
+                // puzzle complete
+                AudioManager.PlayWithPitch("Baboon Screech", 1.5f); // TODO: make this affected by distance
+
+                SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
+                checkMonkey = false;
+                if (waitForZ != null) StopCoroutine(MokeZTimer());
+                return;
             }
             else
             {
-                monkeShake = 0;
-                foreach (GameObject z in zlist) z.SetActive(true);
-                Debug.Log("Monkey shakes reset!");
+                AudioManager.Play("Baboon Screech"); // TODO: make this affected by distance
+
+                if (waitForZ != null) StopCoroutine(MokeZTimer());
+                waitForZ = StartCoroutine(MokeZTimer()); //First shake starts countdown timer. waitForZ should be null if monkeShake is 0
             }
         }
-        if (monkeShake >= 3)
+    }
+
+    private IEnumerator MokeZTimer()
+    {
+        float time = 0f;
+        while (monkeShake > 0 && monkeShake < 3) //This is OMEGA SUS but 
         {
-            SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
+            time += Time.deltaTime;
+            if (time >= 3f)
+            {
+                monkeShake = monkeShake == 0 ? 0 : monkeShake - 1;
+                zlist[monkeShake].SetActive(true);
+                time = 0f;
+            }
+            yield return null;
         }
+        waitForZ = null;
     }
 
     public void IsAwake(Condition c)
@@ -245,6 +286,31 @@ public class DesertGrid : SGrid
         c.SetSpec(CheckGrid.contains(GetGridString(), "26") || CheckGrid.contains(GetGridString(), "6...2"));
     }
 
+    #endregion
+
+    #region Party
+    public void StartParty()
+    {
+        if (SaveSystem.Current.GetBool(DESERT_PARTY_STARTED) || SaveSystem.Current.GetBool(DESERT_PARTY_FINISHED))
+            return;
+
+        SaveSystem.Current.SetBool(DESERT_PARTY_STARTED, true);
+
+        StartCoroutine(PartyCutscene());
+    }
+
+    private IEnumerator PartyCutscene()
+    {
+        crocodileAnimator.SetTrigger("grab");
+
+        CameraShake.ShakeIncrease(3, 0.4f);
+        AudioManager.DampenMusic(0.2f, 12);
+        AudioManager.Play("Crocodile Grab Sequence");
+
+        yield return new WaitForSeconds(11);
+
+        SaveSystem.Current.SetBool(DESERT_PARTY_FINISHED, true);
+    }
     #endregion
 
     #region 8puzzle

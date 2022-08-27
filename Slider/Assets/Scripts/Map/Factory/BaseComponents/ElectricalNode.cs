@@ -6,7 +6,6 @@ using UnityEngine.Events;
 //This is what controls the electrical system for the Factory/any other system that uses it.
 public class ElectricalNode : MonoBehaviour
 {
-
     public enum NodeType
     {
         //These determine what type of edges in the graph there are.
@@ -22,36 +21,41 @@ public class ElectricalNode : MonoBehaviour
     public NodeType nodeType;
 
     [Tooltip("NEIGHBORS ARE OUTGOING EDGES")]
-    [SerializeField]
-    protected List<ElectricalNode> neighbors;
-
+    [SerializeField] protected List<ElectricalNode> neighbors;
+    [SerializeField] private bool powerOnStart;
     [SerializeField] protected bool invertSignal = false;
+    [SerializeField] protected bool affectedByBlackout = true;
 
+    [Header("DEBUG TOOLS")]
     [SerializeField] protected bool debugAsPoweredOn;
 
     //These are serialized for debugging purposes. They should not need to be set in the inspector.
-    //[SerializeField]
+    [Header("EXPOSED FOR DEBUG")]
+    [SerializeField]
     protected int powerRefs;
-    //[SerializeField]
-    protected List<ElectricalNode> powerPathPrevs;  //This is used for backtracking paths to a power source.
-
-    public virtual bool Powered => (invertSignal ? powerRefs <= 0 : powerRefs > 0) || debugAsPoweredOn; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
+    [SerializeField]
+    protected Dictionary<ElectricalNode, int> powerPathPrevs;  //This is used for backtracking paths to a power source. (value is number of times referenced)
 
     public class OnPoweredArgs
     {
         public bool powered;
     }
-    //public static event System.EventHandler<OnPoweredArgs> OnPowered;
-
-    [SerializeField]
     public UnityEvent<OnPoweredArgs> OnPowered;
-
     public UnityEvent OnPoweredOn;
     public UnityEvent OnPoweredOff;
 
+    private bool blackedOut;
+
+    public virtual bool Powered => !blackedOut && PoweredNormally || debugAsPoweredOn; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
+
+    protected bool PoweredNormally => (invertSignal ? powerRefs <= 0 : powerRefs > 0);
+
+    public virtual bool AffectedByBlackout => nodeType == NodeType.INPUT && affectedByBlackout && !FactoryGrid.IsInPast(gameObject);
+    protected static bool CrystalBlackout => SGrid.Current.GetArea() == Area.Factory && PowerCrystal.Blackout;
+
     protected void Awake()
     {
-        powerPathPrevs = new List<ElectricalNode>();
+        powerPathPrevs = new Dictionary<ElectricalNode, int>();
         powerRefs = 0;  //Always start off and let things turn on.
     }
 
@@ -67,7 +71,10 @@ public class ElectricalNode : MonoBehaviour
 
     private void Start()
     {
-        if (Powered)
+        if (powerOnStart)
+        {
+            StartSignal(true);
+        } else if (Powered)
         {
             //This is mainly for inverted power.
             OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
@@ -84,7 +91,15 @@ public class ElectricalNode : MonoBehaviour
         }
     }
 
-    public virtual void StartSignal(bool input)
+    public void SetBlackout(bool isBlackout)
+    {
+        blackedOut = isBlackout;
+        OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
+
+        PushSignalToOutput(!isBlackout && PoweredNormally);
+    }
+
+    public virtual void StartSignal(bool input, bool includeSelf = true)
     {
         if (nodeType != NodeType.INPUT)
         {
@@ -92,17 +107,16 @@ public class ElectricalNode : MonoBehaviour
             Debug.LogError("Can only start a signal from an INPUT node.");
         }
 
-        if (Powered != input && !(PowerCrystal.Blackout && input))    //This ensures we don't double propagate
+        if (Powered != input)    //This ensures we don't double propagate
         {
-            powerRefs = input ? 1 : 0;
+            if (includeSelf)
+            {
+                powerRefs = input ? 1 : 0;
+            }
 
             OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
 
-            foreach (ElectricalNode node in neighbors)
-            {
-                HashSet<ElectricalNode> recStack = new HashSet<ElectricalNode>() { this };
-                node.PropagateSignal(input, this, recStack);
-            }
+            PushSignalToOutput(input);
         }
     }
 
@@ -137,27 +151,38 @@ public class ElectricalNode : MonoBehaviour
             return false;
         }
 
-        bool oldPowered = Powered;
-
-        //Update the reference counter
-        //An assumption is made here that value is a newly updated value, otherwise the refCount strategy does not work.
         if (value)
         {
             powerRefs = powerRefs + numRefs;
-            powerPathPrevs.Add(prev);
+            if (!powerPathPrevs.ContainsKey(prev))
+            {
+                powerPathPrevs.Add(prev, 0);
+            }
+            powerPathPrevs[prev] += numRefs;
         }
         else
         {
             powerRefs = Mathf.Max(powerRefs - numRefs, 0);
-            powerPathPrevs.Remove(prev);
+            if (powerPathPrevs.ContainsKey(prev)) {
+                powerPathPrevs[prev] -= numRefs;
+                if (powerPathPrevs[prev] <= 0)
+                {
+                    powerPathPrevs.Remove(prev);
+                }
+            }
         }
 
         return true;
     }
 
     //Takes the existing signal on the node and pushes it to the node's neighbors.
-    protected void PushSignalToOutput(bool value, HashSet<ElectricalNode> recStack, int numRefs = 1)
+    protected void PushSignalToOutput(bool value, HashSet<ElectricalNode> recStack = null, int numRefs = 1)
     {
+        if (recStack == null)
+        {
+            recStack = new HashSet<ElectricalNode>();
+        }
+
         //Propagate new signal to all other neighbors
         recStack.Add(this);
         foreach (ElectricalNode neighbor in neighbors)
@@ -180,6 +205,10 @@ public class ElectricalNode : MonoBehaviour
             nodes.Add(new HashSet<ElectricalNode>());
 
             GetPathNodesRecursive(nodes);
+        } else if (powerRefs > 0 && nodeType == NodeType.INPUT)   //This is an input powered node
+        {
+            nodes.Add(new HashSet<ElectricalNode>());
+            nodes[0].Add(this);
         }
     }
 
@@ -194,7 +223,7 @@ public class ElectricalNode : MonoBehaviour
             var rootPath = new HashSet<ElectricalNode>(currPathNodes);
 
             allPathNodes.RemoveAt(allPathNodes.Count - 1);
-            foreach (var node in powerPathPrevs)
+            foreach (var node in powerPathPrevs.Keys)
             {
                 if (!currPathNodes.Contains(node))
                 {
@@ -206,7 +235,7 @@ public class ElectricalNode : MonoBehaviour
         } else
         {
             //Continue current path
-            foreach (var node in powerPathPrevs)
+            foreach (var node in powerPathPrevs.Keys)
             {
                 if (!currPathNodes.Contains(node))
                 {
@@ -336,6 +365,14 @@ public class ElectricalNode : MonoBehaviour
         return true;
     }
 
+    public void RemoveAllNeighbors()
+    {
+        while(neighbors.Count > 0) 
+        {
+            RemoveNeighbor(neighbors[0]);
+        }
+    }
+
     private static void PropagateAllPathsFromTo(bool value, ElectricalNode from, ElectricalNode to)
     {
         List<HashSet<ElectricalNode>> pathsFrom;
@@ -344,7 +381,7 @@ public class ElectricalNode : MonoBehaviour
         //Propagate each path individually
         foreach (var path in pathsFrom)
         {
-            to.PropagateSignal(true, from, path, 1);
+            to.PropagateSignal(value, from, path, 1);
         }
     }
 }

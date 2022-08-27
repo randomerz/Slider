@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class PowerCrystal : MonoBehaviour
 {
-    private const string lightShaderName = "Shader Graphs/LightShaderBoolean";
-
     private ElectricalNode[] allNodes;
     private Conveyor[] conveyors;
-    private List<Material> lightMaterials;
 
     public static bool Blackout { get; private set; }
 
@@ -17,60 +14,53 @@ public class PowerCrystal : MonoBehaviour
         Blackout = false;
         allNodes = GameObject.FindObjectsOfType<ElectricalNode>();
         conveyors = GameObject.FindObjectsOfType<Conveyor>();
+    }
 
-        lightMaterials = FindMaterials();
+    public void CheckBlackout(Condition cond)
+    {
+        cond.SetSpec(Blackout);
     }
 
     public void StartCrystalPoweredSequence()
     {
-        AudioManager.StopMusic("Factory");
         StartCoroutine(CrystalPoweredBuildup());
     }
 
     private IEnumerator CrystalPoweredBuildup()
     {
+        AudioManager.StopMusic("Factory");
         yield return new WaitForSeconds(2.0f);
         DoBlackout();
     }
 
     private void DoBlackout()
     {
-        Blackout = true;
         AudioManager.PlayWithVolume("Power Off", 1.0f);
+        SetBlackout(true);
+        FactoryLightManager.SwitchLights(false);
+    }
+
+    public void TurnEverythingBackOn()
+    {
+        AudioManager.PlayWithVolume("Power On", 1.0f);
+        AudioManager.PlayMusic("Factory");
+        SetBlackout(false);
+    }
+
+    private void SetBlackout(bool isBlackout)
+    {
+        Blackout = isBlackout;
         foreach (var node in allNodes)
         {
-            if (node.nodeType == ElectricalNode.NodeType.INPUT)
+            if (node != null && node.AffectedByBlackout)
             {
-                node.StartSignal(false);
+                node.SetBlackout(isBlackout);
             }
         }
 
         foreach (var conveyor in conveyors)
         {
-            conveyor.ConveyorEnabled = false;
+            conveyor.ConveyorEnabled = !isBlackout;
         }
-
-        foreach (var mat in lightMaterials)
-        {
-            mat.SetInt("_LightOn", 0);  //L: No set bool? Ya serious?
-        }
-    }
-
-    private List<Material> FindMaterials()
-    {
-        List<Material> materials = new List<Material>();
-        Shader lightShader = Shader.Find(lightShaderName);
-
-        Renderer[] allRenderers = FindObjectsOfType<Renderer>(true);
-        foreach (Renderer r in allRenderers)
-        {
-            if (r.material.shader == lightShader)
-            {
-                materials.Add(r.material);
-                //Debug.Log(r.gameObject.name);
-            }
-        }
-
-        return materials;
     }
 }

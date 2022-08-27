@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -130,6 +131,48 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Glass Clink
     clip: {fileID: 8300000, guid: fa5d024a49be548988f2317729a17510, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
+  - name: Conveyor
+    clip: {fileID: 8300000, guid: 6256065330d07c94aacb64ec20d9d1a5, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
+  - name: Crocodile Grab Sequence
+    clip: {fileID: 8300000, guid: 9848e8ddddfb820498e9300d5302c3f3, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: Water Drop Water
+    clip: {fileID: 8300000, guid: 7b6df99774a5c8b47bcf5759e699d7a4, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
+  - name: Baboon Screech
+    clip: {fileID: 8300000, guid: 7f1f6d9cb878f1e46a92f2b7a6aa7d3d, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
+  - name: Dice Shake
+    clip: {fileID: 8300000, guid: 69ae3cff3d898e84084b4d571f2d7b9b, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
+  - name: Bottle Fill
+    clip: {fileID: 8300000, guid: 815e71289506ab24d9a4a828630be2f1, type: 3}
     volume: 1
     pitch: 1
     loop: 0

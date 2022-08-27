@@ -110,12 +110,12 @@ TextureImporter:
       name: casinotileset_interactable_blocks_0
       rect:
         serializedVersion: 2
-        x: 218
-        y: 0
-        width: 218
-        height: 300
+        x: 346
+        y: 160
+        width: 64
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -123,6 +123,27 @@ TextureImporter:
       bones: []
       spriteID: ec1c57496ffa78c00800000000000000
       internalID: 902883723898634702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casinotileset_interactable_blocks_1
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 95
+        width: 48
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 71e78aad2159731468d84948df33408a
+      internalID: -402438278
       vertices: []
       indices: 
       edges: []
@@ -138,6 +159,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      casinotileset_interactable_blocks_1: -402438278
       casinotileset_interactable_blocks_0: 902883723898634702
   spritePackingTag: 
   pSDRemoveMatte: 0

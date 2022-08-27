@@ -32,14 +32,8 @@ public class Conveyor : ElectricalNode
         }
     }
 
-    //public bool CheckingInterruptMove
-    //{
-    //    get;
-    //    private set;
-    //}
-
     private bool ConveyorPowered => ConveyorEnabled && Powered;
-    private bool waitingToDoMove = false;
+    private bool waitingToQueueAndFinishMove = false;
 
     private new void Awake()
     {
@@ -102,31 +96,55 @@ public class Conveyor : ElectricalNode
 
     private void TryQueueConveyorMove()
     {
-        if (ConveyorPowered && !waitingToDoMove)
+        if (ConveyorPowered && !waitingToQueueAndFinishMove)
         {
             SMoveConveyor move = ConstructMove();
             if (move != null)
             {
-                waitingToDoMove = true;
-                StartCoroutine(FactoryArtifact.WaitUntilCanQueueMoveSafely(move, QueueConveyorMove));
-            } else
-            {
-                //CheckingInterruptMove = false;
+                waitingToQueueAndFinishMove = true;
+                StartCoroutine(WaitUntilCanQueueMoveSafely(move, QueueConveyorMove));
             }
+        }
+    }
+
+    public IEnumerator WaitUntilCanQueueMoveSafely(SMove move, System.Action callback = null)
+    {
+        if (FactoryArtifact.DequeueLocked)
+        {
+            yield return new WaitUntil(() => !FactoryArtifact.DequeueLocked);   //Mutex locks, woo hoo!
+        }
+        FactoryArtifact.DequeueLocked = true;
+
+        List<SMove> activeMovesWhenCalled = new List<SMove>(UIArtifact.GetActiveMoves());
+        foreach (SMove activeMove in activeMovesWhenCalled)
+        {
+            if (activeMove.Overlaps(move))
+            {
+                while (UIArtifact.GetActiveMoves().Contains(activeMove))
+                {
+                    yield return null;
+                }
+                break;
+            }
+        }
+
+        if (callback != null)
+        {
+            callback();
         }
     }
 
     private void QueueConveyorMove()
     {
         //Construct a brand new move because it might have changed! (ex: tile moving in front of conveyor, so have to push both tiles).
-        waitingToDoMove = false;
         SMoveConveyor newMove = ConstructMove();
         if (ConveyorPowered && newMove != null)
         {
             artifact.QueueMoveToFront(newMove);
         }
-        FactoryArtifact.DequeueLocked = false;  //Make sure the key is released or else we will spinlock.
-    }              
+        waitingToQueueAndFinishMove = false;
+        FactoryArtifact.DequeueLocked = false;  //Make sure the key is released, even if we didn't do the move, or else we will spinlock.
+    }
 
     //This method covers conveyor belts that stretch over multiple tiles as well as arbitrary grid size, which is a lot more than we needed lol.
     private SMoveConveyor ConstructMove()

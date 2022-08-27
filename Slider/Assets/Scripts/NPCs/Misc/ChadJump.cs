@@ -6,11 +6,11 @@ public class ChadJump : MonoBehaviour
 {
     enum JumpState
     {
-        standing,
-        jumping,
-        jumped,
-        falling,
-        fell
+        STANDING,
+        JUMPING,
+        JUMPED,
+        FALLING,
+        FELL
     }
 
     [Header("Chad Animation stuff")]
@@ -52,7 +52,7 @@ public class ChadJump : MonoBehaviour
         if (SGrid.Current.GetStile(islandId) != null &&
             SGrid.Current.GetStile(islandId).isTileActive &&
             e.stile.islandId == islandId && 
-            jumpState == JumpState.jumped)
+            jumpState == JumpState.JUMPED)
         {
             // Falling!
             StartCoroutine(Fall());
@@ -62,16 +62,16 @@ public class ChadJump : MonoBehaviour
     // So that the dcond can call after dialogue ends
     public void JumpStarter()
     {
-        if (jumpState != JumpState.jumping)
+        if (jumpState != JumpState.JUMPING)
         {
             StartCoroutine(Jump());
         }
     }
 
     // Animates Chad Jumping
-    public IEnumerator Jump()
+    private IEnumerator Jump()
     {
-        jumpState = JumpState.jumping;
+        jumpState = JumpState.JUMPING;
         npcAnimator.SetBool("isJumping", true);
         npcCollider.enabled = false;
 
@@ -94,14 +94,22 @@ public class ChadJump : MonoBehaviour
 
         transform.localPosition = target;
 
-        jumpState = JumpState.jumped;
+        jumpState = JumpState.JUMPED;
         npcAnimator.SetBool("isJumping", false);
     }
+
+
 
     // Animates Chad Falling
     private IEnumerator Fall()
     {
-        jumpState = JumpState.falling;
+        jumpState = JumpState.FALLING;
+        
+        foreach(AnimatorControllerParameter p in npcAnimator.parameters)
+        {
+            npcAnimator.SetBool(p.name, false);
+        }
+
         npcAnimator.SetBool("isTipping", true);
 
         yield return new WaitForSeconds(0.5f);
@@ -123,7 +131,7 @@ public class ChadJump : MonoBehaviour
 
         transform.localPosition = target;
 
-        jumpState = JumpState.fell;
+        jumpState = JumpState.FELL;
         npcAnimator.SetBool("isTipping", false);
         AudioManager.Play("Hurt");
 
@@ -135,7 +143,18 @@ public class ChadJump : MonoBehaviour
         }
     }
 
-    private void FinishFall()
+    public void ResetJump()
+    {
+        jumpState = JumpState.STANDING;
+
+        foreach (AnimatorControllerParameter p in npcAnimator.parameters)
+        {
+            npcAnimator.SetBool(p.name, false);
+        }
+
+    }
+
+    public void FinishFall()
     {
         npcCollider.enabled = true;
         flashlightItem?.SetCollider(true);
@@ -143,6 +162,21 @@ public class ChadJump : MonoBehaviour
 
     public void ChadFell(Condition cond)
     {
-        cond.SetSpec(jumpState == JumpState.fell || PlayerInventory.Contains("Flashlight"));
+        cond.SetSpec(ChadFell());
+    }
+
+    public bool ChadFell()
+    {
+        return jumpState == JumpState.FELL || PlayerInventory.Contains("Flashlight");
+    }
+
+    public bool ChadFalling()
+    {
+        return jumpState == JumpState.FALLING;
+    }
+
+    public bool ChadJumped()
+    {
+        return jumpState == JumpState.JUMPED;
     }
 }

@@ -1,15 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-//L: Used to handle queue interrupts with conveyors and separate process queue things.
 public class FactoryArtifact : UIArtifact
 {
+    [SerializeField] private Image background;
+    [SerializeField] private Sprite pastBackgroundSprite;
+    [SerializeField] private Sprite presentBackgroundSprite;
     public static bool DequeueLocked = false;
 
     private new void Awake()
     {
         base.Awake();
+    }
+
+    private new void OnEnable()
+    {
+        base.OnEnable();
+        FactoryGrid.playerPastChanged += UpdateButtonSpritesAndBackground;
     }
 
     public override void ProcessQueue()
@@ -27,43 +36,13 @@ public class FactoryArtifact : UIArtifact
         List<SMove> newMoveQueue = new List<SMove>(moveQueue);
         newMoveQueue.Insert(0, move);
 
-        //L: We also have to make sure the interrupted move does not interfere with any of the subsequent moves that have already been made on the artifact.
+        //L: We also have to make sure the queued move does not interfere with any of the subsequent moves that have already been made on the artifact.
         UndoMovesAfterOverlap(newMoveQueue, move);
 
         SwapButtonsBasedOnMove(move);
 
-
         moveQueue = new Queue<SMove>(newMoveQueue);
         base.ProcessQueue();
-        //StartCoroutine(WaitOutOverlappingActiveMoves(move, base.ProcessQueue));
-    }
-
-    public static IEnumerator WaitUntilCanQueueMoveSafely(SMove move, System.Action callback = null)
-    {
-        //This is kinda hacky, but basically we're waiting a bit in case the conveyor is turned off right after a move (Indiana Jones puzzle)
-        yield return new WaitForSeconds(0.05f);
-
-        yield return new WaitUntil(() => !DequeueLocked);   //Mutex locks, woo hoo!
-
-        DequeueLocked = true;
-
-        List<SMove> currActiveMoves = GetActiveMoves();
-        foreach (SMove activeMove in currActiveMoves)
-        {
-            if (activeMove.Overlaps(move))
-            {
-                while (currActiveMoves.Contains(activeMove))
-                {
-                    yield return null;
-                }
-                break;
-            }
-        }
-
-        if (callback != null)
-        {
-            callback();
-        }
     }
 
     private void UndoMovesAfterOverlap(List<SMove> newMoveQueue, SMove moveToCheck) {
@@ -71,7 +50,7 @@ public class FactoryArtifact : UIArtifact
         for (int i = 1; i < newMoveQueue.Count; i++)
         {
             //SMoveConveyor should never interfere, but just in case we don't want them to be undone.
-            if (!(newMoveQueue[i] is SMoveConveyor) && newMoveQueue[i].Overlaps(moveToCheck))
+            if (newMoveQueue[i].Overlaps(moveToCheck))
             {
                 cutIndex = i;
                 break;
@@ -81,7 +60,7 @@ public class FactoryArtifact : UIArtifact
         //Undo the moves on the artifact in the reverse order that they were made.
         for (int i = newMoveQueue.Count-1; i >= cutIndex; i--)
         {
-            ReverseButtonSwapBasedOnMove(newMoveQueue[i]);
+            UndoSwapsBasedOnMove(newMoveQueue[i]);
             newMoveQueue.RemoveAt(i);
         }
     }
@@ -97,13 +76,13 @@ public class FactoryArtifact : UIArtifact
 
         foreach (var b in buttonToNewPos.Keys)
         {
-            b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y);
+            b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y, true);
         }
 
         UpdateMoveOptions();
     }
 
-    private void ReverseButtonSwapBasedOnMove(SMove move)
+    private void UndoSwapsBasedOnMove(SMove move)
     {
         var buttonToNewPos = new Dictionary<ArtifactTileButton, Vector2Int>();
         foreach (Movement m in move.moves)
@@ -114,9 +93,31 @@ public class FactoryArtifact : UIArtifact
 
         foreach (var b in buttonToNewPos.Keys)
         {
-            b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y);
+            if (b.isActiveAndEnabled)   //Can't start coroutines on inactive button.
+            {
+                b.FlickerImmediate(1);
+            }
+            b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y, false);
         }
 
         UpdateMoveOptions();
+    }
+
+    private void UpdateButtonSpritesAndBackground(bool inPast)
+    {
+        foreach (var b in buttons)
+        {
+            if (inPast)
+            {
+                b.GetComponent<ArtifactTBPluginPast>().UsePastSprite();
+                b.UseDefaultEmptySprite();
+            } else
+            {
+                b.UseDefaultIslandSprite();
+                b.GetComponent<ArtifactTBPluginConveyor>().UpdateEmptySprite();
+            }
+            b.SetSpriteToIslandOrEmpty();
+        }
+        background.sprite = inPast ? pastBackgroundSprite : presentBackgroundSprite;
     }
 }

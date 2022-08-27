@@ -29,7 +29,6 @@ public class SpriteSwapper : MonoBehaviour
 
     public void TurnOff()
     {
-        Debug.Log("Sprite Swapper Off");
         sr.sprite = off;
     }
 }
