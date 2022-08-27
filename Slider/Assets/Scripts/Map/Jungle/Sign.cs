@@ -62,16 +62,26 @@ public class Sign : Box
             }
         }
 
+/*        print("boo");
+        foreach (Shape shape in shapesRecieved)
+        {
+            print(shape);
+        }
+        print("ahdkfljaldf");*/
+
         while (recipes.HasNext())
         {
+            //not finding the recipe :C
             Recipe recipe = recipes.GetNext();
+            print(recipe);
             if (recipe.Check(shapesRecieved) != null)
             {
                 //we found the recipe
+                //brah
                 currentShape = recipe.Check(shapesRecieved);
                 return;
             }
         }
-        currentShape = shapesRecieved[0]; //supposed to just pass a shape
+        currentShape = shapesRecieved[0]; //assuming there is only one shape in the list B)
     }
 }

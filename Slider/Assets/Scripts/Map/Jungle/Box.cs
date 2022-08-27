@@ -143,13 +143,13 @@ public class Box : MonoBehaviour
             //yay we got the next box
            // print("box sending shape");
             nextBox.RecieveShape(paths[currentDirectionIndex], currentShape);
-            paths[currentDirectionIndex].Activate();
+            paths[currentDirectionIndex].TurnSideOn();
         }
         else if (nextBin != null)
         {
            // print("sending shape to bin");
             nextBin.RecieveShape(currentShape);
-            paths[currentDirectionIndex].Activate();
+            paths[currentDirectionIndex].TurnSideOn();
         }
     }
 
@@ -171,9 +171,9 @@ public class Box : MonoBehaviour
 
     public void Rotate()
     {
-        paths[currentDirectionIndex].Deactivate();
+        paths[currentDirectionIndex].TurnSideOff();
         currentDirectionIndex = (currentDirectionIndex + 1) % paths.Count;
-        paths[currentDirectionIndex].Activate();
+        paths[currentDirectionIndex].TurnSideOn();
         if (currentShape == null)
         {
             return;

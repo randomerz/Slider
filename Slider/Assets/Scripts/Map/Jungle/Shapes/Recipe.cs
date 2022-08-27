@@ -16,12 +16,42 @@ public class Recipe : ScriptableObject
     public Shape Check(List<Shape> shapes)
     {
         foreach (Shapes stuff in combinations) {
-            if (shapes.Equals(stuff.ingredients)) //not sure if this works since idk if order matters
+            if (AllIngredients(shapes)) //not sure if this works since idk if order matters //IT MIGHT
             {
                 return result;
             }
         }
 
         return null;
+    }
+
+    public bool AllIngredients(List<Shape> shapes)
+    {
+        foreach (Shapes combo in combinations)
+        {
+            List<Shape> ingredients = combo.ingredients;
+            //check each combo!
+
+            List<Shape> hold = new List<Shape>();
+            foreach (Shape shape in shapes)
+            {
+                hold.Add(shape);
+            }
+
+            foreach (Shape ingredient in ingredients)
+            {
+                //check if they all have the same things
+                bool removed = hold.Remove(ingredient);
+                if (!removed)
+                {
+                    return false;
+                }
+            }
+            if (hold.Count > 0)
+            {
+                return false;
+            }
+        }
+        return false;
     }
 }
