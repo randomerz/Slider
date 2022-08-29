@@ -40,12 +40,12 @@ public class Meltable : MonoBehaviour, ISavable
 
     private void OnEnable() {
         sTile = GetComponentInParent<MountainSTile>();
-      //  SGridAnimator.OnSTileMoveEndEarly += CheckFreezeOnMoveEnd; //C: Has to be early + delay or else tile in args is null
+        SGridAnimator.OnSTileMoveEndEarly += CheckFreezeOnMoveEnd; //C: Has to be early + delay or else tile in args is null
         currFreezeTime = freezeTime;
     }
 
     private void OnDisable() {
-       // SGridAnimator.OnSTileMoveEndEarly -= CheckFreezeOnMoveEnd;
+        SGridAnimator.OnSTileMoveEndEarly -= CheckFreezeOnMoveEnd;
     }
 
 
@@ -56,6 +56,11 @@ public class Meltable : MonoBehaviour, ISavable
             if(currFreezeTime < 0)
                 Freeze();
         }
+    }
+
+    public void SetCanBreakWithAnchor(bool value)
+    {
+        canBreakWithAnchor = value;
     }
 
     public void CheckFreezeOnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)

@@ -71,7 +71,7 @@ public class WaterWheel : MonoBehaviour
 
     public void ActivateLavaStage(){
         inLavaStage = true;
-        heaterAnimator.SetBool("broken",false);
+        heaterAnimator.SetBool("Broken",false);
     }
 
     public bool IsDone(){

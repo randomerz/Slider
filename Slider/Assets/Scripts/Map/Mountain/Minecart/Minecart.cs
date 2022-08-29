@@ -188,8 +188,10 @@ public class Minecart : Item
 
     public void StopMoving(bool onTrack = false)
     {
+        Debug.Log("stopMoving");
         isMoving = false;
-        isOnTrack = onTrack? isOnTrack: false;
+        if(!onTrack)
+            isOnTrack = false;
         minecartAnimator.SetBool("isMoving", false);
         collisionPause = false;
         collidingObjects.Clear();
@@ -197,6 +199,7 @@ public class Minecart : Item
 
     public void ResetTiles()
     {
+        Debug.Log("reset tiles");
         currentTile = null;
         targetTile = null;
         currentTilePos = Vector3Int.zero;
@@ -247,19 +250,24 @@ public class Minecart : Item
     {
         if(dropOnNextMove)
         {
+            Debug.Log("dropping");
             transform.position += (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
             if(savedRM != null)
             {
+                Debug.Log("drop to rail");
                 Vector3Int targetLoc = savedRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
                 railManager = savedRM;
                 SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)); 
                 UpdateParent();
+                savedRM = null;
             }
             else
             {
-                StopMoving();
-                gameObject.transform.SetParent(SGrid.GetSTileUnderneath(transform, null).transform);
+                Debug.Log("drop to floor");
+                Derail();
+//                gameObject.transform.SetParent(SGrid.GetSTileUnderneath(transform, null).transform);
             }
+            Debug.Log("end");
             dropOnNextMove = false;
             savedRM = null;
             return;
@@ -299,9 +307,9 @@ public class Minecart : Item
         foreach(STile tile in stileList)
         {
             RailManager[] otherRMs = tile.allTileMaps.GetComponentsInChildren<RailManager>();
-            foreach(RailManager railManager in otherRMs)
-                if(railManager != null)
-                    rmList.Add(railManager);
+            foreach(RailManager rm in otherRMs)
+                if(rm != null && rm != railManager)
+                    rmList.Add(rm);
         }
         
         foreach(RailManager rm in rmList) //look and see if the next location overlaps with a location of a rail on another STile
@@ -315,7 +323,7 @@ public class Minecart : Item
                 return;
             }
         }
-        foreach(RailManager rm in rmList) //check dropping down
+        foreach(RailManager rm in rmList) //check dropping down onto tile
         {
             targetLoc = rm.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
             //C: Check if the minecart can drop down to the tile below. Needs to be in seperate loop so will check after trying all non-drops first
@@ -328,7 +336,7 @@ public class Minecart : Item
             }
         }
         
-        if(borderRM) 
+        if(borderRM) //check border
         {
             targetLoc = borderRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
             if(borderRM.railLocations.Contains(targetLoc)) //look and see if the next location overlaps with a location of a rail on the outside
@@ -339,13 +347,16 @@ public class Minecart : Item
                 return;
             }
         }
-        if(transform.position.y > 62.5)
+
+        if(transform.position.y > 62.5) //check dropping down onto world
         {
             targetWorldPos += getDirectionAsVector(currentDirection);
-            GameObject temp = gameObject;
+          //  GameObject temp = gameObject;
+            GameObject temp = new GameObject();
             temp.transform.position = targetWorldPos +  new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0);
             if(SGrid.GetStileUnderneath(temp) != null) 
                 dropOnNextMove = true;
+            Destroy(temp);
             return;
         }
         StopMoving();

@@ -84,7 +84,7 @@ public class MountainGrid : SGrid
             if(!CheckGrid.contains(GetGridString(true), "34_57_16_82" ))
             {
                 Minecart mc = FindObjectOfType<Minecart>();
-                mc.StopMoving();
+                mc?.StopMoving();
             }
             UIArtifact.ClearQueues();
             SetGrid(t7exact);
