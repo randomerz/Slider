@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class BottleManager : MonoBehaviour
 {
-    // set in the editor
-    public GameObject bottle_prefab; 
-
+    public GameObject bottlePrefab;
+    public bool puzzleSolved = false;
+    
     private int turncounter = 0;
     private GameObject bottle = null;
     private bool puzzleActive = false;
-    private bool puzzleSolved = false;
-    private STile boundSTile = null;
-
+    private STile bottleParentStile = null;
+    private string validTiles = "138"; //these tiles have a water path for the bottle
+    [SerializeField] private Vector3 bottleInitialLocation = new Vector3(-7.5f,41.5f);
     private List<Vector3> positions = new List<Vector3>{ new Vector3(-4.5f,7.5f), new Vector3(0,0), new Vector3(4.5f,-7.5f)};
+
+    
 
     public void OnEnable()
     {
@@ -28,7 +30,7 @@ public class BottleManager : MonoBehaviour
         SGridAnimator.OnSTileMoveStart -= UpdateBottleLocation;
     }
 
-    protected IEnumerator StartBottleMovementAnimation(Vector3 start, Vector3 end, float moveDuration)
+    private IEnumerator StartBottleMovementAnimation(Vector3 start, Vector3 end, float moveDuration)
     {
         float t = 0;
         while(t < moveDuration)
@@ -37,11 +39,13 @@ public class BottleManager : MonoBehaviour
             bottle.transform.localPosition = Vector3.Lerp(start, end, t/moveDuration);
             yield return null;
         }
+        bottle.transform.localPosition = end;
     }
 
     private void UpdateBottleLocation(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs){
-        if(puzzleActive && tileMoveArgs.stile.islandId == boundSTile.islandId)
+        if(puzzleActive && tileMoveArgs.stile.islandId == bottleParentStile.islandId && !bottleParentStile.hasAnchor)
         {
+            Debug.Log("wha");
             turncounter++;
             if (turncounter >2)
             {
@@ -52,15 +56,23 @@ public class BottleManager : MonoBehaviour
         }
     }
 
-    private void DestroyBottle()
+    private IEnumerator DestroyBottleExecutor()
     {
         Debug.Log("deleting bottle");
         if(bottle != null)
             bottle.GetComponent<Animator>().SetBool("IsSinking", true);
+        UITrackerManager.RemoveTracker(bottle);
         bottle = null;
         puzzleActive = false;
-        boundSTile = null;
+        bottleParentStile = null;
+        yield return null;
         
+    }
+
+    //so that juliet can call it
+    public void DestroyBottle()
+    {
+        StartCoroutine(DestroyBottleExecutor());
     }
 
     public void CreateNewBottle()
@@ -71,13 +83,13 @@ public class BottleManager : MonoBehaviour
             puzzleActive = true;
 
             Debug.Log("Creating new bottle");
-            bottle = GameObject.Instantiate(bottle_prefab, new Vector3(-7.5f,41.5f), Quaternion.identity);
+            bottle = GameObject.Instantiate(bottlePrefab, bottleInitialLocation, Quaternion.identity);
 
-            boundSTile = SGrid.GetSTileUnderneath(bottle.transform, null);
-            Debug.Log("bound stile: " + boundSTile);
-            bottle.transform.SetParent(boundSTile.transform);
+            bottleParentStile = SGrid.Current.GetGrid()[0, 2];
+            Debug.Log("bound stile: " + bottleParentStile);
+            bottle.transform.SetParent(bottleParentStile.transform);
 
-            if(boundSTile.islandId == 1 || boundSTile.islandId == 3 || boundSTile.islandId == 8)
+            if(CheckGrid.contains(SGrid.GetGridString(),$"[{validTiles}].._..._..."))
             {
                 turncounter = 0;
                 bottle.transform.localPosition = positions[turncounter];
@@ -97,7 +109,8 @@ public class BottleManager : MonoBehaviour
 
     public void InvalidTile(Condition c)
     {
-       if( CheckGrid.contains(SGrid.GetGridString(),"[138].._..._..."))
+       //only tiles 1,3, and 8 have a water path for the bottle to go through
+       if( CheckGrid.contains(SGrid.GetGridString(),$"[{validTiles}].._..._..."))
         {
             c.SetSpec(false);
         }
@@ -109,10 +122,11 @@ public class BottleManager : MonoBehaviour
 
     public void MessageDelivered(Condition c)
     {
-        if (turncounter < 3 && boundSTile != null && boundSTile.x == 2 && boundSTile.y == 0)
+        if ((turncounter < 3 && bottleParentStile != null && bottleParentStile.x == 2 && bottleParentStile.y == 0) || puzzleSolved)
         {
             c.SetSpec(true);
             puzzleSolved = true;
+
         }
         else
         {

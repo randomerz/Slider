@@ -11,7 +11,6 @@ public class OceanGrid : SGrid
 
     public GameObject burriedGuyNPC;
     public KnotBox knotBox;
-    //public LostGuyMovement lostGuyMovement;
     public BottleManager bottleManager;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
@@ -100,11 +99,13 @@ public class OceanGrid : SGrid
     public override void Save()
     {
         base.Save();
+        SaveSystem.Current.SetBool("RJBottleDelivery", bottleManager.puzzleSolved);
     }
 
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
+        bottleManager.puzzleSolved = SaveSystem.Current.GetBool("RJBottleDelivery");
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
