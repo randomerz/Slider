@@ -75,7 +75,7 @@ public class Item : MonoBehaviour
         {
             go.SetActive(false);
         }
-        spriteRenderer.sortingOrder = 1; // bring object to render above others
+        // spriteRenderer.sortingOrder = 1; // bring object to render above others
 
         float t = 0;
 

@@ -15,6 +15,7 @@ public class ShopManager : Singleton<ShopManager>
     private bool turnedInMushroom;
     private bool turnedInGoldenFish;
     private bool turnedInRock;
+    private bool turnedInRose;
     private bool startedFinalQuest;
     private bool[] wasSliderOrDrinkCollectibleBought = new bool[9]; // from 4 to 9 and then three drinks
 
@@ -146,6 +147,12 @@ public class ShopManager : Singleton<ShopManager>
             turnedInRock = true;
             EarnCredits(1);
             shopDialogueManager.UpdateDialogue("Turn in Rock");
+        }
+        if(PlayerInventory.Contains("Rose") && !turnedInRose)
+        {
+            turnedInRose = true;
+            EarnCredits(1);
+            shopDialogueManager.UpdateDialogue("Turn in Rose");
         }
 
         if (totalCreditCount - origCreditCount >= 1)

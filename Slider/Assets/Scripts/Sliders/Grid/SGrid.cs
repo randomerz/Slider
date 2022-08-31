@@ -419,7 +419,6 @@ public void SetGrid(int[,] puzzle)
 
     public void ActivateCollectible(string name)
     {
-        Debug.Log($"Called ActivateCollectible({name})");
         if (!PlayerInventory.Contains(name, myArea))
         {
             GetCollectible(name)?.gameObject.SetActive(true);
@@ -438,7 +437,6 @@ public void SetGrid(int[,] puzzle)
 
     public void GivePlayerTheCollectible(string name)
     {
-        Debug.Log("Activating collectible " + name);
         if (GetCollectible(name) != null)
         {
             ActivateCollectible(name);
@@ -652,7 +650,6 @@ public void SetGrid(int[,] puzzle)
             for (int y = 0; y < Current.Height; y++) {
                 string tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
-                Debug.Log(x + " " + y);
                 if (tids == "*") 
                 {
                     numComplete += 1;

@@ -11,12 +11,11 @@ public class OceanGrid : SGrid
 
     public GameObject burriedGuyNPC;
     public KnotBox knotBox;
-    //public LostGuyMovement lostGuyMovement;
+    public BottleManager bottleManager;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
     public List<int> buoytiles = new List<int> {1, 3, 4, 8, 9};
 
-    [SerializeField]
     private Vector2Int[] correctPath =
     {
         Vector2Int.left,
@@ -101,13 +100,14 @@ public class OceanGrid : SGrid
     public override void Save()
     {
         base.Save();
+        SaveSystem.Current.SetBool("OceanRJBottleDelivery", bottleManager.puzzleSolved);
     }
 
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
+        bottleManager.puzzleSolved = SaveSystem.Current.GetBool("RJBottleDelivery");
     }
-
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {

@@ -19,6 +19,7 @@ public class DesertGrid : SGrid
     private bool checkCompletion = false;
     private bool checkMonkey = false;
     private Coroutine waitForZ; //Should be null if monkeShakes is 0
+    private Coroutine shuffleBuildUpCoroutine;
 
     private const string DESERT_PARTY_STARTED = "desertPartyStarted";
     private const string DESERT_PARTY_FINISHED = "desertPartyFinished";
@@ -317,17 +318,67 @@ public class DesertGrid : SGrid
     //Puzzle 7: 8puzzle
     public void ShufflePuzzle()
     {
+        if (shuffleBuildUpCoroutine == null)
+        {
+            shuffleBuildUpCoroutine = StartCoroutine(ShuffleBuildUp());
+        }
+    }
+
+    private IEnumerator ShuffleBuildUp()
+    {
+        //AudioManager.Play("Puzzle Complete");
+
+        //yield return new WaitForSeconds(0.5f);
+
+        CameraShake.Shake(0.25f, 0.25f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(0.25f, 0.25f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(0.75f, 0.5f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(1.5f, 2.5f);
+        AudioManager.PlayWithVolume("Slide Explosion", 0.2f);
+        AudioManager.Play("TFT Bell");
+
+        yield return new WaitForSeconds(0.25f);
+
+        UIEffects.FlashWhite();
+        DoShuffle();
+
+        yield return new WaitForSeconds(0.75f);
+
+        CameraShake.Shake(2, 0.9f);
+    }
+
+    private void DoShuffle()
+    {
+        if (GetNumTilesCollected() != 8)
+        {
+            Debug.LogError("Tried to shuffle desert when not 8 tiles were collected! Detected " + GetNumTilesCollected() + " tiles.");
+            return;
+        }
+
         DesertArtifactRandomizer.ShuffleGrid();
 
-        // fading stuff
-        UIEffects.FlashWhite();
-        CameraShake.Shake(1.5f, 1.0f);
+        gridAnimator.ChangeMovementDuration(0.5f);
 
         checkCompletion = true;
+        SaveSystem.Current.SetBool("desertCompletion", checkCompletion);
+
         OnGridMove += UpdateButtonCompletions; // this is probably not needed
         UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
         SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
     }
+    
     private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (!PlayerInventory.Contains("Slider 9", Area.Desert) && (GetGridString() == "567_2#3_184"))
