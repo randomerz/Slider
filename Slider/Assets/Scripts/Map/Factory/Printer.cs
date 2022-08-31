@@ -8,6 +8,10 @@ public class Printer : MonoBehaviour
     public GameObject wallObject;
     public GameObject floorObject;
     public GameObject wireObject;
+    public GameObject tileItem;
+    public GameObject rocketItem;
+    public ParticleSystem poof;
+    public Animator anim;
 
     private bool giveslider = false;
     // Start is called before the first frame update
@@ -28,14 +32,23 @@ public class Printer : MonoBehaviour
     {
         if (!giveslider && walls && floor && wires)
         {
-
-            //To Code active animation
-            //give slider
-            SGrid.Current.ActivateSliderCollectible(5);
-            giveslider = true;
+            StartCoroutine(PoofCoroutine());
         }
     }
 
+    private IEnumerator PoofCoroutine()
+    {
+        rocketItem.SetActive(false);
+        poof.Play();
+        tileItem.SetActive(true);
+        anim.speed = 4;
+
+        yield return new WaitForSeconds(3f);
+
+        anim.speed = 1;
+        SGrid.Current.ActivateSliderCollectible(5);
+        giveslider = true;
+    }
     public void CheckParts()
     {
         string operatorMessage = "";
