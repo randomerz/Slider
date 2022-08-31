@@ -14,6 +14,7 @@ public class SGridAnimator : MonoBehaviour
         public STile stile;
         public Vector2Int prevPos;
         public SMove smove; // the SMove this Move() was a part of
+        public float moveDuration; // base * smove.moveduration
     }
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndEarly;
@@ -86,7 +87,8 @@ public class SGridAnimator : MonoBehaviour
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
-            smove = move
+            smove = move,
+            moveDuration = currMoveDuration
         });
 
         EffectOnMoveStart(move is SMoveConveyor);
@@ -118,46 +120,29 @@ public class SGridAnimator : MonoBehaviour
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
-            smove = move
+            smove = move,
+            moveDuration = currMoveDuration
         });
 
         OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
-            smove = move
+            smove = move,
+            moveDuration = currMoveDuration
         });
 
         EffectOnMoveFinish();
     }
 
-    // dc: next person who finds this can delete is bye bye o/
-    //protected void InvokeOnStileMoveStart(STile stile, Movement moveCoords, SMove move) {
-    //    OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
-    //    {
-    //        stile = stile,
-    //        prevPos = moveCoords.startLoc,
-    //        smove = move
-    //    });
-    //}
 
-    //protected void InvokeOnStileMoveEnd(STile stile, Movement moveCoords, SMove move) {
-    //    OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
-    //    {
-    //        stile = stile,
-    //        prevPos = moveCoords.startLoc,
-    //        smove = move
-    //    });
-    //}
-
-    // DC: this is a lot of parameters :)
     protected IEnumerator DisableBordersAndColliders(
         STile[,] grid, 
-        SGridBackground[,] bgGrid, 
-        HashSet<Vector2Int> positions, 
-        Dictionary<Vector2Int, List<int>> borders,
-        List<Coroutine> moveCoroutines
-        )
+        SGridBackground[,] bgGrid,
+        HashSet<Vector2Int> positions,
+        Dictionary<Vector2Int, 
+        List<int>> borders, 
+        List<Coroutine> moveCoroutines)
     {
         foreach (Vector2Int p in borders.Keys)
         {
