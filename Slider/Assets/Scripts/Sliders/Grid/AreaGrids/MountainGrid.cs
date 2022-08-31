@@ -97,6 +97,7 @@ public class MountainGrid : SGrid
     public void SetCrystalDelivered(bool value)
     {
         crystalDelivered = value;
+        AudioManager.Play("Puzzle Complete");
         SaveSystem.Current.SetBool("MountainCrystalDelivered", crystalDelivered);
     }
 

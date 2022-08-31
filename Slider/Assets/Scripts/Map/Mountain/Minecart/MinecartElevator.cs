@@ -30,6 +30,7 @@ public class MinecartElevator : MonoBehaviour
     {
         isFixed = true;
         mainMc.UpdateState("Empty");
+        AudioManager.Play("Puzzle Complete");
         //update sprites/animate/whatnot
     }
 
