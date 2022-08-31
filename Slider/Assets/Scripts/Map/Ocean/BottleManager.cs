@@ -45,7 +45,7 @@ public class BottleManager : MonoBehaviour
     private void UpdateBottleLocation(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs){
         if(puzzleActive && tileMoveArgs.stile.islandId == bottleParentStile.islandId && !bottleParentStile.hasAnchor)
         {
-            Debug.Log("wha");
+            //Debug.Log("wha");
             turncounter++;
             if (turncounter >2)
             {
@@ -58,7 +58,7 @@ public class BottleManager : MonoBehaviour
 
     private IEnumerator DestroyBottleExecutor()
     {
-        Debug.Log("deleting bottle");
+        //Debug.Log("deleting bottle");
         if(bottle != null)
             bottle.GetComponent<Animator>().SetBool("IsSinking", true);
         UITrackerManager.RemoveTracker(bottle);
@@ -82,11 +82,11 @@ public class BottleManager : MonoBehaviour
         {
             puzzleActive = true;
 
-            Debug.Log("Creating new bottle");
+            //Debug.Log("Creating new bottle");
             bottle = GameObject.Instantiate(bottlePrefab, bottleInitialLocation, Quaternion.identity);
 
             bottleParentStile = SGrid.Current.GetGrid()[0, 2];
-            Debug.Log("bound stile: " + bottleParentStile);
+            //Debug.Log("bound stile: " + bottleParentStile);
             bottle.transform.SetParent(bottleParentStile.transform);
 
             if(CheckGrid.contains(SGrid.GetGridString(),$"[{validTiles}].._..._..."))
@@ -94,11 +94,11 @@ public class BottleManager : MonoBehaviour
                 turncounter = 0;
                 bottle.transform.localPosition = positions[turncounter];
                 UITrackerManager.AddNewTracker(bottle, UITrackerManager.DefaultSprites.circleEmpty);
-                Debug.Log("valid tile");
+                //Debug.Log("valid tile");
             }
             else
             {
-                Debug.Log("invalid tile");
+                //Debug.Log("invalid tile");
                 DestroyBottle();
             }
 
