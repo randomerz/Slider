@@ -99,7 +99,7 @@ public class OceanGrid : SGrid
     public override void Save()
     {
         base.Save();
-        SaveSystem.Current.SetBool("RJBottleDelivery", bottleManager.puzzleSolved);
+        SaveSystem.Current.SetBool("OceanRJBottleDelivery", bottleManager.puzzleSolved);
     }
 
     public override void Load(SaveProfile profile)
