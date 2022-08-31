@@ -7,7 +7,8 @@ public class DesertGrid : SGrid
 {
     [Header("Desert")]
     public Item log; //Right now the animator for the campfire doesn't stay alive if scene transitions
-    public NPCAnimatorController campfire;
+    public Animator crocodileAnimator;
+    public Animator campfire;
     public DiceGizmo dice1;
     public DiceGizmo dice2;
     public SpriteRenderer[] casinoCeilingSprites;
@@ -18,6 +19,10 @@ public class DesertGrid : SGrid
     private bool checkCompletion = false;
     private bool checkMonkey = false;
     private Coroutine waitForZ; //Should be null if monkeShakes is 0
+    private Coroutine shuffleBuildUpCoroutine;
+
+    private const string DESERT_PARTY_STARTED = "desertPartyStarted";
+    private const string DESERT_PARTY_FINISHED = "desertPartyFinished";
 
     public override void Init() {
         InitArea(Area.Desert);
@@ -34,7 +39,7 @@ public class DesertGrid : SGrid
         if (!campfireIsLit)
         {
             log.gameObject.SetActive(true);
-            campfire.SetBoolToTrue("isDying");
+            campfire.SetBool("isDying", true);
         }
 
         AudioManager.PlayMusic("Desert");
@@ -138,19 +143,28 @@ public class DesertGrid : SGrid
     public void CheckMonkeyShakeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         STile monkeyTile = Current.GetStile(3);
-        if (monkeShake >= 3)
+        if (monkeyTile.isTileActive && e.stile == monkeyTile)
         {
-            SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
-            if (waitForZ != null) StopCoroutine(MokeZTimer());
-            checkMonkey = false;
-        }
-        else if (monkeyTile.isTileActive && e.stile == monkeyTile)
-        {
-            Debug.Log(monkeShake);
             zlist[monkeShake].SetActive(false);
             monkeShake++;
-            if (waitForZ != null) StopCoroutine(MokeZTimer());
-            waitForZ = StartCoroutine(MokeZTimer()); //First shake starts countdown timer. waitForZ should be null if monkeShake is 0
+
+            if (monkeShake >= 3)
+            {
+                // puzzle complete
+                AudioManager.PlayWithPitch("Baboon Screech", 1.5f); // TODO: make this affected by distance
+
+                SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
+                checkMonkey = false;
+                if (waitForZ != null) StopCoroutine(MokeZTimer());
+                return;
+            }
+            else
+            {
+                AudioManager.Play("Baboon Screech"); // TODO: make this affected by distance
+
+                if (waitForZ != null) StopCoroutine(MokeZTimer());
+                waitForZ = StartCoroutine(MokeZTimer()); //First shake starts countdown timer. waitForZ should be null if monkeShake is 0
+            }
         }
     }
 
@@ -275,21 +289,96 @@ public class DesertGrid : SGrid
 
     #endregion
 
+    #region Party
+    public void StartParty()
+    {
+        if (SaveSystem.Current.GetBool(DESERT_PARTY_STARTED) || SaveSystem.Current.GetBool(DESERT_PARTY_FINISHED))
+            return;
+
+        SaveSystem.Current.SetBool(DESERT_PARTY_STARTED, true);
+
+        StartCoroutine(PartyCutscene());
+    }
+
+    private IEnumerator PartyCutscene()
+    {
+        crocodileAnimator.SetTrigger("grab");
+
+        CameraShake.ShakeIncrease(3, 0.4f);
+        AudioManager.DampenMusic(0.2f, 12);
+        AudioManager.Play("Crocodile Grab Sequence");
+
+        yield return new WaitForSeconds(11);
+
+        SaveSystem.Current.SetBool(DESERT_PARTY_FINISHED, true);
+    }
+    #endregion
+
     #region 8puzzle
     //Puzzle 7: 8puzzle
     public void ShufflePuzzle()
     {
+        if (shuffleBuildUpCoroutine == null)
+        {
+            shuffleBuildUpCoroutine = StartCoroutine(ShuffleBuildUp());
+        }
+    }
+
+    private IEnumerator ShuffleBuildUp()
+    {
+        //AudioManager.Play("Puzzle Complete");
+
+        //yield return new WaitForSeconds(0.5f);
+
+        CameraShake.Shake(0.25f, 0.25f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(0.25f, 0.25f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(0.75f, 0.5f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(1.5f, 2.5f);
+        AudioManager.PlayWithVolume("Slide Explosion", 0.2f);
+        AudioManager.Play("TFT Bell");
+
+        yield return new WaitForSeconds(0.25f);
+
+        UIEffects.FlashWhite();
+        DoShuffle();
+
+        yield return new WaitForSeconds(0.75f);
+
+        CameraShake.Shake(2, 0.9f);
+    }
+
+    private void DoShuffle()
+    {
+        if (GetNumTilesCollected() != 8)
+        {
+            Debug.LogError("Tried to shuffle desert when not 8 tiles were collected! Detected " + GetNumTilesCollected() + " tiles.");
+            return;
+        }
+
         DesertArtifactRandomizer.ShuffleGrid();
 
-        // fading stuff
-        UIEffects.FlashWhite();
-        CameraShake.Shake(1.5f, 1.0f);
+        gridAnimator.ChangeMovementDuration(0.5f);
 
         checkCompletion = true;
+        SaveSystem.Current.SetBool("desertCompletion", checkCompletion);
+
         OnGridMove += UpdateButtonCompletions; // this is probably not needed
         UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
         SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
     }
+    
     private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (!PlayerInventory.Contains("Slider 9", Area.Desert) && (GetGridString() == "567_2#3_184"))

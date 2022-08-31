@@ -268,7 +268,7 @@ public class AudioManager : Singleton<AudioManager>
 
         while (t < length)
         {
-            SetMusicVolumeMultiplier(Mathf.Lerp(1, amount, _soundDampenCurve.Evaluate(t / length)));
+            SetMusicVolumeMultiplier(Mathf.Lerp(amount, 1, _soundDampenCurve.Evaluate(t / length)));
 
             yield return null;
             t += Time.deltaTime;

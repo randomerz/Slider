@@ -489,6 +489,11 @@ public class UIArtifact : Singleton<UIArtifact>
         return _instance.activeMoves.Count > 0;
     }
 
+    public static bool ActiveMovesContains(SMove move)
+    {
+        return _instance.activeMoves.Contains(move);
+    }
+
     public static List<SMove> GetActiveMoves()
     {
         return _instance.activeMoves;

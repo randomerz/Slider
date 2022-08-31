@@ -24,7 +24,7 @@ public class NPCShake : MonoBehaviour
                 break;
             transform.position = baseTransform.position + Random.insideUnitSphere *.4f;
 
-            curTime += .025f  ;
+            curTime += .025f;
 
             yield return new WaitForSeconds(.025f);
         }

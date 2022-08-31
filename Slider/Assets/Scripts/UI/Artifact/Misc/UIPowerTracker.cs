@@ -9,6 +9,7 @@ public class UIPowerTracker : MonoBehaviour
     [SerializeField] private ElectricalNode myNode;
 
     private ArtifactTileButton button;
+    private bool playerInPast;
 
     private void Awake()
     {
@@ -21,24 +22,32 @@ public class UIPowerTracker : MonoBehaviour
 
     private void OnEnable()
     {
-        SetImageActiveStatus();
+        UpdatePoweredImageEnabled();
         myNode.OnPowered.AddListener(OnMyNodePowered);
+        FactoryGrid.playerPastChanged += PlayerPastChangedHandler;
     }
 
     private void OnDisable()
     {
         myNode.OnPowered.RemoveListener(OnMyNodePowered);
+        FactoryGrid.playerPastChanged -= PlayerPastChangedHandler;
     }
 
-    private void SetImageActiveStatus()
+    private void PlayerPastChangedHandler(bool inPast)
+    {
+        playerInPast = inPast;
+        UpdatePoweredImageEnabled();
+    }
+
+    private void UpdatePoweredImageEnabled()
     {
         bool nodeOnDisabledButton = button != null && !button.TileIsActive;
-        poweredImage.enabled = myNode.Powered && !nodeOnDisabledButton;
+        poweredImage.enabled = myNode.Powered && !nodeOnDisabledButton && !playerInPast;
     }
 
     public void OnMyNodePowered(ElectricalNode.OnPoweredArgs e)
     {
-        SetImageActiveStatus();
+        UpdatePoweredImageEnabled();
     }
 }
 

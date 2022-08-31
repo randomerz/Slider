@@ -9,11 +9,15 @@ public class FactoryGrid : SGrid
     [SerializeField] private PowerCrystal powerCrystal;
     [SerializeField] private ServerComputer serverComputer;
 
+    private bool playerInPast;
+
+    public delegate void PlayerPastEvent(bool playerInPast);
+    public static event PlayerPastEvent playerPastChanged;
+
     public override void Init() {
         InitArea(Area.Factory);
         base.Init();
     }
-
 
     protected override void Start()
     {
@@ -23,6 +27,16 @@ public class FactoryGrid : SGrid
         UIEffects.FadeFromBlack();
 
         //SGrid.OnGridMove += (sender, e) => { Debug.Log(GetGridString()); };
+    }
+
+    private void Update()
+    {
+        bool oldValue = playerInPast;
+        playerInPast = FactoryGrid.IsInPast(Player.GetInstance().gameObject);
+        if (oldValue != playerInPast)
+        {
+            playerPastChanged?.Invoke(playerInPast);
+        }
     }
 
     public override void Save() 

@@ -24,18 +24,10 @@ public class ElectricalNode : MonoBehaviour
     [SerializeField] protected List<ElectricalNode> neighbors;
     [SerializeField] private bool powerOnStart;
     [SerializeField] protected bool invertSignal = false;
+    [SerializeField] protected bool affectedByBlackout = true;
 
     [Header("DEBUG TOOLS")]
     [SerializeField] protected bool debugAsPoweredOn;
-
-    public class OnPoweredArgs
-    {
-        public bool powered;
-    }
-    [SerializeField]
-    public UnityEvent<OnPoweredArgs> OnPowered;
-    public UnityEvent OnPoweredOn;
-    public UnityEvent OnPoweredOff;
 
     //These are serialized for debugging purposes. They should not need to be set in the inspector.
     [Header("EXPOSED FOR DEBUG")]
@@ -44,9 +36,22 @@ public class ElectricalNode : MonoBehaviour
     [SerializeField]
     protected Dictionary<ElectricalNode, int> powerPathPrevs;  //This is used for backtracking paths to a power source. (value is number of times referenced)
 
-    public virtual bool Powered => (!Blackout && (invertSignal ? powerRefs <= 0 : powerRefs > 0)) || debugAsPoweredOn; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
+    public class OnPoweredArgs
+    {
+        public bool powered;
+    }
+    public UnityEvent<OnPoweredArgs> OnPowered;
+    public UnityEvent OnPoweredOn;
+    public UnityEvent OnPoweredOff;
 
-    public bool Blackout => SGrid.Current.GetArea() == Area.Factory && PowerCrystal.Blackout && !FactoryGrid.IsInPast(gameObject);
+    private bool blackedOut;
+
+    public virtual bool Powered => !blackedOut && PoweredNormally || debugAsPoweredOn; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
+
+    protected bool PoweredNormally => (invertSignal ? powerRefs <= 0 : powerRefs > 0);
+
+    public virtual bool AffectedByBlackout => nodeType == NodeType.INPUT && affectedByBlackout && !FactoryGrid.IsInPast(gameObject);
+    protected static bool CrystalBlackout => SGrid.Current.GetArea() == Area.Factory && PowerCrystal.Blackout;
 
     protected void Awake()
     {
@@ -86,7 +91,15 @@ public class ElectricalNode : MonoBehaviour
         }
     }
 
-    public virtual void StartSignal(bool input)
+    public void SetBlackout(bool isBlackout)
+    {
+        blackedOut = isBlackout;
+        OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
+
+        PushSignalToOutput(!isBlackout && PoweredNormally);
+    }
+
+    public virtual void StartSignal(bool input, bool includeSelf = true)
     {
         if (nodeType != NodeType.INPUT)
         {
@@ -94,17 +107,16 @@ public class ElectricalNode : MonoBehaviour
             Debug.LogError("Can only start a signal from an INPUT node.");
         }
 
-        if (Powered != input && !(Blackout && input))    //This ensures we don't double propagate
+        if (Powered != input)    //This ensures we don't double propagate
         {
-            powerRefs = input ? 1 : 0;
+            if (includeSelf)
+            {
+                powerRefs = input ? 1 : 0;
+            }
 
             OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
 
-            foreach (ElectricalNode node in neighbors)
-            {
-                HashSet<ElectricalNode> recStack = new HashSet<ElectricalNode>() { this };
-                node.PropagateSignal(input, this, recStack);
-            }
+            PushSignalToOutput(input);
         }
     }
 
@@ -164,8 +176,13 @@ public class ElectricalNode : MonoBehaviour
     }
 
     //Takes the existing signal on the node and pushes it to the node's neighbors.
-    protected void PushSignalToOutput(bool value, HashSet<ElectricalNode> recStack, int numRefs = 1)
+    protected void PushSignalToOutput(bool value, HashSet<ElectricalNode> recStack = null, int numRefs = 1)
     {
+        if (recStack == null)
+        {
+            recStack = new HashSet<ElectricalNode>();
+        }
+
         //Propagate new signal to all other neighbors
         recStack.Add(this);
         foreach (ElectricalNode neighbor in neighbors)
