@@ -15,7 +15,6 @@ public class Printer : MonoBehaviour
     public Animator bodyAnim;
     public Animator headAnim;
 
-    private bool giveslider = false;
     // Start is called before the first frame update
     // Update is called once per frame
     private bool walls = false;
@@ -33,7 +32,7 @@ public class Printer : MonoBehaviour
 
     public void StartPoof()
     {
-        if (!giveslider && walls && floor && wires)
+        if (!PlayerInventory.Contains("Slider 5") && walls && floor && wires)
         {
             StartCoroutine(PoofCoroutine());
         }
@@ -55,7 +54,6 @@ public class Printer : MonoBehaviour
         headAnim.speed = 2.5f;
         bodyAnim.speed = 2.5f;
         SGrid.Current.ActivateSliderCollectible(5);
-        giveslider = true;
         yield return new WaitForSeconds(0.5f);
         headAnim.speed = 1f;
         bodyAnim.speed = 1f;
