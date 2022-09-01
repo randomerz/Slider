@@ -11,7 +11,9 @@ public class Printer : MonoBehaviour
     public GameObject tileItem;
     public GameObject rocketItem;
     public ParticleSystem poof;
-    public Animator anim;
+    public ParticleSystem poof2;
+    public Animator bodyAnim;
+    public Animator headAnim;
 
     private bool giveslider = false;
     // Start is called before the first frame update
@@ -21,6 +23,7 @@ public class Printer : MonoBehaviour
     private bool wires = false;
     void Awake()
     {
+        
         CheckParts();
     }
     void Update()
@@ -41,13 +44,24 @@ public class Printer : MonoBehaviour
         rocketItem.SetActive(false);
         poof.Play();
         tileItem.SetActive(true);
-        anim.speed = 4;
-
-        yield return new WaitForSeconds(3f);
-
-        anim.speed = 1;
+        bodyAnim.speed = 2.5f;
+        headAnim.speed = 2.5f;
+        yield return new WaitForSeconds(1f);
+        poof2.Play();
+        bodyAnim.speed = 4f;
+        headAnim.speed = 4f;
+        yield return new WaitForSeconds(3.5f);
+        poof2.Stop();
+        headAnim.speed = 2.5f;
+        bodyAnim.speed = 2.5f;
         SGrid.Current.ActivateSliderCollectible(5);
         giveslider = true;
+        yield return new WaitForSeconds(0.5f);
+        headAnim.speed = 1f;
+        bodyAnim.speed = 1f;
+        poof.Play();
+        rocketItem.SetActive(true);
+        tileItem.SetActive(false);
     }
     public void CheckParts()
     {
