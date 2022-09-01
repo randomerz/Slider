@@ -70,16 +70,17 @@ public class Printer : MonoBehaviour
         SetActives();
         if (!floor && !walls && !wires)
         {
-            operatorMessage = "This printer can print the next tile! Bring these three parts: the floor, the walls, and the wires.";
+            // first message
+            operatorMessage = "I'll just need these materials: the floor, the walls, and the wires!!!";
         }
         else if (floor && walls && wires)
         {
-            operatorMessage = "You have all the parts! You're ready to print!";
+            // ready to print
+            operatorMessage = "Radical, let me turn it on!!!!";
         }
         else
         {
             List<string> mlist = new List<string>();
-            operatorMessage = "It still needs";
             if (!floor)
             {
                 mlist.Add(" the floor");
@@ -92,7 +93,7 @@ public class Printer : MonoBehaviour
             {
                 mlist.Add(" the wires");
             }
-            operatorMessage += string.Join(",", mlist) + ".";
+            operatorMessage = $"It still needs{string.Join(',', mlist)}!!!";
         }
         SaveSystem.Current.SetString("FactoryPrinterParts", operatorMessage);
     }
