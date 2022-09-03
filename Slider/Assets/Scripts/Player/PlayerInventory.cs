@@ -58,6 +58,7 @@ public class PlayerInventory : MonoBehaviour
         equipables.Clear();
         itemIterator = equipables.GetEnumerator();
         currentItem = null;
+        hasCollectedAnchor = false;
     }
 
     public void SetCollectiblesList(List<Collectible.CollectibleData> value)

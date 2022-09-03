@@ -489,7 +489,7 @@ public void SetGrid(int[,] puzzle)
 
     public virtual void Save() 
     { 
-        Debug.Log("Saving data for " + myArea);
+        Debug.Log($"[Saves] Saving data for {myArea}");
         SaveSystem.Current.SaveSGridData(myArea, this);
     }
 
@@ -505,7 +505,7 @@ public void SetGrid(int[,] puzzle)
             return;
         }
 
-        Debug.Log("Loading saved data for " + myArea + "...");
+        Debug.Log($"[Saves] Loading saved data for {myArea}.");
 
         // setting grids... similar to initialization
         STile[,] newGrid = new STile[Width, Height];

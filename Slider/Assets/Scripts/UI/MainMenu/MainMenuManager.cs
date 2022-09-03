@@ -324,7 +324,6 @@ public class MainMenuManager : Singleton<MainMenuManager>
                 return;
 
             keyboardEnabled = false;
-            Debug.Log("Starting new game with profile: " + profileName);
 
             SaveSystem.SetProfile(newSaveProfileIndex, new SaveProfile(profileName));
             SaveSystem.SetCurrentProfile(newSaveProfileIndex);
