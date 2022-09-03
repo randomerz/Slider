@@ -29,11 +29,7 @@ public class ElectricalNode : MonoBehaviour
     [Header("DEBUG TOOLS")]
     [SerializeField] protected bool debugAsPoweredOn;
 
-    //These are serialized for debugging purposes. They should not need to be set in the inspector.
-    [Header("EXPOSED FOR DEBUG")]
-    [SerializeField]
     protected int powerRefs;
-    [SerializeField]
     protected Dictionary<ElectricalNode, int> powerPathPrevs;  //This is used for backtracking paths to a power source. (value is number of times referenced)
 
     public class OnPoweredArgs
