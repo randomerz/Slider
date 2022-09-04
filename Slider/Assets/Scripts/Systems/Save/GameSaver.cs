@@ -39,6 +39,7 @@ public class GameSaver : MonoBehaviour
 
     private void SaveGame()
     {
+        Debug.Log("[Saves] Autosaving...");
         SaveSystem.SaveGame();
     }
 

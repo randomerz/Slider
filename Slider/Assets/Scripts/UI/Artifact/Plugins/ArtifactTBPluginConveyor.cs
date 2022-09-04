@@ -55,7 +55,10 @@ public class ArtifactTBPluginConveyor : ArtifactTBPlugin
 
     public void UpdateEmptySprite()
     {
-        if (!FactoryGrid.IsInPast(Player.GetInstance().gameObject) && !TrySetEmptySpriteToConveyor())
+        bool isInPast = false;
+        
+        isInPast = FactoryGrid.IsInPast(Player.GetInstance().gameObject);
+        if (!isInPast && !TrySetEmptySpriteToConveyor())
         {
             button.UseDefaultEmptySprite();
         }

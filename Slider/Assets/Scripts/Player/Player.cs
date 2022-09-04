@@ -43,6 +43,11 @@ public class Player : Singleton<Player>, ISavable
             Init();
     }
 
+    public void InitSingleton()
+    {
+        InitializeSingleton(overrideExistingInstanceWith: this);
+    }
+
     public void Init()
     {
         didInit = true;
@@ -241,7 +246,6 @@ public class Player : Singleton<Player>, ISavable
         transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
         STile stileUnderneath = SGrid.GetSTileUnderneath(transform, null);
         transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
-        //Debug.Log("setting position to: " + new Vector3(sp.position[0], sp.position[1], sp.position[2]));
 
         SetIsOnWater(sp.isOnWater);
         SetIsInHouse(sp.isInHouse);

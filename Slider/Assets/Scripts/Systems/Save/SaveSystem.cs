@@ -16,7 +16,7 @@ public class SaveSystem
         get {
             if (current == null && SGrid.Current != null) // SGrid.current != null meas we are in play
             {
-                Debug.LogWarning("Save System is not using a profile! Creating a default profile for now...");
+                Debug.LogWarning("[File IO] Save System is not using a profile! Creating a default profile for now...");
                 current = new SaveProfile("Boomo");
                 currentIndex = -1;
             }
@@ -94,7 +94,7 @@ public class SaveSystem
 
     private static void SaveToFile(SerializableSaveProfile profile, int index)
     {
-        Debug.Log("Saving data to file " + index + "...");
+        Debug.Log($"[File IO] Saving data to file {index}.");
 
         BinaryFormatter formatter = new BinaryFormatter();
         string path = GetFilePath(index);
@@ -143,8 +143,6 @@ public class SaveSystem
 
         // Load last scene the player was in
         string sceneToLoad = current.GetLastArea().ToString();
-        if (current.GetBool("isDemoBuild") && sceneToLoad == "Caves")
-            sceneToLoad = "Demo Caves";
         SceneManager.LoadScene(sceneToLoad);
     }
 
@@ -155,7 +153,7 @@ public class SaveSystem
 
     private static SerializableSaveProfile LoadFromFile(int index)
     {
-        Debug.Log("Loading data from file " + index + "...");
+        Debug.Log($"[File IO] Loading data from file {index}.");
 
         string path = GetFilePath(index);
         if (File.Exists(path))
@@ -170,14 +168,14 @@ public class SaveSystem
         }
         else
         {
-            Debug.LogWarning("Save file not found at " + path);
+            Debug.LogWarning($"[File IO] Save file not found at {path}");
             return null;
         }
     }
 
     public static void DeleteSaveProfile(int index)
     {
-        Debug.Log("Deleting Save profile #" + index + "!");
+        Debug.Log($"[File IO] Deleting Save profile #{index}!");
 
         saveProfiles[index] = null;
 

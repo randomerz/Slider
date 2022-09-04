@@ -36,6 +36,9 @@ public class SceneInitializer : MonoBehaviour
         if (uiArtifact == null)
             uiArtifact = GameObject.FindObjectOfType<UIArtifact>();
 
+        // DC: I LOVE DEALING WITH CIRCULAR DEPENDENCIES
+        player?.InitSingleton();
+
         // Run inits (automatically sets singletons)
         uiArtifact?.Init();
         sgrid?.Init(); // sgrid.Load is dependent on UIArtifact singleton
