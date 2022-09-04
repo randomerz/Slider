@@ -8,6 +8,9 @@ public class CaveGrid : SGrid
 
     private bool allTilesLit = false;
 
+    [SerializeField] private CaveDoor caveDoor;
+    [SerializeField] private MountainCaveWall mountainCaveWall;
+
     static System.EventHandler<SGridAnimator.OnTileMoveArgs> checkCompletionsOnMoveFunc;
 
     public override void Init() {
@@ -113,10 +116,14 @@ public class CaveGrid : SGrid
     public override void Save() 
     {
         base.Save();
+        caveDoor.Save();
+      //  mountainCaveWall.Save();
     }
 
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
+        caveDoor.Load(profile);
+        mountainCaveWall.Load(profile);
     }
 }

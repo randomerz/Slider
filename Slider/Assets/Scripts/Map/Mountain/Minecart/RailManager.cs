@@ -36,7 +36,6 @@ public class RailManager : MonoBehaviour
     public void ChangeTile(Vector3Int loc, RailTile tile)
     {
         int index = stateOneTiles.IndexOf(tile);
-        Debug.Log(tile);
         if (index > -1)
             SetTile(loc, stateZeroTiles[index]);
     }

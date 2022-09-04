@@ -236,4 +236,5 @@ public class STile : MonoBehaviour
 
         allTileMaps.transform.position = pos;
     }
+
 }

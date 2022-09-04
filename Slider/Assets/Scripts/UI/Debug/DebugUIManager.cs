@@ -21,6 +21,7 @@ public class DebugUIManager : MonoBehaviour
     public GameObject anchorPrefab;
     public GameObject minecartPrefab;
 
+
     private void Awake()
     {
         controls = new InputSettings();
@@ -43,13 +44,14 @@ public class DebugUIManager : MonoBehaviour
         if (Player.GetInstance() == null || !GameManager.instance.debugModeActive)
             return;
         isDebugOpen = !isDebugOpen;
-        Player.SetCanMove(!isDebugOpen);
         debugPanel.SetActive(isDebugOpen);
 
         if (isDebugOpen)
         {
             UIManager.PauseGameGlobal();
             UIManager.canOpenMenus = false;
+
+            Player.SetCanMove(false);
 
             consoleText.Select();
             consoleText.ActivateInputField();
@@ -60,6 +62,7 @@ public class DebugUIManager : MonoBehaviour
         {
             UIManager.CloseUI();
             UIManager.canOpenMenus = true;
+            Player.SetCanMove(true);
         }
     }
 
@@ -237,6 +240,32 @@ public class DebugUIManager : MonoBehaviour
         {
             SGrid.Current.GetCollectible("Slider " + i)?.DoPickUp();
         }
+    }
+
+    public void ActivateAllCollectibles(bool excludeSliders = false)
+    {
+        foreach (Collectible c in SGrid.Current.GetCollectibles())
+        {
+            if(excludeSliders && c.name.Contains("Slider")){}
+            else
+            {
+                c.gameObject.SetActive(true);
+                c.transform.position = Player.GetPosition(); 
+            }
+        }
+        UIManager.CloseUI();
+    }
+
+    //C: Gives all collectables for that area
+    public void AC()
+    {
+        ActivateAllCollectibles();
+    }
+
+    //C: Gives all collectables for that area, excluding Sliders
+    public void ACES()
+    {
+        ActivateAllCollectibles(true);
     }
 
     public void DebugFactoryPast()

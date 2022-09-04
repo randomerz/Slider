@@ -18,6 +18,8 @@ public class RailTile : Tile
     
     public int defaultDir = 0; //the direction that the minecart will begin traveling in by default
 
+    public bool isPowered = false;
+
     #if UNITY_EDITOR
     [MenuItem("Assets/Create/2D/Tiles/Custom Tiles/Rail Tile")]
     public static void CreateRailTile()
