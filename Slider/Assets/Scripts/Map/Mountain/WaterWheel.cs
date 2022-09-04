@@ -61,10 +61,12 @@ public class WaterWheel : MonoBehaviour
         if(lavaCount == 1) {
             cog1.AddLava();
             cog1.Melt();
+            cog1.SetRefreezeOnTop(false);
         }
         if(lavaCount == 2){
             cog2.AddLava();
             cog2.Melt();
+            cog2.SetRefreezeOnTop(false);
         }
     }
 
@@ -72,9 +74,16 @@ public class WaterWheel : MonoBehaviour
     {
         if(!inLavaStage) return;
         if(lavaCount > 1)
+        {
             cog2.RemoveLava();
+            cog2.SetRefreezeOnTop(true);
+
+        }
         if(lavaCount > 0)
+        {
             cog1.RemoveLava();
+            cog1.SetRefreezeOnTop(true);
+        }
         lavaCount = 0;
         heaterAnimator.SetInteger("Lava",lavaCount);
         hasMovedTile = true;
