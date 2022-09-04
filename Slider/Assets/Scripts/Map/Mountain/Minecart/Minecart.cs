@@ -77,7 +77,6 @@ public class Minecart : Item
             return;
         if(e.stile == currentSTile)
         {
-            Debug.Log("Minecart stopped because tile " + e.stile.islandId + " was moved");
             if(isMoving)
                 Derail();
             else
@@ -161,7 +160,9 @@ public class Minecart : Item
     {
         if(other.gameObject.CompareTag("Player"))
             collisionPause = true;
-        else if(other.gameObject.layer == 14 || other.gameObject.tag.Equals("MinecartIgnore") || dropOnNextMove) //C: Layer 14 is MinecartIgnore, adding drop might break something lol
+        else if ((dropOnNextMove && !other.gameObject.tag.Equals("WorldMapCollider")) 
+                || (other.gameObject.layer == 14 && !dropOnNextMove) //C: Layer 14 is MinecartIgnore
+                || other.gameObject.tag.Equals("MinecartIgnore"))
             return;
         else
             StopMoving();
@@ -188,7 +189,6 @@ public class Minecart : Item
 
     public void StopMoving(bool onTrack = false)
     {
-        Debug.Log("stopMoving");
         isMoving = false;
         if(!onTrack)
             isOnTrack = false;
@@ -199,7 +199,6 @@ public class Minecart : Item
 
     public void ResetTiles()
     {
-        Debug.Log("reset tiles");
         currentTile = null;
         targetTile = null;
         currentTilePos = Vector3Int.zero;
@@ -250,11 +249,9 @@ public class Minecart : Item
     {
         if(dropOnNextMove)
         {
-            Debug.Log("dropping");
             transform.position += (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
             if(savedRM != null)
             {
-                Debug.Log("drop to rail");
                 Vector3Int targetLoc = savedRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
                 railManager = savedRM;
                 SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)); 
@@ -263,11 +260,9 @@ public class Minecart : Item
             }
             else
             {
-                Debug.Log("drop to floor");
                 Derail();
-//                gameObject.transform.SetParent(SGrid.GetSTileUnderneath(transform, null).transform);
+                UpdateParent(SGrid.GetSTileUnderneath(transform, null));
             }
-            Debug.Log("end");
             dropOnNextMove = false;
             savedRM = null;
             return;
@@ -348,14 +343,19 @@ public class Minecart : Item
             }
         }
 
-        if(transform.position.y > 62.5) //check dropping down onto world
+        if(transform.position.y > 93 && transform.position.y < 124
+            && transform.position.x > -7 && transform.position.x < 24) //check dropping down onto world
         {
+            bool shouldDrop = true;
             targetWorldPos += getDirectionAsVector(currentDirection);
           //  GameObject temp = gameObject;
             GameObject temp = new GameObject();
+            if(SGrid.GetStileUnderneath(temp) != null) //don't drop if there is an adj tile
+                shouldDrop = false;
             temp.transform.position = targetWorldPos +  new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0);
-            if(SGrid.GetStileUnderneath(temp) != null) 
-                dropOnNextMove = true;
+            if(SGrid.GetStileUnderneath(temp) == null) //don't drop unless there is a tile to drop down onto
+                shouldDrop = false;
+            dropOnNextMove = shouldDrop;
             Destroy(temp);
             return;
         }
@@ -427,9 +427,10 @@ public class Minecart : Item
         currentSTile = null;
     }
 
-    private void UpdateParent(GameObject go)
+    private void UpdateParent(STile sTile)
     {
-        gameObject.transform.parent = railManager.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
+        gameObject.transform.parent = sTile.transform.Find("Objects").transform;
+        currentSTile = sTile;
     }
 
     //C: returns a vector that can be added to the tile position in order to determine the location of the specified point
@@ -467,7 +468,6 @@ public class Minecart : Item
     }
 
     #endregion
-
 
     public void CheckIsEmpty(Condition c){
         c.SetSpec(mcState == MinecartState.Empty);

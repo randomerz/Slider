@@ -14,6 +14,8 @@ public class WaterWheel : MonoBehaviour
     private int lavaCount = 0;
     private bool hasAddedLava = false;
     private bool hasMovedTile = false;
+    private bool firstPower = false;
+    private bool firstLavaPower = false;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
@@ -33,6 +35,7 @@ public class WaterWheel : MonoBehaviour
 
     private void Update() {
         UpdatePower();
+        
     }
 
 
@@ -40,6 +43,14 @@ public class WaterWheel : MonoBehaviour
         bool shouldPower = stile.x == 0 && stile.y > 1 && cog1.IsNotFrozenOrBroken() && cog2.IsNotFrozenOrBroken();
         powered = shouldPower;
         powerNode.StartSignal(shouldPower);
+        if(!firstPower){
+            firstPower = true;
+            AudioManager.Play("Puzzle Complete");
+        }
+        if(powered && inLavaStage && !firstLavaPower){
+            firstLavaPower = true;
+            AudioManager.Play("Puzzle Complete");
+        }
     }
 
     public void AddLava()
@@ -72,6 +83,13 @@ public class WaterWheel : MonoBehaviour
     public void ActivateLavaStage(){
         inLavaStage = true;
         heaterAnimator.SetBool("Broken",false);
+    }
+
+    public void SetLavaComplete()
+    {
+        inLavaStage = false;
+        cog1.SetRefreezeOnTop(false);
+        cog2.SetRefreezeOnTop(false);
     }
 
     public bool IsDone(){

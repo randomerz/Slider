@@ -13,6 +13,8 @@ public class Meltable : MonoBehaviour, ISavable
     [SerializeField] private Sprite meltedSprite;
     [SerializeField] private Sprite anchorBrokenSprite;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Sprite newFrozenSprite;
+
 
 
     [Header("Events")]
@@ -25,6 +27,7 @@ public class Meltable : MonoBehaviour, ISavable
     [Header("Properties")]
     [SerializeField] private bool canBreakWithAnchor = true;
     [SerializeField] private bool canBreakWhenNotFrozen = false;
+    [SerializeField] private bool breakToMelted = false;
     [SerializeField] private bool refreezeOnTop = true;
     [SerializeField] private bool refreezeFromBroken = false;
     [SerializeField] private bool fixBackToFrozen = false;
@@ -86,20 +89,24 @@ public class Meltable : MonoBehaviour, ISavable
 
     public bool CheckFreeze()
     {
-        return (!refreezeOnTop || (sTile == null || sTile.y > 1) && (!anchorBroken || refreezeFromBroken) && numLavaSources <= 0);
+        return (!refreezeOnTop || ((sTile != null && sTile.y > 1) || transform.position.y > 62.5) && (!anchorBroken || refreezeFromBroken) && numLavaSources <= 0);
     }
 
     public void Break(bool fromLoad = false) {
         if(fromLoad || ((isFrozen || canBreakWhenNotFrozen) && canBreakWithAnchor && !anchorBroken))
         {
-            anchorBroken = true;
-            numTimesBroken++;
-            isFrozen = false;
-           // animator.SetBool("Broken", true);
-            if(spriteRenderer)
-                spriteRenderer.sprite = anchorBrokenSprite;
-            onBreak.Invoke();
-            currFreezeTime = freezeTime;
+            if(breakToMelted)
+                Melt(true);
+            else
+            {
+                anchorBroken = true;
+                numTimesBroken++;
+                isFrozen = false;
+                if(spriteRenderer)
+                    spriteRenderer.sprite = anchorBrokenSprite;
+                onBreak.Invoke();
+                currFreezeTime = freezeTime;
+            }
         }
     }
 
@@ -150,6 +157,22 @@ public class Meltable : MonoBehaviour, ISavable
     {
         numLavaSources++;
         Melt();
+    }
+
+    public void SetRefreezeOnTop(bool value){
+        refreezeOnTop = value;
+    }
+
+    public void SetBreakToMelted(bool value){
+        breakToMelted = value;
+    }
+
+    public void SetFixBackToFrozen(bool value){
+        fixBackToFrozen = value;
+    }
+
+    public void ChangeFrozenSprite(){
+        frozenSprite = newFrozenSprite;
     }
 
     public void Save()

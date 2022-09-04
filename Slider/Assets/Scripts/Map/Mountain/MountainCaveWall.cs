@@ -47,5 +47,9 @@ public class MountainCaveWall : MonoBehaviour, ISavable
             go.SetActive(didBlowUp);
         foreach (GameObject go in deactivateOnExplosion)
             go.SetActive(!didBlowUp);
+        if(didBlowUp) {
+            mc.gameObject.SetActive(true);
+            mc.SnapToRail(mcSpawn.transform.position, 1);
+        }
     }
 }

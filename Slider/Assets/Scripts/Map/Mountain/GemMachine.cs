@@ -38,6 +38,7 @@ public class GemMachine : MonoBehaviour, ISavable
             return;
         numGems++;
         if(numGems == 2){
+            AudioManager.Play("Puzzle Complete");
             isDone = true;
             SGrid.Current.EnableStile(8);
         }
