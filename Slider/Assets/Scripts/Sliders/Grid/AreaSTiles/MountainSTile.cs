@@ -5,12 +5,6 @@ using UnityEngine;
 public class MountainSTile : STile
 {
     
-    public override void Init()
-    {
-        STILE_WIDTH = 25;
-        base.Init();
-    }
-
     public override Vector3 calculatePosition(int x, int y) 
     {
         return new Vector3(x * STILE_WIDTH, y/2 * ((MountainGrid) SGrid.Current).layerOffset + y % 2 * STILE_WIDTH);
