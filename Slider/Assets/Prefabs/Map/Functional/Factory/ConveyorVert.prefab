@@ -11,6 +11,46 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 22100000, guid: 83774946e6ed8684bb968dfbb948108e, type: 2}
+    - target: {fileID: 620539597732272972, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_Name
+      value: AxleVert (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2601878329995214916, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 953825856, guid: 0a82f762ad40573408c9bdc911617a35, type: 3}
+    - target: {fileID: 3136690967211147336, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3136690967211147336, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5267878967716107964, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_Name
+      value: AxleVert
+      objectReference: {fileID: 0}
+    - target: {fileID: 5483195036095661080, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -233257773, guid: 30c0f87bf7486024eb751a9da05d2f4a, type: 3}
+    - target: {fileID: 5799243636421247320, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: fdf14d8f18cc30e44b88f35db6b0bca7, type: 2}
+    - target: {fileID: 5983429703698817569, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.875
+      objectReference: {fileID: 0}
+    - target: {fileID: 5983429703698817569, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6241674625313697088, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 8d4734a11013591448dc0b2c4df27bfc, type: 2}
     - target: {fileID: 7361588221802975517, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
       propertyPath: m_Name
       value: ConveyorVert
@@ -63,10 +103,26 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 2290528181689289870}
+    - target: {fileID: 7463171227360128199, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7463171227360128199, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7993079124821535129, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 5371926924371013757, guid: 23802b76590bb99459f0822be89543ea, type: 3}
+    - target: {fileID: 8143930246406943861, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 8d4734a11013591448dc0b2c4df27bfc, type: 2}
+    - target: {fileID: 8938652374049387279, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -233257773, guid: 30c0f87bf7486024eb751a9da05d2f4a, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3995a29bf103e49418a73bb610f6418f, type: 3}
 --- !u!95 &2290528181689289870 stripped
