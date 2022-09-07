@@ -51,6 +51,10 @@ public class Controls : Singleton<Controls>
     {
         InitializeSingleton(overrideExistingInstanceWith:this);
 
+        // DC: See https://forum.unity.com/threads/input-system-1-4-1-released.1306062/
+        // Might be able to remove this line after input system 1.4.3
+        InputSystem.settings.SetInternalFeatureFlag("DISABLE_SHORTCUT_SUPPORT", true);
+
         if (_bindings == null)
         {
             LoadBindings();
