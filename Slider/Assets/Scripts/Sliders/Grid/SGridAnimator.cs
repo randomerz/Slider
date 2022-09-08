@@ -14,13 +14,13 @@ public class SGridAnimator : MonoBehaviour
         public STile stile;
         public Vector2Int prevPos;
         public SMove smove; // the SMove this Move() was a part of
+        public float moveDuration; // base * smove.moveduration
     }
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndEarly;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
 
     private float currMoveDuration = 1f;
-
 
     public void ChangeMovementDuration(float value)
     {
@@ -50,14 +50,8 @@ public class SGridAnimator : MonoBehaviour
                 grid[m.startLoc.x, m.startLoc.y].SetGridPosition(m.endLoc.x, m.endLoc.y);
         }
         
-        Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
-        StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move.positions, borders, moveCoroutines));
+        StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move, moveCoroutines));
 
-        // DC: bug involving anchoring a tile in a rotate, lets you walk into void
-        if (move is SMoveRotate) 
-        {
-            CheckAnchorInRotate(move as SMoveRotate, grid, moveCoroutines);
-        }
     }
 
     //C: Added to avoid duplicated code in mountian section
@@ -82,12 +76,16 @@ public class SGridAnimator : MonoBehaviour
             stile.SetBorderColliders(true);
         }
 
+
         OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
-            smove = move
+            smove = move,
+            moveDuration = currMoveDuration
         });
+
+
 
         EffectOnMoveStart(move is SMoveConveyor);
 
@@ -118,47 +116,32 @@ public class SGridAnimator : MonoBehaviour
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
-            smove = move
+            smove = move,
+            moveDuration = currMoveDuration
         });
 
         OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
         {
             stile = stile,
             prevPos = moveCoords.startLoc,
-            smove = move
+            smove = move,
+            moveDuration = currMoveDuration
         });
-
         EffectOnMoveFinish();
     }
 
-    // dc: next person who finds this can delete is bye bye o/
-    //protected void InvokeOnStileMoveStart(STile stile, Movement moveCoords, SMove move) {
-    //    OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
-    //    {
-    //        stile = stile,
-    //        prevPos = moveCoords.startLoc,
-    //        smove = move
-    //    });
-    //}
-
-    //protected void InvokeOnStileMoveEnd(STile stile, Movement moveCoords, SMove move) {
-    //    OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
-    //    {
-    //        stile = stile,
-    //        prevPos = moveCoords.startLoc,
-    //        smove = move
-    //    });
-    //}
-
     // DC: this is a lot of parameters :)
+
     protected IEnumerator DisableBordersAndColliders(
-        STile[,] grid, 
-        SGridBackground[,] bgGrid, 
-        HashSet<Vector2Int> positions, 
-        Dictionary<Vector2Int, List<int>> borders,
-        List<Coroutine> moveCoroutines
+            STile[,] grid, 
+            SGridBackground[,] bgGrid,
+            SMove move, 
+            List<Coroutine> moveCoroutines
         )
     {
+        Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
+
+        // disable borders colliders
         foreach (Vector2Int p in borders.Keys)
         {
             if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1))
@@ -170,10 +153,18 @@ public class SGridAnimator : MonoBehaviour
             }
         }
 
+        // DC: bug involving anchoring a tile in a rotate, lets you walk into void
+        STile anchorRotationPlayerStile = null;
+        if (move is SMoveRotate) 
+        {
+            anchorRotationPlayerStile = CheckAnchorInRotate(move as SMoveRotate, grid);
+            anchorRotationPlayerStile?.SetBorderColliders(true);
+        }
+
         List<STile> disabledColliders = new List<STile>();
 
         // if the player is on a slider, disable hitboxes temporarily
-        foreach (Vector2Int p in positions)
+        foreach (Vector2Int p in move.positions)
         {
             // Debug.Log(Player.GetStileUnderneath());
             if (Player.GetStileUnderneath() != null && Player.GetStileUnderneath().islandId != grid[p.x, p.y].islandId)
@@ -184,12 +175,15 @@ public class SGridAnimator : MonoBehaviour
             }
         }
 
+
+        // Wait for moves to finish
         foreach (Coroutine coroutine in moveCoroutines)
         {
             yield return coroutine;
         }
-        //yield return new WaitForSeconds(currMoveDuration); // ideally this should be called with an event, not after time
 
+
+        // enable border colliders
         foreach (Vector2Int p in borders.Keys)
         {
             if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1))
@@ -201,22 +195,33 @@ public class SGridAnimator : MonoBehaviour
             }
         }
 
+        // Anchor bug
+        anchorRotationPlayerStile?.SetBorderColliders(false);
+
         foreach (STile t in disabledColliders)
         {
             t.SetSliderCollider(true);
         }
     }
 
-    protected IEnumerator EnableTileBorderColliders(STile stile, List<Coroutine> moveCoroutines)
+    // returns the Stile which should have its border colliders enabled
+    private STile CheckAnchorInRotate(SMoveRotate move, STile[,] grid)
     {
-        stile.SetBorderColliders(true);
-        
-        foreach (Coroutine coroutine in moveCoroutines)
+        // if player is on a stile that is anchored
+        STile playerStile = Player.GetStileUnderneath();
+        if (playerStile != null && playerStile.hasAnchor)
         {
-            yield return coroutine;
+            foreach (Vector2Int p in move.anchoredPositions)
+            {
+                // and that tile is involved in the rotation
+                if (grid[p.x, p.y].isTileActive && grid[p.x, p.y].islandId == playerStile.islandId)
+                {
+                    // return that tile so its borders are enabled
+                    return playerStile;
+                }
+            }
         }
-
-        stile.SetBorderColliders(false);
+        return null;
     }
 
     protected void EffectOnMoveStart(bool isConveyor)
@@ -246,25 +251,5 @@ public class SGridAnimator : MonoBehaviour
     {
         Vector2 dif = start - end;
         return dif.magnitude > 0.1 ? dif : Vector2.zero; //C: in case of float jank
-    }
-
-    private void CheckAnchorInRotate(SMoveRotate move, STile[,] grid, List<Coroutine> moveCoroutines)
-    {
-        // if player is on a stile that is anchored
-        STile playerStile = Player.GetStileUnderneath();
-        if (playerStile != null && playerStile.hasAnchor)
-        {
-            // Debug.Log("Player is on: " + playerStile.islandId);
-            foreach (Vector2Int p in move.anchoredPositions)
-            {
-                // and that tile is involved in the rotation
-                if (grid[p.x, p.y].isTileActive && grid[p.x, p.y].islandId == playerStile.islandId)
-                {
-                    // enable colliders temporarily
-                    StartCoroutine(EnableTileBorderColliders(playerStile, moveCoroutines));
-                    return;
-                }
-            }
-        }
     }
 }

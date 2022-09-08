@@ -6,6 +6,7 @@ public class AnchorFirstAppearance : MonoBehaviour
 {
     public Anchor anchor;
     public SpriteRenderer spriteRenderer;
+    public PlayerActionHints hints;
     
     void Start()
     {
@@ -25,6 +26,7 @@ public class AnchorFirstAppearance : MonoBehaviour
     {
         ItemPickupEffect.StartCutscene(spriteRenderer.sprite, "Anchor");
         anchor.OnPickUp.RemoveListener(DoCutscene);
+        hints.TriggerHint("anchor");
         Destroy(this);
     }
 }

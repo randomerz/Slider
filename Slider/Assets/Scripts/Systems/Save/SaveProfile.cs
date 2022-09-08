@@ -184,6 +184,7 @@ public class SaveProfile
     public void LoadSavablesData()
     {
         List<ISavable> savables = GetCachedSavables();
+        Debug.Log($"[Saves] Loading {savables.Count} savables...");
         // Load Player first
         foreach (ISavable s in savables)
         {

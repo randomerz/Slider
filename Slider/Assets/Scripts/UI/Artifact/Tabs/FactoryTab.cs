@@ -53,7 +53,7 @@ public class FactoryTab : ArtifactTab
 
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
     {
-        Debug.Log("MoveMadeOnArtifact");
+        // Debug.Log("MoveMadeOnArtifact");
         if (gate.GateActive && !gate.Powered)
         {
             if (gate.Countdown > 0)
@@ -83,7 +83,7 @@ public class FactoryTab : ArtifactTab
             int currBlinks = numBlinks;
             while (currBlinks > 0)
             {
-                Debug.Log("num blinks: " + currBlinks);
+                // Debug.Log("num blinks: " + currBlinks);
                 image.sprite = blinkSprite;
                 yield return new WaitForSeconds(0.5f);
                 image.sprite = queuedNextSprite;

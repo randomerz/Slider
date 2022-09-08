@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ElectricLineCreator : MonoBehaviour
 {
@@ -8,6 +9,9 @@ public class ElectricLineCreator : MonoBehaviour
     [SerializeField] private ElectricalNode eNode;
     [SerializeField] private Transform lineStart;
     [SerializeField] private Animator anim;
+
+    public UnityEvent OnConductingOn;
+    public UnityEvent OnConductingOff;
 
     //(Node that the pilon is connected to, instantiation of the effect)
     protected Dictionary<ConductiveElectricalNode, GameObject> electricalLines;
@@ -52,6 +56,7 @@ public class ElectricLineCreator : MonoBehaviour
 
             if (eNode.Powered)
             {
+                OnConductingOn?.Invoke();
                 CreateElectricLineEffect(other);
             }
         }
@@ -66,6 +71,7 @@ public class ElectricLineCreator : MonoBehaviour
             nodesConducting.Remove(other);
             if (nodesConducting.Count == 0)
             {
+                OnConductingOff?.Invoke();
                 if (anim != null)
                 {
                     anim.SetBool("Conducting", false);
@@ -87,17 +93,19 @@ public class ElectricLineCreator : MonoBehaviour
         {
             if (!electricalLines.ContainsKey(node))
             {
-                CreateElectricLineEffect(node);
+                OnConductingOn?.Invoke();
                 if (anim != null)
                 {
                     anim.SetBool("Conducting", true);
                 }
+                CreateElectricLineEffect(node);
             }
         }
     }
 
     public void OnPoweredOff()
     {
+        OnConductingOff?.Invoke();
         if (anim != null)
         {
             anim.SetBool("Powered", false);

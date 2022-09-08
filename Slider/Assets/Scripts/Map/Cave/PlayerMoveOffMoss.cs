@@ -9,10 +9,6 @@ public class PlayerMoveOffMoss : MonoBehaviour
     public Transform player;
     public Transform playerRespawn;
 
-    public float playerBoopSpeed;
-
-    //private bool movingPlayer;
-
     private void Awake()
     {
         if (player == null)
@@ -31,36 +27,6 @@ public class PlayerMoveOffMoss : MonoBehaviour
     {
         CaveMossManager.MossIsGrowing -= CheckPlayerOnMoss;
     }
-
-    /*
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            player.transform.position = playerRespawn.position;
-        }
-    }
-    */
-
-    /*
-    public IEnumerator MovePlayerOffMoss()
-    {
-        movingPlayer = true;
-
-        //Move player off the moss
-        float t = 0.0f;
-        while (t < 1.0f)
-        {
-            t += playerBoopSpeed;
-            player.transform.position = Vector3.Lerp(player.transform.position, playerRespawn.position, t);
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        // Debug.Log(player.transform.position);
-        // Debug.Log(playerRespawn.position);
-        movingPlayer = false;
-    }
-    */
 
     internal void CheckPlayerOnMoss(object sender, CaveMossManager.MossIsGrowingArgs e)
     {

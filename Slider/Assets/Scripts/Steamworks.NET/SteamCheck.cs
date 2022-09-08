@@ -10,11 +10,11 @@ public class SteamCheck : MonoBehaviour
     {
         if (!SteamManager.Initialized)
         {
-            Debug.LogWarning("Steam Manager is Not Initialized! Make sure Steam is running in the background if you want to test Steam-related features!");
+            Debug.LogWarning("[Steam] Steam Manager is Not Initialized! Make sure Steam is running in the background if you want to test Steam-related features!");
         }
         else
         {
-            Debug.Log("Hello Steam user " + SteamFriends.GetPersonaName());
+            Debug.Log("[Steam] Hello Steam user " + SteamFriends.GetPersonaName());
         }
     }
 

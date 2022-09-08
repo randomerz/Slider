@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ConveyorVertMotor
+  m_Controller: {fileID: 9100000, guid: 5b6371aa651991947a4bdc091be0439a, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 3916dff7f380d2e4b80041d0398786f3, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ca5b6af957c70a5448ee98874a86ad87, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: de57d5313ca3aed42893f237d5eff2d3, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: f3289db9423275d4da11dcc3e7a7ee03, type: 2}
