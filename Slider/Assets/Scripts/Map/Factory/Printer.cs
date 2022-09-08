@@ -8,8 +8,13 @@ public class Printer : MonoBehaviour
     public GameObject wallObject;
     public GameObject floorObject;
     public GameObject wireObject;
+    public GameObject tileItem;
+    public GameObject rocketItem;
+    public ParticleSystem poof;
+    public ParticleSystem poof2;
+    public Animator bodyAnim;
+    public Animator headAnim;
 
-    private bool giveslider = false;
     // Start is called before the first frame update
     // Update is called once per frame
     private bool walls = false;
@@ -17,6 +22,7 @@ public class Printer : MonoBehaviour
     private bool wires = false;
     void Awake()
     {
+        
         CheckParts();
     }
     void Update()
@@ -26,16 +32,35 @@ public class Printer : MonoBehaviour
 
     public void StartPoof()
     {
-        if (!giveslider && walls && floor && wires)
+        if (!PlayerInventory.Contains("Slider 5") && walls && floor && wires)
         {
-
-            //To Code active animation
-            //give slider
-            SGrid.Current.ActivateSliderCollectible(5);
-            giveslider = true;
+            StartCoroutine(PoofCoroutine());
         }
     }
 
+    private IEnumerator PoofCoroutine()
+    {
+        rocketItem.SetActive(false);
+        poof.Play();
+        tileItem.SetActive(true);
+        bodyAnim.speed = 2.5f;
+        headAnim.speed = 2.5f;
+        yield return new WaitForSeconds(1f);
+        poof2.Play();
+        bodyAnim.speed = 4f;
+        headAnim.speed = 4f;
+        yield return new WaitForSeconds(3.5f);
+        poof2.Stop();
+        headAnim.speed = 2.5f;
+        bodyAnim.speed = 2.5f;
+        SGrid.Current.ActivateSliderCollectible(5);
+        yield return new WaitForSeconds(0.5f);
+        headAnim.speed = 1f;
+        bodyAnim.speed = 1f;
+        poof.Play();
+        rocketItem.SetActive(true);
+        tileItem.SetActive(false);
+    }
     public void CheckParts()
     {
         string operatorMessage = "";
@@ -45,16 +70,17 @@ public class Printer : MonoBehaviour
         SetActives();
         if (!floor && !walls && !wires)
         {
-            operatorMessage = "This printer can print the next tile! Bring these three parts: the floor, the walls, and the wires.";
+            // first message
+            operatorMessage = "I'll just need these materials: the floor, the walls, and the wires!!!";
         }
         else if (floor && walls && wires)
         {
-            operatorMessage = "You have all the parts! You're ready to print!";
+            // ready to print
+            operatorMessage = "Radical, let me turn it on!!!!";
         }
         else
         {
             List<string> mlist = new List<string>();
-            operatorMessage = "It still needs";
             if (!floor)
             {
                 mlist.Add(" the floor");
@@ -67,7 +93,7 @@ public class Printer : MonoBehaviour
             {
                 mlist.Add(" the wires");
             }
-            operatorMessage += string.Join(",", mlist) + ".";
+            operatorMessage = $"It still needs{string.Join(',', mlist)}!!!";
         }
         SaveSystem.Current.SetString("FactoryPrinterParts", operatorMessage);
     }

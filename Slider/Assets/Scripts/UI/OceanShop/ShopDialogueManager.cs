@@ -373,6 +373,15 @@ public class ShopDialogueManager : MonoBehaviour
                 ));
                 break;
             
+            case "Turn in Rose":
+                SetDialogue(new ShopDialogue(
+                    null,
+                    "Are you trying to hit on me? Sorry I have a boyfriend",
+                    TKSprite.Angry,
+                    null
+                ));
+                break;
+
             case "Turn in Multiple Items":
                 SetDialogue(new ShopDialogue(
                     null,

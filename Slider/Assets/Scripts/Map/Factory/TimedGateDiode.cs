@@ -35,7 +35,7 @@ public class TimedGateDiode : ElectricalNode
 
     public void GateActivatedHandler()
     {
-        Debug.Log($"Timed Gate for Diode {gameObject.name} activated.");
+        // Debug.Log($"Timed Gate for Diode {gameObject.name} activated.");
         if (Powered)
         {
             swapper.TurnOn();
@@ -45,7 +45,7 @@ public class TimedGateDiode : ElectricalNode
 
     public void GateDeactivatedHandler()
     {
-        Debug.Log($"Timed Gate for Diode {gameObject.name} deactivated.");
+        // Debug.Log($"Timed Gate for Diode {gameObject.name} deactivated.");
         swapper.TurnOff();
     }
 }

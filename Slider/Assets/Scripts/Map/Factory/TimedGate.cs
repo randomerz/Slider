@@ -119,6 +119,13 @@ public class TimedGate : ElectricalNode
     {
         if (!Powered)
         {
+            if (gateActive)
+            {
+                // "Reseting" the gate
+                inputsPowered.Clear();
+                OnGateDeactivated?.Invoke();
+            }
+            
             gateActive = true;
             countdown = numTurns;
             queuedNextSprite = countdownSprite[numTurns];

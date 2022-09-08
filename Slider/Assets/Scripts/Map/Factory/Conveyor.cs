@@ -12,7 +12,7 @@ public class Conveyor : ElectricalNode
 
     [SerializeField] private FactoryArtifact artifact;
 
-    [SerializeField] private Animator animator;
+    [SerializeField] private List<Animator> animators;
 
     private bool _conveyorEnabled = true;
 
@@ -39,17 +39,14 @@ public class Conveyor : ElectricalNode
     {
         base.Awake();
         nodeType = NodeType.OUTPUT;
-
-        if (animator == null)
-        {
-            animator = GetComponent<Animator>();
-        }
     }
 
     private void Start()
     {
 
-        animator.SetFloat("speed", ConveyorPowered ? 2 : 0);
+        animators.ForEach((a) => {
+            a.SetFloat("speed", ConveyorPowered ? 2 : 0);
+        });
 
         if (artifact == null)
         {
@@ -79,7 +76,9 @@ public class Conveyor : ElectricalNode
 
     private void HandleConveyorPoweredStatus()
     {
-        animator.SetFloat("speed", ConveyorPowered ? 2 : 0);
+        animators.ForEach((a) => {
+            a.SetFloat("speed", ConveyorPowered ? 2 : 0);
+        });
 
         TryQueueConveyorMove();
     }
