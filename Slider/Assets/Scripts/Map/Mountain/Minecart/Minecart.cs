@@ -5,39 +5,49 @@ using UnityEngine.Tilemaps;
 
 public class Minecart : Item
 {
-    
+    [Header("Movement")]
     [SerializeField] private int currentDirection;
     public RailManager railManager;
     [SerializeField] private bool isOnTrack;
-    [SerializeField] private bool isMoving;
+    [SerializeField] public bool isMoving {get; private set;} = false;
     private bool canStartMoving = true;
     [SerializeField] public RailTile currentTile;
     [SerializeField] public RailTile targetTile;
-    [SerializeField] private float speed = 2.0f;
-    public Vector3 offSet = new Vector3(0.5f, 0.5f, 0.0f);
+    [SerializeField] private float speed = 2.0f; 
+    public Vector3 offSet = new Vector3(0.5f, 0.75f, 0.0f);
     [SerializeField] private RailManager borderRM;
-    private STile currentSTile;
+    public STile currentSTile;
+    public MinecartState mcState;
 
+    [SerializeField] private bool dropOnNextMove = false;
+    [SerializeField] private RailManager savedRM = null;
 
     public Vector3Int currentTilePos;
     public Vector3Int targetTilePos; 
     public Vector3 targetWorldPos;
 
+    [Header("Player")]
+    public Transform playerPos;
+
+    [Header("Animation")]
     [SerializeField] private float derailDuration;
     [SerializeField] private AnimationCurve xDerailMotion;
     [SerializeField] private AnimationCurve yDerailMotion;
-
-    
-    public Sprite trackerSprite;
     [SerializeField] private Animator minecartAnimator;
 
+    [Header("UI")]
+    public Sprite trackerSprite;
+
+
+    private List<GameObject> collidingObjects = new List<GameObject>();
+    private bool collisionPause = false;
+    
 
     public void setCanStartMoving(bool canStart)
     {
         canStartMoving = canStart;
     }
 
-    //C: this is horrible
     private void Awake() 
     {
         RailManager[] rms = FindObjectsOfType<RailManager>();
@@ -58,12 +68,14 @@ public class Minecart : Item
     private void OnDisable()
     {
         SGridAnimator.OnSTileMoveStart -= OnMoveStart;
-        SGridAnimator.OnSTileMoveEnd += OnMoveEnd;
+        SGridAnimator.OnSTileMoveEnd -= OnMoveEnd;
     }
 
-    private void OnMoveStart(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs)
+    private void OnMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(tileMoveArgs.stile = currentSTile)
+        if(currentSTile == null || e.stile == null)
+            return;
+        if(e.stile == currentSTile)
         {
             if(isMoving)
                 Derail();
@@ -77,25 +89,29 @@ public class Minecart : Item
         if(tileMoveArgs.stile = currentSTile)
             canStartMoving = true;
         //recalculate target position
+        if(mcState == MinecartState.Crystal)
+            mcState = MinecartState.Empty;
     }
+
+    #region Item
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null)
     {
         base.PickUpItem(pickLocation, callback);
         UITrackerManager.RemoveTracker(this.gameObject);
+        if(mcState == MinecartState.Crystal || mcState == MinecartState.Lava)
+            mcState = MinecartState.Empty;
     }
 
-    //Item Related Stuff
+
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
     {
         UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
-        Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
-        if (hit == null)
-            return null;
         
-        if(hit.GetComponent<STile>()) //Use Stile RM
+        STile hitTile = SGrid.GetStileUnderneath(gameObject);
+
+        if(hitTile != null) //Use Stile RM
         {
-            STile hitTile = hit.GetComponent<STile>();
             Tilemap railmap = hitTile.allTileMaps.GetComponentInChildren<STileTilemap>().minecartRails;
             railManager = railmap.GetComponent<RailManager>();
             if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation))) //C: If this is dropped onto rails, it will snap into position (change to station only later?)
@@ -106,14 +122,14 @@ public class Minecart : Item
             else
                 StartCoroutine(AnimateDrop(dropLocation, callback));
             
-            gameObject.transform.parent = hitTile.transform.Find("Objects").transform;
+            UpdateParent();
             currentSTile = hitTile;
             return hitTile;
         }
-        else if(hit.GetComponent<STileTilemap>()) //use border RM
+        else if(borderRM) //use border RM
         {
-            Tilemap railmap = hit.GetComponent<STileTilemap>().minecartRails;
-            railManager = railmap.GetComponent<RailManager>();
+            railManager = borderRM;
+            Tilemap railmap = borderRM.railMap;
 
             if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation))) //C: If this is dropped onto rails, it will snap into position (change to station only later?)
             {
@@ -122,12 +138,16 @@ public class Minecart : Item
             }
             else
                 StartCoroutine(AnimateDrop(dropLocation, callback));
-            //decouple from RM
-            gameObject.transform.parent = borderRM.gameObject.GetComponentInParent<STileTilemap>().transform.Find("Objects").transform;
+            UpdateParentBorder();
+            currentSTile = null;
         }
+        else
+            base.DropItem(dropLocation, callback);
         return null;
 
     }
+
+    #endregion
 
     public override void OnEquip()
     {
@@ -138,16 +158,29 @@ public class Minecart : Item
 
     private void OnCollisionEnter2D(Collision2D other) 
     {
-        Debug.Log("bonk");
-        StopMoving(true);
+        if(other.gameObject.CompareTag("Player"))
+            collisionPause = true;
+        else if ((dropOnNextMove && !other.gameObject.tag.Equals("WorldMapCollider")) 
+                || (other.gameObject.layer == 14 && !dropOnNextMove) //C: Layer 14 is MinecartIgnore
+                || other.gameObject.tag.Equals("MinecartIgnore"))
+            return;
+        else
+            StopMoving();
+    }
+
+    private void OnCollisionExit2D(Collision2D other) 
+    {
+        if(other.gameObject.CompareTag("Player"))
+            collisionPause = false;
     }
 
 
 
+    #region movement
 
     public void StartMoving() 
     {
-        if(isOnTrack && canStartMoving)
+        if(isOnTrack && canStartMoving && !collisionPause)
         {
             isMoving = true; 
             minecartAnimator.SetBool("isMoving", true);
@@ -157,8 +190,11 @@ public class Minecart : Item
     public void StopMoving(bool onTrack = false)
     {
         isMoving = false;
-        isOnTrack = onTrack? isOnTrack: false;
+        if(!onTrack)
+            isOnTrack = false;
         minecartAnimator.SetBool("isMoving", false);
+        collisionPause = false;
+        collidingObjects.Clear();
     }
 
     public void ResetTiles()
@@ -170,12 +206,12 @@ public class Minecart : Item
     }
 
     //Places the minecart on the tile at the given position
-    public void SnapToRail(Vector3Int pos)
+    public void SnapToRail(Vector3Int pos, int direction = -1)
     {
         transform.position = railManager.railMap.layoutGrid.CellToWorld(pos) + offSet;
         currentTile = railManager.railMap.GetTile(pos) as RailTile;
         currentTilePos = pos;
-        currentDirection = currentTile.defaultDir;
+        currentDirection = direction == -1? currentTile.defaultDir: direction;
         if(railManager.railLocations.Contains(pos))
         {
             targetTilePos = currentTilePos + GetTileOffsetVector(currentDirection);
@@ -187,22 +223,50 @@ public class Minecart : Item
             ResetTiles();
     }
 
+    public void SnapToRail(Vector3 pos, int dir = -1)
+    {
+        railManager = borderRM;
+        Vector3Int newPos = railManager.railMap.WorldToCell(pos);
+        SnapToRail(newPos, dir);
+    }
+
     
 
     private void Update() 
     {
         if(Time.timeScale == 0) return;
-        if(isMoving && isOnTrack)
+        if(isMoving && isOnTrack && !collisionPause)
         {
             if(Vector3.Distance(transform.position, targetWorldPos) < 0.01f)
                 GetNextTile();
             else
                 transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * speed);
         }
+        minecartAnimator.SetInteger("State", ((int)mcState));
     }
 
     private void GetNextTile()
     {
+        if(dropOnNextMove)
+        {
+            transform.position += (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
+            if(savedRM != null)
+            {
+                Vector3Int targetLoc = savedRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
+                railManager = savedRM;
+                SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)); 
+                UpdateParent();
+                savedRM = null;
+            }
+            else
+            {
+                Derail();
+                UpdateParent(SGrid.GetSTileUnderneath(transform, null));
+            }
+            dropOnNextMove = false;
+            savedRM = null;
+            return;
+        }
         currentTile = targetTile;
         currentTilePos = targetTilePos;
         targetTilePos = currentTilePos + GetTileOffsetVector(currentDirection);
@@ -237,43 +301,68 @@ public class Minecart : Item
         Vector3Int targetLoc;
         foreach(STile tile in stileList)
         {
-            RailManager otherRM = tile.allTileMaps.GetComponentInChildren<RailManager>();
-                if(otherRM != null)
-                    rmList.Add(otherRM);
-            }
-            foreach(RailManager rm in rmList) //look and see if the next location overlaps with a location of a rail on another STile
+            RailManager[] otherRMs = tile.allTileMaps.GetComponentsInChildren<RailManager>();
+            foreach(RailManager rm in otherRMs)
+                if(rm != null && rm != railManager)
+                    rmList.Add(rm);
+        }
+        
+        foreach(RailManager rm in rmList) //look and see if the next location overlaps with a location of a rail on another STile
+        {
+            targetLoc = rm.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
+            if(rm.railLocations.Contains(targetLoc))
             {
-                targetLoc = rm.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
-                if(rm.railLocations.Contains(targetLoc))
-                {
-                    railManager = rm;
-                    SnapToRailNewSTile(targetLoc);
-                    gameObject.transform.parent = rm.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
-                    return;
-                }
-                //C: Check if the minecart can drop down to the tile below
-                else if(MountainGrid.Instance && rm.railLocations.Contains(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)))
-                {
-                    railManager = rm;
-                    transform.position += new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0);
-                    SnapToRailNewSTile(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)); //give seperate method for between layers?
-                    gameObject.transform.parent = rm.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
-                    return;
-                }
+                railManager = rm;
+                SnapToRailNewSTile(targetLoc);
+                UpdateParent();
+                return;
             }
-            if(borderRM) {
+        }
+        foreach(RailManager rm in rmList) //check dropping down onto tile
+        {
+            targetLoc = rm.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
+            //C: Check if the minecart can drop down to the tile below. Needs to be in seperate loop so will check after trying all non-drops first
+            if(MountainGrid.Instance && rm.railLocations.Contains(targetLoc + new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)))
+            {
+                dropOnNextMove = true;
+                savedRM = rm;
+                targetWorldPos += getDirectionAsVector(currentDirection);
+                return;
+            }
+        }
+        
+        if(borderRM) //check border
+        {
             targetLoc = borderRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
             if(borderRM.railLocations.Contains(targetLoc)) //look and see if the next location overlaps with a location of a rail on the outside
             {
                 railManager = borderRM;
                 SnapToRailNewSTile(targetLoc);
-                gameObject.transform.parent = borderRM.gameObject.GetComponentInParent<STileTilemap>().transform.Find("Objects").transform;
+                UpdateParentBorder();
                 return;
             }
-            }
+        }
+
+        if(transform.position.y > 93 && transform.position.y < 124
+            && transform.position.x > -7 && transform.position.x < 24) //check dropping down onto world
+        {
+            bool shouldDrop = true;
+            targetWorldPos += getDirectionAsVector(currentDirection);
+          //  GameObject temp = gameObject;
+            GameObject temp = new GameObject();
+            if(SGrid.GetStileUnderneath(temp) != null) //don't drop if there is an adj tile
+                shouldDrop = false;
+            temp.transform.position = targetWorldPos +  new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0);
+            if(SGrid.GetStileUnderneath(temp) == null) //don't drop unless there is a tile to drop down onto
+                shouldDrop = false;
+            dropOnNextMove = shouldDrop;
+            Destroy(temp);
+            return;
+        }
         StopMoving();
     }
 
+    #endregion
 
     //Used to snap to a rail tile when moving across STiles
     public void SnapToRailNewSTile(Vector3Int pos)
@@ -296,18 +385,7 @@ public class Minecart : Item
        // StartCoroutine(AnimateDerail(derailVector));
     }
 
-    //returns a vector that can be added to the tile position in order to determine the location of the specified point
-    public static Vector3Int GetTileOffsetVector(int num)
-    {
-        int[] arr = {1, 0, -1, 0};
-        return new Vector3Int(arr[num], arr[(num+3) % 4], 0);
-    }
-
-    private static Vector3 getDirectionAsVector(int dir)
-    {
-        Vector3[] arr = {Vector3.right, Vector3.up, Vector3.left, Vector3.down};
-        return arr[dir];
-    }
+    
 
 
 
@@ -332,5 +410,78 @@ public class Minecart : Item
         base.spriteRenderer.transform.position = target;
         callback();
 
+    }
+
+
+    #region Utility
+
+    private void UpdateParent()
+    {
+        gameObject.transform.parent = railManager.gameObject.GetComponentInParent<STile>().transform.Find("Objects").transform;
+        currentSTile = railManager.gameObject.GetComponentInParent<STile>();
+    }
+
+    private void UpdateParentBorder()
+    {
+        gameObject.transform.parent = borderRM.gameObject.GetComponentInParent<STileTilemap>().transform.Find("Objects").transform;
+        currentSTile = null;
+    }
+
+    private void UpdateParent(STile sTile)
+    {
+        gameObject.transform.parent = sTile.transform.Find("Objects").transform;
+        currentSTile = sTile;
+    }
+
+    //C: returns a vector that can be added to the tile position in order to determine the location of the specified point
+    public static Vector3Int GetTileOffsetVector(int num)
+    {
+        int[] arr = {1, 0, -1, 0};
+        return new Vector3Int(arr[num], arr[(num+3) % 4], 0);
+    }
+
+    private static Vector3 getDirectionAsVector(int dir)
+    {
+        Vector3[] arr = {Vector3.right, Vector3.up, Vector3.left, Vector3.down};
+        return arr[dir];
+    }
+
+    public void UpdateState(string stateName){
+        if(stateName.Equals("Player"))
+            mcState = MinecartState.Player;
+        else if(stateName.Equals("Lava"))
+            mcState = MinecartState.Lava;
+        else if(stateName.Equals("Crystal"))
+            mcState = MinecartState.Crystal;
+        else if (stateName.Equals("Empty"))
+            mcState = MinecartState.Empty;
+        else if (stateName.Equals("RepairParts"))
+            mcState = MinecartState.RepairParts;
+        else
+            Debug.LogWarning("Invalid Minecart State. Should be Player, Lava, Empty, RepairParts, or Crystal");
+    }
+
+    public void TryAddCrystals()
+    {
+        if(mcState == MinecartState.Empty)
+            mcState = MinecartState.Crystal;
+    }
+
+    #endregion
+
+    public void CheckIsEmpty(Condition c){
+        c.SetSpec(mcState == MinecartState.Empty);
+    }
+
+    public void CheckCrystals(Condition c){
+        c.SetSpec(mcState == MinecartState.Crystal);
+    }
+
+    public void CheckIsMoving(Condition c){
+        c.SetSpec(isMoving);
+    }
+
+    public void CheckIsNotMoving(Condition c){
+        c.SetSpec(!isMoving);
     }
 }

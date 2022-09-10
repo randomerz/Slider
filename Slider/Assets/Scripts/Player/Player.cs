@@ -277,6 +277,10 @@ public class Player : Singleton<Player>, ISavable
         _instance.canMove = value;
     }
 
+    public static bool GetCanMove(){
+        return _instance.canMove;
+    }
+
     public void toggleCollision()
     {
         _instance.collision = !_instance.collision;
@@ -289,6 +293,11 @@ public class Player : Singleton<Player>, ISavable
     public static void SetPosition(Vector3 pos)
     {
         _instance.transform.position = pos;
+    }
+
+    public static void SetParent(Transform parent)
+    {
+        _instance.transform.SetParent(parent);
     }
 
     public static Vector3 GetPosition()

@@ -14,6 +14,7 @@ public class OceanGrid : SGrid
     public BottleManager bottleManager;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
+    public List<int> buoytiles = new List<int> {1, 3, 4, 8, 9};
 
     private Vector2Int[] correctPath =
     {
@@ -223,46 +224,23 @@ public class OceanGrid : SGrid
 
     private bool BuoyConditions()
     {
-        if (!(GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
-        {
-            return false;
-        }
-
-        if (!knotBox.isActiveAndEnabled)
-        {
-            return false;
-        }
-
-        return knotBox.CheckLines() == 0;
+        return (AllBuoy() && knotBox.isActiveAndEnabled && (knotBox.CheckLines() == 0));
     }
 
     public void BuoyAllFound(Condition c)
     {
-        if (!AllBuoy())
-        {
-            c.SetSpec(false);
-        }
-        else
-        {
-            c.SetSpec(true);
-        }
+        c.SetSpec(AllBuoy());
     }
 
+    //C: Returns if all the required buoy tiles are active
     public bool AllBuoy()
     {
-        return GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive;
+        return SGrid.AreTilesActive(GetStiles(buoytiles));
     }
 
     public void knotBoxEnabled(Condition c)
     {
-        if (!knotBox.isActiveAndEnabled && (GetStile(1).isTileActive && GetStile(3).isTileActive && GetStile(4).isTileActive && GetStile(8).isTileActive && GetStile(9).isTileActive))
-        {
-            c.SetSpec(true);
-        }
-        else
-        {
-            c.SetSpec(false);
-        }
+        c.SetSpec(!knotBox.isActiveAndEnabled && AllBuoy());
     }
 
     public void BuoyCheck(Condition c)
@@ -407,7 +385,7 @@ public class OceanGrid : SGrid
 
     public bool FoggyCompleted()
     {
-        return playerIndex == 6;
+        return playerIndex == correctPath.Length;
     }
 
     // Final puzzle

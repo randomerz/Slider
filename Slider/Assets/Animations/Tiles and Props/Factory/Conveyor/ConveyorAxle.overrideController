@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ConveyorAxle
+  m_Controller: {fileID: 9100000, guid: 7aaa0314aac6b174599cb6fba854f456, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 0e82889223f353147ad354944d90ad32, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 41b0b660803341f4195549f80b600d69, type: 2}

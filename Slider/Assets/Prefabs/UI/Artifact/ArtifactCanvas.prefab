@@ -1689,11 +1689,8 @@ MonoBehaviour:
   - {fileID: 2748644293659441546}
   - {fileID: 4180610847218624583}
   - {fileID: 8543521732902162522}
-  timedGateTabs: []
   uiArtifactMenus: {fileID: 4884099563033190283}
   rearrangingTabAnimator: {fileID: 8165601889493273141}
-  rearrangingFragTabAnimator: {fileID: 0}
-  previewTabAnimator: {fileID: 0}
   saveTabSprite: {fileID: 6597818083717702972, guid: b4c915f27fdd7ac4baadae484b4a7ec5, type: 3}
   loadTabSprite: {fileID: -8204407956828586285, guid: b4c915f27fdd7ac4baadae484b4a7ec5, type: 3}
   saveEmptyTabSprite: {fileID: -2436569352898479471, guid: b4c915f27fdd7ac4baadae484b4a7ec5, type: 3}
@@ -2603,11 +2600,11 @@ PrefabInstance:
       objectReference: {fileID: 4839968679539576888}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: displayName
-      value: Bomb
+      value: Explosives
       objectReference: {fileID: 0}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: collectibleName
-      value: Bomb
+      value: Explosives
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b1443db5380833d48b886452d308d54c, type: 3}

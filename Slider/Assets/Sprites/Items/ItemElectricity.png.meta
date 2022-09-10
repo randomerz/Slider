@@ -102,7 +102,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -145,6 +145,18 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -154,8 +166,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 24
-        height: 24
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -173,10 +185,10 @@ TextureImporter:
       name: ItemElectricity_1
       rect:
         serializedVersion: 2
-        x: 24
+        x: 32
         y: 0
-        width: 24
-        height: 24
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -194,10 +206,10 @@ TextureImporter:
       name: ItemElectricity_2
       rect:
         serializedVersion: 2
-        x: 48
+        x: 64
         y: 0
-        width: 24
-        height: 24
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -215,10 +227,10 @@ TextureImporter:
       name: ItemElectricity_3
       rect:
         serializedVersion: 2
-        x: 72
+        x: 96
         y: 0
-        width: 24
-        height: 24
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -236,10 +248,10 @@ TextureImporter:
       name: ItemElectricity_4
       rect:
         serializedVersion: 2
-        x: 96
+        x: 128
         y: 0
-        width: 24
-        height: 24
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -257,10 +269,10 @@ TextureImporter:
       name: ItemElectricity_5
       rect:
         serializedVersion: 2
-        x: 120
+        x: 160
         y: 0
-        width: 24
-        height: 24
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -278,10 +290,10 @@ TextureImporter:
       name: ItemElectricity_6
       rect:
         serializedVersion: 2
-        x: 144
+        x: 192
         y: 0
-        width: 24
-        height: 24
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -299,10 +311,10 @@ TextureImporter:
       name: ItemElectricity_7
       rect:
         serializedVersion: 2
-        x: 168
+        x: 224
         y: 0
-        width: 24
-        height: 24
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -320,10 +332,10 @@ TextureImporter:
       name: ItemElectricity_8
       rect:
         serializedVersion: 2
-        x: 192
+        x: 256
         y: 0
-        width: 24
-        height: 24
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -341,10 +353,10 @@ TextureImporter:
       name: ItemElectricity_9
       rect:
         serializedVersion: 2
-        x: 216
+        x: 288
         y: 0
-        width: 24
-        height: 24
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -354,27 +366,6 @@ TextureImporter:
       bones: []
       spriteID: e4d4706135dd3a4a0800000000000000
       internalID: -6583174881363931826
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ItemElectricity_10
-      rect:
-        serializedVersion: 2
-        x: 240
-        y: 0
-        width: 24
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5742875ff1c179e70800000000000000
-      internalID: 9121790493850084469
       vertices: []
       indices: 
       edges: []
@@ -397,7 +388,6 @@ TextureImporter:
       ItemElectricity_2: 3626312406275938941
       ItemElectricity_7: 4720698016868767755
       ItemElectricity_0: 2380078713359252675
-      ItemElectricity_10: 9121790493850084469
       ItemElectricity_6: 8470636631708373834
       ItemElectricity_4: -2299242708269445475
       ItemElectricity_9: -6583174881363931826

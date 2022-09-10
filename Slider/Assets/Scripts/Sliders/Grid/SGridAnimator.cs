@@ -22,7 +22,6 @@ public class SGridAnimator : MonoBehaviour
 
     private float currMoveDuration = 1f;
 
-
     public void ChangeMovementDuration(float value)
     {
         movementDuration = value;
@@ -77,6 +76,7 @@ public class SGridAnimator : MonoBehaviour
             stile.SetBorderColliders(true);
         }
 
+
         OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
         {
             stile = stile,
@@ -84,6 +84,8 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
+
+
 
         EffectOnMoveStart(move is SMoveConveyor);
 
@@ -125,10 +127,10 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-
         EffectOnMoveFinish();
     }
 
+    // DC: this is a lot of parameters :)
 
     protected IEnumerator DisableBordersAndColliders(
             STile[,] grid, 

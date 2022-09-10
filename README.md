@@ -1,5 +1,5 @@
 # Slider
-Unity 2021.3.6f
+Unity 2021.3.9f
 
 ![Image](production/steam/vgdev_demo_temp/main_capsule_temp.png?raw=true "Title")
 
@@ -14,4 +14,6 @@ Manipulate the world in order to solve puzzles and help others. You will manage 
 
 Slider was a [submission](https://randomerz.itch.io/slider-jam) to GMTK 2021. The game placed 16th by community at the end! Spring 2022, I pitched the game to Georgia Tech's Video Game Dev club, and we developed the game over the semester.
 
-In April, the game was released on [Steam!](https://store.steampowered.com/app/1916890/Slider/)
+In April, the game was released on [Steam](https://store.steampowered.com/app/1916890/Slider/) and in July we published a demo version of Slider.
+
+Currently, we're looking to release Slider early 2023 and we hope you'll root for us on our journey!
