@@ -1,9 +1,9 @@
 # Slider
 Unity 2021.3.9f
 
-![Image](production/steam/vgdev_demo_temp/main_capsule_temp.png?raw=true "Title")
+![Image](production/art/Slider_Main_1920x1080.png?raw=true "Title")
 
-[Wishlist the game on Steam!](https://store.steampowered.com/app/1916890/Slider/)
+[Wishlist/Try out demo on Steam!](https://store.steampowered.com/app/1916890/Slider/)
 
 Manipulate the world in order to solve puzzles and help others. You will manage an ever-growing set of tiles and mechanics as you explore unique areas and unravel the mysteries of the universe.
 
