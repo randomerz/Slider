@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 
-class CaveArtifactTileButton : ArtifactTileButton
+class ArtifactTBPluginLight : ArtifactTBPlugin
 {
     public bool isLit = true;
 
@@ -9,13 +9,6 @@ class CaveArtifactTileButton : ArtifactTileButton
     private Sprite islandDarkSprite;
     [SerializeField]
     private Sprite islandLitSprite;
-
-    private new void Start()
-    {
-        base.Start();
-
-        CheckLit();
-    }
 
     private void OnEnable()
     {
@@ -25,12 +18,16 @@ class CaveArtifactTileButton : ArtifactTileButton
         CaveLight.OnLightSwitched += LightSwitched;
     }
 
-    private new void OnDisable()
+    private void OnDisable()
     {
-        base.OnDisable();
         SGrid.OnSTileEnabled -= STileEnabled;
         UIArtifact.OnButtonInteract -= ButtonInteract;
         CaveLight.OnLightSwitched -= LightSwitched;
+    }
+
+    private void Start()
+    {
+        CheckLit();
     }
 
     private void STileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
@@ -50,11 +47,11 @@ class CaveArtifactTileButton : ArtifactTileButton
 
     public void CheckLit()
     {
-        if (MyStile != null && TileIsActive)
+        if (button.MyStile != null && button.TileIsActive)
         {
-            isLit = (MyStile as CaveSTile).GetTileLit(this.x, this.y);
-            islandSprite = isLit ? islandLitSprite : islandDarkSprite;
-            SetSpriteToIslandOrEmpty();
+            isLit = (button.MyStile as CaveSTile).GetTileLit(button.x, button.y);
+            button.SetIslandSprite(isLit ? islandLitSprite : islandDarkSprite);
+            button.SetSpriteToIslandOrEmpty();
         }
     }
 }
