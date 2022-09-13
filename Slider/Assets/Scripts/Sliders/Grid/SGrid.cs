@@ -204,17 +204,19 @@ public void SetGrid(int[,] puzzle)
         return (c > '9') ? (c - 'A' +  10) : (c - '0');
     }
 
-    // Returns a string like:   123_6##_4#5
-    // for a grid like:  1 2 3
-    //                   6 . .
-    //        (0, 0) ->  4 . 5
+    
+    /// <summary>
+    /// Returns a string like:   123_6##_4#5
+    /// for a grid like:  1 2 3
+    ///                   6 . .
+    ///        (0, 0) ->  4 . 5
+    /// </summary>
+    /// <param name="numsOnly">If numsOnly is true, then the grid string will contain all tile IDs. If false, then inactive tiles will be represented by #s</param>
+    /// <returns></returns>
     public static string GetGridString(bool numsOnly = false)
     {
         return GetGridString(Current.grid, numsOnly);
     }
-
-    //C: If numsOnly is true, then the grid string will contain all tile IDs. 
-    // If false, then inactive tiles will be represented by #s
 
     public static string GetGridString(STile[,] grid, bool numsOnly = false)
     {

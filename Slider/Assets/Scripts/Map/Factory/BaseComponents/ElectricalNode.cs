@@ -55,12 +55,12 @@ public class ElectricalNode : MonoBehaviour
         powerRefs = 0;  //Always start off and let things turn on.
     }
 
-    protected void OnEnable()
+    protected virtual void OnEnable()
     {
         OnPowered.AddListener(OnPoweredHandler);
     }
 
-    protected void OnDisable()
+    protected virtual void OnDisable()
     {
         OnPowered.RemoveListener(OnPoweredHandler);
     }
