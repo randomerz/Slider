@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ServerComputer : MonoBehaviour
 {
     [SerializeField] private ElectricalNode power;
-    [SerializeField] private PlayerConditionals pConds;
     [SerializeField] private Animator anim;
+    [SerializeField] private PlayerConditionals pConds;
     [SerializeField] private PlayerPositionChanger ppChanger;
     [SerializeField] private GameObject[] pastTileMaps;
 
+    public UnityEvent OnInteract;
+
     private void Awake()
     {
-        pConds.DisableConditionals();
+        pConds?.DisableConditionals();
     }
 
     private void OnEnable()
@@ -23,21 +26,21 @@ public class ServerComputer : MonoBehaviour
     #region Called By Events
     public void TurnOn()
     {
-        Debug.Log("Powered Computer On");
+        // Debug.Log("Powered Computer On");
         anim.SetBool("Powered", true);
-        pConds.EnableConditionals();
+        pConds?.EnableConditionals();
     }
 
     public void TurnOff()
     {
-        Debug.Log("Powered Computer Off");
+        // Debug.Log("Powered Computer Off");
         anim.SetBool("Powered", false);
-        pConds.DisableConditionals();
+        pConds?.DisableConditionals();
     }
 
     public void OnPlayerInteract()
     {
-        StartSendToPastEvent();
+        OnInteract?.Invoke();
     }
     #endregion
 
