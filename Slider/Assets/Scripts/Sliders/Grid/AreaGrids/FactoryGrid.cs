@@ -57,7 +57,7 @@ public class FactoryGrid : SGrid
     public void ExplodeDoor()
     {
         CameraShake.Shake(1.0f, 1.0f);
-        SaveSystem.Current.SetBool("doorExploded", true);
+        SaveSystem.Current.SetBool("factoryDoorExploded", true);
         explosionChecker.CheckConditions();
     }
 

@@ -44,7 +44,6 @@ public class PoweredFactoryPlug : ElectricalNode
 
     public void UpdateAnimator()
     {
-        Debug.Log("should extend: " + ShouldExtend());
         animator.SetBool("Powered", ShouldExtend());
     }
 

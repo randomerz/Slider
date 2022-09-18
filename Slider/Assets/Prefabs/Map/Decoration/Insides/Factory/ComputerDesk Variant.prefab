@@ -57,7 +57,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 300713974080736061, guid: 475171edea803bd44b765c24b5a1ad99, type: 3}
       propertyPath: m_Name
-      value: ComputerDesk
+      value: ComputerDesk Variant
       objectReference: {fileID: 0}
     - target: {fileID: 7583996306048283052, guid: 475171edea803bd44b765c24b5a1ad99, type: 3}
       propertyPath: m_Size.x
@@ -65,7 +65,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7583996306048283052, guid: 475171edea803bd44b765c24b5a1ad99, type: 3}
       propertyPath: m_Size.y
-      value: 0.75
+      value: 0.8125
+      objectReference: {fileID: 0}
+    - target: {fileID: 7583996306048283052, guid: 475171edea803bd44b765c24b5a1ad99, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.03125
       objectReference: {fileID: 0}
     - target: {fileID: 7583996306048283052, guid: 475171edea803bd44b765c24b5a1ad99, type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.x
