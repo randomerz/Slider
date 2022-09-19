@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class ArtifactTBPluginPast : ArtifactTBPlugin
 {
-    [SerializeField] Sprite pastSprite;
+    [SerializeField] private Sprite pastSprite;
+    [SerializeField] private Sprite pastCompletedSprite;
 
     public void UsePastSprite()
     {
         button.SetIslandSprite(pastSprite);
+        button.SetCompletedSprite(pastCompletedSprite);
     }
 }
