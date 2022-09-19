@@ -21,6 +21,7 @@ public class ChadSrElectricPuzzle : MonoBehaviour
     private void Start()
     {
         itemHolding?.SetCollider(false);
+        itemHolding?.OnEquip();
     }
 
     private void DropItemHolding()
