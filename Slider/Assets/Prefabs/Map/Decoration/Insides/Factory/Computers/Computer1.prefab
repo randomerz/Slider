@@ -103,6 +103,9 @@ MonoBehaviour:
   pConds: {fileID: 0}
   ppChanger: {fileID: 0}
   pastTileMaps: []
+  OnInteract:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!212 &5315829106730869574
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -143,7 +146,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 529684183
   m_SortingLayer: 7
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: -1635216820, guid: b3af05d5937c9674293252ebe5bcc6e0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -154,7 +157,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!95 &7974495796829189825
 Animator:
   serializedVersion: 4

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PoweredFactoryPlug : ElectricalNode
 {
-    //Probably want to do an animation later instead of sprite swapping
+    public override bool Powered => ShouldExtend(); // you can do this??
 
     [SerializeField] private Animator animator;
 
@@ -32,9 +32,9 @@ public class PoweredFactoryPlug : ElectricalNode
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        //Debug.Log($"We Powered? {e.powered}");
-        base.OnPoweredHandler(e);
-        UpdateAnimator();
+        // base.OnPoweredHandler(e); // We only power on when extended... >:) this is for map icon purposes
+
+        UpdateAnimator(shouldInvokeOnPowered: false);
     }
 
     public void OnMoveHandler(object sender, SGridAnimator.OnTileMoveArgs e)
@@ -42,8 +42,23 @@ public class PoweredFactoryPlug : ElectricalNode
         UpdateAnimator();
     }
 
-    public void UpdateAnimator()
+    public void UpdateAnimator(bool shouldInvokeOnPowered=true)
     {
+        if (shouldInvokeOnPowered)
+        {
+            OnPowered?.Invoke(new OnPoweredArgs{
+                powered = ShouldExtend()
+            });
+        }
+
+        if (ShouldExtend())
+        {
+            OnPoweredOn?.Invoke();
+        } else
+        {
+            OnPoweredOff?.Invoke();
+        }
+
         animator.SetBool("Powered", ShouldExtend());
     }
 
@@ -54,6 +69,6 @@ public class PoweredFactoryPlug : ElectricalNode
             CheckGrid.contains(SGrid.GetGridString(), "12") ||
             CheckGrid.contains(SGrid.GetGridString(), "32");
 
-        return !isInvalidSpot && Powered;
+        return !isInvalidSpot && base.Powered;
     }
 }

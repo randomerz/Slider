@@ -15,12 +15,17 @@ public class Item : MonoBehaviour
     [SerializeField] private float pickUpDuration;
     [SerializeField] private AnimationCurve xPickUpMotion;
     [SerializeField] private AnimationCurve yPickUpMotion;
+    private Vector3 spriteOffset; // for sprite pivot stuff
 
     [SerializeField] protected GameObject[] enableOnDrop;
 
     // events
     public UnityEvent OnPickUp;
     public UnityEvent OnDrop;
+
+    private void Awake() {
+        spriteOffset = spriteRenderer.transform.localPosition;
+    }
 
     public virtual void PickUpItem(Transform pickLocation, System.Action callback=null) // pickLocation may be moving
     {
@@ -89,14 +94,14 @@ public class Item : MonoBehaviour
             Vector3 pos = new Vector3(Mathf.Lerp(start.x, target.transform.position.x, x),
                                       Mathf.Lerp(start.y, target.transform.position.y, y));
             
-            spriteRenderer.transform.position = pos;
+            spriteRenderer.transform.position = pos + spriteOffset;
 
             yield return null;
             t += Time.deltaTime;
         }
 
         transform.position = target.position;
-        spriteRenderer.transform.position = target.position;
+        spriteRenderer.transform.position = target.position + spriteOffset;
         myCollider.enabled = false;
         OnPickUp?.Invoke();
         callback();
@@ -127,15 +132,15 @@ public class Item : MonoBehaviour
             Vector3 pos = new Vector3(Mathf.Lerp(end.transform.position.x, start.transform.position.x, x),
                                       Mathf.Lerp(end.transform.position.y, start.transform.position.y, y));
             
-            spriteRenderer.transform.position = pos;
+            spriteRenderer.transform.position = pos + spriteOffset;
 
             yield return null;
             t -= Time.deltaTime;
         }
 
-        spriteRenderer.sortingOrder = 0; // bring object to render below others
+        // spriteRenderer.sortingOrder = 0; // bring object to render below others
 
-        spriteRenderer.transform.position = end.transform.position;
+        spriteRenderer.transform.position = end.transform.position + spriteOffset;
         OnDrop?.Invoke();
         callback();
         Destroy(start);
