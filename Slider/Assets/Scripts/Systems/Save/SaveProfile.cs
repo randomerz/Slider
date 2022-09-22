@@ -17,6 +17,7 @@ public class SaveProfile
 
     private Dictionary<string, bool> bools = new Dictionary<string, bool>();
     private Dictionary<string, string> strings = new Dictionary<string, string>();
+    private Dictionary<string, int> achievementData = new Dictionary<string, int>();
 
     // Cached stuff
     // nothing bc i dont know what to do bc scenes exist
