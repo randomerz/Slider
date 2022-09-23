@@ -17,7 +17,7 @@ public class SaveProfile
 
     private Dictionary<string, bool> bools = new Dictionary<string, bool>();
     private Dictionary<string, string> strings = new Dictionary<string, string>();
-    private AchievementStatistic[] achievementData;
+    public AchievementStatistic[] AchievementData { get; set; }
 
     // Cached stuff
     // nothing bc i dont know what to do bc scenes exist
@@ -131,7 +131,7 @@ public class SaveProfile
         //Debug.Log(playTimeInSeconds);
         SetBool("isDemoBuild", true);
         SaveSavablesData();
-        achievementData = AchievementManager.GetAchievementData();
+        AchievementData = AchievementManager.GetAchievementData();
     }
 
     public void Load()
@@ -140,8 +140,7 @@ public class SaveProfile
 
         LoadSavablesData();
 
-        // MAKE THIS ACTUALLY WORK
-        AchievementManager.OverwriteAchievementData(achievementData);
+        AchievementManager.OverwriteAchievementData(AchievementData);
     }
 
     public void SaveSGridData(Area area, SGrid sgrid)

@@ -26,6 +26,7 @@ public class SerializableSaveProfile
     public bool[]   bools_Values;
     public string[] strings_Keys;
     public string[] strings_Values;
+    public AchievementStatistic[] achievementData;
 
     public static SerializableSaveProfile FromSaveProfile(SaveProfile saveProfile)
     {
@@ -48,6 +49,8 @@ public class SerializableSaveProfile
         ssp.areaToSGridData_Values = saveProfile.GetAreaToSGridData().Values.ToArray();
         ssp.bools_Values = saveProfile.GetBoolsDictionary().Values.ToArray();
         ssp.strings_Values = saveProfile.GetStringsDictionary().Values.ToArray();
+
+        ssp.achievementData = saveProfile.AchievementData;
 
         return ssp;
     }
@@ -77,6 +80,8 @@ public class SerializableSaveProfile
         for (int i = 0; i < strings_Keys.Length; i++)
             strings.Add(strings_Keys[i], strings_Values[i]);
         sp.SetStringsDictionary(strings);
+
+        sp.AchievementData = achievementData;
 
         return sp;
     }

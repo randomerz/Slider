@@ -54,6 +54,7 @@ public class AchievementManager : Singleton<AchievementManager>
         {
             _instance.achievementStats[statistic.Key] = statistic.Value;
         }
+        _instance.SendAchievementStatsToSteam();
     }
 
     private void Start()
@@ -64,8 +65,9 @@ public class AchievementManager : Singleton<AchievementManager>
 }
 
 /// <summary>
-/// Represents a key-value pair for a Steam achievement statistic.
+/// Serializable struct that represents a key-value pair for a Steam achievement statistic.
 /// </summary>
+[System.Serializable]
 public struct AchievementStatistic
 {
     public string Key { get; private set; }
