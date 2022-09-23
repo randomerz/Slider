@@ -16,6 +16,7 @@ public class ArtifactTileButton : MonoBehaviour
     [SerializeField] private Sprite emptySpriteDefault;
     [SerializeField] private Sprite islandSpriteDefault;
     [SerializeField] private Sprite completedSprite;
+    private Sprite completedSpriteDefault;
     [SerializeField] private Sprite hoverSprite;
     [SerializeField] private Sprite blankSprite;
     [SerializeField] private List<ArtifactTBPlugin> plugins;
@@ -129,6 +130,11 @@ public class ArtifactTileButton : MonoBehaviour
         islandSprite = islandSpriteDefault;
     }
 
+    public void UseDefaultCompletedSprite()
+    {
+        completedSprite = completedSpriteDefault;
+    }
+
     public void UseDefaultEmptySprite()
     {
         emptySprite = emptySpriteDefault;
@@ -137,6 +143,11 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetIslandSprite(Sprite s)
     {
         islandSprite = s;
+    }
+
+    public void SetCompletedSprite(Sprite s)
+    {
+        completedSprite = s;
     }
 
     public void SetEmptySprite(Sprite s)
@@ -238,6 +249,7 @@ public class ArtifactTileButton : MonoBehaviour
     private void Init()
     {
         LinkButton = null;
+        completedSpriteDefault = completedSprite;
         foreach (ArtifactTileButton b in buttonManager.buttons)
         {
             if (MyStile != null && MyStile.linkTile != null && MyStile.linkTile == b.MyStile)

@@ -56,6 +56,10 @@ public class SceneSpawns : MonoBehaviour
         MagiTechDesertPortal,
         MagiTechRocket,
 
+        // New
+        FactoryPastNorth,
+        MagiTechPastSouth,
+
         // Space
     }
 
