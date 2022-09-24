@@ -17,6 +17,7 @@ public class SaveProfile
 
     private Dictionary<string, bool> bools = new Dictionary<string, bool>();
     private Dictionary<string, string> strings = new Dictionary<string, string>();
+    private Dictionary<string, int> ints = new Dictionary<string, int>();
     public AchievementStatistic[] AchievementData { get; set; }
 
     // Cached stuff
@@ -30,7 +31,6 @@ public class SaveProfile
     }
 
     #region Getters / Setters
-
     public string GetProfileName()
     {
         return profileName;
@@ -121,7 +121,15 @@ public class SaveProfile
         strings = value;
     }
 
+    public Dictionary<string, int> GetIntsDictionary()
+    {
+        return ints;
+    }
 
+    public void SetIntsDictionary(Dictionary<string, int> value)
+    {
+        ints = value;
+    }
     #endregion
 
     public void Save()
@@ -143,6 +151,7 @@ public class SaveProfile
         AchievementManager.OverwriteAchievementData(AchievementData);
     }
 
+    #region SGrid
     public void SaveSGridData(Area area, SGrid sgrid)
     {
         if (area == Area.None)
@@ -176,7 +185,9 @@ public class SaveProfile
 
         return areaToSGridData[area];
     }
+    #endregion
 
+    #region Savables
     public void SaveSavablesData()
     {
         foreach (ISavable s in GetCachedSavables())
@@ -218,11 +229,9 @@ public class SaveProfile
         }
         return savables;
     }
+    #endregion
 
-    // public Vector3 GetPlayerPos(Area area) {
-    //     return playerPos[area];
-    // }
-
+    #region Dictionaries
     /// <summary>
     /// Returns the value associated with "name" in keys. If no such value exists, this method returns false by defualt, but can also return true if passed as an argument 
     /// </summary>
@@ -230,13 +239,7 @@ public class SaveProfile
     /// <returns></returns>
     public bool GetBool(string name, bool defaultVal = false)
     {
-        if (!bools.ContainsKey(name))
-        {
-            //Debug.LogWarning("Couldn't find saved variable of name: " + name);
-            return defaultVal;
-        }
-        // add a null check here?
-        return bools[name];
+        return bools.GetValueOrDefault(name, defaultVal);
     }
 
     public void SetBool(string name, bool value)
@@ -251,17 +254,22 @@ public class SaveProfile
     /// <returns></returns>
     public string GetString(string name)
     {
-        if (!strings.ContainsKey(name))
-        {
-            //Debug.LogWarning("Couldn't find saved variable of name: " + name);
-            return name;
-        }
-        // add a null check here?
-        return strings[name];
+        return strings.GetValueOrDefault(name, name);
     }
 
     public void SetString(string name, string value)
     {
         strings[name] = value;
     }
+
+    public int GetInt(string name, int defaultValue = 0)
+    {
+        return ints.GetValueOrDefault(name, defaultValue);
+    }
+
+    public void SetInt(string name, int value)
+    {
+        ints[name] = value;
+    }
+    #endregion
 }

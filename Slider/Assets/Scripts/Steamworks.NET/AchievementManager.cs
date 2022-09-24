@@ -28,14 +28,6 @@ public class AchievementManager : Singleton<AchievementManager>
         _instance.SendAchievementStatsToSteam();
     }
 
-    private void SendAchievementStatsToSteam()
-    {
-        foreach (string key in achievementStats.Keys)
-        {
-            SteamUserStats.SetStat(key, achievementStats[key]);
-        }
-    }
-
     public static AchievementStatistic[] GetAchievementData()
     {
         AchievementStatistic[] pairs = new AchievementStatistic[_instance.achievementStats.Count];
@@ -48,6 +40,11 @@ public class AchievementManager : Singleton<AchievementManager>
         return pairs;
     }
 
+    /// <summary>
+    /// This replaces all achievement stats with the passed in key-value pair array.
+    /// This is dangerous and should only really be used when loading achievement stats from a save profile.
+    /// </summary>
+    /// <param name="achievementStatistics"></param>
     public static void OverwriteAchievementData(AchievementStatistic[] achievementStatistics)
     {
         foreach (AchievementStatistic statistic in achievementStatistics)
@@ -55,6 +52,14 @@ public class AchievementManager : Singleton<AchievementManager>
             _instance.achievementStats[statistic.Key] = statistic.Value;
         }
         _instance.SendAchievementStatsToSteam();
+    }
+
+    private void SendAchievementStatsToSteam()
+    {
+        foreach (string key in achievementStats.Keys)
+        {
+            SteamUserStats.SetStat(key, achievementStats[key]);
+        }
     }
 
     private void Start()
