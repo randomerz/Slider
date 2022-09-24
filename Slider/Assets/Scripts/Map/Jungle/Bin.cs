@@ -19,7 +19,14 @@ public class Bin : MonoBehaviour
 
     public void RecieveShape(Shape shape)
     {
-        //broadcast the shape has been made
-        print(shape.name);
+        if (shape == null)
+        {
+            print("Pushed null shape");
+        }
+        else
+        {
+            //broadcast the shape has been made
+            print("bin: " + shape.name);
+        }
     }
 }

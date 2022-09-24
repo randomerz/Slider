@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Box : MonoBehaviour
 {
+    protected Dictionary<string, int> stringToIndex = new Dictionary<string, int>();
+
+    public List<Shape> shapes;
+    protected int currentShapeIndex = 0;
+    protected Shape currentShape;
+
     public Path left;
     public Path right;
     public Path top;
@@ -11,71 +17,45 @@ public class Box : MonoBehaviour
 
     protected List<Path> paths = new List<Path>(); //vector2 key, path
     protected List<Vector2> directions = new List<Vector2>();
-    protected int currentDirectionIndex = 0;
-    public List<Shape> shapes;
-    protected int currentShapeIndex = 0;
-    protected Shape currentShape;
+    public int currentDirectionIndex = 0;
 
     // Start is called before the first frame update
     void Awake()
     {
-        //start a path here in a default direction
+        SetPaths();
+    }
+
+    protected void SetPaths()
+    {
         if (left != null)
         {
             directions.Add(new Vector2(-1, 0));
             paths.Add(left);
-        }
-        if (right != null)
-        {
-            directions.Add(new Vector2(1, 0));
-            paths.Add(right);
+            stringToIndex.Add("left", stringToIndex.Count);
         }
         if (top != null)
         {
             directions.Add(new Vector2(0, 1));
             paths.Add(top);
+            stringToIndex.Add("top", stringToIndex.Count);
+        }
+        if (right != null)
+        {
+            directions.Add(new Vector2(1, 0));
+            paths.Add(right);
+            stringToIndex.Add("right", stringToIndex.Count);
         }
         if (bottom != null)
         {
             directions.Add(new Vector2(0, -1));
             paths.Add(bottom);
+            stringToIndex.Add("down", stringToIndex.Count);
         }
-
-        currentShape = shapes[currentShapeIndex];
-        CreateShape();
     }
-
-    private new void OnEnable()
-    {
-        SGrid.OnSTileEnabled += OnSTileEnabled;
-    }
-
-    private new void OnDisable()
-    {
-        SGrid.OnSTileEnabled -= OnSTileEnabled;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    //will need this
-/*    private void CreateShape(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        CreateShape();
-    }*/
-
-    private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
-    {
-        CreateShape();
-    }
-
 
     public void CreateShape()
     {
-       // print("Box creating shape");
+       print("Box creating shape");
         //send racast in direction and then calls RecieveShape() of that obj on the boxes layer
 
         Physics2D.queriesStartInColliders = false;
@@ -132,7 +112,7 @@ public class Box : MonoBehaviour
 
         if (distanceTo > inactiveStileDistance)
         {
-            print("inactive stile in the way");
+            //print("inactive stile in the way");
             nextBin = null;
             nextBox = null;
         }
@@ -141,15 +121,16 @@ public class Box : MonoBehaviour
         if (nextBox != null)
         {
             //yay we got the next box
-           // print("box sending shape");
+           //print("box sending shape");
             nextBox.RecieveShape(paths[currentDirectionIndex], currentShape);
-            paths[currentDirectionIndex].TurnSideOn();
+            print("activating path: " + paths[currentDirectionIndex].gameObject.name);
+            paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
         }
         else if (nextBin != null)
         {
-           // print("sending shape to bin");
+            print("sending shape to bin");
             nextBin.RecieveShape(currentShape);
-            paths[currentDirectionIndex].TurnSideOn();
+            paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
         }
     }
 
@@ -157,27 +138,55 @@ public class Box : MonoBehaviour
     public virtual void RecieveShape(Path path, Shape shape)
     {
         //what should a box do when it recieves a shape... like nothing right since it just produces what its told to
-        print("box recieved a shape");
-        print(this.gameObject.name);
-    }
-
-    public void ChangeShape()
-    {
-        print("Changing shape");
-        currentShapeIndex = (currentShapeIndex + 1) % shapes.Count;
-        currentShape = shapes[currentShapeIndex];
-        CreateShape();
+       // print("box recieved a shape");
+      //  print(this.gameObject.name);
     }
 
     public void Rotate()
     {
-        paths[currentDirectionIndex].TurnSideOff();
-        currentDirectionIndex = (currentDirectionIndex + 1) % paths.Count;
-        paths[currentDirectionIndex].TurnSideOn();
-        if (currentShape == null)
+        paths[currentDirectionIndex].Deactivate();
+
+        //check each path to see if any is not active alr
+        for (int i = 0; i < paths.Count; i++)
         {
-            return;
+            currentDirectionIndex = (currentDirectionIndex + 1) % paths.Count;
+
+            //start path if that path is not active alr
+            if (!paths[currentDirectionIndex].isActive())
+            {
+                paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
+
+                if (currentShape == null)
+                {
+                    return;
+                }
+
+                CreateShape();
+                break;
+            }
         }
-        CreateShape();
+
+        print(this.gameObject.name + " " + currentDirectionIndex);
+    }
+
+    protected bool isDefaultCurrentPath()
+    {
+        bool defaultPath = false;
+        int right = -1;
+        int down = -1;
+        if (stringToIndex.ContainsKey("right"))
+        {
+            right = stringToIndex["right"];
+        }
+        if (stringToIndex.ContainsKey("down"))
+        {
+            down = stringToIndex["down"];
+        }
+
+        if (currentDirectionIndex == right || currentDirectionIndex == down) //down or right 
+        {
+            defaultPath = true;
+        }
+        return defaultPath;
     }
 }

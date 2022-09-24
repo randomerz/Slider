@@ -4,7 +4,7 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "RecipeList", menuName = "Scriptable Objects/RecipeList")]
 
-public class RecipeList : MonoBehaviour
+public class RecipeList : ScriptableObject
 {
     public List<Recipe> list = new List<Recipe>();
     private int index = 0;

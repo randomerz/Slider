@@ -52,6 +52,6 @@ public class Recipe : ScriptableObject
                 return false;
             }
         }
-        return false;
+        return true;
     }
 }

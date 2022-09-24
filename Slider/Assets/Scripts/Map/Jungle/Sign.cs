@@ -5,31 +5,14 @@ using UnityEngine;
 public class Sign : Box
 {
     public RecipeList recipes;
-    Dictionary<Path, Shape> shapes = new Dictionary<Path, Shape>(); //idk if i sshould rename this i should think
+    private Dictionary<Path, Shape> shapes = new Dictionary<Path, Shape>(); //idk if i sshould rename this i should think
+    public string startPath = "left";
     
     // Start is called before the first frame update
     void Awake()
     {
-        if (left != null)
-        {
-            directions.Add(new Vector2(-1, 0));
-            paths.Add(left);
-        }
-        if (right != null)
-        {
-            directions.Add(new Vector2(1, 0));
-            paths.Add(right);
-        }
-        if (top != null)
-        {
-            directions.Add(new Vector2(0, 1));
-            paths.Add(top);
-        }
-        if (bottom != null)
-        {
-            directions.Add(new Vector2(0, -1));
-            paths.Add(bottom);
-        }
+        print("creating sign");
+        SetPaths();
 
         if (shapes.Count == 0)
         {
@@ -38,15 +21,20 @@ public class Sign : Box
                 shapes.Add(path, null);
             }
         }
+
+        currentDirectionIndex = stringToIndex[startPath];
     }
 
-    // Update is called once per frame
+    private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        //do nothing??
+    }
 
     public override void RecieveShape(Path path, Shape shape)
     {
         //somehow take in shapes and merge is needed
         // also be able to remove a shape when the box output diff stuff or the path stops
-     //   print("sign got shape");
+        print("sign got shape");
         shapes[path] = shape;
         MergeShapes();
         CreateShape();
@@ -68,20 +56,23 @@ public class Sign : Box
             print(shape);
         }
         print("ahdkfljaldf");*/
-
-        while (recipes.HasNext())
+        
+/*        while (recipes.HasNext())
         {
             //not finding the recipe :C
             Recipe recipe = recipes.GetNext();
-            print(recipe);
-            if (recipe.Check(shapesRecieved) != null)
+            //print(recipe);
+            Shape hold = recipe.Check(shapesRecieved);
+            if (hold != null)
             {
                 //we found the recipe
                 //brah
-                currentShape = recipe.Check(shapesRecieved);
+                currentShape = hold;
+                print(currentShape.type);
                 return;
             }
         }
+*/
         currentShape = shapesRecieved[0]; //assuming there is only one shape in the list B)
     }
 }
