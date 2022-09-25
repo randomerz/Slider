@@ -55,7 +55,7 @@ public class Box : MonoBehaviour
 
     public void CreateShape()
     {
-       print("Box creating shape");
+       //print("Box creating shape");
         //send racast in direction and then calls RecieveShape() of that obj on the boxes layer
 
         Physics2D.queriesStartInColliders = false;
@@ -123,12 +123,12 @@ public class Box : MonoBehaviour
             //yay we got the next box
            //print("box sending shape");
             nextBox.RecieveShape(paths[currentDirectionIndex], currentShape);
-            print("activating path: " + paths[currentDirectionIndex].gameObject.name);
+           // print("activating path: " + paths[currentDirectionIndex].gameObject.name);
             paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
         }
         else if (nextBin != null)
         {
-            print("sending shape to bin");
+           // print("sending shape to bin");
             nextBin.RecieveShape(currentShape);
             paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
         }
@@ -144,29 +144,32 @@ public class Box : MonoBehaviour
 
     public void Rotate()
     {
-        paths[currentDirectionIndex].Deactivate();
-
-        //check each path to see if any is not active alr
-        for (int i = 0; i < paths.Count; i++)
+        if (currentShape != null)
         {
-            currentDirectionIndex = (currentDirectionIndex + 1) % paths.Count;
+            paths[currentDirectionIndex].Deactivate();
 
-            //start path if that path is not active alr
-            if (!paths[currentDirectionIndex].isActive())
+            //check each path to see if any is not active alr
+            for (int i = 0; i < paths.Count; i++)
             {
-                paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
+                currentDirectionIndex = (currentDirectionIndex + 1) % paths.Count;
 
-                if (currentShape == null)
+                //start path if that path is not active alr
+                if (!paths[currentDirectionIndex].isActive())
                 {
-                    return;
+                    paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
+
+                    if (currentShape == null)
+                    {
+                        return;
+                    }
+
+                    CreateShape();
+                    break;
                 }
-
-                CreateShape();
-                break;
             }
-        }
 
-        print(this.gameObject.name + " " + currentDirectionIndex);
+            //print(this.gameObject.name + " " + currentDirectionIndex);
+        }
     }
 
     protected bool isDefaultCurrentPath()

@@ -34,8 +34,8 @@ public class Sign : Box
     {
         //somehow take in shapes and merge is needed
         // also be able to remove a shape when the box output diff stuff or the path stops
-        print("sign got shape");
-        shapes[path] = shape;
+       // print("sign got shape");
+        shapes[path.pair] = shape;
         MergeShapes();
         CreateShape();
     }
@@ -74,5 +74,6 @@ public class Sign : Box
         }
 */
         currentShape = shapesRecieved[0]; //assuming there is only one shape in the list B)
+        //print("sign shape: " + currentShape.name);
     }
 }

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Path : MonoBehaviour
 {
-    public bool active = false;
+    private bool active = false;
+    public Path pair;
     bool defaultAnim = true; //left, or down (animation will have default and non default for direciton
     private Vector2 direction;
     //Animation thing
@@ -27,12 +28,22 @@ public class Path : MonoBehaviour
             GetComponentInChildren<SpriteRenderer>().color = Color.magenta; //up or left
             defaultAnim = false;
         }
+
+        if (pair != null && !pair.isActive())
+        {
+            pair.Activate(right);
+        }
     }
 
     public void Deactivate()
     {
         GetComponentInChildren<SpriteRenderer>().color = Color.white;       //unactivated
         active = false;
+
+        if (pair != null && pair.isActive())
+        {
+            pair.Deactivate();
+        }
     }
 
     public bool isActive()
