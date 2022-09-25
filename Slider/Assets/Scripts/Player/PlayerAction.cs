@@ -36,7 +36,7 @@ public class PlayerAction : Singleton<PlayerAction>
         pickedItem = PlayerInventory.GetCurrentItem();
         if (pickedItem != null && !isPicking)
         {
-            pickedItem.gameObject.transform.position = pickedItemLocation.position;
+            // pickedItem.gameObject.transform.position = pickedItemLocation.position;
 
             Vector2 furthestValidDropPosition = GetFurthestValidDropPosition();
 
@@ -173,6 +173,8 @@ public class PlayerAction : Singleton<PlayerAction>
     {
         isPicking = false;
         itemDropIndicator.SetActive(true);
+        
+        pickedItem.transform.SetParent(pickedItemLocation);
     }
 
     private void FinishDropping()

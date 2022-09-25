@@ -121,11 +121,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 480
         width: 160
         height: 160
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -142,11 +142,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 160
-        y: 0
+        y: 480
         width: 160
         height: 160
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -154,6 +154,258 @@ TextureImporter:
       bones: []
       spriteID: a2172a04acce1ad48820614e65eadf7e
       internalID: 289223702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: power_crystal_on_2
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 480
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b70db7623703f84bba896eb758c1677
+      internalID: 1694548933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: power_crystal_on_3
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 480
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f6c07aa90dc3734e91eda2efbdf89eb
+      internalID: -1017092111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: power_crystal_on_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8bf3c9391def6341bbc66cc48914705
+      internalID: 573060370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: power_crystal_on_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 320
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b80127ec59ead94b82f85a9556ac8a4
+      internalID: -550019269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: power_crystal_on_6
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 320
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8e5f91760189694cbee9359cb00f18e
+      internalID: -1117114400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: power_crystal_on_7
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 320
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 258db684863c48b49b53def306fbfb1c
+      internalID: 1065495655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: power_crystal_on_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 160
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3dd05ee29045fa4282e8e5bd03562c3
+      internalID: -458902429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: power_crystal_on_9
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 160
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2067077c103559499fd53d5243ac224
+      internalID: -83965590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: power_crystal_on_10
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 160
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef85e5b447de2024881ade7a1e0a61c4
+      internalID: 1512173979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: power_crystal_on_11
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 160
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52315fc6e4dfb48489834229fb57b139
+      internalID: -677755392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: power_crystal_on_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4a725fbb8c8f8d49886a070ae15876a
+      internalID: -1930428153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: power_crystal_on_13
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.45, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0249060efadc8274483867d76d086a87
+      internalID: 1452961869
       vertices: []
       indices: 
       edges: []
@@ -169,8 +421,20 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      power_crystal_on_3: -1017092111
+      power_crystal_on_6: -1117114400
+      power_crystal_on_12: -1930428153
+      power_crystal_on_11: -677755392
       power_crystal_on_0: 1627899103
+      power_crystal_on_2: 1694548933
+      power_crystal_on_7: 1065495655
+      power_crystal_on_5: -550019269
+      power_crystal_on_13: 1452961869
+      power_crystal_on_10: 1512173979
       power_crystal_on_1: 289223702
+      power_crystal_on_8: -458902429
+      power_crystal_on_9: -83965590
+      power_crystal_on_4: 573060370
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
