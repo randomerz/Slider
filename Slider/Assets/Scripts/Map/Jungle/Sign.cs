@@ -23,6 +23,7 @@ public class Sign : Box
         }
 
         currentDirectionIndex = stringToIndex[startPath];
+        paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
     }
 
     private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)

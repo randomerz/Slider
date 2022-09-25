@@ -51,4 +51,9 @@ public class Path : MonoBehaviour
         return active;
     }
 
+    public void ChangePair()
+    {
+        
+    }
+
 }

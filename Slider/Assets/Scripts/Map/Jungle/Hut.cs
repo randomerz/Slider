@@ -8,23 +8,31 @@ public class Hut : Box
     {
         SetPaths();
         currentShape = shapes[currentShapeIndex];
+        paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
         CreateShape();
     }
 
     private new void OnEnable()
     {
         SGrid.OnSTileEnabled += OnSTileEnabled;
+        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
     }
 
     private new void OnDisable()
     {
         SGrid.OnSTileEnabled -= OnSTileEnabled;
+        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
     }
 
     private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
         CreateShape();
     }
+    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        CreateShape();
+    }
+
     public void ChangeShape()
     {
         currentShapeIndex = (currentShapeIndex + 1) % shapes.Count;

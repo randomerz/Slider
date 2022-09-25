@@ -25,6 +25,35 @@ public class Box : MonoBehaviour
         SetPaths();
     }
 
+    private new void OnEnable()
+    {
+        SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
+        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
+    }
+
+    private new void OnDisable()
+    {
+        SGridAnimator.OnSTileMoveStart -= OnSTileMoveEarly;
+        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
+    }
+
+    private void OnSTileMoveEarly(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        //turn off paths?
+        foreach(Path path in paths)
+        {
+            path.Deactivate();
+        }
+    }
+
+    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        foreach(Path path in paths)
+        {
+            path.ChangePair();
+        }
+    }
+
     protected void SetPaths()
     {
         if (left != null)
