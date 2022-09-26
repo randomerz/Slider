@@ -7,6 +7,11 @@ public class Hut : Box
     void Awake()
     {
         SetPaths();
+/*        foreach (Path path in paths)
+        {
+            path.ChangePair();
+        }*/
+
         currentShape = shapes[currentShapeIndex];
         paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
         CreateShape();

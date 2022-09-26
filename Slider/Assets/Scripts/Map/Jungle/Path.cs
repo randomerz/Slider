@@ -9,15 +9,26 @@ public class Path : MonoBehaviour
     bool defaultAnim = true; //left, or down (animation will have default and non default for direciton
     private Vector2 direction;
     //Animation thing
-    // Start is called before the first frame update
-    void Start()
+
+    private new void OnEnable()
     {
-       
+        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
+    }
+
+    private new void OnDisable()
+    {
+        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
+    }
+
+
+    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        ChangePair();
     }
 
     public void Activate(bool right)
     {
-        print("activating path: " + gameObject.name);
+       // print("activating path: " + gameObject.name);
         active = true;
         if (right)
         {
@@ -53,7 +64,57 @@ public class Path : MonoBehaviour
 
     public void ChangePair()
     {
-        
-    }
+        // ray cast on 2 sides
+        // find short ends
 
+        print("changing pair for " + gameObject.name);
+
+        pair = null;
+        Vector2 one = new Vector2(1, 0);
+        Vector2 two = new Vector2(-1, 0);
+
+/*        if (this.transform.localRotation.z == -90 || this.transform.localRotation.z == 90)
+        {
+            one.y = -1;
+            two.y = 1;
+        }*/
+
+        //colliders not working :<<<
+        //ray cast 
+        Physics2D.queriesStartInColliders = false;
+
+        //my raycasts dont hit anything
+        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 100, LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 100, LayerMask.GetMask("JunglePaths"));
+
+
+        //want to find the closest bin or box and stile
+        if (checkOne.collider != null)
+        {
+            print("one other path found");
+            //check not on same stile
+            pair = checkOne.collider.gameObject.GetComponent<Path>();
+            if (!pair.transform.parent.Equals(this.transform.parent))
+            {
+                pair.pair = this;
+            } else
+            {
+                pair = null;
+            }
+        }
+        else if (checkTwo.collider != null && pair == null)
+        {
+            print("two other path found");
+            pair = checkTwo.collider.gameObject.GetComponent<Path>();
+            if (!pair.transform.parent.Equals(this.transform.parent))
+            {
+                pair.pair = this;
+            } else
+            {
+                pair = null;
+            }
+        }
+
+        Physics2D.queriesStartInColliders = true;
+    }
 }

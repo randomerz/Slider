@@ -23,34 +23,28 @@ public class Box : MonoBehaviour
     void Awake()
     {
         SetPaths();
+/*        foreach (Path path in paths)
+        {
+            path.ChangePair();
+        }*/
     }
 
     private new void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
-        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
     }
 
     private new void OnDisable()
     {
         SGridAnimator.OnSTileMoveStart -= OnSTileMoveEarly;
-        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
     }
 
     private void OnSTileMoveEarly(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         //turn off paths?
-        foreach(Path path in paths)
+        foreach (Path path in paths)
         {
             path.Deactivate();
-        }
-    }
-
-    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        foreach(Path path in paths)
-        {
-            path.ChangePair();
         }
     }
 
@@ -85,15 +79,12 @@ public class Box : MonoBehaviour
     public void CreateShape()
     {
        //print("Box creating shape");
-        //send racast in direction and then calls RecieveShape() of that obj on the boxes layer
 
         Physics2D.queriesStartInColliders = false;
 
         RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, directions[currentDirectionIndex].normalized, 100, LayerMask.GetMask("Slider"));
 
         Physics2D.queriesStartInColliders = true;
-
-        //       RaycastHit2D raycasthit = Physics2D.Raycast(transform.position, directions[currentDirectionIndex].normalized, 100, LayerMask.GetMask("Faeries"));
 
         Box nextBox = null;
         Bin nextBin = null;
@@ -152,14 +143,28 @@ public class Box : MonoBehaviour
             //yay we got the next box
            //print("box sending shape");
             nextBox.RecieveShape(paths[currentDirectionIndex], currentShape);
-           // print("activating path: " + paths[currentDirectionIndex].gameObject.name);
-            paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
+
+            //only show path working if there is a shape to carry and if not the path is deactivated
+            if (currentShape != null)
+            {
+                paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
+            } else
+            {
+                paths[currentDirectionIndex].Deactivate();
+            }
         }
         else if (nextBin != null)
         {
            // print("sending shape to bin");
             nextBin.RecieveShape(currentShape);
-            paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
+
+            if (currentShape != null)
+            {
+                paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
+            } else
+            {
+                paths[currentDirectionIndex].Deactivate();
+            }
         }
     }
 
@@ -196,8 +201,6 @@ public class Box : MonoBehaviour
                     break;
                 }
             }
-
-            //print(this.gameObject.name + " " + currentDirectionIndex);
         }
     }
 

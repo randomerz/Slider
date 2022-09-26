@@ -5,28 +5,36 @@ using UnityEngine;
 public class Bin : MonoBehaviour
 {
     List<Recipe> recipes = new List<Recipe>();
-    // Start is called before the first frame update
-    void Start()
+    Shape currentShape = null;
+
+    private new void OnEnable()
     {
-        
+        SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
     }
 
-    // Update is called once per frame
-    void Update()
+    private new void OnDisable()
     {
-        
+        SGridAnimator.OnSTileMoveStart -= OnSTileMoveEarly;
+    }
+
+    private void OnSTileMoveEarly(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        //remove all shapes
+        currentShape = null;
+        print("no shape");
     }
 
     public void RecieveShape(Shape shape)
     {
         if (shape == null)
         {
-            print("Pushed null shape");
+            print("no shape");
         }
         else
         {
             //broadcast the shape has been made
             print("bin: " + shape.name);
+            currentShape =  shape;
         }
     }
 }

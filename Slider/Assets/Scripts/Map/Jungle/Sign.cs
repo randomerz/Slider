@@ -13,6 +13,10 @@ public class Sign : Box
     {
         print("creating sign");
         SetPaths();
+/*        foreach (Path path in paths)
+        {
+            path.ChangePair();
+        }*/
 
         if (shapes.Count == 0)
         {
@@ -23,13 +27,27 @@ public class Sign : Box
         }
 
         currentDirectionIndex = stringToIndex[startPath];
-        paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
+    }
+    private new void OnEnable()
+    {
+        SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
     }
 
-    private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
+    private new void OnDisable()
     {
-        //do nothing??
+        SGridAnimator.OnSTileMoveStart -= OnSTileMoveEarly;
     }
+
+    private void OnSTileMoveEarly(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        //remove all shapes
+        shapes = new Dictionary<Path, Shape>();
+        foreach (Path path in paths)
+        {
+            shapes.Add(path, null);
+        }
+    }
+
 
     public override void RecieveShape(Path path, Shape shape)
     {
