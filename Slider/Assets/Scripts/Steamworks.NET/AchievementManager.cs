@@ -11,6 +11,12 @@ public class AchievementManager : Singleton<AchievementManager>
 {
     private Dictionary<string, int> achievementStats;
 
+    private void Start()
+    {
+        InitializeSingleton();
+        achievementStats = new Dictionary<string, int>();
+    }
+
     /// <summary>
     /// Set a statistic with the given key. This key needs to match one setup in Steamworks (message Daniel or Travis to have them create a statistic!)
     /// </summary>
@@ -60,12 +66,6 @@ public class AchievementManager : Singleton<AchievementManager>
         {
             SteamUserStats.SetStat(key, achievementStats[key]);
         }
-    }
-
-    private void Start()
-    {
-        InitializeSingleton();
-        achievementStats = new Dictionary<string, int>();
     }
 }
 

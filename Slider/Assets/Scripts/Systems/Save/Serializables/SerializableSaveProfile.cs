@@ -81,13 +81,15 @@ public class SerializableSaveProfile
             strings.Add(strings_Keys[i], strings_Values[i]);
         sp.SetStringsDictionary(strings);
 
-        // Travis: Not sure why I need to do this null check
         if (ints_Keys != null)
         {
             Dictionary<string, int> ints = new Dictionary<string, int>(ints_Keys.Length);
             for (int i = 0; i < ints_Keys.Length; i++)
                 ints.Add(ints_Keys[i], ints_Values[i]);
             sp.SetIntsDictionary(ints);
+        } else
+        {
+            Debug.LogWarning("[SerializableSaveProfile] The saved integers dictionary had no keys. This most likely just means that no ints are being saved.");
         }
 
         sp.AchievementData = achievementData;
