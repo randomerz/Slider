@@ -158,6 +158,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: crystal_med_yellow_bot
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 48
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bcd185ddffa8bf4bb401f13c8997af7
+      internalID: 1481652510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: crystal_med_yellow_top
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 20
+        width: 48
+        height: 28
+      alignment: 9
+      pivot: {x: 0.5, y: 0.14285715}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d372e6995005e34696593c88e54b343
+      internalID: -769712721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -169,7 +211,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      crystal_med_yellow_top: -769712721
       crystal_med_Top: 154588914
+      crystal_med_yellow_bot: 1481652510
       crystal_med_Bottom: 228728450
   spritePackingTag: 
   pSDRemoveMatte: 0

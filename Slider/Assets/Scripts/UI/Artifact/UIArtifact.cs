@@ -79,7 +79,7 @@ public class UIArtifact : Singleton<UIArtifact>
             {
                 ArtifactTileButton b = GetButton(x, y);
                 if (b.TileIsActive)
-                    s += b.islandId;
+                    s += b.islandId.ToString("X");
                 else
                     s += "#";
             }
@@ -587,8 +587,11 @@ public class UIArtifact : Singleton<UIArtifact>
 
     protected void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
+        Debug.Log("Swapping " + buttonCurrent + " " + buttonEmpty);
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
+        Debug.Log(oldCurrX + " " + oldCurrY);
+        Debug.Log(buttonEmpty.x + " " + buttonEmpty.y);
         buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y, true);
         buttonEmpty.SetPosition(oldCurrX, oldCurrY, true);
     }

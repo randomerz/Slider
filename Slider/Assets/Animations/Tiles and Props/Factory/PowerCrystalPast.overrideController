@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PowerCrystalPast
+  m_Controller: {fileID: 9100000, guid: d76c7d3f127a37340af1661c94b5ecc4, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: ad1b4bd9fb8fee44fb977f79950694b5, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 66ab7e7355c677e4faa4d0c721bf996e, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 66ab7e7355c677e4faa4d0c721bf996e, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 66ab7e7355c677e4faa4d0c721bf996e, type: 2}

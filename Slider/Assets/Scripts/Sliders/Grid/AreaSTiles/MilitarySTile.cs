@@ -6,6 +6,6 @@ public class MilitarySTile : STile
 
     private new void Awake() {
         base.Awake();
-        STILE_WIDTH = 13;
+        // STILE_WIDTH = 13;
     }
 }
