@@ -224,4 +224,9 @@ public class Box : MonoBehaviour
         }
         return defaultPath;
     }
+
+    public Vector2 GetDirection()
+    {
+        return directions[currentDirectionIndex];
+    }
 }

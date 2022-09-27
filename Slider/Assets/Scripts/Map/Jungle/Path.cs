@@ -7,7 +7,6 @@ public class Path : MonoBehaviour
     private bool active = false;
     public Path pair;
     bool defaultAnim = true; //left, or down (animation will have default and non default for direciton
-    private Vector2 direction;
     //Animation thing
 
     private new void OnEnable()
@@ -73,25 +72,25 @@ public class Path : MonoBehaviour
         Vector2 one = new Vector2(1, 0);
         Vector2 two = new Vector2(-1, 0);
 
-/*        if (this.transform.localRotation.z == -90 || this.transform.localRotation.z == 90)
+        if (this.transform.localRotation.z == -90 || this.transform.localRotation.z == 90)
         {
-            one.y = -1;
-            two.y = 1;
-        }*/
+            one= new Vector2(0, 1);
+            two = new Vector2(0, -1);
+        }
 
         //colliders not working :<<<
         //ray cast 
         Physics2D.queriesStartInColliders = false;
 
         //my raycasts dont hit anything
-        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 100, LayerMask.GetMask("JunglePaths"));
-        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 100, LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 50, LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 50, LayerMask.GetMask("JunglePaths"));
 
 
         //want to find the closest bin or box and stile
         if (checkOne.collider != null)
         {
-            print("one other path found");
+            print("one - other path found");
             //check not on same stile
             pair = checkOne.collider.gameObject.GetComponent<Path>();
             if (!pair.transform.parent.Equals(this.transform.parent))
@@ -102,9 +101,9 @@ public class Path : MonoBehaviour
                 pair = null;
             }
         }
-        else if (checkTwo.collider != null && pair == null)
+        if (checkTwo.collider != null && pair == null)
         {
-            print("two other path found");
+            print("two - other path found");
             pair = checkTwo.collider.gameObject.GetComponent<Path>();
             if (!pair.transform.parent.Equals(this.transform.parent))
             {
@@ -116,5 +115,20 @@ public class Path : MonoBehaviour
         }
 
         Physics2D.queriesStartInColliders = true;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        if (this.transform.localRotation.z == -90 || this.transform.localRotation.z == 90)
+        {
+            Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(0, 1, 0) * 10);
+            Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(0, -1, 0) * 10);
+        }
+        else
+        {
+            Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(1, 0, 0) * 10);
+            Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(-1, 0, 0) * 10);
+        }
     }
 }

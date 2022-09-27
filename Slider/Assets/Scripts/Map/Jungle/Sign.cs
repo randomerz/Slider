@@ -26,7 +26,10 @@ public class Sign : Box
             }
         }
 
-        currentDirectionIndex = stringToIndex[startPath];
+        if (stringToIndex.ContainsKey(startPath))
+        {
+            currentDirectionIndex = stringToIndex[startPath];
+        }
     }
     private new void OnEnable()
     {

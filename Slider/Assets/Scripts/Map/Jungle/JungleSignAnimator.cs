@@ -46,7 +46,8 @@ public class JungleSignAnimator : MonoBehaviour
     private Sprite DirectionToSprite(Vector2 direction)
     {
         int index = (int)(Mathf.Atan2(direction.y, direction.x) / (Mathf.PI / 2) + 4) % 4;
-        Debug.Log(index + " " + Mathf.Atan2(direction.y, direction.x));
+        // Debug.Log(index + " " + Mathf.Atan2(direction.y, direction.x));
+        print(direction + " : " + index);
         return signDirectionsSprites[index];
     }
 
@@ -54,5 +55,44 @@ public class JungleSignAnimator : MonoBehaviour
     public void SetRandomDirection()
     {
         SetDirection(new Vector2[] {Vector2.right, Vector2.up, Vector2.left, Vector2.down}[Random.Range(0, 4)]);
+    }
+
+    public void UpdateDirection()
+    {
+        Sign s = null;
+        Hut h = null;
+
+        GameObject parent = this.transform.parent.gameObject;
+        if (parent != null)
+        {
+            s = parent.GetComponent<Sign>();
+        }
+
+        if (parent != null)
+        {
+            GameObject grandparent = parent.transform.parent.gameObject;
+            if (grandparent != null)
+            {
+                h = grandparent.GetComponent<Hut>();
+            }
+        }
+
+        print("hut: " + h);
+        print("sign: " + s);
+
+        if (h != null)
+        {
+            Vector2 direction = h.GetDirection();
+            //print(direction);
+            SetDirection(direction);
+        } else if (s != null)
+        {
+            Vector2 direction = s.GetDirection();
+            //print(direction);
+            SetDirection(direction);
+        } else
+        {
+            SetRandomDirection();
+        }
     }
 }

@@ -80,7 +80,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3, y: 3}
+  m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
 --- !u!61 &4852848544237912663
 BoxCollider2D:
@@ -135,6 +135,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 7876779314235505377}
+        m_TargetAssemblyTypeName: JungleSignAnimator, Assembly-CSharp
+        m_MethodName: UpdateDirection
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   addToOnAction: 1
   isCarryingItem: 0
   itemNameCheck: 
@@ -149,8 +161,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4852848545585317208}
   - component: {fileID: 4852848545585317211}
+  - component: {fileID: 7876779314235505377}
   m_Layer: 7
-  m_Name: Sprite
+  m_Name: SignSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -212,8 +225,8 @@ SpriteRenderer:
   m_SortingLayerID: 529684183
   m_SortingLayer: 7
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0.28930813, b: 0.28930813, a: 1}
+  m_Sprite: {fileID: 1600079017, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -223,3 +236,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7876779314235505377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4852848545585317209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d08130671c4bf4182554e4ca0f2dfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 4852848545585317211}
+  signDirectionsSprites:
+  - {fileID: 1600079017, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
+  - {fileID: -126840367, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
+  - {fileID: 1126957954, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
+  - {fileID: 856556665, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
+  bumpAnimationSprites:
+  - {fileID: 745285067, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
+  - {fileID: -1616351788, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
