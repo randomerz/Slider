@@ -66,10 +66,12 @@ public class UIArtifact : Singleton<UIArtifact>
         return null;
     }
 
-    // Returns a string like:   123_6##_4#5
-    // for a grid like:  1 2 3
-    //                   6 . .
-    //        (0, 0) ->  4 . 5
+    /// Returns a string like: 123_6##_4#5, 
+    /// for a grid like:  1 2 3
+    ///                   6 . .
+    ///        (0, 0) ->  4 . 5
+    /// </summary>
+    /// <returns></returns>
     public static string GetGridString()
     {
         string s = "";
@@ -78,8 +80,11 @@ public class UIArtifact : Singleton<UIArtifact>
             for (int x = 0; x < 3; x++)
             {
                 ArtifactTileButton b = GetButton(x, y);
+                // Currently for military (16 tiles), we mod 16 and convert to hex, so 10 -> A, ..., 15 -> F, 16 -> 0
+                // It's kinda weird and jank but there isn't really anything in the future that will need a more
+                // complicated system so its what we are doing for now
                 if (b.TileIsActive)
-                    s += b.islandId.ToString("X");
+                    s += (b.islandId % 16).ToString("X");
                 else
                     s += "#";
             }
@@ -587,11 +592,8 @@ public class UIArtifact : Singleton<UIArtifact>
 
     protected void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        Debug.Log("Swapping " + buttonCurrent + " " + buttonEmpty);
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
-        Debug.Log(oldCurrX + " " + oldCurrY);
-        Debug.Log(buttonEmpty.x + " " + buttonEmpty.y);
         buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y, true);
         buttonEmpty.SetPosition(oldCurrX, oldCurrY, true);
     }
