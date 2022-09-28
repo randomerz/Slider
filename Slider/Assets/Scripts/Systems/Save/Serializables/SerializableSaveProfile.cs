@@ -15,17 +15,16 @@ public class SerializableSaveProfile
     public Area lastArea;
     public bool inGame;
 
-
-    //private Dictionary<Area, SGridData> areaToSGridData = new Dictionary<Area, SGridData>();
     public Area[] areaToSGridData_Keys;
     public SGridData[] areaToSGridData_Values;
 
-    //private Dictionary<string, bool> bools = new Dictionary<string, bool>();
-    //private Dictionary<string, string> strings = new Dictionary<string, string>();
     public string[] bools_Keys;
     public bool[]   bools_Values;
     public string[] strings_Keys;
     public string[] strings_Values;
+    public string[] ints_Keys;
+    public int[] ints_Values;
+    public AchievementStatistic[] achievementData;
 
     public static SerializableSaveProfile FromSaveProfile(SaveProfile saveProfile)
     {
@@ -44,10 +43,14 @@ public class SerializableSaveProfile
         ssp.areaToSGridData_Keys = saveProfile.GetAreaToSGridData().Keys.ToArray();
         ssp.bools_Keys = saveProfile.GetBoolsDictionary().Keys.ToArray();
         ssp.strings_Keys = saveProfile.GetStringsDictionary().Keys.ToArray();
+        ssp.ints_Keys = saveProfile.GetIntsDictionary().Keys.ToArray();
 
         ssp.areaToSGridData_Values = saveProfile.GetAreaToSGridData().Values.ToArray();
         ssp.bools_Values = saveProfile.GetBoolsDictionary().Values.ToArray();
         ssp.strings_Values = saveProfile.GetStringsDictionary().Values.ToArray();
+        ssp.ints_Values = saveProfile.GetIntsDictionary().Values.ToArray();
+
+        ssp.achievementData = saveProfile.AchievementData;
 
         return ssp;
     }
@@ -77,6 +80,19 @@ public class SerializableSaveProfile
         for (int i = 0; i < strings_Keys.Length; i++)
             strings.Add(strings_Keys[i], strings_Values[i]);
         sp.SetStringsDictionary(strings);
+
+        if (ints_Keys != null)
+        {
+            Dictionary<string, int> ints = new Dictionary<string, int>(ints_Keys.Length);
+            for (int i = 0; i < ints_Keys.Length; i++)
+                ints.Add(ints_Keys[i], ints_Values[i]);
+            sp.SetIntsDictionary(ints);
+        } else
+        {
+            Debug.LogWarning("[SerializableSaveProfile] The saved integers dictionary had no keys. This most likely just means that no ints are being saved.");
+        }
+
+        sp.AchievementData = achievementData;
 
         return sp;
     }
