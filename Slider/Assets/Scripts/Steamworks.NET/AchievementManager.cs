@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Steamworks;
+using System;
 
 /// <summary>
 /// This class handles storing achievement data and sending it to steam. Use <see cref="SetAchievementStat(string, int)"/> to set/update a particular achievement stat.
@@ -34,16 +35,26 @@ public class AchievementManager : Singleton<AchievementManager>
         _instance.SendAchievementStatsToSteam();
     }
 
+    /// <returns>An array of all AchievementStatistics, or an empty array if they cannot be found</returns>
     public static AchievementStatistic[] GetAchievementData()
     {
-        AchievementStatistic[] pairs = new AchievementStatistic[_instance.achievementStats.Count];
-        int i = 0;
-        foreach (string key in _instance.achievementStats.Keys)
+        try
         {
-            pairs[i] = new AchievementStatistic(key, _instance.achievementStats[key]);
-            i++;
+            AchievementStatistic[] pairs = new AchievementStatistic[_instance.achievementStats.Count];
+            int i = 0;
+            foreach (string key in _instance.achievementStats.Keys)
+            {
+                pairs[i] = new AchievementStatistic(key, _instance.achievementStats[key]);
+                i++;
+            }
+            return pairs;
+        } catch (NullReferenceException)
+        {
+            Debug.LogWarning("[AchievementManager] Failed to load achievement stats. This could indicate that you are not " +
+                "connected to Steam or that AchievementManager is not present in your scene.");
+            return new AchievementStatistic[0];
         }
-        return pairs;
+        
     }
 
     /// <summary>
