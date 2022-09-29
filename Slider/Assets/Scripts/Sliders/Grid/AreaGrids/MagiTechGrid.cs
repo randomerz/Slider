@@ -15,7 +15,7 @@ public class MagiTechGrid : SGrid
     /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
     and the right 9 STiles represent the past. The past tile will have an islandID
     exactly 9 more than its corresponding present tile. Note that in strings, the past tiles
-    will be reprsented with the characters A-I so they can retain a length of 1. *THIS HAS NOT BEEN PROPERLY IMPLEMENTED YET
+    will be reprsented with the characters A-I so they can retain a length of 1.
 
     A Magitech grid might look like this
 

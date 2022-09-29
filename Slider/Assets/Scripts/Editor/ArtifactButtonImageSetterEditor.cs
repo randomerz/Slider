@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEditor;
 using UnityEditor.EditorTools;
 
@@ -26,6 +27,14 @@ public class ArtifactButtonImageSetterEditor : Editor
         if (GUILayout.Button("Update Images"))
         {
             _target.UpdateImages();
+            foreach (ArtifactTileButton b in _target.buttons)
+            {
+                EditorUtility.SetDirty(b);
+            }
+            foreach (Image s in _target.images)
+            {
+                EditorUtility.SetDirty(s);
+            }
         }
     }
 }

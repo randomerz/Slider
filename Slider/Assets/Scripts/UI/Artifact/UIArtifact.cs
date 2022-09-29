@@ -80,11 +80,8 @@ public class UIArtifact : Singleton<UIArtifact>
             for (int x = 0; x < 3; x++)
             {
                 ArtifactTileButton b = GetButton(x, y);
-                // Currently for military (16 tiles), we mod 16 and convert to hex, so 10 -> A, ..., 15 -> F, 16 -> 0
-                // It's kinda weird and jank but there isn't really anything in the future that will need a more
-                // complicated system so its what we are doing for now
                 if (b.TileIsActive)
-                    s += (b.islandId % 16).ToString("X");
+                    s += Converter.IntToChar(b.islandId);
                 else
                     s += "#";
             }
