@@ -34,14 +34,16 @@ public class Sign : Box
     private new void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
+        SGridAnimator.OnSTileMoveStart += UpdateShapesOnTileMove;
     }
 
     private new void OnDisable()
     {
         SGridAnimator.OnSTileMoveStart -= OnSTileMoveEarly;
+        SGridAnimator.OnSTileMoveStart -= UpdateShapesOnTileMove;
     }
 
-    private void OnSTileMoveEarly(object sender, SGridAnimator.OnTileMoveArgs e)
+    private void UpdateShapesOnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         //remove all shapes
         shapes = new Dictionary<Path, Shape>();

@@ -39,8 +39,9 @@ public class Box : MonoBehaviour
         SGridAnimator.OnSTileMoveStart -= OnSTileMoveEarly;
     }
 
-    private void OnSTileMoveEarly(object sender, SGridAnimator.OnTileMoveArgs e)
+    protected void OnSTileMoveEarly(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        print("HHHHH");
         //turn off paths?
         foreach (Path path in paths)
         {
