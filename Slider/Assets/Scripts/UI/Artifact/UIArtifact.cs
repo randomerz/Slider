@@ -66,10 +66,12 @@ public class UIArtifact : Singleton<UIArtifact>
         return null;
     }
 
-    // Returns a string like:   123_6##_4#5
-    // for a grid like:  1 2 3
-    //                   6 . .
-    //        (0, 0) ->  4 . 5
+    /// Returns a string like: 123_6##_4#5, 
+    /// for a grid like:  1 2 3
+    ///                   6 . .
+    ///        (0, 0) ->  4 . 5
+    /// </summary>
+    /// <returns></returns>
     public static string GetGridString()
     {
         string s = "";
@@ -79,7 +81,7 @@ public class UIArtifact : Singleton<UIArtifact>
             {
                 ArtifactTileButton b = GetButton(x, y);
                 if (b.TileIsActive)
-                    s += b.islandId;
+                    s += Converter.IntToChar(b.islandId);
                 else
                     s += "#";
             }

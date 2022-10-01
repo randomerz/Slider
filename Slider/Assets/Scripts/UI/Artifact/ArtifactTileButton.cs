@@ -14,8 +14,8 @@ public class ArtifactTileButton : MonoBehaviour
 
     [FormerlySerializedAs("emptySprite")]
     [SerializeField] private Sprite emptySpriteDefault;
-    [SerializeField] private Sprite islandSpriteDefault;
-    [SerializeField] private Sprite completedSprite;
+    public Sprite islandSpriteDefault; // public for editor tools
+    public Sprite completedSprite; // public for editor tools
     private Sprite completedSpriteDefault;
     [SerializeField] private Sprite hoverSprite;
     [SerializeField] private Sprite blankSprite;

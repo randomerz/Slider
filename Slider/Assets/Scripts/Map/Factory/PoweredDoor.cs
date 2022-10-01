@@ -22,4 +22,10 @@ public class PoweredDoor : ElectricalNode
         base.OnPoweredHandler(e);
         animator.SetBool("Powered", e.powered);
     }
+
+    // quick workaround to make the npc power the north factory door
+    public void PowerDoorScuffed()
+    {
+        animator.SetBool("Powered", true);
+    }
 }

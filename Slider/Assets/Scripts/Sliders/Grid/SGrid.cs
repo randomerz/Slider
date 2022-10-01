@@ -189,21 +189,6 @@ public void SetGrid(int[,] puzzle)
         }
     }
 
-    /* C: converts integers >=10 to characters
-     * 10 = A, 11 = B, etc.
-     * Integers 0-9 are left untouched (note that they
-     * are now characters)
-     */
-    public static char IntToChar(int num)
-    {
-        return (num > 9) ? (char)('A' -  10 + num) : (char)('0' + num);
-    }
-
-    public static int CharToInt(char c)
-    {
-        return (c > '9') ? (c - 'A' +  10) : (c - '0');
-    }
-
     
     /// <summary>
     /// Returns a string like:   123_6##_4#5
@@ -226,7 +211,7 @@ public void SetGrid(int[,] puzzle)
             for (int x = 0; x < grid.GetLength(0); x++)
             {
                 if (numsOnly || grid[x, y].isTileActive)
-                    s += IntToChar(grid[x, y].islandId);
+                    s += Converter.IntToChar(grid[x, y].islandId);
                 else
                     s += "#";
             }
@@ -246,7 +231,7 @@ public void SetGrid(int[,] puzzle)
         {
             for (int y = 0; y < Current.Height; y++)
             {
-                gridFormat[y, (Current.Width - 1 - x)] = CharToInt(gridstring[(x * Current.Height) + y]);
+                gridFormat[y, (Current.Width - 1 - x)] = Converter.CharToInt(gridstring[(x * Current.Height) + y]);
             }
         }
         return gridFormat;
