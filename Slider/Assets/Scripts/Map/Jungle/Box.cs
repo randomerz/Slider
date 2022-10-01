@@ -31,18 +31,16 @@ public class Box : MonoBehaviour
 
     private new void OnEnable()
     {
-        SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
+        SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
     }
 
     private new void OnDisable()
     {
-        SGridAnimator.OnSTileMoveStart -= OnSTileMoveEarly;
+        SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
     }
 
-    protected void OnSTileMoveEarly(object sender, SGridAnimator.OnTileMoveArgs e)
+    protected void DeactivatePathsOnSTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        print("HHHHH");
-        //turn off paths?
         foreach (Path path in paths)
         {
             path.Deactivate();
@@ -145,7 +143,7 @@ public class Box : MonoBehaviour
            //print("box sending shape");
             nextBox.RecieveShape(paths[currentDirectionIndex], currentShape);
 
-            //only show path working if there is a shape to carry and if not the path is deactivated
+            //only show path working if there is a shape to carry and if not the path is deactivated did i wanna change this? iforgot
             if (currentShape != null)
             {
                 paths[currentDirectionIndex].Activate(isDefaultCurrentPath());

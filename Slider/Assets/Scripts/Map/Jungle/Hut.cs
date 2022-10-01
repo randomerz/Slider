@@ -21,14 +21,14 @@ public class Hut : Box
     {
         SGrid.OnSTileEnabled += OnSTileEnabled;
         SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
-        SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
+        SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
     }
 
     private new void OnDisable()
     {
         SGrid.OnSTileEnabled -= OnSTileEnabled;
         SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
-        SGridAnimator.OnSTileMoveStart -= OnSTileMoveEarly;
+        SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
     }
 
     private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)

@@ -63,11 +63,6 @@ public class Path : MonoBehaviour
 
     public void ChangePair()
     {
-        // ray cast on 2 sides
-        // find short ends
-
-        //print("changing pair for " + gameObject.name);
-
         pair = null;
         Vector2 one = new Vector2(1, 0);
         Vector2 two = new Vector2(-1, 0);
@@ -90,7 +85,6 @@ public class Path : MonoBehaviour
         //want to find the closest bin or box and stile
         if (checkOne.collider != null)
         {
-            print("one - other path found");
             //check not on same stile
             pair = checkOne.collider.gameObject.GetComponent<Path>();
             if (!pair.transform.parent.Equals(this.transform.parent))
@@ -103,7 +97,6 @@ public class Path : MonoBehaviour
         }
         if (checkTwo.collider != null && pair == null)
         {
-            print("two - other path found");
             pair = checkTwo.collider.gameObject.GetComponent<Path>();
             if (!pair.transform.parent.Equals(this.transform.parent))
             {

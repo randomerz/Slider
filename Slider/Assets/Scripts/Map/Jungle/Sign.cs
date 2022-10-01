@@ -11,7 +11,6 @@ public class Sign : Box
     // Start is called before the first frame update
     void Awake()
     {
-        print("creating sign");
         SetPaths();
 /*        foreach (Path path in paths)
         {
@@ -33,14 +32,14 @@ public class Sign : Box
     }
     private new void OnEnable()
     {
-        SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
-        SGridAnimator.OnSTileMoveStart += UpdateShapesOnTileMove;
+        SGridAnimator.OnSTileMoveEnd += UpdateShapesOnTileMove;
+        SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
     }
 
     private new void OnDisable()
     {
-        SGridAnimator.OnSTileMoveStart -= OnSTileMoveEarly;
-        SGridAnimator.OnSTileMoveStart -= UpdateShapesOnTileMove;
+        SGridAnimator.OnSTileMoveEnd -= UpdateShapesOnTileMove;
+        SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
     }
 
     private void UpdateShapesOnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
