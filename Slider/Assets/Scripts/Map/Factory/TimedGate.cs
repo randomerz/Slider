@@ -192,6 +192,8 @@ public class TimedGate : ElectricalNode
     {
         PushSignalToOutput(true, new HashSet<ElectricalNode>(), 1);
         EvaluateGate();
+
+        AudioManager.Play("Puzzle Complete");
     }
 
     private IEnumerator WaitAfterMove(System.Action callback)
