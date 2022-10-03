@@ -12,10 +12,10 @@ public class FactoryTabManager : ArtifactTabManager
 
         if (SGrid.Current.MyArea == Area.Factory)
         {
-            timedGateTabs[0].SetIsVisible(screenIndex == timedGateTabs[0].homeScreen);
-            timedGateTabs[1].SetIsVisible(screenIndex == timedGateTabs[1].homeScreen);
-            timedGateTabs[2].SetIsVisible(screenIndex == timedGateTabs[2].homeScreen);
-            timedGateTabs[3].SetIsVisible(screenIndex == timedGateTabs[3].homeScreen);
+            for (int i = 0; i < timedGateTabs.Count; i++)
+            {
+                timedGateTabs[i].SetIsVisible(screenIndex == timedGateTabs[i].homeScreen);
+            }
         }
         //Debug.Log(timedGateTabs[2].tabAnimator.GetBool("isVisible"));
     }

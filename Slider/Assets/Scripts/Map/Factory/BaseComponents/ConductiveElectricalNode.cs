@@ -90,4 +90,19 @@ public class ConductiveElectricalNode : ElectricalNode
         }
         return thisStay && otherStay;
     }
+
+    private void OnDrawGizmos() 
+    {
+        Gizmos.color = Color.yellow;
+
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 4);
+        foreach (Collider2D h in hits)
+        {
+            ConductiveElectricalNode node = h.GetComponentInParent<ConductiveElectricalNode>();
+            if (node != null)
+            {
+                Gizmos.DrawLine(transform.position, node.transform.position);
+            }
+        }
+    }
 }

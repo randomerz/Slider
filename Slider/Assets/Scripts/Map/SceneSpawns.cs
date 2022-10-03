@@ -44,7 +44,7 @@ public class SceneSpawns : MonoBehaviour
 
         // Military
         MilitaryNorth,
-        MiliaryEast,
+        MiliaryWest,
 
         // Mountain
         MountainSouth,
