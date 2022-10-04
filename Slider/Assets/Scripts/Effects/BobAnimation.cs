@@ -7,11 +7,11 @@ public class BobAnimation : MonoBehaviour
     private Vector3 origOffset;
     private float PPU = 16;
 
-    [SerializeField] private float totalLength = 3f; 
-    [SerializeField] private float firstDown = 0.5f; 
-    [SerializeField] private float backMiddle = 1.5f;
-    [SerializeField] private float firstUp = 2f;
-    [SerializeField] private float initOffset = 0;
+    public float totalLength = 3f; 
+    public float firstDown = 0.5f; 
+    public float backMiddle = 1.5f;
+    public float firstUp = 2f;
+    public float initOffset = 0;
     private int state; // this is my attempt to make it more effecient
 
     public bool useRectTransform;
@@ -19,6 +19,9 @@ public class BobAnimation : MonoBehaviour
 
     public bool doHorizontalInstead;
     private Vector3 up;
+
+    [Tooltip("Uses the totalLength to determine bob rate")]
+    public bool doTwoPixelBobRate;
 
     void Start()
     {
@@ -36,6 +39,12 @@ public class BobAnimation : MonoBehaviour
     {
         float t = (Time.time + initOffset) % totalLength;
 
+        if (doTwoPixelBobRate) 
+        {
+            TwoPixelBob(t);
+            return;
+        }
+
         switch (state) 
         {
             case 0:
@@ -51,11 +60,8 @@ public class BobAnimation : MonoBehaviour
             case 1:
                 if (t >= backMiddle)
                 {
-                    state = 2;
-                    if (!useRectTransform)
-                        transform.localPosition = origOffset;
-                    else
-                        rectTransform.anchoredPosition = origOffset;
+                    state = (firstUp != -1) ? 2 : 0;
+                    ResetPosition();
                 }
                 break;
             case 2:
@@ -72,12 +78,35 @@ public class BobAnimation : MonoBehaviour
                 if (t < firstDown) // cant be t > totalLength
                 {
                     state = 0;
-                    if (!useRectTransform)
-                        transform.localPosition = origOffset;
-                    else
-                        rectTransform.anchoredPosition = origOffset;
+                    ResetPosition();
                 }
                 break;
         }
+    }
+
+    private void TwoPixelBob(float t)
+    {
+        if (t < totalLength / 2)
+        {
+            if (!useRectTransform)
+                transform.localPosition = origOffset + (-up / PPU);
+            else
+                rectTransform.anchoredPosition = origOffset + (-up);
+        }
+        else
+        {
+            if (!useRectTransform)
+                transform.localPosition = origOffset;
+            else
+                rectTransform.anchoredPosition = origOffset;
+        }
+    }
+
+    public void ResetPosition()
+    {
+        if (!useRectTransform)
+            transform.localPosition = origOffset;
+        else
+            rectTransform.anchoredPosition = origOffset;
     }
 }
