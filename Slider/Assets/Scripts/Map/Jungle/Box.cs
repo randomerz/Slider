@@ -23,10 +23,6 @@ public class Box : MonoBehaviour
     void Awake()
     {
         SetPaths();
-/*        foreach (Path path in paths)
-        {
-            path.ChangePair();
-        }*/
     }
 
     private new void OnEnable()
@@ -77,90 +73,103 @@ public class Box : MonoBehaviour
 
     public void CreateShape()
     {
-       //print("Box creating shape");
+        //print("Box creating shape");
 
-        Physics2D.queriesStartInColliders = false;
+        /*        Physics2D.queriesStartInColliders = false;
 
-        RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, directions[currentDirectionIndex].normalized, 100, LayerMask.GetMask("Slider"));
+                RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, directions[currentDirectionIndex].normalized, 100, LayerMask.GetMask("Slider"));
 
-        Physics2D.queriesStartInColliders = true;
+                Physics2D.queriesStartInColliders = true;
 
-        Box nextBox = null;
-        Bin nextBin = null;
-        float distanceTo = 100;
-        float inactiveStileDistance = 100;
+                Box nextBox = null;
+                Bin nextBin = null;
+                float distanceTo = 100;
+                float inactiveStileDistance = 100;
 
-        //want to find the closest bin or box and stile
-        foreach (RaycastHit2D raycasthit in tileCheck)
-        {
-            Collider2D hitcollider = raycasthit.collider;
-            if (raycasthit.collider != null)
-            {
-                //do something (it shouldnt be null O_O)
-                STile s = hitcollider.gameObject.GetComponent<STile>();
-                Box other = hitcollider.GetComponent<Box>();
-                Bin bin = hitcollider.GetComponent<Bin>();
-
-                if (s != null && !s.isTileActive)
+                //want to find the closest bin or box and stile
+                foreach (RaycastHit2D raycasthit in tileCheck)
                 {
-                    if (Vector2.Distance(raycasthit.centroid, transform.position) < inactiveStileDistance)
+                    Collider2D hitcollider = raycasthit.collider;
+                    if (raycasthit.collider != null)
                     {
-                        inactiveStileDistance = Vector2.Distance(raycasthit.centroid, transform.position);
+                        //do something (it shouldnt be null O_O)
+                        STile s = hitcollider.gameObject.GetComponent<STile>();
+                        Box other = hitcollider.GetComponent<Box>();
+                        Bin bin = hitcollider.GetComponent<Bin>();
+
+                        if (s != null && !s.isTileActive)
+                        {
+                            if (Vector2.Distance(raycasthit.centroid, transform.position) < inactiveStileDistance)
+                            {
+                                inactiveStileDistance = Vector2.Distance(raycasthit.centroid, transform.position);
+                            }
+                        }
+
+                        if (other != null || bin != null)
+                        {
+                            if (Vector2.Distance(raycasthit.centroid, transform.position) < distanceTo)
+                            {
+                                distanceTo = Vector2.Distance(raycasthit.centroid, transform.position);
+
+                                //save the closest box/bin
+                                if (other != null)
+                                {
+                                    nextBox = other;
+                                }
+                                else
+                                {
+                                    nextBin = bin;
+                                }
+                            }
+                        }
                     }
                 }
 
-                if (other != null || bin != null)
+                if (distanceTo > inactiveStileDistance)
                 {
-                    if (Vector2.Distance(raycasthit.centroid, transform.position) < distanceTo)
-                    {
-                        distanceTo = Vector2.Distance(raycasthit.centroid, transform.position);
+                    //print("inactive stile in the way");
+                    nextBin = null;
+                    nextBox = null;
+                }
 
-                        //save the closest box/bin
-                        if (other != null)
-                        {
-                            nextBox = other;
-                        }
-                        else
-                        {
-                            nextBin = bin;
-                        }
+                //now see if there is an avaliable bin or box
+                if (nextBox != null)
+                {
+                    //yay we got the next box
+                   //print("box sending shape");
+                    nextBox.RecieveShape(paths[currentDirectionIndex], currentShape);
+
+                    //only show path working if there is a shape to carry and if not the path is deactivated did i wanna change this? iforgot
+                    if (currentShape != null)
+                    {
+                        paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
+                    } else
+                    {
+                        paths[currentDirectionIndex].Deactivate();
                     }
                 }
-            }
-        }
+                else if (nextBin != null)
+                {
+                   // print("sending shape to bin");
+                    nextBin.RecieveShape(currentShape);
 
-        if (distanceTo > inactiveStileDistance)
+                    if (currentShape != null)
+                    {
+                        paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
+                    } else
+                    {
+                        paths[currentDirectionIndex].Deactivate();
+                    }
+                }*/
+        Box next = GetBoxInDirection();
+        if (next != null)
         {
-            //print("inactive stile in the way");
-            nextBin = null;
-            nextBox = null;
-        }
-
-        //now see if there is an avaliable bin or box
-        if (nextBox != null)
-        {
-            //yay we got the next box
-           //print("box sending shape");
-            nextBox.RecieveShape(paths[currentDirectionIndex], currentShape);
-
-            //only show path working if there is a shape to carry and if not the path is deactivated did i wanna change this? iforgot
+            next.RecieveShape(paths[currentDirectionIndex], currentShape);
             if (currentShape != null)
             {
                 paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
-            } else
-            {
-                paths[currentDirectionIndex].Deactivate();
             }
-        }
-        else if (nextBin != null)
-        {
-           // print("sending shape to bin");
-            nextBin.RecieveShape(currentShape);
-
-            if (currentShape != null)
-            {
-                paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
-            } else
+            else
             {
                 paths[currentDirectionIndex].Deactivate();
             }
@@ -171,8 +180,8 @@ public class Box : MonoBehaviour
     public virtual void RecieveShape(Path path, Shape shape)
     {
         //what should a box do when it recieves a shape... like nothing right since it just produces what its told to
-       // print("box recieved a shape");
-      //  print(this.gameObject.name);
+        // print("box recieved a shape");
+        //  print(this.gameObject.name);
     }
 
     public void Rotate()
@@ -189,18 +198,72 @@ public class Box : MonoBehaviour
                 //start path if that path is not active alr
                 if (!paths[currentDirectionIndex].isActive())
                 {
-                    paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
-
-                    if (currentShape == null)
+                    Box next = GetBoxInDirection();
+                    if (next != null)
                     {
-                        return;
-                    }
+                        if (currentShape == null)
+                        {
+                            return;
+                        }
+                        paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
 
-                    CreateShape();
+                        CreateShape();
+                    }
                     break;
                 }
             }
         }
+    }
+
+    private Box GetBoxInDirection()
+    {
+        Physics2D.queriesStartInColliders = false;
+
+        RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, directions[currentDirectionIndex].normalized, 100, LayerMask.GetMask("Slider"));
+
+        Physics2D.queriesStartInColliders = true;
+
+        Box nextBox = null;
+        float distanceTo = 100;
+        float inactiveStileDistance = 100;
+
+        //want to find the closest bin or box and stile
+        foreach (RaycastHit2D raycasthit in tileCheck)
+        {
+            Collider2D hitcollider = raycasthit.collider;
+            if (raycasthit.collider != null)
+            {
+                //do something (it shouldnt be null O_O)
+                STile s = hitcollider.gameObject.GetComponent<STile>();
+                Box other = hitcollider.GetComponent<Box>();
+
+                if (s != null && !s.isTileActive)
+                {
+                    if (Vector2.Distance(raycasthit.centroid, transform.position) < inactiveStileDistance)
+                    {
+                        inactiveStileDistance = Vector2.Distance(raycasthit.centroid, transform.position);
+                    }
+                }
+
+                if (other != null)
+                {
+                    if (Vector2.Distance(raycasthit.centroid, transform.position) < distanceTo)
+                    {
+                        distanceTo = Vector2.Distance(raycasthit.centroid, transform.position);
+                        nextBox = other;
+                    }
+                }
+            }
+        }
+
+        if (distanceTo > inactiveStileDistance)
+        {
+            //print("inactive stile in the way");
+            nextBox = null;
+        }
+
+        return nextBox;
+
     }
 
     protected bool isDefaultCurrentPath()

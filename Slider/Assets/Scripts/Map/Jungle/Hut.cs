@@ -37,6 +37,10 @@ public class Hut : Box
     }
     private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        foreach (Path path in paths)
+        {
+            path.ChangePair();
+        }
         CreateShape();
     }
 

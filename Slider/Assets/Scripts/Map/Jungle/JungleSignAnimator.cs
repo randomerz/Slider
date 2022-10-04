@@ -77,8 +77,8 @@ public class JungleSignAnimator : MonoBehaviour
             }
         }
 
-        print("hut: " + h);
-        print("sign: " + s);
+       // print("hut: " + h);
+      //  print("sign: " + s);
 
         if (h != null)
         {

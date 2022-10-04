@@ -44,6 +44,10 @@ public class Sign : Box
 
     private void UpdateShapesOnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        foreach (Path path in paths)
+        {
+            path.ChangePair();
+        }
         //remove all shapes
         shapes = new Dictionary<Path, Shape>();
         foreach (Path path in paths)
@@ -58,6 +62,8 @@ public class Sign : Box
         //somehow take in shapes and merge is needed
         // also be able to remove a shape when the box output diff stuff or the path stops
        // print("sign got shape");
+
+        //sometimes this is like null because the path pairs havent been updated yet
         shapes[path.pair] = shape;
         MergeShapes();
         CreateShape();

@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bin : MonoBehaviour
+public class Bin : Box
 {
     List<Recipe> recipes = new List<Recipe>();
-    Shape currentShape = null;
 
     private new void OnEnable()
     {
@@ -24,7 +23,7 @@ public class Bin : MonoBehaviour
         print("no shape");
     }
 
-    public void RecieveShape(Shape shape)
+    public override void RecieveShape(Path path, Shape shape)
     {
         if (shape == null)
         {

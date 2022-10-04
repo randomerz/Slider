@@ -9,7 +9,7 @@ public class Path : MonoBehaviour
     bool defaultAnim = true; //left, or down (animation will have default and non default for direciton
     //Animation thing
 
-    private new void OnEnable()
+/*    private new void OnEnable()
     {
         SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
     }
@@ -23,7 +23,7 @@ public class Path : MonoBehaviour
     private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         ChangePair();
-    }
+    }*/
 
     public void Activate(bool right)
     {
