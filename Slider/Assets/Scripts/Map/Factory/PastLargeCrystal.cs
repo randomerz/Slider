@@ -7,8 +7,19 @@ public class PastLargeCrystal : ElectricalNode
     [Header("Past Large Crystal")]
     [SerializeField] private PlayerPositionChanger ppChanger;
     [SerializeField] private PowerCrystal powerCrystal;
+    [SerializeField] private string crystalBTTFParticleName;
 
     private bool CrystalHasEnoughPower => Powered && powerPathPrevs.Keys.Count >= 2;
+    private GameObject crystalBTTFParticles;
+    private List<GameObject> particles = new List<GameObject>();
+
+    protected override void Awake() {
+        base.Awake();
+
+        crystalBTTFParticles = Resources.Load<GameObject>(crystalBTTFParticleName);
+        if (crystalBTTFParticles == null)
+            Debug.LogError("Couldn't load particles!");
+    }
 
     public void CheckCrystalHasEnoughPower(Condition cond)
     {
@@ -17,11 +28,54 @@ public class PastLargeCrystal : ElectricalNode
 
     public void BTTFStarter()
     {
-        CameraShake.ShakeIncrease(3.0f, 0.5f);
+        StartCoroutine(BTTFAnimation());
+    }
+
+    private IEnumerator BTTFAnimation()
+    {
+        StartCoroutine(BTTFParticleAnimation(7));
+
+        yield return new WaitForSeconds(1);
+
+        CameraShake.ShakeIncrease(6.0f, 0.5f);
+
+        yield return new WaitForSeconds(3);
+
         UIEffects.FadeToWhite(() =>
         {
             StartCoroutine(BackToTheFuture());
         }, 3.0f, false);
+    }
+
+    // this could be optimized a lot
+    private IEnumerator BTTFParticleAnimation(int numRecur)
+    {
+        if (numRecur == 0)
+            yield break;
+
+        for (int i = 0; i < 4; i++)
+        {
+            particles.Add(GameObject.Instantiate(crystalBTTFParticles, transform.position + GetRandomPosition(), Quaternion.identity, transform));
+
+            yield return new WaitForSeconds(0.25f);
+        }
+
+        StartCoroutine(BTTFParticleAnimation(numRecur - 1));
+
+        for (int i = 0; i < 32; i++)
+        {
+            particles.Add(GameObject.Instantiate(crystalBTTFParticles, transform.position + GetRandomPosition(), Quaternion.identity, transform));
+
+            yield return new WaitForSeconds(0.25f);
+        }
+    }
+    
+    private Vector3 GetRandomPosition()
+    {
+        float r = Random.Range(0f, 8f);
+        float t = Random.Range(0f, 360f);
+
+        return new Vector2(r * Mathf.Cos(t), r * Mathf.Sin(t));
     }
 
     private IEnumerator BackToTheFuture()
@@ -31,5 +85,11 @@ public class PastLargeCrystal : ElectricalNode
         powerCrystal.TurnEverythingBackOn();
         ppChanger.UPPTransform();
         UIEffects.FadeFromWhite();
+
+        foreach (GameObject go in particles)
+        {
+            go.SetActive(false);
+        }
+        StopAllCoroutines();
     }
 }
