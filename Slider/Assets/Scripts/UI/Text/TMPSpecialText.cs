@@ -43,6 +43,8 @@ public class TMPSpecialText : MonoBehaviour
     public float waveAmplitude = 1;
     public float wavePeriod = 1;
     public float typeLoopSpeed = 0.05f;
+    [Tooltip("Will delete color tags; intended for background fonts")]
+    public bool ignoreColor;
 
     private List<Coroutine> effectCoroutines;
 
@@ -129,6 +131,24 @@ public class TMPSpecialText : MonoBehaviour
                     // lazy color solution
                     if (command[0] == '#')
                     {
+                        if (ignoreColor)
+                        {
+                            // remove tags
+                            int closing_color = text.IndexOf("</color>", i);
+                            if (closing_color == -1)
+                            {
+                                Debug.LogError("Couldn't find closing </color> tag!");
+                                continue;
+                            }
+
+                            string ot = text.Substring(i + command.Length + 2, closing_color - (i + command.Length + 2));
+
+                            text = text.Substring(0, i) + 
+                                   ot +
+                                   text.Substring(closing_color + "</color>".Length + 0);
+                            m_TextMeshPro.text = text;
+                            continue;
+                        }
                         offset += 9;
                         i += 8;
                     } else if (command.Equals("/color"))
