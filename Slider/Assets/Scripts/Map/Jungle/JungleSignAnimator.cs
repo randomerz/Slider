@@ -47,7 +47,7 @@ public class JungleSignAnimator : MonoBehaviour
     {
         int index = (int)(Mathf.Atan2(direction.y, direction.x) / (Mathf.PI / 2) + 4) % 4;
         // Debug.Log(index + " " + Mathf.Atan2(direction.y, direction.x));
-        print(direction + " : " + index);
+       // print(direction + " : " + index);
         return signDirectionsSprites[index];
     }
 
@@ -83,12 +83,12 @@ public class JungleSignAnimator : MonoBehaviour
         if (h != null)
         {
             Vector2 direction = h.GetDirection();
-            //print(direction);
+            print(direction);
             SetDirection(direction);
         } else if (s != null)
         {
             Vector2 direction = s.GetDirection();
-            //print(direction);
+            print(direction);
             SetDirection(direction);
         } else
         {

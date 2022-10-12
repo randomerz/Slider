@@ -25,6 +25,7 @@ public class Bin : Box
 
     public override void RecieveShape(Path path, Shape shape)
     {
+        print("bin got shape");
         if (shape == null)
         {
             print("no shape");

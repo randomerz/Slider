@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Path : MonoBehaviour
 {
     private bool active = false;
     public Path pair;
     bool defaultAnim = true; //left, or down (animation will have default and non default for direciton
+    Direction direction;
+
+
     //Animation thing
 
 /*    private new void OnEnable()
@@ -78,10 +82,10 @@ public class Path : MonoBehaviour
         Physics2D.queriesStartInColliders = false;
 
         //my raycasts dont hit anything
-        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 5, LayerMask.GetMask("JunglePaths"));
-        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 5, LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 6, LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 6, LayerMask.GetMask("JunglePaths"));
 
-
+       // print("");
         //want to find the closest bin or box and stile
         if (checkOne.collider != null)
         {
@@ -116,7 +120,7 @@ public class Path : MonoBehaviour
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(0, 1, 0) * 5);
-            Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(-0, -1, 0) * 5);
+            Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(0, -1, 0) * 5);
         }
         else
         {

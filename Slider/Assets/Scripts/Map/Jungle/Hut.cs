@@ -7,13 +7,8 @@ public class Hut : Box
     void Awake()
     {
         SetPaths();
-/*        foreach (Path path in paths)
-        {
-            path.ChangePair();
-        }*/
 
         currentShape = shapes[currentShapeIndex];
-        paths[currentDirectionIndex].Activate(isDefaultCurrentPath());
         CreateShape();
     }
 
@@ -37,9 +32,9 @@ public class Hut : Box
     }
     private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        foreach (Path path in paths)
+        foreach (Direction d in paths.Keys)
         {
-            path.ChangePair();
+            paths[d].ChangePair();
         }
         CreateShape();
     }

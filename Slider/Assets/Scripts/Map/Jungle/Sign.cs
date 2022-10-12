@@ -6,28 +6,18 @@ public class Sign : Box
 {
     public RecipeList recipes;
     private Dictionary<Path, Shape> shapes = new Dictionary<Path, Shape>(); //idk if i sshould rename this i should think
-    public string startPath = "left";
     
     // Start is called before the first frame update
     void Awake()
     {
         SetPaths();
-/*        foreach (Path path in paths)
-        {
-            path.ChangePair();
-        }*/
 
         if (shapes.Count == 0)
         {
-            foreach (Path path in paths)
+            foreach (Direction d in paths.Keys)
             {
-                shapes.Add(path, null);
+                shapes.Add(paths[d], null);
             }
-        }
-
-        if (stringToIndex.ContainsKey(startPath))
-        {
-            currentDirectionIndex = stringToIndex[startPath];
         }
     }
     private new void OnEnable()
@@ -44,15 +34,15 @@ public class Sign : Box
 
     private void UpdateShapesOnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        foreach (Path path in paths)
+        foreach (Direction d in paths.Keys)
         {
-            path.ChangePair();
+            paths[d].ChangePair();
         }
         //remove all shapes
         shapes = new Dictionary<Path, Shape>();
-        foreach (Path path in paths)
+        foreach (Direction d in paths.Keys)
         {
-            shapes.Add(path, null);
+            shapes.Add(paths[d], null);
         }
     }
 
@@ -61,9 +51,11 @@ public class Sign : Box
     {
         //somehow take in shapes and merge is needed
         // also be able to remove a shape when the box output diff stuff or the path stops
-       // print("sign got shape");
+        // print("sign got shape");
 
         //sometimes this is like null because the path pairs havent been updated yet
+
+        print(path.gameObject.name);
         shapes[path.pair] = shape;
         MergeShapes();
         CreateShape();
@@ -71,11 +63,11 @@ public class Sign : Box
     public void MergeShapes()
     {
         List<Shape> shapesRecieved = new List<Shape>(); 
-        foreach (Path path in paths)
+        foreach (Direction d in paths.Keys)
         {
-            if (shapes[path] != null)
+            if (shapes[paths[d]] != null)
             {
-                shapesRecieved.Add(shapes[path]);
+                shapesRecieved.Add(shapes[paths[d]]);
             }
         }
 
