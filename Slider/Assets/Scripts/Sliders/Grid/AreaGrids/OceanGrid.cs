@@ -28,9 +28,11 @@ public class OceanGrid : SGrid
     private int playerIndex = 0;
     private Vector2Int playerMovement;
     private int lastIslandId = 1;
+    private bool foggyCompleted;
     public GameObject fog6;
     public GameObject fog7;
     public GameObject fogIsland;
+    private int fogIslandId; //tile which fog island was found on
 
     [Header("Foggy Progress Notes")]
     [SerializeField] private List<SpriteRenderer> progressNotes;
@@ -101,12 +103,14 @@ public class OceanGrid : SGrid
     {
         base.Save();
         SaveSystem.Current.SetBool("OceanRJBottleDelivery", bottleManager.puzzleSolved);
+        SaveSystem.Current.SetBool("FoggyIslandReached", foggyCompleted);
     }
 
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
         bottleManager.puzzleSolved = SaveSystem.Current.GetBool("RJBottleDelivery");
+        foggyCompleted = SaveSystem.Current.GetBool("FoggyIslandReached");
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
@@ -279,24 +283,34 @@ public class OceanGrid : SGrid
 
     public void CheckFoggySeas(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        FoggyCorrectMovement();
-
-        if (GetStile(6).isTileActive && GetStile(7).isTileActive && FoggyCompleted())
+        bool correct = FoggyCorrectMovement();
+        
+        if (GetStile(6).isTileActive && GetStile(7).isTileActive && foggyCompleted)
         {
-            fogIsland.transform.position = Player.GetStileUnderneath().transform.position;
-            fogIsland.SetActive(true);
+            if(Player.GetStileUnderneath().islandId == fogIslandId && correct) 
+            {
+                fogIsland.transform.position = Player.GetStileUnderneath().transform.position;
+                fogIsland.SetActive(true);
+                if (fogIslandId == 6)
+                {
+                    fog6.SetActive(false);
+                }
+                else
+                {
+                    fog7.SetActive(false);
+                }
+            }
+            
             SetProgressRingActive(false);
 
-            if (Player.GetStileUnderneath().islandId == 6)
-            {
-                fog6.SetActive(false);
-
-            }
-            else
-            {
-                fog7.SetActive(false);
-            }
+            
         }
+        else
+        {
+            fog6.SetActive(true);
+            fog7.SetActive(true);
+        }
+        
     }
 
     private void updatePlayerMovement()
@@ -308,7 +322,7 @@ public class OceanGrid : SGrid
         }
 
         int currentIslandId = Player.GetStileUnderneath().islandId;
-        if ((currentIslandId == 6 || currentIslandId == 7) && !FoggyCompleted())
+        if ((currentIslandId == 6 || currentIslandId == 7))
         {
             SetProgressRingActive(true);
         }
@@ -349,23 +363,33 @@ public class OceanGrid : SGrid
         AudioManager.SetMusicParameter("Ocean", "OceanFoggyProgress", playerIndex);
     }
 
-    public void FoggyCorrectMovement()
+    public bool FoggyCorrectMovement()
     {
-        if (playerIndex < correctPath.Length && correctPath[playerIndex] == playerMovement)
+        Debug.Log("player index: " + playerIndex+ " correct path: " + correctPath.Length);
+        if(playerIndex == correctPath.Length-1 && !foggyCompleted)
+        {
+            FoggyCompleted();
+            return true;//only returns true the first time u complete this puzzle basically
+        }
+        else if (playerIndex >=0 && playerIndex < correctPath.Length && correctPath[playerIndex] == playerMovement)
         {
             playerIndex++;
             FoggySeasAudio();
             progressNotes[playerIndex - 1].sprite = fullNote;
+            return false;
         }
         else
         {
             failFoggy();
+            return false;
         }
 
     }
 
     private void failFoggy()
     {
+        if(playerIndex > 5) //cant fail if u reached the island
+            return;
         if (playerIndex != 0)
         {
             AudioManager.Play("Artifact Error");
@@ -383,9 +407,12 @@ public class OceanGrid : SGrid
         }
     }
 
-    public bool FoggyCompleted()
+    private void FoggyCompleted()
     {
-        return playerIndex == correctPath.Length;
+        foggyCompleted = true;
+        fogIslandId = Player.GetStileUnderneath().islandId;
+        for(int i =0; i < correctPath.Length; i++)
+            progressNotes[i].sprite = emptyNote;
     }
 
     // Final puzzle
