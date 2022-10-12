@@ -47,17 +47,53 @@ public class ServerComputer : MonoBehaviour
     #region Send Player To Past
     public void StartSendToPastEvent()
     {
-        UIEffects.FadeToWhite( () =>
-        {
-            StartCoroutine(SendToPastThenFadeIn());
-        }, 3.0f, false);
+        StartCoroutine(SendToPastEvent());
     }
 
-    private IEnumerator SendToPastThenFadeIn()
+    private IEnumerator SendToPastEvent()
     {
-        yield return new WaitForSeconds(2.0f);
-        SpawnPlayerInPast();
+        CameraShake.Shake(0.5f, 0.25f);
+        AudioManager.PlayWithVolume("Slide Explosion", 0.25f);
+
+        yield return new WaitForSeconds(2);
+
+        for (int i = 0; i < 2; i++)
+        {
+            CameraShake.Shake(0.25f, 0.25f);
+            AudioManager.PlayWithVolume("Slide Rumble", 0.25f);
+
+            yield return new WaitForSeconds(1f);
+        }
+        
+        for (int i = 0; i < 4; i++)
+        {
+            CameraShake.Shake(0.25f, 0.25f);
+            AudioManager.PlayWithVolume("Slide Rumble", 0.25f);
+
+            yield return new WaitForSeconds(0.5f);
+        }
+        
+        for (int i = 0; i < 7; i++)
+        {
+            CameraShake.Shake(0.25f, 0.25f);
+            AudioManager.PlayWithVolume("Slide Rumble", 0.25f);
+
+            if (i == 1 || i == 4 || i == 6)
+                FactoryLightManager.SwitchLights(true);
+            if (i == 2 || i == 5)
+                FactoryLightManager.SwitchLights(false);
+
+            yield return new WaitForSeconds(0.25f);
+        }
+
+        yield return new WaitForSeconds(0.1f);
+
+        // cut everything off
+        CameraShake.StopShake();
+        AudioManager.StopAllSoundAndMusic();
+        
         UIEffects.FadeFromWhite();
+        SpawnPlayerInPast();
     }
 
     private void SpawnPlayerInPast()
