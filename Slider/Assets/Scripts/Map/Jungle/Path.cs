@@ -71,21 +71,19 @@ public class Path : MonoBehaviour
         Vector2 one = new Vector2(1, 0);
         Vector2 two = new Vector2(-1, 0);
 
+
         if (this.transform.localEulerAngles.z == -90 || this.transform.localEulerAngles.z == 90)
         {
             one= new Vector2(0, 1);
             two = new Vector2(0, -1);
         }
 
-        //colliders not working :<<<
-        //ray cast 
         Physics2D.queriesStartInColliders = false;
 
-        //my raycasts dont hit anything
-        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 6, LayerMask.GetMask("JunglePaths"));
-        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 6, LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 5, LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 5, LayerMask.GetMask("JunglePaths"));
 
-       // print("");
+        // print("");
         //want to find the closest bin or box and stile
         if (checkOne.collider != null)
         {
