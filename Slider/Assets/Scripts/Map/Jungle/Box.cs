@@ -64,8 +64,8 @@ public class Box : MonoBehaviour
 
     public void CreateShape()
     {
-        print(this.gameObject.name + " is sending shape " + currentShape.name);
-        print(currentDirection);
+    /*    print(this.gameObject.name + " is sending shape " + currentShape.name);
+        print(currentDirection);*/
         Box next = GetBoxInDirection();
         if (next != null)
         {
@@ -90,8 +90,6 @@ public class Box : MonoBehaviour
     }
 
     //TODO: ALSO NEED TO FIX and add on STILE collected to create shape
-    //TODO: this is broken (it only really rotates between two bc of what it takes)
-
     public void Rotate()
     {
         if (currentShape != null)
@@ -141,19 +139,6 @@ public class Box : MonoBehaviour
                     break;
                 }
             }
-          /*  if (!found)
-            {
-                Box next = GetBoxInDirection();
-                if (next != null)
-                {
-                    if (currentShape == null)
-                    {
-                        return;
-                    }
-                    paths[currentDirection].Activate(isDefaultCurrentPath());
-                    CreateShape();
-                }
-            }*/
         }
     }
 
