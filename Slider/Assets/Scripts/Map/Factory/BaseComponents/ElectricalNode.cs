@@ -49,7 +49,7 @@ public class ElectricalNode : MonoBehaviour
     public virtual bool AffectedByBlackout => nodeType == NodeType.INPUT && affectedByBlackout && !FactoryGrid.IsInPast(gameObject);
     protected static bool CrystalBlackout => SGrid.Current.GetArea() == Area.Factory && PowerCrystal.Blackout;
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         powerPathPrevs = new Dictionary<ElectricalNode, int>();
         powerRefs = 0;  //Always start off and let things turn on.

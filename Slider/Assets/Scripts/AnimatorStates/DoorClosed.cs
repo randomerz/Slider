@@ -20,6 +20,7 @@ public class DoorClosed : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.GetComponent<Collider2D>().enabled = false;
+        animator.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -1; // Entity to -1
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
