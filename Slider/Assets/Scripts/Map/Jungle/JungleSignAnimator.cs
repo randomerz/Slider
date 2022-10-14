@@ -83,12 +83,12 @@ public class JungleSignAnimator : MonoBehaviour
         if (h != null)
         {
             Vector2 direction = h.GetDirection();
-            print(direction);
+           // print(direction);
             SetDirection(direction);
         } else if (s != null)
         {
             Vector2 direction = s.GetDirection();
-            print(direction);
+          //  print(direction);
             SetDirection(direction);
         } else
         {

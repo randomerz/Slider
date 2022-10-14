@@ -55,7 +55,7 @@ public class Sign : Box
 
         //sometimes this is like null because the path pairs havent been updated yet
 
-        print(path.gameObject.name);
+        //print(path.gameObject.name);
         shapes[path.pair] = shape;
         MergeShapes();
         CreateShape();
@@ -77,24 +77,19 @@ public class Sign : Box
             print(shape);
         }
         print("ahdkfljaldf");*/
-        
-/*        while (recipes.HasNext())
+
+        foreach (Recipe recipe in recipes.list)
         {
-            //not finding the recipe :C
-            Recipe recipe = recipes.GetNext();
-            //print(recipe);
+            //print(recipe.result.name);
             Shape hold = recipe.Check(shapesRecieved);
             if (hold != null)
             {
-                //we found the recipe
-                //brah
                 currentShape = hold;
-                print(currentShape.type);
+                print("merged: " + currentShape.type);
                 return;
             }
         }
-*/
-        currentShape = shapesRecieved[0]; //assuming there is only one shape in the list B)
-        //print("sign shape: " + currentShape.name);
+
+        currentShape = shapesRecieved[0];
     }
 }

@@ -8,7 +8,7 @@ public class Box : MonoBehaviour
 
     public List<Shape> shapes;
     protected int currentShapeIndex = 0;
-    protected Shape currentShape;
+    public Shape currentShape;
 
     public Path left;
     public Path right;
@@ -96,6 +96,13 @@ public class Box : MonoBehaviour
         {
             paths[currentDirection].Deactivate();
 
+            // update the box it points in currently to push no shape onto the path
+            Box box = GetBoxInDirection();
+            if (box != null)
+            {
+                box.RecieveShape(paths[currentDirection], null);
+            }
+
             //check each path to see if any is not active alr
 
             Direction[] ds = { Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN };
@@ -114,7 +121,7 @@ public class Box : MonoBehaviour
             for (int i = 1; i <= 4; i++)
             {
                 Direction d = ds[(at + i) % 4];
-                print(d);
+                //print(d);
 
                 if (!paths.ContainsKey(d))
                 {
