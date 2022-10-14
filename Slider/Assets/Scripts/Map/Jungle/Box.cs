@@ -27,11 +27,13 @@ public class Box : MonoBehaviour
     private new void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
+        SGrid.OnSTileEnabled += STileEnabled;
     }
 
     private new void OnDisable()
     {
         SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
+        SGrid.OnSTileEnabled -= STileEnabled;
     }
 
     protected void DeactivatePathsOnSTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
@@ -40,6 +42,11 @@ public class Box : MonoBehaviour
         {
             paths[d].Deactivate();
         }
+    }
+
+    protected void STileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        CreateShape();
     }
 
     protected void SetPaths()
@@ -64,8 +71,8 @@ public class Box : MonoBehaviour
 
     public void CreateShape()
     {
-    /*    print(this.gameObject.name + " is sending shape " + currentShape.name);
-        print(currentDirection);*/
+        //print(this.gameObject.name + " is sending shape " + currentShape.name);
+        //print(currentDirection);
         Box next = GetBoxInDirection();
         if (next != null)
         {
@@ -85,11 +92,10 @@ public class Box : MonoBehaviour
     public virtual void RecieveShape(Path path, Shape shape)
     {
         //what should a box do when it recieves a shape... like nothing right since it just produces what its told to
-        // print("box recieved a shape");
-        //  print(this.gameObject.name);
+        //print("box recieved a shape");
+        //print(this.gameObject.name);
     }
 
-    //TODO: ALSO NEED TO FIX and add on STILE collected to create shape
     public void Rotate()
     {
         if (currentShape != null)
@@ -154,10 +160,9 @@ public class Box : MonoBehaviour
         Vector2 v = DirectionUtil.D2V(currentDirection);
 
         Physics2D.queriesStartInColliders = false;
+        Physics2D.queriesHitTriggers = false;
 
         RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, v.normalized, 100, LayerMask.GetMask("Slider"));
-
-        Physics2D.queriesStartInColliders = true;
 
         Box nextBox = null;
         float distanceTo = 100;
@@ -195,6 +200,9 @@ public class Box : MonoBehaviour
         {
             nextBox = null;
         }
+
+        Physics2D.queriesHitTriggers = true;
+        Physics2D.queriesStartInColliders = true;
 
         return nextBox;
 
