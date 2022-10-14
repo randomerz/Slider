@@ -40,4 +40,9 @@ public class MilitaryGrid : SGrid
 
 
     // === Military puzzle specific ===
+
+    public void RestartCombat()
+    {
+        Debug.Log("Restarting Combat!");
+    }
 }
