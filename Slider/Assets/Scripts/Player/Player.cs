@@ -95,7 +95,6 @@ public class Player : Singleton<Player>, ISavable
             else
             {
                 Physics2D.queriesHitTriggers = false;
-                Physics2D.queriesStartInColliders = false;
                 RaycastHit2D raycasthit = Physics2D.Raycast(transform.position, inputDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
 
                 if (raycasthit.collider == null || raycasthit.collider.Equals(this.GetComponent<BoxCollider2D>()))
@@ -123,7 +122,6 @@ public class Player : Singleton<Player>, ISavable
                     }
                 }
                 Physics2D.queriesHitTriggers = true;
-                Physics2D.queriesStartInColliders = true;
             }
         }
 
