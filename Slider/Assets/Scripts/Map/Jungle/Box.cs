@@ -1,0 +1,220 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Box : MonoBehaviour
+{
+    protected Dictionary<Direction, Path> paths = new Dictionary<Direction, Path>();
+
+    public List<Shape> shapes;
+    protected int currentShapeIndex = 0;
+    public Shape currentShape;
+
+    public Path left;
+    public Path right;
+    public Path top;
+    public Path bottom;
+
+    protected List<Vector2> directions = new List<Vector2>();
+    public Direction currentDirection = Direction.RIGHT; //you should set at the start 
+
+    // Start is called before the first frame update
+    void Awake()
+    {
+        SetPaths();
+    }
+
+    private new void OnEnable()
+    {
+        SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
+        SGrid.OnSTileEnabled += STileEnabled;
+    }
+
+    private new void OnDisable()
+    {
+        SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
+        SGrid.OnSTileEnabled -= STileEnabled;
+    }
+
+    protected void DeactivatePathsOnSTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        foreach (Direction d in paths.Keys)
+        {
+            paths[d].Deactivate();
+        }
+    }
+
+    protected void STileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        CreateShape();
+    }
+
+    protected void SetPaths()
+    {
+        if (left != null)
+        {
+            paths[Direction.LEFT] = left;
+        }
+        if (top != null)
+        {
+            paths[Direction.UP] = top;
+        }
+        if (right != null)
+        {
+            paths[Direction.RIGHT] = right;
+        }
+        if (bottom != null)
+        {
+            paths[Direction.DOWN] = bottom;
+        }
+    }
+
+    public void CreateShape()
+    {
+        //print(this.gameObject.name + " is sending shape " + currentShape.name);
+        //print(currentDirection);
+        Box next = GetBoxInDirection();
+        if (next != null)
+        {
+            next.RecieveShape(paths[currentDirection], currentShape);
+            if (currentShape != null)
+            {
+                paths[currentDirection].Activate(isDefaultCurrentPath());
+            }
+            else
+            {
+                paths[currentDirection].Deactivate();
+            }
+        }
+    }
+
+
+    public virtual void RecieveShape(Path path, Shape shape)
+    {
+        //what should a box do when it recieves a shape... like nothing right since it just produces what its told to
+        //print("box recieved a shape");
+        //print(this.gameObject.name);
+    }
+
+    public void Rotate()
+    {
+        if (currentShape != null)
+        {
+            paths[currentDirection].Deactivate();
+
+            // update the box it points in currently to push no shape onto the path
+            Box box = GetBoxInDirection();
+            if (box != null)
+            {
+                box.RecieveShape(paths[currentDirection], null);
+            }
+
+            //check each path to see if any is not active alr
+
+            Direction[] ds = { Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN };
+
+            int at = 0;
+
+            for (int i = 0; i < ds.Length; i++)
+            {
+                if (ds[i] == currentDirection) {
+                    at = i;
+                    break;
+                }
+            }
+
+           // bool found = false;
+            for (int i = 1; i <= 4; i++)
+            {
+                Direction d = ds[(at + i) % 4];
+                //print(d);
+
+                if (!paths.ContainsKey(d))
+                {
+                    continue;
+                }
+
+                currentDirection = d;
+                //turn on path if there is another
+                if (!paths[d].isActive())
+                {
+                    Box next = GetBoxInDirection();
+                    if (next != null)
+                    {
+                        if (currentShape == null)
+                        {
+                            return;
+                        }
+
+                        paths[currentDirection].Activate(isDefaultCurrentPath());
+                        CreateShape();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    private Box GetBoxInDirection()
+    {
+        Vector2 v = DirectionUtil.D2V(currentDirection);
+
+        Physics2D.queriesStartInColliders = false;
+        Physics2D.queriesHitTriggers = false;
+
+        RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, v.normalized, 100, LayerMask.GetMask("Slider"));
+
+        Box nextBox = null;
+        float distanceTo = 100;
+        float inactiveStileDistance = 100;
+
+        //want to find the closest bin or box and stile
+        foreach (RaycastHit2D raycasthit in tileCheck)
+        {
+            Collider2D hitcollider = raycasthit.collider;
+            if (raycasthit.collider != null)
+            {
+                STile s = hitcollider.gameObject.GetComponent<STile>();
+                Box other = hitcollider.GetComponent<Box>();
+
+                if (s != null && !s.isTileActive)
+                {
+                    if (Vector2.Distance(raycasthit.centroid, transform.position) < inactiveStileDistance)
+                    {
+                        inactiveStileDistance = Vector2.Distance(raycasthit.centroid, transform.position);
+                    }
+                }
+
+                if (other != null)
+                {
+                    if (Vector2.Distance(raycasthit.centroid, transform.position) < distanceTo)
+                    {
+                        distanceTo = Vector2.Distance(raycasthit.centroid, transform.position);
+                        nextBox = other;
+                    }
+                }
+            }
+        }
+
+        if (distanceTo > inactiveStileDistance)
+        {
+            nextBox = null;
+        }
+
+        Physics2D.queriesHitTriggers = true;
+        Physics2D.queriesStartInColliders = true;
+
+        return nextBox;
+
+    }
+
+    protected bool isDefaultCurrentPath()
+    {
+        return currentDirection == Direction.RIGHT || currentDirection == Direction.DOWN;
+    }
+
+    public Vector2 GetDirection()
+    {
+       return DirectionUtil.D2V(currentDirection);
+    }
+}
