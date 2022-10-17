@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Bin : Box
 {
-    List<Recipe> recipes = new List<Recipe>();
-
     private new void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
