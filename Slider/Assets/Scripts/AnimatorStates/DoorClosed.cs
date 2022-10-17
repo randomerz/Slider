@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DoorClosed : StateMachineBehaviour
 {
+    public bool shouldUpdateSpriteOrder = true;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{
@@ -20,7 +21,8 @@ public class DoorClosed : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.GetComponent<Collider2D>().enabled = false;
-        animator.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -1; // Entity to -1
+        if (shouldUpdateSpriteOrder)
+            animator.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -1; // Entity to -1
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

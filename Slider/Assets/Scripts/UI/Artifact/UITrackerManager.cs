@@ -7,14 +7,14 @@ public class UITrackerManager : MonoBehaviour
 {
     protected static UITrackerManager _instance;
     
-    protected Vector2 center = new Vector2(17, 17);
+    protected virtual Vector2 center => new Vector2(17, 17);
     protected Vector2 position;
     protected Vector2 offset;
     protected ArtifactTileButton currentButton;
     protected STile currentTile;
     protected float scale = 27f/17f;
-    protected float centerScale = 37f/17f;
-    
+    protected virtual float centerScale => 37f / 17f;
+
     public UIArtifactMenus uiArtifactMenus;
     public GameObject artifactPanel;
     public GameObject uiTrackerPrefab;
@@ -37,6 +37,7 @@ public class UITrackerManager : MonoBehaviour
     public Sprite circleEmpty;
     public Sprite pin;
     public Sprite exclamation;
+
 
     public enum DefaultSprites {
         none,
@@ -134,7 +135,7 @@ public class UITrackerManager : MonoBehaviour
     protected virtual void CalculateOffsetNullTile() 
     {
         offset = (position - center) * centerScale;
-        offset = new Vector3(Mathf.Clamp(offset.x, -62.5f, 62.5f), Mathf.Clamp(offset.y, -57.5f, 57.5f));
+        offset = new Vector3(Mathf.Clamp(offset.x, -70f, 70f), Mathf.Clamp(offset.y, -60f, 60f));
     }
 
     protected virtual void CalculateOffset() 

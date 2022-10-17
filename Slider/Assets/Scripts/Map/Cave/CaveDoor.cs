@@ -2,39 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CaveDoor : MonoBehaviour, ISavable
+public class CaveDoor : MonoBehaviour
 {
-    [SerializeField] private GameObject doorCollider;
-    [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private Sprite openSprite;
-    [SerializeField] private Sprite closedSprite;
-    [SerializeField] private bool isOpen = false;
+    public PoweredDoor poweredDoor;
 
-    public void OpenDoor(){
-        isOpen = true;
-        doorCollider.SetActive(false);
-        spriteRenderer.sprite = openSprite;
+    private void Awake() {
+        Debug.Log("Cave door awake");
     }
 
-    public void CloseDoor(){
-        isOpen = false;
-        doorCollider.SetActive(true);
-        spriteRenderer.sprite = closedSprite;
-    }
-
-    public void Save()
+    public void StartDoorOpeningEffects()
     {
-        SaveSystem.Current.SetBool("CaveDoorOpen", isOpen);
+        if (!SaveSystem.Current.GetBool(poweredDoor.saveDoorString))
+            StartCoroutine(DoorOpeningEffects());
     }
 
-    public void Load(SaveProfile s)
+    private IEnumerator DoorOpeningEffects()
     {
-        isOpen = s.GetBool("CaveDoorOpen");
-        if(isOpen)
-            OpenDoor();
-    }
+        float animationDuration = 8;
 
-    public void IsDoorOpen(Condition c){
-        c.SetSpec(isOpen);
+        CameraShake.ShakeIncrease(animationDuration, 0.5f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(animationDuration);
+
+        CameraShake.Shake(0.5f, 1);
+        AudioManager.Play("Slide Explosion");
     }
 }
