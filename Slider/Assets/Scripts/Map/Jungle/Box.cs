@@ -22,15 +22,20 @@ public class Box : MonoBehaviour
     void Awake()
     {
         SetPaths();
+
+        foreach (Direction d in paths.Keys)
+        {
+            paths[d].ChangePair();
+        }
     }
 
-    private new void OnEnable()
+    private void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
         SGrid.OnSTileEnabled += STileEnabled;
     }
 
-    private new void OnDisable()
+    private void OnDisable()
     {
         SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
         SGrid.OnSTileEnabled -= STileEnabled;

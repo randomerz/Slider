@@ -12,6 +12,11 @@ public class Sign : Box
     {
         SetPaths();
 
+        foreach (Direction d in paths.Keys)
+        {
+            paths[d].ChangePair();
+        }
+
         if (shapes.Count == 0)
         {
             foreach (Direction d in paths.Keys)
@@ -20,13 +25,13 @@ public class Sign : Box
             }
         }
     }
-    private new void OnEnable()
+    private void OnEnable()
     {
         SGridAnimator.OnSTileMoveEnd += UpdateShapesOnTileMove;
         SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
     }
 
-    private new void OnDisable()
+    private void OnDisable()
     {
         SGridAnimator.OnSTileMoveEnd -= UpdateShapesOnTileMove;
         SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
@@ -56,9 +61,23 @@ public class Sign : Box
         //sometimes this is like null because the path pairs havent been updated yet
 
         //print(path.gameObject.name);
-        shapes[path.pair] = shape;
-        MergeShapes();
-        CreateShape();
+        if (shape != null)
+        {
+            if (path.pair != null)
+            {
+                shapes[path.pair] = shape;
+                MergeShapes();
+                CreateShape();
+            }
+            else
+            {
+                print(this.gameObject.name + " " + path.gameObject.name);
+                print("null path");
+                shapes[path] = shape;
+                MergeShapes();
+                CreateShape();
+            }
+        }
     }
     public void MergeShapes()
     {

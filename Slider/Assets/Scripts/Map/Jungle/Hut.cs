@@ -8,18 +8,23 @@ public class Hut : Box
     {
         SetPaths();
 
+        foreach (Direction d in paths.Keys)
+        {
+            paths[d].ChangePair();
+        }
+
         currentShape = shapes[currentShapeIndex];
         CreateShape();
     }
 
-    private new void OnEnable()
+    private void OnEnable()
     {
         SGrid.OnSTileEnabled += OnSTileEnabled;
         SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
         SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
     }
 
-    private new void OnDisable()
+    private void OnDisable()
     {
         SGrid.OnSTileEnabled -= OnSTileEnabled;
         SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
