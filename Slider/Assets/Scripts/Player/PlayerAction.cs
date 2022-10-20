@@ -14,6 +14,8 @@ public class PlayerAction : Singleton<PlayerAction>
     [SerializeField] private float minimumDropDistance = 0.5f;
     [SerializeField] private float maximumDropDistance = 1.5f;
     [SerializeField] private float dropCirclecastRadius = 0.5f;
+    [SerializeField] private float dropBoxcastWidth = 0.75f; // 12/16
+    [SerializeField] private float dropBoxcastHeight = 7f / 16f;
 
     private Item lastDroppedItem;
     private bool isPicking;  //Picking up animation is happening
@@ -54,8 +56,16 @@ public class PlayerAction : Singleton<PlayerAction>
     {
         Vector3 raycastDirection = Player.GetLastMoveDirection().normalized;
 
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, dropCirclecastRadius, raycastDirection, maximumDropDistance, 
-            layerMask:dropCollidingMask);
+        // RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, dropCirclecastRadius, raycastDirection, maximumDropDistance, 
+        //     layerMask:dropCollidingMask);
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(
+            transform.position, 
+            new Vector2(dropBoxcastWidth, dropBoxcastHeight), 
+            Mathf.Atan2(raycastDirection.y, raycastDirection.x) * Mathf.Rad2Deg,
+            raycastDirection, 
+            maximumDropDistance,
+            layerMask:dropCollidingMask
+        );
 
         Vector2 furthestPossibleDropPosition = transform.position;
         bool collisionOccured = false;
