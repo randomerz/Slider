@@ -17,6 +17,9 @@ public class VillageGrid : SGrid
     [SerializeField] private string poofParticleName;
     private GameObject poofParticles;
 
+    public CameraDolly introCameraDolly;
+    private const string INTRO_CUTSCENE_SAVE_STRING = "villageIntroCutscene";
+
     public override void Init()
     {
         InitArea(Area.Village);
@@ -33,7 +36,19 @@ public class VillageGrid : SGrid
         base.Start();
 
         AudioManager.PlayMusic("Village");
-        UIEffects.FadeFromBlack();
+
+        if (GameManager.instance.debugModeActive)
+            SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
+
+        if (!SaveSystem.Current.GetBool(INTRO_CUTSCENE_SAVE_STRING))
+        {
+            SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
+            introCameraDolly.StartTrack();
+        }
+        else
+        {
+            UIEffects.FadeFromBlack();
+        }
 
         if (checkCompletion)
         {
