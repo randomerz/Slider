@@ -29,9 +29,22 @@ public class AchievementManager : Singleton<AchievementManager>
         _instance.SendAchievementStatsToSteam();
     }
 
-    public static void SetAchievementStat(AchievementStatistic achievementStatistic)
+    /// <summary>
+    /// Increment a statistic with the given key. This key needs to match one setup in Steamworks (message Daniel or Travis to have them create a statistic!)
+    /// </summary>
+    /// <param name="statName"></param>
+    /// <param name="value"></param>
+    public static void IncrementAchievementStat(string statName, int increment = 1)
     {
-        _instance.achievementStats[achievementStatistic.Key] = achievementStatistic.Value;
+        if (_instance.achievementStats.ContainsKey(statName))
+        {
+            _instance.achievementStats[statName] += increment;
+        }
+        else
+        {
+            _instance.achievementStats[statName] = increment;
+        }
+        Debug.Log(_instance.achievementStats[statName]);
         _instance.SendAchievementStatsToSteam();
     }
 
@@ -64,11 +77,14 @@ public class AchievementManager : Singleton<AchievementManager>
     /// <param name="achievementStatistics"></param>
     public static void OverwriteAchievementData(AchievementStatistic[] achievementStatistics)
     {
-        foreach (AchievementStatistic statistic in achievementStatistics)
+        if (achievementStatistics != null)
         {
-            _instance.achievementStats[statistic.Key] = statistic.Value;
+            foreach (AchievementStatistic statistic in achievementStatistics)
+            {
+                _instance.achievementStats[statistic.Key] = statistic.Value;
+            }
+            _instance.SendAchievementStatsToSteam();
         }
-        _instance.SendAchievementStatsToSteam();
     }
 
     private void SendAchievementStatsToSteam()

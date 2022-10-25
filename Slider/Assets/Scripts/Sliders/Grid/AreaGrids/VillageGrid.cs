@@ -131,6 +131,13 @@ public class VillageGrid : SGrid
             ruinsSymbols.SetSprites(false);
 
             GameObject.Instantiate(poofParticles, ruinsSymbols.ruinsHole.transform.position, Quaternion.identity, ruinsSymbols.transform);
+
+            AchievementManager.SetAchievementStat("completedVillage", 1);
+            if (SaveSystem.Current.GetPlayTimeInSeconds() < 300)
+            {
+                Debug.Log(SaveSystem.Current.GetPlayTimeInSeconds());
+                AchievementManager.SetAchievementStat("completedVillageSpeedrun", 1);
+            }
         }
     }
 
