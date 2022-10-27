@@ -6,10 +6,6 @@ public class CaveDoor : MonoBehaviour
 {
     public PoweredDoor poweredDoor;
 
-    private void Awake() {
-        Debug.Log("Cave door awake");
-    }
-
     public void StartDoorOpeningEffects()
     {
         if (!SaveSystem.Current.GetBool(poweredDoor.saveDoorString))

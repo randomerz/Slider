@@ -10,12 +10,11 @@ using System;
 /// </summary>
 public class AchievementManager : Singleton<AchievementManager>
 {
-    private Dictionary<string, int> achievementStats;
+    private Dictionary<string, int> achievementStats = new Dictionary<string, int>();
 
     private void Awake()
     {
         InitializeSingleton();
-        achievementStats = new Dictionary<string, int>();
     }
 
     /// <summary>
@@ -36,7 +35,7 @@ public class AchievementManager : Singleton<AchievementManager>
     /// </summary>
     public static void IncrementAchievementStat(string statName, int increment = 1)
     {
-        if (_instance == null)
+        if (_instance != null)
         {
             SetAchievementStat(statName, _instance.achievementStats.GetValueOrDefault(statName, 0) + increment);
         }
