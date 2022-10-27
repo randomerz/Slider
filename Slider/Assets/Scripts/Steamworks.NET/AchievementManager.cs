@@ -12,7 +12,7 @@ public class AchievementManager : Singleton<AchievementManager>
 {
     private Dictionary<string, int> achievementStats;
 
-    private void Start()
+    private void Awake()
     {
         InitializeSingleton();
         achievementStats = new Dictionary<string, int>();
@@ -21,31 +21,25 @@ public class AchievementManager : Singleton<AchievementManager>
     /// <summary>
     /// Set a statistic with the given key. This key needs to match one setup in Steamworks (message Daniel or Travis to have them create a statistic!)
     /// </summary>
-    /// <param name="statName"></param>
-    /// <param name="value"></param>
     public static void SetAchievementStat(string statName, int value)
     {
-        _instance.achievementStats[statName] = value;
-        _instance.SendAchievementStatsToSteam();
+        if (_instance != null)
+        {
+            _instance.achievementStats[statName] = value;
+            _instance.SendAchievementStatsToSteam();
+        }
     }
 
     /// <summary>
-    /// Increment a statistic with the given key. This key needs to match one setup in Steamworks (message Daniel or Travis to have them create a statistic!)
+    /// Increment a statistic with the given key by the given amount. This key needs to match one setup in Steamworks 
+    /// (message Daniel or Travis to have them create a statistic!)
     /// </summary>
-    /// <param name="statName"></param>
-    /// <param name="value"></param>
     public static void IncrementAchievementStat(string statName, int increment = 1)
     {
-        if (_instance.achievementStats.ContainsKey(statName))
+        if (_instance == null)
         {
-            _instance.achievementStats[statName] += increment;
+            SetAchievementStat(statName, _instance.achievementStats.GetValueOrDefault(statName, 0) + increment);
         }
-        else
-        {
-            _instance.achievementStats[statName] = increment;
-        }
-        Debug.Log(_instance.achievementStats[statName]);
-        _instance.SendAchievementStatsToSteam();
     }
 
     /// <returns>An array of all AchievementStatistics, or an empty array if they cannot be found</returns>
@@ -89,9 +83,12 @@ public class AchievementManager : Singleton<AchievementManager>
 
     private void SendAchievementStatsToSteam()
     {
-        foreach (string key in achievementStats.Keys)
+        if (SteamManager.Initialized && SteamUser.BLoggedOn())
         {
-            SteamUserStats.SetStat(key, achievementStats[key]);
+            foreach (string key in achievementStats.Keys)
+            {
+                SteamUserStats.SetStat(key, achievementStats[key]);
+            }
         }
     }
 }
