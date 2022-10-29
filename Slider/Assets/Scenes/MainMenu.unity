@@ -2943,7 +2943,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3203,6 +3203,7 @@ MonoBehaviour:
   playerAnimator: {fileID: 39868089}
   mainMenuButtonsAnimator: {fileID: 1146284376}
   mainMenuQuitButtonAnimator: {fileID: 1121971053}
+  mainMenuBackgroundAnimator: {fileID: 1873760204}
   mainMenuPanel: {fileID: 5049116214890196632}
   savesPanel: {fileID: 735139347}
   newSavePanel: {fileID: 1949098307}
@@ -6276,7 +6277,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_AnchorMax.x
@@ -8680,6 +8681,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1873760202}
+  - component: {fileID: 1873760205}
+  - component: {fileID: 1873760204}
+  - component: {fileID: 1873760203}
   m_Layer: 5
   m_Name: ParalaxBG
   m_TagString: Untagged
@@ -8711,6 +8715,59 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 11.25}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1873760203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873760201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e857361c6d7e0c46b6520c1840f8f37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  paralaxPlanes:
+  - gameObject: {fileID: 1343522100}
+    paralaxFactor: 0.08
+  - gameObject: {fileID: 741097784}
+    paralaxFactor: 0.06
+  - gameObject: {fileID: 750906721}
+    paralaxFactor: 0.04
+  - gameObject: {fileID: 1613696525}
+    paralaxFactor: 0.02
+--- !u!95 &1873760204
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873760201}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 70fcf3c229e87f14eb084843876b1cb3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!225 &1873760205
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873760201}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &1875150452
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9431,7 +9488,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_AnchorMax.x
@@ -11459,7 +11516,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_AnchorMax.x
