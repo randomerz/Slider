@@ -24,12 +24,14 @@ public class SpriteSwapper : MonoBehaviour
 
     public void TurnOn()
     {
-        sr.sprite = on;
+        if (sr) sr.sprite = on;
+        if (image) image.sprite = on;
     }
 
     public void TurnOff()
     {
-        sr.sprite = off;
+        if (sr) sr.sprite = off;
+        if (image) image.sprite = off;
     }
 }
 
