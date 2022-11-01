@@ -5913,6 +5913,10 @@ PrefabInstance:
       value: Continue
       objectReference: {fileID: 0}
     - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 15c96e9e615f9be48adec32e3abc8f7b, type: 2}
+    - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_fontColor.b
       value: 0.6
       objectReference: {fileID: 0}
@@ -5924,6 +5928,10 @@ PrefabInstance:
       propertyPath: m_fontColor.r
       value: 0.6
       objectReference: {fileID: 0}
+    - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -7753448444141561828, guid: 15c96e9e615f9be48adec32e3abc8f7b, type: 2}
     - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_fontColor32.rgba
       value: 4288256409
@@ -11455,6 +11463,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Credits
       objectReference: {fileID: 0}
+    - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 15c96e9e615f9be48adec32e3abc8f7b, type: 2}
+    - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -7753448444141561828, guid: 15c96e9e615f9be48adec32e3abc8f7b, type: 2}
     - target: {fileID: 8175251183880460336, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_Name
       value: Credits Button
@@ -15850,6 +15866,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Options
       objectReference: {fileID: 0}
+    - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 15c96e9e615f9be48adec32e3abc8f7b, type: 2}
+    - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -7753448444141561828, guid: 15c96e9e615f9be48adec32e3abc8f7b, type: 2}
     - target: {fileID: 8175251183880460336, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_Name
       value: Options Button
@@ -17954,6 +17978,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5049116214890196633}
     m_Modifications:
+    - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 15c96e9e615f9be48adec32e3abc8f7b, type: 2}
+    - target: {fileID: 8175251183621917413, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -7753448444141561828, guid: 15c96e9e615f9be48adec32e3abc8f7b, type: 2}
     - target: {fileID: 8175251183880460336, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
       propertyPath: m_Name
       value: Play Button
