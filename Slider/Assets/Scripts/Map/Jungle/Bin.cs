@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class Bin : Box
 {
-    List<Recipe> recipes = new List<Recipe>();
-
-    private new void OnEnable()
+    private void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
     }
 
-    private new void OnDisable()
+    private void OnDisable()
     {
         SGridAnimator.OnSTileMoveStart -= OnSTileMoveEarly;
     }
