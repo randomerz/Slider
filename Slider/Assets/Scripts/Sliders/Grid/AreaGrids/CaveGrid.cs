@@ -116,14 +116,14 @@ public class CaveGrid : SGrid
     public override void Save() 
     {
         base.Save();
-        caveDoor.Save();
+        // caveDoor.Save();
       //  mountainCaveWall.Save();
     }
 
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
-        caveDoor.Load(profile);
+        // caveDoor.Load(profile);
         mountainCaveWall.Load(profile);
     }
 }

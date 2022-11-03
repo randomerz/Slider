@@ -13,16 +13,8 @@ public class PlayerConditionals : MonoBehaviour
     public bool isCarryingItem;
     public string itemNameCheck;
 
-    public bool triggerIsLit;
-
     private bool actionAdded;
     private bool onActionEnabled = true;
-    private LightManager lm;
-
-    private void Awake()
-    {
-        lm = GameObject.Find("LightManager")?.GetComponent<LightManager>();
-    }
 
     // private void OnDisable() {               Maybe this is needed?
     //     PlayerAction.OnAction -= OnActionListener;
@@ -72,18 +64,6 @@ public class PlayerConditionals : MonoBehaviour
         if (!onActionEnabled)
         {
             return false;
-        }
-
-        // Caves power station door
-        if (triggerIsLit)
-        {
-            if (lm != null)
-            {
-                if (!lm.GetLightMaskAt((int)transform.position.x, (int)transform.position.y))
-                {
-                    return false;
-                }
-            }
         }
 
         if (isCarryingItem)

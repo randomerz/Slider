@@ -32,7 +32,7 @@ public class CaveMossManager : MonoBehaviour
     private BoundsInt mossBounds;
 
     //L: Keep track of the tiles that are animating so that we are not calling the coroutine twice. 
-    private Dictionary<Vector3Int, MossAnimData> tilesAnimating;
+    private Dictionary<Vector3Int, MossAnimData> tilesAnimating = new Dictionary<Vector3Int, MossAnimData>();
 
     [SerializeField]
     private STile stile;
@@ -69,7 +69,6 @@ public class CaveMossManager : MonoBehaviour
     private void Start()
     {
         mossBounds = mossMap.cellBounds;
-        tilesAnimating = new Dictionary<Vector3Int, MossAnimData>();
 
         //L: Initialize all moss tiles
         if (LightManager.instance != null)

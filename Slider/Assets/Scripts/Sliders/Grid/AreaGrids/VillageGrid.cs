@@ -13,6 +13,12 @@ public class VillageGrid : SGrid
     [SerializeField] private RuinsSymbols ruinsSymbols;
     private Coroutine shuffleBuildUpCoroutine;
     private bool checkCompletion = false;
+    
+    [SerializeField] private string poofParticleName;
+    private GameObject poofParticles;
+
+    public CameraDolly introCameraDolly;
+    private const string INTRO_CUTSCENE_SAVE_STRING = "villageIntroCutscene";
 
     public override void Init()
     {
@@ -30,12 +36,28 @@ public class VillageGrid : SGrid
         base.Start();
 
         AudioManager.PlayMusic("Village");
-        UIEffects.FadeFromBlack();
+
+        if (GameManager.instance.debugModeActive)
+            SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
+
+        if (!SaveSystem.Current.GetBool(INTRO_CUTSCENE_SAVE_STRING))
+        {
+            SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
+            introCameraDolly.StartTrack();
+        }
+        else
+        {
+            UIEffects.FadeFromBlack();
+        }
 
         if (checkCompletion)
         {
             UpdateButtonCompletions(this, null);
         }
+        
+        poofParticles = Resources.Load<GameObject>(poofParticleName);
+        if (poofParticles == null)
+            Debug.LogError("Couldn't load particles!");
     }
 
     private void OnEnable()
@@ -94,6 +116,30 @@ public class VillageGrid : SGrid
     }
 
     // Puzzle 8 - 8puzzle
+    public void FillInHole()
+    {
+        if (!SaveSystem.Current.GetBool("villageHoleFilled"))
+        {
+            SaveSystem.Current.SetBool("villageHoleFilled", true);
+
+            AudioManager.Play("Puzzle Complete");
+
+            Item ruinsFragment = PlayerInventory.RemoveItem();
+            ruinsFragment.gameObject.SetActive(false);
+            
+            ruinsSymbols.ruinsHole.enabled = false;
+            ruinsSymbols.SetSprites(false);
+
+            GameObject.Instantiate(poofParticles, ruinsSymbols.ruinsHole.transform.position, Quaternion.identity, ruinsSymbols.transform);
+
+            AchievementManager.SetAchievementStat("completedVillage", 1);
+            if (SaveSystem.Current.GetPlayTimeInSeconds() < 180)
+            {
+                AchievementManager.SetAchievementStat("completedVillageSpeedrun", 1);
+            }
+        }
+    }
+
     public void ShufflePuzzle()
     {
         if (shuffleBuildUpCoroutine == null)
@@ -104,9 +150,6 @@ public class VillageGrid : SGrid
 
     private IEnumerator ShuffleBuildUp()
     {
-        //AudioManager.Play("Puzzle Complete");
-
-        //yield return new WaitForSeconds(0.5f);
 
         CameraShake.Shake(0.25f, 0.25f);
         AudioManager.Play("Slide Rumble");

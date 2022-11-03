@@ -158,6 +158,7 @@ public class ChadJump : MonoBehaviour
     {
         npcCollider.enabled = true;
         flashlightItem?.SetCollider(true);
+        flashlightItem.spriteRenderer.sortingOrder = 0;
     }
 
     public void ChadFell(Condition cond)

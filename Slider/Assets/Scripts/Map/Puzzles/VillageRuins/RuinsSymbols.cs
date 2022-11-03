@@ -5,15 +5,25 @@ using UnityEngine;
 public class RuinsSymbols : MonoBehaviour
 {
     public FlashWhite[] ruinSymbols = new FlashWhite[4];
+    public SpriteRenderer ruinsHole;
 
     private void Start()
     {
         if (SaveSystem.Current.GetBool("villageCompletion"))
         {
-            foreach (FlashWhite s in ruinSymbols)
-            {
-                s.SetSpriteActive(true);
-            }
+            // foreach (FlashWhite s in ruinSymbols)
+            // {
+            //     s.SetSpriteActive(true);
+            // }
+            ruinsHole.enabled = false;
+        }
+    }
+
+    public void SetSprites(bool value)
+    {
+        foreach (FlashWhite s in ruinSymbols)
+        {
+            s.SetSpriteActive(value);
         }
     }
 
