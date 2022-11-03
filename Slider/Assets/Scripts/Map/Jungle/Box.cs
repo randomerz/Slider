@@ -96,23 +96,21 @@ public class Box : MonoBehaviour
 
     public virtual void RecieveShape(Path path, Shape shape)
     {
-        //what should a box do when it recieves a shape... like nothing right since it just produces what its told to
-        //print("box recieved a shape");
-        //print(this.gameObject.name);
+
     }
 
     public void Rotate()
     {
         if (currentShape != null)
         {
-            paths[currentDirection].Deactivate();
-
             // update the box it points in currently to push no shape onto the path
             Box box = GetBoxInDirection();
+
             if (box != null)
             {
                 box.RecieveShape(paths[currentDirection], null);
             }
+            paths[currentDirection].Deactivate();
 
             //check each path to see if any is not active alr
 
@@ -140,7 +138,7 @@ public class Box : MonoBehaviour
                 }
 
                 currentDirection = d;
-                //turn on path if there is another
+                //turn on path if there is not another using it
                 if (!paths[d].isActive())
                 {
                     Box next = GetBoxInDirection();

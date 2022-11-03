@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Path : MonoBehaviour
 {
-    private bool active = false;
+    public bool active = false;
     public Path pair;
     bool defaultAnim = true; //left, or down (animation will have default and non default for direciton
     Direction direction;
@@ -55,7 +55,7 @@ public class Path : MonoBehaviour
 
         if (this.transform.localEulerAngles.z == -90 || this.transform.localEulerAngles.z == 90)
         {
-            one= new Vector2(0, 1);
+            one = new Vector2(0, 1);
             two = new Vector2(0, -1);
         }
 

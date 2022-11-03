@@ -56,27 +56,25 @@ public class Sign : Box
     {
         //somehow take in shapes and merge is needed
         // also be able to remove a shape when the box output diff stuff or the path stops
-        // print("sign got shape");
+        //print("sign got shape " + shape);
 
         //sometimes this is like null because the path pairs havent been updated yet
 
         //print(path.gameObject.name);
-        if (shape != null)
+
+        if (path.pair != null)
         {
-            if (path.pair != null)
-            {
-                shapes[path.pair] = shape;
-                MergeShapes();
-                CreateShape();
-            }
-            else
-            {
-                print(this.gameObject.name + " " + path.gameObject.name);
-                print("null path");
-                shapes[path] = shape;
-                MergeShapes();
-                CreateShape();
-            }
+            shapes[path.pair] = shape;
+            MergeShapes();
+            CreateShape();
+        }
+        else
+        {
+/*                print(this.gameObject.name + " " + path.gameObject.name);
+            print("null path");*/
+            shapes[path] = shape;
+            MergeShapes();
+            CreateShape();
         }
     }
     public void MergeShapes()
@@ -104,11 +102,18 @@ public class Sign : Box
             if (hold != null)
             {
                 currentShape = hold;
-                print("merged: " + currentShape.type);
+                //print("merged: " + currentShape.type);
                 return;
             }
         }
 
-        currentShape = shapesRecieved[0];
+        if (shapesRecieved.Count == 0)
+        {
+            currentShape = null;
+        }
+        else
+        {
+            currentShape = shapesRecieved[0];
+        }
     }
 }
