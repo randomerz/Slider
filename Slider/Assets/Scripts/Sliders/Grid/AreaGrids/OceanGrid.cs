@@ -461,6 +461,7 @@ public class OceanGrid : SGrid
             oceanArtifact.FlickerAllOnce();
 
             UIArtifactWorldMap.SetAreaStatus(Area.Ocean, ArtifactWorldMapArea.AreaStatus.color);
+            UIArtifactMenus._instance.OpenArtifactAndShow(2);
         }
     }
 

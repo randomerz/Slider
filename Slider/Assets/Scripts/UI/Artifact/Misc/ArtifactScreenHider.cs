@@ -93,7 +93,7 @@ public class ArtifactScreenHider : MonoBehaviour
             return;
 
         AddScreens();
-        uiArtifactMenus.OpenArtifactAndShow(screenIndex);
+        uiArtifactMenus.OpenArtifactAndShow(screenIndex, true);
         // StartCoroutine(IAddScreensAndShow(screenIndex));
     }
 
@@ -124,7 +124,7 @@ public class ArtifactScreenHider : MonoBehaviour
             AddInventoryScreen();
             PlayerInventory.OnPlayerGetCollectible -= CheckAddInventoryScreen;
             
-            uiArtifactMenus.OpenArtifactAndShow(0);
+            uiArtifactMenus.OpenArtifactAndShow(0, true);
             // StartCoroutine(IAddScreensAndShow(0));
         }
     }

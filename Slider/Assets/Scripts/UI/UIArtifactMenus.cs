@@ -119,14 +119,15 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     }
 
 
-    public void OpenArtifactAndShow(int screenIndex)
+    public void OpenArtifactAndShow(int screenIndex, bool justCollectedItem=false)
     {
-        StartCoroutine(IOpenArtifactAndShow(screenIndex));
+        StartCoroutine(IOpenArtifactAndShow(screenIndex, justCollectedItem));
     }
 
-    private IEnumerator IOpenArtifactAndShow(int screenIndex)
+    private IEnumerator IOpenArtifactAndShow(int screenIndex, bool justCollectedItem)
     {
-        yield return new WaitForSeconds(2.25f); // magic number
+        if (justCollectedItem)
+            yield return new WaitForSeconds(2.25f); // magic number if just picked an item
 
         OpenArtifact();
 
