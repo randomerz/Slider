@@ -129,6 +129,11 @@ public class CaveMossManager : MonoBehaviour
     {
         bool posIsLit = LightManager.instance.GetLightMaskAt(mossMap, pos);
 
+        if (!mossStates.ContainsKey(pos))
+        {
+            SetMossState(pos, posIsLit);
+        }
+
         if (mossStates[pos] != GetStateFromLit(posIsLit))
         {
             mossStates[pos] = GetStateFromLit(posIsLit);
