@@ -103,7 +103,13 @@ public class CaveMossManager : MonoBehaviour
     {
         Color invisibleWhite = new Color(1.0f, 1.0f, 1.0f, 0.0f);
 
-        mossStates.Add(pos, GetStateFromLit(posIsLit));
+        if (!mossStates.ContainsKey(pos))
+        {
+            mossStates.Add(pos, GetStateFromLit(posIsLit));
+        } else
+        {
+            mossStates[pos] = GetStateFromLit(posIsLit);
+        }
 
         mossMap.SetColor(pos, posIsLit ? invisibleWhite : Color.white);
         recededMossMap.SetColor(pos, posIsLit ? Color.white : invisibleWhite);
