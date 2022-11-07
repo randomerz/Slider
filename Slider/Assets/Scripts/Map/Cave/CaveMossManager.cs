@@ -147,7 +147,10 @@ public class CaveMossManager : MonoBehaviour
             if (mossCoroutines.ContainsKey(pos))
             {
                 //L: The tile is animating the wrong way, stop the animation.
-                StopCoroutine(mossCoroutines[pos]);
+                if (mossCoroutines[pos] != null)
+                {
+                    StopCoroutine(mossCoroutines[pos]);
+                }
                 mossCoroutines.Remove(pos);
             }
 
