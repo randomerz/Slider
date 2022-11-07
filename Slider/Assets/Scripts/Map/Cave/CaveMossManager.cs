@@ -103,7 +103,13 @@ public class CaveMossManager : MonoBehaviour
     {
         Color invisibleWhite = new Color(1.0f, 1.0f, 1.0f, 0.0f);
 
-        mossStates.Add(pos, GetStateFromLit(posIsLit));
+        if (!mossStates.ContainsKey(pos))
+        {
+            mossStates.Add(pos, GetStateFromLit(posIsLit));
+        } else
+        {
+            mossStates[pos] = GetStateFromLit(posIsLit);
+        }
 
         mossMap.SetColor(pos, posIsLit ? invisibleWhite : Color.white);
         recededMossMap.SetColor(pos, posIsLit ? Color.white : invisibleWhite);
@@ -129,6 +135,11 @@ public class CaveMossManager : MonoBehaviour
     {
         bool posIsLit = LightManager.instance.GetLightMaskAt(mossMap, pos);
 
+        if (!mossStates.ContainsKey(pos))
+        {
+            SetMossState(pos, posIsLit);
+        }
+
         if (mossStates[pos] != GetStateFromLit(posIsLit))
         {
             mossStates[pos] = GetStateFromLit(posIsLit);
@@ -136,7 +147,10 @@ public class CaveMossManager : MonoBehaviour
             if (mossCoroutines.ContainsKey(pos))
             {
                 //L: The tile is animating the wrong way, stop the animation.
-                StopCoroutine(mossCoroutines[pos]);
+                if (mossCoroutines[pos] != null)
+                {
+                    StopCoroutine(mossCoroutines[pos]);
+                }
                 mossCoroutines.Remove(pos);
             }
 
