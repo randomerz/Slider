@@ -139,6 +139,15 @@ public class PlayerInventory : MonoBehaviour
         return temp;
     }
 
+    public static void RemoveAndDestroyItem()
+    {
+        if (currentItem != null)
+            equipables.Remove(currentItem);
+        Destroy(currentItem.gameObject);
+        currentItem = null;
+        itemIterator = equipables.GetEnumerator();
+    }
+
     public static Item GetCurrentItem()
     {
         return currentItem;
