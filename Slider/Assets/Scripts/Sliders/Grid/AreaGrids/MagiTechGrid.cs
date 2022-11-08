@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class MagiTechGrid : SGrid
 
     [SerializeField] private NPC hungryBoi;
     [SerializeField] private DesyncItem desyncBurger;
+
+    private Dictionary<Area, bool> gems;
 
     /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
     and the right 9 STiles represent the past. The past tile will have an islandID
@@ -40,6 +43,7 @@ public class MagiTechGrid : SGrid
 
         AudioManager.PlayMusic("MagiTech");
         UIEffects.FadeFromBlack();
+        gems = new Dictionary<Area, bool>();
     }
 
     #region Magitech Mechanics 
@@ -116,5 +120,41 @@ public class MagiTechGrid : SGrid
         }
     }
 
+    #region Gem Conds
+    public void hasOceanGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Ocean, false));
+    public void hasMilitaryGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Military, false));
+    public void hasFactoryGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Factory, false));
+    public void hasMountainGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Mountain, false));
+    public void hasVillageGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Village, false));
+    public void hasCavesGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Caves, false));
+    public void hasDesertGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Desert, false));
+    public void hasJungleGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Jungle, false));
+    public void hasMagiTechGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.MagiTech, false));
 
+    #endregion
+    public void HasAllGems(Condition c)
+    {
+        foreach (bool b in gems.Values)
+        {
+            if (!b)
+            {
+                c.SetSpec(false);
+                return;
+            }
+        }
+        c.SetSpec(true);
+    }
+
+    public void TurnInGem(Item item)
+    {
+        Area itemNameAsEnum;
+        if (Enum.TryParse(item.itemName, out itemNameAsEnum))
+        {
+            gems.Add(itemNameAsEnum, true);
+            //Funni turn-in coroutine
+            PlayerInventory.RemoveItem();
+            item.gameObject.SetActive(false);
+        }
+
+    }
 }
