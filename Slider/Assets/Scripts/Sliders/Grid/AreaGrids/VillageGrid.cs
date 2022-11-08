@@ -16,8 +16,8 @@ public class VillageGrid : SGrid
     private Coroutine shuffleBuildUpCoroutine;
     private bool checkCompletion = false;
     
-    [SerializeField] private string poofParticleName;
-    private GameObject poofParticles;
+    // [SerializeField] private string poofParticleName;
+    // private GameObject poofParticles;
 
     public CameraDolly introCameraDolly;
     private const string INTRO_CUTSCENE_SAVE_STRING = "villageIntroCutscene";
@@ -57,9 +57,11 @@ public class VillageGrid : SGrid
             UpdateButtonCompletions(this, null);
         }
         
-        poofParticles = Resources.Load<GameObject>(poofParticleName);
-        if (poofParticles == null)
-            Debug.LogError("Couldn't load particles!");
+        CheckHole();
+        
+        // poofParticles = Resources.Load<GameObject>(poofParticleName);
+        // if (poofParticles == null)
+        //     Debug.LogError("Couldn't load particles!");
     }
 
     private void OnEnable()
@@ -122,8 +124,7 @@ public class VillageGrid : SGrid
     {
         if (SaveSystem.Current.GetBool("villageHoleFilled"))
         {
-            ruinsSymbols.ruinsHole.enabled = false;
-            ruinsSymbols.SetSprites(false);
+            ruinsFragment.SetActive(false);
         }
         else if (PlayerInventory.Contains("Slider 3", Area.Caves)) // if they finish caves before village
         {
@@ -139,13 +140,13 @@ public class VillageGrid : SGrid
 
             AudioManager.Play("Puzzle Complete");
 
-            Item ruinsFragment = PlayerInventory.RemoveItem();
-            ruinsFragment.gameObject.SetActive(false);
+            Item ruinsFrag = PlayerInventory.RemoveItem();
+            ruinsFrag.gameObject.SetActive(false);
             
             ruinsSymbols.ruinsHole.enabled = false;
             ruinsSymbols.SetSprites(false);
 
-            GameObject.Instantiate(poofParticles, ruinsSymbols.ruinsHole.transform.position, Quaternion.identity, ruinsSymbols.transform);
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, ruinsSymbols.ruinsHole.transform.position, Quaternion.identity, ruinsSymbols.transform);
 
             AchievementManager.SetAchievementStat("completedVillage", 1);
             if (SaveSystem.Current.GetPlayTimeInSeconds() < 180)

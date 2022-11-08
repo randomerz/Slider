@@ -9,7 +9,6 @@ public class FlashWhite : MonoBehaviour
     public Material whiteSpriteMat;
     private Material oldMat;
 
-    // Start is called before the first frame update
     void Awake()
     {
         mySprite = GetComponent<SpriteRenderer>();
