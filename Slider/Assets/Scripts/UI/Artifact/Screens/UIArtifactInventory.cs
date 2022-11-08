@@ -15,7 +15,7 @@ public class UIArtifactInventory : MonoBehaviour
 
 
     [Header("Special Collectible Counters")] // could be refactored
-    public TextMeshProUGUI flashlightCount;
+    public TextMeshProUGUI breadgeCount;
 
     private void OnEnable() 
     {
@@ -52,11 +52,15 @@ public class UIArtifactInventory : MonoBehaviour
 
     private void UpdateCollectibleCounters(object sender, PlayerInventory.InventoryEvent e)
     {
-        int numFlashlight = 0;
-        if (PlayerInventory.Contains("Flashlight", Area.Village)) numFlashlight += 1;
-        if (PlayerInventory.Contains("Flashlight", Area.Caves))   numFlashlight += 1;
+        int numBreadge = 0;
+
+        for (int i = 1; i <= 9; i++)
+        {
+            if (PlayerInventory.Contains("Breadge", (Area)i))
+                numBreadge += 1;
+        }
         
-        flashlightCount.text = numFlashlight.ToString();
-        flashlightCount.gameObject.SetActive(numFlashlight > 1);
+        breadgeCount.text = numBreadge.ToString();
+        breadgeCount.gameObject.SetActive(numBreadge > 1);
     }
 }

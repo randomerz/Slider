@@ -304,6 +304,11 @@ public class DebugUIManager : MonoBehaviour
         SGrid.Current.SetGrid(puzzle);
     }
 
+    public void SetBool(string boolName)
+    {
+        SaveSystem.Current.SetBool(boolName, true);
+    }
+
     public void NoClip()
     {
         Player p = GameObject.Find("Player").GetComponent<Player>();

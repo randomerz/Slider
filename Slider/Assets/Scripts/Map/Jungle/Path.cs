@@ -5,29 +5,10 @@ using UnityEngine;
 
 public class Path : MonoBehaviour
 {
-    private bool active = false;
+    public bool active = false;
     public Path pair;
     bool defaultAnim = true; //left, or down (animation will have default and non default for direciton
     Direction direction;
-
-
-    //Animation thing
-
-/*    private new void OnEnable()
-    {
-        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
-    }
-
-    private new void OnDisable()
-    {
-        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
-    }
-
-
-    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        ChangePair();
-    }*/
 
     public void Activate(bool right)
     {
@@ -74,14 +55,14 @@ public class Path : MonoBehaviour
 
         if (this.transform.localEulerAngles.z == -90 || this.transform.localEulerAngles.z == 90)
         {
-            one= new Vector2(0, 1);
+            one = new Vector2(0, 1);
             two = new Vector2(0, -1);
         }
 
         Physics2D.queriesStartInColliders = false;
 
-        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 5, LayerMask.GetMask("JunglePaths"));
-        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 5, LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 6, LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 6, LayerMask.GetMask("JunglePaths"));
 
         // print("");
         //want to find the closest bin or box and stile
@@ -92,7 +73,8 @@ public class Path : MonoBehaviour
             if (!pair.transform.parent.Equals(this.transform.parent))
             {
                 pair.pair = this;
-            } else
+            }
+            else
             {
                 pair = null;
             }
@@ -103,9 +85,10 @@ public class Path : MonoBehaviour
             if (!pair.transform.parent.Equals(this.transform.parent))
             {
                 pair.pair = this;
-            } else
+            }
+            else
             {
-                pair = null;
+                pair = null; 
             }
         }
 

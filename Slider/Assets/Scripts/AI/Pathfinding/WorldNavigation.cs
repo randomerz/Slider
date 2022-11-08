@@ -176,11 +176,11 @@ public class WorldNavigation : MonoBehaviour
     //Check if a point is in.
     public bool IsValidPt(Vector2Int pos)
     {
-        if (validPtsWorld.Contains(pos))
-        {
-            return true;
-        }
+        return validPtsWorld.Contains(pos) || IsValidPtOnStile(pos);
+    }
 
+    public bool IsValidPtOnStile(Vector2Int pos)
+    {
         foreach (STile stile in stiles)
         {
             if (validPtsStiles.ContainsKey(stile) && validPtsStiles[stile].Contains(AbsToRelPos(pos, stile)))
@@ -195,6 +195,12 @@ public class WorldNavigation : MonoBehaviour
     //Perform some arbitrary function on every point.
     private void ForEachValidPt(Action<Vector2Int> func)
     {
+        ForEachValidPtOutsideStile(func);
+        ForEachValidPtOnStile(func);
+    }
+
+    private void ForEachValidPtOutsideStile(Action<Vector2Int> func)
+    {
         if (validPtsWorld != null)
         {
             foreach (Vector2Int pt in validPtsWorld)
@@ -202,7 +208,10 @@ public class WorldNavigation : MonoBehaviour
                 func(pt);
             }
         }
+    }
 
+    private void ForEachValidPtOnStile(Action<Vector2Int> func)
+    {
         foreach (STile stile in stiles)
         {
             if (validPtsStiles.ContainsKey(stile))
@@ -400,7 +409,12 @@ public class WorldNavigation : MonoBehaviour
     {
         if (validPtsWorld != null)
         {
-            ForEachValidPt ((pos) => {
+            ForEachValidPtOutsideStile ((pos) => {
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawSphere(new Vector3(pos.x, pos.y, 0), 0.2f);
+            });
+
+            ForEachValidPtOnStile((pos) => {
                 Gizmos.color = Color.blue;
                 Gizmos.DrawSphere(new Vector3(pos.x, pos.y, 0), 0.2f);
             });

@@ -32,6 +32,7 @@ public class FactoryServerPropLights : MonoBehaviour
     }
 
     public ElectricalNode power;
+    public bool lightsAlwaysOn;
     public List<SpriteRenderer> lights;
     private List<LightData> lightData = new List<LightData>();
     private const float MAX_BLINK_COUNTDOWN = 5;
@@ -44,7 +45,7 @@ public class FactoryServerPropLights : MonoBehaviour
 
     private void OnEnable() 
     {
-        SetLights(power.Powered);
+        SetLights(power.Powered || lightsAlwaysOn);
     }
 
     void Update()

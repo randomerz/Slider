@@ -188,6 +188,7 @@ public class RatAI : MonoBehaviour
         {
             objectToSteal.transform.parent = transform.parent;  //"Unparent" The Rat from the object so the Rat "Drops" it
         }
+        Debug.Log("Rat is Dee");
         Destroy(gameObject);
     }
 
@@ -235,7 +236,7 @@ public class RatAI : MonoBehaviour
                 for (int y = (int)-maxDistVision; y <= (int)maxDistVision; y++)
                 {
                     Vector2Int pos = posAsInt + new Vector2Int(x, y);
-                    if (nav.IsValidPt(pos) && (!avoidsDark || LightManager.instance.GetLightMaskAt(pos.x, pos.y)))
+                    if (nav.IsValidPtOnStile(pos) && (!avoidsDark || LightManager.instance.GetLightMaskAt(pos.x, pos.y)))
                     {
                         _costMap.Add(pos, CostToThreat(GetDistToNearestBadTile(pos), false));
                     }
@@ -287,7 +288,7 @@ public class RatAI : MonoBehaviour
 
                     //Check wall, darkness, etc.
                     bool darkObstacle = avoidsDark && !LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y);
-                    if ((!nav.IsValidPt(posToCheck) || darkObstacle) && distToPoint < distToNearestObstacle)
+                    if ((!nav.IsValidPtOnStile(posToCheck) || darkObstacle) && distToPoint < distToNearestObstacle)
                     {
                         distToNearestObstacle = distToPoint;
                     }

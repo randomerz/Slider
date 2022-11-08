@@ -129,10 +129,21 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    public static void RemoveItem()
+    public static Item RemoveItem()
     {
         if (currentItem != null)
             equipables.Remove(currentItem);
+        Item temp = currentItem;
+        currentItem = null;
+        itemIterator = equipables.GetEnumerator();
+        return temp;
+    }
+
+    public static void RemoveAndDestroyItem()
+    {
+        if (currentItem != null)
+            equipables.Remove(currentItem);
+        Destroy(currentItem.gameObject);
         currentItem = null;
         itemIterator = equipables.GetEnumerator();
     }

@@ -7,6 +7,8 @@ public class PoweredDoor : ElectricalNode
     //Probably want to do an animation later instead of sprite swapping
 
     [SerializeField] private Animator animator;
+    [SerializeField] private bool shouldSaveDoorState; // also stay powered no matter what
+    public string saveDoorString;
 
     private new void Awake()
     {
@@ -14,18 +16,30 @@ public class PoweredDoor : ElectricalNode
         nodeType = NodeType.OUTPUT;
 
         animator ??= GetComponent<Animator>();
+
+        if (shouldSaveDoorState)
+        {
+            if (SaveSystem.Current.GetBool(saveDoorString))
+            {
+                animator.SetBool("Powered", true);
+                animator.SetBool("Skip", true);
+            }
+        }
     }
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
-        //Debug.Log($"We Powered? {e.powered}");
+        if (shouldSaveDoorState) // stay powered
+        {
+            e.powered = true;
+        }
+
         base.OnPoweredHandler(e);
         animator.SetBool("Powered", e.powered);
-    }
 
-    // quick workaround to make the npc power the north factory door
-    public void PowerDoorScuffed()
-    {
-        animator.SetBool("Powered", true);
+        if (shouldSaveDoorState) // stay powered
+        {
+            SaveSystem.Current.SetBool(saveDoorString, true);
+        }
     }
 }

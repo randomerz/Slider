@@ -25,6 +25,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     public Animator playerAnimator;
     public Animator mainMenuButtonsAnimator;
     public Animator mainMenuQuitButtonAnimator;
+    public Animator mainMenuBackgroundAnimator;
 
     [Header("Panels")]
     public GameObject mainMenuPanel;
@@ -148,6 +149,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         playerAnimator.SetBool("isUp", true);
         mainMenuButtonsAnimator.SetBool("isUp", true);
         mainMenuQuitButtonAnimator.SetBool("isVisible", true);
+        mainMenuBackgroundAnimator.SetBool("isVisible", true);
         textAnimator.SetBool("isVisible", false);
 
         AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 1);
