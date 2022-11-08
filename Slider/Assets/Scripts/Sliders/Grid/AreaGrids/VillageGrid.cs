@@ -11,6 +11,8 @@ public class VillageGrid : SGrid
     private bool fishOn;
 
     [SerializeField] private RuinsSymbols ruinsSymbols;
+    [SerializeField] private GameObject ruinsFragment; // for finishing caves before village
+    [SerializeField] private Transform slider8FloorTransform; // for finishing caves before village
     private Coroutine shuffleBuildUpCoroutine;
     private bool checkCompletion = false;
     
@@ -116,6 +118,19 @@ public class VillageGrid : SGrid
     }
 
     // Puzzle 8 - 8puzzle
+    private void CheckHole()
+    {
+        if (SaveSystem.Current.GetBool("villageHoleFilled"))
+        {
+            ruinsSymbols.ruinsHole.enabled = false;
+            ruinsSymbols.SetSprites(false);
+        }
+        else if (PlayerInventory.Contains("Slider 3", Area.Caves)) // if they finish caves before village
+        {
+            ruinsFragment.transform.SetParent(slider8FloorTransform);
+        }
+    }
+
     public void FillInHole()
     {
         if (!SaveSystem.Current.GetBool("villageHoleFilled"))
