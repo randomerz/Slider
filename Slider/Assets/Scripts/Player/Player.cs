@@ -18,7 +18,9 @@ public class Player : Singleton<Player>, ISavable
     [SerializeField] private PlayerAction playerAction;
     [SerializeField] private PlayerInventory playerInventory;
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
-    [SerializeField] private SpriteRenderer boatSpriteRenderer;
+    [SerializeField] private Collider2D colliderPlayerVers;
+    [SerializeField] private Collider2D colliderBoatVers;
+    [SerializeField] private GameObject boatGameObject;
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Rigidbody2D rb;
 
@@ -366,7 +368,9 @@ public class Player : Singleton<Player>, ISavable
     public void SetIsOnWater(bool isOnWater)
     {
         this.isOnWater = isOnWater;
-        boatSpriteRenderer.enabled = isOnWater;
+        colliderPlayerVers.enabled = !isOnWater;
+        colliderBoatVers.enabled = isOnWater;
+        boatGameObject.SetActive(isOnWater);
 
         UpdatePlayerSpeed();
     }
