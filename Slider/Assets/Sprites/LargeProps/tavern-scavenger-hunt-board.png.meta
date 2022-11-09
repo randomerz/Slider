@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ae0fcbfa8b2dfff4fb5a90e86c7855dd
+guid: fbfe832f8a3e68c40ac520a3715273b9
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -63,18 +63,14 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
-<<<<<<< HEAD:Slider/Assets/Sprites/LargeProps/Ocean/Tavern.png.meta
-  cookieLightType: 1
-=======
   cookieLightType: 0
->>>>>>> 54f70ba81c2ce6a338311fc5f9251c32e72864dd:Slider/Assets/Sprites/LargeProps/tavern-scavenger-hunt-board.png.meta
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -106,7 +102,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Server
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
