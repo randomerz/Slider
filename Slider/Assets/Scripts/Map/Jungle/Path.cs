@@ -13,7 +13,7 @@ public class Path : MonoBehaviour
 
     public void Activate(bool right, Shape shape)
     {
-       // print("activating path: " + gameObject.name);
+        //print("activating path: " + right + " for " + this.gameObject.name);
         active = true;
         if (right)
         {
@@ -49,10 +49,9 @@ public class Path : MonoBehaviour
         return active;
     }
 
-    public void GrabShape()
+    public bool getAnimType()
     {
-        //make collectible item and make the player hold it
-        print("grabbing shape: " + currentShape.name);
+        return defaultAnim;
     }
 
     public void ChangePair()

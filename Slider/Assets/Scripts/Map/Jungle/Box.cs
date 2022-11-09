@@ -78,15 +78,18 @@ public class Box : MonoBehaviour
 
     public void CreateShape()
     {
-        //print(this.gameObject.name + " is sending shape " + currentShape.name);
+       // print(this.gameObject.name + " is sending shape " + currentShape);
         //print(currentDirection);
         Box next = GetBoxInDirection();
         if (next != null)
         {
-            next.RecieveShape(paths[currentDirection], currentShape, parents);
             if (currentShape != null)
             {
-                paths[currentDirection].Activate(isDefaultCurrentPath(), currentShape);
+                if (!paths[currentDirection].isActive())//something wrong here
+                {
+                    paths[currentDirection].Activate(isDefaultCurrentPath(), currentShape); 
+                    next.RecieveShape(paths[currentDirection], currentShape, parents);
+                }
             }
             else
             {
@@ -112,7 +115,11 @@ public class Box : MonoBehaviour
             {
                 box.RecieveShape(paths[currentDirection], null, this.parents);
             }
-            paths[currentDirection].Deactivate();
+
+            if (isDefaultCurrentPath() == paths[currentDirection].getAnimType())
+            {
+                paths[currentDirection].Deactivate();
+            }
 
             //check each path to see if any is not active alr
 
@@ -150,7 +157,6 @@ public class Box : MonoBehaviour
                             return;
                         }
 
-                        paths[currentDirection].Activate(isDefaultCurrentPath(), currentShape);
                         CreateShape();
                     }
                     break;

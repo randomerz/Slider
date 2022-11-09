@@ -53,13 +53,7 @@ public class Sign : Box
 
     public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
-        //somehow take in shapes and merge is needed
-        // also be able to remove a shape when the box output diff stuff or the path stops
         //print("sign got shape " + shape);
-
-        //sometimes this is like null because the path pairs havent been updated yet
-
-        //print(path.gameObject.name);
 
         if (parents.Contains(this) && shape != null)
         {
