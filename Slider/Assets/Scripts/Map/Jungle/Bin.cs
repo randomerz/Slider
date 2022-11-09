@@ -21,7 +21,7 @@ public class Bin : Box
         print("no shape");
     }
 
-    public override void RecieveShape(Path path, Shape shape)
+    public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
         if (shape == null)
         {

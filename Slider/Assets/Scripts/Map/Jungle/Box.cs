@@ -8,6 +8,8 @@ public class Box : MonoBehaviour
 
     public List<Shape> shapes;
     protected int currentShapeIndex = 0;
+
+    public List<Box> parents = new List<Box>();
     public Shape currentShape;
 
     public Path left;
@@ -22,7 +24,7 @@ public class Box : MonoBehaviour
     void Awake()
     {
         SetPaths();
-
+        parents.Add(this);
         foreach (Direction d in paths.Keys)
         {
             paths[d].ChangePair();
@@ -81,10 +83,10 @@ public class Box : MonoBehaviour
         Box next = GetBoxInDirection();
         if (next != null)
         {
-            next.RecieveShape(paths[currentDirection], currentShape);
+            next.RecieveShape(paths[currentDirection], currentShape, parents);
             if (currentShape != null)
             {
-                paths[currentDirection].Activate(isDefaultCurrentPath());
+                paths[currentDirection].Activate(isDefaultCurrentPath(), currentShape);
             }
             else
             {
@@ -94,9 +96,9 @@ public class Box : MonoBehaviour
     }
 
 
-    public virtual void RecieveShape(Path path, Shape shape)
+    public virtual void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
-
+        
     }
 
     public void Rotate()
@@ -108,7 +110,7 @@ public class Box : MonoBehaviour
 
             if (box != null)
             {
-                box.RecieveShape(paths[currentDirection], null);
+                box.RecieveShape(paths[currentDirection], null, this.parents);
             }
             paths[currentDirection].Deactivate();
 
@@ -126,7 +128,6 @@ public class Box : MonoBehaviour
                 }
             }
 
-           // bool found = false;
             for (int i = 1; i <= 4; i++)
             {
                 Direction d = ds[(at + i) % 4];
@@ -149,7 +150,7 @@ public class Box : MonoBehaviour
                             return;
                         }
 
-                        paths[currentDirection].Activate(isDefaultCurrentPath());
+                        paths[currentDirection].Activate(isDefaultCurrentPath(), currentShape);
                         CreateShape();
                     }
                     break;

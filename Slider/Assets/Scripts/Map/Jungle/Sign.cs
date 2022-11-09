@@ -11,7 +11,6 @@ public class Sign : Box
     void Awake()
     {
         SetPaths();
-
         foreach (Direction d in paths.Keys)
         {
             paths[d].ChangePair();
@@ -52,7 +51,7 @@ public class Sign : Box
     }
 
 
-    public override void RecieveShape(Path path, Shape shape)
+    public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
         //somehow take in shapes and merge is needed
         // also be able to remove a shape when the box output diff stuff or the path stops
@@ -62,6 +61,14 @@ public class Sign : Box
 
         //print(path.gameObject.name);
 
+        if (parents.Contains(this) && shape != null)
+        {
+            return;
+        }
+
+        this.parents = parents;
+        parents.Add(this);
+
         if (path.pair != null)
         {
             shapes[path.pair] = shape;
@@ -70,8 +77,6 @@ public class Sign : Box
         }
         else
         {
-/*                print(this.gameObject.name + " " + path.gameObject.name);
-            print("null path");*/
             shapes[path] = shape;
             MergeShapes();
             CreateShape();

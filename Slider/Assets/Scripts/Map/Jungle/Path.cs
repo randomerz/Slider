@@ -7,10 +7,11 @@ public class Path : MonoBehaviour
 {
     public bool active = false;
     public Path pair;
+    private Shape currentShape = null;
     bool defaultAnim = true; //left, or down (animation will have default and non default for direciton
     Direction direction;
 
-    public void Activate(bool right)
+    public void Activate(bool right, Shape shape)
     {
        // print("activating path: " + gameObject.name);
         active = true;
@@ -26,12 +27,14 @@ public class Path : MonoBehaviour
 
         if (pair != null && !pair.isActive())
         {
-            pair.Activate(right);
+            pair.Activate(right, shape);
         }
+        currentShape = shape;
     }
 
     public void Deactivate()
     {
+        currentShape = null;
         GetComponentInChildren<SpriteRenderer>().color = Color.white;       //unactivated
         active = false;
 
@@ -44,6 +47,12 @@ public class Path : MonoBehaviour
     public bool isActive()
     {
         return active;
+    }
+
+    public void GrabShape()
+    {
+        //make collectible item and make the player hold it
+        print("grabbing shape: " + currentShape.name);
     }
 
     public void ChangePair()
@@ -61,8 +70,8 @@ public class Path : MonoBehaviour
 
         Physics2D.queriesStartInColliders = false;
 
-        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 6, LayerMask.GetMask("JunglePaths"));
-        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 6, LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 7, LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 7, LayerMask.GetMask("JunglePaths"));
 
         // print("");
         //want to find the closest bin or box and stile
