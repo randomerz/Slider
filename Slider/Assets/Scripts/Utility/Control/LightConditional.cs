@@ -27,4 +27,9 @@ public class LightConditional : MonoBehaviour
     {
         return (lm != null && lm.GetLightMaskAt((int)transform.position.x, (int)transform.position.y));
     }
+
+    public void CheckLitSpec(Condition c)
+    {
+        c.SetSpec(CheckLit());
+    }
 }

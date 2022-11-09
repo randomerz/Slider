@@ -39,9 +39,7 @@ public class CatTrick : MonoBehaviour
                 hasMittens = i.itemName == mittens.itemName || hasMittens;
                 hasAutumn = i.itemName == autumn.itemName || hasAutumn;
                 hasTofu = i.itemName == tofu.itemName || hasTofu;
-                Debug.Log($"{hasMittens} {hasAutumn} {hasTofu}");
             }
-            Debug.Log(i?.name);
         }
     }
 

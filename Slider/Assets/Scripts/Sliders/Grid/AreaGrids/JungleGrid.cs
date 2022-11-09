@@ -6,6 +6,10 @@ public class JungleGrid : SGrid
 {
     public ChadRace chadRace;
 
+    public List<GameObject> jungleBridgeRails;
+    public List<GameObject> jungleBridges;
+    public GameObject minecartProp;
+
     public override void Init() {
         InitArea(Area.Jungle);
         base.Init();
@@ -144,5 +148,59 @@ public class JungleGrid : SGrid
 
     public void PlayerCollectedRaceRewards(Condition c) {
         c.SetSpec(PlayerInventory.Contains(GetCollectible("Boots")));
+    }
+
+    // Broken bridge -- puzzle 7
+
+    public void TurnInRail()
+    {
+        if (SaveSystem.Current.GetBool("jungleTurnedInRail"))
+            return;
+
+        SaveSystem.Current.SetBool("jungleTurnedInRail", true);
+        AudioManager.Play("Puzzle Complete");
+
+        if (SaveSystem.Current.GetBool("jungleTurnedInMinecart"))
+        {
+            FixBridge();
+        }
+        else
+        {
+            foreach (GameObject g in jungleBridgeRails)
+            {
+                g.SetActive(true);
+            }
+        }
+    }
+
+    public void TurnInMinecart()
+    {
+        if (SaveSystem.Current.GetBool("jungleTurnedInMinecart"))
+            return;
+            
+        SaveSystem.Current.SetBool("jungleTurnedInMinecart", true);
+        AudioManager.Play("Puzzle Complete");
+
+        PlayerInventory.RemoveAndDestroyItem();
+
+        minecartProp.SetActive(true);
+        // particlemanager.poof
+
+        if (SaveSystem.Current.GetBool("jungleTurnedInRail"))
+        {
+            FixBridge();
+        }
+    }
+
+    public void FixBridge()
+    {
+        SaveSystem.Current.SetBool("jungleBridgeFixed", true);
+
+        // animate minecart?
+        
+        foreach (GameObject g in jungleBridges)
+        {
+            g.SetActive(true);
+        }
     }
 }

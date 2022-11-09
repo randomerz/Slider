@@ -81,11 +81,18 @@ public class CaveGrid : SGrid
         c.SetSpec(checkLightingCompletion && allTilesLit);
     }
 
+    // These are for NPC dialogue to call
+    public void CavesCloseArtifact()
+    {
+        UIArtifactMenus._instance.CloseArtifact();
+    }
+
     public void CavesShake1()
     {
         CameraShake.Shake(0.25f, 0.25f);
         AudioManager.Play("Slide Rumble");
     }
+
     public void CavesShake2()
     {
         CameraShake.Shake(0.75f, 0.5f);
@@ -111,6 +118,7 @@ public class CaveGrid : SGrid
         StartCoroutine(CheckCompletionsAfterDelay(1.1f));
 
         UIArtifactWorldMap.SetAreaStatus(Area.Caves, ArtifactWorldMapArea.AreaStatus.color);
+        UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
     }
 
     public override void Save() 

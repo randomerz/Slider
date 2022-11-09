@@ -9,13 +9,10 @@ public class RuinsSymbols : MonoBehaviour
 
     private void Start()
     {
-        if (SaveSystem.Current.GetBool("villageCompletion"))
+        if (SaveSystem.Current.GetBool("villageHoleFilled"))
         {
-            // foreach (FlashWhite s in ruinSymbols)
-            // {
-            //     s.SetSpriteActive(true);
-            // }
             ruinsHole.enabled = false;
+            SetSprites(true);
         }
     }
 

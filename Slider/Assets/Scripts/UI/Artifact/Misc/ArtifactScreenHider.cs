@@ -93,27 +93,28 @@ public class ArtifactScreenHider : MonoBehaviour
             return;
 
         AddScreens();
-        StartCoroutine(IAddScreensAndShow(screenIndex));
+        uiArtifactMenus.OpenArtifactAndShow(screenIndex, true);
+        // StartCoroutine(IAddScreensAndShow(screenIndex));
     }
 
-    private IEnumerator IAddScreensAndShow(int screenIndex)
-    {
-        yield return new WaitForSeconds(2.25f); // magic number
+    // private IEnumerator IAddScreensAndShow(int screenIndex)
+    // {
+    //     yield return new WaitForSeconds(2.25f); // magic number
 
-        uiArtifactMenus.OpenArtifact();
+    //     uiArtifactMenus.OpenArtifact();
 
-        if (screenIndex != 0)
-        {
-            yield return new WaitForSeconds(0.3f); // magic number
+    //     if (screenIndex != 0)
+    //     {
+    //         yield return new WaitForSeconds(0.3f); // magic number
 
-            screenAnimator.SetScreen(screenIndex);
+    //         screenAnimator.SetScreen(screenIndex);
             
-            // For the gif of the week!
-            // gifAnimation.ClearAllAreas();
-            // yield return new WaitForSeconds(0.6f);
-            // StartCoroutine(gifAnimation.AnimateAllAreas());
-        }
-    }
+    //         // For the gif of the week!
+    //         // gifAnimation.ClearAllAreas();
+    //         // yield return new WaitForSeconds(0.6f);
+    //         // StartCoroutine(gifAnimation.AnimateAllAreas());
+    //     }
+    // }
 
 
     private void CheckAddInventoryScreen(object sender, PlayerInventory.InventoryEvent e)
@@ -123,7 +124,8 @@ public class ArtifactScreenHider : MonoBehaviour
             AddInventoryScreen();
             PlayerInventory.OnPlayerGetCollectible -= CheckAddInventoryScreen;
             
-            StartCoroutine(IAddScreensAndShow(0));
+            uiArtifactMenus.OpenArtifactAndShow(0, true);
+            // StartCoroutine(IAddScreensAndShow(0));
         }
     }
 

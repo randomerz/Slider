@@ -393,6 +393,7 @@ public class DesertGrid : SGrid
 
             AudioManager.Play("Puzzle Complete");
             UIArtifactWorldMap.SetAreaStatus(Area.Desert, ArtifactWorldMapArea.AreaStatus.color);
+            UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
         }
     }
     #endregion

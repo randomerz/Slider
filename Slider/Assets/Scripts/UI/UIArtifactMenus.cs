@@ -117,4 +117,30 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         artifactPanel.SetActive(false);
         isClosing = false;
     }
+
+
+    public void OpenArtifactAndShow(int screenIndex, bool justCollectedItem=false)
+    {
+        StartCoroutine(IOpenArtifactAndShow(screenIndex, justCollectedItem));
+    }
+
+    private IEnumerator IOpenArtifactAndShow(int screenIndex, bool justCollectedItem)
+    {
+        if (justCollectedItem)
+            yield return new WaitForSeconds(2.25f); // magic number if just picked an item
+
+        OpenArtifact();
+
+        if (screenIndex != 0)
+        {
+            yield return new WaitForSeconds(0.3f); // magic number
+
+            screenAnimator.SetScreen(screenIndex);
+            
+            // For the gif of the week!
+            // gifAnimation.ClearAllAreas();
+            // yield return new WaitForSeconds(0.6f);
+            // StartCoroutine(gifAnimation.AnimateAllAreas());
+        }
+    }
 }
