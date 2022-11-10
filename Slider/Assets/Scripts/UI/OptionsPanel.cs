@@ -12,7 +12,10 @@ public class OptionsPanel : MonoBehaviour
     {
         musicSlider.onValueChanged.AddListener((float value) => { UpdateMusicVolume(); });
         sfxSlider.onValueChanged.AddListener((float value) => { UpdateSFXVolume(); });
+    }
 
+    private void OnEnable()
+    {
         sfxSlider.value = AudioManager.GetSFXVolume();
         musicSlider.value = AudioManager.GetMusicVolume();
     }
