@@ -1121,7 +1121,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &151849264
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3922,6 +3922,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2811531780615819926, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 3252435886930719925, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
       propertyPath: m_Name
       value: OptionsPanel
@@ -3932,7 +3936,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3516294938470570098, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -15
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 3516294938470570099, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -3957,6 +3961,14 @@ PrefabInstance:
     - target: {fileID: 3516294938470570099, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: MainMenuManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3555346351192707470, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 3870229305519456696, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 6196475476098619737, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
       propertyPath: m_AnchorMax.x
@@ -4108,7 +4120,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7763130322787013087, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -45
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 8292675729436426432, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
       propertyPath: m_IsActive
@@ -7460,10 +7472,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ControlsPanel
       objectReference: {fileID: 0}
-    - target: {fileID: 1138034111241829049, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1631032016384002369, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -9596,7 +9604,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1260355244}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -9996,19 +10004,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 380634037666542964, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_NormalizedViewPortRect.x
-      value: 0.10962242
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 380634037666542964, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_NormalizedViewPortRect.y
-      value: 0.11038961
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 380634037666542964, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_NormalizedViewPortRect.width
-      value: 0.7795372
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 380634037666542964, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_NormalizedViewPortRect.height
-      value: 0.77922076
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 380634037666542965, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -12605,7 +12613,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "MMMMMWWWWW\u200B"
+  m_text: "\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
   m_sharedMaterial: {fileID: 2433850607178412188, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
@@ -16156,7 +16164,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0}
   m_CustomCaretColor: 1
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0}
-  m_Text: MMMMMWWWWW
+  m_Text: 
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
