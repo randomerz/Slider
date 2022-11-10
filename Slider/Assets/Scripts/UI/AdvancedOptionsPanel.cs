@@ -14,10 +14,7 @@ public class AdvancedOptionsPanel : MonoBehaviour
         screenShakeSlider.onValueChanged.AddListener((float value) => { UpdateScreenShake(); });
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
         autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
-    }
 
-    private void OnEnable()
-    {
         screenShakeSlider.value = SettingsManager.ScreenShake;
         bigTextToggle.isOn = SettingsManager.BigTextEnabled;
         autoMoveToggle.isOn = SettingsManager.AutoMove;
