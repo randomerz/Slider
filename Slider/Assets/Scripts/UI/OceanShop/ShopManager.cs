@@ -7,6 +7,13 @@ using UnityEngine.InputSystem;
 public class ShopManager : Singleton<ShopManager>
 {
     //private static ShopManager _instance;
+    public class OnTurnedItemInArgs : System.EventArgs
+    {
+        public string item;
+    }
+
+    public static event System.EventHandler<OnTurnedItemInArgs> OnTurnedItemIn;
+    
     private int totalCreditCount;
     private int credits; // TODO: serialize
     private bool turnedInAnchor;
@@ -115,6 +122,7 @@ public class ShopManager : Singleton<ShopManager>
             turnedInAnchor = true;
             EarnCredits(2); //change back to 2
             shopDialogueManager.UpdateDialogue("Turn in Anchor");
+            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Trusty Anchor" });
         }
 
         int origCreditCount = totalCreditCount;
@@ -123,36 +131,42 @@ public class ShopManager : Singleton<ShopManager>
             turnedInTreasureChest = true;
             EarnCredits(1);
             shopDialogueManager.UpdateDialogue("Turn in Treasure Chest");
+            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "Cat Beard's Treasure" });
         }
-        if (PlayerInventory.Contains("Treasure Map") && !turnedInTreasureMap)
+        if (PlayerInventory.Contains("Magical Gem") && !turnedInTreasureMap)
         {
             turnedInTreasureMap = true;
             EarnCredits(1);
-            shopDialogueManager.UpdateDialogue("Turn in Treasure Map");
+            shopDialogueManager.UpdateDialogue("Turn in Magical Gem");
+            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Magical Gem" });
         }
         if (PlayerInventory.Contains("Mushroom") && !turnedInMushroom)
         {
             turnedInMushroom = true;
             EarnCredits(1);
             shopDialogueManager.UpdateDialogue("Turn in Mushroom");
+            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Funky Mushroom" });
         }
         if (PlayerInventory.Contains("Golden Fish") && !turnedInGoldenFish)
         {
             turnedInGoldenFish = true;
             EarnCredits(1);
             shopDialogueManager.UpdateDialogue("Turn in Golden Fish");
+            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Golden Fish" });
         }
         if (PlayerInventory.Contains("Rock") && !turnedInRock)
         {
             turnedInRock = true;
             EarnCredits(1);
             shopDialogueManager.UpdateDialogue("Turn in Rock");
+            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Peculiar Rock" });
         }
         if(PlayerInventory.Contains("Rose") && !turnedInRose)
         {
             turnedInRose = true;
             EarnCredits(1);
             shopDialogueManager.UpdateDialogue("Turn in Rose");
+            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Delicate Rose" });
         }
 
         if (totalCreditCount - origCreditCount >= 1)
