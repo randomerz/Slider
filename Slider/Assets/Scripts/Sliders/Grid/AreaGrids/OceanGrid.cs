@@ -10,6 +10,8 @@ public class OceanGrid : SGrid
     public static bool canRotate = true; // global variable, used in OceanArtifact
 
     public GameObject burriedGuyNPC;
+    public GameObject burriedTreasure;
+    public ParticleSystem burriedTreasureParticles;
     public KnotBox knotBox;
     public BottleManager bottleManager;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
@@ -184,12 +186,15 @@ public class OceanGrid : SGrid
     {
         if (IsShipwreckAdjacent())
         {
-            Collectible c = GetCollectible("Treasure Chest");
-
-            if (!PlayerInventory.Contains(c))
+            if (!PlayerInventory.Contains("Treasure Chest"))
             {
-                c.gameObject.SetActive(true);
+                burriedTreasure.SetActive(true);
+                burriedTreasureParticles.Play();
             }
+        }
+        else
+        {
+            burriedTreasure.SetActive(false);
         }
     }
 

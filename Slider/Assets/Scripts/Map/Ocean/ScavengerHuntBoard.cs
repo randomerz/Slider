@@ -23,7 +23,7 @@ public class ScavengerHuntBoard : MonoBehaviour
     public void SetScavengerBoardText()
     {
         if(this.available_tasks.Count >0)
-            this.tasks_available = $"Scavengings to Acquire: {string.Join(", ", this.available_tasks)}";
+            this.tasks_available = $"Scavengings to Acquire: \n{string.Join(", ", this.available_tasks)}";
         else if(tasks_available != "Talk to Bob for a chance at a job!" && SGrid.Current.GetNumTilesCollected() == 9)
             this.tasks_available = "You've scavenged the whole sea!";
         SaveSystem.Current.SetString("OceanTavernBoardAvailable", tasks_available);

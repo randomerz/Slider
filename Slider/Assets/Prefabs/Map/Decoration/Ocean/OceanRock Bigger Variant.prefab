@@ -70,10 +70,22 @@ PrefabInstance:
     - target: {fileID: 6237534510701642402, guid: dafc5d26ca6abf54db07790a29b2e167, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: ee50294a8505774428dadb270f8b43b8, type: 3}
+      objectReference: {fileID: -2076254119, guid: 4b33b9814b42f594f9a353a5b6c97c85, type: 3}
     - target: {fileID: 6237534510701642407, guid: dafc5d26ca6abf54db07790a29b2e167, type: 3}
       propertyPath: m_Name
-      value: OceanRock Medium
+      value: OceanRock Bigger Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 6757497140711855153, guid: dafc5d26ca6abf54db07790a29b2e167, type: 3}
+      propertyPath: m_Size.x
+      value: 3.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6757497140711855153, guid: dafc5d26ca6abf54db07790a29b2e167, type: 3}
+      propertyPath: m_Size.y
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6757497140711855153, guid: dafc5d26ca6abf54db07790a29b2e167, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dafc5d26ca6abf54db07790a29b2e167, type: 3}
