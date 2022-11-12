@@ -6,7 +6,6 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class UIManager : Singleton<UIManager>
 {
     public static System.EventHandler<System.EventArgs> OnPause;
@@ -23,23 +22,12 @@ public class UIManager : Singleton<UIManager>
     public GameObject controlsPanel;
     public GameObject advOptionsPanel;
     public GameObject eventSystem;
-    public Slider sfxSlider;
-    public Slider musicSlider;
-    public Slider screenShakeSlider;
-    public Toggle bigTextToggle;
-    public Toggle autoMoveToggle;
 
     private void Awake()
     {
         InitializeSingleton();
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.OnPressPause());
-
-        sfxSlider.value = AudioManager.GetSFXVolume();
-        musicSlider.value = AudioManager.GetMusicVolume();
-
-        bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
-        autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
     }
     private void OnEnable() {
         SceneManager.activeSceneChanged += OnSceneChange;
@@ -166,10 +154,6 @@ public class UIManager : Singleton<UIManager>
 
     public void OpenOptions()
     {
-        sfxSlider.value = AudioManager.GetSFXVolume();
-        musicSlider.value = AudioManager.GetMusicVolume();
-        screenShakeSlider.value = SettingsManager.ScreenShake;
-
         if (!couldOpenMenusLastFrame)
             return;
 
@@ -195,8 +179,6 @@ public class UIManager : Singleton<UIManager>
     }
     public void OpenAdvOptions()
     {
-        bigTextToggle.isOn = SettingsManager.BigTextEnabled;
-        autoMoveToggle.isOn = SettingsManager.AutoMove;
         if (!couldOpenMenusLastFrame)
             return;
 
@@ -217,37 +199,6 @@ public class UIManager : Singleton<UIManager>
         {
             OpenOptions();
         }
-    }
-
-    public void UpdateSFXVolume()
-    {
-        SettingsManager.SFXVolume = sfxSlider.value;
-        AudioManager.SetSFXVolume(sfxSlider.value);
-    }
-
-    public void UpdateMusicVolume()
-    {
-        SettingsManager.MusicVolume = musicSlider.value;
-        AudioManager.SetMusicVolume(musicSlider.value);
-    }
-
-    public void UpdateScreenShake()
-    {
-        SettingsManager.ScreenShake = screenShakeSlider.value;
-    }
-
-    public void UpdateBigText()
-    {
-        // By the word of our noble lord, Boomo, long may he reign, these two lines must remain commented out
-        //DialogueManager.highContrastMode = value;
-        //DialogueManager.doubleSizeMode = value;
-
-        SettingsManager.BigTextEnabled = bigTextToggle.isOn;
-    }
-
-    public void UpdateAutoMove()
-    {
-        SettingsManager.AutoMove = autoMoveToggle.isOn;
     }
 
     public void LoadMainMenu()

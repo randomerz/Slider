@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 442539580, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: m_Lens.m_SensorSize.x
+      value: 1.7777778
+      objectReference: {fileID: 0}
     - target: {fileID: 380634036804812840, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -59,16 +63,40 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 380634037254267612, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 380634037254267614, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: isOnWater
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 380634037666542964, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: m_NormalizedViewPortRect.x
+      value: 0.022395834
+      objectReference: {fileID: 0}
+    - target: {fileID: 380634037666542964, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: m_NormalizedViewPortRect.y
+      value: 0.35462964
+      objectReference: {fileID: 0}
+    - target: {fileID: 380634037666542964, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: m_NormalizedViewPortRect.width
+      value: 0.16666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 380634037666542964, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: m_NormalizedViewPortRect.height
+      value: 0.16666666
       objectReference: {fileID: 0}
     - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: itemText
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 3785533694745293587, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+    - target: {fileID: 3315645012634170180, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8233378363419931551, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
