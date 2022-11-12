@@ -488,6 +488,7 @@ GameObject:
   - component: {fileID: 3255215873672854460}
   - component: {fileID: 380634037254267615}
   - component: {fileID: 380634037254267612}
+  - component: {fileID: 3512278234758974931}
   - component: {fileID: 3315645012634170180}
   - component: {fileID: 5205933783250344951}
   m_Layer: 8
@@ -533,7 +534,7 @@ MonoBehaviour:
   playerInventory: {fileID: 3255215873672854460}
   playerSpriteRenderer: {fileID: 380634036804812840}
   colliderPlayerVers: {fileID: 380634037254267612}
-  colliderBoatVers: {fileID: 3315645012634170180}
+  colliderBoatVers: {fileID: 3512278234758974931}
   boatGameObject: {fileID: 8233378363419931551}
   playerAnimator: {fileID: 380634036804812841}
   rb: {fileID: 380634037254267615}
@@ -624,6 +625,32 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.625}
   m_EdgeRadius: 0.125
+--- !u!61 &3512278234758974931
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380634037254267600}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.46875}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.5, y: 0.5625}
+  m_EdgeRadius: 0
 --- !u!60 &3315645012634170180
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1077,7 +1104,7 @@ GameObject:
   - component: {fileID: 2327666521070968836}
   - component: {fileID: 3785533694745293587}
   - component: {fileID: 8382275496679562409}
-  - component: {fileID: 3994925388311842669}
+  - component: {fileID: 5789001497117310765}
   m_Layer: 8
   m_Name: Boat
   m_TagString: Untagged
@@ -1172,34 +1199,16 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!60 &3994925388311842669
-PolygonCollider2D:
+--- !u!114 &5789001497117310765
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8233378363419931551}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
-    newSize: {x: 2, y: 2}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.5, y: -0.125}
-      - {x: -1, y: -0.6125}
-      - {x: -1, y: -0.8125}
-      - {x: 0.5, y: -0.8125}
-      - {x: 1, y: -0.3125}
-      - {x: 1, y: -0.125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8765e55f538895b4b9297a9477b65ff1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerSprite: {fileID: 380634036804812842}
