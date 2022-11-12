@@ -331,16 +331,16 @@ public class ShopDialogueManager : MonoBehaviour
             case "Turn in Treasure Chest":
                 SetDialogue(new ShopDialogue(
                     null,
-                    "Nice chest you've got there. Now let's see what's hidden inside...",
-                    TKSprite.Normal,
+                    "The One Piece is Real!",
+                    TKSprite.Happy,
                     null
                 ));
                 break;
             
-            case "Turn in Treasure Map":
+            case "Turn in Magical Gem":
                 SetDialogue(new ShopDialogue(
                     null,
-                    "A treasure map! One time someone told me \"the coconuts are the key\". Sounds crazy, but I don't know.",
+                    "A magical gem! I could enhance my drinks with some Sorcery...",
                     TKSprite.Normal,
                     null
                 ));
@@ -376,7 +376,7 @@ public class ShopDialogueManager : MonoBehaviour
             case "Turn in Rose":
                 SetDialogue(new ShopDialogue(
                     null,
-                    "Are you trying to hit on me? Sorry I have a boyfriend",
+                    "Sorry but I have a boyfriend. I'll pay so I don't owe you.",
                     TKSprite.Angry,
                     null
                 ));
