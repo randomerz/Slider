@@ -14,7 +14,6 @@ public class VillageGrid : SGrid
     [SerializeField] private GameObject ruinsFragment; // for finishing caves before village
     [SerializeField] private Transform slider8FloorTransform; // for finishing caves before village
     private Coroutine shuffleBuildUpCoroutine;
-    private bool checkCompletion = false;
     
     // [SerializeField] private string poofParticleName;
     // private GameObject poofParticles;

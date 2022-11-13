@@ -1,13 +1,9 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class OceanGrid : SGrid
 {
-    // public static OceanGrid instance;
-
-    private static bool checkCompletion = false; // TODO: serialize all these
-    private static bool isCompleted = false;
-    public static bool canRotate = true; // global variable, used in OceanArtifact
 
     public GameObject burriedGuyNPC;
     public GameObject burriedTreasure;
@@ -35,6 +31,8 @@ public class OceanGrid : SGrid
     public GameObject fog7;
     public GameObject fogIsland;
     private int fogIslandId; //tile which fog island was found on
+    
+    private bool isCompleted = false;
 
     [Header("Foggy Progress Notes")]
     [SerializeField] private List<SpriteRenderer> progressNotes;
@@ -111,6 +109,10 @@ public class OceanGrid : SGrid
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
+        checkCompletion = profile.GetBool("oceanCompletion");
+        isCompleted = profile.GetBool("oceanCompletion");
+        if (isCompleted) ((OceanArtifact)OceanArtifact._instance).SetCanRotate(false);
+
         bottleManager.puzzleSolved = SaveSystem.Current.GetBool("RJBottleDelivery");
         foggyCompleted = SaveSystem.Current.GetBool("FoggyIslandReached");
     }
@@ -137,8 +139,8 @@ public class OceanGrid : SGrid
     {
         string s = GetGridString(true);
 
-        if (CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
-            || CheckGrid.contains(s, "1...3") || CheckGrid.contains(s, "3...1"))
+        if (CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13") || 
+            CheckGrid.contains(s, "1...3") || CheckGrid.contains(s, "3...1"))
         {
             List<STile> tiles = new List<STile>();
             foreach (STile tile in grid)
@@ -229,6 +231,14 @@ public class OceanGrid : SGrid
     public void ActivateBurriedNPC()
     {
         burriedGuyNPC.SetActive(true);
+    }
+
+    public void SpawnFezziwigReward() {
+        Collectible c = GetCollectible("Magical Gem");
+        if (!PlayerInventory.Contains(c)) {
+            c.gameObject.SetActive(true);
+            AudioManager.Play("Puzzle Complete");
+        }
     }
 
     private bool BuoyConditions()
@@ -420,6 +430,19 @@ public class OceanGrid : SGrid
             progressNotes[i].sprite = emptyNote;
     }
 
+    private void SetProgressRingActive(bool active)
+    {
+        foreach (SpriteRenderer note in progressNotes)
+        {
+            note.enabled = active;
+            if (!active)
+            {
+
+                Instantiate(sparklePrefab, note.gameObject.transform.position, Quaternion.identity);
+            }
+        }
+    }
+
     // Final puzzle
 
     public void IsCompleted(Condition c)
@@ -447,6 +470,8 @@ public class OceanGrid : SGrid
         if (!checkCompletion)
         {
             checkCompletion = true;
+            SaveSystem.Current.SetBool("oceanCompletion", checkCompletion);
+
             OnGridMove += UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
@@ -460,14 +485,23 @@ public class OceanGrid : SGrid
         if (!isCompleted && IsFinalPuzzleMatching())
         {
             isCompleted = true;
-            oceanArtifact.SetCanRotate(false);
+            SaveSystem.Current.SetBool("oceanCompleted", checkCompletion);
+            ((OceanArtifact)OceanArtifact._instance).SetCanRotate(false);
 
             AudioManager.Play("Puzzle Complete");
             oceanArtifact.FlickerAllOnce();
 
             UIArtifactWorldMap.SetAreaStatus(Area.Ocean, ArtifactWorldMapArea.AreaStatus.color);
-            UIArtifactMenus._instance.OpenArtifactAndShow(2);
+
+            StartCoroutine(ShowMapAfterDelay(1));
         }
+    }
+
+    private IEnumerator ShowMapAfterDelay(float t)
+    {
+        yield return new WaitForSeconds(t);
+
+        UIArtifactMenus._instance.OpenArtifactAndShow(2);
     }
 
     protected override void UpdateButtonCompletionsHelper()
@@ -502,26 +536,5 @@ public class OceanGrid : SGrid
         treesToJungle.SetActive(false);
         CameraShake.Shake(1, 2);
         AudioManager.Play("Slide Explosion");
-    }
-
-    public void SpawnFezziwigReward() {
-        Collectible c = GetCollectible("Strawberry");
-        if (!PlayerInventory.Contains(c)) {
-            c.gameObject.SetActive(true);
-            AudioManager.Play("Puzzle Complete");
-        }
-    }
-
-    private void SetProgressRingActive(bool active)
-    {
-        foreach (SpriteRenderer note in progressNotes)
-        {
-            note.enabled = active;
-            if (!active)
-            {
-
-                Instantiate(sparklePrefab, note.gameObject.transform.position, Quaternion.identity);
-            }
-        }
     }
 }
