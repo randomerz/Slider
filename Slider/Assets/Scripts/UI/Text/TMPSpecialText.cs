@@ -109,7 +109,54 @@ public class TMPSpecialText : MonoBehaviour
     {
         int offset = 0;
 
+        // Parse text replacement first
         int i = 0;
+        while (i < text.Length)
+        {
+
+            if (text[i] == '<')
+            {
+                // find if closing > exists
+                int first_right_chev = text.IndexOf('>', i);
+                if (first_right_chev == -1)
+                {
+                    i++;
+                    continue;
+                }
+
+                // find command between the < >
+                string command = text.Substring(i + 1, first_right_chev - i - 1);
+                int commandHash = command.GetHashCode();
+                
+                if (!IsTextReplacement(commandHash))
+                {
+                    i++;
+                    continue;
+                } 
+
+                // find if closing </ > exists
+                int closing_tag = text.IndexOf("</" + command + ">", i);
+                if (closing_tag == -1)
+                {
+                    i++;
+                    continue;
+                }
+
+                string originalText = text.Substring(i + command.Length + 2, closing_tag - (i + command.Length + 2));
+                originalText = ParseCommandReplaceText(commandHash, originalText);
+
+                // remove tags
+                text = text.Substring(0, i) + 
+                       originalText + 
+                       text.Substring(closing_tag + command.Length + 3);
+                m_TextMeshPro.text = text;
+            }
+
+            i++;
+        }
+
+        // Other commands -- cannot next commands
+        i = 0;
         while (i < text.Length)
         {
             if (text[i] == '<')
@@ -171,7 +218,7 @@ public class TMPSpecialText : MonoBehaviour
                 }
 
                 string originalText = text.Substring(i + command.Length + 2, closing_tag - (i + command.Length + 2));
-                originalText = ParseCommandReplaceText(commandHash, originalText);
+                // originalText = ParseCommandReplaceText(commandHash, originalText);
 
                 // remove tags
                 text = text.Substring(0, i) + 
@@ -214,6 +261,17 @@ public class TMPSpecialText : MonoBehaviour
                 return true;
         }
         return false;
+    }
+
+    private bool IsTextReplacement(int hash)
+    {
+        // var || string
+        return hash == 696029845 || hash == -983953243;
+    }
+
+    private bool IsTextReplacement(string command)
+    {
+        return command == "var" || command == "string";
     }
 
     

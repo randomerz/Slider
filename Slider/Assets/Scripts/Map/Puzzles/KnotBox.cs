@@ -10,6 +10,7 @@ public class KnotBox : MonoBehaviour
     public LineRenderer[] lines;
 
     public ParticleSystem[] particles;
+    public Transform[] correctPositions;
 
     // Update is called once per frame
     void Update()
@@ -137,13 +138,22 @@ public class KnotBox : MonoBehaviour
 
     public void CheckParticles()
     {
-        Debug.Log("Checking particles");
+        // Debug.Log("Checking particles");
         if (CheckLines() == 0 && particles != null)
         {
             foreach (ParticleSystem ps in particles)
             {
                 ps.Play();
             }
+        }
+    }
+
+    public void SetToCorrectPositions()
+    {
+        for (int i = 0; i < knotnodes.Length; i++)
+        {
+            // knotnodes[i] is the sprite in village, so we want the parent
+            knotnodes[i].transform.parent.position = correctPositions[i].transform.position;
         }
     }
 
