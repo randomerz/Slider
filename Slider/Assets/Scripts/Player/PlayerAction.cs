@@ -67,7 +67,7 @@ public class PlayerAction : Singleton<PlayerAction>
             layerMask:dropCollidingMask
         );
 
-        Vector2 furthestPossibleDropPosition = transform.position;
+        Vector2 closestPossibleDropPosition = transform.position + maximumDropDistance * raycastDirection;
         bool collisionOccured = false;
 
         foreach (RaycastHit2D hit in hits)
@@ -79,9 +79,9 @@ public class PlayerAction : Singleton<PlayerAction>
             if ((hitCollider.gameObject != pickedItem.gameObject && !hitCollider.isTrigger) || (stile != null && !stile.isTileActive))
             {
                 collisionOccured = true;
-                if (Vector2.Distance(hit.centroid, transform.position) > Vector2.Distance(furthestPossibleDropPosition, transform.position))
+                if (Vector2.Distance(hit.centroid, transform.position) < Vector2.Distance(closestPossibleDropPosition, transform.position))
                 {
-                    furthestPossibleDropPosition = hit.centroid;
+                    closestPossibleDropPosition = hit.centroid;
                 }
             }
         }
@@ -90,10 +90,10 @@ public class PlayerAction : Singleton<PlayerAction>
         if (!collisionOccured)
         {
             Vector3 moveDir = Player.GetLastMoveDirection().normalized;
-            furthestPossibleDropPosition = transform.position + moveDir * maximumDropDistance;
+            closestPossibleDropPosition = transform.position + moveDir * maximumDropDistance;
         }
 
-        return furthestPossibleDropPosition;
+        return closestPossibleDropPosition;
     }
 
     private void Action() 
