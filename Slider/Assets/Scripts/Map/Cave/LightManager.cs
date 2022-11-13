@@ -25,10 +25,8 @@ public class LightManager : MonoBehaviour
     private int maskSizeX;
     private int maskSizeY;
 
-    [SerializeField]
-    private Texture2D heightMask;
-    [SerializeField]
-    private Texture2D lightMask;
+    [SerializeField] private Texture2D heightMask;
+    [SerializeField] private Texture2D lightMask;
 
     [SerializeField]
     private List<Material> _caveLightMaterials;

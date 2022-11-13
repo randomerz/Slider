@@ -34,7 +34,6 @@ public class CaveMossManager : MonoBehaviour
     {
         public STile stile;
     }
-    public static event System.EventHandler<MossIsGrowingArgs> MossIsGrowing;
 
     public static event System.EventHandler<MossUpdatedArgs> MossUpdated;
 
@@ -114,7 +113,6 @@ public class CaveMossManager : MonoBehaviour
         mossMap.SetColor(pos, posIsLit ? invisibleWhite : Color.white);
         recededMossMap.SetColor(pos, posIsLit ? Color.white : invisibleWhite);
         mossCollidersMap.SetColliderType(pos, posIsLit ? Tile.ColliderType.None : Tile.ColliderType.Grid);
-        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, mossMap = mossCollidersMap, cellPos = pos, isGrowing = mossStates[pos] == MossState.GROWN });
     }
 
     private void UpdateMoss()
@@ -196,8 +194,6 @@ public class CaveMossManager : MonoBehaviour
     {
         //L: Enable the moss collider
         mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
-        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, mossMap = mossCollidersMap, cellPos = pos, isGrowing = true });
-
         while (mossMap.GetColor(pos).a < 1.0f)
         {
 
@@ -222,6 +218,5 @@ public class CaveMossManager : MonoBehaviour
         //L: Disable the moss collider
         mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
         mossCoroutines.Remove(pos);
-        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, mossMap = mossCollidersMap, cellPos = pos, isGrowing = false });
     }
 }
