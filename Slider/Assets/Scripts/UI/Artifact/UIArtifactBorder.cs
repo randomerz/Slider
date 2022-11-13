@@ -11,7 +11,9 @@ public class UIArtifactBorder : MonoBehaviour
 
     private void OnEnable() 
     {
-        shouldFlickerOnEnable = SGrid.Current.CheckCompletion;
+        bool checkingCompletion = SGrid.Current.CheckCompletion;
+        bool areaCompleted = UIArtifactWorldMap.GetAreaStatus(SGrid.Current.MyArea) == ArtifactWorldMapArea.AreaStatus.color;
+        shouldFlickerOnEnable = checkingCompletion && !areaCompleted;
         CheckArtifactBorder();
     }
 

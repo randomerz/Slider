@@ -32,6 +32,8 @@ public class OceanGrid : SGrid
     public GameObject fogIsland;
     private int fogIslandId; //tile which fog island was found on
     
+    [SerializeField] private Volcano volcano;
+
     private bool isCompleted = false;
 
     [Header("Foggy Progress Notes")]
@@ -110,11 +112,13 @@ public class OceanGrid : SGrid
     {
         base.Load(profile);
         checkCompletion = profile.GetBool("oceanCompletion");
-        isCompleted = profile.GetBool("oceanCompletion");
+        isCompleted = profile.GetBool("oceanCompleted");
         if (isCompleted) ((OceanArtifact)OceanArtifact._instance).SetCanRotate(false);
 
-        bottleManager.puzzleSolved = SaveSystem.Current.GetBool("RJBottleDelivery");
-        foggyCompleted = SaveSystem.Current.GetBool("FoggyIslandReached");
+        treesToJungle.SetActive(profile.GetBool("oceanTreesRemoved"));
+
+        bottleManager.puzzleSolved = profile.GetBool("RJBottleDelivery");
+        foggyCompleted = profile.GetBool("FoggyIslandReached");
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
@@ -209,16 +213,11 @@ public class OceanGrid : SGrid
     {
         if (IsVolcanoSet())
         {
-            Collectible c = GetCollectible("Rock");
-
-            if (!PlayerInventory.Contains(c))
+            if (!SaveSystem.Current.GetBool("oceanVolcanoErupted"))
             {
-                c.gameObject.SetActive(true);
                 AudioManager.Play("Puzzle Complete");
 
-                // have some particle effects and propper stuff here
-                // CameraShake.Shake(0.75f, 5); 
-                AudioManager.Play("Slide Explosion");
+                volcano.Erupt();
             }
         }
     }
@@ -533,6 +532,7 @@ public class OceanGrid : SGrid
 
     public void ClearTreesToJungle() // called in ShopDialogueManager
     {
+        SaveSystem.Current.SetBool("oceanTreesRemoved", true);
         treesToJungle.SetActive(false);
         CameraShake.Shake(1, 2);
         AudioManager.Play("Slide Explosion");

@@ -7,25 +7,36 @@ using UnityEngine.InputSystem;
 
 public class ShopDialogueManager : MonoBehaviour
 {
-    // TODO: serialize these somehow
     private bool canOverrideDialogue = true;
-    public bool isFirstTime = true;
-    private bool isVisiting = false;
     
-    private TextMeshProUGUI currentText;
+    private TMPTextTyper currentTyperText;
+    private TMPSpecialText currentSpecialText;
     private ShopDialogue currentDialogue;
-    private Coroutine typingCoroutine;
+    // private Coroutine typingCoroutine;
 
     public enum TKSprite { // tavernkeep sprite
         Normal,
         Happy,
         Question,
         Angry,
+        None,
     }
 
     [Header("References")]
     public ShopManager shopManager;
     public Image tkImage;
+
+    // for typing
+    public TMPTextTyper mainTyperText;
+    public TMPSpecialText mainSpecialText;
+    public TMPTextTyper buyTyperText;
+    public TMPSpecialText buySpecialText;
+    public TMPTextTyper talkTyperText;
+    public TMPSpecialText talkSpecialText;
+    public TMPTextTyper dialogueTyperText;
+    public TMPSpecialText dialogueSpecialText;
+
+    // for updating font styles
     public TextMeshProUGUI mainText;
     public TextMeshProUGUI buyText;
     public TextMeshProUGUI talkText;
@@ -35,6 +46,7 @@ public class ShopDialogueManager : MonoBehaviour
     public Sprite tkHappy;
     public Sprite tkQuestion;
     public Sprite tkAngry;
+    public Sprite tkNone;
     
     public class ShopDialogue
     {
@@ -65,14 +77,22 @@ public class ShopDialogueManager : MonoBehaviour
         // I thought this was safer than changing the controls to only trigger on press.
         if (context.control.IsPressed())
         {
-            if (typingCoroutine != null)
+            if (currentTyperText.TrySkipText())
             {
-                FinishTyping();
+                // skip typing!
             }
             else
             {
                 FinishAndAction();
             }
+            // if (typingCoroutine != null)
+            // {
+            //     FinishTyping();
+            // }
+            // else
+            // {
+            //     FinishAndAction();
+            // }
         }
     }
 
@@ -82,36 +102,45 @@ public class ShopDialogueManager : MonoBehaviour
     {
         dialogue.onStart?.Invoke();
 
-        TextMeshProUGUI myText = null;
+        TMPTextTyper typerText = null;
+        TMPSpecialText specialText = null;
         switch (shopManager.UIState)
         {
             case ShopManager.States.Main:
-                myText = mainText;
+                typerText = mainTyperText;
+                specialText = mainSpecialText;
                 break;
             case ShopManager.States.Buy:
-                myText = buyText;
+                typerText = buyTyperText;
+                specialText = buySpecialText;
                 break;
             case ShopManager.States.Talk:
-                myText = talkText;
+                typerText = talkTyperText;
+                specialText = talkSpecialText;
                 break;
             case ShopManager.States.Dialogue:
-                myText = dialogueText;
+                typerText = dialogueTyperText;
+                specialText = dialogueSpecialText;
                 break;
         }
-        if (myText == null)
+        if (typerText == null)
         {
             Debug.LogError("Tried SetDialogue when UIState was None!");
             return;
         }
 
-        currentText = myText;
+        currentTyperText = typerText;
+        currentSpecialText = specialText;
         currentDialogue = dialogue;
         tkImage.sprite = GetSprite(dialogue.tkSprite);
 
-        if (typingCoroutine != null)
-            StopCoroutine(typingCoroutine);
+        currentSpecialText.StopEffects();
+        currentTyperText.StartTyping(dialogue.text);
 
-        typingCoroutine = StartCoroutine(TypeDialogue());
+        // if (typingCoroutine != null)
+        //     StopCoroutine(typingCoroutine);
+
+        // typingCoroutine = StartCoroutine(TypeDialogue());
     }
 
     private Sprite GetSprite(TKSprite tkSprite)
@@ -126,42 +155,44 @@ public class ShopDialogueManager : MonoBehaviour
                 return tkQuestion;
             case TKSprite.Angry:
                 return tkAngry;
+            case TKSprite.None:
+                return tkNone;
         }
         return null;
     }
 
-    private IEnumerator TypeDialogue()
-    {
-        if (currentText == null || currentDialogue == null)
-            Debug.LogError("Current Text or Current Dialogue are null!");
+    // private IEnumerator TypeDialogue()
+    // {
+    //     if (currentText == null || currentDialogue == null)
+    //         Debug.LogError("Current Text or Current Dialogue are null!");
 
-        currentText.text = "";
+    //     currentText.text = "";
 
-        char[] charArr = currentDialogue.text.ToCharArray();
-        for (int i = 0; i < currentDialogue.text.Length; i++)
-        {
-            char nextChar = charArr[i];
-            currentText.text += nextChar;
+    //     char[] charArr = currentDialogue.text.ToCharArray();
+    //     for (int i = 0; i < currentDialogue.text.Length; i++)
+    //     {
+    //         char nextChar = charArr[i];
+    //         currentText.text += nextChar;
 
-            if (GameSettings.punctuation.IndexOf(nextChar) != -1)
-                yield return new WaitForSeconds(GameSettings.textSpeed);
+    //         if (GameSettings.punctuation.IndexOf(nextChar) != -1)
+    //             yield return new WaitForSeconds(GameSettings.textSpeed);
 
-            yield return new WaitForSeconds(GameSettings.textSpeed);
-        }
+    //         yield return new WaitForSeconds(GameSettings.textSpeed);
+    //     }
 
-        FinishTyping();
-    }
+    //     FinishTyping();
+    // }
 
-    // if typing and press 'E'
-    private void FinishTyping()
-    {
-        if (currentText == null || currentDialogue == null)
-            Debug.LogError("Current Text or Current Dialogue are null!");
+    // // if typing and press 'E'
+    // private void FinishTyping()
+    // {
+    //     if (currentText == null || currentDialogue == null)
+    //         Debug.LogError("Current Text or Current Dialogue are null!");
 
-        StopCoroutine(typingCoroutine);
-        typingCoroutine = null;
-        currentText.text = currentDialogue.text;
-    }
+    //     StopCoroutine(typingCoroutine);
+    //     typingCoroutine = null;
+    //     currentText.text = currentDialogue.text;
+    // }
 
     // if not typing and press 'E'
     private void FinishAndAction()
@@ -186,7 +217,7 @@ public class ShopDialogueManager : MonoBehaviour
         if (!canOverrideDialogue)
             return;
 
-        if (isFirstTime)
+        if (!SaveSystem.Current.GetBool("oceanHasTalkedToBob"))
         {
             UpdateDialogue("First Time");
             return;
@@ -198,7 +229,7 @@ public class ShopDialogueManager : MonoBehaviour
             return;
         }
 
-        if (isVisiting) 
+        if (SaveSystem.Current.GetBool("oceanIsVisiting")) 
         {
             UpdateDialogue("Visiting");
             return;
@@ -284,7 +315,7 @@ public class ShopDialogueManager : MonoBehaviour
                     TKSprite.Happy,
                     () => {
                         canOverrideDialogue = true;
-                        isFirstTime = false;
+                        SaveSystem.Current.SetBool("oceanHasTalkedToBob", true);
                         UpdateDialogue("No Anchor");
                     }
                 ))
@@ -398,17 +429,31 @@ public class ShopDialogueManager : MonoBehaviour
                         shopManager.OpenDialoguePanel();
                         (SGrid.Current as OceanGrid).StartFinalChallenge();
                     },
+                    "Never expected it, pal, but...",
+                    TKSprite.Normal,
+                    () => {
+                        SetDialogue(new ShopDialogue(
+                    null,
                     "Looks like you've about explored the whole darned ocean. Time to put things in their rightful places.",
+                    TKSprite.Question,
+                    () => {
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "I've seen what you can do with that tablet of yours. If you can put our island back together, I can help you get to Canopy Town.",
                     TKSprite.Normal,
                     () => {
                         shopManager.OpenMainPanel();
 
                         SetDialogue(new ShopDialogue(
                     null,
-                    "Help with this, and I'll get you access to the next town over.",
+                    "I'll bust out the axe and cut the trees above the tavern.",
                     TKSprite.Happy,
                     () => {
                         canOverrideDialogue = true;
+                    }
+                ));
+                    }
+                ));
                     }
                 ));
                     }
@@ -426,18 +471,92 @@ public class ShopDialogueManager : MonoBehaviour
                     "Wish you could stay, but something tells me you have places to be.",
                     TKSprite.Normal,
                     () => {
-                        // Cutscene stuff???
-                        (SGrid.Current as OceanGrid).ClearTreesToJungle();
-                        shopManager.OpenMainPanel();
+                        // He disappear
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "...",
+                    TKSprite.None,
+                    () => {
+                        dialogueText.fontStyle = FontStyles.Italic;
 
-                        isVisiting = true;
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "> You watch as he leaves, with haste and his dull axe.",
+                    TKSprite.None,
+                    () => {
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "> He takes large strides, his massive figure easily pushing the tavern doors open.",
+                    TKSprite.None,
+                    () => {
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "> A moment passes as you think about him cutting down the trees blocking the path. You sneak a peak through the window.",
+                    TKSprite.None,
+                    () => {
+                        (SGrid.Current as OceanGrid).ClearTreesToJungle();
+
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "*CHOP, CHOP, CHOP*",
+                    TKSprite.None,
+                    () => {
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "> He cuts them down... so easily.",
+                    TKSprite.None,
+                    () => {
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "> Of course, he'd wipe some sweat from his brow. But this was of no effort to a man like Bob.",
+                    TKSprite.None,
+                    () => {
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "> He doesn't notice you watching through the window as he makes his way back in.",
+                    TKSprite.None,
+                    () => {
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "> Axe on shoulder, he pushes the doors open and hops over the bar counter.",
+                    TKSprite.None,
+                    () => {
+                        dialogueText.fontStyle = FontStyles.Normal;
 
                         SetDialogue(new ShopDialogue(
                     null,
                     "Safe travels! And welcome to the Jungle.",
                     TKSprite.Happy,
                     () => {
+                        shopManager.OpenMainPanel();
+                        SaveSystem.Current.SetBool("oceanIsVisiting", true);
+
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "Bring me back a souvenier some time.",
+                    TKSprite.Question,
+                    () => {
                         canOverrideDialogue = true;
+                    }
+                ));
+                    }
+                ));
+                    }
+                ));
+                    }
+                ));
+                    }
+                ));
+                    }
+                ));
+                    }
+                ));
+                    }
+                ));
+                    }
+                ));
+                    }
+                ));
                     }
                 ));
                     }
@@ -483,8 +602,23 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "I run a tavern and pawn shop. Bring me anything interesting and you'll make a pretty penny",
+                    "I run a tavern and pawn shop. Bring me anything interesting and you'll make a pretty penny.",
                     TKSprite.Normal,
+                    () => {
+                        canOverrideDialogue = true;
+                        shopManager.OpenTalkPanel();
+                    }
+                ));
+                break;
+            
+            case "A Budding Romance":
+                SetDialogue(new ShopDialogue(
+                    () => { 
+                        canOverrideDialogue = false;
+                        shopManager.OpenDialoguePanel();
+                    },
+                    "I don't like to gossip, but... that Romeo REALLY wants to get with Juliet. Maybe you can wingman and get his message across.",
+                    TKSprite.Question,
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
@@ -498,7 +632,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Heard the Black Trident broke upon some rocks earlier this week. Might be worth searching the area.",
+                    "Heard the Black Trident broke upon some rocks earlier today. Poor fellow. Might be worth searching the area.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
@@ -507,14 +641,14 @@ public class ShopDialogueManager : MonoBehaviour
                 ));
                 break;
             
-            case "Down with the Ship":
+            case "Magical Spells":
                 SetDialogue(new ShopDialogue(
                     () => { 
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Privateer Pete's ship took some damage on their last voyage. Guiding it back to shore is sure to secure you some booty.",
-                    TKSprite.Normal,
+                    "Some fellow, Fezziwig, been messing around with some magics. This whole world's gone a bit crazy recently, hasn't it?",
+                    TKSprite.Question,
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
@@ -550,8 +684,8 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Local fisherman has his buoys in a mess. Can't say this is the first time either.",
-                    TKSprite.Normal,
+                    "Pierre the fisherman has his buoys in a mess. Can't say this is the first time either.",
+                    TKSprite.Angry,
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
@@ -715,7 +849,7 @@ public class ShopDialogueManager : MonoBehaviour
                     TKSprite.Normal,
                     () => SetDialogue(new ShopDialogue(
                     null,
-                    "Sometimes I wonder if there's anything for us in the stars",
+                    "Sometimes I wonder if there's anything for us in the stars.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;

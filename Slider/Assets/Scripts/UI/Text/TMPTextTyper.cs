@@ -286,7 +286,7 @@ public class TMPTextTyper : MonoBehaviour
     }
 
     /// <summary>
-    /// Tries to fully type out the current text being typed.
+    /// Tries to fully type out the current text being typed. Returns true if text is skipped, false if it isn't.
     /// </summary>
     /// <returns>Returns true if text is skipped, false if it isn't.</returns>
     public bool TrySkipText()
