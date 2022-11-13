@@ -56,7 +56,6 @@ public class CaveMossManager : MonoBehaviour
         SGridAnimator.OnSTileMoveEnd += UpdateMoss;
         SGrid.OnSTileEnabled += UpdateMoss;
         CaveLight.OnLightSwitched += UpdateMoss;
-        LightManager.OnLightMaskChanged += UpdateMoss;
     }
 
     private void OnDisable()
@@ -65,7 +64,6 @@ public class CaveMossManager : MonoBehaviour
         SGridAnimator.OnSTileMoveEnd -= UpdateMoss;
         SGrid.OnSTileEnabled -= UpdateMoss;
         CaveLight.OnLightSwitched -= UpdateMoss;
-        LightManager.OnLightMaskChanged -= UpdateMoss;
     }
 
     private void Update()
