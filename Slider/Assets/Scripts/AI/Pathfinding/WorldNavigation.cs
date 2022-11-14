@@ -73,22 +73,6 @@ public class WorldNavigation : MonoBehaviour
 
     private void HandleMossUpdated(object sender, CaveMossManager.MossUpdatedArgs e)
     {
-        /* This isn't consistent for some stupid reason.
-        if (validPtsStiles.ContainsKey(e.stile))
-        {
-            if (e.isGrowing)
-            {
-                validPtsStiles[e.stile].Remove((Vector2Int) e.pos);
-                Debug.Log("Removed: " + e.pos);
-            }
-            else
-            {
-                Debug.Log("Added: " + e.pos);
-                validPtsStiles[e.stile].Add((Vector2Int)e.pos);
-            }
-        }
-        */
-
         validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
         OnValidPtsChanged?.Invoke(this, new System.EventArgs());
     }
