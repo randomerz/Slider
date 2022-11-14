@@ -73,6 +73,7 @@ public class PlayerInventory : MonoBehaviour
 
     public void SetHasCollectedAnchor(bool value)
     {
+        SaveSystem.Current.SetBool("playerHasCollectedAnchor", value);
         hasCollectedAnchor = value;
     }
 

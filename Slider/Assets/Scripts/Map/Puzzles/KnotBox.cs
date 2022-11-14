@@ -70,8 +70,8 @@ public class KnotBox : MonoBehaviour
                 next = 0;
             } 
             //RaycastHit2D hit = Physics2D.Raycast(a + 0.43f*dir.normalized,dir,(dir.magnitude-0.877f), 2048);
-            RaycastHit2D[] hits = Physics2D.RaycastAll(a,dir,dir.magnitude, 4096);
-            foreach(RaycastHit2D hit in hits){
+            RaycastHit2D[] hits = Physics2D.RaycastAll(a, dir, dir.magnitude, 4096);
+            foreach(RaycastHit2D hit in hits) {
                 if(!(GameObject.ReferenceEquals(knotnodes[i], hit.collider.gameObject) || GameObject.ReferenceEquals(knotnodes[next], hit.collider.gameObject))){
                     lines[i].startColor = bad;
                     lines[i].endColor = bad;

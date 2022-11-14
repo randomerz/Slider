@@ -85,14 +85,6 @@ public class ShopDialogueManager : MonoBehaviour
             {
                 FinishAndAction();
             }
-            // if (typingCoroutine != null)
-            // {
-            //     FinishTyping();
-            // }
-            // else
-            // {
-            //     FinishAndAction();
-            // }
         }
     }
 
@@ -136,11 +128,6 @@ public class ShopDialogueManager : MonoBehaviour
 
         currentSpecialText.StopEffects();
         currentTyperText.StartTyping(dialogue.text);
-
-        // if (typingCoroutine != null)
-        //     StopCoroutine(typingCoroutine);
-
-        // typingCoroutine = StartCoroutine(TypeDialogue());
     }
 
     private Sprite GetSprite(TKSprite tkSprite)
@@ -160,39 +147,6 @@ public class ShopDialogueManager : MonoBehaviour
         }
         return null;
     }
-
-    // private IEnumerator TypeDialogue()
-    // {
-    //     if (currentText == null || currentDialogue == null)
-    //         Debug.LogError("Current Text or Current Dialogue are null!");
-
-    //     currentText.text = "";
-
-    //     char[] charArr = currentDialogue.text.ToCharArray();
-    //     for (int i = 0; i < currentDialogue.text.Length; i++)
-    //     {
-    //         char nextChar = charArr[i];
-    //         currentText.text += nextChar;
-
-    //         if (GameSettings.punctuation.IndexOf(nextChar) != -1)
-    //             yield return new WaitForSeconds(GameSettings.textSpeed);
-
-    //         yield return new WaitForSeconds(GameSettings.textSpeed);
-    //     }
-
-    //     FinishTyping();
-    // }
-
-    // // if typing and press 'E'
-    // private void FinishTyping()
-    // {
-    //     if (currentText == null || currentDialogue == null)
-    //         Debug.LogError("Current Text or Current Dialogue are null!");
-
-    //     StopCoroutine(typingCoroutine);
-    //     typingCoroutine = null;
-    //     currentText.text = currentDialogue.text;
-    // }
 
     // if not typing and press 'E'
     private void FinishAndAction()
@@ -352,10 +306,25 @@ public class ShopDialogueManager : MonoBehaviour
             
             case "Turn in Anchor":
                 SetDialogue(new ShopDialogue(
-                    null,
+                    () => { 
+                        canOverrideDialogue = false;
+                        SaveSystem.Current.SetBool("oceanBobNormal", true);
+                        shopManager.OpenDialoguePanel();
+                    },
                     "Aye, that's a solid tool there. Here, have some coins on the house. Ask me about jobs and I can help you get started.",
                     TKSprite.Happy,
-                    null
+                    () => {
+                        shopManager.OpenMainPanel();
+
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "There's a whole world out there to explore.",
+                    TKSprite.Happy,
+                    () => {
+                        canOverrideDialogue = true;
+                    }
+                ));
+                    }
                 ));
                 break;
             

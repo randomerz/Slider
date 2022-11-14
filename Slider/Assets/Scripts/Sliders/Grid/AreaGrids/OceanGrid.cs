@@ -9,6 +9,7 @@ public class OceanGrid : SGrid
     public GameObject burriedTreasure;
     public ParticleSystem burriedTreasureParticles;
     public KnotBox knotBox;
+    private bool knotBoxEnabledLastFrame;
     public BottleManager bottleManager;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
@@ -98,7 +99,10 @@ public class OceanGrid : SGrid
 
         //Get tile the player is on. if it change from last update, find the direction the player moved. Add direction to list of moves. put list in checkfoggy. only why on fog tiles
         updatePlayerMovement();
-
+    }
+    
+    private void LateUpdate() {
+        knotBoxEnabledLastFrame = knotBox.isActiveAndEnabled;
     }
 
     public override void Save()
@@ -242,7 +246,12 @@ public class OceanGrid : SGrid
 
     private bool BuoyConditions()
     {
-        return (AllBuoy() && knotBox.isActiveAndEnabled && (knotBox.CheckLines() == 0));
+        return (
+            AllBuoy() && 
+            knotBox.isActiveAndEnabled && 
+            knotBoxEnabledLastFrame &&
+            knotBox.CheckLines() == 0
+        );
     }
 
     public void BuoyAllFound(Condition c)
@@ -258,6 +267,11 @@ public class OceanGrid : SGrid
 
     public void knotBoxEnabled(Condition c)
     {
+        c.SetSpec(knotBox.isActiveAndEnabled && AllBuoy());
+    }
+
+    public void knotBoxDisabled(Condition c)
+    {
         c.SetSpec(!knotBox.isActiveAndEnabled && AllBuoy());
     }
 
@@ -271,6 +285,7 @@ public class OceanGrid : SGrid
         if (AllBuoy())
         {
             knotBox.enabled = !knotBox.enabled;
+            knotBox.CheckLines();
             if (knotBox.enabled)
             {
                 foreach (GameObject knotnode in knotBox.knotnodes)

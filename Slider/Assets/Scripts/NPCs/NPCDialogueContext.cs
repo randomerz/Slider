@@ -150,12 +150,19 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         display.SetMessagePing(!CurrDchainIsEmpty());
         if (dialogueBoxIsActive && playerInDialogueTrigger)
         {
+            if (context.CurrCond.alwaysStartFromBeginning)
+            {
+                CurrDchainIndex = 0;
+                cachedDchainIndices[context.CurrCondIndex] = 0;
+            }
+
             TypeCurrentDialogue();
         }
     }
 
     public void TypeCurrentDialogue()
     {
+        Debug.Log("typing current dialogue");
         if (DialogueEnabled && !CurrDchainIsEmpty())
         {
             //Debug.Log(context.CurrCond.GetDialogueString(CurrDchainIndex));
@@ -174,6 +181,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         {
             if (waitingForPlayerAction)
             {
+                Debug.Log("Player action input!");
                 waitingForPlayerAction = false;
                 TypeNextDialogueInChain();
             }
@@ -221,6 +229,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 
     private void HandleDialogueFinished()
     {
+        Debug.Log("handling dialogue finished");
         isTypingDialogue = false;
 
         if (!CurrDchainIsEmpty())
@@ -229,7 +238,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
             {
                 waitingForPlayerAction = true;
             }
-            else if (!CurrentDialogue().advanceDialogueManually)
+            else if (!CurrentDialogue().advanceDialogueManually && CurrentDialogue().delayAfterFinishedTyping != 0)
             {
                 float delay = CurrentDialogue().delayAfterFinishedTyping;
                 delayBeforeNextDialogueCoroutine = context.StartCoroutine(SetNextDialogueInChainAfterDelay(delay));
