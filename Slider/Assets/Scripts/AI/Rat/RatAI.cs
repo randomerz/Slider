@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class RatAI : MonoBehaviour
 {
@@ -120,14 +121,14 @@ public class RatAI : MonoBehaviour
             StealPiece();
     }
 
-    private void OnEnable()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        CaveMossManager.MossIsGrowing += DieOnMoss;
+        CheckDeathByMoss(collision);
     }
 
-    private void OnDisable()
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        CaveMossManager.MossIsGrowing -= DieOnMoss;
+        CheckDeathByMoss(collision);
     }
 
     private void Update()
@@ -141,7 +142,10 @@ public class RatAI : MonoBehaviour
             navAgent.StopPath();
         }
 
-        transform.up = rb.velocity.normalized;
+        if (rb.velocity.magnitude > 0.1f)
+        {
+            transform.up = rb.velocity.normalized;
+        }
     }
 
     private void FixedUpdate()
@@ -162,20 +166,23 @@ public class RatAI : MonoBehaviour
         anim.SetFloat("speed", rb.velocity.magnitude);
     }
 
-
-
     public void SetDirection(Vector2 dir)
     {
         _dirFacing = dir.normalized;
         transform.up = new Vector3(_dirFacing.x, _dirFacing.y, 0);
     }
 
-    private void DieOnMoss(object sender, CaveMossManager.MossIsGrowingArgs e)
+    private void CheckDeathByMoss(Collision2D collision)
     {
-        Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
-        if (posAsInt.Equals(TileUtil.WorldToTileCoords(e.mossMap.CellToWorld(e.cellPos))))
+        if (collision.collider.CompareTag("Moss"))
         {
-            Die();
+            Tilemap mossColliders = collision.collider.GetComponent<Tilemap>();
+            Vector3Int ratCellPos = mossColliders.WorldToCell(transform.position);
+            Tile.ColliderType colliderType = mossColliders.GetColliderType(ratCellPos);
+            if (colliderType == Tile.ColliderType.Grid)
+            {
+                Die();
+            }
         }
     }
 
