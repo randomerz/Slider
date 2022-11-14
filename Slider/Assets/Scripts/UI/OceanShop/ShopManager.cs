@@ -223,7 +223,7 @@ public class ShopManager : Singleton<ShopManager>, ISavable
             shopDialogueManager.UpdateDialogue("Turn in Multiple Items");
         }
 
-        if (totalCreditCount == 7 && !startedFinalQuest)
+        if (totalCreditCount == 8 && !startedFinalQuest)
         {
             startedFinalQuest = true;
         }

@@ -115,7 +115,7 @@ public class OceanGrid : SGrid
         isCompleted = profile.GetBool("oceanCompleted");
         if (isCompleted) ((OceanArtifact)OceanArtifact._instance).SetCanRotate(false);
 
-        treesToJungle.SetActive(profile.GetBool("oceanTreesRemoved"));
+        treesToJungle.SetActive(!profile.GetBool("oceanTreesRemoved"));
 
         bottleManager.puzzleSolved = profile.GetBool("RJBottleDelivery");
         foggyCompleted = profile.GetBool("FoggyIslandReached");

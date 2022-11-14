@@ -362,7 +362,7 @@ public class ShopDialogueManager : MonoBehaviour
             case "Turn in Treasure Chest":
                 SetDialogue(new ShopDialogue(
                     null,
-                    "The One Piece is Real!",
+                    "A treasure chest? The One Piece is Real!",
                     TKSprite.Happy,
                     null
                 ));
