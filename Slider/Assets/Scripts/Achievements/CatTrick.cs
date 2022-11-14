@@ -1,10 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class CatTrick : MonoBehaviour
 {
     public Collider2D detectionZone;
+
+    public TextMeshProUGUI text;
+    public TextMeshProUGUI backgroundText;
 
     public Item mittens;
     public Item autumn;
@@ -41,6 +45,22 @@ public class CatTrick : MonoBehaviour
                 hasTofu = i.itemName == tofu.itemName || hasTofu;
             }
         }
+
+        UpdateText();
+    }
+
+    public void UpdateText()
+    {
+        int count = 0;
+        if (hasMittens) count += 1;
+        if (hasAutumn) count += 1;
+        if (hasTofu) count += 1;
+
+        text.text = $"{count}/3";
+        backgroundText.text = $"{count}/3";
+
+        text.gameObject.SetActive(0 < count && count < 3);
+        backgroundText.gameObject.SetActive(0 < count && count < 3);
     }
 
     public void CheckMittens(Condition c)

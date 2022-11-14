@@ -134,6 +134,7 @@ public class ShopManager : Singleton<ShopManager>, ISavable
         for (int i = 0; i < wasSliderOrDrinkCollectibleBought.Length; i++)
         {
             SaveSystem.Current.SetBool($"oceanWasSliderBought{i}", wasSliderOrDrinkCollectibleBought[i]);
+            // Debug.Log($"Was collectible {i} bought: " + wasSliderOrDrinkCollectibleBought[i]);
         }
     }
 
@@ -154,7 +155,10 @@ public class ShopManager : Singleton<ShopManager>, ISavable
         for (int i = 0; i < wasSliderOrDrinkCollectibleBought.Length; i++)
         {
             wasSliderOrDrinkCollectibleBought[i] = profile.GetBool($"oceanWasSliderBought{i}");
+            // Debug.Log($"Was collectible {i} bought: " + wasSliderOrDrinkCollectibleBought[i]);
         }
+
+        UpdateBuyButtons();
     }
     
     #endregion

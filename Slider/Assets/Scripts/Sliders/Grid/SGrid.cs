@@ -136,7 +136,7 @@ public void SetGrid(int[,] puzzle)
         STile next = null;
 
         // We might not need this getunderstile stuff anymore now that we actually child player to STiles!
-        STile playerSTile = Player.GetStileUnderneath();
+        STile playerSTile = Player.GetInstance().GetSTileUnderneath();
         Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
 
         for (int x = 0; x < Width; x++)

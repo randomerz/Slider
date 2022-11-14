@@ -21,6 +21,7 @@ public class Player : Singleton<Player>, ISavable
     [SerializeField] private Collider2D colliderPlayerVers;
     [SerializeField] private Collider2D colliderBoatVers;
     [SerializeField] private GameObject boatGameObject;
+    [SerializeField] private Transform boatGetSTileUnderneathTransform;
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Rigidbody2D rb;
 
@@ -28,7 +29,7 @@ public class Player : Singleton<Player>, ISavable
 
     private float moveSpeedMultiplier = 1;
     private bool canMove = true;
-    private bool collision = true;
+    private bool noClipEnabled = true;
 
     private bool isInHouse = false;
 
@@ -88,38 +89,40 @@ public class Player : Singleton<Player>, ISavable
     {
         if (canMove)
         {
-            //currently checks everything in the default layer, also does not hit triggers
-            Vector3 target = transform.position + moveSpeed * moveSpeedMultiplier * inputDir.normalized * Time.deltaTime;
-            if (!collision)
+            // we offset where the raycast starts because when you're in the boat, the collider is at the boat not the player
+            Vector3 basePosition = GetPlayerTransformRaycastPosition();
+            Vector3 raycastOffset = transform.position - basePosition;
+            Vector3 target = basePosition + moveSpeed * moveSpeedMultiplier * inputDir.normalized * Time.deltaTime;
+            if (noClipEnabled)
             {
-                transform.position = target;
+                transform.position = target + raycastOffset;
             }
             else
             {
                 Physics2D.queriesHitTriggers = false;
-                RaycastHit2D raycasthit = Physics2D.Raycast(transform.position, inputDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
+                RaycastHit2D raycasthit = Physics2D.Raycast(basePosition, inputDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
 
                 if (raycasthit.collider == null || raycasthit.collider.Equals(this.GetComponent<BoxCollider2D>()))
                 {
-                    transform.position = target;
+                    transform.position = target + raycastOffset;
                 }
                 else
                 {
                     Vector3 testMoveDir = new Vector3(inputDir.x, 0f).normalized;
-                    target = transform.position + moveSpeed * moveSpeedMultiplier * testMoveDir * Time.deltaTime;
-                    RaycastHit2D raycasthitX = Physics2D.Raycast(transform.position, testMoveDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
+                    target = basePosition + moveSpeed * moveSpeedMultiplier * testMoveDir * Time.deltaTime;
+                    RaycastHit2D raycasthitX = Physics2D.Raycast(basePosition, testMoveDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
                     if (raycasthitX.collider == null)
                     {
-                        transform.position = target;
+                        transform.position = target + raycastOffset;
                     }
                     else
                     {
                         testMoveDir = new Vector3(0f, inputDir.y).normalized;
-                        target = transform.position + moveSpeed * moveSpeedMultiplier * testMoveDir * Time.deltaTime;
-                        RaycastHit2D raycasthitY = Physics2D.Raycast(transform.position, testMoveDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
+                        target = basePosition + moveSpeed * moveSpeedMultiplier * testMoveDir * Time.deltaTime;
+                        RaycastHit2D raycasthitY = Physics2D.Raycast(basePosition, testMoveDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
                         if (raycasthitY.collider == null)
                         {
-                            transform.position = target;
+                            transform.position = target + raycastOffset;
                         }
                     }
                 }
@@ -128,7 +131,7 @@ public class Player : Singleton<Player>, ISavable
         }
 
         // updating childing
-        currentStileUnderneath = SGrid.GetSTileUnderneath(transform, currentStileUnderneath);
+        currentStileUnderneath = GetSTileUnderneath();
         // Debug.Log("Currently on: " + currentStileUnderneath);
 
         if (currentStileUnderneath != null)
@@ -186,7 +189,7 @@ public class Player : Singleton<Player>, ISavable
 
         SaveSystem.Current.SetSerializeablePlayer(sp);
 
-        //Debug.Log("Saved player position to: " + pos);
+        // Debug.Log("Saved player position to: " + pos);
     }
 
     private Vector3 GetSavePosition()
@@ -198,7 +201,7 @@ public class Player : Singleton<Player>, ISavable
         Vector3 localPos = transform.localPosition;
 
         // STile postitions
-        STile stile = SGrid.GetStileUnderneath(gameObject);
+        STile stile = GetSTileUnderneath();
         if (stile == null)
         {
             return pos;
@@ -206,7 +209,7 @@ public class Player : Singleton<Player>, ISavable
         else
         {
             Vector2Int stileEndCoords = GetEndStileLocation(stile.islandId);
-            Vector3 stilePos = SGrid.GetStileUnderneath(gameObject).calculatePosition(stileEndCoords.x, stileEndCoords.y);
+            Vector3 stilePos = stile.calculatePosition(stileEndCoords.x, stileEndCoords.y);
 
             return stilePos + localPos;
         }
@@ -243,14 +246,14 @@ public class Player : Singleton<Player>, ISavable
 
         // Player
 
+        SetIsOnWater(sp.isOnWater);
+        SetIsInHouse(sp.isInHouse);
+
         // Update position
         transform.SetParent(null);
         transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
-        STile stileUnderneath = SGrid.GetSTileUnderneath(transform, null);
+        STile stileUnderneath = GetSTileUnderneath();
         transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
-
-        SetIsOnWater(sp.isOnWater);
-        SetIsInHouse(sp.isInHouse);
 
         // PlayerInventory
         playerInventory.SetCollectiblesList(sp.collectibles);
@@ -285,9 +288,9 @@ public class Player : Singleton<Player>, ISavable
 
     public void toggleCollision()
     {
-        _instance.collision = !_instance.collision;
-        Collider2D collider = GetComponent<Collider2D>();
-        collider.enabled = collision;
+        _instance.noClipEnabled = !_instance.noClipEnabled;
+        // Collider2D collider = GetComponent<Collider2D>();
+        // collider.enabled = !noClipEnabled;
     }
 
 
@@ -310,19 +313,23 @@ public class Player : Singleton<Player>, ISavable
     }
 
 
-
-    public static bool IsSafe()
+    public Vector3 GetPlayerTransformRaycastPosition()
     {
-        // DC: this was needed for game jam, but probably not really anymore
-        // Collider2D hit = Physics2D.OverlapPoint(_instance.transform.position, LayerMask.GetMask("SlideableArea"));
-        // return hit != null;
-        return true;
+        if (!isOnWater)
+        {
+            return transform.position;
+        }
+        else
+        {
+            return boatGetSTileUnderneathTransform.transform.position;
+        }
     }
 
-    public static STile GetStileUnderneath()
+    public STile GetSTileUnderneath()
     {
-        _instance.currentStileUnderneath = SGrid.GetSTileUnderneath(_instance.transform, _instance.currentStileUnderneath);
-        return _instance.currentStileUnderneath;
+        Transform transformToUse = isOnWater ? boatGetSTileUnderneathTransform : transform;
+        currentStileUnderneath = SGrid.GetSTileUnderneath(transformToUse, currentStileUnderneath);
+        return currentStileUnderneath;
     }
 
     public static void SetMoveSpeedMultiplier(float x)
@@ -368,6 +375,7 @@ public class Player : Singleton<Player>, ISavable
     public void SetIsOnWater(bool isOnWater)
     {
         this.isOnWater = isOnWater;
+
         colliderPlayerVers.enabled = !isOnWater;
         colliderBoatVers.enabled = isOnWater;
         boatGameObject.SetActive(isOnWater);

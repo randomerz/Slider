@@ -33,7 +33,8 @@ public class ArtifactScreenHider : MonoBehaviour
 
     private void OnEnable() 
     {
-        PlayerInventory.OnPlayerGetCollectible += CheckAddInventoryScreen;
+        if (!PlayerInventory.Contains("Map", Area.Village))
+            PlayerInventory.OnPlayerGetCollectible += CheckAddInventoryScreen;
     }
 
     private void OnDisable() 
@@ -119,7 +120,7 @@ public class ArtifactScreenHider : MonoBehaviour
 
     private void CheckAddInventoryScreen(object sender, PlayerInventory.InventoryEvent e)
     {
-        if (PlayerHasCoffee())
+        if (PlayerHasCoffee() && e.collectible.name == "Coffee")
         {
             AddInventoryScreen();
             PlayerInventory.OnPlayerGetCollectible -= CheckAddInventoryScreen;

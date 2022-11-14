@@ -301,9 +301,9 @@ public class OceanGrid : SGrid
         
         if (GetStile(6).isTileActive && GetStile(7).isTileActive && foggyCompleted)
         {
-            if(Player.GetStileUnderneath().islandId == fogIslandId && correct) 
+            if(Player.GetInstance().GetSTileUnderneath().islandId == fogIslandId && correct) 
             {
-                fogIsland.transform.position = Player.GetStileUnderneath().transform.position;
+                fogIsland.transform.position = Player.GetInstance().GetSTileUnderneath().transform.position;
                 fogIsland.SetActive(true);
                 if (fogIslandId == 6)
                 {
@@ -330,12 +330,12 @@ public class OceanGrid : SGrid
     private void updatePlayerMovement()
     {
 
-        if (Player.GetStileUnderneath() == null)
+        if (Player.GetInstance().GetSTileUnderneath() == null)
         {
             return;
         }
 
-        int currentIslandId = Player.GetStileUnderneath().islandId;
+        int currentIslandId = Player.GetInstance().GetSTileUnderneath().islandId;
         if ((currentIslandId == 6 || currentIslandId == 7))
         {
             SetProgressRingActive(true);
@@ -424,7 +424,7 @@ public class OceanGrid : SGrid
     private void FoggyCompleted()
     {
         foggyCompleted = true;
-        fogIslandId = Player.GetStileUnderneath().islandId;
+        fogIslandId = Player.GetInstance().GetSTileUnderneath().islandId;
         for(int i =0; i < correctPath.Length; i++)
             progressNotes[i].sprite = emptyNote;
     }
