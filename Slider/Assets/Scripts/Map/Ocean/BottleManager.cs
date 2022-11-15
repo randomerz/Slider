@@ -4,18 +4,33 @@ using UnityEngine;
 
 public class BottleManager : MonoBehaviour
 {
+    private const string validTiles = "13"; //these tiles have a water path for the bottle
+    
     public GameObject bottlePrefab;
     public bool puzzleSolved = false;
+
+    public Item romeosBottle; // for the spawn animation
+    private Transform romeosBottleHolder;
     
     private int turncounter = 0;
-    private GameObject bottle = null;
     private bool puzzleActive = false;
+
+    private GameObject bottle = null;
+    private bool bottleIsInWater = false;
     private STile bottleParentStile = null;
-    private string validTiles = "138"; //these tiles have a water path for the bottle
+
     [SerializeField] private Vector3 bottleInitialLocation = new Vector3(-7.5f,41.5f);
-    private List<Vector3> positions = new List<Vector3>{ new Vector3(-4.5f,7.5f), new Vector3(0,0), new Vector3(4.5f,-7.5f)};
+    private List<Vector3> positions = new List<Vector3> { 
+        new Vector3(-4.5f,7.5f), 
+        new Vector3(0,0), 
+        new Vector3(4.5f,-7.5f)
+    };
 
     
+    private void Awake() 
+    {
+        romeosBottleHolder = romeosBottle.transform.parent;
+    }
 
     public void OnEnable()
     {
@@ -56,55 +71,71 @@ public class BottleManager : MonoBehaviour
         }
     }
 
-    private IEnumerator DestroyBottleExecutor()
+    private void DestroyBottleExecutor()
     {
         //Debug.Log("deleting bottle");
         if(bottle != null)
             bottle.GetComponent<Animator>().SetBool("IsSinking", true);
+
         UITrackerManager.RemoveTracker(bottle);
+
         bottle = null;
+        bottleIsInWater = false;
         puzzleActive = false;
         bottleParentStile = null;
-        yield return null;
+        
+        romeosBottle.spriteRenderer.enabled = true;
+
+        // yield return null;
         
     }
 
     //so that juliet can call it
     public void DestroyBottle()
     {
-        StartCoroutine(DestroyBottleExecutor());
+        // StartCoroutine(DestroyBottleExecutor());
+        DestroyBottleExecutor();
     }
 
     public void CreateNewBottle()
     {
         //create new bottle after talking to romeo and puzzle is not solved
-        if(bottle == null && !puzzleSolved)
+        if(bottle == null && !puzzleSolved && CheckGrid.contains(SGrid.GetGridString(),$"[{validTiles}].._..._..."))
         {
             puzzleActive = true;
 
-            //Debug.Log("Creating new bottle");
             bottle = GameObject.Instantiate(bottlePrefab, bottleInitialLocation, Quaternion.identity);
 
             bottleParentStile = SGrid.Current.GetGrid()[0, 2];
-            //Debug.Log("bound stile: " + bottleParentStile);
             bottle.transform.SetParent(bottleParentStile.transform);
 
-            if(CheckGrid.contains(SGrid.GetGridString(),$"[{validTiles}].._..._..."))
-            {
-                turncounter = 0;
-                bottle.transform.localPosition = positions[turncounter];
-                UITrackerManager.AddNewTracker(bottle, UITrackerManager.DefaultSprites.circleEmpty);
-                //Debug.Log("valid tile");
-            }
-            else
-            {
-                //Debug.Log("invalid tile");
-                DestroyBottle();
-            }
+            turncounter = 0;
+            bottle.transform.localPosition = positions[turncounter];
+
+            UITrackerManager.AddNewTracker(bottle, UITrackerManager.DefaultSprites.circleEmpty);
 
 
+            bottleIsInWater = false;
+            RomeoBottleSpawnAnimation(bottle);
             
         }
+    }
+
+    private void RomeoBottleSpawnAnimation(GameObject actualBottle)
+    {
+        actualBottle.GetComponent<SpriteRenderer>().enabled = false;
+
+        romeosBottle.DropItem(bottle.transform.position, () => {
+
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, bottle.transform.position, actualBottle.transform);
+            actualBottle.GetComponent<SpriteRenderer>().enabled = true;
+            bottleIsInWater = true;
+
+            romeosBottle.spriteRenderer.enabled = false;
+            romeosBottle.transform.SetParent(romeosBottleHolder);
+            romeosBottle.transform.localPosition = Vector3.zero;
+        });
+        // yield return new WaitUntil(() => true) ;
     }
 
     public void InvalidTile(Condition c)
@@ -118,6 +149,11 @@ public class BottleManager : MonoBehaviour
         {
             c.SetSpec(true);
         }
+    }
+
+    public void BottleIsInWater(Condition c)
+    {
+        c.SetSpec(bottleIsInWater);
     }
 
     public void MessageDelivered(Condition c)
