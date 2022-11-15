@@ -221,7 +221,6 @@ public class SaveProfile
 
     private List<ISavable> GetCachedSavables()
     {
-        // TODO: actually cache them
         List<ISavable> savables = new List<ISavable>();
         foreach (ISavable s in GameObject.FindObjectsOfType<MonoBehaviour>(true).OfType<ISavable>())
         {

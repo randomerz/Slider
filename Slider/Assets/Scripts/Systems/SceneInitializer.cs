@@ -51,5 +51,9 @@ public class SceneInitializer : MonoBehaviour
 
             profileToLoad = null;
         }
+        else if (SaveSystem.Current != null) // going to main menu
+        {
+            SaveSystem.Current.Load();
+        }
     }
 }

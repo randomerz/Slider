@@ -9,6 +9,7 @@ public class OceanGrid : SGrid
     public GameObject burriedTreasure;
     public ParticleSystem burriedTreasureParticles;
     public KnotBox knotBox;
+    private bool knotBoxEnabledLastFrame;
     public BottleManager bottleManager;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
@@ -98,7 +99,10 @@ public class OceanGrid : SGrid
 
         //Get tile the player is on. if it change from last update, find the direction the player moved. Add direction to list of moves. put list in checkfoggy. only why on fog tiles
         updatePlayerMovement();
-
+    }
+    
+    private void LateUpdate() {
+        knotBoxEnabledLastFrame = knotBox.isActiveAndEnabled;
     }
 
     public override void Save()
@@ -115,7 +119,7 @@ public class OceanGrid : SGrid
         isCompleted = profile.GetBool("oceanCompleted");
         if (isCompleted) ((OceanArtifact)OceanArtifact._instance).SetCanRotate(false);
 
-        treesToJungle.SetActive(profile.GetBool("oceanTreesRemoved"));
+        treesToJungle.SetActive(!profile.GetBool("oceanTreesRemoved"));
 
         bottleManager.puzzleSolved = profile.GetBool("RJBottleDelivery");
         foggyCompleted = profile.GetBool("FoggyIslandReached");
@@ -123,7 +127,7 @@ public class OceanGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
-        if (stile.islandId == 3)
+        if (stile.islandId == 3 && !stile.isTileActive)
         {
             CheckTile3Placement(stile);
         }
@@ -242,7 +246,12 @@ public class OceanGrid : SGrid
 
     private bool BuoyConditions()
     {
-        return (AllBuoy() && knotBox.isActiveAndEnabled && (knotBox.CheckLines() == 0));
+        return (
+            AllBuoy() && 
+            knotBox.isActiveAndEnabled && 
+            knotBoxEnabledLastFrame &&
+            knotBox.CheckLines() == 0
+        );
     }
 
     public void BuoyAllFound(Condition c)
@@ -258,6 +267,11 @@ public class OceanGrid : SGrid
 
     public void knotBoxEnabled(Condition c)
     {
+        c.SetSpec(knotBox.isActiveAndEnabled && AllBuoy());
+    }
+
+    public void knotBoxDisabled(Condition c)
+    {
         c.SetSpec(!knotBox.isActiveAndEnabled && AllBuoy());
     }
 
@@ -271,6 +285,7 @@ public class OceanGrid : SGrid
         if (AllBuoy())
         {
             knotBox.enabled = !knotBox.enabled;
+            knotBox.CheckLines();
             if (knotBox.enabled)
             {
                 foreach (GameObject knotnode in knotBox.knotnodes)
@@ -301,9 +316,9 @@ public class OceanGrid : SGrid
         
         if (GetStile(6).isTileActive && GetStile(7).isTileActive && foggyCompleted)
         {
-            if(Player.GetStileUnderneath().islandId == fogIslandId && correct) 
+            if(Player.GetInstance().GetSTileUnderneath().islandId == fogIslandId && correct) 
             {
-                fogIsland.transform.position = Player.GetStileUnderneath().transform.position;
+                fogIsland.transform.position = Player.GetInstance().GetSTileUnderneath().transform.position;
                 fogIsland.SetActive(true);
                 if (fogIslandId == 6)
                 {
@@ -330,12 +345,12 @@ public class OceanGrid : SGrid
     private void updatePlayerMovement()
     {
 
-        if (Player.GetStileUnderneath() == null)
+        if (Player.GetInstance().GetSTileUnderneath() == null)
         {
             return;
         }
 
-        int currentIslandId = Player.GetStileUnderneath().islandId;
+        int currentIslandId = Player.GetInstance().GetSTileUnderneath().islandId;
         if ((currentIslandId == 6 || currentIslandId == 7))
         {
             SetProgressRingActive(true);
@@ -424,7 +439,7 @@ public class OceanGrid : SGrid
     private void FoggyCompleted()
     {
         foggyCompleted = true;
-        fogIslandId = Player.GetStileUnderneath().islandId;
+        fogIslandId = Player.GetInstance().GetSTileUnderneath().islandId;
         for(int i =0; i < correctPath.Length; i++)
             progressNotes[i].sprite = emptyNote;
     }

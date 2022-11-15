@@ -103,7 +103,17 @@ public class VillageGrid : SGrid
     }
 
 
+    public void OnWaterfallEntry()
+    {
+        // if puzzle complete + enter waterfall, then mark the cave door as exploded
+        if (PlayerInventory.Contains("Slider 9", Area.Village))
+        {
+            SaveSystem.Current.SetBool("caveDoorExploded", true);
+        }
+    }
+
     // === Village puzzle specific ===
+    
     public void CheckFishOn(Condition c)
     {
         c.SetSpec(fishOn);

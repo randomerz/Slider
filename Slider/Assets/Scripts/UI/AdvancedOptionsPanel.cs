@@ -7,20 +7,26 @@ public class AdvancedOptionsPanel : MonoBehaviour
 {
     [SerializeField] private Slider screenShakeSlider;
     [SerializeField] private Toggle bigTextToggle;
+    [SerializeField] private Toggle highContrastTextToggle;
     [SerializeField] private Toggle autoMoveToggle;
+    [SerializeField] private Toggle colorblindToggle;
 
     private void Awake()
     {
         screenShakeSlider.onValueChanged.AddListener((float value) => { UpdateScreenShake(); });
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
+        highContrastTextToggle.onValueChanged.AddListener((bool value) => { UpdateHighContrastText(); });
         autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
+        colorblindToggle.onValueChanged.AddListener((bool value) => { UpdateColorblind(); });
     }
 
     private void OnEnable()
     {
         screenShakeSlider.value = SettingsManager.ScreenShake;
         bigTextToggle.isOn = SettingsManager.BigTextEnabled;
+        highContrastTextToggle.isOn = SettingsManager.HighContrastTextEnabled;
         autoMoveToggle.isOn = SettingsManager.AutoMove;
+        colorblindToggle.isOn = SettingsManager.Colorblind;
     }
 
     public void UpdateScreenShake()
@@ -37,8 +43,18 @@ public class AdvancedOptionsPanel : MonoBehaviour
         SettingsManager.BigTextEnabled = bigTextToggle.isOn;
     }
 
+    public void UpdateHighContrastText()
+    {
+        SettingsManager.HighContrastTextEnabled = highContrastTextToggle.isOn;
+    }
+
     public void UpdateAutoMove()
     {
         SettingsManager.AutoMove = autoMoveToggle.isOn;
+    }
+
+    public void UpdateColorblind()
+    {
+        SettingsManager.Colorblind = colorblindToggle.isOn;
     }
 }

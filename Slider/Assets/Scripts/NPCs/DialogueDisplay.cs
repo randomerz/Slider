@@ -5,8 +5,6 @@ using TMPro;
 
 public class DialogueDisplay : MonoBehaviour
 {
-    public static bool doubleSizeMode = false;
-    public static bool highContrastMode = false;
 
     public TMPTextTyper textTyperText;
     public TMPTextTyper textTyperBG;
@@ -28,7 +26,9 @@ public class DialogueDisplay : MonoBehaviour
         CheckSize();
         DeactivateMessagePing();
         canvas.SetActive(true);
+
         StopAllCoroutines();
+
         message = message.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
         // message = ConvertVariablesToStrings(message);
         textSpecialText.StopEffects();
@@ -60,18 +60,13 @@ public class DialogueDisplay : MonoBehaviour
 
     private void CheckContrast()
     {
+        bool highContrastMode = SettingsManager.HighContrastTextEnabled;
         highContrastBG.SetActive(highContrastMode);
     }
 
     private void CheckSize()
     {
-        if (doubleSizeMode)
-        {
-            canvas.transform.localScale = new Vector3(2, 2, 2);
-        }
-        else
-        {
-            canvas.transform.localScale = new Vector3(1, 1, 1);
-        }
+        bool doubleSizeMode = SettingsManager.BigTextEnabled;
+        canvas.transform.localScale = doubleSizeMode ? new Vector3(1.5f, 1.5f, 1.5f) : Vector3.one;
     }
 }

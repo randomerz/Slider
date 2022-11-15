@@ -7,6 +7,7 @@ public class PlayerAction : Singleton<PlayerAction>
     public Item pickedItem;
 
     [SerializeField] private Transform pickedItemLocation;
+    [SerializeField] private Transform boatDropItemBaseTransform;
     [SerializeField] private GameObject itemDropIndicator;
     [SerializeField] private LayerMask itemMask;
     [SerializeField] private LayerMask dropCollidingMask;
@@ -40,11 +41,14 @@ public class PlayerAction : Singleton<PlayerAction>
         {
             // pickedItem.gameObject.transform.position = pickedItemLocation.position;
 
-            Vector2 furthestValidDropPosition = GetFurthestValidDropPosition();
+            Vector2 closestValidDropPosition = GetClosestValidDropPosition();
+            
+            // we offset where the raycast starts because when you're in the boat, the collider is at the boat not the player
+            Vector3 basePosition = GetPlayerTransformRaycastPosition();
 
-            canDrop = Vector2.Distance(transform.position, furthestValidDropPosition) > minimumDropDistance;
+            canDrop = Vector2.Distance(basePosition, closestValidDropPosition) > minimumDropDistance;
             itemDropIndicator.SetActive(canDrop);
-            itemDropIndicator.transform.position = furthestValidDropPosition;
+            itemDropIndicator.transform.position = closestValidDropPosition;
         }
         else if (pickedItem == null)
         {
@@ -52,14 +56,16 @@ public class PlayerAction : Singleton<PlayerAction>
         }
     }
 
-    private Vector2 GetFurthestValidDropPosition()
+    private Vector2 GetClosestValidDropPosition()
     {
         Vector3 raycastDirection = Player.GetLastMoveDirection().normalized;
 
-        // RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, dropCirclecastRadius, raycastDirection, maximumDropDistance, 
-        //     layerMask:dropCollidingMask);
+
+        // we offset where the raycast starts because when you're in the boat, the collider is at the boat not the player
+        Vector3 basePosition = GetPlayerTransformRaycastPosition();
+
         RaycastHit2D[] hits = Physics2D.BoxCastAll(
-            transform.position, 
+            basePosition, 
             new Vector2(dropBoxcastWidth, dropBoxcastHeight), 
             Mathf.Atan2(raycastDirection.y, raycastDirection.x) * Mathf.Rad2Deg,
             raycastDirection, 
@@ -67,7 +73,7 @@ public class PlayerAction : Singleton<PlayerAction>
             layerMask:dropCollidingMask
         );
 
-        Vector2 closestPossibleDropPosition = transform.position + maximumDropDistance * raycastDirection;
+        Vector2 closestPossibleDropPosition = basePosition + maximumDropDistance * raycastDirection;
         bool collisionOccured = false;
 
         foreach (RaycastHit2D hit in hits)
@@ -79,7 +85,7 @@ public class PlayerAction : Singleton<PlayerAction>
             if ((hitCollider.gameObject != pickedItem.gameObject && !hitCollider.isTrigger) || (stile != null && !stile.isTileActive))
             {
                 collisionOccured = true;
-                if (Vector2.Distance(hit.centroid, transform.position) < Vector2.Distance(closestPossibleDropPosition, transform.position))
+                if (Vector2.Distance(hit.centroid, basePosition) < Vector2.Distance(closestPossibleDropPosition, basePosition))
                 {
                     closestPossibleDropPosition = hit.centroid;
                 }
@@ -90,10 +96,22 @@ public class PlayerAction : Singleton<PlayerAction>
         if (!collisionOccured)
         {
             Vector3 moveDir = Player.GetLastMoveDirection().normalized;
-            closestPossibleDropPosition = transform.position + moveDir * maximumDropDistance;
+            closestPossibleDropPosition = basePosition + moveDir * maximumDropDistance;
         }
 
         return closestPossibleDropPosition;
+    }
+
+    public Vector3 GetPlayerTransformRaycastPosition()
+    {
+        if (!Player.GetInstance().GetIsOnWater())
+        {
+            return transform.position;
+        }
+        else
+        {
+            return boatDropItemBaseTransform.transform.position;
+        }
     }
 
     private void Action() 

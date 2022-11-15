@@ -31,7 +31,7 @@ public class CaveGrid : SGrid
     {
         if (checkCompletion)
         {
-            checkCompletionsOnMoveFunc(this, null);
+            checkCompletionsOnMoveFunc.Invoke(this, null);
             SGridAnimator.OnSTileMoveEnd += checkCompletionsOnMoveFunc;
         }
     }
@@ -58,7 +58,9 @@ public class CaveGrid : SGrid
         checkCompletion = profile.GetBool("cavesCompletion");
 
         if (checkCompletion)
+        {
             gridAnimator.ChangeMovementDuration(0.5f);
+        }
 
         mountainCaveWall.Load(profile); // needed?
     }

@@ -66,8 +66,8 @@ public class SGridAnimator : MonoBehaviour
     protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true)
     {
         //isMoving = true;
-        bool isPlayerOnStile = (Player.GetStileUnderneath() != null &&
-                                Player.GetStileUnderneath().islandId == stile.islandId);
+        bool isPlayerOnStile = (Player.GetInstance().GetSTileUnderneath() != null &&
+                                Player.GetInstance().GetSTileUnderneath().islandId == stile.islandId);
 
         stile.SetMovingDirection(GetMovingDirection(moveCoords.startLoc, moveCoords.endLoc));
         
@@ -166,8 +166,7 @@ public class SGridAnimator : MonoBehaviour
         // if the player is on a slider, disable hitboxes temporarily
         foreach (Vector2Int p in move.positions)
         {
-            // Debug.Log(Player.GetStileUnderneath());
-            if (Player.GetStileUnderneath() != null && Player.GetStileUnderneath().islandId != grid[p.x, p.y].islandId)
+            if (Player.GetInstance().GetSTileUnderneath() != null && Player.GetInstance().GetSTileUnderneath().islandId != grid[p.x, p.y].islandId)
             {
                 // Debug.Log("disabling" +  p.x + " " + p.y);
                 grid[p.x, p.y].SetSliderCollider(false);
@@ -208,7 +207,7 @@ public class SGridAnimator : MonoBehaviour
     private STile CheckAnchorInRotate(SMoveRotate move, STile[,] grid)
     {
         // if player is on a stile that is anchored
-        STile playerStile = Player.GetStileUnderneath();
+        STile playerStile = Player.GetInstance().GetSTileUnderneath();
         if (playerStile != null && playerStile.hasAnchor)
         {
             foreach (Vector2Int p in move.anchoredPositions)
@@ -232,17 +231,6 @@ public class SGridAnimator : MonoBehaviour
 
     protected void EffectOnMoveFinish()
     {
-        //L: Bruh I can't
-        //bool moveToConveyor = false;
-        //List<SMove> activeMoves = UIArtifact.GetActiveMoves();
-        //activeMoves.ForEach(move =>
-        //{
-        //    if (move is SMoveConveyor)
-        //    {
-        //        moveToConveyor = true;
-        //    }
-        //});
-
         CameraShake.Shake(currMoveDuration / 2, 1.0f);
         AudioManager.PlayWithVolume("Slide Explosion", currMoveDuration);
     }
