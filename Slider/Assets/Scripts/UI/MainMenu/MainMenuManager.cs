@@ -8,7 +8,6 @@ using UnityEngine.InputSystem.Utilities;
 using TMPro;
 
 // TODO: 
-//  - refactor options into an options panel -- for now the options buttons are dead
 //  - fix Continue button (see in Update())
 public class MainMenuManager : Singleton<MainMenuManager>
 {

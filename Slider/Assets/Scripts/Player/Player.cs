@@ -29,7 +29,7 @@ public class Player : Singleton<Player>, ISavable
 
     private float moveSpeedMultiplier = 1;
     private bool canMove = true;
-    private bool noClipEnabled = true;
+    private bool noClipEnabled = false;
 
     private bool isInHouse = false;
 
@@ -250,10 +250,20 @@ public class Player : Singleton<Player>, ISavable
         SetIsInHouse(sp.isInHouse);
 
         // Update position
-        transform.SetParent(null);
-        transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
-        STile stileUnderneath = GetSTileUnderneath();
-        transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
+        if (GameManager.instance.debugModeActive && DebugUIManager.justDidSetScene)
+        {
+            // skip setting position if just did SetScene()
+            DebugUIManager.justDidSetScene = false;
+
+            SetIsOnWater(SGrid.Current.MyArea == Area.Ocean);
+        }
+        else
+        {
+            transform.SetParent(null);
+            transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
+            STile stileUnderneath = GetSTileUnderneath();
+            transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
+        }
 
         // PlayerInventory
         playerInventory.SetCollectiblesList(sp.collectibles);
@@ -289,8 +299,16 @@ public class Player : Singleton<Player>, ISavable
     public void toggleCollision()
     {
         _instance.noClipEnabled = !_instance.noClipEnabled;
-        // Collider2D collider = GetComponent<Collider2D>();
-        // collider.enabled = !noClipEnabled;
+
+        if (_instance.noClipEnabled)
+        {
+            colliderPlayerVers.enabled = false;
+            colliderBoatVers.enabled = false;
+        }
+        else
+        {
+            SetIsOnWater(isOnWater);
+        }
     }
 
 

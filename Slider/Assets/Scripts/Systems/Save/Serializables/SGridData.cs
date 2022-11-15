@@ -38,16 +38,18 @@ public class SGridData
             for (int y = 0; y < sgrid.Height; y++)
             {
                 STileData std = new STileData(sgrid.GetGrid()[x, y]);
+                
+                if (std.x != x || std.y != y)
+                {
+                    Debug.LogError("STile's saved X and Y do not match!");
+                }
+
                 std.x = x;
                 std.y = y;
                 grid.Add(std);
             }
         }
+
         realigningGrid = sgrid.realigningGrid;
-        // if (sgrid.GetAltGrid() != null) {
-        //     foreach (STile s in sgrid.GetAltGrid()) {
-        //         altGrid.Add(new STileData(s));
-        //     }
-        // }
     }
 }
