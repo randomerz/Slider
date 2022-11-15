@@ -172,7 +172,7 @@ public class ChadJump : MonoBehaviour
 
     public bool ChadFell()
     {
-        return jumpState == JumpState.FELL || PlayerInventory.Contains("Flashlight");
+        return jumpState == JumpState.FELL;
     }
 
     public bool ChadFalling()

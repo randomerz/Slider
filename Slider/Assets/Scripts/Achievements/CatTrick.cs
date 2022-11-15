@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class CatTrick : MonoBehaviour
+public class CatTrick : MonoBehaviour, ISavable
 {
     public Collider2D detectionZone;
 
@@ -13,6 +13,10 @@ public class CatTrick : MonoBehaviour
     public Item mittens;
     public Item autumn;
     public Item tofu;
+
+    public Transform mittensCollectedSpawnLoc;
+    public Transform autumnCollectedSpawnLoc;
+    public Transform tofuCollectedSpawnLoc;
 
     private bool hasMittens;
     private bool hasAutumn;
@@ -28,6 +32,36 @@ public class CatTrick : MonoBehaviour
     private void Update() 
     {
         UpdateCollection();
+    }
+
+    public void Save()
+    {
+        SaveSystem.Current.SetBool("villageHasMittens", hasMittens);
+        SaveSystem.Current.SetBool("villageHasAutumn", hasAutumn);
+        SaveSystem.Current.SetBool("villageHasTofu", hasTofu);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        hasMittens = profile.GetBool("villageHasMittens");
+        hasAutumn = profile.GetBool("villageHasAutumn");
+        hasTofu = profile.GetBool("villageHasTofu");
+
+        if (hasMittens)
+        {
+            mittens.transform.SetParent(mittensCollectedSpawnLoc);
+            mittens.transform.localPosition = Vector3.zero;
+        }
+        if (hasAutumn)
+        {
+            autumn.transform.SetParent(autumnCollectedSpawnLoc);
+            autumn.transform.localPosition = Vector3.zero;
+        }
+        if (hasTofu)
+        {
+            tofu.transform.SetParent(tofuCollectedSpawnLoc);
+            tofu.transform.localPosition = Vector3.zero;
+        }
     }
 
     private void UpdateCollection()

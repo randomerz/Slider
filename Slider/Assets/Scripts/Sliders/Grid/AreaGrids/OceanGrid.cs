@@ -347,6 +347,12 @@ public class OceanGrid : SGrid
 
         if (Player.GetInstance().GetSTileUnderneath() == null)
         {
+            if (lastIslandId == 6 || lastIslandId == 7)
+            {
+                lastIslandId = 1;
+                failFoggy();
+                SetProgressRingActive(false);
+            }
             return;
         }
 
