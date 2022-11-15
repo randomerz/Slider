@@ -11,8 +11,9 @@ public class CaveMossManager : MonoBehaviour
     [SerializeField] private STile stile;
     [SerializeField] private float mossFadeSpeed = 3f;
 
-    private float updateDurationAfterMove;
-    private float updateTimerAfterMove = 0f;
+    private PlayerMoveOffMoss _playerMoveOffMoss;
+    private float _updateDurationAfterMove;
+    private float _updateTimerAfterMove = 0f;
 
     public class MossIsGrowingArgs : System.EventArgs
     {
@@ -36,7 +37,9 @@ public class CaveMossManager : MonoBehaviour
             stile = GetComponentInParent<CaveSTile>();
         }
 
-        updateDurationAfterMove = 1f / mossFadeSpeed + 0.1f;
+        _updateDurationAfterMove = 1f / mossFadeSpeed + 0.1f;
+
+        _playerMoveOffMoss = mossCollidersMap.GetComponent<PlayerMoveOffMoss>();
     }
 
     private void Start()
@@ -56,17 +59,17 @@ public class CaveMossManager : MonoBehaviour
 
     private void Update()
     {
-        if (!SGrid.Current.TilesMoving() || updateTimerAfterMove > 0f)
+        if (!SGrid.Current.TilesMoving() || _updateTimerAfterMove > 0f)
         {
             UpdateMoss();
         }
 
-        updateTimerAfterMove -= Time.deltaTime;
+        _updateTimerAfterMove -= Time.deltaTime;
     }
 
     private void OnTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        updateTimerAfterMove = updateDurationAfterMove;
+        _updateTimerAfterMove = _updateDurationAfterMove;
     }
 
     private void InitMoss()
@@ -107,6 +110,10 @@ public class CaveMossManager : MonoBehaviour
             }
         }
 
+        if (_playerMoveOffMoss.isActiveAndEnabled)
+        {
+            _playerMoveOffMoss.CheckPlayerCollidingWithMoss();
+        }
         MossUpdated?.Invoke(this, new MossUpdatedArgs { stile = stile });
     }
 
