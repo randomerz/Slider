@@ -1,26 +1,18 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class CaveMossManager : MonoBehaviour
 {
-    public enum MossState { 
-        GROWN,
-        RECEDED,
-    }
 
     [SerializeField] private Tilemap mossMap;
     [SerializeField] private Tilemap recededMossMap;
     public Tilemap mossCollidersMap;
-    [SerializeField] private float mossFadeSpeed;
     [SerializeField] private STile stile;
+    [SerializeField] private float mossFadeSpeed = 3f;
 
-    //L: Keep track of the tiles that are animating so that we are not calling the coroutine twice. 
-    private Dictionary<Vector3Int, Coroutine> mossCoroutines = new Dictionary<Vector3Int, Coroutine>();
-    private Dictionary<Vector3Int, MossState> mossStates = new Dictionary<Vector3Int, MossState>(); 
-    private bool updatingMoss;
+    private float updateDurationAfterMove;
+    private float updateTimerAfterMove = 0f;
 
     public class MossIsGrowingArgs : System.EventArgs
     {
@@ -34,7 +26,6 @@ public class CaveMossManager : MonoBehaviour
     {
         public STile stile;
     }
-    public static event System.EventHandler<MossIsGrowingArgs> MossIsGrowing;
 
     public static event System.EventHandler<MossUpdatedArgs> MossUpdated;
 
@@ -44,6 +35,8 @@ public class CaveMossManager : MonoBehaviour
         {
             stile = GetComponentInParent<CaveSTile>();
         }
+
+        updateDurationAfterMove = 1f / mossFadeSpeed + 0.1f;
     }
 
     private void Start()
@@ -53,34 +46,27 @@ public class CaveMossManager : MonoBehaviour
 
     private void OnEnable()
     {
-        //Conditions under which the moss updates.
-        SGridAnimator.OnSTileMoveEnd += UpdateMoss;
-        SGrid.OnSTileEnabled += UpdateMoss;
-        CaveLight.OnLightSwitched += UpdateMoss;
-        LightManager.OnLightMaskChanged += UpdateMoss;
+        SGridAnimator.OnSTileMoveEnd += OnTileMoveEnd;
     }
 
     private void OnDisable()
     {
-        //Conditions under which the moss updates.
-        SGridAnimator.OnSTileMoveEnd -= UpdateMoss;
-        SGrid.OnSTileEnabled -= UpdateMoss;
-        CaveLight.OnLightSwitched -= UpdateMoss;
-        LightManager.OnLightMaskChanged -= UpdateMoss;
+        SGridAnimator.OnSTileMoveEnd -= OnTileMoveEnd;
     }
 
     private void Update()
     {
-        if (updatingMoss && mossCoroutines.Count == 0)
+        if (!SGrid.Current.TilesMoving() || updateTimerAfterMove > 0f)
         {
-            MossUpdated?.Invoke(this, new MossUpdatedArgs { stile = stile });
-            updatingMoss = false;
+            UpdateMoss();
         }
+
+        updateTimerAfterMove -= Time.deltaTime;
     }
 
-    private MossState GetStateFromLit(bool lit)
+    private void OnTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        return lit ? MossState.RECEDED : MossState.GROWN;
+        updateTimerAfterMove = updateDurationAfterMove;
     }
 
     private void InitMoss()
@@ -103,18 +89,9 @@ public class CaveMossManager : MonoBehaviour
     {
         Color invisibleWhite = new Color(1.0f, 1.0f, 1.0f, 0.0f);
 
-        if (!mossStates.ContainsKey(pos))
-        {
-            mossStates.Add(pos, GetStateFromLit(posIsLit));
-        } else
-        {
-            mossStates[pos] = GetStateFromLit(posIsLit);
-        }
-
         mossMap.SetColor(pos, posIsLit ? invisibleWhite : Color.white);
         recededMossMap.SetColor(pos, posIsLit ? Color.white : invisibleWhite);
         mossCollidersMap.SetColliderType(pos, posIsLit ? Tile.ColliderType.None : Tile.ColliderType.Grid);
-        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, mossMap = mossCollidersMap, cellPos = pos, isGrowing = mossStates[pos] == MossState.GROWN });
     }
 
     private void UpdateMoss()
@@ -129,55 +106,28 @@ public class CaveMossManager : MonoBehaviour
                 });
             }
         }
+
+        MossUpdated?.Invoke(this, new MossUpdatedArgs { stile = stile });
     }
 
     private void UpdateMossTile(Vector3Int pos)
     {
         bool posIsLit = LightManager.instance.GetLightMaskAt(mossMap, pos);
 
-        if (!mossStates.ContainsKey(pos))
+        Color darkAlpha = mossMap.GetColor(pos);
+        Color litAlpha = recededMossMap.GetColor(pos);
+        darkAlpha.a = Mathf.MoveTowards(darkAlpha.a, posIsLit ? 0f : 1f, mossFadeSpeed * Time.deltaTime);
+        litAlpha.a = Mathf.MoveTowards(litAlpha.a, posIsLit ? 1f : 0f, mossFadeSpeed * Time.deltaTime);
+        mossMap.SetColor(pos, darkAlpha);
+        recededMossMap.SetColor(pos, litAlpha);
+
+        if (litAlpha.a > 0.9f)
         {
-            SetMossState(pos, posIsLit);
-        }
-
-        if (mossStates[pos] != GetStateFromLit(posIsLit))
+            mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
+        } else
         {
-            mossStates[pos] = GetStateFromLit(posIsLit);
-
-            if (mossCoroutines.ContainsKey(pos))
-            {
-                //L: The tile is animating the wrong way, stop the animation.
-                if (mossCoroutines[pos] != null)
-                {
-                    StopCoroutine(mossCoroutines[pos]);
-                }
-                mossCoroutines.Remove(pos);
-            }
-
-            //L: The tile needs to animate and is not already animating in that direction.
-            mossCoroutines.Add(pos, StartCoroutine(mossStates[pos] == MossState.GROWN ? GrowMoss(pos) : RecedeMoss(pos)));
-            updatingMoss = true;
+            mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
         }
-    }
-
-    private void UpdateMoss(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        UpdateMoss();
-    }
-
-    private void UpdateMoss(object sender, SGrid.OnSTileEnabledArgs e)
-    {
-        UpdateMoss();
-    }
-
-    private void UpdateMoss(object sender, CaveLight.OnLightSwitchedArgs e)
-    {
-        UpdateMoss();
-    }
-
-    private void UpdateMoss(object sender, System.EventArgs e)
-    {
-        UpdateMoss();
     }
 
     private void ForEachMossTileIn(Tilemap tm, Action<Vector3Int> func)
@@ -190,38 +140,5 @@ public class CaveMossManager : MonoBehaviour
                 func(pos);
             }
         }
-    }
-
-    public IEnumerator GrowMoss(Vector3Int pos)
-    {
-        //L: Enable the moss collider
-        mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
-        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, mossMap = mossCollidersMap, cellPos = pos, isGrowing = true });
-
-        while (mossMap.GetColor(pos).a < 1.0f)
-        {
-
-            Color c = mossMap.GetColor(pos);
-            mossMap.SetColor(pos, new Color(c.r, c.g, c.b, c.a + mossFadeSpeed));
-            recededMossMap.SetColor(pos, new Color(c.r, c.g, c.b, 1 - (c.a + mossFadeSpeed)));
-            yield return new WaitForSeconds(0.1f);
-        }
-        mossCoroutines.Remove(pos);
-    }
-
-    public IEnumerator RecedeMoss(Vector3Int pos)
-    {
-        while (mossMap.GetColor(pos).a > 0.0f)
-        {
-            Color c = mossMap.GetColor(pos);
-            mossMap.SetColor(pos, new Color(c.r, c.g, c.b, c.a - mossFadeSpeed));
-            recededMossMap.SetColor(pos, new Color(c.r, c.g, c.b, 1 - (c.a - mossFadeSpeed)));
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        //L: Disable the moss collider
-        mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
-        mossCoroutines.Remove(pos);
-        MossIsGrowing?.Invoke(this, new MossIsGrowingArgs { stile = stile, mossMap = mossCollidersMap, cellPos = pos, isGrowing = false });
     }
 }

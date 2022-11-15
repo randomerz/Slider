@@ -16,7 +16,6 @@ public class DesertGrid : SGrid
 
     private int monkeShake = 0;
     private bool campfireIsLit = false;
-    private bool checkCompletion = false;
     private bool checkMonkey = false;
     private Coroutine waitForZ; //Should be null if monkeShakes is 0
     private Coroutine shuffleBuildUpCoroutine;

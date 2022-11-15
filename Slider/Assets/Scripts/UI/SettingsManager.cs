@@ -41,16 +41,8 @@ public class SettingsManager : Singleton<SettingsManager>
             WriteCurrentSettingsToPlayerPrefs();
         }
     }
-    public static bool BigTextEnabled
-    {
-        get => _instance.currentSettings.bigTextEnabled;
-        set
-        {
-            // Big text doesn't actually exist, but when it does... we'll be ready.
-            _instance.currentSettings.bigTextEnabled = value;
-            WriteCurrentSettingsToPlayerPrefs();
-        }
-    }
+
+    // Advanced Options
     public static float ScreenShake
     {
         get => _instance.currentSettings.screenShake;
@@ -60,17 +52,49 @@ public class SettingsManager : Singleton<SettingsManager>
             WriteCurrentSettingsToPlayerPrefs();
         }
     }
+    public static bool BigTextEnabled
+    {
+        get => _instance.currentSettings.bigTextEnabled;
+        set
+        {
+            _instance.currentSettings.bigTextEnabled = value;
+            WriteCurrentSettingsToPlayerPrefs();
+        }
+    }
+    public static bool HighContrastTextEnabled
+    {
+        get => _instance.currentSettings.highContrastTextEnabled;
+        set
+        {
+            _instance.currentSettings.highContrastTextEnabled = value;
+            WriteCurrentSettingsToPlayerPrefs();
+        }
+    }
     public static bool AutoMove
     {
-        get => _instance.currentSettings.autoMove || SaveSystem.Current.GetBool("forceAutoMove");
+        get => _instance.currentSettings.autoMove || (!GameUI.instance.isMenuScene && SaveSystem.Current.GetBool("forceAutoMove"));
         set
         {
             _instance.currentSettings.autoMove = value;
-            if (!value) SaveSystem.Current.SetBool("forceAutoMove", false);
+            if (!value && !GameUI.instance.isMenuScene) 
+                SaveSystem.Current.SetBool("forceAutoMove", false);
 
             WriteCurrentSettingsToPlayerPrefs();
         }
     }
+    public static bool Colorblind
+    {
+        get => _instance.currentSettings.colorblindMode;
+        set
+        {
+            // Big text doesn't actually exist, but when it does... we'll be ready.
+            _instance.currentSettings.colorblindMode = value;
+            WriteCurrentSettingsToPlayerPrefs();
+        }
+    }
+
+
+
     /// <summary>
     /// Call this whenever we update something in the settings so that 
     /// we always keep the latest in PlayerPrefs. Might not be the most
@@ -111,10 +135,13 @@ struct Settings
 {
     public float sfxVolume;
     public float musicVolume;
+
     public float screenShake;
     public bool bigTextEnabled;
+    public bool highContrastTextEnabled;
     public bool autoMove;
     public bool forceAutoMove;
+    public bool colorblindMode;
 
     /// <summary>
     /// Returns an instance of Settings with volumes set to 50% and big text disabled.
@@ -122,16 +149,18 @@ struct Settings
     /// <returns></returns>
     public static Settings GetDefaultSettings()
     {
-        return new Settings(0.5f, 0.5f, 1.0f, false, false);
+        return new Settings(0.5f, 0.5f, 1.0f, false, false, false);
     }
 
-    public Settings(float sfxVolume, float musicVolume, float screenShake, bool bigTextEnabled, bool autoMove)
+    public Settings(float sfxVolume, float musicVolume, float screenShake, bool bigTextEnabled, bool highContrastTextEnabled, bool autoMove)
     {
         this.sfxVolume = sfxVolume;
         this.musicVolume = musicVolume;
         this.screenShake = screenShake;
         this.bigTextEnabled = bigTextEnabled;
+        this.highContrastTextEnabled = highContrastTextEnabled;
         this.autoMove = autoMove;
         this.forceAutoMove = autoMove;
+        this.colorblindMode = true;
     }
 }

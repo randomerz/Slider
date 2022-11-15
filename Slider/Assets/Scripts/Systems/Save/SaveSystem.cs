@@ -143,6 +143,11 @@ public class SaveSystem
 
         // Load last scene the player was in
         string sceneToLoad = current.GetLastArea().ToString();
+        
+        // early access
+        if (current.GetBool("isDemoBuild") && sceneToLoad == "Military")
+            sceneToLoad = "Demo Military";
+
         SceneManager.LoadScene(sceneToLoad);
     }
 

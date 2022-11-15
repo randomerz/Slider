@@ -10,8 +10,6 @@ using TMPro;
 // TODO: 
 //  - refactor options into an options panel -- for now the options buttons are dead
 //  - fix Continue button (see in Update())
-
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class MainMenuManager : Singleton<MainMenuManager>
 {
     public string cutsceneSceneName;
@@ -43,11 +41,6 @@ public class MainMenuManager : Singleton<MainMenuManager>
     public Button playButton;
 
     public MainMenuSaveButton[] saveProfileButtons;
-
-    public Slider sfxSlider;
-    public Slider musicSlider;
-    public Slider screenShakeSlider;
-    public Toggle bigTextToggle;
 
     private System.IDisposable listener;
 
@@ -275,9 +268,6 @@ public class MainMenuManager : Singleton<MainMenuManager>
         optionsPanel.SetActive(true);
         UINavigationManager.CurrentMenu = optionsPanel;
         StartCoroutine(ISelectTopmostButton());
-
-        musicSlider.value = SettingsManager.MusicVolume;
-        sfxSlider.value = SettingsManager.SFXVolume;
     }
 
     public void OpenAdvancedOptions()
@@ -285,10 +275,6 @@ public class MainMenuManager : Singleton<MainMenuManager>
         CloseAllPanels();
         advancedOptionsPanel.SetActive(true);
         UINavigationManager.CurrentMenu = advancedOptionsPanel;
-
-        screenShakeSlider.value = SettingsManager.ScreenShake;
-        bigTextToggle.isOn = SettingsManager.BigTextEnabled;
-
         StartCoroutine(ISelectTopmostButton());
     }
 
@@ -340,33 +326,5 @@ public class MainMenuManager : Singleton<MainMenuManager>
         UIEffects.FadeToBlack(() => {SceneManager.LoadScene(cutsceneSceneName);  
                                     UINavigationManager.CurrentMenu = null;}, 1, false);
         
-    }
-
-
-    // We need these to handle settings in Main Menu :)
-    public void UpdateSFXVolume()
-    {
-        SettingsManager.SFXVolume = sfxSlider.value;
-        AudioManager.SetSFXVolume(sfxSlider.value);
-    }
-
-    public void UpdateMusicVolume()
-    {
-        SettingsManager.MusicVolume = musicSlider.value;
-        AudioManager.SetMusicVolume(musicSlider.value);
-    }
-
-    public void UpdateScreenShake()
-    {
-        SettingsManager.ScreenShake = screenShakeSlider.value;
-    }
-
-    public void UpdateBigText()
-    {
-        // By the word of our noble lord, Boomo, long may he reign, these two lines must remain commented out
-        //DialogueManager.highContrastMode = value;
-        //DialogueManager.doubleSizeMode = value;
-
-        SettingsManager.BigTextEnabled = bigTextToggle.isOn;
     }
 }

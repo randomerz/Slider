@@ -7,7 +7,7 @@ public class DialogueData
     [TextArea(1, 4)]
     public string dialogue;
 
-    [Tooltip("Only applies when waitUntilPlayerAction and advanceDialogueManually are false")]
+    [Tooltip("Only applies when waitUntilPlayerAction and advanceDialogueManually are false, and != 0")]
     public float delayAfterFinishedTyping = 0.5f;
     [Tooltip("Player has to press e to continue.")] 
     public bool waitUntilPlayerAction;

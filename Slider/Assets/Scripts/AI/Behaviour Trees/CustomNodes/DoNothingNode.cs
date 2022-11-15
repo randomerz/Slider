@@ -13,7 +13,7 @@ public class DoNothingNode : BehaviourTreeNode
     public override NodeState Evaluate()
     {
         ai.navAgent.StopPath();
-        ai.transform.up = (ai.player.transform.position - ai.transform.position).normalized;
+        //ai.transform.up = (ai.player.transform.position - ai.transform.position).normalized;
         return NodeState.RUNNING;
     }
 }

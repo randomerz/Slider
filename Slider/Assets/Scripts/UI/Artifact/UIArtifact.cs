@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -55,6 +56,11 @@ public class UIArtifact : Singleton<UIArtifact>
         InitializeSingleton();
 
         EnableQueueing();
+    }
+
+    public static UIArtifact GetInstance()
+    {
+        return _instance;
     }
 
     public static SMove GetNextMove()
@@ -126,7 +132,6 @@ public class UIArtifact : Singleton<UIArtifact>
                 return b;
             }
         }
-        //Debug.LogWarning("Artifact tile button at " + x + ", " + y + " was not found!");
         return null;
     }
 
@@ -155,30 +160,6 @@ public class UIArtifact : Singleton<UIArtifact>
                 break;
             }
         }
-    }
-
-    public void FlickerNewTiles()
-    {
-        foreach (ArtifactTileButton b in buttons)
-        {
-            if (b.gameObject.activeSelf && b.shouldFlicker)
-            {
-                b.Flicker(3);
-            }
-        }
-    }
-
-    public void FlickerAllOnce()
-    {
-        foreach (ArtifactTileButton b in buttons)
-        {
-            b.Flicker(1);
-        }
-    }
-
-    public static UIArtifact GetInstance()
-    {
-        return _instance;
     }
 
     //This is in case we have situations where the grid is modified without interacting with the artifact (Factory conveyors, Mountain anchor, MagiTech Desyncs)
@@ -313,6 +294,8 @@ public class UIArtifact : Singleton<UIArtifact>
     }
     #endregion
 
+    #region Select Button
+
     public virtual void SelectButton(ArtifactTileButton button, bool isDragged = false)
     {
         // Check if on movement cooldown
@@ -378,30 +361,10 @@ public class UIArtifact : Singleton<UIArtifact>
         //OnButtonInteract?.Invoke(this, null);
     }
 
-    public virtual void UpdatePushedDowns(object sender, System.EventArgs e)
-    {
-        foreach (ArtifactTileButton b in _instance.buttons)
-        {
-            if (b.gameObject.activeSelf)
-            {
-                if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
-                {
-                    //Debug.Log(b.islandId);
-                    b.SetIsInMove(true);
-                }
-                else if (b.MyStile.hasAnchor)
-                {
-                    continue;
-                }
-                else
-                {
-                    b.SetIsInMove(false);
-                }
-            }
-        }
-    }
+    #endregion
 
     #region Queue
+
     //L: This is the new CheckAndSwap
     public virtual bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
@@ -543,6 +506,51 @@ public class UIArtifact : Singleton<UIArtifact>
         }
         return false;
     }
+
+    protected bool MoveOverlapsWithActiveMove(SMove move)
+    {
+        foreach (SMove m in activeMoves)
+        {
+            if (m.Overlaps(move))
+            {
+                // Debug.Log("Move conflicts!");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected bool IsStileInActiveMoves(int islandId)
+    {
+        foreach (SMove smove in activeMoves)
+        {
+            foreach (Movement m in smove.moves)
+            {
+                if (m.islandId == islandId)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    protected void LogMoveFailure() //As Stephen He's Dad would say.
+    {
+        string debug;
+        if (!playerCanQueue)
+        {
+            debug = "Player queueing was disabled.";
+        }
+        else
+        {
+            debug = QueueFull() ? "Queue was full" : "Move was illegal.";
+        }
+
+        Debug.Log($"Couldn't add move to queue! {debug}");
+    }
+
     #endregion
 
     protected virtual List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
@@ -572,56 +580,12 @@ public class UIArtifact : Singleton<UIArtifact>
         return options;
     }
 
-    protected void LogMoveFailure() //As Stephen He's Dad would say.
-    {
-        string debug;
-        if (!playerCanQueue)
-        {
-            debug = "Player queueing was disabled.";
-        }
-        else
-        {
-            debug = QueueFull() ? "Queue was full" : "Move was illegal.";
-        }
-
-        Debug.Log($"Couldn't add move to queue! {debug}");
-    }
-
     protected void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
         buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y, true);
         buttonEmpty.SetPosition(oldCurrX, oldCurrY, true);
-    }
-
-    protected bool MoveOverlapsWithActiveMove(SMove move)
-    {
-        foreach (SMove m in activeMoves)
-        {
-            if (m.Overlaps(move))
-            {
-                // Debug.Log("Move conflicts!");
-                return true;
-            }
-        }
-        return false;
-    }
-
-    protected bool IsStileInActiveMoves(int islandId)
-    {
-        foreach (SMove smove in activeMoves)
-        {
-            foreach (Movement m in smove.moves)
-            {
-                if (m.islandId == islandId)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     private void SetSelectedButton(ArtifactTileButton button)
@@ -662,6 +626,28 @@ public class UIArtifact : Singleton<UIArtifact>
             }
         }
     }
+    public virtual void UpdatePushedDowns(object sender, System.EventArgs e)
+    {
+        foreach (ArtifactTileButton b in _instance.buttons)
+        {
+            if (b.gameObject.activeSelf)
+            {
+                if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
+                {
+                    //Debug.Log(b.islandId);
+                    b.SetIsInMove(true);
+                }
+                else if (b.MyStile.hasAnchor)
+                {
+                    continue;
+                }
+                else
+                {
+                    b.SetIsInMove(false);
+                }
+            }
+        }
+    }
 
     #region Lightning Crap
     public static void SetLightningPos(ArtifactTileButton b)
@@ -696,6 +682,25 @@ public class UIArtifact : Singleton<UIArtifact>
         if (disableHighlight) _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
     }
     #endregion
+
+    public void FlickerNewTiles()
+    {
+        foreach (ArtifactTileButton b in buttons)
+        {
+            if (b.gameObject.activeSelf && b.shouldFlicker)
+            {
+                b.Flicker(3);
+            }
+        }
+    }
+
+    public void FlickerAllOnce()
+    {
+        foreach (ArtifactTileButton b in buttons)
+        {
+            b.Flicker(1);
+        }
+    }
 
 }
 

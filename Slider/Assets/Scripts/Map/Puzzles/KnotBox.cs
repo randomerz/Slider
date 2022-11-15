@@ -10,6 +10,7 @@ public class KnotBox : MonoBehaviour
     public LineRenderer[] lines;
 
     public ParticleSystem[] particles;
+    public Transform[] correctPositions;
 
     // Update is called once per frame
     void Update()
@@ -69,8 +70,8 @@ public class KnotBox : MonoBehaviour
                 next = 0;
             } 
             //RaycastHit2D hit = Physics2D.Raycast(a + 0.43f*dir.normalized,dir,(dir.magnitude-0.877f), 2048);
-            RaycastHit2D[] hits = Physics2D.RaycastAll(a,dir,dir.magnitude, 4096);
-            foreach(RaycastHit2D hit in hits){
+            RaycastHit2D[] hits = Physics2D.RaycastAll(a, dir, dir.magnitude, 4096);
+            foreach(RaycastHit2D hit in hits) {
                 if(!(GameObject.ReferenceEquals(knotnodes[i], hit.collider.gameObject) || GameObject.ReferenceEquals(knotnodes[next], hit.collider.gameObject))){
                     lines[i].startColor = bad;
                     lines[i].endColor = bad;
@@ -137,13 +138,22 @@ public class KnotBox : MonoBehaviour
 
     public void CheckParticles()
     {
-        Debug.Log("Checking particles");
+        // Debug.Log("Checking particles");
         if (CheckLines() == 0 && particles != null)
         {
             foreach (ParticleSystem ps in particles)
             {
                 ps.Play();
             }
+        }
+    }
+
+    public void SetToCorrectPositions()
+    {
+        for (int i = 0; i < knotnodes.Length; i++)
+        {
+            // knotnodes[i] is the sprite in village, so we want the parent
+            knotnodes[i].transform.parent.position = correctPositions[i].transform.position;
         }
     }
 

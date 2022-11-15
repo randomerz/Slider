@@ -14,7 +14,6 @@ public class VillageGrid : SGrid
     [SerializeField] private GameObject ruinsFragment; // for finishing caves before village
     [SerializeField] private Transform slider8FloorTransform; // for finishing caves before village
     private Coroutine shuffleBuildUpCoroutine;
-    private bool checkCompletion = false;
     
     // [SerializeField] private string poofParticleName;
     // private GameObject poofParticles;
@@ -104,7 +103,17 @@ public class VillageGrid : SGrid
     }
 
 
+    public void OnWaterfallEntry()
+    {
+        // if puzzle complete + enter waterfall, then mark the cave door as exploded
+        if (PlayerInventory.Contains("Slider 9", Area.Village))
+        {
+            SaveSystem.Current.SetBool("caveDoorExploded", true);
+        }
+    }
+
     // === Village puzzle specific ===
+    
     public void CheckFishOn(Condition c)
     {
         c.SetSpec(fishOn);

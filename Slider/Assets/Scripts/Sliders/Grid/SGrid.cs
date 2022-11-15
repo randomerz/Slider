@@ -22,6 +22,17 @@ public class SGrid : Singleton<SGrid>, ISavable
         public STile stile;
     }
 
+    public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
+    public static event System.EventHandler<OnSTileEnabledArgs> OnSTileEnabled;
+    public static event System.EventHandler<OnSTileCollectedArgs> OnSTileCollected;
+
+    public static SGrid Current => _instance;
+    public int Width => width;
+    public int Height => height;
+    public Area MyArea { get => myArea; }
+    public string TargetGrid { get { return targetGrid; } }
+    public bool CheckCompletion { get => checkCompletion; }
+
     public int[,] realigningGrid;
 
     [SerializeField] protected int width;
@@ -31,30 +42,22 @@ public class SGrid : Singleton<SGrid>, ISavable
     [SerializeField] protected SGridBackground[] bgGridTiles;
     [SerializeField] protected Collectible[] collectibles;
     [SerializeField] protected SGridAnimator gridAnimator;
-    [SerializeField] protected string targetGrid = "*********";     //L: This is the end goal for the slider puzzle.
-                                                                    //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)
-                                                                    // format: 123456789 for 1 2 3
-                                                                    //                       4 5 6
-                                                                    //                       7 8 9
+
+    //L: This is the end goal for the slider puzzle.
+    //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)
+    // format: 123456789 for 1 2 3
+    //                       4 5 6
+    //                       7 8 9
+    [SerializeField] protected string targetGrid = "*********";     
+
     [Tooltip("Don't forget to set me!")] [SerializeField] protected Area myArea;
+
 
     protected STile[,] grid;
     protected SGridBackground[,] bgGrid;
+    protected bool checkCompletion;
 
     private bool didInit;
-
-    public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
-    public static event System.EventHandler<OnSTileEnabledArgs> OnSTileEnabled;
-    public static event System.EventHandler<OnSTileCollectedArgs> OnSTileCollected;
-
-    public static SGrid Current => _instance;
-    public int Width => width;
-    public int Height => height;
-    public Area MyArea { get => myArea; }
-    public string TargetGrid
-    {
-        get { return targetGrid; }
-    }
 
     protected void Awake()
     {
@@ -133,7 +136,7 @@ public void SetGrid(int[,] puzzle)
         STile next = null;
 
         // We might not need this getunderstile stuff anymore now that we actually child player to STiles!
-        STile playerSTile = Player.GetStileUnderneath();
+        STile playerSTile = Player.GetInstance().GetSTileUnderneath();
         Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
 
         for (int x = 0; x < Width; x++)
@@ -521,6 +524,9 @@ public void SetGrid(int[,] puzzle)
     //L: Used in the save system to load a grid as opposed to using SetGrid(STile[], STile[]) with default tiles positions.
     public virtual void Load(SaveProfile profile) 
     { 
+        // Default vars
+        checkCompletion = false;
+
         //Debug.Log("Loading grid...");
 
         SGridData sgridData = profile.GetSGridData(myArea);

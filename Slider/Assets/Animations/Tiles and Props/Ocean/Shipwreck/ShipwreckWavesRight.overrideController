@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ShipwreckWavesRight
+  m_Controller: {fileID: 9100000, guid: f939fb07e013b5548bd48aeb62acbe8e, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: b3f039e94ea928e4c92af5dc6007f611, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 1d7e4386359fccc47b1ca848e9e82f4b, type: 2}

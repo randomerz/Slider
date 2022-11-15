@@ -533,6 +533,7 @@ GameObject:
   - component: {fileID: 7796720623073112639}
   - component: {fileID: 9108024479827777189}
   - component: {fileID: 3032070814369625942}
+  - component: {fileID: 269715291017833935}
   m_Layer: 5
   m_Name: Frame
   m_TagString: Untagged
@@ -598,6 +599,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &269715291017833935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943054365049430691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 480b94e77544fea43a2c8c47bd113212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  on: {fileID: 21300000, guid: 073b84ad67bb3e34ba876c5730fd0d3f, type: 3}
+  off: {fileID: 21300000, guid: 936dde1a29566bc47aa9a280891a01c3, type: 3}
+  sr: {fileID: 0}
+  image: {fileID: 3032070814369625942}
 --- !u!1 &2127730679163899999
 GameObject:
   m_ObjectHideFlags: 0
@@ -2453,6 +2470,7 @@ GameObject:
   - component: {fileID: 7073059976240536478}
   - component: {fileID: 3570373044967959373}
   - component: {fileID: 5076421993131059262}
+  - component: {fileID: 4659665572785028413}
   - component: {fileID: 6936017592466704374}
   m_Layer: 5
   m_Name: ArtifactFrame
@@ -2527,6 +2545,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiArtifactMenus: {fileID: 4884099563033190283}
+--- !u!114 &4659665572785028413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8663251323211111892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 861115b0693d6d64ebc129db8189ce01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  artifactBorderSwapper: {fileID: 269715291017833935}
 --- !u!225 &6936017592466704374
 CanvasGroup:
   m_ObjectHideFlags: 0
