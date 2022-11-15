@@ -29,7 +29,7 @@ public class Player : Singleton<Player>, ISavable
 
     private float moveSpeedMultiplier = 1;
     private bool canMove = true;
-    private bool noClipEnabled = true;
+    private bool noClipEnabled = false;
 
     private bool isInHouse = false;
 
@@ -289,8 +289,16 @@ public class Player : Singleton<Player>, ISavable
     public void toggleCollision()
     {
         _instance.noClipEnabled = !_instance.noClipEnabled;
-        // Collider2D collider = GetComponent<Collider2D>();
-        // collider.enabled = !noClipEnabled;
+
+        if (_instance.noClipEnabled)
+        {
+            colliderPlayerVers.enabled = false;
+            colliderBoatVers.enabled = false;
+        }
+        else
+        {
+            SetIsOnWater(isOnWater);
+        }
     }
 
 
