@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using TMPro;
 
 // ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class ShopManager : Singleton<ShopManager>, ISavable
@@ -43,17 +45,18 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     public GameObject uiShopPanel;
     // these are sub sections (the bottom ones)
     public GameObject mainPanel;
-
-    public GameObject bottle1;
-    public GameObject bottle2;
-    public GameObject bottle3;
-
     public GameObject buyPanel;
     public GameObject talkPanel;
     public GameObject dialoguePanel;
 
+    public Button sellButton;
+    public TextMeshProUGUI sellButtonText;
     public GameObject[] buyItemButtons;
     public GameObject[] talkSubPanels;
+
+    public GameObject bottle1;
+    public GameObject bottle2;
+    public GameObject bottle3;
 
     public enum States
     {
@@ -166,15 +169,11 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     public void CheckTavernKeep()
     {
         // rest of rewards
-        if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
-        {
-            turnedInAnchor = true;
-            EarnCredits(2); //change back to 2
-            shopDialogueManager.UpdateDialogue("Turn in Anchor");
-            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Trusty Anchor" });
-        }
 
         int origCreditCount = totalCreditCount;
+        
+        // Anchor turn in is checked in OpenShop()
+
         if(PlayerInventory.Contains("Rose") && !turnedInRose)
         {
             turnedInRose = true;
@@ -222,6 +221,10 @@ public class ShopManager : Singleton<ShopManager>, ISavable
         {
             AudioManager.Play("Puzzle Complete");
         }
+        else
+        {
+            AudioManager.Play("Artifact Error");
+        }
         if (totalCreditCount - origCreditCount >= 2)
         {
             shopDialogueManager.UpdateDialogue("Turn in Multiple Items");
@@ -230,12 +233,38 @@ public class ShopManager : Singleton<ShopManager>, ISavable
         if (totalCreditCount == 8 && !startedFinalQuest)
         {
             startedFinalQuest = true;
-        }
-
-        if (startedFinalQuest)
-        {
             shopDialogueManager.UpdateDialogue("All Items Returned");
         }
+
+        UpdateSellButton();
+    }
+
+    private void UpdateSellButton()
+    {
+        if (HasSellableItems())
+        {
+            sellButtonText.text = sellButtonText.text.Replace("*", "") + "*";
+            sellButtonText.color = GameSettings.white;
+            sellButton.enabled = false;
+        }
+        else
+        {
+            sellButtonText.text = sellButtonText.text.Replace("*", "");
+            sellButtonText.color = GameSettings.darkGray;
+            sellButton.enabled = true;
+        }
+    }
+
+    private bool HasSellableItems()
+    {
+        return (
+            (PlayerInventory.Contains("Rose") && !turnedInRose) ||
+            (PlayerInventory.Contains("Treasure Chest") && !turnedInTreasureChest) ||
+            (PlayerInventory.Contains("Magical Gem") && !turnedInTreasureMap) ||
+            (PlayerInventory.Contains("Mushroom") && !turnedInMushroom) ||
+            (PlayerInventory.Contains("Golden Fish") && !turnedInGoldenFish) ||
+            (PlayerInventory.Contains("Rock") && !turnedInRock)
+        );
     }
 
     public int GetCredits()
@@ -327,10 +356,24 @@ public class ShopManager : Singleton<ShopManager>, ISavable
 
 
         uiShopPanel.SetActive(true);
+        UpdateSellButton();
         OpenMainPanel();
 
+        // TODO: varied intro lines here
+        // CheckTavernKeep();
 
-        CheckTavernKeep();
+        if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
+        {
+            turnedInAnchor = true;
+            EarnCredits(2); //change back to 2
+            shopDialogueManager.UpdateDialogue("Turn in Anchor");
+            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Trusty Anchor" });
+        }
+
+        if (startedFinalQuest)
+        {
+            shopDialogueManager.UpdateDialogue("All Items Returned");
+        }
     }
 
     public void CloseShop()
