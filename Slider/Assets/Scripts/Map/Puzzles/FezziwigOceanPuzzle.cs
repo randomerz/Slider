@@ -17,6 +17,11 @@ public class FezziwigOceanPuzzle : MonoBehaviour
     void Start() { 
         Finished = false;
         CanStartCast = true;
+
+        if (PlayerInventory.Contains("Magical Gem"))
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     /// <summary>
