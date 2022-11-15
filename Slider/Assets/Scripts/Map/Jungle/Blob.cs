@@ -14,21 +14,24 @@ public class Blob : MonoBehaviour
 
     public float speed = 1f;
 
-    public void changeFaceDir(bool defaultAnim)
+    public void UpdateBlobOnPath(bool defaultAnim, Direction direction, float blobspeed, int travelDistance)
     {
-        this.flip = !defaultAnim;
+        flip = defaultAnim;
         if (flip)
         {
-            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            spriteRenderer.flipX = flip;
+            GetComponent<SpriteRenderer>().flipX = true;
         }
+        this.direction = direction;
+        this.speed = blobspeed;
+        this.travelDistance = travelDistance;
     }
+
 
     // Update is called once per frame
     void Update()
     {
         Vector2 new_distance = DirectionUtil.D2V(direction) * (speed * 0.01f);
-        traveledDistance += new_distance.magnitude;
+        traveledDistance += Mathf.Abs(new_distance.magnitude);
         this.transform.position = this.transform.position + new Vector3(new_distance.x, new_distance.y, 0);
 
         if (traveledDistance >= travelDistance)

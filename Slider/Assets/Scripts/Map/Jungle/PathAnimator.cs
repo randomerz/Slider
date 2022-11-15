@@ -5,15 +5,25 @@ using UnityEngine;
 public class PathAnimator : MonoBehaviour
 {
     public int creationSpeed = 1;
+    public float blobspeed = 1f;
 
-    public SpriteRenderer spriteRenderer;
+    private int count = 0;
+    public void CreateBlob()
+    {
 
-    private Vector2 direction;
-    private Coroutine blobCoroutine;
+    }
 
-    [Header("Set references")]
-    private Blob blob;
+    void Update()
+    {
+        if (count >= creationSpeed * 1000000)
+        {
+            CreateBlob();
+        }
+    }
 
+    public void UpdateBlobVisibility()
+    {
 
+    }
 
 }

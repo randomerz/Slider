@@ -9,7 +9,58 @@ public class Path : MonoBehaviour
     public Path pair;
     private Shape currentShape = null;
     bool defaultAnim = true; //left, or down (animation will have default and non default for direciton
+
+
+    [Header("Animation Blobs")]
     Direction direction;
+    public GameObject blob;
+    public int timeBetweenCreation = 50;
+    public float blobspeed = 1f;
+    public int travelDistance = 0;
+
+    private int count = 0;
+
+    void Update()
+    {
+        if (active)
+        {
+            if (count >= timeBetweenCreation)
+            {
+                CreateBlob();
+                count = 0;
+            }
+            count++;
+        }
+    }
+
+    public void CreateBlob()
+    {
+        GameObject go = Instantiate(blob);
+        Blob new_blob = go.GetComponent<Blob>();
+        new_blob.transform.parent = this.transform;
+
+        new_blob.UpdateBlobOnPath(defaultAnim, direction, blobspeed, travelDistance);
+
+        BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
+
+        // update this to be the right end of the path
+        if (direction == Direction.LEFT)
+        {
+            new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2), 0, 0);
+        }
+        else if (direction == Direction.RIGHT)
+        {
+            new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2), 0, 0);
+        }
+        else if (direction == Direction.UP)
+        {
+            new_blob.transform.localPosition = new Vector3(0, collider.offset.y - (collider.size.y / 2), 0);
+        }
+        else
+        {
+            new_blob.transform.localPosition = new Vector3(0, collider.offset.y + (collider.size.y / 2), 0);
+        }
+    }
 
     public void Activate(bool right, Shape shape)
     {
