@@ -162,10 +162,8 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 
     public void TypeCurrentDialogue()
     {
-        Debug.Log("typing current dialogue");
         if (DialogueEnabled && !CurrDchainIsEmpty())
         {
-            //Debug.Log(context.CurrCond.GetDialogueString(CurrDchainIndex));
             display.DisplaySentence(context.CurrCond.GetDialogueString(CurrDchainIndex));
 
             isTypingDialogue = true;
@@ -181,7 +179,6 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         {
             if (waitingForPlayerAction)
             {
-                Debug.Log("Player action input!");
                 waitingForPlayerAction = false;
                 TypeNextDialogueInChain();
             }
@@ -229,7 +226,6 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 
     private void HandleDialogueFinished()
     {
-        Debug.Log("handling dialogue finished");
         isTypingDialogue = false;
 
         if (!CurrDchainIsEmpty())

@@ -31,6 +31,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     public GameObject newSavePanel;
     public TMP_InputField profileNameTextField;
     public GameObject optionsPanel;
+    public GameObject advancedOptionsPanel;
     public GameObject controlsPanel;
     public GameObject creditsPanel;
 
@@ -166,7 +167,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     public void CloseCurrentPanel()
     {
-        if (controlsPanel.activeSelf)
+        if (advancedOptionsPanel.activeSelf || controlsPanel.activeSelf)
         {
             OpenOptions();
             UINavigationManager.CurrentMenu = optionsPanel;
@@ -199,6 +200,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         savesPanel.SetActive(false);
         newSavePanel.SetActive(false);
         optionsPanel.SetActive(false);
+        advancedOptionsPanel.SetActive(false);
         controlsPanel.SetActive(false);
         creditsPanel.SetActive(false);
 
@@ -265,6 +267,14 @@ public class MainMenuManager : Singleton<MainMenuManager>
         CloseAllPanels();
         optionsPanel.SetActive(true);
         UINavigationManager.CurrentMenu = optionsPanel;
+        StartCoroutine(ISelectTopmostButton());
+    }
+
+    public void OpenAdvancedOptions()
+    {
+        CloseAllPanels();
+        advancedOptionsPanel.SetActive(true);
+        UINavigationManager.CurrentMenu = advancedOptionsPanel;
         StartCoroutine(ISelectTopmostButton());
     }
 
