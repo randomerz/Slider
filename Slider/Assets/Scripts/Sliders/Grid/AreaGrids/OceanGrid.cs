@@ -127,7 +127,7 @@ public class OceanGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
-        if (stile.islandId == 3)
+        if (stile.islandId == 3 && !stile.isTileActive)
         {
             CheckTile3Placement(stile);
         }
