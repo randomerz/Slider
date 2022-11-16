@@ -9,6 +9,7 @@ public class Path : MonoBehaviour
     public Path pair;
     private Shape currentShape = null;
     bool defaultAnim = true; //left, or down (animation will have default and non default for direciton
+    public bool horizontal = false;
 
 
     [Header("Animation Blobs")]
@@ -126,7 +127,7 @@ public class Path : MonoBehaviour
         Vector2 two = new Vector2(-1, 0);
 
 
-        if (this.transform.localEulerAngles.z == -90 || this.transform.localEulerAngles.z == 90)
+        if (!horizontal)
         {
             one = new Vector2(0, 1);
             two = new Vector2(0, -1);
