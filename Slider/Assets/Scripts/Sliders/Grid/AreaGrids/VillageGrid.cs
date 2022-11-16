@@ -50,11 +50,6 @@ public class VillageGrid : SGrid
         {
             UIEffects.FadeFromBlack();
         }
-
-        if (checkCompletion)
-        {
-            UpdateButtonCompletions(this, null);
-        }
         
         CheckHole();
         
@@ -238,6 +233,7 @@ public class VillageGrid : SGrid
     {
         if (!PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153"))
         {
+            AudioManager.Play("Puzzle Complete");
             GivePlayerTheCollectible("Slider 9");
 
             // Disable queues
@@ -246,7 +242,6 @@ public class VillageGrid : SGrid
             // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
             StartCoroutine(CheckCompletionsAfterDelay(1.2f));
 
-            AudioManager.Play("Puzzle Complete");
             SaveSystem.Current.SetBool("forceAutoMove", false);
             UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }

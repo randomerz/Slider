@@ -71,6 +71,7 @@ public class CaveGrid : SGrid
 
         checkCompletion = true;
         SaveSystem.Current.SetBool("cavesCompletion", checkCompletion);
+        SaveSystem.Current.SetBool("forceAutoMove", true);
 
         CheckLightingCompletions();
     }
@@ -139,6 +140,7 @@ public class CaveGrid : SGrid
                                                  { 8, 7, 9 } };
         SetGrid(completedPuzzle);
         StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+        SaveSystem.Current.SetBool("forceAutoMove", false);
 
         UIArtifactWorldMap.SetAreaStatus(Area.Caves, ArtifactWorldMapArea.AreaStatus.color);
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);

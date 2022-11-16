@@ -77,6 +77,11 @@ public class SGrid : Singleton<SGrid>, ISavable
         }
 
         UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.oneBit);
+        
+        if (checkCompletion)
+        {
+            UpdateButtonCompletions(this, null);
+        }
     }
 
     //For deriving classes: Make sure InitArea is called before Init!
