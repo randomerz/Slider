@@ -42,7 +42,7 @@ public class Blob : MonoBehaviour
         }
 
         // check if i need to change parent then if i do, change
-        STile under = SGrid.GetStileUnderneath(this.gameObject);
+       /* STile under = SGrid.GetStileUnderneath(this.gameObject);
 
         if (under == null)
         {
@@ -60,6 +60,6 @@ public class Blob : MonoBehaviour
             {
                 Destroy(this.gameObject);
             }
-        }
+        }*/
     }
 }

@@ -13,7 +13,7 @@ public class Path : MonoBehaviour
 
 
     [Header("Animation Blobs")]
-    Direction direction;
+    public Direction direction;
     public GameObject blob;
     public int timeBetweenCreation = 50;
     public float blobspeed = 1f;
@@ -43,18 +43,10 @@ public class Path : MonoBehaviour
         BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
         if (direction == Direction.LEFT || direction == Direction.RIGHT)
         {
-            travelDistance = (int)collider.size.x + 1;
-            if (pair != null)
-            {
-                travelDistance += (int)pair.GetComponent<BoxCollider2D>().size.x;
-            }
+            travelDistance = (int) this.transform.localScale.x;
         } else
         {
-            travelDistance = (int)collider.size.y + 1;
-            if (pair != null)
-            {
-                travelDistance += (int)pair.GetComponent<BoxCollider2D>().size.y;
-            }
+            travelDistance = (int)this.transform.localScale.y;
         }
         new_blob.UpdateBlobOnPath(defaultAnim, direction, blobspeed, travelDistance, pair);
 
