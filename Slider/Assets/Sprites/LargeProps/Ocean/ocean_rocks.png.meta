@@ -144,9 +144,9 @@ TextureImporter:
         x: 211
         y: 57
         width: 64
-        height: 64
+        height: 48
       alignment: 9
-      pivot: {x: 0.5, y: 0.125}
+      pivot: {x: 0.5, y: 0.16666667}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -154,6 +154,27 @@ TextureImporter:
       bones: []
       spriteID: 9dd009d97f3ae4a45951c6976393c7ea
       internalID: 992659301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ocean_rocks_2
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 111
+        width: 160
+        height: 96
+      alignment: 9
+      pivot: {x: 0.5, y: 0.125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56c7639fc299bfb499f88bf7b8ab66ca
+      internalID: 1095219451
       vertices: []
       indices: 
       edges: []
@@ -170,6 +191,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       ocean_rocks_1: 992659301
+      ocean_rocks_2: 1095219451
       ocean_rocks_0: -2076254119
   spritePackingTag: 
   pSDRemoveMatte: 0

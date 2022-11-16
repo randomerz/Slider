@@ -84,5 +84,7 @@ public class Volcano : MonoBehaviour
 
         rockCollectible.transform.position = rockTarget.transform.position;
         rockCollectible.GetComponent<Collider2D>().enabled = true;
+
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, rockTarget.transform.position, rockTarget);
     }
 }
