@@ -10,11 +10,12 @@ public class Blob : MonoBehaviour
     public Direction direction;
     public float travelDistance = 10;
     private float traveledDistance = 0;
+    private Path pair;
     bool flip = false;
 
     public float speed = 1f;
 
-    public void UpdateBlobOnPath(bool defaultAnim, Direction direction, float blobspeed, int travelDistance)
+    public void UpdateBlobOnPath(bool defaultAnim, Direction direction, float blobspeed, int travelDistance, Path pair)
     {
         flip = defaultAnim;
         if (flip)
@@ -24,6 +25,7 @@ public class Blob : MonoBehaviour
         this.direction = direction;
         this.speed = blobspeed;
         this.travelDistance = travelDistance;
+        this.pair = pair;
     }
 
 
@@ -37,6 +39,27 @@ public class Blob : MonoBehaviour
         if (traveledDistance >= travelDistance)
         {
             Destroy(this.gameObject);
+        }
+
+        // check if i need to change parent then if i do, change
+        STile under = SGrid.GetStileUnderneath(this.gameObject);
+
+        if (under == null)
+        {
+           Destroy(this.gameObject);
+           return;
+        }
+
+        GameObject pathStile = this.transform.parent.transform.parent.transform.parent.gameObject;
+        if (under.transform.gameObject != pathStile)
+        {
+            if (pair != null)
+            {
+                this.gameObject.transform.SetParent(pair.transform);
+            } else
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
 }
