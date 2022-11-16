@@ -1,44 +1,53 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+// using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerMoveOffMoss : MonoBehaviour
 {
     [SerializeField] private Transform playerRespawn;
 
-    private Tilemap mossColliders;
+    private Tilemap _mossColliders;
+    private Player _player;
+
 
     private void Awake()
     {
-        mossColliders = GetComponent<Tilemap>();
+        _mossColliders = GetComponent<Tilemap>();
+        _player = FindObjectOfType<Player>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        CheckPlayerCollidingWithMoss(collision);
+        if (collision.collider.GetComponent<Player>() != null)
+        {
+            CheckPlayerCollidingWithMoss();
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        CheckPlayerCollidingWithMoss(collision);
+        if (collision.collider.GetComponent<Player>() != null)
+        {
+            CheckPlayerCollidingWithMoss();
+        }
     }
 
-    private void CheckPlayerCollidingWithMoss(Collision2D collision)
+    public void CheckPlayerCollidingWithMoss()
     {
-        Player player = collision.collider.GetComponent<Player>();
-        if (player != null)
+        Vector3Int playerCellCoords = _mossColliders.WorldToCell(_player.transform.position);
+        if (_mossColliders.cellBounds.Contains(playerCellCoords))
         {
-            Vector3Int playerCellCoords = mossColliders.WorldToCell(player.transform.position);
-            Tile.ColliderType colliderType = mossColliders.GetColliderType(playerCellCoords);
+            Tile.ColliderType colliderType = _mossColliders.GetColliderType(playerCellCoords);
             if (colliderType == Tile.ColliderType.Grid)
             {
-                MovePlayerOffMoss(player.transform);
+                MovePlayerOffMoss();
             }
         }
     }
 
-    private void MovePlayerOffMoss(Transform player)
+    private void MovePlayerOffMoss()
     {
-        player.position = playerRespawn.position;
+        _player.transform.position = playerRespawn.position;
         AudioManager.Play("Hurt");
     }
 }

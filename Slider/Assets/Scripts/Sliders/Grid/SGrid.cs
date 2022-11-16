@@ -77,6 +77,11 @@ public class SGrid : Singleton<SGrid>, ISavable
         }
 
         UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.oneBit);
+        
+        if (checkCompletion)
+        {
+            UpdateButtonCompletions(this, null);
+        }
     }
 
     //For deriving classes: Make sure InitArea is called before Init!
@@ -315,13 +320,6 @@ public void SetGrid(int[,] puzzle)
     }
     
 
-    // C: result of consolidating 2 versions of this method
-    // and i don't wanna rewrite method calls
-    public static STile GetStileUnderneath(GameObject target)
-    {
-        return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>());
-    }
-
     // DC: This will prefer an GameObjs parented STile if it has one
     public static STile GetSTileUnderneath(Transform entity, STile currentStileUnderneath)
     {
@@ -347,6 +345,14 @@ public void SetGrid(int[,] puzzle)
             }
         }
         return stileUnderneath;
+    }
+
+    // C: result of consolidating 2 versions of this method
+    // and i don't wanna rewrite method calls
+    // DC: try to use the other one if possible
+    public static STile GetStileUnderneath(GameObject target)
+    {
+        return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>());
     }
 
     public static bool PosInSTileBounds(Vector3 pos, Vector3 stilePos, float offset)

@@ -5,7 +5,7 @@ using UnityEngine;
 public class ScavengerHuntBoard : MonoBehaviour
 {
     private List<string> available_tasks = new List<string> ();
-    string tasks_available = "Talk to Bob for a chance at a job!";
+    string tasks_available = "Want to be a legend? Talk to Bob.";
     public void OnEnable()
     {
         ShopManager.OnTurnedItemIn += RemoveTask;
@@ -24,7 +24,7 @@ public class ScavengerHuntBoard : MonoBehaviour
     {
         if(this.available_tasks.Count >0)
             this.tasks_available = $"Scavengings to Acquire: \n{string.Join(", ", this.available_tasks)}";
-        else if(tasks_available != "Talk to Bob for a chance at a job!" && SGrid.Current.GetNumTilesCollected() == 9)
+        else if(tasks_available != "Want to be a legend? Talk to Bob." && SGrid.Current.GetNumTilesCollected() == 9)
             this.tasks_available = "You've scavenged the whole sea!";
         SaveSystem.Current.SetString("OceanTavernBoardAvailable", tasks_available);
     }

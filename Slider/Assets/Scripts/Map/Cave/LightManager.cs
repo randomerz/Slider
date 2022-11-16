@@ -31,7 +31,7 @@ public class LightManager : MonoBehaviour
     //L: NOTE These should be READ ONLY, but I'm not using ReadOnlyCollection since it would require an entire extra copy for the SetPixels method and we want it to be optimized.
     private Color[] _allBlack = null;
     private Color[] _allBlackStiles = null;
-
+    private bool _updateLightingFlag = false;
     private Shader _caveShader;
 
     public static LightManager instance;
@@ -51,9 +51,27 @@ public class LightManager : MonoBehaviour
         InitializeLighting();
     }
 
+    private void OnEnable()
+    {
+        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
+        SGrid.OnSTileEnabled += OnSTileEnabled;
+        CaveLight.OnLightSwitched += OnLightSwitched;
+    }
+
+    private void OnDisable()
+    {
+        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
+        SGrid.OnSTileEnabled -= OnSTileEnabled;
+        CaveLight.OnLightSwitched -= OnLightSwitched;
+    }
+
     private void Update()
     {
-        UpdateLighting();
+        if (_updateLightingFlag || SGrid.Current.TilesMoving())
+        {
+            _updateLightingFlag = false;
+            UpdateLighting();
+        }
     }
 
     private void OnDestroy()
@@ -62,6 +80,21 @@ public class LightManager : MonoBehaviour
         {
             instance = null;
         }
+    }
+
+    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        _updateLightingFlag = true;
+    }
+
+    private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        _updateLightingFlag = true;
+    }
+
+    private void OnLightSwitched(object sender, CaveLight.OnLightSwitchedArgs e)
+    {
+        _updateLightingFlag = true;
     }
 
     //x and y are in world coordinates.
@@ -259,6 +292,7 @@ public class LightManager : MonoBehaviour
         return _allBlackStiles;
     }
 
+    #region Draw Gizmos
     private void OnDrawGizmosSelected()
     {
         DrawLightMask();
@@ -295,4 +329,5 @@ public class LightManager : MonoBehaviour
             }
         }
     }
+    #endregion
 }

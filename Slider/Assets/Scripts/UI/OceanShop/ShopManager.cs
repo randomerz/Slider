@@ -360,7 +360,6 @@ public class ShopManager : Singleton<ShopManager>, ISavable
         OpenMainPanel();
 
         // TODO: varied intro lines here
-        // CheckTavernKeep();
 
         if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
         {

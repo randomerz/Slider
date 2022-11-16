@@ -311,8 +311,13 @@ public class ShopDialogueManager : MonoBehaviour
                         SaveSystem.Current.SetBool("oceanBobNormal", true);
                         shopManager.OpenDialoguePanel();
                     },
-                    "Aye, that's a solid tool there. Here, have some coins on the house. Ask me about jobs and I can help you get started.",
-                    TKSprite.Happy,
+                    "Aye, that's a solid tool there. In fact, that was awfully quick.",
+                    TKSprite.Question,
+                    () => {
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "Keep it up, and you might just make a name for yourself around here. Ask me about jobs and I can help you get started.",
+                    TKSprite.Question,
                     () => {
                         shopManager.OpenMainPanel();
 
@@ -322,6 +327,8 @@ public class ShopDialogueManager : MonoBehaviour
                     TKSprite.Happy,
                     () => {
                         canOverrideDialogue = true;
+                    }
+                ));
                     }
                 ));
                     }
