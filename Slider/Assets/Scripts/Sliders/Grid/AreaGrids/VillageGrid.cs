@@ -133,6 +133,8 @@ public class VillageGrid : SGrid
         else if (PlayerInventory.Contains("Slider 3", Area.Caves)) // if they finish caves before village
         {
             ruinsFragment.transform.SetParent(slider8FloorTransform);
+            ruinsFragment.transform.position = slider8FloorTransform.position;
+            ruinsFragment.GetComponent<Collider2D>().enabled = true;
         }
     }
 
