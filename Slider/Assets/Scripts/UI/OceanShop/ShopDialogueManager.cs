@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -13,6 +14,15 @@ public class ShopDialogueManager : MonoBehaviour
     private TMPSpecialText currentSpecialText;
     private ShopDialogue currentDialogue;
     // private Coroutine typingCoroutine;
+
+    private List<string> mainShopDialgoue = new List<string>{
+        "Welcome back sailor!", 
+        "Find anything interesting today?",
+        "Looks like a good day to set sail!",
+        "Buccaneer Bob, at your service.",
+        "What can I do for you today?",
+        "Ahoy there!"
+        };
 
     public enum TKSprite { // tavernkeep sprite
         Normal,
@@ -225,9 +235,12 @@ public class ShopDialogueManager : MonoBehaviour
         switch (codeName)
         {
             case "Default Main":
+                System.Random r = new System.Random();
+                int index = r.Next(0,this.mainShopDialgoue.Count);
+
                 SetDialogue(new ShopDialogue(
                     null,
-                    "Buccaneer Bob, at your service.",
+                    this.mainShopDialgoue[index],
                     TKSprite.Normal,
                     null
                 ));
