@@ -11,8 +11,9 @@ public class TempEndOfDemoPositionChanger : MonoBehaviour
     public Transform nearbySpawn;
     private bool tpToNearbySpawn = true;
 
-    void Start()
+    private void OnEnable() 
     {
+        
         // if (Player.GetPosition().y > transform.position.y)
         // {
         //     Player.SetPosition(Player.GetPosition() - 2 * Vector3.up);
@@ -34,7 +35,7 @@ public class TempEndOfDemoPositionChanger : MonoBehaviour
     
     private IEnumerator TurnOffSpawnProtection()
     {
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.05f);
 
         tpToNearbySpawn = false;
     }
