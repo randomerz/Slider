@@ -47,10 +47,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 0
+  creatingBlobs: 1
   pair: {fileID: 0}
   horizontal: 0
+  direction: 0
   blob: {fileID: 6794732048064429014, guid: f61fb858a7b7cad419aec4dfbf411014, type: 3}
-  timeBetweenCreation: 150
+  timeBetweenCreation: 300
   blobspeed: 1
   travelDistance: 5
 --- !u!61 &1628424990113459616
@@ -95,7 +97,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1628424991106839574
 Transform:
   m_ObjectHideFlags: 0

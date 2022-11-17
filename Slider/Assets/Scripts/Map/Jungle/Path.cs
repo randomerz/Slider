@@ -6,9 +6,10 @@ using UnityEngine;
 public class Path : MonoBehaviour
 {
     public bool active = false;
+    public bool creatingBlobs = true;
     public Path pair;
     private Shape currentShape = null;
-    bool defaultAnim = true; //left, or down (animation will have default and non default for direciton
+    bool defaultAnim = true; //right, or down (animation will have default and non default for direciton
     public bool horizontal = false;
 
 
@@ -23,7 +24,7 @@ public class Path : MonoBehaviour
 
     void Update()
     {
-        if (active)
+        if (active && creatingBlobs)
         {
             if (count >= timeBetweenCreation)
             {
@@ -41,51 +42,68 @@ public class Path : MonoBehaviour
         new_blob.transform.parent = this.transform;
 
         BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
-        if (direction == Direction.LEFT || direction == Direction.RIGHT)
+        travelDistance = (int) this.transform.localScale.x + 1;
+        if (pair != null)
         {
-            travelDistance = (int) this.transform.localScale.x;
-        } else
-        {
-            travelDistance = (int)this.transform.localScale.y;
+            travelDistance += (int)pair.transform.localScale.x;
         }
+  
         new_blob.UpdateBlobOnPath(defaultAnim, direction, blobspeed, travelDistance, pair);
 
-        // update this to be the right end of the path
-        if (direction == Direction.LEFT)
+        // set blob to be the correct starting position
+        if (direction == Direction.LEFT || direction == Direction.DOWN)
         {
             new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2), 0, 0);
         }
-        else if (direction == Direction.RIGHT)
+        else
         {
             new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2), 0, 0);
         }
-        else if (direction == Direction.UP)
-        {
-            new_blob.transform.localPosition = new Vector3(0, collider.offset.y - (collider.size.y / 2), 0);
-        }
-        else
-        {
-            new_blob.transform.localPosition = new Vector3(0, collider.offset.y + (collider.size.y / 2), 0);
-        }
     }
 
-    public void Activate(bool right, Shape shape)
+    public void Activate(bool right, Shape shape, bool creating = true)
     {
         //print("activating path: " + right + " for " + this.gameObject.name);
+        creatingBlobs = creating;
         active = true;
+        count = timeBetweenCreation;
+
         if (right)
         {
-            GetComponentInChildren<SpriteRenderer>().color = Color.green;   //right or down
+            //GetComponentInChildren<SpriteRenderer>().color = Color.green;   //right or down
             defaultAnim = true;
         } else
         {
-            GetComponentInChildren<SpriteRenderer>().color = Color.magenta; //up or left
+            //GetComponentInChildren<SpriteRenderer>().color = Color.magenta; //up or left
             defaultAnim = false;
+        }
+
+        if (horizontal)
+        {
+            if (defaultAnim)
+            {
+                direction = Direction.RIGHT;
+            }
+            else
+            {
+                direction = Direction.LEFT;
+            }
+        }
+        else
+        {
+            if (defaultAnim)
+            {
+                direction = Direction.DOWN;
+            }
+            else
+            {
+                direction = Direction.UP;
+            }
         }
 
         if (pair != null && !pair.isActive())
         {
-            pair.Activate(right, shape);
+            pair.Activate(right, shape, false);
         }
         currentShape = shape;
     }
@@ -93,7 +111,7 @@ public class Path : MonoBehaviour
     public void Deactivate()
     {
         currentShape = null;
-        GetComponentInChildren<SpriteRenderer>().color = Color.white;       //unactivated
+       // GetComponentInChildren<SpriteRenderer>().color = Color.white;       //unactivated
         active = false;
 
         if (pair != null && pair.isActive())

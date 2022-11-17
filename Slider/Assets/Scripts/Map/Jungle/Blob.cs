@@ -42,12 +42,12 @@ public class Blob : MonoBehaviour
         }
 
         // check if i need to change parent then if i do, change
-       /* STile under = SGrid.GetStileUnderneath(this.gameObject);
+        STile under = SGrid.GetStileUnderneath(this.gameObject);
 
         if (under == null)
         {
-           Destroy(this.gameObject);
-           return;
+            Destroy(this.gameObject);
+            return;
         }
 
         GameObject pathStile = this.transform.parent.transform.parent.transform.parent.gameObject;
@@ -56,10 +56,13 @@ public class Blob : MonoBehaviour
             if (pair != null)
             {
                 this.gameObject.transform.SetParent(pair.transform);
-            } else
+            }
+            else
             {
                 Destroy(this.gameObject);
             }
-        }*/
+        }
     }
+
+    //fade in and fade out coroutines
 }
