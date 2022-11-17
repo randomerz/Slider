@@ -318,8 +318,12 @@ public class OceanGrid : SGrid
         {
             if(Player.GetInstance().GetSTileUnderneath().islandId == fogIslandId && correct) 
             {
-                fogIsland.transform.position = Player.GetInstance().GetSTileUnderneath().transform.position;
+                STile playerStile = Player.GetInstance().GetSTileUnderneath();
+                fogIsland.transform.position = playerStile.transform.position;
+                fogIsland.transform.SetParent(playerStile.transform);
                 fogIsland.SetActive(true);
+                SetProgressRingActive(false);
+
                 if (fogIslandId == 6)
                 {
                     fog6.SetActive(false);
@@ -329,10 +333,6 @@ public class OceanGrid : SGrid
                     fog7.SetActive(false);
                 }
             }
-            
-            SetProgressRingActive(false);
-
-            
         }
         else
         {
@@ -357,7 +357,7 @@ public class OceanGrid : SGrid
         }
 
         int currentIslandId = Player.GetInstance().GetSTileUnderneath().islandId;
-        if ((currentIslandId == 6 || currentIslandId == 7))
+        if ((currentIslandId == 6 || currentIslandId == 7) && !foggyCompleted)
         {
             SetProgressRingActive(true);
         }
@@ -400,13 +400,13 @@ public class OceanGrid : SGrid
 
     public bool FoggyCorrectMovement()
     {
-        Debug.Log("player index: " + playerIndex+ " correct path: " + correctPath.Length);
-        if(playerIndex == correctPath.Length-1 && !foggyCompleted)
+        // Debug.Log("player index: " + playerIndex+ " correct path: " + correctPath.Length);
+        if(playerIndex == correctPath.Length - 1 && !foggyCompleted)
         {
             FoggyCompleted();
-            return true;//only returns true the first time u complete this puzzle basically
+            return true; //only returns true the first time u complete this puzzle basically
         }
-        else if (playerIndex >=0 && playerIndex < correctPath.Length && correctPath[playerIndex] == playerMovement)
+        else if (0 <= playerIndex && playerIndex < correctPath.Length - 1 && correctPath[playerIndex] == playerMovement)
         {
             playerIndex++;
             FoggySeasAudio();
@@ -431,6 +431,7 @@ public class OceanGrid : SGrid
         }
 
         playerIndex = 0;
+        foggyCompleted = false; // DC: idk why we made it only completable once
         AudioManager.SetMusicParameter("Ocean", "OceanFoggyProgress", 0);
         foreach (SpriteRenderer note in progressNotes)
         {

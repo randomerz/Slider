@@ -49,7 +49,7 @@ public class Volcano : MonoBehaviour
         for (int i = 0; i < 4; i++)
             smokeIncreasings[i].Stop();
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
 
         // boom
         smokeExplosions[0].Play();

@@ -251,8 +251,9 @@ public class DebugUIManager : MonoBehaviour
             if(excludeSliders && c.name.Contains("Slider")){}
             else
             {
-                c.gameObject.SetActive(true);
-                c.transform.position = Player.GetPosition(); 
+                // c.gameObject.SetActive(true);
+                // c.transform.position = Player.GetPosition(); 
+                c.DoPickUp();
             }
         }
         UIManager.CloseUI();
