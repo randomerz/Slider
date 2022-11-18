@@ -44,6 +44,10 @@ public class SceneChanger : MonoBehaviour
     {
         SceneTransitionOverlayManager.ShowOverlay();
 
+        // Stop people from opening UI!
+        
+        UIManager.InvokeCloseAllMenus(); // In case someone had artifact open while transitioning
+
         /* This loads our new scene in the background. There are two components to loading a new scene:
          * 1. Actually loading it: We can do that in the background easily with LoadSceneAsync and make things smoother.
          * 2. Initializing it: All of our Awake, Start, etc methods have to run now, which takes time. To hide this, we

@@ -70,13 +70,20 @@ public class AchievementManager : Singleton<AchievementManager>
     /// <param name="achievementStatistics"></param>
     public static void OverwriteAchievementData(AchievementStatistic[] achievementStatistics)
     {
-        if (achievementStatistics != null)
-        {
-            foreach (AchievementStatistic statistic in achievementStatistics)
+        try {
+            if (achievementStatistics != null)
             {
-                _instance.achievementStats[statistic.Key] = statistic.Value;
+                foreach (AchievementStatistic statistic in achievementStatistics)
+                {
+                    _instance.achievementStats[statistic.Key] = statistic.Value;
+                }
+                _instance.SendAchievementStatsToSteam();
             }
-            _instance.SendAchievementStatsToSteam();
+        } catch (NullReferenceException)
+        {
+            Debug.LogWarning("[AchievementManager] Failed to load achievement stats. This could indicate that you are not " +
+                "connected to Steam or that AchievementManager is not present in your scene.");
+            return;
         }
     }
 

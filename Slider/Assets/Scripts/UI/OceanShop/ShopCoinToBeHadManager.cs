@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class ShopCoinToBeHadManager : MonoBehaviour
+public class ShopCoinToBeHadManager : MonoBehaviour, ISavable
 {
     public TextMeshProUGUI talkText;
     public TextMeshProUGUI coinToBeHadText;
 
     public TextMeshProUGUI business;
+    public TextMeshProUGUI aBuddingRomance;
     public TextMeshProUGUI shipwreck;
-    public TextMeshProUGUI downWithTheShip;
+    public TextMeshProUGUI magicalSpells;
     public TextMeshProUGUI theVeil;
     public TextMeshProUGUI tangledUp;
     public TextMeshProUGUI eruption;
 
-    private bool[] isNew = { // TODO: serialize
+    TextMeshProUGUI[] texts;
+
+    private bool[] isNew = {
+        true,
         true,
         true,
         true,
@@ -24,101 +28,98 @@ public class ShopCoinToBeHadManager : MonoBehaviour
         true
     };
 
+    private void Awake() {
+        
+        texts = new TextMeshProUGUI[] {
+            business,
+            aBuddingRomance,
+            shipwreck,
+            magicalSpells,
+            theVeil,
+            tangledUp,
+            eruption,
+        };
+    }
+
+    public void Save()
+    {
+        for (int i = 0; i < isNew.Length; i++)
+        {
+            SaveSystem.Current.SetBool($"oceanCoinHintsIsNew{i}", isNew[i]);
+        }
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        for (int i = 0; i < isNew.Length; i++)
+        {
+            isNew[i] = profile.GetBool($"oceanCoinHintsIsNew{i}", true);
+        }
+    }
+
     public void UpdateButtons()
     {
+        // A Budding Romance
+        if (!PlayerInventory.Contains("Rose"))
+            aBuddingRomance.transform.parent.gameObject.SetActive(true);
+        else
+            aBuddingRomance.transform.parent.gameObject.SetActive(false);
+
         // Shipwreck
         if (SGrid.Current.GetStile(4).isTileActive && !PlayerInventory.Contains("Treasure Chest"))
-        {
             shipwreck.transform.parent.gameObject.SetActive(true);
-        }
         else
-        {
             shipwreck.transform.parent.gameObject.SetActive(false);
-        }
         
-        // Down with the Ship
-        if (SGrid.Current.GetStile(5).isTileActive && !PlayerInventory.Contains("Treasure Map"))
-        {
-            downWithTheShip.transform.parent.gameObject.SetActive(true);
-        }
+        // Magical Spells
+        if (SGrid.Current.GetStile(5).isTileActive && !PlayerInventory.Contains("Magical Gem"))
+            magicalSpells.transform.parent.gameObject.SetActive(true);
         else
-        {
-            downWithTheShip.transform.parent.gameObject.SetActive(false);
-        }
+            magicalSpells.transform.parent.gameObject.SetActive(false);
         
         // The Veil
         if (SGrid.Current.GetStile(6).isTileActive && SGrid.Current.GetStile(7).isTileActive && 
             !PlayerInventory.Contains("Mushroom"))
-        {
             theVeil.transform.parent.gameObject.SetActive(true);
-        }
         else
-        {
             theVeil.transform.parent.gameObject.SetActive(false);
-        }
         
         // Tangled Up
         if (SGrid.Current.GetStile(1).isTileActive && SGrid.Current.GetStile(3).isTileActive && 
             SGrid.Current.GetStile(4).isTileActive && SGrid.Current.GetStile(8).isTileActive && 
             SGrid.Current.GetStile(9).isTileActive && !PlayerInventory.Contains("Golden Fish"))
-        {
             tangledUp.transform.parent.gameObject.SetActive(true);
-        }
         else
-        {
             tangledUp.transform.parent.gameObject.SetActive(false);
-        }
         
         // Eruption
         if (SGrid.Current.GetStile(3).isTileActive && SGrid.Current.GetStile(4).isTileActive && 
             SGrid.Current.GetStile(5).isTileActive && SGrid.Current.GetStile(8).isTileActive && 
             SGrid.Current.GetStile(9).isTileActive && !PlayerInventory.Contains("Rock"))
-        {
             eruption.transform.parent.gameObject.SetActive(true);
-        }
         else
-        {
             eruption.transform.parent.gameObject.SetActive(false);
-        }
     }
 
     public void UpdateTexts()
     {
+        if (texts == null) Awake(); // bc of initialization order problems
+
         bool anyTruers = false;
-        if (isNew[0] && business.transform.parent.gameObject.activeSelf) 
+
+        for (int i = 0; i < texts.Length; i++)
         {
-            business.text = business.text.Replace("*", "") + "*";
-            anyTruers = true;
-        }
-        if (isNew[1] && shipwreck.transform.parent.gameObject.activeSelf) 
-        {
-            shipwreck.text = shipwreck.text.Replace("*", "") + "*";
-            anyTruers = true;
-        }
-        if (isNew[2] && downWithTheShip.transform.parent.gameObject.activeSelf) 
-        {
-            downWithTheShip.text = downWithTheShip.text.Replace("*", "") + "*";
-            anyTruers = true;
-        }
-        if (isNew[3] && theVeil.transform.parent.gameObject.activeSelf) 
-        {
-            theVeil.text = theVeil.text.Replace("*", "") + "*";
-            anyTruers = true;
-        }
-        if (isNew[4] && tangledUp.transform.parent.gameObject.activeSelf) 
-        {
-            tangledUp.text = tangledUp.text.Replace("*", "") + "*";
-            anyTruers = true;
-        }
-        if (isNew[5] && eruption.transform.parent.gameObject.activeSelf) 
-        {
-            eruption.text = eruption.text.Replace("*", "") + "*";
-            anyTruers = true;
+            if (isNew[i] && texts[i].transform.parent.gameObject.activeSelf) 
+            {
+                texts[i].text = texts[i].text.Replace("*", "") + "*";
+                anyTruers = true;
+            }
         }
 
         talkText.text = talkText.text.Replace("*", "");
         coinToBeHadText.text = coinToBeHadText.text.Replace("*", "");
 
+        // if any are new add a *
         if (anyTruers)
         {
             talkText.text += "*";
@@ -131,28 +132,7 @@ public class ShopCoinToBeHadManager : MonoBehaviour
         if (isNew[index])
         {
             isNew[index] = false;
-
-            switch (index)
-            {
-                case 0:
-                    business.text = business.text.Replace("*", "");
-                    break;
-                case 1:
-                    shipwreck.text = shipwreck.text.Replace("*", "");
-                    break;
-                case 2:
-                    downWithTheShip.text = downWithTheShip.text.Replace("*", "");
-                    break;
-                case 3:
-                    theVeil.text = theVeil.text.Replace("*", "");
-                    break;
-                case 4:
-                    tangledUp.text = tangledUp.text.Replace("*", "");
-                    break;
-                case 5:
-                    eruption.text = eruption.text.Replace("*", "");
-                    break;
-            }
+            texts[index].text = texts[index].text.Replace("*", "");
 
             UpdateTexts();
         }

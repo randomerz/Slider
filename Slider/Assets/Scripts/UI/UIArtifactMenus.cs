@@ -70,25 +70,18 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         if (!UIManager.canOpenMenus || isClosing)
             return;
 
-        if (Player.IsSafe()) // always true for now
-        {
-            artifactPanel.SetActive(true);
-            isArtifactOpen = true;
+        artifactPanel.SetActive(true);
+        isArtifactOpen = true;
 
-            UIManager.PauseGameGlobal();
-            UIManager.canOpenMenus = false;
-            
-            // scuffed parts
-            Player.SetCanMove(false);
-            Time.timeScale = 1;
+        UIManager.PauseGameGlobal();
+        UIManager.canOpenMenus = false;
+        
+        // scuffed parts
+        Player.SetCanMove(false);
+        Time.timeScale = 1;
 
-            artifactAnimator.SetBool("isVisible", true);
-            uiArtifact.FlickerNewTiles();
-        }
-        else
-        {
-            AudioManager.Play("Artifact Error");
-        }
+        artifactAnimator.SetBool("isVisible", true);
+        uiArtifact.FlickerNewTiles();
     }
 
     public void CloseArtifact()

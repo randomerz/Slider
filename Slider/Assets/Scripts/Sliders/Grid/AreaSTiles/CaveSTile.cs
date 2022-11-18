@@ -9,13 +9,14 @@ public class CaveSTile : STile
     public CaveGrid grid;
     public Tilemap wallsSTilemap;
 
-    private List<GameObject> objectsThatBlockLight;
-
     [SerializeField] private List<Vector2Int> validDirsForLight;
 
     [SerializeField] private List<CaveLight> borderLights;
 
-    public Texture2D HeightMask
+    private List<GameObject> objectsThatBlockLight;
+
+    private Color[] _heightMask;
+    public Color[] HeightMask
     {
         get
         {
@@ -26,7 +27,6 @@ public class CaveSTile : STile
             return _heightMask;
         }
     }
-    private Texture2D _heightMask;
 
     private new void Awake()
     {
@@ -50,25 +50,15 @@ public class CaveSTile : STile
         base.Start();
     }
 
-    private void Update()
-    {
-        //base.Update();
-
-        if (LightManager.instance != null && this.GetMovingDirection() != Vector2.zero)
-        {
-            LightManager.instance.UpdateAll();
-        }
-    }
-
     public override void SetTileActive(bool isTileActive)
     {
         base.SetTileActive(isTileActive);
         
-        if (isTileActive && LightManager.instance != null)
-        {
-            LightManager.instance.UpdateHeightMask(this);
-            LightManager.instance.UpdateMaterials();
-        }
+        //if (isTileActive && LightManager.instance != null)
+        //{
+        //    LightManager.instance.UpdateHeightMask(this);
+        //    LightManager.instance.UpdateMaterials();
+        //}
     }
 
     public bool GetTileLit(int x, int y)
@@ -120,45 +110,68 @@ public class CaveSTile : STile
     }
 
     //L: Gets the STILE_WIDTH x STILE_WIDTH (17 x 17) height mask. (1 if there's a wall tile, 0 if not)
-    private Texture2D GenerateHeightMask()
+    private void GenerateHeightMask()
     {
         int offset = STILE_WIDTH / 2;
-        _heightMask = new Texture2D(STILE_WIDTH, STILE_WIDTH);
+        _heightMask = new Color[STILE_WIDTH * STILE_WIDTH];
 
-        //L : Coordinates coorespond to the actual tile coordinates in the world, which are offset from the Texture2D coords by STILE_WIDTH / 2
+        for (int i = 0; i < STILE_WIDTH*STILE_WIDTH; i++)
+        {
+            _heightMask[y*STILE_WIDTH+x] = Color.black;
+        }
         
         foreach (var go in objectsThatBlockLight)
         {
             Tilemap tm = go.GetComponent<Tilemap>();
             if (tm != null)
             {
-                for (int x = -offset; x <= offset; x++)
+                BoundsInt bounds = new BoundsInt(-offset, -offset, 0, STILE_WIDTH, STILE_WIDTH, 1);
+                foreach (var pos in tm.cellBounds.allPositionsWithin)
                 {
-                    for (int y = -offset; y <= offset; y++)
+                    TileBase tile = tm.GetTile(pos);
+                    if (tile != null)
                     {
-                        TileBase tile = tm.GetTile(new Vector3Int(x, y, 0));
-                        Color pixelColor = _heightMask.GetPixel(x + offset, y + offset);
-                        // DC: Set the height to 1 if it was already 1, or tile isnt empty
-                        _heightMask.SetPixel(x + offset, y + offset, (tile != null || pixelColor == Color.white) ? Color.white : Color.black);
+                        _heightMask[(pos.y+offset)*STILE_WIDTH + (pos.x+offset)] = Color.white;
                     }
                 }
-                // Debug.Log("Finished processing tilemap on " + name);
             } 
             else
             {
                 //Position relative to the center of the tile
-                Vector2Int posOnTile = new Vector2Int((int) (go.transform.position.x - transform.position.x), (int) (go.transform.position.y - transform.position.y));
-                if (posOnTile.x < -offset || posOnTile.x > offset || posOnTile.y < -offset || posOnTile.y > offset)
+                int centerX = (int) (go.transform.position.x - transform.position.x);
+                int centerY = (int) (go.transform.position.y - transform.position.y);
+
+                if (centerX < -offset || centerX > offset || centerY < -offset || centerY > offset)
                 {
                     Debug.LogError("Positions when calculating height mask fall outside the tile's bounds");
                 }
-                // Debug.Log("Adding a wall at " + posOnTile.x + ", " + posOnTile.y);
-                _heightMask.SetPixel(posOnTile.x + offset, posOnTile.y + offset, Color.white);
+
+                _heightMask[(centerY + offset) * STILE_WIDTH + (centerX + offset)] = Color.white;
             }
         }
-        
+    }
 
-        _heightMask.Apply();
-        return _heightMask;
+    private void OnDrawGizmosSelected()
+    {
+        //DrawHeightMask(); //Enable for debugging
+    }
+
+    private void DrawHeightMask()
+    {
+        if (_heightMask != null)
+        {
+            Gizmos.color = Color.white;
+            for (int x = 0; x < STILE_WIDTH; x++)
+            {
+                for (int y = 0; y < STILE_WIDTH; y++)
+                {
+                    if (_heightMask[y * STILE_WIDTH + x] == Color.white)
+                    {
+                        Vector3 worldPos = new Vector3(x + transform.position.x - STILE_WIDTH / 2, y + transform.position.y - STILE_WIDTH / 2, 0);
+                        Gizmos.DrawSphere(worldPos, 0.2f);
+                    }
+                }
+            }
+        }
     }
 }

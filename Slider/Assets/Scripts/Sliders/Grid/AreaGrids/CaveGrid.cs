@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class CaveGrid : SGrid
 {
-    private static bool checkLightingCompletion = false;
-
     private bool allTilesLit = false;
 
     [SerializeField] private CaveDoor caveDoor;
@@ -31,24 +29,50 @@ public class CaveGrid : SGrid
 
     private void OnEnable()
     {
-        if (checkLightingCompletion)
+        if (checkCompletion)
         {
-            checkCompletionsOnMoveFunc(this, null);
+            checkCompletionsOnMoveFunc.Invoke(this, null);
             SGridAnimator.OnSTileMoveEnd += checkCompletionsOnMoveFunc;
         }
     }
 
     private void OnDisable()
     {
-        if (checkLightingCompletion)
+        if (checkCompletion)
         {
             SGridAnimator.OnSTileMoveEnd -= checkCompletionsOnMoveFunc;
         }
     }
 
-    public void StartFinalPuzzle() {
+    public override void Save()
+    {
+        base.Save();
+
+        SaveSystem.Current.SetBool("cavesCompletion", checkCompletion);
+    }
+
+    public override void Load(SaveProfile profile)
+    {
+        base.Load(profile);
+
+        checkCompletion = profile.GetBool("cavesCompletion");
+
+        if (checkCompletion)
+        {
+            gridAnimator.ChangeMovementDuration(0.5f);
+        }
+
+        mountainCaveWall.Load(profile); // needed?
+    }
+
+    public void StartFinalPuzzle() 
+    {
         SGridAnimator.OnSTileMoveEnd += checkCompletionsOnMoveFunc;
-        checkLightingCompletion = true;
+
+        checkCompletion = true;
+        SaveSystem.Current.SetBool("cavesCompletion", checkCompletion);
+        SaveSystem.Current.SetBool("forceAutoMove", true);
+
         CheckLightingCompletions();
     }
 
@@ -78,7 +102,7 @@ public class CaveGrid : SGrid
 
     public void SetCavesCompleteCondition(Condition c)
     {
-        c.SetSpec(checkLightingCompletion && allTilesLit);
+        c.SetSpec(checkCompletion && allTilesLit);
     }
 
     // These are for NPC dialogue to call
@@ -116,22 +140,9 @@ public class CaveGrid : SGrid
                                                  { 8, 7, 9 } };
         SetGrid(completedPuzzle);
         StartCoroutine(CheckCompletionsAfterDelay(1.1f));
+        SaveSystem.Current.SetBool("forceAutoMove", false);
 
         UIArtifactWorldMap.SetAreaStatus(Area.Caves, ArtifactWorldMapArea.AreaStatus.color);
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
-    }
-
-    public override void Save() 
-    {
-        base.Save();
-        // caveDoor.Save();
-      //  mountainCaveWall.Save();
-    }
-
-    public override void Load(SaveProfile profile)
-    {
-        base.Load(profile);
-        // caveDoor.Load(profile);
-        mountainCaveWall.Load(profile);
     }
 }

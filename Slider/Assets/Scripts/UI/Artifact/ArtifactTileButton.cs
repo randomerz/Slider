@@ -78,11 +78,17 @@ public class ArtifactTileButton : MonoBehaviour
     public void UpdateTileActive()
     {
         SetSpriteToIslandOrEmpty();
-        SetPosition(MyStile.x, MyStile.y, false);
+
+        //Fix for Conveyor Bug in Factory
+        if (MyStile.GetMovingDirection() == Vector2.zero && UIArtifact.GetInstance().MoveQueueEmpty())
+        {
+            SetPosition(MyStile.x, MyStile.y, false);
+        }
     }
 
     public virtual void SetPosition(int x, int y, bool animateChange=false)
     {
+        //Debug.Log($"Changed button pos from ({this.x}, {this.y}) to ({x}, {y})");
         if (animateChange && TileIsActive)
         {
             // The "Travel" direction

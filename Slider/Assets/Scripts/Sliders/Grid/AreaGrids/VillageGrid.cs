@@ -14,7 +14,6 @@ public class VillageGrid : SGrid
     [SerializeField] private GameObject ruinsFragment; // for finishing caves before village
     [SerializeField] private Transform slider8FloorTransform; // for finishing caves before village
     private Coroutine shuffleBuildUpCoroutine;
-    private bool checkCompletion = false;
     
     // [SerializeField] private string poofParticleName;
     // private GameObject poofParticles;
@@ -39,8 +38,8 @@ public class VillageGrid : SGrid
 
         AudioManager.PlayMusic("Village");
 
-        if (GameManager.instance.debugModeActive)
-            SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
+        // if (GameManager.instance.debugModeActive)
+        //     SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
 
         if (!SaveSystem.Current.GetBool(INTRO_CUTSCENE_SAVE_STRING))
         {
@@ -50,11 +49,6 @@ public class VillageGrid : SGrid
         else
         {
             UIEffects.FadeFromBlack();
-        }
-
-        if (checkCompletion)
-        {
-            UpdateButtonCompletions(this, null);
         }
         
         CheckHole();
@@ -104,7 +98,17 @@ public class VillageGrid : SGrid
     }
 
 
+    public void OnWaterfallEntry()
+    {
+        // if puzzle complete + enter waterfall, then mark the cave door as exploded
+        if (PlayerInventory.Contains("Slider 9", Area.Village))
+        {
+            SaveSystem.Current.SetBool("caveDoorExploded", true);
+        }
+    }
+
     // === Village puzzle specific ===
+    
     public void CheckFishOn(Condition c)
     {
         c.SetSpec(fishOn);
@@ -129,6 +133,8 @@ public class VillageGrid : SGrid
         else if (PlayerInventory.Contains("Slider 3", Area.Caves)) // if they finish caves before village
         {
             ruinsFragment.transform.SetParent(slider8FloorTransform);
+            ruinsFragment.transform.position = slider8FloorTransform.position;
+            ruinsFragment.GetComponent<Collider2D>().enabled = true;
         }
     }
 
@@ -229,6 +235,7 @@ public class VillageGrid : SGrid
     {
         if (!PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153"))
         {
+            AudioManager.Play("Puzzle Complete");
             GivePlayerTheCollectible("Slider 9");
 
             // Disable queues
@@ -237,7 +244,6 @@ public class VillageGrid : SGrid
             // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
             StartCoroutine(CheckCompletionsAfterDelay(1.2f));
 
-            AudioManager.Play("Puzzle Complete");
             SaveSystem.Current.SetBool("forceAutoMove", false);
             UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
         }

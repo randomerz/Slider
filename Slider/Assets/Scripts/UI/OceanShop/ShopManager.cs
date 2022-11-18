@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using TMPro;
 
 // ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
-public class ShopManager : Singleton<ShopManager>
+public class ShopManager : Singleton<ShopManager>, ISavable
 {
     //private static ShopManager _instance;
     public class OnTurnedItemInArgs : System.EventArgs
@@ -15,7 +17,7 @@ public class ShopManager : Singleton<ShopManager>
     public static event System.EventHandler<OnTurnedItemInArgs> OnTurnedItemIn;
     
     private int totalCreditCount;
-    private int credits; // TODO: serialize
+    private int credits;
     private bool turnedInAnchor;
     private bool turnedInTreasureChest;
     private bool turnedInTreasureMap;
@@ -43,17 +45,18 @@ public class ShopManager : Singleton<ShopManager>
     public GameObject uiShopPanel;
     // these are sub sections (the bottom ones)
     public GameObject mainPanel;
-
-    public GameObject bottle1;
-    public GameObject bottle2;
-    public GameObject bottle3;
-
     public GameObject buyPanel;
     public GameObject talkPanel;
     public GameObject dialoguePanel;
 
+    public Button sellButton;
+    public TextMeshProUGUI sellButtonText;
     public GameObject[] buyItemButtons;
     public GameObject[] talkSubPanels;
+
+    public GameObject bottle1;
+    public GameObject bottle2;
+    public GameObject bottle3;
 
     public enum States
     {
@@ -112,20 +115,72 @@ public class ShopManager : Singleton<ShopManager>
     {
         bindingBehaviors.ForEach(bindingBehavior => Controls.UnregisterBindingBehavior(bindingBehavior));
     }
+
+    #endregion
+
+    # region Save Load
+
+    public void Save()
+    {
+        SaveSystem.Current.SetInt("oceanCredits", credits);
+        SaveSystem.Current.SetInt("oceanTotalCreditCount", totalCreditCount);
+
+        SaveSystem.Current.SetBool("oceanTurnedInAnchor", turnedInAnchor);
+        SaveSystem.Current.SetBool("oceanTurnedInTreasureChest", turnedInTreasureChest);
+        SaveSystem.Current.SetBool("oceanTurnedInTreasureMap", turnedInTreasureMap);
+        SaveSystem.Current.SetBool("oceanTurnedInMushroom", turnedInMushroom);
+        SaveSystem.Current.SetBool("oceanTurnedInGoldenFish", turnedInGoldenFish);
+        SaveSystem.Current.SetBool("oceanTurnedInRock", turnedInRock);
+        SaveSystem.Current.SetBool("oceanTurnedInRose", turnedInRose);
+        SaveSystem.Current.SetBool("oceanStartedFinalQuest", startedFinalQuest);
+
+        for (int i = 0; i < wasSliderOrDrinkCollectibleBought.Length; i++)
+        {
+            SaveSystem.Current.SetBool($"oceanWasSliderBought{i}", wasSliderOrDrinkCollectibleBought[i]);
+            // Debug.Log($"Was collectible {i} bought: " + wasSliderOrDrinkCollectibleBought[i]);
+        }
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        credits = profile.GetInt("oceanCredits");
+        totalCreditCount = profile.GetInt("oceanTotalCreditCount");
+
+        turnedInAnchor = profile.GetBool("oceanTurnedInAnchor");
+        turnedInTreasureChest = profile.GetBool("oceanTurnedInTreasureChest");
+        turnedInTreasureMap = profile.GetBool("oceanTurnedInTreasureMap");
+        turnedInMushroom = profile.GetBool("oceanTurnedInMushroom");
+        turnedInGoldenFish = profile.GetBool("oceanTurnedInGoldenFish");
+        turnedInRock = profile.GetBool("oceanTurnedInRock");
+        turnedInRose = profile.GetBool("oceanTurnedInRose");
+        startedFinalQuest = profile.GetBool("oceanStartedFinalQuest");
+
+        for (int i = 0; i < wasSliderOrDrinkCollectibleBought.Length; i++)
+        {
+            wasSliderOrDrinkCollectibleBought[i] = profile.GetBool($"oceanWasSliderBought{i}");
+            // Debug.Log($"Was collectible {i} bought: " + wasSliderOrDrinkCollectibleBought[i]);
+        }
+
+        UpdateBuyButtons();
+    }
+    
     #endregion
 
     public void CheckTavernKeep()
     {
         // rest of rewards
-        if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
-        {
-            turnedInAnchor = true;
-            EarnCredits(2); //change back to 2
-            shopDialogueManager.UpdateDialogue("Turn in Anchor");
-            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Trusty Anchor" });
-        }
 
         int origCreditCount = totalCreditCount;
+        
+        // Anchor turn in is checked in OpenShop()
+
+        if(PlayerInventory.Contains("Rose") && !turnedInRose)
+        {
+            turnedInRose = true;
+            EarnCredits(1);
+            shopDialogueManager.UpdateDialogue("Turn in Rose");
+            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Delicate Rose" });
+        }
         if (PlayerInventory.Contains("Treasure Chest") && !turnedInTreasureChest)
         {
             turnedInTreasureChest = true;
@@ -161,50 +216,55 @@ public class ShopManager : Singleton<ShopManager>
             shopDialogueManager.UpdateDialogue("Turn in Rock");
             OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Peculiar Rock" });
         }
-        if(PlayerInventory.Contains("Rose") && !turnedInRose)
-        {
-            turnedInRose = true;
-            EarnCredits(1);
-            shopDialogueManager.UpdateDialogue("Turn in Rose");
-            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Delicate Rose" });
-        }
 
         if (totalCreditCount - origCreditCount >= 1)
         {
             AudioManager.Play("Puzzle Complete");
+        }
+        else
+        {
+            AudioManager.Play("Artifact Error");
         }
         if (totalCreditCount - origCreditCount >= 2)
         {
             shopDialogueManager.UpdateDialogue("Turn in Multiple Items");
         }
 
-        if (totalCreditCount == 7 && !startedFinalQuest)
+        if (totalCreditCount == 8 && !startedFinalQuest)
         {
             startedFinalQuest = true;
-        }
-
-        if (startedFinalQuest)
-        {
             shopDialogueManager.UpdateDialogue("All Items Returned");
         }
 
-        // just activate in order for now
-        //for (int i = 4; i < Mathf.Min(4 + totalCreditCount, 10); i++)
-        //{
-          //  ActivateSliderCollectible(i);
-        //}
+        UpdateSellButton();
+    }
 
+    private void UpdateSellButton()
+    {
+        if (HasSellableItems())
+        {
+            sellButtonText.text = sellButtonText.text.Replace("*", "") + "*";
+            sellButtonText.color = GameSettings.white;
+            sellButton.enabled = false;
+        }
+        else
+        {
+            sellButtonText.text = sellButtonText.text.Replace("*", "");
+            sellButtonText.color = GameSettings.darkGray;
+            sellButton.enabled = true;
+        }
+    }
 
-
-        // check final quest on completing all others
-        // if (totalCreditCount == 7 + 1 && !startedFinalQuest) // todo: remove +1 later
-        // {
-        //     startedFinalQuest = true;
-        //     SGrid.current.checkCompletion = true;
-        //     SGrid.OnGridMove += SGrid.CheckCompletions;
-
-        //     AudioManager.Play("Puzzle Complete");
-        // }
+    private bool HasSellableItems()
+    {
+        return (
+            (PlayerInventory.Contains("Rose") && !turnedInRose) ||
+            (PlayerInventory.Contains("Treasure Chest") && !turnedInTreasureChest) ||
+            (PlayerInventory.Contains("Magical Gem") && !turnedInTreasureMap) ||
+            (PlayerInventory.Contains("Mushroom") && !turnedInMushroom) ||
+            (PlayerInventory.Contains("Golden Fish") && !turnedInGoldenFish) ||
+            (PlayerInventory.Contains("Rock") && !turnedInRock)
+        );
     }
 
     public int GetCredits()
@@ -249,37 +309,11 @@ public class ShopManager : Singleton<ShopManager>
           AudioManager.Play("Glass Clink");
           UpdateBuyButtons();
         }
-        /*
-        if ((credits > 0 || sliderNumber == 4) && !wasSliderCollectibleBought[sliderNumber - 4])
-        {
-            if (sliderNumber != 4) SpendCredits(1);
-            Collectible c = SGrid.current.GetCollectible("Slider " + sliderNumber);
-            c.DoOnCollect();
-            // SGrid.current.ActivateSliderCollectible(sliderNumber);
-            wasSliderCollectibleBought[sliderNumber - 4] = true;
-            AudioManager.Play("Puzzle Complete");
-
-            int numTurnedOn = UpdateBuyButtons();
-            if (numTurnedOn == 0)
-            {
-              ActivateUnboughtDrinkButtons();
-            }
-        }
-        */
         else
         {
             AudioManager.Play("Artifact Error");
         }
     }
-
-    /*
-    public void ActivateUnboughtDrinkButtons()
-    {
-      buyDrinksButtons[0].SetActive(true);
-      buyDrinksButtons[1].SetActive(true);
-      buyDrinksButtons[2].SetActive(true);
-    }
-    */
 
     #region UI
 
@@ -322,10 +356,23 @@ public class ShopManager : Singleton<ShopManager>
 
 
         uiShopPanel.SetActive(true);
+        UpdateSellButton();
         OpenMainPanel();
 
+        // TODO: varied intro lines here
 
-        CheckTavernKeep();
+        if (PlayerInventory.Instance.GetHasCollectedAnchor() && !turnedInAnchor)
+        {
+            turnedInAnchor = true;
+            EarnCredits(2); //change back to 2
+            shopDialogueManager.UpdateDialogue("Turn in Anchor");
+            OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Trusty Anchor" });
+        }
+
+        if (startedFinalQuest && !(SGrid.Current as OceanGrid).GetIsCompleted())
+        {
+            shopDialogueManager.UpdateDialogue("All Items Returned");
+        }
     }
 
     public void CloseShop()
@@ -367,7 +414,7 @@ public class ShopManager : Singleton<ShopManager>
                     SetTalkState(0);
                 break;
             case States.Dialogue:
-                if (shopDialogueManager.isFirstTime || !PlayerInventory.Instance.GetHasCollectedAnchor())
+                if (!SaveSystem.Current.GetBool("oceanHasTalkedToBob") || !PlayerInventory.Instance.GetHasCollectedAnchor())
                 {
                     CloseShop();
                     break;

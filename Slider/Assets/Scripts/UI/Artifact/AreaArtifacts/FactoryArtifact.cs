@@ -70,6 +70,8 @@ public class FactoryArtifact : UIArtifact
         var buttonToNewPos = new Dictionary<ArtifactTileButton, Vector2Int>();
         foreach (Movement m in move.moves)
         {
+            //Debug.Log($"Button Pos: {m.startLoc}");
+            //Debug.Log($"Button end pos: {m.endLoc}");
             ArtifactTileButton b = GetButton(m.startLoc.x, m.startLoc.y);
             buttonToNewPos[b] = m.endLoc;
         }

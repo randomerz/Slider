@@ -1,47 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+// using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerMoveOffMoss : MonoBehaviour
 {
-    public Tilemap mossMap;
-    public Transform player;
-    public Transform playerRespawn;
+    [SerializeField] private Transform playerRespawn;
+
+    private Tilemap _mossColliders;
+    private Player _player;
+
 
     private void Awake()
     {
-        if (player == null)
+        _mossColliders = GetComponent<Tilemap>();
+        _player = FindObjectOfType<Player>();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.GetComponent<Player>() != null)
         {
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+            CheckPlayerCollidingWithMoss();
         }
-        mossMap = GetComponent<Tilemap>();
     }
 
-    private void OnEnable()
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        CaveMossManager.MossIsGrowing += CheckPlayerOnMoss;
-    }
-
-    private void OnDisable()
-    {
-        CaveMossManager.MossIsGrowing -= CheckPlayerOnMoss;
-    }
-
-    internal void CheckPlayerOnMoss(object sender, CaveMossManager.MossIsGrowingArgs e)
-    {
-        //Each mossMap is tied to a specific respawn point.
-        if (e.mossMap == mossMap)   //This check (hopefully) avoids bugs with teleporting to the wrong places (tile 4 bug)
+        if (collision.collider.GetComponent<Player>() != null)
         {
-            //L: Determine if the player is on the moss while it is growing
-            Vector2Int mossTile = TileUtil.WorldToTileCoords(e.mossMap.CellToWorld(e.cellPos));
-            bool movePlayerOffMoss = mossTile.Equals(TileUtil.WorldToTileCoords(player.transform.position)) && e.isGrowing;
-            if (movePlayerOffMoss)
+            CheckPlayerCollidingWithMoss();
+        }
+    }
+
+    public void CheckPlayerCollidingWithMoss()
+    {
+        Vector3Int playerCellCoords = _mossColliders.WorldToCell(_player.transform.position);
+        if (_mossColliders.cellBounds.Contains(playerCellCoords))
+        {
+            Tile.ColliderType colliderType = _mossColliders.GetColliderType(playerCellCoords);
+            if (colliderType == Tile.ColliderType.Grid)
             {
-                player.transform.position = playerRespawn.position;
-                AudioManager.Play("Hurt");
+                MovePlayerOffMoss();
             }
         }
     }
-    
+
+    private void MovePlayerOffMoss()
+    {
+        _player.transform.position = playerRespawn.position;
+        AudioManager.Play("Hurt");
+    }
 }

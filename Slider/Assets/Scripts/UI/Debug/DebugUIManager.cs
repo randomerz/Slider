@@ -7,7 +7,8 @@ using TMPro;
 
 public class DebugUIManager : MonoBehaviour
 {
-    private const bool debugEnabled = false;
+    public static bool justDidSetScene;
+
     public GameObject debugPanel;
     public bool isDebugOpen;
 
@@ -85,6 +86,7 @@ public class DebugUIManager : MonoBehaviour
 
         if (IsSceneInBuild(sceneName))
         {
+            justDidSetScene = true;
             SaveSystem.Current.Save();
             SceneManager.LoadScene(sceneName);
         }
@@ -249,8 +251,9 @@ public class DebugUIManager : MonoBehaviour
             if(excludeSliders && c.name.Contains("Slider")){}
             else
             {
-                c.gameObject.SetActive(true);
-                c.transform.position = Player.GetPosition(); 
+                // c.gameObject.SetActive(true);
+                // c.transform.position = Player.GetPosition(); 
+                c.DoPickUp();
             }
         }
         UIManager.CloseUI();

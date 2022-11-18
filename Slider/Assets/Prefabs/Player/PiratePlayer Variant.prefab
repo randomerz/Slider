@@ -15,6 +15,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 5981176701932174026, guid: bfba14aa6d01fba4f8f22a6a88325609, type: 3}
+    - target: {fileID: 380634036804812843, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 380634037254267600, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_Name
       value: PiratePlayer Variant
@@ -87,11 +91,15 @@ PrefabInstance:
       propertyPath: m_NormalizedViewPortRect.height
       value: 0.16666666
       objectReference: {fileID: 0}
+    - target: {fileID: 1622983208411525262, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.46875
+      objectReference: {fileID: 0}
     - target: {fileID: 3125492532932420003, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: itemText
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 3315645012634170180, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
+    - target: {fileID: 3512278234758974931, guid: 2478d932e7783d34fa46a7932428b1b6, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}

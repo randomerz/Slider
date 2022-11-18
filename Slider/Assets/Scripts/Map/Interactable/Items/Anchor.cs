@@ -21,14 +21,16 @@ public class Anchor : Item
 
     public void Start()
     {
-        currentSTile = GetComponentInParent<STile>();
-        if (currentSTile != null)
+        if (!SaveSystem.Current.GetBool("playerHasCollectedAnchor"))
         {
-            currentSTile.hasAnchor = true;
-            if(currentSTile.isTileActive)
-                OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true });
+            currentSTile = GetComponentInParent<STile>();
+            if (currentSTile != null)
+            {
+                currentSTile.hasAnchor = true;
+                if(currentSTile.isTileActive)
+                    OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true });
+            }
         }
-            
     }
 
     private void OnEnable()

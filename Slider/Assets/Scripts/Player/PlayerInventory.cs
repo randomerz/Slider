@@ -7,10 +7,10 @@ public class PlayerInventory : MonoBehaviour
     public class InventoryEvent : System.EventArgs {
         public Collectible collectible;
     }
-    
-    public static System.EventHandler<InventoryEvent> OnPlayerGetCollectible;
 
     private static PlayerInventory instance;
+    
+    public static System.EventHandler<InventoryEvent> OnPlayerGetCollectible;
 
     private static List<Collectible.CollectibleData> collectibles = new List<Collectible.CollectibleData>();
 
@@ -19,6 +19,7 @@ public class PlayerInventory : MonoBehaviour
     private static Item currentItem = null;
 
     private static bool hasCollectedAnchor = false;
+    [SerializeField] private Transform itemPickupTransform;
     [SerializeField] private GameObject anchorPrefab;
 
     public static PlayerInventory Instance
@@ -45,7 +46,7 @@ public class PlayerInventory : MonoBehaviour
         // populate inventory on scene start
         if (hasCollectedAnchor)
         {
-            GameObject anchor = Instantiate(anchorPrefab, transform.position, Quaternion.identity, transform);
+            GameObject anchor = Instantiate(anchorPrefab, itemPickupTransform.position, Quaternion.identity, itemPickupTransform);
             anchor.SetActive(false);
             equipables.Add(anchor.GetComponent<Item>());
             anchor.GetComponent<Item>().SetCollider(false);
@@ -73,6 +74,7 @@ public class PlayerInventory : MonoBehaviour
 
     public void SetHasCollectedAnchor(bool value)
     {
+        SaveSystem.Current.SetBool("playerHasCollectedAnchor", value);
         hasCollectedAnchor = value;
     }
 
