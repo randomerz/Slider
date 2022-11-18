@@ -55,6 +55,7 @@ public class Sign : Box
     {
         //print("sign got shape " + shape);
 
+        //not deleting the old one i think
         if (parents.Contains(this) && shape != null)
         {
             return;

@@ -8,7 +8,7 @@ public class Path : MonoBehaviour
     public bool active = false;
     public bool creatingBlobs = true;
     public Path pair;
-    private Shape currentShape = null;
+    public Shape currentShape = null;
     bool defaultAnim = true; //right, or down (animation will have default and non default for direciton
     public bool horizontal = false;
 
@@ -48,7 +48,7 @@ public class Path : MonoBehaviour
             travelDistance += (int)pair.transform.localScale.x;
         }
   
-        new_blob.UpdateBlobOnPath(defaultAnim, direction, blobspeed, travelDistance, pair);
+        new_blob.UpdateBlobOnPath(defaultAnim, direction, blobspeed, travelDistance, pair, currentShape);
 
         // set blob to be the correct starting position
         if (direction == Direction.LEFT || direction == Direction.DOWN)
@@ -105,6 +105,7 @@ public class Path : MonoBehaviour
         {
             pair.Activate(right, shape, false);
         }
+
         currentShape = shape;
     }
 

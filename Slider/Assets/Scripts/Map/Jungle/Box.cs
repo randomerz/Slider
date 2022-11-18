@@ -85,7 +85,7 @@ public class Box : MonoBehaviour
         {
             if (currentShape != null)
             {
-                if (!paths[currentDirection].isActive())//something wrong here
+                if (!paths[currentDirection].isActive() || paths[currentDirection].getAnimType() == isDefaultCurrentPath())//something wrong here
                 {
                     paths[currentDirection].Activate(isDefaultCurrentPath(), currentShape); 
                     next.RecieveShape(paths[currentDirection], currentShape, parents);
