@@ -10,10 +10,14 @@ public class MagiTechGrid : SGrid
 
     public int gridOffset = 100; //C: The X distance between the present and past grid
 
+    [SerializeField] private NPC lightningBoi;
+    [SerializeField] private NPC fireBoi;
     [SerializeField] private NPC hungryBoi;
     [SerializeField] private DesyncItem desyncBurger;
 
     private Dictionary<Area, bool> gems;
+    private bool fireStool;
+    private bool lightningStool;
 
     /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
     and the right 9 STiles represent the past. The past tile will have an islandID
@@ -86,23 +90,28 @@ public class MagiTechGrid : SGrid
 
     #endregion
 
+    private List<Collider2D> GetCollidingItems(GameObject obj)
+    {
+        ContactFilter2D filter = new()
+        {
+            layerMask = LayerMask.GetMask("Item"),
+            useLayerMask = true
+        };
+
+        BoxCollider2D collider = obj.GetComponent<BoxCollider2D>();
+        List<Collider2D> list = new();
+        collider.OverlapCollider(filter, list);
+        return list;
+    }
+
     public void HasTwoBurgers(Condition c)
     {
         if (desyncBurger.IsDesynced)
         {
-            BoxCollider2D collider = hungryBoi.GetComponent<BoxCollider2D>();
-
-            ContactFilter2D filter = new ContactFilter2D();
-            filter.layerMask = LayerMask.GetMask("Item");
-            filter.useLayerMask = true;
-
-            List<Collider2D> list = new List<Collider2D>(); //Change this to however many items can be put inside hungry boi's collider
-            collider.OverlapCollider(filter, list);
-
             bool hasBurger = false;
             bool hasDesyncBurger = false;
 
-            foreach (Collider2D hit in list)
+            foreach (Collider2D hit in GetCollidingItems(hungryBoi.gameObject))
             {
                 if (hit != null)
                 {
@@ -120,16 +129,60 @@ public class MagiTechGrid : SGrid
         }
     }
 
+    public void FireHasStool(Condition c)
+    {
+        if (gems.GetValueOrDefault(Area.Mountain))
+        {
+            c.SetSpec(true);
+            return;
+        }
+        foreach (Collider2D hit in GetCollidingItems(fireBoi.gameObject))
+        {
+            if (hit != null)
+            {
+                Item item = hit.GetComponent<Item>();
+                if (item.itemName == "Step Stool")
+                {
+                    c.SetSpec(true);
+                    return;
+                }
+            }
+        }
+        c.SetSpec(false);
+    }
+    public void LightningHasStool(Condition c)
+    {
+        if (gems.GetValueOrDefault(Area.Factory))
+        {
+            c.SetSpec(true);
+            return;
+        }
+
+        foreach (Collider2D hit in GetCollidingItems(lightningBoi.gameObject))
+        {
+            if (hit != null)
+            {
+                Item item = hit.GetComponent<Item>();
+                if (item.itemName == "Step Stool")
+                {
+                    c.SetSpec(true);
+                    return;
+                }
+            }
+        }
+        c.SetSpec(false);
+    }
+
     #region Gem Conds
-    public void hasOceanGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Ocean, false));
-    public void hasMilitaryGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Military, false));
-    public void hasFactoryGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Factory, false));
-    public void hasMountainGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Mountain, false));
-    public void hasVillageGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Village, false));
-    public void hasCavesGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Caves, false));
-    public void hasDesertGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Desert, false));
-    public void hasJungleGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Jungle, false));
-    public void hasMagiTechGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.MagiTech, false));
+    public void HasOceanGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Ocean, false));
+    public void HasMilitaryGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Military, false));
+    public void HasFactoryGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Factory, false));
+    public void HasMountainGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Mountain, false));
+    public void HasVillageGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Village, false));
+    public void HasCavesGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Caves, false));
+    public void HasDesertGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Desert, false));
+    public void HasJungleGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Jungle, false));
+    public void HasMagiTechGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.MagiTech, false));
 
     #endregion
     public void HasAllGems(Condition c)
@@ -147,8 +200,7 @@ public class MagiTechGrid : SGrid
 
     public void TurnInGem(Item item)
     {
-        Area itemNameAsEnum;
-        if (Enum.TryParse(item.itemName, out itemNameAsEnum))
+        if (Enum.TryParse(item.itemName, out Area itemNameAsEnum))
         {
             gems.Add(itemNameAsEnum, true);
             //Funni turn-in coroutine
