@@ -179,7 +179,7 @@ public class Path : MonoBehaviour
         Physics2D.queriesStartInColliders = true;
     }
 
-    private void OnDrawGizmos()
+/*    private void OnDrawGizmos()
     {
         if (this.transform.localEulerAngles.z == -90 || this.transform.localEulerAngles.z == 90)
         {
@@ -193,5 +193,5 @@ public class Path : MonoBehaviour
             Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(1, 0, 0) * 5);
             Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(-1, 0, 0) * 5);
         }
-    }
+    }*/
 }

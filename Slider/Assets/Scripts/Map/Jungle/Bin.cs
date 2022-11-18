@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Bin : Box
 {
+
+
     private void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
