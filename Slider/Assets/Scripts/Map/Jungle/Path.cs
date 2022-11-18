@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class Path : MonoBehaviour
 {
-    public bool active = false;
-    public bool creatingBlobs = true;
+    private bool active = false;
+    private bool creatingBlobs = true;
     public Path pair;
-    public Shape currentShape = null;
+    private Shape currentShape = null;
     bool defaultAnim = true; //right, or down (animation will have default and non default for direciton
     public bool horizontal = false;
 
@@ -20,7 +20,7 @@ public class Path : MonoBehaviour
     public float blobspeed = 1f;
     public int travelDistance = 0;
 
-    private int count = 0;
+    public int count = 0;
 
     void Update()
     {
@@ -66,7 +66,6 @@ public class Path : MonoBehaviour
         //print("activating path: " + right + " for " + this.gameObject.name);
         creatingBlobs = creating;
         active = true;
-        count = timeBetweenCreation;
 
         if (right)
         {

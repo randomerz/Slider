@@ -5,7 +5,7 @@ using UnityEngine;
 public class Sign : Box
 {
     public RecipeList recipes;
-    private Dictionary<Path, Shape> shapes = new Dictionary<Path, Shape>(); //idk if i sshould rename this i should think
+    public Dictionary<Path, Shape> shapes = new Dictionary<Path, Shape>(); //idk if i sshould rename this i should think
     
     // Start is called before the first frame update
     void Awake()
@@ -55,26 +55,24 @@ public class Sign : Box
     {
         //print("sign got shape " + shape);
 
-        //not deleting the old one i think
         if (parents.Contains(this) && shape != null)
         {
             return;
         }
 
-        this.parents = parents;
         parents.Add(this);
 
         if (path.pair != null)
         {
             shapes[path.pair] = shape;
             MergeShapes();
-            CreateShape();
+            CreateShape(parents);
         }
         else
         {
             shapes[path] = shape;
             MergeShapes();
-            CreateShape();
+            CreateShape(parents);
         }
     }
     public void MergeShapes()
@@ -88,12 +86,10 @@ public class Sign : Box
             }
         }
 
-/*        print("boo");
-        foreach (Shape shape in shapesRecieved)
+        foreach (Shape s in shapesRecieved)
         {
-            print(shape);
+            print(s.name);
         }
-        print("ahdkfljaldf");*/
 
         foreach (Recipe recipe in recipes.list)
         {

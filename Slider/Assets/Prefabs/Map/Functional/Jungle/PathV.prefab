@@ -49,12 +49,14 @@ MonoBehaviour:
   active: 0
   creatingBlobs: 1
   pair: {fileID: 0}
+  currentShape: {fileID: 0}
   horizontal: 0
   direction: 0
   blob: {fileID: 6794732048064429014, guid: f61fb858a7b7cad419aec4dfbf411014, type: 3}
   timeBetweenCreation: 300
   blobspeed: 1
   travelDistance: 5
+  count: 300
 --- !u!61 &1628424990113459616
 BoxCollider2D:
   m_ObjectHideFlags: 0
