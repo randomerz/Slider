@@ -165,7 +165,13 @@ public void SetGrid(int[,] puzzle)
         if (playerSTile != null)
             Player.SetPosition(playerSTile.transform.position + playerOffset);
 
+        STile[,] old = grid;
         grid = newGrid;
+
+        OnGridMove.Invoke(this, new OnGridMoveArgs {
+            oldGrid = old, 
+            grid = grid
+        });
     }
 
     /*

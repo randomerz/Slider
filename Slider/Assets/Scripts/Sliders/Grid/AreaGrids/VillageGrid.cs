@@ -38,8 +38,8 @@ public class VillageGrid : SGrid
 
         AudioManager.PlayMusic("Village");
 
-        if (GameManager.instance.debugModeActive)
-            SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
+        // if (GameManager.instance.debugModeActive)
+        //     SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
 
         if (!SaveSystem.Current.GetBool(INTRO_CUTSCENE_SAVE_STRING))
         {

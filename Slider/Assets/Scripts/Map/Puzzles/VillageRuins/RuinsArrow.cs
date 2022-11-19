@@ -5,6 +5,7 @@ using UnityEngine;
 public class RuinsArrow : MonoBehaviour
 {
     [SerializeField] private Sprite[] arrows; // NNE, NE, ENE, ESE, SE, SSE
+    [SerializeField] private Sprite arrowComplete; // NNE, NE, ENE, ESE, SE, SSE
     [SerializeField] private RuinsArrowRod rod1;
     [SerializeField] private RuinsArrowRod rod2;
     [SerializeField] private RuinsArrowRod rod3;
@@ -12,6 +13,7 @@ public class RuinsArrow : MonoBehaviour
 
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private ParticleSystem arrowParticles;
+    [SerializeField] private ParticleTrail particleTrail;
     [SerializeField] private FlashWhite arrowFlash;
     [SerializeField] private RuinsMapIcons mapIcons;
 
@@ -79,7 +81,7 @@ public class RuinsArrow : MonoBehaviour
         // check if arrow should be on or not
         if (value)
         {
-            if (!spriteRenderer.enabled)
+            if (!spriteRenderer.enabled && !PlayerInventory.Contains("Slider 7"))
             {
                 // if was false before
                 arrowParticles.Play();
@@ -87,16 +89,30 @@ public class RuinsArrow : MonoBehaviour
             }
             spriteRenderer.enabled = true;
             UpdateArrowDirection(grid);
+
+            if (!PlayerInventory.Contains("Slider 7"))
+            {
+                particleTrail.StopRepeating();
+                particleTrail.SpawnParticleTrail(true);
+            }
         }
         else
         {
             spriteRenderer.enabled = false;
             arrowParticles.Stop();
+            
+            particleTrail.StopRepeating();
         }
     }
 
     private void UpdateArrowDirection(STile[,] grid)
     {
+        if (PlayerInventory.Contains("Slider 7", Area.Village))
+        {
+            spriteRenderer.sprite = arrowComplete;
+            return;
+        }
+
         Vector2Int t2 = Vector2Int.zero;
         Vector2Int t5 = Vector2Int.zero;
 
