@@ -369,7 +369,7 @@ public class ShopManager : Singleton<ShopManager>, ISavable
             OnTurnedItemIn?.Invoke(this, new OnTurnedItemInArgs {item = "A Trusty Anchor" });
         }
 
-        if (startedFinalQuest)
+        if (startedFinalQuest && !(SGrid.Current as OceanGrid).GetIsCompleted())
         {
             shopDialogueManager.UpdateDialogue("All Items Returned");
         }
