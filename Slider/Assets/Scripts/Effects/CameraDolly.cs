@@ -28,6 +28,7 @@ public class CameraDolly : MonoBehaviour
     private IEnumerator Rollercoaster()
     {
         UIEffects.FadeFromBlack();
+        UIManager.canOpenMenus = false;
         Player.SetCanMove(false);
 
         float t = 0;
@@ -59,6 +60,7 @@ public class CameraDolly : MonoBehaviour
     private void EndTrack()
     {
         UIEffects.FadeFromBlack();
+        UIManager.canOpenMenus = true;
         Player.SetCanMove(true);
         virtualCamera.Priority = -15;
     }
