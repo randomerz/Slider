@@ -308,7 +308,8 @@ GameObject:
   m_Component:
   - component: {fileID: 313243080293722693}
   - component: {fileID: 1153776546385232476}
-  m_Layer: 0
+  - component: {fileID: 27038539776020003}
+  m_Layer: 16
   m_Name: Button Trigger
   m_TagString: ButtonTrigger
   m_Icon: {fileID: 0}
@@ -345,7 +346,28 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.6
+  m_Radius: 0.5
+--- !u!50 &27038539776020003
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7018306198962470640}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 1
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &7446180154865683207
 GameObject:
   m_ObjectHideFlags: 0
