@@ -119,6 +119,9 @@ public class PlayerAction : Singleton<PlayerAction>
         if (UIManager.IsUIOpen() || UIArtifactMenus.IsArtifactOpen())
             return;
 
+        if (!Player.GetCanMove())
+            return;
+
         if (TryPickOrDrop())
             return; // if succesfully picked something up, return
 
