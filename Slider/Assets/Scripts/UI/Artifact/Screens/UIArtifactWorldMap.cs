@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UIArtifactWorldMap : MonoBehaviour
+public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
 {
     public List<ArtifactWorldMapArea> mapAreas;
     // Make sure to have them in order of enums!
     
-    private static Dictionary<Area, ArtifactWorldMapArea> areaToMapArea = new Dictionary<Area, ArtifactWorldMapArea>();
-    private static Dictionary<Area, ArtifactWorldMapArea.AreaStatus> areaToStatus; // TODO: serialize
+    private Dictionary<Area, ArtifactWorldMapArea> areaToMapArea = new Dictionary<Area, ArtifactWorldMapArea>();
+    private Dictionary<Area, ArtifactWorldMapArea.AreaStatus> areaToStatus; // TODO: serialize
     public GameObject inventoryText;
 
     private bool didInit = false;
+
+    public static UIArtifactWorldMap GetInstance()
+    {
+        return _instance;
+    }
 
     private void Awake() 
     {
@@ -24,7 +29,27 @@ public class UIArtifactWorldMap : MonoBehaviour
         if (didInit)
             return;
         didInit = true;
+        
+        InitializeSingleton(this);
+    }
 
+    public void Save()
+    {
+        Dictionary<Area, SGridData> areaToSgridData = SaveSystem.Current.GetAreaToSGridData();
+
+        foreach (Area area in Area.GetValues(typeof(Area)))
+        {
+            if (area == Area.None)
+                continue; // 0 is Area.none
+
+            areaToSgridData[area].completionColor = areaToStatus[area];
+        }
+
+        SaveSystem.Current.SetAreaToSGridData(areaToSgridData);
+    }
+
+    public void Load(SaveProfile profile)
+    {
         foreach (int i in Area.GetValues(typeof(Area)))
         {
             if (i == 0)
@@ -34,10 +59,7 @@ public class UIArtifactWorldMap : MonoBehaviour
             areaToMapArea[(Area)i] = mapAreas[i - 1]; // offset 0
         }
 
-        if (areaToStatus == null)
-        {
-            LoadAreaToStatus();
-        }
+        LoadAreaToStatus(profile);
 
         foreach (int i in Area.GetValues(typeof(Area)))
         {
@@ -49,43 +71,45 @@ public class UIArtifactWorldMap : MonoBehaviour
         }
     }
 
-    private static void LoadAreaToStatus()
+    private void LoadAreaToStatus(SaveProfile profile)
     {
-        // TODO: fix this
         areaToStatus = new Dictionary<Area, ArtifactWorldMapArea.AreaStatus>();
 
-        foreach (int i in Area.GetValues(typeof(Area)))
+        foreach (Area area in Area.GetValues(typeof(Area)))
         {
-            if (i == 0)
+            if (area == Area.None)
                 continue; // 0 is Area.none
 
-            areaToStatus[(Area)i] = ArtifactWorldMapArea.AreaStatus.none;
+            areaToStatus[area] = profile.GetSGridData(area).completionColor;
         }
     }
 
+    // this is bc we refactored this to be a singleton
     public static void SetAreaStatus(Area area, ArtifactWorldMapArea.AreaStatus status)
     {
-        // if (areaToMapArea == null)
-            
+        _instance._SetAreaStatus(area, status);
+    }
 
+    public void _SetAreaStatus(Area area, ArtifactWorldMapArea.AreaStatus status)
+    {
         if (areaToMapArea[area].SetStatus(status))
         {
             areaToStatus[area] = status;
         }
     }
 
-    public static ArtifactWorldMapArea.AreaStatus GetAreaStatus(Area area)
+    public ArtifactWorldMapArea.AreaStatus GetAreaStatus(Area area)
     {
         return areaToStatus[area];
     }
 
-    public static void ClearAreaStatus(Area area)
+    public void ClearAreaStatus(Area area)
     {
         areaToMapArea[area].ClearStatus();
         areaToStatus[area] = ArtifactWorldMapArea.AreaStatus.none;
     }
 
-    public static void UpdateAreaStatuses()
+    public void UpdateAreaStatuses()
     {
         foreach (ArtifactWorldMapArea a in areaToMapArea.Values)
         {

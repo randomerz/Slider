@@ -32,6 +32,8 @@ public class CameraDolly : MonoBehaviour
         Player.SetCanMove(false);
 
         float t = 0;
+        
+        // fade out at end
         while (t < duration - 0.25f)
         {
             float x = (t / duration);
@@ -55,6 +57,8 @@ public class CameraDolly : MonoBehaviour
             yield return null;
             t += Time.deltaTime;
         }
+
+        // EndTrack();
     }
 
     private void EndTrack()

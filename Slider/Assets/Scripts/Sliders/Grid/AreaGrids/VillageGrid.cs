@@ -41,15 +41,7 @@ public class VillageGrid : SGrid
         // if (GameManager.instance.debugModeActive)
         //     SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
 
-        if (!SaveSystem.Current.GetBool(INTRO_CUTSCENE_SAVE_STRING))
-        {
-            SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
-            introCameraDolly.StartTrack();
-        }
-        else
-        {
-            UIEffects.FadeFromBlack();
-        }
+        UIEffects.FadeFromBlack();
         
         CheckHole();
         
@@ -97,6 +89,15 @@ public class VillageGrid : SGrid
             gridAnimator.ChangeMovementDuration(0.5f);
     }
 
+
+    public void OnHouseExit()
+    {
+        if (!SaveSystem.Current.GetBool(INTRO_CUTSCENE_SAVE_STRING))
+        {
+            SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
+            introCameraDolly.StartTrack();
+        }
+    }
 
     public void OnWaterfallEntry()
     {

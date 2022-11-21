@@ -19,7 +19,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     {
         InitializeSingleton();
 
-        artifactWorldMap.Init();
+        artifactWorldMap.Init(); // TODO: remove this! make it standalone 
 
         // check if this is pointing to the correct UIArtifact or prefab (this happens when we have scripts/prefabs extend UIArtifact)
         if (uiArtifact.gameObject.scene.name == null)

@@ -5,9 +5,12 @@ using UnityEngine;
 [System.Serializable]
 public class SGridData 
 {
-    public List<STileData> grid = new List<STileData>();
-    // public List<STileData> altGrid = new List<STileData>();
+    public Area myArea;
+
+    public List<STileData> grid = null;
     public int[,] realigningGrid;
+
+    public ArtifactWorldMapArea.AreaStatus completionColor;
 
     [System.Serializable]
     public class STileData {
@@ -27,11 +30,16 @@ public class SGridData
     }
 
 
-    public SGridData(SGrid sgrid) {
-        UpdateGrid(sgrid);
+    public SGridData(Area area) {
+        myArea = area;
+        grid = null;
+        realigningGrid = null;
+        completionColor = ArtifactWorldMapArea.AreaStatus.none;
     }
 
     public void UpdateGrid(SGrid sgrid) {
+        if (grid == null) grid = new List<STileData>();
+        
         grid.Clear();
         for (int x = 0; x < sgrid.Width; x++)
         {

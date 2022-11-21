@@ -63,7 +63,14 @@ public class Player : Singleton<Player>, ISavable
 
     private void Start() 
     {
-        UITrackerManager.AddNewTracker(gameObject, UITrackerManager.DefaultSprites.circle1, UITrackerManager.DefaultSprites.circleEmpty, 3f);
+        UITrackerManager.AddNewTracker(
+            gameObject, 
+            UITrackerManager.DefaultSprites.playerBlackCircle, 
+            UITrackerManager.DefaultSprites.playerBlackCircleEmpty, 
+            UITrackerManager.DefaultSprites.playerWhiteCircle, 
+            UITrackerManager.DefaultSprites.playerWhiteCircleEmpty, 
+            3f
+        );
     }
     
     void Update()

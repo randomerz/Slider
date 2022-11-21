@@ -28,6 +28,13 @@ public class SaveProfile
         this.profileName = profileName;
         strings["Cat"] = profileName;
         lastArea = Area.Village;
+
+        foreach (Area area in Area.GetValues(typeof(Area)))
+        {
+            if (area == Area.None) continue;
+            
+            areaToSGridData[area] = new SGridData(area);
+        }
     }
 
     #region Getters / Setters
@@ -159,12 +166,12 @@ public class SaveProfile
             Debug.LogError("Tried saving an area for Region.None");
         }
 
-        if (!areaToSGridData.ContainsKey(area))
-        {
-            areaToSGridData[area] = new SGridData(sgrid);
-            // playerPos[area] = Player.GetPosition();
-            return;
-        }
+        // if (!areaToSGridData.ContainsKey(area))
+        // {
+        //     areaToSGridData[area] = new SGridData(sgrid);
+        //     // playerPos[area] = Player.GetPosition();
+        //     return;
+        // }
 
         areaToSGridData[area].UpdateGrid(sgrid);
         // Debug.Log("length: " + areaToSGridData[area].grid.Count);

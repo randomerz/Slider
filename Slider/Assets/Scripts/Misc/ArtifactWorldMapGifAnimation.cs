@@ -19,7 +19,7 @@ public class ArtifactWorldMapGifAnimation : MonoBehaviour
     public void ClearAllAreas()
     {
         foreach (Area a in areas)
-            UIArtifactWorldMap.ClearAreaStatus(a);
+            UIArtifactWorldMap.GetInstance().ClearAreaStatus(a);
     }
 
     public IEnumerator AnimateAllAreas()
