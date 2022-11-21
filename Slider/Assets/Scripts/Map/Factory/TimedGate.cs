@@ -17,6 +17,8 @@ public class TimedGate : ElectricalNode
     [SerializeField] private Sprite blinkSprite;
     [SerializeField] private SpriteRenderer sr;
 
+    private Sprite[] allSprites; 
+
     [Header("EXPOSED FOR DEBUG")]
     [SerializeField] private int numInputsPowered;
 
@@ -48,7 +50,6 @@ public class TimedGate : ElectricalNode
 
     public override bool AffectedByBlackout => affectedByBlackout;
 
-    #region Unity Callbacks
     private new void Awake()
     {
         base.Awake();
@@ -84,7 +85,14 @@ public class TimedGate : ElectricalNode
         blinking = false;   //L: Coroutines are stopped when game objects are disabled.
         UIArtifact.MoveMadeOnArtifact -= MoveMadeOnArtifact;
     }
-    #endregion
+
+    private void OnValidate()
+    {
+        if (numTurns > 4)
+        {
+            Debug.LogError("Timed Gate only supports countdowns of 4 or less");
+        }
+    }
 
     #region ElectricalNode Overrides
 
@@ -113,6 +121,31 @@ public class TimedGate : ElectricalNode
     }
     #endregion
 
+    public int GetTabSpriteIndex()
+    {
+        for (int i = 0; i < countdownSprite.Length; i++)
+        {
+            if (sr.sprite == countdownSprite[i])
+            {
+                return i;
+            }
+        }
+
+        if (sr.sprite == successSprite)
+        {
+            return countdownSprite.Length;
+        }
+        if (sr.sprite == failureSprite)
+        {
+            return countdownSprite.Length+1;
+        }
+        if (sr.sprite == blinkSprite)
+        {
+            return countdownSprite.Length+2;
+        }
+
+        return -1;
+    }
 
     //This is called via player interaction
     public void ActivateGate()

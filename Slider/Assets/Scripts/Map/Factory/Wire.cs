@@ -74,7 +74,7 @@ public class Wire : ConductiveElectricalNode
             }
             else
             {
-                Debug.LogWarning($"Sparks not found for tile at position {pos} with sprite {tm.GetSprite(pos)}");
+                //Debug.LogWarning($"Sparks not found for tile at position {pos} with sprite {tm.GetSprite(pos)}");
             }
 
         }
