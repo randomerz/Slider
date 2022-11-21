@@ -6,6 +6,7 @@ public class ConductiveElectricalNode : ElectricalNode
 {
     [Header("Conductive Electrical Node")]
     [SerializeField] private bool isConductiveItem;
+    [SerializeField] private bool isConductiveTerminus;
     [SerializeField] private bool ignoreNotMovingCheck;
 
     public struct NodeEventArgs
@@ -28,39 +29,63 @@ public class ConductiveElectricalNode : ElectricalNode
         base.Awake();
     }
 
-    protected virtual void OnTriggerEnter2D(Collider2D collision)
+    private void OnValidate()
     {
-        ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
+        if (isConductiveItem && isConductiveTerminus)
+        {
+            Debug.LogWarning("Node cannot be both conductive item and terminus. This will result in unexpected behaviour.");
+        }
+    }
+
+    protected virtual void OnTriggerEnter2D(Collider2D other)
+    {
+        CheckAddConnection(other);
+    }
+
+    protected virtual void OnTriggerStay2D(Collider2D other)
+    {
+        CheckAddConnection(other);
+    }
+
+    protected virtual void OnTriggerExit2D(Collider2D other)
+    {
+        CheckRemoveConnection(other);
+    }
+
+    private void CheckAddConnection(Collider2D other)
+    {
+        ConductiveElectricalNode otherNode = other.gameObject.GetComponentInParent<ConductiveElectricalNode>();
 
         //Disallow connections btw 2 conductive items (for now)
-        if (other != null)
+        if (otherNode != null)
         {
-            bool bothConductiveItems = isConductiveItem && other.isConductiveItem;
-            if (BothNodesNotMoving(other) && !bothConductiveItems)
+            if (BothNodesNotMoving(otherNode) && ConductiveItemCheck(otherNode))
             {
-                if (AddNeighbor(other))
+                if (AddNeighbor(otherNode))
                 {
-                    onAddNode?.Invoke(this, new NodeEventArgs(this, other));
+                    onAddNode?.Invoke(this, new NodeEventArgs(this, otherNode));
                 }
             }
         }
     }
 
-    protected virtual void OnTriggerStay2D(Collider2D collision)
+    private void CheckRemoveConnection(Collider2D other)
     {
-        OnTriggerEnter2D(collision);
-    }
-
-    protected virtual void OnTriggerExit2D(Collider2D collision)
-    {
-        ConductiveElectricalNode other = collision.gameObject.GetComponentInParent<ConductiveElectricalNode>();
-        if (other != null)
+        ConductiveElectricalNode otherNode = other.gameObject.GetComponentInParent<ConductiveElectricalNode>();
+        if (otherNode != null)
         {
-            if (RemoveNeighbor(other))
+            if (RemoveNeighbor(otherNode))
             {
-                onRemoveNode?.Invoke(this, new NodeEventArgs(this, other));
+                onRemoveNode?.Invoke(this, new NodeEventArgs(this, otherNode));
             }
         }
+    }
+
+    private bool ConductiveItemCheck(ConductiveElectricalNode other)
+    {
+        bool bothConductiveItems = isConductiveItem && other.isConductiveItem;
+        bool itemTerminusCheck = isConductiveItem == other.isConductiveTerminus && isConductiveTerminus == other.isConductiveItem;
+        return !bothConductiveItems && itemTerminusCheck;
     }
 
     public override void OnPoweredHandler(OnPoweredArgs e)
