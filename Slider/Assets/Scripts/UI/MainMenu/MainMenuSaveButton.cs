@@ -37,7 +37,7 @@ public class MainMenuSaveButton : MonoBehaviour
                 profileNameText.text = profile.GetProfileName();
             else
                 profileNameText.text = "Delete?";
-            completionText.text = string.Format("{0}/9", profile.GetAreaToSGridData().Keys.Count);
+            completionText.text = string.Format("{0}/9", GetNumAreasCompleted(profile));
             float seconds = profile.GetPlayTimeInSeconds();
             int minutes = (int)seconds / 60;
             timeText.text = string.Format("{0}h{1:D2}", minutes / 60, minutes % 60);
@@ -50,6 +50,19 @@ public class MainMenuSaveButton : MonoBehaviour
             timeText.gameObject.SetActive(false);
             catSticker.enabled = false;
         }
+    }
+
+    private int GetNumAreasCompleted(SaveProfile profile)
+    {
+        int count = 0;
+        foreach (Area area in Area.GetValues(typeof(Area)))
+        {
+            if (area == Area.None) continue;
+
+            if (profile.GetSGridData(area).completionColor == ArtifactWorldMapArea.AreaStatus.color)
+                count += 1;
+        }
+        return count;
     }
     
     public void ReadProfileFromSave()

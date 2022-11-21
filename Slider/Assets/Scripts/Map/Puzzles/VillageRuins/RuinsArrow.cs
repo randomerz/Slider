@@ -6,6 +6,7 @@ public class RuinsArrow : MonoBehaviour
 {
     [SerializeField] private Sprite[] arrows; // NNE, NE, ENE, ESE, SE, SSE
     [SerializeField] private Sprite arrowComplete; // NNE, NE, ENE, ESE, SE, SSE
+    [SerializeField] private GameObject burriedSlider;
     [SerializeField] private RuinsArrowRod rod1;
     [SerializeField] private RuinsArrowRod rod2;
     [SerializeField] private RuinsArrowRod rod3;
@@ -85,7 +86,7 @@ public class RuinsArrow : MonoBehaviour
             {
                 // if was false before
                 arrowParticles.Play();
-                SGrid.Current.ActivateSliderCollectible(7);
+                burriedSlider.SetActive(true);
             }
             spriteRenderer.enabled = true;
             UpdateArrowDirection(grid);
