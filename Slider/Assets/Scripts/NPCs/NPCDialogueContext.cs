@@ -22,7 +22,6 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
     //L: This should be a state machine now that I think about it.
     private bool canGiveDialogue;
     private bool dialogueBoxIsActive;
-    private bool currDchainExhausted;
     private bool playerInDialogueTrigger;
     private bool isTypingDialogue;
     private bool waitingForPlayerAction;
@@ -112,6 +111,11 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         {
             DeactivateDialogueBox();
         }
+
+        if (playerInDialogueTrigger && !dialogueBoxIsActive)
+        {
+
+        }
     }
 
     public void SetDialogueEnabled(bool value)
@@ -148,7 +152,13 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
     public void OnConditionalsChanged()
     {
         display.SetMessagePing(!CurrDchainIsEmpty());
-        if (dialogueBoxIsActive && playerInDialogueTrigger)
+
+        StartDialogueIfPlayerInTrigger();
+    }
+
+    private void StartDialogueIfPlayerInTrigger()
+    {
+        if (playerInDialogueTrigger)
         {
             if (context.CurrCond.alwaysStartFromBeginning)
             {
@@ -186,6 +196,9 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
             {
                 SkipText();
             }
+        } else if (playerInDialogueTrigger)
+        {
+            //TypeCurrentDialogue();
         }
     }
 
@@ -339,7 +352,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
     {
         if (CurrDchain == null)
         {
-            Debug.Log("CuurDchain is null");
+            Debug.Log("CurrDchain is null");
             return null;
         }
         if (CurrDchainIndex < 0 || CurrDchainIndex >= CurrDchain.Count)
