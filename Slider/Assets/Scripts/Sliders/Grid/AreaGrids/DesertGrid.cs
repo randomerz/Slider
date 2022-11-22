@@ -48,8 +48,8 @@ public class DesertGrid : SGrid
     
     private void OnEnable() {
         if (checkCompletion) {
+            OnGridMove -= UpdateButtonCompletions; 
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
-            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
         }
         if (checkMonkey)
         {
@@ -60,9 +60,8 @@ public class DesertGrid : SGrid
     private void OnDisable() {
         if (checkCompletion)
         {
-            OnGridMove -= UpdateButtonCompletions; // this is probably not needed
+            OnGridMove -= UpdateButtonCompletions;
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
-            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
         }
         if (checkMonkey)
         {
@@ -373,27 +372,40 @@ public class DesertGrid : SGrid
         checkCompletion = true;
         SaveSystem.Current.SetBool("desertCompletion", checkCompletion);
 
-        OnGridMove += UpdateButtonCompletions; // this is probably not needed
+        OnGridMove += UpdateButtonCompletions;
         UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
-        SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
     }
     
-    private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    protected override void UpdateButtonCompletionsHelper()
     {
-        if (!PlayerInventory.Contains("Slider 9", Area.Desert) && (GetGridString() == "567_2#3_184"))
+        base.UpdateButtonCompletionsHelper();
+
+        CheckFinalPlacements(UIArtifact.GetGridString());
+    }
+
+    private void CheckFinalPlacements(string gridString)
+    {
+        if (!PlayerInventory.Contains("Slider 9", myArea) && (gridString == "567_2#3_184"))
         {
-            GivePlayerTheCollectible("Slider 9");
-
-            // Disable queues
-            UIArtifact.ClearQueues();
-
-            // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
-            StartCoroutine(CheckCompletionsAfterDelay(1.1f));
-
             AudioManager.Play("Puzzle Complete");
-            UIArtifactWorldMap.SetAreaStatus(Area.Desert, ArtifactWorldMapArea.AreaStatus.color);
-            UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+
+            // Disable artifact movement
+            UIArtifact.DisableMovement(false); // TODO: make sure this works with scrap of the scroll
         }
     }
+
+    private IEnumerator PlaceTile9()
+    {
+        yield return new WaitUntil(() => UIArtifact._instance.MoveQueueEmpty());
+
+        GivePlayerTheCollectible("Slider 9");
+
+        // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
+        StartCoroutine(CheckCompletionsAfterDelay(1.2f));
+
+        UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
+        UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+    }
+
     #endregion
 }

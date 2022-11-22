@@ -15,8 +15,6 @@ public class VillageGrid : SGrid
     [SerializeField] private Transform slider8FloorTransform; // for finishing caves before village
     private Coroutine shuffleBuildUpCoroutine;
     
-    // [SerializeField] private string poofParticleName;
-    // private GameObject poofParticles;
 
     public CameraDolly introCameraDolly;
     private const string INTRO_CUTSCENE_SAVE_STRING = "villageIntroCutscene";
@@ -32,22 +30,25 @@ public class VillageGrid : SGrid
         }
     }
 
+    public void dm()
+    {
+        UIArtifact.DisableMovement();
+    }
+
+    public void em()
+    {
+        UIArtifact.EnableMovement();
+    }
+
     protected override void Start()
     {
         base.Start();
 
         AudioManager.PlayMusic("Village");
 
-        // if (GameManager.instance.debugModeActive)
-        //     SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
-
         UIEffects.FadeFromBlack();
         
         CheckHole();
-        
-        // poofParticles = Resources.Load<GameObject>(poofParticleName);
-        // if (poofParticles == null)
-        //     Debug.LogError("Couldn't load particles!");
     }
 
     private void OnEnable()
@@ -56,7 +57,6 @@ public class VillageGrid : SGrid
         {
             SGrid.OnGridMove += SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
-            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
         }
     }
 
@@ -66,7 +66,6 @@ public class VillageGrid : SGrid
         {
             SGrid.OnGridMove -= SGrid.UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
-            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;
         }
     }
 
@@ -228,26 +227,39 @@ public class VillageGrid : SGrid
 
         OnGridMove += UpdateButtonCompletions; // this is probably not needed
         UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
-        SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
     }
 
-
-    private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    protected override void UpdateButtonCompletionsHelper()
     {
-        if (!PlayerInventory.Contains("Slider 9", Area.Village) && (GetGridString() == "624_8#7_153"))
+        base.UpdateButtonCompletionsHelper();
+
+        CheckFinalPlacements(UIArtifact.GetGridString());
+    }
+
+    private void CheckFinalPlacements(string gridString)
+    {
+        if (!PlayerInventory.Contains("Slider 9", myArea) && (gridString == "624_8#7_153"))
         {
             AudioManager.Play("Puzzle Complete");
-            GivePlayerTheCollectible("Slider 9");
 
-            // Disable queues
-            UIArtifact.ClearQueues();
-
-            // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
-            StartCoroutine(CheckCompletionsAfterDelay(1.2f));
-
+            // Disable artifact movement
+            UIArtifact.DisableMovement(false);
             SaveSystem.Current.SetBool("forceAutoMove", false);
-            UIArtifactWorldMap.SetAreaStatus(Area.Village, ArtifactWorldMapArea.AreaStatus.color);
+
+            StartCoroutine(PlaceTile9());
         }
+    }
+
+    private IEnumerator PlaceTile9()
+    {
+        yield return new WaitUntil(() => UIArtifact._instance.MoveQueueEmpty());
+
+        GivePlayerTheCollectible("Slider 9");
+
+        // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
+        StartCoroutine(CheckCompletionsAfterDelay(1.2f));
+
+        UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
     }
 
     public void Explode()

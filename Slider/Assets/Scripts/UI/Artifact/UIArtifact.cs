@@ -16,6 +16,7 @@ public class UIArtifact : Singleton<UIArtifact>
     protected List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
     protected List<SMove> activeMoves = new List<SMove>();    // DC: Current list of moves being performed 
     protected Queue<SMove> moveQueue = new Queue<SMove>();    //L: Queue of moves to perform on the grid from the artifact
+    protected bool playerCanAddSMoves; // this is not serialized by area! should it be? meh
     protected bool playerCanQueue;
 
     private bool didInit;
@@ -55,6 +56,7 @@ public class UIArtifact : Singleton<UIArtifact>
         didInit = true;
         InitializeSingleton();
 
+        EnableMovement();
         EnableQueueing();
     }
 
@@ -70,6 +72,26 @@ public class UIArtifact : Singleton<UIArtifact>
             return _instance.moveQueue.Peek();
         }
         return null;
+    }
+
+    public static void EnableMovement(bool enableQueues=true)
+    {
+        _instance.playerCanAddSMoves = true;
+        if (enableQueues) 
+        {
+            EnableQueueing();
+        }
+    }
+
+    public static void DisableMovement(bool disableQueues=true)
+    {
+        _instance.playerCanAddSMoves = false;
+        
+        if (disableQueues)
+        {
+            DisableQueueing();
+            ClearQueues();
+        }
     }
 
     /// Returns a string like: 123_6##_4#5, 
@@ -196,7 +218,7 @@ public class UIArtifact : Singleton<UIArtifact>
         DeselectSelectedButton();
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
-        if (!dragged.TileIsActive || dragged.MyStile.hasAnchor)// || dragged.isForcedDown)
+        if (!dragged.TileIsActive || dragged.MyStile.hasAnchor || !playerCanAddSMoves)
         {
             return;
         }
@@ -298,8 +320,10 @@ public class UIArtifact : Singleton<UIArtifact>
 
     public virtual void SelectButton(ArtifactTileButton button, bool isDragged = false)
     {
-        // Check if on movement cooldown
-        //if (SGrid.GetStile(button.islandId).isMoving)
+        if (!playerCanAddSMoves)
+        {
+            return;
+        }
 
         if (buttonSelected != null)
         {
