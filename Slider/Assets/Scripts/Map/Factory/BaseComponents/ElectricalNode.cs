@@ -88,7 +88,7 @@ public class ElectricalNode : MonoBehaviour
         blackedOut = isBlackout;
         OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
 
-        PushSignalToOutput(!isBlackout && PoweredNormally);
+        PushSignalToOutput(Powered);
     }
 
     public virtual void StartSignal(bool input, bool includeSelf = true)

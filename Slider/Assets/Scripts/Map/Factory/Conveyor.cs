@@ -14,25 +14,9 @@ public class Conveyor : ElectricalNode
 
     [SerializeField] private List<Animator> animators;
 
-    private bool _conveyorEnabled = true;
-
     public Vector2Int StartPos => start;
     public Vector2Int Dir => dir;
 
-    public bool ConveyorEnabled
-    {
-        get {
-            return _conveyorEnabled;
-        }
-
-        set
-        {
-            _conveyorEnabled = value;
-            HandleConveyorPoweredStatus();
-        }
-    }
-
-    private bool ConveyorPowered => ConveyorEnabled && Powered;
     private bool waitingToQueueAndFinishMove = false;
 
     private new void Awake()
@@ -43,9 +27,8 @@ public class Conveyor : ElectricalNode
 
     private void Start()
     {
-
         animators.ForEach((a) => {
-            a.SetFloat("speed", ConveyorPowered ? 2 : 0);
+            a.SetFloat("speed", ConveyorIsPowered() ? 2 : 0);
         });
 
         if (artifact == null)
@@ -68,16 +51,25 @@ public class Conveyor : ElectricalNode
         SGrid.OnSTileEnabled -= OnSTileEnabled;
     }
 
+    private void Update()
+    {
+        UpdateConveyorStatus();
+    }
+
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
         base.OnPoweredHandler(e);
-        HandleConveyorPoweredStatus();
     }
 
-    private void HandleConveyorPoweredStatus()
+    public bool ConveyorIsPowered()
+    {
+        return Powered && !PowerCrystal.Blackout && !FactoryGrid.PlayerInPast;
+    }
+
+    private void UpdateConveyorStatus()
     {
         animators.ForEach((a) => {
-            a.SetFloat("speed", ConveyorPowered ? 2 : 0);
+            a.SetFloat("speed", ConveyorIsPowered() ? 2 : 0);
         });
 
         TryQueueConveyorMove();
@@ -95,7 +87,7 @@ public class Conveyor : ElectricalNode
 
     private void TryQueueConveyorMove()
     {
-        if (ConveyorPowered && !waitingToQueueAndFinishMove)
+        if (ConveyorIsPowered() && !waitingToQueueAndFinishMove)
         {
             SMoveConveyor move = ConstructMove();
             if (move != null)
@@ -137,7 +129,7 @@ public class Conveyor : ElectricalNode
     {
         //Construct a brand new move because it might have changed! (ex: tile moving in front of conveyor, so have to push both tiles).
         SMoveConveyor newMove = ConstructMove();
-        if (ConveyorPowered && newMove != null)
+        if (ConveyorIsPowered() && newMove != null)
         {
             artifact.QueueMoveToFront(newMove);
         }

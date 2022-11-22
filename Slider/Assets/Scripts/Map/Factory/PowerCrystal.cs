@@ -2,23 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerCrystal : MonoBehaviour
+public class PowerCrystal : Singleton<PowerCrystal>, ISavable
 {
-    private ElectricalNode[] allNodes;
-    private Conveyor[] conveyors;
+    private ElectricalNode[] _allNodes;
 
-    public static bool Blackout { get; private set; }
+    private bool _didInit = false;
+
+    private bool _blackout = false;
+    public static bool Blackout => _instance != null && _instance._blackout;
+
+    private void Awake()
+    {
+        if (!_didInit)
+        {
+            Init();
+        }
+    }
+
+    private void Init()
+    {
+        InitializeSingleton();
+        _didInit = true;
+        _allNodes = GameObject.FindObjectsOfType<ElectricalNode>();
+    }
 
     private void Start()
     {
-        Blackout = false;
-        allNodes = GameObject.FindObjectsOfType<ElectricalNode>();
-        conveyors = GameObject.FindObjectsOfType<Conveyor>();
+        SetBlackout(_blackout);
     }
 
     public void CheckBlackout(Condition cond)
     {
-        cond.SetSpec(Blackout);
+        cond.SetSpec(_blackout);
     }
 
     public void StartCrystalPoweredSequence()
@@ -45,22 +60,33 @@ public class PowerCrystal : MonoBehaviour
         AudioManager.PlayWithVolume("Power On", 1.0f);
         AudioManager.PlayMusic("Factory");
         SetBlackout(false);
+        FactoryLightManager.SwitchLights(true);
     }
 
     private void SetBlackout(bool isBlackout)
     {
-        Blackout = isBlackout;
-        foreach (var node in allNodes)
+        if (!_didInit)
+        {
+            Init();
+        }
+
+        _blackout = isBlackout;
+        foreach (var node in _allNodes)
         {
             if (node != null && node.AffectedByBlackout)
             {
                 node.SetBlackout(isBlackout);
             }
         }
+    }
 
-        foreach (var conveyor in conveyors)
-        {
-            conveyor.ConveyorEnabled = !isBlackout;
-        }
+    public void Save()
+    {
+        SaveSystem.Current.SetBool("Blackout", _blackout);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        _blackout = profile.GetBool("Blackout");
     }
 }

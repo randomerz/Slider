@@ -7,10 +7,8 @@ public class FactoryGrid : SGrid
     [Header("FactoryGrid")]
     [SerializeField] private ConditionChecker explosionChecker;
     [SerializeField] private PowerCrystal powerCrystal;
-    [SerializeField] private ServerComputer serverComputer;
 
-    private bool _playerInPast;
-    public static bool PlayerInPast => (SGrid.Current as FactoryGrid)._playerInPast;
+    public static bool PlayerInPast => IsInPast(Player.GetInstance().gameObject);
 
     public delegate void PlayerPastEvent(bool playerInPast);
     public static event PlayerPastEvent playerPastChanged;
@@ -27,18 +25,11 @@ public class FactoryGrid : SGrid
         AudioManager.PlayMusic("Factory");
         UIEffects.FadeFromBlack();
 
-        _playerInPast = FactoryGrid.IsInPast(Player.GetInstance().gameObject);
-        FactoryTimeManager.EnableAnchorsInTime(_playerInPast);
+        FactoryTimeManager.EnableAnchorsInTime(PlayerInPast);
     }
 
     private void Update()
     {
-        bool oldValue = _playerInPast;
-        _playerInPast = FactoryGrid.IsInPast(Player.GetInstance().gameObject);
-        if (oldValue != _playerInPast)
-        {
-            playerPastChanged?.Invoke(_playerInPast);
-        }
     }
 
     public override void Save() 
