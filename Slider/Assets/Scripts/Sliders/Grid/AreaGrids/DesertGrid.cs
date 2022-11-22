@@ -19,6 +19,7 @@ public class DesertGrid : SGrid
     private bool checkMonkey = false;
     private Coroutine waitForZ; //Should be null if monkeShakes is 0
     private Coroutine shuffleBuildUpCoroutine;
+    private Coroutine placeTile9Coroutine;
 
     private const string DESERT_PARTY_STARTED = "desertPartyStarted";
     private const string DESERT_PARTY_FINISHED = "desertPartyFinished";
@@ -385,12 +386,14 @@ public class DesertGrid : SGrid
 
     private void CheckFinalPlacements(string gridString)
     {
-        if (!PlayerInventory.Contains("Slider 9", myArea) && (gridString == "567_2#3_184"))
+        if (!PlayerInventory.Contains("Slider 9", myArea) && gridString == "567_2#3_184" && placeTile9Coroutine == null)
         {
             AudioManager.Play("Puzzle Complete");
 
             // Disable artifact movement
             UIArtifact.DisableMovement(false); // TODO: make sure this works with scrap of the scroll
+
+            placeTile9Coroutine = StartCoroutine(PlaceTile9());
         }
     }
 
@@ -405,6 +408,8 @@ public class DesertGrid : SGrid
 
         UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+        
+        placeTile9Coroutine = null;
     }
 
     #endregion

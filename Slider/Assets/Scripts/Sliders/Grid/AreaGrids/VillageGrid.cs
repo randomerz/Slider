@@ -14,6 +14,7 @@ public class VillageGrid : SGrid
     [SerializeField] private GameObject ruinsFragment; // for finishing caves before village
     [SerializeField] private Transform slider8FloorTransform; // for finishing caves before village
     private Coroutine shuffleBuildUpCoroutine;
+    private Coroutine placeTile9Coroutine;
     
 
     public CameraDolly introCameraDolly;
@@ -238,7 +239,7 @@ public class VillageGrid : SGrid
 
     private void CheckFinalPlacements(string gridString)
     {
-        if (!PlayerInventory.Contains("Slider 9", myArea) && (gridString == "624_8#7_153"))
+        if (!PlayerInventory.Contains("Slider 9", myArea) && gridString == "624_8#7_153" && placeTile9Coroutine == null)
         {
             AudioManager.Play("Puzzle Complete");
 
@@ -246,7 +247,7 @@ public class VillageGrid : SGrid
             UIArtifact.DisableMovement(false);
             SaveSystem.Current.SetBool("forceAutoMove", false);
 
-            StartCoroutine(PlaceTile9());
+            placeTile9Coroutine = StartCoroutine(PlaceTile9());
         }
     }
 
@@ -260,6 +261,8 @@ public class VillageGrid : SGrid
         StartCoroutine(CheckCompletionsAfterDelay(1.2f));
 
         UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
+        
+        placeTile9Coroutine = null;
     }
 
     public void Explode()
