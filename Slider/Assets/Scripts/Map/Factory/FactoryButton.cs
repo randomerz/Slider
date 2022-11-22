@@ -1,5 +1,3 @@
-using ClipperLib;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,9 +5,9 @@ public class FactoryButton : ElectricalNode
 {
     [Header("Factory Button")]
     [SerializeField] private bool logTrace = false;
+
     private Animator _animator;
     private Collider2D _buttonCollider;
-    private int numObjectsOn;
 
     private new void Awake()
     {
@@ -20,19 +18,41 @@ public class FactoryButton : ElectricalNode
         _animator = GetComponent<Animator>();
     }
 
+    private new void OnEnable()
+    {
+        base.OnEnable();
+        PowerCrystal.blackoutStarted += HandleBlackoutStarted;
+    }
+
+    private new void OnDisable()
+    {
+        base.OnDisable();
+        PowerCrystal.blackoutStarted -= HandleBlackoutStarted;
+    }
+
+    private void HandleBlackoutStarted()
+    {
+        SetState(false);
+    }
+
     protected new void Update()
     {
         base.Update();
 
         bool buttonPressed = GetButtonPressed();
-        if (buttonPressed != PoweredConditionsMet())
+        if (buttonPressed != PoweredConditionsMet() && !FactoryBlackoutInEffect())
         {
-            Switch(buttonPressed);
+            SetState(buttonPressed);
         }
     }
 
-    public void Switch(bool powered)
+    public void SetState(bool powered)
     {
+        if (PoweredConditionsMet() == powered)
+        {
+            return;
+        }
+
         StartSignal(powered);
         _animator.SetBool("Powered", powered);
     }

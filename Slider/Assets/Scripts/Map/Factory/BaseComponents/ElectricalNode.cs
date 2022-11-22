@@ -82,7 +82,7 @@ public class ElectricalNode : MonoBehaviour
         return (invertSignal ? powerRefs <= 0 : powerRefs > 0);
     }
 
-    private bool FactoryBlackoutInEffect()
+    protected bool FactoryBlackoutInEffect()
     {
         bool inFactoryDuringBlackout = SGrid.Current.GetArea() == Area.Factory && PowerCrystal.Blackout;
         bool isAffected = affectedByBlackout && !FactoryGrid.IsInPast(gameObject);

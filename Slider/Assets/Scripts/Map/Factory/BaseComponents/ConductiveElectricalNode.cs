@@ -116,7 +116,7 @@ public class ConductiveElectricalNode : ElectricalNode
         return thisStay && otherStay;
     }
 
-    private void OnDrawGizmos() 
+    private void OnDrawGizmosSelected() 
     {
         Gizmos.color = Color.yellow;
 

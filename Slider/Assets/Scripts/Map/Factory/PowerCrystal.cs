@@ -4,26 +4,16 @@ using UnityEngine;
 
 public class PowerCrystal : Singleton<PowerCrystal>, ISavable
 {
-    private ElectricalNode[] _allNodes;
-
-    private bool _didInit = false;
-
     private bool _blackout = false;
     public static bool Blackout => _instance != null && _instance._blackout;
 
+    public delegate void HandleBlackout();
+    public static event HandleBlackout blackoutStarted;
+    public static event HandleBlackout blackoutEnded;
+
     private void Awake()
     {
-        if (!_didInit)
-        {
-            Init();
-        }
-    }
-
-    private void Init()
-    {
         InitializeSingleton();
-        _didInit = true;
-        _allNodes = GameObject.FindObjectsOfType<ElectricalNode>();
     }
 
     private void Start()
@@ -66,6 +56,15 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
     private void SetBlackout(bool isBlackout)
     {
         _blackout = isBlackout;
+
+        if (isBlackout)
+        {
+            blackoutStarted?.Invoke();
+        }
+        else
+        {
+            blackoutEnded?.Invoke();
+        }
     }
 
     public void Save()
