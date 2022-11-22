@@ -21,6 +21,12 @@ public class FactoryArtifact : UIArtifact
         FactoryGrid.playerPastChanged += UpdateButtonSpritesAndBackground;
     }
 
+    private new void OnDisable()
+    {
+        base.OnDisable();
+        FactoryGrid.playerPastChanged -= UpdateButtonSpritesAndBackground;
+    }
+
     public override void ProcessQueue()
     {
         if (!DequeueLocked)

@@ -98,7 +98,7 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
         SpawnPlayerInPast();
     }
 
-    private static void EnableAnchorsInTime(bool inPast)
+    public static void EnableAnchorsInTime(bool inPast)
     {
         Anchor[] anchors = GameObject.FindObjectsOfType<Anchor>(true);
         foreach (var anchor in anchors)
