@@ -84,6 +84,8 @@ public class CaveMossManager : MonoBehaviour
                 SetMossState(pos, posIsLit);
             });
         }
+
+        MossUpdated?.Invoke(this, new MossUpdatedArgs { stile = stile });
     }
 
     private void SetMossState(Vector3Int pos, bool posIsLit)
@@ -112,6 +114,7 @@ public class CaveMossManager : MonoBehaviour
         {
             _playerMoveOffMoss.CheckPlayerCollidingWithMoss();
         }
+
         MossUpdated?.Invoke(this, new MossUpdatedArgs { stile = stile });
     }
 

@@ -20,8 +20,7 @@ public class ElectricalNode : MonoBehaviour
     [Header("Electrical Node")]
     public NodeType nodeType;
 
-    [Tooltip("NEIGHBORS ARE OUTGOING EDGES")]
-    [SerializeField] protected List<ElectricalNode> neighbors;
+    [SerializeField, Tooltip("NEIGHBORS ARE OUTGOING EDGES")] protected List<ElectricalNode> neighbors;
     [SerializeField] private bool powerOnStart;
     [SerializeField] protected bool invertSignal = false;
     [SerializeField] protected bool affectedByBlackout = true;
