@@ -30,12 +30,11 @@ public class Lever : ElectricalNode
 
     public void Switch()
     {
-        // StartCoroutine(SwitchCoroutine());
-        SetState(!Powered);
+        SetState(!PoweredConditionsMet());
     }
 
     public void SetState(bool value) {
-        if (Powered == value) {
+        if (PoweredConditionsMet() == value) {
             return;
         }
 
@@ -72,16 +71,4 @@ public class Lever : ElectricalNode
 
         StartSignal(false);
     }
-
-    // public IEnumerator SwitchCoroutine()
-    // {
-    //     //L: This waits until a specific time in the animation and then sends the signal to the rest of the circuit.
-    //     if (Powered)
-    //     {
-    //         return TurnOff();
-    //     } else
-    //     {
-    //         return TurnOn();
-    //     }
-    // }
 }

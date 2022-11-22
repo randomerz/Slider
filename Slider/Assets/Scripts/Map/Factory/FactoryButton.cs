@@ -20,10 +20,12 @@ public class FactoryButton : ElectricalNode
         _animator = GetComponent<Animator>();
     }
 
-    private void Update()
+    protected new void Update()
     {
+        base.Update();
+
         bool buttonPressed = GetButtonPressed();
-        if (buttonPressed != Powered)
+        if (buttonPressed != PoweredConditionsMet())
         {
             Switch(buttonPressed);
         }

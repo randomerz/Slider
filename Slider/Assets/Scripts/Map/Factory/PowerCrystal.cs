@@ -65,19 +65,7 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
 
     private void SetBlackout(bool isBlackout)
     {
-        if (!_didInit)
-        {
-            Init();
-        }
-
         _blackout = isBlackout;
-        foreach (var node in _allNodes)
-        {
-            if (node != null && node.AffectedByBlackout)
-            {
-                node.SetBlackout(isBlackout);
-            }
-        }
     }
 
     public void Save()

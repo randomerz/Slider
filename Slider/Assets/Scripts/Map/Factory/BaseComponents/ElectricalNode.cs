@@ -28,6 +28,8 @@ public class ElectricalNode : MonoBehaviour
     protected int powerRefs;
     protected Dictionary<ElectricalNode, int> powerPathPrevs;  //This is used for backtracking paths to a power source. (value is number of times referenced)
 
+    private bool _lastPoweredState = false;
+
     public class OnPoweredArgs
     {
         public bool powered;
@@ -36,14 +38,8 @@ public class ElectricalNode : MonoBehaviour
     public UnityEvent OnPoweredOn;
     public UnityEvent OnPoweredOff;
 
-    private bool blackedOut;
-
-    public virtual bool Powered => !blackedOut && PoweredNormally; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
-
-    protected bool PoweredNormally => (invertSignal ? powerRefs <= 0 : powerRefs > 0);
-
-    public virtual bool AffectedByBlackout => nodeType == NodeType.INPUT && affectedByBlackout && !FactoryGrid.IsInPast(gameObject);
-    protected static bool CrystalBlackout => SGrid.Current.GetArea() == Area.Factory && PowerCrystal.Blackout;
+    //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
+    public bool Powered => !FactoryBlackoutInEffect() && PoweredConditionsMet();
 
     protected virtual void Awake()
     {
@@ -68,9 +64,29 @@ public class ElectricalNode : MonoBehaviour
             StartSignal(true);
         } else if (Powered)
         {
-            //This is mainly for inverted power.
             OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
         }
+    }
+
+    protected void Update()
+    {
+        if (Powered != _lastPoweredState)
+        {
+            OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
+        }
+        _lastPoweredState = Powered;
+    }
+
+    protected virtual bool PoweredConditionsMet()
+    {
+        return (invertSignal ? powerRefs <= 0 : powerRefs > 0);
+    }
+
+    private bool FactoryBlackoutInEffect()
+    {
+        bool inFactoryDuringBlackout = SGrid.Current.GetArea() == Area.Factory && PowerCrystal.Blackout;
+        bool isAffected = affectedByBlackout && !FactoryGrid.IsInPast(gameObject);
+        return inFactoryDuringBlackout && isAffected;
     }
 
     public virtual void OnPoweredHandler(OnPoweredArgs e) { 
@@ -83,14 +99,6 @@ public class ElectricalNode : MonoBehaviour
         }
     }
 
-    public void SetBlackout(bool isBlackout)
-    {
-        blackedOut = isBlackout;
-        OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
-
-        PushSignalToOutput(Powered);
-    }
-
     public virtual void StartSignal(bool input, bool includeSelf = true)
     {
         if (nodeType != NodeType.INPUT)
@@ -99,14 +107,12 @@ public class ElectricalNode : MonoBehaviour
             Debug.LogWarning("Should only start a signal from an INPUT node.");
         }
 
-        if (Powered != input)    //This ensures we don't double propagate
+        if (PoweredConditionsMet() != input)    //This ensures we don't double propagate
         {
             if (includeSelf)
             {
                 powerRefs = input ? 1 : 0;
             }
-
-            OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
 
             PushSignalToOutput(input);
         }
@@ -115,16 +121,8 @@ public class ElectricalNode : MonoBehaviour
     //Target Complexity : O(n) including recursive calls (so updating node state should be O(1))
     protected virtual void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
     {
-        //These two methods are split in order to implement buffered input (which is only used for timed gates).
-        bool oldPowered = Powered;
         if (EvaluateNodeInput(value, prev, recStack, numRefs))
         {
-            //Call the event/handlers (this should only be used for nodes to respond to inputs, NOT to update node state)
-            if (Powered != oldPowered)
-            {
-                OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
-            }
-
             PushSignalToOutput(value, recStack, numRefs);
         }
 
@@ -185,57 +183,6 @@ public class ElectricalNode : MonoBehaviour
             }
         }
         recStack.Remove(this);
-    }
-
-    //Complexity is O(n * p) where p is the number of paths (which shouldn't be too many usually)
-    public void GetPathNodes(out List<HashSet<ElectricalNode>> nodes)
-    {
-        nodes = new List<HashSet<ElectricalNode>>();
-
-        if (powerPathPrevs.Count > 0)
-        {
-            nodes.Add(new HashSet<ElectricalNode>());
-
-            GetPathNodesRecursive(nodes);
-        } else if (powerRefs > 0 && nodeType == NodeType.INPUT)   //This is an input powered node
-        {
-            nodes.Add(new HashSet<ElectricalNode>());
-            nodes[0].Add(this);
-        }
-    }
-
-    private void GetPathNodesRecursive(List<HashSet<ElectricalNode>> allPathNodes)
-    {
-        HashSet<ElectricalNode> currPathNodes = allPathNodes[allPathNodes.Count-1];
-        currPathNodes.Add(this);
-
-        if (powerPathPrevs.Count > 1)
-        {
-            //Path Branches
-            var rootPath = new HashSet<ElectricalNode>(currPathNodes);
-
-            allPathNodes.RemoveAt(allPathNodes.Count - 1);
-            foreach (var node in powerPathPrevs.Keys)
-            {
-                if (!currPathNodes.Contains(node))
-                {
-                    allPathNodes.Add(new HashSet<ElectricalNode>(rootPath));
-                    node.GetPathNodesRecursive(allPathNodes);
-                }
-
-            }
-        } else
-        {
-            //Continue current path
-            foreach (var node in powerPathPrevs.Keys)
-            {
-                if (!currPathNodes.Contains(node))
-                {
-                    node.GetPathNodesRecursive(allPathNodes);
-                }
-
-            }
-        }
     }
 
     //Target Complexity: O(n * p) p is the number of paths in this node as well as other (i.e. refs)
@@ -362,6 +309,59 @@ public class ElectricalNode : MonoBehaviour
         while(neighbors.Count > 0) 
         {
             RemoveNeighbor(neighbors[0]);
+        }
+    }
+
+    //Complexity is O(n * p) where p is the number of paths (which shouldn't be too many usually)
+    private void GetPathNodes(out List<HashSet<ElectricalNode>> nodes)
+    {
+        nodes = new List<HashSet<ElectricalNode>>();
+
+        if (powerPathPrevs.Count > 0)
+        {
+            nodes.Add(new HashSet<ElectricalNode>());
+
+            GetPathNodesRecursive(nodes);
+        }
+        else if (powerRefs > 0 && nodeType == NodeType.INPUT)   //This is an input powered node
+        {
+            nodes.Add(new HashSet<ElectricalNode>());
+            nodes[0].Add(this);
+        }
+    }
+
+    private void GetPathNodesRecursive(List<HashSet<ElectricalNode>> allPathNodes)
+    {
+        HashSet<ElectricalNode> currPathNodes = allPathNodes[allPathNodes.Count - 1];
+        currPathNodes.Add(this);
+
+        if (powerPathPrevs.Count > 1)
+        {
+            //Path Branches
+            var rootPath = new HashSet<ElectricalNode>(currPathNodes);
+
+            allPathNodes.RemoveAt(allPathNodes.Count - 1);
+            foreach (var node in powerPathPrevs.Keys)
+            {
+                if (!currPathNodes.Contains(node))
+                {
+                    allPathNodes.Add(new HashSet<ElectricalNode>(rootPath));
+                    node.GetPathNodesRecursive(allPathNodes);
+                }
+
+            }
+        }
+        else
+        {
+            //Continue current path
+            foreach (var node in powerPathPrevs.Keys)
+            {
+                if (!currPathNodes.Contains(node))
+                {
+                    node.GetPathNodesRecursive(allPathNodes);
+                }
+
+            }
         }
     }
 

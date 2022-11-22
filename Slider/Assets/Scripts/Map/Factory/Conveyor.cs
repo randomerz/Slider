@@ -51,8 +51,9 @@ public class Conveyor : ElectricalNode
         SGrid.OnSTileEnabled -= OnSTileEnabled;
     }
 
-    private void Update()
+    private new void Update()
     {
+        base.Update();
         UpdateConveyorStatus();
     }
 
