@@ -271,14 +271,26 @@ public class DebugUIManager : MonoBehaviour
         ActivateAllCollectibles(true);
     }
 
-    public void DebugFactoryPast()
+    public void GoToFactoryPast()
     {
         if (SGrid.Current.GetArea() != Area.Factory)
         {
-            Debug.LogWarning("FactoryPastDebug is only valid while in the Factory area.");
-        } else
+            Debug.LogWarning("GoToFactoryPast command is only valid while in the Factory area.");
+        }
+        else
         {
-            StartCoroutine(FactoryGrid.SendPlayerToPastDebugSequence(this));
+            FactoryTimeManager.SpawnPlayerInPast();
+        }
+    }
+    public void GoToFactoryPresent()
+    {
+        if (SGrid.Current.GetArea() != Area.Factory)
+        {
+            Debug.LogWarning("GoToFactoryPresent command is only valid while in the Factory area.");
+        }
+        else
+        {
+            FactoryTimeManager.SpawnPlayerInPresent();
         }
     }
 

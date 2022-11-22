@@ -17,8 +17,6 @@ public class TimedGate : ElectricalNode
     [SerializeField] private Sprite blinkSprite;
     [SerializeField] private SpriteRenderer sr;
 
-    private Sprite[] allSprites; 
-
     [Header("EXPOSED FOR DEBUG")]
     [SerializeField] private int numInputsPowered;
 
@@ -44,7 +42,7 @@ public class TimedGate : ElectricalNode
         get
         {
             bool normal = inputsPowered != null && inputsPowered.Count >= numInputs;
-            return (invertSignal ? !normal : normal) || debugAsPoweredOn;
+            return (invertSignal ? !normal : normal);
         }
     }
 

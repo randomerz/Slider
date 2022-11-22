@@ -215,10 +215,14 @@ public class PlayerAction : Singleton<PlayerAction>
         itemDropIndicator.SetActive(false);
     }
 
-    public bool HasItem() {
+    public bool HasItem()
+    {
         return pickedItem != null;
     }
-
+    public bool HasItem(string itemName)
+    {
+        return pickedItem != null && pickedItem.itemName.Equals(itemName);
+    }
 
     public void IncrementActionsAvailable()
     {

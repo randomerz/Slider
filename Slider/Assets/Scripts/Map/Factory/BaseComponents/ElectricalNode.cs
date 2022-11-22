@@ -25,9 +25,6 @@ public class ElectricalNode : MonoBehaviour
     [SerializeField] protected bool invertSignal = false;
     [SerializeField] protected bool affectedByBlackout = true;
 
-    [Header("DEBUG TOOLS")]
-    [SerializeField] protected bool debugAsPoweredOn;
-
     protected int powerRefs;
     protected Dictionary<ElectricalNode, int> powerPathPrevs;  //This is used for backtracking paths to a power source. (value is number of times referenced)
 
@@ -41,7 +38,7 @@ public class ElectricalNode : MonoBehaviour
 
     private bool blackedOut;
 
-    public virtual bool Powered => !blackedOut && PoweredNormally || debugAsPoweredOn; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
+    public virtual bool Powered => !blackedOut && PoweredNormally; //This is marked virtual so we can have different powering conditions (see TimedGate.cs)
 
     protected bool PoweredNormally => (invertSignal ? powerRefs <= 0 : powerRefs > 0);
 
@@ -99,7 +96,7 @@ public class ElectricalNode : MonoBehaviour
         if (nodeType != NodeType.INPUT)
         {
             //According to the OOD gurus and lord Aibek, this violates some design principle (I think). Oh well.
-            Debug.LogError("Can only start a signal from an INPUT node.");
+            Debug.LogWarning("Should only start a signal from an INPUT node.");
         }
 
         if (Powered != input)    //This ensures we don't double propagate

@@ -60,14 +60,4 @@ public class FactoryGrid : SGrid
         SaveSystem.Current.SetBool("factoryDoorExploded", true);
         explosionChecker.CheckConditions();
     }
-
-    //THIS IS FOR DEBUG ONLY
-    public static IEnumerator SendPlayerToPastDebugSequence(DebugUIManager duiManager)
-    {
-        duiManager.ES("6");
-        yield return new WaitForSeconds(2.0f);
-        (Current as FactoryGrid).powerCrystal.StartCrystalPoweredSequence();
-        yield return new WaitForSeconds(2.0f);
-        (Current as FactoryGrid).serverComputer.StartSendToPastEvent();
-    }
 }

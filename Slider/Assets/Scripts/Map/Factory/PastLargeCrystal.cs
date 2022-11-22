@@ -81,10 +81,10 @@ public class PastLargeCrystal : ElectricalNode
     private IEnumerator BackToTheFuture()
     {
         yield return new WaitForSeconds(2.0f);
+
         SaveSystem.Current.SetBool("DidBTTF", true);
         powerCrystal.TurnEverythingBackOn();
-        ppChanger.UPPTransform();
-        UIEffects.FadeFromWhite();
+        FactoryTimeManager.SpawnPlayerInPresent();
 
         foreach (GameObject go in particles)
         {
