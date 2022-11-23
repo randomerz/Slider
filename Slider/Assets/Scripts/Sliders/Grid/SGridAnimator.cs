@@ -51,7 +51,6 @@ public class SGridAnimator : MonoBehaviour
         }
         
         StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move, moveCoroutines));
-
     }
 
     //C: Added to avoid duplicated code in mountian section

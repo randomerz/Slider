@@ -543,7 +543,7 @@ public void SetGrid(int[,] puzzle)
 
         SGridData sgridData = profile.GetSGridData(myArea);
 
-        if (sgridData == null) {
+        if (sgridData.grid == null) {
             SetGrid(stiles);
             return;
         }

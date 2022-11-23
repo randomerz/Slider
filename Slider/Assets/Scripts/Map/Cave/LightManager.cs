@@ -35,7 +35,8 @@ public class LightManager : MonoBehaviour
     private Shader _caveShader;
 
     public static LightManager instance;
-    public static event System.EventHandler<System.EventArgs> OnLightMaskChanged;
+
+    public static event System.EventHandler OnLightingUpdate;
 
     void Awake()
     {
@@ -97,7 +98,7 @@ public class LightManager : MonoBehaviour
         _updateLightingFlag = true;
     }
 
-    //x and y are in world coordinates.
+    //x and y are in tilemap cell coordinates
     public bool GetLightMaskAt(int x, int y)
     {
         //Debug.Log(lightMask.GetPixel(x + worldToMaskDX, y + worldToMaskDY));
@@ -124,6 +125,8 @@ public class LightManager : MonoBehaviour
             FindMaterials();
         }
         UpdateMaterials();
+
+        OnLightingUpdate?.Invoke(this, null);
     }
 
     private void UpdateLighting()
@@ -131,6 +134,8 @@ public class LightManager : MonoBehaviour
         UpdateHeightMask();
         UpdateLightMask();
         UpdateMaterials();
+
+        OnLightingUpdate?.Invoke(this, null);
     }
 
     private void SetTileMapSize()
@@ -173,8 +178,8 @@ public class LightManager : MonoBehaviour
         if (stile.isTileActive)
         {
             Color[] buffer = stile.HeightMask;
-            int xMin = -stile.STILE_WIDTH / 2 + (int)stile.transform.position.x + _worldToMaskDX;
-            int yMin = -stile.STILE_WIDTH / 2 + (int)stile.transform.position.y + _worldToMaskDY;
+            int xMin = (int) (-stile.STILE_WIDTH / 2 + stile.transform.position.x + _worldToMaskDX);
+            int yMin = (int) (-stile.STILE_WIDTH / 2 + stile.transform.position.y + _worldToMaskDY);
             _heightMask.SetPixels(xMin, yMin, stile.STILE_WIDTH, stile.STILE_WIDTH, buffer);
         }
     }
@@ -204,14 +209,12 @@ public class LightManager : MonoBehaviour
 
         UpdateLightMaskWithLights(true);
         _lightMask.Apply();
-        OnLightMaskChanged?.Invoke(this, new System.EventArgs());
     }
 
     private void UpdateLightMask()
     {
         UpdateLightMaskWithLights(false);
         _lightMask.Apply();
-        OnLightMaskChanged?.Invoke(this, new System.EventArgs());
     }
 
     private void UpdateLightMaskWithLights(bool fromInit)

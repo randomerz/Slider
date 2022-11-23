@@ -19,6 +19,7 @@ public class DesertGrid : SGrid
     private bool checkMonkey = false;
     private Coroutine waitForZ; //Should be null if monkeShakes is 0
     private Coroutine shuffleBuildUpCoroutine;
+    private Coroutine placeTile9Coroutine;
 
     private const string DESERT_PARTY_STARTED = "desertPartyStarted";
     private const string DESERT_PARTY_FINISHED = "desertPartyFinished";
@@ -48,8 +49,8 @@ public class DesertGrid : SGrid
     
     private void OnEnable() {
         if (checkCompletion) {
+            OnGridMove -= UpdateButtonCompletions; 
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
-            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
         }
         if (checkMonkey)
         {
@@ -60,9 +61,8 @@ public class DesertGrid : SGrid
     private void OnDisable() {
         if (checkCompletion)
         {
-            OnGridMove -= UpdateButtonCompletions; // this is probably not needed
+            OnGridMove -= UpdateButtonCompletions;
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
-            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
         }
         if (checkMonkey)
         {
@@ -373,27 +373,44 @@ public class DesertGrid : SGrid
         checkCompletion = true;
         SaveSystem.Current.SetBool("desertCompletion", checkCompletion);
 
-        OnGridMove += UpdateButtonCompletions; // this is probably not needed
+        OnGridMove += UpdateButtonCompletions;
         UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
-        SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
     }
     
-    private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    protected override void UpdateButtonCompletionsHelper()
     {
-        if (!PlayerInventory.Contains("Slider 9", Area.Desert) && (GetGridString() == "567_2#3_184"))
+        base.UpdateButtonCompletionsHelper();
+
+        CheckFinalPlacements(UIArtifact.GetGridString());
+    }
+
+    private void CheckFinalPlacements(string gridString)
+    {
+        if (!PlayerInventory.Contains("Slider 9", myArea) && gridString == "567_2#3_184" && placeTile9Coroutine == null)
         {
-            GivePlayerTheCollectible("Slider 9");
-
-            // Disable queues
-            UIArtifact.ClearQueues();
-
-            // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
-            StartCoroutine(CheckCompletionsAfterDelay(1.1f));
-
             AudioManager.Play("Puzzle Complete");
-            UIArtifactWorldMap.SetAreaStatus(Area.Desert, ArtifactWorldMapArea.AreaStatus.color);
-            UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+
+            // Disable artifact movement
+            UIArtifact.DisableMovement(false); // TODO: make sure this works with scrap of the scroll
+
+            placeTile9Coroutine = StartCoroutine(PlaceTile9());
         }
     }
+
+    private IEnumerator PlaceTile9()
+    {
+        yield return new WaitUntil(() => UIArtifact._instance.MoveQueueEmpty());
+
+        GivePlayerTheCollectible("Slider 9");
+
+        // we don't have access to the Collectible.StartCutscene() pick up, so were doing this dumb thing instead
+        StartCoroutine(CheckCompletionsAfterDelay(1.2f));
+
+        UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
+        UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+        
+        placeTile9Coroutine = null;
+    }
+
     #endregion
 }

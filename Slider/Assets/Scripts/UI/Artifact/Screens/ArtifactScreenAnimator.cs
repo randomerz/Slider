@@ -148,7 +148,7 @@ public class ArtifactScreenAnimator : MonoBehaviour
         // map screen
         if (index == 2)
         {
-            UIArtifactWorldMap.UpdateAreaStatuses();
+            UIArtifactWorldMap.GetInstance().UpdateAreaStatuses();
         }
     }
 }
