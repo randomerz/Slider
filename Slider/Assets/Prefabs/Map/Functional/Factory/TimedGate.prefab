@@ -32,6 +32,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5746183642452132351}
   - {fileID: 4853681515238783124}
@@ -51,10 +52,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodeType: 0
-  powerRefs: 0
-  powerPathPrevs: []
   neighbors: []
+  powerOnStart: 0
   invertSignal: 0
+  affectedByBlackout: 0
   OnPowered:
     m_PersistentCalls:
       m_Calls:
@@ -88,6 +89,19 @@ MonoBehaviour:
   OnPoweredOff:
     m_PersistentCalls:
       m_Calls: []
+  numTurns: 1
+  numInputs: 2
+  countdownSprite:
+  - {fileID: -7737521283505794906, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
+  - {fileID: 983346854917613154, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
+  - {fileID: -5405932048687707892, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
+  - {fileID: -9178972454052903182, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
+  - {fileID: 2384347535599915884, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
+  successSprite: {fileID: -6096239707695861182, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
+  failureSprite: {fileID: -3171331807334548094, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
+  waitingSprite: {fileID: 4661998333126539131, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
+  blinkSprite: {fileID: -8010366982899206070, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
+  sr: {fileID: 3412255915355598674}
   OnGateActivated:
     m_PersistentCalls:
       m_Calls: []
@@ -118,21 +132,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  numTurns: 1
-  numInputs: 2
-  countdownSprite:
-  - {fileID: -7737521283505794906, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  - {fileID: 983346854917613154, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  - {fileID: -5405932048687707892, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  - {fileID: -9178972454052903182, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  - {fileID: 2384347535599915884, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  - {fileID: -1147608325574132425, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  successSprite: {fileID: -6096239707695861182, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  failureSprite: {fileID: -3171331807334548094, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  waitingSprite: {fileID: 4661998333126539131, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  blinkSprite: {fileID: -8010366982899206070, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
-  sr: {fileID: 3412255915355598674}
-  countdown: 0
 --- !u!114 &4581142379752906045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,7 +162,6 @@ MonoBehaviour:
   addToOnAction: 1
   isCarryingItem: 0
   itemNameCheck: 
-  triggerIsLit: 0
 --- !u!212 &3412255915355598674
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -175,6 +173,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -202,7 +201,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 529684183
-  m_SortingLayer: 6
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: 4661998333126539131, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -297,7 +296,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 863580826205369219, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
       propertyPath: m_SortingLayer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 863580826205369219, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
       propertyPath: m_SortingLayerID
@@ -382,7 +381,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 863580826205369219, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
       propertyPath: m_SortingLayer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 863580826205369219, guid: e5fec754ffd231b4ca893a23fa821915, type: 3}
       propertyPath: m_SortingLayerID
