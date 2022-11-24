@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Bin : Box
 {
+
+
     private void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
@@ -21,7 +23,7 @@ public class Bin : Box
         print("no shape");
     }
 
-    public override void RecieveShape(Path path, Shape shape)
+    public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
         if (shape == null)
         {
