@@ -135,9 +135,9 @@ public class CaveGrid : SGrid
     {
         GivePlayerTheCollectible("Slider 9");
 
-        int[,] completedPuzzle = new int[3, 3] { { 2, 1, 5 },
+        int[,] completedPuzzle = new int[3, 3] { { 9, 1, 5 },
                                                  { 6, 3, 4 },
-                                                 { 8, 7, 9 } };
+                                                 { 8, 7, 2 } };
         SetGrid(completedPuzzle);
         StartCoroutine(CheckCompletionsAfterDelay(1.1f));
         SaveSystem.Current.SetBool("forceAutoMove", false);
