@@ -14,7 +14,7 @@ public class Hut : Box
         }
 
         currentShape = shapes[currentShapeIndex];
-        CreateShape();
+        CreateShape(new List<Box>());
     }
 
     private void OnEnable()
@@ -33,7 +33,7 @@ public class Hut : Box
 
     private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
-        CreateShape();
+        CreateShape(new List<Box>());
     }
     private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
@@ -41,14 +41,14 @@ public class Hut : Box
         {
             paths[d].ChangePair();
         }
-        CreateShape();
+        CreateShape(new List<Box>());
     }
 
     public void ChangeShape()
     {
         currentShapeIndex = (currentShapeIndex + 1) % shapes.Count;
         currentShape = shapes[currentShapeIndex];
-        CreateShape();
+        CreateShape(new List<Box>());
     }
 
 }
