@@ -25,7 +25,7 @@ public class FactoryGrid : SGrid
         }
         UIEffects.FadeFromBlack();
 
-        FactoryTimeManager.EnableAnchorsInTime(PlayerInPast);
+        //FactoryTimeManager.EnableAnchorsInTime(PlayerInPast);
     }
 
     public override void Save() 
