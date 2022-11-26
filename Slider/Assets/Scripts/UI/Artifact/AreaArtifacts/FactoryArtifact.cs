@@ -17,15 +17,17 @@ public class FactoryArtifact : UIArtifact
 
     private new void OnEnable()
     {
+        FactoryGrid.PlayerChangedTime += PlayerChangedTime;
         base.OnEnable();
     }
 
     private new void OnDisable()
     {
+        FactoryGrid.PlayerChangedTime -= PlayerChangedTime;
         base.OnDisable();
     }
 
-    private void Update()
+    private void PlayerChangedTime(object sender, System.EventArgs e)
     {
         UpdateButtonSpritesAndBackground(FactoryGrid.PlayerInPast);
     }
@@ -127,6 +129,7 @@ public class FactoryArtifact : UIArtifact
                 b.UseDefaultIslandSprite();
                 b.GetComponent<ArtifactTBPluginConveyor>().UpdateEmptySprite();
             }
+
             b.SetSpriteToIslandOrEmpty();
         }
         background.sprite = inPast ? pastBackgroundSprite : presentBackgroundSprite;

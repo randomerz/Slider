@@ -253,7 +253,7 @@ public class ElectricalNode : MonoBehaviour
         return true;
     }
 
-    protected virtual bool ValidDirectionGoingTo(ElectricalNode other)
+    public bool ValidDirectionGoingTo(ElectricalNode other)
     {
         if (other == null) {
             return false;

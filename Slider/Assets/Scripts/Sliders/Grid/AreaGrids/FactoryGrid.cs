@@ -9,6 +9,9 @@ public class FactoryGrid : SGrid
     [SerializeField] private PowerCrystal powerCrystal;
 
     public static bool PlayerInPast => IsInPast(Player.GetInstance().gameObject);
+    private bool _lastPlayerInPast = false;
+
+    public static event System.EventHandler PlayerChangedTime;
 
     public override void Init() {
         InitArea(Area.Factory);
@@ -24,8 +27,15 @@ public class FactoryGrid : SGrid
             AudioManager.PlayMusic("Factory");
         }
         UIEffects.FadeFromBlack();
+    }
 
-        //FactoryTimeManager.EnableAnchorsInTime(PlayerInPast);
+    private void Update()
+    {
+        if (PlayerInPast != _lastPlayerInPast)
+        {
+            _lastPlayerInPast = PlayerInPast;
+            PlayerChangedTime?.Invoke(this, null);
+        }
     }
 
     public override void Save() 
