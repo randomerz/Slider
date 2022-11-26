@@ -24,9 +24,6 @@ public class ElectricalNode : MonoBehaviour
     [SerializeField] protected bool invertSignal = false;
     [SerializeField] protected bool affectedByBlackout = true;
 
-    protected int _powerRefs;
-    protected Dictionary<ElectricalNode, int> _powerPathPrevs;
-
     protected HashSet<ElectricalNode> _outgoingNodes = new HashSet<ElectricalNode>();
     protected HashSet<ElectricalNode> _incomingNodes = new HashSet<ElectricalNode>();
 
@@ -61,6 +58,11 @@ public class ElectricalNode : MonoBehaviour
     protected virtual void OnDisable()
     {
         OnPowered.RemoveListener(OnPoweredHandler);
+    }
+
+    private void OnDestroy()
+    {
+        RemoveAllConnections();
     }
 
     private void Start()
@@ -131,7 +133,7 @@ public class ElectricalNode : MonoBehaviour
 
             foreach (ElectricalNode node in curr._incomingNodes)
             {
-                if (!visited.Contains(node))
+                if (node != null && !visited.Contains(node))
                 {
                     visited.Add(node);
                     stack.Push(node);
@@ -161,7 +163,7 @@ public class ElectricalNode : MonoBehaviour
             {
                 foreach (ElectricalNode node in curr._outgoingNodes)
                 {
-                    if (!visited.Contains(node))
+                    if (node != null && !visited.Contains(node))
                     {
                         visited.Add(node);
                         stack.Push(new KeyValuePair<ElectricalNode, ElectricalNode>(node, curr));
@@ -182,17 +184,9 @@ public class ElectricalNode : MonoBehaviour
         _isPowered = powered;
     }
 
-    public void RemoveAllNeighbors()
-    {
-        while(neighbors.Count > 0) 
-        {
-            RemoveConnection(neighbors[0]);
-        }
-    }
-
     protected bool AddConnection(ElectricalNode other)
     {
-        if (neighbors.Contains(other) || other.neighbors.Contains(this))
+        if (_outgoingNodes.Contains(other) || _incomingNodes.Contains(other))
         {
             return false;
         } 
@@ -200,7 +194,7 @@ public class ElectricalNode : MonoBehaviour
         bool forwardDir = ValidDirectionGoingTo(other);
         if (forwardDir)
         {
-            neighbors.Add(other);
+            _outgoingNodes.Add(other);
             other._incomingNodes.Add(this);
 
             UpdateDFS();
@@ -208,13 +202,33 @@ public class ElectricalNode : MonoBehaviour
         bool reverseDir = other.ValidDirectionGoingTo(this);
         if (reverseDir)
         {
-            other.neighbors.Add(this);
+            other._outgoingNodes.Add(this);
             _incomingNodes.Add(other);
 
             other.UpdateDFS();
         }
 
         return forwardDir || reverseDir;
+    }
+
+    private void RemoveAllConnections()
+    {
+        foreach (ElectricalNode node in _outgoingNodes)
+        {
+            if (node != null)   //This shouldn't happen?
+            {
+                node._incomingNodes.Remove(this);
+                node.UpdateDFS();
+            }
+        }
+        foreach (ElectricalNode node in _incomingNodes)
+        {
+            if (node != null)
+            {
+                node._outgoingNodes.Remove(this);
+                node.UpdateDFS();
+            }
+        }
     }
 
     protected bool RemoveConnection(ElectricalNode other)

@@ -54,10 +54,6 @@ public class TimedGate : ElectricalNode
     {
         base.OnEnable();
 
-        if (Powered)
-        {
-            EvaluateGate();
-        }
         UIArtifact.MoveMadeOnArtifact += MoveMadeOnArtifact;
         PowerCrystal.blackoutStarted += HandleBlackoutStarted;
         PowerCrystal.blackoutEnded += HandleBlackoutEnded;
@@ -104,9 +100,9 @@ public class TimedGate : ElectricalNode
     protected override void EvaluateNodeDuringPropagate(bool value, ElectricalNode prev)
     {
         //if (EvaluateNodeInput(value, prev) && value && _gateActive)
-        if (value && _gateActive)
+        if (value && _gateActive && prev != null && prev.Powered)
         {
-            PowerInput(prev);
+            _inputsPowered.Add(prev);
         }
     }
 
@@ -159,7 +155,7 @@ public class TimedGate : ElectricalNode
         {
             if (_gateActive)
             {
-                // "Reseting" the gate
+                // "Resetting" the gate
                 _inputsPowered.Clear();
                 OnGateDeactivated?.Invoke();
             }
@@ -171,33 +167,15 @@ public class TimedGate : ElectricalNode
             foreach (ElectricalNode input in _incomingNodes)
             {
                 //Add all the nodes that were already connected to the gate when it was turned on.
-                PowerInput(input);
+                if (input.Powered)
+                {
+                    _inputsPowered.Add(input);
+                }
             }
 
             StartCoroutine(BlinkThenShowNext());
             OnGateActivated?.Invoke();
         }
-    }
-
-    public void EvaluateGate()
-    {
-        if (!Powered)
-        {
-            //Player failed to power the inputs in time.
-            _gateActive = false;
-            _inputsPowered.Clear();
-            OnGateDeactivated?.Invoke();
-        }
-
-        _queuedNextSprite = Powered ? successSprite : failureSprite;
-        StartCoroutine(BlinkThenShowNext());
-    }
-
-    private void PowerGate()
-    {
-        StartSignal(true);
-        EvaluateGate();
-        AudioManager.Play("Puzzle Complete");
     }
 
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
@@ -210,12 +188,14 @@ public class TimedGate : ElectricalNode
             {
                 _queuedNextSprite = countdownSprite[_countdown];
                 StartCoroutine(BlinkThenShowNext());
-            } else if (_countdown == 0)
+            }
+            else if (_countdown == 0)
             {
                 _queuedNextSprite = countdownSprite[_countdown];
                 StartCoroutine(BlinkUntilNextSpriteChange());
-                _waitToEndGateCoroutine = StartCoroutine(WaitAfterMove(EvaluateGate));
-            } else if (_countdown < 0)
+                _waitToEndGateCoroutine = StartCoroutine(WaitAfterMove(CheckFailedToPower));
+            }
+            else if (_countdown < 0)
             {
                 //If player tries to queue another move, just stop the gate immediately. (avoids some nasty edge cases)
                 if (_waitToEndGateCoroutine != null)
@@ -223,9 +203,31 @@ public class TimedGate : ElectricalNode
                     StopCoroutine(_waitToEndGateCoroutine);
                 }
 
-                EvaluateGate();
+                CheckFailedToPower();
             }
         }
+    }
+
+    private void CheckFailedToPower()
+    {
+        if (!Powered)
+        {
+            //Player failed to power the inputs in time.
+            _gateActive = false;
+            _inputsPowered.Clear();
+
+            _queuedNextSprite = failureSprite;
+            StartCoroutine(BlinkThenShowNext());
+            OnGateDeactivated?.Invoke();
+        }
+    }
+
+    private void PowerGate()
+    {
+        StartSignal(true);
+        _queuedNextSprite = successSprite;
+        StartCoroutine(BlinkThenShowNext());
+        AudioManager.Play("Puzzle Complete");
     }
 
     private IEnumerator WaitAfterMove(System.Action callback)
@@ -293,10 +295,5 @@ public class TimedGate : ElectricalNode
             sr.sprite = _queuedNextSprite;
             _blinking = false;
         }
-    }
-
-    public void PowerInput(ElectricalNode prev)
-    {
-        _inputsPowered.Add(prev);
     }
 }

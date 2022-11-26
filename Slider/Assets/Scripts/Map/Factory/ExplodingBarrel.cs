@@ -8,18 +8,14 @@ public class ExplodingBarrel : MonoBehaviour
     private readonly string explosionResName = "SmokePoof Variant";
 
     [SerializeField] private ConditionChecker doorChecker;
-    [SerializeField] private ElectricalNode eNode;
     [SerializeField] private Transform[] explosionLocations;
 
     public UnityEvent OnExplode;
 
     private GameObject explosionEffect;
 
-
-
     private void Awake()
     {
-        eNode = GetComponent<ElectricalNode>();
     }
 
     private void OnEnable()
@@ -39,7 +35,6 @@ public class ExplodingBarrel : MonoBehaviour
         {
             Instantiate(explosionEffect, location.position, Quaternion.identity);
         }
-        eNode.RemoveAllNeighbors();
         Destroy(gameObject);
 
         OnExplode?.Invoke();

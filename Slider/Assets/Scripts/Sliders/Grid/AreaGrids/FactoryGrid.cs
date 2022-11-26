@@ -19,7 +19,10 @@ public class FactoryGrid : SGrid
     {
         base.Start();
 
-        AudioManager.PlayMusic("Factory");
+        if (!PlayerInPast)
+        {
+            AudioManager.PlayMusic("Factory");
+        }
         UIEffects.FadeFromBlack();
 
         FactoryTimeManager.EnableAnchorsInTime(PlayerInPast);

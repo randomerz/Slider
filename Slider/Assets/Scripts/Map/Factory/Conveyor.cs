@@ -136,6 +136,7 @@ public class Conveyor : ElectricalNode
         }
         waitingToQueueAndFinishMove = false;
         FactoryArtifact.DequeueLocked = false;  //Make sure the key is released, even if we didn't do the move, or else we will spinlock.
+        UIArtifact.GetInstance().ProcessQueue();
     }
 
     //This method covers conveyor belts that stretch over multiple tiles as well as arbitrary grid size, which is a lot more than we needed lol.
