@@ -10,9 +10,6 @@ public class FactoryGrid : SGrid
 
     public static bool PlayerInPast => IsInPast(Player.GetInstance().gameObject);
 
-    public delegate void PlayerPastEvent(bool playerInPast);
-    public static event PlayerPastEvent playerPastChanged;
-
     public override void Init() {
         InitArea(Area.Factory);
         base.Init();
@@ -26,10 +23,6 @@ public class FactoryGrid : SGrid
         UIEffects.FadeFromBlack();
 
         FactoryTimeManager.EnableAnchorsInTime(PlayerInPast);
-    }
-
-    private void Update()
-    {
     }
 
     public override void Save() 

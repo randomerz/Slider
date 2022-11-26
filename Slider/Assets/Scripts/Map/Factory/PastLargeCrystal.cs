@@ -9,7 +9,6 @@ public class PastLargeCrystal : ElectricalNode
     [SerializeField] private PowerCrystal powerCrystal;
     [SerializeField] private string crystalBTTFParticleName;
 
-    private bool CrystalHasEnoughPower => Powered && powerPathPrevs.Keys.Count >= 2;
     private GameObject crystalBTTFParticles;
     private List<GameObject> particles = new List<GameObject>();
 
@@ -23,7 +22,18 @@ public class PastLargeCrystal : ElectricalNode
 
     public void CheckCrystalHasEnoughPower(Condition cond)
     {
-        cond.SetSpec(CrystalHasEnoughPower);
+        cond.SetSpec(CrystalHasEnoughPower());
+    }
+
+    private bool CrystalHasEnoughPower()
+    {
+        int count = 0;
+        foreach (ElectricalNode node in _incomingNodes)
+        {
+            count += node.Powered ? 1 : 0;
+        }
+
+        return Powered && count >= 2;
     }
 
     public void BTTFStarter()

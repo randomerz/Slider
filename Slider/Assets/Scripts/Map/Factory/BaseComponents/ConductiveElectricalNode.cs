@@ -56,12 +56,11 @@ public class ConductiveElectricalNode : ElectricalNode
     {
         ConductiveElectricalNode otherNode = other.gameObject.GetComponentInParent<ConductiveElectricalNode>();
 
-        //Disallow connections btw 2 conductive items (for now)
         if (otherNode != null)
         {
             if (BothNodesNotMoving(otherNode) && ConductiveItemCheck(otherNode))
             {
-                if (AddNeighbor(otherNode))
+                if (AddConnection(otherNode))
                 {
                     onAddNode?.Invoke(this, new NodeEventArgs(this, otherNode));
                 }
@@ -74,7 +73,7 @@ public class ConductiveElectricalNode : ElectricalNode
         ConductiveElectricalNode otherNode = other.gameObject.GetComponentInParent<ConductiveElectricalNode>();
         if (otherNode != null)
         {
-            if (RemoveNeighbor(otherNode))
+            if (RemoveConnection(otherNode))
             {
                 onRemoveNode?.Invoke(this, new NodeEventArgs(this, otherNode));
             }

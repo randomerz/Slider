@@ -101,12 +101,18 @@ public class TimedGate : ElectricalNode
         return (invertSignal ? !allInputsPowered : allInputsPowered);
     }
 
-    protected override void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
+    protected override void EvaluateNodeDuringPropagate(bool value, ElectricalNode prev)
     {
-        if (EvaluateNodeInput(value, prev, recStack, numRefs) && value && _gateActive)
+        //if (EvaluateNodeInput(value, prev) && value && _gateActive)
+        if (value && _gateActive)
         {
             PowerInput(prev);
         }
+    }
+
+    protected override bool ShouldPushOutgoingOntoStack(bool value, ElectricalNode prev)
+    {
+        return prev == null;    //Only if we started here aka powered the gate.
     }
 
     public override void OnPoweredHandler(OnPoweredArgs e)
@@ -115,7 +121,6 @@ public class TimedGate : ElectricalNode
         base.OnPoweredHandler(e);
         if (e.powered)
         {
-            //Once the timed gate is powered, it essentially acts as an input source to it's outputs. It will not turn off
             PowerGate();
         }
     }
@@ -163,7 +168,7 @@ public class TimedGate : ElectricalNode
             _countdown = numTurns;
             _queuedNextSprite = countdownSprite[numTurns];
 
-            foreach (ElectricalNode input in powerPathPrevs.Keys)
+            foreach (ElectricalNode input in _incomingNodes)
             {
                 //Add all the nodes that were already connected to the gate when it was turned on.
                 PowerInput(input);
@@ -186,6 +191,13 @@ public class TimedGate : ElectricalNode
 
         _queuedNextSprite = Powered ? successSprite : failureSprite;
         StartCoroutine(BlinkThenShowNext());
+    }
+
+    private void PowerGate()
+    {
+        StartSignal(true);
+        EvaluateGate();
+        AudioManager.Play("Puzzle Complete");
     }
 
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
@@ -214,14 +226,6 @@ public class TimedGate : ElectricalNode
                 EvaluateGate();
             }
         }
-    }
-
-    private void PowerGate()
-    {
-        PushSignalToOutput(true, new HashSet<ElectricalNode>(), 1);
-        EvaluateGate();
-
-        AudioManager.Play("Puzzle Complete");
     }
 
     private IEnumerator WaitAfterMove(System.Action callback)

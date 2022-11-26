@@ -51,6 +51,7 @@ public class ElectricLineCreator : MonoBehaviour
             nodesConducting.Add(other);
             if (anim != null)
             {
+                //L: I was getting a lot of annoying warnings, so I surpressed them here.
                 anim.SetBool("Conducting", true);
             }
 

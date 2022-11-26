@@ -10,7 +10,6 @@ public class FactoryMagnet : MonoBehaviour
     public FactoryMagnet magnetPair;
 
     [SerializeField] private bool powerOnStart;
-    [SerializeField] private bool affectedByBlackout = true;
 
     private bool _isPoweredWithoutBlackout;
     private bool _lastPoweredState = false;
