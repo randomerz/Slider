@@ -49,15 +49,17 @@ public class ElectricLineCreator : MonoBehaviour
         {
             ConductiveElectricalNode other = e.from.gameObject == this.gameObject ? e.to : e.from;
             nodesConducting.Add(other);
-            if (anim != null)
-            {
-                anim.SetBool("Conducting", true);
-            }
 
-            if (eNode.Powered)
+            bool powerFlowsForward = eNode.Powered && eNode.ValidDirectionGoingTo(other);
+            bool powerFlowsReverse = other.Powered && other.ValidDirectionGoingTo(eNode);
+            if (powerFlowsForward || powerFlowsReverse)
             {
-                OnConductingOn?.Invoke();
+                if (anim != null)
+                {
+                    anim.SetBool("Conducting", true);
+                }
                 CreateElectricLineEffect(other);
+                OnConductingOn?.Invoke();
             }
         }
 

@@ -30,6 +30,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -15.990017, y: 34.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8524056590299330112}
   m_Father: {fileID: 0}
@@ -48,10 +49,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodeType: 1
-  powerRefs: 0
-  powerPathPrevs: []
   neighbors: []
+  powerOnStart: 0
   invertSignal: 0
+  affectedByBlackout: 1
+  debugAsPoweredOn: 0
   OnPowered:
     m_PersistentCalls:
       m_Calls: []
@@ -61,7 +63,7 @@ MonoBehaviour:
   OnPoweredOff:
     m_PersistentCalls:
       m_Calls: []
-  animator: {fileID: 2588704490966313961}
+  logTrace: 0
 --- !u!70 &4198937189463770064
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -75,8 +77,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.00529612, y: 0.06948144}
-  m_Size: {x: 1.4206992, y: 0.862417}
+  m_Offset: {x: -0.005690572, y: 0.029582713}
+  m_Size: {x: 1.6242309, y: 0.9422224}
   m_Direction: 1
 --- !u!50 &3624628278898750688
 Rigidbody2D:
@@ -101,7 +103,7 @@ Rigidbody2D:
   m_Constraints: 0
 --- !u!95 &2588704490966313961
 Animator:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -114,6 +116,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -145,6 +148,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3624628278898750689}
   m_RootOrder: 0
@@ -160,6 +164,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -187,7 +192,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -773487469
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 3253217600472362319, guid: fc7c41f453103fa43b7190cbf778ef02, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

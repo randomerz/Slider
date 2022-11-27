@@ -10,8 +10,8 @@ public class WorldNavigation : MonoBehaviour
     private Tilemap worldFloorTM;
 
     //We cache these in sets since there are a lot of points to consider.
-    private HashSet<Vector2Int> validPtsWorld;
-    private Dictionary<STile, HashSet<Vector2Int>> validPtsStiles;
+    private HashSet<Vector2Int> validPtsWorld = new HashSet<Vector2Int>();
+    private Dictionary<STile, HashSet<Vector2Int>> validPtsStiles = new Dictionary<STile, HashSet<Vector2Int>>();
 
     private STile[] stiles;
 
@@ -45,14 +45,12 @@ public class WorldNavigation : MonoBehaviour
     private void OnEnable()
     {
         SGrid.OnSTileEnabled += HandleSTileEnabled;
-        SGridAnimator.OnSTileMoveEnd += HandleSTileMoved;
         CaveMossManager.MossUpdated += HandleMossUpdated;
     }
 
     private void OnDisable()
     {
         SGrid.OnSTileEnabled -= HandleSTileEnabled;
-        SGridAnimator.OnSTileMoveEnd -= HandleSTileMoved;
         CaveMossManager.MossUpdated -= HandleMossUpdated;
     }
 
@@ -63,17 +61,15 @@ public class WorldNavigation : MonoBehaviour
         OnValidPtsChanged?.Invoke(this, new System.EventArgs());
     }
 
-    private void HandleSTileMoved(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        //We don't need to do this anymore since the positions are relative per stile.
-        //validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
-
-        //OnValidPtsChanged?.Invoke(this, new System.EventArgs());
-    }
-
     private void HandleMossUpdated(object sender, CaveMossManager.MossUpdatedArgs e)
     {
-        validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
+        if (e.stile == null)
+        {
+            validPtsWorld = GetWorldValidPts();
+        } else
+        {
+            validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
+        }
         OnValidPtsChanged?.Invoke(this, new System.EventArgs());
     }
 

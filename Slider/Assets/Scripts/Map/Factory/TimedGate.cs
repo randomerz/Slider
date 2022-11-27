@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+//Note: Gate has 3 states: Deactivated, Activated, and Powered
+//Deactivated: !_gateActive && !Powered
+//Activated: _gateActive && !Powered
+//Powered: Powered
 public class TimedGate : ElectricalNode
 {
     [Header("Timed Gate")]
@@ -17,128 +21,156 @@ public class TimedGate : ElectricalNode
     [SerializeField] private Sprite blinkSprite;
     [SerializeField] private SpriteRenderer sr;
 
-    [Header("EXPOSED FOR DEBUG")]
-    [SerializeField] private int numInputsPowered;
-
     public UnityEvent OnGateActivated;
     public UnityEvent OnGateDeactivated;
 
-    private Sprite queuedNextSprite;
+    private Sprite _queuedNextSprite;
+    private HashSet<ElectricalNode> _inputsPowered;
+    private bool _gateActive;    //Whether the timed gate is activated and displaying the countdown
+    private int _countdown;
+    private Coroutine _waitToEndGateCoroutine;
+    private bool _blinking;  //Ensures that only one blink coroutine is executing at a time.
 
-    private HashSet<ElectricalNode> inputsPowered;
+    private PlayerConditionals _pConds;
 
-    private bool gateActive;    //Whether the timed gate is activated and displaying the countdown (Note: This is different from Powered)
-    [SerializeField] private int countdown;
+    public bool GateActive => _gateActive;
 
-    private Coroutine waitingToEndGate;
-    private bool blinking;  //Ensures that only one blink coroutine is executing at a time.
-
-    public bool GateActive => gateActive;
-
-    public int Countdown => countdown;
-
-    public override bool Powered
-    {
-        get
-        {
-            bool normal = inputsPowered != null && inputsPowered.Count >= numInputs;
-            return (invertSignal ? !normal : normal) || debugAsPoweredOn;
-        }
-    }
-
-    public override bool AffectedByBlackout => affectedByBlackout;
-
-    #region Unity Callbacks
     private new void Awake()
     {
         base.Awake();
         nodeType = NodeType.IO;
 
-        inputsPowered = new HashSet<ElectricalNode>();
-        waitingToEndGate = null;
-        queuedNextSprite = waitingSprite;
+        _inputsPowered = new HashSet<ElectricalNode>();
+        _waitToEndGateCoroutine = null;
+        _queuedNextSprite = waitingSprite;
+        _blinking = false;
+
+        _pConds = GetComponent<PlayerConditionals>();
+
         sr.sprite = waitingSprite;
-
-        if (numTurns > 5)
-        {
-            Debug.LogError("Countdowns greater than 5 are not supported");
-        }
-
-        blinking = false;
     }
 
     private new void OnEnable()
     {
         base.OnEnable();
 
-        if (Powered)
-        {
-            EvaluateGate();
-        }
         UIArtifact.MoveMadeOnArtifact += MoveMadeOnArtifact;
+        PowerCrystal.blackoutStarted += HandleBlackoutStarted;
+        PowerCrystal.blackoutEnded += HandleBlackoutEnded;
     }
 
     private new void OnDisable()
     {
         base.OnDisable();
-        blinking = false;   //L: Coroutines are stopped when game objects are disabled.
+        _blinking = false;   //L: Coroutines are stopped when game objects are disabled.
         UIArtifact.MoveMadeOnArtifact -= MoveMadeOnArtifact;
+        PowerCrystal.blackoutStarted -= HandleBlackoutStarted;
+        PowerCrystal.blackoutEnded -= HandleBlackoutEnded;
     }
-    #endregion
+
+    private void OnValidate()
+    {
+        if (numTurns > 4)
+        {
+            Debug.LogError("Timed Gate only supports countdowns of 4 or less");
+        }
+
+        affectedByBlackout = false; //Timed gates are not affected!
+    }
+
+    private void HandleBlackoutStarted()
+    {
+        //L: Might as well do this. Player shouldn't be messing with the gates anyway.
+        _pConds.DisableConditionals();
+    }
+
+    private void HandleBlackoutEnded()
+    {
+        _pConds.EnableConditionals();
+    }
 
     #region ElectricalNode Overrides
 
-    protected override void PropagateSignal(bool value, ElectricalNode prev, HashSet<ElectricalNode> recStack, int numRefs = 1)
+    protected override bool PoweredConditionsMet()
     {
-        bool oldPowered = Powered;
-        if (EvaluateNodeInput(value, prev, recStack, numRefs) && value && gateActive)
-        {
-            PowerInput(prev);
+        bool allInputsPowered = _inputsPowered != null && _inputsPowered.Count >= numInputs;
+        return (invertSignal ? !allInputsPowered : allInputsPowered);
+    }
 
-            if (Powered != oldPowered)
-            {
-                OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
-            }
+    protected override void EvaluateNodeDuringPropagate(bool value, ElectricalNode prev)
+    {
+        //if (EvaluateNodeInput(value, prev) && value && _gateActive)
+        if (value && _gateActive && prev != null && prev.Powered)
+        {
+            _inputsPowered.Add(prev);
         }
     }
+
+    protected override bool ShouldPushOutgoingOntoStack(bool value, ElectricalNode prev)
+    {
+        return prev == null;    //Only if we started here aka powered the gate.
+    }
+
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
 
         base.OnPoweredHandler(e);
         if (e.powered)
         {
-            //Once the timed gate is powered, it essentially acts as an input source to it's outputs. It will not turn off
             PowerGate();
         }
     }
     #endregion
 
+    public int GetTabSpriteIndex()
+    {
+        for (int i = 0; i < countdownSprite.Length; i++)
+        {
+            if (sr.sprite == countdownSprite[i])
+            {
+                return i;
+            }
+        }
+
+        if (sr.sprite == successSprite)
+        {
+            return countdownSprite.Length;
+        }
+        if (sr.sprite == failureSprite)
+        {
+            return countdownSprite.Length+1;
+        }
+        if (sr.sprite == blinkSprite)
+        {
+            return countdownSprite.Length+2;
+        }
+
+        return -1;
+    }
 
     //This is called via player interaction
     public void ActivateGate()
     {
         if (!Powered)
         {
-            if (gateActive)
+            if (_gateActive)
             {
-                // "Reseting" the gate
-                inputsPowered.Clear();
+                // "Resetting" the gate
+                _inputsPowered.Clear();
                 OnGateDeactivated?.Invoke();
             }
             
-            gateActive = true;
-            countdown = numTurns;
-            queuedNextSprite = countdownSprite[numTurns];
+            _gateActive = true;
+            _countdown = numTurns;
+            _queuedNextSprite = countdownSprite[numTurns];
 
-            bool oldPowered = Powered;
-            foreach (ElectricalNode input in powerPathPrevs.Keys)
+            foreach (ElectricalNode input in _incomingNodes)
             {
                 //Add all the nodes that were already connected to the gate when it was turned on.
-                PowerInput(input);
-            }
-            if (Powered != oldPowered)
-            {
-                OnPowered?.Invoke(new OnPoweredArgs { powered = Powered });
+                if (input.Powered)
+                {
+                    _inputsPowered.Add(input);
+                }
             }
 
             StartCoroutine(BlinkThenShowNext());
@@ -146,53 +178,55 @@ public class TimedGate : ElectricalNode
         }
     }
 
-    public void EvaluateGate()
+    private void MoveMadeOnArtifact(object sender, System.EventArgs e)
+    {
+        if (_gateActive && !Powered)
+        {
+            _countdown--;
+
+            if (_countdown > 0)
+            {
+                _queuedNextSprite = countdownSprite[_countdown];
+                StartCoroutine(BlinkThenShowNext());
+            }
+            else if (_countdown == 0)
+            {
+                _queuedNextSprite = countdownSprite[_countdown];
+                StartCoroutine(BlinkUntilNextSpriteChange());
+                _waitToEndGateCoroutine = StartCoroutine(WaitAfterMove(CheckFailedToPower));
+            }
+            else if (_countdown < 0)
+            {
+                //If player tries to queue another move, just stop the gate immediately. (avoids some nasty edge cases)
+                if (_waitToEndGateCoroutine != null)
+                {
+                    StopCoroutine(_waitToEndGateCoroutine);
+                }
+
+                CheckFailedToPower();
+            }
+        }
+    }
+
+    private void CheckFailedToPower()
     {
         if (!Powered)
         {
             //Player failed to power the inputs in time.
-            gateActive = false;
-            inputsPowered.Clear();
+            _gateActive = false;
+            _inputsPowered.Clear();
+
+            _queuedNextSprite = failureSprite;
+            StartCoroutine(BlinkThenShowNext());
             OnGateDeactivated?.Invoke();
-        }
-
-        queuedNextSprite = Powered ? successSprite : failureSprite;
-        StartCoroutine(BlinkThenShowNext());
-    }
-
-    private void MoveMadeOnArtifact(object sender, System.EventArgs e)
-    {
-        if (gateActive && !Powered)
-        {
-            countdown--;
-
-            if (countdown > 0)
-            {
-                queuedNextSprite = countdownSprite[countdown];
-                StartCoroutine(BlinkThenShowNext());
-            } else if (countdown == 0)
-            {
-                queuedNextSprite = countdownSprite[countdown];
-                StartCoroutine(BlinkUntilNextSpriteChange());
-                waitingToEndGate = StartCoroutine(WaitAfterMove(EvaluateGate));
-            } else if (countdown < 0)
-            {
-                //If player tries to queue another move, just stop the gate immediately. (avoids some nasty edge cases)
-                if (waitingToEndGate != null)
-                {
-                    StopCoroutine(waitingToEndGate);
-                }
-
-                EvaluateGate();
-            }
         }
     }
 
     private void PowerGate()
     {
-        PushSignalToOutput(true, new HashSet<ElectricalNode>(), 1);
-        EvaluateGate();
-
+        StartSignal(true);
+        _queuedNextSprite = successSprite;
+        StartCoroutine(BlinkThenShowNext());
         AudioManager.Play("Puzzle Complete");
     }
 
@@ -221,15 +255,15 @@ public class TimedGate : ElectricalNode
 
     private IEnumerator BlinkThenShowNext(int numBlinks = 1)
     {
-        if (!blinking)
+        if (!_blinking)
         {
-            blinking = true;
+            _blinking = true;
             int currBlinks = numBlinks;
             while (currBlinks > 0)
             {
                 sr.sprite = blinkSprite;
                 yield return new WaitForSeconds(0.25f);
-                sr.sprite = queuedNextSprite;
+                sr.sprite = _queuedNextSprite;
                 currBlinks--;
                 if (currBlinks > 0)
                 {
@@ -237,35 +271,29 @@ public class TimedGate : ElectricalNode
                 }
             }
 
-            sr.sprite = queuedNextSprite;
-            blinking = false;
+            sr.sprite = _queuedNextSprite;
+            _blinking = false;
         }
     }
 
     private IEnumerator BlinkUntilNextSpriteChange()
     {
-        if (!blinking)
+        if (!_blinking)
         {
-            blinking = true;
-            Sprite currSprite = queuedNextSprite;
-            while (queuedNextSprite == currSprite)
+            _blinking = true;
+            Sprite currSprite = _queuedNextSprite;
+            while (_queuedNextSprite == currSprite)
             {
                 sr.sprite = blinkSprite;
                 yield return new WaitForSeconds(0.25f);
-                sr.sprite = queuedNextSprite;
-                if (currSprite == queuedNextSprite)
+                sr.sprite = _queuedNextSprite;
+                if (currSprite == _queuedNextSprite)
                 {
                     yield return new WaitForSeconds(0.25f);
                 }
             }
-            sr.sprite = queuedNextSprite;
-            blinking = false;
+            sr.sprite = _queuedNextSprite;
+            _blinking = false;
         }
-    }
-
-    public void PowerInput(ElectricalNode prev)
-    {
-        inputsPowered.Add(prev);
-        numInputsPowered = inputsPowered.Count;
     }
 }
