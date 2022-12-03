@@ -6,10 +6,10 @@ using UnityEngine.UI;
 public class UITrackerManager : MonoBehaviour
 {
     protected static UITrackerManager _instance;
+
+    public bool trackHousingAccurately = false;
     
     protected virtual Vector2 center => new Vector2(17, 17);
-    protected Vector2 position;
-    protected Vector2 offset;
     protected ArtifactTileButton currentButton;
     protected STile currentTile;
     protected float scale = 27f/17f;
@@ -112,6 +112,73 @@ public class UITrackerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckBuffers();
+
+        for (int x = 0; x < targets.Count; x++) {
+            if (targets[x].target == null) {
+                Destroy(targets[x].gameObject);
+                targets.RemoveAt(x);
+                x--;
+                Debug.LogWarning("Removed a tracker pointing to a destroyed object");
+            }
+        }
+
+        foreach (UITracker tracker in targets) {
+            currentTile = tracker.GetSTile();
+            tracker.gameObject.SetActive(tracker.target.activeInHierarchy);
+
+            if (currentTile != null) 
+            {
+                currentButton = uiArtifactMenus.uiArtifact.GetButton(currentTile.islandId);
+                tracker.image.rectTransform.SetParent(currentButton.imageRectTransform);
+                
+                Vector2 offset = CalculateOffset(tracker);
+                if (tracker.GetIsInHouse() && !trackHousingAccurately)
+                {
+                    tracker.image.rectTransform.anchoredPosition = Vector2.zero;
+                }
+                else
+                {
+                    tracker.image.rectTransform.anchoredPosition = offset;
+                }
+            }
+            else
+            {
+                tracker.image.rectTransform.SetParent(artifactPanel.GetComponent<RectTransform>());
+
+                Vector2 offset = CalculateOffsetNullTile(tracker);
+                tracker.image.rectTransform.anchoredPosition = offset;
+            }
+        }
+    }
+
+    protected virtual Vector2 CalculateOffsetNullTile(UITracker tracker) 
+    {
+        Vector2 position = tracker.GetPosition();
+        if (trackHousingAccurately && tracker.GetIsInHouse())
+        {
+            position += new Vector2(0, 150);
+        }
+
+        Vector2 offset = (position - center) * centerScale;
+        offset = new Vector3(Mathf.Clamp(offset.x, -70f, 70f), Mathf.Clamp(offset.y, -60f, 60f));
+        return offset;
+    }
+
+    protected virtual Vector2 CalculateOffset(UITracker tracker) 
+    {
+        Vector2 position = tracker.GetPosition();
+        if (trackHousingAccurately && tracker.GetIsInHouse())
+        {
+            position += new Vector2(0, 150);
+        }
+
+        Vector2 offset = (position - (Vector2)currentTile.transform.position) * scale;
+        return offset;
+    }
+
+    private void CheckBuffers()
+    {
         if (uiTrackerBuffer.Count > 0) {
             for (int i = 0; i < uiTrackerBuffer.Count; i++) {
                 UITrackerData uid = uiTrackerBuffer[i];
@@ -134,61 +201,6 @@ public class UITrackerManager : MonoBehaviour
             }
             removeBuffer.Clear();
         }
-
-        for (int x = 0; x < targets.Count; x++) {
-            if (targets[x].target == null) {
-                Destroy(targets[x].gameObject);
-                targets.RemoveAt(x);
-                x--;
-                Debug.LogWarning("Removed a tracker pointing to a destroyed object");
-            }
-        }
-
-        foreach (UITracker t in targets) {
-            position = t.GetPosition();
-            currentTile = t.GetSTile();
-            t.gameObject.SetActive(t.target.activeInHierarchy);
-
-            //S: When target is not on a tile
-            if(currentTile == null){
-                t.image.rectTransform.SetParent(artifactPanel.GetComponent<RectTransform>());
-                CalculateOffsetNullTile();
-                //offset = (position - center) * centerScale;
-                //offset = new Vector3(Mathf.Clamp(offset.x, -62.5f, 62.5f), Mathf.Clamp(offset.y, -57.5f, 57.5f));
-
-                t.image.rectTransform.anchoredPosition = offset;
-
-                continue;
-            }
-
-            CalculateOffset();
-            //offset = (position - (Vector2)currentTile.transform.position) * scale;
-
-            currentButton = uiArtifactMenus.uiArtifact.GetButton(currentTile.islandId);
-            // Debug.Log("Setting transform of " + t.name);
-            t.image.rectTransform.SetParent(currentButton.imageRectTransform);
-            
-            if(t.GetIsInHouse())
-            {
-                t.image.rectTransform.anchoredPosition = Vector2.zero;
-            }
-            else
-            {
-                t.image.rectTransform.anchoredPosition = offset;
-            }
-        }
-    }
-
-    // C: made into its own method so it can be overriden 
-    protected virtual void CalculateOffsetNullTile() 
-    {
-        offset = (position - center) * centerScale;
-        offset = new Vector3(Mathf.Clamp(offset.x, -70f, 70f), Mathf.Clamp(offset.y, -60f, 60f));
-    }
-
-    protected virtual void CalculateOffset() 
-    {
-        offset = (position - (Vector2)currentTile.transform.position) * scale;
     }
 
 

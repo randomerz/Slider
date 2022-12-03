@@ -20,17 +20,21 @@ public class MountainUITrackerManager : UITrackerManager
         _instance = this;
     }
 
-    protected override void CalculateOffsetNullTile() 
+    protected override Vector2 CalculateOffsetNullTile(UITracker tracker) 
     {
+        Vector2 position = tracker.GetPosition();
         Vector2 temp = (position - (position.y > 62.5? upperCenter: lowerCenter));
-        offset = temp.x * xCenterOffset + temp.y * yCenterOffset + (position.y > 62.5? new Vector2(0, 29.5f): new Vector2(0, -29.5f));
+        Vector2 offset = temp.x * xCenterOffset + temp.y * yCenterOffset + (position.y > 62.5 ? new Vector2(0, 29.5f) : new Vector2(0, -29.5f));
         //C: TODO: clamp outside of stiles
         //offset = new Vector3(Mathf.Clamp(offset.x, -62.5f, 62.5f), Mathf.Clamp(offset.y, -57.5f, 57.5f));
+        return offset;
     }
 
-    protected override void CalculateOffset() 
+    protected override Vector2 CalculateOffset(UITracker tracker) 
     {
+        Vector2 position = tracker.GetPosition();
         Vector2 temp = (position - (Vector2)currentTile.transform.position);
-        offset = temp.x * xOffset + temp.y * yOffset;
+        Vector2 offset = temp.x * xOffset + temp.y * yOffset;
+        return offset;
     }
 }
