@@ -123,10 +123,10 @@ public class FactoryArtifact : UIArtifact
             if (inPast)
             {
                 b.GetComponent<ArtifactTBPluginPast>().UsePastSprite();
-                b.UseDefaultEmptySprite();
+                b.RestoreDefaultEmptySprite();
             } else
             {
-                b.UseDefaultIslandSprite();
+                b.RestoreDefaultIslandSprite();
                 b.GetComponent<ArtifactTBPluginConveyor>().UpdateEmptySprite();
             }
 

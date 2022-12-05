@@ -58,8 +58,8 @@ public class ArtifactTileButton : MonoBehaviour
     protected void Awake() 
     {
         Init();
-        UseDefaultIslandSprite();
-        UseDefaultEmptySprite();
+        RestoreDefaultIslandSprite();
+        RestoreDefaultEmptySprite();
     }
 
     protected void OnDisable()
@@ -131,17 +131,17 @@ public class ArtifactTileButton : MonoBehaviour
         buttonAnimator.sliderImage.sprite = hoverSprite;
     }
 
-    public void UseDefaultIslandSprite()
+    public void RestoreDefaultIslandSprite()
     {
         islandSprite = islandSpriteDefault;
     }
 
-    public void UseDefaultCompletedSprite()
+    public void RestoreDefaultCompletedSprite()
     {
         completedSprite = completedSpriteDefault;
     }
 
-    public void UseDefaultEmptySprite()
+    public void RestoreDefaultEmptySprite()
     {
         emptySprite = emptySpriteDefault;
     }
