@@ -196,7 +196,7 @@ public class UITrackerManager : MonoBehaviour
         }
 
         if (removeBuffer.Count > 0) {
-            for (int i = removeBuffer.Count; i >= 0; i++) {
+            for (int i = removeBuffer.Count - 1; i >= 0; i--) {
                 RemoveTracker(removeBuffer[i]);
             }
             removeBuffer.Clear();

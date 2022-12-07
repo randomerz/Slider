@@ -48,9 +48,6 @@ public class Anchor : Item
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null) // pickLocation may be moving
     {
-        //conductiveNode.GetComponent<Collider2D>().enabled = false;
-        //triggerCollider.enabled = false;
-
         base.PickUpItem(pickLocation, callback);
         OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=false });
         UnanchorTile();
@@ -72,8 +69,6 @@ public class Anchor : Item
 
     public override void OnEquip()
     {
-        //conductiveNode.GetComponent<Collider2D>().enabled = false;
-        //triggerCollider.enabled = false;
         base.OnEquip();
         Player.SetMoveSpeedMultiplier(0.75f);
     }
@@ -91,6 +86,7 @@ public class Anchor : Item
         UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
         return null;
     }
+    
     public override void dropCallback()
     {
         base.dropCallback();
@@ -99,7 +95,4 @@ public class Anchor : Item
         
         OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true });
     }
-
-        //conductiveNode.GetComponent<Collider2D>().enabled = true;
-        //triggerCollider.enabled = true;
 }
