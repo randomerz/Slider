@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &893779327721645513
 Transform:
   m_ObjectHideFlags: 0
@@ -130,7 +130,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81daf62b7f3a3c645b408d554c61ee6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  active: 0
+  creatingBlobs: 1
   pair: {fileID: 0}
+  currentShape: {fileID: 0}
+  horizontal: 1
+  direction: 0
+  blob: {fileID: 6794732048064429014, guid: f61fb858a7b7cad419aec4dfbf411014, type: 3}
+  timeBetweenCreation: 300
+  blobspeed: 1
+  travelDistance: 5
+  count: 300
 --- !u!61 &893779329034979391
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -144,7 +154,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0013924986, y: 0}
+  m_Offset: {x: 0.001978606, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -155,5 +165,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.9940667, y: 1}
+  m_Size: {x: 0.9905936, y: 1}
   m_EdgeRadius: 0

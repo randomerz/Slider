@@ -7,12 +7,11 @@ public class FactoryGrid : SGrid
     [Header("FactoryGrid")]
     [SerializeField] private ConditionChecker explosionChecker;
     [SerializeField] private PowerCrystal powerCrystal;
-    [SerializeField] private ServerComputer serverComputer;
 
-    private bool playerInPast;
+    public static bool PlayerInPast => IsInPast(Player.GetInstance().gameObject);
+    private bool _lastPlayerInPast = false;
 
-    public delegate void PlayerPastEvent(bool playerInPast);
-    public static event PlayerPastEvent playerPastChanged;
+    public static event System.EventHandler PlayerChangedTime;
 
     public override void Init() {
         InitArea(Area.Factory);
@@ -23,19 +22,19 @@ public class FactoryGrid : SGrid
     {
         base.Start();
 
-        AudioManager.PlayMusic("Factory");
+        if (!PlayerInPast)
+        {
+            AudioManager.PlayMusic("Factory");
+        }
         UIEffects.FadeFromBlack();
-
-        //SGrid.OnGridMove += (sender, e) => { Debug.Log(GetGridString()); };
     }
 
     private void Update()
     {
-        bool oldValue = playerInPast;
-        playerInPast = FactoryGrid.IsInPast(Player.GetInstance().gameObject);
-        if (oldValue != playerInPast)
+        if (PlayerInPast != _lastPlayerInPast)
         {
-            playerPastChanged?.Invoke(playerInPast);
+            _lastPlayerInPast = PlayerInPast;
+            PlayerChangedTime?.Invoke(this, null);
         }
     }
 
@@ -59,15 +58,5 @@ public class FactoryGrid : SGrid
         CameraShake.Shake(1.0f, 1.0f);
         SaveSystem.Current.SetBool("factoryDoorExploded", true);
         explosionChecker.CheckConditions();
-    }
-
-    //THIS IS FOR DEBUG ONLY
-    public static IEnumerator SendPlayerToPastDebugSequence(DebugUIManager duiManager)
-    {
-        duiManager.ES("6");
-        yield return new WaitForSeconds(2.0f);
-        (Current as FactoryGrid).powerCrystal.StartCrystalPoweredSequence();
-        yield return new WaitForSeconds(2.0f);
-        (Current as FactoryGrid).serverComputer.StartSendToPastEvent();
     }
 }

@@ -8,6 +8,7 @@ public class Box : MonoBehaviour
 
     public List<Shape> shapes;
     protected int currentShapeIndex = 0;
+
     public Shape currentShape;
 
     public Path left;
@@ -22,7 +23,6 @@ public class Box : MonoBehaviour
     void Awake()
     {
         SetPaths();
-
         foreach (Direction d in paths.Keys)
         {
             paths[d].ChangePair();
@@ -51,7 +51,7 @@ public class Box : MonoBehaviour
 
     protected void STileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
-        CreateShape();
+        CreateShape(new List<Box>());
     }
 
     protected void SetPaths()
@@ -74,29 +74,34 @@ public class Box : MonoBehaviour
         }
     }
 
-    public void CreateShape()
+    public void CreateShape(List<Box> parents)
     {
-        //print(this.gameObject.name + " is sending shape " + currentShape.name);
+       // print(this.gameObject.name + " is sending shape " + currentShape);
         //print(currentDirection);
+
         Box next = GetBoxInDirection();
         if (next != null)
         {
-            next.RecieveShape(paths[currentDirection], currentShape);
             if (currentShape != null)
             {
-                paths[currentDirection].Activate(isDefaultCurrentPath());
+                if (!paths[currentDirection].isActive() || paths[currentDirection].getAnimType() == isDefaultCurrentPath())//something wrong here
+                {
+                    paths[currentDirection].Activate(isDefaultCurrentPath(), currentShape); 
+                    next.RecieveShape(paths[currentDirection], currentShape, parents);
+                }
             }
             else
             {
                 paths[currentDirection].Deactivate();
+                next.RecieveShape(paths[currentDirection], currentShape, parents);
             }
         }
     }
 
 
-    public virtual void RecieveShape(Path path, Shape shape)
+    public virtual void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
-
+        
     }
 
     public void Rotate()
@@ -108,9 +113,14 @@ public class Box : MonoBehaviour
 
             if (box != null)
             {
-                box.RecieveShape(paths[currentDirection], null);
+                //print("pushing null");
+                box.RecieveShape(paths[currentDirection], null, new List<Box>());
             }
-            paths[currentDirection].Deactivate();
+
+            if (isDefaultCurrentPath() == paths[currentDirection].getAnimType())
+            {
+                paths[currentDirection].Deactivate();
+            }
 
             //check each path to see if any is not active alr
 
@@ -126,7 +136,6 @@ public class Box : MonoBehaviour
                 }
             }
 
-           // bool found = false;
             for (int i = 1; i <= 4; i++)
             {
                 Direction d = ds[(at + i) % 4];
@@ -149,8 +158,7 @@ public class Box : MonoBehaviour
                             return;
                         }
 
-                        paths[currentDirection].Activate(isDefaultCurrentPath());
-                        CreateShape();
+                        CreateShape(new List<Box>());
                     }
                     break;
                 }

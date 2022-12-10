@@ -17,8 +17,19 @@ public class FactoryArtifact : UIArtifact
 
     private new void OnEnable()
     {
+        FactoryGrid.PlayerChangedTime += PlayerChangedTime;
         base.OnEnable();
-        FactoryGrid.playerPastChanged += UpdateButtonSpritesAndBackground;
+    }
+
+    private new void OnDisable()
+    {
+        FactoryGrid.PlayerChangedTime -= PlayerChangedTime;
+        base.OnDisable();
+    }
+
+    private void PlayerChangedTime(object sender, System.EventArgs e)
+    {
+        UpdateButtonSpritesAndBackground(FactoryGrid.PlayerInPast);
     }
 
     public override void ProcessQueue()
@@ -112,12 +123,13 @@ public class FactoryArtifact : UIArtifact
             if (inPast)
             {
                 b.GetComponent<ArtifactTBPluginPast>().UsePastSprite();
-                b.UseDefaultEmptySprite();
+                b.RestoreDefaultEmptySprite();
             } else
             {
-                b.UseDefaultIslandSprite();
+                b.RestoreDefaultIslandSprite();
                 b.GetComponent<ArtifactTBPluginConveyor>().UpdateEmptySprite();
             }
+
             b.SetSpriteToIslandOrEmpty();
         }
         background.sprite = inPast ? pastBackgroundSprite : presentBackgroundSprite;

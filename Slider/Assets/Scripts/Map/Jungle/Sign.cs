@@ -5,13 +5,12 @@ using UnityEngine;
 public class Sign : Box
 {
     public RecipeList recipes;
-    private Dictionary<Path, Shape> shapes = new Dictionary<Path, Shape>(); //idk if i sshould rename this i should think
+    public Dictionary<Path, Shape> shapes = new Dictionary<Path, Shape>(); //idk if i sshould rename this i should think
     
     // Start is called before the first frame update
     void Awake()
     {
         SetPaths();
-
         foreach (Direction d in paths.Keys)
         {
             paths[d].ChangePair();
@@ -52,29 +51,28 @@ public class Sign : Box
     }
 
 
-    public override void RecieveShape(Path path, Shape shape)
+    public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
-        //somehow take in shapes and merge is needed
-        // also be able to remove a shape when the box output diff stuff or the path stops
         //print("sign got shape " + shape);
 
-        //sometimes this is like null because the path pairs havent been updated yet
+        if (parents.Contains(this) && shape != null)
+        {
+            return;
+        }
 
-        //print(path.gameObject.name);
+        parents.Add(this);
 
         if (path.pair != null)
         {
             shapes[path.pair] = shape;
             MergeShapes();
-            CreateShape();
+            CreateShape(parents);
         }
         else
         {
-/*                print(this.gameObject.name + " " + path.gameObject.name);
-            print("null path");*/
             shapes[path] = shape;
             MergeShapes();
-            CreateShape();
+            CreateShape(parents);
         }
     }
     public void MergeShapes()
@@ -88,12 +86,10 @@ public class Sign : Box
             }
         }
 
-/*        print("boo");
-        foreach (Shape shape in shapesRecieved)
+        foreach (Shape s in shapesRecieved)
         {
-            print(shape);
+            print(s.name);
         }
-        print("ahdkfljaldf");*/
 
         foreach (Recipe recipe in recipes.list)
         {

@@ -168,10 +168,10 @@ public void SetGrid(int[,] puzzle)
         STile[,] old = grid;
         grid = newGrid;
 
-        OnGridMove.Invoke(this, new OnGridMoveArgs {
-            oldGrid = old, 
-            grid = grid
-        });
+        //OnGridMove.Invoke(this, new OnGridMoveArgs {
+        //    oldGrid = old, 
+        //    grid = grid
+        //});
     }
 
     /*

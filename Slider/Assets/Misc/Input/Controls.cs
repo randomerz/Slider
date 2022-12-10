@@ -141,6 +141,11 @@ public class Controls : Singleton<Controls>
     {
         return action.GetBindingDisplayString(group:_instance.currentControlScheme);
     }
+
+    public static void StartCoroutineOnInstance(IEnumerator coroutine)
+    {
+        _instance.StartCoroutine(coroutine);
+    }
 }
 
 /// <summary>
@@ -152,7 +157,8 @@ public class Controls : Singleton<Controls>
 public class ManagedBindingBehavior : BindingBehavior
 {
     public MonoBehaviour owner;
-    public ManagedBindingBehavior(MonoBehaviour owner, InputAction binding, System.Action<InputAction.CallbackContext> behavior, bool isEnabled = true)
+    public ManagedBindingBehavior(MonoBehaviour owner, InputAction binding, System.Action<InputAction.CallbackContext> behavior, 
+                                  bool isEnabled = true)
         : base(binding, behavior, isEnabled)
     {
         this.owner = owner;
@@ -198,6 +204,49 @@ public class BindingBehavior
         if (isEnabled)
         {
             behavior?.Invoke(context);
+        }
+    }
+}
+
+public class BindingHeldBehavior : BindingBehavior
+{
+    public float minimumHoldDuration;
+
+    public BindingHeldBehavior(InputAction binding, System.Action<InputAction.CallbackContext> behavior, 
+                               float minimumHoldDuration, bool isEnabled = true)
+        : base(binding, behavior, isEnabled)
+    {
+        this.minimumHoldDuration = minimumHoldDuration;
+    }
+
+    public override void Invoke(InputAction.CallbackContext context)
+    {
+        Controls.StartCoroutineOnInstance(ICheckForBindingHeld(context));
+    }
+
+    private void ActualInvoke(InputAction.CallbackContext context)
+    {
+        behavior?.Invoke(context);
+    }
+
+    private IEnumerator ICheckForBindingHeld(InputAction.CallbackContext context)
+    {
+        if (binding.controls[0] == null)
+        {
+            Debug.LogError("BindingHeldBehavior was attached to a control with a null binding");
+            yield return null;
+        }
+
+        float timeSinceButtonPressed = 0;
+        while (binding.controls[0].IsPressed())
+        {
+            timeSinceButtonPressed += Time.deltaTime;
+            if (timeSinceButtonPressed > minimumHoldDuration)
+            {
+                ActualInvoke(context);
+                break;
+            }
+            yield return new WaitForEndOfFrame();
         }
     }
 }
