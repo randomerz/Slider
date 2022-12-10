@@ -204,9 +204,17 @@ public class MagiTechGrid : SGrid
         {
             gems.Add(itemNameAsEnum, true);
             //Funni turn-in coroutine
-            PlayerInventory.RemoveItem();
-            item.gameObject.SetActive(false);
+            PlayerInventory.RemoveAndDestroyItem();
+            //item.gameObject.SetActive(false);
+            Debug.Log(itemNameAsEnum);
         }
+    }
 
+    public void TurnInMountory()
+    {
+        gems.Add(Area.Factory, true);
+        gems.Add(Area.Mountain, true);
+        PlayerInventory.RemoveAndDestroyItem();
+        Debug.Log("Factory Mountain");
     }
 }

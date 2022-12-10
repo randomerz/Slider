@@ -226,9 +226,7 @@ public class MagiTechArtifact : UIArtifact
         QueueAdd(move);
         SwapButtons(buttonCurrent, buttonEmpty);
         ArtifactTileButton currAlt = GetButton(FindAltId(buttonCurrent.islandId));
-        Debug.Log("CurrAlt: " + FindAltId(buttonCurrent.islandId) + ": " + currAlt.x + " " + currAlt.y);
         ArtifactTileButton emptyAlt = GetButton(FindAltId(buttonEmpty.islandId));
-        Debug.Log("EmptyAlt: " + FindAltId(buttonEmpty.islandId)+ " " + currAlt.x + " " + currAlt.y);
         SwapButtons(currAlt, emptyAlt);
         ProcessQueue();
         UpdateMoveOptions();
