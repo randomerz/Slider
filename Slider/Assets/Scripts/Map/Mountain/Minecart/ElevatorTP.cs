@@ -10,6 +10,7 @@ public class ElevatorTP : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) 
     {
         if(other.GetComponent<Minecart>()){
+            Debug.Log("Elevator TP");
             Minecart mc = other.GetComponent<Minecart>();
             if(isTop)
                 elevator.SendMinecartDown(mc);

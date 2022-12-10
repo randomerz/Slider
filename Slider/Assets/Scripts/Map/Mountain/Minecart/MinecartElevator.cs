@@ -9,7 +9,7 @@ public class MinecartElevator : MonoBehaviour
     public GameObject bottomPosition;
     public Minecart mainMc;
   //  public RailManager borderRM;
-    private bool isOpen; //C: true if there are tiles in front of the elevator (top and bottom), false otherwise
+    private bool isOpen = true; //C: TODO true if there are tiles in front of the elevator (top and bottom), false otherwise
     private bool hasGoneDown;
 
     private void OnEnable() {
@@ -37,11 +37,12 @@ public class MinecartElevator : MonoBehaviour
 
     public void SendMinecartDown(Minecart mc)
     {
-        if(!isFixed || !isOpen)
+        if(!isFixed)
             return;
         mc.StopMoving();
         StartCoroutine(WaitThenSend(mc, bottomPosition.transform.position, 3));
         hasGoneDown = true;
+        Debug.Log("send down");
     }
 
     public void SendMinecartUp(Minecart mc)
@@ -50,6 +51,8 @@ public class MinecartElevator : MonoBehaviour
             return;
         mc.StopMoving();
         StartCoroutine(WaitThenSend(mc, topPosition.transform.position, 3));
+        Debug.Log("send up");
+
     }
 
     public void CheckIsFixed(Condition c)
