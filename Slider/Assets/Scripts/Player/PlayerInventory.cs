@@ -133,10 +133,7 @@ public class PlayerInventory : MonoBehaviour
 
     public static void RemoveItemNoReturn()
     {
-        if (currentItem != null)
-            equipables.Remove(currentItem);
-        currentItem = null;
-        itemIterator = equipables.GetEnumerator();
+        RemoveItem(); 
     }
 
     public static Item RemoveItem()

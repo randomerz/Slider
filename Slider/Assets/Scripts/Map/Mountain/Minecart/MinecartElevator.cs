@@ -10,6 +10,7 @@ public class MinecartElevator : MonoBehaviour
     public Minecart mainMc;
   //  public RailManager borderRM;
     private bool isOpen; //C: true if there are tiles in front of the elevator (top and bottom), false otherwise
+    private bool hasGoneDown;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveEnd += CheckOpenOnMove;
@@ -40,6 +41,7 @@ public class MinecartElevator : MonoBehaviour
             return;
         mc.StopMoving();
         StartCoroutine(WaitThenSend(mc, bottomPosition.transform.position, 3));
+        hasGoneDown = true;
     }
 
     public void SendMinecartUp(Minecart mc)
@@ -58,6 +60,11 @@ public class MinecartElevator : MonoBehaviour
     public void CheckIsNotOpen(Condition c)
     {
         c.SetSpec(!isOpen);
+    }
+
+    public void CheckHasGoneDown(Condition c)
+    {
+        c.SetSpec(hasGoneDown);
     }
 
     private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir){
