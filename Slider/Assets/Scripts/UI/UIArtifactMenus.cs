@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
@@ -41,19 +40,12 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     {
         PlayerInventory.OnPlayerGetCollectible += CloseArtifactListener;
         UIManager.OnCloseAllMenus += CloseArtifactListenerNoOpen;
-        SceneManager.activeSceneChanged += OnSceneChange;
     }
 
     private void OnDisable() 
     {
         PlayerInventory.OnPlayerGetCollectible -= CloseArtifactListener;
         UIManager.OnCloseAllMenus -= CloseArtifactListenerNoOpen;
-        SceneManager.activeSceneChanged -= OnSceneChange;
-    }
-
-    private void OnSceneChange (Scene curr, Scene next)
-    {
-        isClosing = false; //C: can get stuck as true if animation from force close doesn't complete before scene transition
     }
 
     public static bool IsArtifactOpen()
