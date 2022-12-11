@@ -13,8 +13,7 @@ public class UIManager : Singleton<UIManager>
     public static System.EventHandler<System.EventArgs> OnCloseAllMenus;
     
     public bool isGamePaused;
-    public static bool canOpenMenus = true;
-    public bool canOpen = true;
+    private static bool canOpenMenus = true;
     private static bool couldOpenMenusLastFrame = true; // DC: maximum jank because timing
 
     public GameObject pausePanel;
@@ -30,28 +29,7 @@ public class UIManager : Singleton<UIManager>
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.OnPressPause());
     }
 
-    private void OnEnable() {
-        SceneManager.activeSceneChanged += OnSceneChange;
-        //eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(SceneManager.GetActiveScene().name));
-    }
-
-
-    private void OnSceneChange (Scene curr, Scene next)
-    {
-        canOpenMenus = !GameUI.instance.menuScenes.Contains(next.name); //C: Not using isMenuScene because it might not execute first
-        if(canOpenMenus)
-            print("menus enabled");
-        else
-            print("menus disabled");
-        //eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(next.name));
-    }
-
-    private void Update() {
-        canOpen = canOpenMenus;
-    }
-
     private void OnDisable() {
-        SceneManager.activeSceneChanged -= OnSceneChange;
         if (!canOpenMenus)
         {
             Debug.LogWarning("UIManager was disabled without closing the menu!");
@@ -96,6 +74,10 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
+    public static void SetCanOpenMenus(bool val)
+    {
+        canOpenMenus = val;
+    }
     
 
     public static bool IsUIOpen() // used for if Player can use Action

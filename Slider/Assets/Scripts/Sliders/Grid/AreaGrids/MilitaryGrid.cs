@@ -15,7 +15,6 @@ public class MilitaryGrid : SGrid
         base.Start();
 
         AudioManager.PlayMusic("Military");
-        UIEffects.FadeFromBlack();
     }
 
     private void OnEnable()

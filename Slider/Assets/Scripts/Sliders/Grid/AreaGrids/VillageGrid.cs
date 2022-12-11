@@ -46,8 +46,6 @@ public class VillageGrid : SGrid
         base.Start();
 
         AudioManager.PlayMusic("Village");
-
-        UIEffects.FadeFromBlack();
         
         CheckHole();
     }

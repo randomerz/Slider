@@ -26,7 +26,6 @@ public class FactoryGrid : SGrid
         {
             AudioManager.PlayMusic("Factory");
         }
-        UIEffects.FadeFromBlack();
     }
 
     private void Update()
