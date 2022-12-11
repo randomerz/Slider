@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
@@ -12,8 +13,8 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     public Animator artifactAnimator;
     public UIArtifactWorldMap artifactWorldMap;
 
-    private bool isArtifactOpen;
-    private bool isClosing;
+    public bool isArtifactOpen;
+    public bool isClosing = false;
 
     private void Awake() 
     {
@@ -39,13 +40,20 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     private void OnEnable() 
     {
         PlayerInventory.OnPlayerGetCollectible += CloseArtifactListener;
-        UIManager.OnCloseAllMenus += CloseArtifactListener;
+        UIManager.OnCloseAllMenus += CloseArtifactListenerNoOpen;
+        SceneManager.activeSceneChanged += OnSceneChange;
     }
 
     private void OnDisable() 
     {
         PlayerInventory.OnPlayerGetCollectible -= CloseArtifactListener;
-        UIManager.OnCloseAllMenus -= CloseArtifactListener;
+        UIManager.OnCloseAllMenus -= CloseArtifactListenerNoOpen;
+        SceneManager.activeSceneChanged -= OnSceneChange;
+    }
+
+    private void OnSceneChange (Scene curr, Scene next)
+    {
+        isClosing = false; //C: can get stuck as true if animation from force close doesn't complete before scene transition
     }
 
     public static bool IsArtifactOpen()
@@ -70,6 +78,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         if (!UIManager.canOpenMenus || isClosing)
             return;
 
+        print("open art");
         artifactPanel.SetActive(true);
         isArtifactOpen = true;
 
@@ -84,7 +93,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         uiArtifact.FlickerNewTiles();
     }
 
-    public void CloseArtifact()
+    public void CloseArtifact(bool canOpen = true)
     {
         if (isArtifactOpen)
         {
@@ -93,22 +102,32 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
             Player.SetCanMove(true);
 
             UIManager.CloseUI();
-            UIManager.canOpenMenus = true;
+            UIManager.canOpenMenus = canOpen;
+            //if(!canOpen)
 
             artifactAnimator.SetBool("isVisible", false);
             isClosing = true;
+            print("close is true");
         }
     }
 
     private void CloseArtifactListener(object sender, System.EventArgs e)
     {
+        print("close listener");
         CloseArtifact();
+    }
+
+    private void CloseArtifactListenerNoOpen(object sender, System.EventArgs e)
+    {
+        print("no open");
+        CloseArtifact(false);
     }
 
     public void DisableArtPanel()
     {
         artifactPanel.SetActive(false);
         isClosing = false;
+        print("disable art panel");
     }
 
 

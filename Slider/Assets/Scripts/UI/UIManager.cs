@@ -14,6 +14,7 @@ public class UIManager : Singleton<UIManager>
     
     public bool isGamePaused;
     public static bool canOpenMenus = true;
+    public bool canOpen = true;
     private static bool couldOpenMenusLastFrame = true; // DC: maximum jank because timing
 
     public GameObject pausePanel;
@@ -28,6 +29,7 @@ public class UIManager : Singleton<UIManager>
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.OnPressPause());
     }
+
     private void OnEnable() {
         SceneManager.activeSceneChanged += OnSceneChange;
         //eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(SceneManager.GetActiveScene().name));
@@ -36,7 +38,16 @@ public class UIManager : Singleton<UIManager>
 
     private void OnSceneChange (Scene curr, Scene next)
     {
+        canOpenMenus = !GameUI.instance.menuScenes.Contains(next.name); //C: Not using isMenuScene because it might not execute first
+        if(canOpenMenus)
+            print("menus enabled");
+        else
+            print("menus disabled");
         //eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(next.name));
+    }
+
+    private void Update() {
+        canOpen = canOpenMenus;
     }
 
     private void OnDisable() {
@@ -127,11 +138,17 @@ public class UIManager : Singleton<UIManager>
         OnPause?.Invoke(this, null);
     }
 
-    public static void InvokeCloseAllMenus()
+    public static void InvokeCloseAllMenus(bool disableOpen = false)
     {
+        canOpenMenus = !disableOpen;
+        if(disableOpen){
+            canOpenMenus = false;
+            print("disabling menus");
+        }
         _instance.ResumeGame();
 
         OnCloseAllMenus.Invoke(_instance, null);
+        
     }
 
 

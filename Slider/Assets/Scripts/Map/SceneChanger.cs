@@ -33,6 +33,9 @@ public class SceneChanger : MonoBehaviour
         if (isSpawnPosRelative)
             SceneSpawns.relativePos = Player.GetPosition() - transform.position;
         
+        //We want to disable menus before made to black 
+        UIManager.InvokeCloseAllMenus(true); 
+
         // Start a fade to black and then load the scene once it finishes
         UIEffects.FadeToBlack(() => { StartLoadingScene(); }, 2);
     }
@@ -46,7 +49,7 @@ public class SceneChanger : MonoBehaviour
 
         // Stop people from opening UI!
         
-        UIManager.InvokeCloseAllMenus(); // In case someone had artifact open while transitioning
+      //  UIManager.InvokeCloseAllMenus(true); // In case someone had artifact open while transitioning
 
         /* This loads our new scene in the background. There are two components to loading a new scene:
          * 1. Actually loading it: We can do that in the background easily with LoadSceneAsync and make things smoother.
