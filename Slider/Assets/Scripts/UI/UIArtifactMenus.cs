@@ -78,7 +78,6 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         if (!UIManager.canOpenMenus || isClosing)
             return;
 
-        print("open art");
         artifactPanel.SetActive(true);
         isArtifactOpen = true;
 
