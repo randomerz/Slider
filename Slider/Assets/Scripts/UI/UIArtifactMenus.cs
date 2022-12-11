@@ -13,8 +13,8 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     public Animator artifactAnimator;
     public UIArtifactWorldMap artifactWorldMap;
 
-    public bool isArtifactOpen;
-    public bool isClosing = false;
+    private bool isArtifactOpen;
+    private bool isClosing = false;
 
     private void Awake() 
     {
@@ -103,23 +103,19 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
             UIManager.CloseUI();
             UIManager.canOpenMenus = canOpen;
-            //if(!canOpen)
 
             artifactAnimator.SetBool("isVisible", false);
             isClosing = true;
-            print("close is true");
         }
     }
 
     private void CloseArtifactListener(object sender, System.EventArgs e)
     {
-        print("close listener");
         CloseArtifact();
     }
 
     private void CloseArtifactListenerNoOpen(object sender, System.EventArgs e)
     {
-        print("no open");
         CloseArtifact(false);
     }
 
@@ -127,7 +123,6 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     {
         artifactPanel.SetActive(false);
         isClosing = false;
-        print("disable art panel");
     }
 
 

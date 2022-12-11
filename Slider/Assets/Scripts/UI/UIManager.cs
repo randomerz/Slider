@@ -13,7 +13,7 @@ public class UIManager : Singleton<UIManager>
     public static System.EventHandler<System.EventArgs> OnCloseAllMenus;
     
     public bool isGamePaused;
-    private static bool canOpenMenus = true;
+    public static bool canOpenMenus = true;
     private static bool couldOpenMenusLastFrame = true; // DC: maximum jank because timing
 
     public GameObject pausePanel;
@@ -123,10 +123,6 @@ public class UIManager : Singleton<UIManager>
     public static void InvokeCloseAllMenus(bool disableOpen = false)
     {
         canOpenMenus = !disableOpen;
-        if(disableOpen){
-            canOpenMenus = false;
-            print("disabling menus");
-        }
         _instance.ResumeGame();
 
         OnCloseAllMenus.Invoke(_instance, null);
