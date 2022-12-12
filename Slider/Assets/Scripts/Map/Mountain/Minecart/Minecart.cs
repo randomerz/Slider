@@ -36,7 +36,10 @@ public class Minecart : Item
     [SerializeField] private Animator minecartAnimator;
 
     [Header("UI")]
-    public Sprite trackerSprite;
+    public Sprite trackerSpriteEmpty;
+    public Sprite trackerSpriteRepair;
+    public Sprite trackerSpriteLava;
+    public Sprite trackerSpriteCrystal;
 
 
     private List<GameObject> collidingObjects = new List<GameObject>();
@@ -55,7 +58,7 @@ public class Minecart : Item
             if(r.isBorderRM)
                 borderRM = r;
         }
-        UITrackerManager.AddNewTracker(gameObject, trackerSprite);
+        AddTracker();   
         minecartAnimator ??= GetComponent<Animator>();
     }
 
@@ -90,7 +93,7 @@ public class Minecart : Item
             canStartMoving = true;
         //recalculate target position
         if(mcState == MinecartState.Crystal)
-            mcState = MinecartState.Empty;
+            UpdateState("Empty");
     }
 
     #region Item
@@ -100,14 +103,14 @@ public class Minecart : Item
         base.PickUpItem(pickLocation, callback);
         UITrackerManager.RemoveTracker(this.gameObject);
         if(mcState == MinecartState.Crystal || mcState == MinecartState.Lava)
-            mcState = MinecartState.Empty;
+            UpdateState("Empty");
     }
 
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
     {
-        UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
-        
+        AddTracker();
+
         STile hitTile = SGrid.GetStileUnderneath(gameObject);
 
         if(hitTile != null) //Use Stile RM
@@ -148,6 +151,19 @@ public class Minecart : Item
     }
 
     #endregion
+
+
+    private void AddTracker()
+    {
+        if(mcState == MinecartState.Lava)
+            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteLava);
+        else if(mcState == MinecartState.Crystal)
+            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteCrystal);
+        else if(mcState == MinecartState.Empty)
+            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteEmpty);
+        else if(mcState == MinecartState.RepairParts)
+            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteRepair);
+    }
 
     public override void OnEquip()
     {
@@ -459,12 +475,15 @@ public class Minecart : Item
             mcState = MinecartState.RepairParts;
         else
             Debug.LogWarning("Invalid Minecart State. Should be Player, Lava, Empty, RepairParts, or Crystal");
+
+        UITrackerManager.RemoveTracker(this.gameObject);
+        AddTracker();
     }
 
     public void TryAddCrystals()
     {
         if(mcState == MinecartState.Empty)
-            mcState = MinecartState.Crystal;
+            UpdateState("Crystal");
     }
 
     #endregion
