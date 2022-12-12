@@ -13,7 +13,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     public UIArtifactWorldMap artifactWorldMap;
 
     private bool isArtifactOpen;
-    private bool isClosing;
+    private bool isClosing = false;
 
     private void Awake() 
     {
@@ -39,13 +39,13 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     private void OnEnable() 
     {
         PlayerInventory.OnPlayerGetCollectible += CloseArtifactListener;
-        UIManager.OnCloseAllMenus += CloseArtifactListener;
+        UIManager.OnCloseAllMenus += CloseArtifactListenerNoOpen;
     }
 
     private void OnDisable() 
     {
         PlayerInventory.OnPlayerGetCollectible -= CloseArtifactListener;
-        UIManager.OnCloseAllMenus -= CloseArtifactListener;
+        UIManager.OnCloseAllMenus -= CloseArtifactListenerNoOpen;
     }
 
     public static bool IsArtifactOpen()
@@ -84,7 +84,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         uiArtifact.FlickerNewTiles();
     }
 
-    public void CloseArtifact()
+    public void CloseArtifact(bool canOpen = true)
     {
         if (isArtifactOpen)
         {
@@ -93,7 +93,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
             Player.SetCanMove(true);
 
             UIManager.CloseUI();
-            UIManager.canOpenMenus = true;
+            UIManager.canOpenMenus = canOpen;
 
             artifactAnimator.SetBool("isVisible", false);
             isClosing = true;
@@ -103,6 +103,11 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     private void CloseArtifactListener(object sender, System.EventArgs e)
     {
         CloseArtifact();
+    }
+
+    private void CloseArtifactListenerNoOpen(object sender, System.EventArgs e)
+    {
+        CloseArtifact(false);
     }
 
     public void DisableArtPanel()

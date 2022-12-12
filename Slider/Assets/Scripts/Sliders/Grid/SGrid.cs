@@ -82,6 +82,8 @@ public class SGrid : Singleton<SGrid>, ISavable
         {
             UpdateButtonCompletions(this, null);
         }
+        
+        UIEffects.FadeFromBlack(() => {UIManager.SetCanOpenMenus(true);});
     }
 
     //For deriving classes: Make sure InitArea is called before Init!

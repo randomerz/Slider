@@ -39,7 +39,6 @@ public class MagiTechGrid : SGrid
         base.Start();
 
         AudioManager.PlayMusic("MagiTech");
-        UIEffects.FadeFromBlack();
     }
 
     #region Magitech Mechanics 
