@@ -48,6 +48,7 @@ public class CameraShake : MonoBehaviour
                 break;
 
             curIntensity = Mathf.Lerp(amount, 0, curTime / duration);
+            Debug.Log(_instance.baseTransform.position + " " + Random.insideUnitSphere + " " + curIntensity);
             transform.position = _instance.baseTransform.position + Random.insideUnitSphere * curIntensity;
             if(cmPerlin != null) cmPerlin.m_AmplitudeGain = curIntensity;
 

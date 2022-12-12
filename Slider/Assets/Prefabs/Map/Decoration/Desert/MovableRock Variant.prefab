@@ -53,7 +53,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4607457495645169289, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
       propertyPath: m_Radius
-      value: 0.75
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4607457495645169289, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
       propertyPath: m_Offset.y
@@ -183,5 +183,5 @@ MonoBehaviour:
   OnDrop:
     m_PersistentCalls:
       m_Calls: []
-  shakeAmount: 0
-  shakeDuration: 0
+  shakeAmount: 0.33
+  shakeDuration: 0.4

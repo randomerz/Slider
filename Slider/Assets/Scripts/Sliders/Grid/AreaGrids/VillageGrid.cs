@@ -31,16 +31,6 @@ public class VillageGrid : SGrid
         }
     }
 
-    public void dm()
-    {
-        UIArtifact.DisableMovement();
-    }
-
-    public void em()
-    {
-        UIArtifact.EnableMovement();
-    }
-
     protected override void Start()
     {
         base.Start();
