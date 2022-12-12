@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class Minecart : Item
+public class Minecart : Item, ISavable
 {
     [Header("Movement")]
     [SerializeField] private int currentDirection;
@@ -475,7 +475,11 @@ public class Minecart : Item
             mcState = MinecartState.RepairParts;
         else
             Debug.LogWarning("Invalid Minecart State. Should be Player, Lava, Empty, RepairParts, or Crystal");
+        UpdateIcon();
+    }
 
+    private void UpdateIcon()
+    {
         UITrackerManager.RemoveTracker(this.gameObject);
         AddTracker();
     }
@@ -503,4 +507,20 @@ public class Minecart : Item
     public void CheckIsNotMoving(Condition c){
         c.SetSpec(!isMoving);
     }
+
+    #region save/load
+
+    public void Save()
+    {
+        SaveSystem.Current.SetInt("mountainMCState", (int)mcState);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        int state = profile.GetInt("mountainMCState");
+        mcState = (MinecartState)state;
+        UpdateIcon();
+    }
+
+    #endregion
 }
