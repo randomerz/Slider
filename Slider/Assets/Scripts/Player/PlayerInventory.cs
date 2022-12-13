@@ -131,6 +131,11 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
+    public static void RemoveItemNoReturn()
+    {
+        RemoveItem(); 
+    }
+
     public static Item RemoveItem()
     {
         if (currentItem != null)

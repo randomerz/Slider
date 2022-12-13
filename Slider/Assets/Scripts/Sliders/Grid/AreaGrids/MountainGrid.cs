@@ -35,7 +35,6 @@ public class MountainGrid : SGrid
     {
         base.Start();
         AudioManager.PlayMusic("Mountain");
-        UIEffects.FadeFromBlack();
     }
     
     /*private void OnEnable()     C: Currently broken, will look into fixing later

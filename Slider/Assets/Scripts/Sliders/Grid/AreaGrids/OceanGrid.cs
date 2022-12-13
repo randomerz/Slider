@@ -58,7 +58,6 @@ public class OceanGrid : SGrid
         AudioManager.PlayMusic("Ocean");
         AudioManager.PlayMusic("Ocean Tavern", false); // for FMOD effects
         AudioManager.PlayMusic("Ocean uwu", false); // for FMOD effects
-        UIEffects.FadeFromBlack();
 
         foreach (SpriteRenderer note in progressNotes)
         {

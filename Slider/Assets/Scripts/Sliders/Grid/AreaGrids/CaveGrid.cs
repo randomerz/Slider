@@ -24,7 +24,6 @@ public class CaveGrid : SGrid
         base.Start();
 
         AudioManager.PlayMusic("Caves");
-        UIEffects.FadeFromBlack();
     }
 
     private void OnEnable()

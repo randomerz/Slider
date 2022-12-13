@@ -44,7 +44,6 @@ public class DesertGrid : SGrid
 
         AudioManager.PlayMusic("Desert");
         AudioManager.PlayMusic("Desert Casino", false);
-        UIEffects.FadeFromBlack();
     }
     
     private void OnEnable() {
