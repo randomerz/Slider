@@ -42,7 +42,6 @@ public class MinecartElevator : MonoBehaviour
         mc.StopMoving();
         StartCoroutine(WaitThenSend(mc, bottomPosition.transform.position, 3));
         hasGoneDown = true;
-        Debug.Log("send down");
     }
 
     public void SendMinecartUp(Minecart mc)
@@ -51,8 +50,6 @@ public class MinecartElevator : MonoBehaviour
             return;
         mc.StopMoving();
         StartCoroutine(WaitThenSend(mc, topPosition.transform.position, 3));
-        Debug.Log("send up");
-
     }
 
     public void CheckIsFixed(Condition c)
