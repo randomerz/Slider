@@ -14,7 +14,6 @@ public class PlayerAction : Singleton<PlayerAction>
 
     [SerializeField] private float minimumDropDistance = 0.5f;
     [SerializeField] private float maximumDropDistance = 1.5f;
-    [SerializeField] private float dropCirclecastRadius = 0.5f;
     [SerializeField] private float dropBoxcastWidth = 0.75f; // 12/16
     [SerializeField] private float dropBoxcastHeight = 7f / 16f;
 
