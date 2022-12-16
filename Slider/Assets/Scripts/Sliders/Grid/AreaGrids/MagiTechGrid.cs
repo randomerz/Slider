@@ -106,27 +106,26 @@ public class MagiTechGrid : SGrid
 
     public void HasTwoBurgers(Condition c)
     {
-        if (desyncBurger.IsDesynced)
-        {
-            bool hasBurger = false;
-            bool hasDesyncBurger = false;
-
-            foreach (Collider2D hit in GetCollidingItems(hungryBoi.gameObject))
-            {
-                if (hit != null)
-                {
-                    Item item = hit.GetComponent<Item>();
-                    //Debug.Log(item.itemName);
-                    if (item.itemName == "Burger") hasBurger = true;
-                    else if (item.itemName == desyncBurger.itemName) hasDesyncBurger = true;
-                }
-            }
-            c.SetSpec(hasBurger && hasDesyncBurger);
-        }
-        else
+        if (!desyncBurger.IsDesynced)
         {
             c.SetSpec(false);
+            return;
         }
+
+        bool hasBurger = false;
+        bool hasDesyncBurger = false;
+
+        foreach (Collider2D hit in GetCollidingItems(hungryBoi.gameObject))
+        {
+            if (hit != null)
+            {
+                Item item = hit.GetComponent<Item>();
+                //Debug.Log(item.itemName);
+                if (item.itemName == "Burger") hasBurger = true;
+                else if (item.itemName == desyncBurger.itemName) hasDesyncBurger = true;
+            }
+        }
+        c.SetSpec(hasBurger && hasDesyncBurger);
     }
 
     public void FireHasStool(Condition c)
