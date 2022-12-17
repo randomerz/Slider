@@ -214,6 +214,5 @@ public class MagiTechGrid : SGrid
         gems.Add(Area.Factory, true);
         gems.Add(Area.Mountain, true);
         PlayerInventory.RemoveAndDestroyItem();
-        Debug.Log("Factory Mountain");
     }
 }
