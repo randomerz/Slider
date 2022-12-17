@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LargeRock
+  m_Controller: {fileID: 9100000, guid: c4a7218663c45d045871f4c9226eabde, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: dbe87bf5d747c094da953a02e84871ca, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 5610e9de8f2c5fc4891a43a8a4e18f7f, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: c99b42b545c42464b9859e3c55f73d9c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ba1a589ee284ac14cbef3ab11bb742b5, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: ee665001b25c6ed4da146b6ed5cae1e9, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d0d3e4f53d682524da89d6e8a2635d5a, type: 2}
