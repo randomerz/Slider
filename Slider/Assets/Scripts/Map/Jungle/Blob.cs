@@ -12,14 +12,18 @@ public class Blob : MonoBehaviour
     private float traveledDistance = 0;
     private Path pair;
     bool flip = false;
-
     float speed = 1f;
+
+    [Header ("shape")]
     public Shape carry;
 
     public void UpdateBlobOnPath(bool defaultAnim, Direction direction, float blobspeed, int travelDistance, Path pair, Shape shape)
     {
         carry = shape;
-        this.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = carry.sprite;
+        SpriteRenderer spriteRenderer = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = carry.sprite;
+
+       // AnimateShape(this.transform);
 
         flip = defaultAnim;
         if (flip)
