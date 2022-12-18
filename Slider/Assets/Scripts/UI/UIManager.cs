@@ -28,19 +28,8 @@ public class UIManager : Singleton<UIManager>
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.OnPressPause());
     }
-    private void OnEnable() {
-        SceneManager.activeSceneChanged += OnSceneChange;
-        //eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(SceneManager.GetActiveScene().name));
-    }
-
-
-    private void OnSceneChange (Scene curr, Scene next)
-    {
-        //eventSystem.SetActive(!GameUI.instance.menuScenes.Contains(next.name));
-    }
 
     private void OnDisable() {
-        SceneManager.activeSceneChanged -= OnSceneChange;
         if (!canOpenMenus)
         {
             Debug.LogWarning("UIManager was disabled without closing the menu!");
@@ -85,6 +74,10 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
+    public static void SetCanOpenMenus(bool val)
+    {
+        canOpenMenus = val;
+    }
     
 
     public static bool IsUIOpen() // used for if Player can use Action
@@ -127,11 +120,13 @@ public class UIManager : Singleton<UIManager>
         OnPause?.Invoke(this, null);
     }
 
-    public static void InvokeCloseAllMenus()
+    public static void InvokeCloseAllMenus(bool disableOpen = false)
     {
+        canOpenMenus = !disableOpen;
         _instance.ResumeGame();
 
         OnCloseAllMenus.Invoke(_instance, null);
+        
     }
 
 

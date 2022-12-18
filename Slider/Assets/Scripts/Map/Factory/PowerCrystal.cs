@@ -2,23 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerCrystal : MonoBehaviour
+public class PowerCrystal : Singleton<PowerCrystal>, ISavable
 {
-    private ElectricalNode[] allNodes;
-    private Conveyor[] conveyors;
+    private bool _blackout = false;
+    public static bool Blackout => _instance != null && _instance._blackout;
 
-    public static bool Blackout { get; private set; }
+    public delegate void HandleBlackout();
+    public static event HandleBlackout blackoutStarted;
+    public static event HandleBlackout blackoutEnded;
+
+    private void Awake()
+    {
+        InitializeSingleton();
+    }
 
     private void Start()
     {
-        Blackout = false;
-        allNodes = GameObject.FindObjectsOfType<ElectricalNode>();
-        conveyors = GameObject.FindObjectsOfType<Conveyor>();
+        SetBlackout(_blackout);
     }
 
     public void CheckBlackout(Condition cond)
     {
-        cond.SetSpec(Blackout);
+        cond.SetSpec(_blackout);
     }
 
     public void StartCrystalPoweredSequence()
@@ -45,22 +50,30 @@ public class PowerCrystal : MonoBehaviour
         AudioManager.PlayWithVolume("Power On", 1.0f);
         AudioManager.PlayMusic("Factory");
         SetBlackout(false);
+        FactoryLightManager.SwitchLights(true);
     }
 
     private void SetBlackout(bool isBlackout)
     {
-        Blackout = isBlackout;
-        foreach (var node in allNodes)
-        {
-            if (node != null && node.AffectedByBlackout)
-            {
-                node.SetBlackout(isBlackout);
-            }
-        }
+        _blackout = isBlackout;
 
-        foreach (var conveyor in conveyors)
+        if (isBlackout)
         {
-            conveyor.ConveyorEnabled = !isBlackout;
+            blackoutStarted?.Invoke();
         }
+        else
+        {
+            blackoutEnded?.Invoke();
+        }
+    }
+
+    public void Save()
+    {
+        SaveSystem.Current.SetBool("Blackout", _blackout);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        _blackout = profile.GetBool("Blackout");
     }
 }

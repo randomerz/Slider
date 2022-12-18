@@ -21,6 +21,7 @@ public class DiceGizmo : MonoBehaviour
     private Coroutine diceShakeCoroutine;
     //public Animator animator; // this is only based on Tree animator controller rn
     //Chen: Should the above be changed to the Dice animator controller or something?
+    private bool animationFinished = false;
 
     private void Awake()
     {
@@ -50,8 +51,14 @@ public class DiceGizmo : MonoBehaviour
         c.SetSpec(otherDice != null && value + otherDice.value == 11);
     }
 
+    public void DiceShakeFinished(Condition c)
+    {
+        c.SetSpec(animationFinished);
+    }
+
     public void changeValue(int num) //Don't want to change yet due to Desert/Ocean Scene references
     {
+        animationFinished = false;
         value = num;
         if (value >= 7) value = 1;
 
@@ -89,7 +96,7 @@ public class DiceGizmo : MonoBehaviour
 
         text.text = value.ToString();
         bgText.text = value.ToString();
-
+        animationFinished = true;
         diceShakeCoroutine = null;
     }
 

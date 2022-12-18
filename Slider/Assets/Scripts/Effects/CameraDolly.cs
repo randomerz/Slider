@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.InputSystem;
 
 public class CameraDolly : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class CameraDolly : MonoBehaviour
     public AnimationCurve pathMovementCurve;
     public float duration;
 
+    private BindingHeldBehavior dollySkipBindingBehavior;
+
     private void Awake() 
     {
         dolly = virtualCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
@@ -22,6 +25,10 @@ public class CameraDolly : MonoBehaviour
     public void StartTrack()
     {
         virtualCamera.Priority = 15;
+
+        dollySkipBindingBehavior = (BindingHeldBehavior) Controls.RegisterBindingBehavior(
+            new BindingHeldBehavior(Controls.Bindings.Player.Action, SkipToEndOfTrack, 1.5f));
+
         StartCoroutine(Rollercoaster());
     }
     
@@ -32,6 +39,8 @@ public class CameraDolly : MonoBehaviour
         Player.SetCanMove(false);
 
         float t = 0;
+        
+        // fade out at end
         while (t < duration - 0.25f)
         {
             float x = (t / duration);
@@ -55,6 +64,15 @@ public class CameraDolly : MonoBehaviour
             yield return null;
             t += Time.deltaTime;
         }
+    }
+
+    private void SkipToEndOfTrack(InputAction.CallbackContext ignored)
+    {
+        UIEffects.FadeToBlack(
+            () => EndTrack()
+        );
+        StopAllCoroutines(); // Stops the dolly movement and prevents FadeToBlack from being called twice
+        Controls.UnregisterBindingBehavior(dollySkipBindingBehavior);
     }
 
     private void EndTrack()

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class FactoryMagnet : MonoBehaviour 
@@ -6,13 +7,15 @@ public class FactoryMagnet : MonoBehaviour
     public BobAnimation bobAnimation;
     public ParticleSystem topParticles;
     public ParticleSystem bottomParticles;
-
     public FactoryMagnet magnetPair;
 
-    public bool isPowered;
+    [SerializeField] private bool powerOnStart;
+
+    private bool _isPoweredWithoutBlackout;
+    private bool _lastPoweredState = false;
 
     private void Start() {
-        SetPowered(isPowered);
+        SetPowered(powerOnStart);
     }
 
     private void OnEnable() {
@@ -23,13 +26,32 @@ public class FactoryMagnet : MonoBehaviour
         SGridAnimator.OnSTileMoveEnd -= CheckConnected;
     }
 
+    private void Update()
+    {
+        if (GetPowered() != _lastPoweredState)
+        {
+            UpdatePoweredState();
+        }
+
+        _lastPoweredState = GetPowered();
+    }
+
+    public bool GetPowered()
+    {
+        return _isPoweredWithoutBlackout && !PowerCrystal.Blackout;
+    }
+
     public void SetPowered(bool value)
     {
-        isPowered = value;
+        _isPoweredWithoutBlackout = value;
+        UpdatePoweredState();
+    }
 
+    private void UpdatePoweredState()
+    {
+        bool isPowered = GetPowered();
         poweredSprite.enabled = isPowered;
         bobAnimation.enabled = isPowered;
-        
         if (isPowered)
         {
             topParticles.Play();
@@ -41,7 +63,6 @@ public class FactoryMagnet : MonoBehaviour
             bottomParticles.Stop();
             bobAnimation.ResetPosition();
         }
-        
     }
 
     public void SetConnected(bool value)
@@ -58,10 +79,15 @@ public class FactoryMagnet : MonoBehaviour
 
     public void CheckConnected(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        if (magnetPair == null)
+        {
+            return;
+        }
+
         if (e.stile.islandId == 2 && e.stile.x == 0 && e.stile.y == 0)
         {
             // check if moving tile 2 to bottom left
-            if (isPowered && magnetPair.isPowered)
+            if (GetPowered() && magnetPair.GetPowered())
             {
                 SetConnected(true);
                 magnetPair.SetConnected(true);

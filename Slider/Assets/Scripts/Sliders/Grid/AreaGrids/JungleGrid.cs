@@ -21,7 +21,6 @@ public class JungleGrid : SGrid
         base.Start();
 
         AudioManager.PlayMusic("Jungle");
-        UIEffects.FadeFromBlack();
     }
 
     private void OnEnable() {

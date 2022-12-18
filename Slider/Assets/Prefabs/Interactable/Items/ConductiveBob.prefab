@@ -52,7 +52,6 @@ MonoBehaviour:
   invertSignal: 0
   affectedByBlackout: 1
   debugAsPoweredOn: 0
-  powerRefs: 0
   OnPowered:
     m_PersistentCalls:
       m_Calls: []
@@ -191,7 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 355008855184339470}
   - component: {fileID: 2480643263636467287}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Button Trigger
   m_TagString: ButtonTrigger
   m_Icon: {fileID: 0}

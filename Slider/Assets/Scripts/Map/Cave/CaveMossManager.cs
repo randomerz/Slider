@@ -4,6 +4,7 @@ using UnityEngine.Tilemaps;
 
 public class CaveMossManager : MonoBehaviour
 {
+    private const float colliderForgiveness = 0.25f;
 
     [SerializeField] private Tilemap mossMap;
     [SerializeField] private Tilemap recededMossMap;
@@ -12,8 +13,7 @@ public class CaveMossManager : MonoBehaviour
     [SerializeField] private float mossFadeSpeed = 3f;
 
     private PlayerMoveOffMoss _playerMoveOffMoss;
-    private float _updateDurationAfterMove;
-    private float _updateTimerAfterMove = 0f;
+    private float _updateMossTimer;
 
     public class MossIsGrowingArgs : System.EventArgs
     {
@@ -37,8 +37,6 @@ public class CaveMossManager : MonoBehaviour
             stile = GetComponentInParent<CaveSTile>();
         }
 
-        _updateDurationAfterMove = 1f / mossFadeSpeed + 0.1f;
-
         _playerMoveOffMoss = mossCollidersMap.GetComponent<PlayerMoveOffMoss>();
     }
 
@@ -49,27 +47,27 @@ public class CaveMossManager : MonoBehaviour
 
     private void OnEnable()
     {
-        SGridAnimator.OnSTileMoveEnd += OnTileMoveEnd;
+        LightManager.OnLightingUpdate += HandleLightingUpdate;
     }
 
     private void OnDisable()
     {
-        SGridAnimator.OnSTileMoveEnd -= OnTileMoveEnd;
+        LightManager.OnLightingUpdate -= HandleLightingUpdate;
     }
 
     private void Update()
     {
-        if (!SGrid.Current.TilesMoving() || _updateTimerAfterMove > 0f)
+
+        if (_updateMossTimer >= 0f)
         {
             UpdateMoss();
+            _updateMossTimer -= Time.deltaTime;
         }
-
-        _updateTimerAfterMove -= Time.deltaTime;
     }
 
-    private void OnTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    private void HandleLightingUpdate(object sender, System.EventArgs e)
     {
-        _updateTimerAfterMove = _updateDurationAfterMove;
+        _updateMossTimer = mossFadeSpeed;
     }
 
     private void InitMoss()
@@ -86,6 +84,8 @@ public class CaveMossManager : MonoBehaviour
                 SetMossState(pos, posIsLit);
             });
         }
+
+        MossUpdated?.Invoke(this, new MossUpdatedArgs { stile = stile });
     }
 
     private void SetMossState(Vector3Int pos, bool posIsLit)
@@ -114,6 +114,7 @@ public class CaveMossManager : MonoBehaviour
         {
             _playerMoveOffMoss.CheckPlayerCollidingWithMoss();
         }
+
         MossUpdated?.Invoke(this, new MossUpdatedArgs { stile = stile });
     }
 
@@ -128,7 +129,7 @@ public class CaveMossManager : MonoBehaviour
         mossMap.SetColor(pos, darkAlpha);
         recededMossMap.SetColor(pos, litAlpha);
 
-        if (litAlpha.a > 0.9f)
+        if (litAlpha.a > colliderForgiveness)
         {
             mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
         } else

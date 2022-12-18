@@ -27,7 +27,7 @@ TextureImporter:
       213: 5430534620177761393
     second: jungle_icons_tops_7
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -87,6 +87,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -114,6 +115,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -217,7 +230,7 @@ TextureImporter:
         serializedVersion: 2
         x: 35
         y: 137
-        width: 66
+        width: 32
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -236,8 +249,8 @@ TextureImporter:
       name: jungle_icons_tops_5
       rect:
         serializedVersion: 2
-        x: 1
-        y: 103
+        x: 69
+        y: 137
         width: 32
         height: 32
       alignment: 0
@@ -257,7 +270,7 @@ TextureImporter:
       name: jungle_icons_tops_6
       rect:
         serializedVersion: 2
-        x: 35
+        x: 1
         y: 103
         width: 32
         height: 32
@@ -278,7 +291,7 @@ TextureImporter:
       name: jungle_icons_tops_7
       rect:
         serializedVersion: 2
-        x: 69
+        x: 35
         y: 103
         width: 32
         height: 32
@@ -295,6 +308,216 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: jungle_icons_tops_8
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 103
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 259937ccc3d6d774cabcac592daed2b0
+      internalID: 1947798232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_icons_tops_9
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 69
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73972aa099445b243b96e8fdb8da1981
+      internalID: -1970311858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_icons_tops_10
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 69
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a665cc4d61eb88848af60acfc8973780
+      internalID: -1340474288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_icons_tops_11
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 69
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 473d04e046be1154db2c824f81cc585a
+      internalID: 1934423937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_icons_tops_12
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 35
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3eef922cd16d14545aab6ae0b05dd7ed
+      internalID: -43152384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_icons_tops_13
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 35
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f8ef6e3e327a2c4682b576810670f6f
+      internalID: -108051767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_icons_tops_14
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 35
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db90283f688b1ab4db1689f176b78f3d
+      internalID: -575561935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_icons_tops_15
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 368ceb60ebf748443a2f54b0c41047a9
+      internalID: 1724304962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_icons_tops_16
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 1
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e851aa7f263e07846a3151a5d48b818b
+      internalID: 1361065271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_icons_tops_17
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 1
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62a40b30500cf874aa3c3cce43dbd3b2
+      internalID: -976581195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -306,14 +529,24 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      jungle_icons_tops_12: -43152384
       jungle_icons_tops_4: -7756626991305627778
       jungle_icons_tops_2: 5457454260387168145
       jungle_icons_tops_1: 4116441202489622258
+      jungle_icons_tops_8: 1947798232
+      jungle_icons_tops_16: 1361065271
       jungle_icons_tops_6: -8758361070816983547
+      jungle_icons_tops_10: -1340474288
+      jungle_icons_tops_17: -976581195
       jungle_icons_tops_5: -249532209418552371
       jungle_icons_tops_7: 5430534620177761393
+      jungle_icons_tops_13: -108051767
+      jungle_icons_tops_9: -1970311858
+      jungle_icons_tops_11: 1934423937
       jungle_icons_tops_3: -8170417807235054699
+      jungle_icons_tops_14: -575561935
       jungle_icons_tops_0: -4967323383455347685
+      jungle_icons_tops_15: 1724304962
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

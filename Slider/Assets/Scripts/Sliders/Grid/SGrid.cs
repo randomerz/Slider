@@ -82,6 +82,8 @@ public class SGrid : Singleton<SGrid>, ISavable
         {
             UpdateButtonCompletions(this, null);
         }
+        
+        UIEffects.FadeFromBlack(() => {UIManager.SetCanOpenMenus(true);});
     }
 
     //For deriving classes: Make sure InitArea is called before Init!
@@ -168,10 +170,10 @@ public void SetGrid(int[,] puzzle)
         STile[,] old = grid;
         grid = newGrid;
 
-        OnGridMove.Invoke(this, new OnGridMoveArgs {
-            oldGrid = old, 
-            grid = grid
-        });
+        //OnGridMove.Invoke(this, new OnGridMoveArgs {
+        //    oldGrid = old, 
+        //    grid = grid
+        //});
     }
 
     /*
@@ -543,7 +545,7 @@ public void SetGrid(int[,] puzzle)
 
         SGridData sgridData = profile.GetSGridData(myArea);
 
-        if (sgridData == null) {
+        if (sgridData.grid == null) {
             SetGrid(stiles);
             return;
         }

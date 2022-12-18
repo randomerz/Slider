@@ -12,8 +12,11 @@ public class UITracker : MonoBehaviour
     private float minY = -75; // for if the object being tracked is in the house or not
 
     private bool shouldBlink = false;
+    private bool shouldCheckOffMap = false;
     private Sprite defaultSprite;
     private Sprite blinkSprite;
+    private Sprite defaultOffMapSprite;
+    private Sprite blinkOffMapSprite;
     private float defaultBlinkTime;
     private float blinkTime;
     private float timeToSwap;
@@ -26,22 +29,38 @@ public class UITracker : MonoBehaviour
             {
                 if (timeToSwap < 0)
                 {
-                    image.sprite = defaultSprite;
+                    image.sprite = DetermineCurrentSprite(false);
+                    image.SetNativeSize();
                     timeToSwap = 1;//2 * blinkTime;
                 }
                 else
                 {
                     // set to blink sprite
-                    image.sprite = blinkSprite;
+                    image.sprite = DetermineCurrentSprite(true);
+                    image.SetNativeSize();
                 }
             }
             else
             {
-                image.sprite = defaultSprite;
+                image.sprite = DetermineCurrentSprite(false);
+                image.SetNativeSize();
             }
 
             timeToSwap -= Time.deltaTime;
             blinkTime -= Time.deltaTime;
+        }
+    }
+
+    private Sprite DetermineCurrentSprite(bool blink)
+    {
+        if (shouldCheckOffMap && GetSTile() == null)
+        {
+            // offmap sprite
+            return blink ? blinkOffMapSprite : defaultOffMapSprite;
+        }
+        else
+        {
+            return blink ? blinkSprite : defaultSprite;
         }
     }
 
@@ -85,5 +104,12 @@ public class UITracker : MonoBehaviour
         this.defaultBlinkTime = blinkTime;
         this.blinkTime = blinkTime;
         timeToSwap = 1;//2 * blinkTime;
+    }
+
+    public void SetOffMapSprites(Sprite defaultOffMapSprite, Sprite blinkOffMapSprite)
+    {
+        shouldCheckOffMap = true;
+        this.defaultOffMapSprite = defaultOffMapSprite;
+        this.blinkOffMapSprite = blinkOffMapSprite;
     }
 }
