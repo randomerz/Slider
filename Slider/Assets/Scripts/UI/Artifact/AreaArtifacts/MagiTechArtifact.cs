@@ -224,10 +224,10 @@ public class MagiTechArtifact : UIArtifact
     {
         MoveMadeOnArtifact?.Invoke(this, null);
         QueueAdd(move);
-        SwapButtons(buttonCurrent, buttonEmpty);
         ArtifactTileButton currAlt = GetButton(FindAltId(buttonCurrent.islandId));
         ArtifactTileButton emptyAlt = GetButton(FindAltId(buttonEmpty.islandId));
         SwapButtons(currAlt, emptyAlt);
+        SwapButtons(buttonCurrent, buttonEmpty);
         ProcessQueue();
         UpdateMoveOptions();
     }
