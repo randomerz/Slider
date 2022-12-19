@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 543717419826196478, guid: daabb3442c88f4a4eb424f9ab764d8c7, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 917f1c8f678b72c45834ba406bb53e53, type: 2}
     - target: {fileID: 5770532071833829492, guid: daabb3442c88f4a4eb424f9ab764d8c7, type: 3}
       propertyPath: m_Name
       value: MediumRock Variant

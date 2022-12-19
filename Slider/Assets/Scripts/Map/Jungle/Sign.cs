@@ -86,10 +86,10 @@ public class Sign : Box
             }
         }
 
-        foreach (Shape s in shapesRecieved)
+/*        foreach (Shape s in shapesRecieved)
         {
             print(s.name);
-        }
+        }*/
 
         foreach (Recipe recipe in recipes.list)
         {
