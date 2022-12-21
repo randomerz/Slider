@@ -47,7 +47,7 @@ public class MagiLaser : MonoBehaviour
         lr.positionCount = 1;
         lr.SetPosition(0,pos);
         bool incomplete = true;
-        bool tp1, tp2 = false;
+        // bool tp1, tp2 = false;
 
         while(incomplete) {
             hit = Physics2D.Raycast(pos, dir, 40.0f, 4096);
