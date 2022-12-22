@@ -26,6 +26,11 @@ public class MinecartAnimationManager : MonoBehaviour
     {
 
     }
+
+    public void AnimateCorner(int currDir, int nextDir)
+    {
+
+    }
 }
 
 
