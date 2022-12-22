@@ -42,7 +42,6 @@ public class Minecart : Item, ISavable
     [SerializeField] private float derailDuration;
     [SerializeField] private AnimationCurve xDerailMotion;
     [SerializeField] private AnimationCurve yDerailMotion;
-   // [SerializeField] private Animator minecartAnimator;
     [SerializeField] private MinecartAnimationManager animator;
 
     public bool tileSwitch = false; //set to true when halfway between tiles, used for updating animation
@@ -62,7 +61,6 @@ public class Minecart : Item, ISavable
                 borderRM = r;
         }
         AddTracker();   
-       // minecartAnimator ??= GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -104,6 +102,7 @@ public class Minecart : Item, ISavable
         if(Time.timeScale == 0) return;
         if(isMoving && isOnTrack && !collisionPause)
         {
+            animator.SetSpeed(1);
             //Use min of prev pos and target pos to update animation
             float distToPrev = Vector3.Distance(transform.position, prevWorldPos);
             float distToNext = Vector3.Distance(transform.position, targetWorldPos);
@@ -128,6 +127,9 @@ public class Minecart : Item, ISavable
             else
                 transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * speed);
         }
+        else
+            animator.SetSpeed(0);
+
        // minecartAnimator.SetInteger("State", ((int)mcState));
     }
 
@@ -224,7 +226,7 @@ public class Minecart : Item, ISavable
         if(isOnTrack && canStartMoving && !collisionPause)
         {
             isMoving = true; 
-            //minecartAnimator.SetBool("isMoving", true);
+            animator.SetSpeed(1);
         } 
     }
 
@@ -233,7 +235,7 @@ public class Minecart : Item, ISavable
         isMoving = false;
         if(!onTrack)
             isOnTrack = false;
-        //minecartAnimator.SetBool("isMoving", false);
+        animator.SetSpeed(0);
         collisionPause = false;
         collidingObjects.Clear();
     }

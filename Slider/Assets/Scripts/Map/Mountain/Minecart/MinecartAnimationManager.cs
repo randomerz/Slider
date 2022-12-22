@@ -14,23 +14,16 @@ public class MinecartAnimationManager : MonoBehaviour
     [SerializeField] private Animator lavaAnimator;
     [SerializeField] private GameObject lavaSprite;
 
-    
-
-
     [SerializeField] private string currentState; //animation state
     [SerializeField] private MinecartState mcState;
 
     private List<GameObject> objects = new List<GameObject>();
-    //private List<Animator> animators = new List<Animator>();
 
     private void Awake() 
     {
         objects.Add(crystalSprite);
         objects.Add(repairPartsSprite);
-        objects.Add(lavaSprite);
-        //animators.Add(crystalAnimator);
-        //animators.Add(repairPartsAnimator);
-        //animators.Add(lavaAnimator);    
+        objects.Add(lavaSprite);  
     }
 
     public void ChangeAnimationState(string newState)
@@ -79,6 +72,13 @@ public class MinecartAnimationManager : MonoBehaviour
         contentsAnimator?.Play(currentState);
     }
 
+    public void SetSpeed(int speed)
+    {
+        mcAnimator.speed = speed;
+        crystalAnimator.speed = speed;
+        lavaAnimator.speed = speed;
+        repairPartsAnimator.speed = speed;
+    }
 }
 
 
@@ -97,6 +97,4 @@ public enum MCAnimationState
     WSTURN,
     SETURN,
     SWTURN,
-    STOPPEDEW,
-    STOPPEDNS
 }
