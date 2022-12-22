@@ -27,6 +27,12 @@ public class DesyncItem : Item
         Anchor.OnAnchorInteract += CheckItemsOnAnchorInteract;
     }
 
+    private void OnDisable()
+    {
+        Portal.OnTimeChange -= CheckItemsOnTeleport;
+        Anchor.OnAnchorInteract -= CheckItemsOnAnchorInteract;
+    }
+
     private void CheckItemsOnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
     {
         isDesynced = e.drop && originTile != null && originTile.hasAnchor;
