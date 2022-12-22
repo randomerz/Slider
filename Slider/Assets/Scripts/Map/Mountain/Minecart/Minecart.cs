@@ -50,15 +50,6 @@ public class Minecart : Item, ISavable
     public Sprite trackerSpriteLava;
     public Sprite trackerSpriteCrystal;
 
-
-  
-    
-
-    public void setCanStartMoving(bool canStart)
-    {
-        canStartMoving = canStart;
-    }
-
     private void Awake() 
     {
         RailManager[] rms = FindObjectsOfType<RailManager>();
@@ -95,13 +86,44 @@ public class Minecart : Item, ISavable
         }
     }
 
-    private void OnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs)
+    private void OnMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(tileMoveArgs.stile = currentSTile)
+        if(e.stile = currentSTile)
             canStartMoving = true;
-        //recalculate target position
+        //TODO: recalculate target position
         if(mcState == MinecartState.Crystal)
             UpdateState("Empty");
+    }
+
+    private void Update() 
+    {
+        if(Time.timeScale == 0) return;
+        if(isMoving && isOnTrack && !collisionPause)
+        {
+            if(Vector3.Distance(transform.position, targetWorldPos) < 0.01f)
+                GetNextTile();
+            else
+                transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * speed);
+        }
+       // minecartAnimator.SetInteger("State", ((int)mcState));
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) 
+    {
+        if(other.gameObject.CompareTag("Player"))
+            collisionPause = true;
+        else if ((dropOnNextMove && !other.gameObject.tag.Equals("WorldMapCollider")) 
+                || (other.gameObject.layer == 14 && !dropOnNextMove) //C: Layer 14 is MinecartIgnore
+                || other.gameObject.tag.Equals("MinecartIgnore"))
+            return;
+        else
+            StopMoving();
+    }
+
+    private void OnCollisionExit2D(Collision2D other) 
+    {
+        if(other.gameObject.CompareTag("Player"))
+            collisionPause = false;
     }
 
     #region Item
@@ -158,21 +180,6 @@ public class Minecart : Item, ISavable
 
     }
 
-    #endregion
-
-
-    private void AddTracker()
-    {
-        if(mcState == MinecartState.Lava)
-            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteLava);
-        else if(mcState == MinecartState.Crystal)
-            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteCrystal);
-        else if(mcState == MinecartState.Empty)
-            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteEmpty);
-        else if(mcState == MinecartState.RepairParts)
-            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteRepair);
-    }
-
     public override void OnEquip()
     {
         StopMoving();
@@ -180,23 +187,14 @@ public class Minecart : Item, ISavable
         currentSTile = null;
     }
 
-    private void OnCollisionEnter2D(Collision2D other) 
-    {
-        if(other.gameObject.CompareTag("Player"))
-            collisionPause = true;
-        else if ((dropOnNextMove && !other.gameObject.tag.Equals("WorldMapCollider")) 
-                || (other.gameObject.layer == 14 && !dropOnNextMove) //C: Layer 14 is MinecartIgnore
-                || other.gameObject.tag.Equals("MinecartIgnore"))
-            return;
-        else
-            StopMoving();
-    }
+    #endregion
 
-    private void OnCollisionExit2D(Collision2D other) 
-    {
-        if(other.gameObject.CompareTag("Player"))
-            collisionPause = false;
-    }
+
+    
+
+    
+
+
 
 
 
@@ -256,18 +254,7 @@ public class Minecart : Item, ISavable
 
     
 
-    private void Update() 
-    {
-        if(Time.timeScale == 0) return;
-        if(isMoving && isOnTrack && !collisionPause)
-        {
-            if(Vector3.Distance(transform.position, targetWorldPos) < 0.01f)
-                GetNextTile();
-            else
-                transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * speed);
-        }
-       // minecartAnimator.SetInteger("State", ((int)mcState));
-    }
+    
 
     private void GetNextTile()
     {
@@ -409,7 +396,10 @@ public class Minecart : Item, ISavable
        // StartCoroutine(AnimateDerail(derailVector));
     }
 
-    
+    public void setCanStartMoving(bool canStart)
+    {
+        canStartMoving = canStart;
+    }
 
 
 
@@ -435,6 +425,65 @@ public class Minecart : Item, ISavable
         callback();
 
     }
+
+    #region State
+
+    public void UpdateState(string stateName){
+        if(stateName.Equals("Player"))
+            mcState = MinecartState.Player;
+        else if(stateName.Equals("Lava"))
+            mcState = MinecartState.Lava;
+        else if(stateName.Equals("Crystal"))
+            mcState = MinecartState.Crystal;
+        else if (stateName.Equals("Empty"))
+            mcState = MinecartState.Empty;
+        else if (stateName.Equals("RepairParts"))
+            mcState = MinecartState.RepairParts;
+        else
+            Debug.LogWarning("Invalid Minecart State. Should be Player, Lava, Empty, RepairParts, or Crystal");
+        UpdateIcon();
+
+    }
+
+        public void TryAddCrystals()
+    {
+        if(mcState == MinecartState.Empty)
+            UpdateState("Crystal");
+    }
+
+    #endregion
+
+
+    #region UI
+
+    private void UpdateIcon()
+    {
+        UITrackerManager.RemoveTracker(this.gameObject);
+        AddTracker();
+    }
+
+    private void AddTracker()
+    {
+        if(mcState == MinecartState.Lava)
+            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteLava);
+        else if(mcState == MinecartState.Crystal)
+            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteCrystal);
+        else if(mcState == MinecartState.Empty)
+            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteEmpty);
+        else if(mcState == MinecartState.RepairParts)
+            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteRepair);
+    }
+
+    #endregion
+    
+    #region Animation
+
+    private void UpdateContentsSprite()
+    {
+
+    }
+
+    #endregion
 
 
     #region Utility
@@ -468,40 +517,6 @@ public class Minecart : Item, ISavable
     {
         Vector3[] arr = {Vector3.right, Vector3.up, Vector3.left, Vector3.down};
         return arr[dir];
-    }
-
-    public void UpdateState(string stateName){
-        if(stateName.Equals("Player"))
-            mcState = MinecartState.Player;
-        else if(stateName.Equals("Lava"))
-            mcState = MinecartState.Lava;
-        else if(stateName.Equals("Crystal"))
-            mcState = MinecartState.Crystal;
-        else if (stateName.Equals("Empty"))
-            mcState = MinecartState.Empty;
-        else if (stateName.Equals("RepairParts"))
-            mcState = MinecartState.RepairParts;
-        else
-            Debug.LogWarning("Invalid Minecart State. Should be Player, Lava, Empty, RepairParts, or Crystal");
-        UpdateIcon();
-
-    }
-
-    private void UpdateIcon()
-    {
-        UITrackerManager.RemoveTracker(this.gameObject);
-        AddTracker();
-    }
-
-    private void UpdateContentsSprite()
-    {
-
-    }
-
-    public void TryAddCrystals()
-    {
-        if(mcState == MinecartState.Empty)
-            UpdateState("Crystal");
     }
 
     #endregion
