@@ -5,14 +5,39 @@ using UnityEngine;
 public class MinecartAnimationManager : MonoBehaviour
 {
     [SerializeField] private Animator mcAnimator;
-    [SerializeField] private Animator contentsAnimator;
-    [SerializeField] private string currentState;
+    private Animator contentsAnimator;
+    private GameObject contentsSprite;
+    [SerializeField] private Animator crystalAnimator;
+    [SerializeField] private GameObject crystalSprite;
+    [SerializeField] private Animator repairPartsAnimator;
+    [SerializeField] private GameObject repairPartsSprite;
+    [SerializeField] private Animator lavaAnimator;
+    [SerializeField] private GameObject lavaSprite;
+
+    
+
+
+    [SerializeField] private string currentState; //animation state
+    [SerializeField] private MinecartState mcState;
+
+    private List<GameObject> objects = new List<GameObject>();
+    //private List<Animator> animators = new List<Animator>();
+
+    private void Awake() 
+    {
+        objects.Add(crystalSprite);
+        objects.Add(repairPartsSprite);
+        objects.Add(lavaSprite);
+        //animators.Add(crystalAnimator);
+        //animators.Add(repairPartsAnimator);
+        //animators.Add(lavaAnimator);    
+    }
 
     public void ChangeAnimationState(string newState)
     {
         if (currentState == newState) return;
         mcAnimator.Play(currentState);
-        contentsAnimator.Play(currentState);
+        contentsAnimator?.Play(currentState);
         currentState = newState;
     }
 
@@ -22,15 +47,38 @@ public class MinecartAnimationManager : MonoBehaviour
         ChangeAnimationState(stateName);
     }
 
-    public void ChangeContents()
+    public void ChangeContents(MinecartState contents)
     {
+        if(contents == mcState) return;
+        switch(contents)
+        {
+            case MinecartState.Crystal:
+                contentsAnimator = crystalAnimator;
+                contentsSprite = crystalSprite;
+                break;
+            case MinecartState.Lava:
+                contentsAnimator = lavaAnimator;
+                contentsSprite = lavaSprite;
+                break;
+            case MinecartState.RepairParts:
+                contentsAnimator = repairPartsAnimator;
+                contentsSprite = repairPartsSprite;
+                break;
+            case MinecartState.Empty:
+            default:
+                contentsAnimator = null;
+                contentsSprite = null;
+                break;
+        }
 
+        mcState = contents;
+
+        foreach(GameObject sprite in objects)
+            sprite.SetActive(contentsSprite != null && contentsSprite == sprite);
+
+        contentsAnimator?.Play(currentState);
     }
 
-    public void AnimateCorner(int currDir, int nextDir)
-    {
-
-    }
 }
 
 

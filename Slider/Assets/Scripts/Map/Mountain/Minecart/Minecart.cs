@@ -474,10 +474,10 @@ public class Minecart : Item, ISavable
         else
             Debug.LogWarning("Invalid Minecart State. Should be Player, Lava, Empty, RepairParts, or Crystal");
         UpdateIcon();
-
+        UpdateContentsSprite();
     }
 
-        public void TryAddCrystals()
+    public void TryAddCrystals()
     {
         if(mcState == MinecartState.Empty)
             UpdateState("Crystal");
@@ -512,18 +512,27 @@ public class Minecart : Item, ISavable
 
     private void UpdateContentsSprite()
     {
-
+        animator.ChangeContents(mcState);
     }
 
     private void PlayCurveAnimation()
     {
-        
+        //magic number based on enum order, better than 8 case switch
+        int animationNum = 4 + (currentDirection * 2) + (nextDirection / 2);
+        animator.ChangeAnimationState(animationNum);
     }
     
     private void PlayStraightAnimation()
     {
+        animator.ChangeAnimationState(currentDirection);
+    }
+
+    private void PlayStoppedAnimation()
+    {
 
     }
+
+    
 
 
     #endregion
