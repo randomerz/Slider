@@ -6,34 +6,43 @@ using UnityEngine.Tilemaps;
 public class Minecart : Item, ISavable
 {
     [Header("Movement")]
-    [SerializeField] private int currentDirection;
-    public RailManager railManager;
+    [SerializeField] private float speed = 8.0f; 
+    [SerializeField] private int currentDirection; //0 = East, 1 = North, 2 = West, 3 = South
     [SerializeField] private bool isOnTrack;
     [SerializeField] public bool isMoving {get; private set;} = false;
+    public Vector3 offSet = new Vector3(0.5f, 0.75f, 0.0f);
+    
+
     private bool canStartMoving = true;
+    private List<GameObject> collidingObjects = new List<GameObject>();
+    private bool collisionPause = false;
+
+    [Header("Rail Managers")]
+    public RailManager railManager;
+    [SerializeField] private RailManager savedRM = null;
+    [SerializeField] private RailManager borderRM; 
+
+
+    [Header("Rail Tiles")]
     [SerializeField] public RailTile currentTile;
     [SerializeField] public RailTile targetTile;
-    [SerializeField] private float speed = 2.0f; 
-    public Vector3 offSet = new Vector3(0.5f, 0.75f, 0.0f);
-    [SerializeField] private RailManager borderRM;
     public STile currentSTile;
-    public MinecartState mcState;
-
-    [SerializeField] private bool dropOnNextMove = false;
-    [SerializeField] private RailManager savedRM = null;
-
     public Vector3Int currentTilePos;
     public Vector3Int targetTilePos; 
     public Vector3 targetWorldPos;
+    [SerializeField] private bool dropOnNextMove = false;
 
-    [Header("Player")]
-    public Transform playerPos;
+
+    [Header("State")]
+    public MinecartState mcState;
+
 
     [Header("Animation")]
     [SerializeField] private float derailDuration;
     [SerializeField] private AnimationCurve xDerailMotion;
     [SerializeField] private AnimationCurve yDerailMotion;
-    [SerializeField] private Animator minecartAnimator;
+   // [SerializeField] private Animator minecartAnimator;
+    [SerializeField] private MinecartAnimationManager animator;
 
     [Header("UI")]
     public Sprite trackerSpriteEmpty;
@@ -42,8 +51,7 @@ public class Minecart : Item, ISavable
     public Sprite trackerSpriteCrystal;
 
 
-    private List<GameObject> collidingObjects = new List<GameObject>();
-    private bool collisionPause = false;
+  
     
 
     public void setCanStartMoving(bool canStart)
@@ -59,7 +67,7 @@ public class Minecart : Item, ISavable
                 borderRM = r;
         }
         AddTracker();   
-        minecartAnimator ??= GetComponent<Animator>();
+       // minecartAnimator ??= GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -199,7 +207,7 @@ public class Minecart : Item, ISavable
         if(isOnTrack && canStartMoving && !collisionPause)
         {
             isMoving = true; 
-            minecartAnimator.SetBool("isMoving", true);
+            //minecartAnimator.SetBool("isMoving", true);
         } 
     }
 
@@ -208,7 +216,7 @@ public class Minecart : Item, ISavable
         isMoving = false;
         if(!onTrack)
             isOnTrack = false;
-        minecartAnimator.SetBool("isMoving", false);
+        //minecartAnimator.SetBool("isMoving", false);
         collisionPause = false;
         collidingObjects.Clear();
     }
@@ -258,7 +266,7 @@ public class Minecart : Item, ISavable
             else
                 transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * speed);
         }
-        minecartAnimator.SetInteger("State", ((int)mcState));
+       // minecartAnimator.SetInteger("State", ((int)mcState));
     }
 
     private void GetNextTile()
@@ -476,12 +484,18 @@ public class Minecart : Item, ISavable
         else
             Debug.LogWarning("Invalid Minecart State. Should be Player, Lava, Empty, RepairParts, or Crystal");
         UpdateIcon();
+
     }
 
     private void UpdateIcon()
     {
         UITrackerManager.RemoveTracker(this.gameObject);
         AddTracker();
+    }
+
+    private void UpdateContentsSprite()
+    {
+
     }
 
     public void TryAddCrystals()
@@ -491,6 +505,9 @@ public class Minecart : Item, ISavable
     }
 
     #endregion
+
+
+    #region Conditionals
 
     public void CheckIsEmpty(Condition c){
         c.SetSpec(mcState == MinecartState.Empty);
@@ -507,6 +524,9 @@ public class Minecart : Item, ISavable
     public void CheckIsNotMoving(Condition c){
         c.SetSpec(!isMoving);
     }
+
+    #endregion
+
 
     #region save/load
 
