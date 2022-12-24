@@ -41,16 +41,11 @@ public class CameraZoom : Singleton<CameraZoom>
                 break;
             
             zoomLevel = curve.Evaluate(curTime/duration);
-            //ppcam.refResolutionX = Mathf.FloorToInt(refX * zoomLevel);
-		    //ppcam.refResolutionY = Mathf.FloorToInt(refY * zoomLevel);
-           // ppcam.CorrectCinemachineOrthoSize(refOrtho * zoomLevel);
             cmCamera.m_Lens.OrthographicSize = refOrtho * zoomLevel;
             curTime += Time.deltaTime;
 
             yield return null;
         }
-       // ppcam.refResolutionX = refX;
-		//ppcam.refResolutionY = refY;
         cmCamera.m_Lens.OrthographicSize = refOrtho;
     }
 }
