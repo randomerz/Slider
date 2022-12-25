@@ -6,8 +6,7 @@ using UnityEngine.Events;
 public class ExplodingBarrel : MonoBehaviour
 {
     private readonly string explosionResName = "SmokePoof Variant";
-
-    [SerializeField] private ConditionChecker doorChecker;
+    
     [SerializeField] private Transform[] explosionLocations;
 
     public UnityEvent OnExplode;
@@ -31,7 +30,7 @@ public class ExplodingBarrel : MonoBehaviour
     {
         //Do Ze Animation
         yield return new WaitForSeconds(2.0f);
-        foreach (var location in explosionLocations)
+        foreach (Transform location in explosionLocations)
         {
             Instantiate(explosionEffect, location.position, Quaternion.identity);
         }

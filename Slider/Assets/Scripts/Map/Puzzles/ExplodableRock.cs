@@ -46,12 +46,13 @@ public class ExplodableRock : MonoBehaviour, ISavable
     {
         animator.SetBool("explode", true);
 
+        CameraShake.Shake(1, 1);
         foreach (ParticleSystem p in explosionParticles)
         {
             p.Play();
         }
 
-        yield return null;
+        yield return new WaitForSeconds(1.5f);
 
         FinishExploding();
     }
