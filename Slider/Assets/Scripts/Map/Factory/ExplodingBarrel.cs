@@ -7,21 +7,24 @@ public class ExplodingBarrel : MonoBehaviour
 {
     private readonly string explosionResName = "SmokePoof Variant";
 
-    [SerializeField] private ConditionChecker doorChecker;
     [SerializeField] private Transform[] explosionLocations;
+    [SerializeField] private ParticleSystem[] fuseParticles;
+    [SerializeField] private ExplodableRock explodableRock;
 
     public UnityEvent OnExplode;
 
     private GameObject explosionEffect;
 
-    private void Awake()
+    private void Start()
     {
+        if (explodableRock.isExploded)
+        {
+            DestroyBarrels();
+        }
+
+        explosionEffect = ParticleManager.GetPrefab(ParticleType.SmokePoof);
     }
 
-    private void OnEnable()
-    {
-        explosionEffect = Resources.Load<GameObject>(explosionResName);
-    }
     public void Explode()
     {
         StartCoroutine(ExplodeRoutine());
@@ -29,14 +32,35 @@ public class ExplodingBarrel : MonoBehaviour
 
     private IEnumerator ExplodeRoutine()
     {
-        //Do Ze Animation
+        CameraShake.ShakeConstant(2, 0.1f);
+        foreach (ParticleSystem ps in fuseParticles)
+        {
+            ps.Play();
+            yield return new WaitForSeconds(0.1f);
+        }
+
         yield return new WaitForSeconds(2.0f);
-        foreach (var location in explosionLocations)
+
+        foreach (ParticleSystem ps in fuseParticles)
+        {
+            ps.Stop();
+        }
+
+        foreach (Transform location in explosionLocations)
         {
             Instantiate(explosionEffect, location.position, Quaternion.identity);
         }
-        Destroy(gameObject);
+
+        DestroyBarrels();
 
         OnExplode?.Invoke();
+    }
+
+    private void DestroyBarrels()
+    {
+        foreach (Transform location in explosionLocations)
+        {
+            Destroy(location.gameObject);
+        }
     }
 }

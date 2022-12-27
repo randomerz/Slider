@@ -23,6 +23,10 @@ public class ExplodableRock : MonoBehaviour, ISavable
     public void Load(SaveProfile profile)
     {
         isExploded = profile.GetBool(saveString, false);
+        if (isExploded)
+        {
+            FinishExploding();
+        }
     }
 
     public void Save()
@@ -46,12 +50,13 @@ public class ExplodableRock : MonoBehaviour, ISavable
     {
         animator.SetBool("explode", true);
 
+        CameraShake.Shake(0.75f, 1);
         foreach (ParticleSystem p in explosionParticles)
         {
             p.Play();
         }
 
-        yield return null;
+        yield return new WaitForSeconds(1.5f);
 
         FinishExploding();
     }
@@ -60,5 +65,11 @@ public class ExplodableRock : MonoBehaviour, ISavable
     {
         animator.SetBool("finishedExploding", true);
         myCollider.enabled = false;
+    }
+
+    // Exposed for the animation events
+    public void RubbleShake()
+    {
+        CameraShake.Shake(0.5f, 0.75f);
     }
 }
