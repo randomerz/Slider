@@ -24,7 +24,6 @@ public class GemManager : MonoBehaviour, ISavable
 
     public void Load(SaveProfile profile)
     {
-        Debug.Log(gems);
         gems.Add(Area.Ocean, SaveSystem.Current.GetBool("magiTechOcean"));
         gems.Add(Area.Military, SaveSystem.Current.GetBool("magiTechMilitary"));
         gems.Add(Area.Factory, SaveSystem.Current.GetBool("magiTechFactory"));
