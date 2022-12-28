@@ -15,6 +15,9 @@ public class TrailerCutScene : MonoBehaviour
     //public float lookAtCatWait = 0.5f;
     //public float dollyWait = 1f;
 
+    public CinemachineVirtualCamera cmPlayerCam;
+    public AnimationCurve cameraZoomCurve;
+
     public Animator catAnimator;
     public Animator oldManAnimator;
     public SpriteRenderer oldManSpriteRenderer;
@@ -26,13 +29,14 @@ public class TrailerCutScene : MonoBehaviour
     public GameObject tile9;
 
     public AnimationCurve shrinkCurve;
+    public float shrinkEndRotation;
     public float shrinkDuration;
 
     void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-            StartCoroutine(StartIntroCutscene());
+        StartCoroutine(StartIntroCutscene());
     }
+    
 
     //private IEnumerator StartIntroCutscene()
     //{
@@ -54,18 +58,21 @@ public class TrailerCutScene : MonoBehaviour
 
     private IEnumerator StartIntroCutscene()
     {
+        yield return new WaitForSeconds(3);
+
         Debug.Log("Starting...");
 
         // camera shake
         CameraShake.Shake(1, 0.5f);
 
+        // slow zoom
+        StartCoroutine(SlowCameraZoom(4, 7));
+
         yield return new WaitForSeconds(0.25f);
 
-        // slow zoom
-        StartCoroutine(SlowCameraZoom(2, 5));
 
         // cat awake
-        catAnimator.SetBool("awake", true);
+        catAnimator.SetBool("isAwake", true);
 
         yield return new WaitForSeconds(0.25f);
 
@@ -84,9 +91,12 @@ public class TrailerCutScene : MonoBehaviour
 
         StartCoroutine(ShrinkTile(tile3, shrinkDuration));
 
+        yield return new WaitForSeconds(0.5f);
+        oldManSpriteRenderer.flipX = !oldManSpriteRenderer.flipX;
+
         // shrink other tiles
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1f);
 
         StartCoroutine(ShrinkTile(tile5, shrinkDuration));
         yield return new WaitForSeconds(0.125f);
@@ -100,18 +110,25 @@ public class TrailerCutScene : MonoBehaviour
         Debug.Log("Starting camera zoom");
 
         float t = 0;
+        float x = 0;
         while (t < duration)
         {
-            float scale = 1;
-            slider.transform.localScale = scale * Vector3.one;
+            x = shrinkCurve.Evaluate(t / duration);
+            slider.transform.rotation = Quaternion.Euler(0, 0, x * shrinkEndRotation);
+            slider.transform.localScale = (1 - x) * Vector3.one;
 
             yield return null;
             t += Time.deltaTime;
         }
 
         Debug.Log("Finished zoom");
+        
+        slider.transform.localEulerAngles.Set(0, 0, shrinkEndRotation);
+        slider.transform.localScale = Vector3.zero;
 
         GameObject smokePrefab = ParticleManager.GetPrefab(ParticleType.SmokePoof);
+        Instantiate(smokePrefab, slider.transform.position, Quaternion.identity, null);
+        Instantiate(smokePrefab, slider.transform.position, Quaternion.identity, null);
 
         yield return null;
 
@@ -122,13 +139,20 @@ public class TrailerCutScene : MonoBehaviour
     {
         Debug.Log("Starting camera zoom");
 
+        float startZoomAmount = cmPlayerCam.m_Lens.OrthographicSize;
+
         float t = 0;
         while (t < duration)
         {
             // set zoom
+            float x = cameraZoomCurve.Evaluate(t / duration);
+            float newZoom = Mathf.Lerp(startZoomAmount, endZoomAmount, x);
+            cmPlayerCam.m_Lens.OrthographicSize = newZoom;
 
             yield return null;
             t += Time.deltaTime;
         }
+
+        cmPlayerCam.m_Lens.OrthographicSize = endZoomAmount;
     }
 }
