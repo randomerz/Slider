@@ -147,7 +147,7 @@ public class MagiTechGrid : SGrid
         foreach (Collider2D hit in GetCollidingItems(lightningBoi))
         {
             Item item = hit.GetComponent<Item>();
-            if (hit != null && item.itemName == "Step Stool")
+            if (item != null && item.itemName == "Step Stool")
             {
                 c.SetSpec(true);
                 return;
