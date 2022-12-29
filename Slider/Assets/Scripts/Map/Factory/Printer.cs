@@ -20,11 +20,12 @@ public class Printer : MonoBehaviour
     private bool walls = false;
     private bool floor = false;
     private bool wires = false;
-    void Awake()
+
+    void Start()
     {
-        
         CheckParts();
     }
+
     void Update()
     {
         
@@ -61,12 +62,13 @@ public class Printer : MonoBehaviour
         rocketItem.SetActive(true);
         tileItem.SetActive(false);
     }
+
     public void CheckParts()
     {
         string operatorMessage = "";
-        walls = PlayerInventory.Contains("Walls");
-        floor = PlayerInventory.Contains("Floor");
-        wires = PlayerInventory.Contains("Wires");
+        walls = PlayerInventory.Contains("Slider Walls");
+        floor = PlayerInventory.Contains("Slider Base");
+        wires = PlayerInventory.Contains("Slider Wires");
         SetActives();
         if (!floor && !walls && !wires)
         {

@@ -32,6 +32,9 @@ public class TrailerCutScene : MonoBehaviour
     public float shrinkEndRotation;
     public float shrinkDuration;
 
+    public GameObject ruinsSparkleParticles;
+    private List<GameObject> particles = new List<GameObject>();
+
     void Start()
     {
         StartCoroutine(StartIntroCutscene());
@@ -61,6 +64,9 @@ public class TrailerCutScene : MonoBehaviour
         yield return new WaitForSeconds(3);
 
         Debug.Log("Starting...");
+
+        StartParticles();
+        yield return new WaitForSeconds(1);
 
         // camera shake
         CameraShake.Shake(1, 0.5f);
@@ -154,5 +160,43 @@ public class TrailerCutScene : MonoBehaviour
         }
 
         cmPlayerCam.m_Lens.OrthographicSize = endZoomAmount;
+    }
+
+
+    private void StartParticles()
+    {
+        Random.InitState(0);
+        StartCoroutine(ParticleAnimation(3));
+
+        //yield return new WaitForSeconds(1);
+
+        //CameraShake.ShakeIncrease(6.0f, 0.5f);
+    }
+
+    // this could be optimized a lot
+    private IEnumerator ParticleAnimation(int numRecur)
+    {
+        if (numRecur == 0)
+            yield break;
+
+        for (int i = 0; i < 4; i++)
+        {
+            particles.Add(GameObject.Instantiate(ruinsSparkleParticles, transform.position + GetRandomPosition(), Quaternion.identity, transform));
+
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        yield return new WaitForSeconds(0.25f);
+        StartCoroutine(ParticleAnimation(numRecur - 1));
+        yield return new WaitForSeconds(0.05f);
+        StartCoroutine(ParticleAnimation(numRecur - 1));
+    }
+
+    private Vector3 GetRandomPosition()
+    {
+        float r = Random.Range(0f, 8f);
+        float t = Random.Range(0f, 360f);
+
+        return new Vector2(r * Mathf.Cos(t), r * Mathf.Sin(t));
     }
 }
