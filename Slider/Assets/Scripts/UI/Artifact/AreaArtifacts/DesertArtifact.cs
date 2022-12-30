@@ -43,7 +43,7 @@ public class DesertArtifact : UIArtifact
     public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         SMove move;
-
+        buttonEmpty.SetSpriteToIslandOrEmpty();
         if (moveQueue.Count < maxMoveQueueSize)
         {
             move = ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
@@ -96,7 +96,7 @@ public class DesertArtifact : UIArtifact
         return move;
     }
 
-    //C: Literally the same thing, except uses base.ConstructMoveFromButtonPair and tosses in a SwapButtons because UI bandaid fixes
+    //Chen: Literally the same thing, except uses base.ConstructMoveFromButtonPair and tosses in a SwapButtons because UI bandaid fixes
     public bool TryFragQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         SMove move;
@@ -138,7 +138,7 @@ public class DesertArtifact : UIArtifact
                 else
                 {
                     b.SetIsInMove(false);
-                    b.SetHighlighted(moveOptionButtons.Contains(b)); //Bug or feature? This is because you can select active tiles
+                    b.SetHighlighted(moveOptionButtons.Contains(b));
                 }
             }
         }
