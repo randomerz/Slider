@@ -263,7 +263,8 @@ public class Minecart : Item, ISavable
             targetTilePos = currentTilePos + GetTileOffsetVector(currentDirection);
             targetTile = railManager.railMap.GetTile(targetTilePos) as RailTile;
             targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) + offSet;
-            nextDirection = GetDirection(targetTile, currentDirection);
+            if(targetTile != null)
+                nextDirection = GetDirection(targetTile, currentDirection);
             isOnTrack = true;
         }
         else
