@@ -9,11 +9,16 @@ public class ElevatorAnimationManager : MonoBehaviour
     [SerializeField] private Animator bottomDispAnimator;
     [SerializeField] private Animator bottomDoorAnimator;
 
-    private void Awake() {
-       // topDispAnimator.Play("Disp Top Fade In");
+    private bool isAnimating = false;
+    private bool repaired = false;
+
+    private void Start() {
+        topDispAnimator.Play("Disp Top Fade In");
         bottomDispAnimator.Play("Disp Bottom Fade In");
-        //topDoorAnimator.Play("Open");
-        bottomDoorAnimator.Play("Open");
+        if(repaired)
+            OpenDoors();
+        else
+            CloseDoors();
     }
 
     public void SendUp()
@@ -28,39 +33,44 @@ public class ElevatorAnimationManager : MonoBehaviour
 
     private IEnumerator SendCoroutine(string sendAnimName)
     {
-        //dissolve indicator
-        //topDispAnimator.Play("Disp Top Fade Out");
+        isAnimating = true;
+        
+        topDispAnimator.Play("Disp Top Fade Out");
         bottomDispAnimator.Play("Disp Bottom Fade Out");
         yield return new WaitForSeconds(0.333f);
 
-        //close doors
-      //  topDoorAnimator.Play("Close");
-        bottomDoorAnimator.Play("Close");
-
-        //send in direction
-       // topDispAnimator.Play(sendAnimName);
+        CloseDoors();
+        topDispAnimator.Play(sendAnimName);
         bottomDispAnimator.Play(sendAnimName);
-
-        //travel
         yield return new WaitForSeconds(2.833f);
 
-        //open doors
-      //  topDoorAnimator.Play("Open");
-        bottomDoorAnimator.Play("Open");
-      //  topDispAnimator.Play("Disp Top Fade In");
+        OpenDoors();
+        topDispAnimator.Play("Disp Top Fade In");
         bottomDispAnimator.Play("Disp Bottom Fade In");
 
-        //yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(1f);
+
+        isAnimating = false;
     }
 
-    public void TestDoorOpen()
+    private void CloseDoors()
     {
-        bottomDoorAnimator.Play("Open");
-
-    }
-
-    public void TestDoorClose()
-    {
+        topDoorAnimator.Play("Close");
         bottomDoorAnimator.Play("Close");
+        //update colliders
+    }
+
+    private void OpenDoors()
+    {
+        topDoorAnimator.Play("Open");
+        bottomDoorAnimator.Play("Open");
+        //update colliders
+    }
+
+    public void Repair()
+    {
+        repaired = true;
+        OpenDoors();
+        //delete extra sprites or whatnot
     }
 }

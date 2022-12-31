@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MinecartElevator : MonoBehaviour
+public class MinecartElevator : MonoBehaviour, ISavable
 {
     [SerializeField] private bool isFixed;
     public GameObject topPosition;
@@ -33,6 +33,7 @@ public class MinecartElevator : MonoBehaviour
         isFixed = true;
         mainMc.UpdateState("Empty");
         AudioManager.Play("Puzzle Complete");
+        animationManager.Repair();
         //update sprites/animate/whatnot
     }
 
@@ -71,10 +72,21 @@ public class MinecartElevator : MonoBehaviour
     }
 
     private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir){
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1f);
         mc.SnapToRail(position, dir);
+        yield return new WaitForSeconds(2.5f);
         mc.StartMoving();
     }
 
-    
+    public void Save()
+    {
+        SaveSystem.Current.SetBool("MountainElevatorFixed", isFixed);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        isFixed = profile.GetBool("MountainElevatorFixed");
+        if(isFixed)
+            animationManager.Repair();
+    }
 }
