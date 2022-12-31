@@ -41,7 +41,7 @@ public class MinecartElevator : MonoBehaviour
         if(!isFixed)
             return;
         mc.StopMoving();
-        animationManager.SendDown(mc);
+        animationManager.SendDown();
         StartCoroutine(WaitThenSend(mc, bottomPosition.transform.position, 3));
         hasGoneDown = true;
     }
@@ -51,7 +51,7 @@ public class MinecartElevator : MonoBehaviour
         if(!isFixed)
             return;
         mc.StopMoving();
-        animationManager.SendUp(mc);
+        animationManager.SendUp();
         StartCoroutine(WaitThenSend(mc, topPosition.transform.position, 3));
     }
 
@@ -71,7 +71,7 @@ public class MinecartElevator : MonoBehaviour
     }
 
     private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir){
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(3f);
         mc.SnapToRail(position, dir);
         mc.StartMoving();
     }

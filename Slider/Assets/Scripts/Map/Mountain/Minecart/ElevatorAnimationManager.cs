@@ -10,49 +10,57 @@ public class ElevatorAnimationManager : MonoBehaviour
     [SerializeField] private Animator bottomDoorAnimator;
 
     private void Awake() {
-        topDispAnimator.Play("Top");
-        bottomDispAnimator.Play("Bottom");
-        topDoorAnimator.Play("Open");
+       // topDispAnimator.Play("Disp Top Fade In");
+        bottomDispAnimator.Play("Disp Bottom Fade In");
+        //topDoorAnimator.Play("Open");
         bottomDoorAnimator.Play("Open");
     }
 
-    public void SendUp(Minecart mc)
+    public void SendUp()
     {
-        StartCoroutine(SendCoroutine(mc, "SendUp"));
+        StartCoroutine(SendCoroutine("Disp Send Up"));
     }
 
-    public void SendDown(Minecart mc)
+    public void SendDown()
     {
-        StartCoroutine(SendCoroutine(mc, "SendDown"));
+        StartCoroutine(SendCoroutine("Disp Send Down"));
     }
 
-
-    private IEnumerator SendCoroutine(Minecart mc, string sendAnimName)
+    private IEnumerator SendCoroutine(string sendAnimName)
     {
         //dissolve indicator
-        topDispAnimator.Play("Dissolve");
-        bottomDispAnimator.Play("Dissolve");
-        yield return new WaitForSeconds(0.25f);
+        //topDispAnimator.Play("Disp Top Fade Out");
+        bottomDispAnimator.Play("Disp Bottom Fade Out");
+        yield return new WaitForSeconds(0.333f);
 
         //close doors
-        topDoorAnimator.Play("Close");
+      //  topDoorAnimator.Play("Close");
         bottomDoorAnimator.Play("Close");
 
         //send in direction
-        topDispAnimator.Play(sendAnimName);
+       // topDispAnimator.Play(sendAnimName);
         bottomDispAnimator.Play(sendAnimName);
 
         //travel
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2.833f);
 
         //open doors
-        topDoorAnimator.Play("Open");
+      //  topDoorAnimator.Play("Open");
         bottomDoorAnimator.Play("Open");
-        topDispAnimator.Play("Appear");
-        bottomDispAnimator.Play("Appear");
+      //  topDispAnimator.Play("Disp Top Fade In");
+        bottomDispAnimator.Play("Disp Bottom Fade In");
 
-        yield return new WaitForSeconds(0.25f);
-        topDispAnimator.Play("Top");
-        bottomDispAnimator.Play("Bottom");
+        //yield return new WaitForSeconds(0.25f);
+    }
+
+    public void TestDoorOpen()
+    {
+        bottomDoorAnimator.Play("Open");
+
+    }
+
+    public void TestDoorClose()
+    {
+        bottomDoorAnimator.Play("Close");
     }
 }
