@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bcd82aea7c11024ba10e65288532285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delta: 0.07
+  flickerSpeed: 0.5
   dynamic: 0
 --- !u!212 &7332939556883089497
 SpriteRenderer:
