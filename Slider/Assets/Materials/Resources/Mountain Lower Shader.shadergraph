@@ -2,11 +2,7 @@
     "m_SGVersion": 3,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
     "m_ObjectId": "5a0019ebd95f4f31bb879ec1d0eea9dd",
-    "m_Properties": [
-        {
-            "m_Id": "9b2b074afa52498685afa53c14c6104e"
-        }
-    ],
+    "m_Properties": [],
     "m_Keywords": [],
     "m_Dropdowns": [],
     "m_CategoryData": [
@@ -840,11 +836,7 @@
     "m_Type": "UnityEditor.ShaderGraph.CategoryData",
     "m_ObjectId": "99f0cf4791d54363a2f80192d2b67e4c",
     "m_Name": "",
-    "m_ChildObjectList": [
-        {
-            "m_Id": "9b2b074afa52498685afa53c14c6104e"
-        }
-    ]
+    "m_ChildObjectList": []
 }
 
 {
@@ -870,28 +862,6 @@
         "w": 0.0
     },
     "m_Labels": []
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.BooleanShaderProperty",
-    "m_ObjectId": "9b2b074afa52498685afa53c14c6104e",
-    "m_Guid": {
-        "m_GuidSerialized": "d99d9643-694c-455f-b6a0-91183066a250"
-    },
-    "m_Name": "LightOn",
-    "m_DefaultRefNameVersion": 0,
-    "m_RefNameGeneratedByDisplayName": "",
-    "m_DefaultReferenceName": "Boolean_9b2b074afa52498685afa53c14c6104e",
-    "m_OverrideReferenceName": "_LightOn",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": true
 }
 
 {

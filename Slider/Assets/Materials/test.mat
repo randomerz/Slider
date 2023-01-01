@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: test
-  m_Shader: {fileID: -6465566751694194690, guid: 455a0dee021d0f549aa516b6ae2104fc, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: c961cf3c5ea52eb4bbd15dc5d6efa917, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -71,6 +71,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_afec9eb5d77b4b0faa9fbcad1f469ac6_Texture_1:
+        m_Texture: {fileID: 8400000, guid: 00821c913b9cbae4dbfa30b30f1b44d1, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
