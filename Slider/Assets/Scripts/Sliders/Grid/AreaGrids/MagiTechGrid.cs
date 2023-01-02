@@ -155,4 +155,15 @@ public class MagiTechGrid : SGrid
         }
         c.SetSpec(false);
     }
+
+    public void TurnInArtifact()
+    {
+        //Ensure Scroll of Realign is used
+        if (!(UIArtifact.GetGridString() == "132_76#_548"))
+        {
+            return;
+        }
+        //Disable ability to open artifact
+        UIArtifactMenus._instance.hasArtifact = false;
+    }
 }
