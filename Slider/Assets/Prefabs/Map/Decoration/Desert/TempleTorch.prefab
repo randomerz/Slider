@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bcd82aea7c11024ba10e65288532285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delta: 0.07
-  flickerSpeed: 0.5
+  delta: 0.05
+  flickerSpeed: 0.4
   dynamic: 0
 --- !u!212 &7332939556883089497
 SpriteRenderer:
@@ -89,7 +89,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b0790b3cf22a34c468cbe924c389d912, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 376fbf5975645084dab4695de4a71115, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
