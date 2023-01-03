@@ -65,7 +65,7 @@ public class GemManager : MonoBehaviour, ISavable
         Item item = PlayerInventory.GetCurrentItem();
         if (item == null)
         {
-            AudioManager.Play("ArtifactError");
+            AudioManager.Play("Artifact Error");
             return;
         }
         if (Enum.TryParse(item.itemName, out Area itemNameAsEnum))

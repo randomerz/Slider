@@ -121,6 +121,7 @@ Transform:
   - {fileID: 4711123391565635705}
   - {fileID: 4782200234506656121}
   - {fileID: 7949870137721624224}
+  - {fileID: 1952267768886989979}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -549,6 +550,100 @@ Transform:
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 8847753119295245062, guid: e8a5a5c8f3da82b469ac93a43accf240, type: 3}
   m_PrefabInstance: {fileID: 1484521363259563428}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2749874979147672064
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 5770532071833829493}
+    m_Modifications:
+    - target: {fileID: 641441975571074504, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: laserInteractionType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 641441975571074504, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: OnLasered.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 641441975571074504, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: OnLasered.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 641441975571074504, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: OnLasered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 83693980403180539}
+    - target: {fileID: 641441975571074504, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: OnLasered.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 641441975571074504, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: OnLasered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RubbleShake
+      objectReference: {fileID: 0}
+    - target: {fileID: 641441975571074504, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: OnLasered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ExplodableRock, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 641441975571074504, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: OnLasered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4970122273632902978, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+      propertyPath: m_Name
+      value: RaycastCollider
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+--- !u!4 &1952267768886989979 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
+  m_PrefabInstance: {fileID: 2749874979147672064}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4076955387574456957
 PrefabInstance:

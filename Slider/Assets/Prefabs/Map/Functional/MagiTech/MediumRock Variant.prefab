@@ -27,6 +27,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 22100000, guid: 917f1c8f678b72c45834ba406bb53e53, type: 2}
+    - target: {fileID: 3373012147404842952, guid: daabb3442c88f4a4eb424f9ab764d8c7, type: 3}
+      propertyPath: OnLasered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ExplodeRock
+      objectReference: {fileID: 0}
     - target: {fileID: 4711123391565635705, guid: daabb3442c88f4a4eb424f9ab764d8c7, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.5
