@@ -77,6 +77,7 @@ public class MountainGrid : SGrid
 
     private void CheckTile7Spawn()
     {
+        //UPDATE TO FORCE PARITY
         int[,] t7exact = new int[,]{{7,1,5,3},{2,6,8,4}};
         if(!CheckGrid.contains(GetGridString(true), "34_58_16_72" )) 
         {
@@ -88,6 +89,19 @@ public class MountainGrid : SGrid
             UIArtifact.ClearQueues();
             SetGrid(t7exact);
         }
+    }
+
+    public void FinishMountain()
+    {
+        EnableStile(8);
+
+        int[,] completedPuzzle = new int[2, 4] { {4, 7, 5, 3},
+                                                 {2, 6, 8, 1}};
+        SetGrid(completedPuzzle);
+        SaveSystem.Current.SetBool("forceAutoMove", false);
+
+        UIArtifactWorldMap.SetAreaStatus(Area.Mountain, ArtifactWorldMapArea.AreaStatus.color);
+        UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
     }
 
 
