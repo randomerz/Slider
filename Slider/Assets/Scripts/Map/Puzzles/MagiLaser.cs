@@ -10,27 +10,39 @@ public class MagiLaser : MonoBehaviour
     public LineRenderer lineRenderer, lineRenderer2, lineRenderer3;
     private RaycastHit2D hit;
     private Laserable laserable;
-    private Vector2 curDir, curDir2, curDir3;
-    private Vector2 curPos, curPos2, curPos3;
-    private LinkedList<Vector3> rendererPositions, pastRendererPositions; 
-    void Update()
+    private Vector2 curDir, curDir2;
+    private Vector2 curPos, curPos2;
+
+    private void OnEnable()
+    {
+        //SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
+        //UIArtifact.MoveMadeOnArtifact += OnMoveMadeOnArtifact;
+    }
+
+    private void OnDisable()
+    {
+        //SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
+        //UIArtifact.MoveMadeOnArtifact -= OnMoveMadeOnArtifact;
+    }
+    private void FixedUpdate()
     {
         MakeLaser();
     }
-
+    /*
     private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (!isEnabled || !UIArtifact.GetInstance().MoveQueueEmpty()) return;
-        MakeLaser();
+        if (!isEnabled && UIArtifact.GetInstance().MoveQueueEmpty()) return;
+        canShoot = true;
     }
-
-    private void OnSTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
+    
+    private void OnMoveMadeOnArtifact(object sender, System.EventArgs e)
     {
         ClearLasers();
     }
-
+    */
     public void ClearLasers()
     {
+        //canShoot = false;
         lineRenderer.positionCount = 0;
         lineRenderer2.positionCount = 0;
     }
@@ -50,13 +62,6 @@ public class MagiLaser : MonoBehaviour
         curPos2 = initPos;
         DrawLaser(curDir2, curPos2, lineRenderer2);
     }
-    private void MakeLaser3(Vector2 initDir3)
-    {
-        Vector3 initPos3 = GameObject.FindWithTag("Portal1").transform.position + (Vector3)(initDir3*0.8f); 
-        curDir3 = initDir3;
-        curPos3 = initPos3;
-        DrawLaser(curDir3, curPos3, lineRenderer3);
-    }
     
     /// <summary>
     /// Given a LineRenderer, Raycasts to check for laser interactions and updates list of positions
@@ -67,13 +72,13 @@ public class MagiLaser : MonoBehaviour
     /// <param name="lr"> LineRenderer to set positions for</param>
     private void DrawLaser(Vector2 dir, Vector2 pos, LineRenderer lr) 
     {
+        if (!isEnabled) return;
         //Set origin point
         lr.positionCount = 1;
         lr.SetPosition(lr.positionCount - 1, pos);
         // bool tp1, tp2 = false;
-
-        while(true) {
-            hit = Physics2D.Raycast(pos, dir, 40.0f, 4096); //4096 is layermask RayCast
+        for(int ct = 0; ct < 10; ct++) {
+            hit = Physics2D.Raycast(pos, dir, 50.0f, 4096); //4096 is layermask RayCast
             if (!hit)
             {
                 lr.positionCount++;
@@ -89,19 +94,27 @@ public class MagiLaser : MonoBehaviour
                 return;
             }
 
-            lr.positionCount++;
-            lr.SetPosition(lr.positionCount - 1, hit.transform.position);
+            laserable.isLasered = true;
+            laserable.OnLasered?.Invoke();
 
-            if (laserable.laserInteractionType == Laserable.LaserInteractionType.Reflect) {
+            if (laserable.IsInteractionType("Passthrough"))
+            {
+                pos = hit.transform.position + (Vector3)(dir * 1.1f);
+                continue;
+            }
+
+            lr.positionCount++;
+            lr.SetPosition(lr.positionCount - 1, laserable.IsInteractionType("Absorb") ? hit.point : hit.transform.position);
+
+            if (laserable.IsInteractionType("Reflect")) {
                 dir = laserable.flipDirection ? MirrorTwoReflect(dir) : MirrorOneReflect(dir);
                 pos = hit.transform.position + (Vector3)(dir * 1.1f);
-            } else if(laserable.laserInteractionType == Laserable.LaserInteractionType.Portal) {
-                MakePastLaser(hit.transform, dir);
-                break;
-            } else if (laserable.laserInteractionType == Laserable.LaserInteractionType.Absorb){
-                laserable.OnLasered?.Invoke();
-                break;
+                continue; //Only time we want to continue is if laser hits a mirror
+            } 
+            else if(laserable.IsInteractionType("Portal")) {
+                MakePastLaser(hit.transform, dir); //Will make another laser
             }
+            break;
         }
     }
     private Vector2 MirrorOneReflect(Vector2 dir) {
@@ -109,6 +122,11 @@ public class MagiLaser : MonoBehaviour
     }
     private Vector2 MirrorTwoReflect(Vector2 dir){
         return new Vector2(-dir.y, -dir.x);
+    }
+
+    public void ToggleLaser()
+    {
+        isEnabled = !isEnabled;
     }
 }
 

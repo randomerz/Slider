@@ -91,12 +91,6 @@ public class MagiTechGrid : SGrid
 
     #endregion
 
-    private List<Collider2D> GetCollidingItems(Collider2D collider)
-    {
-        List<Collider2D> list = new();
-        collider.OverlapCollider(contactFilter, list);
-        return list;
-    }
 
     public void HasTwoBurgers(Condition c)
     {
@@ -117,7 +111,6 @@ public class MagiTechGrid : SGrid
         }
         c.SetSpec(hasBurger && hasDesyncBurger);
     }
-
     public void FireHasStool(Condition c)
     {
         if (SaveSystem.Current.GetBool("magiTechFactory"))
@@ -155,7 +148,12 @@ public class MagiTechGrid : SGrid
         }
         c.SetSpec(false);
     }
-
+    private List<Collider2D> GetCollidingItems(Collider2D collider)
+    {
+        List<Collider2D> list = new();
+        collider.OverlapCollider(contactFilter, list);
+        return list;
+    }
     public void TurnInArtifact()
     {
         //Ensure Scroll of Realign is used
