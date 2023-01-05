@@ -17,14 +17,12 @@ public class Path : MonoBehaviour
     public GameObject blob;
     private Direction direction;
     private float timeBetweenCreation = 3.8f;
-    private float blobspeed = 0.25f;
     private int travelDistance = 0;
 
     private float timeCount = 4;
 
     void Start()
     {
-
     }
 
     void Update()
@@ -52,8 +50,8 @@ public class Path : MonoBehaviour
         {
             travelDistance += (int)pair.transform.localScale.x;
         }
-  
-        new_blob.UpdateBlobOnPath(defaultAnim, direction, blobspeed, travelDistance, pair, currentShape);
+
+        new_blob.UpdateBlobOnPath(defaultAnim, direction, travelDistance, pair, currentShape);
 
         // set blob to be the correct starting position
         if (direction == Direction.LEFT || direction == Direction.DOWN)

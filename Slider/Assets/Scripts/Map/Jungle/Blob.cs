@@ -12,12 +12,12 @@ public class Blob : MonoBehaviour
     private float traveledDistance = 0;
     private Path pair;
     bool flip = false;
-    float speed = 1f;
+    float speed = 0.75f;
 
     [Header ("shape")]
     public Shape carry;
 
-    public void UpdateBlobOnPath(bool defaultAnim, Direction direction, float blobspeed, int travelDistance, Path pair, Shape shape)
+    public void UpdateBlobOnPath(bool defaultAnim, Direction direction, int travelDistance, Path pair, Shape shape)
     {
         carry = shape;
         SpriteRenderer spriteRenderer = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -31,7 +31,6 @@ public class Blob : MonoBehaviour
             GetComponent<SpriteRenderer>().flipX = true;
         }
         this.direction = direction;
-        this.speed = blobspeed;
         this.travelDistance = travelDistance;
         this.pair = pair;
     }
@@ -40,7 +39,7 @@ public class Blob : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 new_distance = DirectionUtil.D2V(direction) * (speed * 0.01f);
+        Vector2 new_distance = DirectionUtil.D2V(direction) * (speed * Time.deltaTime);
         traveledDistance += Mathf.Abs(new_distance.magnitude);
         this.transform.position = this.transform.position + new Vector3(new_distance.x, new_distance.y, 0);
 
