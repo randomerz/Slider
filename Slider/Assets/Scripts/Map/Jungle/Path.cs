@@ -14,24 +14,29 @@ public class Path : MonoBehaviour
 
 
     [Header("Animation Blobs")]
-    public Direction direction;
     public GameObject blob;
-    public int timeBetweenCreation = 50;
-    public float blobspeed = 1f;
-    public int travelDistance = 0;
+    private Direction direction;
+    private float timeBetweenCreation = 3.8f;
+    private float blobspeed = 0.25f;
+    private int travelDistance = 0;
 
-    public int count = 0;
+    private float timeCount = 4;
+
+    void Start()
+    {
+
+    }
 
     void Update()
     {
         if (active && creatingBlobs)
         {
-            if (count >= timeBetweenCreation)
+            if (timeCount >= timeBetweenCreation)
             {
                 CreateBlob();
-                count = 0;
+                timeCount = 0;
             }
-            count++;
+            timeCount += Time.deltaTime;
         }
     }
 

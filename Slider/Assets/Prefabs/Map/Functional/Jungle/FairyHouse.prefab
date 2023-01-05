@@ -443,6 +443,14 @@ PrefabInstance:
       propertyPath: onSuccess.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: JungleSignAnimator, Assembly-CSharp
       objectReference: {fileID: 0}
+    - target: {fileID: 4852848545585317208, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852848545585317208, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4852848545585317209, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: m_Layer
       value: 0

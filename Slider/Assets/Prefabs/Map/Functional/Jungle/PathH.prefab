@@ -130,15 +130,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81daf62b7f3a3c645b408d554c61ee6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 0
-  creatingBlobs: 1
   pair: {fileID: 0}
-  currentShape: {fileID: 0}
   horizontal: 1
   direction: 0
   blob: {fileID: 6794732048064429014, guid: f61fb858a7b7cad419aec4dfbf411014, type: 3}
   timeBetweenCreation: 300
-  blobspeed: 1
+  blobspeed: 0.5
   travelDistance: 5
   count: 300
 --- !u!61 &893779329034979391
