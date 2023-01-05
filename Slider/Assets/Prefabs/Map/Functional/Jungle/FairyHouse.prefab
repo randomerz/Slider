@@ -159,7 +159,6 @@ MonoBehaviour:
   addToOnAction: 1
   isCarryingItem: 0
   itemNameCheck: 
-  triggerIsLit: 0
 --- !u!1 &2655301141042564133
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,6 +355,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2655301140884828776}
     m_Modifications:
+    - target: {fileID: 1595776388029333482, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4852848544237912658, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: m_RootOrder
       value: 2
