@@ -171,11 +171,20 @@ public class DebugUIManager : MonoBehaviour
                 }
                 else
                 {
+                    float f;
+                    if (float.TryParse(p[1], out f))
+                    {
+                        go.gameObject.BroadcastMessage(p[0], f, SendMessageOptions.DontRequireReceiver);
+                    }
+                    // backwards compatibility some methods need strings that are numbers/ints
                     go.gameObject.BroadcastMessage(p[0], p[1], SendMessageOptions.DontRequireReceiver);
                 }
             }
         }
     }
+
+
+    #region Commands
 
     //C: modified to work for any size grid
     public void GiveAllSliders()
@@ -270,29 +279,6 @@ public class DebugUIManager : MonoBehaviour
         ActivateAllCollectibles(true);
     }
 
-    public void GoToFactoryPast()
-    {
-        if (SGrid.Current.GetArea() != Area.Factory)
-        {
-            Debug.LogWarning("GoToFactoryPast command is only valid while in the Factory area.");
-        }
-        else
-        {
-            FactoryTimeManager.SpawnPlayerInPast();
-        }
-    }
-    public void GoToFactoryPresent()
-    {
-        if (SGrid.Current.GetArea() != Area.Factory)
-        {
-            Debug.LogWarning("GoToFactoryPresent command is only valid while in the Factory area.");
-        }
-        else
-        {
-            FactoryTimeManager.SpawnPlayerInPresent();
-        }
-    }
-
     //C: make sure pattern is the same length as the current sgrid
     public void SetGrid(string pattern)
     {
@@ -318,9 +304,14 @@ public class DebugUIManager : MonoBehaviour
         SGrid.Current.SetGrid(puzzle);
     }
 
-    public void SetBool(string boolName)
+    public void SetBoolTrue(string boolName)
     {
         SaveSystem.Current.SetBool(boolName, true);
+    }
+
+    public void EnableArtifactCompletion()
+    {
+        SGrid.Current.CheckCompletion = true; // doesn't do anything bc you need to subscribe the checking methods
     }
 
     public void NoClip()
@@ -329,9 +320,33 @@ public class DebugUIManager : MonoBehaviour
         p.toggleCollision();
     }
 
+    public void GoToFactoryPast()
+    {
+        if (SGrid.Current.GetArea() != Area.Factory)
+        {
+            Debug.LogWarning("GoToFactoryPast command is only valid while in the Factory area.");
+        }
+        else
+        {
+            FactoryTimeManager.SpawnPlayerInPast();
+        }
+    }
+    public void GoToFactoryPresent()
+    {
+        if (SGrid.Current.GetArea() != Area.Factory)
+        {
+            Debug.LogWarning("GoToFactoryPresent command is only valid while in the Factory area.");
+        }
+        else
+        {
+            FactoryTimeManager.SpawnPlayerInPresent();
+        }
+    }
+
     public void EarthQuake()
     {
         CameraShake.Shake(3f, 3f);
     }
-    
+
+    #endregion
 }

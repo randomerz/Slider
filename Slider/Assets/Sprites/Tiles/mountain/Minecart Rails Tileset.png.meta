@@ -291,7 +291,7 @@ TextureImporter:
       213: 1518385163002978912
     second: Minecart Rails Tileset_47
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -351,6 +351,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -426,6 +427,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1456,7 +1469,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1477,7 +1490,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1498,7 +1511,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1519,7 +1532,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1527,6 +1540,48 @@ TextureImporter:
       bones: []
       spriteID: 279f3435e8902374385dc883dfa467e6
       internalID: -745867786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minecart Rails Tileset_52
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fac7e6339b7adca4c916ca8444c8bc4c
+      internalID: 176702322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minecart Rails Tileset_53
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b3c34e7a724b824d9a3b0a7cb6cf2de
+      internalID: 462361238
       vertices: []
       indices: 
       edges: []
@@ -1557,6 +1612,7 @@ TextureImporter:
       Minecart Rails Tileset_42: -3820816077881506249
       Minecart Rails Tileset_11: -5046542225230581650
       Minecart Rails Tileset_37: -2577937104085944860
+      Minecart Rails Tileset_53: 462361238
       Minecart Rails Tileset_13: 8801927061516742915
       Minecart Rails Tileset_30: -2751896644166992086
       Minecart Rails Tileset_29: -1587320791424517785
@@ -1583,6 +1639,7 @@ TextureImporter:
       Minecart Rails Tileset_35: 5154909392426039687
       Minecart Rails Tileset_6: 3820760104234997170
       Minecart Rails Tileset_24: -5940395256336124347
+      Minecart Rails Tileset_52: 176702322
       Minecart Rails Tileset_39: -4694041143595511157
       Minecart Rails Tileset_19: -7752529329400262301
       Minecart Rails Tileset_31: -1187011056979696717
