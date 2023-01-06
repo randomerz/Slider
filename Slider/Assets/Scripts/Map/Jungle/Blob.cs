@@ -23,7 +23,7 @@ public class Blob : MonoBehaviour
     [Header ("shape")]
     public Shape carry;
 
-    public void UpdateBlobOnPath(bool defaultAnim, Direction direction, int travelDistance, Path pair, Shape shape)
+    public void UpdateBlobOnPath(bool defaultAnim, Direction direction, float travelDistance, Path pair, Shape shape)
     {
         carry = shape;
         SpriteRenderer spriteRenderer = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -39,8 +39,6 @@ public class Blob : MonoBehaviour
         this.pair = pair;
     }
 
-
-    // Update is called once per frame
     void FixedUpdate()
     {
 
@@ -56,6 +54,11 @@ public class Blob : MonoBehaviour
             if (traveledDistance >= travelDistance)
             {
                 Destroy(this.gameObject);
+            }
+
+            if (traveledDistance > 1 && traveledDistance < 2)
+            {
+                this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 0;
             }
 
             // check if i need to change parent then if i do, change
@@ -87,7 +90,6 @@ public class Blob : MonoBehaviour
     {
         timePassed += Time.deltaTime;
         float time = timePassed / jumpTime; 
-        //bro yes i should lerp this
         if (direction == Direction.RIGHT) {
             float target_X = this.transform.position.x + (speed * Time.deltaTime);
             float target_Y = jumpStart.y + -0.2f * time + 0.35f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
@@ -99,10 +101,8 @@ public class Blob : MonoBehaviour
         }
     }
 
-    //jump into bin
     public void JumpIntoBin()
     {
-        //  GetComponent<Animation>().Play("BlobJumpRight");
         speed = 1f;
         jumping = true;
         jumpStart = new Vector2(this.transform.position.x, this.transform.position.y);

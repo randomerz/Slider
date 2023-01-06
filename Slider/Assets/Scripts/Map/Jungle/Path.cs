@@ -17,7 +17,7 @@ public class Path : MonoBehaviour
     public GameObject blob;
     private Direction direction;
     private float timeBetweenCreation = 3.8f;
-    private int travelDistance = 0;
+    private float travelDistance = 0;
 
     private float timeCount = 4;
 
@@ -45,7 +45,7 @@ public class Path : MonoBehaviour
         new_blob.transform.parent = this.transform;
 
         BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
-        travelDistance = (int) this.transform.localScale.x + 1;
+        travelDistance = (int) this.transform.localScale.x + 0.5f;
         if (pair != null)
         {
             travelDistance += (int)pair.transform.localScale.x;
@@ -61,6 +61,11 @@ public class Path : MonoBehaviour
         else
         {
             new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2), 0, 0);
+        }
+       
+        if (direction == Direction.LEFT || direction == Direction.RIGHT)
+        {
+            new_blob.gameObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
         }
     }
 
