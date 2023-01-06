@@ -6,18 +6,7 @@ public class MountainSGridAnimator : SGridAnimator
 {
     protected override Coroutine DetermineMoveType(SMove move, STile[,] grid, Movement m)
     {
-        int diff = m.endLoc.y - m.startLoc.y;
-        bool onSameLevel = (Mathf.Abs(diff) <= 1); 
-
-        bool isPlayerOnStile = (Player.GetInstance().GetSTileUnderneath() != null &&
-                                Player.GetInstance().GetSTileUnderneath().islandId == grid[m.startLoc.x, m.startLoc.y].islandId);
-        if(!onSameLevel && isPlayerOnStile)
-        {
-            if(diff > 0)
-                CameraZoom.MoveUp(movementDuration);
-            else
-                CameraZoom.MoveDown(movementDuration);
-        }
+        bool onSameLevel = (Mathf.Abs(m.endLoc.y - m.startLoc.y) <= 1); 
         return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move, onSameLevel));
     }
 }

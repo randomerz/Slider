@@ -53,15 +53,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3536543981120463952, guid: ef81c7a3d7defaf4e9d921e089c4cdf2, type: 3}
       propertyPath: m_Name
-      value: Pot Variant
+      value: Pot
       objectReference: {fileID: 0}
     - target: {fileID: 4934964883040916944, guid: ef81c7a3d7defaf4e9d921e089c4cdf2, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 3726110966880067741, guid: 8430daea8e9e7044eb96828952d8c28a, type: 3}
-    - target: {fileID: 4934964883040916944, guid: ef81c7a3d7defaf4e9d921e089c4cdf2, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: e86b385606bfe044a9a022cc7bcdaa3f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef81c7a3d7defaf4e9d921e089c4cdf2, type: 3}

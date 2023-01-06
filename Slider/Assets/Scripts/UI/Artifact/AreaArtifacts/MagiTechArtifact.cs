@@ -203,8 +203,8 @@ public class MagiTechArtifact : UIArtifact
     }
 
     private int FindAltId(int islandId)
-    {        
-        return (islandId == 9) ? 18 : (islandId + 9) % 18;
+    {
+        return (islandId + 9) % 18;
     }
 
     protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
@@ -224,10 +224,10 @@ public class MagiTechArtifact : UIArtifact
     {
         MoveMadeOnArtifact?.Invoke(this, null);
         QueueAdd(move);
+        SwapButtons(buttonCurrent, buttonEmpty);
         ArtifactTileButton currAlt = GetButton(FindAltId(buttonCurrent.islandId));
         ArtifactTileButton emptyAlt = GetButton(FindAltId(buttonEmpty.islandId));
         SwapButtons(currAlt, emptyAlt);
-        SwapButtons(buttonCurrent, buttonEmpty);
         ProcessQueue();
         UpdateMoveOptions();
     }

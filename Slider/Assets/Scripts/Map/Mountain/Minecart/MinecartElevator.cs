@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MinecartElevator : MonoBehaviour, ISavable
+public class MinecartElevator : MonoBehaviour
 {
     [SerializeField] private bool isFixed;
     public GameObject topPosition;
@@ -11,7 +11,6 @@ public class MinecartElevator : MonoBehaviour, ISavable
   //  public RailManager borderRM;
     private bool isOpen = true; //C: TODO true if there are tiles in front of the elevator (top and bottom), false otherwise
     private bool hasGoneDown;
-    public ElevatorAnimationManager animationManager;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveEnd += CheckOpenOnMove;
@@ -33,7 +32,6 @@ public class MinecartElevator : MonoBehaviour, ISavable
         isFixed = true;
         mainMc.UpdateState("Empty");
         AudioManager.Play("Puzzle Complete");
-        animationManager.Repair();
         //update sprites/animate/whatnot
     }
 
@@ -42,9 +40,9 @@ public class MinecartElevator : MonoBehaviour, ISavable
         if(!isFixed)
             return;
         mc.StopMoving();
-        animationManager.SendDown();
         StartCoroutine(WaitThenSend(mc, bottomPosition.transform.position, 3));
         hasGoneDown = true;
+        Debug.Log("send down");
     }
 
     public void SendMinecartUp(Minecart mc)
@@ -52,8 +50,9 @@ public class MinecartElevator : MonoBehaviour, ISavable
         if(!isFixed)
             return;
         mc.StopMoving();
-        animationManager.SendUp();
         StartCoroutine(WaitThenSend(mc, topPosition.transform.position, 3));
+        Debug.Log("send up");
+
     }
 
     public void CheckIsFixed(Condition c)
@@ -72,21 +71,8 @@ public class MinecartElevator : MonoBehaviour, ISavable
     }
 
     private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir){
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         mc.SnapToRail(position, dir);
-        yield return new WaitForSeconds(2.5f);
         mc.StartMoving();
-    }
-
-    public void Save()
-    {
-        SaveSystem.Current.SetBool("MountainElevatorFixed", isFixed);
-    }
-
-    public void Load(SaveProfile profile)
-    {
-        isFixed = profile.GetBool("MountainElevatorFixed");
-        if(isFixed)
-            animationManager.Repair();
     }
 }

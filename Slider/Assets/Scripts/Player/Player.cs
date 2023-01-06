@@ -24,7 +24,7 @@ public class Player : Singleton<Player>, ISavable
     [SerializeField] private Transform boatGetSTileUnderneathTransform;
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private bool debugDontUpdateStileUnderneath;
+
     
 
     private float moveSpeedMultiplier = 1;
@@ -141,7 +141,7 @@ public class Player : Singleton<Player>, ISavable
         currentStileUnderneath = GetSTileUnderneath();
         // Debug.Log("Currently on: " + currentStileUnderneath);
 
-        if (currentStileUnderneath != null && !debugDontUpdateStileUnderneath)
+        if (currentStileUnderneath != null)
         {
             transform.SetParent(currentStileUnderneath.transform);
         }

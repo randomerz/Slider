@@ -31,13 +31,7 @@ public class SGrid : Singleton<SGrid>, ISavable
     public int Height => height;
     public Area MyArea { get => myArea; }
     public string TargetGrid { get { return targetGrid; } }
-    public bool CheckCompletion {
-        get => checkCompletion;
-        set {
-            Debug.LogWarning("Check completion was set outside of SGrid!");
-            checkCompletion = value;
-        }
-    }
+    public bool CheckCompletion { get => checkCompletion; }
 
     public int[,] realigningGrid;
 
