@@ -8,11 +8,11 @@ public class Blob : MonoBehaviour
     public Animator animator; 
 
     Direction direction;
-    public float travelDistance = 10;
-    public float traveledDistance = 0;
+    float travelDistance = 10;
+    private float traveledDistance = 0;
     private Path pair;
     bool flip = false;
-    public float speed = 0.75f;
+    float speed = 0.75f;
 
     [Header ("shape")]
     public Shape carry;
@@ -37,7 +37,7 @@ public class Blob : MonoBehaviour
 
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         Vector2 new_distance = DirectionUtil.D2V(direction) * (speed * Time.deltaTime);
         traveledDistance += Mathf.Abs(new_distance.magnitude);
@@ -69,14 +69,6 @@ public class Blob : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
-    }
-
-    //jump
-    public IEnumerator JumpIntoBin()
-    {
-         yield return new WaitForSeconds(GetComponent<Animation>()["BlobJumpRight"].length);
-        this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
-        //Destroy(gameObject);
     }
 
     //fade in and fade out coroutines

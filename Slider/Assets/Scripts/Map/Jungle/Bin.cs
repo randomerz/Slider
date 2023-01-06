@@ -46,7 +46,6 @@ public class Bin : Box
         if (blob != null)
         {
             print("Blob must now jump!");
-            blob.JumpIntoBin();
         }
     }
 }
