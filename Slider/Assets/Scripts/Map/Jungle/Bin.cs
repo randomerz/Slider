@@ -41,11 +41,10 @@ public class Bin : Box
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        print("collision");
         Blob blob = collider.gameObject.GetComponent<Blob>();
         if (blob != null)
         {
-            print("Blob must now jump!");
+            blob.JumpIntoBin();
         }
     }
 }
