@@ -185,7 +185,6 @@ public class DebugUIManager : MonoBehaviour
         string target = sgrid.TargetGrid;
         int[,] grid = new int[sgrid.Width, sgrid.Height];
 
-        print(target);
         // dc: if there's a * in the TargetGrid, then we just set them all on and are done w it lol
         if (target.Contains("*"))
         {
@@ -197,7 +196,6 @@ public class DebugUIManager : MonoBehaviour
         }
 
         int i = 0;
-        print(target);
         while(target.Length > 0)
         {
             char c = target[0];
