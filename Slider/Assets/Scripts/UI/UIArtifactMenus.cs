@@ -12,6 +12,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     public Animator artifactAnimator;
     public UIArtifactWorldMap artifactWorldMap;
 
+    public bool hasArtifact = true;
     private bool isArtifactOpen;
     private bool isClosing = false;
 
@@ -67,7 +68,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
     public void OpenArtifact()
     {
-        if (!UIManager.canOpenMenus || isClosing)
+        if (!UIManager.canOpenMenus || isClosing || !hasArtifact)
             return;
 
         artifactPanel.SetActive(true);
