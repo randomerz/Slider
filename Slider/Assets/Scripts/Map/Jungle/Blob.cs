@@ -92,18 +92,18 @@ public class Blob : MonoBehaviour
         float time = timePassed / jumpTime; 
         if (direction == Direction.RIGHT) {
             float target_X = this.transform.position.x + (speed * Time.deltaTime);
-            float target_Y = jumpStart.y + -0.2f * time + 0.35f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
+            float target_Y = jumpStart.y + -1.15f * time + 0.8f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
             this.transform.position = new Vector3(target_X, target_Y);
         } else
         {
-            float target_Y = jumpStart.y + 0.2f * time + 0.75f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
+            float target_Y = jumpStart.y + -0.75f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
             this.transform.position = new Vector3(this.transform.position.x, target_Y);
         }
     }
 
     public void JumpIntoBin()
     {
-        speed = 1f;
+        speed = 1.1f;
         jumping = true;
         jumpStart = new Vector2(this.transform.position.x, this.transform.position.y);
         StartCoroutine(WaitForJump());
@@ -112,8 +112,10 @@ public class Blob : MonoBehaviour
     IEnumerator WaitForJump()
     {
         animator.SetBool("Right", true);
-
-        yield return new WaitForSeconds(jumpTime);
+        yield return new WaitForSeconds(jumpTime/2);
+        this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
+        this.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -1;
+        yield return new WaitForSeconds(jumpTime / 2);
         Destroy(this.gameObject);
     }
 
