@@ -193,7 +193,6 @@ public class DebugUIManager : MonoBehaviour
         SGrid sgrid = SGrid.Current;
         string target = sgrid.TargetGrid;
         int[,] grid = new int[sgrid.Width, sgrid.Height];
-        
 
         // dc: if there's a * in the TargetGrid, then we just set them all on and are done w it lol
         if (target.Contains("*"))
