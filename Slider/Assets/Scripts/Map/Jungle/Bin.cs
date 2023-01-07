@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class Bin : Box
@@ -34,6 +36,15 @@ public class Bin : Box
             //broadcast the shape has been made
             print("bin: " + shape.name);
             currentShape =  shape;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        Blob blob = collider.gameObject.GetComponent<Blob>();
+        if (blob != null)
+        {
+            blob.JumpIntoBin();
         }
     }
 }

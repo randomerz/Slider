@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class Box : MonoBehaviour
@@ -84,7 +85,7 @@ public class Box : MonoBehaviour
         {
             if (currentShape != null)
             {
-                if (!paths[currentDirection].isActive() || paths[currentDirection].getAnimType() == isDefaultCurrentPath())//something wrong here
+                if (!paths[currentDirection].isActive() || paths[currentDirection].getAnimType() == isDefaultCurrentPath())
                 {
                     paths[currentDirection].Activate(isDefaultCurrentPath(), currentShape); 
                     next.RecieveShape(paths[currentDirection], currentShape, parents);
@@ -139,7 +140,6 @@ public class Box : MonoBehaviour
             for (int i = 1; i <= 4; i++)
             {
                 Direction d = ds[(at + i) % 4];
-                //print(d);
 
                 if (!paths.ContainsKey(d))
                 {
@@ -173,6 +173,7 @@ public class Box : MonoBehaviour
         Physics2D.queriesStartInColliders = false;
         Physics2D.queriesHitTriggers = false;
 
+        print(transform.position);
         RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, v.normalized, 100, LayerMask.GetMask("Slider"));
 
         Box nextBox = null;
@@ -187,6 +188,7 @@ public class Box : MonoBehaviour
             {
                 STile s = hitcollider.gameObject.GetComponent<STile>();
                 Box other = hitcollider.GetComponent<Box>();
+                print("found a box");
 
                 if (s != null && !s.isTileActive)
                 {
