@@ -17,6 +17,7 @@ public class MagiTechGrid : SGrid
 
     private bool hasBurger;
     private bool hasDesyncBurger;
+    private int numOres = 0;
 
     private ContactFilter2D contactFilter;
 
@@ -163,5 +164,25 @@ public class MagiTechGrid : SGrid
         }
         //Disable ability to open artifact
         UIArtifactMenus._instance.hasArtifact = false;
+    }
+    public void HasOneOre(Condition c)
+    {
+        c.SetSpec(numOres == 1);
+    }
+
+    public void HasTwoOres(Condition c)
+    {
+        
+        c.SetSpec(numOres == 2);
+    }
+    public void HasThreeOres(Condition c)
+    {
+
+        c.SetSpec(numOres == 3);
+    }
+
+    public void IncrementOres()
+    {
+        numOres++;
     }
 }
