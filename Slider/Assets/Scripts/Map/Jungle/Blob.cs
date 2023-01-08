@@ -153,19 +153,22 @@ public class Blob : MonoBehaviour
     public IEnumerator fadeOutAnimation()
     {
         Color c = renderer.material.color;
-        for (float alpha = 1f; alpha >= 0; alpha -= 0.25f)
+        for (float alpha = 1f; alpha >= 0; alpha -= 0.1f)
         {
             c.a = alpha;
             renderer.material.color = c;
             shapeRenderer.material.color = c;
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.1667f);
         }
     }
 
     public void fadeOut()
     {
-        StartCoroutine(fadeOutAnimation());
-        speed = 0;
+        if (!jumping)
+        {
+            StartCoroutine(fadeOutAnimation());
+            speed = 0;
+        }
     }
 
     public IEnumerator fadeInAnimation()
@@ -176,13 +179,16 @@ public class Blob : MonoBehaviour
             c.a = alpha;
             renderer.material.color = c;
             shapeRenderer.material.color = c;
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.1667f);
         }
     }
 
     public void fadeIn()
     {
-        speed = 0.75f;
-        StartCoroutine(fadeInAnimation());
+        if (!jumping)
+        {
+            speed = 0.75f;
+            StartCoroutine(fadeInAnimation());
+        }
     }
 }
