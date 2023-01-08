@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using UnityEngine;
 
@@ -20,7 +22,7 @@ public class Path : MonoBehaviour
     private float timeBetweenCreation = 3.8f;
     private float travelDistance = 0;
 
-    private float timeCount = 0;
+    private float timeCount = 4f;
 
     void Update()
     {
@@ -69,6 +71,14 @@ public class Path : MonoBehaviour
         creatingBlobs = creating;
         active = true;
 
+        if (defaultAnim != right)
+        {
+            foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
+            {
+                Destroy(blob.gameObject);
+            }
+        }
+
         if (right)
         {
             defaultAnim = true;
@@ -108,44 +118,8 @@ public class Path : MonoBehaviour
         currentShape = shape;
 
         //prepopulate some blobs if there are no blob
-        BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
-        if (this.transform.childCount == 0)
-        {
-            float length = (int)this.transform.localScale.x;
-            if (pair != null)
-            {
-                length += (int)pair.transform.localScale.x;
-            }
-            float distanceBetween = timeBetweenCreation * 0.75f * Time.deltaTime;
 
-            for (int i = 0; i < int(length/distanceBetween); i += 1)
-            {
-                GameObject go = Instantiate(blob);
-                Blob new_blob = go.GetComponent<Blob>();
-                new_blob.transform.parent = this.transform;
 
-                travelDistance = length - (i * distanceBetween);
-
-                // set blob to be the correct starting position
-                if (direction == Direction.LEFT)
-                {
-                    new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - (i * distanceBetween), 0, 0);
-                }
-                else if (direction == Direction.DOWN)
-                {
-                    new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - 0.1f - (i * distanceBetween), 0, 0);
-                }
-                else
-                {
-                    new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2) + (i * distanceBetween), 0, 0);
-                }
-
-                new_blob.UpdateBlobOnPath(defaultAnim, direction, travelDistance, pair, currentShape);
-
-                new_blob.setAlpha(0f);
-                new_blob.setSpeed(0f);
-            }
-        }
         //fade in blobs
         foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
         {
