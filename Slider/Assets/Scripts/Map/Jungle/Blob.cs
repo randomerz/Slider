@@ -7,7 +7,8 @@ using UnityEngine;
 public class Blob : MonoBehaviour
 {
 
-    public Animator animator; 
+    public Animator animator;
+    public SpriteRenderer renderer;
 
     Direction direction;
     float travelDistance = 10;
@@ -22,17 +23,18 @@ public class Blob : MonoBehaviour
 
     [Header ("shape")]
     public Shape carry;
+    public SpriteRenderer shapeRenderer;
 
     public void UpdateBlobOnPath(bool defaultAnim, Direction direction, float travelDistance, Path pair, Shape shape)
     {
         carry = shape;
-        SpriteRenderer spriteRenderer = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        SpriteRenderer spriteRenderer = shapeRenderer;
         spriteRenderer.sprite = carry.sprite;
 
         if (direction != Direction.DOWN)
         {
             spriteRenderer.sortingOrder = -1;
-            this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
+            renderer.sortingOrder = -1;
         }
 
         flip = defaultAnim;
@@ -62,17 +64,16 @@ public class Blob : MonoBehaviour
                 Destroy(this.gameObject);
             }
 
-            SpriteRenderer shapeSprite = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
             if (traveledDistance > 2 && traveledDistance < 4)
             {
-                this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 0;
-                shapeSprite.sortingOrder = 0;
+                renderer.sortingOrder = 0;
+                shapeRenderer.sortingOrder = 0;
             }
 
             if (travelDistance - traveledDistance <= 1.25)
             {
-                this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
-                shapeSprite.sortingOrder = -1;
+                renderer.sortingOrder = -1;
+                shapeRenderer.sortingOrder = -1;
             }
 
             // check if i need to change parent then if i do, change
@@ -127,11 +128,40 @@ public class Blob : MonoBehaviour
     {
         animator.SetBool("Right", true);
         yield return new WaitForSeconds(jumpTime/2);
-        this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
-        this.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -1;
+        renderer.sortingOrder = -1;
+        shapeRenderer.sortingOrder = -1;
         yield return new WaitForSeconds(jumpTime / 2);
         Destroy(this.gameObject);
     }
 
     //fade in and fade out coroutines
+    public IEnumerator fadeOutAnimation()
+    {
+        Color c = renderer.material.color;
+        for (float alpha = 1f; alpha >= 0; alpha -= 0.25f)
+        {
+            c.a = alpha;
+            renderer.material.color = c;
+            shapeRenderer.material.color = c;
+            yield return new WaitForSeconds(0.25f);
+        }
+    }
+
+    public void fadeOut()
+    {
+        StartCoroutine(fadeOutAnimation());
+        Destroy(this.gameObject, 2);
+    }
+
+    public IEnumerator fadeInAnimation()
+    {
+        Color c = renderer.material.color;
+        for (float alpha = 0f; alpha <= 1; alpha += 0.25f)
+        {
+            c.a = alpha;
+            renderer.material.color = c;
+            shapeRenderer.material.color = c;
+            yield return null;
+        }
+    }
 }

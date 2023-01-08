@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 
@@ -54,9 +55,12 @@ public class Path : MonoBehaviour
         new_blob.UpdateBlobOnPath(defaultAnim, direction, travelDistance, pair, currentShape);
 
         // set blob to be the correct starting position
-        if (direction == Direction.LEFT || direction == Direction.DOWN)
+        if (direction == Direction.LEFT)
         {
             new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2), 0, 0);
+        } else if (direction == Direction.DOWN)
+        {
+            new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - 0.1f, 0, 0);
         }
         else
         {
@@ -116,6 +120,11 @@ public class Path : MonoBehaviour
         if (pair != null && pair.isActive())
         {
             pair.Deactivate();
+        }
+
+        //fade out all the blobs
+        foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>()) {
+            blob.fadeOut();
         }
     }
 
