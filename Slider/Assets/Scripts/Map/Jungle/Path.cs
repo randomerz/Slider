@@ -9,7 +9,7 @@ public class Path : MonoBehaviour
     private bool creatingBlobs = true;
     public Path pair;
     private Shape currentShape = null;
-    bool defaultAnim = true; //right, or down (animation will have default and non default for direciton
+    bool defaultAnim = true; //used to see if the sprite needs to be flipped
     public bool horizontal = false;
 
 
@@ -45,7 +45,7 @@ public class Path : MonoBehaviour
         new_blob.transform.parent = this.transform;
 
         BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
-        travelDistance = (int)this.transform.localScale.x + 0.5f;
+        travelDistance = (int)this.transform.localScale.x; // + 0.5f
         if (pair != null)
         {
             travelDistance += (int)pair.transform.localScale.x;
@@ -62,26 +62,18 @@ public class Path : MonoBehaviour
         {
             new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2), 0, 0);
         }
-       
-        if (direction == Direction.LEFT || direction == Direction.RIGHT)
-        {
-            new_blob.gameObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
-        }
     }
 
     public void Activate(bool right, Shape shape, bool creating = true)
     {
-        //print("activating path: " + right + " for " + this.gameObject.name);
         creatingBlobs = creating;
         active = true;
 
         if (right)
         {
-            //GetComponentInChildren<SpriteRenderer>().color = Color.green;   //right or down
             defaultAnim = true;
         } else
         {
-            //GetComponentInChildren<SpriteRenderer>().color = Color.magenta; //up or left
             defaultAnim = false;
         }
 
@@ -119,7 +111,6 @@ public class Path : MonoBehaviour
     public void Deactivate()
     {
         currentShape = null;
-       // GetComponentInChildren<SpriteRenderer>().color = Color.white;       //unactivated
         active = false;
 
         if (pair != null && pair.isActive())
@@ -156,11 +147,9 @@ public class Path : MonoBehaviour
         RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 7, LayerMask.GetMask("JunglePaths"));
         RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 7, LayerMask.GetMask("JunglePaths"));
 
-        // print("");
         //want to find the closest bin or box and stile
         if (checkOne.collider != null)
         {
-            //check not on same stile
             pair = checkOne.collider.gameObject.GetComponent<Path>();
             if (!pair.transform.parent.Equals(this.transform.parent))
             {

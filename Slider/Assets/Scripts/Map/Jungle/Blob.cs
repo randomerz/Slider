@@ -29,6 +29,12 @@ public class Blob : MonoBehaviour
         SpriteRenderer spriteRenderer = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = carry.sprite;
 
+        if (direction != Direction.DOWN)
+        {
+            spriteRenderer.sortingOrder = -1;
+            this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
+        }
+
         flip = defaultAnim;
         if (flip)
         {
@@ -56,9 +62,17 @@ public class Blob : MonoBehaviour
                 Destroy(this.gameObject);
             }
 
-            if (traveledDistance > 1 && traveledDistance < 2)
+            SpriteRenderer shapeSprite = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
+            if (traveledDistance > 2 && traveledDistance < 4)
             {
                 this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 0;
+                shapeSprite.sortingOrder = 0;
+            }
+
+            if (travelDistance - traveledDistance <= 1.25)
+            {
+                this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
+                shapeSprite.sortingOrder = -1;
             }
 
             // check if i need to change parent then if i do, change
@@ -92,11 +106,11 @@ public class Blob : MonoBehaviour
         float time = timePassed / jumpTime; 
         if (direction == Direction.RIGHT) {
             float target_X = this.transform.position.x + (speed * Time.deltaTime);
-            float target_Y = jumpStart.y + -1.15f * time + 0.8f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
+            float target_Y = jumpStart.y + -2f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
             this.transform.position = new Vector3(target_X, target_Y);
         } else
         {
-            float target_Y = jumpStart.y + -0.75f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
+            float target_Y = jumpStart.y + -1f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
             this.transform.position = new Vector3(this.transform.position.x, target_Y);
         }
     }
