@@ -31,7 +31,7 @@ public class Blob : MonoBehaviour
         SpriteRenderer spriteRenderer = shapeRenderer;
         spriteRenderer.sprite = carry.sprite;
 
-        if (direction != Direction.DOWN)
+        if (direction == Direction.LEFT || direction == Direction.RIGHT)
         {
             spriteRenderer.sortingOrder = -1;
             renderer.sortingOrder = -1;
@@ -45,6 +45,21 @@ public class Blob : MonoBehaviour
         this.direction = direction;
         this.travelDistance = travelDistance;
         this.pair = pair;
+    }
+
+    public void setSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    public void setAlpha(float alpha)
+    {
+        Color c = renderer.material.color;
+        c.a = alpha;
+        Color s = shapeRenderer.material.color;
+        s.a = alpha;
+        renderer.material.color = c;
+        shapeRenderer.material.color = s;
     }
 
     void FixedUpdate()
@@ -107,7 +122,7 @@ public class Blob : MonoBehaviour
         float time = timePassed / jumpTime; 
         if (direction == Direction.RIGHT) {
             float target_X = this.transform.position.x + (speed * Time.deltaTime);
-            float target_Y = jumpStart.y + -2f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
+            float target_Y = jumpStart.y + -2.5f * time + 1.5f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
             this.transform.position = new Vector3(target_X, target_Y);
         } else
         {
@@ -150,7 +165,7 @@ public class Blob : MonoBehaviour
     public void fadeOut()
     {
         StartCoroutine(fadeOutAnimation());
-        Destroy(this.gameObject, 2);
+        speed = 0;
     }
 
     public IEnumerator fadeInAnimation()
@@ -161,7 +176,13 @@ public class Blob : MonoBehaviour
             c.a = alpha;
             renderer.material.color = c;
             shapeRenderer.material.color = c;
-            yield return null;
+            yield return new WaitForSeconds(0.25f);
         }
+    }
+
+    public void fadeIn()
+    {
+        speed = 0.75f;
+        StartCoroutine(fadeInAnimation());
     }
 }
