@@ -118,7 +118,50 @@ public class Path : MonoBehaviour
         currentShape = shape;
 
         //prepopulate some blobs if there are no blob
+      /*  if (this.gameObject.transform.childCount == 0 && creatingBlobs)
+        {
+            BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
+            float length = (int)this.transform.localScale.x;
 
+            if (pair != null)
+            {
+                length += (int)pair.transform.localScale.x;
+            }
+            float distancebetween = 3f;
+            int blobCount = (int)(length / distancebetween);
+
+            for (int i = 0; i < blobCount; i++)
+            {
+                GameObject go = Instantiate(blob);
+                Blob new_blob = go.GetComponent<Blob>();
+                new_blob.transform.parent = this.transform;
+
+                travelDistance = length;
+
+                // set blob to be the correct starting position
+                if (direction == Direction.LEFT)
+                {
+                    new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - (i * distancebetween), 0, 0);
+                }
+                else if (direction == Direction.DOWN)
+                {
+                    new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - 0.1f - (i * distancebetween), 0, 0);
+                }
+                else
+                {
+                    new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2) + (i * distancebetween), 0, 0);
+                }
+
+                travelDistance -= (i * distancebetween);
+                print("distance " + travelDistance);
+
+                new_blob.UpdateBlobOnPath(defaultAnim, direction, travelDistance, pair, currentShape);
+                new_blob.setSpeed(0);
+                new_blob.setAlpha(0);
+            }
+        }
+
+        print(this.gameObject.transform.childCount);*/
 
         //fade in blobs
         foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
