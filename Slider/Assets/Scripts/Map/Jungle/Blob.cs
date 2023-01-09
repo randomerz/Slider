@@ -17,13 +17,17 @@ public class Blob : MonoBehaviour
     bool flip = false;
     float speed = 0.75f;
     bool jumping = false;
-    float jumpTime = 1.75f;
+    float jumpTime = 3f;
     float timePassed = 0;
     Vector2 jumpStart;
 
     [Header ("shape")]
     public Shape carry;
     public SpriteRenderer shapeRenderer;
+
+    [Header ("Jump info")]
+    private Vector2 startPos;
+    private Vector2 targetPos;
 
     public void UpdateBlobOnPath(bool defaultAnim, Direction direction, float travelDistance, Path pair, Shape shape)
     {
@@ -121,9 +125,13 @@ public class Blob : MonoBehaviour
         timePassed += Time.deltaTime;
         float time = timePassed / jumpTime; 
         if (direction == Direction.RIGHT) {
-            float target_X = this.transform.position.x + (speed * Time.deltaTime);
-            float target_Y = jumpStart.y + -2.5f * time + 1.5f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
-            this.transform.position = new Vector3(target_X, target_Y);
+            float dist = targetPos.x - startPos.x;
+            float nextX = Mathf.MoveTowards(transform.position.x, targetPos.x, speed * Time.deltaTime);
+            float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - startPos.x) / dist);
+            float height = 1.5f * (nextX - startPos.x) * (nextX - targetPos.x) / (-0.25f * dist * dist);
+
+            Vector3 movePosition = new Vector3(nextX, baseY + height, transform.position.z);
+            transform.position = movePosition;
         } else
         {
             float target_Y = jumpStart.y + -1f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
@@ -135,8 +143,9 @@ public class Blob : MonoBehaviour
     {
         speed = 1.1f;
         jumping = true;
-        jumpStart = new Vector2(this.transform.position.x, this.transform.position.y);
         StartCoroutine(WaitForJump());
+        startPos = new Vector2(this.transform.position.x, this.transform.position.y);
+        targetPos = new Vector2(this.transform.position.x + 3, this.transform.position.y - 2);
     }
 
     IEnumerator WaitForJump()
@@ -145,7 +154,7 @@ public class Blob : MonoBehaviour
         yield return new WaitForSeconds(jumpTime/2);
         renderer.sortingOrder = -1;
         shapeRenderer.sortingOrder = -1;
-        yield return new WaitForSeconds(jumpTime / 2);
+        yield return new WaitForSeconds(jumpTime/2);
         Destroy(this.gameObject);
     }
 
@@ -153,7 +162,7 @@ public class Blob : MonoBehaviour
     public IEnumerator fadeOutAnimation()
     {
         Color c = renderer.material.color;
-        for (float alpha = 1f; alpha >= 0; alpha -= 0.1f)
+        for (float alpha = 1f; alpha >= 0; alpha -= 0.25f)
         {
             c.a = alpha;
             renderer.material.color = c;
