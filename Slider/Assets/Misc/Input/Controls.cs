@@ -1,5 +1,5 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,7 +16,7 @@ using UnityEngine.InputSystem;
 /// <b>When you do the above, please note that you need to do controls.Enable()/controls.Disable() to make sure the controls are active only when you want them to be!</b>
 /// <para/>
 /// As an alternative to the above method, I recommend using 
-/// <see cref="RegisterBindingBehavior(MonoBehaviour, InputAction, System.Action{InputAction.CallbackContext})"/>
+/// <see cref="RegisterBindingBehavior(MonoBehaviour, InputAction, Action{InputAction.CallbackContext})"/>
 /// which automatically handles enabling and disabling and is both cleaner and less dangerous.
 /// </summary>
 /// <remarks>Author: Travis</remarks>
@@ -94,7 +94,7 @@ public class Controls : Singleton<Controls>
     /// <param name="binding">Use Controls.Bindings.&lt;Binding Path&gt; (eg: Controls.Bindings.UI.Pause)</param>
     /// <param name="behavior">eg: context => DoThing();</param>
     /// <returns>The constructed <see cref="ManagedBindingBehavior"/></returns>
-    public static BindingBehavior RegisterBindingBehavior(MonoBehaviour owner, InputAction binding, System.Action<InputAction.CallbackContext> behavior)
+    public static BindingBehavior RegisterBindingBehavior(MonoBehaviour owner, InputAction binding, Action<InputAction.CallbackContext> behavior)
     {
         BindingBehavior managedBindingBehavior = new ManagedBindingBehavior(owner, binding, behavior);
         RegisterBindingBehavior(managedBindingBehavior);
@@ -120,7 +120,7 @@ public class Controls : Singleton<Controls>
     /// <summary>
     /// Use this to remove a managed binding behavior manually. In most cases, automatic removal when the owner is inactive 
     /// (you get this for free without doing anything) should be fine, but this is here for special cases. 
-    /// <see cref="RegisterBindingBehavior(MonoBehaviour, InputAction, System.Action{InputAction.CallbackContext})"/> returns
+    /// <see cref="RegisterBindingBehavior(MonoBehaviour, InputAction, Action{InputAction.CallbackContext})"/> returns
     /// the <see cref="ManagedBindingBehavior"/>, so save that and pass that in here to remove it.
     /// </summary>
     /// <param name="bindingBehavior"></param>
@@ -135,11 +135,18 @@ public class Controls : Singleton<Controls>
     /// <para/>
     /// <b>Use this instead of action.GetBindingDisplayString because this method considers the current control scheme.</b>
     /// </summary>
-    /// <param name="action"></param>
+    /// <param name="onlyShowKey">Whether the string returned should only include the key (e.g. "E") and not modifiers like "Press", "Hold", etc.</param>
     /// <returns></returns>
-    public static string GetBindingDisplayString(InputAction action)
+    public static string GetBindingDisplayString(InputAction action, bool onlyShowKey = false)
     {
-        return action.GetBindingDisplayString(group:_instance.currentControlScheme);
+        if (onlyShowKey)
+        {
+            return action.GetBindingDisplayString(group: _instance.currentControlScheme).Replace("Hold", "").Replace("Press", "");
+        }
+        else
+        {
+            return action.GetBindingDisplayString(group: _instance.currentControlScheme);
+        }
     }
 
     public static void StartCoroutineOnInstance(IEnumerator coroutine)
@@ -152,12 +159,13 @@ public class Controls : Singleton<Controls>
 /// Represents a behavior which will be bound to an input binding. In simple terms, use this to add some behavior when a control is triggered.
 /// This binding will be automatically removed the first time the binding is triggered while the owner MonoBehavior is null or disabled.
 /// <para/>
-/// Add binding behaviors using <see cref="Controls.RegisterBindingBehavior(MonoBehaviour, InputAction, System.Action{InputAction.CallbackContext})"/>.
+/// Add binding behaviors using <see cref="Controls.RegisterBindingBehavior(MonoBehaviour, InputAction, Action{InputAction.CallbackContext})"/>.
 /// </summary>
 public class ManagedBindingBehavior : BindingBehavior
 {
     public MonoBehaviour owner;
-    public ManagedBindingBehavior(MonoBehaviour owner, InputAction binding, System.Action<InputAction.CallbackContext> behavior, 
+
+    public ManagedBindingBehavior(MonoBehaviour owner, InputAction binding, Action<InputAction.CallbackContext> behavior, 
                                   bool isEnabled = true)
         : base(binding, behavior, isEnabled)
     {
@@ -184,15 +192,15 @@ public class ManagedBindingBehavior : BindingBehavior
 /// If you want this binding behavior to be automatically removed when an owner MonoBehavior is disabled, use <see cref="ManagedBindingBehavior"/>.
 /// <br/>Generally speaking, you should prefer <see cref="ManagedBindingBehavior"/> and only use this when the managed option does not work for your use case.
 /// <para/>
-/// Add binding behaviors using <see cref="Controls.RegisterBindingBehavior(MonoBehaviour, InputAction, System.Action{InputAction.CallbackContext})"/>.
+/// Add binding behaviors using <see cref="Controls.RegisterBindingBehavior(MonoBehaviour, InputAction, Action{InputAction.CallbackContext})"/>.
 /// </summary>
 public class BindingBehavior
 {
     public InputAction binding;
-    public System.Action<InputAction.CallbackContext> behavior;
+    public Action<InputAction.CallbackContext> behavior;
     public bool isEnabled;
 
-    public BindingBehavior(InputAction binding, System.Action<InputAction.CallbackContext> behavior, bool isEnabled = true)
+    public BindingBehavior(InputAction binding, Action<InputAction.CallbackContext> behavior, bool isEnabled = true)
     {
         this.binding = binding;
         this.behavior = behavior;
@@ -208,15 +216,34 @@ public class BindingBehavior
     }
 }
 
+/// <summary>
+/// Represents a binding behavior which supports triggering events on the initial press, 
+/// after the button is held for a period of time, each frame while the button is held, and when the button is released early.
+/// <para/>
+/// The onButtonReleasedEarly and onEachFrameWhileButtonHeld events pass a float representing the duration of the hold up to that point.
+/// </summary>
 public class BindingHeldBehavior : BindingBehavior
 {
-    public float minimumHoldDuration;
+    public float holdDuration;
+    public Action<InputAction.CallbackContext> onHoldStarted;
+    public Action<InputAction.CallbackContext> onHoldCompleted;
+    public Action<float> onButtonReleasedEarly;
+    public Action<float> onEachFrameWhileButtonHeld;
 
-    public BindingHeldBehavior(InputAction binding, System.Action<InputAction.CallbackContext> behavior, 
-                               float minimumHoldDuration, bool isEnabled = true)
-        : base(binding, behavior, isEnabled)
+    public BindingHeldBehavior(InputAction binding, 
+                               float holdDuration,
+                               Action<InputAction.CallbackContext> onHoldStarted = null,
+                               Action<InputAction.CallbackContext> onHoldCompleted = null,
+                               Action<float> onButtonReleasedEarly = null,
+                               Action<float> onEachFrameWhileButtonHeld = null,
+                               bool isEnabled = true)
+        : base(binding, onHoldCompleted, isEnabled)
     {
-        this.minimumHoldDuration = minimumHoldDuration;
+        this.holdDuration = holdDuration;
+        this.onHoldStarted = onHoldStarted;
+        this.onHoldCompleted = onHoldCompleted;
+        this.onButtonReleasedEarly = onButtonReleasedEarly;
+        this.onEachFrameWhileButtonHeld = onEachFrameWhileButtonHeld;
     }
 
     public override void Invoke(InputAction.CallbackContext context)
@@ -237,11 +264,19 @@ public class BindingHeldBehavior : BindingBehavior
             yield return null;
         }
 
+        onHoldStarted?.Invoke(context);
+
         float timeSinceButtonPressed = 0;
-        while (binding.controls[0].IsPressed())
+        while (binding.controls[0].IsPressed() || timeSinceButtonPressed < holdDuration)
         {
             timeSinceButtonPressed += Time.deltaTime;
-            if (timeSinceButtonPressed > minimumHoldDuration)
+            onEachFrameWhileButtonHeld?.Invoke(timeSinceButtonPressed);
+            if (!binding.controls[0].IsPressed())
+            {
+                onButtonReleasedEarly?.Invoke(timeSinceButtonPressed);
+                break;
+            }
+            if (timeSinceButtonPressed >= holdDuration)
             {
                 ActualInvoke(context);
                 break;
