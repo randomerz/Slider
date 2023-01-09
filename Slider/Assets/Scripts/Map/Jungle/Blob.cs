@@ -136,7 +136,7 @@ public class Blob : MonoBehaviour
         else
         {
             float time = timePassed / jumpTime;
-            float target_Y = startPos.y + -0.75f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
+            float target_Y = startPos.y + -1f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
             this.transform.position = new Vector3(this.transform.position.x, target_Y);
         }
     }

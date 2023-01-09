@@ -52,6 +52,7 @@ public class Hut : Box
         {
             box.RecieveShape(paths[currentDirection], null, new List<Box>());
         }
+        paths[currentDirection].Deactivate();
 
         currentShapeIndex = (currentShapeIndex + 1) % shapes.Count;
         currentShape = shapes[currentShapeIndex];
