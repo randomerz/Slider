@@ -50,6 +50,8 @@ public class Path : MonoBehaviour
             travelDistance += (int)pair.transform.localScale.x;
         }
 
+        new_blob.UpdateBlobOnPath(defaultAnim, direction, travelDistance, pair, currentShape);
+
         // set blob to be the correct starting position
         if (direction == Direction.LEFT)
         {
@@ -62,8 +64,6 @@ public class Path : MonoBehaviour
         {
             new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2), 0, 0);
         }
-
-        new_blob.UpdateBlobOnPath(defaultAnim, direction, travelDistance, pair, currentShape);
     }
 
     public void Activate(bool right, Shape shape, bool creating = true)
@@ -71,7 +71,7 @@ public class Path : MonoBehaviour
         creatingBlobs = creating;
         active = true;
 
-        if (defaultAnim != right)
+        if (defaultAnim != right || (currentShape == null || !shape.name.Equals(currentShape.name)))
         {
             foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
             {

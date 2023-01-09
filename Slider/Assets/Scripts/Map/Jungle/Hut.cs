@@ -46,9 +46,15 @@ public class Hut : Box
 
     public void ChangeShape()
     {
+        Box box = GetBoxInDirection();
+
+        if (box != null)
+        {
+            box.RecieveShape(paths[currentDirection], null, new List<Box>());
+        }
+
         currentShapeIndex = (currentShapeIndex + 1) % shapes.Count;
         currentShape = shapes[currentShapeIndex];
         CreateShape(new List<Box>());
     }
-
 }

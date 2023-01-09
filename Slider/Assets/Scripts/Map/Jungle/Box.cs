@@ -165,7 +165,7 @@ public class Box : MonoBehaviour
         }
     }
 
-    private Box GetBoxInDirection()
+    protected Box GetBoxInDirection()
     {
         Vector2 v = DirectionUtil.D2V(currentDirection);
 

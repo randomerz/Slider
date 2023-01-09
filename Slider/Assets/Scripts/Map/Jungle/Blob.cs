@@ -17,15 +17,14 @@ public class Blob : MonoBehaviour
     bool flip = false;
     float speed = 0.75f;
     bool jumping = false;
-    float jumpTime = 3f;
+    float jumpTime = 1.4f;
     float timePassed = 0;
-    Vector2 jumpStart;
 
-    [Header ("shape")]
+    [Header("shape")]
     public Shape carry;
     public SpriteRenderer shapeRenderer;
 
-    [Header ("Jump info")]
+    [Header("Jump info")]
     private Vector2 startPos;
     private Vector2 targetPos;
 
@@ -72,7 +71,8 @@ public class Blob : MonoBehaviour
         if (jumping)
         {
             Jump();
-        } else
+        }
+        else
         {
             Vector2 new_distance = DirectionUtil.D2V(direction) * (speed * Time.deltaTime);
             traveledDistance += Mathf.Abs(new_distance.magnitude);
@@ -123,8 +123,8 @@ public class Blob : MonoBehaviour
     void Jump()
     {
         timePassed += Time.deltaTime;
-        float time = timePassed / jumpTime; 
-        if (direction == Direction.RIGHT) {
+        if (direction == Direction.RIGHT)
+        {
             float dist = targetPos.x - startPos.x;
             float nextX = Mathf.MoveTowards(transform.position.x, targetPos.x, speed * Time.deltaTime);
             float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - startPos.x) / dist);
@@ -132,29 +132,35 @@ public class Blob : MonoBehaviour
 
             Vector3 movePosition = new Vector3(nextX, baseY + height, transform.position.z);
             transform.position = movePosition;
-        } else
+        }
+        else
         {
-            float target_Y = jumpStart.y + -1f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
+            float time = timePassed / jumpTime;
+            float target_Y = startPos.y + -0.75f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
             this.transform.position = new Vector3(this.transform.position.x, target_Y);
         }
     }
 
     public void JumpIntoBin()
     {
-        speed = 1.1f;
+        speed = 1.2f;
         jumping = true;
+        if (direction == Direction.RIGHT)
+        {
+            jumpTime = 2.5f;
+        }
         StartCoroutine(WaitForJump());
         startPos = new Vector2(this.transform.position.x, this.transform.position.y);
-        targetPos = new Vector2(this.transform.position.x + 3, this.transform.position.y - 2);
+        targetPos = new Vector2(this.transform.position.x + 3, this.transform.position.y - 3);
     }
 
     IEnumerator WaitForJump()
     {
         animator.SetBool("Right", true);
-        yield return new WaitForSeconds(jumpTime/2);
+        yield return new WaitForSeconds(jumpTime / 2);
         renderer.sortingOrder = -1;
         shapeRenderer.sortingOrder = -1;
-        yield return new WaitForSeconds(jumpTime/2);
+        yield return new WaitForSeconds(jumpTime / 2);
         Destroy(this.gameObject);
     }
 
