@@ -12,7 +12,7 @@ public class Blob : MonoBehaviour
 
     Direction direction;
     float travelDistance = 10;
-    private float traveledDistance = 0;
+    public float traveledDistance = 0;
     private Path pair;
     bool flip = false;
     float speed = 0.75f;
@@ -48,6 +48,11 @@ public class Blob : MonoBehaviour
         this.direction = direction;
         this.travelDistance = travelDistance;
         this.pair = pair;
+    }
+
+    public void setTraveledDistance(float traveled)
+    {
+        this.traveledDistance = traveled;
     }
 
     public void setSpeed(float speed)
