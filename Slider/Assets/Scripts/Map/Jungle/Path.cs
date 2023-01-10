@@ -118,12 +118,16 @@ public class Path : MonoBehaviour
         currentShape = shape;
 
         //prepopulate some blobs if there are no blob
-        if (this.gameObject.transform.childCount == 0)
+        if (this.gameObject.transform.childCount == 0 && creatingBlobs)
         {
             BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
             float length = (int)this.transform.localScale.x;
 
-            print(length);
+            if (pair != null)
+            {
+                length += (int)pair.transform.localScale.x;
+            }
+
             float distancebetween = 2.5f;
             int blobCount = (int)(length / distancebetween);
 
@@ -133,14 +137,7 @@ public class Path : MonoBehaviour
                 Blob new_blob = go.GetComponent<Blob>();
                 new_blob.transform.parent = this.transform;
 
-
                 travelDistance = length;
-
-                if (pair != null)
-                {
-                    travelDistance += (int)pair.transform.localScale.x;
-                }
-
 
                 // set blob to be the correct starting position
                 if (direction == Direction.LEFT)
@@ -157,7 +154,7 @@ public class Path : MonoBehaviour
                     new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2) + 0.15f * (i * distancebetween), 0, 0);
                 }
 
-                travelDistance -= 0.15f * (i * distancebetween);
+                travelDistance -= (i * distancebetween);
                 print("distance " + travelDistance); // fix this
 
                 new_blob.UpdateBlobOnPath(defaultAnim, direction, travelDistance, pair, currentShape);
@@ -166,8 +163,6 @@ public class Path : MonoBehaviour
                 new_blob.setTraveledDistance(i * distancebetween * 0.15f);
             }
         }
-
-        print(this.gameObject.transform.childCount);
 
         //fade in blobs
         foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
