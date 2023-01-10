@@ -71,7 +71,8 @@ public class Path : MonoBehaviour
         creatingBlobs = creating;
         active = true;
 
-        if (defaultAnim != right || (currentShape == null || !shape.name.Equals(currentShape.name)))
+        //delete blobs if wrong shape or wrong direction
+        if (defaultAnim != right || (currentShape != null && !shape.name.Equals(currentShape.name)))
         {
             foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
             {
