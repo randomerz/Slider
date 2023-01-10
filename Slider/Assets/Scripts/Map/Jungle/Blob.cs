@@ -34,12 +34,6 @@ public class Blob : MonoBehaviour
         SpriteRenderer spriteRenderer = shapeRenderer;
         spriteRenderer.sprite = carry.sprite;
 
-        if (direction == Direction.LEFT || direction == Direction.RIGHT)
-        {
-            spriteRenderer.sortingOrder = -1;
-            renderer.sortingOrder = -1;
-        }
-
         flip = defaultAnim;
         if (flip)
         {
@@ -48,6 +42,12 @@ public class Blob : MonoBehaviour
         this.direction = direction;
         this.travelDistance = travelDistance;
         this.pair = pair;
+
+        if ((direction == Direction.LEFT || direction == Direction.RIGHT))
+        {
+            renderer.sortingOrder = -1;
+            shapeRenderer.sortingOrder = -1;
+        }
     }
 
     public void setTraveledDistance(float traveled)
@@ -88,6 +88,7 @@ public class Blob : MonoBehaviour
                 Destroy(this.gameObject);
             }
 
+            // I think there has to be a better way to do this LMAO
             if (traveledDistance > 2 && traveledDistance < 4)
             {
                 renderer.sortingOrder = 0;
@@ -163,8 +164,8 @@ public class Blob : MonoBehaviour
     {
         animator.SetBool("Right", true);
         yield return new WaitForSeconds(jumpTime / 2);
-        renderer.sortingOrder = -1;
-        shapeRenderer.sortingOrder = -1;
+        renderer.sortingOrder = -2;
+        shapeRenderer.sortingOrder = -2;
         yield return new WaitForSeconds(jumpTime / 2);
         Destroy(this.gameObject);
     }

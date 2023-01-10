@@ -138,29 +138,29 @@ public class Path : MonoBehaviour
                 new_blob.transform.parent = this.transform;
 
                 travelDistance = length;
+                float traveledDistance = 0.15f * (i * distancebetween);
 
                 // set blob to be the correct starting position
                 if (direction == Direction.LEFT)
                 {
-                    new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - 0.15f * (i * distancebetween), 0, 0);
+                    new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - traveledDistance, 0, 0);
                 }
                 else if (direction == Direction.DOWN)
                 {
-                    new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - 0.1f - 0.15f * (i * distancebetween), 0, 0);
+                    new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - 0.1f - traveledDistance, 0, 0);
                     travelDistance -= 0.1f;
                 }
                 else
                 {
-                    new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2) + 0.15f * (i * distancebetween), 0, 0);
+                    new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2) + traveledDistance, 0, 0);
                 }
 
                 travelDistance -= (i * distancebetween);
-                print("distance " + travelDistance); // fix this
 
                 new_blob.UpdateBlobOnPath(defaultAnim, direction, travelDistance, pair, currentShape);
                 new_blob.setSpeed(0);
                 new_blob.setAlpha(0);
-                new_blob.setTraveledDistance(i * distancebetween * 0.15f);
+                new_blob.setTraveledDistance(traveledDistance);
             }
         }
 
