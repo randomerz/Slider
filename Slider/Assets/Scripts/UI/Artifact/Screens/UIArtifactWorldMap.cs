@@ -9,7 +9,7 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
     // Make sure to have them in order of enums!
     
     private Dictionary<Area, ArtifactWorldMapArea> areaToMapArea = new Dictionary<Area, ArtifactWorldMapArea>();
-    private Dictionary<Area, ArtifactWorldMapArea.AreaStatus> areaToStatus; // TODO: serialize
+    private Dictionary<Area, ArtifactWorldMapArea.AreaStatus> areaToStatus;
     public GameObject inventoryText;
 
     private bool didInit = false;
