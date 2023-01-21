@@ -314,6 +314,17 @@ public class DebugUIManager : MonoBehaviour
         SGrid.Current.CheckCompletion = true; // doesn't do anything bc you need to subscribe the checking methods
     }
 
+    public void DebugPrintBools()
+    {
+        Dictionary<string, bool> bools = SaveSystem.Current.GetBoolsDictionary();
+        string s = "";
+        foreach (string key in bools.Keys)
+        {
+            s += $"{key}:{bools[key]}, \n";
+        }
+        Debug.Log(s);
+    }
+
     public void NoClip()
     {
         Player p = GameObject.Find("Player").GetComponent<Player>();
