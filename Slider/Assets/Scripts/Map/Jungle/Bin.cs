@@ -34,6 +34,14 @@ public class Bin : Box
             //broadcast a shape has been made
             print("bin: " + shape.name);
         }
+
+        foreach (Path p in recievedShapes.Keys)
+        {
+            if (recievedShapes[p] != null)
+            {
+                print(recievedShapes[p].name);
+            }
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collider)
