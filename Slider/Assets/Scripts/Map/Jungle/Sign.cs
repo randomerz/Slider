@@ -5,7 +5,7 @@ using UnityEngine;
 public class Sign : Box
 {
     public RecipeList recipes;
-    public Dictionary<Path, Shape> shapes = new Dictionary<Path, Shape>(); //idk if i sshould rename this i should think
+    public Dictionary<Path, Shape> recievedShapes = new Dictionary<Path, Shape>(); 
     
     // Start is called before the first frame update
     void Awake()
@@ -16,11 +16,11 @@ public class Sign : Box
             paths[d].ChangePair();
         }
 
-        if (shapes.Count == 0)
+        if (recievedShapes.Count == 0)
         {
             foreach (Direction d in paths.Keys)
             {
-                shapes.Add(paths[d], null);
+                recievedShapes.Add(paths[d], null);
             }
         }
     }
@@ -43,10 +43,10 @@ public class Sign : Box
             paths[d].ChangePair();
         }
         //remove all shapes
-        shapes = new Dictionary<Path, Shape>();
+        recievedShapes = new Dictionary<Path, Shape>();
         foreach (Direction d in paths.Keys)
         {
-            shapes.Add(paths[d], null);
+            recievedShapes.Add(paths[d], null);
         }
     }
 
@@ -64,13 +64,13 @@ public class Sign : Box
 
         if (path.pair != null)
         {
-            shapes[path.pair] = shape;
+            recievedShapes[path.pair] = shape;
             MergeShapes();
             CreateShape(parents);
         }
         else
         {
-            shapes[path] = shape;
+            recievedShapes[path] = shape;
             MergeShapes();
             CreateShape(parents);
         }
@@ -80,9 +80,9 @@ public class Sign : Box
         List<Shape> shapesRecieved = new List<Shape>(); 
         foreach (Direction d in paths.Keys)
         {
-            if (shapes[paths[d]] != null)
+            if (recievedShapes[paths[d]] != null)
             {
-                shapesRecieved.Add(shapes[paths[d]]);
+                shapesRecieved.Add(recievedShapes[paths[d]]);
             }
         }
 

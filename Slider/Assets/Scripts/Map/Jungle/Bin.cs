@@ -5,9 +5,8 @@ using System.Security.Cryptography;
 using UnityEngine;
 
 public class Bin : Box
-{
-
-
+{ 
+    public Dictionary<Path, Shape> recievedShapes = new Dictionary<Path, Shape>();
     private void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
@@ -27,15 +26,13 @@ public class Bin : Box
 
     public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
-        if (shape == null)
+        //add the shape
+        recievedShapes[path] = shape;
+
+        if( shape != null)
         {
-            print("bin: no shape");
-        }
-        else
-        {
-            //broadcast the shape has been made
+            //broadcast a shape has been made
             print("bin: " + shape.name);
-            currentShape =  shape;
         }
     }
 
