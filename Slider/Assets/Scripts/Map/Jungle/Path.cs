@@ -14,24 +14,27 @@ public class Path : MonoBehaviour
 
 
     [Header("Animation Blobs")]
-    public Direction direction;
     public GameObject blob;
-    public int timeBetweenCreation = 50;
-    public float blobspeed = 1f;
-    public int travelDistance = 0;
+    private Direction direction;
+    private float timeBetweenCreation = 3.8f;
+    private float travelDistance = 0;
 
-    public int count = 0;
+    private float timeCount = 4;
+
+    void Start()
+    {
+    }
 
     void Update()
     {
         if (active && creatingBlobs)
         {
-            if (count >= timeBetweenCreation)
+            if (timeCount >= timeBetweenCreation)
             {
                 CreateBlob();
-                count = 0;
+                timeCount = 0;
             }
-            count++;
+            timeCount += Time.deltaTime;
         }
     }
 
@@ -42,13 +45,13 @@ public class Path : MonoBehaviour
         new_blob.transform.parent = this.transform;
 
         BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
-        travelDistance = (int) this.transform.localScale.x + 1;
+        travelDistance = (int)this.transform.localScale.x + 0.5f;
         if (pair != null)
         {
             travelDistance += (int)pair.transform.localScale.x;
         }
-  
-        new_blob.UpdateBlobOnPath(defaultAnim, direction, blobspeed, travelDistance, pair, currentShape);
+
+        new_blob.UpdateBlobOnPath(defaultAnim, direction, travelDistance, pair, currentShape);
 
         // set blob to be the correct starting position
         if (direction == Direction.LEFT || direction == Direction.DOWN)
@@ -58,6 +61,11 @@ public class Path : MonoBehaviour
         else
         {
             new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2), 0, 0);
+        }
+       
+        if (direction == Direction.LEFT || direction == Direction.RIGHT)
+        {
+            new_blob.gameObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
         }
     }
 

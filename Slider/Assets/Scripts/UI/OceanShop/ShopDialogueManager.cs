@@ -175,6 +175,12 @@ public class ShopDialogueManager : MonoBehaviour
 
 
     #region Dialogues
+
+    // for public access
+    public void SetSprite(TKSprite sprite)
+    {
+        tkImage.sprite = GetSprite(sprite);
+    }
     
     public void UpdateDialogue()
     {
@@ -220,11 +226,11 @@ public class ShopDialogueManager : MonoBehaviour
             return;
         }
 
-        if (shopManager.UIState == ShopManager.States.Buy)
-        {
-            UpdateDialogue("Default Buy");
-            return;
-        }
+        // if (shopManager.UIState == ShopManager.States.Buy)
+        // {
+        //     UpdateDialogue("Default Buy");
+        //     return;
+        // }
     }
 
     public void UpdateDialogue(string codeName)
@@ -246,23 +252,23 @@ public class ShopDialogueManager : MonoBehaviour
                 ));
                 break;
                 
-            case "Default Buy":
-                SetDialogue(new ShopDialogue(
-                    null,
-                    "Whaddya' want, landlubber",
-                    TKSprite.Normal,
-                    null
-                ));
-                break;
+            // case "Default Buy":
+            //     SetDialogue(new ShopDialogue(
+            //         null,
+            //         "Whaddya' want, landlubber",
+            //         TKSprite.Normal,
+            //         null
+            //     ));
+            //     break;
                 
-            case "Default Purchase":
-                SetDialogue(new ShopDialogue(
-                    null,
-                    "Hmm, a wise choice!",
-                    TKSprite.Happy,
-                    null
-                ));
-                break;
+            // case "Default Purchase":
+            //     SetDialogue(new ShopDialogue(
+            //         null,
+            //         "Hmm, a wise choice!",
+            //         TKSprite.Happy,
+            //         null
+            //     ));
+            //     break;
 
 
 

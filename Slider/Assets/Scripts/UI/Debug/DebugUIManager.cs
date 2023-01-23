@@ -193,7 +193,6 @@ public class DebugUIManager : MonoBehaviour
         SGrid sgrid = SGrid.Current;
         string target = sgrid.TargetGrid;
         int[,] grid = new int[sgrid.Width, sgrid.Height];
-        
 
         // dc: if there's a * in the TargetGrid, then we just set them all on and are done w it lol
         if (target.Contains("*"))
@@ -313,6 +312,17 @@ public class DebugUIManager : MonoBehaviour
     public void EnableArtifactCompletion()
     {
         SGrid.Current.CheckCompletion = true; // doesn't do anything bc you need to subscribe the checking methods
+    }
+
+    public void DebugPrintBools()
+    {
+        Dictionary<string, bool> bools = SaveSystem.Current.GetBoolsDictionary();
+        string s = "";
+        foreach (string key in bools.Keys)
+        {
+            s += $"{key}:{bools[key]}, \n";
+        }
+        Debug.Log(s);
     }
 
     public void NoClip()
