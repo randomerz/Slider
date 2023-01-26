@@ -11,13 +11,11 @@ public class TavernPassNavigationControls : MonoBehaviour
 
     private void OnEnable() {
         leftBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => {
-            Debug.Log("left");
             if (context.ReadValue<Vector2>().x < 0)
                 tavernPassManager.DecrementButton();
         });
 
         rightBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => {
-            Debug.Log("right");
             if (context.ReadValue<Vector2>().x > 0)
                 tavernPassManager.IncrementButton();
         });
