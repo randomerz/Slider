@@ -1775,6 +1775,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8279323558221872075}
   - component: {fileID: 8279323558221872072}
+  - component: {fileID: 274158273913421012}
   - component: {fileID: 8279323558221872073}
   m_Layer: 5
   m_Name: Tavern Pass
@@ -1851,6 +1852,19 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &274158273913421012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8279323558221872074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb34ada31b6a7e4aa5cabb1a49dd119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tavernPassManager: {fileID: 8279323558221872072}
 --- !u!114 &8279323558221872073
 MonoBehaviour:
   m_ObjectHideFlags: 0
