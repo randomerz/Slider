@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.LogWarning("Called GameManager.SaveGame(), you should probably call SaveSystem.SaveGame() instead.");
 
-        SaveSystem.SaveGame();
+        SaveSystem.SaveGame("Called via console");
     }
 
     public void LoadGame()

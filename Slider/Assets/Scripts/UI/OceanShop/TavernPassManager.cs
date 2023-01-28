@@ -13,6 +13,15 @@ public class TavernPassManager : MonoBehaviour, ISavable
     public float progressAnimationDuration;
     public AnimationCurve progressAnimationCurve;
 
+    private Dictionary<int, int> creditsToCurrentRewardIndex = new Dictionary<int, int>() {
+        {0, 0},
+        {1, 1},
+        {2, 2},
+        {3, 2},
+        {4, 3},
+        {5, 3},
+        {6, 4},
+    };
     private Dictionary<int, int> creditsToNextRewardIndex = new Dictionary<int, int>() {
         {0, 1},
         {1, 2},
@@ -57,7 +66,10 @@ public class TavernPassManager : MonoBehaviour, ISavable
         float progress = CalculateProgressPercent(displayedCredits);
         progressBar.value = progress;
 
-        // displayedCredits = currentNumCredits;
+        for (int i = 0; i < displayedCredits; i++)
+        {
+            tavernPassButtons[creditsToCurrentRewardIndex[i]].SetComplete(true);
+        }
     }
 
     public void OnOpenTavernPass()
@@ -110,7 +122,7 @@ public class TavernPassManager : MonoBehaviour, ISavable
 
         if (to == nextTarget)
         {
-            yield return GiveRewards(creditsToNextRewardIndex[nextTarget - 1]);
+            yield return GiveRewards(creditsToCurrentRewardIndex[nextTarget]);
 
             IncrementButton();
         }
@@ -139,6 +151,9 @@ public class TavernPassManager : MonoBehaviour, ISavable
 
     private IEnumerator GiveRewards(int tier)
     {
+        // Animation start
+        yield return new WaitForSeconds(0.5f);
+
         string rewardName = tavernPassButtons[tier].rewardName;
         switch (tier)
         {
@@ -158,6 +173,9 @@ public class TavernPassManager : MonoBehaviour, ISavable
                 // Bob's Favor
                 break;
         }
+
+        tavernPassButtons[tier].SetComplete(true);
+        SaveSystem.SaveGame("Tavern Pass Reward");
 
         Debug.Log($"Give reward for tier {tier}: {rewardName}");
         yield return new WaitForSeconds(0.5f);

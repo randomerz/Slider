@@ -20,10 +20,15 @@ public class GameSaver : MonoBehaviour
     private void Start()
     {
         // for auto save on new scene loads
-        SaveGame();
+        Save();
 
         if (destroyAfterStart)
             Destroy(gameObject);
+    }
+
+    private void Save()
+    {
+        SaveSystem.SaveGame("Autosaving");
     }
 
     public void SaveAndDestroyAfterStart()
@@ -34,17 +39,11 @@ public class GameSaver : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        SaveGame();
-    }
-
-    private void SaveGame()
-    {
-        Debug.Log("[Saves] Autosaving...");
-        SaveSystem.SaveGame();
+        Save();
     }
 
     private void SaveGame(object sender, System.EventArgs e)
     {
-        SaveGame();
+        Save();
     }
 }

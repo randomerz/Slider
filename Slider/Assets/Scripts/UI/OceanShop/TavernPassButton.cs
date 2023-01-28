@@ -21,4 +21,12 @@ public class TavernPassButton : MonoBehaviour
     {
         image.sprite = selectedSprite;
     }
+
+    public void SetComplete(bool value)
+    {
+        isComplete = value;
+
+        if (image.sprite != selectedSprite)
+            image.sprite = completedSprite;
+    }
 }

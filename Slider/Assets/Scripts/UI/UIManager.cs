@@ -197,7 +197,7 @@ public class UIManager : Singleton<UIManager>
 
     public void LoadMainMenu()
     {
-        SaveSystem.SaveGame();
+        SaveSystem.SaveGame("Quitting to Main Menu");
         SaveSystem.SetCurrentProfile(-1);
         ResumeGame();
 
