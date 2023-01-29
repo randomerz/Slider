@@ -80,10 +80,12 @@ public class SaveSystem
     /// <summary>
     /// Saves the game to the current loaded profile index (either 0, 1, or 2). If the profile index is -1, then no data will be saved.
     /// </summary>
-    public static void SaveGame()
+    public static void SaveGame(string reason="")
     {
         if (currentIndex == -1)
             return;
+
+        if (reason != "") Debug.Log($"[Saves] Saving game: {reason}");
 
         current.Save();
 
