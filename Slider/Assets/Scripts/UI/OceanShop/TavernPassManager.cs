@@ -6,7 +6,11 @@ using TMPro;
 
 public class TavernPassManager : MonoBehaviour, ISavable
 {
+    public GameObject tavernBell;
+    public GameObject tavernCat;
+
     public ShopManager shopManager;
+    public TavernPassRewardEffect rewardEffect;
     public TavernPassButton[] tavernPassButtons;
     public TextMeshProUGUI rewardDescriptionText;
     public Slider progressBar;
@@ -58,6 +62,9 @@ public class TavernPassManager : MonoBehaviour, ISavable
     public void Load(SaveProfile profile)
     {
         displayedCredits = profile.GetInt("oceanTavernPassDisplayedCredits");
+
+        if (tavernBell != null) tavernBell.SetActive(displayedCredits >= 2);
+        if (tavernCat != null) tavernCat.SetActive(displayedCredits >= 4);
     }
 
     public void InitializeProgressBar()
@@ -74,6 +81,20 @@ public class TavernPassManager : MonoBehaviour, ISavable
 
     public void OnOpenTavernPass()
     {
+        if (!tavernPassButtons[0].isComplete)
+        {
+            ShopManager.CanClosePanel = false;
+            string rewardName = tavernPassButtons[0].rewardName;
+            Sprite rewardSprite = tavernPassButtons[0].rewardImage.sprite;
+            rewardEffect.StartEffect(rewardName, rewardSprite, () => {
+                GiveRewards(0);
+                IncrementButton();
+                ShopManager.CanClosePanel = true;
+            });
+
+            return;
+        }
+
         SelectButton(creditsToNextRewardIndex[displayedCredits]);
         TryUpdateProgressBar();
     }
@@ -112,6 +133,9 @@ public class TavernPassManager : MonoBehaviour, ISavable
             yield break;
         }
 
+        // Start update
+        ShopManager.CanClosePanel = false;
+
         int from = displayedCredits;
         int to = Mathf.Min(currentNumCredits, nextTarget);
 
@@ -122,13 +146,33 @@ public class TavernPassManager : MonoBehaviour, ISavable
 
         if (to == nextTarget)
         {
-            yield return GiveRewards(creditsToCurrentRewardIndex[nextTarget]);
+            int tier = creditsToCurrentRewardIndex[nextTarget];
+            string rewardName = tavernPassButtons[tier].rewardName;
+            Sprite rewardSprite = tavernPassButtons[tier].rewardImage.sprite;
+
+            if (tier == tavernPassButtons.Length - 1) // if giving final tier
+            {
+                // We transition into dialogue panel instead
+                rewardEffect.StartEffect(rewardName, rewardSprite, () => {
+                    displayedCredits = to;
+                    ShopManager.CanClosePanel = true;
+
+                    GiveRewards(tier);
+                });
+                yield break;
+            }
+
+            yield return rewardEffect.StartEffectCoroutine(rewardName, rewardSprite, () => GiveRewards(tier));
+            
 
             IncrementButton();
         }
 
 
         displayedCredits = to;
+
+        ShopManager.CanClosePanel = true;
+        // Finish update
 
         if (displayedCredits < currentNumCredits)
             StartCoroutine(UpdateProgressBar());
@@ -149,43 +193,52 @@ public class TavernPassManager : MonoBehaviour, ISavable
         progressBar.value = to;
     }
 
-    private IEnumerator GiveRewards(int tier)
+    private void GiveRewards(int tier)
     {
-        // Animation start
-        yield return new WaitForSeconds(0.5f);
-
-        string rewardName = tavernPassButtons[tier].rewardName;
         switch (tier)
         {
             case 0:
                 // Free Slider
+                SGrid.Current.CollectSTile(4);
                 break;
+
             case 1:
                 // All Sliders
+                for (int i = 5; i <= 9; i++)
+                {
+                    SGrid.Current.CollectSTile(i);
+                }
                 break;
+
             case 2:
                 // Tavern Bell
+                if (tavernBell != null) tavernBell.SetActive(true);
                 break;
+
             case 3:
                 // Tavern Cat
+                if (tavernCat != null) tavernCat.SetActive(true);
                 break;
+
             case 4:
                 // Bob's Favor
+                shopManager.StartFinalChallenge();
                 break;
         }
 
         tavernPassButtons[tier].SetComplete(true);
         SaveSystem.SaveGame("Tavern Pass Reward");
 
-        Debug.Log($"Give reward for tier {tier}: {rewardName}");
-        yield return new WaitForSeconds(0.5f);
+        // string rewardName = tavernPassButtons[tier].rewardName;
+        // Debug.Log($"Give reward for tier {tier}: {rewardName}");
     }
 
     public bool TavernPassHasReward()
     {
         int currentNumCredits = shopManager.GetCredits();
-        return creditsToNextRewardIndex[currentNumCredits] != creditsToNextRewardIndex[displayedCredits] ||
-               (currentNumCredits == 6 && displayedCredits != 6);
+        return creditsToNextRewardIndex[currentNumCredits] != creditsToNextRewardIndex[displayedCredits] || // if next reward is available
+               (currentNumCredits == 6 && displayedCredits != 6) || // or final reward is available
+               !tavernPassButtons[0].isComplete; // or on first open
     }
 
     #region UI
