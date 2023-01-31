@@ -72,13 +72,18 @@ public class Path : MonoBehaviour
         active = true;
 
         //delete blobs if wrong shape or wrong direction
+        //this is so gross I should see if i can fix the if statement
+        bool deleted = false;
         if (defaultAnim != right || (currentShape != null && !shape.name.Equals(currentShape.name)))
         {
             foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
             {
                 Destroy(blob.gameObject);
+                deleted = true;
             }
         }
+
+        currentShape = shape;
 
         if (right)
         {
@@ -116,10 +121,8 @@ public class Path : MonoBehaviour
             pair.Activate(right, shape, false);
         }
 
-        currentShape = shape;
-
         //prepopulate some blobs if there are no blob
-        if (this.gameObject.transform.childCount == 0 && creatingBlobs)
+        if ((this.gameObject.transform.childCount == 0 || deleted) && creatingBlobs )
         {
             BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
             float length = (int)this.transform.localScale.x;
@@ -174,7 +177,7 @@ public class Path : MonoBehaviour
 
     public void Deactivate()
     {
-        currentShape = null;
+        //currentShape = null;
         active = false;
 
         if (pair != null && pair.isActive())
