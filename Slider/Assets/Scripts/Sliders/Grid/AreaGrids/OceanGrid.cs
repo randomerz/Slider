@@ -11,6 +11,7 @@ public class OceanGrid : SGrid
     public KnotBox knotBox;
     private bool knotBoxEnabledLastFrame;
     public BottleManager bottleManager;
+    public NPCRotation npcRotation;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
     public List<int> buoytiles = new List<int> {1, 3, 4, 8, 9};
@@ -109,6 +110,8 @@ public class OceanGrid : SGrid
         base.Save();
         SaveSystem.Current.SetBool("OceanRJBottleDelivery", bottleManager.puzzleSolved);
         SaveSystem.Current.SetBool("FoggyIslandReached", foggyCompleted);
+        SaveSystem.Current.SetBool("CatbeardTreasureCollected", npcRotation.gotCatbeardTreasure);
+        SaveSystem.Current.SetBool("OceanBreadgeCollected", npcRotation.gotBreadge);
     }
 
     public override void Load(SaveProfile profile)
@@ -122,10 +125,21 @@ public class OceanGrid : SGrid
 
         bottleManager.puzzleSolved = profile.GetBool("RJBottleDelivery");
         foggyCompleted = profile.GetBool("FoggyIslandReached");
+        npcRotation.gotCatbeardTreasure = profile.GetBool("CatbeardTreasureCollected");
+        npcRotation.gotBreadge = profile.GetBool("OceanBreadgeCollected");
+
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
+        if(stile.islandId == 2 && !stile.isTileActive)
+        {
+            Debug.Log("forcing tile 2 spawn");
+            STile tavern = GetTileAt(2,2);
+            STile other = GetTileAt(1,0);
+            if(other.islandId != 1)
+                SwapTiles(tavern, other);
+        }
         if (stile.islandId == 3 && !stile.isTileActive)
         {
             CheckTile3Placement(stile);
@@ -141,7 +155,6 @@ public class OceanGrid : SGrid
             CheckVolcano(this, null);
         }
     }
-
     private void CheckTile3Placement(STile stile)
     {
         string s = GetGridString(true);

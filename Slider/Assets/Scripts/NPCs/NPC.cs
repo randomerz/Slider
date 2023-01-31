@@ -113,13 +113,19 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     #endregion
 
     #region Teleportation
+
+    public void MoveLocal(Transform parent, Vector3 position)
+    {
+            transform.parent = parent;
+            transform.localPosition = position;
+    }
     public void Teleport(Transform trans)
     {
         if (transform.position != trans.position)
         {
             Instantiate(poofParticles, transform.position, Quaternion.identity);
             transform.position = trans.position;
-            transform.parent = trans.parent;
+            transform.parent = trans;
         }
     }
     #endregion
