@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d52663f1e64b4a539cad6cb8f3e65ed, type: 3}
+  m_Name: AnimationImporterConfig
+  m_EditorClassIdentifier: 
+  _animationNamesThatDoNotLoop:
+  - death
+  _automaticImporting: 0
+  _spritePixelsPerUnit: 100
+  _pivotAlignmentType: 0
+  _targetObjectType: 0
+  _pathToSpriteRendererComponent: 
+  _pathToImageComponent: 
+  _spriteAlignment: 7
+  _spriteAlignmentCustomX: 0
+  _spriteAlignmentCustomY: 0
+  _spritesTargetLocation:
+    _locationType: 1
+    _globalDirectory: Assets
+  _animationsTargetLocation:
+    _locationType: 1
+    _globalDirectory: Assets
+  _animationControllersTargetLocation:
+    _locationType: 0
+    _globalDirectory: Assets
+  _spriteNamingScheme: 0
