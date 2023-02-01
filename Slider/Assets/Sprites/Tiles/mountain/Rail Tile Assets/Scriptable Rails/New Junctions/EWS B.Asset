@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bcd48d2e41d59bc45ae804c5f80b43e3, type: 3}
-  m_Name: TRT 4
+  m_Name: EWS B
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -6764332876373470220, guid: e85488d46e6a2a641bdb8fea050f4f98, type: 3}
+  m_Sprite: {fileID: 462361238, guid: e85488d46e6a2a641bdb8fea050f4f98, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -34,4 +34,6 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  connections: ffffffffffffffffffffffffffffffff
+  connections: 03000000ffffffff0000000000000000
+  defaultDir: 0
+  isPowered: 0

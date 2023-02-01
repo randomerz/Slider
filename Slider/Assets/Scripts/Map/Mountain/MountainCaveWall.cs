@@ -10,13 +10,14 @@ public class MountainCaveWall : MonoBehaviour, ISavable
     public GameObject mcSpawn; //blowing up wall
     public GameObject mcLoadSpawn; //loading from entering scene after wall blown up
     public bool didBlowUp = false;
+    public ExplodableRock explodableRock;
 
     public void BlowUpCaveWall()
     {
         if(didBlowUp)
             return;
         didBlowUp = true;
-
+        explodableRock?.ExplodeRock();
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");
 
