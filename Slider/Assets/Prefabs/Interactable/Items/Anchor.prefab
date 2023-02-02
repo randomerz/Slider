@@ -157,7 +157,6 @@ MonoBehaviour:
   powerOnStart: 0
   invertSignal: 0
   affectedByBlackout: 1
-  debugAsPoweredOn: 0
   OnPowered:
     m_PersistentCalls:
       m_Calls:
@@ -276,6 +275,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   isConductiveItem: 1
+  isConductiveTerminus: 0
   ignoreNotMovingCheck: 0
 --- !u!50 &1641171343835192531
 Rigidbody2D:
