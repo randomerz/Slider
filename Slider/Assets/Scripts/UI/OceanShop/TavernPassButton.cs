@@ -6,6 +6,7 @@ public class TavernPassButton : MonoBehaviour
     public bool isComplete;
 
     public string rewardName;
+    public Image rewardImage;
     public Image image;
 
     public Sprite defaultSprite;

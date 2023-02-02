@@ -55,6 +55,7 @@ public class Minecart : Item, ISavable
 
     private void Awake() 
     {
+        base.Awake();
         RailManager[] rms = FindObjectsOfType<RailManager>();
         foreach (RailManager r in rms) {
             if(r.isBorderRM)
