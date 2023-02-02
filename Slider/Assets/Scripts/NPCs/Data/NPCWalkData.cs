@@ -9,6 +9,7 @@ public class NPCWalkData
     public List<Transform> path;
     public List<STileCrossing> stileCrossings;
     public bool turnAroundAfterWalking;
+    public bool teleportToEndIfInterrupted;
 
     public UnityEvent onPathStarted;
     public UnityEvent onPathFinished;
