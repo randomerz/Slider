@@ -201,7 +201,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Emotes_Exclamation_2
+      name: Emotes_ExclamationLoop_0
       rect:
         serializedVersion: 2
         x: 0
@@ -215,14 +215,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8a5ce37e82c00fe30800000000000000
-      internalID: 4535138194579965352
+      spriteID: 00000000000000000800000000000000
+      internalID: 0
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Emotes_Exclamation_3
+      name: Emotes_ExclamationLoop_1
       rect:
         serializedVersion: 2
         x: 16
@@ -236,8 +236,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0a1b23fc1396da170800000000000000
-      internalID: 8191318959907320224
+      spriteID: 00000000000000000800000000000000
+      internalID: 0
       vertices: []
       indices: 
       edges: []
@@ -285,7 +285,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Emotes_Question_2
+      name: Emotes_QuestionLoop_0
       rect:
         serializedVersion: 2
         x: 48
@@ -299,14 +299,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 605526e5d50e532e0800000000000000
-      internalID: -2146562955752090362
+      spriteID: 00000000000000000800000000000000
+      internalID: 0
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Emotes_Question_3
+      name: Emotes_QuestionLoop_1
       rect:
         serializedVersion: 2
         x: 0
@@ -320,8 +320,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9221a79566a79ff90800000000000000
-      internalID: -6919364772471631319
+      spriteID: 00000000000000000800000000000000
+      internalID: 0
       vertices: []
       indices: 
       edges: []
@@ -487,7 +487,9 @@ TextureImporter:
       Emotes_Sparkle_0: -2528370156562525356
       Emotes_Exclamation_2: 4535138194579965352
       Emotes_Question_0: -2365565005822490852
+      Emotes_QuestionLoop_0: 0
       Emotes_Sweat_1: 8922951403204087458
+      Emotes_QuestionLoop_1: 0
       Emotes_Exclamation_1: -2446680549580373429
       Emotes_Exclamation_0: -2503271775290250889
       Emotes_Annoyed_0: -5145866996613665783
@@ -495,6 +497,8 @@ TextureImporter:
       Emotes_Question_3: -6919364772471631319
       Emotes_Question_1: -5407494389288893127
       Emotes_Annoyed_3: 138820630606797439
+      Emotes_ExclamationLoop_0: 0
+      Emotes_ExclamationLoop_1: 0
       Emotes_Annoyed_2: -1080747568405953137
       Emotes_Sparkle_1: 835329267660589085
       Emotes_Exclamation_3: 8191318959907320224
