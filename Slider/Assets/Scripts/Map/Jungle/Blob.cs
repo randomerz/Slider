@@ -45,8 +45,8 @@ public class Blob : MonoBehaviour
 
         if ((direction == Direction.LEFT || direction == Direction.RIGHT))
         {
-            renderer.sortingOrder = -1;
-            shapeRenderer.sortingOrder = -1;
+            renderer.sortingOrder = -2;
+            shapeRenderer.sortingOrder = -2;
         }
     }
 
@@ -95,11 +95,11 @@ public class Blob : MonoBehaviour
                 shapeRenderer.sortingOrder = 0;
             }
 
-            if (travelDistance - traveledDistance <= 1.25)
+/*            if (travelDistance - traveledDistance <= 1.25)
             {
-                renderer.sortingOrder = -1;
-                shapeRenderer.sortingOrder = -1;
-            }
+                renderer.sortingOrder = -2;
+                shapeRenderer.sortingOrder = -2;
+            }*/
 
             // check if i need to change parent then if i do, change
             STile under = SGrid.GetStileUnderneath(this.gameObject);
