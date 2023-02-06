@@ -53,7 +53,7 @@ public class Minecart : Item, ISavable
     public Sprite trackerSpriteCrystal;
 
 
-    private void Awake() 
+    public override void Awake() 
     {
         base.Awake();
         RailManager[] rms = FindObjectsOfType<RailManager>();
