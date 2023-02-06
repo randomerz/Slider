@@ -41,6 +41,12 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         SetCondPrioritiesToArrayPos();
     }
 
+    private new void Start() 
+    {
+        base.Start();
+        CurrCond.onConditionalEnter?.Invoke();
+    }
+
     private new void OnEnable()
     {
         base.OnEnable();

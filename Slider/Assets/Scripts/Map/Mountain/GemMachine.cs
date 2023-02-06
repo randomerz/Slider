@@ -10,6 +10,7 @@ public class GemMachine : MonoBehaviour, ISavable
     private bool isDone;
     private bool isBroken = true;
     public GameObject gemChecker;
+    public Animator animator;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
@@ -34,6 +35,7 @@ public class GemMachine : MonoBehaviour, ISavable
     }
 
     public void addGem(){
+        animator.Play("AbsorbGem");
         if(!isPowered || isBroken)
             return;
         numGems++;
@@ -50,6 +52,10 @@ public class GemMachine : MonoBehaviour, ISavable
 
     public void ResetGems(){
         numGems = 0;
+    }
+
+    public void OnEndAbsorb(){
+        animator.Play("Empty");
     }
 
     public void SetIsPowered(bool value){

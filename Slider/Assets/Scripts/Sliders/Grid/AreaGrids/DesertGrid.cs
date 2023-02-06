@@ -12,6 +12,7 @@ public class DesertGrid : SGrid
     public DiceGizmo dice1;
     public DiceGizmo dice2;
     public SpriteRenderer[] casinoCeilingSprites;
+    public List<Animator> casinoSigns;
     [SerializeField] private GameObject[] zlist; //From smallest to largest
 
     private int monkeShake = 0;
@@ -82,6 +83,14 @@ public class DesertGrid : SGrid
         {
             s.color = c;
         }
+    }
+
+    public override void EnableStile(STile stile, bool shouldFlicker = true)
+    {
+        base.EnableStile(stile, shouldFlicker);
+        if(stile.islandId == 5 || stile.islandId == 6)
+            foreach (Animator a in casinoSigns)
+                a.Play("Idle", -1, 0);
     }
 
     private float GetDistanceToCasino()

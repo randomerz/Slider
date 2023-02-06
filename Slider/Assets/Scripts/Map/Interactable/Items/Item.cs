@@ -23,7 +23,7 @@ public class Item : MonoBehaviour
     public UnityEvent OnPickUp;
     public UnityEvent OnDrop;
 
-    private void Awake() {
+    public virtual void Awake() {
         spriteOffset = spriteRenderer.transform.localPosition;
     }
 
