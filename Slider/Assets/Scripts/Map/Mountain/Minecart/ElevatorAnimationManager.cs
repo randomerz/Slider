@@ -9,6 +9,8 @@ public class ElevatorAnimationManager : MonoBehaviour
     [SerializeField] private Animator bottomDispAnimator;
     [SerializeField] private Animator bottomDoorAnimator;
 
+    public List<GameObject> deactivateOnFix;
+
     private bool isAnimating = false;
     private bool repaired = false;
 
@@ -72,5 +74,16 @@ public class ElevatorAnimationManager : MonoBehaviour
         repaired = true;
         OpenDoors();
         //delete extra sprites or whatnot
+        foreach(GameObject go in deactivateOnFix)
+        {
+            go.SetActive(false);
+            {
+                for(int i = 0; i < 10; i++)
+                {
+                    Vector3 random = Random.insideUnitCircle * 1.5f;
+                    ParticleManager.SpawnParticle(ParticleType.SmokePoof, go.transform.position + random);
+                }
+            }
+        }
     }
 }
