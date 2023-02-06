@@ -172,5 +172,7 @@ public class NPCRotation : MonoBehaviour
         gotBreadge = true;
     }
 
+    
+
 
 }

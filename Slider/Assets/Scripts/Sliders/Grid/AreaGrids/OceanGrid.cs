@@ -15,6 +15,8 @@ public class OceanGrid : SGrid
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
     public List<int> buoytiles = new List<int> {1, 3, 4, 8, 9};
+    public OceanDolly introCameraDolly;
+    private const string INTRO_CUTSCENE_SAVE_STRING = "oceanIntroCutscene";
 
     private Vector2Int[] correctPath =
     {
@@ -47,6 +49,7 @@ public class OceanGrid : SGrid
     {
         InitArea(Area.Ocean);
         base.Init();
+        
     }
 
 
@@ -64,6 +67,7 @@ public class OceanGrid : SGrid
         {
             note.enabled = false;
         }
+        Pan();
 
     }
 
@@ -570,5 +574,14 @@ public class OceanGrid : SGrid
         treesToJungle.SetActive(false);
         CameraShake.Shake(1, 2);
         AudioManager.Play("Slide Explosion");
+    }
+
+    public void Pan()
+    {
+        if (!SaveSystem.Current.GetBool(INTRO_CUTSCENE_SAVE_STRING))
+        {
+            SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
+            introCameraDolly.StartTrack();
+        }
     }
 }
