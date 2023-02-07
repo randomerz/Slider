@@ -18,10 +18,12 @@ public class NPCEditor : Editor
     {
         base.OnInspectorGUI();
 
+        EditorGUILayout.LabelField("Custom tools", EditorStyles.boldLabel);
+
         _target.autoSetWaitUntilPlayerAction = EditorGUILayout.Toggle("Automatically Set 'waitUntilPlayerAction'", _target.autoSetWaitUntilPlayerAction);
         if (_target.autoSetWaitUntilPlayerAction)
         {
-            // SetWaitUntilPlayerActions();
+            SetWaitUntilPlayerActions();
         }
 
     }
