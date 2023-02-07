@@ -9,12 +9,13 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
 {
     private readonly string poofParticleName = "SmokePoof Variant";
 
-    public float speed;
-    [SerializeField] private NPCAnimatorController animator;
     [SerializeField] private string characterName;
     [SerializeField] private List<NPCConditionals> conds;
+    public float speed;
+    [SerializeField] private NPCAnimatorController animator;
     [SerializeField] private DialogueDisplay dialogueDisplay;
     [SerializeField] private SpriteRenderer sr;
+    [Tooltip("This is for NPC walks")]
     [SerializeField] private bool spriteDefaultFacingLeft;
 
     private int currCondIndex;
@@ -22,6 +23,9 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private NPCWalkingContext walkingCtx;
     private STile currentStileUnderneath;
     private GameObject poofParticles;
+
+    // For editor
+    [HideInInspector] public bool autoSetWaitUntilPlayerAction = true;
 
     public List<NPCConditionals> Conds => conds;
     public int CurrCondIndex => currCondIndex;

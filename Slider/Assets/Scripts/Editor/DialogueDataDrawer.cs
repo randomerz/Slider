@@ -6,8 +6,8 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(DialogueData))]
 public class DialogueDataDrawer : PropertyDrawer
 {
-    private List<string> property_names = new List<string> {
-        // "dialogue",
+    private const string DIALOGUE_PROPERTY_NAME = "dialogue";
+    private readonly string[] property_names = {
         "delayAfterFinishedTyping",
         "waitUntilPlayerAction",
         "advanceDialogueManually",
@@ -36,8 +36,8 @@ public class DialogueDataDrawer : PropertyDrawer
                 position.width,
                 EditorGUIUtility.singleLineHeight * 3
             );
-            SerializedProperty prop = property.FindPropertyRelative("dialogue");
-            EditorGUI.PropertyField(dialogueRect, property.FindPropertyRelative("dialogue"), true);
+            SerializedProperty prop = property.FindPropertyRelative(DIALOGUE_PROPERTY_NAME);
+            EditorGUI.PropertyField(dialogueRect, property.FindPropertyRelative(DIALOGUE_PROPERTY_NAME), true);
             position.y += EditorGUIUtility.singleLineHeight * 3 + EditorGUIUtility.standardVerticalSpacing;
 
             foreach (string s in property_names)
@@ -60,7 +60,7 @@ public class DialogueDataDrawer : PropertyDrawer
         
         if (property.isExpanded)
         {
-            SerializedProperty prop = property.FindPropertyRelative("dialogue");
+            SerializedProperty prop = property.FindPropertyRelative(DIALOGUE_PROPERTY_NAME);
             height += EditorGUIUtility.singleLineHeight * 3 + EditorGUIUtility.standardVerticalSpacing;
 
             foreach (string s in property_names)
