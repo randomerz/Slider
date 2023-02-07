@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 [System.Serializable]
 public class NPCConditionals
 {
+    [HideInInspector] public string name;
     public List<Condition> conditions;
 
     [Header("Dialogue")]
