@@ -86,6 +86,7 @@ public class Sign : Box
             }
         }
 
+        print("New merge");
         foreach (Shape s in shapesRecieved)
         {
             print(s.name);
