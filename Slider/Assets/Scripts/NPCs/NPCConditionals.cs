@@ -10,8 +10,8 @@ public class NPCConditionals
     public List<Condition> conditions;
 
     [Header("Dialogue")]
-    public List<DialogueData> dialogueChain;
     public bool alwaysStartFromBeginning;
+    public List<DialogueData> dialogueChain;
     [FormerlySerializedAs("onDialogueChanged")]
     public UnityEvent onConditionalEnter;
     public UnityEvent onDialogueChainExhausted;

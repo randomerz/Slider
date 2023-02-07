@@ -129,6 +129,12 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
         isWalking = false;
         animator.SetBoolToFalse("isWalking");
         currWalk.onPathBroken?.Invoke();
+
+        if (currWalk.teleportToEndIfInterrupted)
+        {
+            context.Teleport(remainingPath[remainingPath.Count - 1]);
+            FinishWalk();
+        }
     }
 
     private IEnumerator DoCurrentWalk()
