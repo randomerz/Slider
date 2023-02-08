@@ -50,6 +50,9 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private new void Start() 
     {
         base.Start();
+        
+        animator.Play(CurrCond.animationOnEnter);
+        emoteController.SetEmote(CurrCond.emoteOnEnter);
         CurrCond.onConditionalEnter?.Invoke();
     }
 
@@ -166,7 +169,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private void ChangeCurrentConditional(int newCond)
     {
         currCondIndex = newCond;
+
+        animator.Play(CurrCond.animationOnEnter);
+        emoteController.SetEmote(CurrCond.emoteOnEnter);
         CurrCond.onConditionalEnter?.Invoke();
+        
         dialogueCtx.OnConditionalsChanged();
     }
 

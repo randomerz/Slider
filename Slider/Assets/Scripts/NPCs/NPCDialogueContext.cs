@@ -227,7 +227,9 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
                 //This is so the dialogue automatically ends after the delay or whatever for don't interrupt's so that it doesn't just stay there until the end of time. 
                 DeactivateDialogueBox();
             }
-            context.CurrCond.OnDialogueChainExhausted();
+            
+            // Does this even get called?
+            // context.CurrCond.OnDialogueChainExhausted();
         }
     }
 
@@ -315,6 +317,20 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         }
 
         context.CurrCond.OnDialogueChainEnd(CurrDchainIndex);
+        
+        TryDialogueChainExhausted();
+    }
+
+    private void TryDialogueChainExhausted()
+    {
+        if (CurrDchainIndex == context.CurrCond.dialogueChain.Count - 1 && !context.CurrCond.isDialogueChainExhausted)
+        {
+            context.CurrCond.isDialogueChainExhausted = true;
+            Debug.Log("bye bye");
+            context.animator.Play(context.CurrCond.animationOnExhaust);
+            context.emoteController.SetEmote(context.CurrCond.emoteOnExhaust);
+            context.CurrCond.OnDialogueChainExhausted();
+        }
     }
 
     //Returns if the cache already had the value

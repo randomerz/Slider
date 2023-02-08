@@ -10,11 +10,19 @@ public class NPCConditionalsDrawer : PropertyDrawer
         "alwaysStartFromBeginning",
         "dialogueChain",
     };
-    private readonly string[] PROGRAMMY_PROPERTY_NAMES = {
+    private readonly string[] ANIMATOR_PROPERTY_NAMES = {
+        "animationOnEnter",
+        "animationOnExhaust",
+        "emoteOnEnter",
+        "emoteOnExhaust",
+    };
+    private readonly string[] PROGRAMMER_PROPERTY_NAMES = {
         "onConditionalEnter",
         "onDialogueChainExhausted",
         "walks",
     };
+    private const string IS_ANIMATOR_UNFOLDED_NAME = "editorIsAnimatorUnfolded";
+    private const string IS_PROGRAMMER_UNFOLDED_NAME = "editorIsProgrammerUnfolded";
 
     // public static bool isProgrammyUnfolded = false;
 
@@ -38,15 +46,31 @@ public class NPCConditionalsDrawer : PropertyDrawer
                 position.y += EditorGUI.GetPropertyHeight(prop);
             }
 
-            // Programmy Foldout -- were just storing it in the `onConditionalEnter` :)
-            prop = property.FindPropertyRelative("onConditionalEnter");
-            var programmyFoldoutRect = GetLinePositionFrom(position, 1);
-            prop.isExpanded = EditorGUI.Foldout(programmyFoldoutRect, prop.isExpanded, "Other Programmy Parts", true);
+            // Animator Foldout
+            prop = property.FindPropertyRelative(IS_ANIMATOR_UNFOLDED_NAME);
+            var animatorFoldoutRect = GetLinePositionFrom(position, 1);
+            prop.boolValue = EditorGUI.Foldout(animatorFoldoutRect, prop.boolValue, "Animator Parts", true);
             position.y += 20;
             
-            if (prop.isExpanded)
+            if (prop.boolValue)
             {
-                foreach (string s in PROGRAMMY_PROPERTY_NAMES)
+                foreach (string s in ANIMATOR_PROPERTY_NAMES)
+                {
+                    prop = property.FindPropertyRelative(s);
+                    EditorGUI.PropertyField(position, property.FindPropertyRelative(s), true);
+                    position.y += EditorGUI.GetPropertyHeight(prop);
+                }
+            }
+
+            // Programmy Foldout
+            prop = property.FindPropertyRelative(IS_PROGRAMMER_UNFOLDED_NAME);
+            var programmyFoldoutRect = GetLinePositionFrom(position, 1);
+            prop.boolValue = EditorGUI.Foldout(programmyFoldoutRect, prop.boolValue, "Programmer Parts", true);
+            position.y += 20;
+            
+            if (prop.boolValue)
+            {
+                foreach (string s in PROGRAMMER_PROPERTY_NAMES)
                 {
                     prop = property.FindPropertyRelative(s);
                     EditorGUI.PropertyField(position, property.FindPropertyRelative(s), true);
@@ -77,13 +101,26 @@ public class NPCConditionalsDrawer : PropertyDrawer
                 height += EditorGUI.GetPropertyHeight(prop);
             }
 
+            // Animator foldout
+            height += 20;
+
+            prop = property.FindPropertyRelative(IS_ANIMATOR_UNFOLDED_NAME);
+            if (prop.boolValue)
+            {
+                foreach (string s in ANIMATOR_PROPERTY_NAMES)
+                {
+                    prop = property.FindPropertyRelative(s);
+                    height += EditorGUI.GetPropertyHeight(prop);
+                }
+            }
+
             // Programmy foldout
             height += 20;
 
-            prop = property.FindPropertyRelative("onConditionalEnter");
-            if (prop.isExpanded)
+            prop = property.FindPropertyRelative(IS_PROGRAMMER_UNFOLDED_NAME);
+            if (prop.boolValue)
             {
-                foreach (string s in PROGRAMMY_PROPERTY_NAMES)
+                foreach (string s in PROGRAMMER_PROPERTY_NAMES)
                 {
                     prop = property.FindPropertyRelative(s);
                     height += EditorGUI.GetPropertyHeight(prop);
