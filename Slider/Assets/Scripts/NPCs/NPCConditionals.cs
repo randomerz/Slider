@@ -18,12 +18,13 @@ public class NPCConditionals
     // Animator parts
     [Tooltip("Name of NPC animation to play when conditional is entered.")]
     public string animationOnEnter;
-    [Tooltip("Name of NPC animation to play when conditional is exhausted.")]
-    public string animationOnExhaust;
+    // Feel free to uncomment these if you want to use them (and in NPCDialogueContext.TryDialogueChainExhausted() and NPCConditionalsDrawer.ANIMATOR_PROPERTY_NAMES)
+    // [Tooltip("Name of NPC animation to play when conditional is exhausted.")] 
+    // public string animationOnExhaust;
     [Tooltip("Name of NPC emote to display when conditional is entered.")]
     public NPCEmotes.Emotes emoteOnEnter;
-    [Tooltip("Name of NPC emote to display when conditional is exhausted.")]
-    public NPCEmotes.Emotes emoteOnExhaust;
+    // [Tooltip("Name of NPC emote to display when conditional is exhausted.")]
+    // public NPCEmotes.Emotes emoteOnExhaust;
 
     // Programmy parts
     [FormerlySerializedAs("onDialogueChanged")]
@@ -104,5 +105,15 @@ public class NPCConditionals
     public void KillDialogue()
     {
         priority = 0;
+    }
+
+    public void SetNPCAnimatorController(NPCAnimatorController controller)
+    {
+        Debug.Log("updating dd");
+        foreach (DialogueData data in dialogueChain)
+        {
+            // data.npcAnimatorController = controller;
+            // data.asn = controller.animationStateNames;
+        }
     }
 }

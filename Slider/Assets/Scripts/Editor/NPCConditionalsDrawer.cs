@@ -12,9 +12,9 @@ public class NPCConditionalsDrawer : PropertyDrawer
     };
     private readonly string[] ANIMATOR_PROPERTY_NAMES = {
         "animationOnEnter",
-        "animationOnExhaust",
+        // "animationOnExhaust",
         "emoteOnEnter",
-        "emoteOnExhaust",
+        // "emoteOnExhaust",
     };
     private readonly string[] PROGRAMMER_PROPERTY_NAMES = {
         "onConditionalEnter",

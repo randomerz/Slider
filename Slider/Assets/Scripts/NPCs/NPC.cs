@@ -14,7 +14,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     public float speed;
 
     public NPCEmotes emoteController;// { get; private set; }
-    public Animator animator;// { get; private set; }
+    public Animator animator { 
+        get => npcAnimatorController.myAnimator; 
+        private set => npcAnimatorController.myAnimator = value;
+    }
+    public NPCAnimatorController npcAnimatorController;
     [SerializeField] private DialogueDisplay dialogueDisplay;
     [SerializeField] private SpriteRenderer sr;
     [Tooltip("This is for NPC walks")]
@@ -51,7 +55,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     {
         base.Start();
         
-        animator.Play(CurrCond.animationOnEnter);
+        npcAnimatorController.Play(CurrCond.animationOnEnter);
         emoteController.SetEmote(CurrCond.emoteOnEnter);
         CurrCond.onConditionalEnter?.Invoke();
     }
@@ -170,7 +174,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     {
         currCondIndex = newCond;
 
-        animator.Play(CurrCond.animationOnEnter);
+        npcAnimatorController.Play(CurrCond.animationOnEnter);
         emoteController.SetEmote(CurrCond.emoteOnEnter);
         CurrCond.onConditionalEnter?.Invoke();
         

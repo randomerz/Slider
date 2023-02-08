@@ -260,7 +260,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 
     private void DeactivateDialogueBox()
     {
-        context.animator.Play(CurrDchain[CurrDchainIndex].animationOnLeave);
+        context.npcAnimatorController.Play(CurrDchain[CurrDchainIndex].animationOnLeave);
         context.emoteController.SetEmote(CurrDchain[CurrDchainIndex].emoteOnLeave);
 
         display.FadeAwayDialogue();
@@ -290,7 +290,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 
     private void OnDialogueStart()
     {
-        context.animator.Play(CurrDchain[CurrDchainIndex].animationOnStart);
+        context.npcAnimatorController.Play(CurrDchain[CurrDchainIndex].animationOnStart);
         context.emoteController.SetEmote(CurrDchain[CurrDchainIndex].emoteOnStart);
 
         //Handle event caching (only cache doNotRepeatEvents)
@@ -326,9 +326,8 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         if (CurrDchainIndex == context.CurrCond.dialogueChain.Count - 1 && !context.CurrCond.isDialogueChainExhausted)
         {
             context.CurrCond.isDialogueChainExhausted = true;
-            Debug.Log("bye bye");
-            context.animator.Play(context.CurrCond.animationOnExhaust);
-            context.emoteController.SetEmote(context.CurrCond.emoteOnExhaust);
+            // context.npcAnimatorController.Play(context.CurrCond.animationOnExhaust);
+            // context.emoteController.SetEmote(context.CurrCond.emoteOnExhaust);
             context.CurrCond.OnDialogueChainExhausted();
         }
     }

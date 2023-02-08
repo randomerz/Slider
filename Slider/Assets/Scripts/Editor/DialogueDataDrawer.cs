@@ -12,6 +12,10 @@ public class DialogueDataDrawer : PropertyDrawer
         "emoteOnStart",
         "emoteOnLeave",
     };
+    // private const string ANIMATOR_ON_START_NAME = "animationOnStart";
+    // private const string ANIMATOR_ON_LEAVE_NAME = "animationOnLeave";
+    // private string[] availableStates;
+
     private readonly string[] PROGRAMMER_PROPERTY_NAMES = {
         "delayAfterFinishedTyping",
         "waitUntilPlayerAction",
@@ -23,8 +27,6 @@ public class DialogueDataDrawer : PropertyDrawer
     };
     private const string IS_ANIMATOR_UNFOLDED_NAME = "editorIsAnimatorUnfolded";
     private const string IS_PROGRAMMER_UNFOLDED_NAME = "editorIsProgrammerUnfolded";
-
-    // public static bool isProgrammyUnfolded = false;
 
     // Draw the property inside the given rect
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -55,12 +57,22 @@ public class DialogueDataDrawer : PropertyDrawer
             
             if (prop.boolValue)
             {
+                EditorGUI.indentLevel++;
+                
+                // animationOnStart
+                // couldnt get animations to work :(
+                // check thread https://stackoverflow.com/questions/62795915/unity-custom-drop-down-selection-for-arrays-c-sharp
+                // prop = property.FindPropertyRelative("npcAnimatorController");
+                // Debug.Log("prop:" + prop);
+
                 foreach (string s in ANIMATOR_PROPERTY_NAMES)
                 {
                     prop = property.FindPropertyRelative(s);
                     EditorGUI.PropertyField(position, property.FindPropertyRelative(s), true);
                     position.y += EditorGUI.GetPropertyHeight(prop);
                 }
+
+                EditorGUI.indentLevel--;
             }
 
             // Programmy Foldout
@@ -71,12 +83,16 @@ public class DialogueDataDrawer : PropertyDrawer
             
             if (prop.boolValue)
             {
+                EditorGUI.indentLevel++;
+                
                 foreach (string s in PROGRAMMER_PROPERTY_NAMES)
                 {
                     prop = property.FindPropertyRelative(s);
                     EditorGUI.PropertyField(position, property.FindPropertyRelative(s), true);
                     position.y += EditorGUI.GetPropertyHeight(prop);
                 }
+                
+                EditorGUI.indentLevel--;
             }
         }
 
