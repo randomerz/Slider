@@ -106,14 +106,4 @@ public class NPCConditionals
     {
         priority = 0;
     }
-
-    public void SetNPCAnimatorController(NPCAnimatorController controller)
-    {
-        Debug.Log("updating dd");
-        foreach (DialogueData data in dialogueChain)
-        {
-            // data.npcAnimatorController = controller;
-            // data.asn = controller.animationStateNames;
-        }
-    }
 }

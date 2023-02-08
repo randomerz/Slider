@@ -13,7 +13,6 @@ public class NPCEditor : Editor
     {
         _target = (NPC)target;
         SetConditionalNames();
-        SetNPCAnimationControllers();
     }
 
     public override void OnInspectorGUI()
@@ -54,15 +53,6 @@ public class NPCEditor : Editor
             NPCConditionals npcConditional = _target.Conds[i];
             if (npcConditional.dialogueChain.Count > 0)
                 npcConditional.name = $"{i}. {npcConditional.dialogueChain[0].dialogue}";
-        }
-    }
-
-    private void SetNPCAnimationControllers()
-    {
-        for (int i = 0; i < _target.Conds.Count; i++)
-        {
-            NPCConditionals npcConditional = _target.Conds[i];
-            npcConditional.SetNPCAnimatorController(_target.npcAnimatorController);
         }
     }
 }
