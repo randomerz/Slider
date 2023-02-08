@@ -258,6 +258,9 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 
     private void DeactivateDialogueBox()
     {
+        context.animator.Play(CurrDchain[CurrDchainIndex].animationOnLeave);
+        context.emoteController.SetEmote(CurrDchain[CurrDchainIndex].emoteOnLeave);
+
         display.FadeAwayDialogue();
 
         DontAllowDialogueToContinue();
@@ -285,6 +288,9 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 
     private void OnDialogueStart()
     {
+        context.animator.Play(CurrDchain[CurrDchainIndex].animationOnStart);
+        context.emoteController.SetEmote(CurrDchain[CurrDchainIndex].emoteOnStart);
+
         //Handle event caching (only cache doNotRepeatEvents)
         if (!CurrDchainIsEmpty() && CurrDchain[CurrDchainIndex].doNotRepeatEvents)
         {

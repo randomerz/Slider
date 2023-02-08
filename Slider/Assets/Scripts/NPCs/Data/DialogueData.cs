@@ -7,6 +7,17 @@ public class DialogueData
     [TextArea(1, 4)]
     public string dialogue;
 
+    // Animator Parts
+    [Tooltip("Name of NPC animation to play when dialogue starts.")]
+    public string animationOnStart;
+    [Tooltip("Name of NPC animation to play when you leave the NPC.")]
+    public string animationOnLeave;
+    [Tooltip("Name of NPC emote to display when dialogue starts.")]
+    public NPCEmotes.Emotes emoteOnStart;
+    [Tooltip("Name of NPC emote to display when you leave the NPC.")]
+    public NPCEmotes.Emotes emoteOnLeave;
+
+    // Programmer Parts
     [Tooltip("Only applies when waitUntilPlayerAction and advanceDialogueManually are false, and != 0")]
     public float delayAfterFinishedTyping = 0.5f;
     [Tooltip("Player has to press e to continue.")] 
@@ -21,4 +32,8 @@ public class DialogueData
 
     public UnityEvent onDialogueStart;
     public UnityEvent onDialogueEnd;
+
+    // Editor tools
+    [HideInInspector] public bool editorIsAnimatorUnfolded;
+    [HideInInspector] public bool editorIsProgrammerUnfolded;
 }

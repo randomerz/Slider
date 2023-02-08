@@ -6,7 +6,13 @@ using UnityEngine;
 public class DialogueDataDrawer : PropertyDrawer
 {
     private const string DIALOGUE_PROPERTY_NAME = "dialogue";
-    private readonly string[] PROGRAMMY_PROPERTY_NAMES = {
+    private readonly string[] ANIMATOR_PROPERTY_NAMES = {
+        "animationOnStart",
+        "animationOnLeave",
+        "emoteOnStart",
+        "emoteOnLeave",
+    };
+    private readonly string[] PROGRAMMER_PROPERTY_NAMES = {
         "delayAfterFinishedTyping",
         "waitUntilPlayerAction",
         "advanceDialogueManually",
@@ -15,6 +21,8 @@ public class DialogueDataDrawer : PropertyDrawer
         "onDialogueStart",
         "onDialogueEnd",
     };
+    private const string IS_ANIMATOR_UNFOLDED_NAME = "editorIsAnimatorUnfolded";
+    private const string IS_PROGRAMMER_UNFOLDED_NAME = "editorIsProgrammerUnfolded";
 
     // public static bool isProgrammyUnfolded = false;
 
@@ -39,14 +47,31 @@ public class DialogueDataDrawer : PropertyDrawer
             EditorGUI.PropertyField(dialogueRect, property.FindPropertyRelative(DIALOGUE_PROPERTY_NAME), true);
             position.y += EditorGUIUtility.singleLineHeight * 3 + EditorGUIUtility.standardVerticalSpacing;
 
-            // Programmy Foldout -- were just storing it in the dialogue's `isExpanded` :)
-            var programmyFoldoutRect = GetLinePositionFrom(position, 1);
-            prop.isExpanded = EditorGUI.Foldout(programmyFoldoutRect, prop.isExpanded, "Programmy Parts", true);
+            // Animator Foldout
+            prop = property.FindPropertyRelative(IS_ANIMATOR_UNFOLDED_NAME);
+            var animatorFoldoutRect = GetLinePositionFrom(position, 1);
+            prop.boolValue = EditorGUI.Foldout(animatorFoldoutRect, prop.boolValue, "Animator Parts", true);
             position.y += 20;
             
-            if (prop.isExpanded)
+            if (prop.boolValue)
             {
-                foreach (string s in PROGRAMMY_PROPERTY_NAMES)
+                foreach (string s in ANIMATOR_PROPERTY_NAMES)
+                {
+                    prop = property.FindPropertyRelative(s);
+                    EditorGUI.PropertyField(position, property.FindPropertyRelative(s), true);
+                    position.y += EditorGUI.GetPropertyHeight(prop);
+                }
+            }
+
+            // Programmy Foldout
+            prop = property.FindPropertyRelative(IS_PROGRAMMER_UNFOLDED_NAME);
+            var programmyFoldoutRect = GetLinePositionFrom(position, 1);
+            prop.boolValue = EditorGUI.Foldout(programmyFoldoutRect, prop.boolValue, "Programmer Parts", true);
+            position.y += 20;
+            
+            if (prop.boolValue)
+            {
+                foreach (string s in PROGRAMMER_PROPERTY_NAMES)
                 {
                     prop = property.FindPropertyRelative(s);
                     EditorGUI.PropertyField(position, property.FindPropertyRelative(s), true);
@@ -72,12 +97,26 @@ public class DialogueDataDrawer : PropertyDrawer
             SerializedProperty prop = property.FindPropertyRelative(DIALOGUE_PROPERTY_NAME);
             height += EditorGUIUtility.singleLineHeight * 3 + EditorGUIUtility.standardVerticalSpacing;
 
+            // Animator foldout
+            height += 20;
+
+            prop = property.FindPropertyRelative(IS_ANIMATOR_UNFOLDED_NAME);
+            if (prop.boolValue)
+            {
+                foreach (string s in ANIMATOR_PROPERTY_NAMES)
+                {
+                    prop = property.FindPropertyRelative(s);
+                    height += EditorGUI.GetPropertyHeight(prop);
+                }
+            }
+
             // Programmy foldout
             height += 20;
 
-            if (prop.isExpanded)
+            prop = property.FindPropertyRelative(IS_PROGRAMMER_UNFOLDED_NAME);
+            if (prop.boolValue)
             {
-                foreach (string s in PROGRAMMY_PROPERTY_NAMES)
+                foreach (string s in PROGRAMMER_PROPERTY_NAMES)
                 {
                     prop = property.FindPropertyRelative(s);
                     height += EditorGUI.GetPropertyHeight(prop);

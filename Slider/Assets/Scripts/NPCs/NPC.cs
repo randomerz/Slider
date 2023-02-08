@@ -12,7 +12,9 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     [SerializeField] private string characterName;
     [SerializeField] private List<NPCConditionals> conds;
     public float speed;
-    [SerializeField] private NPCAnimatorController animator;
+
+    public NPCEmotes emoteController;// { get; private set; }
+    public Animator animator;// { get; private set; }
     [SerializeField] private DialogueDisplay dialogueDisplay;
     [SerializeField] private SpriteRenderer sr;
     [Tooltip("This is for NPC walks")]
