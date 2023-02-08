@@ -2,12 +2,11 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-// IngredientDrawer
 [CustomPropertyDrawer(typeof(DialogueData))]
 public class DialogueDataDrawer : PropertyDrawer
 {
     private const string DIALOGUE_PROPERTY_NAME = "dialogue";
-    private readonly string[] property_names = {
+    private readonly string[] PROGRAMMY_PROPERTY_NAMES = {
         "delayAfterFinishedTyping",
         "waitUntilPlayerAction",
         "advanceDialogueManually",
@@ -17,7 +16,7 @@ public class DialogueDataDrawer : PropertyDrawer
         "onDialogueEnd",
     };
 
-    bool isFolded = true;
+    // public static bool isProgrammyUnfolded = false;
 
     // Draw the property inside the given rect
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -40,11 +39,19 @@ public class DialogueDataDrawer : PropertyDrawer
             EditorGUI.PropertyField(dialogueRect, property.FindPropertyRelative(DIALOGUE_PROPERTY_NAME), true);
             position.y += EditorGUIUtility.singleLineHeight * 3 + EditorGUIUtility.standardVerticalSpacing;
 
-            foreach (string s in property_names)
+            // Programmy Foldout -- were just storing it in the dialogue's `isExpanded` :)
+            var programmyFoldoutRect = GetLinePositionFrom(position, 1);
+            prop.isExpanded = EditorGUI.Foldout(programmyFoldoutRect, prop.isExpanded, "Programmy Parts", true);
+            position.y += 20;
+            
+            if (prop.isExpanded)
             {
-                prop = property.FindPropertyRelative(s);
-                EditorGUI.PropertyField(position, property.FindPropertyRelative(s), true);
-                position.y += EditorGUI.GetPropertyHeight(prop);
+                foreach (string s in PROGRAMMY_PROPERTY_NAMES)
+                {
+                    prop = property.FindPropertyRelative(s);
+                    EditorGUI.PropertyField(position, property.FindPropertyRelative(s), true);
+                    position.y += EditorGUI.GetPropertyHeight(prop);
+                }
             }
         }
 
@@ -56,17 +63,25 @@ public class DialogueDataDrawer : PropertyDrawer
     {
         float height = 0;
 
+        // Base foldout
         height += 20;
         
         if (property.isExpanded)
         {
+            // Dialogue
             SerializedProperty prop = property.FindPropertyRelative(DIALOGUE_PROPERTY_NAME);
             height += EditorGUIUtility.singleLineHeight * 3 + EditorGUIUtility.standardVerticalSpacing;
 
-            foreach (string s in property_names)
+            // Programmy foldout
+            height += 20;
+
+            if (prop.isExpanded)
             {
-                prop = property.FindPropertyRelative(s);
-                height += EditorGUI.GetPropertyHeight(prop);
+                foreach (string s in PROGRAMMY_PROPERTY_NAMES)
+                {
+                    prop = property.FindPropertyRelative(s);
+                    height += EditorGUI.GetPropertyHeight(prop);
+                }
             }
         }
 
