@@ -12,11 +12,11 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
     private List<Transform> remainingPath;
     private Coroutine walkCoroutine;
 
-    private NPCAnimatorController animator;
+    private Animator animator;
     private SpriteRenderer spriteRenderer;
     private bool spriteDefaultFacingLeft;
 
-    public NPCWalkingContext(NPC context, NPCAnimatorController animator, SpriteRenderer sr, bool spriteDefaultFacingLeft) : base(context)
+    public NPCWalkingContext(NPC context, Animator animator, SpriteRenderer sr, bool spriteDefaultFacingLeft) : base(context)
     {
         this.animator = animator;
         this.spriteRenderer = sr;
@@ -104,7 +104,7 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
             remainingPath = new List<Transform>(currWalk.path);
 
             isWalking = true;
-            animator.SetBoolToTrue("isWalking");
+            animator.SetBool("isWalking", true);
             currWalk.onPathStarted?.Invoke();
 
             walkCoroutine = context.StartCoroutine(DoCurrentWalk());
@@ -127,7 +127,7 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
         context.StopCoroutine(walkCoroutine);
         walkCoroutine = null;
         isWalking = false;
-        animator.SetBoolToFalse("isWalking");
+        animator.SetBool("isWalking", false);
         currWalk.onPathBroken?.Invoke();
 
         if (currWalk.teleportToEndIfInterrupted)
@@ -204,7 +204,7 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
             isWalking = false;
             currWalk = null;
             walkCoroutine = null;
-            animator.SetBoolToFalse("isWalking");
+            animator.SetBool("isWalking", false);
             oldWalk.onPathFinished?.Invoke();   //This needs to be called after we've safely handled finishing the previous walk.
         } else
         {

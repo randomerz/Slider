@@ -2,12 +2,21 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-// IngredientDrawer
 [CustomPropertyDrawer(typeof(DialogueData))]
 public class DialogueDataDrawer : PropertyDrawer
 {
-    private List<string> property_names = new List<string> {
-        // "dialogue",
+    private const string DIALOGUE_PROPERTY_NAME = "dialogue";
+    private readonly string[] ANIMATOR_PROPERTY_NAMES = {
+        "animationOnStart",
+        "animationOnLeave",
+        "emoteOnStart",
+        "emoteOnLeave",
+    };
+    // private const string ANIMATOR_ON_START_NAME = "animationOnStart";
+    // private const string ANIMATOR_ON_LEAVE_NAME = "animationOnLeave";
+    // private string[] availableStates;
+
+    private readonly string[] PROGRAMMER_PROPERTY_NAMES = {
         "delayAfterFinishedTyping",
         "waitUntilPlayerAction",
         "advanceDialogueManually",
@@ -16,8 +25,8 @@ public class DialogueDataDrawer : PropertyDrawer
         "onDialogueStart",
         "onDialogueEnd",
     };
-
-    bool isFolded = true;
+    private const string IS_ANIMATOR_UNFOLDED_NAME = "editorIsAnimatorUnfolded";
+    private const string IS_PROGRAMMER_UNFOLDED_NAME = "editorIsProgrammerUnfolded";
 
     // Draw the property inside the given rect
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -36,15 +45,54 @@ public class DialogueDataDrawer : PropertyDrawer
                 position.width,
                 EditorGUIUtility.singleLineHeight * 3
             );
-            SerializedProperty prop = property.FindPropertyRelative("dialogue");
-            EditorGUI.PropertyField(dialogueRect, property.FindPropertyRelative("dialogue"), true);
+            SerializedProperty prop = property.FindPropertyRelative(DIALOGUE_PROPERTY_NAME);
+            EditorGUI.PropertyField(dialogueRect, property.FindPropertyRelative(DIALOGUE_PROPERTY_NAME), true);
             position.y += EditorGUIUtility.singleLineHeight * 3 + EditorGUIUtility.standardVerticalSpacing;
 
-            foreach (string s in property_names)
+            // Animator Foldout
+            prop = property.FindPropertyRelative(IS_ANIMATOR_UNFOLDED_NAME);
+            var animatorFoldoutRect = GetLinePositionFrom(position, 1);
+            prop.boolValue = EditorGUI.Foldout(animatorFoldoutRect, prop.boolValue, "Animator Parts", true);
+            position.y += 20;
+            
+            if (prop.boolValue)
             {
-                prop = property.FindPropertyRelative(s);
-                EditorGUI.PropertyField(position, property.FindPropertyRelative(s), true);
-                position.y += EditorGUI.GetPropertyHeight(prop);
+                EditorGUI.indentLevel++;
+                
+                // animationOnStart
+                // couldnt get animations to work :(
+                // check thread https://stackoverflow.com/questions/62795915/unity-custom-drop-down-selection-for-arrays-c-sharp
+                // prop = property.FindPropertyRelative("npcAnimatorController");
+                // Debug.Log("prop:" + prop);
+
+                foreach (string s in ANIMATOR_PROPERTY_NAMES)
+                {
+                    prop = property.FindPropertyRelative(s);
+                    EditorGUI.PropertyField(position, property.FindPropertyRelative(s), true);
+                    position.y += EditorGUI.GetPropertyHeight(prop);
+                }
+
+                EditorGUI.indentLevel--;
+            }
+
+            // Programmy Foldout
+            prop = property.FindPropertyRelative(IS_PROGRAMMER_UNFOLDED_NAME);
+            var programmyFoldoutRect = GetLinePositionFrom(position, 1);
+            prop.boolValue = EditorGUI.Foldout(programmyFoldoutRect, prop.boolValue, "Programmer Parts", true);
+            position.y += 20;
+            
+            if (prop.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                
+                foreach (string s in PROGRAMMER_PROPERTY_NAMES)
+                {
+                    prop = property.FindPropertyRelative(s);
+                    EditorGUI.PropertyField(position, property.FindPropertyRelative(s), true);
+                    position.y += EditorGUI.GetPropertyHeight(prop);
+                }
+                
+                EditorGUI.indentLevel--;
             }
         }
 
@@ -56,17 +104,39 @@ public class DialogueDataDrawer : PropertyDrawer
     {
         float height = 0;
 
+        // Base foldout
         height += 20;
         
         if (property.isExpanded)
         {
-            SerializedProperty prop = property.FindPropertyRelative("dialogue");
+            // Dialogue
+            SerializedProperty prop = property.FindPropertyRelative(DIALOGUE_PROPERTY_NAME);
             height += EditorGUIUtility.singleLineHeight * 3 + EditorGUIUtility.standardVerticalSpacing;
 
-            foreach (string s in property_names)
+            // Animator foldout
+            height += 20;
+
+            prop = property.FindPropertyRelative(IS_ANIMATOR_UNFOLDED_NAME);
+            if (prop.boolValue)
             {
-                prop = property.FindPropertyRelative(s);
-                height += EditorGUI.GetPropertyHeight(prop);
+                foreach (string s in ANIMATOR_PROPERTY_NAMES)
+                {
+                    prop = property.FindPropertyRelative(s);
+                    height += EditorGUI.GetPropertyHeight(prop);
+                }
+            }
+
+            // Programmy foldout
+            height += 20;
+
+            prop = property.FindPropertyRelative(IS_PROGRAMMER_UNFOLDED_NAME);
+            if (prop.boolValue)
+            {
+                foreach (string s in PROGRAMMER_PROPERTY_NAMES)
+                {
+                    prop = property.FindPropertyRelative(s);
+                    height += EditorGUI.GetPropertyHeight(prop);
+                }
             }
         }
 

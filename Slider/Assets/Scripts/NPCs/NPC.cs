@@ -9,12 +9,19 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
 {
     private readonly string poofParticleName = "SmokePoof Variant";
 
-    public float speed;
-    [SerializeField] private NPCAnimatorController animator;
     [SerializeField] private string characterName;
     [SerializeField] private List<NPCConditionals> conds;
+    public float speed;
+
+    public NPCEmotes emoteController;// { get; private set; }
+    public Animator animator { 
+        get => npcAnimatorController.myAnimator; 
+        private set => npcAnimatorController.myAnimator = value;
+    }
+    public NPCAnimatorController npcAnimatorController;
     [SerializeField] private DialogueDisplay dialogueDisplay;
     [SerializeField] private SpriteRenderer sr;
+    [Tooltip("This is for NPC walks")]
     [SerializeField] private bool spriteDefaultFacingLeft;
 
     private int currCondIndex;
@@ -22,6 +29,9 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private NPCWalkingContext walkingCtx;
     private STile currentStileUnderneath;
     private GameObject poofParticles;
+
+    // For editor
+    [HideInInspector] public bool autoSetWaitUntilPlayerAction = true;
 
     public List<NPCConditionals> Conds => conds;
     public int CurrCondIndex => currCondIndex;
@@ -44,6 +54,9 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private new void Start() 
     {
         base.Start();
+        
+        npcAnimatorController.Play(CurrCond.animationOnEnter);
+        emoteController.SetEmote(CurrCond.emoteOnEnter);
         CurrCond.onConditionalEnter?.Invoke();
     }
 
@@ -166,7 +179,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private void ChangeCurrentConditional(int newCond)
     {
         currCondIndex = newCond;
+
+        npcAnimatorController.Play(CurrCond.animationOnEnter);
+        emoteController.SetEmote(CurrCond.emoteOnEnter);
         CurrCond.onConditionalEnter?.Invoke();
+        
         dialogueCtx.OnConditionalsChanged();
     }
 
