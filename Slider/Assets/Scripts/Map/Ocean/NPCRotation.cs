@@ -4,46 +4,43 @@ using UnityEngine;
 
 public class NPCRotation : MonoBehaviour
 {
-    private List<string> rotationUpdates = new List<string> ();
+    private List<string> rotationUpdates = new List<string>();
     [SerializeField] NPC diceGirl;
     [SerializeField] NPC diceGuy;
     [SerializeField] NPC fisherman;
     [SerializeField] NPC alien;
     [SerializeField] NPC porker;
+    [SerializeField] NPC ike;
     [SerializeField] NPC traveling_merchant;
     [SerializeField] NPC catBeard;
     [SerializeField] NPC fezziwig;
     [SerializeField] NPC amberOak;
     [SerializeField] NPC muncher;
-    [SerializeField] Transform tile2Transform;
-    Transform tavernTransform;
+    [SerializeField] Transform leftDice; //vanessa -> amber oak
+    [SerializeField] Transform rightDice;// bruce ->catbeard
+    [SerializeField] Transform leftSign;//amberoak -> alien
+    [SerializeField] Transform rightSign;//fezziwig
+    [SerializeField] Transform leftEntrance; //trav merch
+    [SerializeField] Transform rightEntrance; //porker
+    [SerializeField] Transform left_left_table; //fisherman
+    [SerializeField] Transform off_camera; 
+    [SerializeField] Transform coconuts; //porker
+    [SerializeField] Transform IkeSpot; //ike
 
-    public bool gotBreadge = false;
+    public bool gotBreadge = false; //saved in oceangrid.cs maybe need to update to Savable in the future
     public bool gotCatbeardTreasure = false;
 
-    public Dictionary<string,Vector3> tavernLoc = new Dictionary<string,Vector3>(){
-        {"left_dice", new Vector3(-6, 4, 0)},
-        {"right_dice", new Vector3(-1.5f, 5, 0)},
-        {"left_entrance", new Vector3(-2, -2, 0)},
-        {"right_entrance", new Vector3(4, 2, 0)},
-        {"left_sign", new Vector3(-1.5f, 1.5f, 0)},
-        {"left_left_table", new Vector3(-6, 1.5f, 0)},
-        {"right_sign", new Vector3(3f, 1.5f, 0)},
-        {"outside", new Vector3(20,0,0)},
-        {"coconuts", new Vector3(6.75f, 4f, 0)},
-        {"right_right_table", new Vector3(8.5f, 0.5f, 0)}  
-    };
     public void OnEnable()
     {
         ShopManager.OnTurnedItemIn += ChangeNPCS;
         AnchorFirstAppearance.OnAnchorAcquire += MoveAmberOak;
-        tavernTransform = diceGirl.transform.parent;
         InitTavern();
     }
 
     public void OnDisable()
     {
         ShopManager.OnTurnedItemIn -= ChangeNPCS;
+        AnchorFirstAppearance.OnAnchorAcquire -= MoveAmberOak;
     }
 
 
@@ -51,9 +48,9 @@ public class NPCRotation : MonoBehaviour
     public void InitTavern()
     {
         List<Collectible.CollectibleData> collectibles = PlayerInventory.Instance.GetCollectiblesList();
-        foreach(Collectible.CollectibleData item in collectibles)
+        foreach (Collectible.CollectibleData item in collectibles)
         {
-            switch(item.name)
+            switch (item.name)
             {
                 case "A Golden Fish": //fisherman joins the tavern
                     rotationUpdates.Add("fisherman");
@@ -62,36 +59,36 @@ public class NPCRotation : MonoBehaviour
                 case "A Peculiar Rock": //alien
                     rotationUpdates.Add("alien");
                     break;
-                
+
                 case "Cat Beard's Treasure"://dice ppl leave
-                    Debug.Log("adding dice duo to change list");
                     rotationUpdates.Add("diceGirl");
                     rotationUpdates.Add("catBeard");
                     break;
-                
+
                 case "A Magical Gem": //fezziwig joins
                     rotationUpdates.Add("fezziwig");
                     break;
                 default:
                     break;
             }
-            if(PlayerInventory.Instance.GetHasCollectedAnchor()){
-                Debug.Log("adding dice duo to change list");
-                amberOak.MoveLocal(amberOak.transform.parent, tavernLoc["left_sign"]);
+            if (PlayerInventory.Instance.GetHasCollectedAnchor())
+            {
+                amberOak.Teleport(leftSign);
             }
-            if(SaveSystem.Current.GetBool("oceanPickedUpCoconut"))
+            if (SaveSystem.Current.GetBool("oceanPickedUpCoconut"))
                 MovePorker();
 
-            traveling_merchant.MoveLocal(traveling_merchant.transform.parent, tavernLoc["outside"]);
-            alien.MoveLocal(alien.transform.parent, tavernLoc["outside"]);
+            traveling_merchant.Teleport(off_camera);
+            alien.Teleport(off_camera);
         }
     }
 
 
-   //whenever player turns in an item, depending on item, bring npcs/in and out of tavern
-    public void ChangeNPCS(object sender, ShopManager.OnTurnedItemInArgs args )
+    //whenever player turns in an item, depending on item, bring npcs/in and out of tavern
+    public void ChangeNPCS(object sender, ShopManager.OnTurnedItemInArgs args)
     {
-        switch(args.item){
+        switch (args.item)
+        {
             case "A Golden Fish": //fisherman joins the tavern
                 rotationUpdates.Add("fisherman");
                 break;
@@ -99,14 +96,13 @@ public class NPCRotation : MonoBehaviour
             case "A Peculiar Rock": //alien
                 rotationUpdates.Add("alien");
                 break;
-            
+
             case "Cat Beard's Treasure"://dice ppl leave
-                Debug.Log("adding dice duo to change list");
                 rotationUpdates.Add("diceGirl");
                 rotationUpdates.Add("catBeard");
                 gotCatbeardTreasure = true;
                 break;
-            
+
             case "A Magical Gem": //fezziwig joins
                 rotationUpdates.Add("fezziwig");
                 break;
@@ -115,64 +111,69 @@ public class NPCRotation : MonoBehaviour
         }
     }
 
-    public void UpdateTavern(){
-        Debug.Log("Updating tavern npcs!");
+    public void UpdateTavern()
+    {
         float rng = UnityEngine.Random.Range(0f, 1f);
-        Debug.Log("RNG: " + rng + " gotCatbeardTreasure: " + gotCatbeardTreasure + " gotBreadge: " + gotBreadge);
-        if(rng < .1f && !gotBreadge && gotCatbeardTreasure){
-            traveling_merchant.MoveLocal(traveling_merchant.transform.parent, tavernLoc["left_entrance"]);
-        }else{
-            traveling_merchant.MoveLocal(traveling_merchant.transform.parent, tavernLoc["outside"]);
+        if (rng < .1f && !gotBreadge && gotCatbeardTreasure)
+        {
+            traveling_merchant.Teleport(leftEntrance);
         }
-        foreach(string person in rotationUpdates){
-            Debug.Log("Updating "+ person);
-            switch(person){
-            case "fisherman": //fisherman joins the tavern
-                fisherman.MoveLocal(fisherman.transform.parent, tavernLoc["right_sign"]);
-                break;
-
-            case "alien": //alien joins
-                alien.MoveLocal(alien.transform.parent, tavernLoc["left_left_table"]);
-                break;
-            
-            case "diceGirl"://dice ppl leave, catberad and broke replace them
-                Debug.Log("Evicting the dice duo!");
-                diceGirl.MoveLocal(diceGirl.transform, tavernLoc["outside"]);
-                diceGuy.MoveLocal(diceGuy.transform, tavernLoc["outside"]);
-                amberOak.MoveLocal(tavernTransform, tavernLoc["left_dice"]);
-                catBeard.MoveLocal(tavernTransform, tavernLoc["right_dice"]);
-                break;
-            
-            case "fezziwig": //fezziwig joins
-                fezziwig.MoveLocal(fezziwig.transform.parent, tavernLoc["right_sign"]);
-                break;
-            case "porker"://move porker to the coconuts and change his dialogue
-                porker.MoveLocal(tile2Transform, tavernLoc["coconutArea"]);
-                break;
-            
-
-            default:
-                break;
+        else
+        {
+            traveling_merchant.Teleport(off_camera);
         }
+        foreach (string person in rotationUpdates)
+        {
+            switch (person)
+            {
+                case "fisherman": //fisherman joins the tavern
+                    fisherman.Teleport(left_left_table);
+                    break;
+
+                case "alien": //alien joins
+                    alien.Teleport(leftSign);
+                    break;
+
+                case "diceGirl"://dice ppl leave, catberad and broke replace them
+                    diceGirl.Teleport(off_camera);
+                    diceGuy.Teleport(off_camera);
+                    amberOak.Teleport(leftDice);
+                    catBeard.Teleport(rightDice);
+                    break;
+
+                case "fezziwig": //fezziwig joins
+                    fezziwig.Teleport(rightSign);
+                    break;
+                case "porker"://move porker to the coconuts and change his dialogue
+                    porker.Teleport(coconuts);
+                    break;
+
+
+                default:
+                    break;
+            }
         }
         rotationUpdates.Clear();
     }
 
-    public void MovePorker(){
-        Debug.Log("coconuts");
-        porker.MoveLocal(tile2Transform, tavernLoc["coconuts"]);
+    public void MovePorker()
+    {
+        porker.Teleport(coconuts);
     }
 
-    public void MoveAmberOak(object sender, System.EventArgs e){
-        Debug.Log("moving AmberOak");
-        amberOak.MoveLocal(amberOak.transform.parent, tavernLoc["left_sign"]);
+    public void MoveAmberOak(object sender, System.EventArgs e)
+    {
+        porker.Teleport(rightEntrance);
+        ike.Teleport(IkeSpot);
+        amberOak.Teleport(leftSign);
     }
 
-    public void CollectedBreadge(){
+    public void CollectedBreadge()
+    {
         gotBreadge = true;
     }
 
-    
+
 
 
 }
