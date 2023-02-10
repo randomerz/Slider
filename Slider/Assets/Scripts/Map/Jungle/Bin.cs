@@ -7,6 +7,10 @@ using UnityEngine;
 public class Bin : Box
 { 
     public Dictionary<Path, Shape> recievedShapes = new Dictionary<Path, Shape>();
+    public SpriteRenderer shape1;
+    public SpriteRenderer shape2;
+    private int numShapes = 0;
+
     private void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += OnSTileMoveEarly;
@@ -21,6 +25,9 @@ public class Bin : Box
     {
         //remove all shapes
         currentShape = null;
+        numShapes = 0;
+        shape1.sprite = null;
+        shape2.sprite = null;
         print("no shape");
     }
 
@@ -33,13 +40,32 @@ public class Bin : Box
         {
             //broadcast a shape has been made
             print("bin: " + shape.name);
+            numShapes++;
+        } else
+        {
+            numShapes--;
         }
 
         foreach (Path p in recievedShapes.Keys)
         {
             if (recievedShapes[p] != null)
             {
-                print(recievedShapes[p].name);
+                if (numShapes == 1)
+                {
+                    shape1.sprite = recievedShapes[p].sprite;
+                } else { 
+                    shape2.sprite = recievedShapes[p].sprite;
+                }
+                //print(recievedShapes[p].name);
+            } else
+            {
+                if (numShapes == 0)
+                {
+                    shape1.sprite = null;
+                } else
+                {
+                    shape2.sprite = null;
+                }
             }
         }
     }
