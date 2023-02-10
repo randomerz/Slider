@@ -43,11 +43,11 @@ public class Blob : MonoBehaviour
         this.travelDistance = travelDistance;
         this.pair = pair;
 
-        if ((direction == Direction.LEFT || direction == Direction.RIGHT))
+/*        if ((direction == Direction.LEFT || direction == Direction.RIGHT))
         {
             renderer.sortingOrder = -2;
             shapeRenderer.sortingOrder = -2;
-        }
+        }*/
     }
 
     public void setTraveledDistance(float traveled)

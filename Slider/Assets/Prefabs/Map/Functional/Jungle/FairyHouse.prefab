@@ -129,6 +129,11 @@ MonoBehaviour:
   top: {fileID: 0}
   bottom: {fileID: 0}
   currentDirection: 0
+  insignias:
+  - {fileID: -1146792032, guid: 8b740846c81f3a14d8cb4f9bf19eed3a, type: 3}
+  - {fileID: -1030472465, guid: 8b740846c81f3a14d8cb4f9bf19eed3a, type: 3}
+  - {fileID: 712031244, guid: 8b740846c81f3a14d8cb4f9bf19eed3a, type: 3}
+  insignia: {fileID: 2655301141477459161}
 --- !u!114 &1224805008847403842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,8 +321,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 529684183
   m_SortingLayer: 7
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 712031244, guid: 8b740846c81f3a14d8cb4f9bf19eed3a, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: -1146792032, guid: 8b740846c81f3a14d8cb4f9bf19eed3a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

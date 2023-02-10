@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Hut : Box
 {
+    public Sprite[] insignias;
+    public SpriteRenderer insignia;
+
     void Awake()
     {
         SetPaths();
@@ -56,6 +59,7 @@ public class Hut : Box
 
         currentShapeIndex = (currentShapeIndex + 1) % shapes.Count;
         currentShape = shapes[currentShapeIndex];
+        insignia.sprite = insignias[currentShapeIndex];
         CreateShape(new List<Box>());
     }
 }
