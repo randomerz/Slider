@@ -132,7 +132,7 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
 
         if (currWalk.teleportToEndIfInterrupted)
         {
-            context.Teleport(remainingPath[remainingPath.Count - 1]);
+            context.Teleport(remainingPath[remainingPath.Count - 1], true);
             FinishWalk();
         }
     }

@@ -7,16 +7,16 @@ using UnityEngine.InputSystem;
 public class CameraDolly : MonoBehaviour
 {
     public CinemachineVirtualCamera virtualCamera;
-    private CinemachineTrackedDolly dolly;
+    protected CinemachineTrackedDolly dolly;
     public CinemachineSmoothPath path;
-    private int numWaypoints;
+    protected int numWaypoints;
     
     public AnimationCurve pathMovementCurve;
     public float duration;
 
-    private BindingHeldBehavior dollySkipBindingBehavior;
+    protected BindingHeldBehavior dollySkipBindingBehavior;
 
-    private void Awake() 
+    protected void Awake() 
     {
         dolly = virtualCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
         numWaypoints = path.m_Waypoints.Length;
@@ -32,7 +32,7 @@ public class CameraDolly : MonoBehaviour
         StartCoroutine(Rollercoaster());
     }
     
-    private IEnumerator Rollercoaster()
+    protected virtual IEnumerator Rollercoaster()
     {
         UIEffects.FadeFromBlack();
         UIManager.canOpenMenus = false;
@@ -66,7 +66,7 @@ public class CameraDolly : MonoBehaviour
         }
     }
 
-    private void SkipToEndOfTrack(InputAction.CallbackContext ignored)
+    protected void SkipToEndOfTrack(InputAction.CallbackContext ignored)
     {
         UIEffects.FadeToBlack(
             () => EndTrack()
@@ -75,7 +75,7 @@ public class CameraDolly : MonoBehaviour
         Controls.UnregisterBindingBehavior(dollySkipBindingBehavior);
     }
 
-    private void EndTrack()
+    protected void EndTrack()
     {
         UIEffects.FadeFromBlack();
         UIManager.canOpenMenus = true;

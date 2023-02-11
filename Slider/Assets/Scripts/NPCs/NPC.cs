@@ -132,13 +132,15 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     #endregion
 
     #region Teleportation
-    public void Teleport(Transform trans)
+
+    public void Teleport(Transform trans,bool poof=false)
     {
         if (transform.position != trans.position)
         {
-            Instantiate(poofParticles, transform.position, Quaternion.identity);
+            if(poof)
+                Instantiate(poofParticles, transform.position, Quaternion.identity);
             transform.position = trans.position;
-            transform.parent = trans.parent;
+            transform.parent = trans;
         }
     }
     #endregion
