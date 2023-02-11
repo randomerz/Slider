@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,13 +13,13 @@ public class BottleManager : MonoBehaviour
     public Item romeosBottle; // for the spawn animation
     private Transform romeosBottleHolder;
     
-    private int turncounter = 0;
+    private float turncounter = 0;
     private bool puzzleActive = false;
 
     private GameObject bottle = null;
     private bool bottleIsInWater = false;
     private STile bottleParentStile = null;
-
+    
     [SerializeField] private Vector3 bottleInitialLocation = new Vector3(-7.5f,41.5f);
     private List<Vector3> positions = new List<Vector3> { 
         new Vector3(-4.5f,7.5f), 
@@ -47,6 +48,8 @@ public class BottleManager : MonoBehaviour
 
     private IEnumerator StartBottleMovementAnimation(Vector3 start, Vector3 end, float moveDuration)
     {
+        if(start == end)
+            yield break;
         float t = 0;
         while(t < moveDuration)
         {
@@ -58,16 +61,16 @@ public class BottleManager : MonoBehaviour
     }
 
     private void UpdateBottleLocation(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs){
-        if(puzzleActive && tileMoveArgs.stile.islandId == bottleParentStile.islandId && !bottleParentStile.hasAnchor)
+        if(puzzleActive)
         {
-            //Debug.Log("wha");
-            turncounter++;
+            Debug.Log("wha "+turncounter);
+            turncounter+=0.25f;
             if (turncounter >2)
             {
                 DestroyBottle();
             }
-            else
-                StartCoroutine(StartBottleMovementAnimation(positions[turncounter-1] ,positions[turncounter], tileMoveArgs.moveDuration));
+            else if(MathF.Ceiling(turncounter) == 1 || MathF.Ceiling(turncounter) == 2)
+                StartCoroutine(StartBottleMovementAnimation(bottle.transform.position ,positions[(int)(MathF.Ceiling(turncounter))], tileMoveArgs.moveDuration));
         }
     }
 
@@ -110,7 +113,7 @@ public class BottleManager : MonoBehaviour
             bottle.transform.SetParent(bottleParentStile.transform);
 
             turncounter = 0;
-            bottle.transform.localPosition = positions[turncounter];
+            bottle.transform.localPosition = positions[(int)(turncounter)];
 
             UITrackerManager.AddNewTracker(bottle, UITrackerManager.DefaultSprites.circleEmpty);
 

@@ -7,6 +7,9 @@ public class VillageGrid : SGrid
     public GameObject caveDoorEntrance;
     public GameObject caveDoorRocks;
     public GameObject particleSpawner;
+    
+    [SerializeField] private NPC romeoNPC;
+    [SerializeField] private SinWaveAnimation catSinWave;
 
     private bool fishOn;
 
@@ -75,6 +78,9 @@ public class VillageGrid : SGrid
 
         if (checkCompletion)
             gridAnimator.ChangeMovementDuration(0.5f);
+        
+        if (SaveSystem.Current.GetBool(INTRO_CUTSCENE_SAVE_STRING))
+            catSinWave.gameObject.SetActive(false);
     }
 
 
@@ -89,9 +95,54 @@ public class VillageGrid : SGrid
 
     private IEnumerator StartVillageCutscene()
     {
+        StartCoroutine(CatFloatingAway());
+
+        romeoNPC.sr.flipX = true;
+        romeoNPC.GetComponent<DialogueDisplay>().DeactivateMessagePing();
+
         introCameraDolly.StartTrack();
 
-        yield return null;
+        yield return new WaitForSeconds(0.5f);
+        
+        romeoNPC.sr.flipX = false;
+
+        yield return new WaitForSeconds(0.5f);
+        
+        romeoNPC.sr.flipX = true;
+
+        yield return new WaitForSeconds(1);
+        
+        romeoNPC.StartWalkAtIndex(0);
+
+        yield return new WaitForSeconds(3f);
+        
+        romeoNPC.GetComponent<DialogueDisplay>().ActivateMessagePing();
+    }
+
+    private IEnumerator CatFloatingAway()
+    {
+        catSinWave.horizontalVelocity = 0.25f;
+
+        yield return new WaitForSeconds(1);
+
+        catSinWave.horizontalVelocity = 1.25f;
+
+        bool playerOnBeach = false;
+
+        // once cat goes over water, let him chill
+        yield return new WaitUntil(() => {
+            playerOnBeach = playerOnBeach || Player.GetPosition().x > 43;
+            return catSinWave.transform.position.x > 53;
+        });
+
+        catSinWave.horizontalVelocity = 0;
+
+        yield return new WaitUntil(() => {
+            playerOnBeach = playerOnBeach || Player.GetPosition().x > 43;
+            return playerOnBeach;
+        });
+
+        catSinWave.horizontalVelocity = 0.75f;
     }
 
     public void OnWaterfallEntry()

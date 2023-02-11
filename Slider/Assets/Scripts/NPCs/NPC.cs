@@ -19,8 +19,8 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         private set => npcAnimatorController.myAnimator = value;
     }
     public NPCAnimatorController npcAnimatorController;
+    public SpriteRenderer sr;
     [SerializeField] private DialogueDisplay dialogueDisplay;
-    [SerializeField] private SpriteRenderer sr;
     [Tooltip("This is for NPC walks")]
     [SerializeField] private bool spriteDefaultFacingLeft;
 
@@ -132,13 +132,20 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     #endregion
 
     #region Teleportation
-    public void Teleport(Transform trans)
+
+    public void Teleport(Transform transform)
     {
-        if (transform.position != trans.position)
+        Teleport(transform, false);
+    }
+
+    public void Teleport(Transform transform, bool poof=false)
+    {
+        if (base.transform.position != transform.position)
         {
-            Instantiate(poofParticles, transform.position, Quaternion.identity);
-            transform.position = trans.position;
-            transform.parent = trans.parent;
+            if(poof)
+                Instantiate(poofParticles, base.transform.position, Quaternion.identity);
+            base.transform.position = transform.position;
+            base.transform.parent = transform;
         }
     }
     #endregion
