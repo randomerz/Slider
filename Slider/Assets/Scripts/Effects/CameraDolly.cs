@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class CameraDolly : MonoBehaviour
 {
+    public System.EventHandler<System.EventArgs> OnRollercoasterEnd;
+
     public CinemachineVirtualCamera virtualCamera;
     private CinemachineTrackedDolly dolly;
     public CinemachineSmoothPath path;
@@ -81,5 +83,7 @@ public class CameraDolly : MonoBehaviour
         UIManager.canOpenMenus = true;
         Player.SetCanMove(true);
         virtualCamera.Priority = -15;
+
+        OnRollercoasterEnd?.Invoke(this, null);
     }
 }

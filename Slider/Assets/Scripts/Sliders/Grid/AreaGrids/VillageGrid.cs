@@ -83,8 +83,15 @@ public class VillageGrid : SGrid
         if (!SaveSystem.Current.GetBool(INTRO_CUTSCENE_SAVE_STRING))
         {
             SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
-            introCameraDolly.StartTrack();
+            StartCoroutine(StartVillageCutscene());
         }
+    }
+
+    private IEnumerator StartVillageCutscene()
+    {
+        introCameraDolly.StartTrack();
+
+        yield return null;
     }
 
     public void OnWaterfallEntry()
