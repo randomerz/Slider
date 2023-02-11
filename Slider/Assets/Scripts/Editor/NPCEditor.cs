@@ -12,6 +12,7 @@ public class NPCEditor : Editor
     private void OnEnable()
     {
         _target = (NPC)target;
+        SetConditionalNames();
     }
 
     public override void OnInspectorGUI()
@@ -21,10 +22,11 @@ public class NPCEditor : Editor
         EditorGUILayout.LabelField("Custom tools", EditorStyles.boldLabel);
 
         _target.autoSetWaitUntilPlayerAction = EditorGUILayout.Toggle("Automatically Set 'waitUntilPlayerAction'", _target.autoSetWaitUntilPlayerAction);
-        if (_target.autoSetWaitUntilPlayerAction)
+        if (_target.autoSetWaitUntilPlayerAction && GUI.changed)
         {
             SetWaitUntilPlayerActions();
         }
+
 
     }
 
@@ -40,6 +42,17 @@ public class NPCEditor : Editor
                 bool advanceDialogueManually = dialogueData.advanceDialogueManually;
                 npcConditional.dialogueChain[i].waitUntilPlayerAction = !isLast && !dontInterrupt && !advanceDialogueManually;
             }
+
+        }
+    }
+
+    private void SetConditionalNames()
+    {
+        for (int i = 0; i < _target.Conds.Count; i++)
+        {
+            NPCConditionals npcConditional = _target.Conds[i];
+            if (npcConditional.dialogueChain.Count > 0)
+                npcConditional.name = $"{i}. {npcConditional.dialogueChain[0].dialogue}";
         }
     }
 }

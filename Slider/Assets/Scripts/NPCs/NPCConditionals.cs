@@ -7,20 +7,38 @@ using UnityEngine.Serialization;
 [System.Serializable]
 public class NPCConditionals
 {
+    [HideInInspector] public string name;
     public List<Condition> conditions;
 
     [Header("Dialogue")]
     public bool alwaysStartFromBeginning;
     public List<DialogueData> dialogueChain;
+    [HideInInspector] public bool isDialogueChainExhausted;
+
+    // Animator parts
+    [Tooltip("Name of NPC animation to play when conditional is entered.")]
+    public string animationOnEnter;
+    // Feel free to uncomment these if you want to use them (and in NPCDialogueContext.TryDialogueChainExhausted() and NPCConditionalsDrawer.ANIMATOR_PROPERTY_NAMES)
+    // [Tooltip("Name of NPC animation to play when conditional is exhausted.")] 
+    // public string animationOnExhaust;
+    [Tooltip("Name of NPC emote to display when conditional is entered.")]
+    public NPCEmotes.Emotes emoteOnEnter;
+    // [Tooltip("Name of NPC emote to display when conditional is exhausted.")]
+    // public NPCEmotes.Emotes emoteOnExhaust;
+
+    // Programmy parts
     [FormerlySerializedAs("onDialogueChanged")]
     public UnityEvent onConditionalEnter;
     public UnityEvent onDialogueChainExhausted;
-
     public List<NPCWalkData> walks;
 
     [HideInInspector] public int priority;
     private int currentprio = 0;
 
+    // Editor tools
+    [HideInInspector] public bool editorIsAnimatorUnfolded;
+    [HideInInspector] public bool editorIsProgrammerUnfolded;
+    
     public bool CheckConditions()
     {
         foreach (Condition cond in conditions)

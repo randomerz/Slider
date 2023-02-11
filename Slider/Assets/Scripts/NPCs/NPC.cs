@@ -12,7 +12,13 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     [SerializeField] private string characterName;
     [SerializeField] private List<NPCConditionals> conds;
     public float speed;
-    [SerializeField] private NPCAnimatorController animator;
+
+    public NPCEmotes emoteController;// { get; private set; }
+    public Animator animator { 
+        get => npcAnimatorController.myAnimator; 
+        private set => npcAnimatorController.myAnimator = value;
+    }
+    public NPCAnimatorController npcAnimatorController;
     [SerializeField] private DialogueDisplay dialogueDisplay;
     [SerializeField] private SpriteRenderer sr;
     [Tooltip("This is for NPC walks")]
@@ -48,6 +54,9 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private new void Start() 
     {
         base.Start();
+        
+        npcAnimatorController.Play(CurrCond.animationOnEnter);
+        emoteController.SetEmote(CurrCond.emoteOnEnter);
         CurrCond.onConditionalEnter?.Invoke();
     }
 
@@ -123,13 +132,15 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     #endregion
 
     #region Teleportation
-    public void Teleport(Transform trans)
+
+    public void Teleport(Transform trans,bool poof=false)
     {
         if (transform.position != trans.position)
         {
-            Instantiate(poofParticles, transform.position, Quaternion.identity);
+            if(poof)
+                Instantiate(poofParticles, transform.position, Quaternion.identity);
             transform.position = trans.position;
-            transform.parent = trans.parent;
+            transform.parent = trans;
         }
     }
     #endregion
@@ -164,7 +175,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private void ChangeCurrentConditional(int newCond)
     {
         currCondIndex = newCond;
+
+        npcAnimatorController.Play(CurrCond.animationOnEnter);
+        emoteController.SetEmote(CurrCond.emoteOnEnter);
         CurrCond.onConditionalEnter?.Invoke();
+        
         dialogueCtx.OnConditionalsChanged();
     }
 
