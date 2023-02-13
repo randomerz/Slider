@@ -98,6 +98,18 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
         }
     }
 
+    // For inspectors/NPCs
+    public void SetAreaStatusSilhouette(string areaName)
+    {
+        Area area = Area.None;
+        if (!Area.TryParse<Area>(areaName, out area))
+        {
+            Debug.LogError("Area was not able to be parsed. Did you type it correctly?");
+            return;
+        }
+        _instance._SetAreaStatus(Area.Parse<Area>(areaName), ArtifactWorldMapArea.AreaStatus.silhouette);
+    }
+
     public ArtifactWorldMapArea.AreaStatus GetAreaStatus(Area area)
     {
         return areaToStatus[area];

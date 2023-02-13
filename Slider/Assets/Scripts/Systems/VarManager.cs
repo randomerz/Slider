@@ -9,7 +9,7 @@ public class VarManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject); will commenting this break anything? c:
         }
     }
 
