@@ -55,9 +55,9 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     {
         base.Start();
         
+        CurrCond.onConditionalEnter?.Invoke();
         npcAnimatorController.Play(CurrCond.animationOnEnter);
         emoteController.SetEmote(CurrCond.emoteOnEnter);
-        CurrCond.onConditionalEnter?.Invoke();
     }
 
     private new void OnEnable()
@@ -181,9 +181,9 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     {
         currCondIndex = newCond;
 
+        CurrCond.onConditionalEnter?.Invoke();
         npcAnimatorController.Play(CurrCond.animationOnEnter);
         emoteController.SetEmote(CurrCond.emoteOnEnter);
-        CurrCond.onConditionalEnter?.Invoke();
         
         dialogueCtx.OnConditionalsChanged();
     }
