@@ -130,6 +130,8 @@ public class ShopDialogueManager : MonoBehaviour
             Debug.LogError("Tried SetDialogue when UIState was None!");
             return;
         }
+        
+        ShopManager.CanClosePanel = shopManager.UIState != ShopManager.States.Dialogue;
 
         currentTyperText = typerText;
         currentSpecialText = specialText;
@@ -168,13 +170,22 @@ public class ShopDialogueManager : MonoBehaviour
             
             // if currentDialogue changed then we want to leave it changed, otherwise null it so it doesnt get called again
             if (currentDialogue == temp)
+            {   
+                ShopManager.CanClosePanel = true;
                 currentDialogue = null;
+            }
         }
     }
 
 
 
     #region Dialogues
+
+    // for public access
+    public void SetSprite(TKSprite sprite)
+    {
+        tkImage.sprite = GetSprite(sprite);
+    }
     
     public void UpdateDialogue()
     {
@@ -209,7 +220,7 @@ public class ShopDialogueManager : MonoBehaviour
             }
             else if (shopManager.UIState == ShopManager.States.Main)
             {
-                UpdateDialogue("All Items Returned");
+                UpdateDialogue("Final Challenge Reminder");
                 return;
             }
         }
@@ -220,11 +231,11 @@ public class ShopDialogueManager : MonoBehaviour
             return;
         }
 
-        if (shopManager.UIState == ShopManager.States.Buy)
-        {
-            UpdateDialogue("Default Buy");
-            return;
-        }
+        // if (shopManager.UIState == ShopManager.States.Buy)
+        // {
+        //     UpdateDialogue("Default Buy");
+        //     return;
+        // }
     }
 
     public void UpdateDialogue(string codeName)
@@ -246,23 +257,23 @@ public class ShopDialogueManager : MonoBehaviour
                 ));
                 break;
                 
-            case "Default Buy":
-                SetDialogue(new ShopDialogue(
-                    null,
-                    "Whaddya' want, landlubber",
-                    TKSprite.Normal,
-                    null
-                ));
-                break;
+            // case "Default Buy":
+            //     SetDialogue(new ShopDialogue(
+            //         null,
+            //         "Whaddya' want, landlubber",
+            //         TKSprite.Normal,
+            //         null
+            //     ));
+            //     break;
                 
-            case "Default Purchase":
-                SetDialogue(new ShopDialogue(
-                    null,
-                    "Hmm, a wise choice!",
-                    TKSprite.Happy,
-                    null
-                ));
-                break;
+            // case "Default Purchase":
+            //     SetDialogue(new ShopDialogue(
+            //         null,
+            //         "Hmm, a wise choice!",
+            //         TKSprite.Happy,
+            //         null
+            //     ));
+            //     break;
 
 
 
@@ -324,22 +335,29 @@ public class ShopDialogueManager : MonoBehaviour
                         SaveSystem.Current.SetBool("oceanBobNormal", true);
                         shopManager.OpenDialoguePanel();
                     },
-                    "Aye, that's a solid tool there. In fact, that was awfully quick.",
+                    "Aye, that's a solid tool there. In fact, that was awfully quick. Keep it up, and you might just make a name for yourself around here.",
                     TKSprite.Question,
                     () => {
                         SetDialogue(new ShopDialogue(
                     null,
-                    "Keep it up, and you might just make a name for yourself around here. Ask me about jobs and I can help you get started.",
+                    "Look pal, we're trying a new, uh... \"Business\" model here. I'll even let you get started for free with the first tier for free.",
                     TKSprite.Question,
+                    () => {
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "How it works is, YOU bring me treasures from around the sea, and I'll give you some... points? Get enough points and you'll get a reward.",
+                    TKSprite.Normal,
                     () => {
                         shopManager.OpenMainPanel();
 
                         SetDialogue(new ShopDialogue(
                     null,
-                    "There's a whole world out there to explore.",
+                    "I'm calling it, \"Bob's Tavern Pass\"!",
                     TKSprite.Happy,
                     () => {
                         canOverrideDialogue = true;
+                    }
+                ));
                     }
                 ));
                     }
@@ -411,24 +429,24 @@ public class ShopDialogueManager : MonoBehaviour
                 ));
                 break;
             
-            case "All Items Returned":
+            case "Start Final Challenge":
                 SetDialogue(new ShopDialogue(
                     () => {
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                         (SGrid.Current as OceanGrid).StartFinalChallenge();
                     },
-                    "Never expected it, pal, but...",
+                    "Well... to be honest, never expected you to finish my battle pass.",
                     TKSprite.Normal,
                     () => {
                         SetDialogue(new ShopDialogue(
                     null,
-                    "Looks like you've about explored the whole darned ocean. Time to put things in their rightful places.",
+                    "Now that you've about explored the whole darned ocean, I reckon it's about time to put things in their rightful places.",
                     TKSprite.Question,
                     () => {
                         SetDialogue(new ShopDialogue(
                     null,
-                    "I've seen what you can do with that tablet of yours. If you can put our island back together, I can help you get to Canopy Town.",
+                    "I've seen what you can do with that tablet of yours. If you can put our islands and such back together, I can help you get to Canopy Town.",
                     TKSprite.Normal,
                     () => {
                         shopManager.OpenMainPanel();
@@ -443,6 +461,29 @@ public class ShopDialogueManager : MonoBehaviour
                 ));
                     }
                 ));
+                    }
+                ));
+                    }
+                ));
+                break;
+            
+            case "Final Challenge Reminder":
+                SetDialogue(new ShopDialogue(
+                    () => {
+                        canOverrideDialogue = false;
+                        shopManager.OpenDialoguePanel();
+                    },
+                    "If you fix this island and maybe Catbeard's ship with that tablet of yours, I can help you cross over to Canopy Town.",
+                    TKSprite.Normal,
+                    () => {
+                        shopManager.OpenMainPanel();
+
+                        SetDialogue(new ShopDialogue(
+                    null,
+                    "I'll bust out the axe and cut the trees above the tavern.",
+                    TKSprite.Happy,
+                    () => {
+                        canOverrideDialogue = true;
                     }
                 ));
                     }

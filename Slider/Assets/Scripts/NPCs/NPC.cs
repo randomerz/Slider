@@ -9,12 +9,19 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
 {
     private readonly string poofParticleName = "SmokePoof Variant";
 
-    public float speed;
-    [SerializeField] private NPCAnimatorController animator;
     [SerializeField] private string characterName;
     [SerializeField] private List<NPCConditionals> conds;
+    public float speed;
+
+    public NPCEmotes emoteController;// { get; private set; }
+    public Animator animator { 
+        get => npcAnimatorController.myAnimator; 
+        private set => npcAnimatorController.myAnimator = value;
+    }
+    public NPCAnimatorController npcAnimatorController;
+    public SpriteRenderer sr;
     [SerializeField] private DialogueDisplay dialogueDisplay;
-    [SerializeField] private SpriteRenderer sr;
+    [Tooltip("This is for NPC walks")]
     [SerializeField] private bool spriteDefaultFacingLeft;
 
     private int currCondIndex;
@@ -22,6 +29,9 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private NPCWalkingContext walkingCtx;
     private STile currentStileUnderneath;
     private GameObject poofParticles;
+
+    // For editor
+    [HideInInspector] public bool autoSetWaitUntilPlayerAction = true;
 
     public List<NPCConditionals> Conds => conds;
     public int CurrCondIndex => currCondIndex;
@@ -39,6 +49,15 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     {
         base.Awake();
         SetCondPrioritiesToArrayPos();
+    }
+
+    private new void Start() 
+    {
+        base.Start();
+        
+        CurrCond.onConditionalEnter?.Invoke();
+        npcAnimatorController.Play(CurrCond.animationOnEnter);
+        emoteController.SetEmote(CurrCond.emoteOnEnter);
     }
 
     private new void OnEnable()
@@ -113,13 +132,20 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     #endregion
 
     #region Teleportation
-    public void Teleport(Transform trans)
+
+    public void Teleport(Transform transform)
     {
-        if (transform.position != trans.position)
+        Teleport(transform, false);
+    }
+
+    public void Teleport(Transform transform, bool poof=false)
+    {
+        if (base.transform.position != transform.position)
         {
-            Instantiate(poofParticles, transform.position, Quaternion.identity);
-            transform.position = trans.position;
-            transform.parent = trans.parent;
+            if(poof)
+                Instantiate(poofParticles, base.transform.position, Quaternion.identity);
+            base.transform.position = transform.position;
+            base.transform.parent = transform;
         }
     }
     #endregion
@@ -154,7 +180,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private void ChangeCurrentConditional(int newCond)
     {
         currCondIndex = newCond;
+
         CurrCond.onConditionalEnter?.Invoke();
+        npcAnimatorController.Play(CurrCond.animationOnEnter);
+        emoteController.SetEmote(CurrCond.emoteOnEnter);
+        
         dialogueCtx.OnConditionalsChanged();
     }
 

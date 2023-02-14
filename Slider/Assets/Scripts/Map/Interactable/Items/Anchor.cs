@@ -9,8 +9,9 @@ public class Anchor : Item
         public STile stile;
         public bool drop;
     }
-    public static event System.EventHandler<OnAnchorInteractArgs> OnAnchorInteract;
 
+    public static event System.EventHandler<OnAnchorInteractArgs> OnAnchorInteract;
+    
     
     // Start is called before the first frame update
     [SerializeField] private float shakeAmount;

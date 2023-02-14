@@ -12,6 +12,8 @@ public class SinWaveAnimation : MonoBehaviour
     public float C = 0;
     public float D = 0;
 
+    public float horizontalVelocity = 0;
+
     void Start()
     {
         origOffset = transform.localPosition;
@@ -21,6 +23,7 @@ public class SinWaveAnimation : MonoBehaviour
     void Update()
     {
         float t = Time.time;
+        origOffset += Vector3.right * horizontalVelocity * Time.deltaTime;
         transform.localPosition = origOffset + Vector3.up * Sin(t);
     }
 

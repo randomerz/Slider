@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class OceanGrid : SGrid
 {
-
     public GameObject burriedGuyNPC;
     public GameObject burriedTreasure;
     public ParticleSystem burriedTreasureParticles;
     public KnotBox knotBox;
     private bool knotBoxEnabledLastFrame;
     public BottleManager bottleManager;
+    public NPCRotation npcRotation;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
     public List<int> buoytiles = new List<int> {1, 3, 4, 8, 9};
+    public OceanDolly introCameraDolly;
+    private const string INTRO_CUTSCENE_SAVE_STRING = "oceanIntroCutscene";
 
     private Vector2Int[] correctPath =
     {
@@ -46,6 +48,7 @@ public class OceanGrid : SGrid
     {
         InitArea(Area.Ocean);
         base.Init();
+        
     }
 
 
@@ -63,6 +66,7 @@ public class OceanGrid : SGrid
         {
             note.enabled = false;
         }
+        Pan();
 
     }
 
@@ -107,8 +111,10 @@ public class OceanGrid : SGrid
     public override void Save()
     {
         base.Save();
-        SaveSystem.Current.SetBool("OceanRJBottleDelivery", bottleManager.puzzleSolved);
-        SaveSystem.Current.SetBool("FoggyIslandReached", foggyCompleted);
+        SaveSystem.Current.SetBool("oceanRJBottleDelivery", bottleManager.puzzleSolved);
+        SaveSystem.Current.SetBool("oceanFoggyIslandReached", foggyCompleted);
+        SaveSystem.Current.SetBool("oceanCatbeardTreasureCollected", npcRotation.gotCatbeardTreasure);
+        SaveSystem.Current.SetBool("oceanBreadgeCollected", npcRotation.gotBreadge);
     }
 
     public override void Load(SaveProfile profile)
@@ -120,12 +126,19 @@ public class OceanGrid : SGrid
 
         treesToJungle.SetActive(!profile.GetBool("oceanTreesRemoved"));
 
-        bottleManager.puzzleSolved = profile.GetBool("RJBottleDelivery");
-        foggyCompleted = profile.GetBool("FoggyIslandReached");
+        bottleManager.puzzleSolved = profile.GetBool("oceanRJBottleDelivery");
+        foggyCompleted = profile.GetBool("oceanFoggyIslandReached");
+        npcRotation.gotCatbeardTreasure = profile.GetBool("oceanCatbeardTreasureCollected");
+        npcRotation.gotBreadge = profile.GetBool("oceanBreadgeCollected");
+
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
+        if(stile.islandId == 2 && !stile.isTileActive)
+        {
+            CheckTile2Placement(stile);
+        }
         if (stile.islandId == 3 && !stile.isTileActive)
         {
             CheckTile3Placement(stile);
@@ -141,49 +154,40 @@ public class OceanGrid : SGrid
             CheckVolcano(this, null);
         }
     }
-
+    private void CheckTile2Placement(STile stile)
+    {
+        
+        STile other = GetTileAt(1,0);
+        if(other.islandId != 1)
+            SwapTiles(stile, other);
+    }
     private void CheckTile3Placement(STile stile)
     {
-        string s = GetGridString(true);
-
-        if (CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13") || 
-            CheckGrid.contains(s, "1...3") || CheckGrid.contains(s, "3...1"))
+        //try to spawn on middle right
+        STile other = GetTileAt(2, 1);
+        if (other.islandId != 1 && other.islandId != 2){
+            SwapTiles(stile, other);
+            return;
+        }
+        else if(other.islandId == 2) //middle right taken up by tavern so try middle else just ff lol
         {
-            List<STile> tiles = new List<STile>();
-            foreach (STile tile in grid)
+            STile midddle_tile = GetTileAt(1, 1);
+            if(midddle_tile.islandId == 1)
             {
-                tiles.Add(tile);
+                SwapTiles(stile, GetTileAt(2,2));
+                return;
             }
-
-            bool firstRun = true;
-
-            STile other = tiles[tiles.Count - 1];
-            while (tiles.Count > 0 && ((CheckGrid.contains(s, "31") || CheckGrid.contains(s, "13")
-                 || CheckGrid.contains(s, "1...3") || CheckGrid.contains(s, "3...1"))))
+        }
+        else //middle right is taken up by start so try middle middle or left middle
+        {
+            STile midddle_tile = GetTileAt(1, 1);
+            if(midddle_tile.islandId == 1)
             {
-                if (!firstRun)
-                {
-                    tiles.Remove(other);
-                }
-                firstRun = false;
-
-                for (int i = tiles.Count - 1; i >= 0; i--)
-                {
-                    other = tiles[i];
-                    if (!other.isTileActive)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        tiles.Remove(other);
-                    }
-                }
-
-                SwapTiles(stile, other);
-
-                s = GetGridString(true);
+                SwapTiles(stile, GetTileAt(0,1));
+                return;
             }
+            else
+                SwapTiles(stile, midddle_tile);
         }
     }
 
@@ -557,5 +561,14 @@ public class OceanGrid : SGrid
         treesToJungle.SetActive(false);
         CameraShake.Shake(1, 2);
         AudioManager.Play("Slide Explosion");
+    }
+
+    public void Pan()
+    {
+        if (!SaveSystem.Current.GetBool(INTRO_CUTSCENE_SAVE_STRING))
+        {
+            SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
+            introCameraDolly.StartTrack();
+        }
     }
 }

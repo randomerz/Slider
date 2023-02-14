@@ -8,6 +8,7 @@ using UnityEditor.EditorTools;
 public class STileEditor : Editor
 {
     private STile _target;
+    private bool autoUpdatePostition = true;
 
     private void OnEnable()
     {
@@ -18,7 +19,8 @@ public class STileEditor : Editor
     {
         base.OnInspectorGUI();
 
-        if (GUILayout.Toggle(true, "Auto-Update position") && GUI.changed)
+        autoUpdatePostition = EditorGUILayout.Toggle("Auto-Update position", autoUpdatePostition);
+        if (autoUpdatePostition)
         {
             _target.transform.position = new Vector3(_target.x, _target.y) * _target.STILE_WIDTH;
         }

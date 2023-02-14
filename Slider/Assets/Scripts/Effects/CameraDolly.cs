@@ -8,21 +8,23 @@ using TMPro;
 
 public class CameraDolly : MonoBehaviour
 {
+    public System.EventHandler<System.EventArgs> OnRollercoasterEnd;
+
     public CinemachineVirtualCamera virtualCamera;
-    private CinemachineTrackedDolly dolly;
+    protected CinemachineTrackedDolly dolly;
     public CinemachineSmoothPath path;
-    private int numWaypoints;
+    protected int numWaypoints;
     
     public AnimationCurve pathMovementCurve;
     public float duration;
 
-    private BindingHeldBehavior dollySkipBindingBehavior;
+    protected BindingHeldBehavior dollySkipBindingBehavior;
 
     [SerializeField] private Slider skipPrompt;
     [SerializeField] private TextMeshProUGUI skipPromptText;
     [SerializeField] private float holdDurationToSkip = 1.5f;
 
-    private void Awake() 
+    protected void Awake() 
     {
         dolly = virtualCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
         numWaypoints = path.m_Waypoints.Length;
@@ -57,7 +59,7 @@ public class CameraDolly : MonoBehaviour
         skipPrompt.value = durationButtonHeldSoFar / holdDurationToSkip;
     }
     
-    private IEnumerator Rollercoaster()
+    protected virtual IEnumerator Rollercoaster()
     {
         UIEffects.FadeFromBlack();
         UIManager.canOpenMenus = false;
@@ -91,7 +93,7 @@ public class CameraDolly : MonoBehaviour
         }
     }
 
-    private void SkipToEndOfTrack(InputAction.CallbackContext ignored)
+    protected void SkipToEndOfTrack(InputAction.CallbackContext ignored)
     {
         UIEffects.FadeToBlack(
             () => EndTrack()
@@ -99,7 +101,7 @@ public class CameraDolly : MonoBehaviour
         StopAllCoroutines(); // Stops the dolly movement and prevents FadeToBlack from being called twice
     }
 
-    private void EndTrack()
+    protected void EndTrack()
     {
         UIEffects.FadeFromBlack();
         UIManager.canOpenMenus = true;
@@ -107,5 +109,7 @@ public class CameraDolly : MonoBehaviour
         virtualCamera.Priority = -15;
         skipPrompt.gameObject.SetActive(false);
         Controls.UnregisterBindingBehavior(dollySkipBindingBehavior);
+        
+        OnRollercoasterEnd?.Invoke(this, null);
     }
 }

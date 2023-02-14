@@ -12,7 +12,7 @@ public class UIQuitGame : MonoBehaviour
 
     public void LoadMainMenu()
     {
-        SaveSystem.SaveGame();
+        SaveSystem.SaveGame("Quitting to Main Menu");
         SaveSystem.SetCurrentProfile(-1);
         SceneManager.LoadScene("MainMenu");
     }
