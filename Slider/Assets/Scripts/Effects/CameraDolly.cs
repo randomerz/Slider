@@ -20,7 +20,7 @@ public class CameraDolly : MonoBehaviour
 
     protected BindingHeldBehavior dollySkipBindingBehavior;
 
-    [SerializeField] private Slider skipPrompt;
+    [SerializeField] private Slider skipPromptSlider;
     [SerializeField] private TextMeshProUGUI skipPromptText;
     [SerializeField] private float holdDurationToSkip = 1.5f;
 
@@ -50,13 +50,13 @@ public class CameraDolly : MonoBehaviour
     private void InitializeSkipPrompt()
     {
         skipPromptText.text = $"Hold {Controls.GetBindingDisplayString(Controls.Bindings.Player.Action, onlyShowKey: true)} to Skip";
-        skipPrompt.value = 0;
-        skipPrompt.gameObject.SetActive(true);
+        skipPromptSlider.value = 0;
+        skipPromptSlider.gameObject.SetActive(true);
     }
 
     private void UpdateSkipPrompt(float durationButtonHeldSoFar)
     {
-        skipPrompt.value = durationButtonHeldSoFar / holdDurationToSkip;
+        skipPromptSlider.value = durationButtonHeldSoFar / holdDurationToSkip;
     }
     
     protected virtual IEnumerator Rollercoaster()
@@ -107,7 +107,7 @@ public class CameraDolly : MonoBehaviour
         UIManager.canOpenMenus = true;
         Player.SetCanMove(true);
         virtualCamera.Priority = -15;
-        skipPrompt.gameObject.SetActive(false);
+        skipPromptSlider.gameObject.SetActive(false);
         Controls.UnregisterBindingBehavior(dollySkipBindingBehavior);
         
         OnRollercoasterEnd?.Invoke(this, null);

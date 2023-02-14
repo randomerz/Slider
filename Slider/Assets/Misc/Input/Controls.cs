@@ -47,6 +47,12 @@ public class Controls : Singleton<Controls>
         }
     }
 
+    /// <summary>
+    /// Invoked every time a binding behavior is unregistered. Passes the BindingBehavior which was just unregistered. 
+    /// Currently only used to support BindingHeldBehaviors ending their coroutines when unregistered, but might prove useful for other stuff.
+    /// </summary>
+    public static Action<BindingBehavior> OnBehaviorUnregistered;
+
     private void OnEnable()
     {
         InitializeSingleton(overrideExistingInstanceWith:this);
@@ -100,6 +106,7 @@ public class Controls : Singleton<Controls>
         RegisterBindingBehavior(managedBindingBehavior);
         return managedBindingBehavior;
     }
+
     /// <summary>
     /// This managed binding behavior is automatically removed when the control is triggered while the owner is inactive.
     /// Until that happens, the associated behavior will be triggered every time the binding you pass in is triggered. 
@@ -118,7 +125,7 @@ public class Controls : Singleton<Controls>
     }
 
     /// <summary>
-    /// Use this to remove a managed binding behavior manually. In most cases, automatic removal when the owner is inactive 
+    /// Use this to remove a binding behavior manually. In most cases, automatic removal when the owner is inactive 
     /// (you get this for free without doing anything) should be fine, but this is here for special cases. 
     /// <see cref="RegisterBindingBehavior(MonoBehaviour, InputAction, Action{InputAction.CallbackContext})"/> returns
     /// the <see cref="ManagedBindingBehavior"/>, so save that and pass that in here to remove it.
@@ -128,6 +135,7 @@ public class Controls : Singleton<Controls>
     {
         InputAction action = _bindings.FindAction(bindingBehavior.binding.name);
         action.performed -= bindingBehavior.Invoke;
+        OnBehaviorUnregistered?.Invoke(bindingBehavior);
     }
 
     /// <summary>
@@ -149,9 +157,14 @@ public class Controls : Singleton<Controls>
         }
     }
 
-    public static void StartCoroutineOnInstance(IEnumerator coroutine)
+    public static Coroutine StartCoroutineOnInstance(IEnumerator coroutine)
     {
-        _instance.StartCoroutine(coroutine);
+        return _instance.StartCoroutine(coroutine);
+    }
+
+    public static void StopCoroutineOnInstance(Coroutine coroutine)
+    {
+        _instance.StopCoroutine(coroutine);
     }
 }
 
@@ -230,6 +243,8 @@ public class BindingHeldBehavior : BindingBehavior
     public Action<float> onButtonReleasedEarly;
     public Action<float> onEachFrameWhileButtonHeld;
 
+    private Coroutine activeBindingHeldCoroutine;
+
     public BindingHeldBehavior(InputAction binding, 
                                float holdDuration,
                                Action<InputAction.CallbackContext> onHoldStarted = null,
@@ -244,11 +259,20 @@ public class BindingHeldBehavior : BindingBehavior
         this.onHoldCompleted = onHoldCompleted;
         this.onButtonReleasedEarly = onButtonReleasedEarly;
         this.onEachFrameWhileButtonHeld = onEachFrameWhileButtonHeld;
+
+        // Handle ending the coroutine early if the behavior gets removed to make Boomo happy
+        Controls.OnBehaviorUnregistered += (BindingBehavior behaviorThatWasUnregistered) =>
+        {
+            if (behaviorThatWasUnregistered == this)
+            {
+                Controls.StopCoroutineOnInstance(activeBindingHeldCoroutine);
+            }
+        };
     }
 
     public override void Invoke(InputAction.CallbackContext context)
     {
-        Controls.StartCoroutineOnInstance(ICheckForBindingHeld(context));
+        activeBindingHeldCoroutine = Controls.StartCoroutineOnInstance(ICheckForBindingHeld(context));
     }
 
     private void ActualInvoke(InputAction.CallbackContext context)
