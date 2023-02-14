@@ -19,13 +19,9 @@ public static class Areas
         Area.Military => "Commiting Warcrimes",
         Area.MagiTech => "Playing With Time Portals",
         // Area.Space => "Exploring the Galaxy",
-        _ => "None",
+        _ => "None"
     };
-}
 
-public static class Areas2
-{
-    // DC: I cant define it in the same class??
     public static string GetDisplayName(this Area area) => area switch
     {
         Area.None => "None",
@@ -39,7 +35,7 @@ public static class Areas2
         Area.Military => "The Flats",
         Area.MagiTech => "MRI",
         // Area.Space => "Space",
-        _ => "None",
+        _ => "None"
     };
 }
 
@@ -53,7 +49,7 @@ public enum Area {
     Factory,
     Mountain,
     Military,
-    MagiTech,
+    MagiTech
     // Space
 }
 
