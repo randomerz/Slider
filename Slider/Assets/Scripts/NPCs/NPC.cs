@@ -135,7 +135,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
 
     public void Teleport(Transform transform)
     {
-        Teleport(transform, false);
+        Teleport(transform, true);
     }
 
     public void Teleport(Transform transform, bool poof=false)
