@@ -22,7 +22,8 @@ public class CameraDolly : MonoBehaviour
     
     [SerializeField] private Slider skipPromptSlider;
     [SerializeField] private TextMeshProUGUI skipPromptText;
-    [SerializeField] private float holdDurationToSkip = 1.5f;
+    [SerializeField] private float holdDurationToSkip = 1f;
+    [SerializeField] private AnimationCurve holdAnimationCurve;
 
     protected void Awake()
     {
@@ -49,14 +50,15 @@ public class CameraDolly : MonoBehaviour
 
     private void InitializeSkipPrompt()
     {
-        skipPromptText.text = $"Hold {Controls.GetBindingDisplayString(Controls.Bindings.Player.Action, onlyShowKey: true)} to Skip";
+        // skipPromptText.text = $"Hold {Controls.GetBindingDisplayString(Controls.Bindings.Player.Action, onlyShowKey: true)} to Skip";
+        skipPromptText.text = $"Skip";
         skipPromptSlider.value = 0;
         skipPromptSlider.gameObject.SetActive(true);
     }
 
     private void UpdateSkipPrompt(float durationButtonHeldSoFar)
     {
-        skipPromptSlider.value = durationButtonHeldSoFar / holdDurationToSkip;
+        skipPromptSlider.value = holdAnimationCurve.Evaluate(durationButtonHeldSoFar / holdDurationToSkip);
     }
     
     protected virtual IEnumerator Rollercoaster()
