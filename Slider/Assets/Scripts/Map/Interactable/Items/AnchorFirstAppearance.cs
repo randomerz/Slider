@@ -7,7 +7,7 @@ public class AnchorFirstAppearance : MonoBehaviour
     public Anchor anchor;
     public SpriteRenderer spriteRenderer;
     public PlayerActionHints hints;
-    
+    public static event System.EventHandler<System.EventArgs> OnAnchorAcquire;
     void Start()
     {
         if (PlayerInventory.Instance.GetHasCollectedAnchor())
@@ -26,6 +26,7 @@ public class AnchorFirstAppearance : MonoBehaviour
     {
         ItemPickupEffect.StartCutscene(spriteRenderer.sprite, "Anchor");
         anchor.OnPickUp.RemoveListener(DoCutscene);
+        OnAnchorAcquire?.Invoke(this, new System.EventArgs{});
         hints.TriggerHint("anchor");
         Destroy(this);
     }

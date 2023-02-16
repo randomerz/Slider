@@ -3,20 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using TMPro;
 
 public class CameraDolly : MonoBehaviour
 {
+    public System.EventHandler<System.EventArgs> OnRollercoasterEnd;
+
     public CinemachineVirtualCamera virtualCamera;
-    private CinemachineTrackedDolly dolly;
+    protected CinemachineTrackedDolly dolly;
     public CinemachineSmoothPath path;
-    private int numWaypoints;
+    protected int numWaypoints;
     
     public AnimationCurve pathMovementCurve;
     public float duration;
 
-    private BindingHeldBehavior dollySkipBindingBehavior;
+    protected BindingHeldBehavior dollySkipBindingBehavior;
+    
+    [SerializeField] private Slider skipPromptSlider;
+    [SerializeField] private TextMeshProUGUI skipPromptText;
+    [SerializeField] private float holdDurationToSkip = 1f;
+    [SerializeField] private AnimationCurve holdAnimationCurve;
 
-    private void Awake() 
+    protected void Awake()
     {
         dolly = virtualCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
         numWaypoints = path.m_Waypoints.Length;
@@ -26,13 +35,33 @@ public class CameraDolly : MonoBehaviour
     {
         virtualCamera.Priority = 15;
 
-        dollySkipBindingBehavior = (BindingHeldBehavior) Controls.RegisterBindingBehavior(
-            new BindingHeldBehavior(Controls.Bindings.Player.Action, SkipToEndOfTrack, 1.5f));
+        dollySkipBindingBehavior = new BindingHeldBehavior(
+                Controls.Bindings.Player.Action,
+                holdDurationToSkip,
+                onHoldStarted: (ignored) => { InitializeSkipPrompt(); },
+                onEachFrameWhileButtonHeld: UpdateSkipPrompt,
+                onHoldCompleted: SkipToEndOfTrack,
+                onButtonReleasedEarly: (ignored) => { InitializeSkipPrompt(); }
+        );
+        Controls.RegisterBindingBehavior(dollySkipBindingBehavior);
 
         StartCoroutine(Rollercoaster());
     }
+
+    private void InitializeSkipPrompt()
+    {
+        // skipPromptText.text = $"Hold {Controls.GetBindingDisplayString(Controls.Bindings.Player.Action, onlyShowKey: true)} to Skip";
+        skipPromptText.text = $"Skip";
+        skipPromptSlider.value = 0;
+        skipPromptSlider.gameObject.SetActive(true);
+    }
+
+    private void UpdateSkipPrompt(float durationButtonHeldSoFar)
+    {
+        skipPromptSlider.value = holdAnimationCurve.Evaluate(durationButtonHeldSoFar / holdDurationToSkip);
+    }
     
-    private IEnumerator Rollercoaster()
+    protected virtual IEnumerator Rollercoaster()
     {
         UIEffects.FadeFromBlack();
         UIManager.canOpenMenus = false;
@@ -66,20 +95,22 @@ public class CameraDolly : MonoBehaviour
         }
     }
 
-    private void SkipToEndOfTrack(InputAction.CallbackContext ignored)
+    protected void SkipToEndOfTrack(InputAction.CallbackContext ignored)
     {
         UIEffects.FadeToBlack(
             () => EndTrack()
         );
         StopAllCoroutines(); // Stops the dolly movement and prevents FadeToBlack from being called twice
-        Controls.UnregisterBindingBehavior(dollySkipBindingBehavior);
     }
 
-    private void EndTrack()
+    protected void EndTrack()
     {
         UIEffects.FadeFromBlack();
         UIManager.canOpenMenus = true;
         Player.SetCanMove(true);
         virtualCamera.Priority = -15;
+        OnRollercoasterEnd?.Invoke(this, null);
+        skipPromptSlider.gameObject.SetActive(false);
+        Controls.UnregisterBindingBehavior(dollySkipBindingBehavior);
     }
 }

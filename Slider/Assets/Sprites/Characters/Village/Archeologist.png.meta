@@ -67,7 +67,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 64
+    maxTextureSize: 80
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -204,8 +204,8 @@ TextureImporter:
       name: Archeologist_Walk_2
       rect:
         serializedVersion: 2
-        x: 0
-        y: 32
+        x: 64
+        y: 48
         width: 16
         height: 16
       alignment: 0
@@ -225,7 +225,7 @@ TextureImporter:
       name: Archeologist_Walk_3
       rect:
         serializedVersion: 2
-        x: 16
+        x: 0
         y: 32
         width: 16
         height: 16
@@ -246,7 +246,7 @@ TextureImporter:
       name: Archeologist_Shocked_0
       rect:
         serializedVersion: 2
-        x: 32
+        x: 16
         y: 32
         width: 16
         height: 16
@@ -267,7 +267,7 @@ TextureImporter:
       name: Archeologist_Shocked_1
       rect:
         serializedVersion: 2
-        x: 48
+        x: 32
         y: 32
         width: 16
         height: 16
@@ -288,8 +288,8 @@ TextureImporter:
       name: Archeologist_Skeptical_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 16
+        x: 48
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -309,8 +309,8 @@ TextureImporter:
       name: Archeologist_Skeptical_1
       rect:
         serializedVersion: 2
-        x: 16
-        y: 16
+        x: 64
+        y: 32
         width: 16
         height: 16
       alignment: 0
@@ -330,7 +330,7 @@ TextureImporter:
       name: Archeologist_Crying_0
       rect:
         serializedVersion: 2
-        x: 32
+        x: 0
         y: 16
         width: 16
         height: 16
@@ -351,7 +351,7 @@ TextureImporter:
       name: Archeologist_Crying_1
       rect:
         serializedVersion: 2
-        x: 48
+        x: 16
         y: 16
         width: 16
         height: 16
@@ -372,8 +372,8 @@ TextureImporter:
       name: Archeologist_Smug_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 32
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -393,8 +393,8 @@ TextureImporter:
       name: Archeologist_Smug_1
       rect:
         serializedVersion: 2
-        x: 16
-        y: 0
+        x: 48
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -414,8 +414,8 @@ TextureImporter:
       name: Archeologist_Expressionless_0
       rect:
         serializedVersion: 2
-        x: 32
-        y: 0
+        x: 64
+        y: 16
         width: 16
         height: 16
       alignment: 0
@@ -435,7 +435,7 @@ TextureImporter:
       name: Archeologist_Expressionless_1
       rect:
         serializedVersion: 2
-        x: 48
+        x: 0
         y: 0
         width: 16
         height: 16
@@ -448,6 +448,48 @@ TextureImporter:
       bones: []
       spriteID: 7b7dc7ea087521e20800000000000000
       internalID: 3319812085520324535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archeologist_Interested_0
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00000000000000000800000000000000
+      internalID: 0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archeologist_Interested_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00000000000000000800000000000000
+      internalID: 0
       vertices: []
       indices: 
       edges: []
@@ -469,7 +511,9 @@ TextureImporter:
       Archeologist_Shocked_1: 1227437142734392001
       Archeologist_Idle_0: -2047170710514375398
       Archeologist_Skeptical_0: -782433405009551028
+      Archeologist_Interested_0: 0
       Archeologist_Walk_0: 2859437653807378158
+      Archeologist_Interested_1: 0
       Archeologist_Shocked_0: -7248019611855814447
       Archeologist_Expressionless_1: 3319812085520324535
       Archeologist_Walk_1: -6230779950658032176

@@ -186,7 +186,7 @@ public void SetGrid(int[,] puzzle)
      * L: Populates the grid[,] array with the given stiles.
      * This is what initially loads in the grid at the start of the scene if a grid is not already saved.
      */
-    private void SetGrid(STile[] stiles)
+    protected void SetGrid(STile[] stiles)
     {
         if (stiles.Length != Width * Height)
         {

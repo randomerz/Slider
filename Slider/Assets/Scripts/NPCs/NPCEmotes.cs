@@ -6,6 +6,7 @@ public class NPCEmotes : MonoBehaviour
 {
     public enum Emotes
     {
+        None,
         Sparkle,
         Exclamation,
         Question,
@@ -17,20 +18,36 @@ public class NPCEmotes : MonoBehaviour
     [HideInInspector] public float xOffset;
     public SpriteRenderer npcSpriteRenderer;
     public SpriteRenderer spriteRenderer;
+    public Animator animator;
+
+    private Emotes currentEmote;
 
     void Start()
     {
         xOffset = Mathf.Abs(transform.localPosition.x);
     }
 
-    public void PlayEmote(Emotes emote)
+    public void SetEmote(Emotes emote)
     {
+        UpdateEmotePosition();
 
+        if (currentEmote == emote)
+            return;
+        currentEmote = emote;
+
+        if (emote == Emotes.None)
+        {
+            SetEmoteActive(false);
+            return;
+        }
+
+        SetEmoteActive(true);
+        animator.Play(emote.ToString());
     }
 
-    public void StopEmote() 
+    public void SetEmoteActive(bool value) 
     {
-
+        spriteRenderer.enabled = value;
     }
 
     public void UpdateEmotePosition()
