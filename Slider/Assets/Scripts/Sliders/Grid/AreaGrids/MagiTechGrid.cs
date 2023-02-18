@@ -14,9 +14,11 @@ public class MagiTechGrid : SGrid
     [SerializeField] private Collider2D fireBoi;
     [SerializeField] private Collider2D hungryBoi;
     [SerializeField] private DesyncItem desyncBurger;
+    [SerializeField] private Collider2D desertPortalCollider;
 
     private bool hasBurger;
     private bool hasDesyncBurger;
+    private bool desertPortalEnabled;
     private int numOres = 0;
 
     private ContactFilter2D contactFilter;
@@ -56,6 +58,8 @@ public class MagiTechGrid : SGrid
     {
         OnTimeChange(this, new Portal.OnTimeChangeArgs {fromPast = IsInPast(Player.GetInstance().transform)});
         Portal.OnTimeChange += OnTimeChange;
+        Debug.Log("desertPortal: " + desertPortalEnabled);
+        desertPortalCollider.gameObject.SetActive(desertPortalEnabled);
     }
 
     protected void OnDisable()
@@ -101,6 +105,8 @@ public class MagiTechGrid : SGrid
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
+
+        desertPortalEnabled = profile.GetBool("magiTechDesertPortal"); //The laser is set by the Laserable component
     }
 
     public static bool IsInPast(Transform transform)
