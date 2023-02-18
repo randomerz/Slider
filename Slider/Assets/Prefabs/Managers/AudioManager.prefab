@@ -272,29 +272,29 @@ MonoBehaviour:
   - name: Military
     fmodEvent:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -1722245834
+        Data2: 1207134637
+        Data3: -1875216501
+        Data4: -140392825
+      Path: event:/Music/Military BGM
     emitter: {fileID: 0}
   - name: Mountain
     fmodEvent:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -281630821
+        Data2: 1224269927
+        Data3: -2143467359
+        Data4: 250861364
+      Path: event:/Music/Mountain BGM
     emitter: {fileID: 0}
   - name: MagiTech
     fmodEvent:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -784578816
+        Data2: 1200735065
+        Data3: 687324550
+        Data4: 77094655
+      Path: event:/Music/MagiTech BGM
     emitter: {fileID: 0}
   soundDampenCurve:
     serializedVersion: 2

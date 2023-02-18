@@ -29,6 +29,8 @@ public class NPCEmotes : MonoBehaviour
 
     public void SetEmote(Emotes emote)
     {
+        UpdateEmotePosition();
+
         if (currentEmote == emote)
             return;
         currentEmote = emote;
@@ -38,8 +40,6 @@ public class NPCEmotes : MonoBehaviour
             SetEmoteActive(false);
             return;
         }
-
-        UpdateEmotePosition();
 
         SetEmoteActive(true);
         animator.Play(emote.ToString());

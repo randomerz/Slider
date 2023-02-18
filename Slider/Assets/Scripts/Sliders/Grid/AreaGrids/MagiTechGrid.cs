@@ -52,6 +52,24 @@ public class MagiTechGrid : SGrid
         UIEffects.FadeFromBlack();
     }
 
+    protected void OnEnable()
+    {
+        OnTimeChange(this, new Portal.OnTimeChangeArgs {fromPast = IsInPast(Player.GetInstance().transform)});
+        Portal.OnTimeChange += OnTimeChange;
+    }
+
+    protected void OnDisable()
+    {
+        Portal.OnTimeChange -= OnTimeChange;
+    }
+
+    private void OnTimeChange(object sender, Portal.OnTimeChangeArgs e)
+    {
+        bool isFuture = !e.fromPast;
+        Debug.Log("is future? " + isFuture);
+        AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", isFuture ? 1 : 0);
+    }
+
     #region Magitech Mechanics 
 
     public override void CollectSTile(int islandId)
@@ -112,6 +130,7 @@ public class MagiTechGrid : SGrid
         }
         c.SetSpec(hasBurger && hasDesyncBurger);
     }
+
     public void FireHasStool(Condition c)
     {
         if (SaveSystem.Current.GetBool("magiTechFactory"))
@@ -130,6 +149,7 @@ public class MagiTechGrid : SGrid
         }
         c.SetSpec(false);
     }
+
     public void LightningHasStool(Condition c)
     {
         if (SaveSystem.Current.GetBool("magiTechFactory"))
@@ -149,22 +169,25 @@ public class MagiTechGrid : SGrid
         }
         c.SetSpec(false);
     }
+
     private List<Collider2D> GetCollidingItems(Collider2D collider)
     {
         List<Collider2D> list = new();
         collider.OverlapCollider(contactFilter, list);
         return list;
     }
+
     public void TurnInArtifact()
     {
         //Ensure Scroll of Realign is used
-        if (!(UIArtifact.GetGridString() == "132_76#_548"))
+        if (!(UIArtifact.GetGridString() == "132_76#_548")) // TODO: check for bugs with desync in past T u T
         {
             return;
         }
         //Disable ability to open artifact
         UIArtifactMenus._instance.hasArtifact = false;
     }
+
     public void HasOneOre(Condition c)
     {
         c.SetSpec(numOres == 1);
@@ -172,12 +195,10 @@ public class MagiTechGrid : SGrid
 
     public void HasTwoOres(Condition c)
     {
-        
         c.SetSpec(numOres == 2);
     }
     public void HasThreeOres(Condition c)
     {
-
         c.SetSpec(numOres == 3);
     }
 
