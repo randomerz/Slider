@@ -59,6 +59,7 @@ public class MagiTechGrid : SGrid
         OnTimeChange(this, new Portal.OnTimeChangeArgs {fromPast = IsInPast(Player.GetInstance().transform)});
         Portal.OnTimeChange += OnTimeChange;
         Debug.Log("desertPortal: " + desertPortalEnabled);
+        Debug.Log(UIManager.canOpenMenus);
         desertPortalCollider.gameObject.SetActive(desertPortalEnabled);
     }
 
@@ -192,6 +193,7 @@ public class MagiTechGrid : SGrid
         }
         //Disable ability to open artifact
         UIArtifactMenus._instance.hasArtifact = false;
+        Debug.Log("Artifact: " + UIArtifactMenus._instance.hasArtifact);
     }
 
     public void HasOneOre(Condition c)
