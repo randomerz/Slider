@@ -51,7 +51,6 @@ public class MagiTechGrid : SGrid
         contactFilter = new ContactFilter2D();
 
         AudioManager.PlayMusic("MagiTech");
-        UIEffects.FadeFromBlack();
     }
 
     protected void OnEnable()
@@ -117,7 +116,7 @@ public class MagiTechGrid : SGrid
 
     #endregion
 
-
+    #region Conditions
     public void HasTwoBurgers(Condition c)
     {
         if (!desyncBurger.IsDesynced)
@@ -214,4 +213,5 @@ public class MagiTechGrid : SGrid
     {
         numOres++;
     }
+    #endregion
 }
