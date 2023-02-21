@@ -17,7 +17,7 @@ public class Recipe : ScriptableObject
     {
         foreach (Shapes combo in combinations)
         {
-            if (AllIngredients(shapes, combo)) //not sure if this works since idk if order matters //IT MIGHT
+            if (AllIngredients(shapes, combo)) 
             {
                 return result;
             }

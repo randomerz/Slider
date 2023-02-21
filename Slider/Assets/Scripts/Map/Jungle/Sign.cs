@@ -26,13 +26,13 @@ public class Sign : Box
     }
     private void OnEnable()
     {
-        SGridAnimator.OnSTileMoveEnd += UpdateShapesOnTileMove;
+        SGridAnimator.OnSTileMoveStart += UpdateShapesOnTileMove;
         SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
     }
 
     private void OnDisable()
     {
-        SGridAnimator.OnSTileMoveEnd -= UpdateShapesOnTileMove;
+        SGridAnimator.OnSTileMoveStart -= UpdateShapesOnTileMove;
         SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
     }
 
@@ -42,7 +42,7 @@ public class Sign : Box
         {
             paths[d].ChangePair();
         }
-        //remove all shapes
+        //remove all shapes (happens after the bin pushes the triangle is there a way to time this
         recievedShapes = new Dictionary<Path, Shape>();
         foreach (Direction d in paths.Keys)
         {
@@ -53,8 +53,6 @@ public class Sign : Box
 
     public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
-        //print("sign got shape " + shape);
-
         if (parents.Contains(this) && shape != null)
         {
             return;
@@ -77,20 +75,23 @@ public class Sign : Box
     }
     public void MergeShapes()
     {
+        //print("merging");
         List<Shape> shapesRecieved = new List<Shape>(); 
         foreach (Direction d in paths.Keys)
         {
             if (recievedShapes[paths[d]] != null)
             {
+/*                print(recievedShapes[paths[d]]);
+                print(d);*/
                 shapesRecieved.Add(recievedShapes[paths[d]]);
             }
         }
 
-        print("New merge");
+/*        print("merging");
         foreach (Shape s in shapesRecieved)
         {
             print(s.name);
-        }
+        }*/
 
         foreach (Recipe recipe in recipes.list)
         {
@@ -99,7 +100,7 @@ public class Sign : Box
             if (hold != null)
             {
                 currentShape = hold;
-                //print("merged: " + currentShape.type);
+               // print("merged: " + currentShape.type);
                 return;
             }
         }
