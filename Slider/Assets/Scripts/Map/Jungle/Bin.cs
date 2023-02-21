@@ -7,8 +7,8 @@ using UnityEngine;
 public class Bin : Box
 { 
     public Dictionary<Path, Shape> recievedShapes = new Dictionary<Path, Shape>();
-    public SpriteRenderer shape1;
-    public SpriteRenderer shape2;
+    public GameObject shape1;
+    public GameObject shape2;
     private int numShapes = 0;
 
     private void OnEnable()
@@ -26,8 +26,8 @@ public class Bin : Box
         //remove all shapes
         currentShape = null;
         numShapes = 0;
-        shape1.sprite = null;
-        shape2.sprite = null;
+        shape1.gameObject.SetActive(false);
+        shape2.gameObject.SetActive(false);
         print("no shape");
     }
 
@@ -52,19 +52,21 @@ public class Bin : Box
             {
                 if (numShapes == 1)
                 {
-                    shape1.sprite = recievedShapes[p].sprite;
+                    shape1.GetComponentInChildren<SpriteRenderer>().sprite = recievedShapes[p].sprite;
+                    shape1.gameObject.SetActive(true);
                 } else { 
-                    shape2.sprite = recievedShapes[p].sprite;
+                    shape2.GetComponentInChildren<SpriteRenderer>().sprite = recievedShapes[p].sprite;
+                    shape2.gameObject.SetActive(true);
                 }
                 //print(recievedShapes[p].name);
             } else
             {
                 if (numShapes == 0)
                 {
-                    shape1.sprite = null;
+                    shape1.gameObject.SetActive(false);
                 } else
                 {
-                    shape2.sprite = null;
+                    shape2.gameObject.SetActive(false);
                 }
             }
         }
