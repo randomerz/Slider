@@ -5,7 +5,7 @@ using UnityEngine;
 public class Sign : Box
 {
     public RecipeList recipes;
-    public Dictionary<Path, Shape> shapes = new Dictionary<Path, Shape>(); //idk if i sshould rename this i should think
+    public Dictionary<Path, Shape> recievedShapes = new Dictionary<Path, Shape>(); 
     
     // Start is called before the first frame update
     void Awake()
@@ -16,23 +16,23 @@ public class Sign : Box
             paths[d].ChangePair();
         }
 
-        if (shapes.Count == 0)
+        if (recievedShapes.Count == 0)
         {
             foreach (Direction d in paths.Keys)
             {
-                shapes.Add(paths[d], null);
+                recievedShapes.Add(paths[d], null);
             }
         }
     }
     private void OnEnable()
     {
-        SGridAnimator.OnSTileMoveEnd += UpdateShapesOnTileMove;
+        SGridAnimator.OnSTileMoveStart += UpdateShapesOnTileMove;
         SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
     }
 
     private void OnDisable()
     {
-        SGridAnimator.OnSTileMoveEnd -= UpdateShapesOnTileMove;
+        SGridAnimator.OnSTileMoveStart -= UpdateShapesOnTileMove;
         SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
     }
 
@@ -42,19 +42,17 @@ public class Sign : Box
         {
             paths[d].ChangePair();
         }
-        //remove all shapes
-        shapes = new Dictionary<Path, Shape>();
+        //remove all shapes (happens after the bin pushes the triangle is there a way to time this
+        recievedShapes = new Dictionary<Path, Shape>();
         foreach (Direction d in paths.Keys)
         {
-            shapes.Add(paths[d], null);
+            recievedShapes.Add(paths[d], null);
         }
     }
 
 
     public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
-        //print("sign got shape " + shape);
-
         if (parents.Contains(this) && shape != null)
         {
             return;
@@ -64,29 +62,33 @@ public class Sign : Box
 
         if (path.pair != null)
         {
-            shapes[path.pair] = shape;
+            recievedShapes[path.pair] = shape;
             MergeShapes();
             CreateShape(parents);
         }
         else
         {
-            shapes[path] = shape;
+            recievedShapes[path] = shape;
             MergeShapes();
             CreateShape(parents);
         }
     }
     public void MergeShapes()
     {
+        //print("merging");
         List<Shape> shapesRecieved = new List<Shape>(); 
         foreach (Direction d in paths.Keys)
         {
-            if (shapes[paths[d]] != null)
+            if (recievedShapes[paths[d]] != null)
             {
-                shapesRecieved.Add(shapes[paths[d]]);
+/*                print(recievedShapes[paths[d]]);
+                print(d);*/
+                shapesRecieved.Add(recievedShapes[paths[d]]);
             }
         }
 
-/*        foreach (Shape s in shapesRecieved)
+/*        print("merging");
+        foreach (Shape s in shapesRecieved)
         {
             print(s.name);
         }*/
@@ -98,7 +100,7 @@ public class Sign : Box
             if (hold != null)
             {
                 currentShape = hold;
-                //print("merged: " + currentShape.type);
+               // print("merged: " + currentShape.type);
                 return;
             }
         }
