@@ -205,14 +205,18 @@ public class UITrackerManager : MonoBehaviour
 
 
     public static void AddNewTracker(
-                                    GameObject target, 
-                                    DefaultSprites sprite=DefaultSprites.circle1, 
-                                    DefaultSprites blinkSprite=DefaultSprites.none, 
-                                    DefaultSprites offMapSprite=DefaultSprites.none, 
-                                    DefaultSprites offMapBlinkSprite=DefaultSprites.none, 
-                                    float blinkTime=-1
-                                    ) 
-    {
+        GameObject target, 
+        DefaultSprites sprite=DefaultSprites.circle1, 
+        DefaultSprites blinkSprite=DefaultSprites.circleEmpty, 
+        DefaultSprites offMapSprite=DefaultSprites.none, 
+        DefaultSprites offMapBlinkSprite=DefaultSprites.none, 
+        float blinkTime=-1
+    ) {
+        if (target == null)
+        {
+            Debug.LogError("Tried adding a tracker to null!");
+            return;
+        }
         if (_instance == null) {
             uiTrackerEnumBuffer.Add(new UITrackerEnumData(target, sprite, blinkSprite, offMapSprite, offMapBlinkSprite, blinkTime));
             return;
@@ -222,14 +226,18 @@ public class UITrackerManager : MonoBehaviour
     }
     
     public static void AddNewTracker(
-                                    GameObject target, 
-                                    Sprite sprite, 
-                                    Sprite blinkSprite=null, 
-                                    Sprite offMapSprite=null, 
-                                    Sprite offMapBlinkSprite=null, 
-                                    float blinkTime=-1
-                                    ) 
-    {
+        GameObject target, 
+        Sprite sprite, 
+        Sprite blinkSprite=null, 
+        Sprite offMapSprite=null, 
+        Sprite offMapBlinkSprite=null, 
+        float blinkTime=-1
+    ) {
+        if (target == null)
+        {
+            Debug.LogError("Tried adding a tracker to null!");
+            return;
+        }
         if (_instance == null) {
             uiTrackerBuffer.Add(new UITrackerData(target, sprite, blinkSprite, offMapSprite, offMapBlinkSprite, blinkTime));
             return;

@@ -7,26 +7,31 @@ using UnityEngine;
 public class Blob : MonoBehaviour
 {
 
-    public Animator animator; 
+    public Animator animator;
+    public SpriteRenderer renderer;
 
     Direction direction;
     float travelDistance = 10;
-    private float traveledDistance = 0;
+    public float traveledDistance = 0;
     private Path pair;
     bool flip = false;
     float speed = 0.75f;
     bool jumping = false;
-    float jumpTime = 1.75f;
+    float jumpTime = 1.4f;
     float timePassed = 0;
-    Vector2 jumpStart;
 
-    [Header ("shape")]
+    [Header("shape")]
     public Shape carry;
+    public SpriteRenderer shapeRenderer;
+
+    [Header("Jump info")]
+    private Vector2 startPos;
+    private Vector2 targetPos;
 
     public void UpdateBlobOnPath(bool defaultAnim, Direction direction, float travelDistance, Path pair, Shape shape)
     {
         carry = shape;
-        SpriteRenderer spriteRenderer = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        SpriteRenderer spriteRenderer = shapeRenderer;
         spriteRenderer.sprite = carry.sprite;
 
         flip = defaultAnim;
@@ -37,6 +42,32 @@ public class Blob : MonoBehaviour
         this.direction = direction;
         this.travelDistance = travelDistance;
         this.pair = pair;
+
+/*        if ((direction == Direction.LEFT || direction == Direction.RIGHT))
+        {
+            renderer.sortingOrder = -2;
+            shapeRenderer.sortingOrder = -2;
+        }*/
+    }
+
+    public void setTraveledDistance(float traveled)
+    {
+        this.traveledDistance = traveled;
+    }
+
+    public void setSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    public void setAlpha(float alpha)
+    {
+        Color c = renderer.material.color;
+        c.a = alpha;
+        Color s = shapeRenderer.material.color;
+        s.a = alpha;
+        renderer.material.color = c;
+        shapeRenderer.material.color = s;
     }
 
     void FixedUpdate()
@@ -45,7 +76,8 @@ public class Blob : MonoBehaviour
         if (jumping)
         {
             Jump();
-        } else
+        }
+        else
         {
             Vector2 new_distance = DirectionUtil.D2V(direction) * (speed * Time.deltaTime);
             traveledDistance += Mathf.Abs(new_distance.magnitude);
@@ -56,10 +88,18 @@ public class Blob : MonoBehaviour
                 Destroy(this.gameObject);
             }
 
-            if (traveledDistance > 1 && traveledDistance < 2)
+            // I think there has to be a better way to do this LMAO
+            if (traveledDistance > 2 && traveledDistance < 4)
             {
-                this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 0;
+                renderer.sortingOrder = 0;
+                shapeRenderer.sortingOrder = 0;
             }
+
+/*            if (travelDistance - traveledDistance <= 1.25)
+            {
+                renderer.sortingOrder = -2;
+                shapeRenderer.sortingOrder = -2;
+            }*/
 
             // check if i need to change parent then if i do, change
             STile under = SGrid.GetStileUnderneath(this.gameObject);
@@ -89,35 +129,87 @@ public class Blob : MonoBehaviour
     void Jump()
     {
         timePassed += Time.deltaTime;
-        float time = timePassed / jumpTime; 
-        if (direction == Direction.RIGHT) {
-            float target_X = this.transform.position.x + (speed * Time.deltaTime);
-            float target_Y = jumpStart.y + -1.15f * time + 0.8f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
-            this.transform.position = new Vector3(target_X, target_Y);
-        } else
+        if (direction == Direction.RIGHT)
         {
-            float target_Y = jumpStart.y + -0.75f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
+            float dist = targetPos.x - startPos.x;
+            float nextX = Mathf.MoveTowards(transform.position.x, targetPos.x, speed * Time.deltaTime);
+            float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - startPos.x) / dist);
+            float height = 1.5f * (nextX - startPos.x) * (nextX - targetPos.x) / (-0.25f * dist * dist);
+
+            Vector3 movePosition = new Vector3(nextX, baseY + height, transform.position.z);
+            transform.position = movePosition;
+        }
+        else
+        {
+            float time = timePassed / jumpTime;
+            float target_Y = startPos.y + -1f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
             this.transform.position = new Vector3(this.transform.position.x, target_Y);
         }
     }
 
     public void JumpIntoBin()
     {
-        speed = 1.1f;
+        speed = 1.2f;
         jumping = true;
-        jumpStart = new Vector2(this.transform.position.x, this.transform.position.y);
+        if (direction == Direction.RIGHT)
+        {
+            jumpTime = 2.5f;
+        }
         StartCoroutine(WaitForJump());
+        startPos = new Vector2(this.transform.position.x, this.transform.position.y);
+        targetPos = new Vector2(this.transform.position.x + 3, this.transform.position.y - 3);
     }
 
     IEnumerator WaitForJump()
     {
         animator.SetBool("Right", true);
-        yield return new WaitForSeconds(jumpTime/2);
-        this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
-        this.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -1;
+        yield return new WaitForSeconds(jumpTime / 2);
+        renderer.sortingOrder = -2;
+        shapeRenderer.sortingOrder = -2;
         yield return new WaitForSeconds(jumpTime / 2);
         Destroy(this.gameObject);
     }
 
     //fade in and fade out coroutines
+    public IEnumerator fadeOutAnimation()
+    {
+        Color c = renderer.material.color;
+        for (float alpha = 1f; alpha >= 0; alpha -= 0.25f)
+        {
+            c.a = alpha;
+            renderer.material.color = c;
+            shapeRenderer.material.color = c;
+            yield return new WaitForSeconds(0.1667f);
+        }
+    }
+
+    public void fadeOut()
+    {
+        if (!jumping)
+        {
+            StartCoroutine(fadeOutAnimation());
+            speed = 0;
+        }
+    }
+
+    public IEnumerator fadeInAnimation()
+    {
+        Color c = renderer.material.color;
+        for (float alpha = 0f; alpha <= 1; alpha += 0.25f)
+        {
+            c.a = alpha;
+            renderer.material.color = c;
+            shapeRenderer.material.color = c;
+            yield return new WaitForSeconds(0.1667f);
+        }
+    }
+
+    public void fadeIn()
+    {
+        if (!jumping)
+        {
+            speed = 0.75f;
+            StartCoroutine(fadeInAnimation());
+        }
+    }
 }

@@ -160,6 +160,7 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
                 yield return new WaitForEndOfFrame();
             }
             context.transform.position = remainingPath[1].position;
+            context.transform.SetParent(remainingPath[1]);
             remainingPath.RemoveAt(0);
         }
 

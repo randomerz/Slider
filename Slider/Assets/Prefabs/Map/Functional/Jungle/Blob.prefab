@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &6794732048064429014
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,7 +206,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 6794732048064429008}
+  renderer: {fileID: 6794732048064429009}
   carry: {fileID: 0}
+  shapeRenderer: {fileID: 1889214680079952859}
 --- !u!50 &-3017464133561495854
 Rigidbody2D:
   serializedVersion: 4

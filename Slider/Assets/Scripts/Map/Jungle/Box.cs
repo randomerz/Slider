@@ -114,7 +114,6 @@ public class Box : MonoBehaviour
 
             if (box != null)
             {
-                //print("pushing null");
                 box.RecieveShape(paths[currentDirection], null, new List<Box>());
             }
 
@@ -166,14 +165,13 @@ public class Box : MonoBehaviour
         }
     }
 
-    private Box GetBoxInDirection()
+    protected Box GetBoxInDirection()
     {
         Vector2 v = DirectionUtil.D2V(currentDirection);
 
         Physics2D.queriesStartInColliders = false;
         Physics2D.queriesHitTriggers = false;
 
-        print(transform.position);
         RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, v.normalized, 100, LayerMask.GetMask("Slider"));
 
         Box nextBox = null;
@@ -188,7 +186,6 @@ public class Box : MonoBehaviour
             {
                 STile s = hitcollider.gameObject.GetComponent<STile>();
                 Box other = hitcollider.GetComponent<Box>();
-                print("found a box");
 
                 if (s != null && !s.isTileActive)
                 {

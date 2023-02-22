@@ -9,7 +9,7 @@ public class CaveSTile : STile
     public CaveGrid grid;
     public Tilemap wallsSTilemap;
 
-    [SerializeField] private List<Vector2Int> validDirsForLight;
+    public List<Vector2Int> validDirsForLight;
 
     [SerializeField] private List<CaveLight> borderLights;
 

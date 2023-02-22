@@ -5,8 +5,10 @@ using System.Security.Cryptography;
 using UnityEngine;
 
 public class Bin : Box
-{
-
+{ 
+    public Dictionary<Path, Shape> recievedShapes = new Dictionary<Path, Shape>();
+    public ShapePlacer shapePlacer1;
+    public ShapePlacer shapePlacer2;
 
     private void OnEnable()
     {
@@ -22,20 +24,41 @@ public class Bin : Box
     {
         //remove all shapes
         currentShape = null;
+        shapePlacer1.stop();
+        shapePlacer2.stop();
         print("no shape");
     }
 
     public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
-        if (shape == null)
+        //add the shape
+        recievedShapes[path] = shape;
+
+        if( shape != null)
         {
-            print("bin: no shape");
-        }
-        else
-        {
-            //broadcast the shape has been made
+            //broadcast a shape has been made
             print("bin: " + shape.name);
-            currentShape =  shape;
+        }
+
+        shapePlacer1.stop();
+        shapePlacer2.stop();
+
+        int numShapes = 0;
+        foreach (Path p in recievedShapes.Keys)
+        {
+            if (recievedShapes[p] != null)
+            {
+                if (numShapes == 0)
+                {
+                    shapePlacer1.gameObject.SetActive(true);
+                    shapePlacer1.place(recievedShapes[p]);
+                    numShapes++;
+                } else
+                {
+                    shapePlacer2.gameObject.SetActive(true);
+                    shapePlacer2.place(recievedShapes[p]);
+                }
+            } 
         }
     }
 

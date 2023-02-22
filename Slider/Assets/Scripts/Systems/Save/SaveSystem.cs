@@ -62,7 +62,7 @@ public class SaveSystem
 
     public static bool IsCurrentProfileNull()
     {
-        return current == null;
+        return Current == null;
     }
 
     public static void SetProfile(int index, SaveProfile profile)
@@ -87,9 +87,9 @@ public class SaveSystem
 
         if (reason != "") Debug.Log($"[Saves] Saving game: {reason}");
 
-        current.Save();
+        Current.Save();
 
-        SerializableSaveProfile profile = SerializableSaveProfile.FromSaveProfile(current);
+        SerializableSaveProfile profile = SerializableSaveProfile.FromSaveProfile(Current);
 
         SaveToFile(profile, currentIndex);
     }
@@ -121,34 +121,25 @@ public class SaveSystem
 
     public static void LoadSaveProfile(int index)
     {
-        
-        SerializableSaveProfile ssp = null;
-
-        ssp = GetSerializableSaveProfile(index);
-
-        SaveProfile profile;
-        if (ssp == null)
+        SaveProfile profile = saveProfiles[index];
+        if (profile == null)
         {
             Debug.LogError("Creating a new temporary save profile -- this shouldn't happen!");
             profile = new SaveProfile("Boomo");
         }
-        else
-        {
-            profile = ssp.ToSaveProfile();
-        }
 
-        current = profile;
+        Current = profile;
         currentIndex = index;
         
         // This makes it so the profile gets loaded first thing in the new scene
-        SceneInitializer.profileToLoad = current;
+        SceneInitializer.profileToLoad = Current;
 
         // Load last scene the player was in
-        string sceneToLoad = current.GetLastArea().ToString();
+        string sceneToLoad = Current.GetLastArea().ToString();
         
         // early access
-        if (current.GetBool("isDemoBuild") && sceneToLoad == "Military")
-            sceneToLoad = "Demo Military";
+        // if (Current.GetBool("isDemoBuild") && sceneToLoad == "Military")
+        //     sceneToLoad = "Demo Military";
 
         SceneManager.LoadScene(sceneToLoad);
     }
