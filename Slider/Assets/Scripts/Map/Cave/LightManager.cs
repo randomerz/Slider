@@ -12,7 +12,7 @@ public class LightManager : MonoBehaviour
 {
     private const string caveShaderName = "Shader Graphs/CaveTileLightShader";
 
-    [SerializeField] private CaveLight[] lights;
+    public CaveLight[] lights;
     [SerializeField] private CaveSTile[] stiles;
 
     public GameObject tilesRoot;

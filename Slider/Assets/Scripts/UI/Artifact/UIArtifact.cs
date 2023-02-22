@@ -413,11 +413,11 @@ public class UIArtifact : Singleton<UIArtifact>
 
     protected virtual void QueueMoveFromButtonPair(SMove move, ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        MoveMadeOnArtifact?.Invoke(this, null);
         QueueAdd(move);
         SwapButtons(buttonCurrent, buttonEmpty);
         ProcessQueue();
         UpdateMoveOptions();
+        MoveMadeOnArtifact?.Invoke(this, null);
     }
 
     public void QueueAdd(SMove move)
