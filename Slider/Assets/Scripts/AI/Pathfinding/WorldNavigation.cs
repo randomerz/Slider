@@ -6,14 +6,15 @@ using Priority_Queue;
 
 public class WorldNavigation : MonoBehaviour
 {
-    [SerializeField]
-    private Tilemap worldFloorTM;
+    [SerializeField] private Tilemap worldFloorTM;
 
     //We cache these in sets since there are a lot of points to consider.
     private HashSet<Vector2Int> validPtsWorld = new HashSet<Vector2Int>();
     private Dictionary<STile, HashSet<Vector2Int>> validPtsStiles = new Dictionary<STile, HashSet<Vector2Int>>();
 
     private STile[] stiles;
+
+    private List<STile> handleStileBuffer = new List<STile>();
 
     [Header("Debug")]
     [SerializeField]
@@ -54,6 +55,20 @@ public class WorldNavigation : MonoBehaviour
         CaveMossManager.MossUpdated -= HandleMossUpdated;
     }
 
+    private void Update() 
+    {
+        for (int i = 0; i < handleStileBuffer.Count; i++)
+        {
+            STile stile = handleStileBuffer[i];
+            if (stile.GetMovingDirection() == Vector2.zero)
+            {
+                validPtsStiles[stile] = GetSTileValidPts(stile);
+                handleStileBuffer.RemoveAt(i);
+                i -= 1;
+            }
+        }
+    }
+
     private void HandleSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
         validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
@@ -66,9 +81,20 @@ public class WorldNavigation : MonoBehaviour
         if (e.stile == null)
         {
             validPtsWorld = GetWorldValidPts();
-        } else
+        } 
+        else
         {
-            validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
+            if (e.stile.GetMovingDirection() == Vector2.zero)
+            {
+                validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
+            }
+            else
+            {
+                if (!handleStileBuffer.Contains(e.stile))
+                {
+                    handleStileBuffer.Add(e.stile);
+                }
+            }
         }
         OnValidPtsChanged?.Invoke(this, new System.EventArgs());
     }
@@ -76,7 +102,7 @@ public class WorldNavigation : MonoBehaviour
     private HashSet<Vector2Int> GetWorldValidPts()
     {
         var result = new HashSet<Vector2Int>();
-        ContactFilter2D filter = GetFilterWithoutTriggers(~LayerMask.GetMask("Ignore Raycast", "SlideableArea", "Player", "Rat", "NPC"));
+        ContactFilter2D filter = GetFilterWithoutTriggers(~LayerMask.GetMask("Ignore Raycast", "Player", "Rat", "NPC"));
         RaycastHit2D[] hits = new RaycastHit2D[1];
         foreach (Vector2Int pos in worldFloorTM.cellBounds.allPositionsWithin)
         {
@@ -99,14 +125,19 @@ public class WorldNavigation : MonoBehaviour
     private HashSet<Vector2Int> GetSTileValidPts(STile stile)
     {
         var result = new HashSet<Vector2Int>();
+        
+        if (!stile.isTileActive)
+            return result;
 
+        // Debug.Log("Getting STile valid points for stile " + stile.islandId);
+        
         //Graph coordinates are relative to the stile.
         int minX = -stile.STILE_WIDTH / 2 ;
         int minY = -stile.STILE_WIDTH / 2;
         int maxX = stile.STILE_WIDTH / 2;
         int maxY = stile.STILE_WIDTH / 2;
 
-        ContactFilter2D filter = GetFilterWithoutTriggers(~LayerMask.GetMask("Ignore Raycast", "SlideableArea", "Player", "Rat", "NPC"));
+        ContactFilter2D filter = GetFilterWithoutTriggers(~LayerMask.GetMask("Ignore Raycast", "Player", "Rat", "NPC"));
         RaycastHit2D[] hits = new RaycastHit2D[1];
         CaveMossManager moss = stile.GetComponentInChildren<CaveMossManager>();
         for (int x = minX; x <= maxX; x++)
@@ -115,7 +146,6 @@ public class WorldNavigation : MonoBehaviour
             {
                 Vector2Int posRel = new Vector2Int(x, y);
                 Vector2 posAbs = RelToAbsPos(posRel, stile);
-
 
                 int hit = Physics2D.CircleCast(posAbs, 0.5f, Vector2.up, filter, hits, 0f);
                 if (hit == 0)
@@ -387,7 +417,7 @@ public class WorldNavigation : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (validPtsWorld != null)
+        if (validPtsWorld != null && stiles.Length > 0)
         {
             ForEachValidPtOutsideStile ((pos) => {
                 Gizmos.color = Color.magenta;
