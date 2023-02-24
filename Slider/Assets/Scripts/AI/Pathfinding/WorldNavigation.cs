@@ -11,6 +11,8 @@ public class WorldNavigation : MonoBehaviour
     //We cache these in sets since there are a lot of points to consider.
     private HashSet<Vector2Int> validPtsWorld = new HashSet<Vector2Int>();
     private Dictionary<STile, HashSet<Vector2Int>> validPtsStiles = new Dictionary<STile, HashSet<Vector2Int>>();
+    private Dictionary<Vector2Int, bool> validPtsStilesCache = new Dictionary<Vector2Int, bool>(); 
+    // cleared when validPtsStiles is updated. we can consider making a dictionary of stile to hash if recomputing happens too often
 
     private STile[] stiles;
 
@@ -47,6 +49,7 @@ public class WorldNavigation : MonoBehaviour
     {
         SGrid.OnSTileEnabled += HandleSTileEnabled;
         CaveMossManager.MossUpdated += HandleMossUpdated;
+        SGridAnimator.OnSTileMoveEnd += HandleTileMovementFinished;
     }
 
     private void OnDisable()
@@ -60,11 +63,25 @@ public class WorldNavigation : MonoBehaviour
         for (int i = 0; i < handleStileBuffer.Count; i++)
         {
             STile stile = handleStileBuffer[i];
-            if (stile.GetMovingDirection() == Vector2.zero)
+            if (!stile.IsMoving())
             {
                 validPtsStiles[stile] = GetSTileValidPts(stile);
+                ClearStileValidPtsCache();
                 handleStileBuffer.RemoveAt(i);
                 i -= 1;
+            }
+        }
+
+    }
+
+    private void HandleTileMovementChecks()
+    {
+        // Clear cache if tiles are moving
+        foreach (STile stile in stiles)
+        {
+            if (stile.IsMoving())
+            {
+                ClearStileValidPtsCache();
             }
         }
     }
@@ -72,6 +89,7 @@ public class WorldNavigation : MonoBehaviour
     private void HandleSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
         validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
+        ClearStileValidPtsCache();
 
         OnValidPtsChanged?.Invoke(this, new System.EventArgs());
     }
@@ -84,9 +102,10 @@ public class WorldNavigation : MonoBehaviour
         } 
         else
         {
-            if (e.stile.GetMovingDirection() == Vector2.zero)
+            if (!e.stile.IsMoving())
             {
                 validPtsStiles[e.stile] = GetSTileValidPts(e.stile);
+                ClearStileValidPtsCache();
             }
             else
             {
@@ -97,6 +116,11 @@ public class WorldNavigation : MonoBehaviour
             }
         }
         OnValidPtsChanged?.Invoke(this, new System.EventArgs());
+    }
+
+    private void HandleTileMovementFinished(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        ClearStileValidPtsCache();
     }
 
     private HashSet<Vector2Int> GetWorldValidPts()
@@ -137,7 +161,7 @@ public class WorldNavigation : MonoBehaviour
         int maxX = stile.STILE_WIDTH / 2;
         int maxY = stile.STILE_WIDTH / 2;
 
-        ContactFilter2D filter = GetFilterWithoutTriggers(~LayerMask.GetMask("Ignore Raycast", "Player", "Rat", "NPC"));
+        ContactFilter2D filter = GetFilterWithoutTriggers(~LayerMask.GetMask("Ignore Raycast", "Player", "Rat")); //, "NPC"));
         RaycastHit2D[] hits = new RaycastHit2D[1];
         CaveMossManager moss = stile.GetComponentInChildren<CaveMossManager>();
         for (int x = minX; x <= maxX; x++)
@@ -191,6 +215,17 @@ public class WorldNavigation : MonoBehaviour
 
     public bool IsValidPtOnStile(Vector2Int pos)
     {
+        if (!validPtsStilesCache.ContainsKey(pos))
+        {
+            validPtsStilesCache[pos] = CalcIsValidPtOnStile(pos);
+        }
+        
+        return validPtsStilesCache[pos];
+    }
+
+    private bool CalcIsValidPtOnStile(Vector2Int pos)
+    {
+        // This is slow when we do it a lot of times! even with our hash tables :(
         foreach (STile stile in stiles)
         {
             if (validPtsStiles.ContainsKey(stile) && validPtsStiles[stile].Contains(AbsToRelPos(pos, stile)))
@@ -200,6 +235,11 @@ public class WorldNavigation : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void ClearStileValidPtsCache()
+    {
+        validPtsStilesCache.Clear();
     }
 
     //Perform some arbitrary function on every point.
