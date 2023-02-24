@@ -141,11 +141,6 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
 
     #region Teleportation
 
-    public void Teleport(Transform transform)
-    {
-        Teleport(transform, true);
-    }
-
     public void Teleport(Transform transform, bool poof=false)
     {
         if (base.transform.position != transform.position)
@@ -230,5 +225,13 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private bool CanUpdateConditionals()
     {
         return dialogueCtx.DialogueEnabled && !dialogueCtx.NPCGivingDontInterruptDialogue();
+    }
+
+    public void makeFaceRight()
+    {
+        if(spriteDefaultFacingLeft)
+        {
+            sr.flipX = true;
+        }
     }
 }

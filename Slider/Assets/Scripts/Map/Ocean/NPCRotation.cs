@@ -127,6 +127,7 @@ public class NPCRotation : MonoBehaviour
             switch (person)
             {
                 case "fisherman": //fisherman joins the tavern
+                    fisherman.makeFaceRight();
                     fisherman.Teleport(left_left_table);
                     break;
 
