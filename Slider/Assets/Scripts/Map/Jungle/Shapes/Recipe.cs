@@ -10,13 +10,14 @@ public class Recipe : ScriptableObject
     {
         public List<Shape> ingredients;
     }
-    public  Shape result;
+    public Shape result;
     public List<Shapes> combinations = new List<Shapes>();
 
     public Shape Check(List<Shape> shapes)
     {
-        foreach (Shapes stuff in combinations) {
-            if (AllIngredients(shapes)) //not sure if this works since idk if order matters //IT MIGHT
+        foreach (Shapes combo in combinations)
+        {
+            if (AllIngredients(shapes, combo)) 
             {
                 return result;
             }
@@ -25,33 +26,39 @@ public class Recipe : ScriptableObject
         return null;
     }
 
-    public bool AllIngredients(List<Shape> shapes)
+    public bool AllIngredients(List<Shape> shapes, Shapes combo)
     {
-        foreach (Shapes combo in combinations)
+        //check each combo to see if they are the shapes being passed in
+        List<Shape> ingredients = combo.ingredients;
+
+        if (shapes.Count != ingredients.Count)
         {
-            List<Shape> ingredients = combo.ingredients;
-            //check each combo!
+            return false;
+        }
 
-            List<Shape> hold = new List<Shape>();
-            foreach (Shape shape in shapes)
-            {
-                hold.Add(shape);
-            }
+        List<Shape> hold = new List<Shape>();
 
-            foreach (Shape ingredient in ingredients)
-            {
-                //check if they all have the same things
-                bool removed = hold.Remove(ingredient);
-                if (!removed)
-                {
-                    return false;
-                }
-            }
-            if (hold.Count > 0)
+
+        foreach (Shape shape in shapes)
+        {
+            hold.Add(shape);
+        }
+
+        //check if they all have the same things
+        foreach (Shape ingredient in ingredients)
+        {
+            bool removed = hold.Remove(ingredient);
+            if (!removed)
             {
                 return false;
             }
         }
-        return true;
+
+        if (hold.Count == 0)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

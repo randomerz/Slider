@@ -48,7 +48,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     public bool keyboardEnabled {get; private set;}
     
     private void Awake() {
-        InitializeSingleton();
+        InitializeSingleton(this);
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
         //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });

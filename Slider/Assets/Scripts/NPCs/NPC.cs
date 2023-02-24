@@ -55,9 +55,17 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     {
         base.Start();
         
-        CurrCond.onConditionalEnter?.Invoke();
-        npcAnimatorController.Play(CurrCond.animationOnEnter);
-        emoteController.SetEmote(CurrCond.emoteOnEnter);
+        CheckAllConditionals();
+
+        if (CanUpdateConditionals())
+        {
+            PollForNewConditional();
+        }
+
+        if (currCondIndex == 0)
+        {
+            ChangeCurrentConditional(0);
+        }
     }
 
     private new void OnEnable()

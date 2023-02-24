@@ -174,10 +174,24 @@ public class DebugUIManager : MonoBehaviour
                     float f;
                     if (float.TryParse(p[1], out f))
                     {
-                        go.gameObject.BroadcastMessage(p[0], f, SendMessageOptions.DontRequireReceiver);
+                        try 
+                        {
+                            go.gameObject.BroadcastMessage(p[0], f, SendMessageOptions.DontRequireReceiver);
+                        }
+                        catch (System.MissingMethodException e)
+                        {
+                            // missing method
+                        }
                     }
                     // backwards compatibility some methods need strings that are numbers/ints
-                    go.gameObject.BroadcastMessage(p[0], p[1], SendMessageOptions.DontRequireReceiver);
+                    try 
+                    {
+                        go.gameObject.BroadcastMessage(p[0], p[1], SendMessageOptions.DontRequireReceiver);
+                    }
+                    catch (System.MissingMethodException e)
+                    {
+                        // missing method
+                    }
                 }
             }
         }

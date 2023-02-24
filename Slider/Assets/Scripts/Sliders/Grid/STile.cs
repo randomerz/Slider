@@ -177,6 +177,11 @@ public class STile : MonoBehaviour
         return !hasAnchor;
     }
 
+    public bool IsMoving()
+    {
+        return movingDirection != Vector2.zero;
+    }
+
     public void SetGridPosition(Vector2Int v)
     {
         SetGridPosition(v.x, v.y);

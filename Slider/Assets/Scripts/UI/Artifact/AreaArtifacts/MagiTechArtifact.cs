@@ -222,7 +222,6 @@ public class MagiTechArtifact : UIArtifact
     }
     protected override void QueueMoveFromButtonPair(SMove move, ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        MoveMadeOnArtifact?.Invoke(this, null);
         QueueAdd(move);
         ArtifactTileButton currAlt = GetButton(FindAltId(buttonCurrent.islandId));
         ArtifactTileButton emptyAlt = GetButton(FindAltId(buttonEmpty.islandId));
@@ -230,6 +229,7 @@ public class MagiTechArtifact : UIArtifact
         SwapButtons(buttonCurrent, buttonEmpty);
         ProcessQueue();
         UpdateMoveOptions();
+        MoveMadeOnArtifact?.Invoke(this, null);
     }
     public override void AddButton(STile stile, bool shouldFlicker = true)
     {

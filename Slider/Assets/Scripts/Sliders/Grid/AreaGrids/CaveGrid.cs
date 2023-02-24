@@ -92,7 +92,7 @@ public class CaveGrid : SGrid
                         {
                             allTilesLit = false;
                         }
-                        UIArtifact.SetButtonComplete(grid[x, y].islandId, currLit);
+                        // UIArtifact.SetButtonComplete(grid[x, y].islandId, currLit);
                     }
                 }
             }

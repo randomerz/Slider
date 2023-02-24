@@ -8,6 +8,7 @@ public class VillageGrid : SGrid
     public GameObject caveDoorRocks;
     public GameObject particleSpawner;
     
+    [SerializeField] private GameObject slider2Collectible;
     [SerializeField] private NPC romeoNPC;
     [SerializeField] private SinWaveAnimation catSinWave;
 
@@ -40,6 +41,10 @@ public class VillageGrid : SGrid
 
         AudioManager.PlayMusic("Village");
         
+        if (!PlayerInventory.Contains("Slider 2", Area.Village))
+        {
+            UITrackerManager.AddNewTracker(slider2Collectible, blinkTime: 3);
+        }
         CheckHole();
     }
 
@@ -143,6 +148,11 @@ public class VillageGrid : SGrid
         });
 
         catSinWave.horizontalVelocity = 0.75f;
+    }
+
+    public void RemoveSlider2Tracker()
+    {
+        UITrackerManager.RemoveTracker(slider2Collectible);
     }
 
     public void OnWaterfallEntry()

@@ -12,6 +12,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
     private bool isOpen = true; //C: TODO true if there are tiles in front of the elevator (top and bottom), false otherwise
     private bool hasGoneDown;
     public ElevatorAnimationManager animationManager;
+    public bool isSending = false; //true when minecart being sent;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveEnd += CheckOpenOnMove;
@@ -72,10 +73,12 @@ public class MinecartElevator : MonoBehaviour, ISavable
     }
 
     private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir){
-        yield return new WaitForSeconds(1f);
+        isSending = true;
+        yield return new WaitForSeconds(2f);
         mc.SnapToRail(position, dir);
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(1.5f);
         mc.StartMoving();
+        isSending = false;
     }
 
     public void Save()

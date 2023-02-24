@@ -12,7 +12,7 @@ public class LightManager : MonoBehaviour
 {
     private const string caveShaderName = "Shader Graphs/CaveTileLightShader";
 
-    [SerializeField] private CaveLight[] lights;
+    public CaveLight[] lights;
     [SerializeField] private CaveSTile[] stiles;
 
     public GameObject tilesRoot;
@@ -66,7 +66,7 @@ public class LightManager : MonoBehaviour
         CaveLight.OnLightSwitched -= OnLightSwitched;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (_updateLightingFlag || SGrid.Current.TilesMoving())
         {
@@ -228,7 +228,7 @@ public class LightManager : MonoBehaviour
             {
                 //Debug.Log($"Updated Light: {l.gameObject.name}");
 
-                Vector2Int testPos = new Vector2Int(29+_worldToMaskDX, -7+_worldToMaskDY);
+                // Vector2Int testPos = new Vector2Int(29+_worldToMaskDX, -7+_worldToMaskDY);
                 //Debug.Log($"Height Mask Test Pixel: {_heightMask.GetPixel(testPos.x, testPos.y).r > 0.5f}");
                 l.UpdateLightMask(ref lightMaskBuffer, _heightMask, _worldToMaskDX, _worldToMaskDY, _maskSizeX, _maskSizeY);
             }
@@ -267,13 +267,13 @@ public class LightManager : MonoBehaviour
     {
         if (_allBlack == null)
         {
-            
             int totalMaskSize = _maskSizeX * _maskSizeY;
+            Color black = Color.black;
 
             _allBlack = new Color[totalMaskSize];
             for (int i = 0; i < totalMaskSize; i++)
             {
-                _allBlack[i] = Color.black;
+                _allBlack[i] = black;
             }
         }
 
@@ -285,10 +285,12 @@ public class LightManager : MonoBehaviour
         if (_allBlackStiles == null)
         {
             int totalSize = 2601;   //3*3*17*17
+            Color black = Color.black;
+
             _allBlackStiles = new Color[totalSize];
             for (int i = 0; i < totalSize; i++)
             {
-                _allBlackStiles[i] = Color.black;
+                _allBlackStiles[i] = black;
             }
         }
 
