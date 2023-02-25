@@ -13,7 +13,7 @@ public class BottleManager : MonoBehaviour
     public Item romeosBottle; // for the spawn animation
     private Transform romeosBottleHolder;
     
-    private float turncounter = 0;
+    private int turncounter = 0;
     private bool puzzleActive = false;
 
     private GameObject bottle = null;
@@ -36,14 +36,14 @@ public class BottleManager : MonoBehaviour
     public void OnEnable()
     {
         //subscribe stile move end to update counter
-        SGridAnimator.OnSTileMoveStart += UpdateBottleLocation;
+        UIArtifact.OnButtonInteract += UpdateBottleLocation;
     }
 
 
     public void OnDisable()
     {
         //unsubscribe stile move end to update counter
-        SGridAnimator.OnSTileMoveStart -= UpdateBottleLocation;
+        UIArtifact.OnButtonInteract -= UpdateBottleLocation;
     }
 
     private IEnumerator StartBottleMovementAnimation(Vector3 start, Vector3 end, float moveDuration)
@@ -60,17 +60,16 @@ public class BottleManager : MonoBehaviour
         bottle.transform.localPosition = end;
     }
 
-    private void UpdateBottleLocation(object sender, SGridAnimator.OnTileMoveArgs tileMoveArgs){
+    private void UpdateBottleLocation(object sender, System.EventArgs e){
         if(puzzleActive)
         {
-            Debug.Log("wha "+turncounter);
-            turncounter+=0.25f;
+            turncounter+=1;
             if (turncounter >2)
             {
                 DestroyBottle();
             }
-            else if(MathF.Ceiling(turncounter) == 1 || MathF.Ceiling(turncounter) == 2)
-                StartCoroutine(StartBottleMovementAnimation(bottle.transform.position ,positions[(int)(MathF.Ceiling(turncounter))], tileMoveArgs.moveDuration));
+            else
+                StartCoroutine(StartBottleMovementAnimation(positions[turncounter-1] ,positions[turncounter], 1));
         }
     }
 
