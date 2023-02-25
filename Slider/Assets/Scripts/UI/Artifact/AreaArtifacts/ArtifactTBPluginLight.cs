@@ -10,8 +10,14 @@ public class ArtifactTBPluginLight : ArtifactTBPlugin
     [SerializeField]
     private Sprite islandLitSprite;
 
+    private void Start() 
+    {
+        SetLit(isLit);
+    }
+
     public void SetLit(bool isLit)
     {
+        this.isLit = isLit;
         if (button.MyStile != null && button.TileIsActive)
         {
             button.SetIslandSprite(isLit ? islandLitSprite : islandDarkSprite);

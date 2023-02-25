@@ -93,7 +93,6 @@ public class CaveArtifactLightSim : MonoBehaviour
         }
 
         UpdateButtons();
-
     }
 
     public void UpdateButtons()
