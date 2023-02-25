@@ -63,14 +63,13 @@ public class BottleManager : MonoBehaviour
     private void UpdateBottleLocation(object sender, System.EventArgs e){
         if(puzzleActive)
         {
-            Debug.Log("wha "+turncounter);
             turncounter+=1;
             if (turncounter >2)
             {
                 DestroyBottle();
             }
             else
-                StartCoroutine(StartBottleMovementAnimation(bottle.transform.position ,positions[turncounter], 1));
+                StartCoroutine(StartBottleMovementAnimation(positions[turncounter-1] ,positions[turncounter], 1));
         }
     }
 
