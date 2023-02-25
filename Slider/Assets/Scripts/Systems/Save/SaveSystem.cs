@@ -88,6 +88,7 @@ public class SaveSystem
         if (reason != "") Debug.Log($"[Saves] Saving game: {reason}");
 
         Current.Save();
+        SetProfile(currentIndex, Current);
 
         SerializableSaveProfile profile = SerializableSaveProfile.FromSaveProfile(Current);
 
@@ -121,15 +122,12 @@ public class SaveSystem
 
     public static void LoadSaveProfile(int index)
     {
-        SaveProfile profile = saveProfiles[index];
-        if (profile == null)
+        SaveSystem.SetCurrentProfile(index);
+        if (Current == null)
         {
             Debug.LogError("Creating a new temporary save profile -- this shouldn't happen!");
-            profile = new SaveProfile("Boomo");
+            Current = new SaveProfile("Boomo");
         }
-
-        Current = profile;
-        currentIndex = index;
         
         // This makes it so the profile gets loaded first thing in the new scene
         SceneInitializer.profileToLoad = Current;
