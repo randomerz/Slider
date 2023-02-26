@@ -8,6 +8,7 @@ public class CaveGrid : SGrid
 
     [SerializeField] private CaveDoor caveDoor;
     [SerializeField] private MountainCaveWall mountainCaveWall;
+    [SerializeField] private CaveArtifactLightSim lightSim;
 
     static System.EventHandler<SGridAnimator.OnTileMoveArgs> checkCompletionsOnMoveFunc;
 
@@ -73,6 +74,7 @@ public class CaveGrid : SGrid
         SaveSystem.Current.SetBool("forceAutoMove", true);
 
         CheckLightingCompletions();
+        lightSim.UpdateLightSim();
     }
 
     private void CheckLightingCompletions()
@@ -138,6 +140,7 @@ public class CaveGrid : SGrid
                                                  { 6, 3, 4 },
                                                  { 8, 7, 2 } };
         SetGrid(completedPuzzle);
+        lightSim.UpdateLightSim();
         StartCoroutine(CheckCompletionsAfterDelay(1.1f));
         SaveSystem.Current.SetBool("forceAutoMove", false);
 
