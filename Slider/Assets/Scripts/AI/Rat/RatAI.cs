@@ -8,6 +8,8 @@ public class RatAI : MonoBehaviour
     [Header("Player")]
     public float playerAggroRange;
     public float playerDeaggroRange;
+    public float minSpeed;
+    public float maxSpeed;
 
     [Header("Pathfinding")]
     [SerializeField]
@@ -44,6 +46,8 @@ public class RatAI : MonoBehaviour
     internal GameObject objectToSteal;
     [SerializeField]
     internal Transform player;
+    [SerializeField]
+    internal PaintedCostMap paintedCostMap;
 
 
     [Header("Cost Map Calculations")]
@@ -76,12 +80,9 @@ public class RatAI : MonoBehaviour
     }
 
     //Costs for running away from player
-    public Dictionary<Vector2Int, int> CostMap
-    {
-        get
-        {
-            return _costMap;
-        }
+    public Dictionary<Vector2Int, int> CostMap { 
+        get { return _costMap; } 
+        private set { _costMap = value; }
     }
     private Dictionary<Vector2Int, int> _costMap = null;
 
@@ -137,6 +138,10 @@ public class RatAI : MonoBehaviour
 
         GenerateCostMap();
 
+        float distToPlayer = Vector3.Distance(transform.position, Player.GetPosition());
+        float speed = Mathf.Lerp(maxSpeed, minSpeed, (distToPlayer - 1) / playerDeaggroRange);
+        navAgent.speed = speed;
+
         if (behaviourTree.State == BehaviourTreeNode.NodeState.FAILURE)
         {
             navAgent.StopPath();
@@ -190,6 +195,7 @@ public class RatAI : MonoBehaviour
     {
         //Play Death Animation
         anim.SetBool("dead", true);
+        AudioManager.Play("Hurt");
 
         if (holdingObject && objectToSteal != null)
         {
@@ -245,7 +251,9 @@ public class RatAI : MonoBehaviour
                     Vector2Int pos = posAsInt + new Vector2Int(x, y);
                     if (nav.IsValidPtOnStile(pos) && (!avoidsDark || LightManager.instance.GetLightMaskAt(pos.x, pos.y)))
                     {
-                        _costMap.Add(pos, CostToThreat(GetDistToNearestBadTile(pos), false));
+                        int cost = (int)(tileMaxPenalty * paintedCostMap.GetNormalizedCostAt(pos));
+                        // int cost = CostToThreat(GetDistToNearestBadTile(pos), false);
+                        _costMap.Add(pos, cost);
                     }
                 }
             }

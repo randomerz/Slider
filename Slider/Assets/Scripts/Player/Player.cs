@@ -191,7 +191,7 @@ public class Player : Singleton<Player>, ISavable
         sp.isInHouse = isInHouse;
 
         // PlayerInventory
-        sp.collectibles = GetPlayerInventory().GetCollectiblesList();
+        sp.collectibles = new List<Collectible.CollectibleData>(GetPlayerInventory().GetCollectiblesList());
         sp.hasCollectedAnchor = GetPlayerInventory().GetHasCollectedAnchor();
 
         SaveSystem.Current.SetSerializeablePlayer(sp);

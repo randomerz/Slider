@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,9 +13,11 @@ public class CaveMossManager : MonoBehaviour
     public Tilemap mossCollidersMap;
     [SerializeField] private STile stile;
     [SerializeField] private float mossFadeSpeed = 3f;
+    [SerializeField] private bool _hasAnyMoss = true;
 
     private PlayerMoveOffMoss _playerMoveOffMoss;
     private float _updateMossTimer;
+    private List<Vector3Int> _cachedMossTilePositions;
 
     public class MossIsGrowingArgs : System.EventArgs
     {
@@ -57,8 +61,7 @@ public class CaveMossManager : MonoBehaviour
 
     private void Update()
     {
-
-        if (_updateMossTimer >= 0f)
+        if (_updateMossTimer >= 0f && _hasAnyMoss)
         {
             UpdateMoss();
             _updateMossTimer -= Time.deltaTime;
@@ -75,7 +78,7 @@ public class CaveMossManager : MonoBehaviour
         //L: Initialize all moss tiles
         if (LightManager.instance != null)
         {
-            ForEachMossTileIn(mossMap, (pos) =>
+            ForEachMossTileIn((pos) =>
             {
                 mossMap.SetTileFlags(pos, TileFlags.None);
                 recededMossMap.SetTileFlags(pos, TileFlags.None);
@@ -85,7 +88,12 @@ public class CaveMossManager : MonoBehaviour
             });
         }
 
-        MossUpdated?.Invoke(this, new MossUpdatedArgs { stile = stile });
+        if (stile == null)
+        {
+            Debug.LogWarning("Skipped Invoking CaveMossManager.MossUpdated()!");
+            return;
+        }
+        StartCoroutine(WaitOneFrame(new MossUpdatedArgs { stile = stile }));
     }
 
     private void SetMossState(Vector3Int pos, bool posIsLit)
@@ -99,13 +107,15 @@ public class CaveMossManager : MonoBehaviour
 
     private void UpdateMoss()
     {
+        int numMossSwapped = 0;
         if (SGrid.Current != null && SGrid.Current as CaveGrid != null)
         {
             if (LightManager.instance != null)
             {
-                ForEachMossTileIn(mossMap, (pos) =>
+                ForEachMossTileIn((pos) =>
                 {
-                    UpdateMossTile(pos);
+                    bool didSwap = UpdateMossTile(pos);
+                    if (didSwap) numMossSwapped += 1;
                 });
             }
         }
@@ -115,10 +125,30 @@ public class CaveMossManager : MonoBehaviour
             _playerMoveOffMoss.CheckPlayerCollidingWithMoss();
         }
 
-        MossUpdated?.Invoke(this, new MossUpdatedArgs { stile = stile });
+        if (numMossSwapped != 0)
+        {
+            if (stile == null)
+            {
+                Debug.LogWarning("Skipped Invoking CaveMossManager.MossUpdated()!");
+                return;
+            }
+            StartCoroutine(WaitOneFrame(new MossUpdatedArgs { stile = stile }));
+        }
     }
 
-    private void UpdateMossTile(Vector3Int pos)
+    private IEnumerator WaitOneFrame(MossUpdatedArgs args)
+    {
+        // yield return new WaitForEndOfFrame();
+        yield return null;
+        MossUpdated?.Invoke(this, args);
+    }
+
+    /// <summary>
+    /// Updates the moss tile to move towards light/dark
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns>True if collider was swapped, otherwise false</returns>
+    private bool UpdateMossTile(Vector3Int pos)
     {
         bool posIsLit = LightManager.instance.GetLightMaskAt(mossMap, pos);
 
@@ -131,22 +161,48 @@ public class CaveMossManager : MonoBehaviour
 
         if (litAlpha.a > colliderForgiveness)
         {
-            mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
-        } else
+            if (mossCollidersMap.GetColliderType(pos) == Tile.ColliderType.Grid)
+            {
+                mossCollidersMap.SetColliderType(pos, Tile.ColliderType.None);
+                return true;
+            }
+        } 
+        else
         {
-            mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
+            if (mossCollidersMap.GetColliderType(pos) == Tile.ColliderType.None)
+            {
+                mossCollidersMap.SetColliderType(pos, Tile.ColliderType.Grid);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // TODO: cache tiles
+    private void ForEachMossTileIn(Action<Vector3Int> func)
+    {
+        foreach (Vector3Int pos in GetCachedMossTilePositions())
+        {
+            func(pos);
         }
     }
 
-    private void ForEachMossTileIn(Tilemap tm, Action<Vector3Int> func)
+    private List<Vector3Int> GetCachedMossTilePositions()
     {
-        foreach (Vector3Int pos in mossMap.cellBounds.allPositionsWithin)
+        if (_cachedMossTilePositions == null)
         {
-            MossTile tile = mossMap.GetTile(pos) as MossTile;
-            if (tile != null)
+            _cachedMossTilePositions = new List<Vector3Int>();
+
+            foreach (Vector3Int pos in mossMap.cellBounds.allPositionsWithin)
             {
-                func(pos);
+                MossTile tile = mossMap.GetTile(pos) as MossTile;
+                if (tile != null)
+                {
+                    _cachedMossTilePositions.Add(pos);
+                }
             }
         }
+
+        return _cachedMossTilePositions;
     }
 }

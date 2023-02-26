@@ -157,33 +157,33 @@ public class OceanGrid : SGrid
     private void CheckTile2Placement(STile stile)
     {
         
-        STile other = GetTileAt(1,0);
+        STile other = GetStileAt(1,0);
         if(other.islandId != 1)
             SwapTiles(stile, other);
     }
     private void CheckTile3Placement(STile stile)
     {
         //try to spawn on middle right
-        STile other = GetTileAt(2, 1);
+        STile other = GetStileAt(2, 1);
         if (other.islandId != 1 && other.islandId != 2){
             SwapTiles(stile, other);
             return;
         }
         else if(other.islandId == 2) //middle right taken up by tavern so try middle else just ff lol
         {
-            STile midddle_tile = GetTileAt(1, 1);
+            STile midddle_tile = GetStileAt(1, 1);
             if(midddle_tile.islandId == 1)
             {
-                SwapTiles(stile, GetTileAt(2,2));
+                SwapTiles(stile, GetStileAt(2,2));
                 return;
             }
         }
         else //middle right is taken up by start so try middle middle or left middle
         {
-            STile midddle_tile = GetTileAt(1, 1);
+            STile midddle_tile = GetStileAt(1, 1);
             if(midddle_tile.islandId == 1)
             {
-                SwapTiles(stile, GetTileAt(0,1));
+                SwapTiles(stile, GetStileAt(0,1));
                 return;
             }
             else

@@ -210,12 +210,6 @@ public class VillageGrid : SGrid
             ruinsSymbols.SetSprites(false);
 
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, ruinsSymbols.ruinsHole.transform.position, Quaternion.identity, ruinsSymbols.transform);
-
-            AchievementManager.SetAchievementStat("completedVillage", 1);
-            if (SaveSystem.Current.GetPlayTimeInSeconds() < 180)
-            {
-                AchievementManager.SetAchievementStat("completedVillageSpeedrun", 1);
-            }
         }
     }
 
@@ -304,6 +298,12 @@ public class VillageGrid : SGrid
             SaveSystem.Current.SetBool("forceAutoMove", false);
 
             placeTile9Coroutine = StartCoroutine(PlaceTile9());
+
+            AchievementManager.SetAchievementStat("completedVillage", 1);
+            if (SaveSystem.Current.GetPlayTimeInSeconds() < 180)
+            {
+                AchievementManager.SetAchievementStat("completedVillageSpeedrun", 1);
+            }
         }
     }
 
