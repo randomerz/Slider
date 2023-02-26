@@ -152,7 +152,9 @@ public class DesertGrid : SGrid
         STile monkeyTile = Current.GetStile(3);
         if (monkeyTile.isTileActive && e.stile == monkeyTile)
         {
-            zlist[monkeShake].SetActive(false);
+            Debug.Log(monkeShake);
+            if (0 <= monkeShake && monkeShake < zlist.Length) // temporary patch
+                zlist[monkeShake].SetActive(false);
             monkeShake++;
 
             if (monkeShake >= 3)
