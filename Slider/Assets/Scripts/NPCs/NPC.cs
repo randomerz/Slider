@@ -141,7 +141,12 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
 
     #region Teleportation
 
-    public void Teleport(Transform transform, bool poof=false)
+    public void Teleport(Transform transform)
+    {
+        Teleport(transform, true);
+    }
+
+    public void Teleport(Transform transform, bool poof=true)
     {
         if (base.transform.position != transform.position)
         {
