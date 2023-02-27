@@ -76,6 +76,7 @@ public class UITrackerManager : MonoBehaviour
     public Sprite empty;
     public Sprite circle1;
     public Sprite circle2;
+    public Sprite circle3;
     public Sprite circleEmpty;
     public Sprite pin;
     public Sprite exclamation;
@@ -90,6 +91,7 @@ public class UITrackerManager : MonoBehaviour
         none,
         circle1,
         circle2,
+        circle3,
         circleEmpty,
         pin,
         exclamation,
