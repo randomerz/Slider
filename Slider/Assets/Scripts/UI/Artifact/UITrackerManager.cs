@@ -103,6 +103,10 @@ public class UITrackerManager : MonoBehaviour
 
     protected virtual void Awake() {
         _instance = this;
+
+        uiTrackerBuffer.Clear();
+        uiTrackerEnumBuffer.Clear();
+        removeBuffer.Clear();
     }
 
     // Start is called before the first frame update
@@ -216,7 +220,7 @@ public class UITrackerManager : MonoBehaviour
     ) {
         if (target == null)
         {
-            Debug.LogError("Tried adding a tracker to null!");
+            Debug.LogWarning("Tried adding a tracker to null!");
             return;
         }
         if (_instance == null) {
@@ -237,7 +241,7 @@ public class UITrackerManager : MonoBehaviour
     ) {
         if (target == null)
         {
-            Debug.LogError("Tried adding a tracker to null!");
+            Debug.LogWarning("Tried adding a tracker to null!");
             return;
         }
         if (_instance == null) {
@@ -273,6 +277,8 @@ public class UITrackerManager : MonoBehaviour
                 return _instance.circle1;
             case DefaultSprites.circle2:
                 return _instance.circle2;
+            case DefaultSprites.circle3:
+                return _instance.circle3;
             case DefaultSprites.circleEmpty:
                 return _instance.circleEmpty;
             case DefaultSprites.pin:

@@ -99,7 +99,14 @@ public class CaveGrid : SGrid
                 {
                     if (grid[x, y].isTileActive)
                     {
-                        bool currLit = (grid[x, y] as CaveSTile).GetTileLit();
+                        CaveSTile stile = (grid[x, y] as CaveSTile);
+                        if (stile == null)
+                        {
+                            Debug.LogError("Found a stile that was null for some reason!");
+                            return;
+                        }
+                        
+                        bool currLit = stile.GetTileLit();
                         if (!currLit)
                         {
                             allTilesLit = false;
