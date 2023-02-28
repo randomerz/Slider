@@ -1,8 +1,10 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 public class PlayerAction : Singleton<PlayerAction>
 {
-    public static System.EventHandler<System.EventArgs> OnAction;
+    //public static System.EventHandler<System.EventArgs> OnAction;
 
     public Item pickedItem;
 
@@ -24,6 +26,8 @@ public class PlayerAction : Singleton<PlayerAction>
 
     private int actionsAvailable = 0;
     [SerializeField] private GameObject actionAvailableIndicator;
+
+    private List<IInteractable> availableInteractables = new List<IInteractable>();
 
     private void Awake() 
     {
@@ -58,7 +62,6 @@ public class PlayerAction : Singleton<PlayerAction>
     private Vector2 GetClosestValidDropPosition()
     {
         Vector3 raycastDirection = Player.GetLastMoveDirection().normalized;
-
 
         // we offset where the raycast starts because when you're in the boat, the collider is at the boat not the player
         Vector3 basePosition = GetPlayerTransformRaycastPosition();
@@ -115,16 +118,16 @@ public class PlayerAction : Singleton<PlayerAction>
 
     private void Action() 
     {
-        if (UIManager.IsUIOpen() || UIArtifactMenus.IsArtifactOpen())
+        if (UIManager.IsUIOpen() || UIArtifactMenus.IsArtifactOpen() || !Player.GetCanMove())
             return;
 
-        if (!Player.GetCanMove())
-            return;
+        bool successfullyPickedUpItem = AttemptItemPickup();
+        bool successfullyInteractedWithAnInteractable = Interact();
 
-        if (TryPickOrDrop())
-            return; // if succesfully picked something up, return
-
-        OnAction?.Invoke(this, new System.EventArgs());
+        if (!successfullyInteractedWithAnInteractable && !successfullyPickedUpItem)
+        {
+            AttemptItemDrop();
+        }
     }
 
     private void CycleEquip()
@@ -144,56 +147,57 @@ public class PlayerAction : Singleton<PlayerAction>
         }
     }
 
-    public bool TryPickOrDrop() 
+    private bool AttemptItemPickup()
     {
-        if (isPicking || isDropping) 
+        if (isPicking || isDropping || pickedItem != null)
         {
             return false;
         }
 
         Collider2D[] nodes = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y), 1f, itemMask);
-        if (pickedItem == null) 
+        if (nodes.Length > 0)
         {
-            //Try picking an item up
-            if (nodes.Length > 0)
+            isPicking = true;
+
+            // find nearest item
+            Collider2D nearest = nodes[0];
+            float nearestDist = Vector3.Distance(nearest.transform.position, transform.position);
+            for (int i = 1; i < nodes.Length; i++)
             {
-                isPicking = true;
-
-                // find nearest item
-                Collider2D nearest = nodes[0];
-                float nearestDist = Vector3.Distance(nearest.transform.position, transform.position);
-                for (int i = 1; i < nodes.Length; i++) {
-                    if (Vector3.Distance(nodes[i].transform.position, transform.position) < nearestDist) {
-                        nearest = nodes[i];
-                        nearestDist = Vector3.Distance(nodes[i].transform.position, transform.position);
-                    }
+                if (Vector3.Distance(nodes[i].transform.position, transform.position) < nearestDist)
+                {
+                    nearest = nodes[i];
+                    nearestDist = Vector3.Distance(nodes[i].transform.position, transform.position);
                 }
-                
-                pickedItem = nearest.GetComponent<Item>();  //Not GetComponentInParent?
-                if (pickedItem == null) {
-                    Debug.LogError("Picked something that isn't an Item!");
-                }
-
-                PlayerInventory.AddItem(pickedItem);
-                pickedItem.PickUpItem(pickedItemLocation.transform, callback:FinishPicking);
-
-                return true;
-            } 
-        }
-        else
-        {
-            // Try dropping the item
-            if (canDrop) 
-            {
-                isDropping = true;
-                PlayerInventory.RemoveItem();
-                pickedItem.DropItem(itemDropIndicator.transform.position, callback:FinishDropping);
-                lastDroppedItem = pickedItem;
-                pickedItem = null;
-                itemDropIndicator.SetActive(false);
-
-                return true;
             }
+
+            pickedItem = nearest.GetComponent<Item>();  //Not GetComponentInParent?
+            if (pickedItem == null)
+            {
+                Debug.LogError("Picked something that isn't an Item!");
+            }
+
+            PlayerInventory.AddItem(pickedItem);
+            pickedItem.PickUpItem(pickedItemLocation.transform, callback: FinishPicking);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool AttemptItemDrop()
+    {
+        if (canDrop && pickedItem != null)
+        {
+            isDropping = true;
+            PlayerInventory.RemoveItem();
+            pickedItem.DropItem(itemDropIndicator.transform.position, callback: FinishDropping);
+            lastDroppedItem = pickedItem;
+            pickedItem = null;
+            itemDropIndicator.SetActive(false);
+
+            return true;
         }
 
         return false;
@@ -218,27 +222,43 @@ public class PlayerAction : Singleton<PlayerAction>
     {
         return pickedItem != null;
     }
+
     public bool HasItem(string itemName)
     {
         return pickedItem != null && pickedItem.itemName.Equals(itemName);
     }
 
-    public void IncrementActionsAvailable()
+    public void AddInteractable(IInteractable interactable)
     {
-        actionsAvailable += 1;
-        if (actionsAvailable > 0)
-        {
-            actionAvailableIndicator.SetActive(true);
-        }
+        availableInteractables.Add(interactable);
+        UpdateActionsAvailableIndicator();
     }
 
-    public void DecrementActionsAvailable()
+    public void RemoveInteractable(IInteractable interactable)
     {
-        actionsAvailable -= 1;
-        if (actionsAvailable <= 0)
+        availableInteractables.Remove(interactable);
+        UpdateActionsAvailableIndicator();
+    }
+
+    public void UpdateActionsAvailableIndicator()
+    {
+        actionAvailableIndicator.SetActive(availableInteractables.FindAll((interactable) => interactable.DisplayInteractionPrompt).Count > 0);
+    }
+
+    private bool Interact()
+    {
+        availableInteractables.Sort((a, b) => b.InteractionPriority - a.InteractionPriority);
+        List<IInteractable> interactablesWithHighestPriority
+            = availableInteractables.FindAll((interactable) => interactable.InteractionPriority == availableInteractables[0].InteractionPriority);
+
+        bool successfullyInteracted = false;
+        foreach (IInteractable interactable in interactablesWithHighestPriority)
         {
-            actionAvailableIndicator.SetActive(false);
-            actionsAvailable = 0;
+            if (interactable.Interact())
+            {
+                successfullyInteracted = true;
+            }
         }
+        return successfullyInteracted;
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerConditionals : MonoBehaviour
+public class PlayerConditionals : MonoBehaviour, IInteractable
 {
 
     public UnityEvent onSuccess;
@@ -13,28 +13,22 @@ public class PlayerConditionals : MonoBehaviour
     public bool isCarryingItem;
     public string itemNameCheck;
 
-    private bool actionAdded;
     private bool onActionEnabled = true;
-
-    // private void OnDisable() {               Maybe this is needed?
-    //     PlayerAction.OnAction -= OnActionListener;
-    // }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            // Debug.Log("Adding listener!");
             if (addToOnAction)
             {
                 if (onActionEnabled)
                 {
-                    AddAction();
+                    Player.GetPlayerAction().AddInteractable(this);
                 }
             }
             else
             {
-                CheckCondition(); // might need to be Player.OnUpdate or something
+                CheckCondition();
             }
         }
     }
@@ -43,12 +37,11 @@ public class PlayerConditionals : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Debug.Log("Removing listener!");
             if (addToOnAction)
             {
                 if (onActionEnabled)
                 {
-                    RemoveAction();
+                    Player.GetPlayerAction().RemoveInteractable(this);
                 }
             }
         }
@@ -102,33 +95,13 @@ public class PlayerConditionals : MonoBehaviour
     {
         if (addToOnAction && onActionEnabled)
         {
-            RemoveAction();
+            Player.GetPlayerAction().RemoveInteractable(this);
             onActionEnabled = false;
         }
     }
 
-    private void OnActionListener(object sender, System.EventArgs e)
+    public bool Interact()
     {
-        CheckCondition();
-    }
-
-    private void AddAction()
-    {
-        if (!actionAdded)
-        {
-            actionAdded = true;
-            PlayerAction.OnAction += OnActionListener;
-            Player.GetPlayerAction().IncrementActionsAvailable();
-        }
-    }
-
-    private void RemoveAction()
-    {
-        if (actionAdded)
-        {
-            actionAdded = false;
-            PlayerAction.OnAction -= OnActionListener;
-            Player.GetPlayerAction().DecrementActionsAvailable();
-        }
+        return CheckCondition();
     }
 }
