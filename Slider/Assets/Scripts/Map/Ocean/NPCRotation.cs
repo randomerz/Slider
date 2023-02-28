@@ -76,7 +76,9 @@ public class NPCRotation : MonoBehaviour
                 amberOak.Teleport(leftSign);
             }
             if (SaveSystem.Current.GetBool("oceanPickedUpCoconut"))
+            {
                 MovePorker();
+            }
 
             traveling_merchant.Teleport(off_camera);
             alien.Teleport(off_camera);
