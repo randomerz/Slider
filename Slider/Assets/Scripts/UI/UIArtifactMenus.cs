@@ -128,8 +128,6 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         if (justCollectedItem)
             yield return new WaitForSeconds(2.75f); // magic number if just picked an item
 
-        Debug.Log("open artifact");
-
         OpenArtifact();
 
         if (screenIndex != 0)

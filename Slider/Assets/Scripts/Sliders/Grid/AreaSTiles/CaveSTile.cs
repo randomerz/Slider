@@ -85,14 +85,14 @@ public class CaveSTile : STile
             //Check position is in the grid
             if (posToCheck.x >= 0 && posToCheck.x < SGrid.Current.Width && posToCheck.y >= 0 && posToCheck.y < SGrid.Current.Height)
             {
-                CaveSTile tile = (CaveSTile)SGrid.Current.GetGrid()[posToCheck.x, posToCheck.y];
+                CaveSTile tile = (CaveSTile)SGrid.Current.GetStileAt(posToCheck.x, posToCheck.y);
                 CaveLight light = tile.GetComponentInChildren<CaveLight>();
                 if (tile.isTileActive && light != null && light.LightOn)
                 {
                     foreach (var lightDir in tile.validDirsForLight)
                     {
                         //The light needs to be able to exit the tile with the light AND enter the tile we are checking from that direction.
-                        if (lightDir.x == -dir.x && lightDir.y == -dir.y)
+                        if (lightDir == -dir)
                         {
                             return true;
                         }

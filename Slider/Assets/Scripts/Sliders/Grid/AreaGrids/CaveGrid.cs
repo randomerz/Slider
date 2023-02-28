@@ -95,7 +95,7 @@ public class CaveGrid : SGrid
             allTilesLit = true;
             for (int x = 0; x < Current.Width; x++)
             {
-                for (int y = 0; y < Current.Width; y++)
+                for (int y = 0; y < Current.Height; y++)
                 {
                     if (grid[x, y].isTileActive)
                     {
