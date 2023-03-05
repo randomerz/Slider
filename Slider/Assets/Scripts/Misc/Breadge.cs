@@ -6,6 +6,6 @@ public class Breadge : MonoBehaviour
 {
     public void Pickup()
     {
-        AchievementManager.SetAchievementStat("collectedBreadge", 1);
+        AchievementManager.IncrementAchievementStat("collectedBreadge", 1);
     }
 }

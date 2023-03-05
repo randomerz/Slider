@@ -43,7 +43,7 @@ public class VillageGrid : SGrid
         
         if (!PlayerInventory.Contains("Slider 2", Area.Village))
         {
-            UITrackerManager.AddNewTracker(slider2Collectible, blinkTime: 3);
+            UITrackerManager.AddNewTracker(slider2Collectible, sprite: UITrackerManager.DefaultSprites.circle3, blinkTime: 3);
         }
         CheckHole();
     }

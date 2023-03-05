@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CaveLargeRuin2
+  m_Controller: {fileID: 9100000, guid: cfc072ac3ba507b4998cc4f483df1a8c, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 504e0ce19747f41468957e10d0ba99c5, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: fe7d712f65b5bd749af8965d6b65ad7a, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: e85bc468505eb2340ace359bfcfe0e46, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 871098401f3bce946b0a035cf8cf644d, type: 2}

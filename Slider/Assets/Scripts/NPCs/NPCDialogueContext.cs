@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
+internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteractable
 {
     public class DialogueEventFlags
     {
@@ -35,6 +35,10 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
     private Dictionary<int, int> cachedDchainIndices;    //(CondIndex, CurrDchainIndex)
 
     private Dictionary<int, Dictionary<int, DialogueEventFlags>> cachedEventFlags; //(CondIndex, DchainIndex, flags)
+
+    [SerializeField] private int _interactionPriority;
+    public int InteractionPriority { get => _interactionPriority; }
+    public bool DisplayInteractionPrompt { get => CurrentDialogue().waitUntilPlayerAction && !isTypingDialogue; }
 
     private List<DialogueData> CurrDchain
     {
@@ -82,13 +86,11 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
     public override void OnEnable()
     {
         base.OnEnable();
-        PlayerAction.OnAction += OnPlayerAction;
     }
 
     public override void OnDisable()
     {
         base.OnDisable();
-        PlayerAction.OnAction -= OnPlayerAction;
     }
 
     public override void Start()
@@ -111,11 +113,6 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         {
             DeactivateDialogueBox();
         }
-
-        if (playerInDialogueTrigger && !dialogueBoxIsActive)
-        {
-
-        }
     }
 
     public void SetDialogueEnabled(bool value)
@@ -137,6 +134,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
 
             TypeCurrentDialogue();
         }
+        Player.GetPlayerAction().AddInteractable(this);
     }
 
     public void OnDialogueTriggerExit()
@@ -147,6 +145,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         {
             DeactivateDialogueBox();
         }
+        Player.GetPlayerAction().RemoveInteractable(this);
     }
 
     public void OnConditionalsChanged()
@@ -167,11 +166,13 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
             }
 
             TypeCurrentDialogue();
+
+            Player.GetPlayerAction().AddInteractable(this);
         }
     }
 
     public void TypeCurrentDialogue()
-    {
+    { 
         if (DialogueEnabled && !CurrDchainIsEmpty())
         {
             display.DisplaySentence(context.CurrCond.GetDialogueString(CurrDchainIndex));
@@ -183,10 +184,15 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         }
     }
 
-    public void OnPlayerAction(object sender, System.EventArgs e)
+    public bool Interact()
     {
         if (dialogueBoxIsActive)
         {
+            if (!CurrentDialogue().waitUntilPlayerAction)
+            {
+                Player.GetPlayerAction().RemoveInteractable(this);
+            }
+
             if (waitingForPlayerAction)
             {
                 waitingForPlayerAction = false;
@@ -196,10 +202,8 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
             {
                 SkipText();
             }
-        } else if (playerInDialogueTrigger)
-        {
-            //TypeCurrentDialogue();
         }
+        return true;
     }
 
     public bool NPCGivingDontInterruptDialogue()
@@ -227,10 +231,9 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
                 //This is so the dialogue automatically ends after the delay or whatever for don't interrupt's so that it doesn't just stay there until the end of time. 
                 DeactivateDialogueBox();
             }
-            
-            // Does this even get called?
-            // context.CurrCond.OnDialogueChainExhausted();
         }
+
+        Player.GetPlayerAction().UpdateActionsAvailableIndicator();
     }
 
     private IEnumerator SetNextDialogueInChainAfterDelay(float delay)
@@ -255,6 +258,13 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
                 delayBeforeNextDialogueCoroutine = context.StartCoroutine(SetNextDialogueInChainAfterDelay(delay));
             }
             OnDialogueEnd();
+        }
+
+        Player.GetPlayerAction().UpdateActionsAvailableIndicator();
+
+        if (CurrDchainIndex == CurrDchain.Count - 1)
+        {
+            Player.GetPlayerAction().RemoveInteractable(this);
         }
     }
 
@@ -317,7 +327,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>
         }
 
         context.CurrCond.OnDialogueChainEnd(CurrDchainIndex);
-        
+
         TryDialogueChainExhausted();
     }
 
