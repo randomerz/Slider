@@ -69,7 +69,12 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     public void OpenArtifact()
     {
         if (!UIManager.canOpenMenus || isClosing || !hasArtifact)
+        {
+            Debug.LogWarning("UIManager: " + UIManager.canOpenMenus);
+            Debug.LogWarning("isClosing: " + isClosing);
+            Debug.LogWarning("hasArtifact: " + hasArtifact);
             return;
+        }
 
         artifactPanel.SetActive(true);
         isArtifactOpen = true;

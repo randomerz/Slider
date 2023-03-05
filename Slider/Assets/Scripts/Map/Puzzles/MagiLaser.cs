@@ -7,7 +7,7 @@ public class MagiLaser : MonoBehaviour
     public Vector2 initDir;
 
     public bool isEnabled;
-    public LineRenderer lineRenderer, lineRenderer2, lineRenderer3;
+    public LineRenderer lineRenderer, lineRenderer2;
     private RaycastHit2D hit;
     private Laserable laserable;
     private Vector2 curDir, curDir2;
