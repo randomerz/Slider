@@ -48,6 +48,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private new void Awake()
     {
         base.Awake();
+        poofParticles = Resources.Load<GameObject>(poofParticleName);
         SetCondPrioritiesToArrayPos();
     }
 
@@ -71,7 +72,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private new void OnEnable()
     {
         base.OnEnable();
-        poofParticles = Resources.Load<GameObject>(poofParticleName);
+        
     }
 
     private new void Update()
