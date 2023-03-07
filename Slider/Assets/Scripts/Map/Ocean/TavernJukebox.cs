@@ -24,7 +24,7 @@ public class TavernJukebox : MonoBehaviour, ISavable
         100f,   // Village
         47.5f,  // Caves - i think is 95
         140f,   // Jungle - 140
-        177f,   // Casino
+        176f,   // Casino - 88
         116f,   // Factory
         105f,   // Military
         41.5f,  // Mountain - i think is 166
