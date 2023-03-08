@@ -5,10 +5,13 @@ using Cinemachine;
 
 public class CameraZoom : Singleton<CameraZoom>
 {
-    public CinemachineVirtualCamera cmCamera;
+   // public CinemachineVirtualCamera cmCamera;
 
     public AnimationCurve MoveUpCurve;
     public AnimationCurve MoveDownCurve;
+
+    public CinemachineVirtualCamera cam;
+    public GameObject image;
 
     private int refX;
     private int refY; 
@@ -17,7 +20,6 @@ public class CameraZoom : Singleton<CameraZoom>
 
     private void Awake() {
         InitializeSingleton();
-        refOrtho = cmCamera.m_Lens.OrthographicSize;
     }
 
     public static void MoveUp(float duration)
@@ -33,6 +35,10 @@ public class CameraZoom : Singleton<CameraZoom>
 
     public IEnumerator AdjustZoom(float duration, AnimationCurve curve)
     {
+        image.SetActive(true);
+        //movecam.SetActive(true);
+        //maincam.SetActive(false);
+        cam.m_Lens.OrthographicSize *= 2;
         float curTime = 0;
         float zoomLevel = 1;
         while (curTime <= duration)
@@ -41,11 +47,15 @@ public class CameraZoom : Singleton<CameraZoom>
                 break;
             
             zoomLevel = curve.Evaluate(curTime/duration);
-            cmCamera.m_Lens.OrthographicSize = refOrtho * zoomLevel;
+            image.transform.localScale = new Vector3 (zoomLevel + 1, zoomLevel + 1, 1);
             curTime += Time.deltaTime;
 
             yield return null;
         }
-        cmCamera.m_Lens.OrthographicSize = refOrtho;
+        image.transform.localScale = Vector3.one * 2;
+        image.SetActive(false);
+        cam.m_Lens.OrthographicSize /= 2;
+        //movecam.SetActive(false);
+        //maincam.SetActive(true);
     }
 }
