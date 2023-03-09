@@ -59,8 +59,8 @@ public class DesertGrid : SGrid
             log.gameObject.SetActive(false);
             campfire.SetBool("isDying", false);
         }
-        Debug.Log("PortalEnabled: " + portalEnabled);
-        Debug.Log("PortalLaser: " + portalLaserEnabled);
+        //Debug.Log("PortalEnabled: " + portalEnabled);
+        //Debug.Log("PortalLaser: " + portalLaserEnabled);
         portalCollider.enabled = portalEnabled;
         portalLaser.isEnabled = portalLaserEnabled;
     }
