@@ -136,20 +136,25 @@ public class Minecart : Item, ISavable
 
     private void OnCollisionEnter2D(Collision2D other) 
     {
-        if(other.gameObject.CompareTag("Player"))
+        collidingObjects.Add(other.gameObject);
+        collisionPause = true;
+        /*if(other.gameObject.CompareTag("Player"))
             collisionPause = true;
         else if ((dropOnNextMove && !other.gameObject.tag.Equals("WorldMapCollider")) 
                 || (other.gameObject.layer == 14 && !dropOnNextMove) //C: Layer 14 is MinecartIgnore
                 || other.gameObject.tag.Equals("MinecartIgnore"))
             return;
         else
-            StopMoving();
+            StopMoving();*/
     }
 
     private void OnCollisionExit2D(Collision2D other) 
     {
-        if(other.gameObject.CompareTag("Player"))
+        collidingObjects.Remove(other.gameObject);
+        if(collidingObjects.Count == 0)
             collisionPause = false;
+        //if(other.gameObject.CompareTag("Player"))
+         //   collisionPause = false;
     }
 
     #region Item

@@ -78,36 +78,43 @@ public class CaveLight : MonoBehaviour
     //Idk if this needs to be pass by reference, but we def. don't want to copy the whole array.
     public void UpdateLightMask(ref Color[] lightMask, Texture2D heightMask, int worldToMaskDX, int worldToMaskDY, int maskSizeX, int maskSizeY)
     {
+        Color[] heights = heightMask.GetPixels();
         Vector2Int lightPos = new Vector2Int((int)transform.position.x, (int)transform.position.y);
+        Color white = Color.white;
 
         Vector2Int[] dirs = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+        // This loop is called a lot every frame! Make sure to optimize it
         foreach (Vector2Int dir in dirs)
         {
             for (int width = -8; width <= 8; width++)
             {
-                //L: The current tile being observed in world coords.
-                Vector2Int curr = lightPos + new Vector2Int(dir.y, dir.x) * width;
+                int dirX = dir.x;
+                int dirY = dir.y;
+                //  The current tile being observed in world coords.
+                Vector2Int curr = new Vector2Int(lightPos.x + dirY * width, lightPos.y + dirX * width);
+                int maskX = curr.x + worldToMaskDX;
+                int maskY = curr.y + worldToMaskDY;
 
                 //L: "Fake Raycast" from the light's position (+ width) up to 25 tiles before it hits a wall
-                for (int j=0; j<=17+8; j++)
+                for (int j = 0; j <= 17+8; j++)
                 {
-                    int maskX = curr.x + worldToMaskDX;
-                    int maskY = curr.y + worldToMaskDY;
-
                     //L: Bounds Check
                     if (maskX < 0 || maskX >= maskSizeX || maskY < 0 || maskY >= maskSizeY)
                     {
                         break;
                     }
                     
-                    lightMask[maskY * maskSizeX + maskX] = Color.white;
+                    lightMask[maskY * maskSizeX + maskX] = white;
 
                     // L: Hit Wall Check (Note: This is after so that the start of the tile still gets lit, but nothing else.
-                    if (heightMask.GetPixel(maskX, maskY).r > 0.5)
+                    if (heights[maskY * maskSizeX + maskX].r > 0.5)
                     {
                         break;
                     }
-                    curr += dir;
+
+                    // curr += dir; // DC: modified for optimizations. vector2int addition is slow when called 3000 times a frame!
+                    maskX += dirX;
+                    maskY += dirY;
                 }
             }
         }

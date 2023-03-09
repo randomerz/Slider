@@ -29,6 +29,7 @@ public class DesyncLever : Lever
         base.OnDisable();
         Anchor.OnAnchorInteract -= CheckLeverOnAnchorInteract;
     }
+    
     public void UpdatePairState()
     {
         Debug.Log("desync: " + isDesynced + " power: " + _isPowered);

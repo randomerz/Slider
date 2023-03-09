@@ -45,6 +45,8 @@ public class NPCConditionalsDrawer : PropertyDrawer
                 EditorGUI.PropertyField(position, property.FindPropertyRelative(s), true);
                 position.y += EditorGUI.GetPropertyHeight(prop);
             }
+            
+            position.y += 10; // Space after dialogue chain
 
             // Animator Foldout
             prop = property.FindPropertyRelative(IS_ANIMATOR_UNFOLDED_NAME);
@@ -100,6 +102,8 @@ public class NPCConditionalsDrawer : PropertyDrawer
                 prop = property.FindPropertyRelative(s);
                 height += EditorGUI.GetPropertyHeight(prop);
             }
+
+            height += 10; // Space after dialogue chain
 
             // Animator foldout
             height += 20;

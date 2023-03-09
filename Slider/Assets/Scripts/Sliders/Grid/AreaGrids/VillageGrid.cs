@@ -8,6 +8,7 @@ public class VillageGrid : SGrid
     public GameObject caveDoorRocks;
     public GameObject particleSpawner;
     
+    [SerializeField] private GameObject slider2Collectible;
     [SerializeField] private NPC romeoNPC;
     [SerializeField] private SinWaveAnimation catSinWave;
 
@@ -40,6 +41,10 @@ public class VillageGrid : SGrid
 
         AudioManager.PlayMusic("Village");
         
+        if (!PlayerInventory.Contains("Slider 2", Area.Village))
+        {
+            UITrackerManager.AddNewTracker(slider2Collectible, sprite: UITrackerManager.DefaultSprites.circle3, blinkTime: 3);
+        }
         CheckHole();
     }
 
@@ -145,6 +150,11 @@ public class VillageGrid : SGrid
         catSinWave.horizontalVelocity = 0.75f;
     }
 
+    public void RemoveSlider2Tracker()
+    {
+        UITrackerManager.RemoveTracker(slider2Collectible);
+    }
+
     public void OnWaterfallEntry()
     {
         // if puzzle complete + enter waterfall, then mark the cave door as exploded
@@ -200,12 +210,6 @@ public class VillageGrid : SGrid
             ruinsSymbols.SetSprites(false);
 
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, ruinsSymbols.ruinsHole.transform.position, Quaternion.identity, ruinsSymbols.transform);
-
-            AchievementManager.SetAchievementStat("completedVillage", 1);
-            if (SaveSystem.Current.GetPlayTimeInSeconds() < 180)
-            {
-                AchievementManager.SetAchievementStat("completedVillageSpeedrun", 1);
-            }
         }
     }
 
@@ -294,6 +298,12 @@ public class VillageGrid : SGrid
             SaveSystem.Current.SetBool("forceAutoMove", false);
 
             placeTile9Coroutine = StartCoroutine(PlaceTile9());
+
+            AchievementManager.SetAchievementStat("completedVillage", 1);
+            if (SaveSystem.Current.GetPlayTimeInSeconds() < 180)
+            {
+                AchievementManager.SetAchievementStat("completedVillageSpeedrun", 1);
+            }
         }
     }
 

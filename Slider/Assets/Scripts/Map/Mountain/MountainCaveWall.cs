@@ -25,10 +25,16 @@ public class MountainCaveWall : MonoBehaviour, ISavable
             go.SetActive(true);
         foreach (GameObject go in deactivateOnExplosion)
             go.SetActive(false);
+        StartCoroutine(WaitForMCSpawn());
+    }
 
+    private IEnumerator WaitForMCSpawn()
+    {
+        
         mc.gameObject.SetActive(true);
-        mc.SnapToRail(mcSpawn.transform.position, 1);
         mc.UpdateState("RepairParts");
+        yield return new WaitForSeconds(2);
+        mc.SnapToRail(mcSpawn.transform.position, 1);
         mc.StartMoving();
     }
 

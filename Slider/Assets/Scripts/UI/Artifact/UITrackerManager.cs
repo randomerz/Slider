@@ -76,6 +76,7 @@ public class UITrackerManager : MonoBehaviour
     public Sprite empty;
     public Sprite circle1;
     public Sprite circle2;
+    public Sprite circle3;
     public Sprite circleEmpty;
     public Sprite pin;
     public Sprite exclamation;
@@ -90,6 +91,7 @@ public class UITrackerManager : MonoBehaviour
         none,
         circle1,
         circle2,
+        circle3,
         circleEmpty,
         pin,
         exclamation,
@@ -101,6 +103,19 @@ public class UITrackerManager : MonoBehaviour
 
     protected virtual void Awake() {
         _instance = this;
+
+        for (int x = 0; x < uiTrackerBuffer.Count; x++) {
+            if (uiTrackerBuffer[x].target == null) {
+                uiTrackerBuffer.RemoveAt(x);
+                x--;
+            }
+        }
+        for (int x = 0; x < uiTrackerEnumBuffer.Count; x++) {
+            if (uiTrackerEnumBuffer[x].target == null) {
+                uiTrackerEnumBuffer.RemoveAt(x);
+                x--;
+            }
+        }
     }
 
     // Start is called before the first frame update
@@ -205,14 +220,18 @@ public class UITrackerManager : MonoBehaviour
 
 
     public static void AddNewTracker(
-                                    GameObject target, 
-                                    DefaultSprites sprite=DefaultSprites.circle1, 
-                                    DefaultSprites blinkSprite=DefaultSprites.none, 
-                                    DefaultSprites offMapSprite=DefaultSprites.none, 
-                                    DefaultSprites offMapBlinkSprite=DefaultSprites.none, 
-                                    float blinkTime=-1
-                                    ) 
-    {
+        GameObject target, 
+        DefaultSprites sprite=DefaultSprites.circle1, 
+        DefaultSprites blinkSprite=DefaultSprites.circleEmpty, 
+        DefaultSprites offMapSprite=DefaultSprites.none, 
+        DefaultSprites offMapBlinkSprite=DefaultSprites.none, 
+        float blinkTime=-1
+    ) {
+        if (target == null)
+        {
+            Debug.LogWarning("Tried adding a tracker to null!");
+            return;
+        }
         if (_instance == null) {
             uiTrackerEnumBuffer.Add(new UITrackerEnumData(target, sprite, blinkSprite, offMapSprite, offMapBlinkSprite, blinkTime));
             return;
@@ -222,14 +241,18 @@ public class UITrackerManager : MonoBehaviour
     }
     
     public static void AddNewTracker(
-                                    GameObject target, 
-                                    Sprite sprite, 
-                                    Sprite blinkSprite=null, 
-                                    Sprite offMapSprite=null, 
-                                    Sprite offMapBlinkSprite=null, 
-                                    float blinkTime=-1
-                                    ) 
-    {
+        GameObject target, 
+        Sprite sprite, 
+        Sprite blinkSprite=null, 
+        Sprite offMapSprite=null, 
+        Sprite offMapBlinkSprite=null, 
+        float blinkTime=-1
+    ) {
+        if (target == null)
+        {
+            Debug.LogWarning("Tried adding a tracker to null!");
+            return;
+        }
         if (_instance == null) {
             uiTrackerBuffer.Add(new UITrackerData(target, sprite, blinkSprite, offMapSprite, offMapBlinkSprite, blinkTime));
             return;
@@ -263,6 +286,8 @@ public class UITrackerManager : MonoBehaviour
                 return _instance.circle1;
             case DefaultSprites.circle2:
                 return _instance.circle2;
+            case DefaultSprites.circle3:
+                return _instance.circle3;
             case DefaultSprites.circleEmpty:
                 return _instance.circleEmpty;
             case DefaultSprites.pin:

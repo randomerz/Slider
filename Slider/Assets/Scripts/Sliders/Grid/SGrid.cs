@@ -268,6 +268,11 @@ public void SetGrid(int[,] puzzle)
         return null;
     }
 
+    public STile GetStileAt(int x, int y)
+    {
+        return Current.grid[x,y];
+    }
+
     public List<STile> GetStiles(List<int> idList)
     {
         List<STile> returnList = new List<STile>();
@@ -280,11 +285,6 @@ public void SetGrid(int[,] puzzle)
     protected static string GetTileIdAt(int x, int y)
     {
         return Current.targetGrid[(Current.Height - y - 1) * Current.Width + x].ToString();
-    }
-
-    public static STile GetTileAt(int x, int y)
-    {
-        return Current.grid[x,y];
     }
 
     protected void SwapTiles(STile one, STile two)

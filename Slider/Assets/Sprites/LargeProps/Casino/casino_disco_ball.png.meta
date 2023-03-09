@@ -1,0 +1,949 @@
+fileFormatVersion: 2
+guid: 312f39acccbaea248b1d0862ce365098
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 672
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: casino_disco_ball_Idle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 560
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0ad099d2d5f5aef0800000000000000
+      internalID: -97401530976511477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Idle_1
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 560
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e06c8f99fdbd1dc0800000000000000
+      internalID: -3666565641788432155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Idle_2
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 560
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b574c82349101b10800000000000000
+      internalID: 1950086414888891828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Idle_3
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 560
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a168325e08af90b90800000000000000
+      internalID: -7275008291533257190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_0
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 560
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15be32c56461f33c0800000000000000
+      internalID: -4377755821331453103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_1
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 560
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 940cb4c691f894ce0800000000000000
+      internalID: -1420446868104822711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 448
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d8b243dcb4d69af0800000000000000
+      internalID: -389890410257663784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_3
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 448
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d59b54ce5ad91f10800000000000000
+      internalID: 2241062390149649874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_4
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 448
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bc8afc6e77007f20800000000000000
+      internalID: 3418240356749839536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_5
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 448
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32852e0574e6d8470800000000000000
+      internalID: 8398490132694587427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_6
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 448
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88de68c77a776c890800000000000000
+      internalID: -7438126173323334264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_7
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 448
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80c9fa409e6936620800000000000000
+      internalID: 2766220523685780488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 336
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f974fd9a16895f00800000000000000
+      internalID: 1106062632373484024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_9
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 336
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a727f33e6e46dc90800000000000000
+      internalID: -7145437523551508568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_10
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 336
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1509bddf6068c5fe0800000000000000
+      internalID: -1198936036200443823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_11
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 336
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 018347254f72d6130800000000000000
+      internalID: 3561546810628782096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_12
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 336
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f88663203e7df8bc0800000000000000
+      internalID: -3778564192345888625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_13
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 336
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27974ba271d1c09a0800000000000000
+      internalID: -6265600996241278606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 224
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b778d1eb37db0c90800000000000000
+      internalID: -7202426526856874060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_15
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 224
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 091614dc732b49250800000000000000
+      internalID: 5950576960399827344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_16
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 224
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4715d679648b2c90800000000000000
+      internalID: -7193510391294126261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_17
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 224
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 172790fab00c8c6c0800000000000000
+      internalID: -4122834302443883919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_18
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 224
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1070e91ee1a0ceb0800000000000000
+      internalID: -4701579966966370276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_19
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 224
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4acc8767298ed2960800000000000000
+      internalID: 7578969463684910244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 112
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c80c68a4c3a7d3d20800000000000000
+      internalID: 3259896104653078668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_21
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 112
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af5f7ae7a170a15e0800000000000000
+      internalID: -1938228879254096390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_22
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 112
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 060c8f9c3853fe140800000000000000
+      internalID: 4751074972044673120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_23
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 112
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dafe2bf30d45455b0800000000000000
+      internalID: -5380582401402277971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_24
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 112
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95179e2781c070bf0800000000000000
+      internalID: -358304346206015143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_25
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 112
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c4ac86434720f8a0800000000000000
+      internalID: -6273471111027186492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_Fall_26
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0509292ecfc6f92b0800000000000000
+      internalID: -5575617980272570288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_BrokenIdle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 112
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7a3316151c351910800000000000000
+      internalID: 1807416886721460860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_BrokenIdle_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 112
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4328380d2f4450300800000000000000
+      internalID: 217655966668390964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_BrokenIdle_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f374c0f1e8c38d50800000000000000
+      internalID: 6738450340208997364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_BrokenIdle_3
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 112
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82bedd35823128cb0800000000000000
+      internalID: -4863303583680042200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_BrokenIdle_4
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 112
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bda6bd0a08e7c980800000000000000
+      internalID: -8518585040270611017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: casino_disco_ball_BrokenIdle_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 86
+        height: 112
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2410714}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6dfa7b8da83fe4240800000000000000
+      internalID: 4778024032353628118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      casino_disco_ball_Fall_9: -7145437523551508568
+      casino_disco_ball_Fall_14: -7202426526856874060
+      casino_disco_ball_Fall_13: -6265600996241278606
+      casino_disco_ball_BrokenIdle_0: 1807416886721460860
+      casino_disco_ball_BrokenIdle_4: -8518585040270611017
+      casino_disco_ball_Fall_18: -4701579966966370276
+      casino_disco_ball_Idle_2: 1950086414888891828
+      casino_disco_ball_Fall_7: 2766220523685780488
+      casino_disco_ball_Fall_20: 3259896104653078668
+      casino_disco_ball_BrokenIdle_5: 4778024032353628118
+      casino_disco_ball_Fall_1: -1420446868104822711
+      casino_disco_ball_Fall_8: 1106062632373484024
+      casino_disco_ball_Fall_21: -1938228879254096390
+      casino_disco_ball_Fall_0: -4377755821331453103
+      casino_disco_ball_Fall_16: -7193510391294126261
+      casino_disco_ball_Fall_17: -4122834302443883919
+      casino_disco_ball_Fall_22: 4751074972044673120
+      casino_disco_ball_Fall_19: 7578969463684910244
+      casino_disco_ball_Idle_3: -7275008291533257190
+      casino_disco_ball_Fall_3: 2241062390149649874
+      casino_disco_ball_BrokenIdle_1: 217655966668390964
+      casino_disco_ball_Fall_10: -1198936036200443823
+      casino_disco_ball_Idle_0: -97401530976511477
+      casino_disco_ball_Fall_11: 3561546810628782096
+      casino_disco_ball_Fall_26: -5575617980272570288
+      casino_disco_ball_BrokenIdle_3: -4863303583680042200
+      casino_disco_ball_Fall_12: -3778564192345888625
+      casino_disco_ball_Fall_24: -358304346206015143
+      casino_disco_ball_Fall_25: -6273471111027186492
+      casino_disco_ball_Fall_23: -5380582401402277971
+      casino_disco_ball_Fall_4: 3418240356749839536
+      casino_disco_ball_Fall_5: 8398490132694587427
+      casino_disco_ball_Fall_15: 5950576960399827344
+      casino_disco_ball_Idle_1: -3666565641788432155
+      casino_disco_ball_BrokenIdle_2: 6738450340208997364
+      casino_disco_ball_Fall_6: -7438126173323334264
+      casino_disco_ball_Fall_2: -389890410257663784
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

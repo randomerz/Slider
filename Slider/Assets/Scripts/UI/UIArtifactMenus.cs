@@ -69,7 +69,12 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     public void OpenArtifact()
     {
         if (!UIManager.canOpenMenus || isClosing || !hasArtifact)
+        {
+            Debug.LogWarning("UIManager: " + UIManager.canOpenMenus);
+            Debug.LogWarning("isClosing: " + isClosing);
+            Debug.LogWarning("hasArtifact: " + hasArtifact);
             return;
+        }
 
         artifactPanel.SetActive(true);
         isArtifactOpen = true;
@@ -126,7 +131,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     private IEnumerator IOpenArtifactAndShow(int screenIndex, bool justCollectedItem)
     {
         if (justCollectedItem)
-            yield return new WaitForSeconds(2.25f); // magic number if just picked an item
+            yield return new WaitForSeconds(2.75f); // magic number if just picked an item
 
         OpenArtifact();
 

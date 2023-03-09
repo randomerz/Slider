@@ -14,9 +14,11 @@ public class MagiTechGrid : SGrid
     [SerializeField] private Collider2D fireBoi;
     [SerializeField] private Collider2D hungryBoi;
     [SerializeField] private DesyncItem desyncBurger;
+    [SerializeField] private Collider2D desertPortalCollider;
 
     private bool hasBurger;
     private bool hasDesyncBurger;
+    private bool desertPortalEnabled;
     private int numOres = 0;
 
     private ContactFilter2D contactFilter;
@@ -49,7 +51,27 @@ public class MagiTechGrid : SGrid
         contactFilter = new ContactFilter2D();
 
         AudioManager.PlayMusic("MagiTech");
-        UIEffects.FadeFromBlack();
+    }
+
+    protected void OnEnable()
+    {
+        OnTimeChange(this, new Portal.OnTimeChangeArgs {fromPast = IsInPast(Player.GetInstance().transform)});
+        Portal.OnTimeChange += OnTimeChange;
+        Debug.Log("desertPortal: " + desertPortalEnabled);
+        Debug.Log(UIManager.canOpenMenus);
+        desertPortalCollider.gameObject.SetActive(desertPortalEnabled);
+    }
+
+    protected void OnDisable()
+    {
+        Portal.OnTimeChange -= OnTimeChange;
+    }
+
+    private void OnTimeChange(object sender, Portal.OnTimeChangeArgs e)
+    {
+        bool isFuture = !e.fromPast;
+        Debug.Log("is future? " + isFuture);
+        AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", isFuture ? 1 : 0);
     }
 
     #region Magitech Mechanics 
@@ -83,6 +105,8 @@ public class MagiTechGrid : SGrid
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
+
+        desertPortalEnabled = profile.GetBool("magiTechDesertPortal"); //The laser is set by the Laserable component
     }
 
     public static bool IsInPast(Transform transform)
@@ -92,7 +116,7 @@ public class MagiTechGrid : SGrid
 
     #endregion
 
-
+    #region Conditions
     public void HasTwoBurgers(Condition c)
     {
         if (!desyncBurger.IsDesynced)
@@ -112,6 +136,7 @@ public class MagiTechGrid : SGrid
         }
         c.SetSpec(hasBurger && hasDesyncBurger);
     }
+
     public void FireHasStool(Condition c)
     {
         if (SaveSystem.Current.GetBool("magiTechFactory"))
@@ -130,6 +155,7 @@ public class MagiTechGrid : SGrid
         }
         c.SetSpec(false);
     }
+
     public void LightningHasStool(Condition c)
     {
         if (SaveSystem.Current.GetBool("magiTechFactory"))
@@ -149,22 +175,26 @@ public class MagiTechGrid : SGrid
         }
         c.SetSpec(false);
     }
+
     private List<Collider2D> GetCollidingItems(Collider2D collider)
     {
         List<Collider2D> list = new();
         collider.OverlapCollider(contactFilter, list);
         return list;
     }
+
     public void TurnInArtifact()
     {
         //Ensure Scroll of Realign is used
-        if (!(UIArtifact.GetGridString() == "132_76#_548"))
+        if (!(UIArtifact.GetGridString() == "132_76#_548")) // TODO: check for bugs with desync in past T u T
         {
             return;
         }
         //Disable ability to open artifact
         UIArtifactMenus._instance.hasArtifact = false;
+        Debug.Log("Artifact: " + UIArtifactMenus._instance.hasArtifact);
     }
+
     public void HasOneOre(Condition c)
     {
         c.SetSpec(numOres == 1);
@@ -172,12 +202,10 @@ public class MagiTechGrid : SGrid
 
     public void HasTwoOres(Condition c)
     {
-        
         c.SetSpec(numOres == 2);
     }
     public void HasThreeOres(Condition c)
     {
-
         c.SetSpec(numOres == 3);
     }
 
@@ -185,4 +213,5 @@ public class MagiTechGrid : SGrid
     {
         numOres++;
     }
+    #endregion
 }

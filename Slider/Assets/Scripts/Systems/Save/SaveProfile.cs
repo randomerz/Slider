@@ -141,9 +141,7 @@ public class SaveProfile
 
     public void Save()
     {
-        
         lastSaved = System.DateTime.Now;
-        //Debug.Log(playTimeInSeconds);
         SetBool("isDemoBuild", true);
         SaveSavablesData();
         AchievementData = AchievementManager.GetAchievementData();

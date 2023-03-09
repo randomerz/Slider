@@ -23,6 +23,6 @@ public class Lavafall : MonoBehaviour
     }
 
     public void CheckLava(){
-        fall.SetActive(sTile.y == 3 && !SGrid.GetTileAt(sTile.x, 2).isTileActive);
+        fall.SetActive(sTile.y == 3 && !SGrid.Current.GetStileAt(sTile.x, 2).isTileActive);
     }
 }

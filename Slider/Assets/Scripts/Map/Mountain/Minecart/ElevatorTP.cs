@@ -9,6 +9,7 @@ public class ElevatorTP : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
+        if(elevator.isSending) return;
         if(other.GetComponent<Minecart>()){
             Minecart mc = other.GetComponent<Minecart>();
             if(isTop)
@@ -16,11 +17,5 @@ public class ElevatorTP : MonoBehaviour
             else
                 elevator.SendMinecartUp(mc);
         }    
-    }
-
-    private void OnDrawGizmos() 
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(transform.position, 0.25f);
     }
 }

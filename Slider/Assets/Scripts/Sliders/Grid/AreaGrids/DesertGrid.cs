@@ -14,10 +14,14 @@ public class DesertGrid : SGrid
     public SpriteRenderer[] casinoCeilingSprites;
     public List<Animator> casinoSigns;
     [SerializeField] private GameObject[] zlist; //From smallest to largest
+    [SerializeField] private Collider2D portalCollider; //Desert Portal
+    [SerializeField] private MagiLaser portalLaser;
 
     private int monkeShake = 0;
     private bool campfireIsLit = false;
     private bool checkMonkey = false;
+    private bool portalEnabled = false;
+    private bool portalLaserEnabled = false;
     private Coroutine waitForZ; //Should be null if monkeShakes is 0
     private Coroutine shuffleBuildUpCoroutine;
     private Coroutine placeTile9Coroutine;
@@ -37,12 +41,6 @@ public class DesertGrid : SGrid
         if (dice1 == null && dice2 == null) Debug.LogWarning("Die have not been set!");
         if (log == null) Debug.LogWarning("Log has not been set!");
 
-        if (!campfireIsLit)
-        {
-            log.gameObject.SetActive(true);
-            campfire.SetBool("isDying", true);
-        }
-
         AudioManager.PlayMusic("Desert");
         AudioManager.PlayMusic("Desert Casino", false);
     }
@@ -56,6 +54,15 @@ public class DesertGrid : SGrid
         {
             SGridAnimator.OnSTileMoveEnd += CheckMonkeyShakeOnMove;
         }
+        if (campfireIsLit)
+        {
+            log.gameObject.SetActive(false);
+            campfire.SetBool("isDying", false);
+        }
+        Debug.Log("PortalEnabled: " + portalEnabled);
+        Debug.Log("PortalLaser: " + portalLaserEnabled);
+        portalCollider.enabled = portalEnabled;
+        portalLaser.isEnabled = portalLaserEnabled;
     }
 
     private void OnDisable() {
@@ -123,6 +130,8 @@ public class DesertGrid : SGrid
         campfireIsLit = profile.GetBool("desertCamp");
         checkCompletion = profile.GetBool("desertCheckCompletion");
         checkMonkey = profile.GetBool("desertCheckMonkey");
+        portalEnabled = profile.GetBool("magiTechDesertPortal");
+        portalLaserEnabled = profile.GetBool("magiTechDesertLaser");
     }
 
     // === Desert puzzle specific ===
@@ -152,7 +161,9 @@ public class DesertGrid : SGrid
         STile monkeyTile = Current.GetStile(3);
         if (monkeyTile.isTileActive && e.stile == monkeyTile)
         {
-            zlist[monkeShake].SetActive(false);
+            Debug.Log(monkeShake);
+            if (0 <= monkeShake && monkeShake < zlist.Length) // temporary patch
+                zlist[monkeShake].SetActive(false);
             monkeShake++;
 
             if (monkeShake >= 3)

@@ -63,11 +63,11 @@ public class DesertArtifact : UIArtifact
 
     protected override void QueueMoveFromButtonPair(SMove move, ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        MoveMadeOnArtifact?.Invoke(this, null);
         QueueAdd(move);
         ProcessQueue();
         UpdatePushedDowns(null, null);
         DeselectSelectedButton();
+        MoveMadeOnArtifact?.Invoke(this, null);
     }
 
     protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)

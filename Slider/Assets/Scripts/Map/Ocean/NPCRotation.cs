@@ -73,13 +73,15 @@ public class NPCRotation : MonoBehaviour
             }
             if (PlayerInventory.Instance.GetHasCollectedAnchor())
             {
-                amberOak.Teleport(leftSign);
+                amberOak.Teleport(leftSign, false);
             }
             if (SaveSystem.Current.GetBool("oceanPickedUpCoconut"))
+            {
                 MovePorker();
+            }
 
-            traveling_merchant.Teleport(off_camera);
-            alien.Teleport(off_camera);
+            traveling_merchant.Teleport(off_camera, false);
+            alien.Teleport(off_camera, false);
         }
     }
 
@@ -116,36 +118,37 @@ public class NPCRotation : MonoBehaviour
         float rng = UnityEngine.Random.Range(0f, 1f);
         if (rng < .1f && !gotBreadge && gotCatbeardTreasure)
         {
-            traveling_merchant.Teleport(leftEntrance);
+            traveling_merchant.Teleport(leftEntrance, false);
         }
         else
         {
-            traveling_merchant.Teleport(off_camera);
+            traveling_merchant.Teleport(off_camera, false);
         }
         foreach (string person in rotationUpdates)
         {
             switch (person)
             {
                 case "fisherman": //fisherman joins the tavern
-                    fisherman.Teleport(left_left_table);
+                    fisherman.makeFaceRight();
+                    fisherman.Teleport(left_left_table, false);
                     break;
 
                 case "alien": //alien joins
-                    alien.Teleport(leftSign);
+                    alien.Teleport(leftSign, false);
                     break;
 
                 case "diceGirl"://dice ppl leave, catberad and broke replace them
-                    diceGirl.Teleport(off_camera);
-                    diceGuy.Teleport(off_camera);
-                    amberOak.Teleport(leftDice);
-                    catBeard.Teleport(rightDice);
+                    diceGirl.Teleport(off_camera, false);
+                    diceGuy.Teleport(off_camera, false);
+                    amberOak.Teleport(leftDice, false);
+                    catBeard.Teleport(rightDice, false);
                     break;
 
                 case "fezziwig": //fezziwig joins
-                    fezziwig.Teleport(rightSign);
+                    fezziwig.Teleport(rightSign, false);
                     break;
                 case "porker"://move porker to the coconuts and change his dialogue
-                    porker.Teleport(coconuts);
+                    porker.Teleport(coconuts, false);
                     break;
 
 
@@ -158,14 +161,14 @@ public class NPCRotation : MonoBehaviour
 
     public void MovePorker()
     {
-        porker.Teleport(coconuts);
+        porker.Teleport(coconuts, false);
     }
 
     public void MoveAmberOak(object sender, System.EventArgs e)
     {
-        porker.Teleport(rightEntrance);
-        ike.Teleport(IkeSpot);
-        amberOak.Teleport(leftSign);
+        porker.Teleport(rightEntrance, false);
+        ike.Teleport(IkeSpot, false);
+        amberOak.Teleport(leftSign, false);
     }
 
     public void CollectedBreadge()

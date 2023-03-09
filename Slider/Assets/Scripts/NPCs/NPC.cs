@@ -48,6 +48,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private new void Awake()
     {
         base.Awake();
+        poofParticles = Resources.Load<GameObject>(poofParticleName);
         SetCondPrioritiesToArrayPos();
     }
 
@@ -55,15 +56,23 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     {
         base.Start();
         
-        CurrCond.onConditionalEnter?.Invoke();
-        npcAnimatorController.Play(CurrCond.animationOnEnter);
-        emoteController.SetEmote(CurrCond.emoteOnEnter);
+        CheckAllConditionals();
+
+        if (CanUpdateConditionals())
+        {
+            PollForNewConditional();
+        }
+
+        if (currCondIndex == 0)
+        {
+            ChangeCurrentConditional(0);
+        }
     }
 
     private new void OnEnable()
     {
         base.OnEnable();
-        poofParticles = Resources.Load<GameObject>(poofParticleName);
+        
     }
 
     private new void Update()
@@ -138,7 +147,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         Teleport(transform, true);
     }
 
-    public void Teleport(Transform transform, bool poof=false)
+    public void Teleport(Transform transform, bool poof=true)
     {
         if (base.transform.position != transform.position)
         {
@@ -222,5 +231,13 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private bool CanUpdateConditionals()
     {
         return dialogueCtx.DialogueEnabled && !dialogueCtx.NPCGivingDontInterruptDialogue();
+    }
+
+    public void makeFaceRight()
+    {
+        if(spriteDefaultFacingLeft)
+        {
+            sr.flipX = true;
+        }
     }
 }
