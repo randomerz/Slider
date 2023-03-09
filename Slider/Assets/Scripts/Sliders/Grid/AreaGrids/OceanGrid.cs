@@ -113,7 +113,7 @@ public class OceanGrid : SGrid
         base.Save();
         SaveSystem.Current.SetBool("oceanRJBottleDelivery", bottleManager.puzzleSolved);
         SaveSystem.Current.SetBool("oceanFoggyIslandReached", foggyCompleted);
-        SaveSystem.Current.SetBool("oceanCatbeardTreasureCollected", npcRotation.gotCatbeardTreasure);
+        SaveSystem.Current.SetBool("oceanUnlockedAllSliders", npcRotation.unlockedAllSliders);
         SaveSystem.Current.SetBool("oceanBreadgeCollected", npcRotation.gotBreadge);
     }
 
@@ -128,7 +128,7 @@ public class OceanGrid : SGrid
 
         bottleManager.puzzleSolved = profile.GetBool("oceanRJBottleDelivery");
         foggyCompleted = profile.GetBool("oceanFoggyIslandReached");
-        npcRotation.gotCatbeardTreasure = profile.GetBool("oceanCatbeardTreasureCollected");
+        npcRotation.unlockedAllSliders = profile.GetBool("oceanUnlockedAllSliders");
         npcRotation.gotBreadge = profile.GetBool("oceanBreadgeCollected");
 
     }
