@@ -28,7 +28,7 @@ public class NPCRotation : MonoBehaviour
     [SerializeField] Transform IkeSpot; //ike
 
     public bool gotBreadge = false; //saved in oceangrid.cs maybe need to update to Savable in the future
-    public bool gotCatbeardTreasure = false;
+    public bool unlockedAllSliders = false;
 
     public void OnEnable()
     {
@@ -99,14 +99,14 @@ public class NPCRotation : MonoBehaviour
                 rotationUpdates.Add("alien");
                 break;
 
-            case "Cat Beard's Treasure"://dice ppl leave
-                rotationUpdates.Add("diceGirl");
+            case "Cat Beard's Treasure": //catbeard joins
                 rotationUpdates.Add("catBeard");
-                gotCatbeardTreasure = true;
                 break;
 
-            case "A Magical Gem": //fezziwig joins
+            case "A Magical Gem": //fezziwig joins, dice ppl leave
+                rotationUpdates.Add("diceGirl");
                 rotationUpdates.Add("fezziwig");
+                unlockedAllSliders = true;
                 break;
             default:
                 break;
@@ -116,7 +116,7 @@ public class NPCRotation : MonoBehaviour
     public void UpdateTavern()
     {
         float rng = UnityEngine.Random.Range(0f, 1f);
-        if (rng < .1f && !gotBreadge && gotCatbeardTreasure)
+        if (rng < .1f && !gotBreadge && unlockedAllSliders)
         {
             traveling_merchant.Teleport(leftEntrance, false);
         }
