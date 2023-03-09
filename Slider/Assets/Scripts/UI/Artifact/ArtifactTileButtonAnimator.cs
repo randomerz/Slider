@@ -36,7 +36,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             sliderImage.rectTransform.anchoredPosition = new Vector3(0, -1);
             highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, -1);
             pushedDownFrame.gameObject.SetActive(true);
-            highlightedFrame.gameObject.SetActive(false);
+            if (!isLightning) highlightedFrame.gameObject.SetActive(false); //We don't disable the highlight if lightning
         }
         else if (isPushedDown && !value)
         {
