@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6171555842681622006}
   - component: {fileID: 2119894923060083103}
   - component: {fileID: 8554040676780911748}
-  m_Layer: 7
+  m_Layer: 19
   m_Name: Bin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,6 +55,8 @@ MonoBehaviour:
   top: {fileID: 0}
   bottom: {fileID: 0}
   currentDirection: 0
+  shapePlacer1: {fileID: 0}
+  shapePlacer2: {fileID: 0}
 --- !u!212 &6171555842681622006
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -159,7 +161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8355923119629162384}
   - component: {fileID: 8355923119629162387}
-  m_Layer: 7
+  m_Layer: 19
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

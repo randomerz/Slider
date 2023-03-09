@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2444568012236879683}
   - component: {fileID: 1889214680079952859}
-  m_Layer: 7
+  m_Layer: 19
   m_Name: shape
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 6794732048064429010}
   - component: {fileID: -3017464133561495854}
   - component: {fileID: -4898522292815560367}
-  m_Layer: 7
+  m_Layer: 19
   m_Name: Blob
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -207,6 +207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 6794732048064429008}
   renderer: {fileID: 6794732048064429009}
+  traveledDistance: 0
   carry: {fileID: 0}
   shapeRenderer: {fileID: 1889214680079952859}
 --- !u!50 &-3017464133561495854
