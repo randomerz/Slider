@@ -26,7 +26,7 @@ public class Bin : Box
         currentShape = null;
         shapePlacer1.stop();
         shapePlacer2.stop();
-        print("no shape");
+        //print("no shape");
     }
 
     public override void RecieveShape(Path path, Shape shape, List<Box> parents)
@@ -34,11 +34,11 @@ public class Bin : Box
         //add the shape
         recievedShapes[path] = shape;
 
-        if( shape != null)
+/*        if( shape != null)
         {
             //broadcast a shape has been made
-            print("bin: " + shape.name);
-        }
+            //print("bin: " + shape.name);
+        }*/
 
         shapePlacer1.stop();
         shapePlacer2.stop();
