@@ -12,7 +12,6 @@ public class ShapePlacer : MonoBehaviour
     {
         if (this.transform.childCount == 0 && making)
         {
-            print("player picked up shape");
             place(makeShape);
         }
     }
