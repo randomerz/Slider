@@ -22,6 +22,8 @@ public class Lever : ElectricalNode
 
     private void Start() 
     {
+        if (powerOnStart) SetState(true);
+
         if (shouldSaveLeverState)
         {
             if (SaveSystem.Current.GetBool(saveLeverString))

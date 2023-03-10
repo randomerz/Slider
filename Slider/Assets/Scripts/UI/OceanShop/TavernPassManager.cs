@@ -199,12 +199,12 @@ public class TavernPassManager : MonoBehaviour, ISavable
         {
             case 0:
                 // Free Slider
-                SGrid.Current.CollectSTile(4);
+                SGrid.Current.CollectSTile(5);
                 break;
 
             case 1:
                 // All Sliders
-                for (int i = 5; i <= 9; i++)
+                for (int i = 4; i <= 9; i++)
                 {
                     SGrid.Current.CollectSTile(i);
                 }

@@ -2298,6 +2298,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7489e8d20ecac9f4b8280e34eb1d6b5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tavernJukebox: {fileID: 0}
+  tavernCat: {fileID: 0}
   shopManager: {fileID: 8279323558638895394}
   rewardEffect: {fileID: 2872425446058672337}
   tavernPassButtons:
@@ -12240,15 +12242,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4789369315781166675, guid: 96c7c802079a5aa4bb316d83c932b48f, type: 3}
       propertyPath: m_Name
-      value: Tavern Bell
+      value: Tavern Jukebox
       objectReference: {fileID: 0}
     - target: {fileID: 6117189401826818893, guid: 96c7c802079a5aa4bb316d83c932b48f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 502137757, guid: 48f72abf864266a46b232bc5bf57ffb6, type: 3}
+      objectReference: {fileID: -1772549255, guid: 4b831da49940cbd49bc2a5055c8fc333, type: 3}
     - target: {fileID: 9162068465647476015, guid: 96c7c802079a5aa4bb316d83c932b48f, type: 3}
       propertyPath: rewardName
-      value: Tavern Bell
+      value: Tavern Jukebox
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96c7c802079a5aa4bb316d83c932b48f, type: 3}
@@ -12402,7 +12404,7 @@ PrefabInstance:
     - target: {fileID: 6117189401826818893, guid: 96c7c802079a5aa4bb316d83c932b48f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -6123564054768132720, guid: f2713f0136540214bb68bcbc967188a5, type: 3}
+      objectReference: {fileID: 1882772474, guid: 4b831da49940cbd49bc2a5055c8fc333, type: 3}
     - target: {fileID: 9162068465647476015, guid: 96c7c802079a5aa4bb316d83c932b48f, type: 3}
       propertyPath: rewardName
       value: Bob's Favor
@@ -12559,7 +12561,7 @@ PrefabInstance:
     - target: {fileID: 6117189401826818893, guid: 96c7c802079a5aa4bb316d83c932b48f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 8033092973025764044, guid: 0e9e75226c3b28c4fab918848a2de10e, type: 3}
+      objectReference: {fileID: -1056051899, guid: 4b831da49940cbd49bc2a5055c8fc333, type: 3}
     - target: {fileID: 9162068465647476015, guid: 96c7c802079a5aa4bb316d83c932b48f, type: 3}
       propertyPath: rewardName
       value: All Sliders
