@@ -1,20 +1,22 @@
 using UnityEngine;
 using System.Collections;
 using Cinemachine;
-using System;
+//using System;
 
 public class CameraShake : MonoBehaviour
 {
     public Transform baseTransform;
     public CinemachineVirtualCamera cmCamera;
 
-    //public static CameraShake _instance;
+    public static CameraShake _instance;
     
     private static float curIntensity;
-   // private static CinemachineBasicMultiChannelPerlin cmPerlin;
-    private CinemachineBasicMultiChannelPerlin cmPerlin;
+    private static CinemachineBasicMultiChannelPerlin cmPerlin;
 
-    public enum ShakeType
+    public static bool noInterrupt;
+    //private CinemachineBasicMultiChannelPerlin cmPerlin;
+
+   /* public enum ShakeType
     {
         Decrease,
         Constant,
@@ -132,10 +134,11 @@ public class CameraShake : MonoBehaviour
 
         transform.position = baseTransform.position;
         if(cmPerlin != null) cmPerlin.m_AmplitudeGain = 0;
-    }
+    }*/
 
+    
 
-    /*
+    
     void Awake()
     {
         if (baseTransform == null)
@@ -150,9 +153,9 @@ public class CameraShake : MonoBehaviour
 
         _instance = this;
     }
-    public static void Shake(float duration, float amount)
+    public static void Shake(float duration, float amount, bool overrideNoInterrupt = false)
     {
-        if (_instance == null || amount < curIntensity)
+        if (_instance == null || amount < curIntensity || (noInterrupt && !overrideNoInterrupt))
             return;
         _instance.StopAllCoroutines();
         _instance.StartCoroutine(_instance.cShake(duration, amount));
@@ -183,9 +186,9 @@ public class CameraShake : MonoBehaviour
         if(cmPerlin != null) cmPerlin.m_AmplitudeGain = 0;
     }
 
-    public static void ShakeConstant(float duration, float amount)
+    public static void ShakeConstant(float duration, float amount, bool overrideNoInterrupt = false)
     {
-        if (_instance == null || amount < curIntensity)
+        if (_instance == null || amount < curIntensity || (noInterrupt && !overrideNoInterrupt))
             return;
         _instance.StopAllCoroutines();
         _instance.StartCoroutine(_instance.cConstantShake(duration, amount));
@@ -216,9 +219,9 @@ public class CameraShake : MonoBehaviour
         if(cmPerlin != null) cmPerlin.m_AmplitudeGain = 0;
     }
 
-    public static void ShakeIncrease(float duration, float amount)
+    public static void ShakeIncrease(float duration, float amount, bool overrideNoInterrupt = false)
     {
-        if (_instance == null || amount < curIntensity)
+        if (_instance == null || amount < curIntensity || (noInterrupt && !overrideNoInterrupt) )
             return;
         _instance.StopAllCoroutines();
         _instance.StartCoroutine(_instance.cIncreaseShake(duration, amount));
@@ -259,5 +262,5 @@ public class CameraShake : MonoBehaviour
 
         _instance.transform.position = _instance.baseTransform.position;
         if(cmPerlin != null) cmPerlin.m_AmplitudeGain = 0;
-    }*/
+    }
 }

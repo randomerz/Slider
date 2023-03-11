@@ -35,7 +35,8 @@ public class Volcano : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         AudioManager.Play("Slide Rumble");
-        CameraShake.ShakeIncrease(8, 0.75f);
+        CameraShake.noInterrupt = true;
+        CameraShake.ShakeIncrease(8, 0.75f, true);
 
         for (int i = 0; i < 4; i++)
         {
@@ -54,12 +55,13 @@ public class Volcano : MonoBehaviour
         // boom
         smokeExplosions[0].Play();
         AudioManager.Play("Slide Explosion");
-        CameraShake.Shake(1, 2);
+        CameraShake.Shake(1, 2, true);
         StartCoroutine(ItemDrop());
 
         yield return new WaitForSeconds(0.1f);
         
         smokeExplosions[1].Play();
+        CameraShake.noInterrupt = false;
     }
 
     private IEnumerator ItemDrop()
