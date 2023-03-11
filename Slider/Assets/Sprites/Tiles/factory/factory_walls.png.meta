@@ -797,7 +797,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -805,6 +805,27 @@ TextureImporter:
       bones: []
       spriteID: 205a0c1b29c65524c9d7dd852d95d361
       internalID: 1883248438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_walls_29
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd08fabfe1dae2243ab09b44071624b7
+      internalID: 431598344
       vertices: []
       indices: 
       edges: []
@@ -837,6 +858,7 @@ TextureImporter:
       factory_walls_18: -1541445073209797729
       factory_floor_2: 245390070594093492
       factory_floor_8: -6166153859588884542
+      factory_walls_29: 431598344
       factory_walls_8: -1854220074246840335
       factory_floor_5: -4083509027660875622
       factory_floor_7: -2067817552921758196
