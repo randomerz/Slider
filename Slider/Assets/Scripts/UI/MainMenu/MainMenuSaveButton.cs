@@ -59,8 +59,17 @@ public class MainMenuSaveButton : MonoBehaviour
         {
             if (area == Area.None) continue;
 
-            if (profile.GetSGridData(area).completionColor == ArtifactWorldMapArea.AreaStatus.color)
+            SGridData data = profile.GetSGridData(area);
+            if (data == null) 
+            {
+                Debug.LogError("SGridData was null when trying to read number of complete areas!");
+                continue;
+            }
+
+            if (data.completionColor == ArtifactWorldMapArea.AreaStatus.color)
+            {
                 count += 1;
+            }
         }
         return count;
     }
