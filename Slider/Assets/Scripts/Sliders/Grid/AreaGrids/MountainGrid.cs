@@ -9,6 +9,8 @@ public class MountainGrid : SGrid
     [SerializeField] private MountainCaveWall mountainCaveWall;
     [SerializeField] private GemMachine gemMachine;
 
+    private bool playerOnBottom = true;
+
     public static MountainGrid Instance => SGrid.Current as MountainGrid;
 
     /* C: The mountian sgrid is a 2 by 4 grid. The top 4 tiles represent the top layer,
@@ -25,6 +27,9 @@ public class MountainGrid : SGrid
 
 
     private bool crystalDelivered = false;
+    private float musicValue = 0;
+
+    private Coroutine musicTransitionCoroutine;
 
     public override void Init() {
         InitArea(Area.Mountain);
@@ -67,6 +72,35 @@ public class MountainGrid : SGrid
             }
         }        
     }*/
+
+    private void Update() {
+        if(playerOnBottom && Player._instance.transform.position.y > 63f) {
+            playerOnBottom = false;
+            if(musicTransitionCoroutine != null)
+                StopCoroutine(musicTransitionCoroutine);
+            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 1, 1));
+
+        }
+        if(!playerOnBottom && Player._instance.transform.position.y < 63f) {
+            playerOnBottom = true;
+            if(musicTransitionCoroutine != null)
+                StopCoroutine(musicTransitionCoroutine);
+            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 0, 1));
+
+        }
+    }
+
+    private IEnumerator TransitionMusic(float start, float end, float duration)
+    {
+        float t = 0;
+        while(t < duration) {
+            musicValue = Mathf.Lerp(start, end, t/duration);
+            AudioManager.SetMusicParameter("Mountain", "MountainTemperature", musicValue);
+            yield return null;
+        }
+        musicValue = end;
+        AudioManager.SetMusicParameter("Mountain", "MountainTemperature", end);
+    }
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
