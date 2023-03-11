@@ -73,6 +73,9 @@ public class ConditionalsEditor : PropertyDrawer
                 case Condition.ConditionType.grid:
                     EditorGUI.PropertyField(fieldRect, patternProperty);
                     break;
+                case Condition.ConditionType.noGrid:
+                    EditorGUI.PropertyField(fieldRect, patternProperty);
+                    break;
                 case Condition.ConditionType.gridStationary:
                     EditorGUI.PropertyField(fieldRect, patternProperty);
                     EditorGUI.PropertyField(field2Rect, stationaryTilesProperty, true);

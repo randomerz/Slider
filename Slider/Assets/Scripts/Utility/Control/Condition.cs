@@ -9,6 +9,7 @@ public class Condition
     {
         item, // DC this should be called collectible but i don't want to rename it bc it will break everything
         grid,
+        noGrid, //C: returns true if grid does *not* contain the pattern
         gridStationary, //L: Forces the grid to be stationary before it can evaluate the condition to true.
         spec,
         playerCarryingItem,
@@ -51,6 +52,12 @@ public class Condition
                 return false;
             case ConditionType.grid:
                 if (CheckGrid.contains(SGrid.GetGridString(), pattern))
+                {
+                    return true;
+                }
+                return false;
+            case ConditionType.noGrid:
+                if (!CheckGrid.contains(SGrid.GetGridString(), pattern))
                 {
                     return true;
                 }
