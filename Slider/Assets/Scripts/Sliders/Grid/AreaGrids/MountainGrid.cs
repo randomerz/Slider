@@ -39,6 +39,9 @@ public class MountainGrid : SGrid
     protected override void Start()
     {
         base.Start();
+        playerOnBottom = Player._instance.transform.position.y < 63f;
+        musicValue = playerOnBottom ? 1 : 0;
+        AudioManager.SetMusicParameter("Mountain", "MountainTemperature", musicValue);
         AudioManager.PlayMusic("Mountain");
     }
     
@@ -78,15 +81,15 @@ public class MountainGrid : SGrid
             playerOnBottom = false;
             if(musicTransitionCoroutine != null)
                 StopCoroutine(musicTransitionCoroutine);
-            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 1, 1));
-
+            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 0, 1));
+            print("play top music");
         }
         if(!playerOnBottom && Player._instance.transform.position.y < 63f) {
             playerOnBottom = true;
             if(musicTransitionCoroutine != null)
                 StopCoroutine(musicTransitionCoroutine);
-            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 0, 1));
-
+            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 1, 1));
+            print("play bottom music");
         }
     }
 
@@ -94,6 +97,7 @@ public class MountainGrid : SGrid
     {
         float t = 0;
         while(t < duration) {
+            t += Time.deltaTime;
             musicValue = Mathf.Lerp(start, end, t/duration);
             AudioManager.SetMusicParameter("Mountain", "MountainTemperature", musicValue);
             yield return null;
