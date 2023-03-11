@@ -35,6 +35,8 @@ public class TimedGate : ElectricalNode
 
     public bool GateActive => _gateActive;
 
+    private const string PROGRESS_SOUND_PREFIX = "FactoryTimedGateProgress";
+
     private new void Awake()
     {
         base.Awake();
@@ -102,7 +104,19 @@ public class TimedGate : ElectricalNode
         //if (EvaluateNodeInput(value, prev) && value && _gateActive)
         if (value && _gateActive && prev != null && prev.Powered)
         {
-            _inputsPowered.Add(prev);
+            AddInputPowered(prev);
+        }
+    }
+
+    private void AddInputPowered(ElectricalNode node)
+    {
+        int prevCount = _inputsPowered.Count;
+        _inputsPowered.Add(node);
+        int newCount = _inputsPowered.Count;
+
+        if (newCount > prevCount)
+        {
+            AudioManager.Play($"{PROGRESS_SOUND_PREFIX}{prevCount + 1}");
         }
     }
 
@@ -169,7 +183,7 @@ public class TimedGate : ElectricalNode
                 //Add all the nodes that were already connected to the gate when it was turned on.
                 if (input.Powered)
                 {
-                    _inputsPowered.Add(input);
+                    AddInputPowered(input);
                 }
             }
 
