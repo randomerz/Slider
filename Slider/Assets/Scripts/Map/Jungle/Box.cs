@@ -172,7 +172,7 @@ public class Box : MonoBehaviour
         Physics2D.queriesStartInColliders = false;
         Physics2D.queriesHitTriggers = false;
 
-        RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, v.normalized, 100, LayerMask.GetMask("Slider"));
+        RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, v.normalized, 100, LayerMask.GetMask("JungleSigns"));
 
         Box nextBox = null;
         float distanceTo = 100;

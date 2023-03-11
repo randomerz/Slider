@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2027552165508363614}
   - component: {fileID: 415121889236455097}
   - component: {fileID: 1224805008847403842}
-  m_Layer: 7
+  m_Layer: 19
   m_Name: FairyHouse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,7 +174,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2655301141042564134}
   - component: {fileID: 2655301141042564135}
-  m_Layer: 7
+  m_Layer: 19
   m_Name: HouseSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -259,7 +259,7 @@ GameObject:
   - component: {fileID: 2655301141477459159}
   - component: {fileID: 2655301141477459161}
   - component: {fileID: 2655301141477459160}
-  m_Layer: 7
+  m_Layer: 19
   m_Name: HouseInsignia
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -422,7 +422,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4852848544237912659, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 4852848544237912660, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: m_Enabled
@@ -498,7 +498,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4852848545585317209, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 19
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 820cf020bb8d36840be9285e897a461e, type: 3}

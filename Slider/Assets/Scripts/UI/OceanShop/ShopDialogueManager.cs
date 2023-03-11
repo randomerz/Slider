@@ -340,7 +340,7 @@ public class ShopDialogueManager : MonoBehaviour
                     () => {
                         SetDialogue(new ShopDialogue(
                     null,
-                    "Look pal, we're trying a new, uh... \"Business\" model here. I'll even let you get started for free with the first tier for free.",
+                    "Look pal, we're trying a new, uh... \"Business\" model here. I'll even let you get started with the first tier for free.",
                     TKSprite.Question,
                     () => {
                         SetDialogue(new ShopDialogue(
