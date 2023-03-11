@@ -178,6 +178,48 @@ MonoBehaviour:
     loop: 0
     doRandomPitch: 1
     source: {fileID: 0}
+  - name: FactoryTimedGateProgress1
+    clip: {fileID: 8300000, guid: 2617de9c343072e47b1bbcdf97734c58, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: FactoryTimedGateProgress2
+    clip: {fileID: 8300000, guid: 856513f04b322a74d9370945b8939c8f, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: FactoryTimedGateProgress3
+    clip: {fileID: 8300000, guid: 5f98d5bf45bf6794a8f96cd4180ec431, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: FactoryTimedGateProgress4
+    clip: {fileID: 8300000, guid: 95fed6226b2491c47b59dd9ace02a675, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: FactoryTimedGateProgress5
+    clip: {fileID: 8300000, guid: d0da706e0d833b94e9eb52a492b14d99, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 0
+    source: {fileID: 0}
+  - name: FactoryTimedGateProgress6
+    clip: {fileID: 8300000, guid: d4a810563a0baf445ab8b67739ab20de, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 0
+    source: {fileID: 0}
   music:
   - name: Main Menu
     fmodEvent:
