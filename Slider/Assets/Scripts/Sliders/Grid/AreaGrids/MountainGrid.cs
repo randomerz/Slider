@@ -81,14 +81,14 @@ public class MountainGrid : SGrid
             playerOnBottom = false;
             if(musicTransitionCoroutine != null)
                 StopCoroutine(musicTransitionCoroutine);
-            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 0, 1));
+            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 0, 2));
             print("play top music");
         }
         if(!playerOnBottom && Player._instance.transform.position.y < 63f) {
             playerOnBottom = true;
             if(musicTransitionCoroutine != null)
                 StopCoroutine(musicTransitionCoroutine);
-            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 1, 1));
+            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 1, 2));
             print("play bottom music");
         }
     }
