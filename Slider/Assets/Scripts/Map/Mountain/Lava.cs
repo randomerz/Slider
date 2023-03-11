@@ -11,7 +11,7 @@ public class Lava : MonoBehaviour
     public ParticleSystem ps;
     public CompositeCollider2D compositeCollider2D;
     public MeshFilter meshFilter;
-
+    public PolygonCollider2D polygonCollider2D;
     private void Start() {
         if(tilemap == null) return;
 
@@ -27,6 +27,14 @@ public class Lava : MonoBehaviour
 
         ps.maxParticles *= numtiles;
         ps.emissionRate *= numtiles;
+
+        int numpaths = compositeCollider2D.pathCount;
+        polygonCollider2D.pathCount = numpaths;
+        for(int i = 0; i < numpaths; i++) {
+            Vector2[] points = new Vector2[compositeCollider2D.GetPathPointCount(i)];
+            compositeCollider2D.GetPath(i, points);
+            polygonCollider2D.SetPath(i, points);
+        }
 
        /* foreach(Vector3 loc in tileWorldLocations) {
             Instantiate(LavaPS, loc, Quaternion.identity, this.transform);
