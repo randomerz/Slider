@@ -173,6 +173,8 @@ public class TimedGate : ElectricalNode
                 _inputsPowered.Clear();
                 OnGateDeactivated?.Invoke();
             }
+
+            AudioManager.Play("UI Click");
             
             _gateActive = true;
             _countdown = numTurns;
@@ -227,6 +229,9 @@ public class TimedGate : ElectricalNode
         if (!Powered)
         {
             //Player failed to power the inputs in time.
+            
+            AudioManager.Play("Artifact Error");
+
             _gateActive = false;
             _inputsPowered.Clear();
 
