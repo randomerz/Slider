@@ -4,8 +4,6 @@ using System.Linq;
 
 public class PlayerAction : Singleton<PlayerAction>
 {
-    //public static System.EventHandler<System.EventArgs> OnAction;
-
     public Item pickedItem;
 
     [SerializeField] private Transform pickedItemLocation;
@@ -24,7 +22,6 @@ public class PlayerAction : Singleton<PlayerAction>
     private bool isDropping; //Drop animation is happening
     private bool canDrop;
 
-    private int actionsAvailable = 0;
     [SerializeField] private GameObject actionAvailableIndicator;
 
     private List<IInteractable> availableInteractables = new List<IInteractable>();
@@ -42,8 +39,6 @@ public class PlayerAction : Singleton<PlayerAction>
         pickedItem = PlayerInventory.GetCurrentItem();
         if (pickedItem != null && !isPicking)
         {
-            // pickedItem.gameObject.transform.position = pickedItemLocation.position;
-
             Vector2 closestValidDropPosition = GetClosestValidDropPosition();
             
             // we offset where the raycast starts because when you're in the boat, the collider is at the boat not the player
@@ -154,24 +149,14 @@ public class PlayerAction : Singleton<PlayerAction>
             return false;
         }
 
-        Collider2D[] nodes = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y), 1f, itemMask);
-        if (nodes.Length > 0)
+        List<Collider2D> collidersInRange = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y), 1f, itemMask).ToList();
+        if (collidersInRange.Count > 0)
         {
             isPicking = true;
 
-            // find nearest item
-            Collider2D nearest = nodes[0];
-            float nearestDist = Vector3.Distance(nearest.transform.position, transform.position);
-            for (int i = 1; i < nodes.Length; i++)
-            {
-                if (Vector3.Distance(nodes[i].transform.position, transform.position) < nearestDist)
-                {
-                    nearest = nodes[i];
-                    nearestDist = Vector3.Distance(nodes[i].transform.position, transform.position);
-                }
-            }
-
-            pickedItem = nearest.GetComponent<Item>();  //Not GetComponentInParent?
+            pickedItem = collidersInRange.OrderBy((item) => Vector3.Distance(item.transform.position, transform.position))
+                                         .Select((collider) => collider.GetComponent<Item>())
+                                         .FirstOrDefault();
             if (pickedItem == null)
             {
                 Debug.LogError("Picked something that isn't an Item!");
@@ -188,13 +173,12 @@ public class PlayerAction : Singleton<PlayerAction>
 
     private bool AttemptItemDrop()
     {
-        if (canDrop && pickedItem != null)
+        if (canDrop && pickedItem != null && !isPicking)
         {
             isDropping = true;
             PlayerInventory.RemoveItem();
             pickedItem.DropItem(itemDropIndicator.transform.position, callback: FinishDropping);
             lastDroppedItem = pickedItem;
-            pickedItem = null;
             itemDropIndicator.SetActive(false);
 
             return true;
@@ -203,11 +187,10 @@ public class PlayerAction : Singleton<PlayerAction>
         return false;
     }
 
-    private void FinishPicking() 
+    private void FinishPicking()
     {
         isPicking = false;
         itemDropIndicator.SetActive(true);
-        
         pickedItem.transform.SetParent(pickedItemLocation);
     }
 
@@ -216,6 +199,7 @@ public class PlayerAction : Singleton<PlayerAction>
         lastDroppedItem.dropCallback();
         isDropping = false;
         itemDropIndicator.SetActive(false);
+        pickedItem = null;
     }
 
     public bool HasItem()
