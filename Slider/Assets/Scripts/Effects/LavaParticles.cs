@@ -25,11 +25,7 @@ public class LavaParticles : MonoBehaviour
         meshFilter.mesh = mesh;
 
         //C: scale particles by mesh size
-        foreach(ParticleSystem ps in particleSystems)
-        {
-            ps.maxParticles *= numtiles;
-            ps.emissionRate *= numtiles;
-        }
+        
 
         int numpaths = compositeCollider2D.pathCount;
         polygonCollider2D.pathCount = numpaths;
@@ -37,6 +33,14 @@ public class LavaParticles : MonoBehaviour
             Vector2[] points = new Vector2[compositeCollider2D.GetPathPointCount(i)];
             compositeCollider2D.GetPath(i, points);
             polygonCollider2D.SetPath(i, points);
+        }
+
+        foreach(ParticleSystem ps in particleSystems)
+        {
+            ps.maxParticles *= numtiles;
+            ps.emissionRate *= numtiles;
+            ps.Stop();
+            ps.Play();
         }
     }
 }
