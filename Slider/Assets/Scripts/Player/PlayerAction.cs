@@ -24,7 +24,7 @@ public class PlayerAction : Singleton<PlayerAction>
 
     [SerializeField] private GameObject actionAvailableIndicator;
 
-    private List<IInteractable> availableInteractables = new List<IInteractable>();
+    private HashSet<IInteractable> availableInteractables = new();
 
     private void Awake() 
     {
@@ -212,6 +212,9 @@ public class PlayerAction : Singleton<PlayerAction>
         return pickedItem != null && pickedItem.itemName.Equals(itemName);
     }
 
+    /// <summary>
+    /// Duplicate interactables are not stored; adding an interactable multiple times will have no effect.
+    /// </summary>
     public void AddInteractable(IInteractable interactable)
     {
         availableInteractables.Add(interactable);
@@ -226,23 +229,31 @@ public class PlayerAction : Singleton<PlayerAction>
 
     public void UpdateActionsAvailableIndicator()
     {
-        actionAvailableIndicator.SetActive(availableInteractables.FindAll((interactable) => interactable.DisplayInteractionPrompt).Count > 0);
+        actionAvailableIndicator.SetActive(availableInteractables.ToList().FindAll((interactable) => interactable.DisplayInteractionPrompt).Count > 0);
     }
 
     private bool Interact()
     {
-        availableInteractables.Sort((a, b) => b.InteractionPriority - a.InteractionPriority);
-        List<IInteractable> interactablesWithHighestPriority
-            = availableInteractables.FindAll((interactable) => interactable.InteractionPriority == availableInteractables[0].InteractionPriority);
-
         bool successfullyInteracted = false;
-        foreach (IInteractable interactable in interactablesWithHighestPriority)
+
+        if (availableInteractables.Count > 0)
         {
-            if (interactable.Interact())
+            List<IInteractable> interactables = availableInteractables.ToList();
+
+            int highestPriority = interactables.Select((interactable) => interactable.InteractionPriority).Max();
+
+            List<IInteractable> interactablesWithSharedHighestPriority
+                = interactables.FindAll((interactable) => interactable.InteractionPriority == highestPriority);
+
+            interactablesWithSharedHighestPriority.ForEach((interactable) =>
             {
-                successfullyInteracted = true;
-            }
+                if (interactable.Interact())
+                {
+                    successfullyInteracted = true;
+                }
+            });
         }
+
         return successfullyInteracted;
     }
 }
