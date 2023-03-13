@@ -173,6 +173,8 @@ public class TimedGate : ElectricalNode
                 _inputsPowered.Clear();
                 OnGateDeactivated?.Invoke();
             }
+
+            AudioManager.Play("UI Click");
             
             _gateActive = true;
             _countdown = numTurns;
@@ -190,6 +192,22 @@ public class TimedGate : ElectricalNode
             StartCoroutine(BlinkThenShowNext());
             OnGateActivated?.Invoke();
         }
+    }
+
+    public void HardRestartGate()
+    {
+        if (Powered)
+        {
+            StartSignal(false);
+            _isPowered = false;
+            UpdateDFS();
+        }
+        
+        _gateActive = false;
+        _inputsPowered.Clear();
+        OnGateDeactivated?.Invoke();
+        _queuedNextSprite = waitingSprite;
+        StartCoroutine(BlinkThenShowNext());
     }
 
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
@@ -227,6 +245,9 @@ public class TimedGate : ElectricalNode
         if (!Powered)
         {
             //Player failed to power the inputs in time.
+            
+            AudioManager.Play("Artifact Error");
+
             _gateActive = false;
             _inputsPowered.Clear();
 

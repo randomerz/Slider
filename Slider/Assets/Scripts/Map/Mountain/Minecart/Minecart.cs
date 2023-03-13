@@ -128,7 +128,7 @@ public class Minecart : Item, ISavable
             else
                 transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * speed);
         }
-        else
+        else if (animator != null)
             animator.SetSpeed(0);
 
        // minecartAnimator.SetInteger("State", ((int)mcState));
@@ -241,7 +241,10 @@ public class Minecart : Item, ISavable
         isMoving = false;
         if(!onTrack)
             isOnTrack = false;
-        animator.SetSpeed(0);
+        if (animator != null)
+        {
+            animator.SetSpeed(0);
+        }
         collisionPause = false;
         collidingObjects.Clear();
     }
