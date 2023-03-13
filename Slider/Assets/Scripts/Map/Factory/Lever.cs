@@ -61,6 +61,8 @@ public class Lever : ElectricalNode
 
     public void Switch()
     {
+        AudioManager.Play("UI Click");
+
         SetState(!PoweredConditionsMet());
     }
 
