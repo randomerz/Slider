@@ -194,6 +194,22 @@ public class TimedGate : ElectricalNode
         }
     }
 
+    public void HardRestartGate()
+    {
+        if (Powered)
+        {
+            StartSignal(false);
+            _isPowered = false;
+            UpdateDFS();
+        }
+        
+        _gateActive = false;
+        _inputsPowered.Clear();
+        OnGateDeactivated?.Invoke();
+        _queuedNextSprite = waitingSprite;
+        StartCoroutine(BlinkThenShowNext());
+    }
+
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
     {
         if (_gateActive && !Powered)
