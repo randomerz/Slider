@@ -14,6 +14,7 @@ public class Condition
         playerCarryingItem,
         flag,
         playerCarryingSpecItem,
+        noGrid, //C: returns true if grid does *not* contain the pattern
     }
     [System.Serializable]
     public class ConditionEvent : UnityEvent<Condition>
@@ -51,6 +52,12 @@ public class Condition
                 return false;
             case ConditionType.grid:
                 if (CheckGrid.contains(SGrid.GetGridString(), pattern))
+                {
+                    return true;
+                }
+                return false;
+            case ConditionType.noGrid:
+                if (!CheckGrid.contains(SGrid.GetGridString(), pattern))
                 {
                     return true;
                 }
