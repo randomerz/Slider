@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8378888085751259444
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1522212488521409320, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 88125750, guid: 5a06b3d6da0c98f44a4e5a16eb51ab5f, type: 3}
+    - target: {fileID: 3985302522749898748, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3985302522749898748, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -28
+      objectReference: {fileID: 0}
+    - target: {fileID: 3985302522749898748, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 3985302522749898748, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3985302522749898748, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3985302522749898748, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3985302522749898748, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3985302522749898748, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3985302522749898748, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3985302522749898748, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3985302522749898748, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3985302522749898751, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_Name
+      value: Drilly Thing
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
