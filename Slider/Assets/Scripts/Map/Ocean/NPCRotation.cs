@@ -75,12 +75,12 @@ public class NPCRotation : MonoBehaviour
             }
             if (PlayerInventory.Instance.GetHasCollectedAnchor())
             {
-                amberOak.Teleport(leftSign, false);
+                MoveAmberOak(this, null);
             }
-            if (SaveSystem.Current.GetBool("oceanPickedUpCoconut"))
-            {
-                MovePorker();
-            }
+            // if (SaveSystem.Current.GetBool("oceanPickedUpCoconut"))
+            // {
+            //     MovePorker();
+            // }
 
             traveling_merchant.Teleport(off_camera, false);
             alien.Teleport(off_camera, false);
@@ -167,7 +167,8 @@ public class NPCRotation : MonoBehaviour
 
     public void MovePorker()
     {
-        porker.Teleport(coconuts, false);
+        if (!SaveSystem.Current.GetBool("oceanPorkerTraining"))
+            porker.Teleport(coconuts, true);
     }
 
     public void MoveAmberOak(object sender, System.EventArgs e)

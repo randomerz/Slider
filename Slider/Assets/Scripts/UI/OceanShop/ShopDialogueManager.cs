@@ -650,7 +650,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "Anyways, I can defineteley help you out to Canopy Town if you finish our Tavern Pass.",
+                    "Anyways, I can definitely help you out to Canopy Town if you finish our Tavern Pass.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;

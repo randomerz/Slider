@@ -1417,7 +1417,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -15.25}
-  m_SizeDelta: {x: 48, y: 14}
+  m_SizeDelta: {x: 70, y: 14}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8279323557903484699
 CanvasRenderer:
@@ -1890,7 +1890,7 @@ MonoBehaviour:
   m_text: The Tavern
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
-  m_sharedMaterial: {fileID: 7572966130275077912, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
+  m_sharedMaterial: {fileID: 2433850607178412188, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1953,7 +1953,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &8279323558154040932
@@ -2568,7 +2568,7 @@ MonoBehaviour:
   m_text: Aliens
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
-  m_sharedMaterial: {fileID: 7572966130275077912, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
+  m_sharedMaterial: {fileID: 2433850607178412188, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2631,7 +2631,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &8279323558324041445
@@ -2952,7 +2952,7 @@ RectTransform:
   m_Children:
   - {fileID: 8279323559769757470}
   m_Father: {fileID: 8279323559740310873}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -3072,7 +3072,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -4115,7 +4115,7 @@ MonoBehaviour:
   m_text: Mushrooms
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
-  m_sharedMaterial: {fileID: 7572966130275077912, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
+  m_sharedMaterial: {fileID: 2433850607178412188, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4178,7 +4178,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &8279323558765013072
@@ -5252,7 +5252,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -30.5}
-  m_SizeDelta: {x: 48, y: 14}
+  m_SizeDelta: {x: 70, y: 14}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8279323558922262528
 CanvasRenderer:
@@ -6395,7 +6395,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 48, y: 14}
+  m_SizeDelta: {x: 70, y: 14}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8279323559138917843
 CanvasRenderer:
@@ -8688,7 +8688,7 @@ MonoBehaviour:
   m_text: Swift Victory
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
-  m_sharedMaterial: {fileID: 7572966130275077912, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
+  m_sharedMaterial: {fileID: 2433850607178412188, guid: 99cf01e0fd7152e4892426ca1b771517, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8751,7 +8751,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &8279323559550162584
@@ -8794,7 +8794,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -45.75}
-  m_SizeDelta: {x: 48, y: 14}
+  m_SizeDelta: {x: 70, y: 14}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8279323559550162589
 CanvasRenderer:
@@ -9839,7 +9839,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -10027,7 +10027,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -10097,9 +10097,9 @@ RectTransform:
   - {fileID: 8279323559469912545}
   - {fileID: 8279323559698744360}
   - {fileID: 8279323559662722331}
-  - {fileID: 8279323559981625746}
   - {fileID: 8279323558444312985}
   - {fileID: 8279323559856646101}
+  - {fileID: 8279323559981625746}
   - {fileID: 8279323558926924644}
   m_Father: {fileID: 8279323559296745797}
   m_RootOrder: 1
@@ -10201,11 +10201,11 @@ MonoBehaviour:
   talkText: {fileID: 8279323559551938638}
   coinToBeHadText: {fileID: 8279323559352695764}
   business: {fileID: 8279323559197494534}
-  aBuddingRomance: {fileID: 8279323559623210966}
   shipwreck: {fileID: 8279323559617244200}
   magicalSpells: {fileID: 8279323559618869434}
   theVeil: {fileID: 8279323559769757471}
   tangledUp: {fileID: 8279323559819360056}
+  aBuddingRomance: {fileID: 8279323559623210966}
   eruption: {fileID: 8279323557925399374}
 --- !u!114 &8279323559740310851
 MonoBehaviour:
@@ -10221,11 +10221,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectables:
   - {fileID: 8279323559469912551}
-  - {fileID: 8279323559981625745}
   - {fileID: 8279323559698744366}
   - {fileID: 8279323559662722329}
   - {fileID: 8279323558444312991}
   - {fileID: 8279323559856646107}
+  - {fileID: 8279323559981625745}
   - {fileID: 8279323558926924650}
   - {fileID: 8279323559935779700}
 --- !u!1 &8279323559743396011
@@ -10613,7 +10613,7 @@ RectTransform:
   m_Children:
   - {fileID: 8279323559819360059}
   m_Father: {fileID: 8279323559740310873}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -10733,7 +10733,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 5
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -11201,7 +11201,7 @@ RectTransform:
   m_Children:
   - {fileID: 8279323559623210961}
   m_Father: {fileID: 8279323559740310873}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -11321,7 +11321,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BottleManager : MonoBehaviour
 {
-    private const string validTiles = "13"; //these tiles have a water path for the bottle
+    private const string validTiles = "1367"; //these tiles have a water path for the bottle
     
     public GameObject bottlePrefab;
     public bool puzzleSolved = false;
@@ -19,6 +19,7 @@ public class BottleManager : MonoBehaviour
     private GameObject bottle = null;
     private bool bottleIsInWater = false;
     private STile bottleParentStile = null;
+    private UITracker bottleUITracker;
     
     [SerializeField] private Vector3 bottleInitialLocation = new Vector3(-7.5f,41.5f);
     private List<Vector3> positions = new List<Vector3> { 
@@ -54,6 +55,10 @@ public class BottleManager : MonoBehaviour
         while(t < moveDuration)
         {
             t += Time.deltaTime;
+
+            if (bottle == null)
+                yield break;
+
             bottle.transform.localPosition = Vector3.Lerp(start, end, t/moveDuration);
             yield return null;
         }
@@ -73,30 +78,37 @@ public class BottleManager : MonoBehaviour
         }
     }
 
-    private void DestroyBottleExecutor()
+    private IEnumerator DestroyBottleExecutor()
     {
         //Debug.Log("deleting bottle");
-        if(bottle != null)
+        if (bottle != null)
             bottle.GetComponent<Animator>().SetBool("IsSinking", true);
 
-        UITrackerManager.RemoveTracker(bottle);
-
-        bottle = null;
+        GameObject tempBottleGO = this.bottle;
+        this.bottle = null;
         bottleIsInWater = false;
         puzzleActive = false;
         bottleParentStile = null;
+
+        bottleUITracker.GetComponent<Animator>().SetBool("sink", true);
+        bottleUITracker = null;
         
         romeosBottle.spriteRenderer.enabled = true;
 
-        // yield return null;
-        
+        yield return new WaitForSeconds(0.5f);
+
+        AudioManager.Play("Bottle Sink");
+
+        yield return new WaitForSeconds(1.5f);
+
+        UITrackerManager.RemoveTracker(tempBottleGO);
     }
 
     //so that juliet can call it
     public void DestroyBottle()
     {
-        // StartCoroutine(DestroyBottleExecutor());
-        DestroyBottleExecutor();
+        StartCoroutine(DestroyBottleExecutor());
+        // DestroyBottleExecutor();
     }
 
     public void CreateNewBottle()
@@ -114,7 +126,7 @@ public class BottleManager : MonoBehaviour
             turncounter = 0;
             bottle.transform.localPosition = positions[(int)(turncounter)];
 
-            UITrackerManager.AddNewTracker(bottle, UITrackerManager.DefaultSprites.circleEmpty);
+            bottleUITracker = UITrackerManager.AddNewAnimatedTracker(bottle);
 
 
             bottleIsInWater = false;
