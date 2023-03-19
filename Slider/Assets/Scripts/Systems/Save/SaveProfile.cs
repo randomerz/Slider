@@ -45,6 +45,16 @@ public class SaveProfile
         return profileName;
     }
 
+    public string GetGameVersion()
+    {
+        return gameVersion;
+    }
+
+    public void SetGameVersion(string value)
+    {
+        gameVersion = value;
+    }
+
     public bool GetCompletionStatus()
     {
         return completionStatus;

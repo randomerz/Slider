@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class FactoryGrid : SGrid
 {
-    [Header("FactoryGrid")]
-    [SerializeField] private PowerCrystal powerCrystal;
+    // [Header("FactoryGrid")]
+    // [SerializeField] private PowerCrystal powerCrystal;
 
     public static bool PlayerInPast => IsInPast(Player.GetInstance().gameObject);
     private bool _lastPlayerInPast = false;
 
     public static event System.EventHandler PlayerChangedTime;
+
 
     public override void Init() {
         InitArea(Area.Factory);
