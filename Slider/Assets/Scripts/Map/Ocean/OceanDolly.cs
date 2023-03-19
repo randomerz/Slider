@@ -28,12 +28,14 @@ public class OceanDolly : CameraDolly
             yield return null;
             t += Time.deltaTime;
         }
+
         intern1.TypeCurrentDialogue();
-        yield return new WaitForSeconds(3.5f);
+        yield return new WaitForSeconds(4f);
         intern1.AdvanceDialogueChain();
         intern2.TypeCurrentDialogue();
         yield return new WaitForSeconds(3.5f);
         intern2.AdvanceDialogueChain();
+
         UIEffects.FadeToBlack(
             () => EndTrack()
         );

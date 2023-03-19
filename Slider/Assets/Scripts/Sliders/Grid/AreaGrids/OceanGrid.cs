@@ -154,18 +154,20 @@ public class OceanGrid : SGrid
             CheckVolcano(this, null);
         }
     }
+
     private void CheckTile2Placement(STile stile)
     {
-        
-        STile other = GetStileAt(1,0);
-        if(other.islandId != 1)
+        STile other = GetStileAt(1, 0);
+        if (other.islandId != 1)
             SwapTiles(stile, other);
     }
+
     private void CheckTile3Placement(STile stile)
     {
         //try to spawn on middle right
         STile other = GetStileAt(2, 1);
-        if (other.islandId != 1 && other.islandId != 2){
+        if (other.islandId != 1 && other.islandId != 2)
+        {
             SwapTiles(stile, other);
             return;
         }
@@ -237,6 +239,7 @@ public class OceanGrid : SGrid
     public void ActivateBurriedNPC()
     {
         burriedGuyNPC.SetActive(true);
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, burriedGuyNPC.transform.position, burriedGuyNPC.transform);
     }
 
     public void SpawnFezziwigReward() {

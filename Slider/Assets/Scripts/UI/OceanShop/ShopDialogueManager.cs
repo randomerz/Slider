@@ -632,12 +632,36 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "I run a tavern and pawn shop. Bring me anything interesting and you'll make a pretty penny.",
+                    "The Tavern Pass we're trying out is pretty neat huh? I'm always here to help if you're ever lost too.",
+                    TKSprite.Normal,
+                    () => SetDialogue(
+
+                new ShopDialogue(
+                    null,
+                    "All the rewards are pretty neat too huh? I picked them myself. For the final reward, I'll even do anything you want!",
+                    TKSprite.Happy,
+                    () => SetDialogue(
+
+                new ShopDialogue(
+                    null,
+                    "Looks like under your name we have registered that you want to... go to the Jungle? Wonder how that got there.",
+                    TKSprite.Question,
+                    () => SetDialogue(
+
+                new ShopDialogue(
+                    null,
+                    "Anyways, I can defineteley help you out to Canopy Town if you finish our Tavern Pass.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
                     }
+                ))
+
+                ))
+
+                ))
+
                 ));
                 break;
             
@@ -765,7 +789,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "Maybe they came in that strange flying saucer, ha!",
+                    "They looked in an awful hurry, carrying something with them too.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
@@ -797,11 +821,16 @@ public class ShopDialogueManager : MonoBehaviour
                         shopManager.OpenDialoguePanel();
                     },
                     "An old ship helmed by the good Captain Mako, anchored to the South. Used to run with his crew before I opened the tavern.",
-                    TKSprite.Normal,
+                    TKSprite.Happy,
+                    () => SetDialogue(new ShopDialogue(
+                    null,
+                    "I don't mean to be rude but... he's a bit washed up now.",
+                    TKSprite.Question,
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
                     }
+                ))
                 ));
                 break;
             
@@ -837,7 +866,7 @@ public class ShopDialogueManager : MonoBehaviour
                     TKSprite.Normal,
                     () => SetDialogue(new ShopDialogue(
                     null,
-                    "Heard some city folk are thinking of beginning some construction in the area. Can't say I'm too big of a fan of destroying nature.",
+                    "Heard some city folk are thinking of beginning some construction in the area. Can't say I'm too big of a fan of what they're doing.",
                     TKSprite.Angry,
                     () => {
                         canOverrideDialogue = true;
@@ -855,7 +884,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                         UIArtifactWorldMap.SetAreaStatus(Area.Desert, ArtifactWorldMapArea.AreaStatus.silhouette);
                     },
-                    "Big crater in the desert to the north.",
+                    "Big, ancient crater that formed a desert to the north.",
                     TKSprite.Normal,
                     () => SetDialogue(new ShopDialogue(
                     null,
@@ -869,17 +898,17 @@ public class ShopDialogueManager : MonoBehaviour
                 ));
                 break;
             
-            case "Everywhere Else":
+            case "Space":
                 SetDialogue(new ShopDialogue(
                     () => { 
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Our world is pretty small. Haven't seen it all, but I've seen a lot.",
-                    TKSprite.Normal,
+                    "You want to know how to get up to the stars?",
+                    TKSprite.Question,
                     () => SetDialogue(new ShopDialogue(
                     null,
-                    "Sometimes I wonder if there's anything for us in the stars.",
+                    "Well, the folks at the Magic Research Institute have been working on a rocket, so it might be your lucky day.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
