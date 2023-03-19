@@ -6,7 +6,7 @@ using TMPro;
 
 public class TavernPassManager : MonoBehaviour, ISavable
 {
-    public GameObject tavernBell;
+    public GameObject tavernJukebox;
     public GameObject tavernCat;
 
     public ShopManager shopManager;
@@ -63,7 +63,7 @@ public class TavernPassManager : MonoBehaviour, ISavable
     {
         displayedCredits = profile.GetInt("oceanTavernPassDisplayedCredits");
 
-        if (tavernBell != null) tavernBell.SetActive(displayedCredits >= 2);
+        if (tavernJukebox != null) tavernJukebox.SetActive(displayedCredits >= 2);
         if (tavernCat != null) tavernCat.SetActive(displayedCredits >= 4);
     }
 
@@ -199,12 +199,12 @@ public class TavernPassManager : MonoBehaviour, ISavable
         {
             case 0:
                 // Free Slider
-                SGrid.Current.CollectSTile(4);
+                SGrid.Current.CollectSTile(5);
                 break;
 
             case 1:
                 // All Sliders
-                for (int i = 5; i <= 9; i++)
+                for (int i = 4; i <= 9; i++)
                 {
                     SGrid.Current.CollectSTile(i);
                 }
@@ -212,7 +212,7 @@ public class TavernPassManager : MonoBehaviour, ISavable
 
             case 2:
                 // Tavern Bell
-                if (tavernBell != null) tavernBell.SetActive(true);
+                if (tavernJukebox != null) tavernJukebox.SetActive(true);
                 break;
 
             case 3:

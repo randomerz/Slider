@@ -24,12 +24,13 @@ public class ArtifactTabManager : MonoBehaviour
 
     private int[,] originalGrid;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         realignTab = tabs[0];
         saveTab = tabs[1];
         loadTab = tabs[2];
     }
+
     public virtual void SetCurrentScreen(int screenIndex)
     {
         #region SaveLoadRealign Cases

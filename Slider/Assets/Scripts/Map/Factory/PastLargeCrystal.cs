@@ -96,6 +96,12 @@ public class PastLargeCrystal : ElectricalNode
         powerCrystal.TurnEverythingBackOn();
         FactoryTimeManager.SpawnPlayerInPresent();
 
+        // Make sure player has sliders up to 8 in case of weird bugs/skips
+        if (!PlayerInventory.Contains("Slider 7", Area.Factory)) 
+            SGrid.Current.GetCollectible("Slider 7").DoOnCollect();
+        if (!PlayerInventory.Contains("Slider 8", Area.Factory)) 
+            SGrid.Current.GetCollectible("Slider 8").DoOnCollect();
+
         foreach (GameObject go in particles)
         {
             go.SetActive(false);

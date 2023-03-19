@@ -35,6 +35,8 @@ public class TimedGate : ElectricalNode
 
     public bool GateActive => _gateActive;
 
+    private const string PROGRESS_SOUND_PREFIX = "FactoryTimedGateProgress";
+
     private new void Awake()
     {
         base.Awake();
@@ -102,7 +104,19 @@ public class TimedGate : ElectricalNode
         //if (EvaluateNodeInput(value, prev) && value && _gateActive)
         if (value && _gateActive && prev != null && prev.Powered)
         {
-            _inputsPowered.Add(prev);
+            AddInputPowered(prev);
+        }
+    }
+
+    private void AddInputPowered(ElectricalNode node)
+    {
+        int prevCount = _inputsPowered.Count;
+        _inputsPowered.Add(node);
+        int newCount = _inputsPowered.Count;
+
+        if (newCount > prevCount)
+        {
+            AudioManager.Play($"{PROGRESS_SOUND_PREFIX}{prevCount + 1}");
         }
     }
 
@@ -159,6 +173,8 @@ public class TimedGate : ElectricalNode
                 _inputsPowered.Clear();
                 OnGateDeactivated?.Invoke();
             }
+
+            AudioManager.Play("UI Click");
             
             _gateActive = true;
             _countdown = numTurns;
@@ -169,13 +185,29 @@ public class TimedGate : ElectricalNode
                 //Add all the nodes that were already connected to the gate when it was turned on.
                 if (input.Powered)
                 {
-                    _inputsPowered.Add(input);
+                    AddInputPowered(input);
                 }
             }
 
             StartCoroutine(BlinkThenShowNext());
             OnGateActivated?.Invoke();
         }
+    }
+
+    public void HardRestartGate()
+    {
+        if (Powered)
+        {
+            StartSignal(false);
+            _isPowered = false;
+            UpdateDFS();
+        }
+        
+        _gateActive = false;
+        _inputsPowered.Clear();
+        OnGateDeactivated?.Invoke();
+        _queuedNextSprite = waitingSprite;
+        StartCoroutine(BlinkThenShowNext());
     }
 
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
@@ -213,6 +245,9 @@ public class TimedGate : ElectricalNode
         if (!Powered)
         {
             //Player failed to power the inputs in time.
+            
+            AudioManager.Play("Artifact Error");
+
             _gateActive = false;
             _inputsPowered.Clear();
 

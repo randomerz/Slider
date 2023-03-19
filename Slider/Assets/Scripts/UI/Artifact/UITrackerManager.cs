@@ -104,9 +104,18 @@ public class UITrackerManager : MonoBehaviour
     protected virtual void Awake() {
         _instance = this;
 
-        uiTrackerBuffer.Clear();
-        uiTrackerEnumBuffer.Clear();
-        removeBuffer.Clear();
+        for (int x = 0; x < uiTrackerBuffer.Count; x++) {
+            if (uiTrackerBuffer[x].target == null) {
+                uiTrackerBuffer.RemoveAt(x);
+                x--;
+            }
+        }
+        for (int x = 0; x < uiTrackerEnumBuffer.Count; x++) {
+            if (uiTrackerEnumBuffer[x].target == null) {
+                uiTrackerEnumBuffer.RemoveAt(x);
+                x--;
+            }
+        }
     }
 
     // Start is called before the first frame update
