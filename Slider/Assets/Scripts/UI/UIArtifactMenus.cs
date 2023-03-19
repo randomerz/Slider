@@ -70,9 +70,9 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     {
         if (!UIManager.canOpenMenus || isClosing || !hasArtifact)
         {
-            Debug.LogWarning("UIManager: " + UIManager.canOpenMenus);
-            Debug.LogWarning("isClosing: " + isClosing);
-            Debug.LogWarning("hasArtifact: " + hasArtifact);
+            // Debug.LogWarning("UIManager: " + UIManager.canOpenMenus);
+            // Debug.LogWarning("isClosing: " + isClosing);
+            // Debug.LogWarning("hasArtifact: " + hasArtifact);
             return;
         }
 

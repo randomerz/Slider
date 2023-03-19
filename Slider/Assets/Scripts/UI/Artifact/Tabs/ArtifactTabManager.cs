@@ -158,7 +158,7 @@ public class ArtifactTabManager : MonoBehaviour
         //get the realignGrid, put the button stuff in the order based on that, then call bggrid set
         if(SGrid.Current.realigningGrid != null)
         {
-            Debug.Log("Previewed!");
+            // Debug.Log("Previewed!");
             uiArtifactMenus.uiArtifact.DeselectSelectedButton();
             originalGrid = new int[SGrid.Current.Width, SGrid.Current.Height];
             for (int x = 0; x < SGrid.Current.Width; x++)
