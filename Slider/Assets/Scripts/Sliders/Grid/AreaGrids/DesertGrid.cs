@@ -59,8 +59,8 @@ public class DesertGrid : SGrid
             log.gameObject.SetActive(false);
             campfire.SetBool("isDying", false);
         }
-        Debug.Log("PortalEnabled: " + portalEnabled);
-        Debug.Log("PortalLaser: " + portalLaserEnabled);
+        //Debug.Log("PortalEnabled: " + portalEnabled);
+        //Debug.Log("PortalLaser: " + portalLaserEnabled);
         portalCollider.enabled = portalEnabled;
         portalLaser.isEnabled = portalLaserEnabled;
     }
@@ -250,7 +250,9 @@ public class DesertGrid : SGrid
     //Puzzle 5: Cactus Juice
     public void HasBottle(Condition c)
     {
-        c.SetSpec(Player.GetPlayerAction().pickedItem != null && Player.GetPlayerAction().pickedItem.itemName.Equals("Bottle"));
+        c.SetSpec(!SaveSystem.Current.GetBool("desertVIP") &&
+            Player.GetPlayerAction().pickedItem != null && 
+            Player.GetPlayerAction().pickedItem.itemName.Equals("Bottle"));
     }
     public void IsCactusJuice(Condition c)
     {
@@ -284,16 +286,11 @@ public class DesertGrid : SGrid
         if (item != null && item.itemName.Equals("Bottle"))
         {
             Bottle cast = (Bottle)item;
-            c.SetSpec(cast.state == bottleState.clean);
-            return;
-        }
-        if (SaveSystem.Current.GetBool("desertVIP"))
-        {
-            c.SetSpec(true);
+            c.SetSpec(cast.state == bottleState.clean || SaveSystem.Current.GetBool("desertVIP"));            
         }
         else
         {
-            c.SetSpec(false);
+            c.SetSpec(SaveSystem.Current.GetBool("desertVIP"));
         }
     }
     #endregion

@@ -28,7 +28,7 @@ public class DesertTabManager : ArtifactTabManager
                 fragRealignTab.SetIsVisible(false);
             }
         }
-        else if (PlayerInventory.Contains("Scroll Frag", Area.Desert))
+        else if (PlayerInventory.Contains("Scroll Frag", Area.Desert) && SGrid.Current.GetActiveTiles().Count != SGrid.Current.GetTotalNumTiles())
         {
             fragRealignTab.SetIsVisible(screenIndex == fragRealignTab.homeScreen);
         }

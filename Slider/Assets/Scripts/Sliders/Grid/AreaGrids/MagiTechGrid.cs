@@ -57,8 +57,8 @@ public class MagiTechGrid : SGrid
     {
         OnTimeChange(this, new Portal.OnTimeChangeArgs {fromPast = IsInPast(Player.GetInstance().transform)});
         Portal.OnTimeChange += OnTimeChange;
-        Debug.Log("desertPortal: " + desertPortalEnabled);
-        Debug.Log(UIManager.canOpenMenus);
+        //Debug.Log("desertPortal: " + desertPortalEnabled);
+        //Debug.Log(UIManager.canOpenMenus);
         desertPortalCollider.gameObject.SetActive(desertPortalEnabled);
     }
 
