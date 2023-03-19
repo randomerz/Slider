@@ -436,7 +436,7 @@ public class ShopDialogueManager : MonoBehaviour
                         shopManager.OpenDialoguePanel();
                         (SGrid.Current as OceanGrid).StartFinalChallenge();
                     },
-                    "Well... to be honest, never expected you to finish my battle pass.",
+                    "Well... to be honest, never expected you to finish my battle pass. You wanna go to Canopy Town, eh?",
                     TKSprite.Normal,
                     () => {
                         SetDialogue(new ShopDialogue(
@@ -632,13 +632,13 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "The Tavern Pass we're trying out is pretty neat huh? I'm always here to help if you're ever lost too.",
+                    "The Tavern Pass we're trying out is pretty neat, huh? I'm always here to help if you're ever lost too.",
                     TKSprite.Normal,
                     () => SetDialogue(
 
                 new ShopDialogue(
                     null,
-                    "All the rewards are pretty neat too huh? I picked them myself. For the final reward, I'll even do anything you want!",
+                    "Don't ask too much about the rewards. Oh, but for the final reward, I'll do anything you want!",
                     TKSprite.Happy,
                     () => SetDialogue(
 
@@ -671,12 +671,19 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "I don't like to gossip, but... that Romeo REALLY wants to get with Juliet. Maybe you can wingman and get his message across.",
+                    "I don't like to gossip, but... that Romeo REALLY wants to get with Juliet. It's really been weighing him down.",
                     TKSprite.Question,
+                    () => SetDialogue(
+
+                new ShopDialogue(
+                    null,
+                    "If you can be a solid wingman, maybe he can get his message across.",
+                    TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
                     }
+                ))
                 ));
                 break;
             
@@ -908,9 +915,11 @@ public class ShopDialogueManager : MonoBehaviour
                     TKSprite.Question,
                     () => SetDialogue(new ShopDialogue(
                     null,
-                    "Well, the folks at the Magic Research Institute have been working on a rocket, so it might be your lucky day.",
+                    "Well, the folks at the Magic Research Institute have been working on a rocket, so it might be your lucky day. Here, I'll show you on your map.",
                     TKSprite.Normal,
                     () => {
+                        UIArtifactWorldMap.SetAreaStatus(Area.MagiTech, ArtifactWorldMapArea.AreaStatus.silhouette);
+
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
                     }

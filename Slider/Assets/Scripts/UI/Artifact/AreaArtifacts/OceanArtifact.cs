@@ -20,6 +20,7 @@ public class OceanArtifact : UIArtifact
         base.OnEnable();
 
         OnButtonInteract += UpdateHighlights;
+        UIArtifactMenus.OnArtifactOpened += UpdateHighlights;
     }
 
     protected override void OnDisable()
@@ -27,6 +28,7 @@ public class OceanArtifact : UIArtifact
         base.OnDisable();
 
         OnButtonInteract -= UpdateHighlights;
+        UIArtifactMenus.OnArtifactOpened -= UpdateHighlights;
     }
 
     public override void ButtonDragged(BaseEventData eventData) 

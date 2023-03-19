@@ -26,6 +26,8 @@ public class NPCRotation : MonoBehaviour
     [SerializeField] Transform off_camera; 
     [SerializeField] Transform coconuts; //porker
     [SerializeField] Transform IkeSpot; //ike
+    
+    [SerializeField] private List<GameObject> diceGameObjects = new List<GameObject>();
 
     public bool gotBreadge = false; //saved in oceangrid.cs maybe need to update to Savable in the future
     public bool unlockedAllSliders = false;
@@ -140,12 +142,16 @@ public class NPCRotation : MonoBehaviour
                 case "diceGirl"://dice ppl leave, catberad and broke replace them
                     diceGirl.Teleport(off_camera, false);
                     diceGuy.Teleport(off_camera, false);
+                    foreach (GameObject go in diceGameObjects)
+                        go.SetActive(false);
+                        
                     amberOak.Teleport(leftDice, false);
                     catBeard.Teleport(rightDice, false);
                     break;
 
                 case "fezziwig": //fezziwig joins
                     fezziwig.Teleport(rightSign, false);
+                    SaveSystem.Current.SetBool("oceanFezziwigInTavern", true);
                     break;
                 case "porker"://move porker to the coconuts and change his dialogue
                     porker.Teleport(coconuts, false);

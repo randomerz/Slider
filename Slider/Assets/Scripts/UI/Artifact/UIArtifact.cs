@@ -518,6 +518,11 @@ public class UIArtifact : Singleton<UIArtifact>
         return moveQueue.Count == 0 && activeMoves.Count == 0;
     }
 
+    public bool MoveQueueEmptyActiveMovesIgnored()
+    {
+        return moveQueue.Count == 0;
+    }
+
     private bool CheckMoveHasAnActiveTile(SMove move)
     {
         STile[,] grid = SGrid.Current.GetGrid();
@@ -558,6 +563,15 @@ public class UIArtifact : Singleton<UIArtifact>
         }
 
         return false;
+    }
+
+    public void ResetMoveQueueAndButtons()
+    {
+        Debug.LogWarning("Nuked the move queue.");
+
+        // Nukes the move queue! Leaves active moves.
+        moveQueue.Clear();
+        SetButtonPositionsToMatchGrid();
     }
 
     protected void LogMoveFailure() //As Stephen He's Dad would say.

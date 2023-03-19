@@ -287,17 +287,32 @@ public void SetGrid(int[,] puzzle)
         return Current.targetGrid[(Current.Height - y - 1) * Current.Width + x].ToString();
     }
 
+    /// <summary>
+    /// Are you SURE you want to swap tiles without adding an SMove? This will clear the current queue of moves!
+    /// </summary>
+    /// <param name="one"></param>
+    /// <param name="two"></param>
     protected void SwapTiles(STile one, STile two)
     {
-        int x = two.x;
-        int y = two.y;
-        two.SetGridPosition(one.x, one.y);
-        one.SetGridPosition(x, y);
-        grid[two.x, two.y] = two;
-        grid[x, y] = one;
+        int oneX = one.x;
+        int oneY = one.y;
+        int twoX = two.x;
+        int twoY = two.y;
 
-        UIArtifact.SetButtonPos(one.islandId, x, y);
-        UIArtifact.SetButtonPos(two.islandId, two.x, two.y);
+        one.SetGridPosition(twoX, twoY);
+        two.SetGridPosition(oneX, oneY);
+        grid[twoX, twoY] = one;
+        grid[oneX, oneY] = two;
+
+        UIArtifact.SetButtonPos(one.islandId, twoX, twoY);
+        UIArtifact.SetButtonPos(two.islandId, oneX, oneY);
+        
+        // We need to clear the queue, or else tiles may end up overlapped!
+        // TODO: if want to optimize, check only if the queued moves overlap with `one` or `two`
+        if (!UIArtifact._instance.MoveQueueEmptyActiveMovesIgnored())
+        {
+            UIArtifact._instance.ResetMoveQueueAndButtons();
+        }
     }
 
     //C: returns a list of active stiles

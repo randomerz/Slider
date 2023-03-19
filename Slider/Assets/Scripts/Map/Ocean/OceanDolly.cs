@@ -37,7 +37,11 @@ public class OceanDolly : CameraDolly
         intern2.AdvanceDialogueChain();
 
         UIEffects.FadeToBlack(
-            () => EndTrack()
+            () => { 
+                EndTrack();
+                intern1.gameObject.SetActive(false);
+                intern2.gameObject.SetActive(false);
+            }
         );
         
     }
