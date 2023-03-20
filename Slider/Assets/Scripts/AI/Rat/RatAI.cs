@@ -80,8 +80,9 @@ public class RatAI : MonoBehaviour
     }
 
     //Costs for running away from player
-    public Dictionary<Vector2Int, int> CostMap { 
-        get { return _costMap; } 
+    public Dictionary<Vector2Int, int> CostMap
+    {
+        get { return _costMap; }
         private set { _costMap = value; }
     }
     private Dictionary<Vector2Int, int> _costMap = null;
@@ -243,6 +244,7 @@ public class RatAI : MonoBehaviour
         {
             _costMap = new Dictionary<Vector2Int, int>();
             Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
+
             //Square that includes Rat vision (which itself is a circle)
             for (int x = (int)-maxDistVision; x <= (int)maxDistVision; x++)
             {
@@ -274,60 +276,9 @@ public class RatAI : MonoBehaviour
         return cost;
     }
 
-    //This algorithm essentially checks the given pos, it's neighbors, the neighbors' neighbors, and so on moving outwards from the original pos.
-    //Efficiency: (2*maxDistCost+1)^2
-    private float GetDistToNearestBadTile(Vector2Int posAsInt)
-    {
-        float distToNearestObstacle = float.MaxValue;
-        Vector2Int[] neighborDirs = { Vector2Int.up, Vector2Int.left, Vector2Int.down, Vector2Int.right,
-                                      new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1) };
-
-        float dist = 0f;
-        var queue = new Queue<Vector2Int>();
-        var visited = new HashSet<Vector2Int>();
-        visited.Add(posAsInt);
-        queue.Enqueue(posAsInt);
-        while (queue.Count > 0 && dist < maxDistCost)
-        {
-            Vector2Int currPos = queue.Dequeue();
-
-            foreach (var dir in neighborDirs)
-            {
-                Vector2Int posToCheck = currPos + dir;
-                if (!visited.Contains(posToCheck))
-                {
-                    float distToPoint = Vector2Int.Distance(posAsInt, currPos);
-                    dist = Mathf.Max(dist, distToPoint);
-                    visited.Add(posToCheck);
-                    queue.Enqueue(posToCheck);
-
-                    //Check wall, darkness, etc.
-                    bool darkObstacle = avoidsDark && !LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y);
-                    if ((!nav.IsValidPtOnStile(posToCheck) || darkObstacle) && distToPoint < distToNearestObstacle)
-                    {
-                        distToNearestObstacle = distToPoint;
-                    }
-                }
-
-            }
-        }
-
-        return distToNearestObstacle;
-    }
-
     private void OnDrawGizmosSelected()
-    {
-        /*
-        if (visited != null)
-        {
-            foreach (Vector2Int pt in visited)
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawSphere(new Vector3(pt.x, pt.y, 0), 0.2f);
-            }
-        }
-        */
-        
+    {   
+        //PRINT COST MAP
         if (CostMap != null)
         {
             foreach (Vector2Int pt in CostMap.Keys)

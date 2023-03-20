@@ -16,9 +16,9 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
     {
         int minCost = int.MaxValue;
         Vector2Int minCostPt = Vector2Int.zero;
-
         Vector2Int posAsInt = TileUtil.WorldToTileCoords(ai.transform.position);
 
+        //Find the position within maxDistVision with the lowest cost on the cost map
         float dist = 0f;
         var queue = new Queue<Vector2Int>();
         var visited = new HashSet<Vector2Int>();
@@ -53,6 +53,7 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
         }
         //Debug.Log($"Min Cost Neighbor: {minCostNeighbor} with cost {minCost}");
         
+        //Set destination to least cost pos, WorldNavigation takes care of the rest.
         if (minCost < int.MaxValue && !minCostPt.Equals(posAsInt))
         {
             RatBlackboard.Instance.destination = minCostPt;
@@ -64,11 +65,13 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
         }
     }
 
-    //Use this to get the cost to a point. (DON'T USE THIS TO GENERATE THE COST MAP)
+    //Total_Cost = Cost_Map_Cost + Player_Cost
     private int GetTileCost(Vector2Int pt)
     {
         Vector2Int playerPosAsInt = TileUtil.WorldToTileCoords(ai.player.position);
-        if (!ai.CostMap.ContainsKey(pt) || pt.Equals(playerPosAsInt))   //Either the Rat can't get there, or it's the player (which the Rat should avoid at all costs!)
+        //Either the Rat can't get there, or it's the player (which the Rat should avoid at all costs!)
+        bool posIllegal = !ai.CostMap.ContainsKey(pt) || pt.Equals(playerPosAsInt);
+        if (posIllegal)
         {
             return int.MaxValue;
         } else

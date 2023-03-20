@@ -35,7 +35,10 @@ public class PaintedCostMap : MonoBehaviour
         }
 
         if (tileIndex == -1)
-            return 1;
+        {
+            //Tile is untraversable.
+            return 2;
+        }
 
         return tileIndex / (weightTiles.Length - 1.0f);
     }
