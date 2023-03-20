@@ -188,11 +188,6 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     {
         if (dialogueBoxIsActive)
         {
-            if (!CurrentDialogue().waitUntilPlayerAction)
-            {
-                Player.GetPlayerAction().RemoveInteractable(this);
-            }
-
             if (waitingForPlayerAction)
             {
                 waitingForPlayerAction = false;
