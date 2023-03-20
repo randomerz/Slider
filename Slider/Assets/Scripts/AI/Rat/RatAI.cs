@@ -80,12 +80,12 @@ public class RatAI : MonoBehaviour
     }
 
     //Costs for running away from player
-    public Dictionary<Vector2Int, int> CostMap
-    {
-        get { return _costMap; }
-        private set { _costMap = value; }
-    }
-    private Dictionary<Vector2Int, int> _costMap = null;
+    //public Dictionary<Vector2, int> CostMap
+    //{
+    //    get { return _costMap; }
+    //    private set { _costMap = value; }
+    //}
+    //private Dictionary<Vector2, int> _costMap = null;
 
     [HideInInspector]
     internal HashSet<Vector2Int> visited = null;    //For debugging
@@ -137,7 +137,7 @@ public class RatAI : MonoBehaviour
     {
         behaviourTree.Evaluate();
 
-        GenerateCostMap();
+        //GenerateCostMap();
 
         float distToPlayer = Vector3.Distance(transform.position, Player.GetPosition());
         float speed = Mathf.Lerp(maxSpeed, minSpeed, (distToPlayer - 1) / playerDeaggroRange);
@@ -164,10 +164,10 @@ public class RatAI : MonoBehaviour
         {
             transform.SetParent(currentStileUnderneath.transform);
         }
-        else
-        {
-            transform.SetParent(GameObject.Find("World Grid").transform);
-        }
+        //else (DON"T, JUST DON"T)
+        //{
+        //    transform.SetParent(GameObject.Find("World Grid").transform);
+        //}
 
         anim.SetFloat("speed", rb.velocity.magnitude);
     }
@@ -233,36 +233,43 @@ public class RatAI : MonoBehaviour
         var runFromPlayerSequence = new SequenceNode(new List<BehaviourTreeNode> { playerAggroNode, setDestToAvoidPlayerNode, moveTowardsSetDestNode });
         var runToValidPtSequence = new SequenceNode(new List<BehaviourTreeNode> { setDestToNearestValidPtNode, moveTowardsSetDestNode });
 
-        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, runToValidPtSequence, stayInPlaceNode }); 
+        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runToValidPtSequence, runFromPlayerSequence, stayInPlaceNode }); 
 
     }
 
     //Efficiency: (2*maxDistVision+1)^2 * (2*maxDistCostmap+1)^2 (This is the most costly operation in the AI)
-    private void GenerateCostMap()
-    {
-        if (!avoidsDark || LightManager.instance != null)
-        {
-            _costMap = new Dictionary<Vector2Int, int>();
-            Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
+    //private void GenerateCostMap()
+    //{
+    //    if (!avoidsDark || LightManager.instance != null)
+    //    {
+    //        _costMap = new Dictionary<Vector2, int>();
+    //        Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
 
-            //Square that includes Rat vision (which itself is a circle)
-            for (int x = (int)-maxDistVision; x <= (int)maxDistVision; x++)
-            {
-                for (int y = (int)-maxDistVision; y <= (int)maxDistVision; y++)
-                {
-                    Vector2Int pos = posAsInt + new Vector2Int(x, y);
-                    if (nav.IsValidPtOnStile(pos) && (!avoidsDark || LightManager.instance.GetLightMaskAt(pos.x, pos.y)))
-                    {
-                        int cost = (int)(tileMaxPenalty * paintedCostMap.GetNormalizedCostAt(pos));
-                        // int cost = CostToThreat(GetDistToNearestBadTile(pos), false);
-                        _costMap.Add(pos, cost);
-                    }
-                }
-            }
-        }
+    //        //Square that includes Rat vision (which itself is a circle)
+    //        for (int x = (int)-maxDistVision; x <= (int)maxDistVision; x++)
+    //        {
+    //            for (int y = (int)-maxDistVision; y <= (int)maxDistVision; y++)
+    //            {
+    //                Vector2Int pos = posAsInt + new Vector2Int(x, y);
 
-        Debug.Assert(_costMap != null, "Tried to initialize Cost Map before LightManager. This might be a problem.");
-    }
+    //                bool tileLightingValid = (!avoidsDark || LightManager.instance.GetLightMaskAt(pos.x, pos.y));
+    //                if (nav.IsValidPtOnStile(pos) && tileLightingValid)
+    //                {
+    //                    float normCost = paintedCostMap.GetNormalizedCostAt(pos);
+    //                    if (normCost <= 1.5f) //Cost can be > 1 to indicate untraversable ground.
+    //                    {
+    //                        int cost = (int)(tileMaxPenalty*normCost);
+    //                        // int cost = CostToThreat(GetDistToNearestBadTile(pos), false);
+    //                        _costMap.Add(pos, cost);
+    //                    }
+
+    //                }
+    //            }
+    //        }
+    //    }
+
+    //    Debug.Assert(_costMap != null, "Tried to initialize Cost Map before LightManager. This might be a problem.");
+    //}
 
     internal int CostToThreat(float distToThreat, bool threatIsPlayer)
     {
@@ -279,22 +286,21 @@ public class RatAI : MonoBehaviour
     private void OnDrawGizmosSelected()
     {   
         //PRINT COST MAP
-        if (CostMap != null)
-        {
-            foreach (Vector2Int pt in CostMap.Keys)
-            {
-                if (CostMap[pt] == int.MaxValue)
-                {
-                    Gizmos.color = Color.red;
-                } else
-                {
-                    //Debug.Log($"CostMap in OnDrawGizmosSelected: {CostMap[pt]}");
-                    Gizmos.color = Color.Lerp(Color.green, Color.red, (float) CostMap[pt] / tileMaxPenalty);
-                }
+        //if (CostMap != null)
+        //{
+        //    foreach (Vector2Int pt in CostMap.Keys)
+        //    {
+        //        if (CostMap[pt] == int.MaxValue)
+        //        {
+        //            Gizmos.color = Color.red;
+        //        } else
+        //        {
+        //            //Debug.Log($"CostMap in OnDrawGizmosSelected: {CostMap[pt]}");
+        //            Gizmos.color = Color.Lerp(Color.green, Color.red, (float) CostMap[pt] / tileMaxPenalty);
+        //        }
 
-                Gizmos.DrawSphere(new Vector3(pt.x, pt.y, 0), 0.2f);
-            }
-        }
-        
+        //        Gizmos.DrawSphere(new Vector3(pt.x, pt.y, 0), 0.2f);
+        //    }
+        //}     
     }
 }

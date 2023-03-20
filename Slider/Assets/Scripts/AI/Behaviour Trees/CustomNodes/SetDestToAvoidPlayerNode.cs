@@ -70,8 +70,8 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
     {
         Vector2Int playerPosAsInt = TileUtil.WorldToTileCoords(ai.player.position);
         //Either the Rat can't get there, or it's the player (which the Rat should avoid at all costs!)
-        bool posIllegal = !ai.CostMap.ContainsKey(pt) || pt.Equals(playerPosAsInt);
-        if (posIllegal)
+        //bool posIllegal = !ai.CostMap.ContainsKey(pt)|| pt.Equals(playerPosAsInt);
+        if (pt.Equals(playerPosAsInt))
         {
             return int.MaxValue;
         } else
@@ -79,7 +79,7 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
             float distToPlayer = Vector2Int.Distance(playerPosAsInt, pt);
 
             //Total cost is the cost of the tile itself (based on how close it is to a wall) 
-            return ai.CostMap[pt] + ai.CostToThreat(distToPlayer, true);
+            return (int) (ai.paintedCostMap.GetNormalizedCostAt(pt) * ai.tileMaxPenalty) + ai.CostToThreat(distToPlayer, true);
         }
     }
 
