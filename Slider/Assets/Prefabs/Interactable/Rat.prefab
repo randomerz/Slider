@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f04283445261e74aa01e938a0b8bd00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAggroRange: 3.5
+  playerAggroRange: 4
   playerDeaggroRange: 6
   minSpeed: 4
   maxSpeed: 8
@@ -166,7 +166,7 @@ MonoBehaviour:
   objectToSteal: {fileID: 0}
   player: {fileID: 0}
   paintedCostMap: {fileID: 0}
-  tileMaxPenalty: 1
+  tileMaxPenalty: 100
   maxDistVision: 5
   maxDistCost: 2
   updateTimer: 0.25
@@ -185,6 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 6
   tolerance: 0.1
+  ai: {fileID: 0}
 --- !u!50 &3202578252114405897
 Rigidbody2D:
   serializedVersion: 4
