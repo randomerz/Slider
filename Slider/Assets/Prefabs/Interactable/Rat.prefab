@@ -154,8 +154,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f04283445261e74aa01e938a0b8bd00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAggroRange: 2.5
-  playerDeaggroRange: 5
+  playerAggroRange: 3.5
+  playerDeaggroRange: 6
+  minSpeed: 4
+  maxSpeed: 8
   nav: {fileID: 0}
   navAgent: {fileID: 5482138428807836078}
   anim: {fileID: 842370665519609470}
@@ -163,8 +165,9 @@ MonoBehaviour:
   mouth: {fileID: 7117076765228698889}
   objectToSteal: {fileID: 0}
   player: {fileID: 0}
-  tileMaxPenalty: 100
-  maxDistVision: 4
+  paintedCostMap: {fileID: 0}
+  tileMaxPenalty: 1
+  maxDistVision: 5
   maxDistCost: 2
   updateTimer: 0.25
   avoidsDark: 0
@@ -180,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7370d928131411e4e88b9b5ebf7213d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5.5
+  speed: 6
   tolerance: 0.1
 --- !u!50 &3202578252114405897
 Rigidbody2D:
@@ -216,7 +219,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.00062930584, y: 0.0015871823}
+  m_Offset: {x: 0, y: 0.125}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -227,7 +230,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5070851, y: 1.0530024}
+  m_Size: {x: 0.25, y: 0.375}
   m_EdgeRadius: 0
 --- !u!1 &1467017979695379807
 GameObject:

@@ -171,7 +171,7 @@ public class WorldNavigation : MonoBehaviour
                 Vector2Int posRel = new Vector2Int(x, y);
                 Vector2 posAbs = RelToAbsPos(posRel, stile);
 
-                int hit = Physics2D.CircleCast(posAbs, 0.5f, Vector2.up, filter, hits, 0f);
+                int hit = Physics2D.CircleCast(posAbs, 0.25f, Vector2.up, filter, hits, 0f);
                 if (hit == 0)
                 {
                     if (moss == null || moss.mossCollidersMap.GetColliderType((Vector3Int) TileUtil.WorldToTileCoords(posAbs)) == Tile.ColliderType.None)

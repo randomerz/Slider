@@ -136,8 +136,8 @@ public class SaveSystem
         string sceneToLoad = Current.GetLastArea().ToString();
         
         // early access
-        if (Current.GetBool("isDemoBuild") && sceneToLoad == "Caves")
-            sceneToLoad = "Demo Caves";
+        // if (Current.GetBool("isDemoBuild") && sceneToLoad == "Caves")
+        //     sceneToLoad = "Demo Caves";
         
         // early access
         // if (Current.GetBool("isDemoBuild") && sceneToLoad == "Military")
