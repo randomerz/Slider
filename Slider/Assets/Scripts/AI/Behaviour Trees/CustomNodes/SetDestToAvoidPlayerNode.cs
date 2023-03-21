@@ -79,7 +79,15 @@ public class SetDestToAvoidPlayerNode : BehaviourTreeNode
             float distToPlayer = Vector2Int.Distance(playerPosAsInt, pt);
 
             //Total cost is the cost of the tile itself (based on how close it is to a wall) 
-            return (int) (ai.paintedCostMap.GetNormalizedCostAt(pt) * ai.tileMaxPenalty) + ai.CostToThreat(distToPlayer, true);
+            float normCost = ai.paintedCostMap.GetNormalizedCostAt(pt);
+            if (normCost > 1.5f)
+            {
+                return int.MaxValue;
+            }
+
+            int tileCost = (int) (ai.paintedCostMap.GetNormalizedCostAt(pt) * ai.tileMaxPenalty);
+            int playerCost = ai.CostToThreat(distToPlayer, true);
+            return tileCost + playerCost;
         }
     }
 
