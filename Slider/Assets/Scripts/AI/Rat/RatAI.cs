@@ -80,11 +80,12 @@ public class RatAI : MonoBehaviour
     }
 
     //Costs for running away from player
-    public Dictionary<Vector2Int, int> CostMap { 
-        get { return _costMap; } 
-        private set { _costMap = value; }
-    }
-    private Dictionary<Vector2Int, int> _costMap = null;
+    //public Dictionary<Vector2, int> CostMap
+    //{
+    //    get { return _costMap; }
+    //    private set { _costMap = value; }
+    //}
+    //private Dictionary<Vector2, int> _costMap = null;
 
     [HideInInspector]
     internal HashSet<Vector2Int> visited = null;    //For debugging
@@ -136,7 +137,7 @@ public class RatAI : MonoBehaviour
     {
         behaviourTree.Evaluate();
 
-        GenerateCostMap();
+        //GenerateCostMap();
 
         float distToPlayer = Vector3.Distance(transform.position, Player.GetPosition());
         float speed = Mathf.Lerp(maxSpeed, minSpeed, (distToPlayer - 1) / playerDeaggroRange);
@@ -163,10 +164,10 @@ public class RatAI : MonoBehaviour
         {
             transform.SetParent(currentStileUnderneath.transform);
         }
-        else
-        {
-            transform.SetParent(GameObject.Find("World Grid").transform);
-        }
+        //else (DON"T, JUST DON"T)
+        //{
+        //    transform.SetParent(GameObject.Find("World Grid").transform);
+        //}
 
         anim.SetFloat("speed", rb.velocity.magnitude);
     }
@@ -232,35 +233,43 @@ public class RatAI : MonoBehaviour
         var runFromPlayerSequence = new SequenceNode(new List<BehaviourTreeNode> { playerAggroNode, setDestToAvoidPlayerNode, moveTowardsSetDestNode });
         var runToValidPtSequence = new SequenceNode(new List<BehaviourTreeNode> { setDestToNearestValidPtNode, moveTowardsSetDestNode });
 
-        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, runToValidPtSequence, stayInPlaceNode }); 
+        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runToValidPtSequence, runFromPlayerSequence, stayInPlaceNode }); 
 
     }
 
     //Efficiency: (2*maxDistVision+1)^2 * (2*maxDistCostmap+1)^2 (This is the most costly operation in the AI)
-    private void GenerateCostMap()
-    {
-        if (!avoidsDark || LightManager.instance != null)
-        {
-            _costMap = new Dictionary<Vector2Int, int>();
-            Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
-            //Square that includes Rat vision (which itself is a circle)
-            for (int x = (int)-maxDistVision; x <= (int)maxDistVision; x++)
-            {
-                for (int y = (int)-maxDistVision; y <= (int)maxDistVision; y++)
-                {
-                    Vector2Int pos = posAsInt + new Vector2Int(x, y);
-                    if (nav.IsValidPtOnStile(pos) && (!avoidsDark || LightManager.instance.GetLightMaskAt(pos.x, pos.y)))
-                    {
-                        int cost = (int)(tileMaxPenalty * paintedCostMap.GetNormalizedCostAt(pos));
-                        // int cost = CostToThreat(GetDistToNearestBadTile(pos), false);
-                        _costMap.Add(pos, cost);
-                    }
-                }
-            }
-        }
+    //private void GenerateCostMap()
+    //{
+    //    if (!avoidsDark || LightManager.instance != null)
+    //    {
+    //        _costMap = new Dictionary<Vector2, int>();
+    //        Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
 
-        Debug.Assert(_costMap != null, "Tried to initialize Cost Map before LightManager. This might be a problem.");
-    }
+    //        //Square that includes Rat vision (which itself is a circle)
+    //        for (int x = (int)-maxDistVision; x <= (int)maxDistVision; x++)
+    //        {
+    //            for (int y = (int)-maxDistVision; y <= (int)maxDistVision; y++)
+    //            {
+    //                Vector2Int pos = posAsInt + new Vector2Int(x, y);
+
+    //                bool tileLightingValid = (!avoidsDark || LightManager.instance.GetLightMaskAt(pos.x, pos.y));
+    //                if (nav.IsValidPtOnStile(pos) && tileLightingValid)
+    //                {
+    //                    float normCost = paintedCostMap.GetNormalizedCostAt(pos);
+    //                    if (normCost <= 1.5f) //Cost can be > 1 to indicate untraversable ground.
+    //                    {
+    //                        int cost = (int)(tileMaxPenalty*normCost);
+    //                        // int cost = CostToThreat(GetDistToNearestBadTile(pos), false);
+    //                        _costMap.Add(pos, cost);
+    //                    }
+
+    //                }
+    //            }
+    //        }
+    //    }
+
+    //    Debug.Assert(_costMap != null, "Tried to initialize Cost Map before LightManager. This might be a problem.");
+    //}
 
     internal int CostToThreat(float distToThreat, bool threatIsPlayer)
     {
@@ -274,76 +283,24 @@ public class RatAI : MonoBehaviour
         return cost;
     }
 
-    //This algorithm essentially checks the given pos, it's neighbors, the neighbors' neighbors, and so on moving outwards from the original pos.
-    //Efficiency: (2*maxDistCost+1)^2
-    private float GetDistToNearestBadTile(Vector2Int posAsInt)
-    {
-        float distToNearestObstacle = float.MaxValue;
-        Vector2Int[] neighborDirs = { Vector2Int.up, Vector2Int.left, Vector2Int.down, Vector2Int.right,
-                                      new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1) };
-
-        float dist = 0f;
-        var queue = new Queue<Vector2Int>();
-        var visited = new HashSet<Vector2Int>();
-        visited.Add(posAsInt);
-        queue.Enqueue(posAsInt);
-        while (queue.Count > 0 && dist < maxDistCost)
-        {
-            Vector2Int currPos = queue.Dequeue();
-
-            foreach (var dir in neighborDirs)
-            {
-                Vector2Int posToCheck = currPos + dir;
-                if (!visited.Contains(posToCheck))
-                {
-                    float distToPoint = Vector2Int.Distance(posAsInt, currPos);
-                    dist = Mathf.Max(dist, distToPoint);
-                    visited.Add(posToCheck);
-                    queue.Enqueue(posToCheck);
-
-                    //Check wall, darkness, etc.
-                    bool darkObstacle = avoidsDark && !LightManager.instance.GetLightMaskAt(posToCheck.x, posToCheck.y);
-                    if ((!nav.IsValidPtOnStile(posToCheck) || darkObstacle) && distToPoint < distToNearestObstacle)
-                    {
-                        distToNearestObstacle = distToPoint;
-                    }
-                }
-
-            }
-        }
-
-        return distToNearestObstacle;
-    }
-
     private void OnDrawGizmosSelected()
-    {
-        /*
-        if (visited != null)
-        {
-            foreach (Vector2Int pt in visited)
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawSphere(new Vector3(pt.x, pt.y, 0), 0.2f);
-            }
-        }
-        */
-        
-        if (CostMap != null)
-        {
-            foreach (Vector2Int pt in CostMap.Keys)
-            {
-                if (CostMap[pt] == int.MaxValue)
-                {
-                    Gizmos.color = Color.red;
-                } else
-                {
-                    //Debug.Log($"CostMap in OnDrawGizmosSelected: {CostMap[pt]}");
-                    Gizmos.color = Color.Lerp(Color.green, Color.red, (float) CostMap[pt] / tileMaxPenalty);
-                }
+    {   
+        //PRINT COST MAP
+        //if (CostMap != null)
+        //{
+        //    foreach (Vector2Int pt in CostMap.Keys)
+        //    {
+        //        if (CostMap[pt] == int.MaxValue)
+        //        {
+        //            Gizmos.color = Color.red;
+        //        } else
+        //        {
+        //            //Debug.Log($"CostMap in OnDrawGizmosSelected: {CostMap[pt]}");
+        //            Gizmos.color = Color.Lerp(Color.green, Color.red, (float) CostMap[pt] / tileMaxPenalty);
+        //        }
 
-                Gizmos.DrawSphere(new Vector3(pt.x, pt.y, 0), 0.2f);
-            }
-        }
-        
+        //        Gizmos.DrawSphere(new Vector3(pt.x, pt.y, 0), 0.2f);
+        //    }
+        //}     
     }
 }

@@ -194,18 +194,10 @@ public class WorldNavigation : MonoBehaviour
         return pos + new Vector2(stile.transform.position.x, stile.transform.position.y);
     }
 
-    private Vector2Int AbsToRelPos(Vector2 pos, STile stile)
-    {
-        Vector2 relPos = pos - new Vector2(stile.transform.position.x, stile.transform.position.y);
-        return TileUtil.WorldToTileCoords(relPos);
-    }
-
     private Vector2Int AbsToRelPos(Vector2Int pos, STile stile)
     {
         return pos - TileUtil.WorldToTileCoords(stile.transform.position);
     }
-
-
 
     //Check if a point is in.
     public bool IsValidPt(Vector2Int pos)
@@ -457,6 +449,11 @@ public class WorldNavigation : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        if (stiles == null)
+        {
+            stiles = GetComponentsInChildren<STile>();
+        }
+
         if (validPtsWorld != null && stiles.Length > 0)
         {
             ForEachValidPtOutsideStile ((pos) => {

@@ -283,13 +283,13 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Ahoy matey! Welcome to Buccaneer Bob's, the finest tavern in the land. Let's get you started with some drinks.",
+                    "Ahoy matey! Welcome to Buccaneer Bob's. Here in the Shifting Seas, freedom is our creed. Just don't get lost or overwhelmed--the oceans are filled with treasure.",
                     TKSprite.Normal,
                     () => SetDialogue(
-
+                       
                 new ShopDialogue(
                     null,
-                    "Would you like Gunmaster's Gin, Raider's Rum, or Sea Wolf's Whiskey?",
+                    "Now what are we looking for? Drinks, perhaps? Or are you interested in my all-new tavern pass?",
                     TKSprite.Happy,
                     () => {
                         canOverrideDialogue = true;
@@ -340,7 +340,7 @@ public class ShopDialogueManager : MonoBehaviour
                     () => {
                         SetDialogue(new ShopDialogue(
                     null,
-                    "Look pal, we're trying a new, uh... \"Business\" model here. I'll even let you get started with the first tier for free.",
+                    "Look pal, we're trying a new, \"Business\" model. Remember that tavern pass I mentioned? As my first subscriber, you get the first tier for free.",
                     TKSprite.Question,
                     () => {
                         SetDialogue(new ShopDialogue(
@@ -378,7 +378,7 @@ public class ShopDialogueManager : MonoBehaviour
             case "Turn in Magical Gem":
                 SetDialogue(new ShopDialogue(
                     null,
-                    "A magical gem! I could enhance my drinks with some Sorcery...",
+                    "A magical gem! Heard them hard-hat types are mining for these babies in the mountains.",
                     TKSprite.Normal,
                     null
                 ));
@@ -414,7 +414,7 @@ public class ShopDialogueManager : MonoBehaviour
             case "Turn in Rose":
                 SetDialogue(new ShopDialogue(
                     null,
-                    "Sorry but I have a boyfriend. I'll pay so I don't owe you.",
+                    "You one of those hopeless romantic types? I appreciate the sentiment.",
                     TKSprite.Angry,
                     null
                 ));
@@ -436,7 +436,7 @@ public class ShopDialogueManager : MonoBehaviour
                         shopManager.OpenDialoguePanel();
                         (SGrid.Current as OceanGrid).StartFinalChallenge();
                     },
-                    "Well... to be honest, never expected you to finish my battle pass. You wanna go to Canopy Town, eh?",
+                    "Well... to be honest, never expected you to finish my battle pass. You really wanna go to Canopy Town, eh?",
                     TKSprite.Normal,
                     () => {
                         SetDialogue(new ShopDialogue(
@@ -453,7 +453,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                         SetDialogue(new ShopDialogue(
                     null,
-                    "I'll bust out the axe and cut the trees above the tavern.",
+                    "I'll bust out the old axe and cut the trees above the tavern.",
                     TKSprite.Happy,
                     () => {
                         canOverrideDialogue = true;
@@ -480,7 +480,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                         SetDialogue(new ShopDialogue(
                     null,
-                    "I'll bust out the axe and cut the trees above the tavern.",
+                    "I'll bust out the old axe and cut the trees above the tavern.",
                     TKSprite.Happy,
                     () => {
                         canOverrideDialogue = true;
@@ -521,7 +521,7 @@ public class ShopDialogueManager : MonoBehaviour
                     () => {
                         SetDialogue(new ShopDialogue(
                     null,
-                    "> A moment passes as you think about him cutting down the trees blocking the path. You sneak a peak through the window.",
+                    "> You sneak a peak through the window.",
                     TKSprite.None,
                     () => {
                         (SGrid.Current as OceanGrid).ClearTreesToJungle();
@@ -563,7 +563,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                         SetDialogue(new ShopDialogue(
                     null,
-                    "Bring me back a souvenier some time.",
+                    "Bring me back a souvenier.",
                     TKSprite.Question,
                     () => {
                         canOverrideDialogue = true;
@@ -671,13 +671,13 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "I don't like to gossip, but... that Romeo REALLY wants to get with Juliet. It's really been weighing him down.",
+                    "I don't like to gossip, but... that Romeo REALLY wants to get with Juliet. It's really been weighing him down. If you can be a solid wingman, maybe he can get his message across.",
                     TKSprite.Question,
                     () => SetDialogue(
 
                 new ShopDialogue(
                     null,
-                    "If you can be a solid wingman, maybe he can get his message across.",
+                    "Beware of disturbing the seas though. Too much water can sink even the heaviest messages.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
@@ -693,7 +693,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Heard the Black Trident broke upon some rocks earlier today. Poor fellow. Might be worth searching the area.",
+                    "Heard the Black Trident broke upon some rocks earlier today. Poor Catbeard. Might be worth searching the area.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
@@ -708,7 +708,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Some fellow, Fezziwig, been messing around with some magics. This whole world's gone a bit crazy recently, hasn't it?",
+                    "Some fellow, Fezziwig, been messing around with some magicks. This whole world's gone a bit crazy recently, hasn't it?",
                     TKSprite.Question,
                     () => {
                         canOverrideDialogue = true;
@@ -729,7 +729,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "Tales tell of a song of three whole verses needed to navigate it. Think it started with \"West, South,\" but I forgot the rest. Maybe others remember.",
+                    "Tales tell of a song of three pairs of verses needed to navigate it. Think it started with \"West, South,\" but I forgot the rest. Maybe others remember.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
@@ -895,7 +895,7 @@ public class ShopDialogueManager : MonoBehaviour
                     TKSprite.Normal,
                     () => SetDialogue(new ShopDialogue(
                     null,
-                    "Some say tell tales of strange happenings, things that can't be explained. I don't believe a word of it.",
+                    "Some tell tall tales of strange happenings, things that can't be explained. I don't believe a word of it.",
                     TKSprite.Question,
                     () => {
                         canOverrideDialogue = true;
