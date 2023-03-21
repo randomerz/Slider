@@ -17,7 +17,7 @@ public class CaveDoor : MonoBehaviour
         float animationDuration = 8;
 
         CameraShake.ShakeConstant(animationDuration, 0.15f);
-        AudioManager.Play("Slide Rumble");
+        AudioManager.Play("Rumble Constant 9s");
 
         yield return new WaitForSeconds(animationDuration);
 

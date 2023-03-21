@@ -66,6 +66,41 @@ MonoBehaviour:
     loop: 0
     doRandomPitch: 1
     source: {fileID: 0}
+  - name: Rumble Decrease 2.5s
+    clip: {fileID: 8300000, guid: 1a670418205c3b94491aac038819a67c, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
+  - name: Rumble Decrease 5s
+    clip: {fileID: 8300000, guid: c88849ac8ff7a0c479ee9e3127dcfb36, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
+  - name: Rumble Increase 8s
+    clip: {fileID: 8300000, guid: 6ea73d4e1ad5c6842bf0f4a3abe0b861, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
+  - name: Rumble Decrease 9s
+    clip: {fileID: 8300000, guid: 715d1234d99211b47be88fcd9dec5f9e, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
+  - name: Rumble Constant 9s
+    clip: {fileID: 8300000, guid: eba36d6fc6bee444f89f12b3764c3831, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    doRandomPitch: 1
+    source: {fileID: 0}
   - name: UI Click
     clip: {fileID: 8300000, guid: 09140345bd32e4742ab358be416e0264, type: 3}
     volume: 1
