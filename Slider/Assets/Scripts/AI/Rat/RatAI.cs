@@ -233,7 +233,7 @@ public class RatAI : MonoBehaviour
         var runFromPlayerSequence = new SequenceNode(new List<BehaviourTreeNode> { playerAggroNode, setDestToAvoidPlayerNode, moveTowardsSetDestNode });
         var runToValidPtSequence = new SequenceNode(new List<BehaviourTreeNode> { setDestToNearestValidPtNode, moveTowardsSetDestNode });
 
-        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runToValidPtSequence, runFromPlayerSequence, stayInPlaceNode }); 
+        behaviourTree = new SelectorNode(new List<BehaviourTreeNode> { stealSequence, runFromPlayerSequence, runToValidPtSequence, stayInPlaceNode }); 
 
     }
 
@@ -273,14 +273,21 @@ public class RatAI : MonoBehaviour
 
     internal int CostToThreat(float distToThreat, bool threatIsPlayer)
     {
-        float penaltyDivider = threatIsPlayer ? playerAggroRange : maxDistCost;
-        int cost = (distToThreat == float.MaxValue) ? 0 : Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / penaltyDivider * (distToThreat - 1f)), 0, tileMaxPenalty);
 
-        cost *= threatIsPlayer ? 1000 : 1; //Basically make the player as unappealing as possible (because the Rat loses if it touches the player)
+        float cost = 4 * tileMaxPenalty * Mathf.Pow(0.25f, distToThreat) +
+                    (0.25f * tileMaxPenalty * (playerAggroRange - distToThreat + 3));
 
-        //Debug.Log("Distance: " + distToThreat);
-        //Debug.Log("Cost: " + cost);
-        return cost;
+        cost = Mathf.Clamp(cost, 0, 100 * tileMaxPenalty);
+        return (int)cost;
+
+        // float penaltyDivider = threatIsPlayer ? playerAggroRange : maxDistCost;
+        // int cost = (distToThreat == float.MaxValue) ? 0 : Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / penaltyDivider * (distToThreat - 1f)), 0, tileMaxPenalty);
+
+        // cost *= threatIsPlayer ? 1000 : 1; //Basically make the player as unappealing as possible (because the Rat loses if it touches the player)
+
+        // //Debug.Log("Distance: " + distToThreat);
+        // //Debug.Log("Cost: " + cost);
+        // return cost;
     }
 
     private void OnDrawGizmosSelected()

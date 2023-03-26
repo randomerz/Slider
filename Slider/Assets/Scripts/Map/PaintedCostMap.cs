@@ -23,8 +23,8 @@ public class PaintedCostMap : MonoBehaviour
         }
         
         PaintedSTileCostMap stileCostMap = stileCostMaps[stile.islandId - 1];
-        int stilePositionX = (int)(worldCoords.x - stile.transform.position.x - 0.5f);
-        int stilePositionY = (int)(worldCoords.y - stile.transform.position.y + 0.5f);
+        int stilePositionX = (int)(worldCoords.x - stile.transform.position.x);
+        int stilePositionY = (int)(worldCoords.y - stile.transform.position.y);
         TileBase tileBase = stileCostMap.GetTileAt(stilePositionX, stilePositionY);
 
         int tileIndex = -1;
