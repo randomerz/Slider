@@ -22,6 +22,7 @@ public class Player : Singleton<Player>, ISavable
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Rigidbody2D rb;
 
+    private PlayerInput playerInput;
     
 
     private float moveSpeedMultiplier = 1;
@@ -51,6 +52,8 @@ public class Player : Singleton<Player>, ISavable
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
         playerInventory.Init();
         UpdatePlayerSpeed();
+
+        playerInput= GetComponent<PlayerInput>();
     }
 
     private void Start() 
@@ -132,6 +135,11 @@ public class Player : Singleton<Player>, ISavable
         {
             transform.SetParent(null);
         }
+    }
+    //Jroo: Either says "Keyboard Mouse" or "Controller" based on last input
+    public string GetCurrentControlScheme()
+    {
+        return playerInput.currentControlScheme;
     }
 
     // Here is where we pay for all our Singleton Sins

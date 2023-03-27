@@ -34,6 +34,7 @@ public class UIArtifact : Singleton<UIArtifact>
 
     protected virtual void OnEnable()
     {
+        //SelectButton(buttons[0]);
     }
 
     protected virtual void OnDisable()
