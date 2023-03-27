@@ -71,6 +71,8 @@ public class Player : Singleton<Player>, ISavable
             UITrackerManager.DefaultSprites.playerWhiteCircleEmpty, 
             3f
         );
+
+        SetIsInHouse(isInHouse);
     }
     
     void Update()
@@ -384,13 +386,10 @@ public class Player : Singleton<Player>, ISavable
 
     public static void SetIsInHouse(bool isInHouse)
     {
-        if (isInHouse != _instance.isInHouse)
-        {
-            if (isInHouse)
-                AudioManager.EnqueueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
-            else
-                AudioManager.DequeueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
-        }
+        if (isInHouse)
+            AudioManager.EnqueueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
+        else
+            AudioManager.DequeueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
         _instance.isInHouse = isInHouse;
     }
 

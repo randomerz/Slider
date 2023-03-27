@@ -372,14 +372,11 @@ public class AudioManager : Singleton<AudioManager>
                 if (!parameterResponsibilityQueue[name].Remove(adj))
                     throw new UnityException($"Modifier {m.name} is not actually in effect (parameter {name} has modifiers attached, but not {m.name})");
                 if (parameterResponsibilityQueue[name].Count == 0)
-                {
                     // no modifiers left, restore parameter default
                     SetGlobalParameter(name, parameterDefaults[name]);
-                } else
-                {
+                else
                     // force evaluate the last effect in this queue
                     SetGlobalParameter(name, parameterResponsibilityQueue[name][^1].value);
-                }
             }
             else
                 throw new UnityException($"Modifier {m.name} is not actually in effect (property {name} does not have any modifiers attached)");
@@ -390,8 +387,7 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (RuntimeManager.StudioSystem.setParameterByName(name, val) == FMOD.RESULT.OK)
         {
-            RuntimeManager.StudioSystem.getParameterByName(name, out float result);
-            Debug.Log($"Finished setting global parameter {name} = {val}");
+            // successfully set parameter
         }
         else
             throw new UnityException($"Failed to set global parameter {name} = {val}");

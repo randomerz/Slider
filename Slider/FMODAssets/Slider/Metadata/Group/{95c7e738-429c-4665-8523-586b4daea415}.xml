@@ -22,6 +22,15 @@
 	</object>
 	<object class="MixerBusPanner" id="{0fead083-bda4-45fb-ae90-53f08a9791f8}" />
 	<object class="ThreeEQEffect" id="{fee3ec33-54ad-422f-8b5d-b8ffa38dc850}">
+		<property name="lowCrossover">
+			<value>280</value>
+		</property>
+		<property name="highCrossover">
+			<value>1650</value>
+		</property>
+		<property name="crossoverSlope">
+			<value>0</value>
+		</property>
 		<relationship name="automators">
 			<destination>{534dabe1-4793-4b47-95f6-8ed43b91058a}</destination>
 			<destination>{301a6e8f-6f90-4de6-9c2f-cbf844f3459f}</destination>
