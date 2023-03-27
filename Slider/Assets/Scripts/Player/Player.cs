@@ -384,6 +384,13 @@ public class Player : Singleton<Player>, ISavable
 
     public static void SetIsInHouse(bool isInHouse)
     {
+        if (isInHouse != _instance.isInHouse)
+        {
+            if (isInHouse)
+                AudioManager.EnqueueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
+            else
+                AudioManager.DequeueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
+        }
         _instance.isInHouse = isInHouse;
     }
 

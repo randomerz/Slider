@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
+using Cinemachine;
 
 public class AudioManager : Singleton<AudioManager>
 {
@@ -26,7 +27,13 @@ public class AudioManager : Singleton<AudioManager>
     private static FMOD.Studio.Bus sfxBus;
     private static FMOD.Studio.Bus musicBus;
 
-    public static AudioManager instance;
+    [SerializeField]
+    List<AudioModifier> modifierPool;
+    Dictionary<AudioModifier.ModifierType, AudioModifier> modifiers;
+
+    // Last-in-first-evaluate queue for each global parameter
+    Dictionary<string, List<AudioModifier.AudioModifierProperty>> parameterResponsibilityQueue;
+    Dictionary<string, float> parameterDefaults;
 
     void Awake()
     {
@@ -55,6 +62,20 @@ public class AudioManager : Singleton<AudioManager>
             m.emitter = gameObject.AddComponent<StudioEventEmitter>();
             m.emitter.EventReference = m.fmodEvent;
         }
+
+        modifiers = new Dictionary<AudioModifier.ModifierType, AudioModifier>(modifierPool.Count);
+        foreach (AudioModifier audioModifier in modifierPool)
+        {
+            if (modifiers.TryAdd(audioModifier.type, audioModifier))
+            {
+                // successfully added
+            } else
+            {
+                throw new UnityException($"Duplicate modifier when trying to add { audioModifier.name }");
+            }
+        }
+        parameterDefaults = new Dictionary<string, float>();
+        parameterResponsibilityQueue = new Dictionary<string, List<AudioModifier.AudioModifierProperty>>();
 
         sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/SFX");
         musicBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/Music");
@@ -300,5 +321,79 @@ public class AudioManager : Singleton<AudioManager>
                 continue;
             s.source.pitch = s.pitch * value;
         }
+    }
+
+    public static void EnqueueModifier(AudioModifier.ModifierType m)
+    {
+        if (_instance.modifiers.ContainsKey(m))
+            _instance.EnqueueModifier(_instance.modifiers[m]);
+        else
+            throw new UnityException($"Trying to access non-materialized modifier {m}");
+    }
+
+    private void EnqueueModifier(AudioModifier m)
+    {
+        foreach (var adj in m.adjustments)
+        {
+            var name = adj.parameter;
+            var val = adj.value;
+
+            if (parameterResponsibilityQueue.ContainsKey(name))
+                parameterResponsibilityQueue[name].Add(adj);
+            else {
+                parameterResponsibilityQueue.Add(name, new List<AudioModifier.AudioModifierProperty> { adj });
+                if (RuntimeManager.StudioSystem.getParameterByName(name, out float prev) == FMOD.RESULT.OK)
+                    parameterDefaults.TryAdd(name, prev);
+                else
+                    throw new UnityException($"Parameter {prev} is modified but does not actually exist");
+            }
+
+            SetGlobalParameter(name, val);
+        }
+    }
+
+    public static void DequeueModifier(AudioModifier.ModifierType m)
+    {
+        if (_instance.modifiers.ContainsKey(m))
+            _instance.DequeueModifier(_instance.modifiers[m]);
+        else
+            throw new UnityException($"Trying to access non-materialized modifier {m}");
+    }
+
+    private void DequeueModifier(AudioModifier m)
+    {
+        foreach (var adj in m.adjustments)
+        {
+            var name = adj.parameter;
+            var val = adj.value;
+
+            if (parameterResponsibilityQueue.ContainsKey(name))
+            {
+                if (!parameterResponsibilityQueue[name].Remove(adj))
+                    throw new UnityException($"Modifier {m.name} is not actually in effect (parameter {name} has modifiers attached, but not {m.name})");
+                if (parameterResponsibilityQueue[name].Count == 0)
+                {
+                    // no modifiers left, restore parameter default
+                    SetGlobalParameter(name, parameterDefaults[name]);
+                } else
+                {
+                    // force evaluate the last effect in this queue
+                    SetGlobalParameter(name, parameterResponsibilityQueue[name][^1].value);
+                }
+            }
+            else
+                throw new UnityException($"Modifier {m.name} is not actually in effect (property {name} does not have any modifiers attached)");
+        }
+    }
+
+    private static void SetGlobalParameter(string name, float val)
+    {
+        if (RuntimeManager.StudioSystem.setParameterByName(name, val) == FMOD.RESULT.OK)
+        {
+            RuntimeManager.StudioSystem.getParameterByName(name, out float result);
+            Debug.Log($"Finished setting global parameter {name} = {val}");
+        }
+        else
+            throw new UnityException($"Failed to set global parameter {name} = {val}");
     }
 }
