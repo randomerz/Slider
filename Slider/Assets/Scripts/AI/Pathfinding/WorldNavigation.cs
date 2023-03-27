@@ -171,7 +171,7 @@ public class WorldNavigation : MonoBehaviour
                 Vector2Int posRel = new Vector2Int(x, y);
                 Vector2 posAbs = RelToAbsPos(posRel, stile);
 
-                int hit = Physics2D.CircleCast(posAbs, 0.5f, Vector2.up, filter, hits, 0f);
+                int hit = Physics2D.CircleCast(posAbs, 0.25f, Vector2.up, filter, hits, 0f);
                 if (hit == 0)
                 {
                     if (moss == null || moss.mossCollidersMap.GetColliderType((Vector3Int) TileUtil.WorldToTileCoords(posAbs)) == Tile.ColliderType.None)
@@ -194,18 +194,10 @@ public class WorldNavigation : MonoBehaviour
         return pos + new Vector2(stile.transform.position.x, stile.transform.position.y);
     }
 
-    private Vector2Int AbsToRelPos(Vector2 pos, STile stile)
-    {
-        Vector2 relPos = pos - new Vector2(stile.transform.position.x, stile.transform.position.y);
-        return TileUtil.WorldToTileCoords(relPos);
-    }
-
     private Vector2Int AbsToRelPos(Vector2Int pos, STile stile)
     {
         return pos - TileUtil.WorldToTileCoords(stile.transform.position);
     }
-
-
 
     //Check if a point is in.
     public bool IsValidPt(Vector2Int pos)
@@ -457,6 +449,11 @@ public class WorldNavigation : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        if (stiles == null)
+        {
+            stiles = GetComponentsInChildren<STile>();
+        }
+
         if (validPtsWorld != null && stiles.Length > 0)
         {
             ForEachValidPtOutsideStile ((pos) => {

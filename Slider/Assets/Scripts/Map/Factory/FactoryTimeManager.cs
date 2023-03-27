@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-
+using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
@@ -10,14 +10,23 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
     [SerializeField] private PlayerPositionChanger presentPPChanger;
     //[SerializeField] private GameObject[] pastTileMaps;
 
+    public List<GameObject> presentBobs;
+    public List<GameObject> pastBobs;
+
     private void Awake()
     {
         InitializeSingleton();
     }
 
+    private void Start() 
+    {
+        SetBobTrackers(FactoryGrid.PlayerInPast);
+    }
+
     public static void SpawnPlayerInPast()
     {
         EnableAnchorsInPast();
+        _instance.SetBobTrackers(true);
 
         //foreach (GameObject go in _instance.pastTileMaps)
         //{
@@ -34,6 +43,7 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
     public static void SpawnPlayerInPresent()
     {
         EnableAnchorsInPresent();
+        _instance.SetBobTrackers(false);
         _instance.presentPPChanger.UPPTransform();
         UIEffects.FadeFromWhite();
     }
@@ -46,6 +56,21 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
     public static void EnableAnchorsInPresent()
     {
         EnableAnchorsInTime(false);
+    }
+    
+    public void SetBobTrackers(bool inPast)
+    {
+        // Add trackers
+        foreach (GameObject go in inPast ? pastBobs : presentBobs)
+        {
+            UITrackerManager.AddNewTracker(go);
+        }
+
+        // Remove trackers
+        foreach (GameObject go in inPast ? presentBobs : pastBobs)
+        {
+            UITrackerManager.RemoveTracker(go);
+        }
     }
 
     public void StartSendToPastEvent()

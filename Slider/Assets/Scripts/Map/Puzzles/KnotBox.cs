@@ -138,7 +138,6 @@ public class KnotBox : MonoBehaviour
 
     public void CheckParticles()
     {
-        // Debug.Log("Checking particles");
         if (CheckLines() == 0 && particles != null)
         {
             foreach (ParticleSystem ps in particles)

@@ -5,8 +5,6 @@ using UnityEngine.Events;
 
 public class ExplodingBarrel : MonoBehaviour
 {
-    private readonly string explosionResName = "SmokePoof Variant";
-
     [SerializeField] private Transform[] explosionLocations;
     [SerializeField] private ParticleSystem[] fuseParticles;
     [SerializeField] private ExplodableRock explodableRock;

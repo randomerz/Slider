@@ -8,6 +8,7 @@ public class FactoryButton : ElectricalNode
 
     private Animator _animator;
     private Collider2D _buttonCollider;
+    private bool _buttonPressedLastFrame;
 
     private new void Awake()
     {
@@ -44,6 +45,20 @@ public class FactoryButton : ElectricalNode
         {
             SetState(buttonPressed);
         }
+
+        if (buttonPressed != _buttonPressedLastFrame)
+        {
+            if (buttonPressed)
+            {
+                AudioManager.Play("UI Click");
+            }
+            else
+            {
+                AudioManager.PlayWithPitch("UI Click", 0.75f);
+            }
+        }
+
+        _buttonPressedLastFrame = buttonPressed;
     }
 
     public void SetState(bool powered)

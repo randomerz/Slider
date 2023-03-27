@@ -15,7 +15,7 @@ public class SetDestToNearestValidPtNode : BehaviourTreeNode
     public override NodeState Evaluate()
     {
         Vector2Int posAsInt = TileUtil.WorldToTileCoords(ai.transform.position);
-        if (ai.nav.IsValidPt(posAsInt) && (!ai.avoidsDark || LightManager.instance.GetLightMaskAt(posAsInt.x, posAsInt.y)))   //Rat is already standing in light
+        if (ai.nav.IsValidPt(posAsInt) && (!ai.avoidsDark || LightManager.instance.GetLightMaskAt(posAsInt.x, posAsInt.y)))
         {
             return NodeState.FAILURE;
         }

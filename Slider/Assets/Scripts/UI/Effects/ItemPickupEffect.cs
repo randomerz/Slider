@@ -6,6 +6,8 @@ using TMPro;
 
 public class ItemPickupEffect : MonoBehaviour
 {
+    public static System.EventHandler<System.EventArgs> OnCutsceneStart;
+
     public AnimationCurve soundDampenCurve;
     public float soundDampenLength = 2;
 
@@ -33,6 +35,8 @@ public class ItemPickupEffect : MonoBehaviour
         _instance.itemImage.sprite = itemSprite;
         _instance.StartCoroutine(_instance.Cutscene(onTextVisibleCallback));
         AudioManager.DampenMusic(0.2f, _instance.soundDampenLength);
+
+        OnCutsceneStart?.Invoke(_instance, null);
     }
 
     private IEnumerator Cutscene(System.Action onTextVisibleCallback=null)

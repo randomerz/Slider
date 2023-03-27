@@ -18,6 +18,7 @@ public class UITrackerManager : MonoBehaviour
     public UIArtifactMenus uiArtifactMenus;
     public GameObject artifactPanel;
     public GameObject uiTrackerPrefab;
+    public GameObject uiTrackerSinkingBottlePrefab;
     public List<UITracker> targets = new List<UITracker>();
     
     // Buffers for when called before initialization
@@ -274,6 +275,16 @@ public class UITrackerManager : MonoBehaviour
         }
 
         _instance.targets.Add(uiTracker);
+    }
+    public static UITracker AddNewAnimatedTracker(GameObject target)
+    {
+        GameObject tracker = GameObject.Instantiate(_instance.uiTrackerSinkingBottlePrefab, _instance.transform);
+        UITracker uiTracker = tracker.GetComponent<UITracker>();
+        uiTracker.target = target;
+        
+        _instance.targets.Add(uiTracker);
+
+        return uiTracker;
     }
 
     private static Sprite EnumToSprite(DefaultSprites enumValue)

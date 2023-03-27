@@ -6,6 +6,7 @@ public class SaveProfile
 {
     // profile-specific metadata
     private string profileName;
+    private string gameVersion;
     private bool completionStatus;
     private float playTimeInSeconds;
     private System.DateTime lastSaved;
@@ -27,6 +28,7 @@ public class SaveProfile
     {
         this.profileName = profileName;
         strings["Cat"] = profileName;
+        this.gameVersion = Application.version;
         lastArea = Area.Village;
 
         foreach (Area area in Area.GetValues(typeof(Area)))
@@ -41,6 +43,16 @@ public class SaveProfile
     public string GetProfileName()
     {
         return profileName;
+    }
+
+    public string GetGameVersion()
+    {
+        return gameVersion;
+    }
+
+    public void SetGameVersion(string value)
+    {
+        gameVersion = value;
     }
 
     public bool GetCompletionStatus()
@@ -144,13 +156,13 @@ public class SaveProfile
         lastSaved = System.DateTime.Now;
         SetBool("isDemoBuild", true);
         SaveSavablesData();
+        this.gameVersion = Application.version;
         AchievementData = AchievementManager.GetAchievementData();
     }
 
     public void Load()
     {
         // Tells everyone to load from this profile's data
-
         LoadSavablesData();
 
         AchievementManager.OverwriteAchievementData(AchievementData);

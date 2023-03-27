@@ -6,6 +6,8 @@ using UnityEngine;
 // ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class UIArtifactMenus : Singleton<UIArtifactMenus>
 {
+    public static System.EventHandler<System.EventArgs> OnArtifactOpened;
+
     public GameObject artifactPanel;
     public UIArtifact uiArtifact;
     public ArtifactScreenAnimator screenAnimator;
@@ -40,12 +42,14 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     private void OnEnable() 
     {
         PlayerInventory.OnPlayerGetCollectible += CloseArtifactListener;
+        ItemPickupEffect.OnCutsceneStart += CloseArtifactListener;
         UIManager.OnCloseAllMenus += CloseArtifactListenerNoOpen;
     }
 
     private void OnDisable() 
     {
         PlayerInventory.OnPlayerGetCollectible -= CloseArtifactListener;
+        ItemPickupEffect.OnCutsceneStart -= CloseArtifactListener;
         UIManager.OnCloseAllMenus -= CloseArtifactListenerNoOpen;
     }
 
@@ -70,9 +74,9 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     {
         if (!UIManager.canOpenMenus || isClosing || !hasArtifact)
         {
-            Debug.LogWarning("UIManager: " + UIManager.canOpenMenus);
-            Debug.LogWarning("isClosing: " + isClosing);
-            Debug.LogWarning("hasArtifact: " + hasArtifact);
+            // Debug.LogWarning("UIManager: " + UIManager.canOpenMenus);
+            // Debug.LogWarning("isClosing: " + isClosing);
+            // Debug.LogWarning("hasArtifact: " + hasArtifact);
             return;
         }
 
@@ -88,6 +92,8 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
         artifactAnimator.SetBool("isVisible", true);
         uiArtifact.FlickerNewTiles();
+
+        OnArtifactOpened?.Invoke(this, null);
     }
 
     public void CloseArtifact(bool canOpen = true)

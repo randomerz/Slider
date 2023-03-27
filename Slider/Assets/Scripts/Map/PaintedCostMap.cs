@@ -5,6 +5,7 @@ public class PaintedCostMap : MonoBehaviour
 {
     [SerializeField] private PaintedSTileCostMap[] stileCostMaps;
     [SerializeField] private TileBase[] weightTiles;
+    [SerializeField] private STile[] stiles;
 
     private int stileWidth;
 
@@ -17,11 +18,13 @@ public class PaintedCostMap : MonoBehaviour
     {
         STile stile = GetStileAt(worldCoords);
         if (stile == null)
-            return 1;
+        {
+            return 2;   //Tile untraversable.
+        }
         
         PaintedSTileCostMap stileCostMap = stileCostMaps[stile.islandId - 1];
-        int stilePositionX = (int)(worldCoords.x - stile.transform.position.x - 0.5f);
-        int stilePositionY = (int)(worldCoords.y - stile.transform.position.y + 0.5f);
+        int stilePositionX = (int)(worldCoords.x - stile.transform.position.x);
+        int stilePositionY = (int)(worldCoords.y - stile.transform.position.y);
         TileBase tileBase = stileCostMap.GetTileAt(stilePositionX, stilePositionY);
 
         int tileIndex = -1;
@@ -35,26 +38,40 @@ public class PaintedCostMap : MonoBehaviour
         }
 
         if (tileIndex == -1)
-            return 1;
+        {
+            //Tile is untraversable.
+            return 2;
+        }
 
         return tileIndex / (weightTiles.Length - 1.0f);
     }
 
-    // Returns island id
     private STile GetStileAt(Vector2 worldCoords)
     {
-        int stileX = (int)((worldCoords.x + (stileWidth / 2) + 0.5f) / stileWidth);
-        int stileY = (int)((worldCoords.y + (stileWidth / 2) + 0.5f) / stileWidth);
-
-        STile stile = SGrid.Current.GetStileAt(stileX, stileY);
-
-        if (stile.isTileActive && !stile.IsMoving())
+        float halfWidth = (float) stileWidth / 2;
+        foreach (STile st in stiles)
         {
-            return stile;
+            float dx = worldCoords.x - st.transform.position.x;
+            float dy = worldCoords.y - st.transform.position.y;
+            if (dx >= -halfWidth && dx <= halfWidth && dy >= -halfWidth && dy <= halfWidth) {
+                return st;
+            }
         }
 
-        // else look for the moving stile
-
+        //Debug.LogError("Couldn't Find Stile for Painted Cost Map (this shouldn't happen?)");
         return null;
+
+        //int stileX = (int)((worldCoords.x + halfWidth + 0.5f) / stileWidth);
+        //int stileY = (int)((worldCoords.y + halfWidth + 0.5f) / stileWidth);
+
+        //STile stile = SGrid.Current.GetStileAt(stileX, stileY);
+
+        //if (stile.isTileActive && !stile.IsMoving())
+        //{
+        //    return stile;
+        //}
+
+        //// else look for the moving stile
+        //return null;
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 public class SerializableSaveProfile
 {
     public string profileName;
+    public string gameVersion;
     public bool completionStatus;
     public float playTimeInSeconds;
     public System.DateTime lastSaved;
@@ -33,6 +34,7 @@ public class SerializableSaveProfile
         SerializableSaveProfile ssp = new SerializableSaveProfile();
 
         ssp.profileName = saveProfile.GetProfileName();
+        ssp.gameVersion = saveProfile.GetGameVersion();
         ssp.completionStatus = saveProfile.GetCompletionStatus();
         ssp.playTimeInSeconds = saveProfile.GetPlayTimeInSeconds();
         ssp.lastSaved = saveProfile.GetLastSaved();
@@ -59,6 +61,7 @@ public class SerializableSaveProfile
     {
         SaveProfile sp = new SaveProfile(profileName);
         
+        sp.SetGameVersion(gameVersion);
         sp.SetCompletionStatus(completionStatus);
         sp.SetPlayTimeInSeconds(playTimeInSeconds);
         sp.SetLastSaved(lastSaved);

@@ -72,29 +72,39 @@ public class OceanGrid : SGrid
 
     private void OnEnable()
     {
-        if (checkCompletion)
+        if (checkCompletion && !isCompleted)
         {
             UpdateButtonCompletions(this, null);
             OnGridMove += UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+            UIArtifactMenus.OnArtifactOpened += CheckFinalPlacementsOnMove;
         }
 
         SGridAnimator.OnSTileMoveEnd += CheckShipwreck;
+        UIArtifactMenus.OnArtifactOpened += CheckShipwreck;
         SGridAnimator.OnSTileMoveEnd += CheckVolcano;
+        UIArtifactMenus.OnArtifactOpened += CheckVolcano;
+
+        SGridAnimator.OnSTileMoveEnd += BuoySuccessEffectsCheck;
     }
 
     private void OnDisable()
     {
-        if (checkCompletion)
+        if (checkCompletion && !isCompleted)
         {
             OnGridMove -= UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+            UIArtifactMenus.OnArtifactOpened -= CheckFinalPlacementsOnMove;
         }
 
         SGridAnimator.OnSTileMoveEnd -= CheckShipwreck;
+        UIArtifactMenus.OnArtifactOpened -= CheckShipwreck;
         SGridAnimator.OnSTileMoveEnd -= CheckVolcano;
+        UIArtifactMenus.OnArtifactOpened -= CheckVolcano;
+        
+        SGridAnimator.OnSTileMoveEnd -= BuoySuccessEffectsCheck;
     }
 
     private void Update()
@@ -154,18 +164,20 @@ public class OceanGrid : SGrid
             CheckVolcano(this, null);
         }
     }
+
     private void CheckTile2Placement(STile stile)
     {
-        
-        STile other = GetStileAt(1,0);
-        if(other.islandId != 1)
+        STile other = GetStileAt(1, 0);
+        if (other.islandId != 1)
             SwapTiles(stile, other);
     }
+
     private void CheckTile3Placement(STile stile)
     {
         //try to spawn on middle right
         STile other = GetStileAt(2, 1);
-        if (other.islandId != 1 && other.islandId != 2){
+        if (other.islandId != 1 && other.islandId != 2)
+        {
             SwapTiles(stile, other);
             return;
         }
@@ -195,7 +207,7 @@ public class OceanGrid : SGrid
 
     // === Ocean puzzle specific ===
 
-    public void CheckShipwreck(object sender, SGridAnimator.OnTileMoveArgs e)
+    public void CheckShipwreck(object sender, System.EventArgs e)
     {
         if (IsShipwreckAdjacent())
         {
@@ -216,7 +228,7 @@ public class OceanGrid : SGrid
         return CheckGrid.contains(GetGridString(), "41");
     }
 
-    public void CheckVolcano(object sender, SGridAnimator.OnTileMoveArgs e)
+    public void CheckVolcano(object sender, System.EventArgs e)
     {
         if (IsVolcanoSet())
         {
@@ -237,6 +249,7 @@ public class OceanGrid : SGrid
     public void ActivateBurriedNPC()
     {
         burriedGuyNPC.SetActive(true);
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, burriedGuyNPC.transform.position, burriedGuyNPC.transform);
     }
 
     public void SpawnFezziwigReward() {
@@ -255,6 +268,18 @@ public class OceanGrid : SGrid
             knotBoxEnabledLastFrame &&
             knotBox.CheckLines() == 0
         );
+    }
+
+    private void BuoySuccessEffectsCheck(object sender, System.EventArgs e)
+    {
+        if (PlayerInventory.Contains("Golden Fish"))
+            return;
+
+        if (BuoyConditions())
+        {
+            knotBox.CheckParticles();
+            AudioManager.Play("Puzzle Complete");
+        }
     }
 
     public void BuoyAllFound(Condition c)
@@ -499,12 +524,13 @@ public class OceanGrid : SGrid
             OnGridMove += UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+            UIArtifactMenus.OnArtifactOpened += CheckFinalPlacementsOnMove;
 
             SGrid.UpdateButtonCompletions(this, null);
         }
     }
 
-    private void CheckFinalPlacementsOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    private void CheckFinalPlacementsOnMove(object sender, System.EventArgs e)
     {
         if (!isCompleted && IsFinalPuzzleMatching())
         {
@@ -569,6 +595,11 @@ public class OceanGrid : SGrid
         {
             SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
             introCameraDolly.StartTrack();
+        }
+        else
+        {
+            introCameraDolly.intern1.gameObject.SetActive(false);
+            introCameraDolly.intern2.gameObject.SetActive(false);
         }
     }
 }

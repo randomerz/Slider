@@ -24,12 +24,13 @@ public class ArtifactTabManager : MonoBehaviour
 
     private int[,] originalGrid;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         realignTab = tabs[0];
         saveTab = tabs[1];
         loadTab = tabs[2];
     }
+
     public virtual void SetCurrentScreen(int screenIndex)
     {
         #region SaveLoadRealign Cases
@@ -157,7 +158,7 @@ public class ArtifactTabManager : MonoBehaviour
         //get the realignGrid, put the button stuff in the order based on that, then call bggrid set
         if(SGrid.Current.realigningGrid != null)
         {
-            Debug.Log("Previewed!");
+            // Debug.Log("Previewed!");
             uiArtifactMenus.uiArtifact.DeselectSelectedButton();
             originalGrid = new int[SGrid.Current.Width, SGrid.Current.Height];
             for (int x = 0; x < SGrid.Current.Width; x++)

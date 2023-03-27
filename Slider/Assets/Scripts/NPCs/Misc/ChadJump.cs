@@ -74,6 +74,7 @@ public class ChadJump : MonoBehaviour
         jumpState = JumpState.JUMPING;
         npcAnimator.SetBool("isJumping", true);
         npcCollider.enabled = false;
+        npcRenderer.sortingOrder = 1;
 
         Vector3 start = startTransform.localPosition;
         Vector3 target = jumpTransform.localPosition;
@@ -134,6 +135,7 @@ public class ChadJump : MonoBehaviour
         jumpState = JumpState.FELL;
         npcAnimator.SetBool("isTipping", false);
         AudioManager.Play("Hurt");
+        npcRenderer.sortingOrder = 0;
 
         if (flashlightItem != null)
         {
