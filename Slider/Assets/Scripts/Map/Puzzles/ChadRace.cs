@@ -188,19 +188,17 @@ public class ChadRace : MonoBehaviour
 
     private IEnumerator SetParameterTemporary(string parameterName, float value1, float value2)
     {
-        Debug.Log("Param update to " + value1);
         AudioManager.SetMusicParameter("Jungle", parameterName, value1);
 
         yield return new WaitForSeconds(1);
         
-        Debug.Log("Param update to " + value2);
         AudioManager.SetMusicParameter("Jungle", parameterName, value2);
     }
 
     private DialogueData ConstructChadDialogueStart()
     {
         var dialogue = new DialogueData();
-        dialogue.dialogue = "Bet I could beat you to the bell (e to start)";
+        dialogue.dialogue = "Bet I could beat you to the bell.";
         return dialogue;
     }
 
@@ -208,7 +206,6 @@ public class ChadRace : MonoBehaviour
     {
         if (jungleChadEnd == 1)
         {
-            Debug.Log("peep ee poo poo");
             StartCoroutine(SetParameterTemporary("JungleChadEnd", 1, 0));
             jungleChadEnd = 0;
         }
