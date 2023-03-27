@@ -70,16 +70,13 @@ public class AudioManager : Singleton<AudioManager>
             {
                 // successfully added
             } else
-            {
-
-                Logger.LogBlockingError($"Duplicate modifier when trying to add { audioModifier.name }");
-            }
+                Debug.LogError($"Duplicate modifier when trying to add { audioModifier.name }");
         }
         parameterDefaults = new Dictionary<string, float>();
         parameterResponsibilityQueue = new Dictionary<string, List<AudioModifier.AudioModifierProperty>>();
 
-        sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/SFX");
-        musicBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/Music");
+        sfxBus = RuntimeManager.GetBus("bus:/Master/SFX");
+        musicBus = RuntimeManager.GetBus("bus:/Master/Music");
         SetSFXVolume(sfxVolume);
         SetMusicVolume(musicVolume);
     }
@@ -329,7 +326,7 @@ public class AudioManager : Singleton<AudioManager>
         if (_instance.modifiers.ContainsKey(m))
             _instance.EnqueueModifier(_instance.modifiers[m]);
         else
-            Logger.LogBlockingError($"Trying to access non-materialized modifier {m}");
+            Debug.LogError($"Trying to access non-materialized modifier {m}");
     }
 
     private void EnqueueModifier(AudioModifier m)
@@ -346,7 +343,7 @@ public class AudioManager : Singleton<AudioManager>
                 if (RuntimeManager.StudioSystem.getParameterByName(name, out float prev) == FMOD.RESULT.OK)
                     parameterDefaults.TryAdd(name, prev);
                 else
-                    Logger.LogBlockingError($"Parameter {prev} is modified but does not actually exist");
+                    Debug.LogError($"Parameter {prev} is modified but does not actually exist");
             }
 
             SetGlobalParameter(name, val);
@@ -358,7 +355,7 @@ public class AudioManager : Singleton<AudioManager>
         if (_instance.modifiers.ContainsKey(m))
             _instance.DequeueModifier(_instance.modifiers[m]);
         else
-            Logger.LogBlockingError($"Trying to access non-materialized modifier {m}");
+            Debug.LogError($"Trying to access non-materialized modifier {m}");
     }
 
     private void DequeueModifier(AudioModifier m)
@@ -366,12 +363,14 @@ public class AudioManager : Singleton<AudioManager>
         foreach (var adj in m.adjustments)
         {
             var name = adj.parameter;
-            var val = adj.value;
 
             if (parameterResponsibilityQueue.ContainsKey(name))
             {
                 if (!parameterResponsibilityQueue[name].Remove(adj))
-                    Logger.LogBlockingError($"Modifier {m.name} is not actually in effect (parameter {name} has modifiers attached, but not {m.name})");
+                {
+                    Debug.LogError($"Modifier {m.name} is not actually in effect (parameter {name} has modifiers attached, but not {m.name})");
+                    continue;
+                }
                 if (parameterResponsibilityQueue[name].Count == 0)
                     // no modifiers left, restore parameter default
                     SetGlobalParameter(name, parameterDefaults[name]);
@@ -380,7 +379,7 @@ public class AudioManager : Singleton<AudioManager>
                     SetGlobalParameter(name, parameterResponsibilityQueue[name][^1].value);
             }
             else
-                Logger.LogBlockingError($"Modifier {m.name} is not actually in effect (property {name} does not have any modifiers attached)");
+                Debug.LogError($"Modifier {m.name} is not actually in effect (property {name} does not have any modifiers attached)");
         }
     }
 
@@ -391,6 +390,6 @@ public class AudioManager : Singleton<AudioManager>
             // successfully set parameter
         }
         else
-            Logger.LogBlockingError($"Failed to set global parameter {name} = {val}");
+            Debug.LogError($"Failed to set global parameter {name} = {val}");
     }
 }

@@ -71,8 +71,6 @@ public class Player : Singleton<Player>, ISavable
             UITrackerManager.DefaultSprites.playerWhiteCircleEmpty, 
             3f
         );
-
-        SetIsInHouse(isInHouse);
     }
     
     void Update()
