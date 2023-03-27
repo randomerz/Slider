@@ -40,6 +40,8 @@ public class Player : Singleton<Player>, ISavable
 
     private bool didInit;
 
+    private static float houseYThreshold = -75; // below this y value the player must be in a house
+
     protected void Awake()
     {
         if (!didInit)
@@ -246,6 +248,7 @@ public class Player : Singleton<Player>, ISavable
         if (profile == null || profile.GetSerializablePlayer() == null)
         {
             playerInventory.Reset();
+            SetIsInHouse(transform.position.y <= houseYThreshold);
             return;
         }
 
@@ -384,6 +387,10 @@ public class Player : Singleton<Player>, ISavable
 
     public static void SetIsInHouse(bool isInHouse)
     {
+        if (isInHouse)
+            AudioManager.EnqueueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
+        else
+            AudioManager.DequeueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
         _instance.isInHouse = isInHouse;
     }
 
