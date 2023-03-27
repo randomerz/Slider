@@ -71,7 +71,8 @@ public class AudioManager : Singleton<AudioManager>
                 // successfully added
             } else
             {
-                throw new UnityException($"Duplicate modifier when trying to add { audioModifier.name }");
+
+                Logger.LogBlockingError($"Duplicate modifier when trying to add { audioModifier.name }");
             }
         }
         parameterDefaults = new Dictionary<string, float>();
@@ -328,7 +329,7 @@ public class AudioManager : Singleton<AudioManager>
         if (_instance.modifiers.ContainsKey(m))
             _instance.EnqueueModifier(_instance.modifiers[m]);
         else
-            throw new UnityException($"Trying to access non-materialized modifier {m}");
+            Logger.LogBlockingError($"Trying to access non-materialized modifier {m}");
     }
 
     private void EnqueueModifier(AudioModifier m)
@@ -345,7 +346,7 @@ public class AudioManager : Singleton<AudioManager>
                 if (RuntimeManager.StudioSystem.getParameterByName(name, out float prev) == FMOD.RESULT.OK)
                     parameterDefaults.TryAdd(name, prev);
                 else
-                    throw new UnityException($"Parameter {prev} is modified but does not actually exist");
+                    Logger.LogBlockingError($"Parameter {prev} is modified but does not actually exist");
             }
 
             SetGlobalParameter(name, val);
@@ -357,7 +358,7 @@ public class AudioManager : Singleton<AudioManager>
         if (_instance.modifiers.ContainsKey(m))
             _instance.DequeueModifier(_instance.modifiers[m]);
         else
-            throw new UnityException($"Trying to access non-materialized modifier {m}");
+            Logger.LogBlockingError($"Trying to access non-materialized modifier {m}");
     }
 
     private void DequeueModifier(AudioModifier m)
@@ -370,7 +371,7 @@ public class AudioManager : Singleton<AudioManager>
             if (parameterResponsibilityQueue.ContainsKey(name))
             {
                 if (!parameterResponsibilityQueue[name].Remove(adj))
-                    throw new UnityException($"Modifier {m.name} is not actually in effect (parameter {name} has modifiers attached, but not {m.name})");
+                    Logger.LogBlockingError($"Modifier {m.name} is not actually in effect (parameter {name} has modifiers attached, but not {m.name})");
                 if (parameterResponsibilityQueue[name].Count == 0)
                     // no modifiers left, restore parameter default
                     SetGlobalParameter(name, parameterDefaults[name]);
@@ -379,7 +380,7 @@ public class AudioManager : Singleton<AudioManager>
                     SetGlobalParameter(name, parameterResponsibilityQueue[name][^1].value);
             }
             else
-                throw new UnityException($"Modifier {m.name} is not actually in effect (property {name} does not have any modifiers attached)");
+                Logger.LogBlockingError($"Modifier {m.name} is not actually in effect (property {name} does not have any modifiers attached)");
         }
     }
 
@@ -390,6 +391,6 @@ public class AudioManager : Singleton<AudioManager>
             // successfully set parameter
         }
         else
-            throw new UnityException($"Failed to set global parameter {name} = {val}");
+            Logger.LogBlockingError($"Failed to set global parameter {name} = {val}");
     }
 }
