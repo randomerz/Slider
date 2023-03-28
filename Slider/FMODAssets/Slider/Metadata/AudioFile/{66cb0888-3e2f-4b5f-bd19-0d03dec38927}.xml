@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{66cb0888-3e2f-4b5f-bd19-0d03dec38927}">
+		<property name="assetPath">
+			<value>SFX/desert/croco_grab_sequence.mp3</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>10.800000000000001</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d8f08288-15bb-4f0d-b3d6-616c13ec65d6}</destination>
+		</relationship>
+	</object>
+</objects>

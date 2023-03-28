@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{bc06983d-495d-4dc6-b6f8-3a5ed4803b22}">
+		<property name="assetPath">
+			<value>SFX/ocean/bottle_sink_sound.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>1.3919999999999999</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d8f08288-15bb-4f0d-b3d6-616c13ec65d6}</destination>
+		</relationship>
+	</object>
+</objects>
