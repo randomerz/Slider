@@ -61,8 +61,7 @@ public class Box : MonoBehaviour
         {
             paths[Direction.LEFT] = left;
         }
-        if (top != null)
-        {
+        if (top != null) { 
             paths[Direction.UP] = top;
         }
         if (right != null)
