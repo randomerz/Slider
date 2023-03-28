@@ -6443,10 +6443,6 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[119].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
-    - target: {fileID: 691562915569134203, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 810027484970413840, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
       propertyPath: m_Points.Array.data[0].x
       value: -6.5
@@ -27285,7 +27281,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7649429769792356515, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
       propertyPath: m_Name
-      value: Military STile
+      value: Military STile Variant
       objectReference: {fileID: 0}
     - target: {fileID: 7649429769792356524, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
       propertyPath: m_RootOrder
@@ -28627,7 +28623,8 @@ MonoBehaviour:
   allTileMaps: {fileID: 2051956613419847984}
   sliderCollider: {fileID: 529306391365834684}
   houseSliderCollider: {fileID: 4237097391070464119}
-  tileMapCollider: {fileID: 8789040070783053666}
+  stileTilemaps: {fileID: 3724858020949799789}
+  houseTilemaps: {fileID: 5574874209605614323}
   borderColliders:
   - {fileID: 3902247174560862239}
   - {fileID: 7878536271550697227}
@@ -28648,6 +28645,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5001208594554478671, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
   m_PrefabInstance: {fileID: 7885876078612436754}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3724858020949799789 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6827765042785281151, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+  m_PrefabInstance: {fileID: 7885876078612436754}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5f5db06263bdf94bbfa8dad19c4e1e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3902247174560862239 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6581962075059848973, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
@@ -28668,6 +28676,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2634759908878225836, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
   m_PrefabInstance: {fileID: 7885876078612436754}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5574874209605614323 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2318698557876907489, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
+  m_PrefabInstance: {fileID: 7885876078612436754}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5f5db06263bdf94bbfa8dad19c4e1e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!19719996 &6554127352549830025 stripped
 TilemapCollider2D:
   m_CorrespondingSourceObject: {fileID: 4000518740236483227, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
@@ -28676,10 +28695,5 @@ TilemapCollider2D:
 --- !u!1 &7878536271550697227 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 10815329210898457, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
-  m_PrefabInstance: {fileID: 7885876078612436754}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8789040070783053666 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1479630269152721008, guid: e69c5db4b2240424db645091cc39dc4d, type: 3}
   m_PrefabInstance: {fileID: 7885876078612436754}
   m_PrefabAsset: {fileID: 0}

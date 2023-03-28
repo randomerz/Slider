@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class Sign : Box
 {
     public RecipeList recipes;
-    public Dictionary<Path, Shape> recievedShapes = new Dictionary<Path, Shape>(); 
+    public Dictionary<Path, Shape> recievedShapes = new Dictionary<Path, Shape>();
     
     // Start is called before the first frame update
     void Awake()
@@ -16,12 +17,10 @@ public class Sign : Box
             paths[d].ChangePair();
         }
 
-        if (recievedShapes.Count == 0)
+        recievedShapes = new Dictionary<Path, Shape>();
+        foreach (Direction d in paths.Keys)
         {
-            foreach (Direction d in paths.Keys)
-            {
-                recievedShapes.Add(paths[d], null);
-            }
+            recievedShapes.Add(paths[d], null);
         }
     }
     private void OnEnable()
@@ -42,7 +41,7 @@ public class Sign : Box
         {
             paths[d].ChangePair();
         }
-        //remove all shapes (happens after the bin pushes the triangle is there a way to time this
+
         recievedShapes = new Dictionary<Path, Shape>();
         foreach (Direction d in paths.Keys)
         {
@@ -76,7 +75,8 @@ public class Sign : Box
     public void MergeShapes()
     {
         //print("merging");
-        List<Shape> shapesRecieved = new List<Shape>(); 
+        List<Shape> shapesRecieved = new List<Shape>();
+
         foreach (Direction d in paths.Keys)
         {
             if (recievedShapes[paths[d]] != null)
