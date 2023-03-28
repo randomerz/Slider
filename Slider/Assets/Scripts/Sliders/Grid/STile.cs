@@ -34,7 +34,8 @@ public class STile : MonoBehaviour
     public GameObject allTileMapsObj;
     public Collider2D sliderCollider;
     public Collider2D houseSliderCollider;
-    public GameObject tileMapCollider;
+    public STileTilemap stileTilemaps;
+    public STileTilemap houseTilemaps;
     private List<Collider2D> disabledColliders = new List<Collider2D>();
     private List<GameObject> disabledColliderTilemaps = new List<GameObject>();
     // these borders follow the tile and generally all activate/deactive together
@@ -104,7 +105,8 @@ public class STile : MonoBehaviour
 
         sliderCollider.enabled = sliderColliderDisableCount <= 0;
         houseSliderCollider.enabled = sliderColliderDisableCount <= 0;
-        tileMapCollider.SetActive(sliderColliderDisableCount <= 0);
+        stileTilemaps.colliders.gameObject.SetActive(sliderColliderDisableCount <= 0);
+        houseTilemaps.colliders.gameObject.SetActive(sliderColliderDisableCount <= 0);
         
         if (sliderColliderDisableCount > 0)
         {

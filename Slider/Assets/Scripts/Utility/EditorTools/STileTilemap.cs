@@ -9,6 +9,7 @@ public class STileTilemap : MonoBehaviour
     public Tilemap walls;
     public Tilemap decoration;
     public Tilemap colliders;
+    public Tilemap materials;
     public Tilemap minecartRails;
     public Tilemap materialMap;
 
