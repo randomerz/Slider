@@ -5,6 +5,7 @@ using UnityEngine;
 using FMODUnity;
 using Cinemachine;
 
+[RequireComponent(typeof(DelayedAudioQueue))]
 public class AudioManager : Singleton<AudioManager>
 {
     [SerializeField]
@@ -34,6 +35,8 @@ public class AudioManager : Singleton<AudioManager>
     // Last-in-first-evaluate queue for each global parameter
     static Dictionary<string, List<AudioModifier.AudioModifierProperty>> parameterResponsibilityQueue;
     static Dictionary<string, float> parameterDefaults;
+
+    private DelayedAudioQueue delayedAudioQueue;
 
     void Awake()
     {
@@ -81,6 +84,8 @@ public class AudioManager : Singleton<AudioManager>
         musicBus = RuntimeManager.GetBus("bus:/Master/Music");
         SetSFXVolume(sfxVolume);
         SetMusicVolume(musicVolume);
+
+        delayedAudioQueue = GetComponent<DelayedAudioQueue>();
     }
 
     private static Music GetMusic(string name)
@@ -117,9 +122,9 @@ public class AudioManager : Singleton<AudioManager>
         s.source.Play();
     }
 
-    public static void PlayFmodWithPosition(FMODUnity.EventReference name, Vector3 position)
+    public static void PlayFmodWithPosition(EventReference name, Vector3 position)
     {
-        RuntimeManager.PlayOneShot(name, position);
+        _instance.delayedAudioQueue.EnqueueOneshot(name, position, Camera.main.transform.position);
     }
 
     public static void PlayWithPitch(string name, float pitch) //Used In Ocean Scene

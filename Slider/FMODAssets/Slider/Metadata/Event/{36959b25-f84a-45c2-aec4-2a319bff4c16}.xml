@@ -5,7 +5,7 @@
 			<value>player_footstep_concrete</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{0f496406-3795-4f61-8878-d8a2a2dae68e}</destination>
@@ -90,7 +90,7 @@
 	<object class="MixerBusPanner" id="{109230ef-dfd6-4cd3-a561-0e09f6b904a2}" />
 	<object class="MultiSound" id="{627a69e4-e07f-4e69-bc34-6209ed6c63f3}">
 		<property name="length">
-			<value>2</value>
+			<value>0.14000000000000001</value>
 		</property>
 		<property name="name" />
 		<property name="playlistMode">
@@ -119,7 +119,7 @@
 	<object class="MixerBusEffectChain" id="{21fa470e-1062-4fc0-a45a-ba6233417035}">
 		<relationship name="effects">
 			<destination>{ae4ef8e2-7907-45ca-b02c-be2c37d612a4}</destination>
-			<destination>{ec7b9ac0-eac0-4dcd-9544-665e3c8123f1}</destination>
+			<destination>{165079e8-469b-4573-b882-1dc0685ba617}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{5346be3e-bcf0-4c5f-99a6-1404d4cee3d7}" />
@@ -146,6 +146,10 @@
 	</object>
 	<object class="MixerBusPanner" id="{467c9141-8f2e-404e-8d9a-9e530334086a}" />
 	<object class="MixerBusFader" id="{ae4ef8e2-7907-45ca-b02c-be2c37d612a4}" />
-	<object class="ObjectSpatialiserEffect" id="{ec7b9ac0-eac0-4dcd-9544-665e3c8123f1}" />
+	<object class="SpatialiserEffect" id="{165079e8-469b-4573-b882-1dc0685ba617}">
+		<property name="maximumDistance">
+			<value>80</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{935b5249-7c15-49ed-91b7-bad3019ccccf}" />
 </objects>

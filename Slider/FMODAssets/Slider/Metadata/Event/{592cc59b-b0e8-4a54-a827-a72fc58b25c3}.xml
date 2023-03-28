@@ -5,7 +5,7 @@
 			<value>player_footstep_puddle</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{0f496406-3795-4f61-8878-d8a2a2dae68e}</destination>
@@ -90,7 +90,7 @@
 	<object class="MixerBusPanner" id="{b94f1133-e6cb-4b04-8615-a2d3739e3f8e}" />
 	<object class="MultiSound" id="{85aff320-3344-4738-b68f-99e127e6af1b}">
 		<property name="length">
-			<value>2</value>
+			<value>0.20000000000000001</value>
 		</property>
 		<property name="name" />
 		<property name="playlistMode">
@@ -118,7 +118,7 @@
 	<object class="MixerBusEffectChain" id="{c96fb2a1-8e3a-4af3-ad8c-a26040686c1c}">
 		<relationship name="effects">
 			<destination>{91a765c6-e8b2-4e89-8930-f53c585405a0}</destination>
-			<destination>{777ce692-8d24-4775-be18-661fdf72aa3b}</destination>
+			<destination>{71932cde-f576-492b-8ed2-988bf1942d54}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{58718294-5559-4ee9-8805-4367d17162f0}" />
@@ -140,6 +140,6 @@
 	</object>
 	<object class="MixerBusPanner" id="{bb278193-07ae-424c-81b5-521cc892dfdb}" />
 	<object class="MixerBusFader" id="{91a765c6-e8b2-4e89-8930-f53c585405a0}" />
-	<object class="ObjectSpatialiserEffect" id="{777ce692-8d24-4775-be18-661fdf72aa3b}" />
+	<object class="SpatialiserEffect" id="{71932cde-f576-492b-8ed2-988bf1942d54}" />
 	<object class="MixerBusFader" id="{71cf4758-2fa2-43e7-b471-682f529b9206}" />
 </objects>
