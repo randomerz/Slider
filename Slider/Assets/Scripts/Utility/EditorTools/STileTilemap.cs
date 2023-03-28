@@ -10,6 +10,7 @@ public class STileTilemap : MonoBehaviour
     public Tilemap decoration;
     public Tilemap colliders;
     public Tilemap minecartRails;
+    public Tilemap materialMap;
 
     public Tile wallTile;
 
