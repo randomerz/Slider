@@ -5,7 +5,6 @@ using UnityEngine;
 using FMODUnity;
 using Cinemachine;
 
-[RequireComponent(typeof(DelayedAudioQueue))]
 public class AudioManager : Singleton<AudioManager>
 {
     [SerializeField]
@@ -36,7 +35,21 @@ public class AudioManager : Singleton<AudioManager>
     static Dictionary<string, List<AudioModifier.AudioModifierProperty>> parameterResponsibilityQueue;
     static Dictionary<string, float> parameterDefaults;
 
-    private DelayedAudioQueue delayedAudioQueue;
+    private GameObject cachedCMBrainKey;
+    private static CinemachineBrain currentCMBrain
+    {
+        get
+        {
+            if (Camera.main.gameObject != _instance.cachedCMBrainKey)
+            {
+                // cache invalid
+                _instance.cachedCMBrainKey = Camera.main.gameObject;
+                _instance.cachedCMBrain = Camera.main.gameObject.GetComponent<CinemachineBrain>();
+            }
+            return _instance.cachedCMBrain;
+        }
+    }
+    private CinemachineBrain cachedCMBrain;
 
     void Awake()
     {
@@ -84,8 +97,6 @@ public class AudioManager : Singleton<AudioManager>
         musicBus = RuntimeManager.GetBus("bus:/Master/Music");
         SetSFXVolume(sfxVolume);
         SetMusicVolume(musicVolume);
-
-        delayedAudioQueue = GetComponent<DelayedAudioQueue>();
     }
 
     private static Music GetMusic(string name)
@@ -122,9 +133,15 @@ public class AudioManager : Singleton<AudioManager>
         s.source.Play();
     }
 
-    public static void PlayFmodWithPosition(EventReference name, Vector3 position)
+    public static void PlayFmodWithWorldPosition(EventReference name, Vector3 position)
     {
-        _instance.delayedAudioQueue.EnqueueOneshot(name, position, Camera.main.transform.position);
+        // fmod listener always on main camera object so positions are always evaluated against main camera transform
+        // however, cinemachine keeps main camera position stable (by only updating at LateUpdate with +100 execution order)
+        // - script position may be different from actual position seen in inspector, if you think main camera "does" move
+        // this evaluates the main camera relative to the active vcam and adds the offset
+        var cmBrain = currentCMBrain;
+        var vCamToListener = cmBrain.transform.position - cmBrain.ActiveVirtualCamera.State.FinalPosition;
+        RuntimeManager.PlayOneShot(name, position + vCamToListener);
     }
 
     public static void PlayWithPitch(string name, float pitch) //Used In Ocean Scene
