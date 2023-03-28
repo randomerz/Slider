@@ -7,8 +7,20 @@ using UnityEngine;
 public class JungleShapeManager : MonoBehaviour, ISavable
 {
     //refactor later to just be a singleton
-    //public static JungleShapeManger instance { get; private set; }
+    public static JungleShapeManager instance { get; private set; }
     private string prefix = "jungleTurnedIn_";
+
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
 
     public bool TurnInShape(Shape wanted)
     {
