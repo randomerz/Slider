@@ -117,6 +117,11 @@ public class AudioManager : Singleton<AudioManager>
         s.source.Play();
     }
 
+    public static void PlayFmodWithPosition(FMODUnity.EventReference name, Vector3 position)
+    {
+        RuntimeManager.PlayOneShot(name, position);
+    }
+
     public static void PlayWithPitch(string name, float pitch) //Used In Ocean Scene
     {
         if (_sounds == null)

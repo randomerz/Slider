@@ -8,34 +8,44 @@ public class MaterialSoundMapping : ScriptableObject
 {
     [SerializeField]
     private MaterialSoundMappingEntry[] mappingList;
-    public Dictionary<Tile, FMODUnity.EventReference> Mapping
+    private Dictionary<Tile, FMODUnity.EventReference> _CachedMapping;
+
+    public FMODUnity.EventReference this[TileBase t]
     {
-        get
-        {
+        get {
             if (_CachedMapping == null)
             {
                 _CachedMapping = new Dictionary<Tile, FMODUnity.EventReference>();
                 foreach (var m in mappingList)
                 {
-                    if (Mapping.ContainsKey(m.materialTile))
+                    if (_CachedMapping.ContainsKey(m.materialTile))
                     {
                         Debug.LogWarning($"{m.materialTile.name} is duplicated in preset {name}");
                     }
                     else
                     {
-                        Mapping.Add(m.materialTile, m.eventRef);
+                        _CachedMapping.Add(m.materialTile, m.eventRef);
                     }
                 }
-            } 
-            return _CachedMapping;
+            }
+
+            if (t == null || t is not Tile)
+            {
+                Debug.LogWarning($"Not a proper tile: {t}");
+                return fallbackMapping;
+            } else if (!_CachedMapping.ContainsKey(t as Tile))
+            {
+                Debug.LogWarning($"Not in mapping: {t.name}");
+                return fallbackMapping;
+            } else
+            {
+                return _CachedMapping[t as Tile];
+            }
         }
     }
-    private Dictionary<Tile, FMODUnity.EventReference> _CachedMapping;
 
     [SerializeField]
     private FMODUnity.EventReference fallbackMapping;
-
-    public FMODUnity.EventReference fallback => fallbackMapping;
 
     [System.Serializable]
     public struct MaterialSoundMappingEntry

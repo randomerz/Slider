@@ -28,36 +28,12 @@ public class MaterialBasedEmitter : MonoBehaviour
     public void Step()
     {
         Tilemap map = locatable.currentMaterialTilemap;
-
-        if (!map)
-        {
-            Debug.LogWarning("No material tilemap found");
-            PlayStepType(mapping.fallback);
-            return;
-        }
-
-        Vector3Int p = map.WorldToCell(locatableRef.transform.position);
-
-        TileBase tile = map.GetTile(p);
-
-        if (!tile)
-        {
-            Debug.LogWarning($"No material tile corresponding to { p }");
-            PlayStepType(mapping.fallback);
-            return;
-        }
-
-        if (tile is Tile)
-        {
-            PlayStepType(mapping.Mapping[tile as Tile]);
-        } else
-        {
-            Debug.LogWarning($"Not a proper tile: {tile.name}");
-        }
+        TileBase tile = map == null ? null : map.GetTile(map.WorldToCell(locatableRef.transform.position));
+        PlayStepType(mapping[tile]);
     }
 
     private void PlayStepType(FMODUnity.EventReference e)
     {
-        FMODUnity.RuntimeManager.PlayOneShot(e, transform.position);
+        AudioManager.PlayFmodWithPosition(e, transform.position);
     }
 }
