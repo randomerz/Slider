@@ -35,7 +35,9 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     private bool isInHouse = false;
 
     private STile currentStileUnderneath;
-    public Tilemap currentMaterialTilemap => currentStileUnderneath.allTileMaps.materialMap;
+    public Tilemap currentMaterialTilemap => isInHouse ? 
+        currentStileUnderneath.houseTilemaps.materials : 
+        currentStileUnderneath.stileTilemaps.materials;
 
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
@@ -283,11 +285,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
         // Other init functions
         UpdatePlayerSpeed();
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Debug.Log(collision.gameObject.name);
     }
 
     private void UpdateMove(Vector2 moveDir) 

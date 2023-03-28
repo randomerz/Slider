@@ -30,8 +30,7 @@ public class STile : MonoBehaviour
     
     [Header("References")]
     public GameObject objects;
-    public STileTilemap allTileMaps;
-    public GameObject allTileMapsObj;
+    public GameObject allTileMaps;
     public Collider2D sliderCollider;
     public Collider2D houseSliderCollider;
     public STileTilemap stileTilemaps;
@@ -89,7 +88,7 @@ public class STile : MonoBehaviour
         this.isTileActive = isTileActive;
 
         objects.SetActive(isTileActive);
-        allTileMapsObj.SetActive(isTileActive);
+        allTileMaps.SetActive(isTileActive);
 
         sliderCollider.isTrigger = isTileActive;
         houseSliderCollider.isTrigger = isTileActive;
@@ -111,7 +110,7 @@ public class STile : MonoBehaviour
         if (sliderColliderDisableCount > 0)
         {
             // disable internal colliders (decorations, npcs, etc.)
-            foreach (Collider2D c in allTileMapsObj.GetComponentsInChildren<Collider2D>())
+            foreach (Collider2D c in allTileMaps.GetComponentsInChildren<Collider2D>())
             {
                 if (c.isActiveAndEnabled)
                 {
@@ -242,7 +241,7 @@ public class STile : MonoBehaviour
     {
         pos = pos + new Vector3(-0.5f, -0.5f);
 
-        allTileMapsObj.transform.position = pos;
+        allTileMaps.transform.position = pos;
     }
 
 }

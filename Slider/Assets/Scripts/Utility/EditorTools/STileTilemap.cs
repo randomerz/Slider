@@ -11,7 +11,6 @@ public class STileTilemap : MonoBehaviour
     public Tilemap colliders;
     public Tilemap materials;
     public Tilemap minecartRails;
-    public Tilemap materialMap;
 
     public Tile wallTile;
 
