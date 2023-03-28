@@ -582,6 +582,15 @@ public class UIArtifact : Singleton<UIArtifact>
         int oldCurrY = buttonCurrent.y;
         buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y, true);
         buttonEmpty.SetPosition(oldCurrX, oldCurrY, true);
+
+        //since buttons swap, it feels like your hover goes backwards on controller, feels unintuitive.
+        //So this will select the tile you swap to after the move
+        if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        {
+            EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
+            //buttonEmpty.OnDeselect();
+            //buttonCurrent.OnSelect();
+        }
     }
 
     protected bool MoveOverlapsWithActiveMove(SMove move)

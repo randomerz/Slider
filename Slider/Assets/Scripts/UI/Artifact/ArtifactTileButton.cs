@@ -157,6 +157,10 @@ public class ArtifactTileButton : MonoBehaviour
     //{
     //    buttonAnimator.UpdatePushedDown();
     //}
+    public void SetControllerHoverHighlighted(bool v)
+    {
+        buttonAnimator.SetControllerHoverHighlight(v);
+    }
 
     public void SetHighlighted(bool v)
     {
@@ -241,7 +245,7 @@ public class ArtifactTileButton : MonoBehaviour
         //SetHighlighted(true);
         if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
         {
-            SetHighlighted(true);
+            SetControllerHoverHighlighted(true);
         }
     }
 
@@ -249,7 +253,7 @@ public class ArtifactTileButton : MonoBehaviour
     {
         if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
         {
-            SetHighlighted(false);
+            SetControllerHoverHighlighted(false);
         }
     }
 
