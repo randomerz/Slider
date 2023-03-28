@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{073a4c74-d421-4cea-bdf9-57c728ac1bd5}">
+		<property name="assetPath">
+			<value>SFX/desert/dice_shake.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>2.472</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d8f08288-15bb-4f0d-b3d6-616c13ec65d6}</destination>
+		</relationship>
+	</object>
+</objects>
