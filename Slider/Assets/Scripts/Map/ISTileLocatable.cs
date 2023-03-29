@@ -5,5 +5,5 @@ using UnityEngine.Tilemaps;
 
 public interface ISTileLocatable
 {
-    Tilemap currentMaterialTilemap { get; }
+    Tilemap GetCurrentMaterialTilemap();
 }
