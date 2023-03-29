@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Tilemaps;
 
 // ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 //L: I moved the STile underneath stuff to static method in STile since it's used in other places.
-public class Player : Singleton<Player>, ISavable
+public class Player : Singleton<Player>, ISavable, ISTileLocatable
 {
 
     [Header("Movement")]
@@ -34,6 +35,42 @@ public class Player : Singleton<Player>, ISavable
     private bool isInHouse = false;
 
     private STile currentStileUnderneath;
+    public Tilemap currentMaterialTilemap
+    {
+        get
+        {
+            if (currentStileUnderneath == null)
+            {
+                var fallback = SGrid.GetWorldGridTilemaps();
+                if (fallback == null)
+                {
+                    return null;
+                } else
+                {
+                    return fallback.materials;
+                }
+            } else if (isInHouse)
+            {
+                if (currentStileUnderneath.houseTilemaps == null)
+                {
+                    return null;
+                } else
+                {
+                    return currentStileUnderneath.houseTilemaps.materials;
+                }
+            } else
+            {
+                if (currentStileUnderneath.stileTilemaps == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return currentStileUnderneath.stileTilemaps.materials;
+                }
+            }
+        }
+    }
 
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
@@ -282,7 +319,6 @@ public class Player : Singleton<Player>, ISavable
         // Other init functions
         UpdatePlayerSpeed();
     }
-
 
     private void UpdateMove(Vector2 moveDir) 
     {
