@@ -35,6 +35,22 @@ public class AudioManager : Singleton<AudioManager>
     private static Dictionary<string, List<AudioModifier.AudioModifierProperty>> parameterResponsibilityQueue;
     private static Dictionary<string, float> parameterDefaults;
 
+    private static GameObject cachedCMBrainKey;
+    private static CinemachineBrain currentCMBrain
+    {
+        get
+        {
+            if (Camera.main.gameObject != cachedCMBrainKey || cachedCMBrain == null)
+            {
+                // cache invalid
+                cachedCMBrainKey = Camera.main.gameObject;
+                cachedCMBrain = Camera.main.gameObject.GetComponent<CinemachineBrain>();
+            }
+            return cachedCMBrain;
+        }
+    }
+    private static CinemachineBrain cachedCMBrain;
+
     void Awake()
     {
         if (InitializeSingleton(ifInstanceAlreadySetThenDestroy:gameObject))
@@ -129,6 +145,17 @@ public class AudioManager : Singleton<AudioManager>
         }
 
         s.emitter.Play();
+    }
+
+    public static void PlayFmodWithWorldPosition(EventReference name, Vector3 position)
+    {
+        // fmod listener always on main camera object so positions are always evaluated against main camera transform
+        // however, cinemachine keeps main camera position stable (by only updating at LateUpdate with +100 execution order)
+        // - script position may be different from actual position seen in inspector, if you think main camera "does" move
+        // this evaluates the main camera relative to the active vcam and adds the offset
+        var cmBrain = currentCMBrain;
+        var vCamToListener = cmBrain.transform.position - cmBrain.ActiveVirtualCamera.State.FinalPosition;
+        RuntimeManager.PlayOneShot(name, position + vCamToListener);
     }
 
     public static void PlayWithPitch(string name, float pitch) //Used In Ocean Scene
@@ -319,7 +346,15 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (modifiers.ContainsKey(m))
         {
-            EnqueueModifier(modifiers[m]);
+            var overrides = SGrid.GetAudioModifierOverrides();
+            if (overrides == null)
+            {
+                EnqueueModifier(modifiers[m]);
+            }
+            else 
+            {
+                EnqueueModifier(overrides.GetOverride(modifiers[m]));
+            }
         }
         else
         {
@@ -356,7 +391,15 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (modifiers.ContainsKey(m))
         {
-            DequeueModifier(modifiers[m]);
+            var overrides = SGrid.GetAudioModifierOverrides();
+            if (overrides == null)
+            {
+                DequeueModifier(modifiers[m]);
+            }
+            else
+            {
+                DequeueModifier(overrides.GetOverride(modifiers[m]));
+            }
         }
         else
         {

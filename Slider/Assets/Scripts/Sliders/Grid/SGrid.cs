@@ -48,6 +48,8 @@ public class SGrid : Singleton<SGrid>, ISavable
     [SerializeField] protected SGridBackground[] bgGridTiles;
     [SerializeField] protected Collectible[] collectibles;
     [SerializeField] protected SGridAnimator gridAnimator;
+    [SerializeField] protected STileTilemap worldGridTilemaps;
+    [SerializeField] protected AudioModifierOverrides audioModifierOverrides;
 
     //L: This is the end goal for the slider puzzle.
     //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)
@@ -382,6 +384,16 @@ public void SetGrid(int[,] puzzle)
     public static STile GetStileUnderneath(GameObject target)
     {
         return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>());
+    }
+
+    public static STileTilemap GetWorldGridTilemaps()
+    {
+        return _instance == null ? null : _instance.worldGridTilemaps;
+    }
+
+    public static AudioModifierOverrides GetAudioModifierOverrides()
+    {
+        return _instance == null ? null : _instance.audioModifierOverrides;
     }
 
     public static bool PosInSTileBounds(Vector3 pos, Vector3 stilePos, float offset)
