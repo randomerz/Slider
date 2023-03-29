@@ -35,21 +35,21 @@ public class AudioManager : Singleton<AudioManager>
     static Dictionary<string, List<AudioModifier.AudioModifierProperty>> parameterResponsibilityQueue;
     static Dictionary<string, float> parameterDefaults;
 
-    private GameObject cachedCMBrainKey;
+    private static GameObject cachedCMBrainKey;
     private static CinemachineBrain currentCMBrain
     {
         get
         {
-            if (Camera.main.gameObject != _instance.cachedCMBrainKey)
+            if (Camera.main.gameObject != cachedCMBrainKey || cachedCMBrain == null)
             {
                 // cache invalid
-                _instance.cachedCMBrainKey = Camera.main.gameObject;
-                _instance.cachedCMBrain = Camera.main.gameObject.GetComponent<CinemachineBrain>();
+                cachedCMBrainKey = Camera.main.gameObject;
+                cachedCMBrain = Camera.main.gameObject.GetComponent<CinemachineBrain>();
             }
-            return _instance.cachedCMBrain;
+            return cachedCMBrain;
         }
     }
-    private CinemachineBrain cachedCMBrain;
+    private static CinemachineBrain cachedCMBrain;
 
     void Awake()
     {
@@ -354,7 +354,15 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (modifiers.ContainsKey(m))
         {
-            EnqueueModifier(modifiers[m]);
+            var overrides = SGrid.GetAudioModifierOverrides();
+            if (overrides == null)
+            {
+                EnqueueModifier(modifiers[m]);
+            }
+            else 
+            {
+                EnqueueModifier(overrides.GetOverride(modifiers[m]));
+            }
         }
         else
         {
@@ -391,7 +399,15 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (modifiers.ContainsKey(m))
         {
-            DequeueModifier(modifiers[m]);
+            var overrides = SGrid.GetAudioModifierOverrides();
+            if (overrides == null)
+            {
+                DequeueModifier(modifiers[m]);
+            }
+            else
+            {
+                DequeueModifier(overrides.GetOverride(modifiers[m]));
+            }
         }
         else
         {
