@@ -92,7 +92,6 @@
 		<property name="length">
 			<value>0.20000000000000001</value>
 		</property>
-		<property name="name" />
 		<property name="playlistMode">
 			<value>1</value>
 		</property>
@@ -103,6 +102,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{f6161f14-5726-41a0-be73-f69480f95b25}">
+		<property name="volume">
+			<value>-12</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>

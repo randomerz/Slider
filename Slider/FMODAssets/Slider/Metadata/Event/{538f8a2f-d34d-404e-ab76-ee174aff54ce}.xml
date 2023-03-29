@@ -92,7 +92,6 @@
 		<property name="length">
 			<value>0.30000000000000004</value>
 		</property>
-		<property name="name" />
 		<property name="playlistMode">
 			<value>1</value>
 		</property>
@@ -104,6 +103,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{d6ea37b6-43ad-4284-bc32-3a9280ac7a1d}">
+		<property name="volume">
+			<value>-21.5</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -156,10 +158,6 @@
 	</object>
 	<object class="MixerBusPanner" id="{f3521c3e-bd14-4c10-a108-348dd689bda7}" />
 	<object class="MixerBusFader" id="{3c527cf1-45b4-40f3-9f84-801c0d4d1bc5}" />
-	<object class="SpatialiserEffect" id="{5d8ebcf9-46a6-4bb4-b794-5ffd821d9236}">
-		<property name="maximumDistance">
-			<value>80</value>
-		</property>
-	</object>
+	<object class="SpatialiserEffect" id="{5d8ebcf9-46a6-4bb4-b794-5ffd821d9236}" />
 	<object class="MixerBusFader" id="{02777018-4e55-4dbf-aea8-d8bfd6cd81d8}" />
 </objects>

@@ -92,7 +92,6 @@
 		<property name="length">
 			<value>0.30000000000000004</value>
 		</property>
-		<property name="name" />
 		<property name="playlistMode">
 			<value>1</value>
 		</property>
@@ -103,6 +102,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{d30ceb93-5623-403e-8f5b-1c8b9f13324d}">
+		<property name="volume">
+			<value>-13.5</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -150,11 +152,7 @@
 	</object>
 	<object class="MixerBusPanner" id="{6c1a43e5-c139-4811-a948-a93026c6aca0}" />
 	<object class="MixerBusFader" id="{fed00572-313f-44d5-8a39-7041855b53a8}" />
-	<object class="SpatialiserEffect" id="{6f0d23a2-4349-42c3-bc69-a018191b1d3e}">
-		<property name="maximumDistance">
-			<value>80</value>
-		</property>
-	</object>
+	<object class="SpatialiserEffect" id="{6f0d23a2-4349-42c3-bc69-a018191b1d3e}" />
 	<object class="Automator" id="{93e8c921-9e61-4a5b-ae2a-4cd779159930}">
 		<property name="nameOfPropertyBeingAutomated">
 			<value>surroundPanDirection</value>
