@@ -15,7 +15,7 @@ public class AudioManager : Singleton<AudioManager>
     private Music[] music;
     private static Music[] _music;
 
-    [SerializeField]
+    [SerializeField] // for item pickup cutscene
     private AnimationCurve soundDampenCurve;
     private static AnimationCurve _soundDampenCurve;
     private static Coroutine soundDampenCoroutine;
@@ -28,12 +28,28 @@ public class AudioManager : Singleton<AudioManager>
     private static FMOD.Studio.Bus musicBus;
 
     [SerializeField]
-    List<AudioModifier> modifierPool;
-    static Dictionary<AudioModifier.ModifierType, AudioModifier> modifiers;
+    private List<AudioModifier> modifierPool;
+    private static Dictionary<AudioModifier.ModifierType, AudioModifier> modifiers;
 
     // Last-in-first-evaluate queue for each global parameter
-    static Dictionary<string, List<AudioModifier.AudioModifierProperty>> parameterResponsibilityQueue;
-    static Dictionary<string, float> parameterDefaults;
+    private static Dictionary<string, List<AudioModifier.AudioModifierProperty>> parameterResponsibilityQueue;
+    private static Dictionary<string, float> parameterDefaults;
+
+    private static GameObject cachedCMBrainKey;
+    private static CinemachineBrain currentCMBrain
+    {
+        get
+        {
+            if (Camera.main.gameObject != cachedCMBrainKey || cachedCMBrain == null)
+            {
+                // cache invalid
+                cachedCMBrainKey = Camera.main.gameObject;
+                cachedCMBrain = Camera.main.gameObject.GetComponent<CinemachineBrain>();
+            }
+            return cachedCMBrain;
+        }
+    }
+    private static CinemachineBrain cachedCMBrain;
 
     void Awake()
     {
@@ -49,12 +65,14 @@ public class AudioManager : Singleton<AudioManager>
 
         foreach (Sound s in _sounds)
         {
-            s.source = gameObject.AddComponent<AudioSource>();
-            s.source.clip = s.clip;
+            s.emitter = gameObject.AddComponent<StudioEventEmitter>();
+            s.emitter.EventReference = s.fmodEvent;
+            // s.source = gameObject.AddComponent<AudioSource>();
+            // s.source.clip = s.clip;
 
-            s.source.volume = s.volume;
-            s.source.pitch = s.pitch;
-            s.source.loop = s.loop;
+            // s.source.volume = s.volume;
+            // s.source.pitch = s.pitch;
+            // s.source.loop = s.loop;
         }
 
         foreach (Music m in _music)
@@ -83,6 +101,23 @@ public class AudioManager : Singleton<AudioManager>
         SetMusicVolume(musicVolume);
     }
 
+    private void Start() {
+        // StartCoroutine(testvolume());
+    }
+
+    private IEnumerator testvolume()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            float val = 2 - (0.2f * i);
+            Debug.Log(val);
+            PlayWithPitch("TFT Bell", val);
+            // Play("TFT Bell");
+
+            yield return new WaitForSeconds(1);
+        }
+    }
+
     private static Music GetMusic(string name)
     {
         if (_music == null)
@@ -109,12 +144,18 @@ public class AudioManager : Singleton<AudioManager>
             return;
         }
 
-        if (s.doRandomPitch)
-            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
-        else
-            s.source.pitch = s.pitch;
+        s.emitter.Play();
+    }
 
-        s.source.Play();
+    public static void PlayFmodWithWorldPosition(EventReference name, Vector3 position)
+    {
+        // fmod listener always on main camera object so positions are always evaluated against main camera transform
+        // however, cinemachine keeps main camera position stable (by only updating at LateUpdate with +100 execution order)
+        // - script position may be different from actual position seen in inspector, if you think main camera "does" move
+        // this evaluates the main camera relative to the active vcam and adds the offset
+        var cmBrain = currentCMBrain;
+        var vCamToListener = cmBrain.transform.position - cmBrain.ActiveVirtualCamera.State.FinalPosition;
+        RuntimeManager.PlayOneShot(name, position + vCamToListener);
     }
 
     public static void PlayWithPitch(string name, float pitch) //Used In Ocean Scene
@@ -129,12 +170,8 @@ public class AudioManager : Singleton<AudioManager>
             return;
         }
 
-        if (s.doRandomPitch)
-            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f) * pitch;
-        else
-            s.source.pitch = s.pitch * pitch;
-
-        s.source.Play();
+        s.emitter.SetParameter("pitch", pitch);
+        s.emitter.Play();
     }
 
 
@@ -150,13 +187,9 @@ public class AudioManager : Singleton<AudioManager>
             return;
         }
 
-        if (s.doRandomPitch)
-            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
-        else
-            s.source.pitch = s.pitch;
-
-        s.source.volume = s.volume * sfxVolume * volumeMultiplier;
-        s.source.Play();
+        // s.source.volume = s.volume * sfxVolume * volumeMultiplier;
+        s.emitter.SetParameter("volume", volumeMultiplier);
+        s.emitter.Play();
     }
 
     public static void PlayMusic(string name, bool stopOtherTracks=true)
@@ -199,7 +232,7 @@ public class AudioManager : Singleton<AudioManager>
             return;
         }
 
-        s.source.Stop();
+        s.emitter.Stop();
     }
 
     public static void StopAllSoundAndMusic()
@@ -210,7 +243,7 @@ public class AudioManager : Singleton<AudioManager>
         }
         foreach (Sound s in _instance.sounds)
         {
-            s.source.Stop();
+            s.emitter.Stop();
         }
     }
 
@@ -236,12 +269,12 @@ public class AudioManager : Singleton<AudioManager>
 
         if (_sounds == null)
             return;
-        foreach (Sound s in _sounds)
-        {
-            if (s == null || s.source == null)
-                continue;
-            s.source.volume = s.volume * value;
-        }
+        // foreach (Sound s in _sounds)
+        // {
+        //     if (s == null || s.emitter == null)
+        //         continue;
+        //     s.emitter.volume = s.volume * value;
+        // }
 
         sfxBus.setVolume(value);
     }
@@ -309,25 +342,19 @@ public class AudioManager : Singleton<AudioManager>
         return musicVolume;
     }
 
-    public static void SetSFXPitch(float value)
-    {
-        value = Mathf.Clamp(value, 0.3f, 3f);
-
-        if (_sounds == null)
-            return;
-        foreach (Sound s in _sounds)
-        {
-            if (s == null || s.source == null)
-                continue;
-            s.source.pitch = s.pitch * value;
-        }
-    }
-
     public static void EnqueueModifier(AudioModifier.ModifierType m)
     {
         if (modifiers.ContainsKey(m))
         {
-            EnqueueModifier(modifiers[m]);
+            var overrides = SGrid.GetAudioModifierOverrides();
+            if (overrides == null)
+            {
+                EnqueueModifier(modifiers[m]);
+            }
+            else 
+            {
+                EnqueueModifier(overrides.GetOverride(modifiers[m]));
+            }
         }
         else
         {
@@ -364,7 +391,15 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (modifiers.ContainsKey(m))
         {
-            DequeueModifier(modifiers[m]);
+            var overrides = SGrid.GetAudioModifierOverrides();
+            if (overrides == null)
+            {
+                DequeueModifier(modifiers[m]);
+            }
+            else
+            {
+                DequeueModifier(overrides.GetOverride(modifiers[m]));
+            }
         }
         else
         {
