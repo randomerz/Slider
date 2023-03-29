@@ -7,8 +7,7 @@ using FMODUnity;
 public class Sound
 {
     public string name;
-    [FormerlySerializedAs("fmodEvent")]
-    public EventReference eventReference;
+    public EventReference fmodEvent;
     [Range(0f, 10f)]
     public int dopplerScale = 0;
 

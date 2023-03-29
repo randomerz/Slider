@@ -180,7 +180,7 @@ public class AudioManager : Singleton<AudioManager>
         if (soundsDict.ContainsKey(name))
         {
             Sound s = soundsDict[name];
-            return PlayFmodWithSpatials(s.eventReference, t, s.dopplerScale);
+            return PlayFmodWithSpatials(s.fmodEvent, t, s.dopplerScale);
         } else
         {
             return null;
@@ -197,9 +197,11 @@ public class AudioManager : Singleton<AudioManager>
             inst.set3DAttributes(attributes.GetAndUpdate());
             inst.start();
             managedInstances.Add((inst, attributes));
-            FMOD.Studio.EventDescription desc;
-            inst.getDescription(out desc);
-            //if (desc.isDopplerEnabled(out bool doppler) == FMOD.RESULT.OK && doppler)
+            
+            //if (
+            //    inst.getDescription(out FMOD.Studio.EventDescription desc) == FMOD.RESULT.OK
+            //    && desc.isDopplerEnabled(out bool doppler) == FMOD.RESULT.OK 
+            //    && doppler)
             //{
             //    Debug.Log("Playing doppler enabled event");
             //}
@@ -548,7 +550,7 @@ public class AudioManager : Singleton<AudioManager>
     {
         private readonly Transform transform;
         float time;
-        private readonly float dopplerScale;
+        private readonly int dopplerScale;
         private readonly bool useDoppler;
         Vector3 position;
 
@@ -570,6 +572,8 @@ public class AudioManager : Singleton<AudioManager>
 
             position = p;
             time = Time.time;
+
+            Debug.Log(v * dopplerScale);
 
             return new FMOD.ATTRIBUTES_3D
             {
