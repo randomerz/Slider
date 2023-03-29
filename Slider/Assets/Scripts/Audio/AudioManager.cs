@@ -102,7 +102,7 @@ public class AudioManager : Singleton<AudioManager>
     }
 
     private void Start() {
-        StartCoroutine(testvolume());
+        // StartCoroutine(testvolume());
     }
 
     private IEnumerator testvolume()
