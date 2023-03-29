@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FMODUnity;
 using Cinemachine;
+using FMODUnity;
 
 public class AudioManager : Singleton<AudioManager>
 {
@@ -34,6 +34,23 @@ public class AudioManager : Singleton<AudioManager>
     // Last-in-first-evaluate queue for each global parameter
     static Dictionary<string, List<AudioModifier.AudioModifierProperty>> parameterResponsibilityQueue;
     static Dictionary<string, float> parameterDefaults;
+
+    private static Dictionary<string, Sound> soundsDict
+    {
+        get
+        {
+            if (_instance == null) return null;
+            if (_instance._soundsDict == null)
+            {
+                _instance._soundsDict = new Dictionary<string, Sound>(_instance.sounds.Length);
+                foreach (Sound s in _instance.sounds) _instance._soundsDict.Add(s.name, s);
+            }
+            return _instance._soundsDict;
+        }
+    }
+    private Dictionary<string, Sound> _soundsDict;
+
+    static List<(FMOD.Studio.EventInstance, ManagedAttributes)> managedInstances;
 
     private static GameObject cachedCMBrainKey;
     private static CinemachineBrain currentCMBrain
@@ -75,7 +92,7 @@ public class AudioManager : Singleton<AudioManager>
 
         foreach (Music m in _music)
         {
-            m.emitter = gameObject.AddComponent<StudioEventEmitter>();
+            m.emitter = gameObject.AddComponent<FMODUnity.StudioEventEmitter>();
             m.emitter.EventReference = m.fmodEvent;
         }
 
@@ -93,10 +110,15 @@ public class AudioManager : Singleton<AudioManager>
         parameterDefaults = new Dictionary<string, float>();
         parameterResponsibilityQueue = new Dictionary<string, List<AudioModifier.AudioModifierProperty>>();
 
-        sfxBus = RuntimeManager.GetBus("bus:/Master/SFX");
-        musicBus = RuntimeManager.GetBus("bus:/Master/Music");
+        sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/SFX");
+        musicBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/Music");
         SetSFXVolume(sfxVolume);
         SetMusicVolume(musicVolume);
+    }
+
+    private void FixedUpdate()
+    {
+        UpdateManagedInstances();
     }
 
     private static Music GetMusic(string name)
@@ -133,15 +155,76 @@ public class AudioManager : Singleton<AudioManager>
         s.source.Play();
     }
 
-    public static void PlayFmodWithWorldPosition(EventReference name, Vector3 position)
+    public static void PlayFmodOneshotWithSpatials(FMODUnity.EventReference name, Vector3 worldPosition)
     {
-        // fmod listener always on main camera object so positions are always evaluated against main camera transform
-        // however, cinemachine keeps main camera position stable (by only updating at LateUpdate with +100 execution order)
-        // - script position may be different from actual position seen in inspector, if you think main camera "does" move
-        // this evaluates the main camera relative to the active vcam and adds the offset
-        var cmBrain = currentCMBrain;
-        var vCamToListener = cmBrain.transform.position - cmBrain.ActiveVirtualCamera.State.FinalPosition;
-        RuntimeManager.PlayOneShot(name, position + vCamToListener);
+        FMODUnity.RuntimeManager.PlayOneShot(name, GetAudioPosition(worldPosition));
+    }
+
+    public static FMOD.Studio.EventInstance? PlayFmodWithSpatials(string name, Transform t)
+    {
+        if (soundsDict == null) return null;
+        if (soundsDict.ContainsKey(name))
+        {
+            Sound s = soundsDict[name];
+            return PlayFmodWithSpatials(s.eventReference, t, s.dopplerScale);
+        } else
+        {
+            return null;
+        }
+    }
+
+    public static FMOD.Studio.EventInstance? PlayFmodWithSpatials(FMODUnity.EventReference name, Transform t,  int dopplerScale = 0)
+    {
+        var inst = FMODUnity.RuntimeManager.CreateInstance(name);
+        if (inst.isValid())
+        {
+            if (managedInstances == null) managedInstances = new List<(FMOD.Studio.EventInstance, ManagedAttributes)>(10);
+            var attributes = new ManagedAttributes(t, dopplerScale);
+            inst.set3DAttributes(attributes.GetAndUpdate());
+            inst.start();
+            managedInstances.Add((inst, attributes));
+            FMOD.Studio.EventDescription desc;
+            inst.getDescription(out desc);
+            //if (desc.isDopplerEnabled(out bool doppler) == FMOD.RESULT.OK && doppler)
+            //{
+            //    Debug.Log("Playing doppler enabled event");
+            //}
+            return inst;
+        } else
+        {
+            return null;
+        }
+    }
+
+    private static void UpdateManagedInstances()
+    {
+        if (managedInstances == null) managedInstances = new List<(FMOD.Studio.EventInstance, ManagedAttributes)>(10);
+        managedInstances.RemoveAll(delegate ((FMOD.Studio.EventInstance inst, ManagedAttributes attributes) pair)
+        {
+            if (pair.inst.isValid())
+            {
+                // instance not already relased
+                if (
+                    pair.inst.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE playback) == FMOD.RESULT.OK 
+                    && playback != FMOD.Studio.PLAYBACK_STATE.STOPPED)
+                {
+                    // instance still playing (including the "stopping" state for events that allow fadeout)
+                    pair.inst.set3DAttributes(pair.attributes.GetAndUpdate());
+                    return false;
+                }
+                else
+                {
+                    // instance stopped playing
+                    pair.inst.release();
+                    return true;
+                }
+            }
+            else
+            {
+                // instance already released
+                return true;
+            }
+        });
     }
 
     public static void PlayWithPitch(string name, float pitch) //Used In Ocean Scene
@@ -381,7 +464,7 @@ public class AudioManager : Singleton<AudioManager>
                 parameterResponsibilityQueue[name].Add(adj);
             else {
                 parameterResponsibilityQueue.Add(name, new List<AudioModifier.AudioModifierProperty> { adj });
-                if (RuntimeManager.StudioSystem.getParameterByName(name, out float prev) == FMOD.RESULT.OK)
+                if (FMODUnity.RuntimeManager.StudioSystem.getParameterByName(name, out float prev) == FMOD.RESULT.OK)
                 {
                     parameterDefaults.TryAdd(name, prev);
                 }
@@ -448,13 +531,61 @@ public class AudioManager : Singleton<AudioManager>
 
     private static void SetGlobalParameter(string name, float val)
     {
-        if (RuntimeManager.StudioSystem.setParameterByName(name, val) == FMOD.RESULT.OK)
+        if (FMODUnity.RuntimeManager.StudioSystem.setParameterByName(name, val) == FMOD.RESULT.OK)
         {
             // successfully set parameter
         }
         else
         {
             Debug.LogWarning($"Failed to set global parameter {name} = {val}");
+        }
+    }
+
+    private static Vector3 GetAudioPosition(Vector3 worldPosition)
+    {
+        // fmod listener always on main camera object so positions are always evaluated against main camera transform
+        // however, cinemachine keeps main camera position stable (by only updating at LateUpdate with +100 execution order)
+        // - script position may be different from actual position seen in inspector, if you think main camera "does" move
+        // this evaluates the main camera relative to the active vcam and adds the offset
+        var cmBrain = currentCMBrain;
+        var vCamToListener = cmBrain.transform.position - cmBrain.ActiveVirtualCamera.State.FinalPosition;
+        return worldPosition + vCamToListener;
+    }
+
+    private class ManagedAttributes
+    {
+        private readonly Transform transform;
+        float time;
+        private readonly float dopplerScale;
+        private readonly bool useDoppler;
+        Vector3 position;
+
+        public ManagedAttributes(Transform transform, int dopplerScale)
+        {
+            this.transform = transform;
+            position = transform.position;
+            time = Time.time;
+            useDoppler = dopplerScale == 0;
+        }
+
+        public FMOD.ATTRIBUTES_3D GetAndUpdate()
+        {
+            if (!useDoppler) return transform.position.To3DAttributes();
+
+            Vector3 p = transform.position;
+            float dt = Time.time - time;
+            Vector3 v = dt > float.Epsilon ? (p - position) / (dt) : Vector3.zero;
+
+            position = p;
+            time = Time.time;
+
+            return new FMOD.ATTRIBUTES_3D
+            {
+                forward = transform.forward.ToFMODVector(),
+                up = transform.up.ToFMODVector(),
+                position = GetAudioPosition(p).ToFMODVector(),
+                velocity = (v * dopplerScale).ToFMODVector()
+            };
         }
     }
 }

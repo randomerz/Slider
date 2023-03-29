@@ -34,6 +34,6 @@ public class MaterialBasedEmitter : MonoBehaviour
 
     private void PlayStepType(FMODUnity.EventReference e)
     {
-        AudioManager.PlayFmodWithWorldPosition(e, transform.position);
+        AudioManager.PlayFmodOneshotWithSpatials(e, transform.position);
     }
 }
