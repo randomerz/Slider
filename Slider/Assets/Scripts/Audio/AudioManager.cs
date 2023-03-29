@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using FMODUnity;
+using FMOD.Studio;
 
 public class AudioManager : Singleton<AudioManager>
 {
@@ -82,8 +83,10 @@ public class AudioManager : Singleton<AudioManager>
 
         foreach (Sound s in _sounds)
         {
-            s.emitter = gameObject.AddComponent<StudioEventEmitter>();
-            s.emitter.EventReference = s.fmodEvent;
+            // AT: no longer needed, see managed instances
+            // s.emitter = gameObject.AddComponent<StudioEventEmitter>();
+            // s.emitter.EventReference = s.fmodEvent;
+
             // s.source = gameObject.AddComponent<AudioSource>();
             // s.source.clip = s.clip;
 
@@ -154,19 +157,28 @@ public class AudioManager : Singleton<AudioManager>
         return m;
     }
 
-    public static void Play(string name)
+    public static FMOD.Studio.EventInstance? Play(string name, Action<FMOD.Studio.EventInstance> config = null)
     {
-        if (_sounds == null)
-            return;
-        Sound s = Array.Find(_sounds, sound => sound.name == name);
+        if (soundsDict.ContainsKey(name))
+        {
+            Sound s = soundsDict[name];
+            var inst = PlayFmodWithSpatials(s.fmodEvent, currentCMBrain.transform);
+            if (inst.HasValue)
+            {
+                config?.Invoke(inst.Value);
+                return inst;
+                
+            } else
+            {
+                Debug.LogError($"Failed to spawn instance for sound {name}");
+                return null;
+            }
 
-        if (s == null)
+        } else
         {
             Debug.LogError("Sound: " + name + " not found!");
-            return;
+            return null;
         }
-
-        s.emitter.Play();
     }
 
     public static void PlayFmodOneshotWithSpatials(FMODUnity.EventReference name, Vector3 worldPosition)
@@ -243,38 +255,21 @@ public class AudioManager : Singleton<AudioManager>
         });
     }
 
-    public static void PlayWithPitch(string name, float pitch) //Used In Ocean Scene
+    public static FMOD.Studio.EventInstance? PlayWithPitch(string name, float pitch) //Used In Ocean Scene
     {
-        if (_sounds == null)
-            return;
-        Sound s = Array.Find(_sounds, sound => sound.name == name);
-
-        if (s == null)
+        return Play(name, delegate (FMOD.Studio.EventInstance inst)
         {
-            Debug.LogError("Sound: " + name + " not found!");
-            return;
-        }
-
-        s.emitter.SetParameter("pitch", pitch);
-        s.emitter.Play();
+            inst.setParameterByName("pitch", pitch);
+        });
     }
 
 
-    public static void PlayWithVolume(string name, float volumeMultiplier)
+    public static FMOD.Studio.EventInstance? PlayWithVolume(string name, float volumeMultiplier)
     {
-        if (_sounds == null)
-            return;
-        Sound s = Array.Find(_sounds, sound => sound.name == name);
-
-        if (s == null)
+        return Play(name, delegate (FMOD.Studio.EventInstance inst)
         {
-            Debug.LogError("Sound: " + name + " not found!");
-            return;
-        }
-
-        // s.source.volume = s.volume * sfxVolume * volumeMultiplier;
-        s.emitter.SetParameter("volume", volumeMultiplier);
-        s.emitter.Play();
+            inst.setParameterByName("volume", volumeMultiplier);
+        });
     }
 
     public static void PlayMusic(string name, bool stopOtherTracks=true)
@@ -305,31 +300,26 @@ public class AudioManager : Singleton<AudioManager>
         m.emitter.Stop();
     }
 
-    public static void StopSound(string name)
-    {
-        if (_sounds == null)
-            return;
-        Sound s = Array.Find(_sounds, sound => sound.name == name);
+    // Requires instance to stop, need discussion...
+    //public static void StopSound(string name)
+    //{
+    //    if (_sounds == null)
+    //        return;
+    //    Sound s = Array.Find(_sounds, sound => sound.name == name);
 
-        if (s == null)
-        {
-            Debug.LogError("Sound: " + name + " not found!");
-            return;
-        }
+    //    if (s == null)
+    //    {
+    //        Debug.LogError("Sound: " + name + " not found!");
+    //        return;
+    //    }
 
-        s.emitter.Stop();
-    }
+    //    s.emitter.Stop();
+    //}
 
     public static void StopAllSoundAndMusic()
     {
-        foreach (Music m in _instance.music)
-        {
-            m.emitter.Stop();
-        }
-        foreach (Sound s in _instance.sounds)
-        {
-            s.emitter.Stop();
-        }
+        musicBus.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        sfxBus.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
     public static void SetMusicParameter(string name, string parameterName, float value)
@@ -354,12 +344,6 @@ public class AudioManager : Singleton<AudioManager>
 
         if (_sounds == null)
             return;
-        // foreach (Sound s in _sounds)
-        // {
-        //     if (s == null || s.emitter == null)
-        //         continue;
-        //     s.emitter.volume = s.volume * value;
-        // }
 
         sfxBus.setVolume(value);
     }
@@ -559,7 +543,8 @@ public class AudioManager : Singleton<AudioManager>
             this.transform = transform;
             position = transform.position;
             time = Time.time;
-            useDoppler = dopplerScale == 0;
+            useDoppler = dopplerScale != 0;
+            this.dopplerScale = dopplerScale;
         }
 
         public FMOD.ATTRIBUTES_3D GetAndUpdate()
@@ -573,12 +558,10 @@ public class AudioManager : Singleton<AudioManager>
             position = p;
             time = Time.time;
 
-            Debug.Log(v * dopplerScale);
-
             return new FMOD.ATTRIBUTES_3D
             {
-                forward = transform.forward.ToFMODVector(),
-                up = transform.up.ToFMODVector(),
+                forward = Vector3.forward.ToFMODVector(),
+                up = Vector3.up.ToFMODVector(),
                 position = GetAudioPosition(p).ToFMODVector(),
                 velocity = (v * dopplerScale).ToFMODVector()
             };

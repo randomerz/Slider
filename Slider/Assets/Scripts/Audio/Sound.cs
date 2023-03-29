@@ -8,12 +8,8 @@ public class Sound
 {
     public string name;
     public EventReference fmodEvent;
-    [Range(0f, 10f)]
     public int dopplerScale = 0;
 
-    [HideInInspector]
-    public StudioEventEmitter emitter;
-    
     // public AudioClip clip;
 
     // [Range(0f, 1f)]
