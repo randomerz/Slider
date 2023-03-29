@@ -27,7 +27,7 @@ public class MaterialBasedEmitter : MonoBehaviour
 
     public void Step()
     {
-        Tilemap map = locatable.currentMaterialTilemap;
+        Tilemap map = locatable.GetCurrentMaterialTilemap();
         TileBase tileBase = map == null ? null : map.GetTile(map.WorldToCell(locatableRef.transform.position));
         PlayStepType(mapping[tileBase]);
     }

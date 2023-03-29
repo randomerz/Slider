@@ -35,42 +35,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     private bool isInHouse = false;
 
     private STile currentStileUnderneath;
-    public Tilemap currentMaterialTilemap
-    {
-        get
-        {
-            if (currentStileUnderneath == null)
-            {
-                var fallback = SGrid.GetWorldGridTilemaps();
-                if (fallback == null)
-                {
-                    return null;
-                } else
-                {
-                    return fallback.materials;
-                }
-            } else if (isInHouse)
-            {
-                if (currentStileUnderneath.houseTilemaps == null)
-                {
-                    return null;
-                } else
-                {
-                    return currentStileUnderneath.houseTilemaps.materials;
-                }
-            } else
-            {
-                if (currentStileUnderneath.stileTilemaps == null)
-                {
-                    return null;
-                }
-                else
-                {
-                    return currentStileUnderneath.stileTilemaps.materials;
-                }
-            }
-        }
-    }
 
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
@@ -449,5 +413,31 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         boatGameObject.SetActive(isOnWater);
 
         UpdatePlayerSpeed();
+    }
+
+    Tilemap ISTileLocatable.GetCurrentMaterialTilemap()
+    {
+        if (currentStileUnderneath == null)
+        {
+            var fallback = SGrid.GetWorldGridTilemaps();
+            if (fallback == null) 
+                return null;
+            else 
+                return fallback.materials;
+        }
+        else if (isInHouse)
+        {
+            if (currentStileUnderneath.houseTilemaps == null) 
+                return null;
+            else 
+                return currentStileUnderneath.houseTilemaps.materials;
+        }
+        else
+        {
+            if (currentStileUnderneath.stileTilemaps == null)
+                return null;
+            else
+                return currentStileUnderneath.stileTilemaps.materials;
+        }
     }
 }
