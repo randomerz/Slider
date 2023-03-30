@@ -85,6 +85,7 @@ public class ChadRace : MonoBehaviour
                 if (!tilesAdjacent) {
                     // The player has cheated
                     chadEndLocal = transform.localPosition;
+                    SaveSystem.Current.SetString("jungleChadSpeak", "Hey, no changing the track before the race is done!");
                     raceState = State.Cheated;
                 } else if (transform.position.y <= endPoint.y) {
                     MoveChad();
@@ -198,7 +199,7 @@ public class ChadRace : MonoBehaviour
     private DialogueData ConstructChadDialogueStart()
     {
         var dialogue = new DialogueData();
-        dialogue.dialogue = "Bet I could beat you to the bell.";
+        dialogue.dialogue = "Bet I could beat you to the bell (e to start).";
         return dialogue;
     }
 
