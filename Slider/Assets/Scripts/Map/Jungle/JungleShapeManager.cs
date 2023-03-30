@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class JungleShapeManager : MonoBehaviour, ISavable
 {
+    //refactor later to just be a singleton
+    //public static JungleShapeManger instance { get; private set; }
     private string prefix = "jungleTurnedIn_";
 
     public bool TurnInShape(Shape wanted)
@@ -21,7 +23,7 @@ public class JungleShapeManager : MonoBehaviour, ISavable
         //check if correct shape
         if (held.itemName.Equals(wanted.name))
         {
-            print("Turn in " + wanted.name);
+            //print("Turn in " + wanted.name);
             PlayerInventory.RemoveAndDestroyItem();
             SaveSystem.Current.SetBool(prefix + wanted.name, true);
         }

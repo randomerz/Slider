@@ -46,222 +46,284 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sounds:
   - name: Item Pick Up
-    clip: {fileID: 8300000, guid: f7f799a5473cd8640b6d7820147ea446, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 400541038
+        Data2: 1183998670
+        Data3: 815781785
+        Data4: -1936799075
+      Path: event:/SFX/Misc/GMTK Pickup
+    emitter: {fileID: 0}
   - name: Slide Rumble
-    clip: {fileID: 8300000, guid: 46c4d5c533fe7ce44b1848f42dfb6960, type: 3}
-    volume: 0.6
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 887524284
+        Data2: 1323519992
+        Data3: -1040153453
+        Data4: 18325320
+      Path: event:/SFX/Rumbles and Explosions/Slide Rumble
+    emitter: {fileID: 0}
   - name: Slide Explosion
-    clip: {fileID: 8300000, guid: addfe3ce1258647488072dd77cf0edae, type: 3}
-    volume: 0.6
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 215736252
+        Data2: 1097066287
+        Data3: 1904038537
+        Data4: -2051480606
+      Path: event:/SFX/Rumbles and Explosions/Slide Explosion
+    emitter: {fileID: 0}
   - name: Rumble Decrease 2.5s
-    clip: {fileID: 8300000, guid: 1a670418205c3b94491aac038819a67c, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 843847029
+        Data2: 1206622253
+        Data3: -1694289525
+        Data4: 1603943095
+      Path: event:/SFX/Rumbles and Explosions/Long Rumble 2.5s
+    emitter: {fileID: 0}
   - name: Rumble Decrease 5s
-    clip: {fileID: 8300000, guid: c88849ac8ff7a0c479ee9e3127dcfb36, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
-  - name: Rumble Increase 8s
-    clip: {fileID: 8300000, guid: 6ea73d4e1ad5c6842bf0f4a3abe0b861, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 1177166519
+        Data2: 1307944926
+        Data3: 1899996591
+        Data4: -169996033
+      Path: event:/SFX/Rumbles and Explosions/Long Rumble 5s
+    emitter: {fileID: 0}
   - name: Rumble Decrease 9s
-    clip: {fileID: 8300000, guid: 715d1234d99211b47be88fcd9dec5f9e, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -2073193470
+        Data2: 1280787418
+        Data3: -797821818
+        Data4: -334665175
+      Path: event:/SFX/Rumbles and Explosions/Long Rumble 9s
+    emitter: {fileID: 0}
   - name: Rumble Constant 9s
-    clip: {fileID: 8300000, guid: eba36d6fc6bee444f89f12b3764c3831, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -866000131
+        Data2: 1149085800
+        Data3: 965472171
+        Data4: 1764040983
+      Path: event:/SFX/Rumbles and Explosions/Long Rumble Constant 9s
+    emitter: {fileID: 0}
+  - name: Rumble Increase 8s
+    fmodEvent:
+      Guid:
+        Data1: 1112940112
+        Data2: 1269083073
+        Data3: 725394309
+        Data4: -1741667662
+      Path: event:/SFX/Rumbles and Explosions/Long Rumble Increase 8s
+    emitter: {fileID: 0}
   - name: UI Click
-    clip: {fileID: 8300000, guid: 09140345bd32e4742ab358be416e0264, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    emitter: {fileID: 0}
   - name: Artifact Error
-    clip: {fileID: 8300000, guid: 823aac25100d8ca499d19e2e0adaf274, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    emitter: {fileID: 0}
   - name: NPC Blip
-    clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    emitter: {fileID: 0}
   - name: Puzzle Complete
-    clip: {fileID: 8300000, guid: e196f04377196b24ea0b029b5457039c, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 293981853
+        Data2: 1233835296
+        Data3: 677736838
+        Data4: -1759630598
+      Path: event:/SFX/SFXR/Puzzle Complete
+    emitter: {fileID: 0}
   - name: Hurt
-    clip: {fileID: 8300000, guid: 7313422adbe73294f805bf31847d41d8, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    emitter: {fileID: 0}
   - name: Fall
-    clip: {fileID: 8300000, guid: 2620fbaec52ed4748aa6bec6e7ee61cb, type: 3}
-    volume: 0.5
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    emitter: {fileID: 0}
   - name: TFT Bell
-    clip: {fileID: 8300000, guid: 4cad7f9ba00cc6c41bf0f4d532ee6903, type: 3}
-    volume: 0.5
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 997633834
+        Data2: 1126826025
+        Data3: -373076304
+        Data4: 2122563298
+      Path: event:/SFX/Magic/TFT Bell
+    emitter: {fileID: 0}
   - name: Power On
-    clip: {fileID: 8300000, guid: 63ed6873c5cde2d4bab704f4f53bcd65, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -850925974
+        Data2: 1091852111
+        Data3: -1566772322
+        Data4: -246391735
+      Path: event:/SFX/Factory/Power On
+    emitter: {fileID: 0}
   - name: Power Off
-    clip: {fileID: 8300000, guid: 5483379a1dd5ada4f9bed87587440e28, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -1650551777
+        Data2: 1102159769
+        Data3: -959976785
+        Data4: 558721145
+      Path: event:/SFX/Factory/Power Off
+    emitter: {fileID: 0}
   - name: Bottle Sink
-    clip: {fileID: 8300000, guid: 1417e8d6bd3d65245ae1f1eb995d1724, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 1728494741
+        Data2: 1218477909
+        Data3: 1573816232
+        Data4: 1705598499
+      Path: event:/SFX/Ocean/Bottle Sink
+    emitter: {fileID: 0}
   - name: Glass Clink
-    clip: {fileID: 8300000, guid: fa5d024a49be548988f2317729a17510, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 1997967116
+        Data2: 1102237575
+        Data3: 304086971
+        Data4: 1230667835
+      Path: event:/SFX/Ocean/Glass Clink
+    emitter: {fileID: 0}
   - name: Conveyor
-    clip: {fileID: 8300000, guid: 6256065330d07c94aacb64ec20d9d1a5, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 1949250554
+        Data2: 1166091428
+        Data3: -147534192
+        Data4: -1220852846
+      Path: event:/SFX/Factory/Conveyor
+    emitter: {fileID: 0}
   - name: Crocodile Grab Sequence
-    clip: {fileID: 8300000, guid: 9848e8ddddfb820498e9300d5302c3f3, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -638547949
+        Data2: 1159680921
+        Data3: 1958267835
+        Data4: -1738639728
+      Path: event:/SFX/Desert/Croco Grab Sequence
+    emitter: {fileID: 0}
   - name: Water Drop Water
-    clip: {fileID: 8300000, guid: 7b6df99774a5c8b47bcf5759e699d7a4, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -54602640
+        Data2: 1215859547
+        Data3: 430265524
+        Data4: -1222714988
+      Path: event:/SFX/Desert/Big Water Drop
+    emitter: {fileID: 0}
   - name: Baboon Screech
-    clip: {fileID: 8300000, guid: 7f1f6d9cb878f1e46a92f2b7a6aa7d3d, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 227165498
+        Data2: 1123725682
+        Data3: -1924915301
+        Data4: 937611837
+      Path: event:/SFX/Desert/Baboon Screech
+    emitter: {fileID: 0}
   - name: Dice Shake
-    clip: {fileID: 8300000, guid: 69ae3cff3d898e84084b4d571f2d7b9b, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 1089929994
+        Data2: 1311362671
+        Data3: -1348997469
+        Data4: 1799270439
+      Path: event:/SFX/Desert/Dice Shake
+    emitter: {fileID: 0}
   - name: Bottle Fill
-    clip: {fileID: 8300000, guid: 815e71289506ab24d9a4a828630be2f1, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 1
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 352461810
+        Data2: 1152617942
+        Data3: 1698111138
+        Data4: 1034827031
+      Path: event:/SFX/Desert/Bottle Bubble Fill
+    emitter: {fileID: 0}
   - name: FactoryTimedGateProgress1
-    clip: {fileID: 8300000, guid: 2617de9c343072e47b1bbcdf97734c58, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 886801775
+        Data2: 1187100107
+        Data3: 1947597726
+        Data4: 1608839436
+      Path: event:/SFX/Factory/FactoryTimedGateProgress1
+    emitter: {fileID: 0}
   - name: FactoryTimedGateProgress2
-    clip: {fileID: 8300000, guid: 856513f04b322a74d9370945b8939c8f, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -1485828056
+        Data2: 1329246443
+        Data3: 1131446694
+        Data4: 1292737289
+      Path: event:/SFX/Factory/FactoryTimedGateProgress2
+    emitter: {fileID: 0}
   - name: FactoryTimedGateProgress3
-    clip: {fileID: 8300000, guid: 5f98d5bf45bf6794a8f96cd4180ec431, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -2078909901
+        Data2: 1080414003
+        Data3: -1577689169
+        Data4: -1458885182
+      Path: event:/SFX/Factory/FactoryTimedGateProgress3
+    emitter: {fileID: 0}
   - name: FactoryTimedGateProgress4
-    clip: {fileID: 8300000, guid: 95fed6226b2491c47b59dd9ace02a675, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -1679999444
+        Data2: 1196516076
+        Data3: -68815941
+        Data4: -1897143703
+      Path: event:/SFX/Factory/FactoryTimedGateProgress4
+    emitter: {fileID: 0}
   - name: FactoryTimedGateProgress5
-    clip: {fileID: 8300000, guid: d0da706e0d833b94e9eb52a492b14d99, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: -141498924
+        Data2: 1209978576
+        Data3: 614243224
+        Data4: -1146322477
+      Path: event:/SFX/Factory/FactoryTimedGateProgress5
+    emitter: {fileID: 0}
   - name: FactoryTimedGateProgress6
-    clip: {fileID: 8300000, guid: d4a810563a0baf445ab8b67739ab20de, type: 3}
-    volume: 1
-    pitch: 1
-    loop: 0
-    doRandomPitch: 0
-    source: {fileID: 0}
+    fmodEvent:
+      Guid:
+        Data1: 1034772929
+        Data2: 1108648073
+        Data3: 2101343917
+        Data4: 1758749397
+      Path: event:/SFX/Factory/FactoryTimedGateProgress6
+    emitter: {fileID: 0}
   music:
   - name: Main Menu
     fmodEvent:
