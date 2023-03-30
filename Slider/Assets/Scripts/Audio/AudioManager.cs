@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
+using Cinemachine;
 
 public class AudioManager : Singleton<AudioManager>
 {
@@ -14,7 +15,7 @@ public class AudioManager : Singleton<AudioManager>
     private Music[] music;
     private static Music[] _music;
 
-    [SerializeField]
+    [SerializeField] // for item pickup cutscene
     private AnimationCurve soundDampenCurve;
     private static AnimationCurve _soundDampenCurve;
     private static Coroutine soundDampenCoroutine;
@@ -26,7 +27,29 @@ public class AudioManager : Singleton<AudioManager>
     private static FMOD.Studio.Bus sfxBus;
     private static FMOD.Studio.Bus musicBus;
 
-    public static AudioManager instance;
+    [SerializeField]
+    private List<AudioModifier> modifierPool;
+    private static Dictionary<AudioModifier.ModifierType, AudioModifier> modifiers;
+
+    // Last-in-first-evaluate queue for each global parameter
+    private static Dictionary<string, List<AudioModifier.AudioModifierProperty>> parameterResponsibilityQueue;
+    private static Dictionary<string, float> parameterDefaults;
+
+    private static GameObject cachedCMBrainKey;
+    private static CinemachineBrain currentCMBrain
+    {
+        get
+        {
+            if (Camera.main.gameObject != cachedCMBrainKey || cachedCMBrain == null)
+            {
+                // cache invalid
+                cachedCMBrainKey = Camera.main.gameObject;
+                cachedCMBrain = Camera.main.gameObject.GetComponent<CinemachineBrain>();
+            }
+            return cachedCMBrain;
+        }
+    }
+    private static CinemachineBrain cachedCMBrain;
 
     void Awake()
     {
@@ -42,12 +65,14 @@ public class AudioManager : Singleton<AudioManager>
 
         foreach (Sound s in _sounds)
         {
-            s.source = gameObject.AddComponent<AudioSource>();
-            s.source.clip = s.clip;
+            s.emitter = gameObject.AddComponent<StudioEventEmitter>();
+            s.emitter.EventReference = s.fmodEvent;
+            // s.source = gameObject.AddComponent<AudioSource>();
+            // s.source.clip = s.clip;
 
-            s.source.volume = s.volume;
-            s.source.pitch = s.pitch;
-            s.source.loop = s.loop;
+            // s.source.volume = s.volume;
+            // s.source.pitch = s.pitch;
+            // s.source.loop = s.loop;
         }
 
         foreach (Music m in _music)
@@ -56,10 +81,41 @@ public class AudioManager : Singleton<AudioManager>
             m.emitter.EventReference = m.fmodEvent;
         }
 
-        sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/SFX");
-        musicBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/Music");
+        modifiers = new Dictionary<AudioModifier.ModifierType, AudioModifier>(modifierPool.Count);
+        foreach (AudioModifier audioModifier in modifierPool)
+        {
+            if (modifiers.TryAdd(audioModifier.type, audioModifier))
+            {
+                // successfully added
+            } else
+            {
+                Debug.LogError($"Duplicate modifier when trying to add {audioModifier.name}");
+            }
+        }
+        parameterDefaults = new Dictionary<string, float>();
+        parameterResponsibilityQueue = new Dictionary<string, List<AudioModifier.AudioModifierProperty>>();
+
+        sfxBus = RuntimeManager.GetBus("bus:/Master/SFX");
+        musicBus = RuntimeManager.GetBus("bus:/Master/Music");
         SetSFXVolume(sfxVolume);
         SetMusicVolume(musicVolume);
+    }
+
+    private void Start() {
+        // StartCoroutine(testvolume());
+    }
+
+    private IEnumerator testvolume()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            float val = 2 - (0.2f * i);
+            Debug.Log(val);
+            PlayWithPitch("TFT Bell", val);
+            // Play("TFT Bell");
+
+            yield return new WaitForSeconds(1);
+        }
     }
 
     private static Music GetMusic(string name)
@@ -88,12 +144,18 @@ public class AudioManager : Singleton<AudioManager>
             return;
         }
 
-        if (s.doRandomPitch)
-            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
-        else
-            s.source.pitch = s.pitch;
+        s.emitter.Play();
+    }
 
-        s.source.Play();
+    public static void PlayFmodWithWorldPosition(EventReference name, Vector3 position)
+    {
+        // fmod listener always on main camera object so positions are always evaluated against main camera transform
+        // however, cinemachine keeps main camera position stable (by only updating at LateUpdate with +100 execution order)
+        // - script position may be different from actual position seen in inspector, if you think main camera "does" move
+        // this evaluates the main camera relative to the active vcam and adds the offset
+        var cmBrain = currentCMBrain;
+        var vCamToListener = cmBrain.transform.position - cmBrain.ActiveVirtualCamera.State.FinalPosition;
+        RuntimeManager.PlayOneShot(name, position + vCamToListener);
     }
 
     public static void PlayWithPitch(string name, float pitch) //Used In Ocean Scene
@@ -108,12 +170,8 @@ public class AudioManager : Singleton<AudioManager>
             return;
         }
 
-        if (s.doRandomPitch)
-            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f) * pitch;
-        else
-            s.source.pitch = s.pitch * pitch;
-
-        s.source.Play();
+        s.emitter.SetParameter("pitch", pitch);
+        s.emitter.Play();
     }
 
 
@@ -129,13 +187,9 @@ public class AudioManager : Singleton<AudioManager>
             return;
         }
 
-        if (s.doRandomPitch)
-            s.source.pitch = s.pitch * UnityEngine.Random.Range(.95f, 1.05f);
-        else
-            s.source.pitch = s.pitch;
-
-        s.source.volume = s.volume * sfxVolume * volumeMultiplier;
-        s.source.Play();
+        // s.source.volume = s.volume * sfxVolume * volumeMultiplier;
+        s.emitter.SetParameter("volume", volumeMultiplier);
+        s.emitter.Play();
     }
 
     public static void PlayMusic(string name, bool stopOtherTracks=true)
@@ -178,7 +232,7 @@ public class AudioManager : Singleton<AudioManager>
             return;
         }
 
-        s.source.Stop();
+        s.emitter.Stop();
     }
 
     public static void StopAllSoundAndMusic()
@@ -189,7 +243,7 @@ public class AudioManager : Singleton<AudioManager>
         }
         foreach (Sound s in _instance.sounds)
         {
-            s.source.Stop();
+            s.emitter.Stop();
         }
     }
 
@@ -215,12 +269,12 @@ public class AudioManager : Singleton<AudioManager>
 
         if (_sounds == null)
             return;
-        foreach (Sound s in _sounds)
-        {
-            if (s == null || s.source == null)
-                continue;
-            s.source.volume = s.volume * value;
-        }
+        // foreach (Sound s in _sounds)
+        // {
+        //     if (s == null || s.emitter == null)
+        //         continue;
+        //     s.emitter.volume = s.volume * value;
+        // }
 
         sfxBus.setVolume(value);
     }
@@ -288,17 +342,111 @@ public class AudioManager : Singleton<AudioManager>
         return musicVolume;
     }
 
-    public static void SetSFXPitch(float value)
+    public static void EnqueueModifier(AudioModifier.ModifierType m)
     {
-        value = Mathf.Clamp(value, 0.3f, 3f);
-
-        if (_sounds == null)
-            return;
-        foreach (Sound s in _sounds)
+        if (modifiers.ContainsKey(m))
         {
-            if (s == null || s.source == null)
-                continue;
-            s.source.pitch = s.pitch * value;
+            var overrides = SGrid.GetAudioModifierOverrides();
+            if (overrides == null)
+            {
+                EnqueueModifier(modifiers[m]);
+            }
+            else 
+            {
+                EnqueueModifier(overrides.GetOverride(modifiers[m]));
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Trying to access non-materialized modifier {m}");
+        }
+    }
+
+    private static void EnqueueModifier(AudioModifier m)
+    {
+        foreach (var adj in m.adjustments)
+        {
+            string name = adj.parameter;
+            float val = adj.value;
+
+            if (parameterResponsibilityQueue.ContainsKey(name))
+                parameterResponsibilityQueue[name].Add(adj);
+            else {
+                parameterResponsibilityQueue.Add(name, new List<AudioModifier.AudioModifierProperty> { adj });
+                if (RuntimeManager.StudioSystem.getParameterByName(name, out float prev) == FMOD.RESULT.OK)
+                {
+                    parameterDefaults.TryAdd(name, prev);
+                }
+                else
+                {
+                    Debug.LogWarning($"Parameter {prev} is modified but does not actually exist");
+                }
+            }
+
+            SetGlobalParameter(name, val);
+        }
+    }
+
+    public static void DequeueModifier(AudioModifier.ModifierType m)
+    {
+        if (modifiers.ContainsKey(m))
+        {
+            var overrides = SGrid.GetAudioModifierOverrides();
+            if (overrides == null)
+            {
+                DequeueModifier(modifiers[m]);
+            }
+            else
+            {
+                DequeueModifier(overrides.GetOverride(modifiers[m]));
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Trying to access non-materialized modifier {m}");
+        }
+    }
+
+    private static void DequeueModifier(AudioModifier m)
+    {
+        foreach (var adj in m.adjustments)
+        {
+            string name = adj.parameter;
+
+            if (parameterResponsibilityQueue.ContainsKey(name))
+            {
+                if (!parameterResponsibilityQueue[name].Remove(adj))
+                {
+                    Debug.LogWarning($"Modifier {m.name} is not actually in effect (parameter {name} has modifiers attached, but not {m.name})");
+                    continue;
+                }
+                if (parameterResponsibilityQueue[name].Count == 0)
+                {
+                    // no modifiers left, restore parameter default
+                    SetGlobalParameter(name, parameterDefaults[name]);
+                }
+                else
+                {
+                    // force evaluate the last effect in this queue
+                    SetGlobalParameter(name, parameterResponsibilityQueue[name][^1].value);
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Modifier {m.name} is not actually in effect (property {name} does not have any modifiers attached)");
+            }
+        }
+    }
+
+    private static void SetGlobalParameter(string name, float val)
+    {
+        if (RuntimeManager.StudioSystem.setParameterByName(name, val) == FMOD.RESULT.OK)
+        {
+            // successfully set parameter
+        }
+        else
+        {
+            Debug.LogWarning($"Failed to set global parameter {name} = {val}");
         }
     }
 }
