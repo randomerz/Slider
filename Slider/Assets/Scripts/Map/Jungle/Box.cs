@@ -20,7 +20,6 @@ public class Box : MonoBehaviour
     protected List<Vector2> directions = new List<Vector2>();
     public Direction currentDirection = Direction.RIGHT; //you should set at the start 
 
-    // Start is called before the first frame update
     void Awake()
     {
         SetPaths();
@@ -72,6 +71,10 @@ public class Box : MonoBehaviour
         {
             paths[Direction.DOWN] = bottom;
         }
+
+        // if (paths.Keys.Count == 0) {
+        //     print(this.gameObject.name);
+        // }
     }
 
     public void CreateShape(List<Box> parents)
@@ -194,6 +197,7 @@ public class Box : MonoBehaviour
                     }
                 }
 
+                //make sure the huts are not hitting their own signs, but I disabled the script C,:
                 if (other != null)
                 {
                     if (Vector2.Distance(raycasthit.centroid, transform.position) < distanceTo)

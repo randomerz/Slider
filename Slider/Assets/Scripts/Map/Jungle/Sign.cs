@@ -74,24 +74,23 @@ public class Sign : Box
     }
     public void MergeShapes()
     {
-        //print("merging");
         List<Shape> shapesRecieved = new List<Shape>();
 
         foreach (Direction d in paths.Keys)
         {
             if (recievedShapes[paths[d]] != null)
             {
-/*                print(recievedShapes[paths[d]]);
-                print(d);*/
+                // print(recievedShapes[paths[d]]);
+                // print(d);
                 shapesRecieved.Add(recievedShapes[paths[d]]);
             }
         }
 
-/*        print("merging");
-        foreach (Shape s in shapesRecieved)
-        {
-            print(s.name);
-        }*/
+        // print(this.gameObject.name + " merging");
+        // foreach (Shape s in shapesRecieved)
+        // {
+        //     print(s.name);
+        // }
 
         foreach (Recipe recipe in recipes.list)
         {
