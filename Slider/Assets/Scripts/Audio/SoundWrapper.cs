@@ -76,13 +76,13 @@ public static class SoundExtension
 
     public static FMOD.Studio.EventInstance? ToFmodInstance(this Sound sound)
     {
-        var inst = FMODUnity.RuntimeManager.CreateInstance(sound.fmodEvent);
-        if (inst.isValid())
+        try
         {
-            return inst;
+            return FMODUnity.RuntimeManager.CreateInstance(sound.fmodEvent);
         }
-        else
+        catch (FMODUnity.EventNotFoundException e)
         {
+            Debug.LogWarning(e);
             return null;
         }
     }
