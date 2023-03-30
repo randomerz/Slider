@@ -81,20 +81,6 @@ public class AudioManager : Singleton<AudioManager>
         _music = music;
         _soundDampenCurve = soundDampenCurve;
 
-        foreach (Sound s in _sounds)
-        {
-            // AT: no longer needed, see managed instances
-            // s.emitter = gameObject.AddComponent<StudioEventEmitter>();
-            // s.emitter.EventReference = s.fmodEvent;
-
-            // s.source = gameObject.AddComponent<AudioSource>();
-            // s.source.clip = s.clip;
-
-            // s.source.volume = s.volume;
-            // s.source.pitch = s.pitch;
-            // s.source.loop = s.loop;
-        }
-
         foreach (Music m in _music)
         {
             m.emitter = gameObject.AddComponent<FMODUnity.StudioEventEmitter>();
@@ -203,8 +189,9 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    public static FMOD.Studio.EventInstance? Play(string name, Transform root = null)
-        => PickSound(name).WithSpatials(root).AndPlay();
+    public static FMOD.Studio.EventInstance? Play(string name, Transform root) => PickSound(name).WithSpatials(root).AndPlay();
+
+    public static FMOD.Studio.EventInstance? Play(string name) => PickSound(name).AndPlay();
 
     private static void UpdateManagedInstances()
     {
@@ -237,12 +224,9 @@ public class AudioManager : Singleton<AudioManager>
         });
     }
 
-    public static FMOD.Studio.EventInstance? PlayWithPitch(string name, float pitch) //Used In Ocean Scene
-        => PickSound(name).WithPitch(pitch).AndPlay();
+    public static FMOD.Studio.EventInstance? PlayWithPitch(string name, float pitch) => PickSound(name).WithPitch(pitch).AndPlay();
 
-
-    public static FMOD.Studio.EventInstance? PlayWithVolume(string name, float volumeMultiplier)
-        => PickSound(name).WithVolume(volumeMultiplier).AndPlay();
+    public static FMOD.Studio.EventInstance? PlayWithVolume(string name, float volumeMultiplier) => PickSound(name).WithVolume(volumeMultiplier).AndPlay();
 
     public static void PlayMusic(string name, bool stopOtherTracks=true)
     {
@@ -307,7 +291,6 @@ public class AudioManager : Singleton<AudioManager>
         // for track-specific parameters
         m.emitter.SetParameter(parameterName, value);
     }
-
 
     public static void SetSFXVolume(float value)
     {
@@ -497,9 +480,10 @@ public class AudioManager : Singleton<AudioManager>
         // however, cinemachine keeps main camera position stable (by only updating at LateUpdate with +100 execution order)
         // - script position may be different from actual position seen in inspector, if you think main camera "does" move
         // this evaluates the main camera relative to the active vcam and adds the offset
-        var cmBrain = currentCMBrain;
-        var vCamToListener = cmBrain.transform.position - cmBrain.ActiveVirtualCamera.State.FinalPosition;
-        return worldPosition + vCamToListener;
+        // var cmBrain = currentCMBrain;
+        // var vCamToListener = cmBrain.transform.position - cmBrain.ActiveVirtualCamera.State.FinalPosition;
+        // Debug.Log(cmBrain.transform.position);
+        return worldPosition; // + vCamToListener;
     }
 
     private class ManagedAttributes
@@ -521,7 +505,7 @@ public class AudioManager : Singleton<AudioManager>
 
         public FMOD.ATTRIBUTES_3D GetAndUpdate()
         {
-            if (!useDoppler) return transform.position.To3DAttributes();
+            if (!useDoppler) return GetAudioPosition(transform.position).To3DAttributes();
 
             Vector3 p = transform.position;
             float dt = Time.time - time;
