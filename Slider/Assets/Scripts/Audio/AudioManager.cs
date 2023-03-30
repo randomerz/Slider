@@ -36,6 +36,9 @@ public class AudioManager : Singleton<AudioManager>
     private static Dictionary<string, List<AudioModifier.AudioModifierProperty>> parameterResponsibilityQueue;
     private static Dictionary<string, float> parameterDefaults;
 
+    [SerializeField]
+    private FMODUnity.StudioListener listener;
+
     private static Dictionary<string, Sound> soundsDict
     {
         get
@@ -53,21 +56,7 @@ public class AudioManager : Singleton<AudioManager>
 
     static List<(FMOD.Studio.EventInstance, ManagedAttributes)> managedInstances;
 
-    private static GameObject cachedCMBrainKey;
-    private static CinemachineBrain currentCMBrain
-    {
-        get
-        {
-            if (Camera.main.gameObject != cachedCMBrainKey || cachedCMBrain == null)
-            {
-                // cache invalid
-                cachedCMBrainKey = Camera.main.gameObject;
-                cachedCMBrain = Camera.main.gameObject.GetComponent<CinemachineBrain>();
-            }
-            return cachedCMBrain;
-        }
-    }
-    private static CinemachineBrain cachedCMBrain;
+    static CinemachineBrain currentCinemachineBrain;
 
     void Awake()
     {
@@ -107,10 +96,15 @@ public class AudioManager : Singleton<AudioManager>
         SetMusicVolume(musicVolume);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
+        if (currentCinemachineBrain != null) {
+            listener.transform.position = currentCinemachineBrain.ActiveVirtualCamera.State.FinalPosition;
+        }
         UpdateManagedInstances();
     }
+
+    public static void UpdateCamera(CinemachineBrain brain) => currentCinemachineBrain = brain;
     
     private void Start() {
         // StartCoroutine(testvolume());
@@ -474,18 +468,6 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    private static Vector3 GetAudioPosition(Vector3 worldPosition)
-    {
-        // fmod listener always on main camera object so positions are always evaluated against main camera transform
-        // however, cinemachine keeps main camera position stable (by only updating at LateUpdate with +100 execution order)
-        // - script position may be different from actual position seen in inspector, if you think main camera "does" move
-        // this evaluates the main camera relative to the active vcam and adds the offset
-        // var cmBrain = currentCMBrain;
-        // var vCamToListener = cmBrain.transform.position - cmBrain.ActiveVirtualCamera.State.FinalPosition;
-        // Debug.Log(cmBrain.transform.position);
-        return worldPosition; // + vCamToListener;
-    }
-
     private class ManagedAttributes
     {
         private readonly Transform transform;
@@ -505,7 +487,7 @@ public class AudioManager : Singleton<AudioManager>
 
         public FMOD.ATTRIBUTES_3D GetAndUpdate()
         {
-            if (!useDoppler) return GetAudioPosition(transform.position).To3DAttributes();
+            if (!useDoppler) return transform.position.To3DAttributes();
 
             Vector3 p = transform.position;
             float dt = Time.time - time;
@@ -518,7 +500,7 @@ public class AudioManager : Singleton<AudioManager>
             {
                 forward = Vector3.forward.ToFMODVector(),
                 up = Vector3.up.ToFMODVector(),
-                position = GetAudioPosition(p).ToFMODVector(),
+                position = p.ToFMODVector(),
                 velocity = (v * dopplerScale).ToFMODVector()
             };
         }
