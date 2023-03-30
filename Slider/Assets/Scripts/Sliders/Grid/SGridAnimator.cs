@@ -83,7 +83,7 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-        EffectOnMoveStart(move is SMoveConveyor, stile.transform);
+        EffectOnMoveStart(move is SMoveConveyor, isPlayerOnStile ? null : stile.transform);
 
         float t = 0;
         currMoveDuration = movementDuration * move.duration;
@@ -123,7 +123,8 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-        EffectOnMoveFinish(stile.transform);
+        
+        EffectOnMoveFinish(isPlayerOnStile ? null : stile.transform);
     }
 
     // DC: this is a lot of parameters :)

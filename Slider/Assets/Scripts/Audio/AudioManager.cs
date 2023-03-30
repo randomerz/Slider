@@ -98,13 +98,21 @@ public class AudioManager : Singleton<AudioManager>
 
     private void Update()
     {
-        if (currentCinemachineBrain != null) {
-            listener.transform.position = currentCinemachineBrain.ActiveVirtualCamera.State.FinalPosition;
-        }
+        UpdateCameraPosition();
         UpdateManagedInstances();
     }
 
     public static void UpdateCamera(CinemachineBrain brain) => currentCinemachineBrain = brain;
+    public void UpdateCameraPosition()
+    {
+        var cam = currentCinemachineBrain != null ? currentCinemachineBrain.ActiveVirtualCamera : null;
+        if (cam == null) return;
+
+        // When camera lerps to target, lock to the target instead of the camera
+        var priority = cam.LookAt == null ? cam.Follow : cam.LookAt;
+        if (priority == null) listener.transform.position = new Vector3(cam.State.FinalPosition.x, cam.State.FinalPosition.y, 0);
+        else listener.transform.position = priority.position;
+    }
     
     private void Start() {
         // StartCoroutine(testvolume());
@@ -139,22 +147,18 @@ public class AudioManager : Singleton<AudioManager>
 
     public static FMOD.Studio.EventInstance? Play(SoundWrapper soundWrapper)
     {
-        if (soundWrapper.fmodInstance == null || !soundWrapper.fmodInstance.HasValue) return null;
-        var inst = soundWrapper.fmodInstance.Value;
+        if (!soundWrapper.valid) return null;
+        var inst = soundWrapper.fmodInstance;
 
-        if (soundWrapper.root != null)
+        if (soundWrapper.useSpatials)
         {
             if (managedInstances == null) managedInstances = new List<(EventInstance, ManagedAttributes)>(10);
-            var attributes = new ManagedAttributes(soundWrapper.root, soundWrapper.sound?.dopplerScale ?? 0);
+            var attributes = new ManagedAttributes(
+                soundWrapper.root == null ? _instance.listener.transform : soundWrapper.root, 
+                soundWrapper.useDoppler, 
+                soundWrapper.sound.dopplerScale);
             inst.set3DAttributes(attributes.GetAndUpdate());
-            managedInstances.Add((inst, new ManagedAttributes(soundWrapper.root, soundWrapper.sound.dopplerScale)));
-        }
-        if (soundWrapper.parameters != null)
-        {
-            foreach(var (name, value) in soundWrapper.parameters)
-            {
-                inst.setParameterByName(name, value);
-            }
+            managedInstances.Add((inst, attributes));
         }
         inst.start();
         return inst;
@@ -468,20 +472,20 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    private class ManagedAttributes
+    private struct ManagedAttributes
     {
         private readonly Transform transform;
         float time;
-        private readonly int dopplerScale;
+        private readonly float dopplerScale;
         private readonly bool useDoppler;
         Vector3 position;
 
-        public ManagedAttributes(Transform transform, int dopplerScale)
+        public ManagedAttributes(Transform transform, bool useDoppler, float dopplerScale)
         {
             this.transform = transform;
             position = transform.position;
             time = Time.time;
-            useDoppler = dopplerScale != 0;
+            this.useDoppler = useDoppler;
             this.dopplerScale = dopplerScale;
         }
 

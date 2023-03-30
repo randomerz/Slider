@@ -9,5 +9,8 @@ public class Sound
 {
     public string name;
     public EventReference fmodEvent;
-    public int dopplerScale = 0;
+
+    [Range(1f, 10f)]
+    [Tooltip("Only set if sound requires more than 5x of scale, otherwise configure inside FMOD.\nNote this is multiplied with the FMOD doppler scale.")]
+    public float dopplerScale = 0;
 }
