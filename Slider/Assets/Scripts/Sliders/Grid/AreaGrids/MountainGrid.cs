@@ -45,7 +45,7 @@ public class MountainGrid : SGrid
         AudioManager.PlayMusic("Mountain");
     }
     
-    /*private void OnEnable()     C: Currently broken, will look into fixing later
+    private void OnEnable()     
     {
         Anchor.OnAnchorInteract += OnAnchorInteract;
     }
@@ -74,7 +74,7 @@ public class MountainGrid : SGrid
                 }
             }
         }        
-    }*/
+    }
 
     private void Update() {
         if(playerOnBottom && Player._instance.transform.position.y > 63f) {
