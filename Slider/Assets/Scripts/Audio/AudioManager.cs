@@ -157,72 +157,54 @@ public class AudioManager : Singleton<AudioManager>
         return m;
     }
 
-    public static FMOD.Studio.EventInstance? Play(string name, Action<FMOD.Studio.EventInstance> config = null)
+    public static FMOD.Studio.EventInstance? Play(SoundWrapper soundWrapper)
+    {
+        if (soundWrapper.fmodInstance == null || !soundWrapper.fmodInstance.HasValue) return null;
+        var inst = soundWrapper.fmodInstance.Value;
+
+        if (soundWrapper.root != null)
+        {
+            if (managedInstances == null) managedInstances = new List<(EventInstance, ManagedAttributes)>(10);
+            var attributes = new ManagedAttributes(soundWrapper.root, soundWrapper.sound?.dopplerScale ?? 0);
+            inst.set3DAttributes(attributes.GetAndUpdate());
+            managedInstances.Add((inst, new ManagedAttributes(soundWrapper.root, soundWrapper.sound.dopplerScale)));
+        }
+        if (soundWrapper.parameters != null)
+        {
+            foreach(var (name, value) in soundWrapper.parameters)
+            {
+                inst.setParameterByName(name, value);
+            }
+        }
+        inst.start();
+        return inst;
+    }
+
+    public static SoundWrapper PickSound(string name)
     {
         if (soundsDict.ContainsKey(name))
         {
             Sound s = soundsDict[name];
-            var inst = PlayFmodWithSpatials(s.fmodEvent, currentCMBrain.transform);
-            if (inst.HasValue)
+            if (s != null)
             {
-                config?.Invoke(inst.Value);
-                return inst;
-                
-            } else
+                return s;
+            }
+            else
             {
                 Debug.LogError($"Failed to spawn instance for sound {name}");
-                return null;
+                return (SoundWrapper) (null as Sound);
             }
 
-        } else
+        }
+        else
         {
             Debug.LogError("Sound: " + name + " not found!");
-            return null;
+            return (SoundWrapper)(null as Sound);
         }
     }
 
-    public static void PlayFmodOneshotWithSpatials(FMODUnity.EventReference name, Vector3 worldPosition)
-    {
-        FMODUnity.RuntimeManager.PlayOneShot(name, GetAudioPosition(worldPosition));
-    }
-
-    public static FMOD.Studio.EventInstance? PlayFmodWithSpatials(string name, Transform t)
-    {
-        if (soundsDict == null) return null;
-        if (soundsDict.ContainsKey(name))
-        {
-            Sound s = soundsDict[name];
-            return PlayFmodWithSpatials(s.fmodEvent, t, s.dopplerScale);
-        } else
-        {
-            return null;
-        }
-    }
-
-    public static FMOD.Studio.EventInstance? PlayFmodWithSpatials(FMODUnity.EventReference name, Transform t,  int dopplerScale = 0)
-    {
-        var inst = FMODUnity.RuntimeManager.CreateInstance(name);
-        if (inst.isValid())
-        {
-            if (managedInstances == null) managedInstances = new List<(FMOD.Studio.EventInstance, ManagedAttributes)>(10);
-            var attributes = new ManagedAttributes(t, dopplerScale);
-            inst.set3DAttributes(attributes.GetAndUpdate());
-            inst.start();
-            managedInstances.Add((inst, attributes));
-            
-            //if (
-            //    inst.getDescription(out FMOD.Studio.EventDescription desc) == FMOD.RESULT.OK
-            //    && desc.isDopplerEnabled(out bool doppler) == FMOD.RESULT.OK 
-            //    && doppler)
-            //{
-            //    Debug.Log("Playing doppler enabled event");
-            //}
-            return inst;
-        } else
-        {
-            return null;
-        }
-    }
+    public static FMOD.Studio.EventInstance? Play(string name, Transform root = null)
+        => PickSound(name).WithSpatials(root).AndPlay();
 
     private static void UpdateManagedInstances()
     {
@@ -256,21 +238,11 @@ public class AudioManager : Singleton<AudioManager>
     }
 
     public static FMOD.Studio.EventInstance? PlayWithPitch(string name, float pitch) //Used In Ocean Scene
-    {
-        return Play(name, delegate (FMOD.Studio.EventInstance inst)
-        {
-            inst.setParameterByName("pitch", pitch);
-        });
-    }
+        => PickSound(name).WithPitch(pitch).AndPlay();
 
 
     public static FMOD.Studio.EventInstance? PlayWithVolume(string name, float volumeMultiplier)
-    {
-        return Play(name, delegate (FMOD.Studio.EventInstance inst)
-        {
-            inst.setParameterByName("volume", volumeMultiplier);
-        });
-    }
+        => PickSound(name).WithVolume(volumeMultiplier).AndPlay();
 
     public static void PlayMusic(string name, bool stopOtherTracks=true)
     {

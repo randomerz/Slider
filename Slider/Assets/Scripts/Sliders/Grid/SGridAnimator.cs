@@ -222,7 +222,7 @@ public class SGridAnimator : MonoBehaviour
     protected void EffectOnMoveStart(bool isConveyor, Transform root)
     {
         CameraShake.ShakeConstant(currMoveDuration + 0.1f, 0.15f);
-        var sfx = AudioManager.PlayFmodWithSpatials(isConveyor ? "Conveyor" : "Slide Rumble", root);
+        var sfx = AudioManager.Play(isConveyor ? "Conveyor" : "Slide Rumble", root);
         if (sfx != null)
         {
             sfx.Value.setVolume(currMoveDuration);
@@ -233,7 +233,7 @@ public class SGridAnimator : MonoBehaviour
     protected void EffectOnMoveFinish(Transform root)
     {
         CameraShake.Shake(currMoveDuration / 2, 1.0f);
-        var sfx = AudioManager.PlayFmodWithSpatials("Slide Explosion", root);
+        var sfx = AudioManager.Play("Slide Explosion", root);
         if (sfx != null)
         {
             sfx.Value.setVolume(currMoveDuration);

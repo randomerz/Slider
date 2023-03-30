@@ -29,11 +29,6 @@ public class MaterialBasedEmitter : MonoBehaviour
     {
         Tilemap map = locatable.GetCurrentMaterialTilemap();
         TileBase tileBase = map == null ? null : map.GetTile(map.WorldToCell(locatableRef.transform.position));
-        PlayStepType(mapping[tileBase]);
-    }
-
-    private void PlayStepType(FMODUnity.EventReference e)
-    {
-        AudioManager.PlayFmodOneshotWithSpatials(e, transform.position);
+        mapping[tileBase].WithSpatials(transform).AndPlay();
     }
 }
