@@ -38,6 +38,8 @@ public class AudioManager : Singleton<AudioManager>
 
     [SerializeField]
     private FMODUnity.StudioListener listener;
+    [SerializeField]
+    private Transform listenerWorldPosition;
 
     [SerializeField, Range(0, 20), Tooltip("Z-direction distance from top-down listener to game's plane")]
     private float ZLevel;
@@ -113,8 +115,11 @@ public class AudioManager : Singleton<AudioManager>
 
         // When camera lerps to target, lock to the target instead of the camera
         var priority = cam.LookAt == null ? cam.Follow : cam.LookAt;
-        if (priority == null) listener.transform.position = new Vector3(cam.State.FinalPosition.x, cam.State.FinalPosition.y, ZLevel);
-        else listener.transform.position = new Vector3(priority.position.x, priority.position.y, ZLevel);
+        Vector3 temp = priority == null ? cam.State.FinalPosition : priority.position;
+        temp.z = ZLevel;
+        listener.transform.position = temp;
+        temp.z = 0;
+        listenerWorldPosition.position = temp;
     }
     
     private void Start() {
@@ -157,13 +162,14 @@ public class AudioManager : Singleton<AudioManager>
         {
             if (managedInstances == null) managedInstances = new List<(EventInstance, ManagedAttributes)>(10);
             var attributes = new ManagedAttributes(
-                soundWrapper.root == null ? _instance.listener.transform : soundWrapper.root, 
+                soundWrapper.root == null ? _instance.listenerWorldPosition.transform : soundWrapper.root, 
                 soundWrapper.useDoppler, 
                 soundWrapper.sound.dopplerScale);
             inst.set3DAttributes(attributes.GetAndUpdate());
             managedInstances.Add((inst, attributes));
         }
         inst.start();
+
         return inst;
     }
 
@@ -190,7 +196,7 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    public static FMOD.Studio.EventInstance? Play(string name, Transform root) => PickSound(name).WithSpatials(root).AndPlay();
+    public static FMOD.Studio.EventInstance? Play(string name, Transform root) => PickSound(name).WithAttachmentToTransform(root).AndPlay();
 
     public static FMOD.Studio.EventInstance? Play(string name) => PickSound(name).AndPlay();
 
