@@ -29,6 +29,6 @@ public class MaterialBasedEmitter : MonoBehaviour
     {
         Tilemap map = locatable.GetCurrentMaterialTilemap();
         TileBase tileBase = map == null ? null : map.GetTile(map.WorldToCell(locatableRef.transform.position));
-        mapping[tileBase].WithSpatials(transform).AndPlay();
+        mapping[tileBase].WithAttachmentToTransform(transform).AndPlay();
     }
 }

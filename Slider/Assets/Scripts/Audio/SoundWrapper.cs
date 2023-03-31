@@ -83,7 +83,7 @@ public struct SoundWrapper
 
 public static class SoundExtension
 {
-    public static SoundWrapper WithSpatials(this Sound sound, Transform root) => ((SoundWrapper)sound).WithAttachmentToTransform(root);
+    public static SoundWrapper WithAttachmentToTransform(this Sound sound, Transform root) => ((SoundWrapper)sound).WithAttachmentToTransform(root);
     public static SoundWrapper WithVolume(this Sound sound, float volume) => ((SoundWrapper) sound).WithVolume(volume);
     public static SoundWrapper WithPitch(this Sound sound, float pitch) => ((SoundWrapper)sound).WithPitch(pitch);
     public static SoundWrapper WithParameter(this Sound sound, string name, float value) => ((SoundWrapper)sound).WithParameter(name, value);
