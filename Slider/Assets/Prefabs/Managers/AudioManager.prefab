@@ -371,6 +371,15 @@ MonoBehaviour:
         Data4: 1758749397
       Path: event:/SFX/Factory/FactoryTimedGateProgress6
     dopplerScale: 0
+  - name: Debug
+    fmodEvent:
+      Guid:
+        Data1: 1475310652
+        Data2: 1203967059
+        Data3: 1067200654
+        Data4: 930797071
+      Path: event:/SFX/Debug/Debug
+    dopplerScale: 3.39
   music:
   - name: Main Menu
     fmodEvent:
@@ -525,3 +534,4 @@ MonoBehaviour:
   modifierPool:
   - {fileID: 11400000, guid: c68abdfdd8910454688546eb6e03e3a1, type: 2}
   listener: {fileID: 6844044390766525512}
+  ZLevel: 10

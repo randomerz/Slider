@@ -39,6 +39,9 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField]
     private FMODUnity.StudioListener listener;
 
+    [SerializeField, Range(0, 20), Tooltip("Z-direction distance from top-down listener to game's plane")]
+    private float ZLevel;
+
     private static Dictionary<string, Sound> soundsDict
     {
         get
@@ -110,8 +113,8 @@ public class AudioManager : Singleton<AudioManager>
 
         // When camera lerps to target, lock to the target instead of the camera
         var priority = cam.LookAt == null ? cam.Follow : cam.LookAt;
-        if (priority == null) listener.transform.position = new Vector3(cam.State.FinalPosition.x, cam.State.FinalPosition.y, 0);
-        else listener.transform.position = priority.position;
+        if (priority == null) listener.transform.position = new Vector3(cam.State.FinalPosition.x, cam.State.FinalPosition.y, ZLevel);
+        else listener.transform.position = new Vector3(priority.position.x, priority.position.y, ZLevel);
     }
     
     private void Start() {

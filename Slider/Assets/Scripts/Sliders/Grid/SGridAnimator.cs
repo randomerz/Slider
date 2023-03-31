@@ -223,23 +223,22 @@ public class SGridAnimator : MonoBehaviour
     protected void EffectOnMoveStart(bool isConveyor, Transform root)
     {
         CameraShake.ShakeConstant(currMoveDuration + 0.1f, 0.15f);
-        var sfx = AudioManager.Play(isConveyor ? "Conveyor" : "Slide Rumble", root);
-        if (sfx != null)
-        {
-            sfx.Value.setVolume(currMoveDuration);
-        }
-        // AudioManager.PlayWithVolume(isConveyor ? "Conveyor" : "Slide Rumble", currMoveDuration);
+        AudioManager
+            .PickSound("Debug")
+            .WithSpatials(root)
+            .WithVolume(currMoveDuration)
+            .AndPlay();
+        // var sfx = AudioManager.Play(isConveyor ? "Conveyor" : "Slide Rumble", root);
     }
 
     protected void EffectOnMoveFinish(Transform root)
     {
         CameraShake.Shake(currMoveDuration / 2, 1.0f);
-        var sfx = AudioManager.Play("Slide Explosion", root);
-        if (sfx != null)
-        {
-            sfx.Value.setVolume(currMoveDuration);
-        }
-        // AudioManager.PlayWithVolume("Slide Explosion", currMoveDuration);
+        AudioManager
+            .PickSound("Slide Explosion")
+            .WithSpatials(root)
+            .WithVolume(currMoveDuration)
+            .AndPlay();
     }
 
     protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) 
