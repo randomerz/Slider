@@ -83,10 +83,7 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-
-
-
-        EffectOnMoveStart(move is SMoveConveyor);
+        EffectOnMoveStart(move is SMoveConveyor, isPlayerOnStile ? null : stile.transform);
 
         float t = 0;
         currMoveDuration = movementDuration * move.duration;
@@ -126,7 +123,8 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-        EffectOnMoveFinish();
+        
+        EffectOnMoveFinish(isPlayerOnStile ? null : stile.transform);
     }
 
     // DC: this is a lot of parameters :)
@@ -222,16 +220,24 @@ public class SGridAnimator : MonoBehaviour
         return null;
     }
 
-    protected void EffectOnMoveStart(bool isConveyor)
+    protected void EffectOnMoveStart(bool isConveyor, Transform root)
     {
         CameraShake.ShakeConstant(currMoveDuration + 0.1f, 0.15f);
-        AudioManager.PlayWithVolume(isConveyor ? "Conveyor" : "Slide Rumble", currMoveDuration);
+        AudioManager
+            .PickSound(isConveyor ? "Conveyor" : "Slide Rumble")
+            .WithAttachmentToTransform(root)
+            .WithVolume(currMoveDuration)
+            .AndPlay();
     }
 
-    protected void EffectOnMoveFinish()
+    protected void EffectOnMoveFinish(Transform root)
     {
         CameraShake.Shake(currMoveDuration / 2, 1.0f);
-        AudioManager.PlayWithVolume("Slide Explosion", currMoveDuration);
+        AudioManager
+            .PickSound("Slide Explosion")
+            .WithAttachmentToTransform(root)
+            .WithVolume(currMoveDuration)
+            .AndPlay();
     }
 
     protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) 

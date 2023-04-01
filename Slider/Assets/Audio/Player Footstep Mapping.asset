@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 992cab017359fb24a91b62fd94057564, type: 3}
+  m_Name: Player Footstep Mapping
+  m_EditorClassIdentifier: 
+  mappingList:
+  - materialTile: {fileID: 11400000, guid: c1693b05f9b5b9443b151a2ccde2e5f0, type: 2}
+    eventRef:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: 1401915951
+          Data2: 1078907725
+          Data3: 401503915
+          Data4: -833290422
+        Path: event:/SFX/Footsteps/player_footstep_grass
+      dopplerScale: 0
+  - materialTile: {fileID: 11400000, guid: a70c6c495ba175b489b04489ea6301e5, type: 2}
+    eventRef:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: -428681772
+          Data2: 1182053985
+          Data3: -1389713231
+          Data4: 305745240
+        Path: event:/SFX/Footsteps/player_footstep_wood
+      dopplerScale: 0
+  - materialTile: {fileID: 11400000, guid: a314c7caee04c3748b9314cb3e89efb7, type: 2}
+    eventRef:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: 915774245
+          Data2: 1170405450
+          Data3: 824886446
+          Data4: 374144923
+        Path: event:/SFX/Footsteps/player_footstep_concrete
+      dopplerScale: 0
+  - materialTile: {fileID: 11400000, guid: ae8ecdcbf5e225147b3ea9ea24274a05, type: 2}
+    eventRef:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: -1236899501
+          Data2: 1315550123
+          Data3: -1469968472
+          Data4: -289132723
+        Path: event:/SFX/Footsteps/player_footstep_sand
+      dopplerScale: 0
+  - materialTile: {fileID: 11400000, guid: ac9eedb037e0b2749becfbf82bbd1056, type: 2}
+    eventRef:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: 1496106395
+          Data2: 1247064296
+          Data3: 799483816
+          Data4: -1020949563
+        Path: event:/SFX/Footsteps/player_footstep_puddle
+      dopplerScale: 0
+  - materialTile: {fileID: 11400000, guid: f2322d483786fb04893ba94f2a38ba18, type: 2}
+    eventRef:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: 928224416
+          Data2: 1111412477
+          Data3: 1874025127
+          Data4: 782460687
+        Path: event:/SFX/Footsteps/player_footstep_metal
+      dopplerScale: 0
+  fallbackMapping:
+    name: 
+    fmodEvent:
+      Guid:
+        Data1: 1401915951
+        Data2: 1078907725
+        Data3: 401503915
+        Data4: -833290422
+      Path: event:/SFX/Footsteps/player_footstep_grass
+    dopplerScale: 0

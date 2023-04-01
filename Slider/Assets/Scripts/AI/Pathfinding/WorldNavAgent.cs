@@ -129,49 +129,49 @@ public class WorldNavAgent : MonoBehaviour
             }
         }
 
-        // super laggy debug mode B)
+        // // super laggy debug mode B)
 
-        int minCost = int.MaxValue;
-        Vector2Int minCostPt = Vector2Int.zero;
-        Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
+        // int minCost = int.MaxValue;
+        // Vector2Int minCostPt = Vector2Int.zero;
+        // Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
 
-        //Find the position within maxDistVision with the lowest cost on the cost map
-        float dist = 0f;
-        var queue = new Queue<Vector2Int>();
-        var visited = new HashSet<Vector2Int>();
-        queue.Enqueue(posAsInt);
-        while (queue.Count > 0 && dist < ai.maxDistVision + 2)
-        {
-            Vector2Int currPos = queue.Dequeue();
-            visited.Add(currPos);
-            int cost = GetTileCost(currPos);
-            if (cost < int.MaxValue)   //Tile is traversable
-            {
-                Gizmos.color = Color.Lerp(Color.green, Color.red, cost / 300f);
-                // if (cost != 0) Debug.Log(cost);
-                Gizmos.DrawSphere(new Vector3(currPos.x, currPos.y), 0.125f + cost / 1500f);
+        // //Find the position within maxDistVision with the lowest cost on the cost map
+        // float dist = 0f;
+        // var queue = new Queue<Vector2Int>();
+        // var visited = new HashSet<Vector2Int>();
+        // queue.Enqueue(posAsInt);
+        // while (queue.Count > 0 && dist < ai.maxDistVision + 2)
+        // {
+        //     Vector2Int currPos = queue.Dequeue();
+        //     visited.Add(currPos);
+        //     int cost = GetTileCost(currPos);
+        //     if (cost < int.MaxValue)   //Tile is traversable
+        //     {
+        //         Gizmos.color = Color.Lerp(Color.green, Color.red, cost / 300f);
+        //         // if (cost != 0) Debug.Log(cost);
+        //         Gizmos.DrawSphere(new Vector3(currPos.x, currPos.y), 0.125f + cost / 1500f);
 
-                //Since we only enqueue tiles that are traversable, there will always be a path from the start to the minCost tile that we choose
-                //meaning that we no longer have to call AStar on every neighbor!
-                dist = Mathf.Max(dist, Vector2Int.Distance(posAsInt, currPos));
+        //         //Since we only enqueue tiles that are traversable, there will always be a path from the start to the minCost tile that we choose
+        //         //meaning that we no longer have to call AStar on every neighbor!
+        //         dist = Mathf.Max(dist, Vector2Int.Distance(posAsInt, currPos));
 
-                if (cost < minCost)
-                {
-                    minCost = cost;
-                    minCostPt = currPos;
-                }
+        //         if (cost < minCost)
+        //         {
+        //             minCost = cost;
+        //             minCostPt = currPos;
+        //         }
 
-                List<Vector2Int> neighbors = ai.nav.GetMooreNeighbors(currPos);
-                foreach (var neighbor in neighbors)
-                {
-                    if (!visited.Contains(neighbor))
-                    {
-                        queue.Enqueue(neighbor);
-                    }
-                }
-                //Debug.Log($"Cost To: {neighbor} is {cost}");
-            }
-        }
+        //         List<Vector2Int> neighbors = ai.nav.GetMooreNeighbors(currPos);
+        //         foreach (var neighbor in neighbors)
+        //         {
+        //             if (!visited.Contains(neighbor))
+        //             {
+        //                 queue.Enqueue(neighbor);
+        //             }
+        //         }
+        //         //Debug.Log($"Cost To: {neighbor} is {cost}");
+        //     }
+        // }
     }
     
     private int GetTileCost(Vector2Int pt)

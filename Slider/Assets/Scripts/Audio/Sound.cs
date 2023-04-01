@@ -1,22 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
+using System.Runtime.CompilerServices;
 
 [System.Serializable]
 public class Sound
 {
     public string name;
+    public EventReference fmodEvent;
 
-    public AudioClip clip;
-
-    [Range(0f, 1f)]
-    public float volume = 1;
-    [Range(0.1f, 3f)]
-    public float pitch = 1;
-
-    public bool loop;
-    public bool doRandomPitch = true;
-
-    [HideInInspector]
-    public AudioSource source;
+    [Range(1f, 10f)]
+    [Tooltip("Only set if sound requires more than 5x of scale, otherwise configure inside FMOD.\nNote this is multiplied with the FMOD doppler scale.")]
+    public float dopplerScale = 0;
 }
