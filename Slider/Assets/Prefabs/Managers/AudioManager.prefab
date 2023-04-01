@@ -141,7 +141,7 @@ MonoBehaviour:
         Data3: -1040153453
         Data4: 18325320
       Path: event:/SFX/Rumbles and Explosions/Slide Rumble
-    dopplerScale: 5
+    dopplerScale: 1
   - name: Slide Explosion
     fmodEvent:
       Guid:
@@ -196,23 +196,32 @@ MonoBehaviour:
         Data4: -1741667662
       Path: event:/SFX/Rumbles and Explosions/Long Rumble Increase 8s
     dopplerScale: 0
-  - name: UI Click
-    fmodEvent:
-      Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
-    dopplerScale: 0
   - name: Artifact Error
     fmodEvent:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1812793343
+        Data2: 1132485894
+        Data3: -2120134783
+        Data4: -504788968
+      Path: event:/SFX/SFXR/Artifact Error
+    dopplerScale: 0
+  - name: UI Click
+    fmodEvent:
+      Guid:
+        Data1: 888704055
+        Data2: 1283724700
+        Data3: 718599337
+        Data4: -1411563401
+      Path: event:/SFX/SFXR/UI Click
+    dopplerScale: 0
+  - name: Hat Click
+    fmodEvent:
+      Guid:
+        Data1: 607630786
+        Data2: 1103724590
+        Data3: 1921376432
+        Data4: -2119127444
+      Path: event:/SFX/SFXR/Hat Click
     dopplerScale: 0
   - name: NPC Blip
     fmodEvent:
@@ -235,21 +244,39 @@ MonoBehaviour:
   - name: Hurt
     fmodEvent:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: -15210043
+        Data2: 1194289358
+        Data3: -1849919341
+        Data4: 1327211398
+      Path: event:/SFX/SFXR/Hurt
     dopplerScale: 0
   - name: Fall
     fmodEvent:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
+        Data1: 1943810120
+        Data2: 1213642217
+        Data3: 3114136
+        Data4: -1173462338
+      Path: event:/SFX/SFXR/Fall
     dopplerScale: 0
+  - name: MagicChimes1
+    fmodEvent:
+      Guid:
+        Data1: 1781160218
+        Data2: 1195332244
+        Data3: 946167185
+        Data4: -470553028
+      Path: event:/SFX/Magic/Magic Chimes1
+    dopplerScale: 1
+  - name: MagicChimes2
+    fmodEvent:
+      Guid:
+        Data1: -347604741
+        Data2: 1218313766
+        Data3: 2008226204
+        Data4: -650800235
+      Path: event:/SFX/Magic/Magic Chimes2
+    dopplerScale: 1
   - name: TFT Bell
     fmodEvent:
       Guid:
@@ -411,7 +438,7 @@ MonoBehaviour:
         Data3: 1067200654
         Data4: 930797071
       Path: event:/SFX/Debug/Debug
-    dopplerScale: 3.39
+    dopplerScale: 1
   music:
   - name: Main Menu
     fmodEvent:

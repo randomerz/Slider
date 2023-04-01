@@ -58,6 +58,7 @@ public class ParticleTrail : MonoBehaviour
         foreach (Vector3 p in positions)
         {
             Instantiate(particlePrefab, p, Quaternion.identity, transform);
+            AudioManager.PlayWithVolume("Hat Click", 0.5f);
 
             yield return new WaitForSeconds(delayBetweenParticles);
         }

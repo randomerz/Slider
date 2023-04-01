@@ -121,23 +121,6 @@ public class AudioManager : Singleton<AudioManager>
         temp.z = 0;
         listenerWorldPosition.position = temp;
     }
-    
-    private void Start() {
-        // StartCoroutine(testvolume());
-    }
-
-    private IEnumerator testvolume()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            float val = 2 - (0.2f * i);
-            Debug.Log(val);
-            PlayWithPitch("TFT Bell", val);
-            // Play("TFT Bell");
-
-            yield return new WaitForSeconds(1);
-        }
-    }
 
     private static Music GetMusic(string name)
     {

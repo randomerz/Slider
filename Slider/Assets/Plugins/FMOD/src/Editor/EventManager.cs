@@ -16,32 +16,36 @@ namespace FMODUnity
     {
         private const string FMODLabel = "FMOD";
 
-        const string AssetsFolderName = "Assets";
+        private const string AssetsFolderName = "Assets";
 
-        const string CacheAssetName = "FMODStudioCache";
+        private const string CacheAssetName = "FMODStudioCache";
         public static string CacheAssetFullName =>
             $"Assets/{RuntimeUtils.PluginBasePath}/Cache/Editor/{CacheAssetName}.asset";
-        static EventCache eventCache;
+        private static EventCache eventCache;
 
-        const string StringBankExtension = "strings.bank";
-        const string BankExtension = "bank";
+        private const string StringBankExtension = "strings.bank";
+        private const string BankExtension = "bank";
 
 #if UNITY_EDITOR
         [MenuItem("FMOD/Refresh Banks", priority = 1)]
         public static void RefreshBanks()
         {
             string result = UpdateCache();
-            OnCacheChange();
-            if (Settings.Instance.ImportType == ImportType.AssetBundle)
+
+            if (eventCache != null)
             {
-                UpdateBankStubAssets(EditorUserBuildSettings.activeBuildTarget);
+                OnCacheChange();
+                if (Settings.Instance.ImportType == ImportType.AssetBundle)
+                {
+                    UpdateBankStubAssets(EditorUserBuildSettings.activeBuildTarget);
+                }
             }
 
             BankRefresher.HandleBankRefresh(result);
         }
 #endif
 
-        static void ClearCache()
+        private static void ClearCache()
         {
             eventCache.CacheTime = DateTime.MinValue;
             eventCache.EditorBanks.Clear();
@@ -53,7 +57,7 @@ namespace FMODUnity
                 Settings.Instance.BanksToLoad.Clear();
         }
 
-        static private void AffirmEventCache()
+        private static void AffirmEventCache()
         {
             if (eventCache == null)
             {
@@ -61,17 +65,28 @@ namespace FMODUnity
             }
         }
 
-        static private string UpdateCache()
+        private static string UpdateCache()
         {
             if (eventCache == null)
             {
                 eventCache = AssetDatabase.LoadAssetAtPath(CacheAssetFullName, typeof(EventCache)) as EventCache;
-                if (eventCache == null || eventCache.cacheVersion != EventCache.CurrentCacheVersion)
+
+                // If new libraries need to be staged, or the staging process is in progress, clear the cache and exit.
+                if (StagingSystem.SourceLibsExist)
+                {
+                    if (eventCache != null)
+                    {
+                        ClearCache();
+                    }
+                    return null;
+                }
+                
+                if (eventCache == null || eventCache.cacheVersion != FMOD.VERSION.number)
                 {
                     RuntimeUtils.DebugLog("FMOD: Event cache is missing or in an old format; creating a new instance.");
 
                     eventCache = ScriptableObject.CreateInstance<EventCache>();
-                    eventCache.cacheVersion = EventCache.CurrentCacheVersion;
+                    eventCache.cacheVersion = FMOD.VERSION.number;
 
                     Directory.CreateDirectory(Path.GetDirectoryName(CacheAssetFullName));
                     AssetDatabase.CreateAsset(eventCache, CacheAssetFullName);
@@ -147,7 +162,7 @@ namespace FMODUnity
             }
 
             // Stop editor preview so no stale data being held
-            EditorUtils.PreviewStop();
+            EditorUtils.StopAllPreviews();
 
             bool reloadPreviewBanks = EditorUtils.PreviewBanksLoaded;
             if (reloadPreviewBanks)
@@ -364,7 +379,7 @@ namespace FMODUnity
             return null;
         }
 
-        static void ShowEventsRenamedDialog()
+        private static void ShowEventsRenamedDialog()
         {
             bool runUpdater = EditorUtility.DisplayDialog("Events Renamed",
                 string.Format("Some events have been renamed in FMOD Studio. Do you want to run {0} " +
@@ -376,7 +391,7 @@ namespace FMODUnity
             }
         }
 
-        static void UpdateCacheBank(EditorBankRef bankRef, ref bool renameOccurred)
+        private static void UpdateCacheBank(EditorBankRef bankRef, ref bool renameOccurred)
         {
             // Clear out any cached events from this bank
             eventCache.EditorEvents.ForEach((x) => x.Banks.Remove(bankRef));
@@ -512,7 +527,7 @@ namespace FMODUnity
             }
         }
 
-        static void InitializeParamRef(EditorParamRef paramRef, FMOD.Studio.PARAMETER_DESCRIPTION description,
+        private static void InitializeParamRef(EditorParamRef paramRef, FMOD.Studio.PARAMETER_DESCRIPTION description,
             Func<int, string> getLabel)
         {
             paramRef.Name = description.name;
@@ -537,7 +552,7 @@ namespace FMODUnity
             }
         }
 
-        static string[] GetParameterLabels(FMOD.Studio.PARAMETER_DESCRIPTION parameterDescription,
+        private static string[] GetParameterLabels(FMOD.Studio.PARAMETER_DESCRIPTION parameterDescription,
             Func<int, string> getLabel)
         {
             string[] labels = new string[(int)parameterDescription.maximum + 1];
@@ -603,7 +618,7 @@ namespace FMODUnity
             }
         }
 
-        static readonly string UpdaterInstructions =
+        private static readonly string UpdaterInstructions =
             string.Format("Please run {0} to resolve this issue.", EventReferenceUpdater.MenuPath);
 
         private static void ValidateEventEmitter(StudioEventEmitter emitter, Scene scene)
@@ -730,6 +745,11 @@ namespace FMODUnity
 
         public static void CopyToStreamingAssets(BuildTarget buildTarget)
         {
+            if (Settings.Instance.ImportType == ImportType.AssetBundle && BuildPipeline.isBuildingPlayer)
+            {
+                return;
+            }
+
             if (string.IsNullOrEmpty(Settings.Instance.SourceBankPath))
                 return;
 
@@ -1028,7 +1048,7 @@ namespace FMODUnity
             #endif
         }
 
-        static void OnCacheChange()
+        private static void OnCacheChange()
         {
             List<string> masterBanks = new List<string>();
             List<string> banks = new List<string>();
