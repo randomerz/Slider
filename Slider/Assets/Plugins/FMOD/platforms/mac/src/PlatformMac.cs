@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -34,19 +35,19 @@ namespace FMODUnity
             Settings.AddPlatformTemplate<PlatformMac>("52eb9df5db46521439908db3a29a1bbb");
         }
 
-        public override string DisplayName { get { return "macOS"; } }
-        public override void DeclareRuntimePlatforms(Settings settings)
+        internal override string DisplayName { get { return "macOS"; } }
+        internal override void DeclareRuntimePlatforms(Settings settings)
         {
             settings.DeclareRuntimePlatform(RuntimePlatform.OSXPlayer, this);
         }
 
 #if UNITY_EDITOR
-        public override IEnumerable<BuildTarget> GetBuildTargets()
+        internal override IEnumerable<BuildTarget> GetBuildTargets()
         {
             yield return BuildTarget.StandaloneOSX;
         }
 
-        public override Legacy.Platform LegacyIdentifier { get { return Legacy.Platform.Mac; } }
+        internal override Legacy.Platform LegacyIdentifier { get { return Legacy.Platform.Mac; } }
 
         protected override BinaryAssetFolderInfo GetBinaryAssetFolder(BuildTarget buildTarget)
         {
@@ -64,18 +65,26 @@ namespace FMODUnity
             yield return new FileRecord("resonanceaudio.bundle");
         }
 
-        public override bool SupportsAdditionalCPP(BuildTarget target)
+        internal override bool SupportsAdditionalCPP(BuildTarget target)
         {
             return false;
         }
 #endif
 
-        public override string GetPluginPath(string pluginName)
+        internal override string GetPluginPath(string pluginName)
         {
-            return string.Format("{0}/{1}.bundle", GetPluginBasePath(), pluginName);
+            string pluginPath = string.Format("{0}/{1}.bundle", GetPluginBasePath(), pluginName);
+            if (System.IO.Directory.Exists((pluginPath)))
+            {
+                return pluginPath;
+            }
+            else
+            {
+                return string.Format("{0}/{1}.dylib", GetPluginBasePath(), pluginName);
+            }
         }
 #if UNITY_EDITOR
-        public override OutputType[] ValidOutputTypes
+        internal override OutputType[] ValidOutputTypes
         {
             get
             {
@@ -87,5 +96,13 @@ namespace FMODUnity
            new OutputType() { displayName = "Core Audio", outputType = FMOD.OUTPUTTYPE.COREAUDIO },
         };
 #endif
+
+        internal override List<CodecChannelCount> DefaultCodecChannels { get { return staticCodecChannels; } }
+
+        private static List<CodecChannelCount> staticCodecChannels = new List<CodecChannelCount>()
+        {
+            new CodecChannelCount { format = CodecType.FADPCM, channels = 0 },
+            new CodecChannelCount { format = CodecType.Vorbis, channels = 32 },
+        };
     }
 }

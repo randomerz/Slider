@@ -1,5 +1,82 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2277467775514796994
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9215923887181117521}
+  m_Layer: 0
+  m_Name: ListenerWorldPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9215923887181117521
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2277467775514796994}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8529986348122845579}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7379062662087638973
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4838699127843664436}
+  - component: {fileID: 6844044390766525512}
+  m_Layer: 0
+  m_Name: Listener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4838699127843664436
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7379062662087638973}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8529986348122845579}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6844044390766525512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7379062662087638973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 7379062662087638973}
+  ListenerNumber: -1
 --- !u!1 &8529986348122845573
 GameObject:
   m_ObjectHideFlags: 0
@@ -28,7 +105,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4838699127843664436}
+  - {fileID: 9215923887181117521}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -53,7 +132,7 @@ MonoBehaviour:
         Data3: 815781785
         Data4: -1936799075
       Path: event:/SFX/Misc/GMTK Pickup
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Slide Rumble
     fmodEvent:
       Guid:
@@ -62,7 +141,7 @@ MonoBehaviour:
         Data3: -1040153453
         Data4: 18325320
       Path: event:/SFX/Rumbles and Explosions/Slide Rumble
-    emitter: {fileID: 0}
+    dopplerScale: 1
   - name: Slide Explosion
     fmodEvent:
       Guid:
@@ -71,7 +150,7 @@ MonoBehaviour:
         Data3: 1904038537
         Data4: -2051480606
       Path: event:/SFX/Rumbles and Explosions/Slide Explosion
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Rumble Decrease 2.5s
     fmodEvent:
       Guid:
@@ -80,7 +159,7 @@ MonoBehaviour:
         Data3: -1694289525
         Data4: 1603943095
       Path: event:/SFX/Rumbles and Explosions/Long Rumble 2.5s
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Rumble Decrease 5s
     fmodEvent:
       Guid:
@@ -89,7 +168,7 @@ MonoBehaviour:
         Data3: 1899996591
         Data4: -169996033
       Path: event:/SFX/Rumbles and Explosions/Long Rumble 5s
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Rumble Decrease 9s
     fmodEvent:
       Guid:
@@ -98,7 +177,7 @@ MonoBehaviour:
         Data3: -797821818
         Data4: -334665175
       Path: event:/SFX/Rumbles and Explosions/Long Rumble 9s
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Rumble Constant 9s
     fmodEvent:
       Guid:
@@ -107,7 +186,7 @@ MonoBehaviour:
         Data3: 965472171
         Data4: 1764040983
       Path: event:/SFX/Rumbles and Explosions/Long Rumble Constant 9s
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Rumble Increase 8s
     fmodEvent:
       Guid:
@@ -116,25 +195,34 @@ MonoBehaviour:
         Data3: 725394309
         Data4: -1741667662
       Path: event:/SFX/Rumbles and Explosions/Long Rumble Increase 8s
-    emitter: {fileID: 0}
-  - name: UI Click
-    fmodEvent:
-      Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Artifact Error
     fmodEvent:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
-    emitter: {fileID: 0}
+        Data1: 1812793343
+        Data2: 1132485894
+        Data3: -2120134783
+        Data4: -504788968
+      Path: event:/SFX/SFXR/Artifact Error
+    dopplerScale: 0
+  - name: UI Click
+    fmodEvent:
+      Guid:
+        Data1: 888704055
+        Data2: 1283724700
+        Data3: 718599337
+        Data4: -1411563401
+      Path: event:/SFX/SFXR/UI Click
+    dopplerScale: 0
+  - name: Hat Click
+    fmodEvent:
+      Guid:
+        Data1: 607630786
+        Data2: 1103724590
+        Data3: 1921376432
+        Data4: -2119127444
+      Path: event:/SFX/SFXR/Hat Click
+    dopplerScale: 0
   - name: NPC Blip
     fmodEvent:
       Guid:
@@ -143,7 +231,7 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Puzzle Complete
     fmodEvent:
       Guid:
@@ -152,25 +240,43 @@ MonoBehaviour:
         Data3: 677736838
         Data4: -1759630598
       Path: event:/SFX/SFXR/Puzzle Complete
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Hurt
     fmodEvent:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
-    emitter: {fileID: 0}
+        Data1: -15210043
+        Data2: 1194289358
+        Data3: -1849919341
+        Data4: 1327211398
+      Path: event:/SFX/SFXR/Hurt
+    dopplerScale: 0
   - name: Fall
     fmodEvent:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
-    emitter: {fileID: 0}
+        Data1: 1943810120
+        Data2: 1213642217
+        Data3: 3114136
+        Data4: -1173462338
+      Path: event:/SFX/SFXR/Fall
+    dopplerScale: 0
+  - name: MagicChimes1
+    fmodEvent:
+      Guid:
+        Data1: 1781160218
+        Data2: 1195332244
+        Data3: 946167185
+        Data4: -470553028
+      Path: event:/SFX/Magic/Magic Chimes1
+    dopplerScale: 1
+  - name: MagicChimes2
+    fmodEvent:
+      Guid:
+        Data1: -347604741
+        Data2: 1218313766
+        Data3: 2008226204
+        Data4: -650800235
+      Path: event:/SFX/Magic/Magic Chimes2
+    dopplerScale: 1
   - name: TFT Bell
     fmodEvent:
       Guid:
@@ -179,7 +285,7 @@ MonoBehaviour:
         Data3: -373076304
         Data4: 2122563298
       Path: event:/SFX/Magic/TFT Bell
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Power On
     fmodEvent:
       Guid:
@@ -188,7 +294,7 @@ MonoBehaviour:
         Data3: -1566772322
         Data4: -246391735
       Path: event:/SFX/Factory/Power On
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Power Off
     fmodEvent:
       Guid:
@@ -197,7 +303,7 @@ MonoBehaviour:
         Data3: -959976785
         Data4: 558721145
       Path: event:/SFX/Factory/Power Off
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Bottle Sink
     fmodEvent:
       Guid:
@@ -206,7 +312,7 @@ MonoBehaviour:
         Data3: 1573816232
         Data4: 1705598499
       Path: event:/SFX/Ocean/Bottle Sink
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Glass Clink
     fmodEvent:
       Guid:
@@ -215,7 +321,7 @@ MonoBehaviour:
         Data3: 304086971
         Data4: 1230667835
       Path: event:/SFX/Ocean/Glass Clink
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Conveyor
     fmodEvent:
       Guid:
@@ -224,7 +330,7 @@ MonoBehaviour:
         Data3: -147534192
         Data4: -1220852846
       Path: event:/SFX/Factory/Conveyor
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Crocodile Grab Sequence
     fmodEvent:
       Guid:
@@ -233,7 +339,7 @@ MonoBehaviour:
         Data3: 1958267835
         Data4: -1738639728
       Path: event:/SFX/Desert/Croco Grab Sequence
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Water Drop Water
     fmodEvent:
       Guid:
@@ -242,7 +348,7 @@ MonoBehaviour:
         Data3: 430265524
         Data4: -1222714988
       Path: event:/SFX/Desert/Big Water Drop
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Baboon Screech
     fmodEvent:
       Guid:
@@ -251,7 +357,7 @@ MonoBehaviour:
         Data3: -1924915301
         Data4: 937611837
       Path: event:/SFX/Desert/Baboon Screech
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Dice Shake
     fmodEvent:
       Guid:
@@ -260,7 +366,7 @@ MonoBehaviour:
         Data3: -1348997469
         Data4: 1799270439
       Path: event:/SFX/Desert/Dice Shake
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: Bottle Fill
     fmodEvent:
       Guid:
@@ -269,7 +375,7 @@ MonoBehaviour:
         Data3: 1698111138
         Data4: 1034827031
       Path: event:/SFX/Desert/Bottle Bubble Fill
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: FactoryTimedGateProgress1
     fmodEvent:
       Guid:
@@ -278,7 +384,7 @@ MonoBehaviour:
         Data3: 1947597726
         Data4: 1608839436
       Path: event:/SFX/Factory/FactoryTimedGateProgress1
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: FactoryTimedGateProgress2
     fmodEvent:
       Guid:
@@ -287,7 +393,7 @@ MonoBehaviour:
         Data3: 1131446694
         Data4: 1292737289
       Path: event:/SFX/Factory/FactoryTimedGateProgress2
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: FactoryTimedGateProgress3
     fmodEvent:
       Guid:
@@ -296,7 +402,7 @@ MonoBehaviour:
         Data3: -1577689169
         Data4: -1458885182
       Path: event:/SFX/Factory/FactoryTimedGateProgress3
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: FactoryTimedGateProgress4
     fmodEvent:
       Guid:
@@ -305,7 +411,7 @@ MonoBehaviour:
         Data3: -68815941
         Data4: -1897143703
       Path: event:/SFX/Factory/FactoryTimedGateProgress4
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: FactoryTimedGateProgress5
     fmodEvent:
       Guid:
@@ -314,7 +420,7 @@ MonoBehaviour:
         Data3: 614243224
         Data4: -1146322477
       Path: event:/SFX/Factory/FactoryTimedGateProgress5
-    emitter: {fileID: 0}
+    dopplerScale: 0
   - name: FactoryTimedGateProgress6
     fmodEvent:
       Guid:
@@ -323,7 +429,16 @@ MonoBehaviour:
         Data3: 2101343917
         Data4: 1758749397
       Path: event:/SFX/Factory/FactoryTimedGateProgress6
-    emitter: {fileID: 0}
+    dopplerScale: 0
+  - name: Debug
+    fmodEvent:
+      Guid:
+        Data1: 1475310652
+        Data2: 1203967059
+        Data3: 1067200654
+        Data4: 930797071
+      Path: event:/SFX/Debug/Debug
+    dopplerScale: 1
   music:
   - name: Main Menu
     fmodEvent:
@@ -477,3 +592,6 @@ MonoBehaviour:
     m_RotationOrder: 4
   modifierPool:
   - {fileID: 11400000, guid: c68abdfdd8910454688546eb6e03e3a1, type: 2}
+  listener: {fileID: 6844044390766525512}
+  listenerWorldPosition: {fileID: 9215923887181117521}
+  ZLevel: 10

@@ -63,6 +63,8 @@ public class RuinsArrow : MonoBehaviour
     private void UpdateArrowOnCollect(object sender, SGrid.OnSTileEnabledArgs e)
     {
         UpdateArrowGeneral();
+        if (e.stile.islandId == 7)
+            particleTrail.StopRepeating();
     }
 
     private void UpdateArrowGeneral()
@@ -87,6 +89,8 @@ public class RuinsArrow : MonoBehaviour
                 // if was false before
                 arrowParticles.Play();
                 burriedSlider.SetActive(true);
+
+                AudioManager.Play("MagicChimes1", transform);
             }
             spriteRenderer.enabled = true;
             UpdateArrowDirection(grid);

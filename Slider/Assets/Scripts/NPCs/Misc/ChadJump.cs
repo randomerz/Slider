@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ChadJump : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class ChadJump : MonoBehaviour
         FALLING,
         FELL
     }
+
+    public UnityEvent OnJumpFinish;
 
     [Header("Chad Animation stuff")]
     [SerializeField] private SpriteRenderer npcRenderer;
@@ -97,6 +100,8 @@ public class ChadJump : MonoBehaviour
 
         jumpState = JumpState.JUMPED;
         npcAnimator.SetBool("isJumping", false);
+
+        OnJumpFinish?.Invoke();
     }
 
 
