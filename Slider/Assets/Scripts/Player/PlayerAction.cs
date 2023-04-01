@@ -165,6 +165,8 @@ public class PlayerAction : Singleton<PlayerAction>
             PlayerInventory.AddItem(pickedItem);
             pickedItem.PickUpItem(pickedItemLocation.transform, callback: FinishPicking);
 
+            AudioManager.PlayWithPitch("UI Click", 1.2f);
+
             return true;
         }
 
@@ -180,6 +182,8 @@ public class PlayerAction : Singleton<PlayerAction>
             pickedItem.DropItem(itemDropIndicator.transform.position, callback: FinishDropping);
             lastDroppedItem = pickedItem;
             itemDropIndicator.SetActive(false);
+
+            AudioManager.PlayWithPitch("UI Click", 0.8f);
 
             return true;
         }

@@ -44,7 +44,7 @@ public struct SoundWrapper
 
     public SoundWrapper WithVolume(float volume)
     {
-        if (valid) fmodInstance.setParameterByName("volume", volume);
+        if (valid) fmodInstance.setVolume(volume);
         return this;
     }
 

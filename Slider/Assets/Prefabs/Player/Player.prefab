@@ -168,7 +168,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.3703701, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -772,7 +772,6 @@ GameObject:
   m_Component:
   - component: {fileID: 380634037666542965}
   - component: {fileID: 380634037666542964}
-  - component: {fileID: 380634037666542967}
   - component: {fileID: 1369399787893420006}
   - component: {fileID: -6385564326461512446}
   - component: {fileID: 6966801021179979627}
@@ -819,8 +818,8 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.013020834
-    y: 0.17777777
+    x: 0.0375
+    y: 0.35462964
     width: 0.16666667
     height: 0.16666666
   near clip plane: 0.1
@@ -843,14 +842,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &380634037666542967
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 380634037666542966}
-  m_Enabled: 1
 --- !u!114 &1369399787893420006
 MonoBehaviour:
   m_ObjectHideFlags: 0
