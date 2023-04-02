@@ -141,6 +141,17 @@ public class Player : Singleton<Player>, ISavable
     {
         return playerInput.currentControlScheme;
     }
+    public event Action<string> ControlSchemeChanged;
+    /// <summary>
+    /// Called when control scheme changes (between "Controller" or "Keyboard Mouse")
+    /// </summary>
+    public void OnControlsChanged()
+    {
+        //string newControlScheme = GetCurrentControlScheme();
+        string newControlScheme = playerInput.currentControlScheme;
+        Debug.Log("Control Scheme changed to: " + newControlScheme);
+        ControlSchemeChanged?.Invoke(newControlScheme);
+    }
 
     // Here is where we pay for all our Singleton Sins
     public void ResetInventory()
