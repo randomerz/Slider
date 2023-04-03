@@ -65,7 +65,7 @@ public class Meltable : MonoBehaviour, ISavable
         if(Time.timeScale != 0 && CheckFreeze())
         {
             currFreezeTime -= Time.deltaTime;
-            if(currFreezeTime < blinkTime && currFreezeTime > 0)
+            if(!isFrozen && currFreezeTime < blinkTime && currFreezeTime > 0)
                 ToggleBlinkSprite(blinkTime - currFreezeTime);
             if(currFreezeTime < 0)
                 Freeze();
