@@ -16,6 +16,9 @@ public class Meltable : MonoBehaviour, ISavable
     [SerializeField] private Sprite newFrozenSprite;
 
 
+    [Header("Visuals")]
+    [Tooltip("At the end of the refreeze time, when this curve is > 1, the object sprite will flash frozen")]
+    [SerializeField] private AnimationCurve blinkCurve;
 
     [Header("Events")]
     public UnityEvent onMelt;
@@ -40,6 +43,7 @@ public class Meltable : MonoBehaviour, ISavable
     private STile sTile;
 
     private float currFreezeTime;
+    private float blinkTime;
 
     private void OnEnable() {
         sTile = GetComponentInParent<MountainSTile>();
@@ -51,13 +55,32 @@ public class Meltable : MonoBehaviour, ISavable
         SGridAnimator.OnSTileMoveEndEarly -= CheckFreezeOnMoveEnd;
     }
 
+    private void Start() {
+        if (blinkCurve.length > 0)
+            blinkTime = blinkCurve[blinkCurve.length - 1].time;
+    }
+
 
     private void Update() {
         if(Time.timeScale != 0 && CheckFreeze())
         {
             currFreezeTime -= Time.deltaTime;
+            if(currFreezeTime < blinkTime && currFreezeTime > 0)
+                ToggleBlinkSprite(blinkTime - currFreezeTime);
             if(currFreezeTime < 0)
                 Freeze();
+        }
+    }
+
+    private void ToggleBlinkSprite(float time)
+    {
+        float val = blinkCurve.Evaluate(time);
+        if(val > 1) {
+            if(spriteRenderer)
+                spriteRenderer.sprite = frozenSprite;
+        } else {
+            if(spriteRenderer)
+                spriteRenderer.sprite = anchorBroken ? anchorBrokenSprite : meltedSprite;
         }
     }
 
