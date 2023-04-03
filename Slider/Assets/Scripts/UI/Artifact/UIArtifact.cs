@@ -576,7 +576,7 @@ public class UIArtifact : Singleton<UIArtifact>
         Debug.Log($"Couldn't add move to queue! {debug}");
     }
 
-    protected void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    protected void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty, bool setCurrentAsSelected = true)
     {
         int oldCurrX = buttonCurrent.x;
         int oldCurrY = buttonCurrent.y;
@@ -585,7 +585,7 @@ public class UIArtifact : Singleton<UIArtifact>
 
         //since buttons swap, it feels like your hover goes backwards on controller, feels unintuitive.
         //So this will select the tile you swap to after the move
-        if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        if (setCurrentAsSelected && Player.GetInstance().GetCurrentControlScheme() == "Controller")
         {
             EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
             //buttonEmpty.OnDeselect();

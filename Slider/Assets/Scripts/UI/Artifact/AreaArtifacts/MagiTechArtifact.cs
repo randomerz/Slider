@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class MagiTechArtifact : UIArtifact
@@ -34,12 +35,14 @@ public class MagiTechArtifact : UIArtifact
     public Sprite presentBackgroundSprite;
     public Sprite pastBackgroundSprite;
 
+
     protected override void OnEnable()
     {
         base.OnEnable();
         Anchor.OnAnchorInteract += OnAnchorInteract;
         SetButtonsAndBackground(isInPast);
     }
+
 
     protected override void OnDisable()
     {
@@ -227,7 +230,8 @@ public class MagiTechArtifact : UIArtifact
         SwapButtons(buttonCurrent, buttonEmpty);
         ArtifactTileButton currAlt = GetButton(FindAltId(buttonCurrent.islandId));
         ArtifactTileButton emptyAlt = GetButton(FindAltId(buttonEmpty.islandId));
-        SwapButtons(currAlt, emptyAlt);
+        SwapButtons(currAlt, emptyAlt, false);
+        //SwapButtons(buttonCurrent, buttonEmpty);
         ProcessQueue();
         UpdateMoveOptions();
     }

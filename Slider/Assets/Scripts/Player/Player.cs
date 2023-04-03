@@ -152,6 +152,11 @@ public class Player : Singleton<Player>, ISavable
         Debug.Log("Control Scheme changed to: " + newControlScheme);
         ControlSchemeChanged?.Invoke(newControlScheme);
     }
+    /*
+    public void OnAltViewHold()
+    {
+        Debug.Log("Alt View Hold");
+    }*/
 
     // Here is where we pay for all our Singleton Sins
     public void ResetInventory()
