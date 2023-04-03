@@ -418,7 +418,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913049, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: ShapeModule.type
@@ -664,6 +664,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
+      propertyPath: RotationModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: CollisionModule.enabled
       value: 0
       objectReference: {fileID: 0}
@@ -708,6 +712,10 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
+      propertyPath: RotationBySpeedModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: ShapeModule.m_MeshNormalOffset
       value: 0
       objectReference: {fileID: 0}
@@ -744,12 +752,24 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
+      propertyPath: InitialModule.startRotation.scalar
+      value: 6.283185
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: CollisionModule.collidesWith.m_Bits
       value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: CollisionModule.m_Planes.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
+      propertyPath: RotationBySpeedModule.x.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
+      propertyPath: RotationBySpeedModule.y.minMaxState
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: TriggerModule.primitives.Array.size
@@ -768,12 +788,32 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
+      propertyPath: RotationBySpeedModule.curve.minScalar
+      value: -0.7853981
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: TriggerModule.primitives.Array.data[0]
       value: 
       objectReference: {fileID: 100418047456623687}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: TriggerModule.primitives.Array.data[1]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
+      propertyPath: InitialModule.startRotation.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
+      propertyPath: RotationBySpeedModule.curve.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
+      propertyPath: InitialModule.startRotationX.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
+      propertyPath: InitialModule.startRotationY.minMaxState
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: CollisionModule.m_EnergyLossOnCollision.scalar
