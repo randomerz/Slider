@@ -121,6 +121,9 @@ public class ChadRace : MonoBehaviour
                     chadimator.SetBool("isWalking", false);
                     chadimator.SetBool("isSad", true);
 
+                    // Save System Dialogue
+                    //SaveSystem.Current.SetString("jungleChadSpeak", "Dangit, I don't know how you won, especially with my faster boots.\nHere, might as well have them.");
+
                     // AudioManager.SetMusicParameter("Jungle", "JungleChadStarted", 0);
                     // AudioManager.SetMusicParameter("Jungle", "JungleChadWon", 2);
                     jungleChadEnd = 1;
