@@ -183,7 +183,7 @@ public class VillageGrid : SGrid
     // Puzzle 8 - 8puzzle
     private void CheckHole()
     {
-        if (SaveSystem.Current.GetBool("villageHoleFilled"))
+        if (SaveSystem.Current.GetBool("villageCompletion")) // check against "villageCompletion" instead of "villageHoldFilled" to avoid a softlock
         {
             ruinsFragment.SetActive(false);
         }
@@ -197,9 +197,9 @@ public class VillageGrid : SGrid
 
     public void FillInHole()
     {
-        if (!SaveSystem.Current.GetBool("villageHoleFilled"))
+        if (!SaveSystem.Current.GetBool("villageCompletion"))
         {
-            SaveSystem.Current.SetBool("villageHoleFilled", true);
+            // SaveSystem.Current.SetBool("villageHoleFilled", true);
 
             AudioManager.Play("Puzzle Complete");
 

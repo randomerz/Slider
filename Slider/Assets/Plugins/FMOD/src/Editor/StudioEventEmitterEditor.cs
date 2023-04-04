@@ -10,7 +10,7 @@ namespace FMODUnity
     [CanEditMultipleObjects]
     public class StudioEventEmitterEditor : Editor
     {
-        ParameterValueView parameterValueView;
+        private ParameterValueView parameterValueView;
 
         public void OnEnable()
         {
@@ -48,6 +48,7 @@ namespace FMODUnity
             var fadeout = serializedObject.FindProperty("AllowFadeout");
             var once = serializedObject.FindProperty("TriggerOnce");
             var preload = serializedObject.FindProperty("Preload");
+            var allowNonRigidbodyDoppler = serializedObject.FindProperty("AllowNonRigidbodyDoppler");
             var overrideAtt = serializedObject.FindProperty("OverrideAttenuation");
             var minDistance = serializedObject.FindProperty("OverrideMinDistance");
             var maxDistance = serializedObject.FindProperty("OverrideMaxDistance");
@@ -85,7 +86,9 @@ namespace FMODUnity
                     EditorGUI.BeginChangeCheck();
                     EditorGUILayout.PropertyField(overrideAtt);
                     if (EditorGUI.EndChangeCheck() ||
-                        (minDistance.floatValue == -1 && maxDistance.floatValue == -1) // never been initialiased
+                        (minDistance.floatValue == -1 && maxDistance.floatValue == -1) || // never been initialiased
+                            !overrideAtt.boolValue &&
+                            (minDistance.floatValue != editorEvent.MinDistance || maxDistance.floatValue != editorEvent.MaxDistance)
                         )
                     {
                         minDistance.floatValue = editorEvent.MinDistance;
@@ -119,6 +122,7 @@ namespace FMODUnity
                     EditorGUILayout.PropertyField(preload, new GUIContent("Preload Sample Data"));
                     EditorGUILayout.PropertyField(fadeout, new GUIContent("Allow Fadeout When Stopping"));
                     EditorGUILayout.PropertyField(once, new GUIContent("Trigger Once"));
+                    EditorGUILayout.PropertyField(allowNonRigidbodyDoppler, new GUIContent("Allow Non-Rigidbody Doppler"));
                 }
             }
 

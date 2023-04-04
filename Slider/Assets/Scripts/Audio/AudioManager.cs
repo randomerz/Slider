@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FMODUnity;
 using Cinemachine;
+using FMODUnity;
+using FMOD.Studio;
 
 public class AudioManager : Singleton<AudioManager>
 {
@@ -35,21 +36,32 @@ public class AudioManager : Singleton<AudioManager>
     private static Dictionary<string, List<AudioModifier.AudioModifierProperty>> parameterResponsibilityQueue;
     private static Dictionary<string, float> parameterDefaults;
 
-    private static GameObject cachedCMBrainKey;
-    private static CinemachineBrain currentCMBrain
+    [SerializeField]
+    private FMODUnity.StudioListener listener;
+    [SerializeField]
+    private Transform listenerWorldPosition;
+
+    [SerializeField, Range(0, 20), Tooltip("Z-direction distance from top-down listener to game's plane")]
+    private float ZLevel;
+
+    private static Dictionary<string, Sound> soundsDict
     {
         get
         {
-            if (Camera.main.gameObject != cachedCMBrainKey || cachedCMBrain == null)
+            if (_instance == null) return null;
+            if (_instance._soundsDict == null)
             {
-                // cache invalid
-                cachedCMBrainKey = Camera.main.gameObject;
-                cachedCMBrain = Camera.main.gameObject.GetComponent<CinemachineBrain>();
+                _instance._soundsDict = new Dictionary<string, Sound>(_instance.sounds.Length);
+                foreach (Sound s in _instance.sounds) _instance._soundsDict.Add(s.name, s);
             }
-            return cachedCMBrain;
+            return _instance._soundsDict;
         }
     }
-    private static CinemachineBrain cachedCMBrain;
+    private Dictionary<string, Sound> _soundsDict;
+
+    static List<(FMOD.Studio.EventInstance, ManagedAttributes)> managedInstances;
+
+    static CinemachineBrain currentCinemachineBrain;
 
     void Awake()
     {
@@ -63,21 +75,9 @@ public class AudioManager : Singleton<AudioManager>
         _music = music;
         _soundDampenCurve = soundDampenCurve;
 
-        foreach (Sound s in _sounds)
-        {
-            s.emitter = gameObject.AddComponent<StudioEventEmitter>();
-            s.emitter.EventReference = s.fmodEvent;
-            // s.source = gameObject.AddComponent<AudioSource>();
-            // s.source.clip = s.clip;
-
-            // s.source.volume = s.volume;
-            // s.source.pitch = s.pitch;
-            // s.source.loop = s.loop;
-        }
-
         foreach (Music m in _music)
         {
-            m.emitter = gameObject.AddComponent<StudioEventEmitter>();
+            m.emitter = gameObject.AddComponent<FMODUnity.StudioEventEmitter>();
             m.emitter.EventReference = m.fmodEvent;
         }
 
@@ -95,27 +95,31 @@ public class AudioManager : Singleton<AudioManager>
         parameterDefaults = new Dictionary<string, float>();
         parameterResponsibilityQueue = new Dictionary<string, List<AudioModifier.AudioModifierProperty>>();
 
-        sfxBus = RuntimeManager.GetBus("bus:/Master/SFX");
-        musicBus = RuntimeManager.GetBus("bus:/Master/Music");
+        sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/SFX");
+        musicBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/Music");
         SetSFXVolume(sfxVolume);
         SetMusicVolume(musicVolume);
     }
 
-    private void Start() {
-        // StartCoroutine(testvolume());
+    private void Update()
+    {
+        UpdateCameraPosition();
+        UpdateManagedInstances();
     }
 
-    private IEnumerator testvolume()
+    public static void UpdateCamera(CinemachineBrain brain) => currentCinemachineBrain = brain;
+    public void UpdateCameraPosition()
     {
-        for (int i = 0; i < 10; i++)
-        {
-            float val = 2 - (0.2f * i);
-            Debug.Log(val);
-            PlayWithPitch("TFT Bell", val);
-            // Play("TFT Bell");
+        var cam = currentCinemachineBrain != null ? currentCinemachineBrain.ActiveVirtualCamera : null;
+        if (cam == null) return;
 
-            yield return new WaitForSeconds(1);
-        }
+        // When camera lerps to target, lock to the target instead of the camera
+        var priority = cam.LookAt == null ? cam.Follow : cam.LookAt;
+        Vector3 temp = priority == null ? cam.State.FinalPosition : priority.position;
+        temp.z = ZLevel;
+        listener.transform.position = temp;
+        temp.z = 0;
+        listenerWorldPosition.position = temp;
     }
 
     private static Music GetMusic(string name)
@@ -132,65 +136,87 @@ public class AudioManager : Singleton<AudioManager>
         return m;
     }
 
-    public static void Play(string name)
+    public static FMOD.Studio.EventInstance? Play(SoundWrapper soundWrapper)
     {
-        if (_sounds == null)
-            return;
-        Sound s = Array.Find(_sounds, sound => sound.name == name);
+        if (!soundWrapper.valid) return null;
+        var inst = soundWrapper.fmodInstance;
 
-        if (s == null)
+        if (soundWrapper.useSpatials)
+        {
+            if (managedInstances == null) managedInstances = new List<(EventInstance, ManagedAttributes)>(10);
+            var attributes = new ManagedAttributes(
+                soundWrapper.root == null ? _instance.listenerWorldPosition.transform : soundWrapper.root, 
+                soundWrapper.useDoppler, 
+                soundWrapper.sound.dopplerScale);
+            inst.set3DAttributes(attributes.GetAndUpdate());
+            managedInstances.Add((inst, attributes));
+        }
+        inst.start();
+
+        return inst;
+    }
+
+    public static SoundWrapper PickSound(string name)
+    {
+        if (soundsDict.ContainsKey(name))
+        {
+            Sound s = soundsDict[name];
+            if (s != null)
+            {
+                return s;
+            }
+            else
+            {
+                Debug.LogError($"Failed to spawn instance for sound {name}");
+                return (SoundWrapper) (null as Sound);
+            }
+
+        }
+        else
         {
             Debug.LogError("Sound: " + name + " not found!");
-            return;
+            return (SoundWrapper)(null as Sound);
         }
-
-        s.emitter.Play();
     }
 
-    public static void PlayFmodWithWorldPosition(EventReference name, Vector3 position)
-    {
-        // fmod listener always on main camera object so positions are always evaluated against main camera transform
-        // however, cinemachine keeps main camera position stable (by only updating at LateUpdate with +100 execution order)
-        // - script position may be different from actual position seen in inspector, if you think main camera "does" move
-        // this evaluates the main camera relative to the active vcam and adds the offset
-        var cmBrain = currentCMBrain;
-        var vCamToListener = cmBrain.transform.position - cmBrain.ActiveVirtualCamera.State.FinalPosition;
-        RuntimeManager.PlayOneShot(name, position + vCamToListener);
-    }
+    public static FMOD.Studio.EventInstance? Play(string name, Transform root) => PickSound(name).WithAttachmentToTransform(root).AndPlay();
 
-    public static void PlayWithPitch(string name, float pitch) //Used In Ocean Scene
-    {
-        if (_sounds == null)
-            return;
-        Sound s = Array.Find(_sounds, sound => sound.name == name);
+    public static FMOD.Studio.EventInstance? Play(string name) => PickSound(name).AndPlay();
 
-        if (s == null)
+    private static void UpdateManagedInstances()
+    {
+        if (managedInstances == null) managedInstances = new List<(FMOD.Studio.EventInstance, ManagedAttributes)>(10);
+        managedInstances.RemoveAll(delegate ((FMOD.Studio.EventInstance inst, ManagedAttributes attributes) pair)
         {
-            Debug.LogError("Sound: " + name + " not found!");
-            return;
-        }
-
-        s.emitter.SetParameter("pitch", pitch);
-        s.emitter.Play();
+            if (pair.inst.isValid())
+            {
+                // instance not already relased
+                if (
+                    pair.inst.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE playback) == FMOD.RESULT.OK 
+                    && playback != FMOD.Studio.PLAYBACK_STATE.STOPPED)
+                {
+                    // instance still playing (including the "stopping" state for events that allow fadeout)
+                    pair.inst.set3DAttributes(pair.attributes.GetAndUpdate());
+                    return false;
+                }
+                else
+                {
+                    // instance stopped playing
+                    pair.inst.release();
+                    return true;
+                }
+            }
+            else
+            {
+                // instance already released
+                return true;
+            }
+        });
     }
 
+    public static FMOD.Studio.EventInstance? PlayWithPitch(string name, float pitch) => PickSound(name).WithPitch(pitch).AndPlay();
 
-    public static void PlayWithVolume(string name, float volumeMultiplier)
-    {
-        if (_sounds == null)
-            return;
-        Sound s = Array.Find(_sounds, sound => sound.name == name);
-
-        if (s == null)
-        {
-            Debug.LogError("Sound: " + name + " not found!");
-            return;
-        }
-
-        // s.source.volume = s.volume * sfxVolume * volumeMultiplier;
-        s.emitter.SetParameter("volume", volumeMultiplier);
-        s.emitter.Play();
-    }
+    public static FMOD.Studio.EventInstance? PlayWithVolume(string name, float volumeMultiplier) => PickSound(name).WithVolume(volumeMultiplier).AndPlay();
 
     public static void PlayMusic(string name, bool stopOtherTracks=true)
     {
@@ -220,31 +246,26 @@ public class AudioManager : Singleton<AudioManager>
         m.emitter.Stop();
     }
 
-    public static void StopSound(string name)
-    {
-        if (_sounds == null)
-            return;
-        Sound s = Array.Find(_sounds, sound => sound.name == name);
+    // Requires instance to stop, need discussion...
+    //public static void StopSound(string name)
+    //{
+    //    if (_sounds == null)
+    //        return;
+    //    Sound s = Array.Find(_sounds, sound => sound.name == name);
 
-        if (s == null)
-        {
-            Debug.LogError("Sound: " + name + " not found!");
-            return;
-        }
+    //    if (s == null)
+    //    {
+    //        Debug.LogError("Sound: " + name + " not found!");
+    //        return;
+    //    }
 
-        s.emitter.Stop();
-    }
+    //    s.emitter.Stop();
+    //}
 
     public static void StopAllSoundAndMusic()
     {
-        foreach (Music m in _instance.music)
-        {
-            m.emitter.Stop();
-        }
-        foreach (Sound s in _instance.sounds)
-        {
-            s.emitter.Stop();
-        }
+        musicBus.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        sfxBus.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
     public static void SetMusicParameter(string name, string parameterName, float value)
@@ -261,7 +282,6 @@ public class AudioManager : Singleton<AudioManager>
         m.emitter.SetParameter(parameterName, value);
     }
 
-
     public static void SetSFXVolume(float value)
     {
         value = Mathf.Clamp(value, 0, 1);
@@ -269,12 +289,6 @@ public class AudioManager : Singleton<AudioManager>
 
         if (_sounds == null)
             return;
-        // foreach (Sound s in _sounds)
-        // {
-        //     if (s == null || s.emitter == null)
-        //         continue;
-        //     s.emitter.volume = s.volume * value;
-        // }
 
         sfxBus.setVolume(value);
     }
@@ -373,7 +387,7 @@ public class AudioManager : Singleton<AudioManager>
                 parameterResponsibilityQueue[name].Add(adj);
             else {
                 parameterResponsibilityQueue.Add(name, new List<AudioModifier.AudioModifierProperty> { adj });
-                if (RuntimeManager.StudioSystem.getParameterByName(name, out float prev) == FMOD.RESULT.OK)
+                if (FMODUnity.RuntimeManager.StudioSystem.getParameterByName(name, out float prev) == FMOD.RESULT.OK)
                 {
                     parameterDefaults.TryAdd(name, prev);
                 }
@@ -440,13 +454,51 @@ public class AudioManager : Singleton<AudioManager>
 
     private static void SetGlobalParameter(string name, float val)
     {
-        if (RuntimeManager.StudioSystem.setParameterByName(name, val) == FMOD.RESULT.OK)
+        if (FMODUnity.RuntimeManager.StudioSystem.setParameterByName(name, val) == FMOD.RESULT.OK)
         {
             // successfully set parameter
         }
         else
         {
             Debug.LogWarning($"Failed to set global parameter {name} = {val}");
+        }
+    }
+
+    private struct ManagedAttributes
+    {
+        private readonly Transform transform;
+        float time;
+        private readonly float dopplerScale;
+        private readonly bool useDoppler;
+        Vector3 position;
+
+        public ManagedAttributes(Transform transform, bool useDoppler, float dopplerScale)
+        {
+            this.transform = transform;
+            position = transform.position;
+            time = Time.time;
+            this.useDoppler = useDoppler;
+            this.dopplerScale = dopplerScale;
+        }
+
+        public FMOD.ATTRIBUTES_3D GetAndUpdate()
+        {
+            if (!useDoppler) return transform.position.To3DAttributes();
+
+            Vector3 p = transform.position;
+            float dt = Time.time - time;
+            Vector3 v = dt > float.Epsilon ? (p - position) / (dt) : Vector3.zero;
+
+            position = p;
+            time = Time.time;
+
+            return new FMOD.ATTRIBUTES_3D
+            {
+                forward = Vector3.forward.ToFMODVector(),
+                up = Vector3.up.ToFMODVector(),
+                position = p.ToFMODVector(),
+                velocity = (v * dopplerScale).ToFMODVector()
+            };
         }
     }
 }

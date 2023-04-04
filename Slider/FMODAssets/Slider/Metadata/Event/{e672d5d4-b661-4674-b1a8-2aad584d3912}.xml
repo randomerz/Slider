@@ -103,7 +103,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{d30ceb93-5623-403e-8f5b-1c8b9f13324d}">
 		<property name="volume">
-			<value>-13.5</value>
+			<value>-18</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -125,6 +125,9 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{33c049a0-27f0-4c8e-bccb-61272a3abd75}">
+		<property name="surroundPanExtent">
+			<value>60</value>
+		</property>
 		<relationship name="automators">
 			<destination>{93e8c921-9e61-4a5b-ae2a-4cd779159930}</destination>
 		</relationship>

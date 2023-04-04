@@ -9,7 +9,7 @@ public class RuinsSymbols : MonoBehaviour
 
     private void Start()
     {
-        if (SaveSystem.Current.GetBool("villageHoleFilled"))
+        if (SaveSystem.Current.GetBool("villageCompletion")) // check against "villageCompletion" instead of "villageHoldFilled" to avoid a softlock
         {
             ruinsHole.enabled = false;
             SetSprites(true);
