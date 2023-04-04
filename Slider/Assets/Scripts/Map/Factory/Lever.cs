@@ -48,6 +48,14 @@ public class Lever : ElectricalNode
         PowerCrystal.blackoutEnded -= HandleBlackoutEnded;
     }
 
+    protected override void Update() {
+        base.Update();
+        if((_animator.GetCurrentAnimatorStateInfo(0).IsName("On") && !_isPowerSource) ||
+        (_animator.GetCurrentAnimatorStateInfo(0).IsName("Off") && _isPowerSource)) {
+            Switch();
+        } 
+    }
+
     private void HandleBlackoutStarted()
     {
         _pConds.DisableConditionals();
