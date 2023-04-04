@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using System;
 
 
-public class Meltable : MonoBehaviour, ISavable
+public class Meltable : FlashWhite, ISavable
 {
     [Header("Sprites")]
    // [SerializeField] private Animator animator; C: Will switch over later
@@ -113,6 +114,11 @@ public class Meltable : MonoBehaviour, ISavable
     public bool CheckFreeze()
     {
         return (!refreezeOnTop || ((sTile != null && sTile.y > 1) || transform.position.y > 62.5) && (!anchorBroken || refreezeFromBroken) && numLavaSources <= 0);
+    }
+
+    public void FlashThenBreak() {
+        Action checkbreak = () => {Break();};
+        Flash(1, checkbreak);
     }
 
     public void Break(bool fromLoad = false) {
