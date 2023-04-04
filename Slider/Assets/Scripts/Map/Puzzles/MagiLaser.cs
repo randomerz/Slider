@@ -5,6 +5,7 @@ using UnityEngine;
 public class MagiLaser : MonoBehaviour
 {
     public Vector2 initDir;
+    [SerializeField] private Transform emitPos;
 
     public bool isEnabled;
     public LineRenderer lineRenderer, lineRenderer2;
@@ -49,9 +50,8 @@ public class MagiLaser : MonoBehaviour
 
     private void MakeLaser()
     {
-        Vector3 initPos = transform.position + new Vector3(-3.0f,1.0f,0.0f);
         curDir = initDir;
-        curPos = initPos;
+        curPos = emitPos.position;
         lineRenderer2.positionCount = 0;
         DrawLaser(curDir, curPos, lineRenderer);
     }
