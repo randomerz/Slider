@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIPowerTracker : MonoBehaviour
+public class UIPowerTracker : FlashWhiteUI
 {
     [SerializeField] private Image poweredImage;
     [SerializeField] private ElectricalNode myNode;

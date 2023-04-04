@@ -33,6 +33,8 @@ public class ArtifactTileButton : MonoBehaviour
     protected Sprite islandSprite;
     protected Sprite emptySprite;
 
+    private FlashWhiteUI[] buttonIcons; //power lines, minecarft junctions, etc
+
     public STile MyStile {
         get
         {
@@ -73,6 +75,7 @@ public class ArtifactTileButton : MonoBehaviour
     protected virtual void Start()
     {
         UpdateTileActive();
+        buttonIcons = GetComponentsInChildren<FlashWhiteUI>();
     }
 
     public void UpdateTileActive()
@@ -243,6 +246,10 @@ public class ArtifactTileButton : MonoBehaviour
             yield return new WaitForSeconds(.25f);
         }
         
+        foreach(FlashWhiteUI e in buttonIcons)
+            if(e.gameObject.activeSelf)
+                e.Flash(numFlickers);
+
         for (int i = 0; i < numFlickers; i++) 
         {
             buttonAnimator.sliderImage.sprite = blankSprite;
