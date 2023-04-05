@@ -51,6 +51,9 @@ public class PaintedCostMap : MonoBehaviour
         float halfWidth = (float) stileWidth / 2;
         foreach (STile st in stiles)
         {
+            if (!st.isTileActive)
+                continue;
+                
             float dx = worldCoords.x - st.transform.position.x;
             float dy = worldCoords.y - st.transform.position.y;
             if (dx >= -halfWidth && dx <= halfWidth && dy >= -halfWidth && dy <= halfWidth) {
