@@ -13,7 +13,7 @@ public abstract class MonoBehaviourContextSubscriber<T> : MonoBehaviour where T 
         }
         providers.Add(provider);
     }
-
+    
     protected void Awake()
     {
         InitializeContexts();
