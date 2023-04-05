@@ -677,7 +677,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: ShapeModule.placementMode
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: ShapeModule.m_MeshRenderer
@@ -745,7 +745,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
-      value: 20
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: InitialModule.startLifetime.scalar
