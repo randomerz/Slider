@@ -12,6 +12,7 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
 
     public List<GameObject> presentBobs;
     public List<GameObject> pastBobs;
+    private bool sendingToPast;
 
     private void Awake()
     {
@@ -75,11 +76,13 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
 
     public void StartSendToPastEvent()
     {
+        if(sendingToPast) return;
         StartCoroutine(_instance.SendToPastEvent());
     }
 
     private IEnumerator SendToPastEvent()
     {
+        sendingToPast = true;
         CameraShake.Shake(0.5f, 0.25f);
         AudioManager.PlayWithVolume("Slide Explosion", 0.25f);
 
@@ -121,6 +124,7 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
         AudioManager.StopAllSoundAndMusic();
 
         SpawnPlayerInPast();
+        sendingToPast = false;
     }
 
     public static void EnableAnchorsInTime(bool inPast)
