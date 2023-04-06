@@ -321,6 +321,17 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         }
     }
 
+    public void TPX(string val)
+    {
+        int n = int.Parse(val);
+        transform.position += new Vector3(n, 0, 0);
+    }
+
+    public void TPY(string val)
+    {
+        int n = int.Parse(val);
+        transform.position += new Vector3(0, n, 0);
+    }
 
 
     public static void SetPosition(Vector3 pos)
