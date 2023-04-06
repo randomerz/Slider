@@ -40,7 +40,6 @@ public class FlashWhite : MonoBehaviour
             yield return new WaitForSeconds(0.25f);
         }
 
-        if(callback !=null)
-            callback?.Invoke();
+        callback?.Invoke();
     }
 }
