@@ -144,7 +144,10 @@ public class STile : MonoBehaviour
             // enable internal colliders
             foreach (Collider2D c in disabledColliders)
             {
-                c.enabled = true;
+                if (c != null)
+                    c.enabled = true;
+                else
+                    Debug.LogWarning($"Tried to disable a collider in 'disabledColliders' but it was null!");
             }
             disabledColliders.Clear();
             foreach (GameObject g in disabledColliderTilemaps)
