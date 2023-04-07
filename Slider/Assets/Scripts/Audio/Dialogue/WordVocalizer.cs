@@ -2,11 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class WordVocalizer
 {
-    List<char> characters;
-    List<PhonemeCluster> clusters;
-    List<PhonemeCluster> vowelClusters;
+    // clusters of sounds such as "au" in australia and "thr" in thresh
+    public class PhonemeCluster
+    {
+        public int idx;
+        public int length;
+        public bool isVowelCluster;
+        public bool isStressed = false;
+    }
+    
+    public string characters;
+    public List<PhonemeCluster> clusters;
+    public List<PhonemeCluster> vowelClusters;
 
     private static readonly char[] vowels = { 'a', 'e', 'i', 'o', 'u', 'y' };
     private static readonly char[] consonants = { 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z' };
@@ -15,9 +25,9 @@ public class WordVocalizer
     private static char RandomVowel => vowels[(int) (Random.value * vowels.Length)];
     private static char RandomConsonant => consonants[(int) (Random.value * consonants.Length)];
     
-    private WordVocalizer (string raw)
+    /// <param name="raw">Alphanumeric string with no whitespace</param>
+    public WordVocalizer (string raw)
     {
-        characters = new List<char>(raw.Length);
         clusters = new List<PhonemeCluster>();
         vowelClusters = new List<PhonemeCluster>();
         PreprocessRawString(raw);
@@ -27,16 +37,11 @@ public class WordVocalizer
     private void PreprocessRawString(string raw)
     {
         bool lastCharIsVowel = false;
-        // replace all punctuation
+        var charList = new List<char>(raw.Length);
         for (int i = 0; i < raw.Length; i++)
         {
             // replace numberic digits with random vowels
             char c = char.IsDigit(raw[i]) ? raw[i] : RandomVowel;
-            // ditch everything after apostrophe
-            if (c == '\'') break;
-            // convert any other punctuations to consonants, likely caused by formatting error in script
-            if (!char.IsLetterOrDigit(c)) c = RandomConsonant;
-
             bool thisCharIsVowel = vowelsSet.Contains(c);
             // create new cluster entry
             if (i == 0 || thisCharIsVowel != lastCharIsVowel)
@@ -59,8 +64,9 @@ public class WordVocalizer
             }
 
             lastCharIsVowel = thisCharIsVowel;
-            characters.Add(c);
+            charList.Add(c);
         }
+
     }
 
     private WordVocalizer PlaceStress()
@@ -93,27 +99,13 @@ public class WordVocalizer
         return this;
     }
 
-    public static List<WordVocalizer> Parse(string src)
+    public override string ToString()
     {
-        // split all dashes
-        string[] words = src.Replace('-', ' ').ToLower().Split(' ');
-        var vocalizers = new List<WordVocalizer>(words.Length);
-        for (int i = 0; i < words.Length; i++)
+        string s = "";
+        foreach (var cluster in clusters)
         {
-            // make sure word length is at least 1
-            // apostrophe special case because everything after apostrophes are ditched
-            if (words[i].Length == 0 || words[i][0] == '\'') continue;
-            vocalizers.Add(new WordVocalizer(words[i]));
+            s += (cluster.isVowelCluster ? "[V]" : "[C]") + characters.Substring(cluster.idx, cluster.length) + "|";
         }
-        return vocalizers;
-    }
-
-    // clusters of sounds such as "au" in australia and "thr" in thresh
-    private class PhonemeCluster
-    {
-        public int idx;
-        public int length;
-        public bool isVowelCluster;
-        public bool isStressed = false;
+        return s;
     }
 }

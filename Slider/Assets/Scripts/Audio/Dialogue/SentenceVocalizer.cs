@@ -1,32 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
-public class SentenceVocalizer : MonoBehaviour
+[System.Serializable]
+public class SentenceVocalizer
 {
-    private static readonly HashSet<char> endings = new HashSet<char>(new char[]{ '.', '?', '!' });
+    private static readonly string endingsStr = @"(?<=[,.?!])";
+    private static readonly char[] endings = { ',','.','?','!' };
+    private static readonly HashSet<char> endingsSet = new(endings);
 
-    public static List<SentenceVocalizer> Parse(string sentence)
+    public static List<SentenceVocalizer> Parse(string paragraph)
     {
-        var vocalizers = new List<SentenceVocalizer>();
-        string cleaned = sentence.Remove('"').Remove('\'');
-        for (int i = 0; i < cleaned.Length; i++)
+        string[] clauses = Regex.Split(CleanUp(paragraph), endingsStr); // split while keeping the delimiter
+        var vocalizers = new List<SentenceVocalizer>(clauses.Length);
+        foreach (var clause in clauses)
         {
-            char c = cleaned[i];
-            if (c == ' ')
+            if (clause.Length <= 1) continue;
+            else vocalizers.Add(new SentenceVocalizer(clause));
+        }
+        return vocalizers;
+    }
+
+    public List<WordVocalizer> words;
+
+    /// <param name="clause">Alphanumeric words separated by space with the last character being one of the characters in "endings"</param>
+    private SentenceVocalizer(string clause)
+    {
+        words = new List<WordVocalizer>();
+        foreach(string word in clause.Substring(0, clause.Length - 1).Split(' ', System.StringSplitOptions.RemoveEmptyEntries))
+        {
+            words.Add(new WordVocalizer(word));
+        }
+    }
+
+    private static string CleanUp(string paragraph)
+    {
+        char[] clean = new char[paragraph.Length];
+        for (int i = 0; i < paragraph.Length; i++)
+        {
+            char c = paragraph[i];
+            if (char.IsLetter(c))
             {
-                // start new partition
-            }
-            else if (endings.Contains(c))
+                clean[i] = char.ToLower(c);
+            } else if (char.IsDigit(c) || endingsSet.Contains(c))
             {
-                // terminate partition while adding to it
-                oaewijafoiwefp
+                clean[i] = c;
             } else
             {
-                // add to partition but not terminate
+                clean[i] = ' ';
             }
         }
 
-        return vocalizers;
+        // collapse whitespaces
+        return string.Join(' ', new string(clean).Split(' ', System.StringSplitOptions.RemoveEmptyEntries));
     }
-}
+} 
