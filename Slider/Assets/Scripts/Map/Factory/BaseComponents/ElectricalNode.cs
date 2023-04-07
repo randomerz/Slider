@@ -77,7 +77,7 @@ public class ElectricalNode : MonoBehaviour
         }
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         if (Powered != _lastPoweredState)
         {

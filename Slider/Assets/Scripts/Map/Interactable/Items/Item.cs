@@ -9,6 +9,7 @@ public class Item : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     [SerializeField] private Collider2D myCollider;
     public bool canKeep = false;
+    public float itemRadius = 0.5f;
 
     // animation
     

@@ -11,6 +11,20 @@ public class LavaParticles : MonoBehaviour
     public CompositeCollider2D compositeCollider2D;
     public MeshFilter meshFilter;
     public PolygonCollider2D polygonCollider2D;
+
+    public static List<PolygonCollider2D> colliders = new List<PolygonCollider2D>(); //all active colliders
+
+
+
+
+    private void OnEnable() {
+        colliders.Add(polygonCollider2D);
+    }
+
+    private void OnDisable() {
+        colliders.Remove(polygonCollider2D);
+    }
+
     private void Start() {
         if(tilemap == null) return;
 
@@ -35,12 +49,30 @@ public class LavaParticles : MonoBehaviour
             polygonCollider2D.SetPath(i, points);
         }
 
+        UpdateKillTriggers();
+
         foreach(ParticleSystem ps in particleSystems)
         {
             ps.maxParticles *= numtiles;
             ps.emissionRate *= numtiles;
             ps.Stop();
             ps.Play();
+        }
+
+    }
+
+    private void UpdateKillTriggers()
+    {
+        foreach(ParticleSystem ps in particleSystems)
+        {
+            var trigger = ps.trigger;
+            if(trigger.colliderCount > 0)
+            {
+                foreach(PolygonCollider2D collider in colliders)
+                {
+                    trigger.AddCollider(collider);
+                }
+            }
         }
     }
 }

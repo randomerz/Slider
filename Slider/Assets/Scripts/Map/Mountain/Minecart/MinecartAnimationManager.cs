@@ -28,24 +28,21 @@ public class MinecartAnimationManager : MonoBehaviour
 
     public void ChangeAnimationState(string newState)
     {
-        return;
-        if (currentState == newState) return;
+      /*  if (currentState == newState) return;
         mcAnimator.Play(currentState);
         contentsAnimator?.Play(currentState);
-        currentState = newState;
+        currentState = newState;*/
     }
 
     public void ChangeAnimationState(int stateNum)
     {
-        return;
         string stateName = ((MCAnimationState)stateNum).ToString();
         ChangeAnimationState(stateName);
     }
 
     public void ChangeContents(MinecartState contents)
     {
-        return;
-        if(contents == mcState) return;
+        /*if(contents == mcState) return;
         switch(contents)
         {
             case MinecartState.Crystal:
@@ -72,7 +69,7 @@ public class MinecartAnimationManager : MonoBehaviour
         foreach(GameObject sprite in objects)
             sprite.SetActive(contentsSprite != null && contentsSprite == sprite);
 
-        contentsAnimator?.Play(currentState);
+        contentsAnimator?.Play(currentState);*/
     }
 
     public void SetSpeed(int speed)

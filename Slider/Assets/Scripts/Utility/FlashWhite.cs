@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class FlashWhite : MonoBehaviour
@@ -15,10 +16,10 @@ public class FlashWhite : MonoBehaviour
         oldMat = mySprite.material;
     }
     
-    public void Flash(int n)
+    public void Flash(int n, Action callback = null)
     {
         StopAllCoroutines();
-        StartCoroutine(_Flash(n));
+        StartCoroutine(_Flash(n, callback));
     }
 
     public void SetSpriteActive(bool value)
@@ -26,7 +27,7 @@ public class FlashWhite : MonoBehaviour
         mySprite.enabled = value;
     }
 
-    private IEnumerator _Flash(int n)
+    private IEnumerator _Flash(int n, Action callback)
     {
         for (int i = 0; i < n; i++)
         {
@@ -38,5 +39,7 @@ public class FlashWhite : MonoBehaviour
 
             yield return new WaitForSeconds(0.25f);
         }
+
+        callback?.Invoke();
     }
 }

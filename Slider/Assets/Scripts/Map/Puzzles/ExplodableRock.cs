@@ -72,4 +72,8 @@ public class ExplodableRock : MonoBehaviour, ISavable
     {
         CameraShake.Shake(0.5f, 0.75f);
     }
+
+    public void CheckIsExploded(Condition c){
+        c.SetSpec(isExploded);
+    }
 }
