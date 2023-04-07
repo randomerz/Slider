@@ -30,18 +30,18 @@ public class WordVocalizer
     {
         clusters = new List<PhonemeCluster>();
         vowelClusters = new List<PhonemeCluster>();
-        PreprocessRawString(raw);
+        characters = PreprocessRawString(raw);
         PlaceStress();
     }
 
-    private void PreprocessRawString(string raw)
+    private string PreprocessRawString(string raw)
     {
         bool lastCharIsVowel = false;
         var charList = new List<char>(raw.Length);
         for (int i = 0; i < raw.Length; i++)
         {
             // replace numberic digits with random vowels
-            char c = char.IsDigit(raw[i]) ? raw[i] : RandomVowel;
+            char c = char.IsDigit(raw[i]) ? RandomVowel : raw[i];
             bool thisCharIsVowel = vowelsSet.Contains(c);
             // create new cluster entry
             if (i == 0 || thisCharIsVowel != lastCharIsVowel)
@@ -66,7 +66,7 @@ public class WordVocalizer
             lastCharIsVowel = thisCharIsVowel;
             charList.Add(c);
         }
-
+        return new string(charList.ToArray());
     }
 
     private WordVocalizer PlaceStress()
@@ -104,7 +104,8 @@ public class WordVocalizer
         string s = "";
         foreach (var cluster in clusters)
         {
-            s += (cluster.isVowelCluster ? "[V]" : "[C]") + characters.Substring(cluster.idx, cluster.length) + "|";
+            string format = cluster.isVowelCluster ? "<B><I>$</I></B>" : "$";
+            s += format.Replace("$", characters.Substring(cluster.idx, cluster.length));
         }
         return s;
     }

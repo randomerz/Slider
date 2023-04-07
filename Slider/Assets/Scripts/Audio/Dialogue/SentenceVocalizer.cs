@@ -23,12 +23,15 @@ public class SentenceVocalizer
     }
 
     public List<WordVocalizer> words;
+    public char punctuation;
 
     /// <param name="clause">Alphanumeric words separated by space with the last character being one of the characters in "endings"</param>
     private SentenceVocalizer(string clause)
     {
         words = new List<WordVocalizer>();
-        foreach(string word in clause.Substring(0, clause.Length - 1).Split(' ', System.StringSplitOptions.RemoveEmptyEntries))
+        int endingTrim = endingsSet.Contains(clause[^1]) ? 1 : 0; // remove ending character if it is a punctuation
+        punctuation = endingTrim > 0 ? clause[^1] : '.'; // default to period when no punctuation
+        foreach(string word in clause.Substring(0, clause.Length - endingTrim).Split(' ', System.StringSplitOptions.RemoveEmptyEntries))
         {
             words.Add(new WordVocalizer(word));
         }
