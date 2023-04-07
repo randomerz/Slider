@@ -57,6 +57,9 @@
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{06498f6f-6ae8-43ce-a714-b5b24c3f41f6}">
+		<property name="dopplerEnabled">
+			<value>true</value>
+		</property>
 		<property name="maximumDistance">
 			<value>150</value>
 		</property>
@@ -76,6 +79,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{877da353-5804-4195-b1b9-460ff467a1bb}">
+		<property name="volume">
+			<value>-6</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{89864ba1-8c9f-48a6-82af-847e437e48b6}</destination>
 		</relationship>
@@ -123,7 +129,11 @@
 			<destination>{660c70e7-d9a0-404a-b339-8432580f5e26}</destination>
 		</relationship>
 	</object>
-	<object class="MixerBusPanner" id="{9921c587-da96-4908-a9f9-72fca6b452b9}" />
+	<object class="MixerBusPanner" id="{9921c587-da96-4908-a9f9-72fca6b452b9}">
+		<property name="surroundPanExtent">
+			<value>60</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{53907613-1c3d-45b9-bbfc-998141e48997}" />
 	<object class="RandomizerModulator" id="{fca11096-163f-47d4-bd15-06e60fed0549}">
 		<property name="nameOfPropertyBeingModulated">

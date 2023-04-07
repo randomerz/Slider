@@ -229,6 +229,7 @@
 		</property>
 		<relationship name="automationCurves">
 			<destination>{4b96455a-d91b-4430-9e22-0565913a50d5}</destination>
+			<destination>{d5611175-13c9-4169-9dd0-9e85b54fab54}</destination>
 		</relationship>
 	</object>
 	<object class="ADSRModulator" id="{ad76e2bb-e83a-48b5-a9db-aeb19fc7bd99}">
@@ -274,13 +275,21 @@
 			<destination>{2fede11c-d980-48c8-8e03-1c399009d96a}</destination>
 		</relationship>
 	</object>
+	<object class="AutomationCurve" id="{d5611175-13c9-4169-9dd0-9e85b54fab54}">
+		<relationship name="parameter">
+			<destination>{4c85932f-52f1-4c41-b86c-aba5000e193f}</destination>
+		</relationship>
+		<relationship name="automationPoints">
+			<destination>{37a3cb37-38b0-419f-9e25-ea5fba8f211a}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusFader" id="{36ff084b-78c4-49c9-9d5f-fdead2a34d98}" />
 	<object class="AutomationPoint" id="{74b99c5d-a589-4603-9c5b-5b5c020314cf}">
 		<property name="position">
 			<value>1</value>
 		</property>
 		<property name="value">
-			<value>-20</value>
+			<value>-24</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{8662a59c-4956-441f-943d-7387c972929a}">
@@ -288,7 +297,7 @@
 			<value>2</value>
 		</property>
 		<property name="value">
-			<value>-16</value>
+			<value>-20</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{82ea881b-41c5-4800-9496-5203461a0667}">
@@ -296,7 +305,7 @@
 			<value>3</value>
 		</property>
 		<property name="value">
-			<value>-12</value>
+			<value>-16</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{f2cba597-33be-48c1-88b7-86658b27b1ba}">
@@ -304,7 +313,7 @@
 			<value>4</value>
 		</property>
 		<property name="value">
-			<value>-8</value>
+			<value>-12</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{262c47b0-251e-4a07-8d18-93094dd62b5e}">
@@ -312,7 +321,7 @@
 			<value>5</value>
 		</property>
 		<property name="value">
-			<value>-4</value>
+			<value>-8</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{376c86af-c860-49b3-8dca-facd69630eac}">
@@ -320,7 +329,7 @@
 			<value>6</value>
 		</property>
 		<property name="value">
-			<value>0</value>
+			<value>-4</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{2fede11c-d980-48c8-8e03-1c399009d96a}">
@@ -329,6 +338,14 @@
 		</property>
 		<property name="value">
 			<value>-80</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{37a3cb37-38b0-419f-9e25-ea5fba8f211a}">
+		<property name="position">
+			<value>3.1359849870982877</value>
+		</property>
+		<property name="value">
+			<value>-6</value>
 		</property>
 	</object>
 </objects>

@@ -23,13 +23,7 @@ public class JungleGrid : SGrid
         AudioManager.PlayMusic("Jungle");
     }
 
-    private void OnEnable() {
-        SGrid.OnGridMove += CheckChad;
-    }
-
-    private void OnDisable() {
-        SGrid.OnGridMove -= CheckChad;
-    }
+    
 
     public override void Save() 
     {
@@ -115,16 +109,13 @@ public class JungleGrid : SGrid
             }
         }
         base.EnableStile(stile, shouldFlicker);
-        CheckChad(this, null);
+        chadRace.CheckChad(this, null);
     }
 
     // === Jungle Puzzle Specific ===
     
     // Puzzle 5 - Chad Race
-    public void CheckChad(object sender, SGrid.OnGridMoveArgs e) {
-        if (Current.GetGrid() != null)
-            chadRace.tilesAdjacent = CheckGrid.row(GetGridString(), "523");
-    }
+    
     
     public void OnRaceWon() {
         AudioManager.Play("Puzzle Complete");

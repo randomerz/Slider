@@ -11,6 +11,9 @@ public class Lever : ElectricalNode
     private Animator _animator;
     private PlayerConditionals _pConds;
 
+    private bool _isAnimating;
+    private bool _targetVisualOn;
+
     private new void Awake()
     {
         base.Awake();
@@ -22,12 +25,17 @@ public class Lever : ElectricalNode
 
     private void Start() 
     {
-        if (powerOnStart) SetState(true);
+        if (powerOnStart) 
+        {
+            _targetVisualOn = true;     
+            SetState(true);
+        }
 
         if (shouldSaveLeverState)
         {
             if (SaveSystem.Current.GetBool(saveLeverString))
             {
+                _targetVisualOn = true;
                 _animator.SetTrigger("Switched");
                 StartSignal(true);
             }
@@ -48,6 +56,15 @@ public class Lever : ElectricalNode
         PowerCrystal.blackoutEnded -= HandleBlackoutEnded;
     }
 
+    protected override void Update() {
+        base.Update();
+        if(!_isAnimating && _targetVisualOn != _isPowerSource)
+        {
+            //Switch();
+            SwitchVisuals();
+        } 
+    }
+
     private void HandleBlackoutStarted()
     {
         _pConds.DisableConditionals();
@@ -59,10 +76,18 @@ public class Lever : ElectricalNode
         _pConds.EnableConditionals();
     }
 
+
     public void Switch()
     {
         AudioManager.Play("UI Click");
 
+        _targetVisualOn = !_targetVisualOn;
+
+        //SetState(!PoweredConditionsMet());
+    }
+
+    private void SwitchVisuals()
+    {
         SetState(!PoweredConditionsMet());
     }
 
@@ -79,6 +104,7 @@ public class Lever : ElectricalNode
     }
 
     public IEnumerator TurnOn() {
+        _isAnimating = true;
         _animator.SetTrigger("Switched");
         yield return new WaitUntil(() =>
         {
@@ -92,9 +118,17 @@ public class Lever : ElectricalNode
         {
             SaveSystem.Current.SetBool(saveLeverString, true);
         }
+
+        yield return new WaitUntil(() =>
+        {
+            AnimatorStateInfo state = _animator.GetCurrentAnimatorStateInfo(0);
+            return state.IsName("On");
+        });
+        _isAnimating = false;
     }
 
     public IEnumerator TurnOff() {
+        _isAnimating = true;
         _animator.SetTrigger("Switched");
         yield return new WaitUntil(() =>
         {
@@ -103,5 +137,12 @@ public class Lever : ElectricalNode
         });
 
         StartSignal(false);
+
+        yield return new WaitUntil(() =>
+        {
+            AnimatorStateInfo state = _animator.GetCurrentAnimatorStateInfo(0);
+            return state.IsName("Off");
+        });
+        _isAnimating = false;
     }
 }

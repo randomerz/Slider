@@ -154,21 +154,61 @@ public class PlayerAction : Singleton<PlayerAction>
         {
             isPicking = true;
 
-            pickedItem = collidersInRange.OrderBy((item) => Vector3.Distance(item.transform.position, transform.position))
-                                         .Select((collider) => collider.GetComponent<Item>())
-                                         .FirstOrDefault();
+            pickedItem = GetNearestValidItem(collidersInRange);
+
             if (pickedItem == null)
             {
-                Debug.LogError("Picked something that isn't an Item!");
+                isPicking = false;
+                return false;
             }
 
             PlayerInventory.AddItem(pickedItem);
             pickedItem.PickUpItem(pickedItemLocation.transform, callback: FinishPicking);
 
+            AudioManager.PlayWithPitch("UI Click", 1.2f);
+
             return true;
         }
 
         return false;
+    }
+
+    private Item GetNearestValidItem(List<Collider2D> collidersInRange)
+    {
+        collidersInRange.OrderBy((item) => Vector3.Distance(item.transform.position, transform.position))
+                                         .Select((collider) => collider.GetComponent<Item>());
+        foreach(Collider2D c in collidersInRange) {
+            if(CheckItemRaycast(c))
+                return c.GetComponent<Item>();
+        }
+        
+        return null;
+    }
+
+    private bool CheckItemRaycast(Collider2D item)
+    {
+        Vector3 itemPos = item.transform.position;
+        Vector3 direction = itemPos - transform.position;
+        Vector3 perp = Vector3.Cross(direction, Vector3.forward).normalized * item.GetComponent<Item>().itemRadius;
+
+        RaycastHit2D[] h1 = Physics2D.RaycastAll(transform.position, direction, direction.magnitude, dropCollidingMask);
+        RaycastHit2D[] h2 = Physics2D.RaycastAll(transform.position + perp, direction, direction.magnitude, dropCollidingMask);
+        RaycastHit2D[] h3 = Physics2D.RaycastAll(transform.position - perp, direction, direction.magnitude, dropCollidingMask);
+
+        return (CheckRaycastList(h1, item) || CheckRaycastList(h2, item) || CheckRaycastList(h3, item));
+    }
+
+    private bool CheckRaycastList(RaycastHit2D[] hits, Collider2D item)
+    {
+        foreach (RaycastHit2D hit in hits)
+        {
+            Collider2D hitCollider = hit.collider;
+            if (!hitCollider.isTrigger && hitCollider != item) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private bool AttemptItemDrop()
@@ -180,6 +220,8 @@ public class PlayerAction : Singleton<PlayerAction>
             pickedItem.DropItem(itemDropIndicator.transform.position, callback: FinishDropping);
             lastDroppedItem = pickedItem;
             itemDropIndicator.SetActive(false);
+
+            AudioManager.PlayWithPitch("UI Click", 0.8f);
 
             return true;
         }

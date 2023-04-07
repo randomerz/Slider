@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//L: MANAGES THE GAME
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
 
     private static SaveSystem saveSystem;
     public GameUI gameUI;
-    public SceneInitializer sceneInitializer; // this script makes me sad
+    public SceneInitializer sceneInitializer;
     public GameSaver gameAutoSaver;
 
     // constant for other scripts to reference
@@ -19,10 +18,6 @@ public class GameManager : MonoBehaviour
         if (instance == null) {
             instance = this;
             DontDestroyOnLoad(gameObject);
-
-            // GameObject saveSystemGO = new GameObject("Save System");
-            // saveSystemGO.AddComponent<SaveSystem>();
-            // saveSystem = saveSystemGO.GetComponent<SaveSystem>();
             saveSystem = new SaveSystem();
         }
         else

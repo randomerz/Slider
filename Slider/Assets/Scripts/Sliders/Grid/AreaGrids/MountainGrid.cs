@@ -45,7 +45,7 @@ public class MountainGrid : SGrid
         AudioManager.PlayMusic("Mountain");
     }
     
-    /*private void OnEnable()     C: Currently broken, will look into fixing later
+    private void OnEnable()     
     {
         Anchor.OnAnchorInteract += OnAnchorInteract;
     }
@@ -63,7 +63,7 @@ public class MountainGrid : SGrid
             if(dropTile != null)
             {
                 if(dropTile.y < 2)
-                    return; //currently using the anchor on the bottom layer does nothing
+                    return; //using the anchor on the bottom layer does nothing
                 STile lower = SGrid.Current.GetGrid()[dropTile.x, dropTile.y - 2];
                 if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile
                 {
@@ -74,7 +74,7 @@ public class MountainGrid : SGrid
                 }
             }
         }        
-    }*/
+    }
 
     private void Update() {
         if(playerOnBottom && Player._instance.transform.position.y > 63f) {
@@ -82,14 +82,12 @@ public class MountainGrid : SGrid
             if(musicTransitionCoroutine != null)
                 StopCoroutine(musicTransitionCoroutine);
             musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 0, 2));
-            print("play top music");
         }
         if(!playerOnBottom && Player._instance.transform.position.y < 63f) {
             playerOnBottom = true;
             if(musicTransitionCoroutine != null)
                 StopCoroutine(musicTransitionCoroutine);
             musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 1, 2));
-            print("play bottom music");
         }
     }
 
