@@ -1,6 +1,7 @@
 using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security;
 using UnityEditor;
 using UnityEngine;
 
@@ -52,8 +53,14 @@ public class VocalizerDebuggerEditor : Editor
         base.OnInspectorGUI();
 
         var reader = target as Vocalizer;
-
-        paragraph = EditorGUILayout.TextArea(paragraph, GUILayout.MinHeight(100), GUILayout.ExpandHeight(true));
+        GUIStyle textAreaStyle = new(EditorStyles.textArea);
+        textAreaStyle.wordWrap = true;
+        string text = EditorGUILayout.TextArea(paragraph, textAreaStyle, GUILayout.MinHeight(100), GUILayout.ExpandHeight(true));
+        if (!text.Equals(paragraph))
+        {
+            reader.SetSentences(new());
+            paragraph = text;
+        }
 
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Parse"))
@@ -71,10 +78,10 @@ public class VocalizerDebuggerEditor : Editor
         }
         EditorGUILayout.EndHorizontal();
 
+        GUIStyle vocalizerPreviewStyle = new(GUI.skin.label);
+        vocalizerPreviewStyle.richText = true;
         foreach (var v in vocalizers)
         {
-            var style = new GUIStyle(GUI.skin.label);
-            style.richText = true;
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(v.punctuation.ToString());
             if (GUILayout.Button("Read clause"))
@@ -89,7 +96,7 @@ public class VocalizerDebuggerEditor : Editor
             }
             EditorGUILayout.EndHorizontal();
             foreach (var w in v.words) {
-                EditorGUILayout.LabelField("\t"+w.ToString(), style);
+                EditorGUILayout.LabelField("\t"+w.ToString(), vocalizerPreviewStyle);
             }
         }
 
