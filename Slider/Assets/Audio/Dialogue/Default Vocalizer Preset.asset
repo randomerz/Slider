@@ -22,9 +22,13 @@ MonoBehaviour:
         Data4: -774281498
       Path: event:/Dialogue/Default_Vocal
     dopplerScale: 0
-  basePitch: 1.486
-  secondsBetweenWords: 0.131
-  secondsBetweenSentences: 0.287
-  phonemeGranularitySeconds: 0.0507
-  intonationMultiplier: 1.098
-  baseVowelDuration: 0.0552
+  basePitch: 0.992
+  stressedVowelPitchMultiplier: 1.149
+  baseDuration: 0.0976
+  baseVolume: 1
+  stressedVowelVolumeAdjustment: 1.2
+  stressedVowelDurationMultiplier: 0.906
+  lerpSmoothnessInverted: 4.59
+  wordGap: 0.1
+  clauseGap: 0.1
+  intonationMultiplier: 1.542

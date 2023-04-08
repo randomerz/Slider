@@ -128,8 +128,7 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocal
         string s = "";
         foreach (var cluster in clusters)
         {
-            string format = cluster.isVowelCluster ? "<B><I>$</I></B>" : "$";
-            s += format.Replace("$", cluster.characters);
+            s += cluster.ToString();
         }
         return s;
     }
@@ -145,6 +144,13 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocal
     {
         return null;
     }
+
+#if UNITY_EDITOR
+    public void ClearProgress()
+    {
+        foreach (var cluster in vowelClusters) cluster.ClearProgress();
+    }
+#endif
 }
 
 public class VowelDescription

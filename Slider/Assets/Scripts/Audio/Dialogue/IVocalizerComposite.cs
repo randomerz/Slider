@@ -18,4 +18,8 @@ public interface IVocalizerComposite<T> : IVocalizer where T : IVocalizer
             yield return Postvocalize(preset, context, v, default, i + 1);
         }
     }
+
+#if UNITY_EDITOR
+    void ClearProgress();
+#endif
 }

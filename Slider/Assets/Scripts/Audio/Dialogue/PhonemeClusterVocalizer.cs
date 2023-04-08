@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 [System.Serializable]
 public class PhonemeClusterVocalizer : IVocalizer
@@ -11,17 +12,35 @@ public class PhonemeClusterVocalizer : IVocalizer
 
     public bool IsEmpty => characters.Length > 0;
 
+#if UNITY_EDITOR
+    public int Progress => _progress;
+    private int _progress = 0;
+    public void ClearProgress() => _progress = 0;
+#endif
+
     public IEnumerator Vocalize(VocalizerPreset preset, VocalizationContext context, int idx, int lengthOfComposite)
     {
+#if UNITY_EDITOR
+        _progress = 0;
+#endif
         var status = AudioManager.Play(preset.synth.WithAttachmentToTransform(context.root), startImmediately: false);
         if (!status.HasValue) yield break;
         var inst = status.Value;
 
         float initialPitch = Mathf.Lerp(context.wordPitchBase, context.wordPitchIntonated, (float)idx / lengthOfComposite);
         float finalPitch = Mathf.Lerp(context.wordPitchBase, context.wordPitchIntonated, (float)(idx + 1) / lengthOfComposite);
-        if (isStressed) finalPitch *= preset.stressedVowelPitchMultiplier;
+        float duration = preset.baseDuration;
+        float volumeAdjustmentDB = 0;
 
+        if (isStressed) {
+            finalPitch *= preset.stressedVowelPitchMultiplier;
+            duration *= preset.stressedVowelDurationMultiplier;
+            volumeAdjustmentDB = preset.stressedVowelVolumeAdjustment;
+        }
+
+        inst.setVolume(preset.baseVolume);
         inst.setParameterByName("Pitch", initialPitch);
+        inst.setParameterByName("VolumeAdjustmentDB", volumeAdjustmentDB);
         inst.setParameterByName("VowelOpeness", context.vowelOpeness);
         inst.setParameterByName("VowelForwardness", context.vowelForwardness);
         inst.start();
@@ -31,8 +50,10 @@ public class PhonemeClusterVocalizer : IVocalizer
             char c = characters[i];
             float t = 0;
             var vowelDescriptor = WordVocalizer.vowelDescriptionTable[c];
-            float duration = preset.baseVowelDuration;
-            if (isStressed) duration *= preset.stressedVowelDurationMultiplier;
+
+#if UNITY_EDITOR
+            _progress = i + 1;
+#endif
 
             while (t < duration)
             {
@@ -48,5 +69,22 @@ public class PhonemeClusterVocalizer : IVocalizer
         }
 
         inst.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        inst.release();
+    }
+
+    public override string ToString()
+    {
+#if UNITY_EDITOR
+        string text = $"<color=green>{ characters.Substring(0, Progress) }</color>{ characters.Substring(Progress) }";
+#else
+        string text = characters;
+#endif
+        if (isVowelCluster)
+        {
+            return $"<B>{text}</B>";
+        } else
+        {
+            return text;
+        }
     }
 }

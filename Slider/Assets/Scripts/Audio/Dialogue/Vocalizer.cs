@@ -13,12 +13,18 @@ public class Vocalizer : MonoBehaviour, IVocalizerComposite<SentenceVocalizer> {
 
     public void StartRead(SentenceVocalizer voc)
     {
+#if UNITY_EDITOR
+        ClearProgress();
+#endif
         StopAllCoroutines();
         StartCoroutine((voc as IVocalizerComposite<WordVocalizer>).Vocalize(preset, new(transform)));
     }
 
     public void StartReadAll()
     {
+#if UNITY_EDITOR
+        ClearProgress();
+#endif
         StopAllCoroutines();
         StartCoroutine((this as IVocalizerComposite<SentenceVocalizer>).Vocalize(preset, new(transform)));
     }
@@ -27,7 +33,7 @@ public class Vocalizer : MonoBehaviour, IVocalizerComposite<SentenceVocalizer> {
 
     public IEnumerator Postvocalize(VocalizerPreset preset, VocalizationContext context, SentenceVocalizer completed, SentenceVocalizer upcoming, int upcomingIdx)
     {
-        yield return new WaitForSecondsRealtime(preset.secondsBetweenSentences);
+        yield return new WaitForSecondsRealtime(preset.clauseGap);
     }
 
     public IEnumerator Prevocalize(VocalizerPreset preset, VocalizationContext context, SentenceVocalizer prior, SentenceVocalizer upcoming, int upcomingIdx)
@@ -39,6 +45,13 @@ public class Vocalizer : MonoBehaviour, IVocalizerComposite<SentenceVocalizer> {
     {
         _Vocalizers = vocalizers;
     }
+
+#if UNITY_EDITOR
+    public void ClearProgress()
+    {
+        foreach (var sv in _Vocalizers) sv.ClearProgress();
+    }
+#endif
 }
 
 #if UNITY_EDITOR

@@ -103,7 +103,7 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
 
     public IEnumerator Postvocalize(VocalizerPreset preset, VocalizationContext context, WordVocalizer completed, WordVocalizer upcoming, int upcomingIdx)
     {
-        yield return new WaitForSecondsRealtime(preset.secondsBetweenWords * (Random.value + 0.5f));
+        yield return new WaitForSecondsRealtime(preset.wordGap * (Random.value + 0.5f));
     }
 
     public float GetIntonation(VocalizerPreset preset)
@@ -115,4 +115,11 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
             default: return preset.basePitch;
         }
     }
+
+#if UNITY_EDITOR
+    public void ClearProgress()
+    {
+        foreach (var w in words) w.ClearProgress();
+    }
+#endif
 } 
