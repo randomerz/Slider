@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 [System.Serializable]
 public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
@@ -122,4 +124,4 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
         foreach (var w in words) w.ClearProgress();
     }
 #endif
-} 
+}

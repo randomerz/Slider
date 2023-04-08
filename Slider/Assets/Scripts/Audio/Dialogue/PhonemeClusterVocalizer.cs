@@ -79,12 +79,9 @@ public class PhonemeClusterVocalizer : IVocalizer
 #else
         string text = characters;
 #endif
-        if (isVowelCluster)
-        {
-            return $"<B>{text}</B>";
-        } else
-        {
-            return text;
-        }
+        string 
+            pre = $"{( isVowelCluster ? "<B>" : "" )}{( isStressed ? "<size=16>" : "" )}",
+            post = $"{(isStressed ? "</size>" : "")}{(isVowelCluster ? "</B>" : "")}";
+        return $"{pre}{text}{post}";
     }
 }

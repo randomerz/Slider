@@ -335,7 +335,6 @@
 		<relationship name="automators">
 			<destination>{5e90b6f2-727c-40e8-a079-791834e76a8f}</destination>
 			<destination>{714c5610-d919-4645-8b46-5bbb45927fba}</destination>
-			<destination>{1ffc3493-046b-4bdd-bba4-e29aea27c8e0}</destination>
 			<destination>{2e5e982f-d2bb-4453-bc4e-2592a1f309a0}</destination>
 		</relationship>
 	</object>
@@ -425,11 +424,6 @@
 		<relationship name="automationCurves">
 			<destination>{e3df85eb-0971-4897-92f6-0be0cc1986cf}</destination>
 		</relationship>
-	</object>
-	<object class="Automator" id="{1ffc3493-046b-4bdd-bba4-e29aea27c8e0}">
-		<property name="nameOfPropertyBeingAutomated">
-			<value>gainD</value>
-		</property>
 	</object>
 	<object class="Automator" id="{2e5e982f-d2bb-4453-bc4e-2592a1f309a0}">
 		<property name="nameOfPropertyBeingAutomated">
