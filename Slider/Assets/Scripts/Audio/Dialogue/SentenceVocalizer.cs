@@ -51,7 +51,7 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
             if (wv.IsEmpty) words.Add(wv);
         }
 
-        if (punctuation == '?' || punctuation == '!')
+        if (punctuation == '?')
         {
             intonation = Intonation.up;
             foreach (var keyword in questionNegation)
@@ -62,7 +62,7 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
                     break;
                 }
             }
-        } else if (punctuation == '.')
+        } else if (punctuation == '.' || punctuation == '!')
         {
             intonation = Intonation.down;
         } else

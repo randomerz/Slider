@@ -17,9 +17,11 @@ public class PhonemeClusterVocalizer : IVocalizer
         if (!status.HasValue) yield break;
         var inst = status.Value;
 
-        float initialPitch = context.wordPitchBase + (isStressed ? 0.25f : 0);
-        inst.setParameterByName("Pitch", initialPitch);
+        float initialPitch = Mathf.Lerp(context.wordPitchBase, context.wordPitchIntonated, (float)idx / lengthOfComposite);
+        float finalPitch = Mathf.Lerp(context.wordPitchBase, context.wordPitchIntonated, (float)(idx + 1) / lengthOfComposite);
+        if (isStressed) finalPitch *= preset.stressedVowelPitchMultiplier;
 
+        inst.setParameterByName("Pitch", initialPitch);
         inst.setParameterByName("VowelOpeness", context.vowelOpeness);
         inst.setParameterByName("VowelForwardness", context.vowelForwardness);
         inst.start();
@@ -27,24 +29,20 @@ public class PhonemeClusterVocalizer : IVocalizer
         for (int i = 0; i < characters.Length; i++)
         {
             char c = characters[i];
-            float t = 0, tGranulatiryCounter = 0;
+            float t = 0;
             var vowelDescriptor = WordVocalizer.vowelDescriptionTable[c];
             float duration = preset.baseVowelDuration;
+            if (isStressed) duration *= preset.stressedVowelDurationMultiplier;
 
             while (t < duration)
             {
-                if (tGranulatiryCounter > preset.phonemeGranularitySeconds)
-                {
-                    inst.setParameterByName("VowelOpeness", context.vowelOpeness);
-                    inst.setParameterByName("VowelForwardness", context.vowelForwardness);
-                    context.vowelOpeness = Mathf.Lerp(context.vowelOpeness, vowelDescriptor.openness, tGranulatiryCounter * 5);
-                    context.vowelForwardness = Mathf.Lerp(context.vowelForwardness, vowelDescriptor.forwardness, tGranulatiryCounter * 5);
-
-                    tGranulatiryCounter %= preset.phonemeGranularitySeconds;
-                }
+                inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, t / duration));
+                inst.setParameterByName("VowelOpeness", context.vowelOpeness);
+                inst.setParameterByName("VowelForwardness", context.vowelForwardness);
+                context.vowelOpeness = Mathf.Lerp(context.vowelOpeness, vowelDescriptor.openness, t * preset.lerpSmoothnessInverted);
+                context.vowelForwardness = Mathf.Lerp(context.vowelForwardness, vowelDescriptor.forwardness, t * preset.lerpSmoothnessInverted);
 
                 t += Time.deltaTime;
-                tGranulatiryCounter += Time.deltaTime;
                 yield return null;
             }
         }

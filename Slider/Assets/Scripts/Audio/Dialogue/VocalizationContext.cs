@@ -19,7 +19,6 @@ public class VocalizationContext
     #endregion
 
     #region WORD VOCALIZER RESPONSIBILITIES
-    public float wordPitch; // reset per word, updated per phoneme
     #endregion
 
     #region PHONEME CLUSTER VOCALIZER RESPONSIBILITIES

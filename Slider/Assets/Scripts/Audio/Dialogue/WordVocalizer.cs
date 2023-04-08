@@ -75,7 +75,14 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocal
     {
         if (vowelClusters.Count == 1)
         {
-            vowelClusters[0].isStressed = true;
+            // for very short words with single vowel, make a guess that it is some preposition like 'a' and 'is'
+            if (vowelClusters[0].characters.Length == 1 && characters.Length < 3)
+            {
+                vowelClusters[0].isStressed = false;
+            } else
+            {
+                vowelClusters[0].isStressed = true;
+            }
         } else if (vowelClusters.Count == 2)
         {
             vowelClusters[Random.value < 0.6f ? 0 : 1].isStressed = true;

@@ -1,3 +1,4 @@
+using Steamworks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,16 +15,17 @@ public class VocalizerPreset : ScriptableObject
     [Range(0.1f, 0.5f)]
     public float secondsBetweenSentences;
 
-    /// <summary>
-    /// The PhonemeClusterVocalizer will try to smooth things out
-    /// This granularity makes sure the smoothing only applies once X seconds
-    /// Setting this to 0 or negative means completely continuous
-    /// </summary>
-    [Range(0f, 0.1f)]
-    public float phonemeGranularitySeconds;
-
     [Range(1f, 2f)]
     public float intonationMultiplier;
     [Range(0.01f, 0.2f)]
     public float baseVowelDuration;
+
+    [Range(1, 10)]
+    public float lerpSmoothnessInverted;
+
+    [Range(0.75f, 1.25f)]
+    public float stressedVowelPitchMultiplier;
+
+    [Range(0.25f, 2f)]
+    public float stressedVowelDurationMultiplier;
 }
