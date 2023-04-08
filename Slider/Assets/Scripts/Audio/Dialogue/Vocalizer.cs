@@ -58,6 +58,7 @@ public class VocalizerDebuggerEditor : Editor
         string text = EditorGUILayout.TextArea(paragraph, textAreaStyle, GUILayout.MinHeight(100), GUILayout.ExpandHeight(true));
         if (!text.Equals(paragraph))
         {
+            vocalizers.Clear();
             reader.SetSentences(new());
             paragraph = text;
         }
