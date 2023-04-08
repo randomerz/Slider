@@ -9,9 +9,14 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
     private static readonly string endingsStr = @"(?<=[,.?!])";
     private static readonly char[] endings = { ',','.','?','!' };
     private static readonly HashSet<char> endingsSet = new(endings);
+    /// <summary>
+    /// Questions no longer tend to tone upwards when these words are in the same clause
+    /// </summary>
+    private static readonly string[] questionNegation = { "who", "what", "when", "where", "why", "how" };
 
     public List<WordVocalizer> words;
     public char punctuation;
+    public VocalizerPreset.VocalIntonation intonation = VocalizerPreset.VocalIntonation.None;
     public List<WordVocalizer> Vocalizers => words;
     public bool Vocalizable => words.Count > 0;
 
@@ -34,10 +39,23 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
     /// <param name="clause">Alphanumeric words separated by space with the last character being one of the characters in "endings"</param>
     private SentenceVocalizer(string clause)
     {
-        Debug.Log($"clause: {clause}");
         words = new List<WordVocalizer>();
         int endingTrim = endingsSet.Contains(clause[^1]) ? 1 : 0; // remove ending character if it is a punctuation
         punctuation = endingTrim > 0 ? clause[^1] : '.'; // default to period when no punctuation
+
+        foreach(var keyword in questionNegation)
+        {
+            if (clause.Contains(keyword))
+            {
+                intonation = VocalizerPreset.VocalIntonation.Down;
+                break;
+            }
+        }
+        if (intonation == VocalizerPreset.VocalIntonation.None)
+        {
+            intonation = (punctuation == '?' || punctuation == '!') ? VocalizerPreset.VocalIntonation.Up : VocalizerPreset.VocalIntonation.Down;
+        }
+
         foreach(string word in clause.Substring(0, clause.Length - endingTrim).Split(' ', System.StringSplitOptions.RemoveEmptyEntries))
         {
             WordVocalizer wv = new(word);
@@ -67,13 +85,13 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
         return string.Join(' ', new string(clean).Split(' ', System.StringSplitOptions.RemoveEmptyEntries));
     }
 
-    public IEnumerator Prevocalize(WordVocalizer prior, WordVocalizer upcoming)
+    public IEnumerator Prevocalize(VocalizerPreset preset, WordVocalizer prior, WordVocalizer upcoming)
     {
-        throw new System.NotImplementedException();
+        return null;
     }
 
-    public IEnumerator Postvocalize(WordVocalizer completed, WordVocalizer upcoming)
+    public IEnumerator Postvocalize(VocalizerPreset preset, WordVocalizer completed, WordVocalizer upcoming)
     {
-        throw new System.NotImplementedException();
+        yield return new WaitForSecondsRealtime(preset.secondsBetweenWords);
     }
 } 

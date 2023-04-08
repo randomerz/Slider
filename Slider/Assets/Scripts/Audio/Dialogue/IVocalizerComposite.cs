@@ -5,8 +5,8 @@ using UnityEngine;
 public interface IVocalizerComposite<T> : IVocalizer where T : IVocalizer
 {
     List<T> Vocalizers { get; }
-    IEnumerator Prevocalize(T prior, T upcoming);
-    IEnumerator Postvocalize(T completed, T upcoming);
+    IEnumerator Prevocalize(VocalizerPreset preset, T prior, T upcoming);
+    IEnumerator Postvocalize(VocalizerPreset preset, T completed, T upcoming);
 
     IEnumerator IVocalizer.Vocalize(VocalizerPreset preset, VocalizationContext context)
     {
@@ -15,12 +15,13 @@ public interface IVocalizerComposite<T> : IVocalizer where T : IVocalizer
             var v = Vocalizers[i];
             if (i != 0)
             {
-                yield return Prevocalize(Vocalizers[i - 1], v);
+                yield return Prevocalize(preset, Vocalizers[i - 1], v);
             }
-            v.Vocalize(preset, context);
+            Debug.Log($"Vocalizing: {v}");
+            (v as IVocalizer).Vocalize(preset, context);
             if (i != Vocalizers.Count - 1)
             {
-                yield return Postvocalize(v, Vocalizers[i + 1]);
+                yield return Postvocalize(preset, v, Vocalizers[i + 1]);
             }
         }
     }

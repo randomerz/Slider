@@ -13,6 +13,17 @@ public class PhonemeClusterVocalizer : IVocalizer
 
     public IEnumerator Vocalize(VocalizerPreset preset, VocalizationContext context)
     {
-        throw new System.NotImplementedException();
+        var status = AudioManager.Play(preset.synth.WithAttachmentToTransform(context.root));
+
+        if (status.HasValue)
+        {
+            var inst = status.Value;
+            float t = 0;
+            while (t < 0.1f) {
+                t += Time.deltaTime;
+                yield return null;
+            }
+            inst.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        }
     }
 }

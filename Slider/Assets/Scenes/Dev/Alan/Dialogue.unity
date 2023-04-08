@@ -159,7 +159,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1880545945}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -268,11 +268,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fd5948397b6fad408e6397d15ab0552, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  synth:
-    Guid:
-      Data1: -1684417107
-      Data2: 1280683026
-      Data3: -334943321
-      Data4: -774281498
-    Path: event:/Dialogue/Default_Vocal
-  wordPause: 0
+  preset: {fileID: 11400000, guid: ab4ec0969ea36ea49a0790140b3255a8, type: 2}

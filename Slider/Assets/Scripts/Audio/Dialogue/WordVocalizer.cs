@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 [System.Serializable]
-public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>
+public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocalizer
 {
     private static readonly char[] vowels = { 'a', 'e', 'i', 'o', 'u', 'y' };
     private static readonly char[] consonants = { 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z' };
@@ -128,12 +127,12 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>
         return s;
     }
 
-    public IEnumerator Prevocalize(PhonemeClusterVocalizer prior, PhonemeClusterVocalizer upcoming)
+    public IEnumerator Prevocalize(VocalizerPreset preset, PhonemeClusterVocalizer prior, PhonemeClusterVocalizer upcoming)
     {
         return null;
     }
 
-    public IEnumerator Postvocalize(PhonemeClusterVocalizer completed, PhonemeClusterVocalizer upcoming)
+    public IEnumerator Postvocalize(VocalizerPreset preset, PhonemeClusterVocalizer completed, PhonemeClusterVocalizer upcoming)
     {
         return null;
     }

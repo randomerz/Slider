@@ -7,4 +7,9 @@ using UnityEngine;
 /// </summary>
 public class VocalizationContext
 {
+    public Transform root;
+    public VocalizationContext(Transform root)
+    {
+        this.root = root;
+    }
 }

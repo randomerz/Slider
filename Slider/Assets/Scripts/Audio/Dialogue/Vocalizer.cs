@@ -10,7 +10,7 @@ public class Vocalizer : MonoBehaviour {
     public void StartRead(SentenceVocalizer voc)
     {
         StopAllCoroutines();
-        StartCoroutine((voc as IVocalizerComposite<WordVocalizer>).Vocalize(preset, new()));
+        StartCoroutine((voc as IVocalizerComposite<WordVocalizer>).Vocalize(preset, new(transform)));
     }
 
 }
