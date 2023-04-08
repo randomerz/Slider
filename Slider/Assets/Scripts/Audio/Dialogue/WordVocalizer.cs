@@ -10,12 +10,12 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocal
     private static readonly char[] consonants = { 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z' };
     public static readonly Dictionary<char, VowelDescription> vowelDescriptionTable = new Dictionary<char, VowelDescription>()
     {
-        ['a'] = new VowelDescription() { openness = 1.0f, frontness = 0.0f },
-        ['e'] = new VowelDescription() { openness = 1.0f, frontness = 1.0f },
-        ['i'] = new VowelDescription() { openness = 0.0f, frontness = 1.0f },
-        ['o'] = new VowelDescription() { openness = 0.5f, frontness = 0.5f },
-        ['u'] = new VowelDescription() { openness = 0.0f, frontness = 0.0f },
-        ['y'] = new VowelDescription() { openness = 0.0f, frontness = 1.0f }
+        ['a'] = new VowelDescription() { openness = 1.0f, forwardness = 0.0f },
+        ['e'] = new VowelDescription() { openness = 1.0f, forwardness = 1.0f },
+        ['i'] = new VowelDescription() { openness = 0.0f, forwardness = 1.0f },
+        ['o'] = new VowelDescription() { openness = 0.5f, forwardness = 0.5f },
+        ['u'] = new VowelDescription() { openness = 0.0f, forwardness = 0.0f },
+        ['y'] = new VowelDescription() { openness = 0.0f, forwardness = 1.0f }
     };
     private static readonly HashSet<char> consonantsSet = new(consonants);
     private static char RandomVowel => vowels[(int)(Random.value * vowels.Length)];
@@ -26,7 +26,7 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocal
     private List<PhonemeClusterVocalizer> clusters;
     public List<PhonemeClusterVocalizer> vowelClusters;
     List<PhonemeClusterVocalizer> IVocalizerComposite<PhonemeClusterVocalizer>.Vocalizers => vowelClusters;
-    public bool Vocalizable => vowelClusters.Count > 0;
+    public bool IsEmpty => vowelClusters.Count > 0;
 
 
     /// <param name="raw">Alphanumeric string with no whitespace</param>
@@ -127,12 +127,14 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocal
         return s;
     }
 
-    public IEnumerator Prevocalize(VocalizerPreset preset, PhonemeClusterVocalizer prior, PhonemeClusterVocalizer upcoming)
+    public IEnumerator Prevocalize(
+        VocalizerPreset preset, VocalizationContext context, PhonemeClusterVocalizer prior, PhonemeClusterVocalizer upcoming, int upcomingIdx)
     {
         return null;
     }
 
-    public IEnumerator Postvocalize(VocalizerPreset preset, PhonemeClusterVocalizer completed, PhonemeClusterVocalizer upcoming)
+    public IEnumerator Postvocalize(
+        VocalizerPreset preset, VocalizationContext context, PhonemeClusterVocalizer completed, PhonemeClusterVocalizer upcoming, int upcomingIdx)
     {
         return null;
     }
@@ -140,6 +142,6 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocal
 
 public class VowelDescription
 {
-    public float frontness;
+    public float forwardness;
     public float openness;
 }

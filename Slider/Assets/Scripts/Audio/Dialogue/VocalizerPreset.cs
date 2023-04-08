@@ -11,22 +11,19 @@ public class VocalizerPreset : ScriptableObject
     [Range(0.1f, 0.5f)]
     public float secondsBetweenWords;
 
-    public AnimationCurve intonationUp, intonationDown;
+    [Range(0.1f, 0.5f)]
+    public float secondsBetweenSentences;
 
-    public AnimationCurve GetIntonation(VocalIntonation key)
-    {
-        switch (key)
-        {
-            case VocalIntonation.Up: return intonationUp;
-            case VocalIntonation.Down: return intonationDown;
-            default: return null;
-        }
-    }
+    /// <summary>
+    /// The PhonemeClusterVocalizer will try to smooth things out
+    /// This granularity makes sure the smoothing only applies once X seconds
+    /// Setting this to 0 or negative means completely continuous
+    /// </summary>
+    [Range(0f, 0.1f)]
+    public float phonemeGranularitySeconds;
 
-    public enum VocalIntonation
-    {
-        None,
-        Up,
-        Down
-    }
+    [Range(1f, 2f)]
+    public float intonationMultiplier;
+    [Range(0.01f, 0.2f)]
+    public float baseVowelDuration;
 }

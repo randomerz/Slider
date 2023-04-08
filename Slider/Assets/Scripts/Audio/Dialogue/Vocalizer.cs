@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class Vocalizer : MonoBehaviour {
+public class Vocalizer : MonoBehaviour, IVocalizerComposite<SentenceVocalizer> {
     [SerializeField] private VocalizerPreset preset;
+
+    private List<SentenceVocalizer> _Vocalizers;
+    public List<SentenceVocalizer> Vocalizers => _Vocalizers;
 
     public void StartRead(SentenceVocalizer voc)
     {
@@ -13,6 +16,28 @@ public class Vocalizer : MonoBehaviour {
         StartCoroutine((voc as IVocalizerComposite<WordVocalizer>).Vocalize(preset, new(transform)));
     }
 
+    public void StartReadAll()
+    {
+        StopAllCoroutines();
+        StartCoroutine((this as IVocalizerComposite<SentenceVocalizer>).Vocalize(preset, new(transform)));
+    }
+
+    public bool IsEmpty => _Vocalizers.Count > 0;
+
+    public IEnumerator Postvocalize(VocalizerPreset preset, VocalizationContext context, SentenceVocalizer completed, SentenceVocalizer upcoming, int upcomingIdx)
+    {
+        yield return new WaitForSecondsRealtime(preset.secondsBetweenSentences);
+    }
+
+    public IEnumerator Prevocalize(VocalizerPreset preset, VocalizationContext context, SentenceVocalizer prior, SentenceVocalizer upcoming, int upcomingIdx)
+    {
+        yield return null;
+    }
+
+    public void SetSentences(List<SentenceVocalizer> vocalizers)
+    {
+        _Vocalizers = vocalizers;
+    }
 }
 
 #if UNITY_EDITOR
@@ -30,10 +55,21 @@ public class VocalizerDebuggerEditor : Editor
 
         paragraph = EditorGUILayout.TextArea(paragraph, GUILayout.MinHeight(100), GUILayout.ExpandHeight(true));
 
+        EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Parse"))
         {
             vocalizers = SentenceVocalizer.Parse(paragraph);
+            reader.SetSentences(vocalizers);
         }
+
+        if (vocalizers.Count > 0)
+        {
+            if (GUILayout.Button("Play"))
+            {
+                reader.StartReadAll();
+            }
+        }
+        EditorGUILayout.EndHorizontal();
 
         foreach (var v in vocalizers)
         {
@@ -56,6 +92,7 @@ public class VocalizerDebuggerEditor : Editor
                 EditorGUILayout.LabelField("\t"+w.ToString(), style);
             }
         }
+
     }
 }
 

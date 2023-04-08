@@ -12,4 +12,18 @@ public class VocalizationContext
     {
         this.root = root;
     }
+
+    #region SENTENCE VOCALIZER RESPONSIBILITIES
+    public float wordPitchBase;
+    public float wordPitchIntonated;
+    #endregion
+
+    #region WORD VOCALIZER RESPONSIBILITIES
+    public float wordPitch; // reset per word, updated per phoneme
+    #endregion
+
+    #region PHONEME CLUSTER VOCALIZER RESPONSIBILITIES
+    public float vowelOpeness;
+    public float vowelForwardness;
+    #endregion
 }
