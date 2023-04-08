@@ -10,10 +10,10 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocal
     private static readonly char[] consonants = { 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z' };
     public static readonly Dictionary<char, VowelDescription> vowelDescriptionTable = new Dictionary<char, VowelDescription>()
     {
-        ['a'] = new VowelDescription() { openness = 1.0f, forwardness = 0.0f },
-        ['e'] = new VowelDescription() { openness = 1.0f, forwardness = 1.0f },
+        ['a'] = new VowelDescription() { openness = 1.0f, forwardness = 0.6f },
+        ['e'] = new VowelDescription() { openness = 0.3f, forwardness = 0.8f },
         ['i'] = new VowelDescription() { openness = 0.0f, forwardness = 1.0f },
-        ['o'] = new VowelDescription() { openness = 0.5f, forwardness = 0.5f },
+        ['o'] = new VowelDescription() { openness = 0.3f, forwardness = 0.5f },
         ['u'] = new VowelDescription() { openness = 0.0f, forwardness = 0.0f },
         ['y'] = new VowelDescription() { openness = 0.0f, forwardness = 1.0f }
     };
