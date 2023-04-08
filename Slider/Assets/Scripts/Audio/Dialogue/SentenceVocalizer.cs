@@ -4,11 +4,16 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 
 [System.Serializable]
-public class SentenceVocalizer
+public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
 {
     private static readonly string endingsStr = @"(?<=[,.?!])";
     private static readonly char[] endings = { ',','.','?','!' };
     private static readonly HashSet<char> endingsSet = new(endings);
+
+    public List<WordVocalizer> words;
+    public char punctuation;
+    public List<WordVocalizer> Vocalizers => words;
+    public bool Vocalizable => words.Count > 0;
 
     public static List<SentenceVocalizer> Parse(string paragraph)
     {
@@ -17,23 +22,26 @@ public class SentenceVocalizer
         foreach (var clause in clauses)
         {
             if (clause.Length <= 1) continue;
-            else vocalizers.Add(new SentenceVocalizer(clause));
+            else
+            {
+                SentenceVocalizer sv = new(clause);
+                if (sv.Vocalizable) vocalizers.Add(sv);
+            }
         }
         return vocalizers;
     }
 
-    public List<WordVocalizer> words;
-    public char punctuation;
-
     /// <param name="clause">Alphanumeric words separated by space with the last character being one of the characters in "endings"</param>
     private SentenceVocalizer(string clause)
     {
+        Debug.Log($"clause: {clause}");
         words = new List<WordVocalizer>();
         int endingTrim = endingsSet.Contains(clause[^1]) ? 1 : 0; // remove ending character if it is a punctuation
         punctuation = endingTrim > 0 ? clause[^1] : '.'; // default to period when no punctuation
         foreach(string word in clause.Substring(0, clause.Length - endingTrim).Split(' ', System.StringSplitOptions.RemoveEmptyEntries))
         {
-            words.Add(new WordVocalizer(word));
+            WordVocalizer wv = new(word);
+            if (wv.Vocalizable) words.Add(wv);
         }
     }
 
@@ -57,5 +65,15 @@ public class SentenceVocalizer
 
         // collapse whitespaces
         return string.Join(' ', new string(clean).Split(' ', System.StringSplitOptions.RemoveEmptyEntries));
+    }
+
+    public IEnumerator Prevocalize(WordVocalizer prior, WordVocalizer upcoming)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public IEnumerator Postvocalize(WordVocalizer completed, WordVocalizer upcoming)
+    {
+        throw new System.NotImplementedException();
     }
 } 
