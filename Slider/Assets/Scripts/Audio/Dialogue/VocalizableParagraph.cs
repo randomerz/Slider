@@ -11,7 +11,7 @@ public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceV
     [SerializeField] private VocalizerPreset preset;
     [SerializeField, HideInInspector] private string text;
     [SerializeField, HideInInspector] private List<SentenceVocalizer> sentences;
-    public VocalizationContext debugContext;
+    public VocalizationContext currentVocalizationContext;
 
     public string Text => text;
     public List<SentenceVocalizer> Vocalizers => sentences;
@@ -25,16 +25,16 @@ public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceV
     {
         var vc = (this as IVocalizerComposite<SentenceVocalizer>);
         vc.Stop();
-        debugContext = new(transform);
-        StartCoroutine((voc as IVocalizerComposite<WordVocalizer>).Vocalize(preset, debugContext));
+        currentVocalizationContext = new(transform);
+        StartCoroutine((voc as IVocalizerComposite<WordVocalizer>).Vocalize(preset, currentVocalizationContext));
     }
 
     public void StartReadAll()
     {
         var vc = (this as IVocalizerComposite<SentenceVocalizer>);
         vc.Stop();
-        debugContext = new(transform);
-        StartCoroutine(vc.Vocalize(preset, debugContext));
+        currentVocalizationContext = new(transform);
+        StartCoroutine(vc.Vocalize(preset, currentVocalizationContext));
     }
 
     public bool IsEmpty => sentences.Count == 0;

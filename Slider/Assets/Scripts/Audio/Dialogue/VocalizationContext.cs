@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 /// <summary>
@@ -28,3 +29,22 @@ public class VocalizationContext
     public float vowelForwardness;
     #endregion
 }
+
+#if UNITY_EDITOR
+// unity readonly drawer
+[CustomPropertyDrawer(typeof(VocalizationContext))]
+public class VocalizationContextDrawer : PropertyDrawer
+{
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    {
+        GUI.enabled = false;
+        EditorGUI.PropertyField(position, property, label, true);
+        GUI.enabled = true;
+    }
+
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        return EditorGUI.GetPropertyHeight(property, label, true);
+    }
+}
+#endif

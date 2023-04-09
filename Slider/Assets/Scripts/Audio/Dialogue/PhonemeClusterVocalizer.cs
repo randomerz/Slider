@@ -43,6 +43,9 @@ public class PhonemeClusterVocalizer : IVocalizer
         inst.setParameterByName("VowelForwardness", context.vowelForwardness);
         inst.start();
 
+        float totalDuration = duration * characters.Length;
+        float totalT = 0f;
+
         for (int i = 0; i < characters.Length; i++)
         {
             char c = characters[i];
@@ -53,13 +56,14 @@ public class PhonemeClusterVocalizer : IVocalizer
 
             while (t < duration)
             {
-                inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, t / duration));
+                inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, totalT / totalDuration));
                 inst.setParameterByName("VowelOpeness", context.vowelOpeness);
                 inst.setParameterByName("VowelForwardness", context.vowelForwardness);
                 context.vowelOpeness = Mathf.Lerp(context.vowelOpeness, vowelDescriptor.openness, t * preset.lerpSmoothnessInverted);
                 context.vowelForwardness = Mathf.Lerp(context.vowelForwardness, vowelDescriptor.forwardness, t * preset.lerpSmoothnessInverted);
 
                 t += Time.deltaTime;
+                totalT += Time.deltaTime;
                 yield return null;
             }
         }
