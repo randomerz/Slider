@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Analytics;
-using Status = IVocalizerComposite<WordVocalizer>.PlayStatus;
 
 [System.Serializable]
 public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
@@ -23,8 +22,8 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
     public bool IsEmpty => words.Count == 0;
     WordVocalizer IVocalizerComposite<WordVocalizer>.Current { get => _Current; set => _Current = value; }
     private WordVocalizer _Current;
-    Status IVocalizerComposite<WordVocalizer>.Status { get => _Status; set => _Status = value; }
-    private Status _Status;
+    VocalizerCompositeStatus IVocalizerComposite<WordVocalizer>.Status { get => _Status; set => _Status = value; }
+    private VocalizerCompositeStatus _Status;
 
     public enum Intonation { flat, up, down };
     public Intonation intonation;

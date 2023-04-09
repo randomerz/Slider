@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Status = IVocalizerComposite<PhonemeClusterVocalizer>.PlayStatus;
 
 [System.Serializable]
 public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>
@@ -33,8 +32,8 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>
 
     PhonemeClusterVocalizer IVocalizerComposite<PhonemeClusterVocalizer>.Current { get => _Current; set => _Current = value; }
     private PhonemeClusterVocalizer _Current;
-    Status IVocalizerComposite<PhonemeClusterVocalizer>.Status { get => _Status; set => _Status = value; }
-    private Status _Status;
+    VocalizerCompositeStatus IVocalizerComposite<PhonemeClusterVocalizer>.Status { get => _Status; set => _Status = value; }
+    private VocalizerCompositeStatus _Status;
 
     public string characters;
     private List<PhonemeClusterVocalizer> clusters;
