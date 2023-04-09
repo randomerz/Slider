@@ -10,6 +10,7 @@ using TMPro;
 /// There is also a method for skipping text, TrySkipText(), which returns whether or not it successfully skipped
 /// </summary>
 [RequireComponent(typeof(TextMeshProUGUI))]
+[RequireComponent(typeof(VocalizableParagraph))]
 public class TMPTextTyper : MonoBehaviour
 {
     // - = - for some reason having content fitter enabled on preffered breaks the TypeString() function
@@ -27,6 +28,8 @@ public class TMPTextTyper : MonoBehaviour
     private int startingCharacterIndex = 0; // for fade in
     
     private TMPSpecialText m_tmpSpecialText; // for special tags
+    private VocalizableParagraph vocalizer;
+    [SerializeField] private bool useVocalizer;
 
     private Coroutine coroutine;
     [HideInInspector] public bool finishedTyping;
@@ -44,6 +47,8 @@ public class TMPTextTyper : MonoBehaviour
         m_TextMeshPro.ForceMeshUpdate();
 
         textSpeed = GameSettings.textSpeed;
+
+        vocalizer = GetComponent<VocalizableParagraph>();
     }
 
     private void Start()
@@ -245,7 +250,7 @@ public class TMPTextTyper : MonoBehaviour
     /// <summary>
     /// Types out the string associated with the TMPro object this is on. Make sure to set the text in the TMPro before calling this method!
     /// </summary>
-    public void StartTyping()
+    private void StartTyping()
     {
         // // For passages that type only once
         // if (finishedTyping)
@@ -255,7 +260,6 @@ public class TMPTextTyper : MonoBehaviour
         // }
 
         SetTextAlphaZero(); // TEMP bug fix because first character is skipped when typing
-        
         
         charIndex = 0;
         startingCharacterIndex = 0; // also temp but maybe these arent as bad
@@ -275,9 +279,15 @@ public class TMPTextTyper : MonoBehaviour
         if (coroutine != null) StopCoroutine(coroutine);
 
         m_TextMeshPro.text = text;
-        m_tmpSpecialText.ParseText();
-        
-        StartTyping();
+        m_tmpSpecialText.ParseText(() =>
+        {
+            StartTyping();
+            if (useVocalizer)
+            {
+                vocalizer.SetText(m_TextMeshPro.text);
+                vocalizer.StartReadAll();
+            }
+        });
     }
 
     public static void UpdateTextSpeed(float charDelay)
@@ -291,6 +301,7 @@ public class TMPTextTyper : MonoBehaviour
     /// <returns>Returns true if text is skipped, false if it isn't.</returns>
     public bool TrySkipText()
     {
+        (vocalizer as IVocalizerComposite<SentenceVocalizer>).Stop();
         if (coroutine != null)
         {
             SkipTypingString();

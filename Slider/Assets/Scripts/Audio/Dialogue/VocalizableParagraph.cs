@@ -20,7 +20,7 @@ public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceV
     private SentenceVocalizer _Current;
     private VocalizerCompositeStatus _Status;
 
-    public void StartRead(SentenceVocalizer voc)
+    public void StartReadSentence(SentenceVocalizer voc)
     {
         var vc = (this as IVocalizerComposite<SentenceVocalizer>);
         vc.Stop();
@@ -105,7 +105,7 @@ public class VocalizerDebuggerEditor : Editor
                 EditorGUILayout.LabelField(v.punctuation.ToString());
                 if (Application.isPlaying && GUILayout.Button("Read clause"))
                 {
-                    reader.StartRead(v);
+                    reader.StartReadSentence(v);
                 }
                 EditorGUILayout.EndHorizontal();
                 string sentence = "";
