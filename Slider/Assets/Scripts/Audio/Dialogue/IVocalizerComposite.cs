@@ -12,15 +12,15 @@ public interface IVocalizerComposite<T> : IVocalizer where T : IVocalizer
 {
     List<T> Vocalizers { get; }
     T Current { get; protected set; }
-    bool Stopped { get; protected set; }
+    PlayStatus Status { get; protected set; }
 
     IEnumerator Prevocalize(VocalizerPreset preset, VocalizationContext context, T prior, T upcoming, int upcomingIdx);
     IEnumerator Postvocalize(VocalizerPreset preset, VocalizationContext context, T completed, T upcoming, int upcomingIdx);
 
     IEnumerator IVocalizer.Vocalize(VocalizerPreset preset, VocalizationContext context, int idx, int lengthOfComposite)
     {
-        ClearProgress();
-        Stopped = false;
+        yield return new WaitUntil(() => Status == PlayStatus.CanPlay);
+        Status = PlayStatus.Playing;
         for (int i = 0; i < Vocalizers.Count; i++)
         {
             var v = Vocalizers[i];
@@ -28,14 +28,19 @@ public interface IVocalizerComposite<T> : IVocalizer where T : IVocalizer
             yield return Prevocalize(preset, context, default, v, i);
             yield return v.Vocalize(preset, context, idx: i, lengthOfComposite: Vocalizers.Count);
             yield return Postvocalize(preset, context, v, default, i + 1);
-            if (Stopped) break;
+            if (Status == PlayStatus.Stopping) break;
         }
+        Status = PlayStatus.CanPlay;
     }
 
     void IVocalizer.Stop()
     {
-        Current.Stop();
-        Stopped = true;
+        if (Status == PlayStatus.Playing)
+        {
+            Current?.Stop();
+            ClearProgress();
+            Status = PlayStatus.Stopping;
+        }
     }
 
     void IVocalizer.ClearProgress()
@@ -44,5 +49,12 @@ public interface IVocalizerComposite<T> : IVocalizer where T : IVocalizer
         {
             member.ClearProgress();
         }
+    }
+
+    public enum PlayStatus
+    {
+        CanPlay,
+        Playing,
+        Stopping
     }
 }

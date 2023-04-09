@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security;
 using UnityEditor;
 using UnityEngine;
+using Status = IVocalizerComposite<SentenceVocalizer>.PlayStatus;
 
 public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceVocalizer> {
     [SerializeField] private VocalizerPreset preset;
@@ -14,9 +15,9 @@ public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceV
     public List<SentenceVocalizer> Vocalizers => sentences;
 
     SentenceVocalizer IVocalizerComposite<SentenceVocalizer>.Current { get => _Current; set => _Current = value; }
-    bool IVocalizerComposite<SentenceVocalizer>.Stopped { get => _Stopped; set => _Stopped = value; }
+    Status IVocalizerComposite<SentenceVocalizer>.Status { get => _Status; set => _Status = value; }
     private SentenceVocalizer _Current;
-    private bool _Stopped;
+    private Status _Status;
 
     public void StartRead(SentenceVocalizer voc)
     {
