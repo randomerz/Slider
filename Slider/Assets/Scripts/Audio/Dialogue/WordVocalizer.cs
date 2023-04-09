@@ -21,17 +21,18 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>
     private static char RandomVowel => vowels[(int)(Random.value * vowels.Length)];
     private static char RandomConsonant => consonants[(int)(Random.value * consonants.Length)];
 
-    public bool IsEmpty => pronouncedCluster == null;
+    public bool IsEmpty => significantCluster == null;
 
     /// <summary>
-    /// Reserved for multi-cluster reading. Currently only does one cluster per word (the first stressed one, or the first one if nothing is stressed)
+    /// Return vowelClusters for reading every single vowel in word
+    /// Return significantCluster for reading only the first stressed vowel group (or the only vowel if no stressed vowels)
     /// </summary>
-    public List<PhonemeClusterVocalizer> Vocalizers => pronouncedCluster;
+    public List<PhonemeClusterVocalizer> Vocalizers => significantCluster;
 
     public string characters;
     private List<PhonemeClusterVocalizer> clusters;
     public List<PhonemeClusterVocalizer> vowelClusters;
-    public List<PhonemeClusterVocalizer> pronouncedCluster;
+    public List<PhonemeClusterVocalizer> significantCluster;
 
     /// <param name="raw">Alphanumeric string with no whitespace</param>
     public WordVocalizer (string raw)
@@ -76,7 +77,7 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>
 
         if (vowelClusters.Count != 0)
         {
-            pronouncedCluster = new() { vowelClusters.FirstOrDefault(c => c.isStressed) ?? vowelClusters[0] };
+            significantCluster = new() { vowelClusters.FirstOrDefault(c => c.isStressed) ?? vowelClusters[0] };
         }
     }
 

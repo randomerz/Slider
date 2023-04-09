@@ -103,7 +103,8 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
             // guess that short sentences more likely to start high
             float pFirstWordHigh = (Vocalizers.Count <= 3) ? 0.75f : 0.25f;
             context.isCurrentWordLow = Random.value > pFirstWordHigh;
-        } else
+        }
+        else if (upcomingIdx != Vocalizers.Count - 1 || intonation != Intonation.up)
         {
             if (context.isCurrentWordLow)
             {
@@ -112,6 +113,10 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
             {
                 context.isCurrentWordLow = preset.DoHighToLow;
             }
+        } else
+        {
+            // last word in an upwards intonated sentence is always high
+            context.isCurrentWordLow = false;
         }
 
         // the last word can be heightened or lowered based on intonation
