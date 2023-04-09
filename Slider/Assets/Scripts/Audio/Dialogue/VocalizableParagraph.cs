@@ -1,4 +1,5 @@
 using FMODUnity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security;
@@ -10,6 +11,7 @@ public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceV
     [SerializeField] private VocalizerPreset preset;
     [SerializeField, HideInInspector] private string text;
     [SerializeField, HideInInspector] private List<SentenceVocalizer> sentences;
+    public VocalizationContext debugContext;
 
     public string Text => text;
     public List<SentenceVocalizer> Vocalizers => sentences;
@@ -23,14 +25,16 @@ public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceV
     {
         var vc = (this as IVocalizerComposite<SentenceVocalizer>);
         vc.Stop();
-        StartCoroutine((voc as IVocalizerComposite<WordVocalizer>).Vocalize(preset, new(transform)));
+        debugContext = new(transform);
+        StartCoroutine((voc as IVocalizerComposite<WordVocalizer>).Vocalize(preset, debugContext));
     }
 
     public void StartReadAll()
     {
         var vc = (this as IVocalizerComposite<SentenceVocalizer>);
         vc.Stop();
-        StartCoroutine(vc.Vocalize(preset, new(transform)));
+        debugContext = new(transform);
+        StartCoroutine(vc.Vocalize(preset, debugContext));
     }
 
     public bool IsEmpty => sentences.Count == 0;
@@ -83,6 +87,13 @@ public class VocalizerDebuggerEditor : Editor
                 if (GUILayout.Button("Play"))
                 {
                     reader.StartReadAll();
+                }
+            }
+            if ((reader as IVocalizerComposite<SentenceVocalizer>).Status == Status.Playing)
+            {
+                if (GUILayout.Button("Stop"))
+                {
+                    (reader as IVocalizerComposite<SentenceVocalizer>).Stop();
                 }
             }
             EditorGUILayout.EndHorizontal();

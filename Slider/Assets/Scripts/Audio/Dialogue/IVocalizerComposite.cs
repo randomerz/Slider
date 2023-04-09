@@ -12,7 +12,7 @@ public interface IVocalizerComposite<T> : IVocalizer where T : IVocalizer
 {
     List<T> Vocalizers { get; }
     T Current { get; protected set; }
-    PlayStatus Status { get; protected set; }
+    public PlayStatus Status { get; protected set; }
 
     IEnumerator Prevocalize(VocalizerPreset preset, VocalizationContext context, T prior, T upcoming, int upcomingIdx);
     IEnumerator Postvocalize(VocalizerPreset preset, VocalizationContext context, T completed, T upcoming, int upcomingIdx);
