@@ -20,6 +20,10 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
     public char punctuation;
     public List<WordVocalizer> Vocalizers => words;
     public bool IsEmpty => words.Count == 0;
+    WordVocalizer IVocalizerComposite<WordVocalizer>.Current { get => _Current; set => _Current = value; }
+    private WordVocalizer _Current;
+    bool IVocalizerComposite<WordVocalizer>.Stopped { get => _Stopped; set => _Stopped = value; }
+    private bool _Stopped;
 
     public enum Intonation { flat, up, down };
     public Intonation intonation;
@@ -139,11 +143,4 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
             default: return preset.basePitch;
         }
     }
-
-#if UNITY_EDITOR
-    public void ClearProgress()
-    {
-        foreach (var w in words) w.ClearProgress();
-    }
-#endif
 }

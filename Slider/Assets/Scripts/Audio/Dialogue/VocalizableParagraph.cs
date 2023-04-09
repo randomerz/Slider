@@ -13,22 +13,23 @@ public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceV
     public string Text => text;
     public List<SentenceVocalizer> Vocalizers => sentences;
 
+    SentenceVocalizer IVocalizerComposite<SentenceVocalizer>.Current { get => _Current; set => _Current = value; }
+    bool IVocalizerComposite<SentenceVocalizer>.Stopped { get => _Stopped; set => _Stopped = value; }
+    private SentenceVocalizer _Current;
+    private bool _Stopped;
+
     public void StartRead(SentenceVocalizer voc)
     {
-#if UNITY_EDITOR
-        ClearProgress();
-#endif
-        StopAllCoroutines();
+        var vc = (this as IVocalizerComposite<SentenceVocalizer>);
+        vc.Stop();
         StartCoroutine((voc as IVocalizerComposite<WordVocalizer>).Vocalize(preset, new(transform)));
     }
 
     public void StartReadAll()
     {
-#if UNITY_EDITOR
-        ClearProgress();
-#endif
-        StopAllCoroutines();
-        StartCoroutine((this as IVocalizerComposite<SentenceVocalizer>).Vocalize(preset, new(transform)));
+        var vc = (this as IVocalizerComposite<SentenceVocalizer>);
+        vc.Stop();
+        StartCoroutine(vc.Vocalize(preset, new(transform)));
     }
 
     public bool IsEmpty => sentences.Count == 0;
@@ -48,13 +49,6 @@ public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceV
         this.text = text;
         sentences = SentenceVocalizer.Parse(this.text) ?? new();
     }
-
-#if UNITY_EDITOR
-    public void ClearProgress()
-    {
-        foreach (var sv in sentences) sv.ClearProgress();
-    }
-#endif
 }
 
 #if UNITY_EDITOR

@@ -25,9 +25,15 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>
 
     /// <summary>
     /// Return vowelClusters for reading every single vowel in word
-    /// Return significantCluster for reading only the first stressed vowel group (or the only vowel if no stressed vowels)
+    /// Return significantCluster for reading only the stressed vowel groups (or the only vowel if no stressed vowels)
+    ///   - For most of the time there is only one stress in a word, but for very long words there might be multiple
     /// </summary>
     public List<PhonemeClusterVocalizer> Vocalizers => significantCluster;
+
+    PhonemeClusterVocalizer IVocalizerComposite<PhonemeClusterVocalizer>.Current { get => _Current; set => _Current = value; }
+    private PhonemeClusterVocalizer _Current;
+    bool IVocalizerComposite<PhonemeClusterVocalizer>.Stopped { get => _Stopped; set => _Stopped = value; }
+    private bool _Stopped;
 
     public string characters;
     private List<PhonemeClusterVocalizer> clusters;
@@ -77,7 +83,8 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>
 
         if (vowelClusters.Count != 0)
         {
-            significantCluster = new() { vowelClusters.FirstOrDefault(c => c.isStressed) ?? vowelClusters[0] };
+            significantCluster = vowelClusters.Where(c => c.isStressed).ToList();
+            if (significantCluster.Count == 0) significantCluster.Add(vowelClusters[0]);
         }
     }
 
@@ -152,13 +159,6 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>
     {
         return null;
     }
-
-#if UNITY_EDITOR
-    public void ClearProgress()
-    {
-        foreach (var cluster in vowelClusters) cluster.ClearProgress();
-    }
-#endif
 }
 
 public class VowelDescription

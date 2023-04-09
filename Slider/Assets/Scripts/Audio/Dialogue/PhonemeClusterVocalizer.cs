@@ -11,20 +11,18 @@ public class PhonemeClusterVocalizer : IVocalizer
 
     public bool IsEmpty => characters.Length == 0;
 
-#if UNITY_EDITOR
+    private FMOD.Studio.EventInstance inst;
+
     public int Progress => _progress;
     private int _progress = 0;
     public void ClearProgress() => _progress = 0;
-#endif
 
     public IEnumerator Vocalize(VocalizerPreset preset, VocalizationContext context, int idx, int lengthOfComposite)
     {
-#if UNITY_EDITOR
-        _progress = 0;
-#endif
+        ClearProgress();
         var status = AudioManager.Play(preset.synth.WithAttachmentToTransform(context.root), startImmediately: false);
         if (!status.HasValue) yield break;
-        var inst = status.Value;
+        inst = status.Value;
 
         float wordIntonationMultiplier = context.isCurrentWordLow ? (1 - preset.wordIntonation) : (1 + preset.wordIntonation);
         float initialPitch = context.wordPitchBase * wordIntonationMultiplier;
@@ -51,9 +49,7 @@ public class PhonemeClusterVocalizer : IVocalizer
             float t = 0;
             var vowelDescriptor = WordVocalizer.vowelDescriptionTable[c];
 
-#if UNITY_EDITOR
             _progress = i + 1;
-#endif
 
             while (t < duration)
             {
@@ -68,20 +64,25 @@ public class PhonemeClusterVocalizer : IVocalizer
             }
         }
 
-        inst.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        inst.release();
+        Stop();
     }
 
     public override string ToString()
     {
 #if UNITY_EDITOR
         string text = $"<color=green>{ characters.Substring(0, Progress) }</color>{ characters.Substring(Progress) }";
-#else
-        string text = characters;
-#endif
-        string 
-            pre = $"{( isVowelCluster ? "<B>" : "" )}{( isStressed ? "<size=16>" : "" )}",
+        string
+            pre = $"{(isVowelCluster ? "<B>" : "")}{(isStressed ? "<size=16>" : "")}",
             post = $"{(isStressed ? "</size>" : "")}{(isVowelCluster ? "</B>" : "")}";
         return $"{pre}{text}{post}";
+#else
+        return characters;
+#endif
+    }
+
+    public void Stop()
+    {
+        inst.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        inst.release();
     }
 }
