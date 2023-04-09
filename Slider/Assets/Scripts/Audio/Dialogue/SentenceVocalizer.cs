@@ -19,7 +19,7 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
     public List<WordVocalizer> words;
     public char punctuation;
     public List<WordVocalizer> Vocalizers => words;
-    public bool IsEmpty => words.Count > 0;
+    public bool IsEmpty => words.Count == 0;
 
     public enum Intonation { flat, up, down };
     public Intonation intonation;
@@ -34,7 +34,7 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
             else
             {
                 SentenceVocalizer sv = new(clause);
-                if (sv.IsEmpty) vocalizers.Add(sv);
+                if (!sv.IsEmpty) vocalizers.Add(sv);
             }
         }
         return vocalizers;
@@ -50,7 +50,7 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
         foreach(string word in clause.Substring(0, clause.Length - endingTrim).Split(' ', System.StringSplitOptions.RemoveEmptyEntries))
         {
             WordVocalizer wv = new(word);
-            if (wv.IsEmpty) words.Add(wv);
+            if (!wv.IsEmpty) words.Add(wv);
         }
 
         if (punctuation == '?')
@@ -97,6 +97,23 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
 
     public IEnumerator Prevocalize(VocalizerPreset preset, VocalizationContext context, WordVocalizer prior, WordVocalizer upcoming, int upcomingIdx)
     {
+        if (prior == null)
+        {
+            // for the first word, initialize intonation of first word
+            // guess that short sentences more likely to start high
+            float pFirstWordHigh = (Vocalizers.Count <= 3) ? 0.75f : 0.25f;
+            context.isCurrentWordLow = Random.value > pFirstWordHigh;
+        } else
+        {
+            if (context.isCurrentWordLow)
+            {
+                context.isCurrentWordLow = !preset.DoLowToHigh;
+            } else
+            {
+                context.isCurrentWordLow = preset.DoHighToLow;
+            }
+        }
+
         // the last word can be heightened or lowered based on intonation
         context.wordPitchBase = preset.basePitch;
         context.wordPitchIntonated = (upcomingIdx == words.Count - 1 ? GetIntonation(preset) : preset.basePitch);
@@ -112,8 +129,8 @@ public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
     {
         switch (intonation)
         {
-            case Intonation.up: return preset.basePitch * preset.intonationMultiplier;
-            case Intonation.down: return preset.basePitch / preset.intonationMultiplier;
+            case Intonation.up: return preset.basePitch * (1 + preset.sentenceIntonation);
+            case Intonation.down: return preset.basePitch * (1 - preset.sentenceIntonation);
             default: return preset.basePitch;
         }
     }

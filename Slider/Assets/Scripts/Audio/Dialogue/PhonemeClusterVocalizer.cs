@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 [System.Serializable]
 public class PhonemeClusterVocalizer : IVocalizer
@@ -10,7 +9,7 @@ public class PhonemeClusterVocalizer : IVocalizer
     public bool isStressed = false;
     public string characters;
 
-    public bool IsEmpty => characters.Length > 0;
+    public bool IsEmpty => characters.Length == 0;
 
 #if UNITY_EDITOR
     public int Progress => _progress;
@@ -27,9 +26,10 @@ public class PhonemeClusterVocalizer : IVocalizer
         if (!status.HasValue) yield break;
         var inst = status.Value;
 
-        float initialPitch = Mathf.Lerp(context.wordPitchBase, context.wordPitchIntonated, (float)idx / lengthOfComposite);
-        float finalPitch = Mathf.Lerp(context.wordPitchBase, context.wordPitchIntonated, (float)(idx + 1) / lengthOfComposite);
-        float duration = preset.baseDuration;
+        float wordIntonationMultiplier = context.isCurrentWordLow ? (1 - preset.wordIntonation) : (1 + preset.wordIntonation);
+        float initialPitch = context.wordPitchBase * wordIntonationMultiplier;
+        float finalPitch = context.wordPitchIntonated * wordIntonationMultiplier;
+        float duration = preset.baseDuration * (context.isCurrentWordLow ? (1 - preset.energeticWordSpeedup) : (1 + preset.energeticWordSpeedup));
         float volumeAdjustmentDB = 0;
 
         if (isStressed) {

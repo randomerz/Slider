@@ -68,7 +68,6 @@
 			<destination>{8664dcbf-bec5-48ed-b098-975f4042924c}</destination>
 			<destination>{6558c45c-b3de-4e81-bef5-5c53d7d30f0a}</destination>
 			<destination>{8708b409-ff73-4ae5-882e-270cdd7f9953}</destination>
-			<destination>{932bbcc4-6f84-4517-a861-c23548bcf155}</destination>
 		</relationship>
 		<relationship name="modules">
 			<destination>{9597561a-0e4a-4f4c-8909-25d18af65f16}</destination>
@@ -125,11 +124,6 @@
 	<object class="AutomationTrack" id="{8708b409-ff73-4ae5-882e-270cdd7f9953}">
 		<relationship name="automator">
 			<destination>{2e5e982f-d2bb-4453-bc4e-2592a1f309a0}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationTrack" id="{932bbcc4-6f84-4517-a861-c23548bcf155}">
-		<relationship name="automator">
-			<destination>{b93ea3c2-55e2-4263-80ca-599bed7cf04a}</destination>
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{9597561a-0e4a-4f4c-8909-25d18af65f16}">
@@ -196,7 +190,7 @@
 	</object>
 	<object class="NamedMarker" id="{6ffe9505-7a21-40ec-8815-02a63789653f}">
 		<property name="position">
-			<value>2.17620889603789</value>
+			<value>2.223887520525452</value>
 		</property>
 		<property name="name">
 			<value>End</value>
@@ -263,7 +257,7 @@
 	<object class="SpatialiserEffect" id="{0133080e-69a0-47ab-bee5-54805a3afc02}" />
 	<object class="AutomationPoint" id="{a3eb0b52-6916-4b71-a166-ad82e53647f4}">
 		<property name="position">
-			<value>2.17620889603789</value>
+			<value>2.226155529863834</value>
 		</property>
 		<property name="value">
 			<value>1</value>
@@ -286,9 +280,6 @@
 		</property>
 		<property name="filterTypeB">
 			<value>9</value>
-		</property>
-		<property name="filterTypeE">
-			<value>10</value>
 		</property>
 		<property name="frequencyA">
 			<value>691.389343</value>

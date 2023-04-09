@@ -30,10 +30,19 @@ public class VocalizerPreset : ScriptableObject
     [Header("Word-level configs")]
     [Range(0.01f, 0.5f)]
     public float wordGap;
+    [Range(-1f, 1f)]
+    public float wordIntonation;
+    [Range(-1f, 1f)]
+    public float energeticWordSpeedup;
+    [Range(0f, 1f), Tooltip("Transition probabilities between word intonations")]
+    public float pLowToHigh, pHighToLow;
 
     [Header("Sentence-level configs")]
     [Range(0.01f, 0.5f)]
     public float clauseGap;
-    [Range(1f, 2f)]
-    public float intonationMultiplier;
+    [Range(-1f, 1f)]
+    public float sentenceIntonation;
+
+    public bool DoLowToHigh => Random.value < pLowToHigh;
+    public bool DoHighToLow => Random.value < pHighToLow;
 }

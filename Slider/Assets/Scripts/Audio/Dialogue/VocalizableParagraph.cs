@@ -5,9 +5,8 @@ using System.Security;
 using UnityEditor;
 using UnityEngine;
 
-public class Vocalizer : MonoBehaviour, IVocalizerComposite<SentenceVocalizer> {
+public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceVocalizer> {
     [SerializeField] private VocalizerPreset preset;
-    
     [SerializeField, HideInInspector] private string text;
     [SerializeField, HideInInspector] private List<SentenceVocalizer> sentences;
 
@@ -32,7 +31,7 @@ public class Vocalizer : MonoBehaviour, IVocalizerComposite<SentenceVocalizer> {
         StartCoroutine((this as IVocalizerComposite<SentenceVocalizer>).Vocalize(preset, new(transform)));
     }
 
-    public bool IsEmpty => sentences.Count > 0;
+    public bool IsEmpty => sentences.Count == 0;
 
     public IEnumerator Postvocalize(VocalizerPreset preset, VocalizationContext context, SentenceVocalizer completed, SentenceVocalizer upcoming, int upcomingIdx)
     {
@@ -60,7 +59,7 @@ public class Vocalizer : MonoBehaviour, IVocalizerComposite<SentenceVocalizer> {
 
 #if UNITY_EDITOR
 
-[CustomEditor(typeof(Vocalizer))]
+[CustomEditor(typeof(VocalizableParagraph))]
 public class VocalizerDebuggerEditor : Editor
 {
     string rawText;
@@ -68,7 +67,7 @@ public class VocalizerDebuggerEditor : Editor
     {
         base.OnInspectorGUI();
 
-        var reader = target as Vocalizer;
+        var reader = target as VocalizableParagraph;
 
         if (Application.isPlaying)
         {

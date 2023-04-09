@@ -4,11 +4,11 @@ using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
-public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocalizer
+public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>
 {
     private static readonly char[] vowels = { 'a', 'e', 'i', 'o', 'u', 'y' };
     private static readonly char[] consonants = { 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z' };
-    public static readonly Dictionary<char, VowelDescription> vowelDescriptionTable = new Dictionary<char, VowelDescription>()
+    public static readonly Dictionary<char, VowelDescription> vowelDescriptionTable = new()
     {
         ['a'] = new VowelDescription() { openness = 1.0f, forwardness = 0.6f },
         ['e'] = new VowelDescription() { openness = 0.3f, forwardness = 0.8f },
@@ -21,13 +21,17 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocal
     private static char RandomVowel => vowels[(int)(Random.value * vowels.Length)];
     private static char RandomConsonant => consonants[(int)(Random.value * consonants.Length)];
 
+    public bool IsEmpty => pronouncedCluster == null;
+
+    /// <summary>
+    /// Reserved for multi-cluster reading. Currently only does one cluster per word (the first stressed one, or the first one if nothing is stressed)
+    /// </summary>
+    public List<PhonemeClusterVocalizer> Vocalizers => pronouncedCluster;
 
     public string characters;
     private List<PhonemeClusterVocalizer> clusters;
     public List<PhonemeClusterVocalizer> vowelClusters;
-    List<PhonemeClusterVocalizer> IVocalizerComposite<PhonemeClusterVocalizer>.Vocalizers => vowelClusters;
-    public bool IsEmpty => vowelClusters.Count > 0;
-
+    public List<PhonemeClusterVocalizer> pronouncedCluster;
 
     /// <param name="raw">Alphanumeric string with no whitespace</param>
     public WordVocalizer (string raw)
@@ -67,11 +71,16 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocal
             }
             lastCharIsVowel = currCharIsVowel;
         }
-        vowelClusters = clusters.Where(c => c.isVowelCluster).ToList();
+        vowelClusters = clusters.Where(c => c.isVowelCluster && !c.IsEmpty).ToList();
         PlaceStress();
+
+        if (vowelClusters.Count != 0)
+        {
+            pronouncedCluster = new() { vowelClusters.FirstOrDefault(c => c.isStressed) ?? vowelClusters[0] };
+        }
     }
 
-    private WordVocalizer PlaceStress()
+    private void PlaceStress()
     {
         if (vowelClusters.Count == 1)
         {
@@ -104,8 +113,6 @@ public class WordVocalizer: IVocalizerComposite<PhonemeClusterVocalizer>, IVocal
                 unstressedPool.RemoveAt(idx);
             }
         }
-
-        return this;
     }
 
     public List<(List<VowelDescription> vowelDescriptors, bool isStressed)> VowelClusterDescriptions ()

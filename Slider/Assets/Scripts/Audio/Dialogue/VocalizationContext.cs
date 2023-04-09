@@ -16,6 +16,7 @@ public class VocalizationContext
     #region SENTENCE VOCALIZER RESPONSIBILITIES
     public float wordPitchBase;
     public float wordPitchIntonated;
+    public bool isCurrentWordLow;
     #endregion
 
     #region WORD VOCALIZER RESPONSIBILITIES

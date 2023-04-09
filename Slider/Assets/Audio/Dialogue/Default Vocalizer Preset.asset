@@ -24,11 +24,15 @@ MonoBehaviour:
     dopplerScale: 0
   basePitch: 0.992
   stressedVowelPitchMultiplier: 1.149
-  baseDuration: 0.0976
+  baseDuration: 0.0742
   baseVolume: 1
   stressedVowelVolumeAdjustment: 1.2
   stressedVowelDurationMultiplier: 0.906
-  lerpSmoothnessInverted: 4.59
-  wordGap: 0.1
-  clauseGap: 0.1
-  intonationMultiplier: 1.542
+  lerpSmoothnessInverted: 9.02
+  wordGap: 0.027
+  wordIntonation: 0.095
+  energeticWordSpeedup: 0.215
+  pLowToHigh: 0.296
+  pHighToLow: 0.662
+  clauseGap: 0.07
+  sentenceIntonation: 0.314
