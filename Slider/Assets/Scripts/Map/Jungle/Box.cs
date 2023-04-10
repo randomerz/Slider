@@ -32,12 +32,14 @@ public class Box : MonoBehaviour
     private void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
+        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
         SGrid.OnSTileEnabled += STileEnabled;
     }
 
     private void OnDisable()
     {
         SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
+        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
         SGrid.OnSTileEnabled -= STileEnabled;
     }
 
@@ -49,9 +51,22 @@ public class Box : MonoBehaviour
         }
     }
 
+    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        foreach (Direction d in paths.Keys)
+        {
+            paths[d].ChangePair();
+        }
+    }
+
     protected void STileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
         CreateShape(new List<Box>());
+
+        foreach (Direction d in paths.Keys)
+        {
+            paths[d].ChangePair();
+        }
     }
 
     protected void SetPaths()

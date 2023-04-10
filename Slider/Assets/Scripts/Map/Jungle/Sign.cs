@@ -26,22 +26,21 @@ public class Sign : Box
     private void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += UpdateShapesOnTileMove;
+        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
         SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
+        SGrid.OnSTileEnabled += STileEnabled;
     }
 
     private void OnDisable()
     {
         SGridAnimator.OnSTileMoveStart -= UpdateShapesOnTileMove;
+        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
         SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
+        SGrid.OnSTileEnabled -= STileEnabled;
     }
 
     private void UpdateShapesOnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        foreach (Direction d in paths.Keys)
-        {
-            paths[d].ChangePair();
-        }
-
         recievedShapes = new Dictionary<Path, Shape>();
         foreach (Direction d in paths.Keys)
         {
@@ -49,12 +48,24 @@ public class Sign : Box
         }
     }
 
+    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        foreach (Direction d in paths.Keys)
+        {
+            paths[d].ChangePair();
+        }
+    }
 
     public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
         if (parents.Contains(this) && shape != null)
         {
             return;
+        }
+
+        if(shape != null)
+        {
+            print(shape.name);
         }
 
         parents.Add(this);
@@ -86,11 +97,11 @@ public class Sign : Box
             }
         }
 
-        // print(this.gameObject.name + " merging");
-        // foreach (Shape s in shapesRecieved)
-        // {
-        //     print(s.name);
-        // }
+/*        print(this.gameObject.name + " merging");
+        foreach (Shape s in shapesRecieved)
+        {
+            print(s.name);
+        }*/
 
         foreach (Recipe recipe in recipes.list)
         {
