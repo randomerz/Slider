@@ -100,12 +100,12 @@ public class TMPSpecialText : MonoBehaviour
     /// <summary>
     /// Calls to parse special tags in the text! This takes a frame to update
     /// </summary>
-    public void ParseText(System.Action callback = default)
+    public void ParseText()
     {
-        StartCoroutine(IParseText(m_TextMeshPro.text, callback));
+        StartCoroutine(IParseText(m_TextMeshPro.text));
     }
 
-    private IEnumerator IParseText(string text, System.Action callback)
+    private IEnumerator IParseText(string text)
     {
         int offset = 0;
 
@@ -241,8 +241,6 @@ public class TMPSpecialText : MonoBehaviour
         {
             ParseCommand(c.hash, c.start, c.end);
         }
-
-        if (callback != default) callback();
     }
 
     private bool IsValid(int hash)

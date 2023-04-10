@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 
 public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceVocalizer> {
-    [SerializeField] private VocalizerPreset preset;
+    public VocalizerPreset preset;
     [SerializeField, HideInInspector] private string text;
     [SerializeField, HideInInspector] private List<SentenceVocalizer> sentences;
     public VocalizationContext currentVocalizationContext;
@@ -50,8 +50,11 @@ public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceV
 
     public void SetText(string text)
     {
-        this.text = text;
-        sentences = SentenceVocalizer.Parse(this.text) ?? new();
+        if (!(this.text ?? "").Equals(text))
+        {
+            this.text = text;
+            sentences = SentenceVocalizer.Parse(this.text) ?? new();
+        }
     }
 }
 
@@ -69,6 +72,8 @@ public class VocalizerDebuggerEditor : Editor
 
         if (Application.isPlaying)
         {
+            EditorGUILayout.LabelField((reader as IVocalizerComposite<SentenceVocalizer>).Status.ToString());
+
             GUIStyle textAreaStyle = new(EditorStyles.textArea)
             {
                 wordWrap = true

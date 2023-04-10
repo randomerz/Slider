@@ -5,6 +5,9 @@ using TMPro;
 
 public class DialogueDisplay : MonoBehaviour
 {
+    public bool useVocalizer;
+    public VocalizerPreset preset;
+    public VocalizableParagraph vocalizer;
 
     public TMPTextTyper textTyperText;
     public TMPTextTyper textTyperBG;
@@ -31,15 +34,34 @@ public class DialogueDisplay : MonoBehaviour
 
         message = message.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
         // message = ConvertVariablesToStrings(message);
+
         textSpecialText.StopEffects();
         textSpecialBG.StopEffects();
-        textTyperText.StartTyping(message);
+
+        string parsed = textTyperText.StartTyping(message);
         textTyperBG.StartTyping(message);
+        vocalizer.SetText(parsed);
+        vocalizer.StartReadAll();
         // StartCoroutine(TypeSentence(message.ToCharArray()));
     }
 
     public void FadeAwayDialogue()
     {
+        if (useVocalizer)
+        {
+            StartCoroutine(FadeWhenReady());
+        }
+        else
+        {
+            canvas.SetActive(false);
+        }
+    }
+
+    IEnumerator FadeWhenReady()
+    {
+        var voc = vocalizer as IVocalizerComposite<SentenceVocalizer>;
+        voc.Stop();
+        yield return new WaitUntil(() => voc.Status == VocalizerCompositeStatus.CanPlay);
         canvas.SetActive(false);
     }
 

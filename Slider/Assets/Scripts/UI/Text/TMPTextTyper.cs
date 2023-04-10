@@ -10,7 +10,6 @@ using TMPro;
 /// There is also a method for skipping text, TrySkipText(), which returns whether or not it successfully skipped
 /// </summary>
 [RequireComponent(typeof(TextMeshProUGUI))]
-[RequireComponent(typeof(VocalizableParagraph))]
 public class TMPTextTyper : MonoBehaviour
 {
     // - = - for some reason having content fitter enabled on preffered breaks the TypeString() function
@@ -28,8 +27,6 @@ public class TMPTextTyper : MonoBehaviour
     private int startingCharacterIndex = 0; // for fade in
     
     private TMPSpecialText m_tmpSpecialText; // for special tags
-    private VocalizableParagraph vocalizer;
-    [SerializeField] private bool useVocalizer;
 
     private Coroutine coroutine;
     [HideInInspector] public bool finishedTyping;
@@ -47,8 +44,6 @@ public class TMPTextTyper : MonoBehaviour
         m_TextMeshPro.ForceMeshUpdate();
 
         textSpeed = GameSettings.textSpeed;
-
-        vocalizer = GetComponent<VocalizableParagraph>();
     }
 
     private void Start()
@@ -274,20 +269,14 @@ public class TMPTextTyper : MonoBehaviour
     /// Set's the TMP's text equal to text, and then starts typing
     /// </summary>
     /// <param name="text"></param>
-    public void StartTyping(string text)
+    public string StartTyping(string text)
     {
         if (coroutine != null) StopCoroutine(coroutine);
 
         m_TextMeshPro.text = text;
-        m_tmpSpecialText.ParseText(() =>
-        {
-            StartTyping();
-            if (useVocalizer)
-            {
-                vocalizer.SetText(m_TextMeshPro.text);
-                vocalizer.StartReadAll();
-            }
-        });
+        m_tmpSpecialText.ParseText();
+        StartTyping();
+        return m_TextMeshPro.text;
     }
 
     public static void UpdateTextSpeed(float charDelay)
@@ -301,7 +290,6 @@ public class TMPTextTyper : MonoBehaviour
     /// <returns>Returns true if text is skipped, false if it isn't.</returns>
     public bool TrySkipText()
     {
-        (vocalizer as IVocalizerComposite<SentenceVocalizer>).Stop();
         if (coroutine != null)
         {
             SkipTypingString();

@@ -1,5 +1,59 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &944314740891234449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4208690070404989986}
+  - component: {fileID: 4361967530816430225}
+  m_Layer: 11
+  m_Name: Vocalizer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4208690070404989986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944314740891234449}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1390625317364026276}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4361967530816430225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944314740891234449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fd5948397b6fad408e6397d15ab0552, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  preset: {fileID: 11400000, guid: ab4ec0969ea36ea49a0790140b3255a8, type: 2}
+  text: 
+  sentences: []
+  currentVocalizationContext:
+    root: {fileID: 0}
+    wordPitchBase: 0
+    wordPitchIntonated: 0
+    isCurrentWordLow: 0
+    vowelOpeness: 0
+    vowelForwardness: 0
 --- !u!1 &1390625316688445350
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,6 +194,7 @@ Transform:
   m_Children:
   - {fileID: 4693589409961080395}
   - {fileID: 1390625316688445349}
+  - {fileID: 4208690070404989986}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -193,6 +248,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bc5308457a4bcd44b45b8eb11bfa22c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useVocalizer: 1
+  preset: {fileID: 11400000, guid: ab4ec0969ea36ea49a0790140b3255a8, type: 2}
+  vocalizer: {fileID: 4361967530816430225}
   textTyperText: {fileID: 2664969615823266812}
   textTyperBG: {fileID: 5413396733350346047}
   textSpecialText: {fileID: 5785310853724136222}
@@ -665,7 +723,6 @@ MonoBehaviour:
   invisibleAtStart: 0
   fadeTextIn: 1
   rolloverCharacterSpread: 2
-  useVocalizer: 0
   finishedTyping: 0
 --- !u!114 &5062938066658938547
 MonoBehaviour:
@@ -860,7 +917,6 @@ MonoBehaviour:
   invisibleAtStart: 0
   fadeTextIn: 1
   rolloverCharacterSpread: 2
-  useVocalizer: 1
   finishedTyping: 0
 --- !u!114 &5785310853724136222
 MonoBehaviour:
