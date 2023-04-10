@@ -81,7 +81,8 @@ public class DesertGrid : SGrid
     {
         // For Casino music / sprites
         float distToCasino = GetDistanceToCasino();
-        AudioManager.SetMusicParameter("Desert", "DesertDistToCasino", distToCasino);
+        // AudioManager.SetMusicParameter("Desert", "DesertDistToCasino", distToCasino);
+        AudioManager.SetGlobalParameter("DesertDistToCasino", distToCasino);
 
         // map [6, 8] => [0, 1]
         float alpha = Mathf.Clamp(Mathf.InverseLerp(6, 8, distToCasino), 0, 1);
@@ -161,7 +162,6 @@ public class DesertGrid : SGrid
         STile monkeyTile = Current.GetStile(3);
         if (monkeyTile.isTileActive && e.stile == monkeyTile)
         {
-            Debug.Log(monkeShake);
             if (0 <= monkeShake && monkeShake < zlist.Length) // temporary patch
                 zlist[monkeShake].SetActive(false);
             monkeShake++;

@@ -11,12 +11,40 @@ public class BaboonTree : MonoBehaviour
         Snapping,
     }
 
+    [SerializeField] private float baboonFallDuration;
+    [SerializeField] private AnimationCurve baboonFallCurve;
+    private bool isWalking;
+    private bool isFalling;
+
     [Header("References")]
     [SerializeField] private Animator rightTreeAnimator;
     [SerializeField] private Animator leftTreeAnimator;
     [SerializeField] private RopeCoil ropeCoil;
 
+    [SerializeField] private GameObject baboonGameObject;
+    [SerializeField] private Animator baboonAnimator;
+    [SerializeField] private SpriteRenderer baboonSpriteRenderer;
+    [SerializeField] private Collider2D baboonCollider;
+    [SerializeField] private Transform baboonFallTransform;
+
     private BaboonState state;
+    private bool didHorizontal;
+    private bool didVertical;
+    private int numRopeConnections;
+
+    private void Start() {
+        if (SaveSystem.Current.GetBool("desertBaboonFinishedWalk") &&
+           !SaveSystem.Current.GetBool("desertBaboonHasFallen"))
+        {
+            // bruh
+            SaveSystem.Current.SetBool("desertBaboonHasFallen", true);
+        }
+
+        if (SaveSystem.Current.GetBool("desertBaboonHasFallen"))
+        {
+            BaboonOnGround();
+        }
+    }
 
     private void OnEnable() 
     {
@@ -42,6 +70,9 @@ public class BaboonTree : MonoBehaviour
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, ropeCoil.transform.position);
             ropeCoil.RemoveRopeFromPlayer();
             ropeCoil.SetRopeCoilActive(false);
+
+            didHorizontal = didVertical = false;
+            numRopeConnections += 1;
         }
     }
 
@@ -70,7 +101,102 @@ public class BaboonTree : MonoBehaviour
 
     private void OnSTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        SMove move = e.smove;
-        DisconnectRope();
+        if (state != BaboonState.Connected)
+            return;
+
+        SMove smove = e.smove;
+        Vector2Int d2 = Vector2Int.zero; // the difference tile 2's move makes
+        Vector2Int d3 = Vector2Int.zero;
+        foreach (Movement m in smove.moves)
+        {
+            if (m.islandId == 2)
+            {
+                d2 = m.endLoc - m.startLoc;
+            }
+            else if (m.islandId == 3)
+            {
+                d3 = m.endLoc - m.startLoc;
+            }
+        }
+
+        if (d2 != d3)
+        {
+            didHorizontal = didVertical = false;
+            DisconnectRope();
+        }
+        else if (d2.x != 0)
+        {
+            didHorizontal = true;
+        }
+        else if (d2.y != 0)
+        {
+            didVertical = true;
+        }
+
+        SaveSystem.Current.SetString("desertRemainingShakeDirection",
+            didHorizontal ? "vertically" : "horizontally"
+        );
+
+        if (isWalking && !isFalling)
+        {
+            BaboonFall();
+        }
     }
+
+
+    // Baboon falling
+    public void SetIsWalking(bool value)
+    {
+        isWalking = value;
+    }
+
+    public void BaboonFall()
+    {
+        isFalling = true;
+        StartCoroutine(AnimateBaboonFall());
+    }
+
+    private IEnumerator AnimateBaboonFall()
+    {
+        baboonGameObject.transform.SetParent(baboonFallTransform);
+        baboonAnimator.Play("Falling");
+        AudioManager.Play("Fall");
+
+        Vector3 startPos = baboonGameObject.transform.position;
+        float t = 0;
+        while (t < baboonFallDuration)
+        {
+            float x = baboonFallCurve.Evaluate(t / baboonFallDuration);
+            Vector3 newPos = Vector3.Lerp(startPos, baboonFallTransform.position, x);
+            baboonGameObject.transform.position = newPos;
+
+            yield return null;
+            t += Time.deltaTime;
+        }
+
+        baboonGameObject.transform.position = baboonFallTransform.position;
+        SaveSystem.Current.SetBool("desertBaboonHasFallen", true);
+
+        AudioManager.Play("Hurt");
+
+        BaboonOnGround();
+    }
+
+    public void BaboonOnGround()
+    {
+        baboonAnimator.Play("Fell");
+        baboonSpriteRenderer.sortingOrder = 0;
+        baboonCollider.enabled = true;
+    }
+
+
+    // NPC Conditionals
+    public void IsStateDisconnected(Condition c)   => c.SetSpec(state == BaboonState.Disconnected);
+    public void IsStateConnected(Condition c)      => c.SetSpec(state == BaboonState.Connected);
+    public void IsStateSnapping(Condition c)       => c.SetSpec(state == BaboonState.Snapping);
+    public void HasConnectedRopeOnce(Condition c)  => c.SetSpec(numRopeConnections >= 1);
+    public void HasConnectedRopeTwice(Condition c) => c.SetSpec(numRopeConnections >= 2);
+    public void IsOneDirectionDone(Condition c)    => c.SetSpec(didHorizontal || didVertical);
+    public void IsBothDirectionsDone(Condition c)  => c.SetSpec(didHorizontal && didVertical); // yes is both directions done
+    public void IsFalling(Condition c)             => c.SetSpec(isFalling);
 }
