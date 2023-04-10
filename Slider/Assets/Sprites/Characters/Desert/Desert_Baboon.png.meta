@@ -121,7 +121,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 144
+        y: 192
         width: 48
         height: 48
       alignment: 0
@@ -142,7 +142,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 48
-        y: 144
+        y: 192
         width: 48
         height: 48
       alignment: 0
@@ -163,7 +163,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 96
-        y: 144
+        y: 192
         width: 48
         height: 48
       alignment: 0
@@ -184,7 +184,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 144
-        y: 144
+        y: 192
         width: 48
         height: 48
       alignment: 0
@@ -205,7 +205,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 192
-        y: 144
+        y: 192
         width: 48
         height: 48
       alignment: 0
@@ -226,7 +226,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 96
+        y: 144
         width: 48
         height: 48
       alignment: 0
@@ -247,7 +247,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 48
-        y: 96
+        y: 144
         width: 48
         height: 48
       alignment: 0
@@ -268,7 +268,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 96
-        y: 96
+        y: 144
         width: 48
         height: 48
       alignment: 0
@@ -289,7 +289,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 144
-        y: 96
+        y: 144
         width: 48
         height: 48
       alignment: 0
@@ -310,7 +310,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 192
-        y: 96
+        y: 144
         width: 48
         height: 48
       alignment: 0
@@ -331,7 +331,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 48
+        y: 96
         width: 48
         height: 48
       alignment: 0
@@ -352,7 +352,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 48
-        y: 48
+        y: 96
         width: 48
         height: 48
       alignment: 0
@@ -373,7 +373,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 96
-        y: 48
+        y: 96
         width: 48
         height: 48
       alignment: 0
@@ -394,7 +394,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 144
-        y: 48
+        y: 96
         width: 48
         height: 48
       alignment: 0
@@ -415,7 +415,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 192
-        y: 48
+        y: 96
         width: 48
         height: 48
       alignment: 0
@@ -436,7 +436,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 48
         width: 48
         height: 48
       alignment: 0
@@ -457,7 +457,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 48
-        y: 0
+        y: 48
         width: 48
         height: 48
       alignment: 0
@@ -478,7 +478,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 96
-        y: 0
+        y: 48
         width: 48
         height: 48
       alignment: 0
@@ -499,7 +499,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 144
-        y: 0
+        y: 48
         width: 48
         height: 48
       alignment: 0
@@ -511,6 +511,48 @@ TextureImporter:
       bones: []
       spriteID: c705a484031a96f80800000000000000
       internalID: -8112776024987905924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desert_Baboon_Scared_0
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 48
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00000000000000000800000000000000
+      internalID: 0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desert_Baboon_Scared_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00000000000000000800000000000000
+      internalID: 0
       vertices: []
       indices: 
       edges: []
@@ -533,6 +575,7 @@ TextureImporter:
       Desert_Baboon_Idle_0: 7918323534116396067
       Desert_Baboon_Sleepy_0: -8340339102002326356
       Desert_Baboon_Walk_0: -1051687819354422019
+      Desert_Baboon_Scared_1: 0
       Desert_Baboon_Fell_0: 4957777340686920312
       Desert_Baboon_Falling_0: -2766480755111218394
       Desert_Baboon_Walk_1: -2188091867709630228
@@ -542,6 +585,7 @@ TextureImporter:
       Desert_Baboon_Walk_2: -2151153601335621704
       Desert_Baboon_Sleepy_1: 5001429200057562910
       Desert_Baboon_Walk_3: -4089514870012350332
+      Desert_Baboon_Scared_0: 0
       Desert_Baboon_Walk_4: 6370677864410629226
       Desert_Baboon_Walk_6: 1329543419130790672
       Desert_Baboon_Fell_1: -8112776024987905924

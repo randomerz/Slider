@@ -31,6 +31,9 @@ public class BaboonTree : MonoBehaviour
     private bool didHorizontal;
     private bool didVertical;
     private int numRopeConnections;
+    private int numShakesAfterWalk;
+
+    private bool checkedOnStileMoveThisFrame;
 
     private void Start() {
         if (SaveSystem.Current.GetBool("desertBaboonFinishedWalk") &&
@@ -54,6 +57,11 @@ public class BaboonTree : MonoBehaviour
     private void OnDisable() 
     {
         SGridAnimator.OnSTileMoveStart -= OnSTileMove;
+    }
+
+    private void Update() 
+    {
+        checkedOnStileMoveThisFrame = false;
     }
 
     public void ConnectRope()
@@ -104,6 +112,11 @@ public class BaboonTree : MonoBehaviour
         if (state != BaboonState.Connected)
             return;
 
+        // we don't want this being called 4 times per move
+        if (checkedOnStileMoveThisFrame)
+            return;
+        checkedOnStileMoveThisFrame = true;
+
         SMove smove = e.smove;
         Vector2Int d2 = Vector2Int.zero; // the difference tile 2's move makes
         Vector2Int d3 = Vector2Int.zero;
@@ -139,7 +152,15 @@ public class BaboonTree : MonoBehaviour
 
         if (isWalking && !isFalling)
         {
-            BaboonFall();
+            if (d2 != d3)
+            {
+                BaboonFall();
+            }
+            else if (d2 != Vector2Int.zero)
+            {
+                AudioManager.Play("Baboon Screech");
+                numShakesAfterWalk += 1;
+            }
         }
     }
 
@@ -178,7 +199,8 @@ public class BaboonTree : MonoBehaviour
         baboonGameObject.transform.position = baboonFallTransform.position;
         SaveSystem.Current.SetBool("desertBaboonHasFallen", true);
 
-        AudioManager.Play("Hurt");
+        // AudioManager.Play("Hurt");
+        AudioManager.Play("Baboon Screech");
 
         BaboonOnGround();
     }
@@ -200,4 +222,5 @@ public class BaboonTree : MonoBehaviour
     public void IsOneDirectionDone(Condition c)    => c.SetSpec(didHorizontal || didVertical);
     public void IsBothDirectionsDone(Condition c)  => c.SetSpec(didHorizontal && didVertical); // yes is both directions done
     public void IsFalling(Condition c)             => c.SetSpec(isFalling);
+    public void DidShakeAfterWalk(Condition c)     => c.SetSpec(numShakesAfterWalk >= 1);
 }
