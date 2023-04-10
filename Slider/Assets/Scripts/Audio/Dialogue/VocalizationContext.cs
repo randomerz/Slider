@@ -6,7 +6,6 @@ using UnityEngine;
 /// <summary>
 /// Collection of parameters guiding a current vocalization instance. Shared between different levels of vocalization
 /// </summary>
-[System.Serializable]
 public class VocalizationContext
 {
     public Transform root;

@@ -1,135 +1,138 @@
-using FMODUnity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Playables;
 
-public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceVocalizer> {
-    public VocalizerPreset preset;
-    [SerializeField, HideInInspector] private string text;
-    [SerializeField, HideInInspector] private List<SentenceVocalizer> sentences;
-    public VocalizationContext currentVocalizationContext;
-
-    public string Text => text;
-    public List<SentenceVocalizer> Vocalizers => sentences;
-
-    SentenceVocalizer IVocalizerComposite<SentenceVocalizer>.Current { get => _Current; set => _Current = value; }
-    VocalizerCompositeStatus IVocalizerComposite<SentenceVocalizer>.Status { get => _Status; set => _Status = value; }
-    private SentenceVocalizer _Current;
-    private VocalizerCompositeStatus _Status;
-
-    public void StartReadSentence(SentenceVocalizer voc)
+namespace SliderVocalization
+{
+    public class VocalizableParagraph : MonoBehaviour, IVocalizerComposite<SentenceVocalizer>
     {
-        var vc = (this as IVocalizerComposite<SentenceVocalizer>);
-        vc.Stop();
-        currentVocalizationContext = new(transform);
-        StartCoroutine((voc as IVocalizerComposite<WordVocalizer>).Vocalize(preset, currentVocalizationContext));
-    }
+        public VocalizerPreset preset;
+        [SerializeField, HideInInspector] private string text;
+        [SerializeField, HideInInspector] private List<SentenceVocalizer> sentences;
+        public VocalizationContext currentVocalizationContext;
 
-    public void StartReadAll()
-    {
-        var vc = (this as IVocalizerComposite<SentenceVocalizer>);
-        vc.Stop();
-        currentVocalizationContext = new(transform);
-        StartCoroutine(vc.Vocalize(preset, currentVocalizationContext));
-    }
+        public string Text => text;
+        public List<SentenceVocalizer> Vocalizers => sentences;
 
-    public bool IsEmpty => sentences.Count == 0;
+        private SentenceVocalizer _Current;
+        private VocalizerCompositeStatus _Status;
 
-    public IEnumerator Postvocalize(VocalizerPreset preset, VocalizationContext context, SentenceVocalizer completed, SentenceVocalizer upcoming, int upcomingIdx)
-    {
-        yield return new WaitForSecondsRealtime(preset.clauseGap);
-    }
+        public WaitUntil WaitUntilCanPlay() => new WaitUntil(() => _Status == VocalizerCompositeStatus.CanPlay);
 
-    public IEnumerator Prevocalize(VocalizerPreset preset, VocalizationContext context, SentenceVocalizer prior, SentenceVocalizer upcoming, int upcomingIdx)
-    {
-        yield return null;
-    }
-
-    public void SetText(string text)
-    {
-        if (!(this.text ?? "").Equals(text))
+        internal void StartReadSentence(SentenceVocalizer voc)
         {
-            this.text = text;
-            sentences = SentenceVocalizer.Parse(this.text) ?? new();
+            this.Stop();
+            voc.Stop();
+            currentVocalizationContext = new(transform);
+            StartCoroutine(voc.Vocalize(preset, currentVocalizationContext));
         }
+
+        public void StartReadAll()
+        {
+            this.Stop();
+            currentVocalizationContext = new(transform);
+            StartCoroutine(this.Vocalize(preset, currentVocalizationContext));
+        }
+
+        List<SentenceVocalizer> IVocalizerComposite<SentenceVocalizer>.Vocalizers => throw new NotImplementedException();
+
+        IEnumerator IVocalizerComposite<SentenceVocalizer>.Prevocalize(VocalizerPreset preset, VocalizationContext context, SentenceVocalizer prior, SentenceVocalizer upcoming, int upcomingIdx)
+            => null;
+
+        IEnumerator IVocalizerComposite<SentenceVocalizer>.Postvocalize(VocalizerPreset preset, VocalizationContext context, SentenceVocalizer completed, SentenceVocalizer upcoming, int upcomingIdx)
+            => null;
+
+        public void SetText(string text)
+        {
+            if (!(this.text ?? "").Equals(text))
+            {
+                this.text = text;
+                sentences = SentenceVocalizer.Parse(this.text) ?? new();
+            }
+        }
+
+        public SentenceVocalizer GetCurrent() => _Current;
+        void IVocalizerComposite<SentenceVocalizer>.SetCurrent(SentenceVocalizer value) => _Current = value;
+        public VocalizerCompositeStatus GetStatus() => _Status;
+        void IVocalizerComposite<SentenceVocalizer>.SetStatus(VocalizerCompositeStatus value) => _Status = value;
     }
-}
 
 #if UNITY_EDITOR
 
-[CustomEditor(typeof(VocalizableParagraph))]
-public class VocalizerDebuggerEditor : Editor
-{
-    string rawText;
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(VocalizableParagraph))]
+    public class VocalizerDebuggerEditor : Editor
     {
-        base.OnInspectorGUI();
-
-        var reader = target as VocalizableParagraph;
-
-        if (Application.isPlaying)
+        string rawText;
+        public override void OnInspectorGUI()
         {
-            EditorGUILayout.LabelField((reader as IVocalizerComposite<SentenceVocalizer>).Status.ToString());
+            base.OnInspectorGUI();
 
-            GUIStyle textAreaStyle = new(EditorStyles.textArea)
-            {
-                wordWrap = true
-            };
-            rawText = EditorGUILayout.TextArea(rawText, textAreaStyle, GUILayout.MinHeight(100), GUILayout.ExpandHeight(true));
+            var reader = target as VocalizableParagraph;
 
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Apply"))
+            if (Application.isPlaying)
             {
-                reader.SetText(rawText);
-                EditorUtility.SetDirty(reader);
-            }
-            if (reader.Vocalizers.Count > 0 && Application.isPlaying)
-            {
-                if (GUILayout.Button("Play"))
+                EditorGUILayout.LabelField(reader.GetStatus().ToString());
+
+                GUIStyle textAreaStyle = new(EditorStyles.textArea)
                 {
-                    reader.StartReadAll();
-                }
-            }
-            if ((reader as IVocalizerComposite<SentenceVocalizer>).Status == VocalizerCompositeStatus.Playing)
-            {
-                if (GUILayout.Button("Stop"))
-                {
-                    (reader as IVocalizerComposite<SentenceVocalizer>).Stop();
-                }
-            }
-            EditorGUILayout.EndHorizontal();
+                    wordWrap = true
+                };
+                rawText = EditorGUILayout.TextArea(rawText, textAreaStyle, GUILayout.MinHeight(100), GUILayout.ExpandHeight(true));
 
-            GUIStyle vocalizerPreviewStyle = new(GUI.skin.label);
-            vocalizerPreviewStyle.richText = true;
-            foreach (var v in reader.Vocalizers)
-            {
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(v.punctuation.ToString());
-                if (Application.isPlaying && GUILayout.Button("Read clause"))
+                if (GUILayout.Button("Apply"))
                 {
-                    reader.StartReadSentence(v);
+                    reader.SetText(rawText);
+                    EditorUtility.SetDirty(reader);
+                }
+                if (reader.Vocalizers.Count > 0 && Application.isPlaying)
+                {
+                    if (GUILayout.Button("Play"))
+                    {
+                        reader.StartReadAll();
+                    }
+                }
+                if (reader.GetStatus() == VocalizerCompositeStatus.Playing)
+                {
+                    if (GUILayout.Button("Stop"))
+                    {
+                        reader.Stop();
+                    }
                 }
                 EditorGUILayout.EndHorizontal();
-                string sentence = "";
-                foreach (var w in v.words)
-                {
-                    sentence += w.ToString() + " ";
-                }
-                EditorGUILayout.LabelField(sentence, vocalizerPreviewStyle);
-            }
 
-            // this is to keep the playback up to date
-            // sometimes Unity skips repainting the inspector so playback progress lags
-            Repaint();
-        }
-        else
-        {
-            EditorGUILayout.LabelField("ONLY EDITABLE LIVE DURING PLAY");
+                GUIStyle vocalizerPreviewStyle = new(GUI.skin.label);
+                vocalizerPreviewStyle.richText = true;
+                foreach (var v in reader.Vocalizers)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField(v.punctuation.ToString());
+                    if (Application.isPlaying && GUILayout.Button("Read clause"))
+                    {
+                        reader.StartReadSentence(v);
+                    }
+                    EditorGUILayout.EndHorizontal();
+                    string sentence = "";
+                    foreach (var w in v.words)
+                    {
+                        sentence += w.ToString() + " ";
+                    }
+                    EditorGUILayout.LabelField(sentence, vocalizerPreviewStyle);
+                }
+
+                // this is to keep the playback up to date
+                // sometimes Unity skips repainting the inspector so playback progress lags
+                Repaint();
+            }
+            else
+            {
+                EditorGUILayout.LabelField("ONLY EDITABLE LIVE DURING PLAY");
+            }
         }
     }
-}
 
 #endif
+}

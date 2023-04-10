@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using Paragraph = SliderVocalization.VocalizableParagraph;
 
 public class DialogueDisplay : MonoBehaviour
 {
     public bool useVocalizer;
     public VocalizerPreset preset;
-    public VocalizableParagraph vocalizer;
+    public Paragraph vocalizer;
 
     public TMPTextTyper textTyperText;
     public TMPTextTyper textTyperBG;
@@ -59,9 +59,8 @@ public class DialogueDisplay : MonoBehaviour
 
     IEnumerator FadeWhenReady()
     {
-        var voc = vocalizer as IVocalizerComposite<SentenceVocalizer>;
-        voc.Stop();
-        yield return new WaitUntil(() => voc.Status == VocalizerCompositeStatus.CanPlay);
+        vocalizer.Stop();
+        yield return vocalizer.WaitUntilCanPlay();
         canvas.SetActive(false);
     }
 

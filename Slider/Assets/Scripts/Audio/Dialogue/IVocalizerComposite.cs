@@ -1,60 +1,85 @@
+using SliderVocalization;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Playables;
 
-/// <summary>
-/// Composite instead of class due to possible multi-inheritance requirements. For example a vocalizer might need to be a Monobehaviour
-/// </summary>
-/// <typeparam name="T">Segments this composite is composed of</typeparam>
-public interface IVocalizerComposite<T> : IVocalizer where T : IVocalizer
+namespace SliderVocalization
 {
-    List<T> Vocalizers { get; }
-    T Current { get; protected set; }
-    public VocalizerCompositeStatus Status { get; protected set; }
-
-    IEnumerator Prevocalize(VocalizerPreset preset, VocalizationContext context, T prior, T upcoming, int upcomingIdx);
-    IEnumerator Postvocalize(VocalizerPreset preset, VocalizationContext context, T completed, T upcoming, int upcomingIdx);
-
-    IEnumerator IVocalizer.Vocalize(VocalizerPreset preset, VocalizationContext context, int idx, int lengthOfComposite)
+    /// <summary>
+    /// Composite instead of class due to possible multi-inheritance requirements. For example a vocalizer might need to be a Monobehaviour
+    /// </summary>
+    /// <typeparam name="T">Segments this composite is composed of</typeparam>
+    public interface IVocalizerComposite<T> : IVocalizer where T : IVocalizer
     {
-        yield return new WaitUntil(() => Status == VocalizerCompositeStatus.CanPlay);
-        Status = VocalizerCompositeStatus.Playing;
-        for (int i = 0; i < Vocalizers.Count; i++)
+        public List<T> Vocalizers { get; }
+
+        bool IVocalizer.IsEmpty => Vocalizers.Count == 0;
+
+        public T GetCurrent();
+        protected void SetCurrent(T value);
+        public VocalizerCompositeStatus GetStatus();
+        protected void SetStatus(VocalizerCompositeStatus value);
+
+        internal IEnumerator Prevocalize(VocalizerPreset preset, VocalizationContext context, T prior, T upcoming, int upcomingIdx);
+        internal IEnumerator Postvocalize(VocalizerPreset preset, VocalizationContext context, T completed, T upcoming, int upcomingIdx);
+
+        IEnumerator IVocalizer.Vocalize(VocalizerPreset preset, VocalizationContext context, int idx, int lengthOfComposite)
         {
-            var v = Vocalizers[i];
-            Current = v;
-            yield return Prevocalize(preset, context, default, v, i);
-            yield return v.Vocalize(preset, context, idx: i, lengthOfComposite: Vocalizers.Count);
-            yield return Postvocalize(preset, context, v, default, i + 1);
-            if (Status == VocalizerCompositeStatus.Stopping) break;
+            yield return new WaitUntil(() => GetStatus() == VocalizerCompositeStatus.CanPlay);
+            SetStatus(VocalizerCompositeStatus.Playing);
+            for (int i = 0; i < Vocalizers.Count; i++)
+            {
+                var v = Vocalizers[i];
+                SetCurrent(v);
+                yield return Prevocalize(preset, context, default, v, i);
+                yield return v.Vocalize(preset, context, idx: i, lengthOfComposite: Vocalizers.Count);
+                yield return Postvocalize(preset, context, v, default, i + 1);
+                if (GetStatus() == VocalizerCompositeStatus.Stopping) break;
+            }
+            SetStatus(VocalizerCompositeStatus.CanPlay);
         }
-        Status = VocalizerCompositeStatus.CanPlay;
+
+        void IVocalizer.Stop()
+        {
+            if (GetStatus() == VocalizerCompositeStatus.Playing)
+            {
+                GetCurrent()?.Stop();
+                ClearProgress();
+                SetStatus(VocalizerCompositeStatus.Stopping);
+            }
+        }
+
+        void IVocalizer.ClearProgress()
+        {
+            foreach (T member in Vocalizers)
+            {
+                member.ClearProgress();
+            }
+        }
     }
 
-    void IVocalizer.Stop()
+    public enum VocalizerCompositeStatus
     {
-        if (Status == VocalizerCompositeStatus.Playing)
-        {
-            Current?.Stop();
-            ClearProgress();
-            Status = VocalizerCompositeStatus.Stopping;
-        }
-    }
-
-    void IVocalizer.ClearProgress()
-    {
-        foreach (T member in Vocalizers)
-        {
-            member.ClearProgress();
-        }
+        CanPlay,
+        Playing,
+        Stopping
     }
 }
-
-public enum VocalizerCompositeStatus
+public static class VocalizerCompositeExtensions
 {
-    CanPlay,
-    Playing,
-    Stopping
+    public static bool GetIsEmpty<T>(this T composite) where T : IVocalizer => (composite as IVocalizer).IsEmpty;
+
+    public static IEnumerator Vocalize<T>(
+        this T composite, VocalizerPreset preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
+        where T : IVocalizer
+        => composite.Vocalize(preset, context, idx, lengthOfComposite);
+
+    public static void Stop<T>(this T composite)
+         where T : IVocalizer
+        => composite.Stop();
+
+    public static void ClearProgress<T>(this T composite)
+         where T : IVocalizer
+        => composite.ClearProgress();
 }
