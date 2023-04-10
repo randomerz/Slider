@@ -153,6 +153,7 @@ public class BaboonTree : MonoBehaviour
     public void BaboonFall()
     {
         isFalling = true;
+        baboonGameObject.GetComponent<NPC>().TryEndCurrentWalk();
         StartCoroutine(AnimateBaboonFall());
     }
 
