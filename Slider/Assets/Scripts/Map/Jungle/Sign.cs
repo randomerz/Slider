@@ -63,11 +63,6 @@ public class Sign : Box
             return;
         }
 
-        if(shape != null)
-        {
-            print(shape.name);
-        }
-
         parents.Add(this);
 
         if (path.pair != null)
