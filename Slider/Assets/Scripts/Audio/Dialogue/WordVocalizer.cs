@@ -94,6 +94,7 @@ namespace SliderVocalization
                     vowelClusters[0].isStressed = vowelClusters[0].characters.Length == 1 && characters.Length < 3;
                     break;
                 case 2:
+                    // for 2 syllable words the first syllable is slightly more likely to be stressed
                     vowelClusters[Random.value < 0.6f ? 0 : 1].isStressed = true;
                     break;
                 default:
@@ -125,10 +126,12 @@ namespace SliderVocalization
             return s;
         }
 
-        IEnumerator IVocalizerComposite<PhonemeClusterVocalizer>.Prevocalize(VocalizerPreset preset, VocalizationContext context, PhonemeClusterVocalizer prior, PhonemeClusterVocalizer upcoming, int upcomingIdx)
+        IEnumerator IVocalizerComposite<PhonemeClusterVocalizer>.Prevocalize(
+            VocalizerPreset preset, VocalizationContext context, PhonemeClusterVocalizer prior, PhonemeClusterVocalizer upcoming, int upcomingIdx)
             => null;
 
-        IEnumerator IVocalizerComposite<PhonemeClusterVocalizer>.Postvocalize(VocalizerPreset preset, VocalizationContext context, PhonemeClusterVocalizer completed, PhonemeClusterVocalizer upcoming, int upcomingIdx)
+        IEnumerator IVocalizerComposite<PhonemeClusterVocalizer>.Postvocalize(
+            VocalizerPreset preset, VocalizationContext context, PhonemeClusterVocalizer completed, PhonemeClusterVocalizer upcoming, int upcomingIdx)
             => null;
 
         public PhonemeClusterVocalizer GetCurrent() => _Current;

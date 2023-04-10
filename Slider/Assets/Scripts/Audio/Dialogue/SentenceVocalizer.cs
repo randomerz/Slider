@@ -96,13 +96,14 @@ namespace SliderVocalization
                     char.IsDigit(c) || endingsSet.Contains(c) ? c : ' ').ToArray()
                 ).Split(' ', System.StringSplitOptions.RemoveEmptyEntries));
 
-        IEnumerator IVocalizerComposite<WordVocalizer>.Prevocalize(VocalizerPreset preset, VocalizationContext context, WordVocalizer prior, WordVocalizer upcoming, int upcomingIdx)
+        IEnumerator IVocalizerComposite<WordVocalizer>.Prevocalize(
+            VocalizerPreset preset, VocalizationContext context, WordVocalizer prior, WordVocalizer upcoming, int upcomingIdx)
         {
             if (prior == null)
             {
                 // for the first word, initialize intonation of first word
                 // guess that short sentences more likely to start high
-                float pFirstWordHigh = (this.Vocalizers.Count <= 3) ? 0.75f : 0.25f;
+                float pFirstWordHigh = (Vocalizers.Count <= 3) ? 0.75f : 0.25f;
                 context.isCurrentWordLow = Random.value > pFirstWordHigh;
             }
             else if (upcomingIdx != Vocalizers.Count - 1 || intonation != Intonation.up)
@@ -121,7 +122,8 @@ namespace SliderVocalization
             return null;
         }
 
-        IEnumerator IVocalizerComposite<WordVocalizer>.Postvocalize(VocalizerPreset preset, VocalizationContext context, WordVocalizer completed, WordVocalizer upcoming, int upcomingIdx)
+        IEnumerator IVocalizerComposite<WordVocalizer>.Postvocalize(
+            VocalizerPreset preset, VocalizationContext context, WordVocalizer completed, WordVocalizer upcoming, int upcomingIdx)
         {
             yield return new WaitForSecondsRealtime(preset.wordGap * (Random.value + 0.5f));
         }

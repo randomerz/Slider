@@ -37,12 +37,12 @@ namespace SliderVocalization
             StartCoroutine(this.Vocalize(preset, currentVocalizationContext));
         }
 
-        List<SentenceVocalizer> IVocalizerComposite<SentenceVocalizer>.Vocalizers => throw new NotImplementedException();
-
-        IEnumerator IVocalizerComposite<SentenceVocalizer>.Prevocalize(VocalizerPreset preset, VocalizationContext context, SentenceVocalizer prior, SentenceVocalizer upcoming, int upcomingIdx)
+        IEnumerator IVocalizerComposite<SentenceVocalizer>.Prevocalize(
+            VocalizerPreset preset, VocalizationContext context, SentenceVocalizer prior, SentenceVocalizer upcoming, int upcomingIdx)
             => null;
 
-        IEnumerator IVocalizerComposite<SentenceVocalizer>.Postvocalize(VocalizerPreset preset, VocalizationContext context, SentenceVocalizer completed, SentenceVocalizer upcoming, int upcomingIdx)
+        IEnumerator IVocalizerComposite<SentenceVocalizer>.Postvocalize(
+            VocalizerPreset preset, VocalizationContext context, SentenceVocalizer completed, SentenceVocalizer upcoming, int upcomingIdx)
             => null;
 
         public void SetText(string text)
@@ -88,7 +88,7 @@ namespace SliderVocalization
                     reader.SetText(rawText);
                     EditorUtility.SetDirty(reader);
                 }
-                if (reader.Vocalizers.Count > 0 && Application.isPlaying)
+                if (reader.Vocalizers != null && reader.Vocalizers.Count > 0 && Application.isPlaying)
                 {
                     if (GUILayout.Button("Play"))
                     {
@@ -106,21 +106,25 @@ namespace SliderVocalization
 
                 GUIStyle vocalizerPreviewStyle = new(GUI.skin.label);
                 vocalizerPreviewStyle.richText = true;
-                foreach (var v in reader.Vocalizers)
+
+                if (reader.Vocalizers != null)
                 {
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField(v.punctuation.ToString());
-                    if (Application.isPlaying && GUILayout.Button("Read clause"))
+                    foreach (var v in reader.Vocalizers)
                     {
-                        reader.StartReadSentence(v);
+                        EditorGUILayout.BeginHorizontal();
+                        EditorGUILayout.LabelField(v.punctuation.ToString());
+                        if (Application.isPlaying && GUILayout.Button("Read clause"))
+                        {
+                            reader.StartReadSentence(v);
+                        }
+                        EditorGUILayout.EndHorizontal();
+                        string sentence = "";
+                        foreach (var w in v.words)
+                        {
+                            sentence += w.ToString() + " ";
+                        }
+                        EditorGUILayout.LabelField(sentence, vocalizerPreviewStyle);
                     }
-                    EditorGUILayout.EndHorizontal();
-                    string sentence = "";
-                    foreach (var w in v.words)
-                    {
-                        sentence += w.ToString() + " ";
-                    }
-                    EditorGUILayout.LabelField(sentence, vocalizerPreviewStyle);
                 }
 
                 // this is to keep the playback up to date
