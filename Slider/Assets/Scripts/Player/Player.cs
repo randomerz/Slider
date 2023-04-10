@@ -26,6 +26,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private bool debugDontUpdateStileUnderneath;
+
+    private PlayerInput playerInput;
     
 
     private float moveSpeedMultiplier = 1;
@@ -62,6 +64,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
         playerInventory.Init();
         UpdatePlayerSpeed();
+
+        playerInput= GetComponent<PlayerInput>();
     }
 
     private void Start() 
@@ -153,6 +157,27 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             transform.SetParent(null);
         }
     }
+    //Jroo: Either says "Keyboard Mouse" or "Controller" based on last input
+    public string GetCurrentControlScheme()
+    {
+        return playerInput.currentControlScheme;
+    }
+    public event Action<string> ControlSchemeChanged;
+    /// <summary>
+    /// Called when control scheme changes (between "Controller" or "Keyboard Mouse")
+    /// </summary>
+    public void OnControlsChanged()
+    {
+        //string newControlScheme = GetCurrentControlScheme();
+        string newControlScheme = playerInput.currentControlScheme;
+        Debug.Log("Control Scheme changed to: " + newControlScheme);
+        ControlSchemeChanged?.Invoke(newControlScheme);
+    }
+    /*
+    public void OnAltViewHold()
+    {
+        Debug.Log("Alt View Hold");
+    }*/
 
     // Here is where we pay for all our Singleton Sins
     public void ResetInventory()

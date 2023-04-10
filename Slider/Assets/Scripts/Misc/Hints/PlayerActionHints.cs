@@ -12,6 +12,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     public UnityEvent PlayerMove;
     public UnityEvent PlayerAction;
     public UnityEvent PlayerCycle;
+    public UnityEvent PlayerAltViewHold;
 
     private void Awake() {
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => {
@@ -21,6 +22,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => PlayerAction?.Invoke());
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.CycleEquip, context => PlayerCycle?.Invoke());
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => PlayerMove?.Invoke());
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.AltViewHold, context => PlayerAltViewHold?.Invoke());
     }
 
     public void Save() {

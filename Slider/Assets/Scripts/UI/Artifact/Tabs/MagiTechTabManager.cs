@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MagiTechTabManager : ArtifactTabManager
 {
@@ -29,5 +30,32 @@ public class MagiTechTabManager : ArtifactTabManager
         artifact.SetPreview(false);
         previewTabAnimator.SetBool("isHovered", false);
         previewTabAnimator.SetFloat("speed", previewTabAnimator.GetFloat("speed") * -1);
+    }
+
+    private InputAction altViewHoldAction;
+
+    private void OnEnable()
+    {
+        altViewHoldAction = Player.GetInstance().GetComponent<PlayerInput>().actions.FindAction("AltViewHold");
+
+        altViewHoldAction.started += OnAltViewHoldStarted;
+        altViewHoldAction.canceled += OnAltViewHoldCanceled;
+    }
+
+    private void OnDisable()
+    {
+        altViewHoldAction.started -= OnAltViewHoldStarted;
+        altViewHoldAction.canceled -= OnAltViewHoldCanceled;
+    }
+
+    private void OnAltViewHoldStarted(InputAction.CallbackContext callbackContext)
+    {
+        Debug.Log("Alt View Hold started!");
+        PreviewOnHoverEnter();
+    }
+    private void OnAltViewHoldCanceled(InputAction.CallbackContext callbackContext)
+    {
+        Debug.Log("Alt View Hold Canceled!");
+        PreviewOnHoverExit();
     }
 }

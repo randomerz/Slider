@@ -36,6 +36,7 @@ public class UIArtifact : Singleton<UIArtifact>
 
     protected virtual void OnEnable()
     {
+        //SelectButton(buttons[0]);
     }
 
     protected virtual void OnDisable()
@@ -534,6 +535,66 @@ public class UIArtifact : Singleton<UIArtifact>
             }
         }
         return false;
+    }
+    #endregion
+
+    protected virtual List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
+    {
+        var options = new List<ArtifactTileButton>();
+
+        Vector2Int[] dirs = {
+            Vector2Int.right,
+            Vector2Int.up,
+            Vector2Int.left,
+            Vector2Int.down
+        };
+
+        foreach (Vector2Int dir in dirs)
+        {
+            ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
+            int i = 2;
+            while (b != null && !b.TileIsActive)
+            {
+                options.Add(b);
+                b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
+
+                i++;
+            }
+        }
+
+        return options;
+    }
+
+    protected void LogMoveFailure() //As Stephen He's Dad would say.
+    {
+        string debug;
+        if (!playerCanQueue)
+        {
+            debug = "Player queueing was disabled.";
+        }
+        else
+        {
+            debug = QueueFull() ? "Queue was full" : "Move was illegal.";
+        }
+
+        Debug.Log($"Couldn't add move to queue! {debug}");
+    }
+
+    protected void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty, bool setCurrentAsSelected = true)
+    {
+        int oldCurrX = buttonCurrent.x;
+        int oldCurrY = buttonCurrent.y;
+        buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y, true);
+        buttonEmpty.SetPosition(oldCurrX, oldCurrY, true);
+
+        //since buttons swap, it feels like your hover goes backwards on controller, feels unintuitive.
+        //So this will select the tile you swap to after the move
+        if (setCurrentAsSelected && Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        {
+            EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
+            //buttonEmpty.OnDeselect();
+            //buttonCurrent.OnSelect();
+        }
     }
 
     protected bool MoveOverlapsWithActiveMove(SMove move)

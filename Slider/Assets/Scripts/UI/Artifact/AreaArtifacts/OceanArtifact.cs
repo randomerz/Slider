@@ -9,10 +9,14 @@ public class OceanArtifact : UIArtifact
     public OceanArtifactHighlights oceanHighlights;
 
     private bool canRotate = true;
+
+    [SerializeField] private GameObject controllerSupportButtonsHolder;
     
     private new void Awake()
     {
         base.Awake();
+
+        Player.GetInstance().ControlSchemeChanged += OnPlayerControlSchemeChanged;
     }
 
     protected override void OnEnable()
@@ -21,6 +25,9 @@ public class OceanArtifact : UIArtifact
 
         OnButtonInteract += UpdateHighlights;
         UIArtifactMenus.OnArtifactOpened += UpdateHighlights;
+
+        if (Player.GetInstance().GetCurrentControlScheme() == "Controller") { controllerSupportButtonsHolder.SetActive(true); }
+        else { controllerSupportButtonsHolder.SetActive(false); }
     }
 
     protected override void OnDisable()
@@ -212,5 +219,16 @@ public class OceanArtifact : UIArtifact
     public void AllowRotate(bool value)
     {
         canRotate = value;
+    }    
+    private void OnPlayerControlSchemeChanged(string newControlScheme)
+    {
+        if (newControlScheme == "Controller")
+        {
+            controllerSupportButtonsHolder.SetActive(true);
+        }
+        else
+        {
+            controllerSupportButtonsHolder.SetActive(false);
+        }
     }
 }
