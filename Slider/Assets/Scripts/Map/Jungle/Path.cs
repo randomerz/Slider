@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class Path : MonoBehaviour
 {
-    private bool active = false;
+    public bool active = false;
     private bool creatingBlobs = true;
     public Path pair;
     private Shape currentShape = null;
