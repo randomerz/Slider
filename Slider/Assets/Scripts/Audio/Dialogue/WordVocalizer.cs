@@ -127,11 +127,11 @@ namespace SliderVocalization
         }
 
         IEnumerator IVocalizerComposite<PhonemeClusterVocalizer>.Prevocalize(
-            VocalizerPreset preset, VocalizationContext context, PhonemeClusterVocalizer prior, PhonemeClusterVocalizer upcoming, int upcomingIdx)
+            VocalizerParameters preset, VocalizationContext context, PhonemeClusterVocalizer prior, PhonemeClusterVocalizer upcoming, int upcomingIdx)
             => null;
 
         IEnumerator IVocalizerComposite<PhonemeClusterVocalizer>.Postvocalize(
-            VocalizerPreset preset, VocalizationContext context, PhonemeClusterVocalizer completed, PhonemeClusterVocalizer upcoming, int upcomingIdx)
+            VocalizerParameters preset, VocalizationContext context, PhonemeClusterVocalizer completed, PhonemeClusterVocalizer upcoming, int upcomingIdx)
             => null;
 
         public PhonemeClusterVocalizer GetCurrent() => _Current;

@@ -28,13 +28,13 @@ namespace SliderVocalization
 
         public enum Intonation { flat, up, down };
         public Intonation intonation;
-        public float GetIntonation(VocalizerPreset preset)
+        public float GetBasePitchFromIntonation(VocalizerParameters preset)
             => intonation switch
             {
-                Intonation.flat => preset.basePitch,
-                Intonation.up => preset.basePitch * (1 + preset.sentenceIntonation),
-                Intonation.down => preset.basePitch * (1 - preset.sentenceIntonation),
-                _ => preset.basePitch
+                Intonation.flat => preset.pitch,
+                Intonation.up => preset.pitch * (1 + preset.sentenceIntonation),
+                Intonation.down => preset.pitch * (1 - preset.sentenceIntonation),
+                _ => preset.pitch
             };
 
         public static List<SentenceVocalizer> Parse(string paragraph)
@@ -97,7 +97,7 @@ namespace SliderVocalization
                 ).Split(' ', System.StringSplitOptions.RemoveEmptyEntries));
 
         IEnumerator IVocalizerComposite<WordVocalizer>.Prevocalize(
-            VocalizerPreset preset, VocalizationContext context, WordVocalizer prior, WordVocalizer upcoming, int upcomingIdx)
+            VocalizerParameters preset, VocalizationContext context, WordVocalizer prior, WordVocalizer upcoming, int upcomingIdx)
         {
             if (prior == null)
             {
@@ -117,13 +117,13 @@ namespace SliderVocalization
             }
 
             // the last word can be heightened or lowered based on intonation
-            context.wordPitchBase = preset.basePitch;
-            context.wordPitchIntonated = (upcomingIdx == words.Count - 1 ? GetIntonation(preset) : preset.basePitch);
+            context.wordPitchBase = preset.pitch;
+            context.wordPitchIntonated = (upcomingIdx == words.Count - 1 ? GetBasePitchFromIntonation(preset) : preset.pitch);
             return null;
         }
 
         IEnumerator IVocalizerComposite<WordVocalizer>.Postvocalize(
-            VocalizerPreset preset, VocalizationContext context, WordVocalizer completed, WordVocalizer upcoming, int upcomingIdx)
+            VocalizerParameters preset, VocalizationContext context, WordVocalizer completed, WordVocalizer upcoming, int upcomingIdx)
         {
             yield return new WaitForSecondsRealtime(preset.wordGap * (Random.value + 0.5f));
         }

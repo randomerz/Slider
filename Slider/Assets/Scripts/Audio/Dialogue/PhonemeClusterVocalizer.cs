@@ -18,27 +18,22 @@ namespace SliderVocalization
         private int _progress = 0;
         public void ClearProgress() => _progress = 0;
 
-        public IEnumerator Vocalize(VocalizerPreset preset, VocalizationContext context, int idx, int lengthOfComposite)
+        public IEnumerator Vocalize(VocalizerParameters parameters, VocalizationContext context, int idx, int lengthOfComposite)
         {
             ClearProgress();
-            var status = AudioManager.Play(preset.synth.WithAttachmentToTransform(context.root), startImmediately: false);
+            var status = AudioManager.Play(parameters.synth.WithAttachmentToTransform(context.root), startImmediately: false);
             if (!status.HasValue) yield break;
             inst = status.Value;
 
-            float wordIntonationMultiplier = context.isCurrentWordLow ? (1 - preset.wordIntonation) : (1 + preset.wordIntonation);
+            if (isStressed) parameters.ModifyWith(parameters.stressedVowelModifiers, createClone: false);
+
+            float wordIntonationMultiplier = context.isCurrentWordLow ? (1 - parameters.wordIntonation) : (1 + parameters.wordIntonation);
             float initialPitch = context.wordPitchBase * wordIntonationMultiplier;
             float finalPitch = context.wordPitchIntonated * wordIntonationMultiplier;
-            float duration = preset.baseDuration * (context.isCurrentWordLow ? (1 - preset.energeticWordSpeedup) : (1 + preset.energeticWordSpeedup));
+            float duration = parameters.duration * (context.isCurrentWordLow ? (1 - parameters.energeticWordSpeedup) : (1 + parameters.energeticWordSpeedup));
             float volumeAdjustmentDB = 0;
 
-            if (isStressed)
-            {
-                finalPitch *= preset.stressedVowelPitchMultiplier;
-                duration *= preset.stressedVowelDurationMultiplier;
-                volumeAdjustmentDB = preset.stressedVowelVolumeAdjustment;
-            }
-
-            inst.setVolume(preset.baseVolume);
+            inst.setVolume(parameters.volume);
             inst.setParameterByName("Pitch", initialPitch);
             inst.setParameterByName("VolumeAdjustmentDB", volumeAdjustmentDB);
             inst.setParameterByName("VowelOpeness", context.vowelOpeness);
@@ -61,8 +56,8 @@ namespace SliderVocalization
                     inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, totalT / totalDuration));
                     inst.setParameterByName("VowelOpeness", context.vowelOpeness);
                     inst.setParameterByName("VowelForwardness", context.vowelForwardness);
-                    context.vowelOpeness = Mathf.Lerp(context.vowelOpeness, vowelDescriptor.openness, t * preset.lerpSmoothnessInverted);
-                    context.vowelForwardness = Mathf.Lerp(context.vowelForwardness, vowelDescriptor.forwardness, t * preset.lerpSmoothnessInverted);
+                    context.vowelOpeness = Mathf.Lerp(context.vowelOpeness, vowelDescriptor.openness, t * parameters.lerpSmoothnessInverted);
+                    context.vowelForwardness = Mathf.Lerp(context.vowelForwardness, vowelDescriptor.forwardness, t * parameters.lerpSmoothnessInverted);
 
                     t += Time.deltaTime;
                     totalT += Time.deltaTime;

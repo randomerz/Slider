@@ -38,11 +38,11 @@ namespace SliderVocalization
         }
 
         IEnumerator IVocalizerComposite<SentenceVocalizer>.Prevocalize(
-            VocalizerPreset preset, VocalizationContext context, SentenceVocalizer prior, SentenceVocalizer upcoming, int upcomingIdx)
+            VocalizerParameters preset, VocalizationContext context, SentenceVocalizer prior, SentenceVocalizer upcoming, int upcomingIdx)
             => null;
 
         IEnumerator IVocalizerComposite<SentenceVocalizer>.Postvocalize(
-            VocalizerPreset preset, VocalizationContext context, SentenceVocalizer completed, SentenceVocalizer upcoming, int upcomingIdx)
+            VocalizerParameters preset, VocalizationContext context, SentenceVocalizer completed, SentenceVocalizer upcoming, int upcomingIdx)
             => null;
 
         public void SetText(string text)

@@ -6,7 +6,6 @@ using Paragraph = SliderVocalization.VocalizableParagraph;
 public class DialogueDisplay : MonoBehaviour
 {
     public bool useVocalizer;
-    public VocalizerPreset preset;
     public Paragraph vocalizer;
 
     public TMPTextTyper textTyperText;

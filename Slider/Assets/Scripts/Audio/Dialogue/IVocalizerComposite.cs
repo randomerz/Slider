@@ -21,10 +21,10 @@ namespace SliderVocalization
         public VocalizerCompositeStatus GetStatus();
         protected void SetStatus(VocalizerCompositeStatus value);
 
-        internal IEnumerator Prevocalize(VocalizerPreset preset, VocalizationContext context, T prior, T upcoming, int upcomingIdx);
-        internal IEnumerator Postvocalize(VocalizerPreset preset, VocalizationContext context, T completed, T upcoming, int upcomingIdx);
+        internal IEnumerator Prevocalize(VocalizerParameters preset, VocalizationContext context, T prior, T upcoming, int upcomingIdx);
+        internal IEnumerator Postvocalize(VocalizerParameters preset, VocalizationContext context, T completed, T upcoming, int upcomingIdx);
 
-        IEnumerator IVocalizer.Vocalize(VocalizerPreset preset, VocalizationContext context, int idx, int lengthOfComposite)
+        IEnumerator IVocalizer.Vocalize(VocalizerParameters preset, VocalizationContext context, int idx, int lengthOfComposite)
         {
             yield return new WaitUntil(() => GetStatus() == VocalizerCompositeStatus.CanPlay);
             SetStatus(VocalizerCompositeStatus.Playing);
@@ -71,7 +71,7 @@ public static class VocalizerCompositeExtensions
     public static bool GetIsEmpty<T>(this T composite) where T : IVocalizer => (composite as IVocalizer).IsEmpty;
 
     public static IEnumerator Vocalize<T>(
-        this T composite, VocalizerPreset preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
+        this T composite, VocalizerParameters preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
         where T : IVocalizer
         => composite.Vocalize(preset, context, idx, lengthOfComposite);
 

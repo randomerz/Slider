@@ -12,27 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2861570b06c9a214fa44972513bf0308, type: 3}
   m_Name: Default Vocalizer Preset
   m_EditorClassIdentifier: 
-  synth:
-    name: 
-    fmodEvent:
-      Guid:
-        Data1: -1684417107
-        Data2: 1280683026
-        Data3: -334943321
-        Data4: -774281498
-      Path: event:/Dialogue/Default_Vocal
-    dopplerScale: 0
-  basePitch: 1
-  stressedVowelPitchMultiplier: 1.102
-  baseDuration: 0.0792
-  baseVolume: 1
-  stressedVowelVolumeAdjustment: 1.2
-  stressedVowelDurationMultiplier: 0.906
-  lerpSmoothnessInverted: 3.4
-  wordGap: 0.045
-  wordIntonation: 0.048
-  energeticWordSpeedup: 0.242
-  pLowToHigh: 0.378
-  pHighToLow: 0.449
-  clauseGap: 0.07
-  sentenceIntonation: 0.274
+  Data:
+    synth:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: -1684417107
+          Data2: 1280683026
+          Data3: -334943321
+          Data4: -774281498
+        Path: event:/Dialogue/Default_Vocal
+      dopplerScale: 0
+    pitch: 1
+    duration: 0.05
+    volume: 1
+    volumeAdjustmentDb: 0
+    stressedVowelModifiers:
+      pitchAddition: 0.05
+      volumeAdjustmentDb: 3
+      durationAddition: -0.02
+    lerpSmoothnessInverted: 4.45
+    wordGap: 0.05
+    wordIntonation: 0.1
+    energeticWordSpeedup: 0.2
+    pLowToHigh: 0.3
+    pHighToLow: 0.3
+    clauseGap: 0.1
+    sentenceIntonation: 0.2
