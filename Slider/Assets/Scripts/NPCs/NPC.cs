@@ -136,6 +136,14 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     {
         walkingCtx.TryStartValidWalk();
     }
+
+    public void TryEndCurrentWalk()
+    {
+        if (walkingCtx.isWalking)
+        {
+            walkingCtx.CancelWalk();
+        }
+    }
     #endregion
 
     #region Teleportation

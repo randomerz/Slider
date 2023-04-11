@@ -270,6 +270,18 @@ public class AudioManager : Singleton<AudioManager>
         sfxBus.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
+    public static void SetGlobalParameter(string name, float val)
+    {
+        if (FMODUnity.RuntimeManager.StudioSystem.setParameterByName(name, val) == FMOD.RESULT.OK)
+        {
+            // successfully set parameter
+        }
+        else
+        {
+            Debug.LogWarning($"Failed to set global parameter {name} = {val}");
+        }
+    }
+
     public static void SetMusicParameter(string name, string parameterName, float value)
     {
         // for global parameters
@@ -451,18 +463,6 @@ public class AudioManager : Singleton<AudioManager>
             {
                 Debug.LogWarning($"Modifier {m.name} is not actually in effect (property {name} does not have any modifiers attached)");
             }
-        }
-    }
-
-    private static void SetGlobalParameter(string name, float val)
-    {
-        if (FMODUnity.RuntimeManager.StudioSystem.setParameterByName(name, val) == FMOD.RESULT.OK)
-        {
-            // successfully set parameter
-        }
-        else
-        {
-            Debug.LogWarning($"Failed to set global parameter {name} = {val}");
         }
     }
 

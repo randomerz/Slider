@@ -6,7 +6,7 @@ using UnityEngine;
 internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
 {
 
-    private bool isWalking;
+    public bool isWalking { get; private set; }
     private NPCWalkData currWalk;
     private List<STileCrossing> remainingStileCrossings;
     private List<Transform> remainingPath;
@@ -211,6 +211,18 @@ internal class NPCWalkingContext : MonoBehaviourContextProvider<NPC>
         {
             Debug.LogError("Current Walk was null? This should never happen. Report bug to Logan immediately.");
         }
+    }
+
+    public void CancelWalk()
+    {
+        if (walkCoroutine != null)
+            context.StopCoroutine(walkCoroutine);
+
+        NPCWalkData oldWalk = currWalk;
+        isWalking = false;
+        currWalk = null;
+        walkCoroutine = null;
+        animator.SetBool("isWalking", false);
     }
 
     private void SetPathStartToCurrNPCPos()
