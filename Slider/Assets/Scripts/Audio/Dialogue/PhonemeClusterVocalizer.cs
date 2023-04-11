@@ -31,7 +31,7 @@ namespace SliderVocalization
             float initialPitch = context.wordPitchBase * wordIntonationMultiplier;
             float finalPitch = context.wordPitchIntonated * wordIntonationMultiplier;
             float duration = parameters.duration * (context.isCurrentWordLow ? (1 - parameters.energeticWordSpeedup) : (1 + parameters.energeticWordSpeedup));
-            float volumeAdjustmentDB = 0;
+            float volumeAdjustmentDB = parameters.volumeAdjustmentDb;
 
             inst.setVolume(parameters.volume);
             inst.setParameterByName("Pitch", initialPitch);

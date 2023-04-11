@@ -29,7 +29,7 @@ namespace SliderVocalization
         public enum Intonation { flat, up, down };
         public Intonation intonation;
         public float GetBasePitchFromIntonation(VocalizerParameters preset)
-            => intonation switch
+            => (preset.overrideIntonation ? preset.intonationOverride : intonation) switch
             {
                 Intonation.flat => preset.pitch,
                 Intonation.up => preset.pitch * (1 + preset.sentenceIntonation),

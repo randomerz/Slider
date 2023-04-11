@@ -46,6 +46,9 @@ namespace SliderVocalization {
         [Range(-1f, 1f)]
         public float sentenceIntonation;
 
+        public bool overrideIntonation;
+        public SentenceVocalizer.Intonation intonationOverride;
+
         public bool DoHighToLow => Random.value < pHighToLow;
         public bool DoLowToHigh => Random.value < pLowToHigh;
 
@@ -67,18 +70,25 @@ namespace SliderVocalization {
     [System.Serializable]
     public struct VocalizerParametersModifier
     {
-        [Range(-.1f, .1f)]
+        [Range(-.25f, .25f)]
         public float pitchAddition;
-        [Range(-10f, 10f)]
+        [Range(-50f, 20f)]
         public float volumeAdjustmentDb;
-        [Range(-.1f, .1f)]
+        [Range(-.15f, .15f)]
         public float durationAddition;
+        public bool overrideIntonation;
+        public SentenceVocalizer.Intonation intonationOverride;
 
         public void ApplyOn(ref VocalizerParameters parameters)
         {
             parameters.pitch += pitchAddition;
             parameters.volumeAdjustmentDb += volumeAdjustmentDb;
             parameters.duration += durationAddition;
+            if (overrideIntonation)
+            {
+                parameters.overrideIntonation = overrideIntonation;
+                parameters.intonationOverride = intonationOverride;
+            }
         }
     }
 }

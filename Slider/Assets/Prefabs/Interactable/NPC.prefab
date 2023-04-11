@@ -46,14 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   preset: {fileID: 11400000, guid: ab4ec0969ea36ea49a0790140b3255a8, type: 2}
   text: 
-  sentences: []
-  currentVocalizationContext:
-    root: {fileID: 0}
-    wordPitchBase: 0
-    wordPitchIntonated: 0
-    isCurrentWordLow: 0
-    vowelOpeness: 0
-    vowelForwardness: 0
+  modifierLibrary: {fileID: 11400000, guid: ff20af8e293c246418520954b5b16f6a, type: 2}
 --- !u!1 &1390625316688445350
 GameObject:
   m_ObjectHideFlags: 0
@@ -249,7 +242,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useVocalizer: 1
-  preset: {fileID: 11400000, guid: ab4ec0969ea36ea49a0790140b3255a8, type: 2}
   vocalizer: {fileID: 4361967530816430225}
   textTyperText: {fileID: 2664969615823266812}
   textTyperBG: {fileID: 5413396733350346047}
@@ -756,14 +748,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   preset: {fileID: 11400000, guid: ab4ec0969ea36ea49a0790140b3255a8, type: 2}
   text: 
-  sentences: []
-  currentVocalizationContext:
-    root: {fileID: 0}
-    wordPitchBase: 0
-    wordPitchIntonated: 0
-    isCurrentWordLow: 0
-    vowelOpeness: 0
-    vowelForwardness: 0
+  modifierLibrary: {fileID: 0}
 --- !u!1 &5307824455736266433
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,14 +935,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   preset: {fileID: 11400000, guid: ab4ec0969ea36ea49a0790140b3255a8, type: 2}
   text: 
-  sentences: []
-  currentVocalizationContext:
-    root: {fileID: 0}
-    wordPitchBase: 0
-    wordPitchIntonated: 0
-    isCurrentWordLow: 0
-    vowelOpeness: 0
-    vowelForwardness: 0
+  modifierLibrary: {fileID: 0}
 --- !u!1 &7614049214047196872
 GameObject:
   m_ObjectHideFlags: 0

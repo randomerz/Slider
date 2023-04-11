@@ -22,7 +22,7 @@ public class DialogueDisplay : MonoBehaviour
         ping.transform.position = new Vector2(transform.position.x, transform.position.y + 1);
     }
 
-    public void DisplaySentence(string message)
+    public void DisplaySentence(string message, NPCEmotes.Emotes emote)
     {
         CheckContrast();
         CheckSize();
@@ -40,7 +40,7 @@ public class DialogueDisplay : MonoBehaviour
         string parsed = textTyperText.StartTyping(message);
         textTyperBG.StartTyping(message);
         vocalizer.SetText(parsed);
-        vocalizer.StartReadAll();
+        vocalizer.StartReadAll(emote);
         // StartCoroutine(TypeSentence(message.ToCharArray()));
     }
 

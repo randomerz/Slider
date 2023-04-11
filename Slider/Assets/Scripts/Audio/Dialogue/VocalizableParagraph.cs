@@ -13,6 +13,7 @@ namespace SliderVocalization
         [SerializeField, HideInInspector] private string text;
         [SerializeField, HideInInspector] private List<SentenceVocalizer> sentences;
         public VocalizationContext currentVocalizationContext;
+        [SerializeField] private VocalizerParameterModifierLibrary modifierLibrary;
 
         public string Text => text;
         public List<SentenceVocalizer> Vocalizers => sentences;
@@ -22,19 +23,19 @@ namespace SliderVocalization
 
         public WaitUntil WaitUntilCanPlay() => new WaitUntil(() => _Status == VocalizerCompositeStatus.CanPlay);
 
-        internal void StartReadSentence(SentenceVocalizer voc)
+        internal void StartReadSentence(SentenceVocalizer voc, NPCEmotes.Emotes emote)
         {
             this.Stop();
             voc.Stop();
             currentVocalizationContext = new(transform);
-            StartCoroutine(voc.Vocalize(preset, currentVocalizationContext));
+            StartCoroutine(voc.Vocalize(((VocalizerParameters) preset).ModifyWith(modifierLibrary[emote], createClone: true), currentVocalizationContext));
         }
 
-        public void StartReadAll()
+        public void StartReadAll(NPCEmotes.Emotes emote)
         {
             this.Stop();
             currentVocalizationContext = new(transform);
-            StartCoroutine(this.Vocalize(preset, currentVocalizationContext));
+            StartCoroutine(this.Vocalize(((VocalizerParameters)preset).ModifyWith(modifierLibrary[emote], createClone: true), currentVocalizationContext));
         }
 
         IEnumerator IVocalizerComposite<SentenceVocalizer>.Prevocalize(
@@ -66,6 +67,7 @@ namespace SliderVocalization
     public class VocalizerDebuggerEditor : Editor
     {
         string rawText;
+        NPCEmotes.Emotes emote;
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
@@ -82,6 +84,7 @@ namespace SliderVocalization
                 };
                 rawText = EditorGUILayout.TextArea(rawText, textAreaStyle, GUILayout.MinHeight(100), GUILayout.ExpandHeight(true));
 
+                emote = (NPCEmotes.Emotes) EditorGUILayout.EnumFlagsField(emote);
                 EditorGUILayout.BeginHorizontal();
                 if (GUILayout.Button("Apply"))
                 {
@@ -92,7 +95,7 @@ namespace SliderVocalization
                 {
                     if (GUILayout.Button("Play"))
                     {
-                        reader.StartReadAll();
+                        reader.StartReadAll(emote);
                     }
                 }
                 if (reader.GetStatus() == VocalizerCompositeStatus.Playing)
@@ -115,7 +118,7 @@ namespace SliderVocalization
                         EditorGUILayout.LabelField(v.punctuation.ToString());
                         if (Application.isPlaying && GUILayout.Button("Read clause"))
                         {
-                            reader.StartReadSentence(v);
+                            reader.StartReadSentence(v, emote);
                         }
                         EditorGUILayout.EndHorizontal();
                         string sentence = "";

@@ -175,7 +175,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     { 
         if (DialogueEnabled && !CurrDchainIsEmpty())
         {
-            display.DisplaySentence(context.CurrCond.GetDialogueString(CurrDchainIndex));
+            display.DisplaySentence(context.CurrCond.GetDialogueString(CurrDchainIndex), CurrDchain[CurrDchainIndex].emoteOnStart);
 
             isTypingDialogue = true;
             dialogueBoxIsActive = true;
