@@ -509,7 +509,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -530,7 +530,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -538,6 +538,69 @@ TextureImporter:
       bones: []
       spriteID: 9124c878c934fc780800000000000000
       internalID: -8660629218842099175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: desert_jackal_ball0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1328cfd8553a1744a66ab75825f46f3
+      internalID: 987585115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: desert_jackal_ball1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f5559b7df9e79748aa2c3c7ce36851c
+      internalID: 420843570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: desert_jackal_ball2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93d79c6a3ac4a0e439a0a226215fa2e0
+      internalID: -329075605
       vertices: []
       indices: 
       edges: []
@@ -568,11 +631,14 @@ TextureImporter:
       desert_npcs_2: 4632478730363476466
       desert_npcs_8: -8826445444469870523
       desert_npcs_21: 3031263398214738463
+      desert_jackal_ball1: 420843570
       desert_npcs_0: 8656358972849910053
       desert_npcs_14: -6735599166850052584
       desert_npcs_3: -2249626989605671028
+      desert_jackal_ball0: 987585115
       desert_npcs_1: -3710413534675861675
       desert_npcs_5: -5997819198610024303
+      desert_jackal_ball2: -329075605
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
