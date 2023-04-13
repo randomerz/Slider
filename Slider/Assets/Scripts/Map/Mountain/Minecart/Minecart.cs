@@ -163,6 +163,7 @@ public class Minecart : Item, ISavable
     {
         base.PickUpItem(pickLocation, callback);
         UITrackerManager.RemoveTracker(this.gameObject);
+        animator.ChangeAnimationState("IDLE");
         if(mcState == MinecartState.Crystal || mcState == MinecartState.Lava)
             UpdateState("Empty");
     }
@@ -530,13 +531,13 @@ public class Minecart : Item, ISavable
     private void PlayCurveAnimation()
     {
         //magic number based on enum order, better than 8 case switch
-        int animationNum = 4 + (currentDirection * 2) + (nextDirection / 2);
+        int animationNum = 5 + (currentDirection * 2) + (nextDirection / 2);
         animator.ChangeAnimationState(animationNum);
     }
     
     private void PlayStraightAnimation()
     {
-        animator.ChangeAnimationState(currentDirection);
+        animator.ChangeAnimationState(currentDirection + 1);
     }
 
     private void PlayStoppedAnimation()

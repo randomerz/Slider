@@ -69,7 +69,7 @@ public class ElevatorAnimationManager : MonoBehaviour
         //update colliders
     }
 
-    public void Repair()
+    public void Repair(bool fromSave = false)
     {
         repaired = true;
         OpenDoors();
@@ -78,10 +78,12 @@ public class ElevatorAnimationManager : MonoBehaviour
         {
             go.SetActive(false);
             {
-                for(int i = 0; i < 10; i++)
-                {
-                    Vector3 random = Random.insideUnitCircle * 1.5f;
-                    ParticleManager.SpawnParticle(ParticleType.SmokePoof, go.transform.position + random);
+                if(!fromSave) {
+                    for(int i = 0; i < 10; i++)
+                    {
+                        Vector3 random = Random.insideUnitCircle * 1.5f;
+                        ParticleManager.SpawnParticle(ParticleType.SmokePoof, go.transform.position + random);
+                    }
                 }
             }
         }

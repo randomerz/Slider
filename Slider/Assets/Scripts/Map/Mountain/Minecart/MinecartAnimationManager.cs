@@ -28,10 +28,11 @@ public class MinecartAnimationManager : MonoBehaviour
 
     public void ChangeAnimationState(string newState)
     {
-      /*  if (currentState == newState) return;
+        if (currentState == newState) return;
+        currentState = newState;
         mcAnimator.Play(currentState);
         contentsAnimator?.Play(currentState);
-        currentState = newState;*/
+        
     }
 
     public void ChangeAnimationState(int stateNum)
@@ -74,7 +75,7 @@ public class MinecartAnimationManager : MonoBehaviour
 
     public void SetSpeed(int speed)
     {
-     //   mcAnimator.speed = speed;
+        mcAnimator.speed = speed;
      //  crystalAnimator.speed = speed;
       //  lavaAnimator.speed = speed;
       //  repairPartsAnimator.speed = speed;
@@ -85,6 +86,7 @@ public class MinecartAnimationManager : MonoBehaviour
 //C: Direction of travel or turn
 public enum MCAnimationState 
 {
+    IDLE,
     EAST,
     NORTH,
     WEST,
