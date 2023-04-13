@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{a9d871db-9392-43e1-9901-e276e27d0fef}">
+		<property name="name">
+			<value>Spectral Tilt</value>
+		</property>
+		<relationship name="folder">
+			<destination>{076b9c86-d860-4db7-af07-2980b2d4c9c0}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{98cecba0-95b8-41e9-8713-0dcf7180038c}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{98cecba0-95b8-41e9-8713-0dcf7180038c}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

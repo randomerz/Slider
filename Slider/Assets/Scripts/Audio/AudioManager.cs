@@ -136,7 +136,7 @@ public class AudioManager : Singleton<AudioManager>
         return m;
     }
 
-    public static FMOD.Studio.EventInstance? Play(SoundWrapper soundWrapper)
+    public static FMOD.Studio.EventInstance? Play(SoundWrapper soundWrapper, bool startImmediately = true)
     {
         if (!soundWrapper.valid) return null;
         var inst = soundWrapper.fmodInstance;
@@ -151,8 +151,10 @@ public class AudioManager : Singleton<AudioManager>
             inst.set3DAttributes(attributes.GetAndUpdate());
             managedInstances.Add((inst, attributes));
         }
-        inst.start();
-
+        if (startImmediately)
+        {
+            inst.start();
+        }
         return inst;
     }
 
