@@ -7,8 +7,8 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SWTURN
-  m_Speed: -1
+  m_Name: NWTURN
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -20,7 +20,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: d074b8b17c32d6e478a2199157cd927a, type: 2}
+  m_Motion: {fileID: 7400000, guid: 51c818006aac935438b6a7a4b91e6f1c, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -59,7 +59,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WNTURN
+  m_Name: WSTURN
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -110,10 +110,10 @@ AnimatorStateMachine:
     m_Position: {x: 870, y: 30, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -9099727890276884575}
-    m_Position: {x: 160, y: 10, z: 0}
+    m_Position: {x: 190, y: -270, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7105700176536759765}
-    m_Position: {x: 150, y: -40, z: 0}
+    m_Position: {x: 200, y: -330, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4344241293189083798}
     m_Position: {x: 830, y: -350, z: 0}
@@ -122,10 +122,10 @@ AnimatorStateMachine:
     m_Position: {x: 850, y: -290, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1855401989294858231}
-    m_Position: {x: 190, y: -270, z: 0}
+    m_Position: {x: 160, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8709921607594037862}
-    m_Position: {x: 170, y: -330, z: 0}
+    m_Position: {x: 160, y: -50, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -170,7 +170,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: NETURN
-  m_Speed: -1
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -182,7 +182,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 42ca0b31b3e17574cba50159bfd9d44e, type: 2}
+  m_Motion: {fileID: 7400000, guid: 2f6743fbafac43e4d91d1ac891e2a017, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -295,20 +295,20 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NWTURN
-  m_Speed: -1
+  m_Name: SWTURN
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
-  m_Mirror: 1
+  m_Mirror: 0
   m_SpeedParameterActive: 0
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 42ca0b31b3e17574cba50159bfd9d44e, type: 2}
+  m_Motion: {fileID: 7400000, guid: 2f6743fbafac43e4d91d1ac891e2a017, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -322,7 +322,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SETURN
-  m_Speed: -1
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -334,7 +334,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: d074b8b17c32d6e478a2199157cd927a, type: 2}
+  m_Motion: {fileID: 7400000, guid: 51c818006aac935438b6a7a4b91e6f1c, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -347,7 +347,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WSTURN
+  m_Name: WNTURN
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -355,7 +355,7 @@ AnimatorState:
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
-  m_Mirror: 1
+  m_Mirror: 0
   m_SpeedParameterActive: 0
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
@@ -374,14 +374,14 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: WEST
-  m_Speed: 1
+  m_Speed: -1
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
-  m_Mirror: 1
+  m_Mirror: 0
   m_SpeedParameterActive: 0
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
