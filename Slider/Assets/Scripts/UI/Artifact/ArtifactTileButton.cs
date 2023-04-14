@@ -268,7 +268,7 @@ public class ArtifactTileButton : MonoBehaviour
     {
         //Debug.Log(Player.GetInstance().GetComponent<PlayerInput>().currentControlScheme);
 
-        Debug.Log(gameObject.name + " button selected");
+        //Debug.Log(gameObject.name + " button selected");
         //SetSelected(true);
         //SetSpriteToHover();
         //SetHighlighted(true);

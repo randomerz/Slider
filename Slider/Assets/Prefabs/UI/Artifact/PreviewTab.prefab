@@ -355,6 +355,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7551949321288793468, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8723669685813629673, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_Controller
       value: 

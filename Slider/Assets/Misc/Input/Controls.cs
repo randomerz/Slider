@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -292,11 +293,11 @@ public class BindingHeldBehavior : BindingBehavior
         onHoldStarted?.Invoke(context);
 
         float timeSinceButtonPressed = 0;
-        while (binding.controls[0].IsPressed() || timeSinceButtonPressed < holdDuration)
+        while (AnyBindingControlIsHeld() || timeSinceButtonPressed < holdDuration)
         {
             timeSinceButtonPressed += Time.deltaTime;
             onEachFrameWhileButtonHeld?.Invoke(timeSinceButtonPressed);
-            if (!binding.controls[0].IsPressed())
+            if (!AnyBindingControlIsHeld())
             {
                 onButtonReleasedEarly?.Invoke(timeSinceButtonPressed);
                 break;
@@ -308,5 +309,10 @@ public class BindingHeldBehavior : BindingBehavior
             }
             yield return new WaitForEndOfFrame();
         }
+    }
+
+    private bool AnyBindingControlIsHeld()
+    {
+        return binding.controls.ToList().Where((control) => control.IsPressed()).Count() > 0;
     }
 }

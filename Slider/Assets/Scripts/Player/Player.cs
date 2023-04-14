@@ -27,8 +27,10 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private bool debugDontUpdateStileUnderneath;
 
-    private PlayerInput playerInput;
-    
+    [SerializeField] private PlayerInput playerInput;
+
+    public static event Action<string> OnControlSchemeChanged;
+
 
     private float moveSpeedMultiplier = 1;
     private bool canMove = true;
@@ -65,7 +67,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         playerInventory.Init();
         UpdatePlayerSpeed();
 
-        playerInput= GetComponent<PlayerInput>();
+        //playerInput= GetComponent<PlayerInput>();
     }
 
     private void Start() 
@@ -162,7 +164,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         return playerInput.currentControlScheme;
     }
-    public event Action<string> ControlSchemeChanged;
+
     /// <summary>
     /// Called when control scheme changes (between "Controller" or "Keyboard Mouse")
     /// </summary>
@@ -171,7 +173,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         //string newControlScheme = GetCurrentControlScheme();
         string newControlScheme = playerInput.currentControlScheme;
         Debug.Log("Control Scheme changed to: " + newControlScheme);
-        ControlSchemeChanged?.Invoke(newControlScheme);
+        OnControlSchemeChanged?.Invoke(newControlScheme);
     }
     /*
     public void OnAltViewHold()

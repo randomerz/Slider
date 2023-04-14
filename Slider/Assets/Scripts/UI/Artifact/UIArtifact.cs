@@ -635,58 +635,6 @@ public class UIArtifact : Singleton<UIArtifact>
         SetButtonPositionsToMatchGrid();
     }
 
-    protected void LogMoveFailure() //As Stephen He's Dad would say.
-    {
-        string debug;
-        if (!playerCanQueue)
-        {
-            debug = "Player queueing was disabled.";
-        }
-        else
-        {
-            debug = QueueFull() ? "Queue was full" : "Move was illegal.";
-        }
-
-        Debug.Log($"Couldn't add move to queue! {debug}");
-    }
-
-    #endregion
-
-    protected virtual List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
-    {
-        var options = new List<ArtifactTileButton>();
-
-        Vector2Int[] dirs = {
-            Vector2Int.right,
-            Vector2Int.up,
-            Vector2Int.left,
-            Vector2Int.down
-        };
-
-        foreach (Vector2Int dir in dirs)
-        {
-            ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
-            int i = 2;
-            while (b != null && !b.TileIsActive)
-            {
-                options.Add(b);
-                b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
-
-                i++;
-            }
-        }
-
-        return options;
-    }
-
-    protected void SwapButtons(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
-    {
-        int oldCurrX = buttonCurrent.x;
-        int oldCurrY = buttonCurrent.y;
-        buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y, true);
-        buttonEmpty.SetPosition(oldCurrX, oldCurrY, true);
-    }
-
     private void SetSelectedButton(ArtifactTileButton button)
     {
         buttonSelected = button;

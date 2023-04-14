@@ -16,7 +16,7 @@ public class OceanArtifact : UIArtifact
     {
         base.Awake();
 
-        Player.GetInstance().ControlSchemeChanged += OnPlayerControlSchemeChanged;
+        Player.OnControlSchemeChanged += OnPlayerControlSchemeChanged;
     }
 
     protected override void OnEnable()
@@ -36,6 +36,8 @@ public class OceanArtifact : UIArtifact
 
         OnButtonInteract -= UpdateHighlights;
         UIArtifactMenus.OnArtifactOpened -= UpdateHighlights;
+
+        Player.OnControlSchemeChanged -= OnPlayerControlSchemeChanged;
     }
 
     public override void ButtonDragged(BaseEventData eventData) 

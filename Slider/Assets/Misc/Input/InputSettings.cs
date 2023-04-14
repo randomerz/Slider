@@ -947,7 +947,7 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                     ""path"": ""*/{Submit}"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard Mouse"",
+                    ""groups"": ""Keyboard Mouse;Controller"",
                     ""action"": ""Submit (No Space/E)"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
