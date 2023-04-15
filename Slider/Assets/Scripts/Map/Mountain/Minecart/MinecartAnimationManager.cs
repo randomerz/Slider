@@ -31,7 +31,7 @@ public class MinecartAnimationManager : MonoBehaviour
         if (currentState == newState) return;
         currentState = newState;
         mcAnimator.Play(currentState);
-        contentsAnimator?.Play(currentState);
+//        contentsAnimator?.Play(currentState);
         
     }
 
@@ -67,10 +67,10 @@ public class MinecartAnimationManager : MonoBehaviour
 
         mcState = contents;
 
-        foreach(GameObject sprite in objects)
-            sprite.SetActive(contentsSprite != null && contentsSprite == sprite);
+       // foreach(GameObject sprite in objects)
+          //  sprite.SetActive(contentsSprite != null && contentsSprite == sprite);
 
-        contentsAnimator?.Play(currentState);
+//        contentsAnimator?.Play(currentState);
     }
 
     public void SetSpeed(int speed)

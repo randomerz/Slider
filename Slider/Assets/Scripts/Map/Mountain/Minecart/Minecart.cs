@@ -114,11 +114,14 @@ public class Minecart : Item, ISavable
             if(!tileSwitch && distToNext < distToPrev)
             {
                 if(currentDirection != nextDirection) {
+                    if(currentDirection == 2 || nextDirection == 2)
+                        spriteRenderer.flipX = true;
                     isOnCorner = true;
                     PlayCurveAnimation();
                 }
                 else {
                     isOnCorner = false;
+                    spriteRenderer.flipX = false;
                     PlayStraightAnimation();
                 }
                 
