@@ -21,9 +21,9 @@ public class MinecartAnimationManager : MonoBehaviour
 
     private void Awake() 
     {
-      ///  objects.Add(crystalSprite);
-      //  objects.Add(repairPartsSprite);
-      //  objects.Add(lavaSprite);  
+        objects.Add(crystalSprite);
+        objects.Add(repairPartsSprite);
+        objects.Add(lavaSprite);  
     }
 
     public void ChangeAnimationState(string newState)
@@ -43,7 +43,7 @@ public class MinecartAnimationManager : MonoBehaviour
 
     public void ChangeContents(MinecartState contents)
     {
-        /*if(contents == mcState) return;
+        if(contents == mcState) return;
         switch(contents)
         {
             case MinecartState.Crystal:
@@ -70,13 +70,13 @@ public class MinecartAnimationManager : MonoBehaviour
         foreach(GameObject sprite in objects)
             sprite.SetActive(contentsSprite != null && contentsSprite == sprite);
 
-        contentsAnimator?.Play(currentState);*/
+        contentsAnimator?.Play(currentState);
     }
 
     public void SetSpeed(int speed)
     {
         mcAnimator.speed = speed;
-     //  crystalAnimator.speed = speed;
+       //crystalAnimator.speed = speed;
       //  lavaAnimator.speed = speed;
       //  repairPartsAnimator.speed = speed;
     }

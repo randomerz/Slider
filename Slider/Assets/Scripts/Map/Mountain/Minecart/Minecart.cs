@@ -7,7 +7,9 @@ public class Minecart : Item, ISavable
 {
     [Header("Movement")]
     [SerializeField] private float speed = 8.0f; 
+    [SerializeField] private float cornerSpeed = 4.0f;
     [SerializeField] private int currentDirection; //0 = East, 1 = North, 2 = West, 3 = South
+    private bool isOnCorner = false;
     public int nextDirection;
     [SerializeField] private bool isOnTrack;
     [SerializeField] public bool isMoving {get; private set;} = false;
@@ -111,10 +113,14 @@ public class Minecart : Item, ISavable
             //halfway between target positions is when the minecart moves from 1 tile to the next.
             if(!tileSwitch && distToNext < distToPrev)
             {
-                if(currentDirection != nextDirection)
+                if(currentDirection != nextDirection) {
+                    isOnCorner = true;
                     PlayCurveAnimation();
-                else
+                }
+                else {
+                    isOnCorner = false;
                     PlayStraightAnimation();
+                }
                 
                 tileSwitch = true;
             }
@@ -126,7 +132,7 @@ public class Minecart : Item, ISavable
                 tileSwitch = false;
             }
             else
-                transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * speed);
+                transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * (isOnCorner ? cornerSpeed : speed));
         }
         else if (animator != null)
             animator.SetSpeed(0);
