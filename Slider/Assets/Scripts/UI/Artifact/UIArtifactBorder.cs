@@ -15,6 +15,8 @@ public class UIArtifactBorder : MonoBehaviour
         bool areaCompleted = SaveSystem.Current.GetSGridData(SGrid.Current.MyArea).completionColor == ArtifactWorldMapArea.AreaStatus.color;
         shouldFlickerOnEnable = checkingCompletion && !areaCompleted;
         CheckArtifactBorder();
+
+        Debug.Log("area completed:" + SaveSystem.Current.GetSGridData(SGrid.Current.MyArea).completionColor);
     }
 
     public void SetFlickerOnEnable(bool value)

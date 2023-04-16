@@ -9,19 +9,17 @@ public class DesertGrid : SGrid
     public Item log; //Right now the animator for the campfire doesn't stay alive if scene transitions
     public Animator crocodileAnimator;
     public Animator campfire;
+    public Item diceItem;
     public DiceGizmo dice1;
     public DiceGizmo dice2;
     public SpriteRenderer[] casinoCeilingSprites;
     public List<Animator> casinoSigns;
-    [SerializeField] private GameObject[] zlist; //From smallest to largest
     [SerializeField] private Collider2D portalCollider; //Desert Portal
     [SerializeField] private MagiLaser portalLaser;
 
-    private int monkeShake = 0;
     private bool campfireIsLit = false;
     private bool portalEnabled = false;
     private bool portalLaserEnabled = false;
-    private Coroutine waitForZ; //Should be null if monkeShakes is 0
     private Coroutine shuffleBuildUpCoroutine;
     private Coroutine placeTile9Coroutine;
 
@@ -39,6 +37,11 @@ public class DesertGrid : SGrid
 
         if (dice1 == null && dice2 == null) Debug.LogWarning("Die have not been set!");
         if (log == null) Debug.LogWarning("Log has not been set!");
+        
+        if (SaveSystem.Current.GetBool("desertDiscoBallFell"))
+        {
+            RemoveDiceItem();
+        }
 
         AudioManager.PlayMusic("Desert");
         AudioManager.PlayMusic("Desert Casino", false);
@@ -139,71 +142,9 @@ public class DesertGrid : SGrid
     }
     #endregion
 
-    /*
-    #region Monkey
-    //Puzzle 2: Baboon tree shake
-    public void CheckMonkeyShakeOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        STile monkeyTile = Current.GetStile(3);
-        if (monkeyTile.isTileActive && e.stile == monkeyTile)
-        {
-            if (0 <= monkeShake && monkeShake < zlist.Length) // temporary patch
-                zlist[monkeShake].SetActive(false);
-            monkeShake++;
-
-            if (monkeShake >= 3)
-            {
-                // puzzle complete
-                AudioManager.PlayWithPitch("Baboon Screech", 1.5f); // TODO: make this affected by distance
-
-                SGridAnimator.OnSTileMoveEnd -= CheckMonkeyShakeOnMove;
-                checkMonkey = false;
-                if (waitForZ != null) StopCoroutine(MokeZTimer());
-                return;
-            }
-            else
-            {
-                AudioManager.Play("Baboon Screech"); // TODO: make this affected by distance
-
-                if (waitForZ != null) StopCoroutine(MokeZTimer());
-                waitForZ = StartCoroutine(MokeZTimer()); //First shake starts countdown timer. waitForZ should be null if monkeShake is 0
-            }
-        }
-    }
-
-    private IEnumerator MokeZTimer()
-    {
-        float time = 0f;
-        while (monkeShake > 0 && monkeShake < 3) //This is OMEGA SUS but 
-        {
-            time += Time.deltaTime;
-            if (time >= 3f)
-            {
-                monkeShake = monkeShake == 0 ? 0 : monkeShake - 1;
-                zlist[monkeShake].SetActive(true);
-                time = 0f;
-            }
-            yield return null;
-        }
-        waitForZ = null;
-    }
-
-    public void IsAwake(Condition c)
-    {
-        c.SetSpec(monkeShake >= 3);
-        checkMonkey = !(monkeShake >= 3);
-    }
-    public void IsMonkeyNearOasis(Condition c)
-    {
-        c.SetSpec(CheckGrid.contains(GetGridString(), "23") || CheckGrid.contains(GetGridString(), "(3|2)...(2|3)"));
-    }
-    #endregion
-    */
-
-    
     #region Jackal
     //Puzzle 3: Jackal Bone
-    public void CheckJackalNearOasis(Condition c)
+    public void CheckJackalNearOasis(Condition c) // no longer used
     {
        c.SetSpec(CheckGrid.contains(GetGridString(), "24") || CheckGrid.contains(GetGridString(), "2...4"));
     }
@@ -215,6 +156,13 @@ public class DesertGrid : SGrid
 
     #region DicePuzzle
     //Puzzle 4: Dice. Should not start checking until after both tiles have been activated
+    public void RemoveDiceItem()
+    {
+        if (PlayerInventory.GetCurrentItem() == diceItem)
+            PlayerInventory.RemoveItem();
+        diceItem.gameObject.SetActive(false);
+    }
+
     public void CheckRolledDice(Condition c)
     {
         c.SetSpec(dice1.isActiveAndEnabled && dice2.isActiveAndEnabled);
@@ -226,6 +174,7 @@ public class DesertGrid : SGrid
         else if (SaveSystem.Current.GetBool("desertDice")) c.SetSpec(true);
         else c.SetSpec(false);
     }
+
     public bool CheckCasinoTogether()
     {
         return CheckGrid.contains(GetGridString(), "56");
