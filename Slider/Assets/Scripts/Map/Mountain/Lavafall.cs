@@ -5,7 +5,8 @@ using UnityEngine;
 public class Lavafall : MonoBehaviour
 {
     private STile sTile;
-    [SerializeField] private GameObject fall;
+    [SerializeField] private List<GameObject> objects;
+    private bool isActive;
 
     private void OnEnable() {
         sTile = GetComponentInParent<STile>();
@@ -23,6 +24,10 @@ public class Lavafall : MonoBehaviour
     }
 
     public void CheckLava(){
-        fall.SetActive(sTile.y == 3 && !SGrid.Current.GetStileAt(sTile.x, 2).isTileActive);
+        if(isActive == (sTile.y == 3 && !SGrid.Current.GetStileAt(sTile.x, 2).isTileActive)) return;
+        isActive = !isActive;
+        
+        foreach(GameObject go in objects)
+            go.SetActive(isActive);
     }
 }

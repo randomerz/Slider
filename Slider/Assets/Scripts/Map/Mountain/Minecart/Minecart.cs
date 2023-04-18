@@ -7,7 +7,9 @@ public class Minecart : Item, ISavable
 {
     [Header("Movement")]
     [SerializeField] private float speed = 8.0f; 
+    [SerializeField] private float cornerSpeed = 4.0f;
     [SerializeField] private int currentDirection; //0 = East, 1 = North, 2 = West, 3 = South
+    private bool isOnCorner = false;
     public int nextDirection;
     [SerializeField] private bool isOnTrack;
     [SerializeField] public bool isMoving {get; private set;} = false;
@@ -111,10 +113,17 @@ public class Minecart : Item, ISavable
             //halfway between target positions is when the minecart moves from 1 tile to the next.
             if(!tileSwitch && distToNext < distToPrev)
             {
-                if(currentDirection != nextDirection)
+                if(currentDirection != nextDirection) {
+                    if(currentDirection == 2 || nextDirection == 2)
+                        spriteRenderer.flipX = true;
+                    isOnCorner = true;
                     PlayCurveAnimation();
-                else
+                }
+                else {
+                    isOnCorner = false;
+                    spriteRenderer.flipX = false;
                     PlayStraightAnimation();
+                }
                 
                 tileSwitch = true;
             }
@@ -126,7 +135,7 @@ public class Minecart : Item, ISavable
                 tileSwitch = false;
             }
             else
-                transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * speed);
+                transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * (isOnCorner ? cornerSpeed : speed));
         }
         else if (animator != null)
             animator.SetSpeed(0);
@@ -163,6 +172,7 @@ public class Minecart : Item, ISavable
     {
         base.PickUpItem(pickLocation, callback);
         UITrackerManager.RemoveTracker(this.gameObject);
+        animator.ChangeAnimationState("IDLE");
         if(mcState == MinecartState.Crystal || mcState == MinecartState.Lava)
             UpdateState("Empty");
     }
@@ -530,13 +540,13 @@ public class Minecart : Item, ISavable
     private void PlayCurveAnimation()
     {
         //magic number based on enum order, better than 8 case switch
-        int animationNum = 4 + (currentDirection * 2) + (nextDirection / 2);
+        int animationNum = 5 + (currentDirection * 2) + (nextDirection / 2);
         animator.ChangeAnimationState(animationNum);
     }
     
     private void PlayStraightAnimation()
     {
-        animator.ChangeAnimationState(currentDirection);
+        animator.ChangeAnimationState(currentDirection + 1);
     }
 
     private void PlayStoppedAnimation()
