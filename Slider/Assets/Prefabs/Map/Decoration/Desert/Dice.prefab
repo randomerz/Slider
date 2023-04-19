@@ -170,6 +170,7 @@ MonoBehaviour:
   waveAmplitude: 0.01
   wavePeriod: 1
   typeLoopSpeed: 0.2
+  ignoreColor: 0
 --- !u!1 &2517853970485281283
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,12 +270,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myStile: {fileID: 0}
+  saveString: 
   diceIndex: 0
   onlySoundInHouse: 0
   otherDice: {fileID: 0}
   text: {fileID: 5089954447996440025}
   bgText: {fileID: 7444229550250470687}
   baseTransform: {fileID: 0}
+  sr: {fileID: 1394925337557471404}
   value: 5
   sprites:
   - {fileID: -2205863333093305225, guid: 20fd6515822039444af323c1e7e4e680, type: 3}
@@ -290,6 +293,10 @@ MonoBehaviour:
   - {fileID: 429175198, guid: 20fd6515822039444af323c1e7e4e680, type: 3}
   - {fileID: -1778472268, guid: 20fd6515822039444af323c1e7e4e680, type: 3}
   - {fileID: 807745962, guid: 20fd6515822039444af323c1e7e4e680, type: 3}
+  bumpSprites:
+  - {fileID: 505336984, guid: 9001a1fb47781504aa208f12ec3e925f, type: 3}
+  - {fileID: -1773676585, guid: 9001a1fb47781504aa208f12ec3e925f, type: 3}
+  - {fileID: 161726269, guid: 9001a1fb47781504aa208f12ec3e925f, type: 3}
 --- !u!1 &6778793108174605882
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,3 +646,4 @@ MonoBehaviour:
   waveAmplitude: 0.01
   wavePeriod: 1
   typeLoopSpeed: 0.2
+  ignoreColor: 0

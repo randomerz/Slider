@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{084368bf-0732-40b9-b210-99720a56c962}">
+		<property name="name">
+			<value>VowelForwardness</value>
+		</property>
+		<relationship name="folder">
+			<destination>{076b9c86-d860-4db7-af07-2980b2d4c9c0}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{4b6170ab-9963-4cdd-ac56-58a4ab10937c}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{4b6170ab-9963-4cdd-ac56-58a4ab10937c}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

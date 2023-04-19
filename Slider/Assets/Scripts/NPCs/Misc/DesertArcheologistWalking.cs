@@ -21,6 +21,10 @@ public class DesertArcheologistWalking : MonoBehaviour
     private void Start() {
         
         npcCondition = npc.Conds[conditionWithWalks];
+        if (npcCondition.dialogueChain[0].dialogue != "one sec... it should be here... guarded by the beast...")
+        {
+            Debug.LogWarning("hey bestie you changed the dialogue you might wanna check this");
+        }
 
         if (SaveSystem.Current.GetBool(DESERT_ARCH_WANDERING))
         {
@@ -78,7 +82,7 @@ public class DesertArcheologistWalking : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            AudioManager.PlayWithVolume("UI Click", 0.5f);
+            AudioManager.PlayWithVolume("Hat Click", 0.5f);
 
             yield return new WaitForSeconds(0.75f);
         }

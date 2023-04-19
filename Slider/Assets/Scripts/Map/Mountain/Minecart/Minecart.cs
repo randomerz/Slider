@@ -7,7 +7,10 @@ public class Minecart : Item, ISavable
 {
     [Header("Movement")]
     [SerializeField] private float speed = 8.0f; 
+    [SerializeField] private float cornerSpeed = 4.0f;
     [SerializeField] private int currentDirection; //0 = East, 1 = North, 2 = West, 3 = South
+    private float baseCornerSpeedMultiplier = 1; // cornerSpeed / speed
+    private float cornerSpeedAmount = 1; // lerp between baseCornerSpeedMultiplier and 1
     public int nextDirection;
     [SerializeField] private bool isOnTrack;
     [SerializeField] public bool isMoving {get; private set;} = false;
@@ -30,7 +33,7 @@ public class Minecart : Item, ISavable
     public Vector3 prevWorldPos; //position in world space
     public Vector3 targetWorldPos;
 
-        public STile currentSTile;
+    public STile currentSTile;
 
     [SerializeField] private bool dropOnNextMove = false;
 
@@ -61,7 +64,8 @@ public class Minecart : Item, ISavable
             if(r.isBorderRM)
                 borderRM = r;
         }
-        AddTracker();   
+        baseCornerSpeedMultiplier = cornerSpeed / speed;
+        AddTracker();
     }
 
     private void OnEnable()
@@ -111,10 +115,17 @@ public class Minecart : Item, ISavable
             //halfway between target positions is when the minecart moves from 1 tile to the next.
             if(!tileSwitch && distToNext < distToPrev)
             {
-                if(currentDirection != nextDirection)
+                if(currentDirection != nextDirection) {
+                    if(currentDirection == 2 || nextDirection == 2)
+                        spriteRenderer.flipX = true;
+                    // isOnCorner = true;
                     PlayCurveAnimation();
-                else
+                }
+                else {
+                    cornerSpeedAmount = 1;
+                    spriteRenderer.flipX = false;
                     PlayStraightAnimation();
+                }
                 
                 tileSwitch = true;
             }
@@ -126,7 +137,7 @@ public class Minecart : Item, ISavable
                 tileSwitch = false;
             }
             else
-                transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * speed);
+                transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * (cornerSpeedAmount * speed));
         }
         else if (animator != null)
             animator.SetSpeed(0);
@@ -163,6 +174,7 @@ public class Minecart : Item, ISavable
     {
         base.PickUpItem(pickLocation, callback);
         UITrackerManager.RemoveTracker(this.gameObject);
+        animator.ChangeAnimationState("IDLE");
         if(mcState == MinecartState.Crystal || mcState == MinecartState.Lava)
             UpdateState("Empty");
     }
@@ -522,6 +534,13 @@ public class Minecart : Item, ISavable
     
     #region Animation
 
+    // Called during animations as an event
+    public void SetCornerPercent(float percent)
+    {
+        percent = Mathf.Clamp01(percent);
+        cornerSpeedAmount = Mathf.Lerp(baseCornerSpeedMultiplier, 1, percent);
+    }
+
     private void UpdateContentsSprite()
     {
         animator.ChangeContents(mcState);
@@ -530,13 +549,14 @@ public class Minecart : Item, ISavable
     private void PlayCurveAnimation()
     {
         //magic number based on enum order, better than 8 case switch
-        int animationNum = 4 + (currentDirection * 2) + (nextDirection / 2);
+        // dc: no way :sob:
+        int animationNum = 5 + (currentDirection * 2) + (nextDirection / 2);
         animator.ChangeAnimationState(animationNum);
     }
     
     private void PlayStraightAnimation()
     {
-        animator.ChangeAnimationState(currentDirection);
+        animator.ChangeAnimationState(currentDirection + 1);
     }
 
     private void PlayStoppedAnimation()

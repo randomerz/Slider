@@ -13,6 +13,7 @@ public class CaveGrid : SGrid
     [SerializeField] private CaveArtifactLightSim lightSim;
     [SerializeField] private string cavesMagicParticleName;
 
+    private Coroutine magicRocksIconFlashCoroutine;
     private GameObject cavesMagicParticles;
     private List<GameObject> particles = new List<GameObject>();
 
@@ -78,6 +79,11 @@ public class CaveGrid : SGrid
     public void StartFinalPuzzle() 
     {
         SGridAnimator.OnSTileMoveEnd += checkCompletionsOnMoveFunc;
+
+        if (!checkCompletion)
+        {
+            AudioManager.Play("Puzzle Complete");
+        }
 
         checkCompletion = true;
         SaveSystem.Current.SetBool("cavesCompletion", checkCompletion);
@@ -179,10 +185,32 @@ public class CaveGrid : SGrid
 
     private void SetMagicRocks(bool value)
     {
-        magicRocksIcon.SetActive(value);
+        if (!value && magicRocksIconFlashCoroutine != null)
+        {
+            StopCoroutine(magicRocksIconFlashCoroutine);
+        }
+        else if (value)
+        {
+            magicRocksIconFlashCoroutine = StartCoroutine(AnimateMagicRockIcon());
+        }
+
         foreach (Animator a in largeMagicRocksAnimators)
         {
             a.SetBool("isMagic", value);
+        }
+    }
+
+    private IEnumerator AnimateMagicRockIcon()
+    {
+        while (true)
+        {
+            magicRocksIcon.SetActive(true);
+
+            yield return new WaitForSeconds(1);
+            
+            magicRocksIcon.SetActive(false);
+
+            yield return new WaitForSeconds(1);
         }
     }
 
@@ -194,7 +222,7 @@ public class CaveGrid : SGrid
 
         for (int i = 0; i < 4; i++)
         {
-            particles.Add(GameObject.Instantiate(cavesMagicParticles, position + GetRandomPosition(), Quaternion.identity, transform));
+            particles.Add(GameObject.Instantiate(cavesMagicParticles, position + GetRandomPosition(), Quaternion.identity, stiles[7].transform)); // stile 8 transform
 
             yield return new WaitForSeconds(0.25f);
         }
@@ -203,7 +231,7 @@ public class CaveGrid : SGrid
 
         for (int i = 0; i < 32; i++)
         {
-            particles.Add(GameObject.Instantiate(cavesMagicParticles, position + GetRandomPosition(), Quaternion.identity, transform));
+            particles.Add(GameObject.Instantiate(cavesMagicParticles, position + GetRandomPosition(), Quaternion.identity, stiles[7].transform));
 
             yield return new WaitForSeconds(0.25f);
         }

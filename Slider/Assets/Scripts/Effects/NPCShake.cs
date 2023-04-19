@@ -31,4 +31,9 @@ public class NPCShake : MonoBehaviour
 
         transform.position = baseTransform.position;
     }
+
+    public void PlaySound(string name)
+    {
+        AudioManager.Play(name, transform);
+    }
 }

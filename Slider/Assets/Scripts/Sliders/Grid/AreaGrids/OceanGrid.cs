@@ -109,9 +109,39 @@ public class OceanGrid : SGrid
 
     private void Update()
     {
-
+        UpdateRomeoReason();
+        
         //Get tile the player is on. if it change from last update, find the direction the player moved. Add direction to list of moves. put list in checkfoggy. only why on fog tiles
-        updatePlayerMovement();
+        UpdatePlayerMovement();
+    }
+
+    private void UpdateRomeoReason()
+    {
+        string reason = "The path is obstructed!";
+        string gridString = GetGridString();
+        
+        if (gridString[0] == '2' || gridString[0] == '8')
+        {
+            reason = "There is land in the way!";
+        }
+        else if (gridString[0] == '4')
+        {
+            reason = "The shipwreck is in the way!";
+        }
+        else if (gridString[0] == '5')
+        {
+            reason = "The island is in the way!";
+        }
+        else if (gridString[0] == '9')
+        {
+            reason = "The volcano is in the way!";
+        }
+        else if (gridString[0] == '.')
+        {
+            reason = "The space in front of me is empty!";
+        }
+
+        SaveSystem.Current.SetString("oceanRomeoReason", reason);
     }
     
     private void LateUpdate() {
@@ -318,7 +348,7 @@ public class OceanGrid : SGrid
             {
                 foreach (GameObject knotnode in knotBox.knotnodes)
                 {
-                    UITrackerManager.AddNewTracker(knotnode);
+                    UITrackerManager.AddNewTracker(knotnode, UITrackerManager.DefaultSprites.circle2);
                 }
             }
             else
@@ -370,7 +400,7 @@ public class OceanGrid : SGrid
         
     }
 
-    private void updatePlayerMovement()
+    private void UpdatePlayerMovement()
     {
 
         if (Player.GetInstance().GetSTileUnderneath() == null)

@@ -167,7 +167,7 @@ public class NPCRotation : MonoBehaviour
 
     public void MovePorker()
     {
-        if (!SaveSystem.Current.GetBool("oceanPorkerTraining"))
+        if (!SaveSystem.Current.GetBool("oceanPorkerTraining") && PlayerInventory.Contains("Slider 7", Area.Ocean))
             porker.Teleport(coconuts, true);
     }
 

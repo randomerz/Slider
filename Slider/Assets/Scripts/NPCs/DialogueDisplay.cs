@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using Paragraph = SliderVocalization.VocalizableParagraph;
 
 public class DialogueDisplay : MonoBehaviour
 {
+    public bool useVocalizer;
+    public Paragraph vocalizer;
 
     public TMPTextTyper textTyperText;
     public TMPTextTyper textTyperBG;
@@ -20,7 +22,7 @@ public class DialogueDisplay : MonoBehaviour
         ping.transform.position = new Vector2(transform.position.x, transform.position.y + 1);
     }
 
-    public void DisplaySentence(string message)
+    public void DisplaySentence(string message, NPCEmotes.Emotes emote)
     {
         CheckContrast();
         CheckSize();
@@ -31,15 +33,33 @@ public class DialogueDisplay : MonoBehaviour
 
         message = message.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
         // message = ConvertVariablesToStrings(message);
+
         textSpecialText.StopEffects();
         textSpecialBG.StopEffects();
-        textTyperText.StartTyping(message);
+
+        string parsed = textTyperText.StartTyping(message);
         textTyperBG.StartTyping(message);
+        vocalizer.SetText(parsed);
+        vocalizer.StartReadAll(emote);
         // StartCoroutine(TypeSentence(message.ToCharArray()));
     }
 
     public void FadeAwayDialogue()
     {
+        if (useVocalizer)
+        {
+            StartCoroutine(FadeWhenReady());
+        }
+        else
+        {
+            canvas.SetActive(false);
+        }
+    }
+
+    IEnumerator FadeWhenReady()
+    {
+        vocalizer.Stop();
+        yield return vocalizer.WaitUntilCanPlay();
         canvas.SetActive(false);
     }
 

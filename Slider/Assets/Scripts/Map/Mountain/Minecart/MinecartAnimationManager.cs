@@ -21,17 +21,18 @@ public class MinecartAnimationManager : MonoBehaviour
 
     private void Awake() 
     {
-      ///  objects.Add(crystalSprite);
-      //  objects.Add(repairPartsSprite);
-      //  objects.Add(lavaSprite);  
+        objects.Add(crystalSprite);
+        objects.Add(repairPartsSprite);
+        objects.Add(lavaSprite);  
     }
 
     public void ChangeAnimationState(string newState)
     {
-      /*  if (currentState == newState) return;
+        if (currentState == newState) return;
+        currentState = newState;
         mcAnimator.Play(currentState);
-        contentsAnimator?.Play(currentState);
-        currentState = newState;*/
+//        contentsAnimator?.Play(currentState);
+        
     }
 
     public void ChangeAnimationState(int stateNum)
@@ -42,7 +43,7 @@ public class MinecartAnimationManager : MonoBehaviour
 
     public void ChangeContents(MinecartState contents)
     {
-        /*if(contents == mcState) return;
+        if(contents == mcState) return;
         switch(contents)
         {
             case MinecartState.Crystal:
@@ -66,16 +67,16 @@ public class MinecartAnimationManager : MonoBehaviour
 
         mcState = contents;
 
-        foreach(GameObject sprite in objects)
-            sprite.SetActive(contentsSprite != null && contentsSprite == sprite);
+       // foreach(GameObject sprite in objects)
+          //  sprite.SetActive(contentsSprite != null && contentsSprite == sprite);
 
-        contentsAnimator?.Play(currentState);*/
+//        contentsAnimator?.Play(currentState);
     }
 
     public void SetSpeed(int speed)
     {
-     //   mcAnimator.speed = speed;
-     //  crystalAnimator.speed = speed;
+        mcAnimator.speed = speed;
+       //crystalAnimator.speed = speed;
       //  lavaAnimator.speed = speed;
       //  repairPartsAnimator.speed = speed;
     }
@@ -85,6 +86,7 @@ public class MinecartAnimationManager : MonoBehaviour
 //C: Direction of travel or turn
 public enum MCAnimationState 
 {
+    IDLE,
     EAST,
     NORTH,
     WEST,

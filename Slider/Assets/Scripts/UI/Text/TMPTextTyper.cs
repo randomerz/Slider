@@ -245,7 +245,7 @@ public class TMPTextTyper : MonoBehaviour
     /// <summary>
     /// Types out the string associated with the TMPro object this is on. Make sure to set the text in the TMPro before calling this method!
     /// </summary>
-    public void StartTyping()
+    private void StartTyping()
     {
         // // For passages that type only once
         // if (finishedTyping)
@@ -255,7 +255,6 @@ public class TMPTextTyper : MonoBehaviour
         // }
 
         SetTextAlphaZero(); // TEMP bug fix because first character is skipped when typing
-        
         
         charIndex = 0;
         startingCharacterIndex = 0; // also temp but maybe these arent as bad
@@ -270,14 +269,14 @@ public class TMPTextTyper : MonoBehaviour
     /// Set's the TMP's text equal to text, and then starts typing
     /// </summary>
     /// <param name="text"></param>
-    public void StartTyping(string text)
+    public string StartTyping(string text)
     {
         if (coroutine != null) StopCoroutine(coroutine);
 
         m_TextMeshPro.text = text;
         m_tmpSpecialText.ParseText();
-        
         StartTyping();
+        return m_TextMeshPro.text;
     }
 
     public static void UpdateTextSpeed(float charDelay)

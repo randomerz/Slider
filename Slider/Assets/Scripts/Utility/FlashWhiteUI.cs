@@ -27,7 +27,7 @@ public class FlashWhiteUI : MonoBehaviour
     private void UpdateRefs()
     {
         mySprite = GetComponent<Image>();
-        oldMat = mySprite.material;
+        oldMat ??= mySprite.material;
     }
 
     public void SetSpriteActive(bool value)
