@@ -49,7 +49,7 @@ public class Hut : Box
 
     public void ChangeShape()
     {
-        Box box = GetBoxInDirection();
+        Box box = GetBoxInDirection(currentDirection);
 
         if (box != null)
         {

@@ -15,9 +15,9 @@ public class DoubleSign : Sign
         {
             if (currentShape != null)
             {
-                if (!paths[currentDirection].isActive() || paths[currentDirection].getAnimType() == isDefaultCurrentPath())
+                if (!paths[currentDirection].isActive() || paths[currentDirection].getAnimType() == isDefaultCurrentPath(currentDirection))
                 {
-                    paths[currentDirection].Activate(isDefaultCurrentPath(), currentShape); 
+                    paths[currentDirection].Activate(isDefaultCurrentPath(currentDirection), currentShape); 
                     next.RecieveShape(paths[currentDirection], currentShape, parents);
                 }
             }
@@ -31,9 +31,9 @@ public class DoubleSign : Sign
         if (next2 != null) {
             if (currentShape != null)
             {
-                if (!paths[secondCurrentDirection].isActive() || paths[secondCurrentDirection].getAnimType() == isDefaultCurrentPath())
+                if (!paths[secondCurrentDirection].isActive() || paths[secondCurrentDirection].getAnimType() == isDefaultCurrentPath(secondCurrentDirection))
                 {
-                    paths[secondCurrentDirection].Activate(isDefaultCurrentPath(), currentShape); 
+                    paths[secondCurrentDirection].Activate(isDefaultCurrentPath(secondCurrentDirection), currentShape); 
                     next.RecieveShape(paths[secondCurrentDirection], currentShape, parents);
                 }
             }
@@ -117,7 +117,7 @@ public class DoubleSign : Sign
                 //turn on path if there is not another using it
                 if (!paths[d].isActive())
                 {
-                    Box next = GetBoxInDirection();
+                    Box next = GetBoxInDirection(d);
                     if (next != null)
                     {
                         if (currentShape == null)
@@ -134,7 +134,7 @@ public class DoubleSign : Sign
                 currentDirection = ds[(at - 1) % 4];
                 if (!paths[currentDirection].isActive())
                 {
-                    Box next = GetBoxInDirection();
+                    Box next = GetBoxInDirection(currentDirection);
                     if (next != null)
                     {
                         if (currentShape == null)
