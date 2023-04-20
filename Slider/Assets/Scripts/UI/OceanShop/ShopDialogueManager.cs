@@ -729,12 +729,19 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "Tales tell of a song of three pairs of verses needed to navigate it. Think it started with \"West, South,\" but I forgot the rest. Maybe others remember.",
+                    "Tales tell of a song of THREE pairs of verses needed to navigate it. Think it started with \"West, South,\" but I forgot the rest.",
                     TKSprite.Normal,
+                    () => SetDialogue(
+
+                new ShopDialogue(
+                    null,
+                    "Maybe others know the rest of the song?",
+                    TKSprite.Question,
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
                     }
+                ))
                 ))
                 ));
                 break;
