@@ -30,8 +30,10 @@ public class OceanGrid : SGrid
     private Vector2Int playerMovement;
     private int lastIslandId = 1;
     private bool foggyCompleted;
-    public GameObject fog6;
-    public GameObject fog7;
+    // public GameObject fog6;
+    // public GameObject fog7;
+    public FogAnimationController fogAnimationController6;
+    public FogAnimationController fogAnimationController7;
     public GameObject fogIsland;
     private int fogIslandId; //tile which fog island was found on
     
@@ -384,18 +386,22 @@ public class OceanGrid : SGrid
 
                 if (fogIslandId == 6)
                 {
-                    fog6.SetActive(false);
+                    // fog6.SetActive(false);
+                    fogAnimationController6.SetIsVisible(false);
                 }
                 else
                 {
-                    fog7.SetActive(false);
+                    // fog7.SetActive(false);
+                    fogAnimationController7.SetIsVisible(false);
                 }
             }
         }
         else
         {
-            fog6.SetActive(true);
-            fog7.SetActive(true);
+            fogAnimationController6.SetIsVisible(true);
+            fogAnimationController7.SetIsVisible(true);
+            // fog6.SetActive(true);
+            // fog7.SetActive(true);
         }
         
     }
@@ -422,8 +428,10 @@ public class OceanGrid : SGrid
         if (currentIslandId != lastIslandId && (lastIslandId == 6 || lastIslandId == 7))
         {
 
-            fog7.SetActive(true);
-            fog6.SetActive(true);
+            // fog7.SetActive(true);
+            // fog6.SetActive(true);
+            fogAnimationController6.SetIsVisible(true);
+            fogAnimationController7.SetIsVisible(true);
             fogIsland.SetActive(false);
             //SetProgressRingActive(true);
 
@@ -452,15 +460,16 @@ public class OceanGrid : SGrid
 
     private void FoggySeasAudio()
     {
-        AudioManager.PlayWithPitch("Puzzle Complete", 0.3f + playerIndex * 0.05f);
-        AudioManager.SetMusicParameter("Ocean", "OceanFoggyProgress", playerIndex);
+        AudioManager.PlayWithPitch("Puzzle Complete", 0.5f + playerIndex * 0.1f);
+        AudioManager.SetGlobalParameter("OceanFoggyProgress", 0);
     }
 
     public bool FoggyCorrectMovement()
     {
         // Debug.Log("player index: " + playerIndex+ " correct path: " + correctPath.Length);
-        if(playerIndex == correctPath.Length - 1 && !foggyCompleted)
+        if(playerIndex == correctPath.Length - 1 && !foggyCompleted && correctPath[playerIndex] == playerMovement)
         {
+            playerIndex++;
             FoggyCompleted();
             return true; //only returns true the first time u complete this puzzle basically
         }
@@ -481,16 +490,14 @@ public class OceanGrid : SGrid
 
     private void failFoggy()
     {
-        if(playerIndex > 5) //cant fail if u reached the island
-            return;
-        if (playerIndex != 0)
+        if (playerIndex != 0 && playerIndex != 6)
         {
             AudioManager.Play("Artifact Error");
         }
 
         playerIndex = 0;
         foggyCompleted = false; // DC: idk why we made it only completable once
-        AudioManager.SetMusicParameter("Ocean", "OceanFoggyProgress", 0);
+        AudioManager.SetGlobalParameter("OceanFoggyProgress", 0);
         foreach (SpriteRenderer note in progressNotes)
         {
             if (note.sprite.Equals(fullNote))

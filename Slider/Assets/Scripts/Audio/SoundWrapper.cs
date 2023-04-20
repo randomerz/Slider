@@ -50,7 +50,7 @@ public struct SoundWrapper
 
     public SoundWrapper WithPitch(float pitch)
     {
-        if (valid) fmodInstance.setParameterByName("pitch", pitch);
+        if (valid) fmodInstance.setParameterByName("Pitch", pitch);
         return this;
     }
 
