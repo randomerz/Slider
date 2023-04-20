@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class DoubleSign : Sign
 {
-    public Direction currentDirection = Direction.RIGHT;
     public Direction secondCurrentDirection = Direction.UP; 
 
     public override void CreateShape(List<Box> parents) {
