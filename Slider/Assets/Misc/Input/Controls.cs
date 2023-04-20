@@ -23,12 +23,17 @@ using UnityEngine.InputSystem;
 /// <remarks>Author: Travis</remarks>
 public class Controls : Singleton<Controls>
 {
+    //I'm sorry Mr. Travis. I'm stroking
+    public static Controls Instance => _instance;
+
+
     private static InputSettings _bindings;
 
     /// <summary>
     /// <b>Revisit this when we start looking into controller support!</b>
     /// </summary>
     [SerializeField] private string currentControlScheme = "Keyboard Mouse";
+    public void SetCurrentControlScheme(string currentControlScheme) { this.currentControlScheme = currentControlScheme; }
 
     /// <summary>
     /// Returns an instance of InputSettings containing our current bindings. If the bindings are not yet loaded, this will load them 

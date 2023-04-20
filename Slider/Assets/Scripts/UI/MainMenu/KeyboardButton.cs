@@ -12,8 +12,13 @@ public class KeyboardButton : MonoBehaviour
 
     void Start()
     {
-        
+        if (name == "Q")
+        {
+            StartCoroutine(SelectAfterTime(1));
+        }
     }
+
+    private IEnumerator SelectAfterTime(float time) { yield return new WaitForSeconds(time); button.Select(); }
     void Update()
     {
         
@@ -46,8 +51,20 @@ public class KeyboardButton : MonoBehaviour
             character.text = character.text.ToLower();
         }
     }
+    /*
     public void Deselect()
     {
+        Debug.Log(name + "DESSELCTE");
         UINavigationManager.ClearSelectable();
+    }*/
+
+    public void OnSelect()
+    {
+        Debug.Log(name + " selected");
+    }
+
+    public void OnDeselect()
+    {
+        Debug.Log(name + " DEselected");
     }
 }

@@ -53,7 +53,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
         //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context 
-            => { if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); } });
+            => { if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { Debug.Log("cornhole"); UINavigationManager.SelectBestButtonInCurrentMenu(); } });
     }
 
     void Start()
@@ -245,8 +245,8 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
         newSaveProfileIndex = profileIndex;
 
-        profileNameTextField.Select();
-        profileNameTextField.ActivateInputField();
+        //profileNameTextField.Select();
+        //profileNameTextField.ActivateInputField();
         profileNameTextField.text = "";
         UINavigationManager.CurrentMenu = newSavePanel;
         keyboardEnabled = true;
