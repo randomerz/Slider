@@ -36,7 +36,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             sliderImage.rectTransform.anchoredPosition = new Vector3(0, -1);
             highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, -1);
             pushedDownFrame.gameObject.SetActive(true);
-            if (!isLightning) highlightedFrame.gameObject.SetActive(false); //We don't disable the highlight if lightning
+            // if (!isLightning) highlightedFrame.gameObject.SetActive(false); //We don't disable the highlight if lightning
         }
         else if (isPushedDown && !value)
         {
@@ -47,7 +47,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             {
                 i.gameObject.SetActive(false);
             }
-            SetHighlighted(isLightning); //Edge case where you set lightning while tile is moving
+            // SetHighlighted(isLightning); //Edge case where you set lightning while tile is moving
         }
     }
 

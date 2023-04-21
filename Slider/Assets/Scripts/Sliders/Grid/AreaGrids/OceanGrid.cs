@@ -607,12 +607,14 @@ public class OceanGrid : SGrid
 
                     // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, !isLand);
+                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetHighlighted(isLand);
                 }
                 else
                 {
                     int tid = int.Parse(tids);
                     // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
+                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetHighlighted(artifactButton.islandId != tid);
                 }
             }
         }

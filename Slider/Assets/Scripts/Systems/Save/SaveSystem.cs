@@ -97,7 +97,7 @@ public class SaveSystem
 
     private static void SaveToFile(SerializableSaveProfile profile, int index)
     {
-        Debug.Log($"[File IO] Saving data to file {index}.");
+        // Debug.Log($"[File IO] Saving data to file {index}.");
 
         BinaryFormatter formatter = new BinaryFormatter();
         string path = GetFilePath(index);

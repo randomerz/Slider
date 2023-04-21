@@ -446,7 +446,7 @@ public class ShopDialogueManager : MonoBehaviour
                     () => {
                         SetDialogue(new ShopDialogue(
                     null,
-                    "I've seen what you can do with that tablet of yours. If you can put our islands and such back together, I can help you get to Canopy Town.",
+                    "If you fix this island and maybe Catbeard's ship with that tablet of yours, I can help you cross over to Canopy Town.",
                     TKSprite.Normal,
                     () => {
                         shopManager.OpenMainPanel();
