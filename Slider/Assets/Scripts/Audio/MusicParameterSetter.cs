@@ -14,8 +14,18 @@ public class MusicParameterSetter : MonoBehaviour
         AudioManager.SetMusicParameter(trackName, parameterName, defaultValue);
     }
 
+    public void UpdateParameterGlobal()
+    {
+        AudioManager.SetGlobalParameter(parameterName, defaultValue);
+    }
+
     public void UpdateParameter(float value)
     {
         AudioManager.SetMusicParameter(trackName, parameterName, value);
+    }
+
+    public void UpdateParameterGlobal(float value)
+    {
+        AudioManager.SetGlobalParameter(parameterName, value);
     }
 }

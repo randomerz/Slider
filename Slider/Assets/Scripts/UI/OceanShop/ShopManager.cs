@@ -231,6 +231,8 @@ public class ShopManager : Singleton<ShopManager>, ISavable
 
         startedFinalQuest = true;
         shopDialogueManager.UpdateDialogue("Start Final Challenge");
+
+        UpdateTavernPassButton();
     }
 
     private void UpdateTavernPassButton()

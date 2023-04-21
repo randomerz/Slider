@@ -48,6 +48,7 @@ public class TavernPassManager : MonoBehaviour, ISavable
     // private int currentNumCredits;
     private int displayedCredits;
     private int currentSelectedIndex;
+    private bool didInitialize;
 
     private void Start() 
     {
@@ -57,6 +58,8 @@ public class TavernPassManager : MonoBehaviour, ISavable
     public void Save()
     {
         SaveSystem.Current.SetInt("oceanTavernPassDisplayedCredits", displayedCredits);
+
+        // SaveSystem.Current.SetBool("oceanTavernPassFreeTierComplete", tavernPassButtons[0].isComplete);
     }
 
     public void Load(SaveProfile profile)
@@ -65,15 +68,24 @@ public class TavernPassManager : MonoBehaviour, ISavable
 
         if (tavernJukebox != null) tavernJukebox.SetActive(displayedCredits >= 2);
         if (tavernCat != null) tavernCat.SetActive(displayedCredits >= 4);
+
+        // if (SaveSystem.Current.GetBool("oceanTavernPassFreeTierComplete"))
+        // {
+        //     tavernPassButtons[0].SetComplete(true);
+        // }
     }
 
     public void InitializeProgressBar()
     {
+        if (didInitialize)
+            return;
+        didInitialize = true;
+
         int currentNumCredits = shopManager.GetCredits();
         float progress = CalculateProgressPercent(displayedCredits);
         progressBar.value = progress;
 
-        for (int i = 0; i < displayedCredits; i++)
+        for (int i = 0; i <= displayedCredits; i++)
         {
             tavernPassButtons[creditsToCurrentRewardIndex[i]].SetComplete(true);
         }
@@ -81,6 +93,11 @@ public class TavernPassManager : MonoBehaviour, ISavable
 
     public void OnOpenTavernPass()
     {
+        if (!didInitialize)
+        {
+            InitializeProgressBar();
+        }
+
         if (!tavernPassButtons[0].isComplete)
         {
             ShopManager.CanClosePanel = false;
@@ -206,6 +223,10 @@ public class TavernPassManager : MonoBehaviour, ISavable
                 // All Sliders
                 for (int i = 4; i <= 9; i++)
                 {
+                    // Given in free tier; we don't want it to flash
+                    if (i == 5)
+                        continue;
+
                     SGrid.Current.CollectSTile(i);
                 }
                 break;
@@ -235,6 +256,11 @@ public class TavernPassManager : MonoBehaviour, ISavable
 
     public bool TavernPassHasReward()
     {
+        if (!didInitialize)
+        {
+            InitializeProgressBar();
+        }
+        
         int currentNumCredits = shopManager.GetCredits();
         return creditsToNextRewardIndex[currentNumCredits] != creditsToNextRewardIndex[displayedCredits] || // if next reward is available
                (currentNumCredits == 6 && displayedCredits != 6) || // or final reward is available
