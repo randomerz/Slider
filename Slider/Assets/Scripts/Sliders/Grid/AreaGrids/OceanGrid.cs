@@ -199,9 +199,48 @@ public class OceanGrid : SGrid
 
     private void CheckTile2Placement(STile stile)
     {
-        STile other = GetStileAt(1, 0);
+        int stile1x = GetStile(1).x;
+        int stile1y = GetStile(1).y;
+
+        if (stile1x < 2)
+        {
+            if (stile1y < 2)
+            {
+                if (CheckTile2PlacementHelper(stile, stile1x + 1, stile1y + 1))
+                    return;
+            }
+            else if (stile1y > 0)
+            {
+                if (CheckTile2PlacementHelper(stile, stile1x + 1, stile1y - 1))
+                    return;
+            }
+        }
+        else if (stile1x > 0)
+        {
+            if (stile1y < 2)
+            {
+                if (CheckTile2PlacementHelper(stile, stile1x - 1, stile1y + 1))
+                    return;
+            }
+            else if (stile1y > 0)
+            {
+                if (CheckTile2PlacementHelper(stile, stile1x - 1, stile1y - 1))
+                    return;
+            }
+        }
+
+        // wah wah u couldnt swap it for some reason boohoo
+    }
+
+    private bool CheckTile2PlacementHelper(STile slider2, int x, int y)
+    {
+        STile other = GetStileAt(x, y);
         if (other.islandId != 1)
-            SwapTiles(stile, other);
+        {
+            SwapTiles(slider2, other);
+            return true;
+        }
+        return false;
     }
 
     private void CheckTile3Placement(STile stile)
