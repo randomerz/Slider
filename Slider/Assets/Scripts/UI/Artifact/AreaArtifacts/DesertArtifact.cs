@@ -8,6 +8,7 @@ public class DesertArtifact : UIArtifact
 {
     protected override void OnDisable()
     {
+        base.OnDisable();
         SGridAnimator.OnSTileMoveEnd -= UpdatePushedDowns;
         OnButtonInteract -= UpdatePushedDowns;
     }
