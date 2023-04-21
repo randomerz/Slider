@@ -8,8 +8,12 @@ public class FogAnimationController : MonoBehaviour
     [SerializeField] private float startRange = 1;
     [SerializeField] private float animationDuration = 2;
 
-    private bool isVisible = true;
+    [SerializeField] private bool isVisible = true;
     private List<Coroutine> coroutines = new List<Coroutine>();
+
+    [Header("Tools")]
+    [SerializeField] private Vector3 minPosition;
+    [SerializeField] private Vector3 maxPosition;
 
     public void SetIsVisible(bool value)
     {
@@ -55,5 +59,18 @@ public class FogAnimationController : MonoBehaviour
 
         c.a = to;
         spriteRenderer.color = c;
+    }
+
+
+    // Tools
+    public void RandomizeFogPositions()
+    {
+        foreach (SpriteRenderer sr in spriteRenderers)
+        {
+            sr.transform.position = new Vector3(
+                Mathf.Round(Random.Range(minPosition.x, maxPosition.x)), 
+                Mathf.Round(Random.Range(minPosition.y, maxPosition.y))
+            );
+        }
     }
 }
