@@ -6,6 +6,13 @@ using UnityEngine.EventSystems;
 
 public class DesertArtifact : UIArtifact
 {
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        SGridAnimator.OnSTileMoveEnd -= UpdatePushedDowns;
+        OnButtonInteract -= UpdatePushedDowns;
+    }
+
     //Chen: getMoveOptions will add buttons even if they're active for Desert sliding
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
