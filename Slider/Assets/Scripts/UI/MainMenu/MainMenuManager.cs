@@ -245,7 +245,10 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
         newSaveProfileIndex = profileIndex;
 
-        //profileNameTextField.Select();
+        if (Controls.Instance.GetCurrentControlScheme() == "Keyboard Mouse")
+        {
+            profileNameTextField.Select();
+        }
         //profileNameTextField.ActivateInputField();
         profileNameTextField.text = "";
         UINavigationManager.CurrentMenu = newSavePanel;

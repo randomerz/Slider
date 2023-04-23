@@ -34,6 +34,7 @@ public class Controls : Singleton<Controls>
     /// </summary>
     [SerializeField] private string currentControlScheme = "Keyboard Mouse";
     public void SetCurrentControlScheme(string currentControlScheme) { this.currentControlScheme = currentControlScheme; }
+    public string GetCurrentControlScheme() { return currentControlScheme; }
 
     /// <summary>
     /// Returns an instance of InputSettings containing our current bindings. If the bindings are not yet loaded, this will load them 
