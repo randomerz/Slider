@@ -216,6 +216,12 @@ public class AudioManager : Singleton<AudioManager>
         });
     }
 
+    /// <summary>
+    /// Plays a sound with pitch
+    /// </summary>
+    /// <param name="name">String of the sound in Audio Manager</param>
+    /// <param name="pitch">Pitch to play between 0.5 and 2.0</param>
+    /// <returns></returns>
     public static FMOD.Studio.EventInstance? PlayWithPitch(string name, float pitch) => PickSound(name).WithPitch(pitch).AndPlay();
 
     public static FMOD.Studio.EventInstance? PlayWithVolume(string name, float volumeMultiplier) => PickSound(name).WithVolume(volumeMultiplier).AndPlay();

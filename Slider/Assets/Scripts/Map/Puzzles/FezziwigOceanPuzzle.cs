@@ -8,6 +8,8 @@ public class FezziwigOceanPuzzle : MonoBehaviour
     [SerializeField] private OceanArtifact oceanArtifact;
     [SerializeField] private ChadJump jumpScript;
     [SerializeField] private Animator npcAnimator;
+    [SerializeField] private FogAnimationController fogRingController;
+    [SerializeField] private FogAnimationController fogWorldController;
 
     private bool CanStartCast;
 
@@ -38,8 +40,11 @@ public class FezziwigOceanPuzzle : MonoBehaviour
         yield return new WaitUntil(() => oceanArtifact.MoveQueueEmpty());
 
         jumpScript.JumpStarter();
+        SetFogStatus(true);
 
         yield return new WaitUntil(() => jumpScript.ChadJumped());
+
+        yield return new WaitForSeconds(1.25f);
 
         npcAnimator.SetBool("isCasting", true);
         StartCoroutine(oceanArtifact.RotateAllTiles(CastFinish));
@@ -52,6 +57,8 @@ public class FezziwigOceanPuzzle : MonoBehaviour
         CanStartCast = !Finished;
         if (!Finished) jumpScript.FinishFall();
         else npcAnimator.SetBool("isCasting", false);
+
+        SetFogStatus(false);
     }
 
     public void CanStartSpell(Condition cond) {
@@ -64,5 +71,17 @@ public class FezziwigOceanPuzzle : MonoBehaviour
 
     public void SpellFinished(Condition cond) {
         cond.SetSpec(Finished);
+    }
+
+
+    private void SetFogStatus(bool enabled)
+    {
+        if (enabled)
+        {
+            fogRingController.transform.position = SGrid.Current.GetStile(5).transform.position;
+        }
+
+        fogRingController.SetIsVisible(enabled);
+        fogWorldController.SetIsVisible(enabled);
     }
 }

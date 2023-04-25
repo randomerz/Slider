@@ -310,6 +310,14 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
         // Other init functions
         UpdatePlayerSpeed();
+
+        // If haven't logged on in a while + correct scene, spawn with anchor
+        if (profile.GetBool("playerSpawnWithAnchorEquipped"))
+        {
+            profile.SetBool("playerSpawnWithAnchorEquipped", false);
+
+            PlayerInventory.NextItem();
+        }
     }
 
     private void UpdateMove(Vector2 moveDir) 

@@ -46,7 +46,7 @@ public class UIArtifact : Singleton<UIArtifact>
 
     private void Start()
     {
-        //L: Do these ever get unsubscribed? (Do they need to?)
+        //L: Do these ever get unsubscribed? (Do they need to?) (If your name is DesertArtifact yes)
         SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
         SGridAnimator.OnSTileMoveEnd += UpdatePushedDowns;
         OnButtonInteract += UpdatePushedDowns;
@@ -646,7 +646,6 @@ public class UIArtifact : Singleton<UIArtifact>
         if (buttonSelected != null)
         {
             moveOptionButtons = GetMoveOptions(buttonSelected);
-
             foreach (ArtifactTileButton b in buttons)
             {
                 b.SetHighlighted(moveOptionButtons.Contains(b));

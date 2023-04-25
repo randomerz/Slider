@@ -63,7 +63,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         CheckContinueButton();
 
         AudioManager.PlayMusic("Main Menu");
-        AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 0);
+        AudioManager.SetGlobalParameter("MainMenuActivated", 0);
 
         // any key listener moved to OpenCutscene()
     }
@@ -144,7 +144,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         mainMenuBackgroundAnimator.SetBool("isVisible", true);
         textAnimator.SetBool("isVisible", false);
 
-        AudioManager.SetMusicParameter("Main Menu", "MainMenuActivated", 1);
+        AudioManager.SetGlobalParameter("MainMenuActivated", 1);
 
         UINavigationManager.CurrentMenu = mainMenuPanel;
         UINavigationManager.LockoutSelectablesInCurrentMenu(SelectTopmostButton, 1);
