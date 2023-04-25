@@ -162,10 +162,22 @@ public class SaveProfile
 
     public void Load()
     {
+        PreLoadChecks();
+
         // Tells everyone to load from this profile's data
         LoadSavablesData();
 
         AchievementManager.OverwriteAchievementData(AchievementData);
+    }
+
+    private void PreLoadChecks()
+    {
+        // If haven't logged on for a few days + specific scenes, spawn with anchor equipped
+        List<Area> areasToCheck = new List<Area>{Area.Ocean, Area.Desert, Area.Factory, Area.Mountain};
+        if ((lastSaved - System.DateTime.Now).TotalDays < 2 && areasToCheck.Contains(lastArea))
+        {
+            SetBool("playerSpawnWithAnchorEquipped", true);
+        }
     }
 
     #region SGrid
