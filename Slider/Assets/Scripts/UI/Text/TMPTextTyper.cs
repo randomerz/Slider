@@ -113,11 +113,11 @@ public class TMPTextTyper : MonoBehaviour
 
             }
 
-            char currChar = textInfo.characterInfo[charIndex].character;
-            if (char.IsPunctuation(currChar) && currChar != '\'' && currChar != '"')
-            {
-                yield return new WaitForSeconds(2 * textSpeed);
-            }
+            //char currChar = textInfo.characterInfo[charIndex].character;
+            //if (char.IsPunctuation(currChar) && currChar != '\'' && currChar != '"')
+            //{
+            //    yield return new WaitForSeconds(2 * textSpeed);
+            //}
             charIndex++;
             startingCharacterIndex++;
             yield return new WaitForSeconds(textSpeed);

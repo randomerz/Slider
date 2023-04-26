@@ -17,6 +17,7 @@ namespace SliderVocalization
         private static readonly string[] questionNegation = { "who", "what", "when", "where", "why", "how" };
 
         internal List<WordVocalizer> words;
+        internal List<float> gaps;
         public char punctuation;
 
         public List<WordVocalizer> Vocalizers => words;
@@ -57,13 +58,18 @@ namespace SliderVocalization
         private SentenceVocalizer(string clause)
         {
             words = new List<WordVocalizer>();
+            gaps = new List<float>();
             int endingTrim = endingsSet.Contains(clause[^1]) ? 1 : 0; // remove ending character if it is a punctuation
             punctuation = endingTrim > 0 ? clause[^1] : '.'; // default to period when no punctuation
 
             foreach (string word in clause.Substring(0, clause.Length - endingTrim).Split(' ', System.StringSplitOptions.RemoveEmptyEntries))
             {
                 WordVocalizer wv = new(word);
-                if (!wv.IsEmpty) words.Add(wv);
+                if (!wv.IsEmpty)
+                {
+                    words.Add(wv);
+                    gaps.Add(0);
+                }
             }
 
             switch (punctuation)
@@ -96,9 +102,9 @@ namespace SliderVocalization
                     char.IsDigit(c) || endingsSet.Contains(c) ? c : ' ').ToArray()
                 ).Split(' ', System.StringSplitOptions.RemoveEmptyEntries));
 
-        IEnumerator IVocalizerComposite<WordVocalizer>.Prevocalize(
-            VocalizerParameters preset, VocalizationContext context, WordVocalizer prior, WordVocalizer upcoming, int upcomingIdx)
+        float IVocalizerComposite<WordVocalizer>.PreRandomize(VocalizerParameters preset, VocalRandomizationContext context, WordVocalizer prior, WordVocalizer upcoming, int upcomingIdx)
         {
+            gaps[upcomingIdx] = preset.wordGap * (Random.value + 0.5f);
             if (prior == null)
             {
                 // for the first word, initialize intonation of first word
@@ -119,18 +125,16 @@ namespace SliderVocalization
             // the last word can be heightened or lowered based on intonation
             context.wordPitchBase = preset.pitch;
             context.wordPitchIntonated = (upcomingIdx == words.Count - 1 ? GetBasePitchFromIntonation(preset) : preset.pitch);
-            return null;
-        }
 
-        IEnumerator IVocalizerComposite<WordVocalizer>.Postvocalize(
-            VocalizerParameters preset, VocalizationContext context, WordVocalizer completed, WordVocalizer upcoming, int upcomingIdx)
-        {
-            yield return new WaitForSecondsRealtime(preset.wordGap * (Random.value + 0.5f));
+            return gaps[upcomingIdx];
         }
 
         public WordVocalizer GetCurrent() => _Current;
         void IVocalizerComposite<WordVocalizer>.SetCurrent(WordVocalizer value) => _Current = value;
         public VocalizerCompositeStatus GetStatus() => _Status;
         void IVocalizerComposite<WordVocalizer>.SetStatus(VocalizerCompositeStatus value) => _Status = value;
+        IEnumerator IVocalizerComposite<WordVocalizer>.Gap(int idx) {
+            yield return new WaitForSeconds(gaps[idx]);
+        }
     }
 }

@@ -126,18 +126,14 @@ namespace SliderVocalization
             return s;
         }
 
-        IEnumerator IVocalizerComposite<PhonemeClusterVocalizer>.Prevocalize(
-            VocalizerParameters preset, VocalizationContext context, PhonemeClusterVocalizer prior, PhonemeClusterVocalizer upcoming, int upcomingIdx)
-            => null;
-
-        IEnumerator IVocalizerComposite<PhonemeClusterVocalizer>.Postvocalize(
-            VocalizerParameters preset, VocalizationContext context, PhonemeClusterVocalizer completed, PhonemeClusterVocalizer upcoming, int upcomingIdx)
-            => null;
-
         public PhonemeClusterVocalizer GetCurrent() => _Current;
         void IVocalizerComposite<PhonemeClusterVocalizer>.SetCurrent(PhonemeClusterVocalizer value) => _Current = value;
         public VocalizerCompositeStatus GetStatus() => _Status;
         void IVocalizerComposite<PhonemeClusterVocalizer>.SetStatus(VocalizerCompositeStatus value) => _Status = value;
+
+        float IVocalizerComposite<PhonemeClusterVocalizer>.PreRandomize(
+            VocalizerParameters preset, VocalRandomizationContext context, PhonemeClusterVocalizer prior, PhonemeClusterVocalizer upcoming, int upcomingIdx)
+            => 0.0f;
     }
 
     public class VowelDescription

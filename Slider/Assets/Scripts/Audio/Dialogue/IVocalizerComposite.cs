@@ -21,8 +21,25 @@ namespace SliderVocalization
         public VocalizerCompositeStatus GetStatus();
         protected void SetStatus(VocalizerCompositeStatus value);
 
-        internal IEnumerator Prevocalize(VocalizerParameters preset, VocalizationContext context, T prior, T upcoming, int upcomingIdx);
-        internal IEnumerator Postvocalize(VocalizerParameters preset, VocalizationContext context, T completed, T upcoming, int upcomingIdx);
+        /// <returns>Extra time added in addition to the sum of randomized components</returns>
+        internal float PreRandomize(VocalizerParameters preset, VocalRandomizationContext context, T prior, T upcoming, int upcomingIdx);
+
+        float IVocalizer.RandomizeVocalization (VocalizerParameters preset, VocalRandomizationContext context)
+        {
+            float totalDuration = 0;
+            for (int i = 0; i < Vocalizers.Count; i++)
+            {
+                var v = Vocalizers[i];
+                totalDuration += PreRandomize(preset, context, default, v, i);
+                totalDuration += v.RandomizeVocalization(preset, context);
+            }
+            return totalDuration;
+        }
+
+        IEnumerator Gap(int idx)
+        {
+            return null;
+        }
 
         IEnumerator IVocalizer.Vocalize(VocalizerParameters preset, VocalizationContext context, int idx, int lengthOfComposite)
         {
@@ -32,10 +49,9 @@ namespace SliderVocalization
             {
                 var v = Vocalizers[i];
                 SetCurrent(v);
-                yield return Prevocalize(preset, context, default, v, i);
                 yield return v.Vocalize(preset, context, idx: i, lengthOfComposite: Vocalizers.Count);
-                yield return Postvocalize(preset, context, v, default, i + 1);
                 if (GetStatus() == VocalizerCompositeStatus.Stopping) break;
+                yield return Gap(i);
             }
             SetStatus(VocalizerCompositeStatus.CanPlay);
         }
