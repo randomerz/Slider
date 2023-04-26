@@ -5,7 +5,6 @@ using UnityEngine;
 using Cinemachine;
 using FMODUnity;
 using FMOD.Studio;
-using System.Runtime.CompilerServices;
 
 public class AudioManager : Singleton<AudioManager>
 {
