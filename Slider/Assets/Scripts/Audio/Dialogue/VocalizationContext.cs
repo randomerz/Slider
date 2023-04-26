@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Collection of parameters guiding a current vocalization instance. Shared between different levels of vocalization
+/// Interpolated / managed parameters during narration
 /// </summary>
 public class VocalizationContext
 {
@@ -14,19 +12,18 @@ public class VocalizationContext
         this.root = root;
     }
 
-    #region SENTENCE VOCALIZER RESPONSIBILITIES
+    public float vowelOpenness;
+    public float vowelForwardness;
+}
+
+/// <summary>
+/// Non-interpolated parameters during narration.
+/// </summary>
+public class VocalRandomizationContext
+{
     public float wordPitchBase;
     public float wordPitchIntonated;
     public bool isCurrentWordLow;
-    #endregion
-
-    #region WORD VOCALIZER RESPONSIBILITIES
-    #endregion
-
-    #region PHONEME CLUSTER VOCALIZER RESPONSIBILITIES
-    public float vowelOpeness;
-    public float vowelForwardness;
-    #endregion
 }
 
 #if UNITY_EDITOR

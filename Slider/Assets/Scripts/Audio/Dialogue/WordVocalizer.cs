@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SliderVocalization
 {
-    public class WordVocalizer : IVocalizerComposite<PhonemeClusterVocalizer>
+    public class WordVocalizer : IVocalizerComposite<BaseVocalizer>
     {
         private static readonly char[] vowels = { 'a', 'e', 'i', 'o', 'u', 'y' };
         public static readonly Dictionary<char, VowelDescription> vowelDescriptionTable = new()
@@ -20,50 +20,55 @@ namespace SliderVocalization
         };
         private static char RandomVowel => vowels[(int)(Random.value * vowels.Length)];
 
-        public bool IsEmpty => significantCluster == null;
+        public bool IsEmpty => m_Vocalizers == null || m_Vocalizers.Count == 0;
 
         /// <summary>
         /// Return vowelClusters for reading every single vowel in word
         /// Return significantCluster for reading only the stressed vowel groups (or the only vowel if no stressed vowels)
         ///   - For most of the time there is only one stress in a word, but for very long words there might be multiple
         /// </summary>
-        public List<PhonemeClusterVocalizer> Vocalizers => significantCluster;
+        public List<BaseVocalizer> Vocalizers => m_Vocalizers;
+        private List<BaseVocalizer> m_Vocalizers;
 
-        private PhonemeClusterVocalizer _Current;
+        private BaseVocalizer _Current;
         private VocalizerCompositeStatus _Status;
 
         internal string characters;
-        private readonly List<PhonemeClusterVocalizer> clusters;
+        private List<PhonemeClusterVocalizer> clusters;
         internal List<PhonemeClusterVocalizer> vowelClusters;
-        internal List<PhonemeClusterVocalizer> significantCluster;
 
+        /// <summary>
+        /// Creates a series of phoneme vocalizers that will be read out loud
+        /// </summary>
         /// <param name="raw">Alphanumeric string with no whitespace</param>
-        public WordVocalizer(string raw)
+        /// <returns></returns>
+        public static WordVocalizer MakeSpokenVocalizer(string raw)
         {
+            WordVocalizer result = new();
             if (raw.Length == 0)
             {
                 Debug.LogError("Word cannot be empty");
-                return;
+                return result;
             }
 
-            clusters = new List<PhonemeClusterVocalizer>();
+            result.clusters = new List<PhonemeClusterVocalizer>();
             // replace numeric digits with random vowels
-            characters = new string(raw.Select(c => char.IsDigit(c) ? RandomVowel : c).ToArray());
+            result.characters = new string(raw.Select(c => char.IsDigit(c) ? RandomVowel : c).ToArray());
 
             // convert word to clusters
-            bool lastCharIsVowel = vowelDescriptionTable.ContainsKey(characters[0]);
-            clusters.Add(new PhonemeClusterVocalizer()
+            bool lastCharIsVowel = vowelDescriptionTable.ContainsKey(result.characters[0]);
+            result.clusters.Add(new PhonemeClusterVocalizer()
             {
                 isVowelCluster = lastCharIsVowel,
-                characters = characters[0].ToString()
+                characters = result.characters[0].ToString()
             });
-            for (int i = 1; i < characters.Length; i++)
+            for (int i = 1; i < result.characters.Length; i++)
             {
-                char c = characters[i];
+                char c = result.characters[i];
                 bool currCharIsVowel = vowelDescriptionTable.ContainsKey(c);
                 if (lastCharIsVowel != currCharIsVowel)
                 {
-                    clusters.Add(new PhonemeClusterVocalizer()
+                    result.clusters.Add(new PhonemeClusterVocalizer()
                     {
                         isVowelCluster = currCharIsVowel,
                         characters = c.ToString()
@@ -71,19 +76,38 @@ namespace SliderVocalization
                 }
                 else
                 {
-                    clusters[^1].characters += c;
+                    result.clusters[^1].characters += c;
                 }
                 lastCharIsVowel = currCharIsVowel;
             }
-            vowelClusters = clusters.Where(c => c.isVowelCluster && !c.IsEmpty).ToList();
-            PlaceStress();
+            result.vowelClusters = result.clusters.Where(c => c.isVowelCluster && !c.IsEmpty).ToList();
+            result.PlaceStress();
 
-            if (vowelClusters.Count != 0)
+            if (result.vowelClusters.Count != 0)
             {
-                significantCluster = vowelClusters.Where(c => c.isStressed).ToList();
-                if (significantCluster.Count == 0) significantCluster.Add(vowelClusters[0]);
+                result.m_Vocalizers = result.vowelClusters.Where(c => c.isStressed).Select(c => c as BaseVocalizer).ToList();
+                if (result.m_Vocalizers.Count == 0) result.m_Vocalizers.Add(result.vowelClusters[0]);
             }
+
+            return result;
         }
+
+        /// <summary>
+        /// Makes a silent vocalizer that waits for a duration proportional to the length of punctuation
+        /// </summary>
+        /// <param name="punctuation"></param>
+        /// <returns></returns>
+        public static WordVocalizer MakePauseVocalizer(string punctuation)
+            => new()
+            {
+                m_Vocalizers = new List<BaseVocalizer> { new PunctuationVocalizer() { characters = punctuation } }
+            };
+
+        public static WordVocalizer MakeClauseEndingVocalizer()
+            => new()
+            {
+                m_Vocalizers = new List<BaseVocalizer> { new PauseVocalizer() }
+            };
 
         private void PlaceStress()
         {
@@ -119,25 +143,34 @@ namespace SliderVocalization
         public override string ToString()
         {
             string s = "";
-            foreach (var cluster in clusters)
+            if (clusters != null)
             {
-                s += cluster.ToString();
+                if (clusters != null)
+                {
+                    foreach (var cluster in clusters)
+                    {
+                        s += cluster.ToString();
+                    }
+                }
+            } else
+            {
+                foreach (var vocalizer in m_Vocalizers)
+                {
+                    s += vocalizer.ToString();
+                }
             }
+            
             return s;
         }
 
-        IEnumerator IVocalizerComposite<PhonemeClusterVocalizer>.Prevocalize(
-            VocalizerParameters preset, VocalizationContext context, PhonemeClusterVocalizer prior, PhonemeClusterVocalizer upcoming, int upcomingIdx)
-            => null;
-
-        IEnumerator IVocalizerComposite<PhonemeClusterVocalizer>.Postvocalize(
-            VocalizerParameters preset, VocalizationContext context, PhonemeClusterVocalizer completed, PhonemeClusterVocalizer upcoming, int upcomingIdx)
-            => null;
-
-        public PhonemeClusterVocalizer GetCurrent() => _Current;
-        void IVocalizerComposite<PhonemeClusterVocalizer>.SetCurrent(PhonemeClusterVocalizer value) => _Current = value;
+        public BaseVocalizer GetCurrent() => _Current;
+        void IVocalizerComposite<BaseVocalizer>.SetCurrent(BaseVocalizer value) => _Current = value;
         public VocalizerCompositeStatus GetStatus() => _Status;
-        void IVocalizerComposite<PhonemeClusterVocalizer>.SetStatus(VocalizerCompositeStatus value) => _Status = value;
+        void IVocalizerComposite<BaseVocalizer>.SetStatus(VocalizerCompositeStatus value) => _Status = value;
+
+        void IVocalizerComposite<BaseVocalizer>.PreRandomize(
+            VocalizerParameters preset, VocalRandomizationContext context, BaseVocalizer upcoming)
+        { }
     }
 
     public class VowelDescription
