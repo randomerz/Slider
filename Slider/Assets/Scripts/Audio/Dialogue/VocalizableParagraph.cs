@@ -55,9 +55,8 @@ namespace SliderVocalization
                 );
         }
 
-        float IVocalizerComposite<SentenceVocalizer>.PreRandomize(
-            VocalizerParameters preset, VocalRandomizationContext context, SentenceVocalizer prior, SentenceVocalizer upcoming, int upcomingIdx
-            ) => 0.0f;
+        void IVocalizerComposite<SentenceVocalizer>.PreRandomize(
+            VocalizerParameters preset, VocalRandomizationContext context, SentenceVocalizer prior, SentenceVocalizer upcoming, int upcomingIdx) { }
         
         public SentenceVocalizer GetCurrent() => _Current;
         void IVocalizerComposite<SentenceVocalizer>.SetCurrent(SentenceVocalizer value) => _Current = value;

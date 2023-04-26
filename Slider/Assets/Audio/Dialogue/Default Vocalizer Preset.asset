@@ -24,13 +24,15 @@ MonoBehaviour:
         Path: event:/Dialogue/Default_Vocal
       dopplerScale: 0
     pitch: 1.565
-    duration: 0.1017
+    duration: 0.156
     volume: 1
     volumeAdjustmentDb: 0
     stressedVowelModifiers:
       pitchAddition: 0.05
       volumeAdjustmentDb: 3
       durationAddition: -0.02
+      overrideIntonation: 0
+      intonationOverride: 0
     lerpSmoothnessInverted: 2
     wordGap: 0.05
     wordIntonation: 0.027
@@ -39,3 +41,5 @@ MonoBehaviour:
     pHighToLow: 0.3
     clauseGap: 0.1
     sentenceIntonation: 0.363
+    overrideIntonation: 0
+    intonationOverride: 0
