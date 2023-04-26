@@ -5,6 +5,7 @@ using UnityEngine;
 using Cinemachine;
 using FMODUnity;
 using FMOD.Studio;
+using System.Runtime.CompilerServices;
 
 public class AudioManager : Singleton<AudioManager>
 {
@@ -44,6 +45,8 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField, Range(0, 20), Tooltip("Z-direction distance from top-down listener to game's plane")]
     private float ZLevel;
 
+    private static bool paused;
+
     private static Dictionary<string, Sound> soundsDict
     {
         get
@@ -59,12 +62,22 @@ public class AudioManager : Singleton<AudioManager>
     }
     private Dictionary<string, Sound> _soundsDict;
 
-    static List<(FMOD.Studio.EventInstance, ManagedAttributes)> managedInstances;
+    static List<ManagedInstance> managedInstances;
 
     static CinemachineBrain currentCinemachineBrain;
 
     void Awake()
     {
+        UIManager.OnResume += delegate (object sender, EventArgs e)
+        {
+            SetPaused(false);
+        };
+
+        UIManager.OnPause += delegate (object sender, EventArgs e)
+        {
+            SetPaused(true);
+        };
+
         if (InitializeSingleton(ifInstanceAlreadySetThenDestroy:gameObject))
         {
             return;
@@ -104,7 +117,7 @@ public class AudioManager : Singleton<AudioManager>
     private void Update()
     {
         UpdateCameraPosition();
-        UpdateManagedInstances();
+        UpdateManagedInstances(Time.deltaTime);
     }
 
     public static void UpdateCamera(CinemachineBrain brain) => currentCinemachineBrain = brain;
@@ -136,26 +149,30 @@ public class AudioManager : Singleton<AudioManager>
         return m;
     }
 
-    public static FMOD.Studio.EventInstance? Play(SoundWrapper soundWrapper, bool startImmediately = true)
+    public delegate void EventInstanceTick(ref EventInstance item);
+
+    public static ManagedInstance Play(SoundWrapper soundWrapper, EventInstanceTick tick = default)
     {
         if (!soundWrapper.valid) return null;
         var inst = soundWrapper.fmodInstance;
 
         if (soundWrapper.useSpatials)
         {
-            if (managedInstances == null) managedInstances = new List<(EventInstance, ManagedAttributes)>(10);
-            var attributes = new ManagedAttributes(
+            managedInstances ??= new List<ManagedInstance>(10);
+            var attributes = new ManagedInstance(
+                inst,
                 soundWrapper.root == null ? _instance.listenerWorldPosition.transform : soundWrapper.root, 
                 soundWrapper.useDoppler, 
-                soundWrapper.sound.dopplerScale);
-            inst.set3DAttributes(attributes.GetAndUpdate());
-            managedInstances.Add((inst, attributes));
-        }
-        if (startImmediately)
-        {
+                soundWrapper.sound.dopplerScale,
+                soundWrapper.duration,
+                tick);
             inst.start();
+            managedInstances.Add(attributes);
+            return attributes;
         }
-        return inst;
+        inst.start();
+        inst.release();
+        return null;
     }
 
     public static SoundWrapper PickSound(string name)
@@ -181,30 +198,49 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    public static FMOD.Studio.EventInstance? Play(string name, Transform root) => PickSound(name).WithAttachmentToTransform(root).AndPlay();
+    public static ManagedInstance Play(string name, Transform root) => PickSound(name).WithAttachmentToTransform(root).AndPlay();
 
-    public static FMOD.Studio.EventInstance? Play(string name) => PickSound(name).AndPlay();
+    public static ManagedInstance Play(string name) => PickSound(name).AndPlay();
 
-    private static void UpdateManagedInstances()
+    public static void SetPaused(bool paused)
     {
-        if (managedInstances == null) managedInstances = new List<(FMOD.Studio.EventInstance, ManagedAttributes)>(10);
-        managedInstances.RemoveAll(delegate ((FMOD.Studio.EventInstance inst, ManagedAttributes attributes) pair)
+        AudioManager.paused = paused;
+        foreach (ManagedInstance attributes in managedInstances)
         {
-            if (pair.inst.isValid())
+            attributes.inst.setPaused(paused);
+        }
+    }
+
+    private static void UpdateManagedInstances(float dt)
+    {
+        if (paused)
+        {
+            managedInstances.RemoveAll(attributes => attributes.ShouldStop);
+        }
+        if (managedInstances == null) managedInstances = new List<ManagedInstance>(10);
+        managedInstances.RemoveAll(delegate (ManagedInstance attributes)
+        {
+            if (attributes.inst.isValid())
             {
                 // instance not already relased
                 if (
-                    pair.inst.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE playback) == FMOD.RESULT.OK 
-                    && playback != FMOD.Studio.PLAYBACK_STATE.STOPPED)
+                    attributes.inst.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK 
+                    && playback != PLAYBACK_STATE.STOPPED)
                 {
                     // instance still playing (including the "stopping" state for events that allow fadeout)
-                    pair.inst.set3DAttributes(pair.attributes.GetAndUpdate());
+                    attributes.inst.set3DAttributes(attributes.GetAndUpdate(dt, out bool shouldStop));
+                    if (shouldStop)
+                    {
+                        attributes.inst.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                        attributes.inst.release();
+                        return true;
+                    }
                     return false;
                 }
                 else
                 {
                     // instance stopped playing
-                    pair.inst.release();
+                    attributes.inst.release();
                     return true;
                 }
             }
@@ -221,10 +257,10 @@ public class AudioManager : Singleton<AudioManager>
     /// </summary>
     /// <param name="name">String of the sound in Audio Manager</param>
     /// <param name="pitch">Pitch to play between 0.5 and 2.0</param>
-    /// <returns></returns>
-    public static FMOD.Studio.EventInstance? PlayWithPitch(string name, float pitch) => PickSound(name).WithPitch(pitch).AndPlay();
+    /// <returns>Reference to managed sfx instance in the audio manager, or null if it immediately stopped / does not need to be managed</returns>
+    public static ManagedInstance PlayWithPitch(string name, float pitch) => PickSound(name).WithPitch(pitch).AndPlay();
 
-    public static FMOD.Studio.EventInstance? PlayWithVolume(string name, float volumeMultiplier) => PickSound(name).WithVolume(volumeMultiplier).AndPlay();
+    public static ManagedInstance PlayWithVolume(string name, float volumeMultiplier) => PickSound(name).WithVolume(volumeMultiplier).AndPlay();
 
     public static void PlayMusic(string name, bool stopOtherTracks=true)
     {
@@ -472,34 +508,52 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    private struct ManagedAttributes
+    public class ManagedInstance
     {
+        public EventInstance inst;
         private readonly Transform transform;
-        float time;
+        private float progress;
+        private float duration;
         private readonly float dopplerScale;
         private readonly bool useDoppler;
-        Vector3 position;
+        private Vector3 position;
+        private readonly EventInstanceTick tick;
+        private bool stop;
+        public bool ShouldStop => stop;
 
-        public ManagedAttributes(Transform transform, bool useDoppler, float dopplerScale)
+        public ManagedInstance(EventInstance inst, Transform transform, bool useDoppler, float dopplerScale, float duration, EventInstanceTick tick)
         {
+            this.inst = inst;
             this.transform = transform;
             position = transform.position;
-            time = Time.time;
+            progress = 0;
+            this.duration = duration;
             this.useDoppler = useDoppler;
             this.dopplerScale = dopplerScale;
+            this.tick = tick;
+            stop = false;
         }
 
-        public FMOD.ATTRIBUTES_3D GetAndUpdate()
+        public void Stop()
         {
-            if (!useDoppler) return transform.position.To3DAttributes();
+            stop = true;
+        }
+
+        public FMOD.ATTRIBUTES_3D GetAndUpdate(float dt, out bool shouldStop)
+        {
+            if (tick != default) tick(ref inst);
+
+            progress += dt;
+            shouldStop = stop || progress >= duration;
+            if (!useDoppler)
+            {
+                return transform.position.To3DAttributes();
+            }
 
             Vector3 p = transform.position;
-            float dt = Time.time - time;
             Vector3 v = dt > float.Epsilon ? (p - position) / (dt) : Vector3.zero;
 
             position = p;
-            time = Time.time;
-
             return new FMOD.ATTRIBUTES_3D
             {
                 forward = Vector3.forward.ToFMODVector(),

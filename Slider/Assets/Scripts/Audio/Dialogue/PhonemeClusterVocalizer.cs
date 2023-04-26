@@ -1,3 +1,4 @@
+using FMOD.Studio;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,48 +13,55 @@ namespace SliderVocalization
 
         public bool IsEmpty => characters.Length == 0;
 
-        private FMOD.Studio.EventInstance inst;
-
         public int Progress => _progress;
         private int _progress = 0;
         public void ClearProgress() => _progress = 0;
 
-        // Randomized parameters --------
+        #region RANDOMIZED PARAMS
         float duration;
+        float totalDuration;
         float wordIntonationMultiplier;
         float initialPitch;
         float finalPitch;
         float volumeAdjustmentDB;
+        #endregion
 
-        // End randomized parameters ----
+        AudioManager.ManagedInstance playingInstance;
+
         public float RandomizeVocalization(VocalizerParameters parameters, VocalRandomizationContext context)
         {
             duration = parameters.duration * (context.isCurrentWordLow ? (1 - parameters.energeticWordSpeedup) : (1 + parameters.energeticWordSpeedup));
+            totalDuration = duration * characters.Length;
             wordIntonationMultiplier = context.isCurrentWordLow ? (1 - parameters.wordIntonation) : (1 + parameters.wordIntonation);
             initialPitch = context.wordPitchBase * wordIntonationMultiplier;
             finalPitch = context.wordPitchIntonated * wordIntonationMultiplier;
             volumeAdjustmentDB = parameters.volumeAdjustmentDb;
-            return duration;
+            return totalDuration;
         }
 
         public IEnumerator Vocalize(VocalizerParameters parameters, VocalizationContext context, int idx, int lengthOfComposite)
         {
             ClearProgress();
-            var status = AudioManager.Play(parameters.synth.WithAttachmentToTransform(context.root), startImmediately: false);
-            if (!status.HasValue) yield break;
-            inst = status.Value;
-
             if (isStressed) parameters.ModifyWith(parameters.stressedVowelModifiers, createClone: false);
 
-            inst.setVolume(parameters.volume);
-            inst.setParameterByName("Pitch", initialPitch);
-            inst.setParameterByName("VolumeAdjustmentDB", volumeAdjustmentDB);
-            inst.setParameterByName("VowelOpeness", context.vowelOpenness);
-            inst.setParameterByName("VowelForwardness", context.vowelOpenness);
-            inst.start();
-
-            float totalDuration = duration * characters.Length;
             float totalT = 0f;
+            playingInstance = AudioManager.Play(parameters.synth
+                .WithAttachmentToTransform(context.root)
+                .WithFixedDuration(totalDuration)
+                .WithVolume(parameters.volume)
+                .WithParameter("Pitch", initialPitch)
+                .WithParameter("VolumeAdjustmentDB", volumeAdjustmentDB)
+                .WithParameter("VowelOpeness", context.vowelOpenness)
+                .WithParameter("VowelForwardness", context.vowelForwardness),
+                tick: delegate (ref EventInstance inst)
+                {
+                    inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, totalT / totalDuration));
+                    inst.setParameterByName("VowelOpeness", context.vowelOpenness);
+                    inst.setParameterByName("VowelForwardness", context.vowelForwardness);
+                }
+            );
+
+            if (playingInstance == null) yield break;
 
             for (int i = 0; i < characters.Length; i++)
             {
@@ -62,12 +70,9 @@ namespace SliderVocalization
                 var vowelDescriptor = WordVocalizer.vowelDescriptionTable[c];
 
                 _progress = i + 1;
-
                 while (t < duration)
                 {
-                    inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, totalT / totalDuration));
-                    inst.setParameterByName("VowelOpeness", context.vowelOpenness);
-                    inst.setParameterByName("VowelForwardness", context.vowelForwardness);
+                    // tick used to be called here, moved to AudioManager update function (see tick above)
                     context.vowelOpenness = Mathf.Lerp(context.vowelOpenness, vowelDescriptor.openness, t * parameters.lerpSmoothnessInverted);
                     context.vowelForwardness = Mathf.Lerp(context.vowelForwardness, vowelDescriptor.forwardness, t * parameters.lerpSmoothnessInverted);
                     t += Time.deltaTime;
@@ -93,8 +98,7 @@ namespace SliderVocalization
 
         public void Stop()
         {
-            inst.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            inst.release();
+            playingInstance?.Stop();
         }
 
     }

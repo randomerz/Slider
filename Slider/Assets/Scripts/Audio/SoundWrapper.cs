@@ -12,6 +12,7 @@ public struct SoundWrapper
     public bool valid;
     public bool useSpatials;
     public bool useDoppler;
+    public float duration;
 
     private SoundWrapper(Sound sound)
     {
@@ -23,6 +24,8 @@ public struct SoundWrapper
 
         useSpatials = false;
         useDoppler = false;
+
+        duration = 0;
 
         if (ToFmodInstance())
         {
@@ -60,7 +63,14 @@ public struct SoundWrapper
         return this;
     }
 
-    public FMOD.Studio.EventInstance? AndPlay() => valid ? AudioManager.Play(this) : null;
+    public SoundWrapper WithFixedDuration(float value)
+    {
+        if (value >= 0f) duration = value;
+        else Debug.LogWarning($"Setting sfx {sound?.name ?? "(no name)"} duration to negative");
+        return this;
+    }
+
+    public AudioManager.ManagedInstance AndPlay() => valid ? AudioManager.Play(this) : null;
 
     private bool ToFmodInstance()
     {
@@ -87,7 +97,8 @@ public static class SoundExtension
     public static SoundWrapper WithVolume(this Sound sound, float volume) => ((SoundWrapper) sound).WithVolume(volume);
     public static SoundWrapper WithPitch(this Sound sound, float pitch) => ((SoundWrapper)sound).WithPitch(pitch);
     public static SoundWrapper WithParameter(this Sound sound, string name, float value) => ((SoundWrapper)sound).WithParameter(name, value);
-    public static FMOD.Studio.EventInstance? AndPlay(this Sound sound) => ((SoundWrapper) sound).AndPlay();
+    public static SoundWrapper WithFixedDuration(this Sound sound, float value) => ((SoundWrapper)sound).WithFixedDuration(value);
+    public static AudioManager.ManagedInstance AndPlay(this Sound sound) => ((SoundWrapper) sound).AndPlay();
 
     public static FMOD.Studio.EventInstance? ToFmodInstance(this Sound sound)
     {
