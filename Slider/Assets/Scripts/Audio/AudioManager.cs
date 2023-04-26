@@ -216,8 +216,9 @@ public class AudioManager : Singleton<AudioManager>
         if (paused)
         {
             managedInstances.RemoveAll(attributes => attributes.ShouldStop);
+            return;
         }
-        if (managedInstances == null) managedInstances = new List<ManagedInstance>(10);
+        managedInstances ??= new List<ManagedInstance>(10);
         managedInstances.RemoveAll(delegate (ManagedInstance attributes)
         {
             if (attributes.inst.isValid())

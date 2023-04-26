@@ -21,7 +21,7 @@ namespace SliderVocalization
         public VocalizerCompositeStatus GetStatus();
         protected void SetStatus(VocalizerCompositeStatus value);
 
-        internal void PreRandomize(VocalizerParameters preset, VocalRandomizationContext context, T prior, T upcoming, int upcomingIdx);
+        internal void PreRandomize(VocalizerParameters preset, VocalRandomizationContext context, T upcoming);
 
         float IVocalizer.RandomizeVocalization (VocalizerParameters preset, VocalRandomizationContext context)
         {
@@ -29,7 +29,7 @@ namespace SliderVocalization
             for (int i = 0; i < Vocalizers.Count; i++)
             {
                 var v = Vocalizers[i];
-                PreRandomize(preset, context, default, v, i);
+                PreRandomize(preset, context, v);
                 totalDuration += v.RandomizeVocalization(preset, context);
             }
             return totalDuration;

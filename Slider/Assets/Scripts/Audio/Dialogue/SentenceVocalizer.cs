@@ -24,6 +24,8 @@ namespace SliderVocalization
         bool IVocalizer.IsEmpty => words.Count == 0;
 
         private WordVocalizer _Current;
+        private WordVocalizer FirstSpokenVocalizer;
+        private WordVocalizer LastSpokenVocalizer;
         private VocalizerCompositeStatus _Status;
 
         public enum Intonation { flat, up, down };
@@ -62,6 +64,7 @@ namespace SliderVocalization
             if (alphaNumeric.Count == 0) return;
 
             punctuation = default;
+            FirstSpokenVocalizer = null;
             for (int i = 0; i < alphaNumeric.Count; i++)
             {
                 Match match = alphaNumeric[i];
@@ -81,7 +84,9 @@ namespace SliderVocalization
                     }
                 }
 
-                words.Add(WordVocalizer.MakeSpokenVocalizer(clause.Substring(match.Index, match.Length)));
+                LastSpokenVocalizer = WordVocalizer.MakeSpokenVocalizer(clause.Substring(match.Index, match.Length));
+                if (FirstSpokenVocalizer == null) FirstSpokenVocalizer = LastSpokenVocalizer;
+                words.Add(LastSpokenVocalizer);
                 words.Add(WordVocalizer.MakePauseVocalizer(gap));
             }
             if (punctuation == default) punctuation = '.';
@@ -110,28 +115,28 @@ namespace SliderVocalization
             }
         }
 
-        void IVocalizerComposite<WordVocalizer>.PreRandomize(VocalizerParameters preset, VocalRandomizationContext context, WordVocalizer prior, WordVocalizer upcoming, int upcomingIdx)
+        void IVocalizerComposite<WordVocalizer>.PreRandomize(VocalizerParameters preset, VocalRandomizationContext context, WordVocalizer upcoming)
         {
-            if (prior == null)
+            if (upcoming == FirstSpokenVocalizer)
             {
                 // for the first word, initialize intonation of first word
                 // guess that short sentences more likely to start high
                 float pFirstWordHigh = (Vocalizers.Count <= 3) ? 0.75f : 0.25f;
                 context.isCurrentWordLow = Random.value > pFirstWordHigh;
             }
-            else if (upcomingIdx != Vocalizers.Count - 1 || intonation != Intonation.up)
-            {
-                context.isCurrentWordLow = context.isCurrentWordLow ? !preset.DoLowToHigh : context.isCurrentWordLow = preset.DoHighToLow;
-            }
-            else
+            else if (upcoming == LastSpokenVocalizer && intonation == Intonation.up)
             {
                 // last word in an upwards intonated sentence is always high
                 context.isCurrentWordLow = false;
             }
+            else
+            {
+                context.isCurrentWordLow = context.isCurrentWordLow ? !preset.DoLowToHigh : context.isCurrentWordLow = preset.DoHighToLow;
+            }
 
             // the last word can be heightened or lowered based on intonation
             context.wordPitchBase = preset.pitch;
-            context.wordPitchIntonated = (upcomingIdx == words.Count - 1 ? GetBasePitchFromIntonation(preset) : preset.pitch);
+            context.wordPitchIntonated = (upcoming == LastSpokenVocalizer ? GetBasePitchFromIntonation(preset) : preset.pitch);
         }
 
         public WordVocalizer GetCurrent() => _Current;

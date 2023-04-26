@@ -169,7 +169,7 @@ namespace SliderVocalization
         void IVocalizerComposite<BaseVocalizer>.SetStatus(VocalizerCompositeStatus value) => _Status = value;
 
         void IVocalizerComposite<BaseVocalizer>.PreRandomize(
-            VocalizerParameters preset, VocalRandomizationContext context, BaseVocalizer prior, BaseVocalizer upcoming, int upcomingIdx)
+            VocalizerParameters preset, VocalRandomizationContext context, BaseVocalizer upcoming)
         { }
     }
 

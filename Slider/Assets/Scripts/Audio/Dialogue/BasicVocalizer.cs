@@ -91,7 +91,7 @@ namespace SliderVocalization
             duration = parameters.duration * (context.isCurrentWordLow ? (1 - parameters.energeticWordSpeedup) : (1 + parameters.energeticWordSpeedup));
             totalDuration = duration * characters.Length;
             wordIntonationMultiplier = context.isCurrentWordLow ? (1 - parameters.wordIntonation) : (1 + parameters.wordIntonation);
-            initialPitch = context.wordPitchBase * wordIntonationMultiplier;
+            initialPitch = context.wordPitchBase * wordIntonationMultiplier * (1 + (Random.value - 0.5f) * 0.1f);
             finalPitch = context.wordPitchIntonated * wordIntonationMultiplier;
             volumeAdjustmentDB = parameters.volumeAdjustmentDb;
             return totalDuration;
@@ -113,7 +113,8 @@ namespace SliderVocalization
                 .WithParameter("VowelForwardness", context.vowelForwardness),
                 tick: delegate (ref EventInstance inst)
                 {
-                    inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, totalT / totalDuration));
+                    float t = (totalT / totalDuration);
+                    inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, t * t * t));
                     inst.setParameterByName("VowelOpeness", context.vowelOpenness);
                     inst.setParameterByName("VowelForwardness", context.vowelForwardness);
                 }
