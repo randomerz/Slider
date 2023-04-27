@@ -13,6 +13,7 @@ public struct SoundWrapper
     public bool useSpatials;
     public bool useDoppler;
     public float duration;
+    public float volume;
 
     public enum IndoorStatus
     {
@@ -33,6 +34,8 @@ public struct SoundWrapper
 
         duration = float.MaxValue;
         indoorStatus = IndoorStatus.UseEmitterLocation;
+
+        volume = 1;
 
         if (ToFmodInstance())
         {
@@ -65,7 +68,7 @@ public struct SoundWrapper
 
     public SoundWrapper WithVolume(float volume)
     {
-        if (valid) fmodInstance.setVolume(volume);
+        this.volume = volume;
         return this;
     }
 
@@ -112,6 +115,17 @@ public struct SoundWrapper
 
         fmodInstance = instOpt.Value;
         return true;
+    }
+
+    public void PlayAsOneshot()
+    {
+        if (!valid)
+        {
+            Debug.LogWarning($"Trying to play invalid { sound?.name } as oneshot");
+        }
+        fmodInstance.start();
+        fmodInstance.setVolume(volume);
+        fmodInstance.release();
     }
 }
 

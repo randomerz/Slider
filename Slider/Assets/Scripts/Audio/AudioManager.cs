@@ -49,6 +49,8 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField]
     private bool IndoorIsolatedFromWorld = false;
     private static bool listenerIsIndoor;
+    [SerializeField, Range(0, 1)]
+    private float indoorMuteFactor;
 
     private static Dictionary<string, Sound> soundsDict
     {
@@ -175,8 +177,7 @@ public class AudioManager : Singleton<AudioManager>
             return attributes;
         } else
         {
-            soundWrapper.fmodInstance.start();
-            soundWrapper.fmodInstance.release();
+            soundWrapper.PlayAsOneshot();
             return null;
         }
     }
@@ -531,96 +532,105 @@ public class AudioManager : Singleton<AudioManager>
 
     public class ManagedInstance
     {
-        private EventInstance inst;
-        private readonly Transform transform;
+        private SoundWrapper soundWrapper;
         /// <summary>
         /// For wrappers with useSpatials but no root transform, the listener transform is injected to root. isOverridingTransform is ony set to true in this case.
         /// </summary>
         private readonly bool isOverridingTransform;
         private float progress;
-        private readonly float duration;
-        private readonly float dopplerScale;
-        private readonly bool useDoppler;
         private Vector3 position;
 
-        public bool Valid => inst.isValid();
+        public bool Valid => soundWrapper.fmodInstance.isValid();
         public bool Stopped
-            => inst.getPlaybackState(out PLAYBACK_STATE playback) != FMOD.RESULT.OK || playback != PLAYBACK_STATE.STOPPED;
+            => soundWrapper.fmodInstance.getPlaybackState(out PLAYBACK_STATE playback) != FMOD.RESULT.OK || playback != PLAYBACK_STATE.STOPPED;
 
         public bool Started
-            => inst.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK && playback == PLAYBACK_STATE.STARTING;
+            => soundWrapper.fmodInstance.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK && playback == PLAYBACK_STATE.STARTING;
         public readonly bool IsIndoor;
 
         public ManagedInstance(in SoundWrapper soundWrapper, bool isOverridingTransform)
         {
-            inst = soundWrapper.fmodInstance;
-            transform = soundWrapper.root;
-            position = transform.position;
+            this.soundWrapper = soundWrapper;
+            position = soundWrapper.root.position;
             progress = 0;
-            duration = soundWrapper.duration;
-            useDoppler = soundWrapper.useDoppler;
-            dopplerScale = soundWrapper.sound.dopplerScale;
             IsIndoor = soundWrapper.IsActuallyIndoor();
             this.isOverridingTransform = isOverridingTransform;
 
-            inst.set3DAttributes(CalculatePositionIncorporateIndoor(position).To3DAttributes());
-            inst.start();
+            bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref position);
+            AdjustForIndoorDisagreement(indoorStatusDisagree);
+            soundWrapper.fmodInstance.set3DAttributes(position.To3DAttributes());
+            soundWrapper.fmodInstance.start();
         }
 
         public void Stop()
         {
-            inst.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            inst.release();
+            soundWrapper.fmodInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            soundWrapper.fmodInstance.release();
         }
 
         public void SetPaused(bool paused)
         {
-            inst.setPaused(paused);
+            soundWrapper.fmodInstance.setPaused(paused);
         }
 
         public void Tick(EventInstanceTick tick)
         {
-            tick(ref inst);
+            tick(ref soundWrapper.fmodInstance);
         }
 
         public void GetAndUpdate(float dt)
         {
             progress += dt;
-            if (progress >= duration)
+            if (progress >= soundWrapper.duration)
             {
                 Stop();
                 return;
             }
-            if (!useDoppler)
+            if (!soundWrapper.useDoppler)
             {
-                Vector3 shiftedPosition = CalculatePositionIncorporateIndoor(transform.position);
-                inst.set3DAttributes(shiftedPosition.To3DAttributes());
+                Vector3 shiftedPosition = soundWrapper.root.position;
+                bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref shiftedPosition);
+                soundWrapper.fmodInstance.set3DAttributes(shiftedPosition.To3DAttributes());
+                AdjustForIndoorDisagreement(indoorStatusDisagree);
             }
             else
             {
-                Vector3 p = transform.position;
+                Vector3 p = soundWrapper.root.position;
                 Vector3 v = dt > float.Epsilon ? (p - position) / (dt) : Vector3.zero;
 
                 position = p;
-                inst.set3DAttributes(new FMOD.ATTRIBUTES_3D
+                bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref p);
+                AdjustForIndoorDisagreement(indoorStatusDisagree);
+                soundWrapper.fmodInstance.set3DAttributes(new FMOD.ATTRIBUTES_3D
                 {
                     forward = Vector3.forward.ToFMODVector(),
                     up = Vector3.up.ToFMODVector(),
-                    position = CalculatePositionIncorporateIndoor(p).ToFMODVector(),
-                    velocity = (v * dopplerScale).ToFMODVector()
+                    position = p.ToFMODVector(),
+                    velocity = (v * soundWrapper.sound.dopplerScale).ToFMODVector()
                 });
             }
         }
 
-        private Vector3 CalculatePositionIncorporateIndoor(Vector3 original)
+        /// <returns>Returns whether indoor status disagrees with listener's indoor status</returns>
+        private bool CalculatePositionIncorporateIndoor(ref Vector3 original)
         {
-            if (IsIndoor == listenerIsIndoor || isOverridingTransform) return original;
+            if (IsIndoor == listenerIsIndoor) return false;
+            if (isOverridingTransform) return true;
             if (listenerIsIndoor)
             {
-                return original + SGrid.GetHousingOffset() * Vector3.up;
+                original += SGrid.GetHousingOffset() * Vector3.up;
             } else
             {
-                return original + SGrid.GetHousingOffset() * Vector3.down;
+                original += SGrid.GetHousingOffset() * Vector3.down;
+            }
+            return true;
+        }
+
+        private void AdjustForIndoorDisagreement(bool indoorStatusDisagree)
+        {
+            if (indoorStatusDisagree)
+            {
+                soundWrapper.fmodInstance.setVolume(soundWrapper.volume - _instance.indoorMuteFactor);
             }
         }
     }
