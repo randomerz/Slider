@@ -682,6 +682,8 @@ public void SetGrid(int[,] puzzle)
         return Current.GetNumButtonCompletionsHelper();
     }
 
+    public static int GetHousingOffset() => _instance.housingOffset;
+
     protected virtual int GetNumButtonCompletionsHelper()
     {
         int numComplete = 0;

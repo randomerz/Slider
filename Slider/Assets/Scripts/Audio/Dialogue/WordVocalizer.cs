@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace SliderVocalization
@@ -53,14 +54,14 @@ namespace SliderVocalization
 
             result.clusters = new List<PhonemeClusterVocalizer>();
             // replace numeric digits with random vowels
-            result.characters = new string(raw.Select(c => char.IsDigit(c) ? RandomVowel : c).ToArray());
+            result.characters = new string(raw.Select(c => char.ToLower(char.IsDigit(c) ? RandomVowel : c)).ToArray());
 
             // convert word to clusters
             bool lastCharIsVowel = vowelDescriptionTable.ContainsKey(result.characters[0]);
             result.clusters.Add(new PhonemeClusterVocalizer()
             {
                 isVowelCluster = lastCharIsVowel,
-                characters = result.characters[0].ToString()
+                characters = new StringBuilder().Append(result.characters[0])
             });
             for (int i = 1; i < result.characters.Length; i++)
             {
@@ -71,12 +72,12 @@ namespace SliderVocalization
                     result.clusters.Add(new PhonemeClusterVocalizer()
                     {
                         isVowelCluster = currCharIsVowel,
-                        characters = c.ToString()
+                        characters = new StringBuilder().Append(c)
                     });
                 }
                 else
                 {
-                    result.clusters[^1].characters += c;
+                    result.clusters[^1].characters.Append(c);
                 }
                 lastCharIsVowel = currCharIsVowel;
             }
@@ -100,7 +101,7 @@ namespace SliderVocalization
         public static WordVocalizer MakePauseVocalizer(string punctuation)
             => new()
             {
-                m_Vocalizers = new List<BaseVocalizer> { new PunctuationVocalizer() { characters = punctuation } }
+                m_Vocalizers = new List<BaseVocalizer> { new PunctuationVocalizer() { characters = new StringBuilder(punctuation) } }
             };
 
         public static WordVocalizer MakeClauseEndingVocalizer()
