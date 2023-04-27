@@ -81,15 +81,15 @@ namespace SliderVocalization {
         public bool overrideIntonation;
         public SentenceVocalizer.Intonation intonationOverride;
 
-        public void ApplyOn(ref VocalizerParameters parameters)
+        public void ApplyOn(ref VocalizerParameters preset)
         {
-            parameters.pitch += pitchAddition;
-            parameters.volumeAdjustmentDb += volumeAdjustmentDb;
-            parameters.duration += durationAddition;
+            preset.pitch += pitchAddition;
+            preset.volumeAdjustmentDb += volumeAdjustmentDb;
+            preset.duration += durationAddition;
             if (overrideIntonation)
             {
-                parameters.overrideIntonation = overrideIntonation;
-                parameters.intonationOverride = intonationOverride;
+                preset.overrideIntonation = overrideIntonation;
+                preset.intonationOverride = intonationOverride;
             }
         }
     }
