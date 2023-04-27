@@ -1,6 +1,7 @@
 using FMOD.Studio;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -17,18 +18,18 @@ namespace SliderVocalization
         protected int _progress = 0;
         public void ClearProgress() => _progress = 0;
 
-        public abstract float RandomizeVocalization(VocalizerParameters parameters, VocalRandomizationContext context);
+        public abstract float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context);
         public abstract void Stop();
-        public abstract IEnumerator Vocalize(VocalizerParameters parameters, VocalizationContext context, int idx = 0, int lengthOfComposite = 1);
+        public abstract IEnumerator Vocalize(VocalizerParameters preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1);
     }
 
     public class PauseVocalizer : BaseVocalizer
     {
 
-        public override float RandomizeVocalization(VocalizerParameters parameters, VocalRandomizationContext context) => parameters.clauseGap;
-        public override IEnumerator Vocalize(VocalizerParameters parameters, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
+        public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context) => preset.clauseGap;
+        public override IEnumerator Vocalize(VocalizerParameters preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
         {
-            yield return new WaitForSeconds(parameters.clauseGap);
+            yield return new WaitForSeconds(preset.clauseGap);
         }
         public override void Stop() { }
 
@@ -44,15 +45,15 @@ namespace SliderVocalization
 
     public class PunctuationVocalizer : BaseVocalizer
     {
-        public override float RandomizeVocalization(VocalizerParameters parameters, VocalRandomizationContext context) 
-            => parameters.duration * characters.Length;
+        public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context) 
+            => preset.duration * characters.Length;
 
-        public override IEnumerator Vocalize(VocalizerParameters parameters, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
+        public override IEnumerator Vocalize(VocalizerParameters preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
         {
             for (int i = 0; i < characters.Length; i++)
             {
                 _progress = i + 1;
-                yield return new WaitForSeconds(parameters.duration);
+                yield return new WaitForSeconds(preset.duration);
             }
         }
 
@@ -83,28 +84,28 @@ namespace SliderVocalization
         #endregion
         AudioManager.ManagedInstance playingInstance;
 
-        public override float RandomizeVocalization(VocalizerParameters parameters, VocalRandomizationContext context)
+        public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context)
         {
-            duration = parameters.duration * (context.isCurrentWordLow ? (1 - parameters.energeticWordSpeedup) : (1 + parameters.energeticWordSpeedup));
+            duration = preset.duration * (context.isCurrentWordLow ? (1 - preset.energeticWordSpeedup) : (1 + preset.energeticWordSpeedup));
             totalDuration = duration * characters.Length;
-            wordIntonationMultiplier = context.isCurrentWordLow ? (1 - parameters.wordIntonation) : (1 + parameters.wordIntonation);
+            wordIntonationMultiplier = context.isCurrentWordLow ? (1 - preset.wordIntonation) : (1 + preset.wordIntonation);
             initialPitch = context.wordPitchBase * wordIntonationMultiplier * (1 + (Random.value - 0.5f) * 0.1f);
             finalPitch = context.wordPitchIntonated * wordIntonationMultiplier * (1 + (Random.value - 0.5f) * 0.1f);
-            volumeAdjustmentDB = parameters.volumeAdjustmentDb;
+            volumeAdjustmentDB = preset.volumeAdjustmentDb;
             return totalDuration;
         }
 
-        public override IEnumerator Vocalize(VocalizerParameters parameters, VocalizationContext context, int idx, int lengthOfComposite)
+        public override IEnumerator Vocalize(VocalizerParameters preset, VocalizationContext context, int idx, int lengthOfComposite)
         {
             ClearProgress();
-            if (isStressed) parameters.ModifyWith(parameters.stressedVowelModifiers, createClone: false);
+            if (isStressed) preset.ModifyWith(preset.stressedVowelModifiers, createClone: false);
 
             float totalT = 0f;
 
-            SoundWrapper wrapper = parameters.synth
+            SoundWrapper wrapper = preset.synth
                 .WithAttachmentToTransform(context.root)
                 .WithFixedDuration(totalDuration)
-                .WithVolume(parameters.volume)
+                .WithVolume(preset.volume)
                 .WithParameter("Pitch", initialPitch)
                 .WithParameter("VolumeAdjustmentDB", volumeAdjustmentDB)
                 .WithParameter("VowelOpeness", context.vowelOpenness)
@@ -132,8 +133,8 @@ namespace SliderVocalization
                         inst.setParameterByName("VowelOpeness", context.vowelOpenness);
                         inst.setParameterByName("VowelForwardness", context.vowelForwardness);
                     });
-                    context.vowelOpenness = Mathf.Lerp(context.vowelOpenness, vowelDescriptor.openness, t * parameters.lerpSmoothnessInverted);
-                    context.vowelForwardness = Mathf.Lerp(context.vowelForwardness, vowelDescriptor.forwardness, t * parameters.lerpSmoothnessInverted);
+                    context.vowelOpenness = Mathf.Lerp(context.vowelOpenness, vowelDescriptor.openness, t * preset.lerpSmoothnessInverted);
+                    context.vowelForwardness = Mathf.Lerp(context.vowelForwardness, vowelDescriptor.forwardness, t * preset.lerpSmoothnessInverted);
                     t += Time.deltaTime;
                     totalT += Time.deltaTime;
                     yield return null;
@@ -141,7 +142,6 @@ namespace SliderVocalization
             }
             Stop();
         }
-
         public override string ToString()
         {
 #if UNITY_EDITOR

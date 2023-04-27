@@ -85,9 +85,12 @@ namespace SliderVocalization
                 }
 
                 LastSpokenVocalizer = WordVocalizer.MakeSpokenVocalizer(clause.Substring(match.Index, match.Length));
-                FirstSpokenVocalizer ??= LastSpokenVocalizer;
-                words.Add(LastSpokenVocalizer);
-                words.Add(WordVocalizer.MakePauseVocalizer(gap));
+                if (!LastSpokenVocalizer.IsEmpty)
+                {
+                    FirstSpokenVocalizer ??= LastSpokenVocalizer;
+                    words.Add(LastSpokenVocalizer);
+                    words.Add(WordVocalizer.MakePauseVocalizer(gap));
+                }
             }
             if (punctuation == default) punctuation = '.';
             words.Add(WordVocalizer.MakeClauseEndingVocalizer());
