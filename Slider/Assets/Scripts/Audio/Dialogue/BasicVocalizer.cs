@@ -110,14 +110,7 @@ namespace SliderVocalization
                 .WithParameter("Pitch", initialPitch)
                 .WithParameter("VolumeAdjustmentDB", volumeAdjustmentDB)
                 .WithParameter("VowelOpeness", context.vowelOpenness)
-                .WithParameter("VowelForwardness", context.vowelForwardness),
-                tick: delegate (ref EventInstance inst)
-                {
-                    float t = (totalT / totalDuration);
-                    inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, t * t * t));
-                    inst.setParameterByName("VowelOpeness", context.vowelOpenness);
-                    inst.setParameterByName("VowelForwardness", context.vowelForwardness);
-                }
+                .WithParameter("VowelForwardness", context.vowelForwardness)
             );
 
             if (playingInstance == null) yield break;
@@ -131,7 +124,13 @@ namespace SliderVocalization
                 _progress = i + 1;
                 while (t < duration)
                 {
-                    // tick used to be called here, moved to AudioManager update function (see tick above)
+                    playingInstance.Tick(delegate (ref EventInstance inst)
+                    {
+                        float t = (totalT / totalDuration);
+                        inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, t));
+                        inst.setParameterByName("VowelOpeness", context.vowelOpenness);
+                        inst.setParameterByName("VowelForwardness", context.vowelForwardness);
+                    });
                     context.vowelOpenness = Mathf.Lerp(context.vowelOpenness, vowelDescriptor.openness, t * parameters.lerpSmoothnessInverted);
                     context.vowelForwardness = Mathf.Lerp(context.vowelForwardness, vowelDescriptor.forwardness, t * parameters.lerpSmoothnessInverted);
                     t += Time.deltaTime;

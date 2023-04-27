@@ -154,7 +154,7 @@ public class AudioManager : Singleton<AudioManager>
 
     public delegate void EventInstanceTick(ref EventInstance item);
 
-    public static ManagedInstance Play(SoundWrapper soundWrapper, EventInstanceTick tick = default)
+    public static ManagedInstance Play(SoundWrapper soundWrapper)
     {
         if (!soundWrapper.valid) return null;
         var inst = soundWrapper.fmodInstance;
@@ -167,8 +167,7 @@ public class AudioManager : Singleton<AudioManager>
                 soundWrapper.root == null ? _instance.listenerWorldPosition.transform : soundWrapper.root, 
                 soundWrapper.useDoppler, 
                 soundWrapper.sound.dopplerScale,
-                soundWrapper.duration,
-                tick);
+                soundWrapper.duration);
             inst.start();
             managedInstances.Add(attributes);
             return attributes;
@@ -534,7 +533,6 @@ public class AudioManager : Singleton<AudioManager>
         private readonly float dopplerScale;
         private readonly bool useDoppler;
         private Vector3 position;
-        private readonly EventInstanceTick tick;
 
         public bool Valid => inst.isValid();
         public bool Stopped
@@ -542,7 +540,7 @@ public class AudioManager : Singleton<AudioManager>
             
         public bool IsIndoor => position.y > -75;
 
-        public ManagedInstance(EventInstance inst, Transform transform, bool useDoppler, float dopplerScale, float duration, EventInstanceTick tick)
+        public ManagedInstance(EventInstance inst, Transform transform, bool useDoppler, float dopplerScale, float duration)
         {
             this.inst = inst;
             this.transform = transform;
@@ -551,8 +549,6 @@ public class AudioManager : Singleton<AudioManager>
             this.duration = duration;
             this.useDoppler = useDoppler;
             this.dopplerScale = dopplerScale;
-            this.tick = tick;
-
             inst.set3DAttributes(CalculatePositionIncorporateIndoor(position).To3DAttributes());
         }
 
@@ -567,10 +563,13 @@ public class AudioManager : Singleton<AudioManager>
             inst.setPaused(paused);
         }
 
+        public void Tick(EventInstanceTick tick)
+        {
+            tick(ref inst);
+        }
+
         public void GetAndUpdate(float dt)
         {
-            if (tick != default) tick(ref inst);
-
             progress += dt;
             if (progress >= duration)
             {
@@ -596,6 +595,8 @@ public class AudioManager : Singleton<AudioManager>
                     velocity = (v * dopplerScale).ToFMODVector()
                 });
             }
+
+            Debug.Log($"{inst} set attributes");
         }
 
         private Vector3 CalculatePositionIncorporateIndoor(Vector3 original)
