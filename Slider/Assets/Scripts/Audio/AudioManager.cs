@@ -210,6 +210,7 @@ public class AudioManager : Singleton<AudioManager>
     public static void SetPaused(bool paused)
     {
         AudioManager.paused = paused;
+        managedInstances ??= new List<ManagedInstance>(10);
         foreach (ManagedInstance attributes in managedInstances)
         {
             attributes.SetPaused(paused);
@@ -543,8 +544,7 @@ public class AudioManager : Singleton<AudioManager>
 
         public bool Started
             => inst.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK && playback == PLAYBACK_STATE.STARTING;
-
-        public bool IsIndoor => position.y < -75;
+        public readonly bool IsIndoor;
 
         public ManagedInstance(in SoundWrapper soundWrapper)
         {
@@ -555,6 +555,7 @@ public class AudioManager : Singleton<AudioManager>
             duration = soundWrapper.duration;
             useDoppler = soundWrapper.useDoppler;
             dopplerScale = soundWrapper.sound.dopplerScale;
+            IsIndoor = soundWrapper.IsActuallyIndoor();
 
             inst.set3DAttributes(CalculatePositionIncorporateIndoor(position).To3DAttributes());
             inst.start();
@@ -610,10 +611,10 @@ public class AudioManager : Singleton<AudioManager>
             if (IsIndoor == listenerIsIndoor) return original;
             if (listenerIsIndoor)
             {
-                return original + SGrid.GetHousingOffset() * Vector3.down;
+                return original + SGrid.GetHousingOffset() * Vector3.up;
             } else
             {
-                return original + SGrid.GetHousingOffset() * Vector3.up;
+                return original + SGrid.GetHousingOffset() * Vector3.down;
             }
         }
     }

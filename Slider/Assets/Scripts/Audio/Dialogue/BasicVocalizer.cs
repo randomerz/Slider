@@ -1,6 +1,7 @@
 using FMOD.Studio;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace SliderVocalization
@@ -10,7 +11,7 @@ namespace SliderVocalization
     /// </summary>
     public abstract class BaseVocalizer : IVocalizer
     {
-        public string characters;
+        public StringBuilder characters;
         public bool IsEmpty => characters.Length == 0;
         public int Progress => _progress;
         protected int _progress = 0;
@@ -60,7 +61,8 @@ namespace SliderVocalization
         public override string ToString()
         {
 #if UNITY_EDITOR
-            return $"<color=cyan>{characters.Substring(0, Progress)}</color>{characters.Substring(Progress)}";
+            string str = characters.ToString();
+            return $"<color=cyan>{str.Substring(0, Progress)}</color>{str.Substring(Progress)}";
 #else
             return characters;
 #endif
@@ -143,7 +145,8 @@ namespace SliderVocalization
         public override string ToString()
         {
 #if UNITY_EDITOR
-            string text = $"<color=green>{characters.Substring(0, Progress)}</color>{characters.Substring(Progress)}";
+            string str = characters.ToString();
+            string text = $"<color=green>{str.Substring(0, Progress)}</color>{str.Substring(Progress)}";
             string pre = $"{(isVowelCluster ? "<B>" : "")}{(isStressed ? "<size=16>" : "")}";
             string post = $"{(isStressed ? "</size>" : "")}{(isVowelCluster ? "</B>" : "")}";
             return $"{pre}{text}{post}";

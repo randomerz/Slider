@@ -26,6 +26,11 @@ namespace SliderVocalization
         float IVocalizer.RandomizeVocalization (VocalizerParameters preset, VocalRandomizationContext context)
         {
             float totalDuration = 0;
+            if (Vocalizers == null)
+            {
+                Debug.LogWarning($"{ToString()} => vocalizers null");
+                return 0;
+            }
             for (int i = 0; i < Vocalizers.Count; i++)
             {
                 var v = Vocalizers[i];
@@ -39,6 +44,11 @@ namespace SliderVocalization
         {
             yield return new WaitUntil(() => GetStatus() == VocalizerCompositeStatus.CanPlay);
             SetStatus(VocalizerCompositeStatus.Playing);
+            if (Vocalizers == null)
+            {
+                Debug.LogWarning($"{ToString()} => vocalizers null");
+                yield break;
+            }
             for (int i = 0; i < Vocalizers.Count; i++)
             {
                 var v = Vocalizers[i];
