@@ -46,6 +46,10 @@ public class AudioManager : Singleton<AudioManager>
 
     private static bool paused;
 
+    [SerializeField]
+    private bool IndoorIsolatedFromWorld = false;
+    private static bool listenerIsIndoor;
+
     private static Dictionary<string, Sound> soundsDict
     {
         get
@@ -206,49 +210,23 @@ public class AudioManager : Singleton<AudioManager>
         AudioManager.paused = paused;
         foreach (ManagedInstance attributes in managedInstances)
         {
-            attributes.inst.setPaused(paused);
+            attributes.SetPaused(paused);
         }
     }
 
     private static void UpdateManagedInstances(float dt)
     {
-        if (paused)
-        {
-            managedInstances.RemoveAll(attributes => attributes.ShouldStop);
-            return;
-        }
         managedInstances ??= new List<ManagedInstance>(10);
+        if (!paused)
+        {
+            foreach (ManagedInstance attributes in managedInstances)
+            {
+                attributes.GetAndUpdate(dt);
+            }
+        }
         managedInstances.RemoveAll(delegate (ManagedInstance attributes)
         {
-            if (attributes.inst.isValid())
-            {
-                // instance not already relased
-                if (
-                    attributes.inst.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK 
-                    && playback != PLAYBACK_STATE.STOPPED)
-                {
-                    // instance still playing (including the "stopping" state for events that allow fadeout)
-                    attributes.inst.set3DAttributes(attributes.GetAndUpdate(dt, out bool shouldStop));
-                    if (shouldStop)
-                    {
-                        attributes.inst.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                        attributes.inst.release();
-                        return true;
-                    }
-                    return false;
-                }
-                else
-                {
-                    // instance stopped playing
-                    attributes.inst.release();
-                    return true;
-                }
-            }
-            else
-            {
-                // instance already released
-                return true;
-            }
+            return !attributes.Valid || attributes.Stopped;
         });
     }
 
@@ -508,18 +486,61 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
+    public static void SetListenerIsIndoor(bool isInHouse)
+    {
+        listenerIsIndoor = isInHouse;
+        if (isInHouse)
+        {
+            if (_instance.IndoorIsolatedFromWorld)
+            {
+                // cut off world sounds
+                managedInstances?.RemoveAll(delegate (ManagedInstance managedInstance)
+                {
+                    if (!managedInstance.IsIndoor)
+                    {
+                        managedInstance.Stop();
+                        return true;
+                    }
+                    return false;
+                });
+            }
+            EnqueueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
+        }
+        else
+        {
+            if (_instance.IndoorIsolatedFromWorld)
+            {
+                // cut off indoor sounds
+                managedInstances?.RemoveAll(delegate (ManagedInstance managedInstance)
+                {
+                    if (managedInstance.IsIndoor)
+                    {
+                        managedInstance.Stop();
+                        return true;
+                    }
+                    return false;
+                });
+            }
+            DequeueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
+        }
+    }
+
     public class ManagedInstance
     {
-        public EventInstance inst;
+        private EventInstance inst;
         private readonly Transform transform;
         private float progress;
-        private float duration;
+        private readonly float duration;
         private readonly float dopplerScale;
         private readonly bool useDoppler;
         private Vector3 position;
         private readonly EventInstanceTick tick;
-        private bool stop;
-        public bool ShouldStop => stop;
+
+        public bool Valid => inst.isValid();
+        public bool Stopped
+            => inst.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK && playback != PLAYBACK_STATE.STOPPED;
+            
+        public bool IsIndoor => position.y > -75;
 
         public ManagedInstance(EventInstance inst, Transform transform, bool useDoppler, float dopplerScale, float duration, EventInstanceTick tick)
         {
@@ -531,36 +552,64 @@ public class AudioManager : Singleton<AudioManager>
             this.useDoppler = useDoppler;
             this.dopplerScale = dopplerScale;
             this.tick = tick;
-            stop = false;
+
+            inst.set3DAttributes(CalculatePositionIncorporateIndoor(position).To3DAttributes());
         }
 
         public void Stop()
         {
-            stop = true;
+            inst.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            inst.release();
         }
 
-        public FMOD.ATTRIBUTES_3D GetAndUpdate(float dt, out bool shouldStop)
+        public void SetPaused(bool paused)
+        {
+            inst.setPaused(paused);
+        }
+
+        public void GetAndUpdate(float dt)
         {
             if (tick != default) tick(ref inst);
 
             progress += dt;
-            shouldStop = stop || progress >= duration;
+            if (progress >= duration)
+            {
+                Stop();
+                return;
+            }
             if (!useDoppler)
             {
-                return transform.position.To3DAttributes();
+                Vector3 shiftedPosition = CalculatePositionIncorporateIndoor(transform.position);
+                inst.set3DAttributes(shiftedPosition.To3DAttributes());
             }
-
-            Vector3 p = transform.position;
-            Vector3 v = dt > float.Epsilon ? (p - position) / (dt) : Vector3.zero;
-
-            position = p;
-            return new FMOD.ATTRIBUTES_3D
+            else
             {
-                forward = Vector3.forward.ToFMODVector(),
-                up = Vector3.up.ToFMODVector(),
-                position = p.ToFMODVector(),
-                velocity = (v * dopplerScale).ToFMODVector()
-            };
+                Vector3 p = transform.position;
+                Vector3 v = dt > float.Epsilon ? (p - position) / (dt) : Vector3.zero;
+
+                position = p;
+                inst.set3DAttributes(new FMOD.ATTRIBUTES_3D
+                {
+                    forward = Vector3.forward.ToFMODVector(),
+                    up = Vector3.up.ToFMODVector(),
+                    position = CalculatePositionIncorporateIndoor(p).ToFMODVector(),
+                    velocity = (v * dopplerScale).ToFMODVector()
+                });
+            }
+        }
+
+        private Vector3 CalculatePositionIncorporateIndoor(Vector3 original)
+        {
+            if (IsIndoor == listenerIsIndoor) return original;
+            if (listenerIsIndoor)
+            {
+                // shift down to meet the listener
+                return original + SGrid.GetHousingOffset() * Vector3.down;
+            } else
+            {
+                // shift up to meet the listener
+                return original + SGrid.GetHousingOffset() * Vector3.up;
+            }
         }
     }
 }
