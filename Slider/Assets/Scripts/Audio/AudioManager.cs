@@ -154,34 +154,30 @@ public class AudioManager : Singleton<AudioManager>
 
     public delegate void EventInstanceTick(ref EventInstance item);
 
-    public static ManagedInstance Play(SoundWrapper soundWrapper)
+    public static ManagedInstance Play(ref SoundWrapper soundWrapper)
     {
         if (!soundWrapper.valid) return null;
-        var inst = soundWrapper.fmodInstance;
 
         if (soundWrapper.useSpatials)
         {
-            managedInstances ??= new List<ManagedInstance>(10);
-            var attributes = new ManagedInstance(
-                inst,
-                soundWrapper.root == null ? _instance.listenerWorldPosition.transform : soundWrapper.root, 
-                soundWrapper.useDoppler,
-                soundWrapper.sound.dopplerScale,
-                soundWrapper.duration);
-            if (_instance.IndoorIsolatedFromWorld && attributes.IsIndoor != listenerIsIndoor)
+            soundWrapper.root = soundWrapper.root != null ? soundWrapper.root : _instance.listenerWorldPosition;
+            if (_instance.IndoorIsolatedFromWorld && soundWrapper.IsActuallyIndoor() != listenerIsIndoor)
             {
-                Debug.Log("DO NOT START");
+                // AT: this is just to mute the error, idk why FMOD gives a warning log even if the sound is not meant to be played...
+                //     releasing the instance doesn't help either
+                soundWrapper.fmodInstance.set3DAttributes(_instance.transform.To3DAttributes());
                 return null;
-            } else
-            {
-                inst.start();
-                managedInstances.Add(attributes);
-                return attributes;
             }
+            managedInstances ??= new List<ManagedInstance>(10);
+            var attributes = new ManagedInstance(soundWrapper);
+            managedInstances.Add(attributes);
+            return attributes;
+        } else
+        {
+            soundWrapper.fmodInstance.start();
+            soundWrapper.fmodInstance.release();
+            return null;
         }
-        inst.start();
-        inst.release();
-        return null;
     }
 
     public static SoundWrapper PickSound(string name)
@@ -550,16 +546,18 @@ public class AudioManager : Singleton<AudioManager>
 
         public bool IsIndoor => position.y < -75;
 
-        public ManagedInstance(EventInstance inst, Transform transform, bool useDoppler, float dopplerScale, float duration)
+        public ManagedInstance(in SoundWrapper soundWrapper)
         {
-            this.inst = inst;
-            this.transform = transform;
+            inst = soundWrapper.fmodInstance;
+            transform = soundWrapper.root;
             position = transform.position;
             progress = 0;
-            this.duration = duration;
-            this.useDoppler = useDoppler;
-            this.dopplerScale = dopplerScale;
+            duration = soundWrapper.duration;
+            useDoppler = soundWrapper.useDoppler;
+            dopplerScale = soundWrapper.sound.dopplerScale;
+
             inst.set3DAttributes(CalculatePositionIncorporateIndoor(position).To3DAttributes());
+            inst.start();
         }
 
         public void Stop()

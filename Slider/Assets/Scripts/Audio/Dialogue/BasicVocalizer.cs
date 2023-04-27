@@ -98,14 +98,18 @@ namespace SliderVocalization
             if (isStressed) parameters.ModifyWith(parameters.stressedVowelModifiers, createClone: false);
 
             float totalT = 0f;
-            playingInstance = AudioManager.Play(parameters.synth
+
+            SoundWrapper wrapper = parameters.synth
                 .WithAttachmentToTransform(context.root)
                 .WithFixedDuration(totalDuration)
                 .WithVolume(parameters.volume)
                 .WithParameter("Pitch", initialPitch)
                 .WithParameter("VolumeAdjustmentDB", volumeAdjustmentDB)
                 .WithParameter("VowelOpeness", context.vowelOpenness)
-                .WithParameter("VowelForwardness", context.vowelForwardness)
+                .WithParameter("VowelForwardness", context.vowelForwardness);
+
+            playingInstance = AudioManager.Play(
+                ref wrapper
             );
 
             if (playingInstance == null) yield break;

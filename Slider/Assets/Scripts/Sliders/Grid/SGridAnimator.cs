@@ -227,6 +227,7 @@ public class SGridAnimator : MonoBehaviour
             .PickSound(isConveyor ? "Conveyor" : "Slide Rumble")
             .WithAttachmentToTransform(root)
             .WithVolume(currMoveDuration)
+            .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
             .AndPlay();
     }
 
@@ -237,6 +238,7 @@ public class SGridAnimator : MonoBehaviour
             .PickSound("Slide Explosion")
             .WithAttachmentToTransform(root)
             .WithVolume(currMoveDuration)
+            .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
             .AndPlay();
     }
 
