@@ -536,9 +536,13 @@ public class AudioManager : Singleton<AudioManager>
 
         public bool Valid => inst.isValid();
         public bool Stopped
-            => inst.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK && playback != PLAYBACK_STATE.STOPPED;
-            
-        public bool IsIndoor => position.y > -75;
+            => inst.getPlaybackState(out PLAYBACK_STATE playback) != FMOD.RESULT.OK || playback != PLAYBACK_STATE.STOPPED;
+
+        public bool Started
+            => inst.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK && playback == PLAYBACK_STATE.STARTING;
+
+
+        public bool IsIndoor => position.y < -75;
 
         public ManagedInstance(EventInstance inst, Transform transform, bool useDoppler, float dopplerScale, float duration)
         {
@@ -595,8 +599,6 @@ public class AudioManager : Singleton<AudioManager>
                     velocity = (v * dopplerScale).ToFMODVector()
                 });
             }
-
-            Debug.Log($"{inst} set attributes");
         }
 
         private Vector3 CalculatePositionIncorporateIndoor(Vector3 original)
@@ -604,11 +606,9 @@ public class AudioManager : Singleton<AudioManager>
             if (IsIndoor == listenerIsIndoor) return original;
             if (listenerIsIndoor)
             {
-                // shift down to meet the listener
                 return original + SGrid.GetHousingOffset() * Vector3.down;
             } else
             {
-                // shift up to meet the listener
                 return original + SGrid.GetHousingOffset() * Vector3.up;
             }
         }

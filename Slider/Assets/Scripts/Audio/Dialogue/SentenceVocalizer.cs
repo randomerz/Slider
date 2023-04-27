@@ -34,8 +34,8 @@ namespace SliderVocalization
             => (preset.overrideIntonation ? preset.intonationOverride : intonation) switch
             {
                 Intonation.flat => preset.pitch,
-                Intonation.up => preset.pitch * (1 + preset.sentenceIntonation),
-                Intonation.down => preset.pitch * (1 - preset.sentenceIntonation),
+                Intonation.up => preset.pitch * (1 + preset.sentenceIntonationUp),
+                Intonation.down => preset.pitch * (1 - preset.sentenceIntonationDown),
                 _ => preset.pitch
             };
 
@@ -85,7 +85,7 @@ namespace SliderVocalization
                 }
 
                 LastSpokenVocalizer = WordVocalizer.MakeSpokenVocalizer(clause.Substring(match.Index, match.Length));
-                if (FirstSpokenVocalizer == null) FirstSpokenVocalizer = LastSpokenVocalizer;
+                FirstSpokenVocalizer ??= LastSpokenVocalizer;
                 words.Add(LastSpokenVocalizer);
                 words.Add(WordVocalizer.MakePauseVocalizer(gap));
             }

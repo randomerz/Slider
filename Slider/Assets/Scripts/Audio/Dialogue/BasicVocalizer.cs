@@ -92,7 +92,7 @@ namespace SliderVocalization
             totalDuration = duration * characters.Length;
             wordIntonationMultiplier = context.isCurrentWordLow ? (1 - parameters.wordIntonation) : (1 + parameters.wordIntonation);
             initialPitch = context.wordPitchBase * wordIntonationMultiplier * (1 + (Random.value - 0.5f) * 0.1f);
-            finalPitch = context.wordPitchIntonated * wordIntonationMultiplier;
+            finalPitch = context.wordPitchIntonated * wordIntonationMultiplier * (1 + (Random.value - 0.5f) * 0.1f);
             volumeAdjustmentDB = parameters.volumeAdjustmentDb;
             return totalDuration;
         }
@@ -120,14 +120,14 @@ namespace SliderVocalization
                 char c = characters[i];
                 float t = 0;
                 var vowelDescriptor = WordVocalizer.vowelDescriptionTable[c];
-
+                
                 _progress = i + 1;
                 while (t < duration)
                 {
                     playingInstance.Tick(delegate (ref EventInstance inst)
                     {
-                        float t = (totalT / totalDuration);
-                        inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, t));
+                        float overallT = (totalT / totalDuration);
+                        inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, overallT * overallT)); // quadratic ease in
                         inst.setParameterByName("VowelOpeness", context.vowelOpenness);
                         inst.setParameterByName("VowelForwardness", context.vowelForwardness);
                     });

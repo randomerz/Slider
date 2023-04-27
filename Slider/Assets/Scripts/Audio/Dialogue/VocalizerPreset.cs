@@ -44,7 +44,9 @@ namespace SliderVocalization {
         [Range(0.01f, 0.5f)]
         public float clauseGap;
         [Range(-1f, 1f)]
-        public float sentenceIntonation;
+        public float sentenceIntonationUp;
+        [Range(-1f, 1f)]
+        public float sentenceIntonationDown;
 
         public bool overrideIntonation;
         public SentenceVocalizer.Intonation intonationOverride;
