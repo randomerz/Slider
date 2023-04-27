@@ -165,12 +165,19 @@ public class AudioManager : Singleton<AudioManager>
             var attributes = new ManagedInstance(
                 inst,
                 soundWrapper.root == null ? _instance.listenerWorldPosition.transform : soundWrapper.root, 
-                soundWrapper.useDoppler, 
+                soundWrapper.useDoppler,
                 soundWrapper.sound.dopplerScale,
                 soundWrapper.duration);
-            inst.start();
-            managedInstances.Add(attributes);
-            return attributes;
+            if (_instance.IndoorIsolatedFromWorld && attributes.IsIndoor != listenerIsIndoor)
+            {
+                Debug.Log("DO NOT START");
+                return null;
+            } else
+            {
+                inst.start();
+                managedInstances.Add(attributes);
+                return attributes;
+            }
         }
         inst.start();
         inst.release();
@@ -540,7 +547,6 @@ public class AudioManager : Singleton<AudioManager>
 
         public bool Started
             => inst.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK && playback == PLAYBACK_STATE.STARTING;
-
 
         public bool IsIndoor => position.y < -75;
 

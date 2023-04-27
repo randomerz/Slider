@@ -12,7 +12,6 @@ namespace SliderVocalization
     {
         public string characters;
         public bool IsEmpty => characters.Length == 0;
-
         public int Progress => _progress;
         protected int _progress = 0;
         public void ClearProgress() => _progress = 0;
@@ -20,11 +19,18 @@ namespace SliderVocalization
         public abstract float RandomizeVocalization(VocalizerParameters parameters, VocalRandomizationContext context);
         public abstract void Stop();
         public abstract IEnumerator Vocalize(VocalizerParameters parameters, VocalizationContext context, int idx = 0, int lengthOfComposite = 1);
-
     }
 
     public class PauseVocalizer : BaseVocalizer
     {
+
+        public override float RandomizeVocalization(VocalizerParameters parameters, VocalRandomizationContext context) => parameters.clauseGap;
+        public override IEnumerator Vocalize(VocalizerParameters parameters, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
+        {
+            yield return new WaitForSeconds(parameters.clauseGap);
+        }
+        public override void Stop() { }
+
         public override string ToString()
         {
 #if UNITY_EDITOR
@@ -33,22 +39,12 @@ namespace SliderVocalization
             return "";
 #endif
         }
-
-        public override float RandomizeVocalization(VocalizerParameters parameters, VocalRandomizationContext context) => parameters.clauseGap;
-        public override void Stop() { }
-
-        public override IEnumerator Vocalize(VocalizerParameters parameters, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
-        {
-            yield return new WaitForSeconds(parameters.clauseGap);
-        }
     }
 
     public class PunctuationVocalizer : BaseVocalizer
     {
         public override float RandomizeVocalization(VocalizerParameters parameters, VocalRandomizationContext context) 
             => parameters.duration * characters.Length;
-
-        public override void Stop() { }
 
         public override IEnumerator Vocalize(VocalizerParameters parameters, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
         {
@@ -58,6 +54,8 @@ namespace SliderVocalization
                 yield return new WaitForSeconds(parameters.duration);
             }
         }
+
+        public override void Stop() { }
 
         public override string ToString()
         {
@@ -73,8 +71,6 @@ namespace SliderVocalization
     {
         public bool isVowelCluster;
         public bool isStressed = false;
-
-
         #region RANDOMIZED PARAMS
         float duration;
         float totalDuration;
@@ -83,7 +79,6 @@ namespace SliderVocalization
         float finalPitch;
         float volumeAdjustmentDB;
         #endregion
-
         AudioManager.ManagedInstance playingInstance;
 
         public override float RandomizeVocalization(VocalizerParameters parameters, VocalRandomizationContext context)
@@ -138,7 +133,6 @@ namespace SliderVocalization
                     yield return null;
                 }
             }
-
             Stop();
         }
 
@@ -153,7 +147,6 @@ namespace SliderVocalization
             return characters;
 #endif
         }
-
 
         public override void Stop()
         {

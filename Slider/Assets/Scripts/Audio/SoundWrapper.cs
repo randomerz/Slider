@@ -25,7 +25,7 @@ public struct SoundWrapper
         useSpatials = false;
         useDoppler = false;
 
-        duration = 0;
+        duration = float.MaxValue;
 
         if (ToFmodInstance())
         {
