@@ -160,7 +160,8 @@ public class AudioManager : Singleton<AudioManager>
 
         if (soundWrapper.useSpatials)
         {
-            soundWrapper.root = soundWrapper.root != null ? soundWrapper.root : _instance.listenerWorldPosition;
+            bool isOverridingTransform = soundWrapper.root == null;
+            soundWrapper.root = !isOverridingTransform ? soundWrapper.root : _instance.listenerWorldPosition;
             if (_instance.IndoorIsolatedFromWorld && soundWrapper.IsActuallyIndoor() != listenerIsIndoor)
             {
                 // AT: this is just to mute the error, idk why FMOD gives a warning log even if the sound is not meant to be played...
@@ -169,7 +170,7 @@ public class AudioManager : Singleton<AudioManager>
                 return null;
             }
             managedInstances ??= new List<ManagedInstance>(10);
-            var attributes = new ManagedInstance(soundWrapper);
+            ManagedInstance attributes = new (soundWrapper, isOverridingTransform);
             managedInstances.Add(attributes);
             return attributes;
         } else
@@ -532,6 +533,10 @@ public class AudioManager : Singleton<AudioManager>
     {
         private EventInstance inst;
         private readonly Transform transform;
+        /// <summary>
+        /// For wrappers with useSpatials but no root transform, the listener transform is injected to root. isOverridingTransform is ony set to true in this case.
+        /// </summary>
+        private readonly bool isOverridingTransform;
         private float progress;
         private readonly float duration;
         private readonly float dopplerScale;
@@ -546,7 +551,7 @@ public class AudioManager : Singleton<AudioManager>
             => inst.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK && playback == PLAYBACK_STATE.STARTING;
         public readonly bool IsIndoor;
 
-        public ManagedInstance(in SoundWrapper soundWrapper)
+        public ManagedInstance(in SoundWrapper soundWrapper, bool isOverridingTransform)
         {
             inst = soundWrapper.fmodInstance;
             transform = soundWrapper.root;
@@ -556,6 +561,7 @@ public class AudioManager : Singleton<AudioManager>
             useDoppler = soundWrapper.useDoppler;
             dopplerScale = soundWrapper.sound.dopplerScale;
             IsIndoor = soundWrapper.IsActuallyIndoor();
+            this.isOverridingTransform = isOverridingTransform;
 
             inst.set3DAttributes(CalculatePositionIncorporateIndoor(position).To3DAttributes());
             inst.start();
@@ -608,7 +614,7 @@ public class AudioManager : Singleton<AudioManager>
 
         private Vector3 CalculatePositionIncorporateIndoor(Vector3 original)
         {
-            if (IsIndoor == listenerIsIndoor) return original;
+            if (IsIndoor == listenerIsIndoor || isOverridingTransform) return original;
             if (listenerIsIndoor)
             {
                 return original + SGrid.GetHousingOffset() * Vector3.up;

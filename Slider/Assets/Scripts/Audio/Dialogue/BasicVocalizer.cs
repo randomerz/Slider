@@ -64,7 +64,7 @@ namespace SliderVocalization
             string str = characters.ToString();
             return $"<color=cyan>{str.Substring(0, Progress)}</color>{str.Substring(Progress)}";
 #else
-            return characters;
+            return characters.ToString();
 #endif
         }
     }
@@ -151,7 +151,7 @@ namespace SliderVocalization
             string post = $"{(isStressed ? "</size>" : "")}{(isVowelCluster ? "</B>" : "")}";
             return $"{pre}{text}{post}";
 #else
-            return characters;
+            return characters.ToString();
 #endif
         }
 
