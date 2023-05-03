@@ -12,6 +12,16 @@ public struct SoundWrapper
     public bool valid;
     public bool useSpatials;
     public bool useDoppler;
+    public float duration;
+    public float volume;
+
+    public enum IndoorStatus
+    {
+        AlwaysIndoor,
+        AlwaysOutdoor,
+        UseEmitterLocation
+    }
+    public IndoorStatus indoorStatus;
 
     private SoundWrapper(Sound sound)
     {
@@ -20,9 +30,12 @@ public struct SoundWrapper
         valid = false;
         root = null;
         useSpatials = false;
-
-        useSpatials = false;
         useDoppler = false;
+
+        duration = float.MaxValue;
+        indoorStatus = IndoorStatus.UseEmitterLocation;
+
+        volume = 1;
 
         if (ToFmodInstance())
         {
@@ -31,6 +44,17 @@ public struct SoundWrapper
             desc.is3D(out useSpatials);
             desc.isDopplerEnabled(out useDoppler);
         }
+    }
+
+    public bool IsActuallyIndoor()
+    {
+        switch (indoorStatus)
+        {
+            case IndoorStatus.AlwaysIndoor: return true;
+            case IndoorStatus.AlwaysOutdoor: return false;
+            case IndoorStatus.UseEmitterLocation: return (root.position.y <= -75);
+        }
+        return false;
     }
 
     public static implicit operator SoundWrapper(Sound sound) => new (sound);
@@ -44,7 +68,7 @@ public struct SoundWrapper
 
     public SoundWrapper WithVolume(float volume)
     {
-        if (valid) fmodInstance.setVolume(volume);
+        this.volume = volume;
         return this;
     }
 
@@ -60,7 +84,20 @@ public struct SoundWrapper
         return this;
     }
 
-    public FMOD.Studio.EventInstance? AndPlay() => valid ? AudioManager.Play(this) : null;
+    public SoundWrapper WithFixedDuration(float value)
+    {
+        if (value >= 0f) duration = value;
+        else Debug.LogWarning($"Setting sfx {sound?.name ?? "(no name)"} duration to negative");
+        return this;
+    }
+
+    public SoundWrapper WithIndoorStatus(IndoorStatus status)
+    {
+        indoorStatus = status;
+        return this;
+    }
+
+    public AudioManager.ManagedInstance AndPlay() => valid ? AudioManager.Play(ref this) : null;
 
     private bool ToFmodInstance()
     {
@@ -79,6 +116,17 @@ public struct SoundWrapper
         fmodInstance = instOpt.Value;
         return true;
     }
+
+    public void PlayAsOneshot()
+    {
+        if (!valid)
+        {
+            Debug.LogWarning($"Trying to play invalid { sound?.name } as oneshot");
+        }
+        fmodInstance.start();
+        fmodInstance.setVolume(volume);
+        fmodInstance.release();
+    }
 }
 
 public static class SoundExtension
@@ -87,7 +135,9 @@ public static class SoundExtension
     public static SoundWrapper WithVolume(this Sound sound, float volume) => ((SoundWrapper) sound).WithVolume(volume);
     public static SoundWrapper WithPitch(this Sound sound, float pitch) => ((SoundWrapper)sound).WithPitch(pitch);
     public static SoundWrapper WithParameter(this Sound sound, string name, float value) => ((SoundWrapper)sound).WithParameter(name, value);
-    public static FMOD.Studio.EventInstance? AndPlay(this Sound sound) => ((SoundWrapper) sound).AndPlay();
+    public static SoundWrapper WithFixedDuration(this Sound sound, float value) => ((SoundWrapper)sound).WithFixedDuration(value);
+    public static SoundWrapper WithIndoorStatus(this Sound sound, SoundWrapper.IndoorStatus indoorStatus) => ((SoundWrapper) sound).WithIndoorStatus(indoorStatus);
+    public static AudioManager.ManagedInstance AndPlay(this Sound sound) => ((SoundWrapper) sound).AndPlay();
 
     public static FMOD.Studio.EventInstance? ToFmodInstance(this Sound sound)
     {

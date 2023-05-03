@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -8,7 +9,6 @@ namespace SliderVocalization
 {
     public class SentenceVocalizer : IVocalizerComposite<WordVocalizer>
     {
-        private static readonly string endingsStr = @"(?<=[,.?!])";
         private static readonly char[] endings = { ',', '.', '?', '!' };
         private static readonly HashSet<char> endingsSet = new(endings);
         /// <summary>
@@ -24,6 +24,8 @@ namespace SliderVocalization
         bool IVocalizer.IsEmpty => words.Count == 0;
 
         private WordVocalizer _Current;
+        private WordVocalizer FirstSpokenVocalizer;
+        private WordVocalizer LastSpokenVocalizer;
         private VocalizerCompositeStatus _Status;
 
         public enum Intonation { flat, up, down };
@@ -32,21 +34,21 @@ namespace SliderVocalization
             => (preset.overrideIntonation ? preset.intonationOverride : intonation) switch
             {
                 Intonation.flat => preset.pitch,
-                Intonation.up => preset.pitch * (1 + preset.sentenceIntonation),
-                Intonation.down => preset.pitch * (1 - preset.sentenceIntonation),
+                Intonation.up => preset.pitch * (1 + preset.sentenceIntonationUp),
+                Intonation.down => preset.pitch * (1 - preset.sentenceIntonationDown),
                 _ => preset.pitch
             };
 
         public static List<SentenceVocalizer> Parse(string paragraph)
         {
-            string[] clauses = Regex.Split(CleanUp(paragraph), endingsStr); // split while keeping the delimiter
-            var vocalizers = new List<SentenceVocalizer>(clauses.Length);
-            foreach (var clause in clauses)
+            MatchCollection clauses = Regex.Matches(paragraph, @"[^.,!?]+[.,!?\s]+(?=[^.,!?\s]|$)");
+            List<SentenceVocalizer> vocalizers = new (clauses.Count);
+            foreach (Match clause in clauses)
             {
                 if (clause.Length <= 1) continue;
                 else
                 {
-                    SentenceVocalizer sv = new(clause);
+                    SentenceVocalizer sv = new(paragraph.Substring(clause.Index, clause.Length));
                     if (!sv.GetIsEmpty()) vocalizers.Add(sv);
                 }
             }
@@ -57,14 +59,41 @@ namespace SliderVocalization
         private SentenceVocalizer(string clause)
         {
             words = new List<WordVocalizer>();
-            int endingTrim = endingsSet.Contains(clause[^1]) ? 1 : 0; // remove ending character if it is a punctuation
-            punctuation = endingTrim > 0 ? clause[^1] : '.'; // default to period when no punctuation
+            MatchCollection alphaNumeric = Regex.Matches(clause, @"[A-Za-z00-9]+");
 
-            foreach (string word in clause.Substring(0, clause.Length - endingTrim).Split(' ', System.StringSplitOptions.RemoveEmptyEntries))
+            if (alphaNumeric.Count == 0) return;
+
+            punctuation = default;
+            FirstSpokenVocalizer = null;
+            for (int i = 0; i < alphaNumeric.Count; i++)
             {
-                WordVocalizer wv = new(word);
-                if (!wv.IsEmpty) words.Add(wv);
+                Match match = alphaNumeric[i];
+
+                int afterWordEnd = match.Index + match.Length;
+                int nextStart = match.NextMatch().Index;
+                if (nextStart == 0) nextStart = clause.Length; // returns 0 when next match does not exist
+
+                string gap = clause.Substring(afterWordEnd, nextStart - afterWordEnd);
+
+                foreach(char punctuation in gap)
+                {
+                    if (endingsSet.Contains(punctuation))
+                    {
+                        this.punctuation = punctuation;
+                        break;
+                    }
+                }
+
+                LastSpokenVocalizer = WordVocalizer.MakeSpokenVocalizer(clause.Substring(match.Index, match.Length));
+                if (!LastSpokenVocalizer.IsEmpty)
+                {
+                    FirstSpokenVocalizer ??= LastSpokenVocalizer;
+                    words.Add(LastSpokenVocalizer);
+                    words.Add(WordVocalizer.MakePauseVocalizer(gap));
+                }
             }
+            if (punctuation == default) punctuation = '.';
+            words.Add(WordVocalizer.MakeClauseEndingVocalizer());
 
             switch (punctuation)
             {
@@ -89,43 +118,28 @@ namespace SliderVocalization
             }
         }
 
-        private static string CleanUp(string paragraph) 
-            => string.Join(' ', new string(
-                paragraph.Select(c => char.IsLetter(c) ?
-                    char.ToLower(c) :
-                    char.IsDigit(c) || endingsSet.Contains(c) ? c : ' ').ToArray()
-                ).Split(' ', System.StringSplitOptions.RemoveEmptyEntries));
-
-        IEnumerator IVocalizerComposite<WordVocalizer>.Prevocalize(
-            VocalizerParameters preset, VocalizationContext context, WordVocalizer prior, WordVocalizer upcoming, int upcomingIdx)
+        void IVocalizerComposite<WordVocalizer>.PreRandomize(VocalizerParameters preset, VocalRandomizationContext context, WordVocalizer upcoming)
         {
-            if (prior == null)
+            if (upcoming == FirstSpokenVocalizer)
             {
                 // for the first word, initialize intonation of first word
                 // guess that short sentences more likely to start high
                 float pFirstWordHigh = (Vocalizers.Count <= 3) ? 0.75f : 0.25f;
                 context.isCurrentWordLow = Random.value > pFirstWordHigh;
             }
-            else if (upcomingIdx != Vocalizers.Count - 1 || intonation != Intonation.up)
-            {
-                context.isCurrentWordLow = context.isCurrentWordLow ? !preset.DoLowToHigh : context.isCurrentWordLow = preset.DoHighToLow;
-            }
-            else
+            else if (upcoming == LastSpokenVocalizer && intonation == Intonation.up)
             {
                 // last word in an upwards intonated sentence is always high
                 context.isCurrentWordLow = false;
             }
+            else
+            {
+                context.isCurrentWordLow = context.isCurrentWordLow ? !preset.DoLowToHigh : context.isCurrentWordLow = preset.DoHighToLow;
+            }
 
             // the last word can be heightened or lowered based on intonation
             context.wordPitchBase = preset.pitch;
-            context.wordPitchIntonated = (upcomingIdx == words.Count - 1 ? GetBasePitchFromIntonation(preset) : preset.pitch);
-            return null;
-        }
-
-        IEnumerator IVocalizerComposite<WordVocalizer>.Postvocalize(
-            VocalizerParameters preset, VocalizationContext context, WordVocalizer completed, WordVocalizer upcoming, int upcomingIdx)
-        {
-            yield return new WaitForSecondsRealtime(preset.wordGap * (Random.value + 0.5f));
+            context.wordPitchIntonated = (upcoming == LastSpokenVocalizer ? GetBasePitchFromIntonation(preset) : preset.pitch);
         }
 
         public WordVocalizer GetCurrent() => _Current;

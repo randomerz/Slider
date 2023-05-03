@@ -21,20 +21,39 @@ namespace SliderVocalization
         public VocalizerCompositeStatus GetStatus();
         protected void SetStatus(VocalizerCompositeStatus value);
 
-        internal IEnumerator Prevocalize(VocalizerParameters preset, VocalizationContext context, T prior, T upcoming, int upcomingIdx);
-        internal IEnumerator Postvocalize(VocalizerParameters preset, VocalizationContext context, T completed, T upcoming, int upcomingIdx);
+        internal void PreRandomize(VocalizerParameters preset, VocalRandomizationContext context, T upcoming);
+
+        float IVocalizer.RandomizeVocalization (VocalizerParameters preset, VocalRandomizationContext context)
+        {
+            float totalDuration = 0;
+            if (Vocalizers == null)
+            {
+                Debug.LogWarning($"{ToString()} => vocalizers null");
+                return 0;
+            }
+            for (int i = 0; i < Vocalizers.Count; i++)
+            {
+                var v = Vocalizers[i];
+                PreRandomize(preset, context, v);
+                totalDuration += v.RandomizeVocalization(preset, context);
+            }
+            return totalDuration;
+        }
 
         IEnumerator IVocalizer.Vocalize(VocalizerParameters preset, VocalizationContext context, int idx, int lengthOfComposite)
         {
             yield return new WaitUntil(() => GetStatus() == VocalizerCompositeStatus.CanPlay);
             SetStatus(VocalizerCompositeStatus.Playing);
+            if (Vocalizers == null)
+            {
+                Debug.LogWarning($"{ToString()} => vocalizers null");
+                yield break;
+            }
             for (int i = 0; i < Vocalizers.Count; i++)
             {
                 var v = Vocalizers[i];
                 SetCurrent(v);
-                yield return Prevocalize(preset, context, default, v, i);
                 yield return v.Vocalize(preset, context, idx: i, lengthOfComposite: Vocalizers.Count);
-                yield return Postvocalize(preset, context, v, default, i + 1);
                 if (GetStatus() == VocalizerCompositeStatus.Stopping) break;
             }
             SetStatus(VocalizerCompositeStatus.CanPlay);

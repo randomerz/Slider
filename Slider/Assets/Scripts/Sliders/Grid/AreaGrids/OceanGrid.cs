@@ -8,6 +8,7 @@ public class OceanGrid : SGrid
     public GameObject burriedTreasure;
     public ParticleSystem burriedTreasureParticles;
     public KnotBox knotBox;
+    public GameObject buoyUITrackerPrefab;
     private bool knotBoxEnabledLastFrame;
     public BottleManager bottleManager;
     public NPCRotation npcRotation;
@@ -387,9 +388,23 @@ public class OceanGrid : SGrid
             knotBox.CheckLines();
             if (knotBox.enabled)
             {
+                List<UITrackerBuoyAddOn> uiTrackerAddOns = new List<UITrackerBuoyAddOn>();
                 foreach (GameObject knotnode in knotBox.knotnodes)
                 {
-                    UITrackerManager.AddNewTracker(knotnode, UITrackerManager.DefaultSprites.circle2);
+                    GameObject buoyUITrackerGO = Instantiate(buoyUITrackerPrefab);
+                    UITracker buoyUITracker = buoyUITrackerGO.GetComponent<UITracker>();
+                    uiTrackerAddOns.Add(buoyUITrackerGO.GetComponent<UITrackerBuoyAddOn>());
+
+                    UITrackerManager.AddNewCustomTracker(buoyUITracker, knotnode);
+                }
+
+                for (int i = 0; i < uiTrackerAddOns.Count; i++)
+                {
+                    int next = (i + 1) % uiTrackerAddOns.Count;
+                    int prev = (i + uiTrackerAddOns.Count - 1) % uiTrackerAddOns.Count;
+
+                    uiTrackerAddOns[i].target1 = uiTrackerAddOns[next].myRectTransform;
+                    uiTrackerAddOns[i].target2 = uiTrackerAddOns[prev].myRectTransform;
                 }
             }
             else
