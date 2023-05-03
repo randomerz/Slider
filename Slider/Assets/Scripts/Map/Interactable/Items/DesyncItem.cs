@@ -18,7 +18,7 @@ public class DesyncItem : Item
     private void Start()
     {
         isItemInPast = MagiTechGrid.IsInPast(transform);
-        originTile = SGrid.GetStileUnderneath(gameObject);
+        originTile = SGrid.GetSTileUnderneath(gameObject);
     }
 
     private void OnEnable()
