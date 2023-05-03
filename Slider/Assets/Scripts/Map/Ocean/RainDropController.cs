@@ -11,9 +11,11 @@ public class RainDropController : MonoBehaviour
 
     private float dropTimer;
     private float secondsPerDrop => 1f / dropsPerSecond;
+    private float rainMultiplier;
 
     [Header("Parameters")]
     [SerializeField] private float dropsPerSecond;
+    [SerializeField] private float timeToFullRain;
     [SerializeField] private Transform minPosition;
     [SerializeField] private Transform maxPosition;
 
@@ -35,12 +37,24 @@ public class RainDropController : MonoBehaviour
                 dropTimer += secondsPerDrop;
             }
         }
+
+        if (isRaining && rainMultiplier != 1)
+        {
+            rainMultiplier = Mathf.Min(1, rainMultiplier + (Time.deltaTime / timeToFullRain));
+        }
+        else if (!isRaining && rainMultiplier != 0)
+        {
+            rainMultiplier = Mathf.Max(0, rainMultiplier - (Time.deltaTime / timeToFullRain));
+        }
     }
 
     private void SpawnRainDrop()
     {
+        if (Random.Range(0f, 1f) > rainMultiplier)
+            return;
+
         Vector3 pos = GetRandomPosition();
-        if (Vector3.Distance(pos, Player.GetPosition()) < 40)
+        if (Vector3.Distance(pos, Player.GetPosition()) < 35)
         {
             RainDrop drop = dropPool.Get();
             drop.transform.position = pos;
@@ -57,6 +71,12 @@ public class RainDropController : MonoBehaviour
             Mathf.Round(Random.Range(minPosition.position.x, maxPosition.position.x) * 16) / 16, 
             Mathf.Round(Random.Range(minPosition.position.y, maxPosition.position.y) * 16) / 16
         );
+    }
+
+    public void SetRainActive(bool value)
+    {
+        isRaining = value;
+        // rainMultiplier should take care of smoothing it
     }
 
     // Pooling
