@@ -116,14 +116,17 @@ public class Minecart : Item, ISavable
             if(!tileSwitch && distToNext < distToPrev)
             {
                 if(currentDirection != nextDirection) {
-                    if(currentDirection == 2 || nextDirection == 2)
+                    if(currentDirection == 2 || nextDirection == 2) {
                         spriteRenderer.flipX = true;
+                        animator.FlipX(true);
+                    }
                     // isOnCorner = true;
                     PlayCurveAnimation();
                 }
                 else {
                     cornerSpeedAmount = 1;
                     spriteRenderer.flipX = false;
+                    animator.FlipX(false);
                     PlayStraightAnimation();
                 }
                 
