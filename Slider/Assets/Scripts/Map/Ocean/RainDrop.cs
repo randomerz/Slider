@@ -42,13 +42,13 @@ public class RainDrop : MonoBehaviour
         else if (tileBase == waterTile)
         {
             animator.SetBool("onWater", true);
-            transform.SetParent(stile.transform);
+            if (stile != null) transform.SetParent(stile.transform);
             return;
         }
         else
         {
             animator.SetBool("onLand", true);
-            transform.SetParent(stile.transform);
+            if (stile != null) transform.SetParent(stile.transform);
             return;
         }
     }
