@@ -38,13 +38,16 @@ public class DesertTabManager : ArtifactTabManager
             saveTab.SetIsVisible(false);
             loadTab.SetIsVisible(false);
             fragRealignTab.SetIsVisible(false);
+            //This is cursed but I have no idea what else to do for the moment
+            UIArtifact.DisableLightning(true);
+            middle?.SetLightning(false);
+            empty?.SetLightning(false);
         }
     }
 
     public void FragRearrangeOnClick()
     {
         // Do the rearranging!
-        //Debug.Log("Swapped!");
         if (middle == empty)
         {
             AudioManager.Play("Artifact Error");
