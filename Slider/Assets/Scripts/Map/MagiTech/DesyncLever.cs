@@ -14,7 +14,7 @@ public class DesyncLever : Lever
     public bool IsDesynced { get => isDesynced; }
     private void Start()
     {
-        originTile = SGrid.GetStileUnderneath(gameObject);
+        originTile = SGrid.GetSTileUnderneath(gameObject);
     }
 
     private new void OnEnable()

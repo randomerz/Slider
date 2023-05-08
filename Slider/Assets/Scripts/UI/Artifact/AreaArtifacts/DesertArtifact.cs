@@ -6,6 +6,13 @@ using UnityEngine.EventSystems;
 
 public class DesertArtifact : UIArtifact
 {
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        SGridAnimator.OnSTileMoveEnd -= UpdatePushedDowns;
+        OnButtonInteract -= UpdatePushedDowns;
+    }
+
     //Chen: getMoveOptions will add buttons even if they're active for Desert sliding
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
@@ -42,11 +49,10 @@ public class DesertArtifact : UIArtifact
 
     public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        SMove move;
+        SMove move = ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);;
         buttonEmpty.SetSpriteToIslandOrEmpty();
-        if (moveQueue.Count < maxMoveQueueSize)
+        if (SGrid.Current.CanMove(move) && !QueueFull() && playerCanQueue)
         {
-            move = ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
             if (move.moves.Count == 0)
             {
                 return false;
@@ -99,11 +105,9 @@ public class DesertArtifact : UIArtifact
     //Chen: Literally the same thing, except uses base.ConstructMoveFromButtonPair and tosses in a SwapButtons because UI bandaid fixes
     public bool TryFragQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        SMove move;
-
-        if (moveQueue.Count < maxMoveQueueSize)
+        SMove move = base.ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
+        if (SGrid.Current.CanMove(move) && !QueueFull() && playerCanQueue && playerCanAddSMoves)
         {
-            move = base.ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
             if (move.moves.Count == 0)
             {
                 return false;

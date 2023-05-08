@@ -44,6 +44,14 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField, Range(0, 20), Tooltip("Z-direction distance from top-down listener to game's plane")]
     private float ZLevel;
 
+    private static bool paused;
+
+    [SerializeField]
+    private bool IndoorIsolatedFromWorld = false;
+    private static bool listenerIsIndoor;
+    [SerializeField, Range(0, 1)]
+    private float indoorMuteFactor;
+
     private static Dictionary<string, Sound> soundsDict
     {
         get
@@ -59,12 +67,22 @@ public class AudioManager : Singleton<AudioManager>
     }
     private Dictionary<string, Sound> _soundsDict;
 
-    static List<(FMOD.Studio.EventInstance, ManagedAttributes)> managedInstances;
+    static List<ManagedInstance> managedInstances;
 
     static CinemachineBrain currentCinemachineBrain;
 
     void Awake()
     {
+        UIManager.OnResume += delegate (object sender, EventArgs e)
+        {
+            SetPaused(false);
+        };
+
+        UIManager.OnPause += delegate (object sender, EventArgs e)
+        {
+            SetPaused(true);
+        };
+
         if (InitializeSingleton(ifInstanceAlreadySetThenDestroy:gameObject))
         {
             return;
@@ -104,7 +122,7 @@ public class AudioManager : Singleton<AudioManager>
     private void Update()
     {
         UpdateCameraPosition();
-        UpdateManagedInstances();
+        UpdateManagedInstances(Time.deltaTime);
     }
 
     public static void UpdateCamera(CinemachineBrain brain) => currentCinemachineBrain = brain;
@@ -136,26 +154,32 @@ public class AudioManager : Singleton<AudioManager>
         return m;
     }
 
-    public static FMOD.Studio.EventInstance? Play(SoundWrapper soundWrapper, bool startImmediately = true)
+    public delegate void EventInstanceTick(ref EventInstance item);
+
+    public static ManagedInstance Play(ref SoundWrapper soundWrapper)
     {
         if (!soundWrapper.valid) return null;
-        var inst = soundWrapper.fmodInstance;
 
         if (soundWrapper.useSpatials)
         {
-            if (managedInstances == null) managedInstances = new List<(EventInstance, ManagedAttributes)>(10);
-            var attributes = new ManagedAttributes(
-                soundWrapper.root == null ? _instance.listenerWorldPosition.transform : soundWrapper.root, 
-                soundWrapper.useDoppler, 
-                soundWrapper.sound.dopplerScale);
-            inst.set3DAttributes(attributes.GetAndUpdate());
-            managedInstances.Add((inst, attributes));
-        }
-        if (startImmediately)
+            bool isOverridingTransform = soundWrapper.root == null;
+            soundWrapper.root = !isOverridingTransform ? soundWrapper.root : _instance.listenerWorldPosition;
+            if (_instance.IndoorIsolatedFromWorld && soundWrapper.IsActuallyIndoor() != listenerIsIndoor)
+            {
+                // AT: this is just to mute the error, idk why FMOD gives a warning log even if the sound is not meant to be played...
+                //     releasing the instance doesn't help either
+                soundWrapper.fmodInstance.set3DAttributes(_instance.transform.To3DAttributes());
+                return null;
+            }
+            managedInstances ??= new List<ManagedInstance>(10);
+            ManagedInstance attributes = new (soundWrapper, isOverridingTransform);
+            managedInstances.Add(attributes);
+            return attributes;
+        } else
         {
-            inst.start();
+            soundWrapper.PlayAsOneshot();
+            return null;
         }
-        return inst;
     }
 
     public static SoundWrapper PickSound(string name)
@@ -181,44 +205,45 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    public static FMOD.Studio.EventInstance? Play(string name, Transform root) => PickSound(name).WithAttachmentToTransform(root).AndPlay();
+    public static ManagedInstance Play(string name, Transform root) => PickSound(name).WithAttachmentToTransform(root).AndPlay();
 
-    public static FMOD.Studio.EventInstance? Play(string name) => PickSound(name).AndPlay();
+    public static ManagedInstance Play(string name) => PickSound(name).AndPlay();
 
-    private static void UpdateManagedInstances()
+    public static void SetPaused(bool paused)
     {
-        if (managedInstances == null) managedInstances = new List<(FMOD.Studio.EventInstance, ManagedAttributes)>(10);
-        managedInstances.RemoveAll(delegate ((FMOD.Studio.EventInstance inst, ManagedAttributes attributes) pair)
+        AudioManager.paused = paused;
+        managedInstances ??= new List<ManagedInstance>(10);
+        foreach (ManagedInstance instance in managedInstances)
         {
-            if (pair.inst.isValid())
+            instance.SetPaused(paused);
+        }
+    }
+
+    private static void UpdateManagedInstances(float dt)
+    {
+        managedInstances ??= new List<ManagedInstance>(10);
+        if (!paused)
+        {
+            foreach (ManagedInstance attributes in managedInstances)
             {
-                // instance not already relased
-                if (
-                    pair.inst.getPlaybackState(out FMOD.Studio.PLAYBACK_STATE playback) == FMOD.RESULT.OK 
-                    && playback != FMOD.Studio.PLAYBACK_STATE.STOPPED)
-                {
-                    // instance still playing (including the "stopping" state for events that allow fadeout)
-                    pair.inst.set3DAttributes(pair.attributes.GetAndUpdate());
-                    return false;
-                }
-                else
-                {
-                    // instance stopped playing
-                    pair.inst.release();
-                    return true;
-                }
+                attributes.GetAndUpdate(dt);
             }
-            else
-            {
-                // instance already released
-                return true;
-            }
+        }
+        managedInstances.RemoveAll(delegate (ManagedInstance attributes)
+        {
+            return !attributes.Valid || attributes.Stopped;
         });
     }
 
-    public static FMOD.Studio.EventInstance? PlayWithPitch(string name, float pitch) => PickSound(name).WithPitch(pitch).AndPlay();
+    /// <summary>
+    /// Plays a sound with pitch
+    /// </summary>
+    /// <param name="name">String of the sound in Audio Manager</param>
+    /// <param name="pitch">Pitch to play between 0.5 and 2.0</param>
+    /// <returns>Reference to managed sfx instance in the audio manager, or null if it immediately stopped / does not need to be managed</returns>
+    public static ManagedInstance PlayWithPitch(string name, float pitch) => PickSound(name).WithPitch(pitch).AndPlay();
 
-    public static FMOD.Studio.EventInstance? PlayWithVolume(string name, float volumeMultiplier) => PickSound(name).WithVolume(volumeMultiplier).AndPlay();
+    public static ManagedInstance PlayWithVolume(string name, float volumeMultiplier) => PickSound(name).WithVolume(volumeMultiplier).AndPlay();
 
     public static void PlayMusic(string name, bool stopOtherTracks=true)
     {
@@ -466,41 +491,148 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    private struct ManagedAttributes
+    public static void SetListenerIsIndoor(bool isInHouse)
     {
-        private readonly Transform transform;
-        float time;
-        private readonly float dopplerScale;
-        private readonly bool useDoppler;
-        Vector3 position;
-
-        public ManagedAttributes(Transform transform, bool useDoppler, float dopplerScale)
+        listenerIsIndoor = isInHouse;
+        if (isInHouse)
         {
-            this.transform = transform;
-            position = transform.position;
-            time = Time.time;
-            this.useDoppler = useDoppler;
-            this.dopplerScale = dopplerScale;
+            if (_instance.IndoorIsolatedFromWorld)
+            {
+                // cut off world sounds
+                managedInstances?.RemoveAll(delegate (ManagedInstance managedInstance)
+                {
+                    if (!managedInstance.IsIndoor)
+                    {
+                        managedInstance.Stop();
+                        return true;
+                    }
+                    return false;
+                });
+            }
+            EnqueueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
+        }
+        else
+        {
+            if (_instance.IndoorIsolatedFromWorld)
+            {
+                // cut off indoor sounds
+                managedInstances?.RemoveAll(delegate (ManagedInstance managedInstance)
+                {
+                    if (managedInstance.IsIndoor)
+                    {
+                        managedInstance.Stop();
+                        return true;
+                    }
+                    return false;
+                });
+            }
+            DequeueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
+        }
+    }
+
+    public class ManagedInstance
+    {
+        private SoundWrapper soundWrapper;
+        /// <summary>
+        /// For wrappers with useSpatials but no root transform, the listener transform is injected to root. isOverridingTransform is ony set to true in this case.
+        /// </summary>
+        private readonly bool isOverridingTransform;
+        private float progress;
+        private Vector3 position;
+
+        public bool Valid => soundWrapper.fmodInstance.isValid();
+        public bool Stopped
+            => soundWrapper.fmodInstance.getPlaybackState(out PLAYBACK_STATE playback) != FMOD.RESULT.OK || playback == PLAYBACK_STATE.STOPPED;
+
+        public bool Started
+            => soundWrapper.fmodInstance.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK && playback == PLAYBACK_STATE.STARTING;
+        public readonly bool IsIndoor;
+        public string Name => soundWrapper.sound?.name ?? "(No name)";
+
+        public ManagedInstance(in SoundWrapper soundWrapper, bool isOverridingTransform)
+        {
+            this.soundWrapper = soundWrapper;
+            position = soundWrapper.root.position;
+            progress = 0;
+            IsIndoor = soundWrapper.IsActuallyIndoor();
+            this.isOverridingTransform = isOverridingTransform;
+
+            bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref position);
+            AdjustForIndoorDisagreement(indoorStatusDisagree);
+            soundWrapper.fmodInstance.set3DAttributes(position.To3DAttributes());
+            soundWrapper.fmodInstance.start();
         }
 
-        public FMOD.ATTRIBUTES_3D GetAndUpdate()
+        public void Stop()
         {
-            if (!useDoppler) return transform.position.To3DAttributes();
+            soundWrapper.fmodInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            soundWrapper.fmodInstance.release();
+        }
 
-            Vector3 p = transform.position;
-            float dt = Time.time - time;
-            Vector3 v = dt > float.Epsilon ? (p - position) / (dt) : Vector3.zero;
+        public void SetPaused(bool paused)
+        {
+            soundWrapper.fmodInstance.setPaused(paused);
+        }
 
-            position = p;
-            time = Time.time;
+        public void Tick(EventInstanceTick tick)
+        {
+            tick(ref soundWrapper.fmodInstance);
+        }
 
-            return new FMOD.ATTRIBUTES_3D
+        public void GetAndUpdate(float dt)
+        {
+            progress += dt;
+            if (progress >= soundWrapper.duration)
             {
-                forward = Vector3.forward.ToFMODVector(),
-                up = Vector3.up.ToFMODVector(),
-                position = p.ToFMODVector(),
-                velocity = (v * dopplerScale).ToFMODVector()
-            };
+                Stop();
+                return;
+            }
+            if (!soundWrapper.useDoppler)
+            {
+                Vector3 shiftedPosition = soundWrapper.root.position;
+                bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref shiftedPosition);
+                soundWrapper.fmodInstance.set3DAttributes(shiftedPosition.To3DAttributes());
+                AdjustForIndoorDisagreement(indoorStatusDisagree);
+            }
+            else
+            {
+                Vector3 p = soundWrapper.root.position;
+                Vector3 v = dt > float.Epsilon ? (p - position) / (dt) : Vector3.zero;
+
+                position = p;
+                bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref p);
+                AdjustForIndoorDisagreement(indoorStatusDisagree);
+                soundWrapper.fmodInstance.set3DAttributes(new FMOD.ATTRIBUTES_3D
+                {
+                    forward = Vector3.forward.ToFMODVector(),
+                    up = Vector3.up.ToFMODVector(),
+                    position = p.ToFMODVector(),
+                    velocity = (v * soundWrapper.sound.dopplerScale).ToFMODVector()
+                });
+            }
+        }
+
+        /// <returns>Returns whether indoor status disagrees with listener's indoor status</returns>
+        private bool CalculatePositionIncorporateIndoor(ref Vector3 original)
+        {
+            if (IsIndoor == listenerIsIndoor) return false;
+            if (isOverridingTransform) return true;
+            if (listenerIsIndoor)
+            {
+                original += SGrid.GetHousingOffset() * Vector3.up;
+            } else
+            {
+                original += SGrid.GetHousingOffset() * Vector3.down;
+            }
+            return true;
+        }
+
+        private void AdjustForIndoorDisagreement(bool indoorStatusDisagree)
+        {
+            if (indoorStatusDisagree)
+            {
+                soundWrapper.fmodInstance.setVolume(soundWrapper.volume - _instance.indoorMuteFactor);
+            }
         }
     }
 }

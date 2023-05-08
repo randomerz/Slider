@@ -380,7 +380,7 @@ public void SetGrid(int[,] puzzle)
     // C: result of consolidating 2 versions of this method
     // and i don't wanna rewrite method calls
     // DC: try to use the other one if possible
-    public static STile GetStileUnderneath(GameObject target)
+    public static STile GetSTileUnderneath(GameObject target)
     {
         return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>());
     }
@@ -681,6 +681,8 @@ public void SetGrid(int[,] puzzle)
     {
         return Current.GetNumButtonCompletionsHelper();
     }
+
+    public static int GetHousingOffset() => _instance.housingOffset;
 
     protected virtual int GetNumButtonCompletionsHelper()
     {

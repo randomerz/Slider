@@ -20,6 +20,7 @@ public class BottleManager : MonoBehaviour
     private bool bottleIsInWater = false;
     private STile bottleParentStile = null;
     private UITracker bottleUITracker;
+    public GameObject uiTrackerSinkingBottlePrefab;
     
     [SerializeField] private Vector3 bottleInitialLocation = new Vector3(-7.5f,41.5f);
     private List<Vector3> positions = new List<Vector3> { 
@@ -126,7 +127,9 @@ public class BottleManager : MonoBehaviour
             turncounter = 0;
             bottle.transform.localPosition = positions[(int)(turncounter)];
 
-            bottleUITracker = UITrackerManager.AddNewAnimatedTracker(bottle);
+            GameObject bottleTrackerGO = Instantiate(uiTrackerSinkingBottlePrefab);
+            bottleUITracker = bottleTrackerGO.GetComponent<UITracker>();
+            UITrackerManager.AddNewCustomTracker(bottleUITracker, bottle);
 
 
             bottleIsInWater = false;

@@ -39,7 +39,9 @@ public class DialogueDisplay : MonoBehaviour
 
         string parsed = textTyperText.StartTyping(message);
         textTyperBG.StartTyping(message);
-        vocalizer.SetText(parsed);
+        float totalDuration = vocalizer.SetText(parsed, emote);
+        textTyperText.SetTextSpeed(totalDuration / parsed.Length);
+        textTyperBG.SetTextSpeed(totalDuration / parsed.Length);
         vocalizer.StartReadAll(emote);
         // StartCoroutine(TypeSentence(message.ToCharArray()));
     }

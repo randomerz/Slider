@@ -7,9 +7,12 @@ namespace SliderVocalization
     public interface IVocalizer
     {
         /// <summary>
-        /// Implicitly updates the context
+        /// Internally set the duration of the next vocalization, needs to be called on every vocalization.
         /// </summary>
-        public IEnumerator Vocalize(VocalizerParameters parameters, VocalizationContext context, int idx = 0, int lengthOfComposite = 1);
+        /// <returns>Duration of vocalization</returns>
+        public float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context);
+
+        public IEnumerator Vocalize(VocalizerParameters preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1);
         public void Stop();
         public bool IsEmpty { get; }
         public void ClearProgress();

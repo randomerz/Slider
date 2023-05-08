@@ -185,7 +185,7 @@ public class Minecart : Item, ISavable
         //TODO: Change orientation based on drop location
         AddTracker();
 
-        STile hitTile = SGrid.GetStileUnderneath(gameObject);
+        STile hitTile = SGrid.GetSTileUnderneath(gameObject);
         Tilemap railmap;
 
         if(hitTile != null) //Use Stile RM
@@ -413,10 +413,10 @@ public class Minecart : Item, ISavable
             targetWorldPos += getDirectionAsVector(currentDirection);
           //  GameObject temp = gameObject;
             GameObject temp = new GameObject();
-            if(SGrid.GetStileUnderneath(temp) != null) //don't drop if there is an adj tile
+            if(SGrid.GetSTileUnderneath(temp) != null) //don't drop if there is an adj tile
                 shouldDrop = false;
             temp.transform.position = targetWorldPos +  new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0);
-            if(SGrid.GetStileUnderneath(temp) == null) //don't drop unless there is a tile to drop down onto
+            if(SGrid.GetSTileUnderneath(temp) == null) //don't drop unless there is a tile to drop down onto
                 shouldDrop = false;
             dropOnNextMove = shouldDrop;
             Destroy(temp);
