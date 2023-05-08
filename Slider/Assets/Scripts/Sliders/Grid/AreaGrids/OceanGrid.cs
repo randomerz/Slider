@@ -8,6 +8,7 @@ public class OceanGrid : SGrid
     public GameObject burriedTreasure;
     public ParticleSystem burriedTreasureParticles;
     public KnotBox knotBox;
+    public GameObject buoyUITrackerPrefab;
     private bool knotBoxEnabledLastFrame;
     public BottleManager bottleManager;
     public NPCRotation npcRotation;
@@ -30,8 +31,10 @@ public class OceanGrid : SGrid
     private Vector2Int playerMovement;
     private int lastIslandId = 1;
     private bool foggyCompleted;
-    public GameObject fog6;
-    public GameObject fog7;
+    // public GameObject fog6;
+    // public GameObject fog7;
+    public FogAnimationController fogAnimationController6;
+    public FogAnimationController fogAnimationController7;
     public GameObject fogIsland;
     private int fogIslandId; //tile which fog island was found on
     
@@ -109,9 +112,39 @@ public class OceanGrid : SGrid
 
     private void Update()
     {
-
+        UpdateRomeoReason();
+        
         //Get tile the player is on. if it change from last update, find the direction the player moved. Add direction to list of moves. put list in checkfoggy. only why on fog tiles
-        updatePlayerMovement();
+        UpdatePlayerMovement();
+    }
+
+    private void UpdateRomeoReason()
+    {
+        string reason = "The path is obstructed!";
+        string gridString = GetGridString();
+        
+        if (gridString[0] == '2' || gridString[0] == '8')
+        {
+            reason = "There is land in the way!";
+        }
+        else if (gridString[0] == '4')
+        {
+            reason = "The shipwreck is in the way!";
+        }
+        else if (gridString[0] == '5')
+        {
+            reason = "The island is in the way!";
+        }
+        else if (gridString[0] == '9')
+        {
+            reason = "The volcano is in the way!";
+        }
+        else if (gridString[0] == '.')
+        {
+            reason = "The space in front of me is empty!";
+        }
+
+        SaveSystem.Current.SetString("oceanRomeoReason", reason);
     }
     
     private void LateUpdate() {
@@ -167,9 +200,48 @@ public class OceanGrid : SGrid
 
     private void CheckTile2Placement(STile stile)
     {
-        STile other = GetStileAt(1, 0);
+        int stile1x = GetStile(1).x;
+        int stile1y = GetStile(1).y;
+
+        if (stile1x < 2)
+        {
+            if (stile1y < 2)
+            {
+                if (CheckTile2PlacementHelper(stile, stile1x + 1, stile1y + 1))
+                    return;
+            }
+            else if (stile1y > 0)
+            {
+                if (CheckTile2PlacementHelper(stile, stile1x + 1, stile1y - 1))
+                    return;
+            }
+        }
+        else if (stile1x > 0)
+        {
+            if (stile1y < 2)
+            {
+                if (CheckTile2PlacementHelper(stile, stile1x - 1, stile1y + 1))
+                    return;
+            }
+            else if (stile1y > 0)
+            {
+                if (CheckTile2PlacementHelper(stile, stile1x - 1, stile1y - 1))
+                    return;
+            }
+        }
+
+        // wah wah u couldnt swap it for some reason boohoo
+    }
+
+    private bool CheckTile2PlacementHelper(STile slider2, int x, int y)
+    {
+        STile other = GetStileAt(x, y);
         if (other.islandId != 1)
-            SwapTiles(stile, other);
+        {
+            SwapTiles(slider2, other);
+            return true;
+        }
+        return false;
     }
 
     private void CheckTile3Placement(STile stile)
@@ -316,9 +388,23 @@ public class OceanGrid : SGrid
             knotBox.CheckLines();
             if (knotBox.enabled)
             {
+                List<UITrackerBuoyAddOn> uiTrackerAddOns = new List<UITrackerBuoyAddOn>();
                 foreach (GameObject knotnode in knotBox.knotnodes)
                 {
-                    UITrackerManager.AddNewTracker(knotnode);
+                    GameObject buoyUITrackerGO = Instantiate(buoyUITrackerPrefab);
+                    UITracker buoyUITracker = buoyUITrackerGO.GetComponent<UITracker>();
+                    uiTrackerAddOns.Add(buoyUITrackerGO.GetComponent<UITrackerBuoyAddOn>());
+
+                    UITrackerManager.AddNewCustomTracker(buoyUITracker, knotnode);
+                }
+
+                for (int i = 0; i < uiTrackerAddOns.Count; i++)
+                {
+                    int next = (i + 1) % uiTrackerAddOns.Count;
+                    int prev = (i + uiTrackerAddOns.Count - 1) % uiTrackerAddOns.Count;
+
+                    uiTrackerAddOns[i].target1 = uiTrackerAddOns[next].myRectTransform;
+                    uiTrackerAddOns[i].target2 = uiTrackerAddOns[prev].myRectTransform;
                 }
             }
             else
@@ -354,23 +440,27 @@ public class OceanGrid : SGrid
 
                 if (fogIslandId == 6)
                 {
-                    fog6.SetActive(false);
+                    // fog6.SetActive(false);
+                    fogAnimationController6.SetIsVisible(false);
                 }
                 else
                 {
-                    fog7.SetActive(false);
+                    // fog7.SetActive(false);
+                    fogAnimationController7.SetIsVisible(false);
                 }
             }
         }
         else
         {
-            fog6.SetActive(true);
-            fog7.SetActive(true);
+            fogAnimationController6.SetIsVisible(true);
+            fogAnimationController7.SetIsVisible(true);
+            // fog6.SetActive(true);
+            // fog7.SetActive(true);
         }
         
     }
 
-    private void updatePlayerMovement()
+    private void UpdatePlayerMovement()
     {
 
         if (Player.GetInstance().GetSTileUnderneath() == null)
@@ -392,8 +482,10 @@ public class OceanGrid : SGrid
         if (currentIslandId != lastIslandId && (lastIslandId == 6 || lastIslandId == 7))
         {
 
-            fog7.SetActive(true);
-            fog6.SetActive(true);
+            // fog7.SetActive(true);
+            // fog6.SetActive(true);
+            fogAnimationController6.SetIsVisible(true);
+            fogAnimationController7.SetIsVisible(true);
             fogIsland.SetActive(false);
             //SetProgressRingActive(true);
 
@@ -422,15 +514,16 @@ public class OceanGrid : SGrid
 
     private void FoggySeasAudio()
     {
-        AudioManager.PlayWithPitch("Puzzle Complete", 0.3f + playerIndex * 0.05f);
-        AudioManager.SetMusicParameter("Ocean", "OceanFoggyProgress", playerIndex);
+        AudioManager.PlayWithPitch("Puzzle Complete", 0.5f + playerIndex * 0.1f);
+        AudioManager.SetGlobalParameter("OceanFoggyProgress", 0);
     }
 
     public bool FoggyCorrectMovement()
     {
         // Debug.Log("player index: " + playerIndex+ " correct path: " + correctPath.Length);
-        if(playerIndex == correctPath.Length - 1 && !foggyCompleted)
+        if(playerIndex == correctPath.Length - 1 && !foggyCompleted && correctPath[playerIndex] == playerMovement)
         {
+            playerIndex++;
             FoggyCompleted();
             return true; //only returns true the first time u complete this puzzle basically
         }
@@ -451,16 +544,14 @@ public class OceanGrid : SGrid
 
     private void failFoggy()
     {
-        if(playerIndex > 5) //cant fail if u reached the island
-            return;
-        if (playerIndex != 0)
+        if (playerIndex != 0 && playerIndex != 6)
         {
             AudioManager.Play("Artifact Error");
         }
 
         playerIndex = 0;
         foggyCompleted = false; // DC: idk why we made it only completable once
-        AudioManager.SetMusicParameter("Ocean", "OceanFoggyProgress", 0);
+        AudioManager.SetGlobalParameter("OceanFoggyProgress", 0);
         foreach (SpriteRenderer note in progressNotes)
         {
             if (note.sprite.Equals(fullNote))
@@ -570,12 +661,14 @@ public class OceanGrid : SGrid
 
                     // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, !isLand);
+                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetHighlighted(isLand);
                 }
                 else
                 {
                     int tid = int.Parse(tids);
                     // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
+                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetHighlighted(artifactButton.islandId != tid);
                 }
             }
         }

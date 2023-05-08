@@ -143,6 +143,7 @@ public class PlayerInventory : MonoBehaviour
         Item temp = currentItem;
         currentItem = null;
         itemIterator = equipables.GetEnumerator();
+
         return temp;
     }
 

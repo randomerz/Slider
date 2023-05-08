@@ -23,6 +23,18 @@ public class PlayerConditionals : MonoBehaviour, IInteractable
             {
                 if (onActionEnabled)
                 {
+                    if (isCarryingItem) // mmm yes beautiful code
+                    {
+                        if (PlayerInventory.GetCurrentItem() == null)
+                        {
+                            return;
+                        }
+                        else if (!PlayerInventory.GetCurrentItem().itemName.Equals(itemNameCheck))
+                        {
+                            return;
+                        }
+                    }
+                    
                     Player.GetPlayerAction().AddInteractable(this);
                 }
             }
@@ -61,11 +73,11 @@ public class PlayerConditionals : MonoBehaviour, IInteractable
 
         if (isCarryingItem)
         {
-            if (!Player.GetPlayerAction().HasItem())
+            if (PlayerInventory.GetCurrentItem() == null)
             {
                 return false;
             }
-            if (!Player.GetPlayerAction().pickedItem.itemName.Equals(itemNameCheck))
+            else if (!PlayerInventory.GetCurrentItem().itemName.Equals(itemNameCheck))
             {
                 return false;
             }
@@ -81,6 +93,18 @@ public class PlayerConditionals : MonoBehaviour, IInteractable
     public void InvokeSuccess()
     {
         onSuccess?.Invoke();
+        
+        if (isCarryingItem)
+        {
+            if (PlayerInventory.GetCurrentItem() == null)
+            {
+                Player.GetPlayerAction().RemoveInteractable(this);
+            }
+            else if (!PlayerInventory.GetCurrentItem().itemName.Equals(itemNameCheck))
+            {
+                Player.GetPlayerAction().RemoveInteractable(this);
+            }
+        }
     }
 
     public void EnableConditionals()

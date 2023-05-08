@@ -137,6 +137,10 @@ public class VillageGrid : SGrid
         // once cat goes over water, let him chill
         yield return new WaitUntil(() => {
             playerOnBeach = playerOnBeach || Player.GetPosition().x > 43;
+            if (Player.GetPosition().x > catSinWave.transform.position.x)
+            {
+                catSinWave.horizontalVelocity = 1.5f;
+            }
             return catSinWave.transform.position.x > 53;
         });
 

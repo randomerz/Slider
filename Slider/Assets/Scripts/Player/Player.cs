@@ -282,6 +282,14 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
         // Other init functions
         UpdatePlayerSpeed();
+
+        // If haven't logged on in a while + correct scene, spawn with anchor
+        if (profile.GetBool("playerSpawnWithAnchorEquipped"))
+        {
+            profile.SetBool("playerSpawnWithAnchorEquipped", false);
+
+            PlayerInventory.NextItem();
+        }
     }
 
     private void UpdateMove(Vector2 moveDir) 
@@ -398,10 +406,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     public static void SetIsInHouse(bool isInHouse)
     {
-        if (isInHouse)
-            AudioManager.EnqueueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
-        else
-            AudioManager.DequeueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
+        AudioManager.SetListenerIsIndoor(isInHouse);
         _instance.isInHouse = isInHouse;
     }
 

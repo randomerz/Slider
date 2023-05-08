@@ -36,7 +36,6 @@ public class NPCRotation : MonoBehaviour
     {
         ShopManager.OnTurnedItemIn += ChangeNPCS;
         AnchorFirstAppearance.OnAnchorAcquire += MoveAmberOak;
-        InitTavern();
     }
 
     public void OnDisable()
@@ -45,7 +44,11 @@ public class NPCRotation : MonoBehaviour
         AnchorFirstAppearance.OnAnchorAcquire -= MoveAmberOak;
     }
 
-
+    private void Start() 
+    {
+        InitTavern();
+        UpdateTavern();
+    }
 
     public void InitTavern()
     {
@@ -54,20 +57,20 @@ public class NPCRotation : MonoBehaviour
         {
             switch (item.name)
             {
-                case "A Golden Fish": //fisherman joins the tavern
+                case "Golden Fish": //fisherman joins the tavern
                     rotationUpdates.Add("fisherman");
                     break;
 
-                case "A Peculiar Rock": //alien
+                case "Rock": //alien
                     rotationUpdates.Add("alien");
                     break;
 
-                case "Cat Beard's Treasure"://dice ppl leave
+                case "Treasure Chest"://dice ppl leave
                     rotationUpdates.Add("diceGirl");
                     rotationUpdates.Add("catBeard");
                     break;
 
-                case "A Magical Gem": //fezziwig joins
+                case "Magical Gem": //fezziwig joins
                     rotationUpdates.Add("fezziwig");
                     break;
                 default:
@@ -167,7 +170,7 @@ public class NPCRotation : MonoBehaviour
 
     public void MovePorker()
     {
-        if (!SaveSystem.Current.GetBool("oceanPorkerTraining"))
+        if (!SaveSystem.Current.GetBool("oceanPorkerTraining") && PlayerInventory.Contains("Slider 7", Area.Ocean))
             porker.Teleport(coconuts, true);
     }
 

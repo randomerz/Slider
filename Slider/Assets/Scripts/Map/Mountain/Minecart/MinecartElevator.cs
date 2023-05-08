@@ -16,16 +16,17 @@ public class MinecartElevator : MonoBehaviour, ISavable
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveEnd += CheckOpenOnMove;
+        SGridAnimator.OnSTileMoveStart += CheckOpenOnMove;
     }
 
     private void OnDisable() {
         SGridAnimator.OnSTileMoveEnd -= CheckOpenOnMove;
+        SGridAnimator.OnSTileMoveStart -= CheckOpenOnMove;
     }
 
     private void CheckOpenOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        isOpen = SGrid.Current.GetGrid()[0,1].isTileActive && SGrid.Current.GetGrid()[0,3].isTileActive;
-        //set bool in animator
+        isOpen = CheckIfShouldBeOpen();
     }
 
 
@@ -56,6 +57,23 @@ public class MinecartElevator : MonoBehaviour, ISavable
         animationManager.SendUp();
         StartCoroutine(WaitThenSend(mc, topPosition.transform.position, 3));
     }
+    
+    private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir){
+        isSending = true;
+        yield return new WaitForSeconds(2f);
+        mc.SnapToRail(position, dir);
+        yield return new WaitForSeconds(1.5f);
+        mc.StartMoving();
+        isSending = false;
+    }
+
+    public bool CheckIfShouldBeOpen()
+    {
+        Condition c = new Condition();
+        c.type = Condition.ConditionType.gridStationary;
+        return SGrid.Current.GetStileAt(0, 1).isTileActive && !SGrid.Current.GetStileAt(0, 1).IsMoving() 
+        && SGrid.Current.GetStileAt(0, 3).isTileActive && !SGrid.Current.GetStileAt(0, 3).IsMoving();
+    }
 
     public void CheckIsFixed(Condition c)
     {
@@ -72,14 +90,6 @@ public class MinecartElevator : MonoBehaviour, ISavable
         c.SetSpec(hasGoneDown);
     }
 
-    private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir){
-        isSending = true;
-        yield return new WaitForSeconds(2f);
-        mc.SnapToRail(position, dir);
-        yield return new WaitForSeconds(1.5f);
-        mc.StartMoving();
-        isSending = false;
-    }
 
     public void Save()
     {
@@ -90,6 +100,6 @@ public class MinecartElevator : MonoBehaviour, ISavable
     {
         isFixed = profile.GetBool("MountainElevatorFixed");
         if(isFixed)
-            animationManager.Repair();
+            animationManager.Repair(true);
     }
 }

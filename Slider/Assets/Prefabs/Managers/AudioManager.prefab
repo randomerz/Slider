@@ -76,7 +76,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attenuationObject: {fileID: 7379062662087638973}
-  ListenerNumber: -1
 --- !u!1 &8529986348122845573
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,6 +357,15 @@ MonoBehaviour:
         Data4: 937611837
       Path: event:/SFX/Desert/Baboon Screech
     dopplerScale: 0
+  - name: Dice Bump
+    fmodEvent:
+      Guid:
+        Data1: 647886163
+        Data2: 1305612812
+        Data3: 1138196376
+        Data4: -2014453397
+      Path: event:/SFX/Desert/Dice Bump
+    dopplerScale: 0
   - name: Dice Shake
     fmodEvent:
       Guid:
@@ -595,3 +603,5 @@ MonoBehaviour:
   listener: {fileID: 6844044390766525512}
   listenerWorldPosition: {fileID: 9215923887181117521}
   ZLevel: 10
+  IndoorIsolatedFromWorld: 0
+  indoorMuteFactor: 0.295
