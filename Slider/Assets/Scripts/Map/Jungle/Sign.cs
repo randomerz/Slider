@@ -68,14 +68,14 @@ public class Sign : Box
         if (path.pair != null)
         {
             recievedShapes[path.pair] = shape;
-            MergeShapes();
-            CreateShape(parents);
+            this.MergeShapes();
+            this.CreateShape(parents);
         }
         else
         {
             recievedShapes[path] = shape;
-            MergeShapes();
-            CreateShape(parents);
+            this.MergeShapes();
+            this.CreateShape(parents);
         }
     }
     public void MergeShapes()

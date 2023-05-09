@@ -94,6 +94,7 @@ public class Box : MonoBehaviour
 
     public virtual void CreateShape(List<Box> parents)
     {
+        print("box - create shape");
        // print(this.gameObject.name + " is sending shape " + currentShape);
         //print(currentDirection);
 
@@ -124,6 +125,7 @@ public class Box : MonoBehaviour
 
     public virtual void Rotate()
     {
+        print("box - rotate");
         if (currentShape != null)
         {
             // update the box it points in currently to push no shape onto the path
