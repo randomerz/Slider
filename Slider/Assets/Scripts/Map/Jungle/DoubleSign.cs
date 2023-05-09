@@ -7,7 +7,6 @@ public class DoubleSign : Sign
     public Direction secondCurrentDirection = Direction.UP; 
 
     public override void CreateShape(List<Box> parents) {
-        print("ds - creating shapes");
         Box next = GetBoxInDirection(currentDirection);
         Box next2 = GetBoxInDirection(secondCurrentDirection);
 
@@ -34,19 +33,18 @@ public class DoubleSign : Sign
                 if (!paths[secondCurrentDirection].isActive() || paths[secondCurrentDirection].getAnimType() == isDefaultCurrentPath(secondCurrentDirection))
                 {
                     paths[secondCurrentDirection].Activate(isDefaultCurrentPath(secondCurrentDirection), currentShape); 
-                    next.RecieveShape(paths[secondCurrentDirection], currentShape, parents);
+                    next2.RecieveShape(paths[secondCurrentDirection], currentShape, parents);
                 }
             }
             else
             {
                 paths[secondCurrentDirection].Deactivate();
-                next.RecieveShape(paths[secondCurrentDirection], currentShape, parents);
+                next2.RecieveShape(paths[secondCurrentDirection], currentShape, parents);
             }
         }
     }
 
     public override void Rotate(){
-        print("ds - rotate");
         if (currentShape != null)
         {
             // update the box it points in currently to push no shape onto the path

@@ -58,7 +58,9 @@ public class Sign : Box
 
     public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
-        if (parents.Contains(this) && shape != null)
+
+       // && (shape != null && this.currentShape != null)
+        if (parents.Contains(this))
         {
             return;
         }

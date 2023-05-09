@@ -61,8 +61,6 @@ public class Box : MonoBehaviour
 
     protected void STileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
-        CreateShape(new List<Box>());
-
         foreach (Direction d in paths.Keys)
         {
             paths[d].ChangePair();
@@ -94,7 +92,6 @@ public class Box : MonoBehaviour
 
     public virtual void CreateShape(List<Box> parents)
     {
-        print("box - create shape");
        // print(this.gameObject.name + " is sending shape " + currentShape);
         //print(currentDirection);
 
@@ -125,7 +122,6 @@ public class Box : MonoBehaviour
 
     public virtual void Rotate()
     {
-        print("box - rotate");
         if (currentShape != null)
         {
             // update the box it points in currently to push no shape onto the path
