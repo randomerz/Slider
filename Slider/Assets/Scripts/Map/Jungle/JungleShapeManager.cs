@@ -4,25 +4,22 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
-public class JungleShapeManager : MonoBehaviour, ISavable
+public class JungleShapeManager : Singleton<JungleShapeManager>, ISavable
 {
     //refactor later to just be a singleton
-    public static JungleShapeManager instance { get; private set; }
+    //public static JungleShapeManager instance { get; private set; }
     private string prefix = "jungleTurnedIn_";
 
     private void Awake()
     {
-        if (instance != null && instance != this)
+        if (InitializeSingleton(ifInstanceAlreadySetThenDestroy:gameObject))
         {
-            Destroy(this);
+            return;
         }
-        else
-        {
-            instance = this;
-        }
+        DontDestroyOnLoad(gameObject);
     }
 
-    public bool TurnInShape(Shape wanted)
+    public static bool TurnInShape(Shape wanted)
     {
         //get teh item the player is holding
         Item held = PlayerInventory.GetCurrentItem();
@@ -37,7 +34,7 @@ public class JungleShapeManager : MonoBehaviour, ISavable
         {
             //print("Turn in " + wanted.name);
             PlayerInventory.RemoveAndDestroyItem();
-            SaveSystem.Current.SetBool(prefix + wanted.name, true);
+            SaveSystem.Current.SetBool(_instance.prefix + wanted.name, true);
         }
 
         return false;

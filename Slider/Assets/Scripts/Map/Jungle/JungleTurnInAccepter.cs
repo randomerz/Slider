@@ -20,6 +20,6 @@ public class JungleTurnInAccepter : MonoBehaviour
 
     public void OnShapeTriggerEnter()
     {
-        bool removed = JungleShapeManager.instance.TurnInShape(neededShape);
+        bool removed = JungleShapeManager.TurnInShape(neededShape);
     }
 }
