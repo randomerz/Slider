@@ -45,30 +45,23 @@ public class DoubleSign : Sign
     }
 
 //TODO: work on rotate since it is not fully polished and doesn't really turn when stuff is in the way
-    public override void Rotate(){
+    public override void Rotate()
+    {
         if (currentShape != null)
         {
             // update the box it points in currently to push no shape onto the path
             Box box = GetBoxInDirection(currentDirection);
             Box box2 = GetBoxInDirection(secondCurrentDirection);
 
-            if (box != null)
+            if (box != null && isDefaultCurrentPath(currentDirection) == paths[currentDirection].getAnimType())
             {
                 box.RecieveShape(paths[currentDirection], null, new List<Box>());
-            }
-            
-            if (box2 != null)
-            {
-                box2.RecieveShape(paths[secondCurrentDirection], null, new List<Box>());
-            }
-
-            if (isDefaultCurrentPath(currentDirection) == paths[currentDirection].getAnimType())
-            {
                 paths[currentDirection].Deactivate();
             }
-
-            if (isDefaultCurrentPath(secondCurrentDirection) == paths[secondCurrentDirection].getAnimType())
+            
+            if (box2 != null && isDefaultCurrentPath(secondCurrentDirection) == paths[secondCurrentDirection].getAnimType())
             {
+                box2.RecieveShape(paths[secondCurrentDirection], null, new List<Box>());
                 paths[secondCurrentDirection].Deactivate();
             }
             
@@ -104,6 +97,7 @@ public class DoubleSign : Sign
                 at2 = temp;
             }
 
+            // no need to loop just pass to the next one
             for (int i = 1; i <= 4; i++)
             {
                 Direction d = ds[(at2 + i) % 4];
@@ -112,6 +106,8 @@ public class DoubleSign : Sign
                 {
                     continue;
                 }
+
+                print("found: " + d);
 
                 secondCurrentDirection = d;
                 //turn on path if there is not another using it
@@ -124,14 +120,11 @@ public class DoubleSign : Sign
                         {
                             return;
                         }
-
-                        CreateShape(new List<Box>());
                     }
-                    break;
                 }
 
                 //do it for the path behind
-                currentDirection = ds[(at - 1) % 4];
+                currentDirection = ds[(at + 1) % 4];
                 if (!paths[currentDirection].isActive())
                 {
                     Box next = GetBoxInDirection(currentDirection);
@@ -141,11 +134,11 @@ public class DoubleSign : Sign
                         {
                             return;
                         }
-
-                        CreateShape(new List<Box>());
-                    }
-                    break;
+                   }
                 }
+
+                CreateShape(new List<Box>());
+                break;
             }
         }
     }
