@@ -107,8 +107,6 @@ public class DoubleSign : Sign
                     continue;
                 }
 
-                print("found: " + d);
-
                 secondCurrentDirection = d;
                 //turn on path if there is not another using it
                 if (!paths[d].isActive())
