@@ -44,6 +44,7 @@ public class DoubleSign : Sign
         }
     }
 
+//TODO: work on rotate since it is not fully polished and doesn't really turn when stuff is in the way
     public override void Rotate(){
         if (currentShape != null)
         {
