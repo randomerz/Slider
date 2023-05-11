@@ -7,6 +7,7 @@ public class TimedGateDiode : ElectricalNode
     [Header("Timed Gate Diode")]
     [SerializeField] private TimedGate gate;
     [SerializeField] private SpriteSwapper swapper;
+    [SerializeField] private BatteryProp batteryProp;
 
 
     private new void OnEnable()
@@ -29,7 +30,8 @@ public class TimedGateDiode : ElectricalNode
         base.OnPoweredHandler(e);
         if (e.powered && gate.GateActive)
         {
-            swapper.TurnOn();
+            //swapper.TurnOn();
+            GateActivatedHandler();
         }
     }
 
@@ -39,6 +41,8 @@ public class TimedGateDiode : ElectricalNode
         if (Powered)
         {
             swapper.TurnOn();
+            batteryProp.SetActive(true);
+            // do something if gate is powered?
         }
 
     }
@@ -47,5 +51,6 @@ public class TimedGateDiode : ElectricalNode
     {
         // Debug.Log($"Timed Gate for Diode {gameObject.name} deactivated.");
         swapper.TurnOff();
+        batteryProp.SetActive(false);
     }
 }

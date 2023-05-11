@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 997012892581697215}
   - component: {fileID: 997012892581697214}
+  - component: {fileID: 7076744612717931999}
   - component: {fileID: 997012892581697184}
-  - component: {fileID: 997012892581697185}
   - component: {fileID: 997012892581697187}
   m_Layer: 0
   m_Name: SmallBattery
@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 997012892581697212}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -87,6 +87,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7076744612717931999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997012892581697212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04ebf9f8b1d032245be45ca2a4079829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteSwapper: {fileID: 997012892581697184}
 --- !u!114 &997012892581697184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,58 +116,6 @@ MonoBehaviour:
   off: {fileID: -788484597, guid: 99b1b0ec6afba3544ba50473d1da36ee, type: 3}
   sr: {fileID: 997012892581697214}
   image: {fileID: 0}
---- !u!114 &997012892581697185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 997012892581697212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58c1b528e0c005048941bffa94744ab2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nodeType: 2
-  neighbors:
-  - {fileID: 0}
-  powerOnStart: 0
-  invertSignal: 0
-  affectedByBlackout: 1
-  debugAsPoweredOn: 0
-  OnPowered:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPoweredOn:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 997012892581697184}
-        m_TargetAssemblyTypeName: SpriteSwapper, Assembly-CSharp
-        m_MethodName: TurnOn
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnPoweredOff:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 997012892581697184}
-        m_TargetAssemblyTypeName: SpriteSwapper, Assembly-CSharp
-        m_MethodName: TurnOff
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!61 &997012892581697187
 BoxCollider2D:
   m_ObjectHideFlags: 0
