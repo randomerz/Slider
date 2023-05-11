@@ -26,22 +26,21 @@ public class Sign : Box
     private void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += UpdateShapesOnTileMove;
+        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
         SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
+        SGrid.OnSTileEnabled += STileEnabled;
     }
 
     private void OnDisable()
     {
         SGridAnimator.OnSTileMoveStart -= UpdateShapesOnTileMove;
+        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
         SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
+        SGrid.OnSTileEnabled -= STileEnabled;
     }
 
     private void UpdateShapesOnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        foreach (Direction d in paths.Keys)
-        {
-            paths[d].ChangePair();
-        }
-
         recievedShapes = new Dictionary<Path, Shape>();
         foreach (Direction d in paths.Keys)
         {
@@ -49,10 +48,19 @@ public class Sign : Box
         }
     }
 
+    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        foreach (Direction d in paths.Keys)
+        {
+            paths[d].ChangePair();
+        }
+    }
 
     public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
-        if (parents.Contains(this) && shape != null)
+
+       // && (shape != null && this.currentShape != null)
+        if (parents.Contains(this))
         {
             return;
         }
@@ -62,32 +70,31 @@ public class Sign : Box
         if (path.pair != null)
         {
             recievedShapes[path.pair] = shape;
-            MergeShapes();
-            CreateShape(parents);
+            this.MergeShapes();
+            this.CreateShape(parents);
         }
         else
         {
             recievedShapes[path] = shape;
-            MergeShapes();
-            CreateShape(parents);
+            this.MergeShapes();
+            this.CreateShape(parents);
         }
     }
     public void MergeShapes()
     {
-        //print("merging");
         List<Shape> shapesRecieved = new List<Shape>();
 
         foreach (Direction d in paths.Keys)
         {
             if (recievedShapes[paths[d]] != null)
             {
-/*                print(recievedShapes[paths[d]]);
-                print(d);*/
+                // print(recievedShapes[paths[d]]);
+                // print(d);
                 shapesRecieved.Add(recievedShapes[paths[d]]);
             }
         }
 
-/*        print("merging");
+/*        print(this.gameObject.name + " merging");
         foreach (Shape s in shapesRecieved)
         {
             print(s.name);

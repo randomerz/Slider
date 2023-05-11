@@ -21,9 +21,10 @@ public class ShapePlacer : MonoBehaviour
         making = true;
         GameObject created = Instantiate(shapeItem);
         created.transform.parent = this.transform;
+        created.transform.GetChild(0).transform.localPosition = new Vector3(0f, -0.5f, 0);
         created.GetComponentInChildren<SpriteRenderer>().sprite = shape.sprite;
         created.GetComponentInChildren<Item>().itemName = shape.name;
-        created.transform.localPosition = new Vector3(0f, -0.5f, 0);
+        created.transform.localPosition = new Vector3(0f, 0f, 0f);
         makeShape = shape;
     }
 
