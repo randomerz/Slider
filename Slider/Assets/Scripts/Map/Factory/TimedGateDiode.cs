@@ -15,6 +15,7 @@ public class TimedGateDiode : ElectricalNode
         base.OnEnable();
         gate.OnGateActivated.AddListener(GateActivatedHandler);
         gate.OnGateDeactivated.AddListener(GateDeactivatedHandler);
+        batteryProp?.UpdateSprite();
     }
 
     private new void OnDisable()
@@ -30,20 +31,22 @@ public class TimedGateDiode : ElectricalNode
         base.OnPoweredHandler(e);
         if (e.powered && gate.GateActive)
         {
-            //swapper.TurnOn();
-            GateActivatedHandler();
+            //GateActivatedHandler();
+            swapper.TurnOn();
+            batteryProp?.SetDiodeEnabled(true);
         }
     }
 
     public void GateActivatedHandler()
     {
-        // Debug.Log($"Timed Gate for Diode {gameObject.name} activated.");
-        if (Powered)
-        {
-            swapper.TurnOn();
-            batteryProp.SetActive(true);
-            // do something if gate is powered?
-        }
+        //Debug.Log($"Timed Gate for Diode {gameObject.name} activated.");
+        batteryProp?.SetGateEnabled(true);
+
+        //if (Powered)
+        //{
+        //    swapper.TurnOn();
+        //    batteryProp.SetDiodeEnabled(true);
+        //}
 
     }
 
@@ -51,6 +54,7 @@ public class TimedGateDiode : ElectricalNode
     {
         // Debug.Log($"Timed Gate for Diode {gameObject.name} deactivated.");
         swapper.TurnOff();
-        batteryProp.SetActive(false);
+        batteryProp?.SetGateEnabled(false);
+        batteryProp?.SetDiodeEnabled(false);
     }
 }

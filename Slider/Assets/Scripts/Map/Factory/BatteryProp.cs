@@ -4,19 +4,63 @@ using UnityEngine;
 
 public class BatteryProp : MonoBehaviour
 {
-    [SerializeField] private SpriteSwapper spriteSwapper;
-    
+    //[SerializeField] private SpriteSwapper spriteSwapper;
 
-    public void SetActive(bool value)
+    private bool isGateEnabled;
+    private bool isDiodeEnabled;
+
+    [SerializeField] private Sprite offSprite;
+    [SerializeField] private Sprite enabledSprite;
+    [SerializeField] private Sprite poweredSprite;
+
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private ParticleSystem particlesBurst;
+    [SerializeField] private ParticleSystem particlesConducting;
+
+
+    public void SetGateEnabled(bool value)
+    {
+        if (value && !isGateEnabled)
+        {
+            particlesBurst.Play();
+        }
+
+        isGateEnabled = value;
+        UpdateSprite();
+    }
+
+    public void SetDiodeEnabled(bool value)
     {
         if (value)
         {
-            spriteSwapper.TurnOn();
+            particlesConducting.Play();
+            if (!isDiodeEnabled)
+            {
+                particlesBurst.Play();
+            }
         }
         else
         {
-            spriteSwapper.TurnOff();
+            particlesConducting.Stop();
         }
 
+        isDiodeEnabled = value;
+        UpdateSprite();
+    }
+
+    public void UpdateSprite()
+    {
+        if (isDiodeEnabled)
+        {
+            spriteRenderer.sprite = poweredSprite;
+        }
+        else if (isGateEnabled)
+        {
+            spriteRenderer.sprite = enabledSprite;
+        }
+        else
+        {
+            spriteRenderer.sprite = offSprite;
+        }
     }
 }
