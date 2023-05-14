@@ -89,7 +89,7 @@ public class RopeCoil : Item
     {
         STile hitTile = base.DropItem(dropLocation, callback);
         isPicked = false;
-        UpdatePlayerSpeed();
+        Player.SetMoveSpeedMultiplier(1f);
 
         return hitTile;
     }

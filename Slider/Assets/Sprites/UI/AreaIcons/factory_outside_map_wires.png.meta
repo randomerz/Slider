@@ -141,12 +141,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: factory_outside_map_wires_0
+      name: factory_outside_map_wires_NW3
       rect:
         serializedVersion: 2
-        x: 19
+        x: 21
         y: 100
-        width: 5
+        width: 4
         height: 28
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -162,13 +162,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: factory_outside_map_wires_1
+      name: factory_outside_map_wires_NW4
       rect:
         serializedVersion: 2
-        x: 25
+        x: 27
         y: 82
-        width: 9
-        height: 31
+        width: 7
+        height: 23
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -183,7 +183,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: factory_outside_map_wires_2
+      name: factory_outside_map_wires_NW5
       rect:
         serializedVersion: 2
         x: 210
@@ -204,7 +204,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: factory_outside_map_wires_3
+      name: factory_outside_map_wires_NE1
       rect:
         serializedVersion: 2
         x: 98
@@ -225,7 +225,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: factory_outside_map_wires_4
+      name: factory_outside_map_wires_E3
       rect:
         serializedVersion: 2
         x: 149
@@ -246,7 +246,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: factory_outside_map_wires_5
+      name: factory_outside_map_wires_E1
       rect:
         serializedVersion: 2
         x: 146
@@ -267,7 +267,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: factory_outside_map_wires_6
+      name: factory_outside_map_wires_E2
       rect:
         serializedVersion: 2
         x: 326
@@ -288,15 +288,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: factory_outside_map_wires_7
+      name: factory_outside_map_wires_NW1
       rect:
         serializedVersion: 2
-        x: 33
-        y: 28
-        width: 2
-        height: 4
+        x: 14
+        y: 122
+        width: 6
+        height: 3
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -304,6 +304,90 @@ TextureImporter:
       bones: []
       spriteID: db3f747ad37ce1900800000000000000
       internalID: 657181663256114109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_outside_map_wires_NW2
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 115
+        width: 4
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7730c6ecfaa2ecc49a7a18b6057fe4cf
+      internalID: -1984695415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_outside_map_wires_NW6
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 125
+        width: 4
+        height: 3
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40254ae1d7a5a8441a2bd3f3502b990e
+      internalID: -1216159615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_outside_map_wires_NW7
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 109
+        width: 3
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77e7fe9a59abdfe408e5adc6220174f9
+      internalID: 1922049388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_outside_map_wires_S1
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 15
+        width: 3
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4993564f02d846e4ead113f72f9a10fa
+      internalID: -1471046080
       vertices: []
       indices: 
       edges: []
@@ -319,14 +403,18 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      factory_outside_map_wires_6: -8781363739637978127
-      factory_outside_map_wires_4: -555304722856615022
-      factory_outside_map_wires_5: -255020851821161281
-      factory_outside_map_wires_0: 1547405131387898833
-      factory_outside_map_wires_3: 4642754258662521609
-      factory_outside_map_wires_7: 657181663256114109
-      factory_outside_map_wires_1: -734834587485663482
-      factory_outside_map_wires_2: 5196981789156527755
+      factory_outside_map_wires_NW7: 1922049388
+      factory_outside_map_wires_E2: -8781363739637978127
+      factory_outside_map_wires_NW6: -1216159615
+      factory_outside_map_wires_NW5: 5196981789156527755
+      factory_outside_map_wires_E1: -255020851821161281
+      factory_outside_map_wires_NW4: -734834587485663482
+      factory_outside_map_wires_NW3: 1547405131387898833
+      factory_outside_map_wires_S1: -1471046080
+      factory_outside_map_wires_NW1: 657181663256114109
+      factory_outside_map_wires_E3: -555304722856615022
+      factory_outside_map_wires_NE1: 4642754258662521609
+      factory_outside_map_wires_NW2: -1984695415
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

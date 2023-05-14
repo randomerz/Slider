@@ -20,7 +20,6 @@ public class Box : MonoBehaviour
     protected List<Vector2> directions = new List<Vector2>();
     public Direction currentDirection = Direction.RIGHT; //you should set at the start 
 
-    // Start is called before the first frame update
     void Awake()
     {
         SetPaths();
@@ -33,12 +32,14 @@ public class Box : MonoBehaviour
     private void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += DeactivatePathsOnSTileMove;
+        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
         SGrid.OnSTileEnabled += STileEnabled;
     }
 
     private void OnDisable()
     {
         SGridAnimator.OnSTileMoveStart -= DeactivatePathsOnSTileMove;
+        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
         SGrid.OnSTileEnabled -= STileEnabled;
     }
 
@@ -50,9 +51,20 @@ public class Box : MonoBehaviour
         }
     }
 
+    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        foreach (Direction d in paths.Keys)
+        {
+            paths[d].ChangePair();
+        }
+    }
+
     protected void STileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
-        CreateShape(new List<Box>());
+        foreach (Direction d in paths.Keys)
+        {
+            paths[d].ChangePair();
+        }
     }
 
     protected void SetPaths()
@@ -72,21 +84,25 @@ public class Box : MonoBehaviour
         {
             paths[Direction.DOWN] = bottom;
         }
+
+        // if (paths.Keys.Count == 0) {
+        //     print(this.gameObject.name);
+        // }
     }
 
-    public void CreateShape(List<Box> parents)
+    public virtual void CreateShape(List<Box> parents)
     {
        // print(this.gameObject.name + " is sending shape " + currentShape);
         //print(currentDirection);
 
-        Box next = GetBoxInDirection();
+        Box next = GetBoxInDirection(currentDirection);
         if (next != null)
         {
             if (currentShape != null)
             {
-                if (!paths[currentDirection].isActive() || paths[currentDirection].getAnimType() == isDefaultCurrentPath())
+                if (!paths[currentDirection].isActive() || paths[currentDirection].getAnimType() == isDefaultCurrentPath(currentDirection))
                 {
-                    paths[currentDirection].Activate(isDefaultCurrentPath(), currentShape); 
+                    paths[currentDirection].Activate(isDefaultCurrentPath(currentDirection), currentShape); 
                     next.RecieveShape(paths[currentDirection], currentShape, parents);
                 }
             }
@@ -104,19 +120,19 @@ public class Box : MonoBehaviour
         
     }
 
-    public void Rotate()
+    public virtual void Rotate()
     {
         if (currentShape != null)
         {
             // update the box it points in currently to push no shape onto the path
-            Box box = GetBoxInDirection();
+            Box box = GetBoxInDirection(currentDirection);
 
             if (box != null)
             {
                 box.RecieveShape(paths[currentDirection], null, new List<Box>());
             }
 
-            if (isDefaultCurrentPath() == paths[currentDirection].getAnimType())
+            if (isDefaultCurrentPath(currentDirection) == paths[currentDirection].getAnimType())
             {
                 paths[currentDirection].Deactivate();
             }
@@ -148,7 +164,7 @@ public class Box : MonoBehaviour
                 //turn on path if there is not another using it
                 if (!paths[d].isActive())
                 {
-                    Box next = GetBoxInDirection();
+                    Box next = GetBoxInDirection(currentDirection);
                     if (next != null)
                     {
                         if (currentShape == null)
@@ -164,9 +180,9 @@ public class Box : MonoBehaviour
         }
     }
 
-    protected Box GetBoxInDirection()
+    protected Box GetBoxInDirection(Direction direction)
     {
-        Vector2 v = DirectionUtil.D2V(currentDirection);
+        Vector2 v = DirectionUtil.D2V(direction);
 
         Physics2D.queriesStartInColliders = false;
         Physics2D.queriesHitTriggers = false;
@@ -194,6 +210,7 @@ public class Box : MonoBehaviour
                     }
                 }
 
+                //make sure the huts are not hitting their own signs, but I disabled the script C,:
                 if (other != null)
                 {
                     if (Vector2.Distance(raycasthit.centroid, transform.position) < distanceTo)
@@ -217,9 +234,9 @@ public class Box : MonoBehaviour
 
     }
 
-    protected bool isDefaultCurrentPath()
+    protected bool isDefaultCurrentPath(Direction direction)
     {
-        return currentDirection == Direction.RIGHT || currentDirection == Direction.DOWN;
+        return direction == Direction.RIGHT || direction == Direction.DOWN;
     }
 
     public Vector2 GetDirection()

@@ -377,7 +377,7 @@ TextureImporter:
         width: 48
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -398,7 +398,7 @@ TextureImporter:
         width: 48
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -406,6 +406,27 @@ TextureImporter:
       bones: []
       spriteID: df6384a9b9de15d46affff7c7d26df68
       internalID: -1080461669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pipe_10
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1f88b532d87ab2418f6f26ef9866830
+      internalID: -1162476572
       vertices: []
       indices: 
       edges: []
@@ -432,6 +453,7 @@ TextureImporter:
       pipe_horizontal_support: -318177525
       pipe_4: 329021975
       pipe_6: 1211825482
+      pipe_10: -1162476572
       pipe_1: -1048288209
       pipe_0: -1624764171
       pipe_vertical_support_bot: 2101104194
