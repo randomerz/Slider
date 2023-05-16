@@ -7,10 +7,10 @@ public class MGEvent
 
 public class MGSpawnEvent : MGEvent
 {
-    public MGEntity entitySpawned;
+    public MGUnits.Job entitySpawned;
     public Vector2Int pos;
 
-    public MGSpawnEvent(MGEntity entity, Vector2Int pos)
+    public MGSpawnEvent(MGUnits.Job entity, Vector2Int pos)
     {
         this.entitySpawned = entity;
         this.pos = pos;
