@@ -11,6 +11,7 @@ public class TavernPassManager : MonoBehaviour, ISavable
 
     public ShopManager shopManager;
     public TavernPassRewardEffect rewardEffect;
+    public UICanvasZoomer canvasZoomer;
     public TavernPassButton[] tavernPassButtons;
     public TextMeshProUGUI rewardDescriptionText;
     public Slider progressBar;
@@ -85,7 +86,8 @@ public class TavernPassManager : MonoBehaviour, ISavable
         float progress = CalculateProgressPercent(displayedCredits);
         progressBar.value = progress;
 
-        for (int i = 0; i <= displayedCredits; i++)
+        tavernPassButtons[0].SetComplete(PlayerInventory.Contains("Slider 5", Area.Ocean));
+        for (int i = 1; i <= displayedCredits; i++)
         {
             tavernPassButtons[creditsToCurrentRewardIndex[i]].SetComplete(true);
         }
@@ -103,6 +105,8 @@ public class TavernPassManager : MonoBehaviour, ISavable
             ShopManager.CanClosePanel = false;
             string rewardName = tavernPassButtons[0].rewardName;
             Sprite rewardSprite = tavernPassButtons[0].rewardImage.sprite;
+
+            UICanvasScreenShake.Shake(2, 20);
             rewardEffect.StartEffect(rewardName, rewardSprite, () => {
                 GiveRewards(0);
                 IncrementButton();
@@ -156,6 +160,8 @@ public class TavernPassManager : MonoBehaviour, ISavable
         int from = displayedCredits;
         int to = Mathf.Min(currentNumCredits, nextTarget);
 
+        canvasZoomer.DoZoomIn(progressAnimationDuration);
+        UICanvasScreenShake.ShakeIncrease(progressAnimationDuration - 0.25f, 30);
         yield return StartCoroutine(AnimateProgressBar(
             CalculateProgressPercent(from), 
             CalculateProgressPercent(to)
@@ -170,6 +176,7 @@ public class TavernPassManager : MonoBehaviour, ISavable
             if (tier == tavernPassButtons.Length - 1) // if giving final tier
             {
                 // We transition into dialogue panel instead
+                canvasZoomer.DoZoomReleaseBig(2);
                 rewardEffect.StartEffect(rewardName, rewardSprite, () => {
                     displayedCredits = to;
                     ShopManager.CanClosePanel = true;
@@ -179,10 +186,15 @@ public class TavernPassManager : MonoBehaviour, ISavable
                 yield break;
             }
 
+            canvasZoomer.DoZoomReleaseBig(2);
             yield return rewardEffect.StartEffectCoroutine(rewardName, rewardSprite, () => GiveRewards(tier));
             
 
             IncrementButton();
+        }
+        else
+        {
+            canvasZoomer.DoZoomReleaseSmall(1);
         }
 
 

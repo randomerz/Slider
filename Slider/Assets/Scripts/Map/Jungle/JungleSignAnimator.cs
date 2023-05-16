@@ -77,9 +77,6 @@ public class JungleSignAnimator : MonoBehaviour
             }
         }
 
-       // print("hut: " + h);
-      //  print("sign: " + s);
-
         if (h != null)
         {
             Vector2 direction = h.GetDirection();
@@ -88,7 +85,6 @@ public class JungleSignAnimator : MonoBehaviour
         } else if (s != null)
         {
             Vector2 direction = s.GetDirection();
-          //  print(direction);
             SetDirection(direction);
         } else
         {

@@ -22,19 +22,20 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private Transform itemPickupTransform;
     [SerializeField] private GameObject anchorPrefab;
 
+    private bool didInit;
+
     public static PlayerInventory Instance
     {
         get => instance;
     }
-
-    private void Awake()
-    {
-        Init();
-    }
-
+    
     // Called by Player.Init() too
     public void Init()
     {
+        if (didInit)
+            return;
+        didInit = true;
+
         if (instance == null)
         {
             instance = this;
@@ -106,7 +107,6 @@ public class PlayerInventory : MonoBehaviour
 
     public static void NextItem()
     {
-
         if (currentItem != null)
         {
             currentItem.gameObject.SetActive(false);

@@ -6,9 +6,12 @@ using UnityEngine;
 public class SMove
 {
     public float duration = 1.0f;   //Normalized to movement duration in SGridAnimator
+    public bool forceFullDuration = false; // must be manually set
     public List<Movement> moves = new List<Movement>();
     public HashSet<Vector2Int> positions = new HashSet<Vector2Int>(); // i think this is a set of the positions?
     public Dictionary<Vector2Int, List<int>> borders = new Dictionary<Vector2Int, List<int>>(); //(pos of tile, borders {0, 1, 2, 3})
+
+    public int moveCounter; // for internal use
 
     public virtual Dictionary<Vector2Int, List<int>> GenerateBorders()
     {

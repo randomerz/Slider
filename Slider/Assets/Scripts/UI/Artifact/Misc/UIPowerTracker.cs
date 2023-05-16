@@ -10,8 +10,10 @@ public class UIPowerTracker : FlashWhiteUI
 
     private ArtifactTileButton button;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (myNode == null)
         {
             Debug.LogError("UIPowerTracker requires node to track");

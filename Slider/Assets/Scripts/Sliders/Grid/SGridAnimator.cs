@@ -83,7 +83,7 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-        EffectOnMoveStart(move is SMoveConveyor, isPlayerOnStile ? null : stile.transform);
+        EffectOnMoveStart(move, isPlayerOnStile ? null : stile.transform);
 
         float t = 0;
         currMoveDuration = movementDuration * move.duration;
@@ -124,7 +124,7 @@ public class SGridAnimator : MonoBehaviour
             moveDuration = currMoveDuration
         });
         
-        EffectOnMoveFinish(isPlayerOnStile ? null : stile.transform);
+        EffectOnMoveFinish(move, isPlayerOnStile ? null : stile.transform);
     }
 
     // DC: this is a lot of parameters :)
@@ -220,24 +220,42 @@ public class SGridAnimator : MonoBehaviour
         return null;
     }
 
-    protected void EffectOnMoveStart(bool isConveyor, Transform root)
+    protected void EffectOnMoveStart(SMove move, Transform root)
     {
-        CameraShake.ShakeConstant(currMoveDuration + 0.1f, 0.15f);
+        float shakeDuration = currMoveDuration + 0.1f;
+        float volume = currMoveDuration;
+
+        if (move.forceFullDuration)
+        {
+            shakeDuration = Mathf.Max(move.duration - (move.moveCounter / 10f), move.duration / 4f);
+            volume = shakeDuration - 0.1f;
+        }
+
+        CameraShake.ShakeConstant(shakeDuration, 0.15f);
         AudioManager
-            .PickSound(isConveyor ? "Conveyor" : "Slide Rumble")
+            .PickSound(move is SMoveConveyor ? "Conveyor" : "Slide Rumble")
             .WithAttachmentToTransform(root)
-            .WithVolume(currMoveDuration)
+            .WithVolume(volume)
             .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
             .AndPlay();
     }
 
-    protected void EffectOnMoveFinish(Transform root)
+    protected void EffectOnMoveFinish(SMove move, Transform root)
     {
-        CameraShake.Shake(currMoveDuration / 2, 1.0f);
+        float shakeDuration = currMoveDuration / 2;
+        float volume = currMoveDuration;
+
+        if (move.forceFullDuration)
+        {
+            shakeDuration = Mathf.Max(move.duration - (move.moveCounter / 10f), move.duration / 4f);
+            volume = shakeDuration - 0.1f;
+        }
+
+        CameraShake.Shake(shakeDuration, 1.0f);
         AudioManager
             .PickSound("Slide Explosion")
             .WithAttachmentToTransform(root)
-            .WithVolume(currMoveDuration)
+            .WithVolume(volume)
             .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
             .AndPlay();
     }
