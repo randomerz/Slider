@@ -6,8 +6,7 @@ public class CameraShake : MonoBehaviour
 {
     public Transform baseTransform;
     public CinemachineVirtualCamera cmCamera;
-
-    public static CameraShake _instance;
+    
     private static CinemachineBasicMultiChannelPerlin cmPerlin;
     public static List<CameraShakeData> shakeData = new List<CameraShakeData>();
 
@@ -71,7 +70,7 @@ public class CameraShake : MonoBehaviour
     }
 
     private void Update() {
-        if(Time.timeScale == 0) return;
+        if (Time.timeScale == 0) return;
         Shake(FindMaxShake());
     }
 
@@ -99,6 +98,6 @@ public class CameraShake : MonoBehaviour
     private void Shake(float amount)
     {
         transform.position = baseTransform.position + UnityEngine.Random.insideUnitSphere * amount;
-        if(cmPerlin != null) cmPerlin.m_AmplitudeGain = amount;
+        if (cmPerlin != null) cmPerlin.m_AmplitudeGain = amount;
     }
 }

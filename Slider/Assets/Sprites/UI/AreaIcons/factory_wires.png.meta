@@ -842,7 +842,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -850,6 +850,48 @@ TextureImporter:
       bones: []
       spriteID: c99c9ab942f260843aa824be363515c7
       internalID: 1110661100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_wires_3e
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ff5454e102613e49a6730e35632f7d2
+      internalID: -268335428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_wires_3f
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a17fc3558282c6842aa98311e478a1a3
+      internalID: 978954782
       vertices: []
       indices: 
       edges: []
@@ -876,6 +918,7 @@ TextureImporter:
       factory_wires_6d: -7989747924451521947
       factory_wires_8a: 7170504702020867772
       factory_wires_6g: -1265236772672498304
+      factory_wires_3e: -268335428
       factory_wires_4e: -7420758665216044920
       factory_wires_4f: 4541491216234631129
       factory_wires_5a: -4763470371561016115
@@ -892,6 +935,7 @@ TextureImporter:
       factory_wires_4g: -868466042898649869
       factory_wires_6e: -7846765201393473400
       factory_wires_3c: -2141362333622213669
+      factory_wires_3f: 978954782
       factory_wires_2c: 6144363064016449298
       factory_wires_4c: -6109386533817241923
       factory_wires_8d: -846804143505762983

@@ -223,9 +223,9 @@ public class AudioManager : Singleton<AudioManager>
     {
         AudioManager.paused = paused;
         managedInstances ??= new List<ManagedInstance>(10);
-        foreach (ManagedInstance attributes in managedInstances)
+        foreach (ManagedInstance instance in managedInstances)
         {
-            attributes.SetPaused(paused);
+            instance.SetPaused(paused);
         }
     }
 
@@ -552,11 +552,12 @@ public class AudioManager : Singleton<AudioManager>
 
         public bool Valid => soundWrapper.fmodInstance.isValid();
         public bool Stopped
-            => soundWrapper.fmodInstance.getPlaybackState(out PLAYBACK_STATE playback) != FMOD.RESULT.OK || playback != PLAYBACK_STATE.STOPPED;
+            => soundWrapper.fmodInstance.getPlaybackState(out PLAYBACK_STATE playback) != FMOD.RESULT.OK || playback == PLAYBACK_STATE.STOPPED;
 
         public bool Started
             => soundWrapper.fmodInstance.getPlaybackState(out PLAYBACK_STATE playback) == FMOD.RESULT.OK && playback == PLAYBACK_STATE.STARTING;
         public readonly bool IsIndoor;
+        public string Name => soundWrapper.sound?.name ?? "(No name)";
 
         public ManagedInstance(in SoundWrapper soundWrapper, bool isOverridingTransform)
         {

@@ -11,11 +11,16 @@ public class FlashWhiteUI : MonoBehaviour
     public Material whiteSpriteMat;
     private Material oldMat;
 
-    void Awake()
+    protected virtual void Awake()
     {
         UpdateRefs();
     }
-    
+
+    private void OnDisable()
+    {
+        mySprite.material = oldMat;
+    }
+
     public void Flash(int n, Action callback = null)
     {
         StopAllCoroutines();

@@ -68,7 +68,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.9930687, y: 0.6840327}
+  m_Offset: {x: 1.1321068, y: 0.6840327}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -79,7 +79,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.8411026, y: 3.8465333}
+  m_Size: {x: 1.5630264, y: 3.8465333}
   m_EdgeRadius: 0
 --- !u!61 &2027552165508363614
 BoxCollider2D:
@@ -94,7 +94,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.9824219, y: 1.3575935}
+  m_Offset: {x: -0.8433838, y: 1.4785461}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -105,7 +105,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.1312714, y: 2.4526634}
+  m_Size: {x: 2.4093475, y: 2.2107582}
   m_EdgeRadius: 0
 --- !u!114 &415121889236455097
 MonoBehaviour:
@@ -434,7 +434,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4852848544237912661, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: m_Size.x
-      value: 2.1324615
+      value: 1.7547417
       objectReference: {fileID: 0}
     - target: {fileID: 4852848544237912661, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: m_Size.y
@@ -442,7 +442,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4852848544237912661, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: m_Offset.x
-      value: -0.05653763
+      value: -0.24539757
       objectReference: {fileID: 0}
     - target: {fileID: 4852848544237912661, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: m_Offset.y
@@ -500,7 +500,8 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 19
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4852848544237912660, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
 --- !u!114 &619523833436315348 stripped
 MonoBehaviour:

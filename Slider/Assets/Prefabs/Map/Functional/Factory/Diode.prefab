@@ -114,12 +114,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030ba8a092895ca4aabf2309da4dfd28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodeType: 2
+  nodeType: 0
   neighbors: []
   powerOnStart: 0
   invertSignal: 0
   affectedByBlackout: 1
-  debugAsPoweredOn: 0
   OnPowered:
     m_PersistentCalls:
       m_Calls:
