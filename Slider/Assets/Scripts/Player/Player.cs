@@ -9,6 +9,7 @@ using UnityEngine.Tilemaps;
 //L: I moved the STile underneath stuff to static method in STile since it's used in other places.
 public class Player : Singleton<Player>, ISavable, ISTileLocatable
 {
+    public static event Action<string> OnControlSchemeChanged;
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5;
@@ -29,7 +30,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     [SerializeField] private PlayerInput playerInput;
 
-    public static event Action<string> OnControlSchemeChanged;
 
 
     private float moveSpeedMultiplier = 1;

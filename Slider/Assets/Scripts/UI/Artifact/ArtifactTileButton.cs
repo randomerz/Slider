@@ -266,12 +266,6 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void OnSelect()
     {
-        //Debug.Log(Player.GetInstance().GetComponent<PlayerInput>().currentControlScheme);
-
-        //Debug.Log(gameObject.name + " button selected");
-        //SetSelected(true);
-        //SetSpriteToHover();
-        //SetHighlighted(true);
         if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
         {
             SetControllerHoverHighlighted(true);
@@ -280,10 +274,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void OnDeselect()
     {
-        if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
-        {
-            SetControllerHoverHighlighted(false);
-        }
+        SetControllerHoverHighlighted(false);
     }
 
     private void Init()

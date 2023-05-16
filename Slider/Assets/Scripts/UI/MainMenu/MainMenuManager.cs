@@ -53,7 +53,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
         //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context 
-            => { if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { Debug.Log("cornhole"); UINavigationManager.SelectBestButtonInCurrentMenu(); } });
+            => { if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); } });
     }
 
     void Start()
