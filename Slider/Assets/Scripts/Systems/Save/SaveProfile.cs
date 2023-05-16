@@ -174,10 +174,8 @@ public class SaveProfile
     {
         // If haven't logged on for a few days + specific scenes, spawn with anchor equipped
         List<Area> areasToCheck = new List<Area>{Area.Ocean, Area.Desert, Area.Factory, Area.Mountain};
-        if ((lastSaved - System.DateTime.Now).TotalDays < 2 && areasToCheck.Contains(lastArea))
-        {
-            SetBool("playerSpawnWithAnchorEquipped", true);
-        }
+        bool shouldSpawnWithAnchorEquipped = (System.DateTime.Now - lastSaved).TotalDays > 2 && areasToCheck.Contains(lastArea);
+        SetBool("playerSpawnWithAnchorEquipped", shouldSpawnWithAnchorEquipped);
     }
 
     #region SGrid
