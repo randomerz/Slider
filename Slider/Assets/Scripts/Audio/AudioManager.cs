@@ -557,6 +557,9 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
+
+    static float VolumeWattConversionExp = 6f / 10f / Mathf.Log10(2); // can't be declared const for some reason
+    static float WattVolumeConversionExp = 1 / VolumeWattConversionExp;
     private static float Subtract01SpaceVolumes(float a, float b)
     {
         // avoid log = -inf error
@@ -566,12 +569,15 @@ public class AudioManager : Singleton<AudioManager>
         }
         // https://qa.fmod.com/t/setfaderlevel-1-full-volume-thats-mean-0db-or-10db/12538/2
         // https://en.wikipedia.org/wiki/DBm#:~:text=3%20Standards-,Unit%20conversions,100%2Dfold%20increase%20in%20power.
-        float decibelA = Mathf.Log(a, 2) * 6;
-        float decibelB = Mathf.Log(b, 2) * 6;
+        //float decibelA = Mathf.Log(a, 2) * 6;
+        //float decibelB = Mathf.Log(b, 2) * 6;
 
-        float miliwattA = Mathf.Pow(10, decibelA / 10f); // omit x / 1 miliwatt
-        float miliwattB = Mathf.Pow(10, decibelB / 10f); // omit x / 1 miliwatt
+        //float miliwattA = Mathf.Pow(10, decibelA / 10f); // omit x / 1 miliwatt
+        //float miliwattB = Mathf.Pow(10, decibelB / 10f); // omit x / 1 miliwatt
 
+        // optimized 
+        float miliwattA = Mathf.Pow(a, VolumeWattConversionExp);
+        float miliwattB = Mathf.Pow(b, VolumeWattConversionExp);
         float miliwattSubtraction = miliwattA - miliwattB;
 
         if (miliwattSubtraction < 0 || Mathf.Approximately(miliwattSubtraction, 0))
@@ -579,9 +585,11 @@ public class AudioManager : Singleton<AudioManager>
             return 0;
         }
 
-        float decibelSubtraction = 10 * Mathf.Log10(miliwattSubtraction); // omit x / 1 miliwatt
+        // float decibelSubtraction = 10 * Mathf.Log10(miliwattSubtraction); // omit x / 1 miliwatt
+        // return Mathf.Pow(2, decibelSubtraction / 6f);
 
-        return Mathf.Pow(2, decibelSubtraction / 6f);
+        // optimized
+        return Mathf.Pow(miliwattSubtraction, WattVolumeConversionExp);
     }
 
     public class ManagedInstance
