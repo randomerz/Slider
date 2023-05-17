@@ -52,6 +52,8 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField, Range(0, 1)]
     private float indoorMuteFactor;
 
+    static HashSet<ManagedInstance> PrioritySounds = new();
+
     private static Dictionary<string, Sound> soundsDict
     {
         get
@@ -172,9 +174,13 @@ public class AudioManager : Singleton<AudioManager>
                 return null;
             }
             managedInstances ??= new List<ManagedInstance>(10);
-            ManagedInstance attributes = new (soundWrapper, isOverridingTransform);
-            managedInstances.Add(attributes);
-            return attributes;
+            ManagedInstance instance = new (soundWrapper, isOverridingTransform);
+            managedInstances.Add(instance);
+            if (soundWrapper.isPriority)
+            {
+                PrioritySounds.Add(instance);
+            }
+            return instance;
         } else
         {
             soundWrapper.PlayAsOneshot();
@@ -221,17 +227,33 @@ public class AudioManager : Singleton<AudioManager>
 
     private static void UpdateManagedInstances(float dt)
     {
+        float MaxPriorityVolume = 0;
+        foreach (ManagedInstance priorityInstance in PrioritySounds)
+        {
+            MaxPriorityVolume = Mathf.Max(MaxPriorityVolume, priorityInstance.FinalVolume);
+            priorityInstance.GetAndUpdate(dt, 0);
+        }
+
         managedInstances ??= new List<ManagedInstance>(10);
         if (!paused)
         {
-            foreach (ManagedInstance attributes in managedInstances)
+            foreach (ManagedInstance instance in managedInstances)
             {
-                attributes.GetAndUpdate(dt);
+                if (PrioritySounds.Contains(instance))
+                {
+                    continue;
+                }
+                instance.GetAndUpdate(dt, MaxPriorityVolume); // ducking
             }
         }
-        managedInstances.RemoveAll(delegate (ManagedInstance attributes)
+        managedInstances.RemoveAll(delegate (ManagedInstance instance)
         {
-            return !attributes.Valid || attributes.Stopped;
+            bool shouldRemove = !instance.Valid || instance.Stopped;
+            if (shouldRemove)
+            {
+                PrioritySounds.Remove(instance);
+            }
+            return shouldRemove;
         });
     }
 
@@ -504,6 +526,7 @@ public class AudioManager : Singleton<AudioManager>
                     if (!managedInstance.IsIndoor)
                     {
                         managedInstance.Stop();
+                        PrioritySounds.Remove(managedInstance);
                         return true;
                     }
                     return false;
@@ -521,6 +544,7 @@ public class AudioManager : Singleton<AudioManager>
                     if (managedInstance.IsIndoor)
                     {
                         managedInstance.Stop();
+                        PrioritySounds.Remove(managedInstance);
                         return true;
                     }
                     return false;
@@ -549,6 +573,15 @@ public class AudioManager : Singleton<AudioManager>
         public readonly bool IsIndoor;
         public string Name => soundWrapper.sound?.name ?? "(No name)";
 
+        public float FinalVolume
+        {
+            get
+            {
+                soundWrapper.fmodInstance.getVolume(out float volume);
+                return volume;
+            }
+        }
+
         public ManagedInstance(in SoundWrapper soundWrapper, bool isOverridingTransform)
         {
             this.soundWrapper = soundWrapper;
@@ -558,7 +591,6 @@ public class AudioManager : Singleton<AudioManager>
             this.isOverridingTransform = isOverridingTransform;
 
             bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref position);
-            AdjustForIndoorDisagreement(indoorStatusDisagree);
             soundWrapper.fmodInstance.set3DAttributes(position.To3DAttributes());
             soundWrapper.fmodInstance.start();
         }
@@ -579,8 +611,9 @@ public class AudioManager : Singleton<AudioManager>
             tick(ref soundWrapper.fmodInstance);
         }
 
-        public void GetAndUpdate(float dt)
+        public void GetAndUpdate(float dt, float duckingVolume)
         {
+            float volume = soundWrapper.volume - duckingVolume;
             progress += dt;
             if (progress >= soundWrapper.duration)
             {
@@ -591,8 +624,9 @@ public class AudioManager : Singleton<AudioManager>
             {
                 Vector3 shiftedPosition = soundWrapper.root.position;
                 bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref shiftedPosition);
+                if (indoorStatusDisagree) volume -= _instance.indoorMuteFactor;
                 soundWrapper.fmodInstance.set3DAttributes(shiftedPosition.To3DAttributes());
-                AdjustForIndoorDisagreement(indoorStatusDisagree);
+                soundWrapper.fmodInstance.setVolume(volume);
             }
             else
             {
@@ -601,7 +635,6 @@ public class AudioManager : Singleton<AudioManager>
 
                 position = p;
                 bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref p);
-                AdjustForIndoorDisagreement(indoorStatusDisagree);
                 soundWrapper.fmodInstance.set3DAttributes(new FMOD.ATTRIBUTES_3D
                 {
                     forward = Vector3.forward.ToFMODVector(),
@@ -609,6 +642,8 @@ public class AudioManager : Singleton<AudioManager>
                     position = p.ToFMODVector(),
                     velocity = (v * soundWrapper.sound.dopplerScale).ToFMODVector()
                 });
+                if (indoorStatusDisagree) volume -= _instance.indoorMuteFactor;
+                soundWrapper.fmodInstance.setVolume(volume);
             }
         }
 
@@ -625,14 +660,6 @@ public class AudioManager : Singleton<AudioManager>
                 original += SGrid.GetHousingOffset() * Vector3.down;
             }
             return true;
-        }
-
-        private void AdjustForIndoorDisagreement(bool indoorStatusDisagree)
-        {
-            if (indoorStatusDisagree)
-            {
-                soundWrapper.fmodInstance.setVolume(soundWrapper.volume - _instance.indoorMuteFactor);
-            }
         }
     }
 }
