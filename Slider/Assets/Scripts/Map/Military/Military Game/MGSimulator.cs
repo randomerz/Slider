@@ -21,6 +21,7 @@ public class MGSimulator : MonoBehaviour
 
     private void Awake()
     {
+        AudioManager.PlayMusic("MilitarySim");
         InitRandomUniform(new Vector2Int(4, 4));
         PrintSimulatorState();
     }
