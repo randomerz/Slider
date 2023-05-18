@@ -112,6 +112,7 @@ public class ChadRace : MonoBehaviour
                 ActivateSpeedLines(true);
                 if (!tilesAdjacent) {
                     // The player has cheated
+                    // TODO: Record Scratch stuff should start around here.
                     chadEndLocal = transform.localPosition;
                     DisplayAndTriggerDialogue("Hey, no changing the track before the race is done!");
                     ActivateSpeedLines(false);
