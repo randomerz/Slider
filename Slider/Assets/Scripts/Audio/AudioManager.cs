@@ -231,16 +231,28 @@ public class AudioManager : Singleton<AudioManager>
     /// <returns>Ducking volume in dB, unscaled by duckingFactor, needs to apply that manually</returns>
     private static float UpdateManagedInstances(float dt)
     {
-        float MaxPriorityVolume01 = 0;
-        foreach (ManagedInstance priorityInstance in PrioritySounds)
-        {
-            MaxPriorityVolume01 = Mathf.Max(MaxPriorityVolume01, priorityInstance.FinalVolume01);
-            priorityInstance.GetAndUpdate(dt, 0);
-        }
-
         managedInstances ??= new List<ManagedInstance>(10);
+        managedInstances.RemoveAll(delegate (ManagedInstance instance)
+        {
+            if (instance.Nullified)
+            {
+                instance.Stop();
+            }
+            bool shouldRemove = instance.Nullified || !instance.Valid || instance.Stopped;
+            if (shouldRemove)
+            {
+                PrioritySounds.Remove(instance);
+            }
+            return shouldRemove;
+        });
+        float MaxPriorityVolume01 = 0;
         if (!paused)
         {
+            foreach (ManagedInstance priorityInstance in PrioritySounds)
+            {
+                MaxPriorityVolume01 = Mathf.Max(MaxPriorityVolume01, priorityInstance.FinalVolume01);
+                priorityInstance.GetAndUpdate(dt, 0);
+            }
             foreach (ManagedInstance instance in managedInstances)
             {
                 if (PrioritySounds.Contains(instance))
@@ -250,15 +262,6 @@ public class AudioManager : Singleton<AudioManager>
                 instance.GetAndUpdate(dt, MaxPriorityVolume01 * _instance.duckingFactor); // ducking
             }
         }
-        managedInstances.RemoveAll(delegate (ManagedInstance instance)
-        {
-            bool shouldRemove = !instance.Valid || instance.Stopped;
-            if (shouldRemove)
-            {
-                PrioritySounds.Remove(instance);
-            }
-            return shouldRemove;
-        });
         return MaxPriorityVolume01;
     }
 
@@ -619,6 +622,8 @@ public class AudioManager : Singleton<AudioManager>
                 return volume;
             }
         }
+
+        public bool Nullified => soundWrapper.root == null;
 
         public ManagedInstance(in SoundWrapper soundWrapper, bool isOverridingTransform)
         {
