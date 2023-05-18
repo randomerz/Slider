@@ -52,6 +52,10 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField, Range(0, 1)]
     private float indoorMuteFactor;
 
+    static HashSet<ManagedInstance> PrioritySounds = new();
+    [SerializeField, Range(0, 1)]
+    private float duckingFactor;
+
     private static Dictionary<string, Sound> soundsDict
     {
         get
@@ -123,6 +127,7 @@ public class AudioManager : Singleton<AudioManager>
     {
         UpdateCameraPosition();
         UpdateManagedInstances(Time.deltaTime);
+        UpdateMusicVolume();
     }
 
     public static void UpdateCamera(CinemachineBrain brain) => currentCinemachineBrain = brain;
@@ -172,9 +177,13 @@ public class AudioManager : Singleton<AudioManager>
                 return null;
             }
             managedInstances ??= new List<ManagedInstance>(10);
-            ManagedInstance attributes = new (soundWrapper, isOverridingTransform);
-            managedInstances.Add(attributes);
-            return attributes;
+            ManagedInstance instance = new (soundWrapper, isOverridingTransform);
+            managedInstances.Add(instance);
+            if (soundWrapper.isPriority)
+            {
+                PrioritySounds.Add(instance);
+            }
+            return instance;
         } else
         {
             soundWrapper.PlayAsOneshot();
@@ -222,17 +231,36 @@ public class AudioManager : Singleton<AudioManager>
     private static void UpdateManagedInstances(float dt)
     {
         managedInstances ??= new List<ManagedInstance>(10);
+        managedInstances.RemoveAll(delegate (ManagedInstance instance)
+        {
+            if (instance.Nullified)
+            {
+                instance.Stop();
+            }
+            bool shouldRemove = instance.Nullified || !instance.Valid || instance.Stopped;
+            if (shouldRemove)
+            {
+                PrioritySounds.Remove(instance);
+            }
+            return shouldRemove;
+        });
         if (!paused)
         {
-            foreach (ManagedInstance attributes in managedInstances)
+            float MaxPriorityVolume01 = 0;
+            foreach (ManagedInstance priorityInstance in PrioritySounds)
             {
-                attributes.GetAndUpdate(dt);
+                MaxPriorityVolume01 = Mathf.Max(MaxPriorityVolume01, priorityInstance.FinalVolume01);
+                priorityInstance.GetAndUpdate(dt, 0);
+            }
+            foreach (ManagedInstance instance in managedInstances)
+            {
+                if (PrioritySounds.Contains(instance))
+                {
+                    continue;
+                }
+                instance.GetAndUpdate(dt, MaxPriorityVolume01 * _instance.duckingFactor); // ducking
             }
         }
-        managedInstances.RemoveAll(delegate (ManagedInstance attributes)
-        {
-            return !attributes.Valid || attributes.Stopped;
-        });
     }
 
     /// <summary>
@@ -335,17 +363,17 @@ public class AudioManager : Singleton<AudioManager>
     public static void SetMusicVolume(float value)
     {
         musicVolume = Mathf.Clamp(value, 0, 1);
-        UpdateMusicVolume();
     }
 
     public static void SetMusicVolumeMultiplier(float value)
     {
         musicVolumeMultiplier = value;
-        UpdateMusicVolume();
     }
 
     private static void UpdateMusicVolume()
     {
+        // AT: no music ducking, use dampen instead
+        // float vol = Mathf.Clamp(Subtract01SpaceVolumes(musicVolume, ducking) * musicVolumeMultiplier, 0, 1);
         float vol = Mathf.Clamp(musicVolume * musicVolumeMultiplier, 0, 1);
 
         if (_music == null)
@@ -504,6 +532,7 @@ public class AudioManager : Singleton<AudioManager>
                     if (!managedInstance.IsIndoor)
                     {
                         managedInstance.Stop();
+                        PrioritySounds.Remove(managedInstance);
                         return true;
                     }
                     return false;
@@ -521,6 +550,7 @@ public class AudioManager : Singleton<AudioManager>
                     if (managedInstance.IsIndoor)
                     {
                         managedInstance.Stop();
+                        PrioritySounds.Remove(managedInstance);
                         return true;
                     }
                     return false;
@@ -528,6 +558,41 @@ public class AudioManager : Singleton<AudioManager>
             }
             DequeueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
         }
+    }
+
+
+    static float VolumeWattConversionExp = 6f / 10f / Mathf.Log10(2); // can't be declared const for some reason
+    static float WattVolumeConversionExp = 1 / VolumeWattConversionExp;
+    private static float Subtract01SpaceVolumes(float a, float b)
+    {
+        // avoid log = -inf error
+        if (Mathf.Approximately(b, 0))
+        {
+            return a;
+        }
+        // https://qa.fmod.com/t/setfaderlevel-1-full-volume-thats-mean-0db-or-10db/12538/2
+        // https://en.wikipedia.org/wiki/DBm#:~:text=3%20Standards-,Unit%20conversions,100%2Dfold%20increase%20in%20power.
+        //float decibelA = Mathf.Log(a, 2) * 6;
+        //float decibelB = Mathf.Log(b, 2) * 6;
+
+        //float miliwattA = Mathf.Pow(10, decibelA / 10f); // omit x / 1 miliwatt
+        //float miliwattB = Mathf.Pow(10, decibelB / 10f); // omit x / 1 miliwatt
+
+        // optimized 
+        float miliwattA = Mathf.Pow(a, VolumeWattConversionExp);
+        float miliwattB = Mathf.Pow(b, VolumeWattConversionExp);
+        float miliwattSubtraction = miliwattA - miliwattB;
+
+        if (miliwattSubtraction < 0 || Mathf.Approximately(miliwattSubtraction, 0))
+        {
+            return 0;
+        }
+
+        // float decibelSubtraction = 10 * Mathf.Log10(miliwattSubtraction); // omit x / 1 miliwatt
+        // return Mathf.Pow(2, decibelSubtraction / 6f);
+
+        // optimized
+        return Mathf.Pow(miliwattSubtraction, WattVolumeConversionExp);
     }
 
     public class ManagedInstance
@@ -549,6 +614,17 @@ public class AudioManager : Singleton<AudioManager>
         public readonly bool IsIndoor;
         public string Name => soundWrapper.sound?.name ?? "(No name)";
 
+        public float FinalVolume01
+        {
+            get
+            {
+                soundWrapper.fmodInstance.getVolume(out float volume);
+                return volume;
+            }
+        }
+
+        public bool Nullified => soundWrapper.root == null;
+
         public ManagedInstance(in SoundWrapper soundWrapper, bool isOverridingTransform)
         {
             this.soundWrapper = soundWrapper;
@@ -558,7 +634,10 @@ public class AudioManager : Singleton<AudioManager>
             this.isOverridingTransform = isOverridingTransform;
 
             bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref position);
-            AdjustForIndoorDisagreement(indoorStatusDisagree);
+            if (indoorStatusDisagree)
+            {
+                soundWrapper.fmodInstance.setVolume(Subtract01SpaceVolumes(soundWrapper.volume, _instance.indoorMuteFactor));
+            }
             soundWrapper.fmodInstance.set3DAttributes(position.To3DAttributes());
             soundWrapper.fmodInstance.start();
         }
@@ -579,8 +658,9 @@ public class AudioManager : Singleton<AudioManager>
             tick(ref soundWrapper.fmodInstance);
         }
 
-        public void GetAndUpdate(float dt)
+        public void GetAndUpdate(float dt, float duckingVolume)
         {
+            float volume = Subtract01SpaceVolumes(soundWrapper.volume, duckingVolume);
             progress += dt;
             if (progress >= soundWrapper.duration)
             {
@@ -591,8 +671,9 @@ public class AudioManager : Singleton<AudioManager>
             {
                 Vector3 shiftedPosition = soundWrapper.root.position;
                 bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref shiftedPosition);
+                if (indoorStatusDisagree) volume = Subtract01SpaceVolumes(volume, _instance.indoorMuteFactor);
                 soundWrapper.fmodInstance.set3DAttributes(shiftedPosition.To3DAttributes());
-                AdjustForIndoorDisagreement(indoorStatusDisagree);
+                soundWrapper.fmodInstance.setVolume(volume);
             }
             else
             {
@@ -601,7 +682,6 @@ public class AudioManager : Singleton<AudioManager>
 
                 position = p;
                 bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref p);
-                AdjustForIndoorDisagreement(indoorStatusDisagree);
                 soundWrapper.fmodInstance.set3DAttributes(new FMOD.ATTRIBUTES_3D
                 {
                     forward = Vector3.forward.ToFMODVector(),
@@ -609,6 +689,8 @@ public class AudioManager : Singleton<AudioManager>
                     position = p.ToFMODVector(),
                     velocity = (v * soundWrapper.sound.dopplerScale).ToFMODVector()
                 });
+                if (indoorStatusDisagree) volume = Subtract01SpaceVolumes(volume, _instance.indoorMuteFactor);
+                soundWrapper.fmodInstance.setVolume(volume);
             }
         }
 
@@ -625,14 +707,6 @@ public class AudioManager : Singleton<AudioManager>
                 original += SGrid.GetHousingOffset() * Vector3.down;
             }
             return true;
-        }
-
-        private void AdjustForIndoorDisagreement(bool indoorStatusDisagree)
-        {
-            if (indoorStatusDisagree)
-            {
-                soundWrapper.fmodInstance.setVolume(soundWrapper.volume - _instance.indoorMuteFactor);
-            }
         }
     }
 }

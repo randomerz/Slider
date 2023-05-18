@@ -42,6 +42,8 @@ public class FactoryArtifact : UIArtifact
 
     public void QueueMoveToFront(SMove move)
     {
+        move.forceFullDuration = true;
+
         //L: Conveyor moves always "Cut the line" per se.
         //Unfortunately you can't queue a move at the front since C# queue is not a dequeue, so we have to do this list conversion instead
         List<SMove> newMoveQueue = new List<SMove>(moveQueue);

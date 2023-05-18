@@ -61,7 +61,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     public void Init()
     {
         didInit = true;
-        InitializeSingleton(overrideExistingInstanceWith: this);
+        InitSingleton();
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
         playerInventory.Init();
@@ -272,7 +272,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     public void Load(SaveProfile profile)
     {
-        InitializeSingleton(overrideExistingInstanceWith: this);
+        if (!didInit)
+            Init();
 
         if (profile == null || profile.GetSerializablePlayer() == null)
         {

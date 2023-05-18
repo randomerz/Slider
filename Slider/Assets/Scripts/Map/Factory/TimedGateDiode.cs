@@ -40,13 +40,15 @@ public class TimedGateDiode : ElectricalNode
     public void GateActivatedHandler()
     {
         //Debug.Log($"Timed Gate for Diode {gameObject.name} activated.");
-        batteryProp?.SetGateEnabled(true);
 
-        //if (Powered)
-        //{
-        //    swapper.TurnOn();
-        //    batteryProp.SetDiodeEnabled(true);
-        //}
+        // In case it started powered
+        if (Powered)
+        {
+            swapper.TurnOn();
+            batteryProp.SetDiodeEnabled(true);
+        }
+
+        batteryProp?.SetGateEnabled(true);
 
     }
 
