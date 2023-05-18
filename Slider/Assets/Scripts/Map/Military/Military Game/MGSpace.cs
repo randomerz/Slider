@@ -5,7 +5,10 @@ using UnityEngine;
 public class MGSpace
 {
     private Dictionary<MGUnits.Job, int> _alliedUnits;   //EntityData, Qty
-    private Dictionary<MGUnits.Job, int> _enemyUnits;
+    private Dictionary<MGUnits.Job, int> _enemyUnits;   //EntityData, Qty
+
+    public delegate void _OnSupplyDropSpawn();
+    public event _OnSupplyDropSpawn OnSupplyDropSpawn;
 
     public MGSpace()
     {
@@ -32,8 +35,7 @@ public class MGSpace
                 break;
         }
 
-        int existingUnits;
-        if (units.TryGetValue(job, out existingUnits))
+        if (units.ContainsKey(job))
         {
             units[job] += quantity;
         }
@@ -41,6 +43,12 @@ public class MGSpace
         {
             units[job] = quantity;
         }
+    }
+
+    public void SpawnSupplyDrop()
+    {
+        Debug.Log("Supply Drop!");
+        OnSupplyDropSpawn?.Invoke();
     }
 
     public void PrintUnitData()

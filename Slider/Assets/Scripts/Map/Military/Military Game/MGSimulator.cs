@@ -17,13 +17,32 @@ public class MGSimulator : MonoBehaviour
 
     private MGSpace[,] _board;
     private Vector2Int _boardDims;
-    private MGEventSender _eventSender;
+    //private MGEventSender _eventSender;
+
+
+    public static event System.EventHandler AfterInit;
 
     private void Awake()
     {
         AudioManager.PlayMusic("MilitarySim");
         InitRandomUniform(new Vector2Int(4, 4));
         PrintSimulatorState();
+        AfterInit?.Invoke(this, null);
+    }
+
+    private void Start()
+    {
+        _board[0, 3].SpawnSupplyDrop();
+    }
+
+    public MGSpace GetSpace(int x, int y)
+    {
+        if (x >= _boardDims.x || y >= _boardDims.y)
+        {
+            Debug.LogError("Space is out of bounds.");
+            return null;
+        }
+        return _board[x, y];
     }
 
     public void InitEmpty(Vector2Int boardDims)
@@ -40,7 +59,7 @@ public class MGSimulator : MonoBehaviour
             }
         }
 
-        _eventSender = new MGEventSender();
+        //_eventSender = new MGEventSender();
 
         //Initialize a supply tile
         //SpawnSupplyDrop(initSupplyDrop);
@@ -76,12 +95,4 @@ public class MGSimulator : MonoBehaviour
             }
         }
     }
-
-    //private void SpawnSupplyDrop(Vector2Int pos)
-    //{
-    //    Debug.Log($"Spawn Supplies at {pos}");
-    //    MGSupply supply = new MGSupply();
-    //    _board[pos.x, pos.y].AddEntity(supply);
-    //    _eventSender.QueueEvent(new MGSpawnEvent(supply, pos));
-    //}
 }

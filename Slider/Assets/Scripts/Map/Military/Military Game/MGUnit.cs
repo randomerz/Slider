@@ -18,6 +18,7 @@ public static class MGUnits
         Neutral
     }
 
+    //This is basically a type chart lol.
     private static Dictionary<Job, HashSet<Job>> dominations = new()
     {
         { Job.Rock , new HashSet<Job>() { Job.Scissors}},
