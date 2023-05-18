@@ -126,8 +126,8 @@ public class AudioManager : Singleton<AudioManager>
     private void Update()
     {
         UpdateCameraPosition();
-        float ducking = UpdateManagedInstances(Time.deltaTime);
-        UpdateMusicVolume(ducking * duckingFactor);
+        UpdateManagedInstances(Time.deltaTime);
+        UpdateMusicVolume();
     }
 
     public static void UpdateCamera(CinemachineBrain brain) => currentCinemachineBrain = brain;
@@ -228,8 +228,7 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    /// <returns>Ducking volume in dB, unscaled by duckingFactor, needs to apply that manually</returns>
-    private static float UpdateManagedInstances(float dt)
+    private static void UpdateManagedInstances(float dt)
     {
         managedInstances ??= new List<ManagedInstance>(10);
         managedInstances.RemoveAll(delegate (ManagedInstance instance)
@@ -245,9 +244,9 @@ public class AudioManager : Singleton<AudioManager>
             }
             return shouldRemove;
         });
-        float MaxPriorityVolume01 = 0;
         if (!paused)
         {
+            float MaxPriorityVolume01 = 0;
             foreach (ManagedInstance priorityInstance in PrioritySounds)
             {
                 MaxPriorityVolume01 = Mathf.Max(MaxPriorityVolume01, priorityInstance.FinalVolume01);
@@ -262,7 +261,6 @@ public class AudioManager : Singleton<AudioManager>
                 instance.GetAndUpdate(dt, MaxPriorityVolume01 * _instance.duckingFactor); // ducking
             }
         }
-        return MaxPriorityVolume01;
     }
 
     /// <summary>
@@ -372,9 +370,11 @@ public class AudioManager : Singleton<AudioManager>
         musicVolumeMultiplier = value;
     }
 
-    private static void UpdateMusicVolume(float ducking)
+    private static void UpdateMusicVolume()
     {
-        float vol = Mathf.Clamp(Subtract01SpaceVolumes(musicVolume, ducking) * musicVolumeMultiplier, 0, 1);
+        // AT: no music ducking, use dampen instead
+        // float vol = Mathf.Clamp(Subtract01SpaceVolumes(musicVolume, ducking) * musicVolumeMultiplier, 0, 1);
+        float vol = Mathf.Clamp(musicVolume * musicVolumeMultiplier, 0, 1);
 
         if (_music == null)
             return;
