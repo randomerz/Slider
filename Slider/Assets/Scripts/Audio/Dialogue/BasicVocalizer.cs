@@ -108,6 +108,7 @@ namespace SliderVocalization
                 .WithParameter("Pitch", initialPitch)
                 .WithParameter("VolumeAdjustmentDB", volumeAdjustmentDB)
                 .WithParameter("VowelOpeness", context.vowelOpenness)
+                .WithPriorityOverDucking(true)
                 .WithParameter("VowelForwardness", context.vowelForwardness);
 
             playingInstance = AudioManager.Play(
