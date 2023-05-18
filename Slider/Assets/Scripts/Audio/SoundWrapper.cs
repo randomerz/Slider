@@ -14,6 +14,7 @@ public struct SoundWrapper
     public bool useDoppler;
     public float duration;
     public float volume;
+    public bool isPriority;
 
     public enum IndoorStatus
     {
@@ -36,6 +37,8 @@ public struct SoundWrapper
         indoorStatus = IndoorStatus.UseEmitterLocation;
 
         volume = 1;
+
+        isPriority = false;
 
         if (ToFmodInstance())
         {
@@ -97,6 +100,12 @@ public struct SoundWrapper
         return this;
     }
 
+    public SoundWrapper WithPriorityOverDucking(bool priorityOverDucking)
+    {
+        isPriority = priorityOverDucking;
+        return this;
+    }
+
     public AudioManager.ManagedInstance AndPlay() => valid ? AudioManager.Play(ref this) : null;
 
     private bool ToFmodInstance()
@@ -137,6 +146,7 @@ public static class SoundExtension
     public static SoundWrapper WithParameter(this Sound sound, string name, float value) => ((SoundWrapper)sound).WithParameter(name, value);
     public static SoundWrapper WithFixedDuration(this Sound sound, float value) => ((SoundWrapper)sound).WithFixedDuration(value);
     public static SoundWrapper WithIndoorStatus(this Sound sound, SoundWrapper.IndoorStatus indoorStatus) => ((SoundWrapper) sound).WithIndoorStatus(indoorStatus);
+    public static SoundWrapper WithPriorityOverDucking(this Sound sound, bool withPriorityOverDucking) => ((SoundWrapper)sound).WithPriorityOverDucking(withPriorityOverDucking);
     public static AudioManager.ManagedInstance AndPlay(this Sound sound) => ((SoundWrapper) sound).AndPlay();
 
     public static FMOD.Studio.EventInstance? ToFmodInstance(this Sound sound)

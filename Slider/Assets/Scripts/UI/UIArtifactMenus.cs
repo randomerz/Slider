@@ -83,7 +83,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         artifactPanel.SetActive(true);
         isArtifactOpen = true;
 
-        UIManager.PauseGameGlobal();
+        // UIManager.PauseGameGlobal();
         UIManager.canOpenMenus = false;
         
         // scuffed parts
