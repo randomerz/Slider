@@ -70,7 +70,8 @@ public class MinecartAnimationManager : MonoBehaviour
         foreach(GameObject sprite in objects)
            sprite.SetActive(contentsSprite != null && contentsSprite == sprite);
 
-        contentsAnimator?.Play(currentState);
+        if(contentsAnimator != null)
+            contentsAnimator?.Play(currentState);
     }
 
     public void FlipX(bool flip)
