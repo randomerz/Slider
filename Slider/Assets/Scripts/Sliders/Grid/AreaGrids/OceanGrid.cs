@@ -37,7 +37,7 @@ public class OceanGrid : SGrid
     public FogAnimationController fogAnimationController7;
     public GameObject fogIsland;
     private int fogIslandId; //tile which fog island was found on
-    
+    private int numAnchorUses;
     [SerializeField] private Volcano volcano;
 
     private bool isCompleted = false;
@@ -90,6 +90,7 @@ public class OceanGrid : SGrid
         UIArtifactMenus.OnArtifactOpened += CheckVolcano;
 
         SGridAnimator.OnSTileMoveEnd += BuoySuccessEffectsCheck;
+        Anchor.OnAnchorInteract += OnAnchorInteract;
     }
 
     private void OnDisable()
@@ -108,6 +109,7 @@ public class OceanGrid : SGrid
         UIArtifactMenus.OnArtifactOpened -= CheckVolcano;
         
         SGridAnimator.OnSTileMoveEnd -= BuoySuccessEffectsCheck;
+        Anchor.OnAnchorInteract -= OnAnchorInteract;
     }
 
     private void Update()
@@ -150,6 +152,12 @@ public class OceanGrid : SGrid
     private void LateUpdate() {
         knotBoxEnabledLastFrame = knotBox.isActiveAndEnabled;
     }
+    
+    private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
+    {
+        if(!e.fromStart && e.drop)
+            numAnchorUses++;
+    }
 
     public override void Save()
     {
@@ -158,6 +166,7 @@ public class OceanGrid : SGrid
         SaveSystem.Current.SetBool("oceanFoggyIslandReached", foggyCompleted);
         SaveSystem.Current.SetBool("oceanUnlockedAllSliders", npcRotation.unlockedAllSliders);
         SaveSystem.Current.SetBool("oceanBreadgeCollected", npcRotation.gotBreadge);
+        SaveSystem.Current.SetInt("oceanAnchorUses", numAnchorUses);
     }
 
     public override void Load(SaveProfile profile)
@@ -173,7 +182,7 @@ public class OceanGrid : SGrid
         foggyCompleted = profile.GetBool("oceanFoggyIslandReached");
         npcRotation.unlockedAllSliders = profile.GetBool("oceanUnlockedAllSliders");
         npcRotation.gotBreadge = profile.GetBool("oceanBreadgeCollected");
-
+        numAnchorUses = profile.GetInt("oceanAnchorUses");
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
@@ -635,6 +644,11 @@ public class OceanGrid : SGrid
             UIArtifactWorldMap.SetAreaStatus(Area.Ocean, ArtifactWorldMapArea.AreaStatus.color);
 
             StartCoroutine(ShowMapAfterDelay(1));
+
+            if(numAnchorUses <= 2) {
+                //Give 2 use Anchor Achievement 
+                print($"You did it with {numAnchorUses} moves woo");
+            }
         }
     }
 
