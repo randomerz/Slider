@@ -186,6 +186,7 @@ public class TimedGate : ElectricalNode
                 if (input.Powered)
                 {
                     AddInputPowered(input);
+                    //input.StartSignal(true); // turn on diodes
                 }
             }
 

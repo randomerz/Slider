@@ -79,8 +79,13 @@ public class DiceGizmo : MonoBehaviour, ISavable
 
         if (!onlySoundInHouse || (onlySoundInHouse && Player.GetIsInHouse()))
         {
-            if (value != 1) AudioManager.Play("Dice Shake");
-            else AudioManager.PlayWithPitch("Dice Shake", 0.75f);
+            float pitch = (value != 1) ? 1f : 0.75f;
+            AudioManager
+                .PickSound("Dice Shake")
+                .WithAttachmentToTransform(transform)
+                .WithPitch(pitch)
+                .WithPriorityOverDucking(true)
+                .AndPlay();
         }
         
         UpdateSprite();
@@ -100,8 +105,13 @@ public class DiceGizmo : MonoBehaviour, ISavable
 
         if (!onlySoundInHouse || (onlySoundInHouse && Player.GetIsInHouse()))
         {
-            if (value != 1) AudioManager.Play("Dice Bump");
-            else AudioManager.PlayWithPitch("Dice Bump", 0.75f);
+            float pitch = (value != 1) ? 1f : 0.75f;
+            AudioManager
+                .PickSound("Dice Bump")
+                .WithAttachmentToTransform(transform)
+                .WithPitch(pitch)
+                .WithPriorityOverDucking(true)
+                .AndPlay();
         }
         
         UpdateSprite();
