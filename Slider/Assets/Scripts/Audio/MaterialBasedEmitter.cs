@@ -27,6 +27,8 @@ public class MaterialBasedEmitter : MonoBehaviour
 
     public void Step()
     {
+        if(ItemPickupEffect.isEffectPlaying) return; //no footstep sounds if in pickup scene
+        
         Tilemap map = locatable.GetCurrentMaterialTilemap();
         TileBase tileBase = map == null ? null : map.GetTile(map.WorldToCell(locatableRef.transform.position));
         mapping[tileBase].WithAttachmentToTransform(transform).AndPlay();
