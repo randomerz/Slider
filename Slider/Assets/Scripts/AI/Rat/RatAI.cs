@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class RatAI : MonoBehaviour
+public class RatAI : MonoBehaviour, ISavable
 {
     [Header("Player")]
     public float playerAggroRange;
@@ -213,7 +213,10 @@ public class RatAI : MonoBehaviour
         {
             objectToSteal.transform.parent = transform.parent;  //"Unparent" The Rat from the object so the Rat "Drops" it
         }
-        Debug.Log("Rat is Dee");
+        
+        visitedTiles.Clear();
+        Save();
+
         Destroy(gameObject);
     }
 
@@ -320,5 +323,32 @@ public class RatAI : MonoBehaviour
         //        Gizmos.DrawSphere(new Vector3(pt.x, pt.y, 0), 0.2f);
         //    }
         //}     
+    }
+
+    private string SetToString(HashSet<int> set) {
+        string output = "";
+        foreach(int num in set){
+            output += num.ToString();
+        }
+        return output;
+    }
+
+    private HashSet<int> StringToSet(string nums)
+    {
+        HashSet<int> set = new HashSet<int>();
+        for(int i = 0; i < nums.Length; i++) {
+            set.Add(nums[i] - '0');
+        }
+        return set;
+    }
+
+    public void Save()
+    {
+        SaveSystem.Current.SetString("cavesRatTiles", SetToString(visitedTiles));
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        throw new System.NotImplementedException();
     }
 }
