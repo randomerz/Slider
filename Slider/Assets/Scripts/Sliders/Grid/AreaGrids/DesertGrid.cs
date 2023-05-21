@@ -310,6 +310,10 @@ public class DesertGrid : SGrid
         CameraShake.Shake(2, 0.9f);
     }
 
+    public void GiveScrollAchievement() {
+        AchievementManager.SetAchievementStat("collectedScroll", 1);
+    }
+
     private void DoShuffle()
     {
         if (GetNumTilesCollected() != 8)
