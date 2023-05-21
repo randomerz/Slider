@@ -647,7 +647,7 @@ public class OceanGrid : SGrid
 
             if(numAnchorUses <= 2) {
                 //Give 2 use Anchor Achievement 
-                print($"You did it with {numAnchorUses} moves woo");
+                AchievementManager.SetAchievementStat("completedOceanMinAnchor", 1);
             }
         }
     }

@@ -171,7 +171,7 @@ public class RatAI : MonoBehaviour
             //Check for achievement
             if(visitedTiles.Count >= 7 && !hasAchievement) {
                 //Give Achievement
-                print("Give Rat Race Achievement");
+                AchievementManager.SetAchievementStat("completedRatAllTiles", 1);
                 hasAchievement = true;
             }
         }
