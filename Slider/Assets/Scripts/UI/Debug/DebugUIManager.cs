@@ -9,6 +9,7 @@ using System;
 public class DebugUIManager : MonoBehaviour
 {
     public static bool justDidSetScene;
+    public static bool disableConveyers;
 
     public GameObject debugPanel;
     public bool isDebugOpen;
@@ -288,6 +289,11 @@ public class DebugUIManager : MonoBehaviour
     public void ACES()
     {
         ActivateAllCollectibles(true);
+    }
+
+    public void ToggleConveyers()
+    {
+        disableConveyers = !disableConveyers;
     }
 
     //C: make sure pattern is the same length as the current sgrid

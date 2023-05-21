@@ -57,10 +57,10 @@ public class FactoryGrid : SGrid
     }
 
     public void CheckForFactoryCompletion() {
-        if(CheckGrid.contains(GetGridString(), "751_869_243")) {
-            UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
-            UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+        if(CheckGrid.contains(GetGridString(), "851_769_243")) {
+            StartCoroutine(ShowButtonAndMapCompletions());
             AchievementManager.SetAchievementStat("completedFactory", 1);
         }
     }
+
 }

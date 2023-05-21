@@ -715,4 +715,13 @@ public void SetGrid(int[,] puzzle)
 
         UpdateButtonCompletions(this, null); // sets the final one to be complete
     }
+    
+    protected IEnumerator ShowButtonAndMapCompletions()
+    {
+        UpdateButtonCompletionsHelper();
+        UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
+        UIArtifactMenus._instance.OpenArtifactAndShow(0, true);
+        yield return new WaitForSeconds(2);
+        UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+    }  
 }

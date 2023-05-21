@@ -64,7 +64,7 @@ public class Conveyor : ElectricalNode
 
     public bool ConveyorIsPowered()
     {
-        return Powered && !PowerCrystal.Blackout && !FactoryGrid.PlayerInPast;
+        return Powered && !PowerCrystal.Blackout && !FactoryGrid.PlayerInPast && !DebugUIManager.disableConveyers;
     }
 
     private void UpdateConveyorStatus()

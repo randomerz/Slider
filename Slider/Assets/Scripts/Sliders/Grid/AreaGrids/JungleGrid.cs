@@ -198,8 +198,7 @@ public class JungleGrid : SGrid
 
     public void CheckForJungleCompletion() {
         if(CheckGrid.contains(GetGridString(), "718_523_964")) {
-            UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
-            UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+            StartCoroutine(ShowButtonAndMapCompletions());
             AchievementManager.SetAchievementStat("completedJungle", 1);
         }
     }
