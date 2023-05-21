@@ -28,6 +28,9 @@ public class AnchorFirstAppearance : MonoBehaviour
         anchor.OnPickUp.RemoveListener(DoCutscene);
         OnAnchorAcquire?.Invoke(this, new System.EventArgs{});
         hints.TriggerHint("anchor");
+
+        AchievementManager.SetAchievementStat("collectedAnchor", 1);
+
         Destroy(this);
     }
 }

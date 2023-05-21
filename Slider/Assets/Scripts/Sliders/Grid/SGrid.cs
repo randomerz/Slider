@@ -176,11 +176,13 @@ public void SetGrid(int[,] puzzle)
 
         STile[,] old = grid;
         grid = newGrid;
+        CheckForCompletionOnSetGrid();
+    }
 
-        //OnGridMove.Invoke(this, new OnGridMoveArgs {
-        //    oldGrid = old, 
-        //    grid = grid
-        //});
+    //C: When we need to check for area completion after setting the grid (such as in areas that can be completed with the scroll)
+    protected virtual void CheckForCompletionOnSetGrid()
+    {
+
     }
 
     /*
@@ -713,4 +715,13 @@ public void SetGrid(int[,] puzzle)
 
         UpdateButtonCompletions(this, null); // sets the final one to be complete
     }
+    
+    protected IEnumerator ShowButtonAndMapCompletions()
+    {
+        UpdateButtonCompletionsHelper();
+        UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
+        UIArtifactMenus._instance.OpenArtifactAndShow(0, true);
+        yield return new WaitForSeconds(2);
+        UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+    }  
 }

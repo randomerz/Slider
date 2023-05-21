@@ -310,6 +310,10 @@ public class DesertGrid : SGrid
         CameraShake.Shake(2, 0.9f);
     }
 
+    public void GiveScrollAchievement() {
+        AchievementManager.SetAchievementStat("collectedScroll", 1);
+    }
+
     private void DoShuffle()
     {
         if (GetNumTilesCollected() != 8)
@@ -362,6 +366,8 @@ public class DesertGrid : SGrid
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
         
         placeTile9Coroutine = null;
+
+        AchievementManager.SetAchievementStat("completedDesert", 1);
     }
 
     #endregion
