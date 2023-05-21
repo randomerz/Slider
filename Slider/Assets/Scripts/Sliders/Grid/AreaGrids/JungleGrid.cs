@@ -15,15 +15,12 @@ public class JungleGrid : SGrid
         base.Init();
     }
     
-
     protected override void Start()
     {
         base.Start();
 
         AudioManager.PlayMusic("Jungle");
     }
-
-    
 
     public override void Save() 
     {

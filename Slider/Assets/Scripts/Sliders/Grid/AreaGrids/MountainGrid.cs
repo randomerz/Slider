@@ -138,6 +138,8 @@ public class MountainGrid : SGrid
 
         UIArtifactWorldMap.SetAreaStatus(Area.Mountain, ArtifactWorldMapArea.AreaStatus.color);
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+
+        AchievementManager.SetAchievementStat("completedMountain", 1);
     }
 
 

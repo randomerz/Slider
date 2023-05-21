@@ -4,20 +4,10 @@ using UnityEngine;
 
 public class BootsSpeedIncrease : MonoBehaviour
 {
-    // everything works, just awaiting sprite ig
-    private static Player player;
-    void Start()
-    {
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
-    }
-
-    void Update()
-    {
-        
-    }
-    
     public void SpeedUp()
     {
-        player.UpdatePlayerSpeed();
+        Player.GetInstance().UpdatePlayerSpeed();
+        AchievementManager.SetAchievementStat("collectedBoots", 1);
+
     }
 }

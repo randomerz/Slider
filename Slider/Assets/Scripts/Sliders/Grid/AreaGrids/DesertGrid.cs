@@ -362,6 +362,8 @@ public class DesertGrid : SGrid
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
         
         placeTile9Coroutine = null;
+
+        AchievementManager.SetAchievementStat("completedDesert", 1);
     }
 
     #endregion
