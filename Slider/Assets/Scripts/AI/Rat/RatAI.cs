@@ -162,15 +162,11 @@ public class RatAI : MonoBehaviour, ISavable
         // updating childing
         currentStileUnderneath = SGrid.GetSTileUnderneath(transform, currentStileUnderneath);
 
-        // Debug.Log("Currently on: " + currentStileUnderneath);
-
         if (currentStileUnderneath != null)
         {
             transform.SetParent(currentStileUnderneath.transform);
             visitedTiles.Add(currentStileUnderneath.islandId);
-            //Check for achievement
-            if(visitedTiles.Count >= 7 && !hasAchievement) {
-                //Give Achievement
+            if(!hasAchievement && visitedTiles.Count >= SGrid.Current.GetNumTilesCollected()) {
                 AchievementManager.SetAchievementStat("completedRatAllTiles", 1);
                 hasAchievement = true;
             }
