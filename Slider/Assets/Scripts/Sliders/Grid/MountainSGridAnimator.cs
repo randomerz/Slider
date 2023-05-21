@@ -28,6 +28,7 @@ public class MountainSGridAnimator : SGridAnimator
         if(move is SMoveLayerSwap && tile.isTileActive) {
             if(Player.GetInstance().GetSTileUnderneath() == tile) {
                 //Player on tile, dither world
+                ((MountainSTile) tile).AnimateBorderTileDither(movementDuration);
             }
             else {
                 //Player not on tile, dither tile

@@ -28,4 +28,8 @@ public class MountainSTile : STile
     public void AnimateTileDither(float duration) {
         mountainTileDither.AnimateTileDither(duration);
     }
+
+    public void AnimateBorderTileDither(float duration) {
+        mountainTileDither.AnimateBorderTileDither(duration);
+    }
 }

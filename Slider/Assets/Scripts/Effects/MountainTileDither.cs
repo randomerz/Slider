@@ -4,37 +4,49 @@ using UnityEngine;
 
 public class MountainTileDither : MonoBehaviour
 {
-    [SerializeField] private Material materialTemplate;
+    [SerializeField] private Material tileMaterialTemplate;
+    [SerializeField] private Material borderMaterialTemplate;
     [SerializeField] private AnimationCurve ditherCurve;
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer tileSpriteRenderer;
+    [SerializeField] private SpriteRenderer borderSpriteRenderer;
+
     private int numDithers = 7;
     private int islandId;
 
-    private Material materialInstance;
+    private Material tileMaterialInstance;
+    private Material borderMaterialInstance;
+
 
     private void Awake() {
         islandId = GetComponentInParent<STile>().islandId;
     }
 
     private void Start() {
-        materialInstance = new Material(materialTemplate);
-        spriteRenderer.material = materialInstance;
-        spriteRenderer.enabled = false;
+        tileMaterialInstance = new Material(tileMaterialTemplate);
+        tileSpriteRenderer.material = tileMaterialInstance;
+        tileSpriteRenderer.enabled = false;
+        borderMaterialInstance = new Material(borderMaterialTemplate);
+        borderSpriteRenderer.material = borderMaterialInstance;
+        borderSpriteRenderer.enabled = false;
     }
   
     public void AnimateTileDither(float duration) {
-        StartCoroutine(DitherCoroutine(duration));
+        StartCoroutine(DitherCoroutine(duration, tileSpriteRenderer, tileMaterialInstance));
     }
 
-    private IEnumerator DitherCoroutine(float duration) {
+    public void AnimateBorderTileDither(float duration) {
+        StartCoroutine(DitherCoroutine(duration, borderSpriteRenderer, borderMaterialInstance));
+    }
+
+    private IEnumerator DitherCoroutine(float duration, SpriteRenderer spriteRenderer, Material material) {
         float t = 0;
         spriteRenderer.enabled = true;
         while (t < duration) {
             t += Time.deltaTime;
-            materialInstance.SetFloat("_DitherNum", EvaluateCurve(t/duration));
+            material.SetFloat("_DitherNum", EvaluateCurve(t/duration));
             yield return null;
         }
-        materialInstance.SetFloat("_DitherNum", 0);
+        material.SetFloat("_DitherNum", 0);
         spriteRenderer.enabled = false;
     }
 
