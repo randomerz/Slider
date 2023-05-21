@@ -268,6 +268,6 @@ public class RatAI : MonoBehaviour, ISavable
 
     public void Load(SaveProfile profile)
     {
-        throw new System.NotImplementedException();
+        visitedTiles = StringToSet(profile.GetString("cavesRatTiles"));
     }
 }
