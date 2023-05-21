@@ -8,6 +8,7 @@ public class Anchor : Item
     {
         public STile stile;
         public bool drop;
+        public bool fromStart = false;
     }
 
     public static event System.EventHandler<OnAnchorInteractArgs> OnAnchorInteract;
@@ -29,7 +30,7 @@ public class Anchor : Item
             {
                 currentSTile.hasAnchor = true;
                 if(currentSTile.isTileActive)
-                    OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true });
+                    OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true, fromStart = true });
             }
         }
     }

@@ -19,6 +19,8 @@ public class ItemPickupEffect : MonoBehaviour
 
     public static ItemPickupEffect _instance;
 
+    public static bool isEffectPlaying;
+
     void Awake()
     {
         _instance = this;
@@ -41,6 +43,7 @@ public class ItemPickupEffect : MonoBehaviour
 
     private IEnumerator Cutscene(System.Action onTextVisibleCallback=null)
     {
+        isEffectPlaying = true;
         NPCDialogueContext.dialogueEnabledAllNPC = false;
         maskObject.SetActive(true);
         animator.SetBool("isVisible", true);
@@ -71,5 +74,6 @@ public class ItemPickupEffect : MonoBehaviour
         Player.SetCanMove(true);
         Player.GetSpriteRenderer().sortingLayerName = "Entity";
         NPCDialogueContext.dialogueEnabledAllNPC = true;
+        isEffectPlaying = false;
     }
 }

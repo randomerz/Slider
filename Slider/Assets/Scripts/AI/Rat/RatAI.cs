@@ -79,6 +79,9 @@ public class RatAI : MonoBehaviour
         }
     }
 
+    private HashSet<int> visitedTiles = new HashSet<int>();
+    private bool hasAchievement = false;
+
     //Costs for running away from player
     //public Dictionary<Vector2, int> CostMap
     //{
@@ -158,11 +161,19 @@ public class RatAI : MonoBehaviour
     {
         // updating childing
         currentStileUnderneath = SGrid.GetSTileUnderneath(transform, currentStileUnderneath);
+
         // Debug.Log("Currently on: " + currentStileUnderneath);
 
         if (currentStileUnderneath != null)
         {
             transform.SetParent(currentStileUnderneath.transform);
+            visitedTiles.Add(currentStileUnderneath.islandId);
+            //Check for achievement
+            if(visitedTiles.Count >= 7 && !hasAchievement) {
+                //Give Achievement
+                print("Give Rat Race Achievement");
+                hasAchievement = true;
+            }
         }
         //else (DON"T, JUST DON"T)
         //{

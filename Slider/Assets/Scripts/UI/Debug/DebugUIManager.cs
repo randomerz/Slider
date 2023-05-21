@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class DebugUIManager : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class DebugUIManager : MonoBehaviour
     private InputSettings controls;
     private static List<string> commandHistory = new List<string>();
     private static int commandIndex;
+
+    public static event System.EventHandler<EventArgs> OnOpenDebug;
+    public static event System.EventHandler<EventArgs> OnCloseDebug;
 
     [Header("Objects")]
     public GameObject anchorPrefab;
@@ -46,6 +50,10 @@ public class DebugUIManager : MonoBehaviour
             return;
         isDebugOpen = !isDebugOpen;
         debugPanel.SetActive(isDebugOpen);
+        if(isDebugOpen)
+            OnOpenDebug?.Invoke(this, new EventArgs());
+        else
+            OnCloseDebug?.Invoke(this, new EventArgs());
 
         if (isDebugOpen)
         {
