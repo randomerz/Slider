@@ -190,4 +190,17 @@ public class JungleGrid : SGrid
             g.SetActive(true);
         }
     }
+
+    protected override void CheckForCompletionOnSetGrid()
+    {
+        CheckForJungleCompletion();
+    }
+
+    public void CheckForJungleCompletion() {
+        if(CheckGrid.contains(GetGridString(), "718_523_964")) {
+            UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
+            UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+            AchievementManager.SetAchievementStat("completedJungle", 1);
+        }
+    }
 }
