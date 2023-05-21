@@ -176,11 +176,13 @@ public void SetGrid(int[,] puzzle)
 
         STile[,] old = grid;
         grid = newGrid;
+        CheckForCompletionOnSetGrid();
+    }
 
-        //OnGridMove.Invoke(this, new OnGridMoveArgs {
-        //    oldGrid = old, 
-        //    grid = grid
-        //});
+    //C: When we need to check for area completion after setting the grid (such as in areas that can be completed with the scroll)
+    protected virtual void CheckForCompletionOnSetGrid()
+    {
+
     }
 
     /*

@@ -12,7 +12,6 @@ public class FactoryGrid : SGrid
 
     public static event System.EventHandler PlayerChangedTime;
 
-
     public override void Init() {
         InitArea(Area.Factory);
         base.Init();
@@ -50,5 +49,18 @@ public class FactoryGrid : SGrid
     public static bool IsInPast(GameObject entity)
     {
         return entity.transform.position.y < -50f;
+    }
+
+    protected override void CheckForCompletionOnSetGrid()
+    {
+        CheckForFactoryCompletion();
+    }
+
+    public void CheckForFactoryCompletion() {
+        if(CheckGrid.contains(GetGridString(), "751_869_243")) {
+            UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
+            UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+            AchievementManager.SetAchievementStat("completedFactory", 1);
+        }
     }
 }
