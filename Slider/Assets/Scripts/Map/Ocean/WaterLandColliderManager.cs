@@ -8,6 +8,9 @@ public class WaterLandColliderManager : MonoBehaviour
     public List<GameObject> waterColliders;
     public List<GameObject> landColliders;
 
+    // for the player to go under the bridges in the jungle/desert
+    public List<SpriteRenderer> bridgeSpriteRenderers = new List<SpriteRenderer>();
+
     void Start()
     {
         if (player == null) 
@@ -34,6 +37,11 @@ public class WaterLandColliderManager : MonoBehaviour
         foreach (GameObject g in landColliders)
         {
             g.SetActive(pow);
+        }
+
+        foreach (SpriteRenderer sr in bridgeSpriteRenderers)
+        {
+            sr.sortingLayerName = pow ? "Entity" : "Default";
         }
     }
 }

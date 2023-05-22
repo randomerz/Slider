@@ -84,7 +84,6 @@ public class ChadRace : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log($"CURRENT RACE STATE: {raceState}");
         switch (raceState) {
 
             case State.NotStarted:
