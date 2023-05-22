@@ -28,7 +28,8 @@ namespace SliderVocalization
         public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context) => preset.clauseGap;
         public override IEnumerator Vocalize(VocalizerParameters preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
         {
-            yield return new WaitForSeconds(preset.clauseGap);
+            if (float.IsNormal(preset.clauseGap) && !float.IsNegative(preset.clauseGap))
+                yield return new WaitForSeconds(preset.clauseGap);
         }
         public override void Stop() { }
 
@@ -52,7 +53,8 @@ namespace SliderVocalization
             for (int i = 0; i < characters.Length; i++)
             {
                 _progress = i + 1;
-                yield return new WaitForSeconds(preset.duration);
+                if (float.IsNormal(preset.duration) && !float.IsNegative(preset.duration))
+                    yield return new WaitForSeconds(preset.duration);
             }
         }
 
