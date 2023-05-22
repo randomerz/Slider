@@ -156,7 +156,7 @@ public class RatAI : MonoBehaviour, ISavable
         {
             transform.SetParent(currentStileUnderneath.transform);
             visitedTiles.Add(currentStileUnderneath.islandId);
-            if(!hasAchievement && visitedTiles.Count >= SGrid.Current.GetNumTilesCollected()) {
+            if(!hasAchievement && visitedTiles.Count >= Mathf.Max(7, SGrid.Current.GetNumTilesCollected())) {
                 AchievementManager.SetAchievementStat("completedRatAllTiles", 1);
                 hasAchievement = true;
             }
@@ -268,6 +268,6 @@ public class RatAI : MonoBehaviour, ISavable
 
     public void Load(SaveProfile profile)
     {
-        throw new System.NotImplementedException();
+        visitedTiles = StringToSet(profile.GetString("cavesRatTiles"));
     }
 }
