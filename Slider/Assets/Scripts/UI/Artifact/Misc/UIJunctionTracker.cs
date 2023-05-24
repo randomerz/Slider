@@ -9,8 +9,9 @@ public class UIJunctionTracker : FlashWhiteUI
     [SerializeField] private Sprite poweredOnSprite;
     private ArtifactTileButton button;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         if (myNode == null)
         {
             Debug.LogError("UIJunctionTracker requires node to track");
