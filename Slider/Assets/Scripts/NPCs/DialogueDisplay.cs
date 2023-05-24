@@ -38,6 +38,9 @@ public class DialogueDisplay : MonoBehaviour
         textSpecialBG.StopEffects();
 
         string parsed = textTyperText.StartTyping(message);
+        // in rare cases NaN is used at first iteration and blocks dialogue typing
+        textTyperText.SetTextSpeed(GameSettings.textSpeed);
+        textTyperBG.SetTextSpeed(GameSettings.textSpeed);
         textTyperBG.StartTyping(message);
         float totalDuration = vocalizer.SetText(parsed, emote);
         textTyperText.SetTextSpeed(totalDuration / parsed.Length);

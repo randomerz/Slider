@@ -120,7 +120,8 @@ public class TMPTextTyper : MonoBehaviour
             //}
             charIndex++;
             startingCharacterIndex++;
-            yield return new WaitForSeconds(textSpeed);
+            if (float.IsNormal(textSpeed) && !float.IsNegative(textSpeed))
+                yield return new WaitForSeconds(textSpeed);
         }
 
         coroutine = null;
@@ -149,7 +150,8 @@ public class TMPTextTyper : MonoBehaviour
             // If No Characters then just yield and wait for some text to be added
             if (characterCount == 0)
             {
-                yield return new WaitForSeconds(textSpeed);
+                if (float.IsNormal(textSpeed) && !float.IsNegative(textSpeed))
+                    yield return new WaitForSeconds(textSpeed);
                 continue;
             }
 
@@ -184,7 +186,8 @@ public class TMPTextTyper : MonoBehaviour
             m_TextMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
             if (charIndex + 1 < characterCount) charIndex += 1;
 
-            yield return new WaitForSeconds(textSpeed);
+            if (float.IsNormal(textSpeed) && !float.IsNegative(textSpeed))
+                yield return new WaitForSeconds(textSpeed);
         }
 
         coroutine = null;
