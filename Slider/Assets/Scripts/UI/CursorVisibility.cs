@@ -4,17 +4,8 @@ using UnityEngine;
 
 public class CursorVisibility : MonoBehaviour
 {
-    void Update()
-    {
+     private void OnGUI() {
         bool cursorActive = (UIManager.IsUIOpen() || UIArtifactMenus.IsArtifactOpen() || GameUI.instance.isMenuScene);
-        if(cursorActive)
-        {
-            print("show");
-        }
-        else
-        {
-            print("hide");
-        }
         Cursor.visible = cursorActive;
         Cursor.lockState = cursorActive ? CursorLockMode.None : CursorLockMode.Confined;
     }
