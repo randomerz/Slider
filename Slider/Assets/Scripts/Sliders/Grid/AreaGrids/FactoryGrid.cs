@@ -12,7 +12,6 @@ public class FactoryGrid : SGrid
 
     public static event System.EventHandler PlayerChangedTime;
 
-
     public override void Init() {
         InitArea(Area.Factory);
         base.Init();
@@ -51,4 +50,17 @@ public class FactoryGrid : SGrid
     {
         return entity.transform.position.y < -50f;
     }
+
+    protected override void CheckForCompletionOnSetGrid()
+    {
+        CheckForFactoryCompletion();
+    }
+
+    public void CheckForFactoryCompletion() {
+        if(CheckGrid.contains(GetGridString(), "851_769_243")) {
+            StartCoroutine(ShowButtonAndMapCompletions());
+            AchievementManager.SetAchievementStat("completedFactory", 1);
+        }
+    }
+
 }

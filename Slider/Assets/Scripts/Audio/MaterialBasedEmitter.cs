@@ -27,6 +27,11 @@ public class MaterialBasedEmitter : MonoBehaviour
 
     public void Step()
     {
+        if (UIManager.IsUIOpen() || UIArtifactMenus.IsArtifactOpen() || !Player.GetCanMove()) // from PlayerAction.cs
+        {
+            return;
+        }
+        
         Tilemap map = locatable.GetCurrentMaterialTilemap();
         TileBase tileBase = map == null ? null : map.GetTile(map.WorldToCell(locatableRef.transform.position));
         mapping[tileBase].WithAttachmentToTransform(transform).AndPlay();

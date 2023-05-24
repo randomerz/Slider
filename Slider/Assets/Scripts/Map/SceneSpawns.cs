@@ -60,6 +60,9 @@ public class SceneSpawns : MonoBehaviour
         FactoryPastNorth,
         MagiTechPastSouth,
 
+        JungleNorthRiver,
+        DesertRiver,
+
         // Space
     }
 

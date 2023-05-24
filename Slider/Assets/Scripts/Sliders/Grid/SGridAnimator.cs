@@ -83,7 +83,7 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-        EffectOnMoveStart(move, isPlayerOnStile ? null : stile.transform);
+        EffectOnMoveStart(move, isPlayerOnStile ? null : stile.transform, stile);
 
         float t = 0;
         currMoveDuration = movementDuration * move.duration;
@@ -220,7 +220,7 @@ public class SGridAnimator : MonoBehaviour
         return null;
     }
 
-    protected void EffectOnMoveStart(SMove move, Transform root)
+    protected virtual void EffectOnMoveStart(SMove move, Transform root, STile tile)
     {
         float shakeDuration = currMoveDuration + 0.1f;
         float volume = currMoveDuration;

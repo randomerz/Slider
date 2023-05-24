@@ -18,7 +18,8 @@ public class FlashWhiteUI : MonoBehaviour
 
     private void OnDisable()
     {
-        mySprite.material = oldMat;
+        if(oldMat != null)
+            mySprite.material = oldMat;
     }
 
     public void Flash(int n, Action callback = null)

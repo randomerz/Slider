@@ -181,6 +181,8 @@ public class CaveGrid : SGrid
 
         UIArtifactWorldMap.SetAreaStatus(Area.Caves, ArtifactWorldMapArea.AreaStatus.color);
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+
+        AchievementManager.SetAchievementStat("completedCaves", 1);
     }
 
     private void SetMagicRocks(bool value)
