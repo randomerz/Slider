@@ -26,9 +26,10 @@ public class UIArtifact : Singleton<UIArtifact>
     
     private int moveCounter;
 
-    private float hoverBuffer = 1f; //Saves hover for this long after moving off if not hoving anything else
+    private float hoverBuffer = 0.1f; //Saves hover for this long after moving off if not hoving anything else
     private float hoverTimer;
-    private ArtifactTileButton hovered;
+    private bool shouldCountDown;
+    private ArtifactTileButton lastHovered;
     
     protected void Awake()
     {
@@ -65,14 +66,13 @@ public class UIArtifact : Singleton<UIArtifact>
     }
 
     private void Update() {
-        if(hovered != null) {
+        if(shouldCountDown && hoverTimer < hoverBuffer) {
             hoverTimer += Time.deltaTime;
-            print("nothing hovered");
             if(hoverTimer > hoverBuffer)
             {
-                print("cleared");
-                hovered = null;
-                hoverTimer = 0;
+                lastHovered.SetSpriteToIslandOrEmpty();
+                lastHovered.SetHighlighted(true);
+                lastHovered = null;
             }
         }
     }
@@ -284,13 +284,20 @@ public class UIArtifact : Singleton<UIArtifact>
 
     private ArtifactTileButton GetButtonHovered(PointerEventData data)
     {
+        ArtifactTileButton hovered = null;
         if (data.pointerEnter != null && data.pointerEnter.name == "Image")
         {
-            ArtifactTileButton temphovered = data.pointerEnter.transform.GetComponentInParent<ArtifactTileButton>();
-            if(temphovered != null) {
-                hovered = temphovered;
-                hoverTimer = 0;
-            }
+            hovered = data.pointerEnter.transform.GetComponentInParent<ArtifactTileButton>();
+        }
+
+        if(hovered != null) {
+            lastHovered = hovered;
+            hoverTimer = 0;
+            shouldCountDown = false;
+        }
+        else if(hoverTimer <= hoverBuffer) {
+            hovered = lastHovered;
+            shouldCountDown = true;
         }
 
         return hovered;
@@ -397,7 +404,6 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         if (buttonSelected == null)
             return;
-
         buttonSelected.SetSelected(false);
         buttonSelected = null;
 
