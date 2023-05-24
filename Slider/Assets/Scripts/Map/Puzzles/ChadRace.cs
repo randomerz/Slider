@@ -84,7 +84,6 @@ public class ChadRace : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log($"CURRENT RACE STATE: {raceState}");
         switch (raceState) {
 
             case State.NotStarted:
@@ -113,6 +112,7 @@ public class ChadRace : MonoBehaviour
                 if (!tilesAdjacent) {
                     // The player has cheated
                     // TODO: Record Scratch stuff should start around here.
+                    AudioManager.Play("Record Scratch");
                     chadEndLocal = transform.localPosition;
                     DisplayAndTriggerDialogue("Hey, no changing the track before the race is done!");
                     ActivateSpeedLines(false);
@@ -132,6 +132,7 @@ public class ChadRace : MonoBehaviour
 
                 break;
             case State.Cheated:
+                StartCoroutine(SetParameterTemporary("JungleChadEnd", 1, 0));
                 ActivateSpeedLines(false);
                 chadimator.SetBool("isWalking", false);
                 transform.localPosition = chadEndLocal;

@@ -30,10 +30,10 @@ public class OceanDolly : CameraDolly
         }
 
         intern1.TypeCurrentDialogue();
-        yield return new WaitForSeconds(4.5f);
+        yield return new WaitForSeconds(5.5f);
         intern1.AdvanceDialogueChain();
         intern2.TypeCurrentDialogue();
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(5f);
         intern2.AdvanceDialogueChain();
 
         UIEffects.FadeToBlack(
