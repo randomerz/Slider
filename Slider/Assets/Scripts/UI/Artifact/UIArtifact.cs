@@ -25,6 +25,10 @@ public class UIArtifact : Singleton<UIArtifact>
     public static System.EventHandler<System.EventArgs> MoveMadeOnArtifact;
     
     private int moveCounter;
+
+    private float hoverBuffer = 1f; //Saves hover for this long after moving off if not hoving anything else
+    private float hoverTimer;
+    private ArtifactTileButton hovered;
     
     protected void Awake()
     {
@@ -58,6 +62,19 @@ public class UIArtifact : Singleton<UIArtifact>
 
         EnableMovement();
         EnableQueueing();
+    }
+
+    private void Update() {
+        if(hovered != null) {
+            hoverTimer += Time.deltaTime;
+            print("nothing hovered");
+            if(hoverTimer > hoverBuffer)
+            {
+                print("cleared");
+                hovered = null;
+                hoverTimer = 0;
+            }
+        }
     }
 
     public static UIArtifact GetInstance()
@@ -247,19 +264,19 @@ public class UIArtifact : Singleton<UIArtifact>
         List<ArtifactTileButton> moveOptions = GetMoveOptions(dragged);
         ResetButtonsToEmptyIfInactive(moveOptions);
 
-        ArtifactTileButton hovered = GetButtonHovered(data);
-        if(dragged == hovered && SettingsManager.AutoMove)
+        ArtifactTileButton hoveredButton = GetButtonHovered(data);
+        if(dragged == hoveredButton && SettingsManager.AutoMove)
         {
             SelectButton(dragged);
             return;
         }
         //player didnt release their mouse on a tile so we assume they dont actually want to move the tile
-        if(hovered == null)
+        if(hoveredButton == null)
         {
             DeselectSelectedButton();
             return; 
         }
-        DoButtonDrag(dragged, hovered, moveOptions);
+        DoButtonDrag(dragged, hoveredButton, moveOptions);
     }
     #endregion
 
@@ -267,11 +284,15 @@ public class UIArtifact : Singleton<UIArtifact>
 
     private ArtifactTileButton GetButtonHovered(PointerEventData data)
     {
-        ArtifactTileButton hovered = null;
         if (data.pointerEnter != null && data.pointerEnter.name == "Image")
         {
-            hovered = data.pointerEnter.transform.GetComponentInParent<ArtifactTileButton>();
+            ArtifactTileButton temphovered = data.pointerEnter.transform.GetComponentInParent<ArtifactTileButton>();
+            if(temphovered != null) {
+                hovered = temphovered;
+                hoverTimer = 0;
+            }
         }
+
         return hovered;
     }
 
