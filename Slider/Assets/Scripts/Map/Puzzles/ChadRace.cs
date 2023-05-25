@@ -111,7 +111,6 @@ public class ChadRace : MonoBehaviour
                 ActivateSpeedLines(true);
                 if (!tilesAdjacent) {
                     // The player has cheated
-                    // TODO: Record Scratch stuff should start around here.
                     AudioManager.Play("Record Scratch");
                     chadEndLocal = transform.localPosition;
                     DisplayAndTriggerDialogue("Hey, no changing the track before the race is done!");
@@ -191,6 +190,7 @@ public class ChadRace : MonoBehaviour
     public void PlayerEnteredEnd() {
         if (raceState == State.Running) {
             raceState = State.PlayerWon;
+            DisplayAndTriggerDialogue("Dangit, I don't know how you won, especially with my faster boots.");
             onRaceWon.Invoke();
         }
     }
