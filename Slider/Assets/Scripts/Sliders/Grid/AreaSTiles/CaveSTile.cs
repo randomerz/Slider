@@ -36,7 +36,7 @@ public class CaveSTile : STile
         Transform[] objects = GetComponentsInChildren<Transform>(true); // true -> include inactive components
         foreach (var o in objects)
         {
-            if (o.CompareTag("BlocksLight"))
+            if (o.CompareTag("BlocksLight") && o.gameObject.activeSelf)
             {
                 objectsThatBlockLight.Add(o.gameObject);
             }

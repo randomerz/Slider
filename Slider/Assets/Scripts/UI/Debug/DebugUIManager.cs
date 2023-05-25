@@ -4,10 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class DebugUIManager : MonoBehaviour
 {
     public static bool justDidSetScene;
+    public static bool disableConveyers;
 
     public GameObject debugPanel;
     public bool isDebugOpen;
@@ -17,6 +19,9 @@ public class DebugUIManager : MonoBehaviour
     private InputSettings controls;
     private static List<string> commandHistory = new List<string>();
     private static int commandIndex;
+
+    public static event System.EventHandler<EventArgs> OnOpenDebug;
+    public static event System.EventHandler<EventArgs> OnCloseDebug;
 
     [Header("Objects")]
     public GameObject anchorPrefab;
@@ -46,6 +51,10 @@ public class DebugUIManager : MonoBehaviour
             return;
         isDebugOpen = !isDebugOpen;
         debugPanel.SetActive(isDebugOpen);
+        if(isDebugOpen)
+            OnOpenDebug?.Invoke(this, new EventArgs());
+        else
+            OnCloseDebug?.Invoke(this, new EventArgs());
 
         if (isDebugOpen)
         {
@@ -280,6 +289,11 @@ public class DebugUIManager : MonoBehaviour
     public void ACES()
     {
         ActivateAllCollectibles(true);
+    }
+
+    public void ToggleConveyers()
+    {
+        disableConveyers = !disableConveyers;
     }
 
     //C: make sure pattern is the same length as the current sgrid

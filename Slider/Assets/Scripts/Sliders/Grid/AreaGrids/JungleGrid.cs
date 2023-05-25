@@ -15,15 +15,12 @@ public class JungleGrid : SGrid
         base.Init();
     }
     
-
     protected override void Start()
     {
         base.Start();
 
         AudioManager.PlayMusic("Jungle");
     }
-
-    
 
     public override void Save() 
     {
@@ -191,6 +188,18 @@ public class JungleGrid : SGrid
         foreach (GameObject g in jungleBridges)
         {
             g.SetActive(true);
+        }
+    }
+
+    protected override void CheckForCompletionOnSetGrid()
+    {
+        CheckForJungleCompletion();
+    }
+
+    public void CheckForJungleCompletion() {
+        if(CheckGrid.contains(GetGridString(), "718_523_964")) {
+            StartCoroutine(ShowButtonAndMapCompletions());
+            AchievementManager.SetAchievementStat("completedJungle", 1);
         }
     }
 }

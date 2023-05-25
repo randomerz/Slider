@@ -87,6 +87,16 @@ public class AudioManager : Singleton<AudioManager>
             SetPaused(true);
         };
 
+        DebugUIManager.OnOpenDebug += delegate (object sender,  EventArgs e)
+        {
+            SetPaused(true);
+        };
+
+        DebugUIManager.OnCloseDebug += delegate (object sender,  EventArgs e)
+        {
+            SetPaused(false);
+        };
+
         if (InitializeSingleton(ifInstanceAlreadySetThenDestroy:gameObject))
         {
             return;

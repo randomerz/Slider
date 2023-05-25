@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class RatAI : MonoBehaviour
+public class RatAI : MonoBehaviour, ISavable
 {
     [Header("Player")]
     public float playerAggroRange;
@@ -79,13 +79,9 @@ public class RatAI : MonoBehaviour
         }
     }
 
-    //Costs for running away from player
-    //public Dictionary<Vector2, int> CostMap
-    //{
-    //    get { return _costMap; }
-    //    private set { _costMap = value; }
-    //}
-    //private Dictionary<Vector2, int> _costMap = null;
+    private HashSet<int> visitedTiles = new HashSet<int>();
+    private bool hasAchievement = false;
+
 
     [HideInInspector]
     internal HashSet<Vector2Int> visited = null;    //For debugging
@@ -136,9 +132,6 @@ public class RatAI : MonoBehaviour
     private void Update()
     {
         behaviourTree.Evaluate();
-
-        //GenerateCostMap();
-
         float distToPlayer = Vector3.Distance(transform.position, Player.GetPosition());
         float speed = Mathf.Lerp(maxSpeed, minSpeed, (distToPlayer - 1) / playerDeaggroRange);
         navAgent.speed = speed;
@@ -158,16 +151,16 @@ public class RatAI : MonoBehaviour
     {
         // updating childing
         currentStileUnderneath = SGrid.GetSTileUnderneath(transform, currentStileUnderneath);
-        // Debug.Log("Currently on: " + currentStileUnderneath);
 
         if (currentStileUnderneath != null)
         {
             transform.SetParent(currentStileUnderneath.transform);
+            visitedTiles.Add(currentStileUnderneath.islandId);
+            if(!hasAchievement && visitedTiles.Count >= Mathf.Max(7, SGrid.Current.GetNumTilesCollected())) {
+                AchievementManager.SetAchievementStat("completedRatAllTiles", 1);
+                hasAchievement = true;
+            }
         }
-        //else (DON"T, JUST DON"T)
-        //{
-        //    transform.SetParent(GameObject.Find("World Grid").transform);
-        //}
 
         anim.SetFloat("speed", rb.velocity.magnitude);
     }
@@ -202,7 +195,10 @@ public class RatAI : MonoBehaviour
         {
             objectToSteal.transform.parent = transform.parent;  //"Unparent" The Rat from the object so the Rat "Drops" it
         }
-        Debug.Log("Rat is Dee");
+        
+        visitedTiles.Clear();
+        Save();
+
         Destroy(gameObject);
     }
 
@@ -237,39 +233,6 @@ public class RatAI : MonoBehaviour
 
     }
 
-    //Efficiency: (2*maxDistVision+1)^2 * (2*maxDistCostmap+1)^2 (This is the most costly operation in the AI)
-    //private void GenerateCostMap()
-    //{
-    //    if (!avoidsDark || LightManager.instance != null)
-    //    {
-    //        _costMap = new Dictionary<Vector2, int>();
-    //        Vector2Int posAsInt = TileUtil.WorldToTileCoords(transform.position);
-
-    //        //Square that includes Rat vision (which itself is a circle)
-    //        for (int x = (int)-maxDistVision; x <= (int)maxDistVision; x++)
-    //        {
-    //            for (int y = (int)-maxDistVision; y <= (int)maxDistVision; y++)
-    //            {
-    //                Vector2Int pos = posAsInt + new Vector2Int(x, y);
-
-    //                bool tileLightingValid = (!avoidsDark || LightManager.instance.GetLightMaskAt(pos.x, pos.y));
-    //                if (nav.IsValidPtOnStile(pos) && tileLightingValid)
-    //                {
-    //                    float normCost = paintedCostMap.GetNormalizedCostAt(pos);
-    //                    if (normCost <= 1.5f) //Cost can be > 1 to indicate untraversable ground.
-    //                    {
-    //                        int cost = (int)(tileMaxPenalty*normCost);
-    //                        // int cost = CostToThreat(GetDistToNearestBadTile(pos), false);
-    //                        _costMap.Add(pos, cost);
-    //                    }
-
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    Debug.Assert(_costMap != null, "Tried to initialize Cost Map before LightManager. This might be a problem.");
-    //}
 
     internal int CostToThreat(float distToThreat, bool threatIsPlayer)
     {
@@ -279,35 +242,32 @@ public class RatAI : MonoBehaviour
 
         cost = Mathf.Clamp(cost, 0, 100 * tileMaxPenalty);
         return (int)cost;
-
-        // float penaltyDivider = threatIsPlayer ? playerAggroRange : maxDistCost;
-        // int cost = (distToThreat == float.MaxValue) ? 0 : Mathf.Clamp(tileMaxPenalty - (int)(tileMaxPenalty / penaltyDivider * (distToThreat - 1f)), 0, tileMaxPenalty);
-
-        // cost *= threatIsPlayer ? 1000 : 1; //Basically make the player as unappealing as possible (because the Rat loses if it touches the player)
-
-        // //Debug.Log("Distance: " + distToThreat);
-        // //Debug.Log("Cost: " + cost);
-        // return cost;
     }
 
-    private void OnDrawGizmosSelected()
-    {   
-        //PRINT COST MAP
-        //if (CostMap != null)
-        //{
-        //    foreach (Vector2Int pt in CostMap.Keys)
-        //    {
-        //        if (CostMap[pt] == int.MaxValue)
-        //        {
-        //            Gizmos.color = Color.red;
-        //        } else
-        //        {
-        //            //Debug.Log($"CostMap in OnDrawGizmosSelected: {CostMap[pt]}");
-        //            Gizmos.color = Color.Lerp(Color.green, Color.red, (float) CostMap[pt] / tileMaxPenalty);
-        //        }
+    private string SetToString(HashSet<int> set) {
+        string output = "";
+        foreach(int num in set){
+            output += num.ToString();
+        }
+        return output;
+    }
 
-        //        Gizmos.DrawSphere(new Vector3(pt.x, pt.y, 0), 0.2f);
-        //    }
-        //}     
+    private HashSet<int> StringToSet(string nums)
+    {
+        HashSet<int> set = new HashSet<int>();
+        for(int i = 0; i < nums.Length; i++) {
+            set.Add(nums[i] - '0');
+        }
+        return set;
+    }
+
+    public void Save()
+    {
+        SaveSystem.Current.SetString("cavesRatTiles", SetToString(visitedTiles));
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        visitedTiles = StringToSet(profile.GetString("cavesRatTiles"));
     }
 }

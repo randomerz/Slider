@@ -60,6 +60,7 @@ GameObject:
   - component: {fileID: 3313838020138531838}
   - component: {fileID: 6531386949380389835}
   - component: {fileID: 8091794286791977582}
+  - component: {fileID: 7750866608286493436}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -197,3 +198,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentControlScheme: Keyboard Mouse
+--- !u!114 &7750866608286493436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8750917147391358172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c890204abde65dd40851211a0945ddc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

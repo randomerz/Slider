@@ -106,6 +106,10 @@ public class PastLargeCrystal : ElectricalNode
         {
             go.SetActive(false);
         }
+
+        if(!SaveSystem.Current.GetBool("ChadSrPuzzleComplete")) //if the bool is true that means we did kill him, so we want to give achievement if it is false
+            AchievementManager.SetAchievementStat("sparedChadSr", 1);
+
         StopAllCoroutines();
     }
 }

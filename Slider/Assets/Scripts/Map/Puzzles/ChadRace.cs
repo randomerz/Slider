@@ -41,6 +41,8 @@ public class ChadRace : MonoBehaviour
 
     private float jungleChadEnd;
 
+    private ParticleSystem[] speedLinesList;
+
 
     private void OnEnable()
     {
@@ -74,6 +76,8 @@ public class ChadRace : MonoBehaviour
         //countDownDialogue.dialogueChain.Add(ConstructChadDialogueStart());
         //npcScript.AddNewConditionals(countDownDialogue);
 
+        speedLinesList = player.GetComponentsInChildren<ParticleSystem>();
+
         DisplayAndTriggerDialogue("Bet I could beat you to the bell (e to start).");
     }
 
@@ -81,13 +85,20 @@ public class ChadRace : MonoBehaviour
     void Update()
     {
         switch (raceState) {
+
+            case State.NotStarted:
+                ActivateSpeedLines(false);
+                break;
+
             case State.Started:
                 player.position = playerStart;
                 float timeDiff = Time.unscaledTime - startTime;
                 if (timeDiff < 3) {
                     DisplayAndTriggerDialogue((int)(4 - (Time.unscaledTime - startTime)) + "");
+                    ActivateSpeedLines(false);
                 } else {
                     DisplayAndTriggerDialogue("GO!");
+                    ActivateSpeedLines(true);
                     chadimator.SetBool("isWalking", true);
                     raceState = State.Running;
 
@@ -97,23 +108,31 @@ public class ChadRace : MonoBehaviour
                 }
                 break;
             case State.Running:
+                ActivateSpeedLines(true);
                 if (!tilesAdjacent) {
                     // The player has cheated
+                    AudioManager.Play("Record Scratch");
                     chadEndLocal = transform.localPosition;
                     DisplayAndTriggerDialogue("Hey, no changing the track before the race is done!");
+                    ActivateSpeedLines(false);
                     raceState = State.Cheated;
                 } else if (transform.position.y <= endPoint.y) {
                     MoveChad();
-                } else {
+                    ActivateSpeedLines(true);
+                }
+                else {
                     // Chad has made it to the finish line
                     onRaceWon.Invoke();
                     chadEndLocal = transform.localPosition;
                     raceState = State.ChadWon;
+                    ActivateSpeedLines(false);
                     DisplayAndTriggerDialogue("Pfft, too easy. Come back when you're fast enough to compete with me. (e to start)");
                 }
 
                 break;
             case State.Cheated:
+                StartCoroutine(SetParameterTemporary("JungleChadEnd", 1, 0));
+                ActivateSpeedLines(false);
                 chadimator.SetBool("isWalking", false);
                 transform.localPosition = chadEndLocal;
                 firstTime = true;
@@ -130,6 +149,7 @@ public class ChadRace : MonoBehaviour
                 }
                 break;
             case State.ChadWon:
+                ActivateSpeedLines(false);
                 chadimator.SetBool("isWalking", false);
                 transform.localPosition = chadEndLocal;
 
@@ -139,6 +159,7 @@ public class ChadRace : MonoBehaviour
                 break;
             case State.PlayerWon:
                 // Not entirely sure why, but an offset of .5 in x gets chad in the right spot at the end
+                ActivateSpeedLines(false);
                 chadEndLocal = finishingLine.localPosition - new Vector3(.5f, 2, 0);
                 if (transform.localPosition.y < chadEndLocal.y) {
                     MoveChad();
@@ -154,6 +175,7 @@ public class ChadRace : MonoBehaviour
                     jungleChadEnd = 1;
                 }
                 break;
+
         }
     }
 
@@ -168,6 +190,7 @@ public class ChadRace : MonoBehaviour
     public void PlayerEnteredEnd() {
         if (raceState == State.Running) {
             raceState = State.PlayerWon;
+            DisplayAndTriggerDialogue("Dangit, I don't know how you won, especially with my faster boots.");
             onRaceWon.Invoke();
         }
     }
@@ -219,8 +242,36 @@ public class ChadRace : MonoBehaviour
         Vector3 targetDirection = transform.position.x >= endPoint.x ? new Vector3(0,1,0) : new Vector3(1,0,0);
         transform.position += + speed * targetDirection * Time.deltaTime;
 
+        if (raceState != State.PlayerWon)
+        {
+            ActivateSpeedLines(true);
+        }
+        else
+        {
+            ActivateSpeedLines(false);
+        }
+
         // Assigns chad's current parent to the objects of the stile that he is currently over
         transform.parent = SGrid.GetSTileUnderneath(gameObject).transform.GetChild(0);
+    }
+
+    private void ActivateSpeedLines(bool activate)
+    {
+        if (activate)
+        {
+            foreach (ParticleSystem lines in speedLinesList)
+            {
+                lines.Play();
+            }
+        }
+        else
+        {
+            foreach (ParticleSystem lines in speedLinesList)
+            {
+                lines.Stop();
+            }
+        }
+        
     }
 
     private void DisplayAndTriggerDialogue(string message) {

@@ -11,7 +11,7 @@ public class ElevatorAnimationManager : MonoBehaviour
 
     public List<GameObject> deactivateOnFix;
 
-    private bool isAnimating = false;
+   // private bool isAnimating = false;
     private bool repaired = false;
 
     private void Start() {
@@ -35,7 +35,7 @@ public class ElevatorAnimationManager : MonoBehaviour
 
     private IEnumerator SendCoroutine(string sendAnimName)
     {
-        isAnimating = true;
+       // isAnimating = true;
         
         topDispAnimator.Play("Disp Top Fade Out");
         bottomDispAnimator.Play("Disp Bottom Fade Out");
@@ -52,7 +52,7 @@ public class ElevatorAnimationManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        isAnimating = false;
+       // isAnimating = false;
     }
 
     private void CloseDoors()

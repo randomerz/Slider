@@ -44,7 +44,7 @@ public class ItemPickupEffect : MonoBehaviour
         NPCDialogueContext.dialogueEnabledAllNPC = false;
         maskObject.SetActive(true);
         animator.SetBool("isVisible", true);
-        AudioManager.Play("Item Pick Up");
+        AudioManager.PickSound("Item Pick Up").WithPriorityOverDucking(true).AndPlay();
 
         UIManager.canOpenMenus = false;
         Player.SetCanMove(false);

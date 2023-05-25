@@ -25,6 +25,11 @@ public class UIArtifact : Singleton<UIArtifact>
     public static System.EventHandler<System.EventArgs> MoveMadeOnArtifact;
     
     private int moveCounter;
+
+    private float hoverBuffer = 0.1f; //Saves hover for this long after moving off if not hoving anything else
+    private float hoverTimer;
+    private bool shouldCountDown;
+    private ArtifactTileButton lastHovered;
     
     protected void Awake()
     {
@@ -59,6 +64,18 @@ public class UIArtifact : Singleton<UIArtifact>
 
         EnableMovement();
         EnableQueueing();
+    }
+
+    private void Update() {
+        if(shouldCountDown && hoverTimer < hoverBuffer) {
+            hoverTimer += Time.deltaTime;
+            if(hoverTimer > hoverBuffer)
+            {
+                lastHovered.SetSpriteToIslandOrEmpty();
+                lastHovered.SetHighlighted(true);
+                lastHovered = null;
+            }
+        }
     }
 
     public static UIArtifact GetInstance()
@@ -248,19 +265,19 @@ public class UIArtifact : Singleton<UIArtifact>
         List<ArtifactTileButton> moveOptions = GetMoveOptions(dragged);
         ResetButtonsToEmptyIfInactive(moveOptions);
 
-        ArtifactTileButton hovered = GetButtonHovered(data);
-        if(dragged == hovered && SettingsManager.AutoMove)
+        ArtifactTileButton hoveredButton = GetButtonHovered(data);
+        if(dragged == hoveredButton && SettingsManager.AutoMove)
         {
             SelectButton(dragged);
             return;
         }
         //player didnt release their mouse on a tile so we assume they dont actually want to move the tile
-        if(hovered == null)
+        if(hoveredButton == null)
         {
             DeselectSelectedButton();
             return; 
         }
-        DoButtonDrag(dragged, hovered, moveOptions);
+        DoButtonDrag(dragged, hoveredButton, moveOptions);
     }
     #endregion
 
@@ -273,6 +290,17 @@ public class UIArtifact : Singleton<UIArtifact>
         {
             hovered = data.pointerEnter.transform.GetComponentInParent<ArtifactTileButton>();
         }
+
+        if(hovered != null) {
+            lastHovered = hovered;
+            hoverTimer = 0;
+            shouldCountDown = false;
+        }
+        else if(hoverTimer <= hoverBuffer) {
+            hovered = lastHovered;
+            shouldCountDown = true;
+        }
+
         return hovered;
     }
 
@@ -377,7 +405,6 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         if (buttonSelected == null)
             return;
-
         buttonSelected.SetSelected(false);
         buttonSelected = null;
 
