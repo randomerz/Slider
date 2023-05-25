@@ -19,15 +19,17 @@ public class UIArtifactmenuDisabler : MonoBehaviour
 
     private void OnEnable()
     {
-        //Debug.LogWarning("SELECT!!");
-
-        if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        //sorry this is kinda cringe
+        if (oceanControllerSupportButtonsHolder!= null) 
         {
-            oceanControllerSupportButtonsHolder.gameObject.SetActive(true);
-            topLeftControllerButton.Select();
-            //Debug.LogError("Control SELECT!!");
-            oceanControllerSupportButtonsHolder.ColorAllButtonsBasedOnIfSelected();
+            if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
+            {
+                oceanControllerSupportButtonsHolder.gameObject.SetActive(true);
+                topLeftControllerButton.Select();
+                //Debug.LogError("Control SELECT!!");
+                oceanControllerSupportButtonsHolder.ColorAllButtonsBasedOnIfSelected();
+            }
+            else { oceanControllerSupportButtonsHolder.gameObject.SetActive(false); }
         }
-        else { oceanControllerSupportButtonsHolder.gameObject.SetActive(false); }
     }
 }
