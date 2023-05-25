@@ -423,12 +423,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initDataParams:
-  - job: 0
-    allegiance: 0
-    min: 1
-    max: 10
-  - job: 0
-    allegiance: 1
+  - unit:
+      job: 0
+      side: 0
     min: 1
     max: 10
 --- !u!4 &1109900565

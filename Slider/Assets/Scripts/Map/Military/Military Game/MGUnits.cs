@@ -18,6 +18,13 @@ public static class MGUnits
         Neutral
     }
 
+    [System.Serializable]
+    public struct Unit
+    {
+        public Job job;
+        public Allegiance side;
+    }
+
     //This is basically a type chart lol.
     private static Dictionary<Job, HashSet<Job>> dominations = new()
     {

@@ -5,8 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public struct MGSimInitData
 {
-    public MGUnits.Job job;
-    public MGUnits.Allegiance allegiance;
+    public MGUnits.Unit unit;
     public int min;
     public int max;
 }
@@ -18,7 +17,6 @@ public class MGSimulator : MonoBehaviour
     private MGSpace[,] _board;
     private Vector2Int _boardDims;
     //private MGEventSender _eventSender;
-
 
     public static event System.EventHandler AfterInit;
 
@@ -78,7 +76,7 @@ public class MGSimulator : MonoBehaviour
                 foreach (MGSimInitData unitData in initDataParams)
                 {
                     int quantity = Random.Range(unitData.min, unitData.max);
-                    _board[x, y].AddUnits(unitData.job, unitData.allegiance, quantity);
+                    _board[x, y].AddUnits(unitData.unit, quantity);
                 }
             }
         }

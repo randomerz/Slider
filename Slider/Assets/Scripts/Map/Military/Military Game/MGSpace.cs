@@ -10,39 +10,44 @@ public class MGSpace
     public delegate void _OnSupplyDropSpawn();
     public event _OnSupplyDropSpawn OnSupplyDropSpawn;
 
+    public delegate void _OnUnitsChanged(MGUnits.Unit unit, int quantity);
+    public event _OnUnitsChanged OnUnitsChanged;
+
     public MGSpace()
     {
         _alliedUnits = new();
         _enemyUnits = new();
     }
 
-    public void AddUnits(MGUnits.Job job, MGUnits.Allegiance allegiance, int quantity)
+    public void AddUnits(MGUnits.Unit unit, int quantity)
     {
         if (quantity <= 0)
         {
             return;
         }
 
-        Dictionary<MGUnits.Job, int> units;
-        switch (allegiance)
+        Dictionary<MGUnits.Job, int> unitQuantities;
+        switch (unit.side)
         {
             case MGUnits.Allegiance.Ally:
-                units = _alliedUnits;
+                unitQuantities = _alliedUnits;
                 break;
             case MGUnits.Allegiance.Enemy:
             default:
-                units = _enemyUnits;
+                unitQuantities = _enemyUnits;
                 break;
         }
 
-        if (units.ContainsKey(job))
+        if (unitQuantities.ContainsKey(unit.job))
         {
-            units[job] += quantity;
+            unitQuantities[unit.job] += quantity;
         }
         else
         {
-            units[job] = quantity;
+            unitQuantities[unit.job] = quantity;
         }
+
+        OnUnitsChanged?.Invoke(unit, unitQuantities[unit.job]);
     }
 
     public void SpawnSupplyDrop()
