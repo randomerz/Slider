@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class OceanArtifact : UIArtifact
 {
@@ -11,7 +12,8 @@ public class OceanArtifact : UIArtifact
     private bool canRotate = true;
 
     [SerializeField] private GameObject controllerSupportButtonsHolder;
-    
+    [SerializeField] private Button topLeftControllerButton;
+
     private new void Awake()
     {
         base.Awake();
@@ -25,9 +27,14 @@ public class OceanArtifact : UIArtifact
 
         OnButtonInteract += UpdateHighlights;
         UIArtifactMenus.OnArtifactOpened += UpdateHighlights;
-
-        if (Player.GetInstance().GetCurrentControlScheme() == "Controller") { controllerSupportButtonsHolder.SetActive(true); }
-        else { controllerSupportButtonsHolder.SetActive(false); }
+        /*
+        Debug.LogWarning("SELECT!!");
+        topLeftControllerButton.Select();
+        if (Player.GetInstance().GetCurrentControlScheme() == "Controller") 
+        { 
+            controllerSupportButtonsHolder.SetActive(true);
+        }
+        else { controllerSupportButtonsHolder.SetActive(false); }*/
     }
 
     protected override void OnDisable()
@@ -227,6 +234,7 @@ public class OceanArtifact : UIArtifact
         if (newControlScheme == "Controller")
         {
             controllerSupportButtonsHolder.SetActive(true);
+            topLeftControllerButton.Select();
         }
         else
         {
