@@ -23,14 +23,15 @@ public class MGSimulator : MonoBehaviour
     private void Awake()
     {
         AudioManager.PlayMusic("MilitarySim");
-        InitRandomUniform(new Vector2Int(4, 4));
-        PrintSimulatorState();
+        InitEmpty(new Vector2Int(4, 4));
         AfterInit?.Invoke(this, null);
     }
 
     private void Start()
     {
-        _board[0, 3].SpawnSupplyDrop();
+        //_board[0, 3].SpawnSupplyDrop();
+        PopulateRandom(_boardDims);
+        PrintSimulatorState();
     }
 
     public MGSpace GetSpace(int x, int y)
@@ -65,18 +66,27 @@ public class MGSimulator : MonoBehaviour
         //StartCoroutine(_eventSender.ProcessQueue());
     }
 
-    public void InitRandomUniform(Vector2Int boardDims)
+    public void PopulateRandom(Vector2Int boardDims)
     {
-        InitEmpty(boardDims);
-
         for (int x = 0; x < boardDims.x; x++)
         {
             for (int y = 0; y < boardDims.y; y++)
             {
                 foreach (MGSimInitData unitData in initDataParams)
                 {
-                    int quantity = Random.Range(unitData.min, unitData.max);
-                    _board[x, y].AddUnits(unitData.unit, quantity);
+                    int quantity = Random.Range(unitData.min, unitData.max+1);
+                    MGUnits.Unit tempUnit = new MGUnits.Unit(unitData.unit.job, unitData.unit.side);
+                    if (unitData.unit.side == MGUnits.Allegiance.Any)
+                    {
+                        if (Random.Range(0f, 1f) > 0.5f)
+                        {
+                            tempUnit.side = MGUnits.Allegiance.Ally;
+                        } else
+                        {
+                            tempUnit.side = MGUnits.Allegiance.Enemy;
+                        }
+                    }
+                    _board[x, y].AddUnits(tempUnit, quantity);
                 }
             }
         }

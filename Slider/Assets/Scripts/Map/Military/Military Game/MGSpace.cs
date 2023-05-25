@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class MGSpace
 {
-    private Dictionary<MGUnits.Job, int> _alliedUnits;   //EntityData, Qty
-    private Dictionary<MGUnits.Job, int> _enemyUnits;   //EntityData, Qty
+    private Dictionary<MGUnits.Unit, int> _units;   //EntityData, Qty
 
     public delegate void _OnSupplyDropSpawn();
     public event _OnSupplyDropSpawn OnSupplyDropSpawn;
@@ -15,8 +14,7 @@ public class MGSpace
 
     public MGSpace()
     {
-        _alliedUnits = new();
-        _enemyUnits = new();
+        _units = new();
     }
 
     public void AddUnits(MGUnits.Unit unit, int quantity)
@@ -26,28 +24,17 @@ public class MGSpace
             return;
         }
 
-        Dictionary<MGUnits.Job, int> unitQuantities;
-        switch (unit.side)
-        {
-            case MGUnits.Allegiance.Ally:
-                unitQuantities = _alliedUnits;
-                break;
-            case MGUnits.Allegiance.Enemy:
-            default:
-                unitQuantities = _enemyUnits;
-                break;
-        }
 
-        if (unitQuantities.ContainsKey(unit.job))
+        if (_units.ContainsKey(unit))
         {
-            unitQuantities[unit.job] += quantity;
+            _units[unit] += quantity;
         }
         else
         {
-            unitQuantities[unit.job] = quantity;
+            _units[unit] = quantity;
         }
 
-        OnUnitsChanged?.Invoke(unit, unitQuantities[unit.job]);
+        OnUnitsChanged?.Invoke(unit, _units[unit]);
     }
 
     public void SpawnSupplyDrop()
@@ -58,20 +45,13 @@ public class MGSpace
 
     public void PrintUnitData()
     {
-        String allies = "Allied Units: \n";
+        String unitDataStr = "Units: \n";
 
-        foreach (MGUnits.Job job in _alliedUnits.Keys)
+        foreach (MGUnits.Unit unit in _units.Keys)
         {
-            allies += $"{job}: {_alliedUnits[job]}\n";
+            unitDataStr += $"{unit.side}-{unit.job}: {_units[unit]}\n";
         }
-        Debug.Log(allies);
 
-        String enemies = "Enemy Units: \n";
-
-        foreach (MGUnits.Job job in _enemyUnits.Keys)
-        {
-            enemies += $"{job}: {_enemyUnits[job]}\n";
-        }
-        Debug.Log(enemies);
+        Debug.Log(unitDataStr);
     }
 }

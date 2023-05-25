@@ -10,7 +10,7 @@ public class MGUISquare : MonoBehaviour
     [SerializeField] private Sprite supplyImage;
     [SerializeField] private GameObject trackerPrefab;
 
-    private Dictionary<MGUnits.Unit, MGUIUnitTracker> unitTrackers;
+    private Dictionary<MGUnits.Unit, MGUIUnitTracker> _unitTrackers;
 
     private MGSimulator _sim;
     private Image _displayImg;
@@ -19,6 +19,7 @@ public class MGUISquare : MonoBehaviour
 
     private void Awake()
     {
+        _unitTrackers = new Dictionary<MGUnits.Unit, MGUIUnitTracker>();
         _sim = FindObjectOfType<MGSimulator>();
         _displayImg = GetComponent<Image>();
 
@@ -49,7 +50,7 @@ public class MGUISquare : MonoBehaviour
         //Check Deletion
         if (quantity <= 0)
         {
-            if (unitTrackers.ContainsKey(unit))
+            if (_unitTrackers.ContainsKey(unit))
             {
                 DestroyTracker(unit);
             }
@@ -58,28 +59,28 @@ public class MGUISquare : MonoBehaviour
         }
 
         //Check Creation
-        if (!unitTrackers.ContainsKey(unit))
+        if (!_unitTrackers.ContainsKey(unit))
         {
             CreateTracker(unit);
         }
 
         //Update Tracker Count.
-        unitTrackers[unit].SetCount(quantity);
+        _unitTrackers[unit].SetCount(quantity);
     }
 
     private void CreateTracker(MGUnits.Unit unit)
     {
-        //TODO: Instantiate tracker prefab object. Position tracker based on allegiance/job.
-
-        GameObject trackerGO = GameObject.Instantiate(trackerPrefab);
+        GameObject trackerGO = GameObject.Instantiate(trackerPrefab, this.transform);
         MGUIUnitTracker tracker = trackerGO.GetComponent<MGUIUnitTracker>();
-        unitTrackers[unit] = tracker;
+        tracker.SetAllegiance(unit.side);
+        //tracker.transform.position += Vector3.left * 5 * (unit.side == MGUnits.Allegiance.Ally ? -1f : 1f);
+        _unitTrackers[unit] = tracker;
     }
 
     private void DestroyTracker(MGUnits.Unit unit)
     {
-        MGUIUnitTracker tracker = unitTrackers[unit];
-        unitTrackers.Remove(unit);
+        MGUIUnitTracker tracker = _unitTrackers[unit];
+        _unitTrackers.Remove(unit);
         Destroy(tracker.gameObject);
     }
 

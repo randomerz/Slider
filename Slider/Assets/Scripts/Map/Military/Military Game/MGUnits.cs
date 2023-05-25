@@ -13,9 +13,10 @@ public static class MGUnits
 
     public enum Allegiance
     {
+        Any,
         Ally,
         Enemy,
-        Neutral
+        Neutral,
     }
 
     [System.Serializable]
@@ -23,6 +24,12 @@ public static class MGUnits
     {
         public Job job;
         public Allegiance side;
+
+        public Unit(Job job, Allegiance side)
+        {
+            this.job = job;
+            this.side = side;
+        }
     }
 
     //This is basically a type chart lol.
