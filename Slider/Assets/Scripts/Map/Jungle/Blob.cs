@@ -8,7 +8,7 @@ public class Blob : MonoBehaviour
 {
 
     public Animator animator;
-    public SpriteRenderer renderer;
+    public SpriteRenderer spriteRenderer;
 
     Direction direction;
     float travelDistance = 10;
@@ -62,11 +62,11 @@ public class Blob : MonoBehaviour
 
     public void setAlpha(float alpha)
     {
-        Color c = renderer.material.color;
+        Color c = spriteRenderer.material.color;
         c.a = alpha;
         Color s = shapeRenderer.material.color;
         s.a = alpha;
-        renderer.material.color = c;
+        spriteRenderer.material.color = c;
         shapeRenderer.material.color = s;
     }
 
@@ -91,7 +91,7 @@ public class Blob : MonoBehaviour
             // I think there has to be a better way to do this LMAO
             if (traveledDistance > 2 && traveledDistance < 4)
             {
-                renderer.sortingOrder = 0;
+                spriteRenderer.sortingOrder = 0;
                 shapeRenderer.sortingOrder = 0;
             }
 
@@ -164,7 +164,7 @@ public class Blob : MonoBehaviour
     {
         animator.SetBool("Right", true);
         yield return new WaitForSeconds(jumpTime / 2);
-        renderer.sortingOrder = -2;
+        spriteRenderer.sortingOrder = -2;
         shapeRenderer.sortingOrder = -2;
         yield return new WaitForSeconds(jumpTime / 2);
         Destroy(this.gameObject);
@@ -173,11 +173,11 @@ public class Blob : MonoBehaviour
     //fade in and fade out coroutines
     public IEnumerator fadeOutAnimation()
     {
-        Color c = renderer.material.color;
+        Color c = spriteRenderer.material.color;
         for (float alpha = 1f; alpha >= 0; alpha -= 0.25f)
         {
             c.a = alpha;
-            renderer.material.color = c;
+            spriteRenderer.material.color = c;
             shapeRenderer.material.color = c;
             yield return new WaitForSeconds(0.1667f);
         }
@@ -194,11 +194,11 @@ public class Blob : MonoBehaviour
 
     public IEnumerator fadeInAnimation()
     {
-        Color c = renderer.material.color;
+        Color c = spriteRenderer.material.color;
         for (float alpha = 0f; alpha <= 1; alpha += 0.25f)
         {
             c.a = alpha;
-            renderer.material.color = c;
+            spriteRenderer.material.color = c;
             shapeRenderer.material.color = c;
             yield return new WaitForSeconds(0.1667f);
         }

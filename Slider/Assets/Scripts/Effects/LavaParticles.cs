@@ -25,6 +25,7 @@ public class LavaParticles : MonoBehaviour
         colliders.Remove(polygonCollider2D);
     }
 
+    [System.Obsolete]
     private void Start() {
         if(tilemap == null) return;
 
@@ -53,13 +54,15 @@ public class LavaParticles : MonoBehaviour
 
         foreach(ParticleSystem ps in particleSystems)
         {
-            ps.maxParticles *= numtiles;
+            var main = ps.main;
+            main.maxParticles *= numtiles;
             ps.emissionRate *= numtiles;
             ps.Stop();
-            ps.Play();
+            ps.Play();        
         }
 
     }
+
 
     private void UpdateKillTriggers()
     {
