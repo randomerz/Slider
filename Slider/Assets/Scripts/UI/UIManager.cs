@@ -195,7 +195,7 @@ public class UIManager : Singleton<UIManager>
         {
             OpenOptions();
         }
-        else if (pausePanel.activeSelf)
+        else if (pausePanel.activeSelf && Player.GetInstance().GetCurrentControlScheme() == "Controller")
         {
             CloseUI();
         }
