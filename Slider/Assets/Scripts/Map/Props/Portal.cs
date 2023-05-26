@@ -21,6 +21,7 @@ public class Portal : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
+            AudioManager.Play("Portal");
             OnTimeChange?.Invoke(this, new OnTimeChangeArgs { fromPast = isInPast });
         }
     }
