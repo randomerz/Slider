@@ -888,17 +888,6 @@ public partial class @InputSettings : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""cf0401e5-e829-4785-a25a-a8ced2c0dbbf"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Controller"",
-                    ""action"": ""OpenArtifact"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""3c3d28bd-b592-4403-80e9-5be614876aea"",
                     ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
