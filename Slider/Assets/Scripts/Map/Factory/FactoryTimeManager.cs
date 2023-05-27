@@ -36,6 +36,8 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
 
         _instance.pastPPChanger.UPPTransform();
 
+        (SGrid.Current as FactoryGrid).factoryMusicController.SetIsInPast(true);
+
         UIEffects.FadeFromWhite();
         FactoryLightManager.SwitchLights(true);
 
@@ -47,6 +49,8 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
         _instance.SetBobTrackers(false);
         _instance.presentPPChanger.UPPTransform();
         UIEffects.FadeFromWhite();
+
+        (SGrid.Current as FactoryGrid).factoryMusicController.SetIsInPast(false);
     }
 
     public static void EnableAnchorsInPast()
