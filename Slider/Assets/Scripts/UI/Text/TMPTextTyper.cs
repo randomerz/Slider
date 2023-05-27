@@ -122,6 +122,8 @@ public class TMPTextTyper : MonoBehaviour
             startingCharacterIndex++;
             if (float.IsNormal(textSpeed) && !float.IsNegative(textSpeed))
                 yield return new WaitForSeconds(textSpeed);
+            else
+                yield return new WaitForSeconds(0);
         }
 
         coroutine = null;
@@ -152,6 +154,8 @@ public class TMPTextTyper : MonoBehaviour
             {
                 if (float.IsNormal(textSpeed) && !float.IsNegative(textSpeed))
                     yield return new WaitForSeconds(textSpeed);
+                else
+                    yield return new WaitForSeconds(0);
                 continue;
             }
 
@@ -167,7 +171,6 @@ public class TMPTextTyper : MonoBehaviour
                     byte alpha = (byte)Mathf.Clamp(textInfo.characterInfo[i].color.a + fadeSteps, 0, 255);
                     textInfo.characterInfo[i].color.a = alpha;
                     SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
-
                     if (alpha == 255)
                     {
                         startingCharacterIndex += 1;
@@ -188,6 +191,8 @@ public class TMPTextTyper : MonoBehaviour
 
             if (float.IsNormal(textSpeed) && !float.IsNegative(textSpeed))
                 yield return new WaitForSeconds(textSpeed);
+            else
+                yield return new WaitForSeconds(0);
         }
 
         coroutine = null;
