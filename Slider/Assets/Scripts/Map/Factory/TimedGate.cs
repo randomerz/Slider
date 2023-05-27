@@ -116,7 +116,7 @@ public class TimedGate : ElectricalNode
 
         if (newCount > prevCount)
         {
-            AudioManager.Play($"{PROGRESS_SOUND_PREFIX}{prevCount + 1}");
+            AudioManager.PickSound($"{PROGRESS_SOUND_PREFIX}{prevCount + 1}").WithPriorityOverDucking(true).AndPlay();
         }
     }
 

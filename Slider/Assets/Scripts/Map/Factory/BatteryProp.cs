@@ -22,7 +22,7 @@ public class BatteryProp : MonoBehaviour
     {
         if (value && !isGateEnabled)
         {
-            particlesBurst.Play();
+            if (particlesBurst) particlesBurst?.Play();
         }
 
         isGateEnabled = value;
@@ -33,15 +33,15 @@ public class BatteryProp : MonoBehaviour
     {
         if (value)
         {
-            particlesConducting.Play();
+            if (particlesConducting) particlesConducting?.Play();
             if (!isDiodeEnabled)
             {
-                particlesBurst.Play();
+                if (particlesBurst) particlesBurst?.Play();
             }
         }
         else
         {
-            particlesConducting.Stop();
+            if (particlesConducting) particlesConducting?.Stop();
         }
 
         isDiodeEnabled = value;
