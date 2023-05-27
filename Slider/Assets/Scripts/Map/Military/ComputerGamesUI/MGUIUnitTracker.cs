@@ -8,8 +8,10 @@ public class MGUIUnitTracker : MonoBehaviour
 {
     //[SerializeField] private TMPro.TextMeshProUGUI text;
     //[SerializeField] private int count;
+    [SerializeField] private Sprite[] jobIcons;
     [SerializeField] private Color allyColor;
     [SerializeField] private Color enemyColor;
+
 
     private Image _image;
 
@@ -18,24 +20,25 @@ public class MGUIUnitTracker : MonoBehaviour
         _image = GetComponent<Image>();
     }
 
-    public void SetAllegiance(MGUnits.Allegiance side)
+    public void SetSquare(MGUISquare square)
     {
-        switch (side)
+        transform.SetParent(square.transform);
+        transform.localPosition = Vector3.zero;
+    }
+
+    public void SetData(MGUnitData.Data data)
+    {
+        _image.sprite = jobIcons[(int) data.job];
+        //TODO: Change image based on the unit type (RPS)
+        switch (data.side)
         {
-            case MGUnits.Allegiance.Ally:
+
+            case MGUnitData.Allegiance.Ally:
                 _image.color = allyColor;
                 break;
             default:
                 _image.color = enemyColor;
                 break;
         }
-    }
-
-    public void SetCount(int count)
-    {
-        //this.count = count;
-
-        ////TODO: Set text field to new count.
-        //text.text = count.ToString();
     }
 }

@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-public static class MGUnits
+public static class MGUnitData
 {
     public enum Job
     {
@@ -13,19 +13,18 @@ public static class MGUnits
 
     public enum Allegiance
     {
-        Any,
         Ally,
         Enemy,
         Neutral,
     }
 
     [System.Serializable]
-    public struct Unit
+    public struct Data
     {
         public Job job;
         public Allegiance side;
 
-        public Unit(Job job, Allegiance side)
+        public Data(Job job, Allegiance side)
         {
             this.job = job;
             this.side = side;
@@ -45,24 +44,3 @@ public static class MGUnits
         return dominations[attacker].Contains(defender);
     }
 }
-
-
-
-//public class MGUnit : MGEntity
-//{
-//}
-
-//public class MGAlliedUnit : MGUnit
-//{
-
-//}
-
-//public class MGEnemyUnit : MGUnit
-//{
-
-//}
-
-//public class MGSupply : MGEntity
-//{
-
-//}

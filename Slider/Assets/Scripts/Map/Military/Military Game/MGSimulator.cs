@@ -2,28 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public struct MGSimInitData
-{
-    public MGUnits.Unit unit;
-    public int min;
-    public int max;
-}
-
 public class MGSimulator : MonoBehaviour
 {
-    [SerializeField] private List<MGSimInitData> initDataParams;
+    [SerializeField] private List<MGUnitData.Data> possibleUnits;
 
-    private MGSpace[,] _board;
     private Vector2Int _boardDims;
+    private MGSpace[,] _board;
+    private List<MGUnit> _units;
     //private MGEventSender _eventSender;
 
     public static event System.EventHandler AfterInit;
 
+    public delegate void _OnUnitSpawn(MGUnit unit);
+    public static event _OnUnitSpawn OnUnitSpawn;
+
     private void Awake()
     {
-        AudioManager.PlayMusic("MilitarySim");
-        InitEmpty(new Vector2Int(4, 4));
+        //AudioManager.PlayMusic("MilitarySim");
+        InitEmptyGrid(new Vector2Int(4, 4));
         AfterInit?.Invoke(this, null);
     }
 
@@ -44,7 +40,7 @@ public class MGSimulator : MonoBehaviour
         return _board[x, y];
     }
 
-    public void InitEmpty(Vector2Int boardDims)
+    public void InitEmptyGrid(Vector2Int boardDims)
     {
         //Clear the grid
         Debug.Log($"Created {boardDims.x} x {boardDims.y} Board");
@@ -54,7 +50,7 @@ public class MGSimulator : MonoBehaviour
         {
             for (int y = 0; y < boardDims.y; y++)
             {
-                _board[x, y] = new MGSpace();
+                _board[x, y] = new MGSpace(x, y);
             }
         }
 
@@ -68,28 +64,53 @@ public class MGSimulator : MonoBehaviour
 
     public void PopulateRandom(Vector2Int boardDims)
     {
+        if (possibleUnits.Count == 0)
+        {
+            Debug.LogError("No possible units. Cannot populate");
+            return;
+        }
+
+        _units = new List<MGUnit>();
+
         for (int x = 0; x < boardDims.x; x++)
         {
             for (int y = 0; y < boardDims.y; y++)
             {
-                foreach (MGSimInitData unitData in initDataParams)
+                if (Random.Range(0f, 1f) > 0.5f)
                 {
-                    int quantity = Random.Range(unitData.min, unitData.max+1);
-                    MGUnits.Unit tempUnit = new MGUnits.Unit(unitData.unit.job, unitData.unit.side);
-                    if (unitData.unit.side == MGUnits.Allegiance.Any)
-                    {
-                        if (Random.Range(0f, 1f) > 0.5f)
-                        {
-                            tempUnit.side = MGUnits.Allegiance.Ally;
-                        } else
-                        {
-                            tempUnit.side = MGUnits.Allegiance.Enemy;
-                        }
-                    }
-                    _board[x, y].AddUnits(tempUnit, quantity);
+                    continue;
                 }
+
+                int randUnitId = Random.Range(0, possibleUnits.Count);
+                MGUnitData.Data randUnitData = possibleUnits[randUnitId];
+
+                SpawnUnit(x, y, randUnitData);
+
+                //foreach (MGUnitData.Data unitData in possibleUnits)
+                //{
+                //    int quantity = Random.Range(0, 1);
+                //    MGUnitData.Data tempUnit = new MGUnitData.Data(unitData.job, unitData.side);
+                //    if (unitData.side == MGUnitData.Allegiance.Any)
+                //    {
+                //        if (Random.Range(0f, 1f) > 0.5f)
+                //        {
+                //            tempUnit.side = MGUnitData.Allegiance.Ally;
+                //        } else
+                //        {
+                //            tempUnit.side = MGUnitData.Allegiance.Enemy;
+                //        }
+                //    }
+                //    _board[x, y].AddUnits(tempUnit, quantity);
+                //}
             }
         }
+    }
+
+    private void SpawnUnit(int x, int y, MGUnitData.Data data)
+    {
+        MGUnit newUnit = new MGUnit(data, _board[x, y]);
+        _units.Add(newUnit);
+        OnUnitSpawn?.Invoke(newUnit);
     }
 
     private void PrintSimulatorState()
@@ -98,8 +119,17 @@ public class MGSimulator : MonoBehaviour
         {
             for (int y = 0; y < _boardDims.y; y++)
             {
-                Debug.Log($"Printing board state for ({x}, {y})");
-                _board[x, y].PrintUnitData();
+                string boardStateDesc = $"Board state for ({x}, {y}): \n";
+
+                foreach (MGUnit unit in _units)
+                {
+                    if (unit.CurrSpace == _board[x, y])
+                    {
+                        boardStateDesc += unit.GetUnitDescriptor();
+                    }
+                }
+
+                Debug.Log(boardStateDesc);
             }
         }
     }

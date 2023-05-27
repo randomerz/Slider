@@ -4,38 +4,41 @@ using UnityEngine;
 
 public class MGSpace
 {
-    private Dictionary<MGUnits.Unit, int> _units;   //EntityData, Qty
+    private int x, y;
 
     public delegate void _OnSupplyDropSpawn();
     public event _OnSupplyDropSpawn OnSupplyDropSpawn;
 
-    public delegate void _OnUnitsChanged(MGUnits.Unit unit, int quantity);
-    public event _OnUnitsChanged OnUnitsChanged;
-
-    public MGSpace()
+    public MGSpace(int x, int y)
     {
-        _units = new();
+        this.x = x;
+        this.y = y;
     }
 
-    public void AddUnits(MGUnits.Unit unit, int quantity)
+    public Vector2Int GetPosition()
     {
-        if (quantity <= 0)
-        {
-            return;
-        }
-
-
-        if (_units.ContainsKey(unit))
-        {
-            _units[unit] += quantity;
-        }
-        else
-        {
-            _units[unit] = quantity;
-        }
-
-        OnUnitsChanged?.Invoke(unit, _units[unit]);
+        return new Vector2Int(x, y);
     }
+
+    //public void AddUnits(MGUnitData.Data unit, int quantity)
+    //{
+    //    if (quantity <= 0)
+    //    {
+    //        return;
+    //    }
+
+
+    //    if (_units.ContainsKey(unit))
+    //    {
+    //        _units[unit] += quantity;
+    //    }
+    //    else
+    //    {
+    //        _units[unit] = quantity;
+    //    }
+
+    //    OnUnitsChanged?.Invoke(unit, _units[unit]);
+    //}
 
     public void SpawnSupplyDrop()
     {
@@ -43,15 +46,15 @@ public class MGSpace
         OnSupplyDropSpawn?.Invoke();
     }
 
-    public void PrintUnitData()
-    {
-        String unitDataStr = "Units: \n";
+    //public void PrintUnitData()
+    //{
+    //    string unitDataStr = "Units: \n";
 
-        foreach (MGUnits.Unit unit in _units.Keys)
-        {
-            unitDataStr += $"{unit.side}-{unit.job}: {_units[unit]}\n";
-        }
+    //    foreach (MGUnitData.Data unit in _units.Keys)
+    //    {
+    //        unitDataStr += $"{unit.side}-{unit.job}: {_units[unit]}\n";
+    //    }
 
-        Debug.Log(unitDataStr);
-    }
+    //    Debug.Log(unitDataStr);
+    //}
 }

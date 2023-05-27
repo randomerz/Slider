@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1, y: 1}
+  m_SizeDelta: {x: 32, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6852958557464704761
 CanvasRenderer:
@@ -60,14 +60,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.23322439, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.9019608, g: 0.9019608, b: 0.9019608, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 2116011787, guid: 359e1eff03be9d54da5c71c91ad004ac, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -89,5 +89,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b69a9a4ec4d194d4ab9b7561815335d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allyColor: {r: 0.14229488, g: 1, b: 0, a: 1}
-  enemyColor: {r: 1, g: 0, b: 0, a: 1}
+  jobIcons:
+  - {fileID: 2116011787, guid: 359e1eff03be9d54da5c71c91ad004ac, type: 3}
+  - {fileID: -365452350, guid: 359e1eff03be9d54da5c71c91ad004ac, type: 3}
+  - {fileID: -128464348, guid: 359e1eff03be9d54da5c71c91ad004ac, type: 3}
+  allyColor: {r: 0.9019608, g: 0.9019608, b: 0.9019608, a: 1}
+  enemyColor: {r: 0.4, g: 0.4, b: 0.4, a: 1}
