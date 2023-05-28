@@ -9,14 +9,14 @@ public class MGUISquare : MonoBehaviour
     [SerializeField] private int y;
     [SerializeField] private Sprite supplyImage;
 
-    private MGSimulator _sim;
+    //private MGSimulator _sim;
     private Image _displayImg;
 
-    private MGSpace _mgSpace;
+    //private MGSpace _mgSpace;
 
     private void Awake()
     {
-        _sim = FindObjectOfType<MGSimulator>();
+        //_sim = FindObjectOfType<MGSimulator>();
         _displayImg = GetComponent<Image>();
 
         MGSimulator.AfterInit += SetupEventListeners;
@@ -24,7 +24,7 @@ public class MGUISquare : MonoBehaviour
 
     private void SetupEventListeners(object sender, System.EventArgs e)
     {
-        _mgSpace = _sim.GetSpace(x, y);
+        //_mgSpace = _sim.GetSpace(x, y);
         //_mgSpace.OnSupplyDropSpawn += OnSupplyDrop;
     }
 

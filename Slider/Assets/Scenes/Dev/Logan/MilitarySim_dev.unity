@@ -1260,7 +1260,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1109900565}
-  - component: {fileID: 1109900564}
+  - component: {fileID: 1109900566}
   m_Layer: 0
   m_Name: MilitarySimManager
   m_TagString: Untagged
@@ -1268,31 +1268,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1109900564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1109900563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4e9d1292d5386749bf22975f787d61a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  possibleUnits:
-  - job: 0
-    side: 0
-  - job: 0
-    side: 1
-  - job: 1
-    side: 0
-  - job: 1
-    side: 1
-  - job: 2
-    side: 0
-  - job: 2
-    side: 1
 --- !u!4 &1109900565
 Transform:
   m_ObjectHideFlags: 0
@@ -1308,6 +1283,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1109900566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109900563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c4bcc388c2d40c44b35a7eb6e7145ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boardDims: {x: 4, y: 4}
+  possibleUnits:
+  - job: 0
+    side: 0
+  - job: 1
+    side: 0
+  - job: 2
+    side: 0
+  - job: 0
+    side: 1
+  - job: 1
+    side: 1
+  - job: 2
+    side: 1
 --- !u!1 &1141790510
 GameObject:
   m_ObjectHideFlags: 0
