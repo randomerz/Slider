@@ -33,7 +33,7 @@ public class MGSimulatorTests
     }
 
     [Test]
-    public void TestSpawnUnits()
+    public void TestSpawnUnitsFull()
     {
         MGUnitData.Data[] spawnData =
         {
@@ -83,5 +83,25 @@ public class MGSimulatorTests
                 y = count / 4;
             }
         }
+    }
+
+    [Test]
+    public void TestMoveSingleUnit()
+    {
+        mgSim.SpawnUnit(0, 0, new MGUnitData.Data(MGJob.Rock, MGSide.Ally));
+        MGUnit unit = mgSim.Units[0];
+
+        //Move a single unit a few times
+        mgSim.MoveUnit(mgSim.Units[0], 1, 0);
+        Assert.AreEqual(unit.CurrSpace, mgSim.GetSpace(1, 0));
+
+        mgSim.MoveUnit(mgSim.Units[0], 0, 1);
+        Assert.AreEqual(unit.CurrSpace, mgSim.GetSpace(1, 1));
+
+        mgSim.MoveUnit(mgSim.Units[0], 0, 2);
+        Assert.AreEqual(unit.CurrSpace, mgSim.GetSpace(1, 3));
+
+        mgSim.MoveUnit(mgSim.Units[0], -1, -2);
+        Assert.AreEqual(unit.CurrSpace, mgSim.GetSpace(0, 1));
     }
 }
