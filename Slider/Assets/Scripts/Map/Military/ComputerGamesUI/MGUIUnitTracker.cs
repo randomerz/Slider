@@ -40,7 +40,7 @@ public class MGUIUnitTracker : MonoBehaviour
         switch (unit.Data.side)
         {
 
-            case MGUnitData.Side.Ally:
+            case MGSide.Ally:
                 _image.color = allyColor;
                 break;
             default:

@@ -4,9 +4,6 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using MGJob = MGUnitData.Job;
-using MGSide = MGUnitData.Side;
-
 public class MGSimulatorTests
 {
     MGSimulator mgSim;

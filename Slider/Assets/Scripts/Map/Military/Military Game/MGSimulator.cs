@@ -66,11 +66,12 @@ public class MGSimulator
         }
     }
 
-    public void SpawnUnit(int x, int y, MGUnitData.Data data)
+    public MGUnit SpawnUnit(int x, int y, MGUnitData.Data data)
     {
         MGUnit newUnit = new MGUnit(data, _board[x, y]);
         _units.Add(newUnit);
         OnUnitSpawn?.Invoke(newUnit);
+        return newUnit;
     }
 
     public void MoveUnit(MGUnit unit, int dx, int dy)

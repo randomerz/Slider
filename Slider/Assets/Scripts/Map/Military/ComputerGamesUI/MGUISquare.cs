@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,11 @@ public class MGUISquare : MonoBehaviour
         _displayImg = GetComponent<Image>();
 
         MGSimulator.AfterInit += SetupEventListeners;
+    }
+
+    public Vector2Int GetPosition()
+    {
+        return new Vector2Int(x, y);
     }
 
     private void SetupEventListeners(object sender, System.EventArgs e)

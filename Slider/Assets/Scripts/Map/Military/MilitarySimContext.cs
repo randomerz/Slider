@@ -9,6 +9,7 @@ public class MilitarySimContext : MonoBehaviour
     //[SerializeField] private GameObject supplyPrefab;
 
     private MGSimulator _simulator;
+    public MGSimulator Simulator => _simulator;
 
     public bool EventFinishFlag { get; set; }
 
@@ -19,10 +20,15 @@ public class MilitarySimContext : MonoBehaviour
         _simulator.Init(boardDims);
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
-        _simulator.PopulateRandom(possibleUnits);
-        _simulator.PrintSimulatorState();
+        MGUnit unit = _simulator.SpawnUnit(0, 0, new MGUnitData.Data(MGJob.Rock, MGSide.Ally));
+        yield return new WaitForSeconds(1f);
+        _simulator.MoveUnit(unit, 1, 0);
+        yield return new WaitForSeconds(1f);
+        _simulator.MoveUnit(unit, 0, 1);
+        yield return new WaitForSeconds(1f);
+        _simulator.MoveUnit(unit, -1, 0);
     }
 
     //public void ProcessEvent(MGEvent e)

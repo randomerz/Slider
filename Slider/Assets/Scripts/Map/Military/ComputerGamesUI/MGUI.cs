@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using UnityEngine;
+﻿using UnityEngine;
 using static MGSimulator;
 
 public class MGUI : MonoBehaviour
@@ -8,6 +7,8 @@ public class MGUI : MonoBehaviour
     [SerializeField] private int height;
     [SerializeField] private MGUISquare[] squares;
     [SerializeField] private GameObject trackerPrefab;
+
+    public MGUISquare[] Squares => squares;
 
     private void Start()
     {
