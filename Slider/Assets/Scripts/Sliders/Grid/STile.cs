@@ -119,8 +119,6 @@ public class STile : MonoBehaviour
                         // DC: disabling these is weird because they have a 2d tilemap collider and a composite collider?
                         // Debug.LogWarning("Found a tilemap " + name + ", " + c.name + " while moving tiles! This may result in unexpected behavior.");
 
-                        // skip triggers because they kinda wacky?
-                        // if (c.isTrigger)
                         c.gameObject.SetActive(false);
                         disabledColliderTilemaps.Add(c.gameObject);
                         continue;
@@ -134,6 +132,11 @@ public class STile : MonoBehaviour
             {
                 if (c.isActiveAndEnabled)
                 {
+                    // maybe we should leave all triggers, but that could cause some npc/interacting weirdness
+                    // in any case, we need to leave factory buttons enabled for sure
+                    if (c.isTrigger && c.CompareTag("LeaveTriggerEnabled"))
+                        continue;
+
                     c.enabled = false;
                     disabledColliders.Add(c);
                 }
