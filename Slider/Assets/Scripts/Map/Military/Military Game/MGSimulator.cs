@@ -6,9 +6,10 @@ public class MGSimulator
 {
 
     private Vector2Int _boardDims;
+    public Vector2Int BoardDims => _boardDims;
     private MGSpace[,] _board;
     private List<MGUnit> _units;
-    //private MGEventSender _eventSender;
+    public List<MGUnit> Units => _units;
 
     public static event System.EventHandler AfterInit;
 
@@ -17,7 +18,6 @@ public class MGSimulator
 
     public void Init(Vector2Int boardDims)
     {
-        Debug.Log($"Created {boardDims.x} x {boardDims.y} Board");
         _boardDims = boardDims;
         _board = new MGSpace[boardDims.x, boardDims.y];
         for (int x = 0; x < boardDims.x; x++)
@@ -27,12 +27,13 @@ public class MGSimulator
                 _board[x, y] = new MGSpace(x, y);
             }
         }
+        _units = new List<MGUnit>();
         AfterInit?.Invoke(this, null);
     }
 
     public MGSpace GetSpace(int x, int y)
     {
-        if (x >= _boardDims.x || y >= _boardDims.y)
+        if (!PosIsOnBoard(new Vector2Int(x, y)))
         {
             Debug.LogError("Space is out of bounds.");
             return null;

@@ -11,7 +11,7 @@ public static class MGUnitData
         Scissors,
     }
 
-    public enum Allegiance
+    public enum Side
     {
         Ally,
         Enemy,
@@ -22,9 +22,9 @@ public static class MGUnitData
     public struct Data
     {
         public Job job;
-        public Allegiance side;
+        public Side side;
 
-        public Data(Job job, Allegiance side)
+        public Data(Job job, Side side)
         {
             this.job = job;
             this.side = side;
