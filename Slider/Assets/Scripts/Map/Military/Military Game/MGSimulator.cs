@@ -13,8 +13,8 @@ public class MGSimulator : MonoBehaviour
 
     public static event System.EventHandler AfterInit;
 
-    public delegate void _OnUnitSpawn(MGUnit unit);
-    public static event _OnUnitSpawn OnUnitSpawn;
+    public delegate void _OnUnit(MGUnit unit);
+    public static event _OnUnit OnUnitSpawn;
 
     private void Awake()
     {
@@ -72,19 +72,17 @@ public class MGSimulator : MonoBehaviour
 
         _units = new List<MGUnit>();
 
-        for (int x = 0; x < boardDims.x; x++)
+        for (int y = 0; y < boardDims.y; y++)
         {
-            for (int y = 0; y < boardDims.y; y++)
+            for (int x = 0; x < boardDims.x; x++)
             {
                 if (Random.Range(0f, 1f) > 0.5f)
                 {
-                    continue;
+                    int randUnitId = Random.Range(0, possibleUnits.Count);
+                    MGUnitData.Data randUnitData = possibleUnits[randUnitId];
+
+                    SpawnUnit(x, y, randUnitData);
                 }
-
-                int randUnitId = Random.Range(0, possibleUnits.Count);
-                MGUnitData.Data randUnitData = possibleUnits[randUnitId];
-
-                SpawnUnit(x, y, randUnitData);
 
                 //foreach (MGUnitData.Data unitData in possibleUnits)
                 //{
@@ -113,11 +111,26 @@ public class MGSimulator : MonoBehaviour
         OnUnitSpawn?.Invoke(newUnit);
     }
 
+    public void MoveUnit(MGUnit unit, int dx, int dy)
+    {
+        Vector2Int currPos = unit.CurrSpace.GetPosition();
+        Vector2Int newPos = currPos + new Vector2Int(dx, dy);
+        if (PosIsOnBoard(newPos))
+        {
+            unit.Move(_board[newPos.x, newPos.y]);
+        }
+    }
+
+    private bool PosIsOnBoard(Vector2Int pos)
+    {
+        return pos.x >= 0 && pos.y >= 0 && pos.x < _boardDims.x && pos.y < _boardDims.y;
+    }
+
     private void PrintSimulatorState()
     {
-        for (int x = 0; x < _boardDims.x; x++)
+        for (int y = 0; y < _boardDims.y; y++)
         {
-            for (int y = 0; y < _boardDims.y; y++)
+            for (int x = 0; x < _boardDims.x; x++)
             {
                 string boardStateDesc = $"Board state for ({x}, {y}): \n";
 

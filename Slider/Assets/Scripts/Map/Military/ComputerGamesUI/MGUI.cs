@@ -4,6 +4,8 @@ using static MGSimulator;
 
 public class MGUI : MonoBehaviour
 {
+    [SerializeField] private int width;
+    [SerializeField] private int height;
     [SerializeField] private MGUISquare[] squares;
     [SerializeField] private GameObject trackerPrefab;
 
@@ -17,9 +19,15 @@ public class MGUI : MonoBehaviour
         MGSimulator.OnUnitSpawn -= OnUnitSpawn;
     }
 
-    public int GetSquareIndexFromPos(int x, int y)
+    public MGUISquare GetSquare(MGSpace space)
     {
-        return 3 * y + x;
+        return GetSquareFromPos(space.GetPosition());
+    }
+
+    public MGUISquare GetSquareFromPos(Vector2Int pos)
+    {
+        int index = pos.y * width + pos.x;
+        return squares[index];
     }
 
     private void OnUnitSpawn(MGUnit unit)
@@ -31,11 +39,7 @@ public class MGUI : MonoBehaviour
     {
         GameObject trackerGO = GameObject.Instantiate(trackerPrefab, this.transform);
         MGUIUnitTracker tracker = trackerGO.GetComponent<MGUIUnitTracker>();
-
-        Vector2Int trackerPos = unit.CurrSpace.GetPosition();
-        MGUISquare trackerSquare = squares[GetSquareIndexFromPos(trackerPos.x, trackerPos.y)];
-        tracker.SetSquare(trackerSquare);
-        tracker.SetData(unit.Data);
+        tracker.SetUnit(unit);
     }
 
     //private void DestroyTracker(MGUnitData.Data unit)

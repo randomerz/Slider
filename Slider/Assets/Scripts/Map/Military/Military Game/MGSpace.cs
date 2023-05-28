@@ -20,6 +20,12 @@ public class MGSpace
         return new Vector2Int(x, y);
     }
 
+    public void SpawnSupplyDrop()
+    {
+        Debug.Log("Supply Drop!");
+        OnSupplyDropSpawn?.Invoke();
+    }
+
     //public void AddUnits(MGUnitData.Data unit, int quantity)
     //{
     //    if (quantity <= 0)
@@ -38,23 +44,5 @@ public class MGSpace
     //    }
 
     //    OnUnitsChanged?.Invoke(unit, _units[unit]);
-    //}
-
-    public void SpawnSupplyDrop()
-    {
-        Debug.Log("Supply Drop!");
-        OnSupplyDropSpawn?.Invoke();
-    }
-
-    //public void PrintUnitData()
-    //{
-    //    string unitDataStr = "Units: \n";
-
-    //    foreach (MGUnitData.Data unit in _units.Keys)
-    //    {
-    //        unitDataStr += $"{unit.side}-{unit.job}: {_units[unit]}\n";
-    //    }
-
-    //    Debug.Log(unitDataStr);
     //}
 }

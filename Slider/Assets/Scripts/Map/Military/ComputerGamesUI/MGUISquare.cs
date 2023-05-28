@@ -25,13 +25,11 @@ public class MGUISquare : MonoBehaviour
     private void SetupEventListeners(object sender, System.EventArgs e)
     {
         _mgSpace = _sim.GetSpace(x, y);
-        MGSimulator.OnUnitSpawn += OnUnitSpawn;
         //_mgSpace.OnSupplyDropSpawn += OnSupplyDrop;
     }
 
     private void OnDisable()
     {
-        MGSimulator.OnUnitSpawn -= OnUnitSpawn;
         //_mgSpace.OnSupplyDropSpawn -= OnSupplyDrop;
     }
 
@@ -39,11 +37,6 @@ public class MGUISquare : MonoBehaviour
     {
         Debug.Log("Supply Drop UI Updated.");
         SetSupplyTile(true);
-    }
-
-    private void OnUnitSpawn(MGUnit unit)
-    {
-
     }
 
     //private void UpdateUnits(MGUnitData.Data unit, int quantity)

@@ -12,11 +12,13 @@ public class MGUIUnitTracker : MonoBehaviour
     [SerializeField] private Color allyColor;
     [SerializeField] private Color enemyColor;
 
-
+    private MGUnit _unit;
+    private MGUI _ui;
     private Image _image;
 
     private void Awake()
     {
+        _ui = GetComponentInParent<MGUI>();
         _image = GetComponent<Image>();
     }
 
@@ -26,11 +28,16 @@ public class MGUIUnitTracker : MonoBehaviour
         transform.localPosition = Vector3.zero;
     }
 
-    public void SetData(MGUnitData.Data data)
+    public void SetUnit(MGUnit unit)
     {
-        _image.sprite = jobIcons[(int) data.job];
+        _unit = unit;
+
+        MGUISquare trackerSquare = _ui.GetSquare(unit.CurrSpace);
+        SetSquare(trackerSquare);
+
+        _image.sprite = jobIcons[(int) unit.Data.job];
         //TODO: Change image based on the unit type (RPS)
-        switch (data.side)
+        switch (unit.Data.side)
         {
 
             case MGUnitData.Allegiance.Ally:
@@ -40,5 +47,21 @@ public class MGUIUnitTracker : MonoBehaviour
                 _image.color = enemyColor;
                 break;
         }
+
+        //Event Handlers
+        unit.OnUnitMove += OnUnitMove;
+        unit.OnUnitDestroy += OnUnitDestroy;
+    }
+
+    public void OnUnitMove(MGSpace oldSpace, MGSpace newSpace)
+    {
+        SetSquare(_ui.GetSquare(newSpace));
+    }
+
+    public void OnUnitDestroy()
+    {
+        _unit.OnUnitMove -= OnUnitMove;
+        _unit.OnUnitDestroy -= OnUnitDestroy;
+        Destroy(this.gameObject);
     }
 }
