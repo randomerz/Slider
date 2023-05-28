@@ -14,20 +14,16 @@ public enum MGSide
     Neutral,
 }
 
-public static class MGUnitData
+[System.Serializable]
+public struct MGUnitData
 {
+    public MGJob job;
+    public MGSide side;
 
-    [System.Serializable]
-    public struct Data
+    public MGUnitData(MGJob job, MGSide side)
     {
-        public MGJob job;
-        public MGSide side;
-
-        public Data(MGJob job, MGSide side)
-        {
-            this.job = job;
-            this.side = side;
-        }
+        this.job = job;
+        this.side = side;
     }
 
     //This is basically a type chart lol.
@@ -38,8 +34,18 @@ public static class MGUnitData
         { MGJob.Scissors, new HashSet<MGJob>() { MGJob.Paper}}
     };
 
-    public static bool Dominates(MGJob attacker, MGJob defender)
+    //Returns > 0 if attacker wins, < 0 if defender wins, and 0 if it is a tie.
+    public static int Dominates(MGJob attacker, MGJob defender)
     {
-        return dominations[attacker].Contains(defender);
+        if (dominations[attacker].Contains(defender))
+        {
+            return 1;
+        } else if (dominations[defender].Contains(attacker))
+        {
+            return -1;
+        } else
+        {
+            return 0;
+        }
     }
 }

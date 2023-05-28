@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.CanvasScaler;
 
 public class MGSimulator
 {
@@ -41,7 +42,8 @@ public class MGSimulator
         return _board[x, y];
     }
 
-    public void PopulateRandom(List<MGUnitData.Data> possibleUnits)
+    //Each space has a 50% chance of spawning a unit
+    public void PopulateRandom(float unitSpawnRate, List<MGUnitData> possibleUnits)
     {
         if (possibleUnits.Count == 0)
         {
@@ -55,10 +57,10 @@ public class MGSimulator
         {
             for (int x = 0; x < _boardDims.x; x++)
             {
-                if (Random.Range(0f, 1f) > 0.5f)
+                if (Random.Range(0f, 1f) < unitSpawnRate)
                 {
                     int randUnitId = Random.Range(0, possibleUnits.Count);
-                    MGUnitData.Data randUnitData = possibleUnits[randUnitId];
+                    MGUnitData randUnitData = possibleUnits[randUnitId];
 
                     SpawnUnit(x, y, randUnitData);
                 }
@@ -66,7 +68,7 @@ public class MGSimulator
         }
     }
 
-    public MGUnit SpawnUnit(int x, int y, MGUnitData.Data data)
+    public MGUnit SpawnUnit(int x, int y, MGUnitData data)
     {
         MGUnit newUnit = new MGUnit(data, _board[x, y]);
         _units.Add(newUnit);
@@ -80,7 +82,36 @@ public class MGSimulator
         Vector2Int newPos = currPos + new Vector2Int(dx, dy);
         if (PosIsOnBoard(newPos))
         {
+            int unitI = 0;
+            while(unitI < _units.Count)
+            {
+                MGUnit otherUnit = _units[unitI];
+                if (otherUnit.CurrSpace == _board[newPos.x, newPos.y])
+                {
+                    EvaluateBattle(unit, otherUnit);
+                    break;
+                }
+                unitI++;
+            }
             unit.Move(_board[newPos.x, newPos.y]);
+        }
+    }
+
+    public void EvaluateBattle(MGUnit attacker, MGUnit defender)
+    {
+        int battleResult = MGUnitData.Dominates(attacker.Data.job, defender.Data.job);
+        //If the result is 0, both units get destroyed.
+        if (battleResult >= 0)
+        {
+            //Attacker wins
+            defender.Destroy();
+            _units.Remove(defender);
+        }
+        if (battleResult <= 0)
+        {
+            //Defender wins
+            attacker.Destroy();
+            _units.Remove(attacker);
         }
     }
 

@@ -3,8 +3,8 @@ using System;
 
 public class MGUnit
 {
-    private MGUnitData.Data _data;
-    public MGUnitData.Data Data => _data;
+    private MGUnitData _data;
+    public MGUnitData Data => _data;
     private MGSpace _currSpace;
     public MGSpace CurrSpace => _currSpace;
 
@@ -14,13 +14,13 @@ public class MGUnit
     public delegate void _OnUnitDestroy();
     public event _OnUnitDestroy OnUnitDestroy;
 
-    public MGUnit(MGUnitData.Data data, MGSpace currSpace)
+    public MGUnit(MGUnitData data, MGSpace currSpace)
     {
         _data = data;
         _currSpace = currSpace;
     }
 
-    public MGUnit(MGUnitData.Data data) : this(data, null)
+    public MGUnit(MGUnitData data) : this(data, null)
     {
     }
 

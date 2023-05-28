@@ -5,7 +5,7 @@ using UnityEngine;
 public class MilitarySimContext : MonoBehaviour
 {
     [SerializeField] private Vector2Int boardDims;
-    [SerializeField] private List<MGUnitData.Data> possibleUnits;
+    [SerializeField] private List<MGUnitData> possibleUnits;
     //[SerializeField] private GameObject supplyPrefab;
 
     private MGSimulator _simulator;
@@ -22,13 +22,11 @@ public class MilitarySimContext : MonoBehaviour
 
     private IEnumerator Start()
     {
-        MGUnit unit = _simulator.SpawnUnit(0, 0, new MGUnitData.Data(MGJob.Rock, MGSide.Ally));
+        yield return null;
+        MGUnit unit = _simulator.SpawnUnit(0, 0, new MGUnitData(MGJob.Rock, MGSide.Ally));
+        MGUnit enemy = _simulator.SpawnUnit(1, 0, new MGUnitData(MGJob.Scissors, MGSide.Enemy));
         yield return new WaitForSeconds(1f);
         _simulator.MoveUnit(unit, 1, 0);
-        yield return new WaitForSeconds(1f);
-        _simulator.MoveUnit(unit, 0, 1);
-        yield return new WaitForSeconds(1f);
-        _simulator.MoveUnit(unit, -1, 0);
     }
 
     //public void ProcessEvent(MGEvent e)

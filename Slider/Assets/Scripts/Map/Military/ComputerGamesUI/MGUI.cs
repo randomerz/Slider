@@ -22,13 +22,18 @@ public class MGUI : MonoBehaviour
 
     public MGUISquare GetSquare(MGSpace space)
     {
-        return GetSquareFromPos(space.GetPosition());
+        return GetSquare(space.GetPosition());
     }
 
-    public MGUISquare GetSquareFromPos(Vector2Int pos)
+    public MGUISquare GetSquare(Vector2Int pos)
     {
         int index = pos.y * width + pos.x;
         return squares[index];
+    }
+
+    public MGUISquare GetSquare(int x, int y)
+    {
+        return GetSquare(new Vector2Int(x, y));
     }
 
     private void OnUnitSpawn(MGUnit unit)
@@ -40,7 +45,7 @@ public class MGUI : MonoBehaviour
     {
         GameObject trackerGO = GameObject.Instantiate(trackerPrefab, this.transform);
         MGUIUnitTracker tracker = trackerGO.GetComponent<MGUIUnitTracker>();
-        tracker.SetUnit(unit);
+        tracker.Init(unit);
     }
 
     //private void DestroyTracker(MGUnitData.Data unit)

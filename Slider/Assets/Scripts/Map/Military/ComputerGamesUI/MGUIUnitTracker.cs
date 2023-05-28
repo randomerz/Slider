@@ -16,26 +16,16 @@ public class MGUIUnitTracker : MonoBehaviour
     private MGUI _ui;
     private Image _image;
 
-    private void Awake()
-    {
-        _ui = GetComponentInParent<MGUI>();
-        _image = GetComponent<Image>();
-    }
-
-    public void SetSquare(MGUISquare square)
-    {
-        transform.SetParent(square.transform);
-        transform.localPosition = Vector3.zero;
-    }
-
-    public void SetUnit(MGUnit unit)
+    public void Init(MGUnit unit)
     {
         _unit = unit;
+        _ui = GetComponentInParent<MGUI>();
+        _image = GetComponent<Image>();
 
         MGUISquare trackerSquare = _ui.GetSquare(unit.CurrSpace);
         SetSquare(trackerSquare);
 
-        _image.sprite = jobIcons[(int) unit.Data.job];
+        _image.sprite = jobIcons[(int)unit.Data.job];
         //TODO: Change image based on the unit type (RPS)
         switch (unit.Data.side)
         {
@@ -51,6 +41,12 @@ public class MGUIUnitTracker : MonoBehaviour
         //Event Handlers
         unit.OnUnitMove += OnUnitMove;
         unit.OnUnitDestroy += OnUnitDestroy;
+    }
+
+    public void SetSquare(MGUISquare square)
+    {
+        transform.SetParent(square.transform);
+        transform.localPosition = Vector3.zero;
     }
 
     public void OnUnitMove(MGSpace oldSpace, MGSpace newSpace)
