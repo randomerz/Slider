@@ -1,10 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using static UnityEngine.UI.CanvasScaler;
-
 public class MGSimulator
 {
+    public enum MoveType
+    {
+        INVALID,
+        WALK,   //Unit moves to an empty square
+        BATTLE  //Unit moves onto an occupied enemy square
+    }
+
+    [System.Serializable]
+    public struct UnitSpawnData
+    {
+        public int x, y;
+        public MGUnitData data;
+    }
+
+    public struct UnitMoveData
+    {
+        public MGUnit movingUnit;
+        public MoveType type;
+        public Vector2Int newPos;
+        public MGUnit occupyingUnit;   //Occupying unit, if exists (could be null)
+
+        public UnitMoveData(MGUnit movingUnit, MoveType result, Vector2Int newPos, MGUnit occupyingUnit)
+        {
+            this.movingUnit = movingUnit;
+            this.type = result;
+            this.newPos = newPos;
+            this.occupyingUnit = occupyingUnit;
+        }
+    }
 
     private Vector2Int _boardDims;
     public Vector2Int BoardDims => _boardDims;
@@ -32,6 +61,23 @@ public class MGSimulator
         AfterInit?.Invoke(this, null);
     }
 
+    public void Reset()
+    {
+        foreach (MGUnit unit in _units)
+        {
+            unit.Destroy();
+        }
+        _units.Clear();
+    }
+
+    public void Populate(List<UnitSpawnData> spawnData)
+    {
+        foreach (UnitSpawnData spawn in spawnData)
+        {
+            SpawnUnit(spawn.x, spawn.y, spawn.data);
+        }
+    }
+
     public MGSpace GetSpace(int x, int y)
     {
         if (!PosIsOnBoard(new Vector2Int(x, y)))
@@ -42,7 +88,20 @@ public class MGSimulator
         return _board[x, y];
     }
 
-    //Each space has a 50% chance of spawning a unit
+    public MGUnit GetUnit(int x, int y)
+    {
+        for (int unitI = 0; unitI < _units.Count; unitI++)
+        {
+            MGUnit unit = _units[unitI];
+            if (unit.CurrSpace == _board[x, y])
+            {
+                return unit;
+            }
+        }
+
+        return null;
+    }
+
     public void PopulateRandom(float unitSpawnRate, List<MGUnitData> possibleUnits)
     {
         if (possibleUnits.Count == 0)
@@ -78,22 +137,55 @@ public class MGSimulator
 
     public void MoveUnit(MGUnit unit, int dx, int dy)
     {
+        UnitMoveData move = GetMove(unit, dx, dy);
+        if (move.type != MoveType.INVALID)
+        {
+            DoMove(move);
+        }
+    }
+
+    public UnitMoveData GetMove(MGUnit unit, int dx, int dy)
+    {
         Vector2Int currPos = unit.CurrSpace.GetPosition();
         Vector2Int newPos = currPos + new Vector2Int(dx, dy);
-        if (PosIsOnBoard(newPos))
+
+        if (!PosIsOnBoard(newPos))
         {
-            int unitI = 0;
-            while(unitI < _units.Count)
+            return new UnitMoveData(unit, MoveType.INVALID, newPos, null);
+        }
+
+        MGUnit occupyingUnit = GetUnit(newPos.x, newPos.y);
+        if (occupyingUnit != null)
+        {
+            if (unit.Data.side == occupyingUnit.Data.side)
             {
-                MGUnit otherUnit = _units[unitI];
-                if (otherUnit.CurrSpace == _board[newPos.x, newPos.y])
-                {
-                    EvaluateBattle(unit, otherUnit);
-                    break;
-                }
-                unitI++;
+                //Can't move onto another allied piece.
+                return new UnitMoveData(unit, MoveType.INVALID, newPos, occupyingUnit);
             }
-            unit.Move(_board[newPos.x, newPos.y]);
+            else
+            {
+                return new UnitMoveData(unit, MoveType.BATTLE, newPos, occupyingUnit);
+            }
+        }
+
+        return new UnitMoveData(unit, MoveType.WALK, newPos, null);
+    }
+
+    public void DoMove(UnitMoveData move)
+    {
+        switch(move.type)
+        {
+            case MoveType.WALK:
+                move.movingUnit.Move(_board[move.newPos.x, move.newPos.y]);
+                break;
+            case MoveType.BATTLE:
+                EvaluateBattle(move.movingUnit, move.occupyingUnit);
+                move.movingUnit.Move(_board[move.newPos.x, move.newPos.y]);
+                break;
+            case MoveType.INVALID:
+            default:
+                Debug.LogError("Attempted to perform invalid move.");
+                break;
         }
     }
 

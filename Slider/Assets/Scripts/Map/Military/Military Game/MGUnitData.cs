@@ -11,7 +11,6 @@ public enum MGSide
 {
     Ally,
     Enemy,
-    Neutral,
 }
 
 [System.Serializable]

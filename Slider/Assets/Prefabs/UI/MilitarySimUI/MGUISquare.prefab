@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3373021576743651186
+--- !u!1 &2315651997305635639
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,25 +8,26 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3044735084755823647}
-  - component: {fileID: 6852958557464704761}
-  - component: {fileID: 8960057881200768107}
-  - component: {fileID: 9003259470370475071}
-  - component: {fileID: 8930642007977030626}
+  - component: {fileID: 2315651997305635638}
+  - component: {fileID: 2315651997305635636}
+  - component: {fileID: 2315651997305635637}
+  - component: {fileID: 6953100280584950779}
+  - component: {fileID: 9220517367401765599}
+  - component: {fileID: 2537965286241975141}
   m_Layer: 5
-  m_Name: MGUITracker
+  m_Name: MGUISquare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &3044735084755823647
+--- !u!224 &2315651997305635638
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3373021576743651186}
+  m_GameObject: {fileID: 2315651997305635639}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -37,38 +38,38 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -56, y: 56}
   m_SizeDelta: {x: 32, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &6852958557464704761
+--- !u!222 &2315651997305635636
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3373021576743651186}
+  m_GameObject: {fileID: 2315651997305635639}
   m_CullTransparentMesh: 1
---- !u!114 &8960057881200768107
+--- !u!114 &2315651997305635637
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3373021576743651186}
+  m_GameObject: {fileID: 2315651997305635639}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9019608, g: 0.9019608, b: 0.9019608, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 2116011787, guid: 359e1eff03be9d54da5c71c91ad004ac, type: 3}
+  m_Sprite: {fileID: -2102344600, guid: 9a75a6a6e7b361b48bc4a399edd82fd8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -78,14 +79,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &9003259470370475071
+--- !u!114 &6953100280584950779
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3373021576743651186}
-  m_Enabled: 0
+  m_GameObject: {fileID: 2315651997305635639}
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -97,9 +98,9 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 2
+  m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.9019608, g: 0.9019608, b: 0.9019608, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -118,13 +119,13 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 8960057881200768107}
+  m_TargetGraphic: {fileID: 2315651997305635637}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8930642007977030626}
-        m_TargetAssemblyTypeName: MGUIUnitTracker, SliderScripts
-        m_MethodName: OnTrackerClick
+      - m_Target: {fileID: 9220517367401765599}
+        m_TargetAssemblyTypeName: MGUISquare, SliderScripts
+        m_MethodName: Select
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -134,21 +135,37 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &8930642007977030626
+--- !u!114 &9220517367401765599
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3373021576743651186}
+  m_GameObject: {fileID: 2315651997305635639}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b69a9a4ec4d194d4ab9b7561815335d1, type: 3}
+  m_Script: {fileID: 11500000, guid: 52b730b946bba9a408a8e2cbbf0a6e57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jobIcons:
-  - {fileID: 2116011787, guid: 359e1eff03be9d54da5c71c91ad004ac, type: 3}
-  - {fileID: -365452350, guid: 359e1eff03be9d54da5c71c91ad004ac, type: 3}
-  - {fileID: -128464348, guid: 359e1eff03be9d54da5c71c91ad004ac, type: 3}
-  allyColor: {r: 0.9019608, g: 0.9019608, b: 0.9019608, a: 1}
-  enemyColor: {r: 0.4, g: 0.4, b: 0.4, a: 1}
+  x: 0
+  y: 0
+--- !u!95 &2537965286241975141
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2315651997305635639}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9f7fc7e2f8038d240877e8be9f5c65fc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

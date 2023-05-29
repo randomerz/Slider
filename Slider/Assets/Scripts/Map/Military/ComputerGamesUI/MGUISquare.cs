@@ -1,3 +1,4 @@
+using log4net.Util;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditorInternal;
@@ -6,21 +7,32 @@ using UnityEngine.UI;
 
 public class MGUISquare : MonoBehaviour
 {
+    public enum AnimStates
+    {
+        EMPTY,
+        MOVE,
+        BATTLE
+    }
+
+    public static Dictionary<AnimStates, string> AnimNames = new()
+    {
+        { AnimStates.EMPTY, "MGUI_Empty"},
+        { AnimStates.MOVE, "MGUI_Move" },
+        { AnimStates.BATTLE, "MGUI_Battle" }
+    };
+
     [SerializeField] private int x;
     [SerializeField] private int y;
-    [SerializeField] private Sprite supplyImage;
 
-    //private MGSimulator _sim;
-    private Image _displayImg;
+    private Animator _anim;
+    private MGUI _ui;
 
     //private MGSpace _mgSpace;
 
     private void Awake()
     {
-        //_sim = FindObjectOfType<MGSimulator>();
-        _displayImg = GetComponent<Image>();
-
-        MGSimulator.AfterInit += SetupEventListeners;
+        _anim = GetComponent<Animator>();
+        _ui = GetComponentInParent<MGUI>();
     }
 
     public Vector2Int GetPosition()
@@ -28,48 +40,13 @@ public class MGUISquare : MonoBehaviour
         return new Vector2Int(x, y);
     }
 
-    private void SetupEventListeners(object sender, System.EventArgs e)
+    public void Select()
     {
-        //_mgSpace = _sim.GetSpace(x, y);
-        //_mgSpace.OnSupplyDropSpawn += OnSupplyDrop;
+        _ui.SelectSquare(this);
     }
 
-    private void OnDisable()
+    public void ChangeAnimState(AnimStates state)
     {
-        //_mgSpace.OnSupplyDropSpawn -= OnSupplyDrop;
-    }
-
-    private void OnSupplyDrop()
-    {
-        Debug.Log("Supply Drop UI Updated.");
-        SetSupplyTile(true);
-    }
-
-    //private void UpdateUnits(MGUnitData.Data unit, int quantity)
-    //{
-    //    //Check Deletion
-    //    if (quantity <= 0)
-    //    {
-    //        if (_unitTrackers.ContainsKey(unit))
-    //        {
-    //            DestroyTracker(unit);
-    //        }
-
-    //        return;
-    //    }
-
-    //    //Check Creation
-    //    if (!_unitTrackers.ContainsKey(unit))
-    //    {
-    //        CreateTracker(unit);
-    //    }
-
-    //    //Update Tracker Count.
-    //    _unitTrackers[unit].SetCount(quantity);
-    //}
-
-    public void SetSupplyTile(bool enabled)
-    {
-        _displayImg.sprite = supplyImage;
+        _anim.Play(AnimNames[state]);
     }
 }

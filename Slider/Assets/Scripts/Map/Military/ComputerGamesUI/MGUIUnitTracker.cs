@@ -13,6 +13,7 @@ public class MGUIUnitTracker : MonoBehaviour
     [SerializeField] private Color enemyColor;
 
     private MGUnit _unit;
+    private MGUISquare _square;
     private MGUI _ui;
     private Image _image;
 
@@ -22,8 +23,7 @@ public class MGUIUnitTracker : MonoBehaviour
         _ui = GetComponentInParent<MGUI>();
         _image = GetComponent<Image>();
 
-        MGUISquare trackerSquare = _ui.GetSquare(unit.CurrSpace);
-        SetSquare(trackerSquare);
+        SetSquare(_ui.GetSquare(unit.CurrSpace));
 
         _image.sprite = jobIcons[(int)unit.Data.job];
         //TODO: Change image based on the unit type (RPS)
@@ -45,6 +45,7 @@ public class MGUIUnitTracker : MonoBehaviour
 
     public void SetSquare(MGUISquare square)
     {
+        _square = square;
         transform.SetParent(square.transform);
         transform.localPosition = Vector3.zero;
     }

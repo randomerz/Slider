@@ -175,4 +175,10 @@ public class MGSimulatorTests
         //Everything got destroyed.
         Assert.AreEqual(0, mgSim.Units.Count);
     }
+
+    [Test]
+    public void TestMovePlayerUnitOntoOtherPlayerUnit()
+    {
+
+    }
 }
