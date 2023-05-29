@@ -495,7 +495,6 @@ MonoBehaviour:
   addToOnAction: 1
   isCarryingItem: 0
   itemNameCheck: 
-  triggerIsLit: 0
 --- !u!114 &4241338638954484714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -822,11 +821,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8847753119295245060, guid: e8a5a5c8f3da82b469ac93a43accf240, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.01
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8847753119295245060, guid: e8a5a5c8f3da82b469ac93a43accf240, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.03
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 8847753119295245060, guid: e8a5a5c8f3da82b469ac93a43accf240, type: 3}
       propertyPath: m_LocalPosition.z

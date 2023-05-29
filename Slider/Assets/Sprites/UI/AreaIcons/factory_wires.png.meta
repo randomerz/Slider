@@ -863,7 +863,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -884,7 +884,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -892,6 +892,27 @@ TextureImporter:
       bones: []
       spriteID: a17fc3558282c6842aa98311e478a1a3
       internalID: 978954782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_wires_1d
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 160
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5aa85e48f48ade149a26423efb209343
+      internalID: 1003030092
       vertices: []
       indices: 
       edges: []
@@ -923,6 +944,7 @@ TextureImporter:
       factory_wires_4f: 4541491216234631129
       factory_wires_5a: -4763470371561016115
       factory_wires_4a: 353073629221362938
+      factory_wires_1d: 1003030092
       factory_wires_2a: -5416979887653467352
       factory_wires_1b: 4871460460283924102
       factory_wires_3a: 6757740338667715037

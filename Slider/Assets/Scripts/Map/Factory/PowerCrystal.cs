@@ -34,7 +34,12 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
     private IEnumerator CrystalPoweredBuildup()
     {
         AudioManager.StopMusic("Factory");
+
+        AudioManager.Play("Slide Explosion");
+        (SGrid.Current as FactoryGrid).factoryMusicController.DoFactoryStinger();
+
         yield return new WaitForSeconds(2.0f);
+
         DoBlackout();
     }
 

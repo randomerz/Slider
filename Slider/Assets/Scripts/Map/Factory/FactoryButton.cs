@@ -41,6 +41,29 @@ public class FactoryButton : ElectricalNode
         base.Update();
 
         bool buttonPressed = GetButtonPressed();
+        if ((buttonPressed || _buttonPressedLastFrame) != PoweredConditionsMet() && !FactoryBlackoutInEffect())
+        {
+            SetState(buttonPressed || _buttonPressedLastFrame);
+        }
+
+        if (buttonPressed != _buttonPressedLastFrame)
+        {
+            if (buttonPressed)
+            {
+                AudioManager.Play("UI Click");
+            }
+            else
+            {
+                AudioManager.PlayWithPitch("UI Click", 0.75f);
+            }
+        }
+
+        _buttonPressedLastFrame = buttonPressed;
+    }
+
+    protected void LateUpdate()
+    {
+        bool buttonPressed = GetButtonPressed();
         if (buttonPressed != PoweredConditionsMet() && !FactoryBlackoutInEffect())
         {
             SetState(buttonPressed);

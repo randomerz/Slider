@@ -7,12 +7,16 @@ using UnityEngine;
 public class ChadRace : MonoBehaviour
 {
     enum State {
+        TrackNotSetup,
         NotStarted,
         Started,
         Running,
         Cheated,
+        CheatedTrackBroken,
+        CheatedTrackFixed,
         ChadWon,
-        PlayerWon
+        PlayerWon,
+        RaceEnded
     };
 
     public UnityEvent onRaceWon;
@@ -77,19 +81,27 @@ public class ChadRace : MonoBehaviour
         //npcScript.AddNewConditionals(countDownDialogue);
 
         speedLinesList = player.GetComponentsInChildren<ParticleSystem>();
-
-        DisplayAndTriggerDialogue("Bet I could beat you to the bell (e to start).");
     }
 
     // Update is called once per frame
     void Update()
     {
         switch (raceState) {
-
+            case State.TrackNotSetup:
+                if (tilesAdjacent)
+                {
+                    DisplayAndTriggerDialogue("Bet I could beat you to the bell (e to start).");
+                    raceState = State.NotStarted;
+                }
+                break;
             case State.NotStarted:
+                if (!tilesAdjacent)
+                {
+                    DisplayAndTriggerDialogue("Set up a track to the bell.");
+                    raceState = State.TrackNotSetup;
+                }
                 ActivateSpeedLines(false);
                 break;
-
             case State.Started:
                 player.position = playerStart;
                 float timeDiff = Time.unscaledTime - startTime;
@@ -111,7 +123,6 @@ public class ChadRace : MonoBehaviour
                 ActivateSpeedLines(true);
                 if (!tilesAdjacent) {
                     // The player has cheated
-                    // TODO: Record Scratch stuff should start around here.
                     AudioManager.Play("Record Scratch");
                     chadEndLocal = transform.localPosition;
                     DisplayAndTriggerDialogue("Hey, no changing the track before the race is done!");
@@ -142,11 +153,26 @@ public class ChadRace : MonoBehaviour
                 if (tilesAdjacent)
                 {
                     DisplayAndTriggerDialogue("Wanna try again, bozo? (e to start)");
-                    raceState = State.NotStarted;
+                    raceState = State.CheatedTrackFixed;
                 }
                 else
                 {
                     CheckChad(jungleGrid, null);
+                }
+                break;
+
+            case State.CheatedTrackBroken:
+                if (tilesAdjacent)
+                {
+                    DisplayAndTriggerDialogue("Wanna try again, bozo? (e to start)");
+                    raceState = State.CheatedTrackFixed;
+                }
+                break;
+            case State.CheatedTrackFixed:
+                if (!tilesAdjacent)
+                {
+                    DisplayAndTriggerDialogue("Reset the track to the bell.");
+                    raceState = State.CheatedTrackBroken;
                 }
                 break;
             case State.ChadWon:
@@ -169,12 +195,18 @@ public class ChadRace : MonoBehaviour
                     chadimator.SetBool("isWalking", false);
                     chadimator.SetBool("isSad", true);
 
-                    DisplayAndTriggerDialogue("*Annoyed grumbling*");
+                    if (PlayerInventory.Contains(jungleGrid.GetCollectible("Boots")))
+                    {
+                        DisplayAndTriggerDialogue("*Annoyed grumbling*");
+                        raceState = State.RaceEnded;
+                    }
 
                     // AudioManager.SetMusicParameter("Jungle", "JungleChadStarted", 0);
                     // AudioManager.SetMusicParameter("Jungle", "JungleChadWon", 2);
                     jungleChadEnd = 1;
                 }
+                break;
+            case State.RaceEnded:
                 break;
 
         }
@@ -191,6 +223,7 @@ public class ChadRace : MonoBehaviour
     public void PlayerEnteredEnd() {
         if (raceState == State.Running) {
             raceState = State.PlayerWon;
+            DisplayAndTriggerDialogue("Dangit, I don't know how you won, especially with my faster boots.");
             onRaceWon.Invoke();
         }
     }
@@ -207,7 +240,8 @@ public class ChadRace : MonoBehaviour
 
     // Invoked by Player Conditionals on success
     public void StartQueued() {
-        if (inStart && tilesAdjacent && (raceState != State.Started && raceState != State.Running && raceState != State.PlayerWon)) {
+        if (inStart && tilesAdjacent && (raceState != State.Started && raceState != State.Running && raceState != State.PlayerWon
+                && raceState != State.RaceEnded)) {
             endPoint = finishingLine.position - new Vector3(0, 1, 0);
             transform.parent = startStileObjects;
             transform.localPosition = chadStartLocal;
@@ -218,6 +252,16 @@ public class ChadRace : MonoBehaviour
     }
 
     // Conditionals stuff for Chad Dialogue
+    public void TrackNotSetup(Condition cond)
+    {
+        cond.SetSpec(raceState == State.TrackNotSetup);
+    }
+
+    public void NotStarted(Condition cond)
+    {
+        cond.SetSpec(raceState == State.NotStarted);
+    }
+
     public void CurrentlyRunning(Condition cond) {
         cond.SetSpec(raceState == State.Running);
     }
@@ -233,6 +277,11 @@ public class ChadRace : MonoBehaviour
     public void ChadWon(Condition cond)
     {
         cond.SetSpec(raceState == State.ChadWon);
+    }
+
+    public void RaceEnded(Condition cond)
+    {
+        cond.SetSpec(raceState == State.RaceEnded);
     }
 
     // Private helper methods

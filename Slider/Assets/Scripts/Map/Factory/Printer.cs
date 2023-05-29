@@ -15,6 +15,8 @@ public class Printer : MonoBehaviour
     public Animator bodyAnim;
     public Animator headAnim;
 
+    private bool startedPrinting;
+
     // Start is called before the first frame update
     // Update is called once per frame
     private bool walls = false;
@@ -28,19 +30,28 @@ public class Printer : MonoBehaviour
 
     void Update()
     {
-        
+        CheckParts();
     }
 
     public void StartPoof()
     {
         if (!PlayerInventory.Contains("Slider 5") && walls && floor && wires)
         {
+            if (startedPrinting)
+                return;
+
+            startedPrinting = true;
             StartCoroutine(PoofCoroutine());
+        }
+        else
+        {
+            AudioManager.Play("Artifact Error");
         }
     }
 
     private IEnumerator PoofCoroutine()
     {
+
         rocketItem.SetActive(false);
         poof.Play();
         tileItem.SetActive(true);
@@ -78,7 +89,7 @@ public class Printer : MonoBehaviour
         else if (floor && walls && wires)
         {
             // ready to print
-            operatorMessage = "Radical, let me turn it on!!!!";
+            operatorMessage = "Radical, go turn it on!!!!";
         }
         else
         {

@@ -447,6 +447,24 @@ MonoBehaviour:
         Data4: 930797071
       Path: event:/SFX/Debug/Debug
     dopplerScale: 1
+  - name: Portal
+    fmodEvent:
+      Guid:
+        Data1: -143556857
+        Data2: 1289989646
+        Data3: -1614548827
+        Data4: -1490286473
+      Path: event:/SFX/Magic/Portal
+    dopplerScale: 1
+  - name: Record Scratch
+    fmodEvent:
+      Guid:
+        Data1: -2056660177
+        Data2: 1156402562
+        Data3: -941530482
+        Data4: -1114012601
+      Path: event:/SFX/Jungle/Record Scratch
+    dopplerScale: 1
   music:
   - name: Main Menu
     fmodEvent:
