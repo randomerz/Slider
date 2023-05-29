@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using static MGSimulator;
+using static UnityEditor.PlayerSettings;
+using static UnityEngine.UI.CanvasScaler;
 
 public class MGUI : MonoBehaviour
 {
@@ -21,6 +23,7 @@ public class MGUI : MonoBehaviour
     private void Start()
     {
         selectedSquare = null;
+        unitMoveOptions = new Dictionary<MGUISquare, UnitMoveData>();
         MGSimulator.OnUnitSpawn += OnUnitSpawn;
     }
 
@@ -57,34 +60,67 @@ public class MGUI : MonoBehaviour
         {
             Vector2Int pos = square.GetPosition();
             MGUnit unit = Sim.GetUnit(pos.x, pos.y);
-            selectedSquare = square;
-            unitMoveOptions = new Dictionary<MGUISquare, UnitMoveData>();
 
-            foreach (Vector2Int dir in DirectionUtil.Cardinal4)
-            { 
-                Vector2Int newPos = pos + dir;
-                UnitMoveData move = Sim.GetMove(unit, dir.x, dir.y);
-                MGUISquare moveSquare = GetSquare(newPos.x, newPos.y);
-                if (moveSquare != null)
-                {
-                    switch (move.type)
-                    {
-                        case MoveType.WALK:
-                            moveSquare.ChangeAnimState(MGUISquare.AnimStates.MOVE);
-                            unitMoveOptions.Add(moveSquare, move);
-                            break;
-                        case MoveType.BATTLE:
-                            moveSquare.ChangeAnimState(MGUISquare.AnimStates.BATTLE);
-                            unitMoveOptions.Add(moveSquare, move);
-                            break;
-                        case MoveType.INVALID:
-                            moveSquare.ChangeAnimState(MGUISquare.AnimStates.EMPTY);
-                            break;
-                    }
-
-                }
+            if (unit == null)
+            {
+                return;
             }
 
+            PopulateMoveOptions(unit);
+            selectedSquare = square;
+        } else
+        {
+            UnitMoveData? moveDid = null;
+            if (unitMoveOptions.ContainsKey(square))
+            {
+                moveDid = unitMoveOptions[square];
+                Sim.DoMove(moveDid.Value);
+            }
+
+            foreach (MGUISquare moveSquare in unitMoveOptions.Keys)
+            {
+                moveSquare.ChangeAnimState(MGUISquare.AnimStates.EMPTY);
+            }
+            unitMoveOptions.Clear();
+
+            //L: QOL From UIArtifact, but we don't want this because unit can only move 1 space anyway.
+            //if (moveDid != null)
+            //{
+            //    PopulateMoveOptions(moveDid.Value.movingUnit);
+            //} else
+            //{
+            //    selectedSquare = null;
+            //}
+            selectedSquare = null;
+        }
+    }
+
+    private void PopulateMoveOptions(MGUnit unit)
+    {
+        Vector2Int currPos = unit.CurrSpace.GetPosition();
+        unitMoveOptions = new Dictionary<MGUISquare, UnitMoveData>();
+        foreach (Vector2Int dir in DirectionUtil.Cardinal4)
+        {
+            Vector2Int newPos = currPos + dir;
+            UnitMoveData move = Sim.GetMove(unit, dir.x, dir.y);
+            MGUISquare moveSquare = GetSquare(newPos.x, newPos.y);
+            if (moveSquare != null)
+            {
+                switch (move.type)
+                {
+                    case MoveType.WALK:
+                        moveSquare.ChangeAnimState(MGUISquare.AnimStates.MOVE);
+                        unitMoveOptions.Add(moveSquare, move);
+                        break;
+                    case MoveType.BATTLE:
+                        moveSquare.ChangeAnimState(MGUISquare.AnimStates.BATTLE);
+                        unitMoveOptions.Add(moveSquare, move);
+                        break;
+                    case MoveType.INVALID:
+                        moveSquare.ChangeAnimState(MGUISquare.AnimStates.EMPTY);
+                        break;
+                }
+            }
         }
     }
 
