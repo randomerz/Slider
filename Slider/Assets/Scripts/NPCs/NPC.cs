@@ -120,6 +120,12 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         dialogueCtx.TypeCurrentDialogue();
     }
 
+    // Also checks if the player is in the trigger before typing
+    public void TypeCurrentDialogueSafe() 
+    {
+        dialogueCtx.TypeCurrentDialogueSafe();
+    }
+
     public void AdvanceDialogueChain()
     {
         dialogueCtx.TypeNextDialogueInChain();
