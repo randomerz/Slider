@@ -172,7 +172,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     }
 
     public void TypeCurrentDialogue()
-    { 
+    {
         if (DialogueEnabled && !CurrDchainIsEmpty())
         {
             display.DisplaySentence(context.CurrCond.GetDialogueString(CurrDchainIndex), CurrDchain[CurrDchainIndex].emoteOnStart);
@@ -181,6 +181,14 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
             dialogueBoxIsActive = true;
 
             OnDialogueStart();
+        }
+    }
+
+    public void TypeCurrentDialogueSafe()
+    {
+        if (playerInDialogueTrigger)
+        {
+            TypeCurrentDialogue();
         }
     }
 

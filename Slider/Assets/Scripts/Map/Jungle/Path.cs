@@ -187,7 +187,10 @@ public class Path : MonoBehaviour
 
         //fade out all the blobs
         foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>()) {
-            blob.fadeOut();
+            if (blob.isActiveAndEnabled)
+            {
+                blob.fadeOut();
+            }
         }
     }
 

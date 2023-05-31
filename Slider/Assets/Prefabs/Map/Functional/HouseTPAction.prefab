@@ -30,6 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -101,6 +102,7 @@ MonoBehaviour:
         m_CallState: 2
   addToOnAction: 1
   isCarryingItem: 0
+  itemNameCheck: 
 --- !u!114 &2894810818442469168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,6 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dPos: {x: 0, y: -150, z: 0}
   tpToHouse: 1
+  goTo: {fileID: 0}
   gizmoType: 3
 --- !u!114 &7263254833973601547
 MonoBehaviour:
