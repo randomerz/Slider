@@ -141,7 +141,8 @@ public class InputRebindButton : MonoBehaviour
         Action,
         CycleEquip,
         OpenArtifact,
-        Pause
+        Pause,
+        AltViewHold
     }
 }
     

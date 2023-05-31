@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
 public class ArtifactTileButton : MonoBehaviour
@@ -181,6 +182,10 @@ public class ArtifactTileButton : MonoBehaviour
     //{
     //    buttonAnimator.UpdatePushedDown();
     //}
+    public void SetControllerHoverHighlighted(bool v)
+    {
+        buttonAnimator.SetControllerHoverHighlight(v);
+    }
 
     public void SetHighlighted(bool v)
     {
@@ -257,6 +262,19 @@ public class ArtifactTileButton : MonoBehaviour
             SetSpriteToIslandOrEmpty();
             yield return new WaitForSeconds(.25f);
         }
+    }
+
+    public void OnSelect()
+    {
+        if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        {
+            SetControllerHoverHighlighted(true);
+        }
+    }
+
+    public void OnDeselect()
+    {
+        SetControllerHoverHighlighted(false);
     }
 
     private void Init()

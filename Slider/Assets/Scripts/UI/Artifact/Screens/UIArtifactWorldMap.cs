@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
 {
@@ -133,5 +134,15 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
     {
         inventoryText.GetComponentsInChildren<TextMeshProUGUI>()[0].text = text;
         inventoryText.GetComponentsInChildren<TextMeshProUGUI>()[1].text = text;
+    }
+
+    [SerializeField] private Button leftArrowButton;
+
+    private void OnEnable()
+    {
+        if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        {
+            leftArrowButton.Select();
+        }
     }
 }

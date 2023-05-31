@@ -9,6 +9,7 @@ using UnityEngine.Tilemaps;
 //L: I moved the STile underneath stuff to static method in STile since it's used in other places.
 public class Player : Singleton<Player>, ISavable, ISTileLocatable
 {
+    public static event Action<string> OnControlSchemeChanged;
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5;
@@ -26,7 +27,10 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private bool debugDontUpdateStileUnderneath;
-    
+
+    [SerializeField] private PlayerInput playerInput;
+
+
 
     private float moveSpeedMultiplier = 1;
     private bool canMove = true;
@@ -62,6 +66,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
         playerInventory.Init();
         UpdatePlayerSpeed();
+
+        //playerInput= GetComponent<PlayerInput>();
     }
 
     private void Start() 
@@ -153,6 +159,31 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             transform.SetParent(null);
         }
     }
+    //Jroo: Either says "Keyboard Mouse" or "Controller" based on last input
+    public string GetCurrentControlScheme()
+    {
+        return playerInput.currentControlScheme;
+    }
+
+    /// <summary>
+    /// Called when control scheme changes (between "Controller" or "Keyboard Mouse")
+    /// </summary>
+    public void OnControlsChanged()
+    {
+        //string newControlScheme = GetCurrentControlScheme();
+        string newControlScheme = playerInput.currentControlScheme;
+        Debug.Log("Control Scheme changed to: " + newControlScheme);
+        OnControlSchemeChanged?.Invoke(newControlScheme);
+        if (Controls.Instance != null)
+        {
+            Controls.Instance.SetCurrentControlScheme(newControlScheme);
+        }
+    }
+    /*
+    public void OnAltViewHold()
+    {
+        Debug.Log("Alt View Hold");
+    }*/
 
     // Here is where we pay for all our Singleton Sins
     public void ResetInventory()

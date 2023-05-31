@@ -1,10 +1,55 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MagiTechTabManager : ArtifactTabManager
 {
     [Header("Preview Tab")]
     [SerializeField] private ArtifactTab previewTab;
     [SerializeField] private Animator previewTabAnimator;
+
+    private BindingHeldBehavior bindingHeldBehavior;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        InitBindingHeldBehavior();
+    }
+
+    private void OnEnable()
+    {
+        Controls.RegisterBindingBehavior(bindingHeldBehavior);
+    }
+
+    private void OnDisable()
+    {
+        Controls.UnregisterBindingBehavior(bindingHeldBehavior);
+    }
+
+    private void InitBindingHeldBehavior()
+    {
+        if (bindingHeldBehavior != null)
+            return;
+
+        bindingHeldBehavior = new BindingHeldBehavior(
+            Controls.Bindings.Player.AltViewHold,
+            float.MaxValue,
+            onHoldStarted: (context) => { OnAltViewHoldStarted(context); },
+            onHoldCompleted: (context) => { OnAltViewHoldCanceled(context); },
+            onButtonReleasedEarly: (context) => { OnAltViewHoldCanceled(new InputAction.CallbackContext()); } // this wont cause anything bad to happen
+        );
+    }
+
+
+    private void OnAltViewHoldStarted(InputAction.CallbackContext callbackContext)
+    {
+        PreviewOnHoverEnter();
+    }
+
+    private void OnAltViewHoldCanceled(InputAction.CallbackContext callbackContext)
+    {
+        PreviewOnHoverExit();
+    }
 
     public override void SetCurrentScreen(int screenIndex)
     {

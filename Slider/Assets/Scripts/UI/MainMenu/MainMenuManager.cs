@@ -51,7 +51,8 @@ public class MainMenuManager : Singleton<MainMenuManager>
         InitializeSingleton(this);
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
-        //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
+        //why was below line commented out before? Uncommenting it so player can use "B" to go back with controller on menus
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context 
             => { if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); } });
     }
@@ -245,8 +246,11 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
         newSaveProfileIndex = profileIndex;
 
-        profileNameTextField.Select();
-        profileNameTextField.ActivateInputField();
+        if (Controls.Instance.GetCurrentControlScheme() == "Keyboard Mouse")
+        {
+            profileNameTextField.Select();
+        }
+        //profileNameTextField.ActivateInputField();
         profileNameTextField.text = "";
         UINavigationManager.CurrentMenu = newSavePanel;
         keyboardEnabled = true;
