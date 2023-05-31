@@ -12,6 +12,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     public UnityEvent PlayerMove;
     public UnityEvent PlayerAction;
     public UnityEvent PlayerCycle;
+    public UnityEvent PlayerAltViewHold;
 
     private void Awake() {
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => {
@@ -21,6 +22,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => PlayerAction?.Invoke());
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.CycleEquip, context => PlayerCycle?.Invoke());
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => PlayerMove?.Invoke());
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.AltViewHold, context => PlayerAltViewHold?.Invoke());
     }
 
     public void Save() {
@@ -95,6 +97,7 @@ public class Hint
 { 
     public string hintName;  //used when searching through hints
     public string hintText; //the text of the hint
+    public string controllerHintText; //a separate hint text, if the hint should be different for controller players
     public bool canDisableHint; //can this hint be disabled?
     public double timeUntilTrigger; //how long from triggering the hint until it displays
     public bool isInCountdown = false; //is this hint counting down until display? 
@@ -149,9 +152,18 @@ public class Hint
     public void Display() {
         if(shouldDisplay && !hasBeenCompleted && !hasBeenAddedToDisplay)
         {
-            UIHints.AddHint(ConvertVariablesToStrings(hintText), hintName);
+            string hintTextToDisplay = CheckConvertToControllerHintText(hintText);
+            UIHints.AddHint(ConvertVariablesToStrings(hintTextToDisplay), hintName);
             hasBeenAddedToDisplay = true;
         }
+    }
+
+    private string CheckConvertToControllerHintText(string message)
+    {
+        if (!controllerHintText.Equals("") && Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        {
+            return controllerHintText;
+        } else { return message; }
     }
 
     //C: Yoinked from DialogueDisplay, modified to work with rebinds instead of save variables

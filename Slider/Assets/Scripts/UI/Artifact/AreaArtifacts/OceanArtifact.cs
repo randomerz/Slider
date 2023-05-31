@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class OceanArtifact : UIArtifact
 {
@@ -9,10 +10,15 @@ public class OceanArtifact : UIArtifact
     public OceanArtifactHighlights oceanHighlights;
 
     private bool canRotate = true;
-    
+
+    [SerializeField] private GameObject controllerSupportButtonsHolder;
+    [SerializeField] private Button topLeftControllerButton;
+
     private new void Awake()
     {
         base.Awake();
+
+        Player.OnControlSchemeChanged += OnPlayerControlSchemeChanged;
     }
 
     protected override void OnEnable()
@@ -21,6 +27,14 @@ public class OceanArtifact : UIArtifact
 
         OnButtonInteract += UpdateHighlights;
         UIArtifactMenus.OnArtifactOpened += UpdateHighlights;
+        /*
+        Debug.LogWarning("SELECT!!");
+        topLeftControllerButton.Select();
+        if (Player.GetInstance().GetCurrentControlScheme() == "Controller") 
+        { 
+            controllerSupportButtonsHolder.SetActive(true);
+        }
+        else { controllerSupportButtonsHolder.SetActive(false); }*/
     }
 
     protected override void OnDisable()
@@ -29,6 +43,8 @@ public class OceanArtifact : UIArtifact
 
         OnButtonInteract -= UpdateHighlights;
         UIArtifactMenus.OnArtifactOpened -= UpdateHighlights;
+
+        Player.OnControlSchemeChanged -= OnPlayerControlSchemeChanged;
     }
 
     public override void ButtonDragged(BaseEventData eventData) 
@@ -212,5 +228,17 @@ public class OceanArtifact : UIArtifact
     public void AllowRotate(bool value)
     {
         canRotate = value;
+    }    
+    private void OnPlayerControlSchemeChanged(string newControlScheme)
+    {
+        if (newControlScheme == "Controller")
+        {
+            controllerSupportButtonsHolder.SetActive(true);
+            topLeftControllerButton.Select();
+        }
+        else
+        {
+            controllerSupportButtonsHolder.SetActive(false);
+        }
     }
 }

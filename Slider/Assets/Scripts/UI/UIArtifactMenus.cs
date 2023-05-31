@@ -37,6 +37,8 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.ArtifactLeft, context => _instance.screenAnimator.PrevScreen());
         //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.CycleArtifactScreens, context => _instance.screenAnimator.CycleScreen());
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.CycleEquip, context => _instance.screenAnimator.CycleScreen());
+        //For controller support
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => _instance.CloseArtifact());
     }
 
     private void OnEnable() 

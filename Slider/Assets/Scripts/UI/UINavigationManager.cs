@@ -170,6 +170,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
     /// </summary>
     public static void SelectBestButtonInCurrentMenu()
     {
+
         if (_inMouseControlMode || _instance._currentMenu == null)
         {
             return;

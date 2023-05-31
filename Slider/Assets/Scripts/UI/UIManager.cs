@@ -27,6 +27,8 @@ public class UIManager : Singleton<UIManager>
         InitializeSingleton();
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.OnPressPause());
+        //for controller support
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { BackPressed(); });
     }
 
     private void OnDisable() {
@@ -192,6 +194,10 @@ public class UIManager : Singleton<UIManager>
         else if (controlsPanel.activeSelf || advOptionsPanel.activeSelf)
         {
             OpenOptions();
+        }
+        else if (pausePanel.activeSelf && Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        {
+            CloseUI();
         }
     }
 

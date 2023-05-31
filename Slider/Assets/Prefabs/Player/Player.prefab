@@ -168,7 +168,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.7777779, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -587,6 +587,7 @@ MonoBehaviour:
   playerAnimator: {fileID: 380634036804812841}
   rb: {fileID: 380634037254267615}
   debugDontUpdateStileUnderneath: 0
+  playerInput: {fileID: 5205933783250344951}
 --- !u!114 &3635922835001186329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -818,8 +819,8 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.0375
-    y: 0.35462964
+    x: 0.010937501
+    y: 0.17314814
     width: 0.16666667
     height: 0.16666666
   near clip plane: 0.1
