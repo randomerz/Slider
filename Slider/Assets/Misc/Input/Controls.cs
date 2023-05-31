@@ -141,6 +141,11 @@ public class Controls : Singleton<Controls>
     public static void UnregisterBindingBehavior(BindingBehavior bindingBehavior)
     {
         InputAction action = _bindings.FindAction(bindingBehavior.binding.name);
+        if (action == null)
+        {
+            Debug.Log("Couldn't find action. Did the editor exit play mode?");
+            return;
+        }
         action.performed -= bindingBehavior.Invoke;
         OnBehaviorUnregistered?.Invoke(bindingBehavior);
     }

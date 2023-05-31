@@ -70,7 +70,6 @@ public class MagiTechGrid : SGrid
     private void OnTimeChange(object sender, Portal.OnTimeChangeArgs e)
     {
         bool isFuture = !e.fromPast;
-        Debug.Log("is future? " + isFuture);
         AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", isFuture ? 1 : 0);
     }
 
