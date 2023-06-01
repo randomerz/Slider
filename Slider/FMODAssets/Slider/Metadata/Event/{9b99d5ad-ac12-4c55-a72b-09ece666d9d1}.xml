@@ -352,6 +352,9 @@
 	</object>
 	<object class="MixerBusFader" id="{389dac78-551c-4ce2-a577-fc47a9228130}" />
 	<object class="ChorusEffect" id="{35f4fd12-225b-4b22-84c9-016deda5b667}">
+		<property name="bypass">
+			<value>true</value>
+		</property>
 		<property name="rate">
 			<value>0.159999996</value>
 		</property>

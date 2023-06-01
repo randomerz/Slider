@@ -27,12 +27,10 @@ namespace SliderVocalization {
         public float volumeAdjustmentDb;
         public VocalizerParametersModifier stressedVowelModifiers;
 
-        [Range(1, 10), Tooltip("Higher value means faster interpolation and less rounded sounds")]
+        [Range(0.1f, 10), Tooltip("Higher value means faster interpolation and less rounded sounds")]
         public float lerpSmoothnessInverted;
 
         [Header("Word-level configs")]
-        [Range(0.01f, 0.5f)]
-        public float wordGap;
         [Range(-1f, 1f)]
         public float wordIntonation;
         [Range(-1f, 1f)]
