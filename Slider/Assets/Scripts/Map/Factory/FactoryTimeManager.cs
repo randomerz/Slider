@@ -68,13 +68,13 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
         // Add trackers
         foreach (GameObject go in inPast ? pastBobs : presentBobs)
         {
-            UITrackerManager.AddNewTracker(go);
+            go.GetComponent<TrackableItem>().SetTrackerEnabled(true);
         }
 
         // Remove trackers
         foreach (GameObject go in inPast ? presentBobs : pastBobs)
         {
-            UITrackerManager.RemoveTracker(go);
+            go.GetComponent<TrackableItem>().SetTrackerEnabled(false);
         }
     }
 
