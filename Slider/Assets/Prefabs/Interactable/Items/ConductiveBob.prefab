@@ -51,7 +51,6 @@ MonoBehaviour:
   powerOnStart: 0
   invertSignal: 0
   affectedByBlackout: 1
-  debugAsPoweredOn: 0
   OnPowered:
     m_PersistentCalls:
       m_Calls: []
@@ -158,6 +157,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   isConductiveItem: 1
+  isConductiveTerminus: 0
   ignoreNotMovingCheck: 0
 --- !u!50 &7346633303750058602
 Rigidbody2D:
@@ -285,9 +285,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4607457495645169288}
-  - component: {fileID: 4015862400581203686}
   - component: {fileID: 4607457495645169294}
   - component: {fileID: 4607457495645169289}
+  - component: {fileID: 2313788777608573579}
   m_Layer: 9
   m_Name: ConductiveBob
   m_TagString: Item
@@ -314,7 +314,44 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4015862400581203686
+--- !u!50 &4607457495645169294
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4607457495645169290}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 1
+  m_UseAutoMass: 0
+  m_Mass: 0.44178647
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
+--- !u!58 &4607457495645169289
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4607457495645169290}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
+--- !u!114 &2313788777608573579
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -323,13 +360,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4607457495645169290}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59ec98f46be488f40a665e0375116960, type: 3}
+  m_Script: {fileID: 11500000, guid: d1386566b6ed1a543b55204139bd1fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Conductive Bob
   spriteRenderer: {fileID: 8919005992056777909}
   myCollider: {fileID: 4607457495645169289}
   canKeep: 0
+  itemRadius: 0.5
   pickUpDuration: 0.5
   xPickUpMotion:
     serializedVersion: 2
@@ -402,71 +440,10 @@ MonoBehaviour:
   - {fileID: 2593100706689104682}
   OnPickUp:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   OnDrop:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
---- !u!50 &4607457495645169294
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4607457495645169290}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 1
-  m_UseAutoMass: 0
-  m_Mass: 0.44178647
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 0
---- !u!58 &4607457495645169289
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4607457495645169290}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
+      m_Calls: []
 --- !u!1 &6452720972823350865
 GameObject:
   m_ObjectHideFlags: 0
