@@ -45,8 +45,8 @@ public class OceanControllerSupportButton : MonoBehaviour
 
     public void ColorButtonBasedOnIfSelected()
     {
-        if (currentlySelected) { image.color = new Color(1, 1, 1, 1); }
-        else { image.color = new Color(1, 1, 1, 0); UIRotateParams.OnHoverExit(); }
+        if (currentlySelected) { image.color = new Color(1, 1, 1, 1); Debug.Log(gameObject.name + " Selected!"); }
+        else { image.color = new Color(1, 1, 1, 0); UIRotateParams.OnHoverExit(); Debug.Log(gameObject.name + " NOT Selected!"); }
     }
 
     public void OnSelect() { currentlySelected = true; ColorButtonBasedOnIfSelected(); }
