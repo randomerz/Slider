@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class OceanControllerSupportButton : MonoBehaviour
 {
+    [SerializeField] private OceanControllerSupportButtonsHolder holder;
+
     [SerializeField] private Image image;
     [SerializeField] private Button button;
     [SerializeField] private UIRotateParams UIRotateParams;
@@ -20,21 +22,31 @@ public class OceanControllerSupportButton : MonoBehaviour
 
     public void OnClick()
     {
-        StartCoroutine(DisappearThenReappearAfterTime(0.8f));
+        holder.lastControllerSupportButtonClicked = this;
+        //StartCoroutine(DisappearThenReappearAfterTime(0.8f));
     }
 
-    private IEnumerator DisappearThenReappearAfterTime(float time)
+    float lastTimeDisappearWasTriggered;
+
+    public IEnumerator DisappearThenReappearAfterTime(float time)
     {
+        float timeAtStartDisappear = Time.time;
+        lastTimeDisappearWasTriggered = timeAtStartDisappear;
+
         image.color = new Color(1,1,1,0); 
         //ColorButtonBasedOnIfSelected();
         yield return new WaitForSeconds(time);
-        ColorButtonBasedOnIfSelected();
+        //If another disappear was triggered after this one started, don't reappear the button for this disappear
+        if (lastTimeDisappearWasTriggered == timeAtStartDisappear)
+        {
+            ColorButtonBasedOnIfSelected();
+        }
     }
 
     public void ColorButtonBasedOnIfSelected()
     {
-        if (currentlySelected) { image.color = new Color(1, 1, 1, 1); }
-        else { image.color = new Color(1, 1, 1, 0); UIRotateParams.OnHoverExit(); }
+        if (currentlySelected) { image.color = new Color(1, 1, 1, 1); Debug.Log(gameObject.name + " Selected!"); }
+        else { image.color = new Color(1, 1, 1, 0); UIRotateParams.OnHoverExit(); Debug.Log(gameObject.name + " NOT Selected!"); }
     }
 
     public void OnSelect() { currentlySelected = true; ColorButtonBasedOnIfSelected(); }
