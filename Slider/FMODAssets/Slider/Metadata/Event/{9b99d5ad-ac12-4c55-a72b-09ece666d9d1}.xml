@@ -270,7 +270,7 @@
 			<value>1</value>
 		</property>
 		<property name="curveShape">
-			<value>-1.00000048</value>
+			<value>-0.0634366646</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{d31f37ef-c885-425d-b580-41f057305d17}">
@@ -352,6 +352,9 @@
 	</object>
 	<object class="MixerBusFader" id="{389dac78-551c-4ce2-a577-fc47a9228130}" />
 	<object class="ChorusEffect" id="{35f4fd12-225b-4b22-84c9-016deda5b667}">
+		<property name="bypass">
+			<value>true</value>
+		</property>
 		<property name="rate">
 			<value>0.159999996</value>
 		</property>
