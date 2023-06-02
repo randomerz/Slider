@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class OceanControllerSupportButton : MonoBehaviour
 {
+    [SerializeField] private OceanControllerSupportButtonsHolder holder;
+
     [SerializeField] private Image image;
     [SerializeField] private Button button;
     [SerializeField] private UIRotateParams UIRotateParams;
@@ -20,10 +22,12 @@ public class OceanControllerSupportButton : MonoBehaviour
 
     public void OnClick()
     {
-        StartCoroutine(DisappearThenReappearAfterTime(0.8f));
+        Debug.Log("click " + gameObject.name);
+        holder.lastControllerSupportButtonClicked = this;
+        //StartCoroutine(DisappearThenReappearAfterTime(0.8f));
     }
 
-    private IEnumerator DisappearThenReappearAfterTime(float time)
+    public IEnumerator DisappearThenReappearAfterTime(float time)
     {
         image.color = new Color(1,1,1,0); 
         //ColorButtonBasedOnIfSelected();
