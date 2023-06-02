@@ -121,9 +121,6 @@ public class UIRotateParams : MonoBehaviour
 
         // artifact.AddQueue(bottomLeftX, bottomLeftY, isCCW);
         artifact.RotateTiles(bottomLeftX, bottomLeftY, isCCW);
-        if (oceanControllerSupportButtonsHolder.isActiveAndEnabled /*Player.GetInstance().GetCurrentControlScheme() == "Controller"*/)
-        {
-            oceanControllerSupportButtonsHolder.MakeLastControllerButtonClickedDisappear();
-        }
+
     }
 }

@@ -22,17 +22,25 @@ public class OceanControllerSupportButton : MonoBehaviour
 
     public void OnClick()
     {
-        Debug.Log("click " + gameObject.name);
         holder.lastControllerSupportButtonClicked = this;
         //StartCoroutine(DisappearThenReappearAfterTime(0.8f));
     }
 
+    float lastTimeDisappearWasTriggered;
+
     public IEnumerator DisappearThenReappearAfterTime(float time)
     {
+        float timeAtStartDisappear = Time.time;
+        lastTimeDisappearWasTriggered = timeAtStartDisappear;
+
         image.color = new Color(1,1,1,0); 
         //ColorButtonBasedOnIfSelected();
         yield return new WaitForSeconds(time);
-        ColorButtonBasedOnIfSelected();
+        //If another disappear was triggered after this one started, don't reappear the button for this disappear
+        if (lastTimeDisappearWasTriggered == timeAtStartDisappear)
+        {
+            ColorButtonBasedOnIfSelected();
+        }
     }
 
     public void ColorButtonBasedOnIfSelected()
