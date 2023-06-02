@@ -10,14 +10,6 @@ public class KeyboardButton : MonoBehaviour
     public TMP_InputField inputField;
     public TextMeshProUGUI character;
 
-    void Start()
-    {
-        
-    }
-    void Update()
-    {
-        
-    }
     public void Click()
     {
         if(MainMenuManager.GetInstance().keyboardEnabled) 
@@ -45,9 +37,5 @@ public class KeyboardButton : MonoBehaviour
         {
             character.text = character.text.ToLower();
         }
-    }
-    public void Deselect()
-    {
-        UINavigationManager.ClearSelectable();
     }
 }

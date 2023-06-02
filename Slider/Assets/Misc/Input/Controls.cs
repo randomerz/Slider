@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,12 +23,18 @@ using UnityEngine.InputSystem;
 /// <remarks>Author: Travis</remarks>
 public class Controls : Singleton<Controls>
 {
+    //I'm sorry Mr. Travis. I'm stroking
+    public static Controls Instance => _instance;
+
+
     private static InputSettings _bindings;
 
     /// <summary>
     /// <b>Revisit this when we start looking into controller support!</b>
     /// </summary>
     [SerializeField] private string currentControlScheme = "Keyboard Mouse";
+    public void SetCurrentControlScheme(string currentControlScheme) { this.currentControlScheme = currentControlScheme; }
+    public string GetCurrentControlScheme() { return currentControlScheme; }
 
     /// <summary>
     /// Returns an instance of InputSettings containing our current bindings. If the bindings are not yet loaded, this will load them 
@@ -134,6 +141,11 @@ public class Controls : Singleton<Controls>
     public static void UnregisterBindingBehavior(BindingBehavior bindingBehavior)
     {
         InputAction action = _bindings.FindAction(bindingBehavior.binding.name);
+        if (action == null)
+        {
+            Debug.Log("Couldn't find action. Did the editor exit play mode?");
+            return;
+        }
         action.performed -= bindingBehavior.Invoke;
         OnBehaviorUnregistered?.Invoke(bindingBehavior);
     }
@@ -292,11 +304,11 @@ public class BindingHeldBehavior : BindingBehavior
         onHoldStarted?.Invoke(context);
 
         float timeSinceButtonPressed = 0;
-        while (binding.controls[0].IsPressed() || timeSinceButtonPressed < holdDuration)
+        while (AnyBindingControlIsHeld() || timeSinceButtonPressed < holdDuration)
         {
             timeSinceButtonPressed += Time.deltaTime;
             onEachFrameWhileButtonHeld?.Invoke(timeSinceButtonPressed);
-            if (!binding.controls[0].IsPressed())
+            if (!AnyBindingControlIsHeld())
             {
                 onButtonReleasedEarly?.Invoke(timeSinceButtonPressed);
                 break;
@@ -308,5 +320,10 @@ public class BindingHeldBehavior : BindingBehavior
             }
             yield return new WaitForEndOfFrame();
         }
+    }
+
+    private bool AnyBindingControlIsHeld()
+    {
+        return binding.controls.ToList().Where((control) => control.IsPressed()).Count() > 0;
     }
 }
