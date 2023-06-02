@@ -89,7 +89,7 @@ namespace SliderVocalization
                 {
                     FirstSpokenVocalizer ??= LastSpokenVocalizer;
                     words.Add(LastSpokenVocalizer);
-                    words.Add(WordVocalizer.MakePauseVocalizer(gap));
+                    // words.Add(WordVocalizer.MakePauseVocalizer(gap));
                 }
             }
             if (punctuation == default) punctuation = '.';
@@ -139,6 +139,7 @@ namespace SliderVocalization
 
             // the last word can be heightened or lowered based on intonation
             context.wordPitchBase = preset.pitch;
+            context.lastWordFinalPitch = context.wordPitchBase;
             context.wordPitchIntonated = (upcoming == LastSpokenVocalizer ? GetBasePitchFromIntonation(preset) : preset.pitch);
         }
 

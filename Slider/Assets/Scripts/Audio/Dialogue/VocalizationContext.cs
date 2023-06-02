@@ -23,6 +23,7 @@ public class VocalRandomizationContext
 {
     public float wordPitchBase;
     public float wordPitchIntonated;
+    public float lastWordFinalPitch;
     public bool isCurrentWordLow;
 }
 
