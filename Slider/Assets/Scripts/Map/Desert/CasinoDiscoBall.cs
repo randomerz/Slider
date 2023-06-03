@@ -94,7 +94,7 @@ public class CasinoDiscoBall : MonoBehaviour, ISavable
         dice1.changeValue(5);
         dice2.changeValue(4);
 
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(4.5f);
 
         Fall();
     }

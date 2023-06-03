@@ -11,7 +11,7 @@ public class OceanArtifact : UIArtifact
 
     private bool canRotate = true;
 
-    [SerializeField] private GameObject controllerSupportButtonsHolder;
+    [SerializeField] private OceanControllerSupportButtonsHolder oceanControllerSupportButtonsHolder;
     [SerializeField] private Button topLeftControllerButton;
 
     private new void Awake()
@@ -27,14 +27,6 @@ public class OceanArtifact : UIArtifact
 
         OnButtonInteract += UpdateHighlights;
         UIArtifactMenus.OnArtifactOpened += UpdateHighlights;
-        /*
-        Debug.LogWarning("SELECT!!");
-        topLeftControllerButton.Select();
-        if (Player.GetInstance().GetCurrentControlScheme() == "Controller") 
-        { 
-            controllerSupportButtonsHolder.SetActive(true);
-        }
-        else { controllerSupportButtonsHolder.SetActive(false); }*/
     }
 
     protected override void OnDisable()
@@ -193,6 +185,11 @@ public class OceanArtifact : UIArtifact
             rotateParams[minY * 2 + minX].RotateArrow(peekedMove.isCCW);
         }
 
+        if (oceanControllerSupportButtonsHolder.isActiveAndEnabled /*Player.GetInstance().GetCurrentControlScheme() == "Controller"*/)
+        {
+            oceanControllerSupportButtonsHolder.MakeLastControllerButtonClickedDisappear();
+        }
+
         base.ProcessQueue();
     }
 
@@ -233,12 +230,12 @@ public class OceanArtifact : UIArtifact
     {
         if (newControlScheme == "Controller")
         {
-            controllerSupportButtonsHolder.SetActive(true);
+            oceanControllerSupportButtonsHolder.gameObject.SetActive(true);
             topLeftControllerButton.Select();
         }
         else
         {
-            controllerSupportButtonsHolder.SetActive(false);
+            oceanControllerSupportButtonsHolder.gameObject.SetActive(false);
         }
     }
 }
