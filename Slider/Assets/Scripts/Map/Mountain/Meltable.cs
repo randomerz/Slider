@@ -37,9 +37,16 @@ public class Meltable : FlashWhite, ISavable
     [SerializeField] private bool fixBackToFrozen = false;
     [SerializeField] private float freezeTime = 5.0f;
 
-    public bool isFrozen = true;
+    public enum MeltableState
+    {
+        FROZEN,
+        MELTED,
+        BROKEN
+    }
+
+    public MeltableState state;
+
     public int numLavaSources = 0;
-    public bool anchorBroken = false;
     private int numTimesBroken = 0;
     private STile sTile;
 
@@ -66,7 +73,7 @@ public class Meltable : FlashWhite, ISavable
         if(Time.timeScale != 0 && CheckFreeze())
         {
             currFreezeTime -= Time.deltaTime;
-            if(!isFrozen && currFreezeTime < blinkTime && currFreezeTime > 0)
+            if(state != MeltableState.FROZEN && currFreezeTime < blinkTime && currFreezeTime > 0)
                 ToggleBlinkSprite(blinkTime - currFreezeTime);
             if(currFreezeTime < 0)
                 Freeze();
@@ -81,7 +88,7 @@ public class Meltable : FlashWhite, ISavable
                 spriteRenderer.sprite = frozenSprite;
         } else {
             if(spriteRenderer)
-                spriteRenderer.sprite = anchorBroken ? anchorBrokenSprite : meltedSprite;
+                spriteRenderer.sprite = (state == MeltableState.BROKEN) ? anchorBrokenSprite : meltedSprite;
         }
     }
 
@@ -113,7 +120,7 @@ public class Meltable : FlashWhite, ISavable
 
     public bool CheckFreeze()
     {
-        return (!refreezeOnTop && ((sTile != null && sTile.y > 1) || transform.position.y > 62.5) && (!anchorBroken || refreezeFromBroken) && numLavaSources <= 0);
+        return (refreezeOnTop && ((sTile != null && sTile.y > 1) || transform.position.y > 62.5) && (state != MeltableState.BROKEN || refreezeFromBroken) && numLavaSources <= 0);
     }
 
     public void FlashThenBreak() {
@@ -122,15 +129,14 @@ public class Meltable : FlashWhite, ISavable
     }
 
     public void Break(bool fromLoad = false) {
-        if(fromLoad || ((isFrozen || canBreakWhenNotFrozen) && canBreakWithAnchor && !anchorBroken))
+        if(fromLoad || ((state == MeltableState.FROZEN || canBreakWhenNotFrozen) && canBreakWithAnchor && state != MeltableState.BROKEN))
         {
             if(breakToMelted)
                 Melt(true);
             else
             {
-                anchorBroken = true;
+                state = MeltableState.BROKEN;
                 numTimesBroken++;
-                isFrozen = false;
                 if(spriteRenderer)
                     spriteRenderer.sprite = anchorBrokenSprite;
                 onBreak?.Invoke();
@@ -141,9 +147,9 @@ public class Meltable : FlashWhite, ISavable
 
     public void Melt(bool fromLoad = false)
     {
-        if(fromLoad || (isFrozen && numLavaSources > 0)) 
+        if(fromLoad || (state == MeltableState.FROZEN && numLavaSources > 0)) 
         {
-            isFrozen = false;
+            state = MeltableState.MELTED;
             if(spriteRenderer)
                 spriteRenderer.sprite = meltedSprite;
             onMelt?.Invoke();
@@ -153,22 +159,21 @@ public class Meltable : FlashWhite, ISavable
 
     public void Freeze(bool fromLoad = false)
     {
-        if(fromLoad || !isFrozen)
+        if(fromLoad || state != MeltableState.FROZEN)
         {
-            isFrozen = true;
+            state = MeltableState.FROZEN;
             if(spriteRenderer)
                 spriteRenderer.sprite = frozenSprite;
             onFreeze?.Invoke();
             currFreezeTime = freezeTime;
-            anchorBroken = false;
         }
     }
 
     public void Fix()
     {
-        if(anchorBroken) 
+        if(state == MeltableState.BROKEN) 
         {
-            anchorBroken = false;
+            state = MeltableState.MELTED;
            // animator.SetBool("Broken", false);
             if(fixBackToFrozen)
                 Freeze();
@@ -207,40 +212,38 @@ public class Meltable : FlashWhite, ISavable
 
     public void Save()
     {
-        SaveSystem.Current.SetBool(gameObject.name + "Frozen", isFrozen);
-        SaveSystem.Current.SetBool(gameObject.name + "Broken", anchorBroken);
+        SaveSystem.Current.SetInt(gameObject.name + "MeltState", ((int)state));
     }
 
     public void Load(SaveProfile profile)
     {
-        isFrozen = profile.GetBool(gameObject.name + "Frozen", true);
-        anchorBroken = profile.GetBool(gameObject.name + "Broken");
-        if(isFrozen)
+        state = (MeltableState)profile.GetInt(gameObject.name + "MeltState");
+        if(state == MeltableState.FROZEN)
             Freeze(true);
-        else if(anchorBroken)
+        else if(state == MeltableState.BROKEN)
             Break(true);
         else
             Melt(true);
     }
 
     public void IsFrozen(Condition c) {
-        c.SetSpec(isFrozen);
+        c.SetSpec(state == MeltableState.FROZEN);
     }
 
     public void IsBroken(Condition c) {
-        c.SetSpec(anchorBroken);
+        c.SetSpec(state == MeltableState.BROKEN);
     }
 
     public void IsNotFrozen(Condition c) {
-        c.SetSpec(!isFrozen);
+        c.SetSpec(state != MeltableState.FROZEN);
     }
 
     public void IsNotFrozenOrBroken(Condition c) {
-        c.SetSpec(!isFrozen && !anchorBroken);
+        c.SetSpec(state == MeltableState.MELTED);
     }
 
     public bool IsNotFrozenOrBroken() {
-        return(!isFrozen && !anchorBroken);
+        return(state == MeltableState.MELTED);
     }
 
     public void HasBeenBrokenMultipleTimes(Condition c){
