@@ -212,12 +212,12 @@ public class Meltable : FlashWhite, ISavable
 
     public void Save()
     {
-        SaveSystem.Current.SetInt(gameObject.name + "MeltState", ((int)state));
+        SaveSystem.Current.SetInt(gameObject.name + gameObject.transform.parent.name + "MeltState", ((int)state));
     }
 
     public void Load(SaveProfile profile)
     {
-        state = (MeltableState)profile.GetInt(gameObject.name + "MeltState");
+        state = (MeltableState)profile.GetInt(gameObject.name + gameObject.transform.parent.name + "MeltState");
         if(state == MeltableState.FROZEN)
             Freeze(true);
         else if(state == MeltableState.BROKEN)
