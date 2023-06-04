@@ -63,11 +63,10 @@ public class MountainGrid : SGrid
             if(dropTile != null)
             {
                 if(dropTile.y < 2)
-                    return; //using the anchor on the bottom layer does nothing
+                    return; 
                 STile lower = SGrid.Current.GetGrid()[dropTile.x, dropTile.y - 2];
-                if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile
+                if(!lower.isTileActive)  
                 {
-                    //C TODO: look at how logan did conveyers and copy that because rn this cancels the whole queue
                     MountainArtifact uiArtifact = (MountainArtifact) MountainArtifact.GetInstance();
                     //UIArtifact.ClearQueues();
                     uiArtifact.AnchorSwap(dropTile, lower);
@@ -106,7 +105,8 @@ public class MountainGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
-       // if(stile.islandId == 7)
+        if(stile.islandId == 7)
+            SaveSystem.Current.SetBool("forceAutoMove", true);
            // CheckTile7Spawn();
         base.EnableStile(stile, shouldFlicker);
     }
