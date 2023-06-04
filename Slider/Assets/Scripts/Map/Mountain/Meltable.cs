@@ -133,7 +133,7 @@ public class Meltable : FlashWhite, ISavable
                 isFrozen = false;
                 if(spriteRenderer)
                     spriteRenderer.sprite = anchorBrokenSprite;
-                onBreak.Invoke();
+                onBreak?.Invoke();
                 currFreezeTime = freezeTime;
             }
         }
@@ -146,7 +146,7 @@ public class Meltable : FlashWhite, ISavable
             isFrozen = false;
             if(spriteRenderer)
                 spriteRenderer.sprite = meltedSprite;
-            onMelt.Invoke();
+            onMelt?.Invoke();
             currFreezeTime = freezeTime;
         }
     }
@@ -158,7 +158,7 @@ public class Meltable : FlashWhite, ISavable
             isFrozen = true;
             if(spriteRenderer)
                 spriteRenderer.sprite = frozenSprite;
-            onFreeze.Invoke();
+            onFreeze?.Invoke();
             currFreezeTime = freezeTime;
             anchorBroken = false;
         }
@@ -174,7 +174,7 @@ public class Meltable : FlashWhite, ISavable
                 Freeze();
             else if(spriteRenderer)
                 spriteRenderer.sprite = meltedSprite;
-            onFix.Invoke();
+            onFix?.Invoke();
         }
     }
 
