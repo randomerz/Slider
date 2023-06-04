@@ -11,6 +11,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
   //  public RailManager borderRM;
     private bool isOpen = true; //C: TODO true if there are tiles in front of the elevator (top and bottom), false otherwise
     private bool hasGoneDown;
+    private bool hasGoneUp;
     public ElevatorAnimationManager animationManager;
     public bool isSending = false; //true when minecart being sent;
 
@@ -56,6 +57,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
         mc.StopMoving();
         animationManager.SendUp();
         StartCoroutine(WaitThenSend(mc, topPosition.transform.position, 3));
+        hasGoneUp = true;
     }
     
     private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir){
@@ -75,29 +77,30 @@ public class MinecartElevator : MonoBehaviour, ISavable
         && SGrid.Current.GetStileAt(0, 3).isTileActive && !SGrid.Current.GetStileAt(0, 3).IsMoving();
     }
 
-    public void CheckIsFixed(Condition c)
-    {
-        c.SetSpec(isFixed);
-    }
+    public void CheckIsFixed(Condition c) => c.SetSpec(isFixed);
 
-    public void CheckIsNotOpen(Condition c)
-    {
-        c.SetSpec(!isOpen);
-    }
+    public void CheckIsNotOpen(Condition c) => c.SetSpec(!isOpen);
 
-    public void CheckHasGoneDown(Condition c)
-    {
-        c.SetSpec(hasGoneDown);
-    }
+    public void CheckHasGoneDown(Condition c) => c.SetSpec(hasGoneDown);
+
+    public void CheckHasNotGoneDown(Condition c) => c.SetSpec(!hasGoneDown);
+
+    public void CheckHasGoneUp(Condition c) => c.SetSpec(hasGoneUp);
+    
 
 
     public void Save()
     {
         SaveSystem.Current.SetBool("MountainElevatorFixed", isFixed);
+        SaveSystem.Current.SetBool("MountainElevatorUp", hasGoneUp);
+        SaveSystem.Current.SetBool("MountainElevatorDown", hasGoneDown);
+
     }
 
     public void Load(SaveProfile profile)
     {
+        hasGoneUp = profile.GetBool("MountainElevatorUp");
+        hasGoneDown = profile.GetBool("MountainElevatorDown");
         isFixed = profile.GetBool("MountainElevatorFixed");
         if(isFixed)
             animationManager.Repair(true);
