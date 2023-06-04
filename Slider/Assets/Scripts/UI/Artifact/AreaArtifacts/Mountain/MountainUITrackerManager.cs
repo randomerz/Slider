@@ -28,7 +28,6 @@ public class MountainUITrackerManager : UITrackerManager
         temp.y = ScaleOutsideCutoff(temp.y, -17, 17, .5f);
         Vector2 offset = temp.x * xCenterOffset + temp.y * yCenterOffset;
         offset += (position.y > 62.5 ? new Vector2(0, 29.5f) : new Vector2(0, -29.5f));
-        print(offset);
         return offset;
     }
 

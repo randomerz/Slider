@@ -39,7 +39,7 @@ public class Meltable : FlashWhite, ISavable
 
     public bool isFrozen = true;
     public int numLavaSources = 0;
-    private bool anchorBroken = false;
+    public bool anchorBroken = false;
     private int numTimesBroken = 0;
     private STile sTile;
 
@@ -113,7 +113,7 @@ public class Meltable : FlashWhite, ISavable
 
     public bool CheckFreeze()
     {
-        return (!refreezeOnTop || ((sTile != null && sTile.y > 1) || transform.position.y > 62.5) && (!anchorBroken || refreezeFromBroken) && numLavaSources <= 0);
+        return (!refreezeOnTop && ((sTile != null && sTile.y > 1) || transform.position.y > 62.5) && (!anchorBroken || refreezeFromBroken) && numLavaSources <= 0);
     }
 
     public void FlashThenBreak() {
@@ -160,6 +160,7 @@ public class Meltable : FlashWhite, ISavable
                 spriteRenderer.sprite = frozenSprite;
             onFreeze.Invoke();
             currFreezeTime = freezeTime;
+            anchorBroken = false;
         }
     }
 

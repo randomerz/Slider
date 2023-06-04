@@ -27,15 +27,14 @@ public class WaterWheel : MonoBehaviour
 
     private void CheckMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(e.stile == stile)
-            ResetOnMove();
+       // if(e.stile == stile)
+            //ResetOnMove();
     }
 
     
 
     private void Update() {
         UpdatePower();
-        
     }
 
 
@@ -58,15 +57,9 @@ public class WaterWheel : MonoBehaviour
         lavaCount++;
         hasAddedLava = true;
         heaterAnimator.SetInteger("Lava",lavaCount);
-        if(lavaCount == 1) {
-            cog1.AddLava();
-            cog1.Melt();
-            cog1.SetRefreezeOnTop(false);
-        }
+
         if(lavaCount == 2){
-            cog2.AddLava();
-            cog2.Melt();
-            cog2.SetRefreezeOnTop(false);
+            SetLavaComplete();
         }
     }
 
@@ -97,8 +90,12 @@ public class WaterWheel : MonoBehaviour
     public void SetLavaComplete()
     {
         inLavaStage = false;
-        cog1.SetRefreezeOnTop(false);
+        cog2.AddLava();
+        cog2.Melt();
         cog2.SetRefreezeOnTop(false);
+        cog1.AddLava();
+        cog1.Melt();
+        cog1.SetRefreezeOnTop(false);
     }
 
     public bool IsDone(){

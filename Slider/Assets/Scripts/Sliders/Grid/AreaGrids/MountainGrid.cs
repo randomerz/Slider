@@ -144,6 +144,8 @@ public class MountainGrid : SGrid
 
 
     #region Minecart Specs
+    
+    public void SetCrystalDeliveredTrue() => SetCrystalDelivered(true);
 
     public void SetCrystalDelivered(bool value)
     {
@@ -152,10 +154,7 @@ public class MountainGrid : SGrid
         SaveSystem.Current.SetBool("MountainCrystalDelivered", crystalDelivered);
     }
 
-    public void CheckCrystalDelivery(Condition c)
-    {
-        c.SetSpec(crystalDelivered);
-    }
+    public void CheckCrystalDelivery(Condition c) => c.SetSpec(crystalDelivered);
 
 
     #endregion
