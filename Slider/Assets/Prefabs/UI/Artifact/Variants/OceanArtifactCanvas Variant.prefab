@@ -66,6 +66,7 @@ MonoBehaviour:
   - {fileID: 1078792646606488907}
   - {fileID: 655173902977228316}
   - {fileID: 579643580678517939}
+  lastControllerSupportButtonClicked: {fileID: 0}
 --- !u!1001 &476497890820839475
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -81,6 +82,10 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SelectArrow
       objectReference: {fileID: 0}
+    - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
+      propertyPath: holder
+      value: 
+      objectReference: {fileID: 5275713909584954109}
     - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: UIRotateParams
       value: 
@@ -191,11 +196,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
@@ -204,7 +209,7 @@ PrefabInstance:
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 6021477107845778326}
+      objectReference: {fileID: 6223463544244758273}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -212,7 +217,7 @@ PrefabInstance:
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 6223463544244758273}
+      objectReference: {fileID: 6021477107845778326}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -227,11 +232,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SelectArrow
+      value: OnClick
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: OnClick
+      value: SelectArrow
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
@@ -239,7 +244,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UIRotateParams, Assembly-CSharp
+      value: OceanControllerSupportButton, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
@@ -247,7 +252,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: OceanControllerSupportButton, Assembly-CSharp
+      value: UIRotateParams, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -348,6 +353,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: dd197fc63de0ddd4bb29076260840dbd, type: 3}
+    - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
+      propertyPath: holder
+      value: 
+      objectReference: {fileID: 5275713909584954109}
     - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: UIRotateParams
       value: 
@@ -466,11 +475,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
@@ -479,7 +488,7 @@ PrefabInstance:
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 6021477107845778326}
+      objectReference: {fileID: 4845051293717010805}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -487,7 +496,7 @@ PrefabInstance:
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 4845051293717010805}
+      objectReference: {fileID: 6021477107845778326}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -502,11 +511,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SelectArrow
+      value: OnClick
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: OnClick
+      value: SelectArrow
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
@@ -514,7 +523,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UIRotateParams, Assembly-CSharp
+      value: OceanControllerSupportButton, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
@@ -522,7 +531,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: OceanControllerSupportButton, Assembly-CSharp
+      value: UIRotateParams, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7763899677382564669, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
@@ -615,6 +624,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: dd197fc63de0ddd4bb29076260840dbd, type: 3}
+    - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
+      propertyPath: holder
+      value: 
+      objectReference: {fileID: 5275713909584954109}
     - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: UIRotateParams
       value: 
@@ -838,6 +851,10 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SelectArrow
       objectReference: {fileID: 0}
+    - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
+      propertyPath: holder
+      value: 
+      objectReference: {fileID: 5275713909584954109}
     - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: UIRotateParams
       value: 
@@ -1077,6 +1094,10 @@ PrefabInstance:
       propertyPath: litCCWArrow
       value: 
       objectReference: {fileID: 7429107406889428964, guid: 56ec0393aa0d55d4cba1b6110fedd2d0, type: 3}
+    - target: {fileID: 2243524688618292921, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
+      propertyPath: oceanControllerSupportButtonsHolder
+      value: 
+      objectReference: {fileID: 5275713909584954109}
     - target: {fileID: 2243524688618292922, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_Name
       value: Rotate Base (2)
@@ -1201,6 +1222,10 @@ PrefabInstance:
       propertyPath: bottomLeftX
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2243524688618292921, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
+      propertyPath: oceanControllerSupportButtonsHolder
+      value: 
+      objectReference: {fileID: 5275713909584954109}
     - target: {fileID: 2243524688618292922, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_Name
       value: Rotate Base (1)
@@ -1345,6 +1370,10 @@ PrefabInstance:
       propertyPath: litCCWArrow
       value: 
       objectReference: {fileID: -5458598972809746309, guid: 56ec0393aa0d55d4cba1b6110fedd2d0, type: 3}
+    - target: {fileID: 2243524688618292921, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
+      propertyPath: oceanControllerSupportButtonsHolder
+      value: 
+      objectReference: {fileID: 5275713909584954109}
     - target: {fileID: 2243524688618292922, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_Name
       value: Rotate Base (3)
@@ -1465,6 +1494,10 @@ PrefabInstance:
       propertyPath: artifact
       value: 
       objectReference: {fileID: 2620790809741503431}
+    - target: {fileID: 2243524688618292921, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
+      propertyPath: oceanControllerSupportButtonsHolder
+      value: 
+      objectReference: {fileID: 5275713909584954109}
     - target: {fileID: 2243524688618292922, guid: ec9cbb05398a4ba4ca4b966231d78d2c, type: 3}
       propertyPath: m_Name
       value: Rotate Base
@@ -1589,6 +1622,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: dd197fc63de0ddd4bb29076260840dbd, type: 3}
+    - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
+      propertyPath: holder
+      value: 
+      objectReference: {fileID: 5275713909584954109}
     - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: UIRotateParams
       value: 
@@ -1808,6 +1845,10 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SelectArrow
       objectReference: {fileID: 0}
+    - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
+      propertyPath: holder
+      value: 
+      objectReference: {fileID: 5275713909584954109}
     - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: UIRotateParams
       value: 
@@ -2032,6 +2073,10 @@ PrefabInstance:
       value: SelectArrow
       objectReference: {fileID: 0}
     - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
+      propertyPath: holder
+      value: 
+      objectReference: {fileID: 5275713909584954109}
+    - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: UIRotateParams
       value: 
       objectReference: {fileID: 5526493263422671828}
@@ -2254,6 +2299,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: dd197fc63de0ddd4bb29076260840dbd, type: 3}
+    - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
+      propertyPath: holder
+      value: 
+      objectReference: {fileID: 5275713909584954109}
     - target: {fileID: 5819481195013226290, guid: ff00e3d712579d64ea7291da4597c18b, type: 3}
       propertyPath: UIRotateParams
       value: 
@@ -2852,6 +2901,7 @@ MonoBehaviour:
   rotateParams: []
   oceanHighlights: {fileID: 0}
   controllerSupportButtonsHolder: {fileID: 1893851258855498643}
+  oceanControllerSupportButtonsHolder: {fileID: 5275713909584954109}
   topLeftControllerButton: {fileID: 7863907074205352718}
 --- !u!114 &8799935562317442825 stripped
 MonoBehaviour:
