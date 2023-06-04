@@ -114,7 +114,7 @@ public class UIRotateParams : MonoBehaviour
             animator.SetTrigger("rotateCW");
         }
     }
-
+    [SerializeField] private OceanControllerSupportButtonsHolder oceanControllerSupportButtonsHolder;
     public void OnClick()
     {
         // OnHover();
