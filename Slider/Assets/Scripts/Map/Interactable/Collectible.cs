@@ -10,6 +10,12 @@ public class Collectible : MonoBehaviour
     {
         public string name;
         public Area area;
+
+        public CollectibleData(string name, Area area)
+        {
+            this.name = name;
+            this.area = area;
+        }
     }
 
     [SerializeField] private CollectibleData cData;

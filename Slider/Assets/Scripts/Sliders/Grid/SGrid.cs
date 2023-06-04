@@ -141,7 +141,7 @@ Note: This updates all of the STiles according to the ids in the given array (un
 */
 public void SetGrid(int[,] puzzle)
     {
-        if (puzzle.Length != grid.Length)
+        if (puzzle.GetLength(0) != grid.GetLength(0) || puzzle.GetLength(1) != grid.GetLength(1))
         {
             Debug.LogWarning("Tried to SetGrid(int[,]), but provided puzzle was of a different length!");
         }
@@ -251,14 +251,26 @@ public void SetGrid(int[,] puzzle)
     public static int[,] GridStringToSetGridFormat(string gridstring)
     {
         //Chen: This in theory should work for other grids? This is mostly used with Scroll of Realigning stuff.
+
         int[,] gridFormat = new int[Current.Width, Current.Height];
-        for (int x = Current.Width - 1; x >= 0; x--)
+
+        for(int i = 0; i < gridstring.Length; i++)
+        {
+            int tileNum =  Converter.CharToInt(gridstring[i]);
+            int x = i % Current.Width;
+            int y = ((Current.Width * Current.Height) - i - 1) / Current.Width;
+            gridFormat[x, y] = tileNum;
+        }
+        //int[,] gridFormat = new int[Current.Height, Current.Width];
+        
+        /*for (int x = Current.Width - 1; x >= 0; x--)
         {
             for (int y = 0; y < Current.Height; y++)
             {
+                print($"{x},{y}");
                 gridFormat[y, (Current.Width - 1 - x)] = Converter.CharToInt(gridstring[(x * Current.Height) + y]);
             }
-        }
+        }*/
         return gridFormat;
     }
 
