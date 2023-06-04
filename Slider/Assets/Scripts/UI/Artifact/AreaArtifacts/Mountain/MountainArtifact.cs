@@ -56,8 +56,5 @@ public class MountainArtifact : UIArtifact
         //We can't just call CheckandSwap because CanMove will return false due to the anchor
         SMove move = new SMoveLayerSwap(s1.x, s1.y, s2.x, s2.y, s1.islandId, s2.islandId);
         QueueMoveFromButtonPair(move, GetButton(s1.islandId), GetButton(s2.islandId));
-        QueueAdd(move);
-        SwapButtons(GetButton(s1.islandId), GetButton(s2.islandId));
-        ProcessQueue();
     }
 }

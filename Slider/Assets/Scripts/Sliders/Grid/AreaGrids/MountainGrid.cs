@@ -69,7 +69,7 @@ public class MountainGrid : SGrid
                 {
                     //C TODO: look at how logan did conveyers and copy that because rn this cancels the whole queue
                     MountainArtifact uiArtifact = (MountainArtifact) MountainArtifact.GetInstance();
-                    UIArtifact.ClearQueues();
+                    //UIArtifact.ClearQueues();
                     uiArtifact.AnchorSwap(dropTile, lower);
                 }
             }
@@ -106,8 +106,8 @@ public class MountainGrid : SGrid
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
-        if(stile.islandId == 7)
-            CheckTile7Spawn();
+       // if(stile.islandId == 7)
+           // CheckTile7Spawn();
         base.EnableStile(stile, shouldFlicker);
     }
 
