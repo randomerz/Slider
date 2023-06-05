@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
+using System;
+using System.IO;
+using NUnit.Framework;
 
 /// <summary>
 /// Builder for use in CLI. See `build_unity.bat` outside of the project folder for example usage.
@@ -37,8 +40,8 @@ public class GameBuilder
         string filename = GetProjectName();
 
         BuildPlayer(BuildTarget.StandaloneWindows64, buildRootPath, filename);
-        BuildPlayer(BuildTarget.StandaloneOSX, buildRootPath, filename);
-        BuildPlayer(BuildTarget.StandaloneLinux64, buildRootPath, filename);
+        //BuildPlayer(BuildTarget.StandaloneOSX, buildRootPath, filename);
+        //BuildPlayer(BuildTarget.StandaloneLinux64, buildRootPath, filename);
 
     }
 
@@ -47,12 +50,12 @@ public class GameBuilder
     {
         if (buildRootPath == null || buildRootPath.Length == 0)
         {
-            Debug.LogError("Path must be provided!");
+            Debug.LogError("[Builds] Path must be provided!");
             return;
         }
         if (filename == null || filename.Length == 0)
         {
-            Debug.LogError("Filename must be provided!");
+            Debug.LogError("[Builds] Filename must be provided!");
             return;
         }
 
@@ -86,20 +89,49 @@ public class GameBuilder
             target = buildTarget,
             locationPathName = finalPath,
         };
-        Debug.Log($"====== Building: {buildTarget.ToString()} ======");
+        Debug.Log($"[Builds] Building: {buildTarget.ToString()} ======");
 
         BuildReport report = BuildPipeline.BuildPlayer(options);
 
         if (report.summary.result == BuildResult.Succeeded)
         {
-            Debug.Log($"Build successful - Build written to {options.locationPathName}");
+            Debug.Log($"[Builds] Build successful - Build written to {options.locationPathName}");
         }
         else if (report.summary.result == BuildResult.Failed)
         {
-            Debug.LogError($"Build failed");
+            Debug.LogError($"[Builds] Build failed");
+        }
+
+        DeleteBurstDebugInformationFolder(report);
+    }
+
+    private static void DeleteBurstDebugInformationFolder(BuildReport buildReport)
+    {
+        string outputPath = buildReport.summary.outputPath;
+
+        try
+        {
+            string applicationName = System.IO.Path.GetFileNameWithoutExtension(outputPath);
+            string outputFolder = System.IO.Path.GetDirectoryName(outputPath);
+            Assert.IsNotNull(outputFolder);
+
+            outputFolder = System.IO.Path.GetFullPath(outputFolder);
+
+            string burstDebugInformationDirectoryPath = System.IO.Path.Combine(outputFolder, $"{applicationName}_BurstDebugInformation_DoNotShip");
+
+            if (Directory.Exists(burstDebugInformationDirectoryPath))
+            {
+                Debug.Log($"[Builds] Deleting Burst debug information folder at path '{burstDebugInformationDirectoryPath}'...");
+
+                Directory.Delete(burstDebugInformationDirectoryPath, true);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"[Builds] An unexpected exception occurred while performing build cleanup: {e}");
         }
     }
-    
+
     private static string[] GetScenePaths()
     {
         List<string> scenes = new List<string>();
@@ -110,7 +142,6 @@ public class GameBuilder
                 scenes.Add(scene.path);
             }
         }
-        Debug.Log($"Building {scenes.Count} scenes...");
         return scenes.ToArray();
     }
 
@@ -123,7 +154,7 @@ public class GameBuilder
     static string GetProjectFolderPath()
     {
         string s = Application.dataPath; // returns Root/Project/Assets/
-        System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(s);
+        DirectoryInfo di = new DirectoryInfo(s);
         s = di.Parent.Parent.FullName;
         return s;
     }
