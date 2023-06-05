@@ -84,6 +84,8 @@ public class PlayerInventory : MonoBehaviour
         return hasCollectedAnchor;
     }
 
+    public static void AddCollectibleFromData(Collectible.CollectibleData data) => collectibles.Add(data);
+
     public static void AddCollectible(Collectible collectible) {
         // Debug.Log("Adding " + collectible.GetArea() + " " + collectible.GetName());
 

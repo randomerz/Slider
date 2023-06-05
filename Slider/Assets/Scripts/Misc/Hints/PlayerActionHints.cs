@@ -205,7 +205,7 @@ public class Hint
             message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
         }
         if(message.IndexOf("W/A/S/D") > -1)
-                    message = message.Replace("W/A/S/D", "WASD");
+            message = message.Replace("W/A/S/D", "WASD");
         return message;
     }
 
