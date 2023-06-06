@@ -235,67 +235,36 @@ public class DebugUIManager : MonoBehaviour
         SGrid.Current.SetGrid(grid);
     }
 
-    public void SpawnAnchor()
-    {
-        Instantiate(anchorPrefab, Player.GetPosition(), Quaternion.identity);
-    }
-
-    public void SpawnMinecart()
-    {
-        Instantiate(minecartPrefab, Player.GetPosition(), Quaternion.identity);
-    }
-
-    public void GPTC(string collectibleName)
-    {
-        SGrid.Current.GivePlayerTheCollectible(collectibleName);
-    }
-
-    public void Give(string collectibleName)
-    {
-        SGrid.Current.GivePlayerTheCollectible(collectibleName);
-    }
+    public void SpawnAnchor() => Instantiate(anchorPrefab, Player.GetPosition(), Quaternion.identity);
+    
+    public void GPTC(string collectibleName) => SGrid.Current.GivePlayerTheCollectible(collectibleName);
+    
+    public void Give(string collectibleName) => SGrid.Current.GivePlayerTheCollectible(collectibleName);
 
     public void ES(string num)
     {
         int n = int.Parse(num);
         for (int i = 1; i <= n; i++)
-        {
             SGrid.Current.GetCollectible("Slider " + i)?.DoPickUp();
-        }
     }
 
     public void ActivateAllCollectibles(bool excludeSliders = false)
     {
         foreach (Collectible c in SGrid.Current.GetCollectibles())
-        {
-            if(excludeSliders && c.name.Contains("Slider")){}
-            else
-            {
-                // c.gameObject.SetActive(true);
-                // c.transform.position = Player.GetPosition(); 
+            if(!excludeSliders && !c.name.Contains("Slider"))
                 c.DoPickUp();
-            }
-        }
         UIManager.CloseUI();
     }
 
     //C: Gives all collectables for that area
-    public void AC()
-    {
-        ActivateAllCollectibles();
-    }
+    public void AC() => ActivateAllCollectibles();
 
     //C: Gives all collectables for that area, excluding Sliders
-    public void ACES()
-    {
-        ActivateAllCollectibles(true);
-    }
+    public void ACES() => ActivateAllCollectibles(true);
+    
 
-    public void ToggleConveyers()
-    {
-        disableConveyers = !disableConveyers;
-    }
-
+    public void ToggleConveyers() => disableConveyers = !disableConveyers;
+    
     //C: make sure pattern is the same length as the current sgrid
     public void SetGrid(string pattern)
     {
@@ -321,15 +290,8 @@ public class DebugUIManager : MonoBehaviour
         SGrid.Current.SetGrid(puzzle);
     }
 
-    public void SetBoolTrue(string boolName)
-    {
-        SaveSystem.Current.SetBool(boolName, true);
-    }
+    public void SetBoolTrue(string boolName) => SaveSystem.Current.SetBool(boolName, true);
 
-    public void EnableArtifactCompletion()
-    {
-        SGrid.Current.CheckCompletion = true; // doesn't do anything bc you need to subscribe the checking methods
-    }
 
     public void DebugPrintBools()
     {
@@ -348,33 +310,31 @@ public class DebugUIManager : MonoBehaviour
         p.toggleCollision();
     }
 
+    public void EnableScroll() => PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Scroll of Realigning", Area.Desert));
+
+    public void GiveBoots()
+    {
+        PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Boots", Area.Jungle));
+        Player.GetInstance().UpdatePlayerSpeed();
+    }
+    
     public void GoToFactoryPast()
     {
         if (SGrid.Current.GetArea() != Area.Factory)
-        {
             Debug.LogWarning("GoToFactoryPast command is only valid while in the Factory area.");
-        }
         else
-        {
             FactoryTimeManager.SpawnPlayerInPast();
-        }
     }
+
     public void GoToFactoryPresent()
     {
         if (SGrid.Current.GetArea() != Area.Factory)
-        {
             Debug.LogWarning("GoToFactoryPresent command is only valid while in the Factory area.");
-        }
         else
-        {
             FactoryTimeManager.SpawnPlayerInPresent();
-        }
     }
 
-    public void EarthQuake()
-    {
-        CameraShake.Shake(3f, 3f);
-    }
-
+    public void EarthQuake() => CameraShake.Shake(3f, 3f);
+    
     #endregion
 }

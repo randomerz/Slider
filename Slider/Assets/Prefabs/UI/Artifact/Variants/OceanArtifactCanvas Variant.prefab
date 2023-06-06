@@ -2822,10 +2822,6 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 14
       objectReference: {fileID: 0}
-    - target: {fileID: 8663251323211111892, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2620790809561359189, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
@@ -2843,7 +2839,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1213414578998944996}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 458f1dcf7c91eae44b08e6fa70fa29c9, type: 3}
+  m_Script: {fileID: 11500000, guid: 625c70ca38407a14d998034edae19305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   oceanControllerSupportButtonsHolder: {fileID: 5275713909584954109}
@@ -2900,7 +2896,6 @@ MonoBehaviour:
   lightning: {fileID: 0}
   rotateParams: []
   oceanHighlights: {fileID: 0}
-  controllerSupportButtonsHolder: {fileID: 1893851258855498643}
   oceanControllerSupportButtonsHolder: {fileID: 5275713909584954109}
   topLeftControllerButton: {fileID: 7863907074205352718}
 --- !u!114 &8799935562317442825 stripped

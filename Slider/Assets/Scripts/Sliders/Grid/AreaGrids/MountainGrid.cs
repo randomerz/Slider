@@ -107,33 +107,16 @@ public class MountainGrid : SGrid
     {
         if(stile.islandId == 7)
             SaveSystem.Current.SetBool("forceAutoMove", true);
-           // CheckTile7Spawn();
         base.EnableStile(stile, shouldFlicker);
-    }
-
-    private void CheckTile7Spawn()
-    {
-        //UPDATE TO FORCE PARITY
-        int[,] t7exact = new int[,]{{7,1,5,3},{2,6,8,4}};
-        if(!CheckGrid.contains(GetGridString(true), "34_58_16_72" )) 
-        {
-            if(!CheckGrid.contains(GetGridString(true), "34_57_16_82" ))
-            {
-                Minecart mc = FindObjectOfType<Minecart>();
-                mc?.StopMoving();
-            }
-            UIArtifact.ClearQueues();
-            SetGrid(t7exact);
-        }
     }
 
     public void FinishMountain()
     {
-        EnableStile(8);
+        /*EnableStile(8);
 
         int[,] completedPuzzle = new int[2, 4] { {4, 7, 5, 3},
                                                  {2, 6, 8, 1}};
-        SetGrid(completedPuzzle);
+        SetGrid(completedPuzzle);*/
         SaveSystem.Current.SetBool("forceAutoMove", false);
 
         UIArtifactWorldMap.SetAreaStatus(Area.Mountain, ArtifactWorldMapArea.AreaStatus.color);
