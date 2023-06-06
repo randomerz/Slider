@@ -118,7 +118,7 @@ public class MountainGrid : SGrid
                                                  {2, 6, 8, 1}};
         SetGrid(completedPuzzle);*/
         SaveSystem.Current.SetBool("forceAutoMove", false);
-
+        UpdateButtonCompletions(this, null);
         UIArtifactWorldMap.SetAreaStatus(Area.Mountain, ArtifactWorldMapArea.AreaStatus.color);
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
 
