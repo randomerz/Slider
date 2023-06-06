@@ -9,11 +9,13 @@ public class MoveObjectsOffIce : MonoBehaviour
     private Tilemap colliders;
     private Transform player;
     private List<Transform> otherObjects = new List<Transform>();
+    private STile stile;
 
     private void Start() 
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         colliders = GetComponent<Tilemap>();
+        stile = GetComponentInParent<STile>();
     }
 
     public void CheckPlayerOnIce()
@@ -41,6 +43,15 @@ public class MoveObjectsOffIce : MonoBehaviour
         }
         otherObjects.Clear();
     }
+
+
+    private bool CheckTileBelow(Transform t)
+    {
+        if(stile.y < 2 || !SGrid.Current.GetGrid()[stile.x, stile.y - 2].isTileActive) return false;
+        
+        return true;
+    }
+
 
     private void OnTriggerEnter2D(Collider2D other) {
         Transform t = other.transform;
