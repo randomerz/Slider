@@ -26,7 +26,8 @@ public class NPCRotation : MonoBehaviour
     [SerializeField] Transform off_camera; 
     [SerializeField] Transform coconuts; //porker
     [SerializeField] Transform IkeSpot; //ike
-    
+    [SerializeField] Transform IkeJukebox; //ike when he dances
+
     [SerializeField] private List<GameObject> diceGameObjects = new List<GameObject>();
 
     public bool gotBreadge = false; //saved in oceangrid.cs maybe need to update to Savable in the future
@@ -129,6 +130,7 @@ public class NPCRotation : MonoBehaviour
         {
             traveling_merchant.Teleport(off_camera, false);
         }
+
         foreach (string person in rotationUpdates)
         {
             switch (person)
@@ -165,6 +167,12 @@ public class NPCRotation : MonoBehaviour
                     break;
             }
         }
+
+        if (SaveSystem.Current.GetBool("oceanTavernJukebox"))
+        {
+            ike.Teleport(IkeJukebox, false);
+        }
+
         rotationUpdates.Clear();
     }
 
