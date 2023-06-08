@@ -23,8 +23,9 @@ MonoBehaviour:
           Data4: -774281498
         Path: event:/Dialogue/Default_Vocal
       dopplerScale: 0
-    pitch: 1.35
-    duration: 0.1915
+    isPronouncedSyllables: 1
+    pitch: 1.416
+    duration: 0.158
     volume: 1
     volumeAdjustmentDb: 0
     stressedVowelModifiers:
@@ -33,7 +34,7 @@ MonoBehaviour:
       durationAddition: -0.02
       overrideIntonation: 0
       intonationOverride: 0
-    lerpSmoothnessInverted: 1.24
+    lerpSmoothnessInverted: 8.1
     wordIntonation: 0.027
     energeticWordSpeedup: 0.2
     pLowToHigh: 0.3

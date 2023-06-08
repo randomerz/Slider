@@ -16,6 +16,10 @@ namespace SliderVocalization {
     public struct VocalizerParameters
     {
         public Sound synth;
+
+        [Tooltip("Not syllable if not meant to be read by NPC, for example words on the sign")]
+        public bool isPronouncedSyllables;
+
         [Header("Vowel-level configs")]
         [Range(0.5f, 2f), Tooltip("FMOD param: Pitch")]
         public float pitch;

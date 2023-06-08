@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2861570b06c9a214fa44972513bf0308, type: 3}
+  m_Name: Exploress Vocalizer Preset
+  m_EditorClassIdentifier: 
+  Data:
+    synth:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: -1684417107
+          Data2: 1280683026
+          Data3: -334943321
+          Data4: -774281498
+        Path: event:/Dialogue/Default_Vocal
+      dopplerScale: 0
+    isPronouncedSyllables: 1
+    pitch: 1.932
+    duration: 0.0789
+    volume: 1
+    volumeAdjustmentDb: 0
+    stressedVowelModifiers:
+      pitchAddition: 0.107
+      volumeAdjustmentDb: 3
+      durationAddition: -0.028
+      overrideIntonation: 0
+      intonationOverride: 0
+    lerpSmoothnessInverted: 1.24
+    wordIntonation: 0.027
+    energeticWordSpeedup: 0.2
+    pLowToHigh: 0.12
+    pHighToLow: 0.3
+    clauseGap: 0.15
+    sentenceIntonationUp: 0.169
+    sentenceIntonationDown: 0.206
+    overrideIntonation: 0
+    intonationOverride: 0
