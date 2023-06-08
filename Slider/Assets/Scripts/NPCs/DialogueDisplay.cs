@@ -43,7 +43,7 @@ public class DialogueDisplay : MonoBehaviour
         textTyperBG.SetTextSpeed(GameSettings.textSpeed);
         textTyperBG.StartTyping(message);
 
-        if (AudioManager.useVocalizer)
+        if (AudioManager.useVocalizer && useVocalizer)
         {
             float totalDuration = vocalizer.SetText(parsed, emote);
             textTyperText.SetTextSpeed(totalDuration / parsed.Length);
