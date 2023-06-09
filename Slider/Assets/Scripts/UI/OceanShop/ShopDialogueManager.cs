@@ -738,6 +738,7 @@ public class ShopDialogueManager : MonoBehaviour
                     "Maybe others know the rest of the song?",
                     TKSprite.Question,
                     () => {
+                        FoggyMusicHintManager.Instance.SetBobHint(false);
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
                     }
