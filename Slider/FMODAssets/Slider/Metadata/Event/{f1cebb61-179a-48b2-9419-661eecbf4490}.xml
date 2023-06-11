@@ -140,7 +140,10 @@
 	</object>
 	<object class="SingleSound" id="{824e6279-00ed-4b6f-9e85-1f62cfffe2b4}">
 		<property name="length">
-			<value>0.94000000000000006</value>
+			<value>0.7599999999999999</value>
+		</property>
+		<property name="timelockedOffset">
+			<value>0.17999999999999999</value>
 		</property>
 		<relationship name="fadeInCurve">
 			<destination>{cca3d513-88bd-469f-a83f-6b66b72569ab}</destination>
@@ -171,10 +174,10 @@
 	</object>
 	<object class="LoopRegion" id="{4a328b0c-d07d-46b5-b2cc-47ddc29a6442}">
 		<property name="position">
-			<value>0.02</value>
+			<value>0.0050000000000000001</value>
 		</property>
 		<property name="length">
-			<value>0.81999999999999995</value>
+			<value>0.70499999999999996</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{36d8a14e-dc53-4e81-b88b-2559a3a8bf30}</destination>
@@ -185,10 +188,10 @@
 	</object>
 	<object class="TransitionRegion" id="{92f01142-e8d5-4762-844f-70e6254d5cc1}">
 		<property name="position">
-			<value>0.02</value>
+			<value>0.0050000000000000001</value>
 		</property>
 		<property name="length">
-			<value>0.81999999999999995</value>
+			<value>0.70499999999999996</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{36d8a14e-dc53-4e81-b88b-2559a3a8bf30}</destination>
@@ -205,7 +208,7 @@
 	</object>
 	<object class="NamedMarker" id="{1d07762e-bc30-4115-a9b9-6c72868b022e}">
 		<property name="position">
-			<value>0.83999999999999997</value>
+			<value>0.70999999999999996</value>
 		</property>
 		<property name="name">
 			<value>End</value>
@@ -291,7 +294,7 @@
 	</object>
 	<object class="AutomationPoint" id="{1cc6f502-5c82-4049-9383-c69c49f482de}">
 		<property name="position">
-			<value>0.02</value>
+			<value>0.0050000000000000044</value>
 		</property>
 		<property name="value">
 			<value>1</value>
@@ -341,10 +344,10 @@
 			<value>0.25999999</value>
 		</property>
 		<property name="gainA">
-			<value>22.5</value>
+			<value>25</value>
 		</property>
 		<property name="gainB">
-			<value>16.5</value>
+			<value>24.5</value>
 		</property>
 		<property name="gainC">
 			<value>7.5</value>
@@ -434,10 +437,10 @@
 	</object>
 	<object class="AutomationPoint" id="{063e1929-c624-4cfb-8c47-9f7b3d01b75a}">
 		<property name="position">
-			<value>0.83999999999999997</value>
+			<value>0.70999999999999996</value>
 		</property>
 		<property name="value">
-			<value>-6.5</value>
+			<value>0</value>
 		</property>
 		<property name="curveShape">
 			<value>-0.477175981</value>
@@ -445,10 +448,10 @@
 	</object>
 	<object class="AutomationPoint" id="{f3a0309f-9abf-45c9-b018-9656ac10b059}">
 		<property name="position">
-			<value>0.92000000000000004</value>
+			<value>0.72893861729542675</value>
 		</property>
 		<property name="value">
-			<value>-35</value>
+			<value>-80</value>
 		</property>
 	</object>
 	<object class="Automator" id="{f368f5c2-151e-4bc2-ae14-a622e301a1fc}">
@@ -622,7 +625,7 @@
 	</object>
 	<object class="AutomationPoint" id="{1ad57528-6ad2-43ca-8771-07da5f0742ab}">
 		<property name="position">
-			<value>0.84106138270457353</value>
+			<value>0.70999999999999996</value>
 		</property>
 		<property name="value">
 			<value>1</value>
@@ -633,7 +636,7 @@
 	</object>
 	<object class="AutomationPoint" id="{6a406526-d7b3-46d5-881b-04705d5b7c63}">
 		<property name="position">
-			<value>0.92106138270457327</value>
+			<value>0.72999999999999998</value>
 		</property>
 		<property name="value">
 			<value>0.5</value>

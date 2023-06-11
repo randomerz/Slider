@@ -251,6 +251,7 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{dbcd2558-bf2b-41c3-abe3-8871ffc5f571}">
 		<relationship name="effects">
+			<destination>{3cbde69f-f319-49d1-a281-5b13d59a7c71}</destination>
 			<destination>{79b50a34-f583-4d7b-9de1-017c8e19cbe8}</destination>
 			<destination>{04646042-a588-4295-b1e2-7db654c55741}</destination>
 			<destination>{b407a4cf-c872-4a61-a828-218391a97507}</destination>
@@ -305,6 +306,11 @@
 			<destination>{db5f202f-af56-436b-ab10-df20f1e06b37}</destination>
 			<destination>{20f8aae2-93e3-4055-8775-80744fd99814}</destination>
 		</relationship>
+	</object>
+	<object class="FlangerEffect" id="{3cbde69f-f319-49d1-a281-5b13d59a7c71}">
+		<property name="mix">
+			<value>100</value>
+		</property>
 	</object>
 	<object class="MultibandEqEffect" id="{79b50a34-f583-4d7b-9de1-017c8e19cbe8}">
 		<property name="filterTypeA">
