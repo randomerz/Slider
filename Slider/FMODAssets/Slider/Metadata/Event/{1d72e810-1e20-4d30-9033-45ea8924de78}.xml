@@ -122,7 +122,7 @@
 	</object>
 	<object class="SingleSound" id="{16a23bdb-1798-401f-8f6c-201251025ae6}">
 		<property name="length">
-			<value>1.7227716713395813</value>
+			<value>1.6200000000000001</value>
 		</property>
 		<relationship name="fadeInCurve">
 			<destination>{94c60732-c435-4731-b4d4-3ce09953aa42}</destination>
@@ -153,10 +153,10 @@
 	</object>
 	<object class="LoopRegion" id="{c170730a-8e2c-4495-a9b5-01382b47fb78}">
 		<property name="position">
-			<value>0.02</value>
+			<value>0.059999999999999998</value>
 		</property>
 		<property name="length">
-			<value>1.54</value>
+			<value>1.5</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{74b227d8-63c0-4af6-9b6a-1738ac8eb1b9}</destination>
@@ -269,12 +269,12 @@
 			<value>0</value>
 		</property>
 		<property name="curveShape">
-			<value>0.109398991</value>
+			<value>-0.369866967</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{9b3877ff-6ca0-4417-8a33-fe734e1736a5}">
 		<property name="position">
-			<value>0.02</value>
+			<value>0.059999999999999998</value>
 		</property>
 		<property name="value">
 			<value>1</value>
@@ -431,18 +431,18 @@
 			<value>1.5634934318555007</value>
 		</property>
 		<property name="value">
-			<value>7</value>
+			<value>9.5</value>
 		</property>
 		<property name="curveShape">
-			<value>-0.226819128</value>
+			<value>0.509635687</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{589c773c-1d8f-4176-acaf-e90717079c92}">
 		<property name="position">
-			<value>1.7</value>
+			<value>1.6200000000000001</value>
 		</property>
 		<property name="value">
-			<value>-80</value>
+			<value>-63.3333359</value>
 		</property>
 	</object>
 	<object class="Automator" id="{f409f507-9e33-48e3-973d-84169c43b278}">
@@ -600,10 +600,10 @@
 	</object>
 	<object class="AutomationPoint" id="{53e6ecce-cb30-43d5-a1be-2b5c004939fe}">
 		<property name="position">
-			<value>1.7</value>
+			<value>1.6200000000000001</value>
 		</property>
 		<property name="value">
-			<value>0.5</value>
+			<value>0.519999981</value>
 		</property>
 	</object>
 </objects>

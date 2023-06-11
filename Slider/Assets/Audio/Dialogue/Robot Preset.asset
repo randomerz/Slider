@@ -24,23 +24,23 @@ MonoBehaviour:
         Path: event:/Dialogue/robot
       dopplerScale: 0
     isPronouncedSyllables: 1
-    pitch: 1.416
-    duration: 0.158
+    pitch: 1
+    duration: 0.15
     volume: 1
     volumeAdjustmentDb: 0
     stressedVowelModifiers:
-      pitchAddition: 0.05
-      volumeAdjustmentDb: 3
-      durationAddition: -0.02
-      overrideIntonation: 0
+      pitchAddition: 0
+      volumeAdjustmentDb: 0
+      durationAddition: 0
+      overrideIntonation: 1
       intonationOverride: 0
-    lerpSmoothnessInverted: 0.1
-    wordIntonation: 0.027
+    lerpSmoothnessInverted: 10
+    wordIntonation: 0
     energeticWordSpeedup: 0.2
     pLowToHigh: 0.3
     pHighToLow: 0.3
     clauseGap: 0.15
-    sentenceIntonationUp: 0.169
-    sentenceIntonationDown: 0.206
-    overrideIntonation: 0
+    sentenceIntonationUp: 0
+    sentenceIntonationDown: 0
+    overrideIntonation: 1
     intonationOverride: 0
