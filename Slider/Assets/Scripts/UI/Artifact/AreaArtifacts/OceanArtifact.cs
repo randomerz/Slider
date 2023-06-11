@@ -185,7 +185,7 @@ public class OceanArtifact : UIArtifact
             rotateParams[minY * 2 + minX].RotateArrow(peekedMove.isCCW);
         }
 
-        if (oceanControllerSupportButtonsHolder.isActiveAndEnabled /*Player.GetInstance().GetCurrentControlScheme() == "Controller"*/)
+        if (oceanControllerSupportButtonsHolder != null && oceanControllerSupportButtonsHolder.isActiveAndEnabled /*Player.GetInstance().GetCurrentControlScheme() == "Controller"*/)
         {
             oceanControllerSupportButtonsHolder.MakeLastControllerButtonClickedDisappear();
         }
