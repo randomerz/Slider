@@ -188,10 +188,10 @@
 	</object>
 	<object class="TransitionRegion" id="{92f01142-e8d5-4762-844f-70e6254d5cc1}">
 		<property name="position">
-			<value>0.0050000000000000001</value>
+			<value>0</value>
 		</property>
 		<property name="length">
-			<value>0.70499999999999996</value>
+			<value>0.70999999999999996</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{36d8a14e-dc53-4e81-b88b-2559a3a8bf30}</destination>
@@ -294,7 +294,7 @@
 	</object>
 	<object class="AutomationPoint" id="{1cc6f502-5c82-4049-9383-c69c49f482de}">
 		<property name="position">
-			<value>0.0050000000000000044</value>
+			<value>0.029999999999999999</value>
 		</property>
 		<property name="value">
 			<value>1</value>
@@ -443,12 +443,12 @@
 			<value>0</value>
 		</property>
 		<property name="curveShape">
-			<value>-0.477175981</value>
+			<value>0.521569908</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{f3a0309f-9abf-45c9-b018-9656ac10b059}">
 		<property name="position">
-			<value>0.72893861729542675</value>
+			<value>0.75</value>
 		</property>
 		<property name="value">
 			<value>-80</value>
@@ -631,12 +631,12 @@
 			<value>1</value>
 		</property>
 		<property name="curveShape">
-			<value>-0.476107776</value>
+			<value>1</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{6a406526-d7b3-46d5-881b-04705d5b7c63}">
 		<property name="position">
-			<value>0.72999999999999998</value>
+			<value>0.75</value>
 		</property>
 		<property name="value">
 			<value>0.5</value>
