@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2861570b06c9a214fa44972513bf0308, type: 3}
+  m_Name: old_guy 1
+  m_EditorClassIdentifier: 
+  Data:
+    synth:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: -712595262
+          Data2: 1153100485
+          Data3: 401521571
+          Data4: -257070916
+        Path: event:/Dialogue/old_guy
+      dopplerScale: 0
+    isPronouncedSyllables: 1
+    pitch: 0.742
+    duration: 0.1712
+    volume: 1
+    volumeAdjustmentDb: 0
+    stressedVowelModifiers:
+      pitchAddition: 0.05
+      volumeAdjustmentDb: 0.1
+      durationAddition: -0.036
+      overrideIntonation: 0
+      intonationOverride: 0
+    lerpSmoothnessInverted: 10
+    wordIntonation: 0.027
+    energeticWordSpeedup: 0.2
+    pLowToHigh: 0.3
+    pHighToLow: 0.78
+    clauseGap: 0.217
+    sentenceIntonationUp: 0.169
+    sentenceIntonationDown: 0.206
+    overrideIntonation: 0
+    intonationOverride: 0

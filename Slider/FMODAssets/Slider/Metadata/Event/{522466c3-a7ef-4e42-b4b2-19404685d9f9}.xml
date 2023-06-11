@@ -255,7 +255,6 @@
 			<destination>{87da693c-315d-4fd0-b49f-d181b02c17a1}</destination>
 			<destination>{99459914-99be-462f-b011-0ce21a129b01}</destination>
 			<destination>{7ddb994f-6257-4983-8469-0334abdc5431}</destination>
-			<destination>{4dd3092e-532a-4d7d-bf21-557807dea497}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{41d24148-5e38-48d1-aa4d-ee868138c025}" />
@@ -392,17 +391,6 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{7ddb994f-6257-4983-8469-0334abdc5431}" />
-	<object class="FlangerEffect" id="{4dd3092e-532a-4d7d-bf21-557807dea497}">
-		<property name="rate">
-			<value>0.0599999987</value>
-		</property>
-		<property name="delay">
-			<value>0.449999988</value>
-		</property>
-		<property name="mix">
-			<value>62</value>
-		</property>
-	</object>
 	<object class="AutomationPoint" id="{881be584-37df-408c-b716-b50e7f6100b8}">
 		<property name="position">
 			<value>10</value>
