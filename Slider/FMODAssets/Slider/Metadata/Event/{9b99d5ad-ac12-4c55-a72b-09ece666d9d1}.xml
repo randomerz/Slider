@@ -230,7 +230,6 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{3200e543-3817-44f8-9341-aa7f533a59b2}">
 		<relationship name="effects">
-			<destination>{6b234772-8c2f-40bb-954e-82b189784c2a}</destination>
 			<destination>{4d8be4c7-40c6-42c9-aded-c7e9896ec3ca}</destination>
 			<destination>{0133080e-69a0-47ab-bee5-54805a3afc02}</destination>
 		</relationship>
@@ -272,17 +271,6 @@
 			<destination>{8178980c-3a19-4ee3-abf5-9d96a1641fcc}</destination>
 			<destination>{d01c3318-e3e8-4174-8176-006970411692}</destination>
 		</relationship>
-	</object>
-	<object class="ChorusEffect" id="{6b234772-8c2f-40bb-954e-82b189784c2a}">
-		<property name="bypass">
-			<value>true</value>
-		</property>
-		<property name="rate">
-			<value>0</value>
-		</property>
-		<property name="depth">
-			<value>47.5</value>
-		</property>
 	</object>
 	<object class="MixerBusFader" id="{4d8be4c7-40c6-42c9-aded-c7e9896ec3ca}" />
 	<object class="SpatialiserEffect" id="{0133080e-69a0-47ab-bee5-54805a3afc02}" />
