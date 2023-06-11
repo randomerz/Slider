@@ -487,6 +487,7 @@ public class OceanGrid : SGrid
         if ((currentIslandId == 6 || currentIslandId == 7) && !foggyCompleted)
         {
             SetProgressRingActive(true);
+            SaveSystem.Current.SetBool("OceanEnteredFoggy", true); // for FoggyMusicHintManager.cs
         }
         if (currentIslandId != lastIslandId && (lastIslandId == 6 || lastIslandId == 7))
         {
