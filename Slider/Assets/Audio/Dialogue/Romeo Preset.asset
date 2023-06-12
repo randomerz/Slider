@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2861570b06c9a214fa44972513bf0308, type: 3}
+  m_Name: Romeo Preset
+  m_EditorClassIdentifier: 
+  Data:
+    synth:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: 1902398541
+          Data2: 1122474486
+          Data3: 2016049581
+          Data4: 67670959
+        Path: event:/Dialogue/guy_generic
+      dopplerScale: 0
+    isPronouncedSyllables: 1
+    pitch: 1.482
+    duration: 0.1848
+    volume: 1
+    volumeAdjustmentDb: 0
+    stressedVowelModifiers:
+      pitchAddition: 0.1
+      volumeAdjustmentDb: 9.3
+      durationAddition: 0.057
+      overrideIntonation: 0
+      intonationOverride: 0
+    lerpSmoothnessInverted: 4.64
+    wordIntonation: 1
+    energeticWordSpeedup: 0.2
+    pLowToHigh: 0.733
+    pHighToLow: 0.733
+    clauseGap: 0.15
+    sentenceIntonationUp: 0.737
+    sentenceIntonationDown: 0.65
+    overrideIntonation: 0
+    intonationOverride: 0
