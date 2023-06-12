@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2861570b06c9a214fa44972513bf0308, type: 3}
+  m_Name: Fish Preset
+  m_EditorClassIdentifier: 
+  Data:
+    synth:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: 230763049
+          Data2: 1176892622
+          Data3: -691413612
+          Data4: 1705230227
+        Path: event:/Dialogue/fish
+      dopplerScale: 0
+    isPronouncedSyllables: 0
+    pitch: 1
+    duration: 0.25
+    volume: 1
+    volumeAdjustmentDb: 0
+    stressedVowelModifiers:
+      pitchAddition: 0.214
+      volumeAdjustmentDb: 4.3
+      durationAddition: 0
+      overrideIntonation: 0
+      intonationOverride: 0
+    lerpSmoothnessInverted: 10
+    wordIntonation: 0.14
+    energeticWordSpeedup: 0
+    pLowToHigh: 0.756
+    pHighToLow: 0.567
+    clauseGap: 0.054
+    sentenceIntonationUp: 1
+    sentenceIntonationDown: 1
+    overrideIntonation: 1
+    intonationOverride: 1
