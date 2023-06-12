@@ -640,6 +640,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
+      propertyPath: autoRandomSeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: ShapeModule.type
       value: 13
       objectReference: {fileID: 0}
@@ -709,7 +713,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: InitialModule.maxNumParticles
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: RotationBySpeedModule.enabled
@@ -745,11 +749,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
-      value: 50
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: InitialModule.startLifetime.scalar
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: InitialModule.startRotation.scalar
@@ -785,7 +789,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: InitialModule.startLifetime.minScalar
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7299665567297913052, guid: 2c4066a226cd1144e8acb062b5e2637a, type: 3}
       propertyPath: RotationBySpeedModule.curve.minScalar
