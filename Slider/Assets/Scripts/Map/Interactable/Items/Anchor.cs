@@ -52,13 +52,16 @@ public class Anchor : Item
     {
         base.PickUpItem(pickLocation, callback);
         OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=false });
-        UnanchorTile();
-        
 
+        RemoveFromTile();
         Player.SetMoveSpeedMultiplier(0.75f);
         PlayerInventory.Instance.SetHasCollectedAnchor(true);
-        
-        UITrackerManager.RemoveTracker(this.gameObject);
+    }
+
+    public void RemoveFromTile()
+    {
+        UnanchorTile();
+        UITrackerManager.RemoveTracker(gameObject);
     }
 
     public void UnanchorTile()
@@ -78,17 +81,23 @@ public class Anchor : Item
     public override STile DropItem(Vector3 dropLocation, System.Action callback = null)
     {
         STile hitTile = base.DropItem(dropLocation, callback);
+        AddToTile(hitTile);
+
+        Player.SetMoveSpeedMultiplier(1f);
+        return hitTile;
+    }
+
+    public void AddToTile(STile hitTile)
+    {
         if (hitTile != null)
         {
             hitTile.hasAnchor = true;
             currentSTile = hitTile;
         }
 
-        Player.SetMoveSpeedMultiplier(1f);
-        UITrackerManager.AddNewTracker(this.gameObject, trackerSprite);
-        return null;
+        UITrackerManager.AddNewTracker(gameObject, trackerSprite);
     }
-    
+
     public override void dropCallback()
     {
         base.dropCallback();

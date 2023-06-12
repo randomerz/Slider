@@ -134,6 +134,7 @@ public class ArtifactTabManager : MonoBehaviour
             }
             //Debug.Log("Loaded!");
 
+            PlayerInventory.ReturnAnchorFromMap();
 
             UIEffects.FadeFromWhite();
             CameraShake.Shake(1.5f, 0.75f);
