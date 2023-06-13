@@ -4,6 +4,8 @@ using System.Linq;
 
 public class PlayerAction : Singleton<PlayerAction>
 {
+    public static PlayerAction Instance => _instance;
+
     public Item pickedItem;
 
     [SerializeField] private Transform pickedItemLocation;
@@ -244,6 +246,12 @@ public class PlayerAction : Singleton<PlayerAction>
         itemDropIndicator.SetActive(false);
         pickedItem = null;
     }
+
+    public Transform GetPickedItemLocationTransform()
+    {
+        return pickedItemLocation;
+    }
+
 
     public bool HasItem()
     {
