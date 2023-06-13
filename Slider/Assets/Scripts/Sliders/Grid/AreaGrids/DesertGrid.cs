@@ -304,10 +304,12 @@ public class DesertGrid : SGrid
 
         UIEffects.FlashWhite();
         DoShuffle();
+        SaveSystem.Current.SetBool("desertShuffledGrid", true);
 
         yield return new WaitForSeconds(0.75f);
 
         CameraShake.Shake(2, 0.9f);
+        shuffleBuildUpCoroutine = null;
     }
 
     public void GiveScrollAchievement() {

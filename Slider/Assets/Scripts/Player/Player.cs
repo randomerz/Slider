@@ -5,8 +5,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
-//L: I moved the STile underneath stuff to static method in STile since it's used in other places.
 public class Player : Singleton<Player>, ISavable, ISTileLocatable
 {
     public static event Action<string> OnControlSchemeChanged;
