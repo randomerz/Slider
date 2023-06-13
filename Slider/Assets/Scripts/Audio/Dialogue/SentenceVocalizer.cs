@@ -101,7 +101,7 @@ namespace SliderVocalization
                     intonation = Intonation.up;
                     foreach (var keyword in questionNegation)
                     {
-                        if (words[0].characters.StartsWith(keyword))
+                        if (words[0].characters.StartsWith(keyword) && Random.value < 0.5f)
                         {
                             intonation = Intonation.down;
                             break;
