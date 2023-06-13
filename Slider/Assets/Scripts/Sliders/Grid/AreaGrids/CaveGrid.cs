@@ -141,7 +141,7 @@ public class CaveGrid : SGrid
         CameraShake.Shake(0.25f, 0.25f);
         AudioManager.Play("Slide Rumble");
 
-        StartCoroutine(CaveMagicParticleAnimation(GetStile(8).transform.position, 6));
+        StartCoroutine(CaveMagicParticleAnimation(GetStile(8).transform.position, 4));
     }
 
     public void CavesShake2()
