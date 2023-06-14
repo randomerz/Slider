@@ -145,7 +145,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         }
 
         // updating childing
-        currentStileUnderneath = GetSTileUnderneath();
+        if(!debugDontUpdateStileUnderneath)
+            currentStileUnderneath = GetSTileUnderneath();
         // Debug.Log("Currently on: " + currentStileUnderneath);
 
         if (currentStileUnderneath != null && !debugDontUpdateStileUnderneath)
