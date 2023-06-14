@@ -465,6 +465,15 @@ MonoBehaviour:
         Data4: -1114012601
       Path: event:/SFX/Jungle/Record Scratch
     dopplerScale: 1
+  - name: Rat Squeak
+    fmodEvent:
+      Guid:
+        Data1: 62348315
+        Data2: 1244939908
+        Data3: 1003720097
+        Data4: 1125836640
+      Path: event:/SFX/Caves/Rat Squeak
+    dopplerScale: 0
   music:
   - name: Main Menu
     fmodEvent:
