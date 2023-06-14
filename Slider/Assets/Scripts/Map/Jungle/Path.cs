@@ -76,7 +76,6 @@ public class Path : MonoBehaviour
         bool deleted = false;
         if (defaultAnim != right || (currentShape != null && !shape.name.Equals(currentShape.name)))
         {
-            print("deleting blobs on path");
             foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
             {
                 Destroy(blob.gameObject);
@@ -126,7 +125,6 @@ public class Path : MonoBehaviour
         bool pathHasNoBlobs = this.gameObject.transform.childCount == 0 && (pair == null || pair.gameObject.transform.childCount == 0);
         if ((pathHasNoBlobs || deleted) && creatingBlobs)
         {
-            print("Repopulating path with blobs " + this.gameObject.name);
             BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
             float length = (int)this.transform.localScale.x;
 
