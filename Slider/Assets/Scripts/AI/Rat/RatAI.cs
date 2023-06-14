@@ -65,6 +65,9 @@ public class RatAI : MonoBehaviour, ISavable
     [Header("Other")]
     [SerializeField]
     internal bool avoidsDark = false;
+    [SerializeField] private float squeakMinTime = 4;
+    [SerializeField] private float squeakMaxTime = 7;
+
 
     internal bool holdingObject;
     private STile currentStileUnderneath;
@@ -81,6 +84,8 @@ public class RatAI : MonoBehaviour, ISavable
 
     private HashSet<int> visitedTiles = new HashSet<int>();
     private bool hasAchievement = false;
+    private float squeakTime;
+    private float squeakTimeCutoff;
 
 
     [HideInInspector]
@@ -117,6 +122,8 @@ public class RatAI : MonoBehaviour, ISavable
             Debug.LogWarning("ObjectToSteal is null!");
         else
             StealPiece();
+
+        squeakTimeCutoff = Random.Range(squeakMinTime, squeakMaxTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -144,6 +151,14 @@ public class RatAI : MonoBehaviour, ISavable
         if (rb.velocity.magnitude > 0.1f)
         {
             transform.up = rb.velocity.normalized;
+        }
+
+        if(squeakTime < squeakTimeCutoff)
+            squeakTime += Time.deltaTime;
+        else {
+            squeakTime = 0;
+            squeakTimeCutoff = Random.Range(squeakMinTime, squeakMaxTime);
+            AudioManager.Play("Rat Squeak", transform);
         }
     }
 
