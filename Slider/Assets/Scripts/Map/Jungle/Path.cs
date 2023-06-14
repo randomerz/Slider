@@ -76,6 +76,7 @@ public class Path : MonoBehaviour
         bool deleted = false;
         if (defaultAnim != right || (currentShape != null && !shape.name.Equals(currentShape.name)))
         {
+            print("deleting blobs on path");
             foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
             {
                 Destroy(blob.gameObject);
@@ -122,8 +123,10 @@ public class Path : MonoBehaviour
         }
 
         //prepopulate some blobs if there are no blob
-        if ((this.gameObject.transform.childCount == 0 || deleted) && creatingBlobs )
+        bool pathHasNoBlobs = this.gameObject.transform.childCount == 0 && (pair == null || pair.gameObject.transform.childCount == 0);
+        if ((pathHasNoBlobs || deleted) && creatingBlobs)
         {
+            print("Repopulating path with blobs " + this.gameObject.name);
             BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
             float length = (int)this.transform.localScale.x;
 
@@ -250,20 +253,4 @@ public class Path : MonoBehaviour
 
         Physics2D.queriesStartInColliders = true;
     }
-
-/*    private void OnDrawGizmos()
-    {
-        if (this.transform.localEulerAngles.z == -90 || this.transform.localEulerAngles.z == 90)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(0, 1, 0) * 5);
-            Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(0, -1, 0) * 5);
-        }
-        else
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(1, 0, 0) * 5);
-            Gizmos.DrawLine(this.transform.position, this.transform.position + new Vector3(-1, 0, 0) * 5);
-        }
-    }*/
 }
