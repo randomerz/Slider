@@ -156,3 +156,10 @@ public class UIHints : MonoBehaviour
         UpdateHint();
     }
 }
+
+[System.Serializable]
+public class HintDisplay
+{ 
+    public string keyboardHintText;
+    public string controllerHintText;
+}

@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 202996452967119641, guid: ab03402b3d633264f90c4577fdc27ab4, type: 3}
       propertyPath: m_Name
-      value: Cactus2
+      value: Cactus2 Variant
       objectReference: {fileID: 0}
     - target: {fileID: 202996452967119642, guid: ab03402b3d633264f90c4577fdc27ab4, type: 3}
       propertyPath: m_RootOrder
@@ -67,5 +67,9 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 1385596821331819264, guid: 8eaf149f5fa74be459951cfdf7e413f1, type: 3}
+    - target: {fileID: 202996452967119644, guid: ab03402b3d633264f90c4577fdc27ab4, type: 3}
+      propertyPath: m_SpriteSortPoint
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab03402b3d633264f90c4577fdc27ab4, type: 3}

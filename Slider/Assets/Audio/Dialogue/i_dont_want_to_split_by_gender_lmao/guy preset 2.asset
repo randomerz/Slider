@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2861570b06c9a214fa44972513bf0308, type: 3}
+  m_Name: guy preset 2
+  m_EditorClassIdentifier: 
+  Data:
+    synth:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: 1902398541
+          Data2: 1122474486
+          Data3: 2016049581
+          Data4: 67670959
+        Path: event:/Dialogue/guy_generic
+      dopplerScale: 0
+    isPronouncedSyllables: 1
+    pitch: 1.022
+    duration: 0.1486
+    volume: 0.928
+    volumeAdjustmentDb: 0
+    stressedVowelModifiers:
+      pitchAddition: 0.091
+      volumeAdjustmentDb: 0.7
+      durationAddition: 0.064
+      overrideIntonation: 0
+      intonationOverride: 0
+    lerpSmoothnessInverted: 4.64
+    wordIntonation: -0.051
+    energeticWordSpeedup: 0.004
+    pLowToHigh: 0.226
+    pHighToLow: 0.194
+    clauseGap: 0.152
+    sentenceIntonationUp: -0.014
+    sentenceIntonationDown: 0.13
+    overrideIntonation: 0
+    intonationOverride: 0

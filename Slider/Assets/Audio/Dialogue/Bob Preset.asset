@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2861570b06c9a214fa44972513bf0308, type: 3}
+  m_Name: Bob Preset
+  m_EditorClassIdentifier: 
+  Data:
+    synth:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: 2085272784
+          Data2: 1252239423
+          Data3: -904190551
+          Data4: 927305143
+        Path: event:/Dialogue/bob
+      dopplerScale: 0
+    isPronouncedSyllables: 1
+    pitch: 1.11
+    duration: 0.221
+    volume: 1
+    volumeAdjustmentDb: 0
+    stressedVowelModifiers:
+      pitchAddition: 0.145
+      volumeAdjustmentDb: 9.9
+      durationAddition: 0
+      overrideIntonation: 0
+      intonationOverride: 0
+    lerpSmoothnessInverted: 4.17
+    wordIntonation: 0.103
+    energeticWordSpeedup: 0.354
+    pLowToHigh: 0.303
+    pHighToLow: 0.807
+    clauseGap: 0.111
+    sentenceIntonationUp: 0.221
+    sentenceIntonationDown: 0.257
+    overrideIntonation: 0
+    intonationOverride: 0

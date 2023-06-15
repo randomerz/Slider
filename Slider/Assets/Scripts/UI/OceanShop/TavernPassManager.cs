@@ -244,8 +244,9 @@ public class TavernPassManager : MonoBehaviour, ISavable
                 break;
 
             case 2:
-                // Tavern Bell
+                // Tavern Jukebox
                 if (tavernJukebox != null) tavernJukebox.SetActive(true);
+                SaveSystem.Current.SetBool("oceanTavernJukebox", true);
                 break;
 
             case 3:

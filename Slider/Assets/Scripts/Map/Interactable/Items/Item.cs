@@ -99,11 +99,16 @@ public class Item : MonoBehaviour
             t += Time.deltaTime;
         }
 
-        transform.position = target.position;
-        spriteRenderer.transform.position = target.position + spriteOffset;
+        AnimatePickUpEnd(target.position);
+        callback();
+    }
+
+    public void AnimatePickUpEnd(Vector3 targetPosition)
+    {
+        transform.position = targetPosition;
+        spriteRenderer.transform.position = targetPosition + spriteOffset;
         myCollider.enabled = false;
         OnPickUp?.Invoke();
-        callback();
     }
 
     protected IEnumerator AnimateDrop(Vector3 target, System.Action callback = null)

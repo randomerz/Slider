@@ -21,6 +21,8 @@ public class AudioManager : Singleton<AudioManager>
     private static AnimationCurve _soundDampenCurve;
     private static Coroutine soundDampenCoroutine;
 
+    public static bool useVocalizer = true;
+
     private static float sfxVolume = 0.5f; // [0..1]
     private static float musicVolume = 0.5f;
     private static float musicVolumeMultiplier = 1; // for music effects
