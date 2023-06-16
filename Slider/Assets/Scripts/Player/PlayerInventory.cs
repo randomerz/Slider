@@ -18,7 +18,7 @@ public class PlayerInventory : MonoBehaviour
     private static IEnumerator<Item> itemIterator = equipables.GetEnumerator();
     private static Item currentItem = null;
 
-    private static bool hasCollectedAnchor = false;
+    private bool hasCollectedAnchor = false;
     [SerializeField] private Transform itemPickupTransform;
     [SerializeField] private GameObject anchorPrefab;
 
@@ -35,6 +35,8 @@ public class PlayerInventory : MonoBehaviour
         if (didInit)
             return;
         didInit = true;
+
+        Debug.Log("init");
 
         if (instance == null)
         {
@@ -75,6 +77,7 @@ public class PlayerInventory : MonoBehaviour
 
     public void SetHasCollectedAnchor(bool value)
     {
+        Debug.Log("has collected anchor: " + value);
         SaveSystem.Current.SetBool("playerHasCollectedAnchor", value);
         hasCollectedAnchor = value;
     }

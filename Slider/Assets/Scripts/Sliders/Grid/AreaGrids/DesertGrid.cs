@@ -344,7 +344,7 @@ public class DesertGrid : SGrid
 
     private void CheckFinalPlacements(string gridString)
     {
-        if (!PlayerInventory.Contains("Slider 9", myArea) && gridString == "567_2#3_184" && placeTile9Coroutine == null)
+        if (!PlayerInventory.Contains("Slider 9", myArea) && gridString == "563_2#8_174" && placeTile9Coroutine == null)
         {
             AudioManager.Play("Puzzle Complete");
 

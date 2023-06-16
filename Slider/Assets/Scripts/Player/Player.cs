@@ -62,7 +62,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         InitSingleton();
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
-        playerInventory.Init();
         UpdatePlayerSpeed();
 
         //playerInput= GetComponent<PlayerInput>();
@@ -310,6 +309,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         // PlayerInventory
         playerInventory.SetCollectiblesList(sp.collectibles);
         playerInventory.SetHasCollectedAnchor(sp.hasCollectedAnchor);
+
+        playerInventory.Init();
 
         // Other init functions
         UpdatePlayerSpeed();
