@@ -46,6 +46,8 @@ public class DialogueDisplay : MonoBehaviour
         if (AudioManager.useVocalizer && useVocalizer)
         {
             float totalDuration = vocalizer.SetText(parsed, emote);
+
+            AudioManager.DampenMusic(0.6f, totalDuration);
             textTyperText.SetTextSpeed(totalDuration / parsed.Length);
             textTyperBG.SetTextSpeed(totalDuration / parsed.Length);
             vocalizer.StartReadAll(emote);
