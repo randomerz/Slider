@@ -76,31 +76,20 @@ public class MountainGrid : SGrid
     }
 
     private void Update() {
-        if(playerOnBottom && Player._instance.transform.position.y > 63f) {
+        float playerY = Player._instance.transform.position.y;
+        if (playerOnBottom && playerY > 63f) {
             playerOnBottom = false;
-            if(musicTransitionCoroutine != null)
-                StopCoroutine(musicTransitionCoroutine);
-            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 0, 2));
+            AudioManager.SetGlobalParameter("MountainTemperature", 0f);
         }
-        if(!playerOnBottom && Player._instance.transform.position.y < 63f) {
+        else if (!playerOnBottom && playerY < 63f) {
             playerOnBottom = true;
-            if(musicTransitionCoroutine != null)
-                StopCoroutine(musicTransitionCoroutine);
-            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 1, 2));
+            AudioManager.SetGlobalParameter("MountainTemperature", 1);
         }
-    }
 
-    private IEnumerator TransitionMusic(float start, float end, float duration)
-    {
-        float t = 0;
-        while(t < duration) {
-            t += Time.deltaTime;
-            musicValue = Mathf.Lerp(start, end, t/duration);
-            AudioManager.SetMusicParameter("Mountain", "MountainTemperature", musicValue);
-            yield return null;
+        if (playerY < housingOffset / 2)
+        {
+            AudioManager.SetGlobalParameter("MountainTemperature", 0.5f);
         }
-        musicValue = end;
-        AudioManager.SetMusicParameter("Mountain", "MountainTemperature", end);
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
