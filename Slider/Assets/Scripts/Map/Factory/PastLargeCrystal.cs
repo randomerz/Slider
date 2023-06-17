@@ -92,7 +92,7 @@ public class PastLargeCrystal : ElectricalNode
     {
         yield return new WaitForSeconds(2.0f);
 
-        SaveSystem.Current.SetBool("DidBTTF", true);
+        SaveSystem.Current.SetBool("factoryDidBTTF", true);
         powerCrystal.TurnEverythingBackOn();
         FactoryTimeManager.SpawnPlayerInPresent();
 

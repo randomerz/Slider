@@ -28,15 +28,19 @@ public class PlayerInventory : MonoBehaviour
     {
         get => instance;
     }
-    
+
+    private void Start()
+    {
+        // Happens if you load a scene for the first time (i.e. Load() isn't called)
+        Init();
+    }
+
     // Called by Player.Init() too
     public void Init()
     {
         if (didInit)
             return;
         didInit = true;
-
-        Debug.Log("init");
 
         if (instance == null)
         {
@@ -77,7 +81,6 @@ public class PlayerInventory : MonoBehaviour
 
     public void SetHasCollectedAnchor(bool value)
     {
-        Debug.Log("has collected anchor: " + value);
         SaveSystem.Current.SetBool("playerHasCollectedAnchor", value);
         hasCollectedAnchor = value;
     }

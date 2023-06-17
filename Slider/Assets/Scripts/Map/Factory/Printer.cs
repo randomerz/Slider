@@ -35,7 +35,7 @@ public class Printer : MonoBehaviour
 
     public void StartPoof()
     {
-        if (!PlayerInventory.Contains("Slider 5") && walls && floor && wires)
+        if (!PlayerInventory.Contains("Slider 5", Area.Factory) && walls && floor && wires)
         {
             if (startedPrinting)
                 return;

@@ -69,7 +69,7 @@ public class UIArtifact : Singleton<UIArtifact>
     private void Update() {
         if(shouldCountDown && hoverTimer < hoverBuffer) {
             hoverTimer += Time.deltaTime;
-            if(hoverTimer > hoverBuffer)
+            if (hoverTimer > hoverBuffer && lastHovered != null)
             {
                 lastHovered.SetSpriteToIslandOrEmpty();
                 lastHovered.SetHighlighted(true);
