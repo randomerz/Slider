@@ -112,7 +112,7 @@
 	</object>
 	<object class="EventMixerMaster" id="{30bb2a8a-5a00-4c15-b963-db543b129fba}">
 		<property name="volume">
-			<value>-6</value>
+			<value>-8</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{24da6286-2f4f-471b-9f52-3f4b8d4b606a}</destination>
@@ -240,7 +240,7 @@
 			<value>0</value>
 		</property>
 		<property name="tempo">
-			<value>166</value>
+			<value>150</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{18f94cb5-ddab-4afd-a426-ac008d976002}</destination>
@@ -265,7 +265,7 @@
 	</object>
 	<object class="TransitionMarker" id="{8bfed38b-d8f8-48b9-8f8b-1c98ff7a2e1b}">
 		<property name="position">
-			<value>185.78313253012047</value>
+			<value>185.60000000000002</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{18f94cb5-ddab-4afd-a426-ac008d976002}</destination>
