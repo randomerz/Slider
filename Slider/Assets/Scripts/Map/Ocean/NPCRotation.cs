@@ -131,6 +131,8 @@ public class NPCRotation : MonoBehaviour
             traveling_merchant.Teleport(off_camera, false);
         }
 
+
+
         foreach (string person in rotationUpdates)
         {
             switch (person)
@@ -156,10 +158,11 @@ public class NPCRotation : MonoBehaviour
 
                 case "fezziwig": //fezziwig joins
                     fezziwig.Teleport(rightSign, false);
+                    porker.Teleport(rightEntrance, false);
                     SaveSystem.Current.SetBool("oceanFezziwigInTavern", true);
                     break;
                 case "porker"://move porker to the coconuts and change his dialogue
-                    porker.Teleport(coconuts, false);
+                    porker.Teleport(coconuts, true);
                     break;
 
 
@@ -178,13 +181,12 @@ public class NPCRotation : MonoBehaviour
 
     public void MovePorker()
     {
-        if (!SaveSystem.Current.GetBool("oceanPorkerTraining") && PlayerInventory.Contains("Slider 7", Area.Ocean))
-            porker.Teleport(coconuts, true);
+        if (!SaveSystem.Current.GetBool("oceanPickedCoconutUp") && PlayerInventory.Contains("Magical Gem", Area.Ocean))
+            SaveSystem.Current.SetBool("oceanPickedCoconutUp", true);
     }
 
     public void MoveAmberOak(object sender, System.EventArgs e)
     {
-        porker.Teleport(rightEntrance, false);
         ike.Teleport(IkeSpot, false);
         amberOak.Teleport(leftSign, false);
     }
