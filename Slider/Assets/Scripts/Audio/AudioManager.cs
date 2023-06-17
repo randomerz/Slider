@@ -5,6 +5,9 @@ using UnityEngine;
 using Cinemachine;
 using FMODUnity;
 using FMOD.Studio;
+using SliderVocalization;
+using System.Linq;
+using UnityEngine.UIElements;
 
 public class AudioManager : Singleton<AudioManager>
 {
@@ -19,13 +22,12 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField] // for item pickup cutscene
     private AnimationCurve soundDampenCurve;
     private static AnimationCurve _soundDampenCurve;
-    private static Coroutine soundDampenCoroutine;
+    private static Dictionary<object, (float amount, float length, float t)> soundDampenInstances;
 
     public static bool useVocalizer = true;
 
     private static float sfxVolume = 0.5f; // [0..1]
     private static float musicVolume = 0.5f;
-    private static float musicVolumeMultiplier = 1; // for music effects
 
     private static FMOD.Studio.Bus sfxBus;
     private static FMOD.Studio.Bus musicBus;
@@ -57,6 +59,8 @@ public class AudioManager : Singleton<AudioManager>
     static HashSet<ManagedInstance> PrioritySounds = new();
     [SerializeField, Range(0, 1)]
     private float duckingFactor;
+    [SerializeField, Range(0, 1)]
+    private float dialogueOverDialogueDuckingFactor;
 
     private static Dictionary<string, Sound> soundsDict
     {
@@ -133,12 +137,15 @@ public class AudioManager : Singleton<AudioManager>
         musicBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/Music");
         SetSFXVolume(sfxVolume);
         SetMusicVolume(musicVolume);
+
+        soundDampenInstances = new();
+        PrioritySounds = new();
     }
 
     private void Update()
     {
         UpdateCameraPosition();
-        UpdateManagedInstances(Time.deltaTime);
+        UpdateManagedInstances(Time.unscaledDeltaTime);
         UpdateMusicVolume();
     }
 
@@ -195,6 +202,7 @@ public class AudioManager : Singleton<AudioManager>
             {
                 PrioritySounds.Add(instance);
             }
+            instance.SetPaused(paused);
             return instance;
         } else
         {
@@ -253,24 +261,37 @@ public class AudioManager : Singleton<AudioManager>
             if (shouldRemove)
             {
                 PrioritySounds.Remove(instance);
+                instance.Stop();
             }
             return shouldRemove;
         });
-        if (!paused)
+        float MaxPriorityVolume01 = 0;
+        foreach (ManagedInstance instance in managedInstances)
         {
-            float MaxPriorityVolume01 = 0;
-            foreach (ManagedInstance priorityInstance in PrioritySounds)
+            if (!paused || !instance.CanPause)
             {
-                MaxPriorityVolume01 = Mathf.Max(MaxPriorityVolume01, priorityInstance.FinalVolume01);
-                priorityInstance.GetAndUpdate(dt, 0);
-            }
-            foreach (ManagedInstance instance in managedInstances)
-            {
-                if (PrioritySounds.Contains(instance))
+                if (!PrioritySounds.Contains(instance))
                 {
                     continue;
                 }
-                instance.GetAndUpdate(dt, MaxPriorityVolume01 * _instance.duckingFactor); // ducking
+                MaxPriorityVolume01 = Mathf.Max(MaxPriorityVolume01, instance.MixerVolume01);
+            }
+        }
+        foreach (ManagedInstance instance in managedInstances)
+        {
+            if (!paused || !instance.CanPause)
+            {
+                // dialogue-over-dialogue ducking overrides regular ducking
+                if (instance.ShouldApplyDialogueDucking)
+                {
+                    instance.GetAndUpdate(dt, MaxPriorityVolume01 * _instance.dialogueOverDialogueDuckingFactor);
+                } else if (PrioritySounds.Contains(instance))
+                {
+                    instance.GetAndUpdate(dt, 0);
+                } else
+                {
+                    instance.GetAndUpdate(dt, MaxPriorityVolume01 * _instance.duckingFactor);
+                }
             }
         }
     }
@@ -377,52 +398,51 @@ public class AudioManager : Singleton<AudioManager>
         musicVolume = Mathf.Clamp(value, 0, 1);
     }
 
-    public static void SetMusicVolumeMultiplier(float value)
-    {
-        musicVolumeMultiplier = value;
-    }
-
     private static void UpdateMusicVolume()
     {
         // AT: no music ducking, use dampen instead
         // float vol = Mathf.Clamp(Subtract01SpaceVolumes(musicVolume, ducking) * musicVolumeMultiplier, 0, 1);
-        float vol = Mathf.Clamp(musicVolume * musicVolumeMultiplier, 0, 1);
+        float vol = musicVolume;
 
-        if (_music == null)
-            return;
+        // for accurate music volume adjustment, always use multiplier 1 while paused
+        if (!paused && soundDampenInstances.Count > 0)
+        {
+            Dictionary<object, (float amount, float length, float t)> nextSDI = new(soundDampenInstances.Count);
+            float minDampened = 1;
+            foreach((object key, var value) in soundDampenInstances)
+            {
+                if (value.t < value.length)
+                {
+                    float currDampen = Mathf.Lerp(value.amount, 1, _soundDampenCurve.Evaluate(value.t / value.length));
+                    nextSDI.Add(key, (value.amount, value.length, value.t + Time.deltaTime));
+                    minDampened = Mathf.Min(minDampened, currDampen);
+                }
+            }
+            soundDampenInstances = nextSDI;
+
+            vol *= minDampened;
+        }
 
         musicBus.setVolume(vol);
     }
 
-    public static void DampenMusic(float amount, float length)
+    public static void DampenMusic(object root, float amount, float length)
     {
-        StopDampen();
-        soundDampenCoroutine = _instance.StartCoroutine(_DampenMusic(amount, length));
-    }
-
-    public static void StopDampen()
-    {
-        if (soundDampenCoroutine != null)
+        if (soundDampenInstances.ContainsKey(root))
         {
-            _instance.StopCoroutine(soundDampenCoroutine);
-            soundDampenCoroutine = null;
+            soundDampenInstances[root] = (amount, length, 0);
+        } else
+        {
+            soundDampenInstances.Add(root, (amount, length, 0));
         }
     }
 
-    private static IEnumerator _DampenMusic(float amount, float length)
+    public static void StopDampen(object root)
     {
-        float t = 0;
-
-        while (t < length)
+        if (soundDampenInstances.ContainsKey(root))
         {
-            SetMusicVolumeMultiplier(Mathf.Lerp(amount, 1, _soundDampenCurve.Evaluate(t / length)));
-
-            yield return null;
-            t += Time.deltaTime;
+            soundDampenInstances.Remove(root);
         }
-
-        SetMusicVolumeMultiplier(1);
-        soundDampenCoroutine = null;
     }
 
     public static float GetSFXVolume()
@@ -562,7 +582,6 @@ public class AudioManager : Singleton<AudioManager>
                     if (managedInstance.IsIndoor)
                     {
                         managedInstance.Stop();
-                        PrioritySounds.Remove(managedInstance);
                         return true;
                     }
                     return false;
@@ -570,41 +589,6 @@ public class AudioManager : Singleton<AudioManager>
             }
             DequeueModifier(AudioModifier.ModifierType.IndoorMusic3Eq);
         }
-    }
-
-
-    static float VolumeWattConversionExp = 6f / 10f / Mathf.Log10(2); // can't be declared const for some reason
-    static float WattVolumeConversionExp = 1 / VolumeWattConversionExp;
-    private static float Subtract01SpaceVolumes(float a, float b)
-    {
-        // avoid log = -inf error
-        if (Mathf.Approximately(b, 0))
-        {
-            return a;
-        }
-        // https://qa.fmod.com/t/setfaderlevel-1-full-volume-thats-mean-0db-or-10db/12538/2
-        // https://en.wikipedia.org/wiki/DBm#:~:text=3%20Standards-,Unit%20conversions,100%2Dfold%20increase%20in%20power.
-        //float decibelA = Mathf.Log(a, 2) * 6;
-        //float decibelB = Mathf.Log(b, 2) * 6;
-
-        //float miliwattA = Mathf.Pow(10, decibelA / 10f); // omit x / 1 miliwatt
-        //float miliwattB = Mathf.Pow(10, decibelB / 10f); // omit x / 1 miliwatt
-
-        // optimized 
-        float miliwattA = Mathf.Pow(a, VolumeWattConversionExp);
-        float miliwattB = Mathf.Pow(b, VolumeWattConversionExp);
-        float miliwattSubtraction = miliwattA - miliwattB;
-
-        if (miliwattSubtraction < 0 || Mathf.Approximately(miliwattSubtraction, 0))
-        {
-            return 0;
-        }
-
-        // float decibelSubtraction = 10 * Mathf.Log10(miliwattSubtraction); // omit x / 1 miliwatt
-        // return Mathf.Pow(2, decibelSubtraction / 6f);
-
-        // optimized
-        return Mathf.Pow(miliwattSubtraction, WattVolumeConversionExp);
     }
 
     public class ManagedInstance
@@ -626,7 +610,21 @@ public class AudioManager : Singleton<AudioManager>
         public readonly bool IsIndoor;
         public string Name => soundWrapper.sound?.name ?? "(No name)";
 
-        public float FinalVolume01
+        public bool CanPause => soundWrapper.sound.canPause;
+        public bool IsDialogue => soundWrapper.dialogueParent;
+        public bool ShouldApplyDialogueDucking { 
+            get {
+                if (!IsDialogue) return false;
+                VocalizableParagraph SoloSpeaker = VocalizableParagraph.SoloSpeaker;
+                if (SoloSpeaker != null && SoloSpeaker != soundWrapper.dialogueParent)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public float MixerVolume01
         {
             get
             {
@@ -648,7 +646,7 @@ public class AudioManager : Singleton<AudioManager>
             bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref position);
             if (indoorStatusDisagree)
             {
-                soundWrapper.fmodInstance.setVolume(Subtract01SpaceVolumes(soundWrapper.volume, _instance.indoorMuteFactor));
+                soundWrapper.fmodInstance.setVolume(Duck(soundWrapper.volume, _instance.indoorMuteFactor));
             }
             soundWrapper.fmodInstance.set3DAttributes(position.To3DAttributes());
             soundWrapper.fmodInstance.start();
@@ -662,7 +660,7 @@ public class AudioManager : Singleton<AudioManager>
 
         public void SetPaused(bool paused)
         {
-            soundWrapper.fmodInstance.setPaused(paused);
+            if (soundWrapper.sound.canPause) soundWrapper.fmodInstance.setPaused(paused);
         }
 
         public void Tick(EventInstanceTick tick)
@@ -672,7 +670,7 @@ public class AudioManager : Singleton<AudioManager>
 
         public void GetAndUpdate(float dt, float duckingVolume)
         {
-            float volume = Subtract01SpaceVolumes(soundWrapper.volume, duckingVolume);
+            float volume = Duck(soundWrapper.volume, duckingVolume);
             progress += dt;
             if (progress >= soundWrapper.duration)
             {
@@ -683,7 +681,7 @@ public class AudioManager : Singleton<AudioManager>
             {
                 Vector3 shiftedPosition = soundWrapper.root.position;
                 bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref shiftedPosition);
-                if (indoorStatusDisagree) volume = Subtract01SpaceVolumes(volume, _instance.indoorMuteFactor);
+                if (indoorStatusDisagree) volume = Duck(volume, _instance.indoorMuteFactor);
                 soundWrapper.fmodInstance.set3DAttributes(shiftedPosition.To3DAttributes());
                 soundWrapper.fmodInstance.setVolume(volume);
             }
@@ -701,7 +699,7 @@ public class AudioManager : Singleton<AudioManager>
                     position = p.ToFMODVector(),
                     velocity = (v * soundWrapper.sound.dopplerScale).ToFMODVector()
                 });
-                if (indoorStatusDisagree) volume = Subtract01SpaceVolumes(volume, _instance.indoorMuteFactor);
+                if (indoorStatusDisagree) volume = Duck(volume, _instance.indoorMuteFactor);
                 soundWrapper.fmodInstance.setVolume(volume);
             }
         }
@@ -719,6 +717,11 @@ public class AudioManager : Singleton<AudioManager>
                 original += SGrid.GetHousingOffset() * Vector3.down;
             }
             return true;
+        }
+
+        private float Duck(float target, float by)
+        {
+            return target - by; // sometimes simple things work best...
         }
     }
 }

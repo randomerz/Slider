@@ -256,7 +256,7 @@ public class DesertGrid : SGrid
         crocodileAnimator.SetTrigger("grab");
 
         CameraShake.ShakeIncrease(3, 0.4f);
-        AudioManager.DampenMusic(0.2f, 12);
+        AudioManager.DampenMusic(this, 0.2f, 12);
         AudioManager.Play("Crocodile Grab Sequence");
 
         yield return new WaitForSeconds(11);
