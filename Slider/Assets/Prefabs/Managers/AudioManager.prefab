@@ -511,6 +511,7 @@ MonoBehaviour:
         Data3: 1003720097
         Data4: 1125836640
       Path: event:/SFX/Caves/Rat Squeak
+    canPause: 0
     dopplerScale: 0
   music:
   - name: Main Menu
@@ -671,3 +672,4 @@ MonoBehaviour:
   IndoorIsolatedFromWorld: 0
   indoorMuteFactor: 0.3
   duckingFactor: 0.2
+  dialogueOverDialogueDuckingFactor: 0.705

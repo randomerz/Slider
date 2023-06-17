@@ -116,6 +116,8 @@ namespace SliderVocalization
                 .WithPriorityOverDucking(true)
                 .WithParameter("VowelForwardness", context.vowelForwardness);
 
+            wrapper.dialogueParent = context.topLevelParent;
+
             playingInstance = AudioManager.Play(
                 ref wrapper
             );

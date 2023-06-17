@@ -22,18 +22,25 @@ namespace SliderVocalization
 
         public WaitUntil WaitUntilCanPlay() => new (() => _Status == VocalizerCompositeStatus.CanPlay);
 
+        public static VocalizableParagraph SoloSpeaker => speakers.Count > 0 ? speakers[^1] : null;
+        internal static List<VocalizableParagraph> speakers = new();
+
         internal void StartReadSentence(SentenceVocalizer voc, NPCEmotes.Emotes emote)
         {
             this.Stop();
             voc.Stop();
-            currentVocalizationContext = new(transform);
+
+            currentVocalizationContext = new(transform, this);
             StartCoroutine(voc.Vocalize(((VocalizerParameters) preset).ModifyWith(modifierLibrary[emote], createClone: true), currentVocalizationContext));
         }
 
         public void StartReadAll(NPCEmotes.Emotes emote)
         {
             this.Stop();
-            currentVocalizationContext = new(transform);
+
+            speakers.Add(this);
+
+            currentVocalizationContext = new(transform, this);
             StartCoroutine(this.Vocalize(((VocalizerParameters)preset).ModifyWith(modifierLibrary[emote], createClone: true), currentVocalizationContext));
         }
 
