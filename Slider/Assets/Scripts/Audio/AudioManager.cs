@@ -138,7 +138,7 @@ public class AudioManager : Singleton<AudioManager>
     private void Update()
     {
         UpdateCameraPosition();
-        UpdateManagedInstances(Time.deltaTime);
+        UpdateManagedInstances(Time.unscaledDeltaTime);
         UpdateMusicVolume();
     }
 
@@ -195,6 +195,7 @@ public class AudioManager : Singleton<AudioManager>
             {
                 PrioritySounds.Add(instance);
             }
+            instance.SetPaused(paused);
             return instance;
         } else
         {
@@ -256,15 +257,18 @@ public class AudioManager : Singleton<AudioManager>
             }
             return shouldRemove;
         });
-        if (!paused)
+        float MaxPriorityVolume01 = 0;
+        foreach (ManagedInstance priorityInstance in PrioritySounds)
         {
-            float MaxPriorityVolume01 = 0;
-            foreach (ManagedInstance priorityInstance in PrioritySounds)
+            if (!paused || !priorityInstance.CanPause)
             {
                 MaxPriorityVolume01 = Mathf.Max(MaxPriorityVolume01, priorityInstance.FinalVolume01);
                 priorityInstance.GetAndUpdate(dt, 0);
             }
-            foreach (ManagedInstance instance in managedInstances)
+        }
+        foreach (ManagedInstance instance in managedInstances)
+        {
+            if (!paused || !instance.CanPause)
             {
                 if (PrioritySounds.Contains(instance))
                 {
@@ -626,6 +630,8 @@ public class AudioManager : Singleton<AudioManager>
         public readonly bool IsIndoor;
         public string Name => soundWrapper.sound?.name ?? "(No name)";
 
+        public bool CanPause => soundWrapper.sound.canPause;
+
         public float FinalVolume01
         {
             get
@@ -662,7 +668,7 @@ public class AudioManager : Singleton<AudioManager>
 
         public void SetPaused(bool paused)
         {
-            soundWrapper.fmodInstance.setPaused(paused);
+            if (soundWrapper.sound.canPause) soundWrapper.fmodInstance.setPaused(paused);
         }
 
         public void Tick(EventInstanceTick tick)
