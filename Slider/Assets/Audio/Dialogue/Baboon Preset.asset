@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2861570b06c9a214fa44972513bf0308, type: 3}
+  m_Name: Baboon Preset
+  m_EditorClassIdentifier: 
+  Data:
+    synth:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: 721328212
+          Data2: 1334828882
+          Data3: 1910492347
+          Data4: 22094437
+        Path: event:/Dialogue/baboon
+      canPause: 0
+      dopplerScale: 0
+    isPronouncedSyllables: 1
+    pitch: 1
+    duration: 0.1522
+    volume: 1
+    volumeAdjustmentDb: 0
+    stressedVowelModifiers:
+      pitchAddition: 0.119
+      volumeAdjustmentDb: 7.1
+      durationAddition: 0.069
+      overrideIntonation: 0
+      intonationOverride: 0
+    lerpSmoothnessInverted: 1.39
+    wordIntonation: 0.611
+    energeticWordSpeedup: 0.058
+    pLowToHigh: 0.737
+    pHighToLow: 0.81
+    clauseGap: 0.16
+    sentenceIntonationUp: 0.601
+    sentenceIntonationDown: 0.592
+    overrideIntonation: 0
+    intonationOverride: 0

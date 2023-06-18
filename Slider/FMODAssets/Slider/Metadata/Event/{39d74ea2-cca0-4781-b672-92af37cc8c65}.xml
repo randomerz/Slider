@@ -288,17 +288,14 @@
 		</relationship>
 	</object>
 	<object class="PitchShifterEffect" id="{88cbb90f-5b78-4616-90b6-21f45113a3f6}">
-		<property name="bypass">
-			<value>true</value>
-		</property>
 		<property name="pitch">
 			<value>1.02999997</value>
 		</property>
 		<property name="fftSize">
-			<value>1500</value>
+			<value>256</value>
 		</property>
 		<property name="overlap">
-			<value>3.79999995</value>
+			<value>1</value>
 		</property>
 		<relationship name="automators">
 			<destination>{ccc7f43d-c129-4ec7-853c-8157dc8c9e03}</destination>
@@ -366,7 +363,7 @@
 			<value>1.26</value>
 		</property>
 		<property name="value">
-			<value>10</value>
+			<value>5</value>
 		</property>
 		<property name="curveShape">
 			<value>0.537956119</value>
@@ -420,7 +417,7 @@
 			<value>2</value>
 		</property>
 		<property name="value">
-			<value>1</value>
+			<value>1.25999999</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{8c5b303b-cdaa-4e40-a502-1d9bab94a2a7}">
