@@ -19,6 +19,10 @@ public class AudioManager : Singleton<AudioManager>
     private Music[] music;
     private static Music[] _music;
 
+    [SerializeField]
+    private Music[] ambience;
+    private static Music[] _ambience;
+
     [SerializeField] // for item pickup cutscene
     private AnimationCurve soundDampenCurve;
     private static AnimationCurve _soundDampenCurve;
@@ -111,12 +115,19 @@ public class AudioManager : Singleton<AudioManager>
 
         _sounds = sounds;
         _music = music;
+        _ambience = ambience;
         _soundDampenCurve = soundDampenCurve;
 
         foreach (Music m in _music)
         {
             m.emitter = gameObject.AddComponent<FMODUnity.StudioEventEmitter>();
             m.emitter.EventReference = m.fmodEvent;
+        }
+
+        foreach (Music a in _ambience)
+        {
+            a.emitter = gameObject.AddComponent<FMODUnity.StudioEventEmitter>();
+            a.emitter.EventReference = a.fmodEvent;
         }
 
         modifiers = new Dictionary<AudioModifier.ModifierType, AudioModifier>(modifierPool.Count);
@@ -172,10 +183,26 @@ public class AudioManager : Singleton<AudioManager>
 
         if (m == null)
         {
+            Debug.LogError("Couldn't find music of name: " + name);
             return null;
         }
 
         return m;
+    }
+
+    private static Music GetAmbience(string name)
+    {
+        if (_ambience == null)
+            return null;
+        Music a = Array.Find(_ambience, ambience => ambience.name == name);
+
+        if (a == null)
+        {
+            Debug.LogError("Couldn't find ambience of name: " + name);
+            return null;
+        }
+
+        return a;
     }
 
     public delegate void EventInstanceTick(ref EventInstance item);
@@ -306,10 +333,10 @@ public class AudioManager : Singleton<AudioManager>
 
     public static ManagedInstance PlayWithVolume(string name, float volumeMultiplier) => PickSound(name).WithVolume(volumeMultiplier).AndPlay();
 
-    public static void PlayMusic(string name, bool stopOtherTracks=true)
+    public static void PlayMusic(string name, bool stopOtherTracks = true)
     {
         Music m = GetMusic(name);
-        
+
         if (m == null)
             return;
 
@@ -327,11 +354,31 @@ public class AudioManager : Singleton<AudioManager>
     public static void StopMusic(string name)
     {
         Music m = GetMusic(name);
-        
+
         if (m == null)
             return;
 
         m.emitter.Stop();
+    }
+
+    public static void PlayAmbience(string name)
+    {
+        Music a = GetAmbience(name);
+
+        if (a == null)
+            return;
+
+        a.emitter.Play();
+    }
+
+    public static void StopAmbience(string name)
+    {
+        Music a = GetAmbience(name);
+
+        if (a == null)
+            return;
+
+        a.emitter.Stop();
     }
 
     // Requires instance to stop, need discussion...

@@ -49,7 +49,7 @@ public class UIArtifact : Singleton<UIArtifact>
         ClearQueues();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         //L: Do these ever get unsubscribed? (Do they need to?) (If your name is DesertArtifact yes)
         SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
