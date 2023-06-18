@@ -631,6 +631,43 @@ MonoBehaviour:
         Data4: 77094655
       Path: event:/Music/MagiTech BGM
     emitter: {fileID: 0}
+  ambience:
+  - name: Waterfall
+    fmodEvent:
+      Guid:
+        Data1: -876547417
+        Data2: 1267356328
+        Data3: -763059281
+        Data4: -476735717
+      Path: event:/Ambience/Waterfall
+    emitter: {fileID: 0}
+  - name: Waterfall Caves
+    fmodEvent:
+      Guid:
+        Data1: 361683603
+        Data2: 1164529194
+        Data3: 1987801021
+        Data4: -410703076
+      Path: event:/Ambience/Waterfall Caves
+    emitter: {fileID: 0}
+  - name: Campfire
+    fmodEvent:
+      Guid:
+        Data1: -1389724339
+        Data2: 1096560050
+        Data3: 1150475672
+        Data4: 1755165757
+      Path: event:/Ambience/Campfire
+    emitter: {fileID: 0}
+  - name: Forest Ambience
+    fmodEvent:
+      Guid:
+        Data1: 1355750639
+        Data2: 1190431554
+        Data3: -1960262746
+        Data4: 1288741103
+      Path: event:/Ambience/Forest Ambience
+    emitter: {fileID: 0}
   soundDampenCurve:
     serializedVersion: 2
     m_Curve:
@@ -671,5 +708,5 @@ MonoBehaviour:
   ZLevel: 10
   IndoorIsolatedFromWorld: 0
   indoorMuteFactor: 0.3
-  duckingFactor: 0.2
+  duckingFactor: 0.6
   dialogueOverDialogueDuckingFactor: 0.705

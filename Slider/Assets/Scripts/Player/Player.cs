@@ -319,7 +319,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         if (profile.GetBool("playerSpawnWithAnchorEquipped"))
         {
             profile.SetBool("playerSpawnWithAnchorEquipped", false);
-
             PlayerInventory.NextItem();
         }
     }

@@ -18,12 +18,14 @@ public class FactoryArtifact : UIArtifact
     private new void OnEnable()
     {
         FactoryGrid.PlayerChangedTime += PlayerChangedTime;
+        UIArtifactMenus.OnArtifactOpened += PlayerChangedTime;
         base.OnEnable();
     }
 
     private new void OnDisable()
     {
         FactoryGrid.PlayerChangedTime -= PlayerChangedTime;
+        UIArtifactMenus.OnArtifactOpened -= PlayerChangedTime;
         base.OnDisable();
     }
 
@@ -120,7 +122,7 @@ public class FactoryArtifact : UIArtifact
 
     private void UpdateButtonSpritesAndBackground(bool inPast)
     {
-        foreach (var b in buttons)
+        foreach (ArtifactTileButton b in buttons)
         {
             if (inPast)
             {

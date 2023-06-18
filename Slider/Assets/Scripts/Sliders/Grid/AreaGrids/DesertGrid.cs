@@ -7,6 +7,7 @@ public class DesertGrid : SGrid
 {
     [Header("Desert")]
     public Item log; //Right now the animator for the campfire doesn't stay alive if scene transitions
+    public DistanceBasedAmbience campfireAmbience;
     public Animator crocodileAnimator;
     public Animator campfire;
     public Item diceItem;
@@ -55,6 +56,7 @@ public class DesertGrid : SGrid
         if (campfireIsLit)
         {
             log.gameObject.SetActive(false);
+            campfireAmbience.enabled = true;
             campfire.SetBool("isDying", false);
         }
         
@@ -132,6 +134,7 @@ public class DesertGrid : SGrid
     public void LightCampFire()
     {
         campfireIsLit = true;
+        campfireAmbience.enabled = true;
         PlayerInventory.RemoveItem();
         log.gameObject.SetActive(false);
     }
