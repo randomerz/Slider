@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
 
 public class FactoryTimeManager : Singleton<FactoryTimeManager>
 {
@@ -21,46 +20,41 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
 
     private void Start() 
     {
-        SetBobTrackers(FactoryGrid.PlayerInPast);
+        if (FactoryGrid.PlayerInPast)
+        {
+            UpdateMapToPast();
+        }
+        else
+        {
+            SetBobTrackers(false);
+        }
     }
 
     public static void SpawnPlayerInPast()
     {
-        EnableAnchorsInPast();
-        _instance.SetBobTrackers(true);
-
-        //foreach (GameObject go in _instance.pastTileMaps)
-        //{
-        //    go.SetActive(true);
-        //}
-
         _instance.pastPPChanger.UPPTransform();
-
-        (SGrid.Current as FactoryGrid).factoryMusicController.SetIsInPast(true);
-
+        
         UIEffects.FadeFromWhite();
         FactoryLightManager.SwitchLights(true);
 
+        UpdateMapToPast();
+    }
+
+    private static void UpdateMapToPast()
+    {
+        PlayerInventory.ReturnAnchorFromMap();
+        _instance.SetBobTrackers(true);
+        (SGrid.Current as FactoryGrid).factoryMusicController.SetIsInPast(true);
     }
 
     public static void SpawnPlayerInPresent()
     {
-        EnableAnchorsInPresent();
+        PlayerInventory.ReturnAnchorFromMap();
         _instance.SetBobTrackers(false);
         _instance.presentPPChanger.UPPTransform();
         UIEffects.FadeFromWhite();
 
         (SGrid.Current as FactoryGrid).factoryMusicController.SetIsInPast(false);
-    }
-
-    public static void EnableAnchorsInPast()
-    {
-        EnableAnchorsInTime(true);
-    }
-
-    public static void EnableAnchorsInPresent()
-    {
-        EnableAnchorsInTime(false);
     }
     
     public void SetBobTrackers(bool inPast)
@@ -80,7 +74,7 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
 
     public void StartSendToPastEvent()
     {
-        if(sendingToPast) return;
+        if (sendingToPast) return;
         StartCoroutine(_instance.SendToPastEvent());
     }
 
@@ -129,28 +123,6 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
 
         SpawnPlayerInPast();
         sendingToPast = false;
-    }
-
-    public static void EnableAnchorsInTime(bool inPast)
-    {
-        Anchor[] anchors = GameObject.FindObjectsOfType<Anchor>(true);
-        foreach (var anchor in anchors)
-        {
-            bool playerHoldingAnchor = Player.GetPlayerAction().HasItem("Anchor");
-            if (!playerHoldingAnchor)
-            {
-                bool anchorInWrongTime = inPast != FactoryGrid.IsInPast(anchor.gameObject);
-                if (anchorInWrongTime)
-                {
-                    anchor.UnanchorTile();
-                    anchor.gameObject.SetActive(false);
-                }
-                else
-                {
-                    anchor.gameObject.SetActive(true);
-                }
-            }
-        }
     }
 }
 

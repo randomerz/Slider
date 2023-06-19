@@ -49,7 +49,7 @@ public class UIArtifact : Singleton<UIArtifact>
         ClearQueues();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         //L: Do these ever get unsubscribed? (Do they need to?) (If your name is DesertArtifact yes)
         SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
@@ -69,7 +69,7 @@ public class UIArtifact : Singleton<UIArtifact>
     private void Update() {
         if(shouldCountDown && hoverTimer < hoverBuffer) {
             hoverTimer += Time.deltaTime;
-            if(hoverTimer > hoverBuffer)
+            if (hoverTimer > hoverBuffer && lastHovered != null)
             {
                 lastHovered.SetSpriteToIslandOrEmpty();
                 lastHovered.SetHighlighted(true);

@@ -7,6 +7,7 @@ public class DesertGrid : SGrid
 {
     [Header("Desert")]
     public Item log; //Right now the animator for the campfire doesn't stay alive if scene transitions
+    public DistanceBasedAmbience campfireAmbience;
     public Animator crocodileAnimator;
     public Animator campfire;
     public Item diceItem;
@@ -55,6 +56,7 @@ public class DesertGrid : SGrid
         if (campfireIsLit)
         {
             log.gameObject.SetActive(false);
+            campfireAmbience.enabled = true;
             campfire.SetBool("isDying", false);
         }
         
@@ -132,6 +134,7 @@ public class DesertGrid : SGrid
     public void LightCampFire()
     {
         campfireIsLit = true;
+        campfireAmbience.enabled = true;
         PlayerInventory.RemoveItem();
         log.gameObject.SetActive(false);
     }
@@ -256,7 +259,7 @@ public class DesertGrid : SGrid
         crocodileAnimator.SetTrigger("grab");
 
         CameraShake.ShakeIncrease(3, 0.4f);
-        AudioManager.DampenMusic(0.2f, 12);
+        AudioManager.DampenMusic(this, 0.2f, 12);
         AudioManager.Play("Crocodile Grab Sequence");
 
         yield return new WaitForSeconds(11);
@@ -344,7 +347,7 @@ public class DesertGrid : SGrid
 
     private void CheckFinalPlacements(string gridString)
     {
-        if (!PlayerInventory.Contains("Slider 9", myArea) && gridString == "567_2#3_184" && placeTile9Coroutine == null)
+        if (!PlayerInventory.Contains("Slider 9", myArea) && gridString == "563_2#8_174" && placeTile9Coroutine == null)
         {
             AudioManager.Play("Puzzle Complete");
 
