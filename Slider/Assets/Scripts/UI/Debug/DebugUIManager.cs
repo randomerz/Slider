@@ -251,7 +251,7 @@ public class DebugUIManager : MonoBehaviour
         {
             if (n >= 2)
             {
-                SGrid.Current.GetCollectible("Slider 2 & 3");
+                SGrid.Current.GetCollectible("Slider 2 & 3").DoPickUp();
             }
         }
     }
