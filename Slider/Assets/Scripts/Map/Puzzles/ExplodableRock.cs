@@ -49,6 +49,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
     private IEnumerator Explode()
     {
         animator.SetBool("explode", true);
+        AudioManager.Play("Slide Explosion");
 
         CameraShake.Shake(0.75f, 1);
         foreach (ParticleSystem p in explosionParticles)

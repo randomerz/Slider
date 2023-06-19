@@ -727,8 +727,9 @@ public void SetGrid(int[,] puzzle)
     {
         UpdateButtonCompletionsHelper();
         UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
-        UIArtifactMenus._instance.OpenArtifactAndShow(0, true);
-        yield return new WaitForSeconds(2);
+        //UIArtifactMenus._instance.OpenArtifactAndShow(0, true);
+        //yield return new WaitForSeconds(2);
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+        yield return null;
     }  
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Item : MonoBehaviour 
+public class Item : MonoBehaviour, ISavable
 {
 
     public string itemName;
@@ -24,8 +24,64 @@ public class Item : MonoBehaviour
     public UnityEvent OnPickUp;
     public UnityEvent OnDrop;
 
-    public virtual void Awake() {
+    public string saveString;
+    private bool shouldLoadSavedDataOnStart;
+    private int savedIslandIdBuffer;
+    private Vector3 savedPositionBuffer;
+
+    public virtual void Awake()
+    {
         spriteOffset = spriteRenderer.transform.localPosition;
+    }
+
+    private void Start()
+    {
+        if (shouldLoadSavedDataOnStart)
+        {
+            if (savedIslandIdBuffer == -1)
+            {
+                transform.SetParent(SGrid.Current.transform);
+            }
+            else
+            {
+                transform.SetParent(SGrid.Current.GetStile(savedIslandIdBuffer).transform);
+            }
+
+            transform.localPosition = savedPositionBuffer;
+        }
+    }
+
+    public void Save()
+    {
+        if (saveString != null && saveString != "")
+        {
+            STile stile = SGrid.GetSTileUnderneath(gameObject);
+            if (stile == null)
+                SaveSystem.Current.SetInt($"{saveString}_STile", -1);
+            else
+                SaveSystem.Current.SetInt($"{saveString}_STile", stile.islandId);
+
+            SaveSystem.Current.SetFloat($"{saveString}_LocalX", stile != null ? transform.localPosition.x : transform.position.x);
+            SaveSystem.Current.SetFloat($"{saveString}_LocalY", stile != null ? transform.localPosition.y : transform.position.y);
+            SaveSystem.Current.SetFloat($"{saveString}_LocalZ", stile != null ? transform.localPosition.z : transform.position.z);
+        }
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        if (saveString != null && saveString != "")
+        {
+            if (profile.GetInt($"{saveString}_STile", 0) == 0) // check if it's the default value
+                return;
+
+            // SGrid.Current.GetSTile isn't accessible at this time of loading
+            shouldLoadSavedDataOnStart = true;
+            savedIslandIdBuffer = SaveSystem.Current.GetInt($"{saveString}_STile");
+            float x = SaveSystem.Current.GetFloat($"{saveString}_LocalX");
+            float y = SaveSystem.Current.GetFloat($"{saveString}_LocalY");
+            float z = SaveSystem.Current.GetFloat($"{saveString}_LocalZ");
+            savedPositionBuffer = new Vector3(x, y, z);
+        }
     }
 
     public virtual void PickUpItem(Transform pickLocation, System.Action callback=null) // pickLocation may be moving
