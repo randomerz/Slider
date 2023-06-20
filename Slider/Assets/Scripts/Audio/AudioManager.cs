@@ -60,7 +60,7 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField, Range(0, 1)]
     private float indoorMuteFactor;
 
-    static HashSet<ManagedInstance> PrioritySounds = new();
+    static HashSet<ManagedInstance> PrioritySounds = new ();
     [SerializeField, Range(0, 1)]
     private float duckingFactor;
     [SerializeField, Range(0, 1)]
@@ -97,17 +97,17 @@ public class AudioManager : Singleton<AudioManager>
             SetPaused(true);
         };
 
-        DebugUIManager.OnOpenDebug += delegate (object sender,  EventArgs e)
+        DebugUIManager.OnOpenDebug += delegate (object sender, EventArgs e)
         {
             SetPaused(true);
         };
 
-        DebugUIManager.OnCloseDebug += delegate (object sender,  EventArgs e)
+        DebugUIManager.OnCloseDebug += delegate (object sender, EventArgs e)
         {
             SetPaused(false);
         };
 
-        if (InitializeSingleton(ifInstanceAlreadySetThenDestroy:gameObject))
+        if (InitializeSingleton(ifInstanceAlreadySetThenDestroy: gameObject))
         {
             return;
         }
@@ -149,8 +149,8 @@ public class AudioManager : Singleton<AudioManager>
         SetSFXVolume(sfxVolume);
         SetMusicVolume(musicVolume);
 
-        soundDampenInstances = new();
-        PrioritySounds = new();
+        soundDampenInstances = new ();
+        PrioritySounds = new ();
     }
 
     private void Update()
@@ -250,7 +250,7 @@ public class AudioManager : Singleton<AudioManager>
             else
             {
                 Debug.LogError($"Failed to spawn instance for sound {name}");
-                return (SoundWrapper) (null as Sound);
+                return (SoundWrapper)(null as Sound);
             }
 
         }

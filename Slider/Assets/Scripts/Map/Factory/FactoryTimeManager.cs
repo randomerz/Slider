@@ -24,6 +24,10 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
         {
             UpdateMapToPast();
         }
+        else
+        {
+            SetBobTrackers(false);
+        }
     }
 
     public static void SpawnPlayerInPast()

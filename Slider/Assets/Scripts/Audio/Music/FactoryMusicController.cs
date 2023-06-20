@@ -38,6 +38,11 @@ public class FactoryMusicController : MonoBehaviour, ISavable
         SetFactoryStingerParameter(false);
     }
 
+    private void OnDestroy()
+    {
+        AudioManager.StopAmbience("Forest Ambience");
+    }
+
 
     // Logic for updating track dynamically
 
