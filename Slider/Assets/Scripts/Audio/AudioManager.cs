@@ -768,7 +768,7 @@ public class AudioManager : Singleton<AudioManager>
 
         private float Duck(float target, float by)
         {
-            return target - by; // sometimes simple things work best...
+            return Mathf.Max(target - by, 0f); // sometimes simple things work best...
         }
     }
 }
