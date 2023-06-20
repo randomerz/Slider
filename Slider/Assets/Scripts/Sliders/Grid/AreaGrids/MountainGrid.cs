@@ -8,6 +8,7 @@ public class MountainGrid : SGrid
 
     [SerializeField] private MountainCaveWall mountainCaveWall;
     [SerializeField] private GemMachine gemMachine;
+    [SerializeField] private SpriteSwapper crystalSpriteSwapper;
 
     private bool playerOnBottom = true;
 
@@ -107,7 +108,7 @@ public class MountainGrid : SGrid
                                                  {2, 6, 8, 1}};
         SetGrid(completedPuzzle);*/
         SaveSystem.Current.SetBool("forceAutoMove", false);
-
+        UpdateButtonCompletions(this, null);
         UIArtifactWorldMap.SetAreaStatus(Area.Mountain, ArtifactWorldMapArea.AreaStatus.color);
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
 
@@ -117,13 +118,15 @@ public class MountainGrid : SGrid
 
     #region Minecart Specs
     
-    public void SetCrystalDeliveredTrue() => SetCrystalDelivered(true);
+    public void SetCrystalDeliveredTrue() => SetCrystalDelivered();
 
-    public void SetCrystalDelivered(bool value)
+    public void SetCrystalDelivered(bool fromSave = false)
     {
-        crystalDelivered = value;
-        AudioManager.Play("Puzzle Complete");
+        crystalDelivered = true;
+        if(!fromSave)
+            AudioManager.Play("Puzzle Complete");
         SaveSystem.Current.SetBool("MountainCrystalDelivered", crystalDelivered);
+        crystalSpriteSwapper.TurnOn();
     }
 
     public void CheckCrystalDelivery(Condition c) => c.SetSpec(crystalDelivered);
@@ -147,7 +150,8 @@ public class MountainGrid : SGrid
         base.Load(profile);
         mountainCaveWall.Load(profile);
         gemMachine.Load(profile);
-        crystalDelivered = profile.GetBool("MountainCrystalDelivered", crystalDelivered);
+        if(profile.GetBool("MountainCrystalDelivered"))
+            SetCrystalDelivered(true);
         Meltable[] meltables = FindObjectsOfType<Meltable>();
         foreach(Meltable m in meltables)
             m.Load(profile);
