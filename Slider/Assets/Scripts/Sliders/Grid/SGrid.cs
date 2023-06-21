@@ -149,9 +149,9 @@ public void SetGrid(int[,] puzzle)
         STile[,] newGrid = new STile[Width, Height];
         STile next = null;
 
-        // We might not need this getunderstile stuff anymore now that we actually child player to STiles!
-        STile playerSTile = Player.GetInstance().GetSTileUnderneath();
-        Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
+        //// We might not need this getunderstile stuff anymore now that we actually child player to STiles!
+        //STile playerSTile = Player.GetInstance().GetSTileUnderneath();
+        //Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
 
         for (int x = 0; x < Width; x++)
         {
@@ -171,8 +171,8 @@ public void SetGrid(int[,] puzzle)
             }
         }
 
-        if (playerSTile != null)
-            Player.SetPosition(playerSTile.transform.position + playerOffset);
+        //if (playerSTile != null)
+        //    Player.SetPosition(playerSTile.transform.position + playerOffset);
 
         STile[,] old = grid;
         grid = newGrid;
@@ -656,10 +656,12 @@ public void SetGrid(int[,] puzzle)
             }
         }
     }
+
     public bool HasRealigningGrid()
     {
         return realigningGrid != null;
     }
+
     protected static void UpdateButtonCompletions(object sender, System.EventArgs e)
     {
         Current.UpdateButtonCompletionsHelper();
