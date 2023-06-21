@@ -8,6 +8,7 @@ public class Wire : ConductiveElectricalNode
     [Header("Wire")]
     [SerializeField] private Tilemap wireTilemap;
     [SerializeField] private Tilemap dottedWireTilemap;
+    [SerializeField] private bool logTrace = false;
 
     private GameObject sparks;
     private List<GameObject> sparkInstances;
@@ -31,6 +32,7 @@ public class Wire : ConductiveElectricalNode
 
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
+        LogTrace("OnPoweredHandler was called: " + e.powered);
         base.OnPoweredHandler(e);
         SetTiles();
 
@@ -84,5 +86,13 @@ public class Wire : ConductiveElectricalNode
     {
         WireDatabase.Instance.SwapTiles(wireTilemap, Powered);
         WireDatabase.Instance.SwapTiles(dottedWireTilemap, Powered);
+    }
+
+    private void LogTrace(string s)
+    {
+        if (logTrace)
+        {
+            Debug.Log($"[{name}] {s}");
+        }
     }
 }

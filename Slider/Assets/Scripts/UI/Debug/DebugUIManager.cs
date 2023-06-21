@@ -246,6 +246,14 @@ public class DebugUIManager : MonoBehaviour
         int n = int.Parse(num);
         for (int i = 1; i <= n; i++)
             SGrid.Current.GetCollectible("Slider " + i)?.DoPickUp();
+
+        if (SGrid.Current is JungleGrid)
+        {
+            if (n >= 2)
+            {
+                SGrid.Current.GetCollectible("Slider 2 & 3").DoPickUp();
+            }
+        }
     }
 
     public void ActivateAllCollectibles(bool excludeSliders = false)

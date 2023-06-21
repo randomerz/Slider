@@ -24,9 +24,8 @@ public class Lavafall : MonoBehaviour
     }
 
     public void CheckLava(){
-        if(isActive == (sTile.y == 3 && !SGrid.Current.GetStileAt(sTile.x, 2).isTileActive)) return;
-        isActive = !isActive;
-        
+        bool shouldBeActive = (sTile.y == 3 && !SGrid.Current.GetStileAt(sTile.x, 2).isTileActive);
+        isActive = shouldBeActive;
         foreach(GameObject go in objects)
             go.SetActive(isActive);
     }

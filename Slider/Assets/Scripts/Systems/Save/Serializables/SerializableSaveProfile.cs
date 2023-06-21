@@ -25,6 +25,8 @@ public class SerializableSaveProfile
     public string[] strings_Values;
     public string[] ints_Keys;
     public int[] ints_Values;
+    public string[] floats_Keys;
+    public float[] floats_Values;
     public AchievementStatistic[] achievementData;
 
     public static SerializableSaveProfile FromSaveProfile(SaveProfile saveProfile)
@@ -46,11 +48,13 @@ public class SerializableSaveProfile
         ssp.bools_Keys = saveProfile.GetBoolsDictionary().Keys.ToArray();
         ssp.strings_Keys = saveProfile.GetStringsDictionary().Keys.ToArray();
         ssp.ints_Keys = saveProfile.GetIntsDictionary().Keys.ToArray();
+        ssp.floats_Keys = saveProfile.GetFloatsDictionary().Keys.ToArray();
 
         ssp.areaToSGridData_Values = saveProfile.GetAreaToSGridData().Values.ToArray();
         ssp.bools_Values = saveProfile.GetBoolsDictionary().Values.ToArray();
         ssp.strings_Values = saveProfile.GetStringsDictionary().Values.ToArray();
         ssp.ints_Values = saveProfile.GetIntsDictionary().Values.ToArray();
+        ssp.floats_Values = saveProfile.GetFloatsDictionary().Values.ToArray();
 
         ssp.achievementData = saveProfile.AchievementData;
 
@@ -90,9 +94,22 @@ public class SerializableSaveProfile
             for (int i = 0; i < ints_Keys.Length; i++)
                 ints.Add(ints_Keys[i], ints_Values[i]);
             sp.SetIntsDictionary(ints);
-        } else
+        }
+        else
         {
             Debug.LogWarning("[SerializableSaveProfile] The saved integers dictionary had no keys. This most likely just means that no ints are being saved.");
+        }
+
+        if (floats_Keys != null)
+        {
+            Dictionary<string, float> floats = new Dictionary<string, float>(floats_Keys.Length);
+            for (int i = 0; i < floats_Keys.Length; i++)
+                floats.Add(floats_Keys[i], floats_Values[i]);
+            sp.SetFloatsDictionary(floats);
+        }
+        else
+        {
+            Debug.LogWarning("[SerializableSaveProfile] The saved floats dictionary had no keys. This most likely just means that no floats are being saved.");
         }
 
         sp.AchievementData = achievementData;

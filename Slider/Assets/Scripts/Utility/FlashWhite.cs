@@ -27,17 +27,17 @@ public class FlashWhite : MonoBehaviour
         mySprite.enabled = value;
     }
 
-    private IEnumerator _Flash(int n, Action callback)
+    private IEnumerator _Flash(int n, Action callback, float time = 0.25f)
     {
         for (int i = 0; i < n; i++)
         {
             mySprite.material = whiteSpriteMat;
 
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(time);
 
             mySprite.material = oldMat;
 
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(time);
         }
 
         callback?.Invoke();

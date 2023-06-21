@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2861570b06c9a214fa44972513bf0308, type: 3}
+  m_Name: Croc Preset
+  m_EditorClassIdentifier: 
+  Data:
+    synth:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: 970411682
+          Data2: 1199688864
+          Data3: -1349356874
+          Data4: 1703726135
+        Path: event:/Dialogue/crocodile
+      canPause: 0
+      dopplerScale: 0
+    isPronouncedSyllables: 1
+    pitch: 1
+    duration: 0.1902
+    volume: 1
+    volumeAdjustmentDb: 0
+    stressedVowelModifiers:
+      pitchAddition: 0.214
+      volumeAdjustmentDb: 7.1
+      durationAddition: 0.069
+      overrideIntonation: 0
+      intonationOverride: 0
+    lerpSmoothnessInverted: 1.39
+    wordIntonation: 0.122
+    energeticWordSpeedup: 0.058
+    pLowToHigh: 0.239
+    pHighToLow: 0.226
+    clauseGap: 0.251
+    sentenceIntonationUp: 1
+    sentenceIntonationDown: 0
+    overrideIntonation: 0
+    intonationOverride: 0

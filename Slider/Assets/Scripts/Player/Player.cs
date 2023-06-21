@@ -62,7 +62,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         InitSingleton();
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
-        playerInventory.Init();
         UpdatePlayerSpeed();
 
         //playerInput= GetComponent<PlayerInput>();
@@ -311,6 +310,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         playerInventory.SetCollectiblesList(sp.collectibles);
         playerInventory.SetHasCollectedAnchor(sp.hasCollectedAnchor);
 
+        playerInventory.Init();
+
         // Other init functions
         UpdatePlayerSpeed();
 
@@ -318,7 +319,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         if (profile.GetBool("playerSpawnWithAnchorEquipped"))
         {
             profile.SetBool("playerSpawnWithAnchorEquipped", false);
-
             PlayerInventory.NextItem();
         }
     }
