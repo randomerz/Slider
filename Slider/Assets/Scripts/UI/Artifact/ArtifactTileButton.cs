@@ -35,6 +35,7 @@ public class ArtifactTileButton : MonoBehaviour
     protected Sprite emptySprite;
 
     private FlashWhiteUI[] buttonIcons; //power lines, minecarft junctions, etc
+    private bool dontUpdateDefaultSpriteOnAwake;
 
     public STile MyStile {
         get
@@ -61,7 +62,10 @@ public class ArtifactTileButton : MonoBehaviour
     protected void Awake() 
     {
         Init();
-        RestoreDefaultIslandSprite();
+        if (!dontUpdateDefaultSpriteOnAwake)
+        {
+            RestoreDefaultIslandSprite();
+        }
         RestoreDefaultEmptySprite();
     }
 
@@ -152,16 +156,19 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SetIslandSprite(Sprite s)
     {
+        dontUpdateDefaultSpriteOnAwake = true;
         islandSprite = s;
     }
 
     public void SetCompletedSprite(Sprite s)
     {
+        dontUpdateDefaultSpriteOnAwake = true;
         completedSprite = s;
     }
 
     public void SetEmptySprite(Sprite s)
     {
+        dontUpdateDefaultSpriteOnAwake = true;
         emptySprite = s;
     }
 

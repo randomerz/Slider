@@ -15,7 +15,9 @@ public class DesertGrid : SGrid
     public DiceGizmo dice2;
     public SpriteRenderer[] casinoCeilingSprites;
     public List<Animator> casinoSigns;
+    [SerializeField] private ArtifactHousingButtonsManager artifactHousingButtonsManager;
     [SerializeField] private GameObject templeTrapBlockingRoom;
+    [SerializeField] private GameObject templeTrapBlockingRoomCollider;
     [SerializeField] private Collider2D portalCollider; //Desert Portal
     [SerializeField] private MagiLaser portalLaser;
 
@@ -138,6 +140,11 @@ public class DesertGrid : SGrid
         checkCompletion = profile.GetBool("desertCheckCompletion");
         portalEnabled = profile.GetBool("magiTechDesertPortal");
         portalLaserEnabled = profile.GetBool("magiTechDesertLaser");
+
+        if (SaveSystem.Current.GetBool("desertIsInTemple"))
+        {
+            SetIsInTemple(true);
+        }
     }
 
     // === Desert puzzle specific ===
@@ -389,6 +396,19 @@ public class DesertGrid : SGrid
 
     #region Scroll
 
+    public void SetIsInTemple(bool isInTemple)
+    {
+        SaveSystem.Current.SetBool("desertIsInTemple", isInTemple);
+        if (isInTemple)
+        {
+            SaveSystem.Current.SetBool("desertEnteredTemple", true);
+        }
+
+        artifactHousingButtonsManager.SetSpritesToHousing(isInTemple);
+        Player._instance.SetTracker(!isInTemple);
+        Player._instance.SetDontUpdateSTileUnderneath(isInTemple);
+    }
+
     public void ActivateTrap()
     {
         SaveSystem.Current.SetBool("desertTempleTrapActivated", true);
@@ -400,6 +420,8 @@ public class DesertGrid : SGrid
 
     private IEnumerator ActivateTrapBuildUp()
     {
+        templeTrapBlockingRoomCollider.SetActive(true);
+
         CameraShake.Shake(0.25f, 0.25f);
         AudioManager.Play("Slide Rumble");
 
@@ -423,7 +445,7 @@ public class DesertGrid : SGrid
 
         UIEffects.FlashWhite();
         SGrid.Current.SetGrid(SGrid.GridStringToSetGridFormat("815493672"));
-        templeTrapBlockingRoom.gameObject.SetActive(true);
+        templeTrapBlockingRoom.SetActive(true);
         SaveSystem.Current.SetBool("desertTempleActivatedTrap", true);
 
         ArtifactTabManager.AfterScrollRearrage += OnScrollRearrage;
@@ -436,7 +458,8 @@ public class DesertGrid : SGrid
 
     private void OnScrollRearrage(object sender, System.EventArgs e)
     {
-        templeTrapBlockingRoom.gameObject.SetActive(false);
+        templeTrapBlockingRoom.SetActive(false);
+        templeTrapBlockingRoomCollider.SetActive(false);
         SaveSystem.Current.SetBool("desertTempleTrapCleared", true);
         ArtifactTabManager.AfterScrollRearrage -= OnScrollRearrage;
 

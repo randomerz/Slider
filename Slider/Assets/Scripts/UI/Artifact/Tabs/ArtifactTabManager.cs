@@ -83,7 +83,7 @@ public class ArtifactTabManager : MonoBehaviour
         AudioManager.Play("MagicChimes1");
         
         yield return new WaitForSeconds(0.5f);
-        AudioManager.Play("Slide Explosion");
+        AudioManager.Play("Rumble Decrease 5s");
 
         UIEffects.FlashWhite(callbackMiddle: () => {
             SGrid.Current.RearrangeGrid();
