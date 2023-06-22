@@ -15,6 +15,7 @@ public class DesertGrid : SGrid
     public DiceGizmo dice2;
     public SpriteRenderer[] casinoCeilingSprites;
     public List<Animator> casinoSigns;
+    [SerializeField] private GameObject templeTrapBlockingRoom;
     [SerializeField] private Collider2D portalCollider; //Desert Portal
     [SerializeField] private MagiLaser portalLaser;
 
@@ -59,7 +60,13 @@ public class DesertGrid : SGrid
             campfireAmbience.enabled = true;
             campfire.SetBool("isDying", false);
         }
-        
+
+        if (SaveSystem.Current.GetBool("desertTempleActivatedTrap") &&
+            !SaveSystem.Current.GetBool("desertTempleTrapCleared"))
+        {
+            ArtifactTabManager.AfterScrollRearrage += OnScrollRearrage;
+        }
+
         portalCollider.enabled = portalEnabled;
         portalLaser.isEnabled = portalLaserEnabled;
     }
@@ -69,6 +76,11 @@ public class DesertGrid : SGrid
         {
             OnGridMove -= UpdateButtonCompletions;
             UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
+        }
+
+        if (SaveSystem.Current.GetBool("desertTempleActivatedTrap"))
+        {
+            ArtifactTabManager.AfterScrollRearrage -= OnScrollRearrage;
         }
     }
 
@@ -371,7 +383,64 @@ public class DesertGrid : SGrid
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
         
         placeTile9Coroutine = null;
+    }
 
+    #endregion
+
+    #region Scroll
+
+    public void ActivateTrap()
+    {
+        SaveSystem.Current.SetBool("desertTempleTrapActivated", true);
+        if (shuffleBuildUpCoroutine == null)
+        {
+            shuffleBuildUpCoroutine = StartCoroutine(ActivateTrapBuildUp());
+        }
+    }
+
+    private IEnumerator ActivateTrapBuildUp()
+    {
+        CameraShake.Shake(0.25f, 0.25f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(0.25f, 0.25f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(0.75f, 0.5f);
+        AudioManager.Play("Slide Rumble");
+
+        yield return new WaitForSeconds(1f);
+
+        CameraShake.Shake(1.5f, 2.5f);
+        AudioManager.PlayWithVolume("Slide Explosion", 0.2f);
+        AudioManager.Play("TFT Bell");
+
+        yield return new WaitForSeconds(0.25f);
+
+        UIEffects.FlashWhite();
+        SGrid.Current.SetGrid(SGrid.GridStringToSetGridFormat("815493672"));
+        templeTrapBlockingRoom.gameObject.SetActive(true);
+        SaveSystem.Current.SetBool("desertTempleActivatedTrap", true);
+
+        ArtifactTabManager.AfterScrollRearrage += OnScrollRearrage;
+
+        yield return new WaitForSeconds(0.75f);
+
+        CameraShake.Shake(2, 0.9f);
+        shuffleBuildUpCoroutine = null;
+    }
+
+    private void OnScrollRearrage(object sender, System.EventArgs e)
+    {
+        templeTrapBlockingRoom.gameObject.SetActive(false);
+        SaveSystem.Current.SetBool("desertTempleTrapCleared", true);
+        ArtifactTabManager.AfterScrollRearrage -= OnScrollRearrage;
+
+        CheckFinalPlacements(UIArtifact.GetGridString());
         AchievementManager.SetAchievementStat("completedDesert", 1);
     }
 
