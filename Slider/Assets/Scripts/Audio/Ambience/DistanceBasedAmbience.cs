@@ -19,6 +19,7 @@ public class DistanceBasedAmbience : MonoBehaviour
 
     private void OnDestroy()
     {
+        AudioManager.StopAmbience(ambienceName);
         AudioManager.SetGlobalParameter(ambienceGlobalParameterName, ambienceGlobalParameterDefaultValue);
     }
 
