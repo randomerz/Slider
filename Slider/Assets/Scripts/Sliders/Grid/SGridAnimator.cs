@@ -64,6 +64,7 @@ public class SGridAnimator : MonoBehaviour
     // if animate is false, will wait and then TP to destination (ex. mountain going up/down)
     protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true)
     {
+        Debug.Log($"Move tile {stile.islandId}");
         //isMoving = true;
         bool isPlayerOnStile = (Player.GetInstance().GetSTileUnderneath() != null &&
                                 Player.GetInstance().GetSTileUnderneath().islandId == stile.islandId);
@@ -83,7 +84,7 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-        EffectOnMoveStart(move, isPlayerOnStile ? null : stile.transform, stile);
+        EffectOnMoveStart(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile);
 
         float t = 0;
         currMoveDuration = movementDuration * move.duration;
@@ -124,7 +125,7 @@ public class SGridAnimator : MonoBehaviour
             moveDuration = currMoveDuration
         });
         
-        EffectOnMoveFinish(move, isPlayerOnStile ? null : stile.transform);
+        EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile);
     }
 
     // DC: this is a lot of parameters :)
@@ -220,7 +221,58 @@ public class SGridAnimator : MonoBehaviour
         return null;
     }
 
-    protected virtual void EffectOnMoveStart(SMove move, Transform root, STile tile)
+    private Transform GetSoundTransform(SMove move, Transform root)
+    {
+        if(move is SMoveRotate || move is SSlideSwap)
+        {
+            //C: Thank you for not letting us create transforms without GameObjects unity very cool
+            GameObject g = new GameObject("Sound Transform");
+            Transform t = g.transform;
+            GameObject.Destroy(g, 1);
+            Vector3 moveCenter = move.GetMoveTilesCenter();
+            t.position = Vector3.Lerp(moveCenter, Player.GetPosition(), 0.5f);
+            return t;
+        }
+        else if (move is SMoveLinkedSwap)
+        {
+            GameObject g = new GameObject("Sound Transform");
+            Transform t = g.transform;
+            GameObject.Destroy(g, 1);
+            t.position = Vector3.Lerp(SGrid.Current.GetStile(2).transform.position, SGrid.Current.GetStile(3).transform.position, 0.5f);;
+            return t;
+        }
+        else
+            return root;
+    }
+
+    private bool ShouldPlaySound(SMove move, Movement movement, STile tile)
+    {
+        if(move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
+        {
+            if(tile.islandId == move.moves[0].islandId)
+            {
+                print($"Playing sound from {tile.islandId}");
+                return true;
+            }
+            else return false;
+
+        }
+        else 
+        {
+                            print($"Playing sound from {tile.islandId}");
+            return true;
+        }
+    }
+
+    private string GetSoundName(SMove move)
+    {
+        if(move is SMoveConveyor)
+            return "Conveyer";
+        else
+            return "Slide Rumble";
+    }
+
+    protected virtual void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile)
     {
         float shakeDuration = currMoveDuration + 0.1f;
         float volume = currMoveDuration;
@@ -231,16 +283,20 @@ public class SGridAnimator : MonoBehaviour
             volume = shakeDuration - 0.1f;
         }
 
-        CameraShake.ShakeConstant(shakeDuration, 0.15f);
-        AudioManager
-            .PickSound(move is SMoveConveyor ? "Conveyor" : "Slide Rumble")
-            .WithAttachmentToTransform(root)
-            .WithVolume(volume)
-            .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
-            .AndPlay();
+        if(ShouldPlaySound(move, movement, tile))
+        {
+            CameraShake.ShakeConstant(shakeDuration, 0.15f);
+            AudioManager
+                .PickSound(GetSoundName(move))
+                .WithAttachmentToTransform(GetSoundTransform(move, root))
+                .WithVolume(volume)
+                .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
+                .AndPlay();
+        }
     }
 
-    protected void EffectOnMoveFinish(SMove move, Transform root)
+
+    protected void EffectOnMoveFinish(SMove move, Movement movement, Transform root, STile tile)
     {
         float shakeDuration = currMoveDuration / 2;
         float volume = currMoveDuration;
@@ -251,13 +307,16 @@ public class SGridAnimator : MonoBehaviour
             volume = shakeDuration - 0.1f;
         }
 
-        CameraShake.Shake(shakeDuration, 1.0f);
-        AudioManager
-            .PickSound("Slide Explosion")
-            .WithAttachmentToTransform(root)
-            .WithVolume(volume)
-            .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
-            .AndPlay();
+        if(ShouldPlaySound(move, movement, tile))
+        {
+            CameraShake.Shake(shakeDuration, 1.0f);
+            AudioManager
+                .PickSound("Slide Explosion")
+                .WithAttachmentToTransform(GetSoundTransform(move, root))
+                .WithVolume(volume)
+                .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
+                .AndPlay();
+        }
     }
 
     protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) 
