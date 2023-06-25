@@ -64,7 +64,6 @@ public class SGridAnimator : MonoBehaviour
     // if animate is false, will wait and then TP to destination (ex. mountain going up/down)
     protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true)
     {
-        Debug.Log($"Move tile {stile.islandId}");
         //isMoving = true;
         bool isPlayerOnStile = (Player.GetInstance().GetSTileUnderneath() != null &&
                                 Player.GetInstance().GetSTileUnderneath().islandId == stile.islandId);
@@ -247,21 +246,12 @@ public class SGridAnimator : MonoBehaviour
 
     private bool ShouldPlaySound(SMove move, Movement movement, STile tile)
     {
+        //C: if this is an Smove with multiple movements, this is how we make sure the sound is only played once. 
+        // We don't actually care which move this is, but this gaurentees only a single play.
         if(move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
-        {
-            if(tile.islandId == move.moves[0].islandId)
-            {
-                print($"Playing sound from {tile.islandId}");
-                return true;
-            }
-            else return false;
-
-        }
+            return (movement == move.moves[0]);
         else 
-        {
-                            print($"Playing sound from {tile.islandId}");
             return true;
-        }
     }
 
     private string GetSoundName(SMove move)
