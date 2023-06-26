@@ -42,27 +42,38 @@ public class SGridAnimator : MonoBehaviour
         }
 
         List<Coroutine> moveCoroutines = new List<Coroutine>();
+        bool playSound = true;
         foreach (Movement m in move.moves)
         {
             if (grid[m.startLoc.x, m.startLoc.y].isTileActive)
-                moveCoroutines.Add(DetermineMoveType(move, grid, m));
+            {
+                moveCoroutines.Add(DetermineMoveType(move, grid, m, playSound || ShouldAlwaysPlaySound(move)));
+                playSound = false;
+            }
             else
                 grid[m.startLoc.x, m.startLoc.y].SetGridPosition(m.endLoc.x, m.endLoc.y);
         }
         
         StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move, moveCoroutines));
     }
+    
+    private bool ShouldAlwaysPlaySound(SMove move)
+    {
+        if(move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
+            return false;
+        return true;
+    }
 
     //C: Added to avoid duplicated code in mountian section
-    protected virtual Coroutine DetermineMoveType(SMove move, STile[,] grid, Movement m)
+    protected virtual Coroutine DetermineMoveType(SMove move, STile[,] grid, Movement m, bool playSound)
     {
-        return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move));
+        return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move, playSound:playSound));
     }
 
     // move is only here so we can pass it into the event
     // C: if animate is true, will animate to destination (this is the case 99% of the time)
     // if animate is false, will wait and then TP to destination (ex. mountain going up/down)
-    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true)
+    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true, bool playSound = true)
     {
         //isMoving = true;
         bool isPlayerOnStile = (Player.GetInstance().GetSTileUnderneath() != null &&
@@ -83,7 +94,7 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-        EffectOnMoveStart(move, isPlayerOnStile ? null : stile.transform, stile);
+        EffectOnMoveStart(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
 
         float t = 0;
         currMoveDuration = movementDuration * move.duration;
@@ -124,7 +135,7 @@ public class SGridAnimator : MonoBehaviour
             moveDuration = currMoveDuration
         });
         
-        EffectOnMoveFinish(move, isPlayerOnStile ? null : stile.transform);
+        EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
     }
 
     // DC: this is a lot of parameters :)
@@ -220,7 +231,33 @@ public class SGridAnimator : MonoBehaviour
         return null;
     }
 
-    protected virtual void EffectOnMoveStart(SMove move, Transform root, STile tile)
+    private Transform GetSoundTransform(SMove move, Transform root)
+    {
+        if(move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
+        {
+            //C: Thank you for not letting us create transforms without GameObjects unity very cool
+            GameObject g = new GameObject("Sound Transform");
+            STileSoundTransform s = g.AddComponent<STileSoundTransform>();
+            s.lerp = 0.25f;
+            s.move = move;
+            GameObject.Destroy(g, 1.5f);
+            return s.transform;
+        }
+        else
+            return root;
+    }
+
+   
+
+    private string GetSoundName(SMove move)
+    {
+        if(move is SMoveConveyor)
+            return "Conveyer";
+        else
+            return "Slide Rumble";
+    }
+
+    protected virtual void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile, bool playSound)
     {
         float shakeDuration = currMoveDuration + 0.1f;
         float volume = currMoveDuration;
@@ -231,16 +268,20 @@ public class SGridAnimator : MonoBehaviour
             volume = shakeDuration - 0.1f;
         }
 
-        CameraShake.ShakeConstant(shakeDuration, 0.15f);
-        AudioManager
-            .PickSound(move is SMoveConveyor ? "Conveyor" : "Slide Rumble")
-            .WithAttachmentToTransform(root)
-            .WithVolume(volume)
-            .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
-            .AndPlay();
+        if(playSound)
+        {
+            CameraShake.ShakeConstant(shakeDuration, 0.15f);
+            AudioManager
+                .PickSound(GetSoundName(move))
+                .WithAttachmentToTransform(GetSoundTransform(move, root))
+                .WithVolume(volume)
+                .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
+                .AndPlay();
+        }
     }
 
-    protected void EffectOnMoveFinish(SMove move, Transform root)
+
+    protected void EffectOnMoveFinish(SMove move, Movement movement, Transform root, STile tile, bool playSound)
     {
         float shakeDuration = currMoveDuration / 2;
         float volume = currMoveDuration;
@@ -251,13 +292,16 @@ public class SGridAnimator : MonoBehaviour
             volume = shakeDuration - 0.1f;
         }
 
-        CameraShake.Shake(shakeDuration, 1.0f);
-        AudioManager
-            .PickSound("Slide Explosion")
-            .WithAttachmentToTransform(root)
-            .WithVolume(volume)
-            .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
-            .AndPlay();
+        if(playSound)
+        {
+            CameraShake.Shake(shakeDuration, 1.0f);
+            AudioManager
+                .PickSound("Slide Explosion")
+                .WithAttachmentToTransform(GetSoundTransform(move, root))
+                .WithVolume(volume)
+                .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
+                .AndPlay();
+        }
     }
 
     protected virtual Vector2 GetMovingDirection(Vector2 start, Vector2 end) 
