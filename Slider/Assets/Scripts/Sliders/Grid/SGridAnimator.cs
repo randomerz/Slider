@@ -233,18 +233,9 @@ public class SGridAnimator : MonoBehaviour
 
     private Transform GetSoundTransform(SMove move, Transform root)
     {
-        if(move is SMoveRotate || move is SSlideSwap)
+        if(move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
         {
             //C: Thank you for not letting us create transforms without GameObjects unity very cool
-            GameObject g = new GameObject("Sound Transform");
-            STileSoundTransform s = g.AddComponent<STileSoundTransform>();
-            s.lerp = 0.5f;
-            s.move = move;
-            GameObject.Destroy(g, 1.5f);
-            return s.transform;
-        }
-        else if (move is SMoveLinkedSwap)
-        {
             GameObject g = new GameObject("Sound Transform");
             STileSoundTransform s = g.AddComponent<STileSoundTransform>();
             s.lerp = 0.25f;

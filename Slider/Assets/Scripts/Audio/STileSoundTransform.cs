@@ -5,7 +5,7 @@ using UnityEngine;
 public class STileSoundTransform : MonoBehaviour
 {
     public SMove move;
-    public float lerp = 0.5f;
+    public float lerp = 0.25f;
 
     public STileSoundTransform(SMove move, float lerp)
     {
