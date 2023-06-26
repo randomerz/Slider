@@ -45,24 +45,34 @@ public class SGridAnimator : MonoBehaviour
         foreach (Movement m in move.moves)
         {
             if (grid[m.startLoc.x, m.startLoc.y].isTileActive)
-                moveCoroutines.Add(DetermineMoveType(move, grid, m));
+                moveCoroutines.Add(DetermineMoveType(move, grid, m, ShouldPlaySound(move, grid[m.startLoc.x, m.startLoc.y])));
             else
                 grid[m.startLoc.x, m.startLoc.y].SetGridPosition(m.endLoc.x, m.endLoc.y);
         }
         
         StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move, moveCoroutines));
     }
+    
+    private bool ShouldPlaySound(SMove move, STile tile)
+    {
+        //C: if this is an Smove with multiple movements, this is how we make sure the sound is only played once. 
+        // We don't actually care which tile this is, but this gaurentees only a single play.
+        if(move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
+            return (tile.islandId == move.GetFirstActiveTile());
+        else 
+            return true;
+    }
 
     //C: Added to avoid duplicated code in mountian section
-    protected virtual Coroutine DetermineMoveType(SMove move, STile[,] grid, Movement m)
+    protected virtual Coroutine DetermineMoveType(SMove move, STile[,] grid, Movement m, bool playSound)
     {
-        return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move));
+        return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move, playSound:playSound));
     }
 
     // move is only here so we can pass it into the event
     // C: if animate is true, will animate to destination (this is the case 99% of the time)
     // if animate is false, will wait and then TP to destination (ex. mountain going up/down)
-    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true)
+    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true, bool playSound = true)
     {
         //isMoving = true;
         bool isPlayerOnStile = (Player.GetInstance().GetSTileUnderneath() != null &&
@@ -83,7 +93,7 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-        EffectOnMoveStart(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile);
+        EffectOnMoveStart(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
 
         float t = 0;
         currMoveDuration = movementDuration * move.duration;
@@ -124,7 +134,7 @@ public class SGridAnimator : MonoBehaviour
             moveDuration = currMoveDuration
         });
         
-        EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile);
+        EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
     }
 
     // DC: this is a lot of parameters :)
@@ -226,33 +236,26 @@ public class SGridAnimator : MonoBehaviour
         {
             //C: Thank you for not letting us create transforms without GameObjects unity very cool
             GameObject g = new GameObject("Sound Transform");
-            Transform t = g.transform;
-            GameObject.Destroy(g, 1);
-            Vector3 moveCenter = move.GetMoveTilesCenter();
-            t.position = Vector3.Lerp(moveCenter, Player.GetPosition(), 0.5f);
-            return t;
+            STileSoundTransform s = g.AddComponent<STileSoundTransform>();
+            s.lerp = 0.5f;
+            s.move = move;
+            GameObject.Destroy(g, 1.5f);
+            return s.transform;
         }
         else if (move is SMoveLinkedSwap)
         {
             GameObject g = new GameObject("Sound Transform");
-            Transform t = g.transform;
-            GameObject.Destroy(g, 1);
-            t.position = Vector3.Lerp(SGrid.Current.GetStile(2).transform.position, SGrid.Current.GetStile(3).transform.position, 0.5f);;
-            return t;
+            STileSoundTransform s = g.AddComponent<STileSoundTransform>();
+            s.lerp = 0.25f;
+            s.move = move;
+            GameObject.Destroy(g, 1.5f);
+            return s.transform;
         }
         else
             return root;
     }
 
-    private bool ShouldPlaySound(SMove move, Movement movement, STile tile)
-    {
-        //C: if this is an Smove with multiple movements, this is how we make sure the sound is only played once. 
-        // We don't actually care which move this is, but this gaurentees only a single play.
-        if(move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
-            return (movement == move.moves[0]);
-        else 
-            return true;
-    }
+   
 
     private string GetSoundName(SMove move)
     {
@@ -262,7 +265,7 @@ public class SGridAnimator : MonoBehaviour
             return "Slide Rumble";
     }
 
-    protected virtual void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile)
+    protected virtual void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile, bool playSound)
     {
         float shakeDuration = currMoveDuration + 0.1f;
         float volume = currMoveDuration;
@@ -273,7 +276,7 @@ public class SGridAnimator : MonoBehaviour
             volume = shakeDuration - 0.1f;
         }
 
-        if(ShouldPlaySound(move, movement, tile))
+        if(playSound)
         {
             CameraShake.ShakeConstant(shakeDuration, 0.15f);
             AudioManager
@@ -286,7 +289,7 @@ public class SGridAnimator : MonoBehaviour
     }
 
 
-    protected void EffectOnMoveFinish(SMove move, Movement movement, Transform root, STile tile)
+    protected void EffectOnMoveFinish(SMove move, Movement movement, Transform root, STile tile, bool playSound)
     {
         float shakeDuration = currMoveDuration / 2;
         float volume = currMoveDuration;
@@ -297,7 +300,7 @@ public class SGridAnimator : MonoBehaviour
             volume = shakeDuration - 0.1f;
         }
 
-        if(ShouldPlaySound(move, movement, tile))
+        if(playSound)
         {
             CameraShake.Shake(shakeDuration, 1.0f);
             AudioManager

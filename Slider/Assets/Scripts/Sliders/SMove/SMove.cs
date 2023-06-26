@@ -113,6 +113,15 @@ public class SMove
             center /= i;
         return center;
     }
+
+    public int GetFirstActiveTile()
+    {
+        foreach (Movement m in moves)
+            if (SGrid.Current.GetStile(m.islandId).isTileActive)
+                return m.islandId;
+        Debug.LogWarning("No active tiles found in move. This should not happen");
+        return -1;
+    }
 }
 
 //C: a movement between 2 points, stored as a pair of vector 2s

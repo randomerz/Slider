@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MountainSGridAnimator : SGridAnimator
 {
-    protected override Coroutine DetermineMoveType(SMove move, STile[,] grid, Movement m)
+    protected override Coroutine DetermineMoveType(SMove move, STile[,] grid, Movement m, bool playSound)
     {
         int diff = m.endLoc.y - m.startLoc.y;
         bool onSameLevel = (Mathf.Abs(diff) <= 1); 
@@ -19,12 +19,12 @@ public class MountainSGridAnimator : SGridAnimator
             else
                 CameraZoom.MoveDown(movementDuration);
         }
-        return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move, onSameLevel));
+        return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move, animate:onSameLevel, playSound: playSound));
     }
 
-    protected override void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile)
+    protected override void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile, bool playSound)
     {
-        base.EffectOnMoveStart(move, movement, root, tile);
+        base.EffectOnMoveStart(move, movement, root, tile, playSound);
         if(move is SMoveLayerSwap && tile.isTileActive) {
             if(Player.GetInstance().GetSTileUnderneath() == tile) {
                 //Player on tile, dither world
