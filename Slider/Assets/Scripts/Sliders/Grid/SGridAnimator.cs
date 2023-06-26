@@ -42,10 +42,14 @@ public class SGridAnimator : MonoBehaviour
         }
 
         List<Coroutine> moveCoroutines = new List<Coroutine>();
+        bool playSound = true;
         foreach (Movement m in move.moves)
         {
             if (grid[m.startLoc.x, m.startLoc.y].isTileActive)
-                moveCoroutines.Add(DetermineMoveType(move, grid, m, ShouldPlaySound(move, grid[m.startLoc.x, m.startLoc.y])));
+            {
+                moveCoroutines.Add(DetermineMoveType(move, grid, m, playSound || ShouldAlwaysPlaySound(move)));
+                playSound = false;
+            }
             else
                 grid[m.startLoc.x, m.startLoc.y].SetGridPosition(m.endLoc.x, m.endLoc.y);
         }
@@ -53,14 +57,11 @@ public class SGridAnimator : MonoBehaviour
         StartCoroutine(DisableBordersAndColliders(grid, SGrid.Current.GetBGGrid(), move, moveCoroutines));
     }
     
-    private bool ShouldPlaySound(SMove move, STile tile)
+    private bool ShouldAlwaysPlaySound(SMove move)
     {
-        //C: if this is an Smove with multiple movements, this is how we make sure the sound is only played once. 
-        // We don't actually care which tile this is, but this gaurentees only a single play.
         if(move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
-            return (tile.islandId == move.GetFirstActiveTile());
-        else 
-            return true;
+            return false;
+        return true;
     }
 
     //C: Added to avoid duplicated code in mountian section

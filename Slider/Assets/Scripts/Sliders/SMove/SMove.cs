@@ -103,7 +103,7 @@ public class SMove
         int i = 0;
         foreach(Movement m in moves)
         {
-            if(SGrid.Current.GetStile(m.islandId).isTileActive)
+            if(m.islandId > 0 && SGrid.Current.GetStile(m.islandId).isTileActive)
             {
                 center += SGrid.Current.GetStile(m.islandId).transform.position;
                 i++;
