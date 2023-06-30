@@ -92,7 +92,6 @@ public class UIArtifact : Singleton<UIArtifact>
         }
 
         // Controller check if nothing is selected, then select the tile 1 or left arrow or right arrow
-        Debug.Log(EventSystem.current.currentSelectedGameObject);
         if (!IsButtonValidForSelection(EventSystem.current.currentSelectedGameObject))
         {
             foreach (GameObject g in fallbackButtonsToSelect)
@@ -665,15 +664,19 @@ public class UIArtifact : Singleton<UIArtifact>
         int oldCurrY = buttonCurrent.y;
         buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y, true);
         buttonEmpty.SetPosition(oldCurrX, oldCurrY, true);
-
+        
         //since buttons swap, it feels like your hover goes backwards on controller, feels unintuitive.
         //So this will select the tile you swap to after the move
         if (setCurrentAsSelected && Player.GetInstance().GetCurrentControlScheme() == "Controller")
         {
-            // DC: Also it feels unintuitive during the final part though when youre doing 8 puzzle
             if (!SettingsManager.AutoMove)
             {
                 EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
+            }
+            // but during the final part though when youre doing 8 puzzle and it auto moves, make cursor stay in place
+            else
+            {
+                buttonEmpty.SetControllerHoverHighlighted(true);
             }
         }
     }
