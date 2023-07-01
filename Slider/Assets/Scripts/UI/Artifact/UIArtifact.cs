@@ -676,7 +676,8 @@ public class UIArtifact : Singleton<UIArtifact>
             // but during the final part though when youre doing 8 puzzle and it auto moves, make cursor stay in place
             else
             {
-                buttonEmpty.SetControllerHoverHighlighted(true);
+                EventSystem.current.SetSelectedGameObject(buttonEmpty.gameObject);
+                //buttonEmpty.SetControllerHoverHighlighted(true);
             }
         }
     }
