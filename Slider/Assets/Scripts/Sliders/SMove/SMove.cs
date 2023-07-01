@@ -96,6 +96,32 @@ public class SMove
 
         return false;
     }
+
+    public Vector3 GetMoveTilesCenter()
+    {
+        Vector3 center = Vector3.zero;
+        int i = 0;
+        foreach(Movement m in moves)
+        {
+            if(m.islandId > 0 && SGrid.Current.GetStile(m.islandId).isTileActive)
+            {
+                center += SGrid.Current.GetStile(m.islandId).transform.position;
+                i++;
+            }
+        }
+        if(i > 0)
+            center /= i;
+        return center;
+    }
+
+    public int GetFirstActiveTile()
+    {
+        foreach (Movement m in moves)
+            if (SGrid.Current.GetStile(m.islandId).isTileActive)
+                return m.islandId;
+        Debug.LogWarning("No active tiles found in move. This should not happen");
+        return -1;
+    }
 }
 
 //C: a movement between 2 points, stored as a pair of vector 2s

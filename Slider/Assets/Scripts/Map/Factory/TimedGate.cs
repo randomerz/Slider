@@ -8,7 +8,7 @@ using UnityEngine.Events;
 //Deactivated: !_gateActive && !Powered
 //Activated: _gateActive && !Powered
 //Powered: Powered
-public class TimedGate : ElectricalNode
+public class TimedGate : ElectricalNode, ISavable
 {
     [Header("Timed Gate")]
 
@@ -24,12 +24,16 @@ public class TimedGate : ElectricalNode
     public UnityEvent OnGateActivated;
     public UnityEvent OnGateDeactivated;
 
+    public string saveString;
+    private bool _saveForcePowerOn;
+
     private Sprite _queuedNextSprite;
     private HashSet<ElectricalNode> _inputsPowered;
     private bool _gateActive;    //Whether the timed gate is activated and displaying the countdown
     private int _countdown;
     private Coroutine _waitToEndGateCoroutine;
     private bool _blinking;  //Ensures that only one blink coroutine is executing at a time.
+    private bool _gateSignalPowered; // So that we don't hear the puzzle complete sound effect multiple times
 
     private PlayerConditionals _pConds;
 
@@ -70,6 +74,23 @@ public class TimedGate : ElectricalNode
         PowerCrystal.blackoutEnded -= HandleBlackoutEnded;
     }
 
+    public void Save()
+    {
+        if (saveString != null && saveString != "")
+        {
+            SaveSystem.Current.SetBool(saveString, Powered);
+        }
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        if (saveString != null && saveString != "" && profile.GetBool(saveString))
+        {
+            _saveForcePowerOn = true;
+            PowerGate(withAudio:false);
+        }
+    }
+
     private void OnValidate()
     {
         if (numTurns > 4)
@@ -96,6 +117,7 @@ public class TimedGate : ElectricalNode
     protected override bool PoweredConditionsMet()
     {
         bool allInputsPowered = _inputsPowered != null && _inputsPowered.Count >= numInputs;
+        allInputsPowered = allInputsPowered || _saveForcePowerOn;
         return (invertSignal ? !allInputsPowered : allInputsPowered);
     }
 
@@ -258,12 +280,17 @@ public class TimedGate : ElectricalNode
         }
     }
 
-    private void PowerGate()
+    private void PowerGate(bool withAudio=true)
     {
+        if (withAudio && !_gateSignalPowered)
+        {
+            AudioManager.Play("Puzzle Complete");
+        }
+        _gateSignalPowered = true;
+        
         StartSignal(true);
         _queuedNextSprite = successSprite;
         StartCoroutine(BlinkThenShowNext());
-        AudioManager.Play("Puzzle Complete");
     }
 
     private IEnumerator WaitAfterMove(System.Action callback)

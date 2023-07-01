@@ -22,10 +22,7 @@ public class FactoryGrid : SGrid
     {
         base.Start();
 
-        if (!PlayerInPast)
-        {
-            AudioManager.PlayMusic("Factory");
-        }
+        AudioManager.PlayMusic("Factory");
     }
 
     private void Update()

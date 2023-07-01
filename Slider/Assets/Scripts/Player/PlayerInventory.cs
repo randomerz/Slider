@@ -18,7 +18,7 @@ public class PlayerInventory : MonoBehaviour
     private static IEnumerator<Item> itemIterator = equipables.GetEnumerator();
     private static Item currentItem = null;
 
-    private static bool hasCollectedAnchor = false;
+    private bool hasCollectedAnchor = false;
     [SerializeField] private Transform itemPickupTransform;
     [SerializeField] private GameObject anchorPrefab;
 
@@ -28,7 +28,13 @@ public class PlayerInventory : MonoBehaviour
     {
         get => instance;
     }
-    
+
+    private void Start()
+    {
+        // Happens if you load a scene for the first time (i.e. Load() isn't called)
+        Init();
+    }
+
     // Called by Player.Init() too
     public void Init()
     {

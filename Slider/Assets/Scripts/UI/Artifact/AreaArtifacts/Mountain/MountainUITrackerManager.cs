@@ -8,8 +8,8 @@ public class MountainUITrackerManager : UITrackerManager
     public static MountainUITrackerManager _instance;
 #pragma warning restore
 
-    private Vector2 xOffset = new Vector2(38f/34f, -16f/34f);
-    private Vector2 yOffset = new Vector2(38f/34f, 16f/34f);
+    private Vector2 xOffset = new Vector2(40f/34f, -18f/34f);
+    private Vector2 yOffset = new Vector2(40f/34f, 18f/34f);
     private Vector2 xCenterOffset = new Vector2(53f/34f, -29f/34f);
     private Vector2 yCenterOffset = new Vector2(53f/34f, 29f/34f);
     private Vector2 lowerCenter = new Vector2(8.5f, 8.5f);

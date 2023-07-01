@@ -1,3 +1,4 @@
+using SliderVocalization;
 using Steamworks;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ public struct SoundWrapper
     public float duration;
     public float volume;
     public bool isPriority;
+    public VocalizableParagraph dialogueParent;
 
     public enum IndoorStatus
     {
@@ -39,6 +41,8 @@ public struct SoundWrapper
         volume = 1;
 
         isPriority = false;
+
+        dialogueParent = null;
 
         if (ToFmodInstance())
         {
@@ -99,7 +103,6 @@ public struct SoundWrapper
         indoorStatus = status;
         return this;
     }
-
     public SoundWrapper WithPriorityOverDucking(bool priorityOverDucking)
     {
         isPriority = priorityOverDucking;
@@ -146,7 +149,7 @@ public static class SoundExtension
     public static SoundWrapper WithParameter(this Sound sound, string name, float value) => ((SoundWrapper)sound).WithParameter(name, value);
     public static SoundWrapper WithFixedDuration(this Sound sound, float value) => ((SoundWrapper)sound).WithFixedDuration(value);
     public static SoundWrapper WithIndoorStatus(this Sound sound, SoundWrapper.IndoorStatus indoorStatus) => ((SoundWrapper) sound).WithIndoorStatus(indoorStatus);
-    public static SoundWrapper WithPriorityOverDucking(this Sound sound, bool withPriorityOverDucking) => ((SoundWrapper)sound).WithPriorityOverDucking(withPriorityOverDucking);
+    public static SoundWrapper WithPriorityOverDucking(this Sound sound, bool priorityOverDucking) => ((SoundWrapper)sound).WithPriorityOverDucking(priorityOverDucking);
     public static AudioManager.ManagedInstance AndPlay(this Sound sound) => ((SoundWrapper) sound).AndPlay();
 
     public static FMOD.Studio.EventInstance? ToFmodInstance(this Sound sound)

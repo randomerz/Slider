@@ -35,6 +35,7 @@ public class ArtifactTileButton : MonoBehaviour
     protected Sprite emptySprite;
 
     private FlashWhiteUI[] buttonIcons; //power lines, minecarft junctions, etc
+    private bool dontUpdateDefaultSpriteOnAwake;
 
     public STile MyStile {
         get
@@ -61,7 +62,10 @@ public class ArtifactTileButton : MonoBehaviour
     protected void Awake() 
     {
         Init();
-        RestoreDefaultIslandSprite();
+        if (!dontUpdateDefaultSpriteOnAwake)
+        {
+            RestoreDefaultIslandSprite();
+        }
         RestoreDefaultEmptySprite();
     }
 
@@ -73,10 +77,37 @@ public class ArtifactTileButton : MonoBehaviour
         }
     }
 
+    private void Init()
+    {
+        LinkButton = null;
+        completedSpriteDefault = completedSprite;
+        foreach (ArtifactTileButton b in buttonManager.buttons)
+        {
+            if (MyStile != null && MyStile.linkTile != null && MyStile.linkTile == b.MyStile)
+            {
+                LinkButton = b;
+                b.LinkButton = this;
+            }
+        }
+    }
+
     protected virtual void Start()
     {
         UpdateTileActive();
         buttonIcons = GetComponentsInChildren<FlashWhiteUI>();
+    }
+
+    public void OnSelect()
+    {
+        if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
+        {
+            SetControllerHoverHighlighted(true);
+        }
+    }
+
+    public void OnDeselect()
+    {
+        SetControllerHoverHighlighted(false);
     }
 
     public void UpdateTileActive()
@@ -152,16 +183,19 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SetIslandSprite(Sprite s)
     {
+        dontUpdateDefaultSpriteOnAwake = true;
         islandSprite = s;
     }
 
     public void SetCompletedSprite(Sprite s)
     {
+        dontUpdateDefaultSpriteOnAwake = true;
         completedSprite = s;
     }
 
     public void SetEmptySprite(Sprite s)
     {
+        dontUpdateDefaultSpriteOnAwake = true;
         emptySprite = s;
     }
 
@@ -177,11 +211,7 @@ public class ArtifactTileButton : MonoBehaviour
     {
         buttonManager.SelectButton(this);
     }
-
-    //public void UpdatePushedDown()
-    //{
-    //    buttonAnimator.UpdatePushedDown();
-    //}
+    
     public void SetControllerHoverHighlighted(bool v)
     {
         buttonAnimator.SetControllerHoverHighlight(v);
@@ -261,33 +291,6 @@ public class ArtifactTileButton : MonoBehaviour
             yield return new WaitForSeconds(.25f);
             SetSpriteToIslandOrEmpty();
             yield return new WaitForSeconds(.25f);
-        }
-    }
-
-    public void OnSelect()
-    {
-        if (Player.GetInstance().GetCurrentControlScheme() == "Controller")
-        {
-            SetControllerHoverHighlighted(true);
-        }
-    }
-
-    public void OnDeselect()
-    {
-        SetControllerHoverHighlighted(false);
-    }
-
-    private void Init()
-    {
-        LinkButton = null;
-        completedSpriteDefault = completedSprite;
-        foreach (ArtifactTileButton b in buttonManager.buttons)
-        {
-            if (MyStile != null && MyStile.linkTile != null && MyStile.linkTile == b.MyStile)
-            {
-                LinkButton = b;
-                b.LinkButton = this;
-            }
         }
     }
 }

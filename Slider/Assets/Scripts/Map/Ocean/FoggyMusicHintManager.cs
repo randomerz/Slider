@@ -26,22 +26,28 @@ public class FoggyMusicHintManager : Singleton<FoggyMusicHintManager>
     private bool UpdateHints()
     {
         // If they finished the puzzle
-        if (PlayerInventory.Contains("Mushroom") && wasOnLastFrame)
+        if (PlayerInventory.Contains("Mushroom"))
         {
-            wasOnLastFrame = false;
-            SetIkeHint(false);
-            SetBobHint(false);
-            SetCoconutHint(false);
+            if (wasOnLastFrame)
+            {
+                wasOnLastFrame = false;
+                SetIkeHint(false);
+                SetBobHint(false);
+                SetCoconutHint(false);
+            }
             return false;
         }
 
         // If it's the last puzzle
         if (shopManager.GetCredits() == 5 && !wasOnLastFrame)
         {
-            wasOnLastFrame = true;
-            SetIkeHint(true);
-            SetBobHint(true);
-            SetCoconutHint(true);
+            if (!wasOnLastFrame)
+            {
+                wasOnLastFrame = true;
+                SetIkeHint(true);
+                SetBobHint(true);
+                SetCoconutHint(true);
+            }
             return true;
         }
 

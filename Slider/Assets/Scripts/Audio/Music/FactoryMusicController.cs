@@ -38,6 +38,11 @@ public class FactoryMusicController : MonoBehaviour, ISavable
         SetFactoryStingerParameter(false);
     }
 
+    private void OnDestroy()
+    {
+        AudioManager.StopAmbience("Forest Ambience");
+    }
+
 
     // Logic for updating track dynamically
 
@@ -46,10 +51,16 @@ public class FactoryMusicController : MonoBehaviour, ISavable
         switch (e.stile.islandId)
         {
             case 2:
-                SetFactoryMusicProgress(1);
+                if (musicProgressionParameter < 1)
+                {
+                    SetFactoryMusicProgress(1);
+                }
                 break;
             case 5:
-                SetFactoryMusicProgress(2);
+                if (musicProgressionParameter < 2)
+                {
+                    SetFactoryMusicProgress(2);
+                }
                 break;
         }
 
@@ -72,10 +83,12 @@ public class FactoryMusicController : MonoBehaviour, ISavable
         if (isInPast)
         {
             SetFactoryMusicProgress(5);
+            AudioManager.PlayAmbience("Forest Ambience");
         }
         else if (PlayerInventory.Contains("Slider 8", Area.Factory))
         {
             SetFactoryMusicProgress(6);
+            AudioManager.StopAmbience("Forest Ambience");
         }
     }
 

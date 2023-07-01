@@ -525,7 +525,7 @@ public class OceanGrid : SGrid
     private void FoggySeasAudio()
     {
         AudioManager.PlayWithPitch("Puzzle Complete", 0.5f + playerIndex * 0.1f);
-        AudioManager.SetGlobalParameter("OceanFoggyProgress", 0);
+        AudioManager.SetGlobalParameter("OceanFoggyProgress", playerIndex);
     }
 
     public bool FoggyCorrectMovement()
