@@ -40,6 +40,7 @@ public class ElectricalNode : MonoBehaviour
     public UnityEvent OnPoweredOff;
 
     public bool Powered => !FactoryBlackoutInEffect() && PoweredConditionsMet();
+    public void PoweredSpec(Condition c) => c.SetSpec(Powered);
 
     protected virtual void Awake()
     {

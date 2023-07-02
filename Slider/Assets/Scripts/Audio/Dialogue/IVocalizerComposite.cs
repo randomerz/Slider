@@ -2,7 +2,6 @@ using SliderVocalization;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 
 namespace SliderVocalization
 {
@@ -94,9 +93,15 @@ public static class VocalizerCompositeExtensions
         where T : IVocalizer
         => composite.Vocalize(preset, context, idx, lengthOfComposite);
 
-    public static void Stop<T>(this T composite)
-         where T : IVocalizer
-        => composite.Stop();
+    public static void Stop<T>(this T composite) where T : IVocalizer
+    {
+        composite.Stop();
+        if (composite is VocalizableParagraph)
+        {
+            VocalizableParagraph.speakers.Remove(composite as VocalizableParagraph);
+            AudioManager.StopDampen(composite as VocalizableParagraph);
+        }
+    }
 
     public static void ClearProgress<T>(this T composite)
          where T : IVocalizer

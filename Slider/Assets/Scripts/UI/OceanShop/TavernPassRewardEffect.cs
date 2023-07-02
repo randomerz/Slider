@@ -37,7 +37,7 @@ public class TavernPassRewardEffect : MonoBehaviour
         displayText.text = $"{name} Acquired!";
         collectibleImage.sprite = sprite;
 
-        AudioManager.DampenMusic(0.2f, SOUND_DAMPEN_LENGTH);
+        AudioManager.DampenMusic(this, 0.2f, SOUND_DAMPEN_LENGTH);
     }
 
     private IEnumerator Effect(System.Action onTextVisibleCallback=null)

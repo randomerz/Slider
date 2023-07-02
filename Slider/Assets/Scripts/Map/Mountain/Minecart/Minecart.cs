@@ -175,6 +175,7 @@ public class Minecart : Item, ISavable
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null)
     {
+        VarManager.instance.SetBoolOn("MountainHasPickedUpMinecart");
         base.PickUpItem(pickLocation, callback);
         UITrackerManager.RemoveTracker(this.gameObject);
         animator.ChangeAnimationState("IDLE");

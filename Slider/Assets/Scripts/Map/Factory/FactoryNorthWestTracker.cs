@@ -35,11 +35,11 @@ public class FactoryNorthWestTracker : MonoBehaviour
                     {
                         if (IsRightDoorPowered())
                         {
-                            Debug.Log("factoryAcquiredBob");
+                            SaveSystem.Current.SetBool("factoryAcquiredBob", true);
                         }
                         else
                         {
-                            Debug.Log("factoryBobCheated");
+                            SaveSystem.Current.SetBool("factoryBobCheated", true);
                         }
                     }
                 }
