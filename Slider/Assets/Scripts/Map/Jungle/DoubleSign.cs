@@ -47,97 +47,94 @@ public class DoubleSign : Sign
 //TODO: work on rotate since it is not fully polished and doesn't really turn when stuff is in the way
     public override void Rotate()
     {
-        if (currentShape != null)
+        // update the box it points in currently to push no shape onto the path
+        Box box = GetBoxInDirection(currentDirection);
+        Box box2 = GetBoxInDirection(secondCurrentDirection);
+
+        if (box != null && isDefaultCurrentPath(currentDirection) == paths[currentDirection].getAnimType())
         {
-            // update the box it points in currently to push no shape onto the path
-            Box box = GetBoxInDirection(currentDirection);
-            Box box2 = GetBoxInDirection(secondCurrentDirection);
+            box.RecieveShape(paths[currentDirection], null, new List<Box>());
+            paths[currentDirection].Deactivate();
+        }
+        
+        if (box2 != null && isDefaultCurrentPath(secondCurrentDirection) == paths[secondCurrentDirection].getAnimType())
+        {
+            box2.RecieveShape(paths[secondCurrentDirection], null, new List<Box>());
+            paths[secondCurrentDirection].Deactivate();
+        }
+        
+        //check each path to see if any is not active alr
+        Direction[] ds = { Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN };
 
-            if (box != null && isDefaultCurrentPath(currentDirection) == paths[currentDirection].getAnimType())
-            {
-                box.RecieveShape(paths[currentDirection], null, new List<Box>());
-                paths[currentDirection].Deactivate();
-            }
-            
-            if (box2 != null && isDefaultCurrentPath(secondCurrentDirection) == paths[secondCurrentDirection].getAnimType())
-            {
-                box2.RecieveShape(paths[secondCurrentDirection], null, new List<Box>());
-                paths[secondCurrentDirection].Deactivate();
-            }
-            
-            //check each path to see if any is not active alr
-            Direction[] ds = { Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN };
+        // at should be less than at2
+        int at = 0;
+        int at2 = 0;
+        int found = 0;
 
-            // at should be less than at2
-            int at = 0;
-            int at2 = 0;
-            int found = 0;
-
-            for (int i = 0; i < ds.Length; i++)
-            {
-                if (ds[i] == currentDirection) {
-                    at = i;
-                    found++;
-                    if (found == 2) { 
-                        break;
-                    }
-                }
-                if (ds[i] == secondCurrentDirection) {
-                    at2 = i;
-                    found++;
-                    if (found == 2) { 
-                        break;
-                    }
+        for (int i = 0; i < ds.Length; i++)
+        {
+            if (ds[i] == currentDirection) {
+                at = i;
+                found++;
+                if (found == 2) { 
+                    break;
                 }
             }
+            if (ds[i] == secondCurrentDirection) {
+                at2 = i;
+                found++;
+                if (found == 2) { 
+                    break;
+                }
+            }
+        }
 
-            if (at > at2) {
-                int temp = at;
-                at = at2;
-                at2 = temp;
+        if (at > at2) {
+            int temp = at;
+            at = at2;
+            at2 = temp;
+        }
+
+        // no need to loop just pass to the next one
+        for (int i = 1; i <= 4; i++)
+        {
+            Direction d = ds[(at2 + i) % 4];
+
+            if (!paths.ContainsKey(d))
+            {
+                continue;
             }
 
-            // no need to loop just pass to the next one
-            for (int i = 1; i <= 4; i++)
+            secondCurrentDirection = d;
+            //turn on path if there is not another using it
+            if (!paths[d].isActive())
             {
-                Direction d = ds[(at2 + i) % 4];
-
-                if (!paths.ContainsKey(d))
+                Box next = GetBoxInDirection(d);
+                if (next != null)
                 {
-                    continue;
-                }
-
-                secondCurrentDirection = d;
-                //turn on path if there is not another using it
-                if (!paths[d].isActive())
-                {
-                    Box next = GetBoxInDirection(d);
-                    if (next != null)
+                    if (currentShape == null)
                     {
-                        if (currentShape == null)
-                        {
-                            return;
-                        }
+                        return;
                     }
                 }
-
-                //do it for the path behind
-                currentDirection = ds[(at + 1) % 4];
-                if (!paths[currentDirection].isActive())
-                {
-                    Box next = GetBoxInDirection(currentDirection);
-                    if (next != null)
-                    {
-                        if (currentShape == null)
-                        {
-                            return;
-                        }
-                   }
-                }
-
-                CreateShape(new List<Box>());
-                break;
             }
+
+            //do it for the path behind
+            currentDirection = ds[(at + 1) % 4];
+            if (!paths[currentDirection].isActive())
+            {
+                Box next = GetBoxInDirection(currentDirection);
+                if (next != null)
+                {
+                    if (currentShape == null)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            CreateShape(new List<Box>());
+            break;
         }
     }
 }
