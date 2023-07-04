@@ -14,6 +14,10 @@ public class MomentumGizmo : MonoBehaviour
         {
             FindSTile();
         }
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
     }
 
     private void OnEnable() 

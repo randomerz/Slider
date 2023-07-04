@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 9044676260861045409}
   - component: {fileID: 9044676260861045412}
   - component: {fileID: 5749947143752042204}
+  - component: {fileID: 3157258894235123465}
+  - component: {fileID: 2522157712530707785}
   m_Layer: 7
   m_Name: Bush
   m_TagString: Untagged
@@ -100,7 +102,7 @@ SpriteRenderer:
   m_SortingLayerID: 529684183
   m_SortingLayer: 7
   m_SortingOrder: 0
-  m_Sprite: {fileID: 588409208, guid: 3ff2e0a08e6e1a448b4be3c8a56e23b3, type: 3}
+  m_Sprite: {fileID: -4562945577744980309, guid: ac463c724eee1b24791024710acc597d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -111,3 +113,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &3157258894235123465
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9044676260861045408}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: ae551230904523841b303ec8588cd0d6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2522157712530707785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9044676260861045408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49d038ae1f6f2a4428f2b795bfa46c86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myStile: {fileID: 0}
+  animator: {fileID: 3157258894235123465}
