@@ -707,6 +707,7 @@ MonoBehaviour:
   listenerWorldPosition: {fileID: 9215923887181117521}
   ZLevel: 10
   IndoorIsolatedFromWorld: 0
-  indoorMuteFactor: 0.3
-  duckingFactor: 0.6
-  dialogueOverDialogueDuckingFactor: 0.705
+  indoorMuteDB: 5
+  duckingDbFactor: 0.5
+  duckingThreshold: -14
+  dialogueDuckingDbFactor: 0.765

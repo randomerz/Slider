@@ -94,7 +94,7 @@
 	</object>
 	<object class="EventMixerMaster" id="{29f03111-4cf2-4f73-b78b-5c1b4e4a495b}">
 		<property name="volume">
-			<value>-16</value>
+			<value>-26</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{8bdf9647-44d9-4700-bb59-0d67ba2702da}</destination>
@@ -170,7 +170,7 @@
 	</object>
 	<object class="NamedMarker" id="{46dd4188-e681-438d-b49c-4554084753fb}">
 		<property name="position">
-			<value>0</value>
+			<value>6</value>
 		</property>
 		<property name="name">
 			<value>Start</value>
@@ -203,7 +203,6 @@
 		<relationship name="effects">
 			<destination>{5787ae9c-d11d-435f-a7f7-4e6f5307ff07}</destination>
 			<destination>{c1205d27-d095-4af5-9bdb-2aede0a4da99}</destination>
-			<destination>{1a843833-be72-43e8-9c0c-4b5bb7973100}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{47dc280f-8f64-40ea-80f5-3d044497ba04}" />
@@ -268,14 +267,6 @@
 		</property>
 		<property name="wetLevel">
 			<value>0</value>
-		</property>
-		<property name="dryLevel">
-			<value>-12</value>
-		</property>
-	</object>
-	<object class="DelayEffect" id="{1a843833-be72-43e8-9c0c-4b5bb7973100}">
-		<property name="delay">
-			<value>2000</value>
 		</property>
 		<property name="dryLevel">
 			<value>-12</value>

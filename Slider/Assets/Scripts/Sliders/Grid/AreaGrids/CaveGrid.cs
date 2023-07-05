@@ -84,8 +84,10 @@ public class CaveGrid : SGrid
         {
             AudioManager.Play("Puzzle Complete");
         }
-
         checkCompletion = true;
+
+        gridAnimator.ChangeMovementDuration(0.5f);
+
         SaveSystem.Current.SetBool("cavesCompletion", checkCompletion);
         SaveSystem.Current.SetBool("forceAutoMove", true);
 
@@ -190,9 +192,15 @@ public class CaveGrid : SGrid
         if (!value && magicRocksIconFlashCoroutine != null)
         {
             StopCoroutine(magicRocksIconFlashCoroutine);
+            magicRocksIconFlashCoroutine = null;
+            magicRocksIcon.SetActive(false);
         }
         else if (value)
         {
+            if (magicRocksIconFlashCoroutine == null)
+            {
+                AudioManager.Play("Puzzle Complete");
+            }
             magicRocksIconFlashCoroutine = StartCoroutine(AnimateMagicRockIcon());
         }
 

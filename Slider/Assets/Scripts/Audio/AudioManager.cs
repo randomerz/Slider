@@ -57,14 +57,16 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField]
     private bool IndoorIsolatedFromWorld = false;
     private static bool listenerIsIndoor;
-    [SerializeField, Range(0, 1)]
-    private float indoorMuteFactor;
+    [SerializeField, Range(0, 10)]
+    private float indoorMuteDB;
 
     static HashSet<ManagedInstance> PrioritySounds = new ();
-    [SerializeField, Range(0, 1)]
-    private float duckingFactor;
-    [SerializeField, Range(0, 1)]
-    private float dialogueOverDialogueDuckingFactor;
+    [SerializeField, Range(0, 1), Tooltip("origional dB minus (dB over threshold * factor)")]
+    private float duckingDbFactor;
+    [SerializeField, Range(-20, 0)]
+    private float duckingThreshold;
+    [SerializeField, Range(0, 1), Tooltip("ducking factor specifically for dialogue over dialogue")]
+    private float dialogueDuckingDbFactor;
 
     private static Dictionary<string, Sound> soundsDict
     {
@@ -223,7 +225,7 @@ public class AudioManager : Singleton<AudioManager>
                 return null;
             }
             managedInstances ??= new List<ManagedInstance>(10);
-            ManagedInstance instance = new (soundWrapper, isOverridingTransform);
+            ManagedInstance instance = new (soundWrapper, isOverridingTransform, Mathf.Pow(2, -_instance.indoorMuteDB));
             managedInstances.Add(instance);
             if (soundWrapper.isPriority)
             {
@@ -293,6 +295,7 @@ public class AudioManager : Singleton<AudioManager>
             return shouldRemove;
         });
         float MaxPriorityVolume01 = 0;
+        float MaxDialogueVolume01 = 0;
         foreach (ManagedInstance instance in managedInstances)
         {
             if (!paused || !instance.CanPause)
@@ -301,9 +304,21 @@ public class AudioManager : Singleton<AudioManager>
                 {
                     continue;
                 }
-                MaxPriorityVolume01 = Mathf.Max(MaxPriorityVolume01, instance.MixerVolume01);
+                float vol = instance.MixerVolume01;
+                MaxPriorityVolume01 = Mathf.Max(MaxPriorityVolume01, vol);
+                if (instance.IsDialogue)
+                {
+                    MaxDialogueVolume01 = Mathf.Max(MaxDialogueVolume01, vol);
+                }
             }
         }
+        float dbOverThreshold = Mathf.Approximately(0, MaxPriorityVolume01) ?
+            0 : Mathf.Max(0, 6 * Mathf.Log(MaxPriorityVolume01, 2) - _instance.duckingThreshold);
+        float dialogueDbOverThreshold = Mathf.Approximately(0, MaxDialogueVolume01) ?
+            0 : Mathf.Max(0, 6 * Mathf.Log(MaxDialogueVolume01, 2) - _instance.dialogueDuckingDbFactor);
+        float priorityDuckingDb = dbOverThreshold * _instance.duckingDbFactor;
+        float dialogueDuckingDb = dialogueDbOverThreshold * _instance.dialogueDuckingDbFactor; 
+        
         foreach (ManagedInstance instance in managedInstances)
         {
             if (!paused || !instance.CanPause)
@@ -311,13 +326,13 @@ public class AudioManager : Singleton<AudioManager>
                 // dialogue-over-dialogue ducking overrides regular ducking
                 if (instance.ShouldApplyDialogueDucking)
                 {
-                    instance.GetAndUpdate(dt, MaxPriorityVolume01 * _instance.dialogueOverDialogueDuckingFactor);
+                    instance.GetAndUpdate(dt, priorityDuckingDb, _instance.indoorMuteDB);
                 } else if (PrioritySounds.Contains(instance))
                 {
-                    instance.GetAndUpdate(dt, 0);
+                    instance.GetAndUpdate(dt, 0, _instance.indoorMuteDB);
                 } else
                 {
-                    instance.GetAndUpdate(dt, MaxPriorityVolume01 * _instance.duckingFactor);
+                    instance.GetAndUpdate(dt, Mathf.Max(priorityDuckingDb, dialogueDuckingDb), _instance.indoorMuteDB);
                 }
             }
         }
@@ -682,7 +697,7 @@ public class AudioManager : Singleton<AudioManager>
 
         public bool Nullified => soundWrapper.root == null;
 
-        public ManagedInstance(in SoundWrapper soundWrapper, bool isOverridingTransform)
+        public ManagedInstance(in SoundWrapper soundWrapper, bool isOverridingTransform, float indoorMuteDb)
         {
             this.soundWrapper = soundWrapper;
             position = soundWrapper.root.position;
@@ -693,7 +708,7 @@ public class AudioManager : Singleton<AudioManager>
             bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref position);
             if (indoorStatusDisagree)
             {
-                soundWrapper.fmodInstance.setVolume(Duck(soundWrapper.volume, _instance.indoorMuteFactor));
+                soundWrapper.fmodInstance.setVolume(Mathf.Pow(2, Mathf.Max(0, 6 * Mathf.Log(soundWrapper.volume, 2) - indoorMuteDb)) / 6);
             }
             soundWrapper.fmodInstance.set3DAttributes(position.To3DAttributes());
             soundWrapper.fmodInstance.start();
@@ -715,9 +730,9 @@ public class AudioManager : Singleton<AudioManager>
             tick(ref soundWrapper.fmodInstance);
         }
 
-        public void GetAndUpdate(float dt, float duckingVolume)
+        public void GetAndUpdate(float dt, float priorityDuckDb, float indoorMuteDb)
         {
-            float volume = Duck(soundWrapper.volume, duckingVolume);
+            float volumeDb = 6 * Mathf.Log(soundWrapper.volume, 2) - priorityDuckDb;
             progress += dt;
             if (progress >= soundWrapper.duration)
             {
@@ -728,9 +743,9 @@ public class AudioManager : Singleton<AudioManager>
             {
                 Vector3 shiftedPosition = soundWrapper.root.position;
                 bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref shiftedPosition);
-                if (indoorStatusDisagree) volume = Duck(volume, _instance.indoorMuteFactor);
+                if (indoorStatusDisagree) volumeDb -= indoorMuteDb;
                 soundWrapper.fmodInstance.set3DAttributes(shiftedPosition.To3DAttributes());
-                soundWrapper.fmodInstance.setVolume(volume);
+                soundWrapper.fmodInstance.setVolume(Mathf.Pow(2, volumeDb / 6));
             }
             else
             {
@@ -746,8 +761,8 @@ public class AudioManager : Singleton<AudioManager>
                     position = p.ToFMODVector(),
                     velocity = (v * soundWrapper.sound.dopplerScale).ToFMODVector()
                 });
-                if (indoorStatusDisagree) volume = Duck(volume, _instance.indoorMuteFactor);
-                soundWrapper.fmodInstance.setVolume(volume);
+                if (indoorStatusDisagree) volumeDb -= indoorMuteDb;
+                soundWrapper.fmodInstance.setVolume(Mathf.Pow(2, volumeDb / 6));
             }
         }
 
@@ -764,11 +779,6 @@ public class AudioManager : Singleton<AudioManager>
                 original += SGrid.GetHousingOffset() * Vector3.down;
             }
             return true;
-        }
-
-        private float Duck(float target, float by)
-        {
-            return Mathf.Max(target - by, 0f); // sometimes simple things work best...
         }
     }
 }

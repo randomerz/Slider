@@ -77,6 +77,7 @@ public class Printer : MonoBehaviour
     public void CheckParts()
     {
         string operatorMessage = "";
+        string operatorHint = "";
         walls = PlayerInventory.Contains("Slider Walls");
         floor = PlayerInventory.Contains("Slider Base");
         wires = PlayerInventory.Contains("Slider Wires");
@@ -84,7 +85,7 @@ public class Printer : MonoBehaviour
         if (!floor && !walls && !wires)
         {
             // first message
-            operatorMessage = "I'll just need these materials: the floor, the walls, and the wires!!!";
+            operatorMessage = "I'll just need these materials: the base, the walls, and the wires!!!";
         }
         else if (floor && walls && wires)
         {
@@ -96,19 +97,31 @@ public class Printer : MonoBehaviour
             List<string> mlist = new List<string>();
             if (!floor)
             {
-                mlist.Add(" the floor");
+                mlist.Add(" the base");
+                operatorHint = "The base is right here to my left, but you'll probably need that Conductive Bob somehow!!!!";
             }
             if (!walls)
             {
                 mlist.Add(" the walls");
+                operatorHint = "The walls are up behind that giant door!!!!";
             }
             if (!wires)
             {
                 mlist.Add(" the wires");
+                operatorHint = "The wires are in the bottom-right of the Factory!!!!";
             }
             operatorMessage = $"It still needs{string.Join(',', mlist)}!!!";
         }
         SaveSystem.Current.SetString("FactoryPrinterParts", operatorMessage);
+        SaveSystem.Current.SetString("FactoryPrinterPartsHint", operatorHint);
+
+        // if only one left
+        if (floor && !walls && !wires ||
+            !floor && walls && !wires ||
+            !floor && !walls && wires)
+        {
+            SaveSystem.Current.SetBool("factoryBuildATileHint", true);
+        }
     }
 
     private void SetActives()
