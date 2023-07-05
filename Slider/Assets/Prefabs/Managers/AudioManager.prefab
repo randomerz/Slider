@@ -465,6 +465,24 @@ MonoBehaviour:
         Data4: -1114012601
       Path: event:/SFX/Jungle/Record Scratch
     dopplerScale: 1
+  - name: Desync Tear Open
+    fmodEvent:
+      Guid:
+        Data1: -597605736
+        Data2: 1252623518
+        Data3: 1345641131
+        Data4: 257574772
+      Path: event:/SFX/Magic/Desync Tear Open
+    dopplerScale: 1
+  - name: Desync Tear Close
+    fmodEvent:
+      Guid:
+        Data1: -768786806
+        Data2: 1134272544
+        Data3: -394793053
+        Data4: -1358399614
+      Path: event:/SFX/Magic/Desync Tear Close
+    dopplerScale: 1
   music:
   - name: Main Menu
     fmodEvent:

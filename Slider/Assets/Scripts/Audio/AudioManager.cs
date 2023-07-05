@@ -655,6 +655,7 @@ public class AudioManager : Singleton<AudioManager>
         public void Stop()
         {
             soundWrapper.fmodInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            Debug.Log($"FMOD INSTANCE STATUS: {soundWrapper.fmodInstance}");
             soundWrapper.fmodInstance.release();
         }
 

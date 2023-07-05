@@ -30,6 +30,9 @@ public class MagiTechArtifact : UIArtifact
     }
     private bool isInPast = false;
     private bool isPreview = false;
+    private bool isDesynchSoundPlaying = false;
+
+    private AudioManager.ManagedInstance desyncTearLoopSound;
 
     public Image background;
     public Sprite presentBackgroundSprite;
@@ -64,11 +67,31 @@ public class MagiTechArtifact : UIArtifact
             UpdateButtonPositions();
             if (desynchLocation.x != desyncedButton.x || desynchLocation.y != desyncedButton.y)
             {
+                if (!isDesynchSoundPlaying)
+                {
+                    isDesynchSoundPlaying = true;
+                    desyncTearLoopSound = AudioManager.PickSound("Desync Tear Open").AndPlay();
+                    Debug.Log($"REEEEEEEEEEEEEEE {desyncTearLoopSound}");
+                }
                 ArtifactTileButton pastButton = desynchIslandId <= 9 ? GetButton(FindAltId(desynchIslandId)) : GetButton(desynchIslandId);
                 if (isInPast != isPreview) SetLightningPos(pastButton);
                 else SetLightningPos(GetButton(FindAltId(pastButton.islandId)));
             }
-            else DisableLightning(false);
+            else
+            {
+                if (isDesynchSoundPlaying)
+                {
+                    isDesynchSoundPlaying = false;
+                    //if (desyncTearLoopSound != null)
+                    //{
+                    //    desyncTearLoopSound.Stop();
+                    //}
+                    desyncTearLoopSound.Stop();
+                    AudioManager.ManagedInstance thing = AudioManager.PickSound("Desync Tear Close").AndPlay();
+                    Debug.Log($"AAAAAAAAAAAAAAAAAAA {thing}");
+                }
+                DisableLightning(false);
+            }
         }
         else DisableLightning(true);
     }
