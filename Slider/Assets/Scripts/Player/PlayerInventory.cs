@@ -18,7 +18,7 @@ public class PlayerInventory : MonoBehaviour
     private static IEnumerator<Item> itemIterator = equipables.GetEnumerator();
     private static Item currentItem = null;
 
-    private static bool hasCollectedAnchor = false;
+    private bool hasCollectedAnchor = false;
     [SerializeField] private Transform itemPickupTransform;
     [SerializeField] private GameObject anchorPrefab;
 
@@ -28,7 +28,13 @@ public class PlayerInventory : MonoBehaviour
     {
         get => instance;
     }
-    
+
+    private void Start()
+    {
+        // Happens if you load a scene for the first time (i.e. Load() isn't called)
+        Init();
+    }
+
     // Called by Player.Init() too
     public void Init()
     {
@@ -83,6 +89,41 @@ public class PlayerInventory : MonoBehaviour
     {
         return hasCollectedAnchor;
     }
+
+
+    /// Finds the anchor if it is placed in the map and tries to return it to the Player's inventory.
+    public static void ReturnAnchorFromMap()
+    {
+        // If is equipped
+        if (currentItem != null && currentItem.itemName == "Anchor")
+        {
+            return;
+        }
+
+        // If already in inventory
+        foreach (Item i in equipables)
+        {
+            if (i.itemName == "Anchor")
+            {
+                return;
+            }
+        }
+
+        // Find all anchors in map
+        foreach (Anchor anchor in FindObjectsOfType<Anchor>())
+        {
+            // do we need to check for the case that it is currently being picked up? probably not bc of timing
+
+            AddItem(anchor);
+            anchor.RemoveFromTile();
+            anchor.transform.SetParent(PlayerAction.Instance.GetPickedItemLocationTransform());
+            anchor.AnimatePickUpEnd(PlayerAction.Instance.GetPickedItemLocationTransform().position);
+        }
+
+        NextItem();
+    }
+
+    public static void AddCollectibleFromData(Collectible.CollectibleData data) => collectibles.Add(data);
 
     public static void AddCollectible(Collectible collectible) {
         // Debug.Log("Adding " + collectible.GetArea() + " " + collectible.GetName());

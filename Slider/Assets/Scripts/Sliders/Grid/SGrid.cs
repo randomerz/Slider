@@ -141,7 +141,7 @@ Note: This updates all of the STiles according to the ids in the given array (un
 */
 public void SetGrid(int[,] puzzle)
     {
-        if (puzzle.Length != grid.Length)
+        if (puzzle.GetLength(0) != grid.GetLength(0) || puzzle.GetLength(1) != grid.GetLength(1))
         {
             Debug.LogWarning("Tried to SetGrid(int[,]), but provided puzzle was of a different length!");
         }
@@ -149,9 +149,9 @@ public void SetGrid(int[,] puzzle)
         STile[,] newGrid = new STile[Width, Height];
         STile next = null;
 
-        // We might not need this getunderstile stuff anymore now that we actually child player to STiles!
-        STile playerSTile = Player.GetInstance().GetSTileUnderneath();
-        Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
+        //// We might not need this getunderstile stuff anymore now that we actually child player to STiles!
+        //STile playerSTile = Player.GetInstance().GetSTileUnderneath();
+        //Vector3 playerOffset = playerSTile ? Player.GetPosition() - playerSTile.transform.position : Vector3.zero;
 
         for (int x = 0; x < Width; x++)
         {
@@ -171,8 +171,8 @@ public void SetGrid(int[,] puzzle)
             }
         }
 
-        if (playerSTile != null)
-            Player.SetPosition(playerSTile.transform.position + playerOffset);
+        //if (playerSTile != null)
+        //    Player.SetPosition(playerSTile.transform.position + playerOffset);
 
         STile[,] old = grid;
         grid = newGrid;
@@ -250,14 +250,14 @@ public void SetGrid(int[,] puzzle)
 
     public static int[,] GridStringToSetGridFormat(string gridstring)
     {
-        //Chen: This in theory should work for other grids? This is mostly used with Scroll of Realigning stuff.
+
         int[,] gridFormat = new int[Current.Width, Current.Height];
-        for (int x = Current.Width - 1; x >= 0; x--)
+        for(int i = 0; i < gridstring.Length; i++)
         {
-            for (int y = 0; y < Current.Height; y++)
-            {
-                gridFormat[y, (Current.Width - 1 - x)] = Converter.CharToInt(gridstring[(x * Current.Height) + y]);
-            }
+            int tileNum =  Converter.CharToInt(gridstring[i]);
+            int x = i % Current.Width;
+            int y = ((Current.Width * Current.Height) - i - 1) / Current.Width;
+            gridFormat[x, y] = tileNum;
         }
         return gridFormat;
     }
@@ -459,6 +459,10 @@ public void SetGrid(int[,] puzzle)
     {
         if (!PlayerInventory.Contains(name, myArea))
         {
+            if (!GetCollectible(name).gameObject.activeSelf)
+            {
+                AudioManager.Play("Puzzle Complete");
+            }
             GetCollectible(name)?.gameObject.SetActive(true);
         }
             
@@ -466,10 +470,13 @@ public void SetGrid(int[,] puzzle)
 
     public void ActivateSliderCollectible(int sliderId)
     {
-        if (!PlayerInventory.Contains("Slider " + sliderId, myArea)) 
+        if (!PlayerInventory.Contains("Slider " + sliderId, myArea))
         {
+            if (!GetCollectible("Slider " + sliderId).gameObject.activeSelf)
+            {
+                AudioManager.Play("Puzzle Complete");
+            }
             GetCollectible("Slider " + sliderId)?.gameObject.SetActive(true);
-            AudioManager.Play("Puzzle Complete");
         }
     }
 
@@ -649,10 +656,12 @@ public void SetGrid(int[,] puzzle)
             }
         }
     }
+
     public bool HasRealigningGrid()
     {
         return realigningGrid != null;
     }
+
     protected static void UpdateButtonCompletions(object sender, System.EventArgs e)
     {
         Current.UpdateButtonCompletionsHelper();
@@ -720,8 +729,9 @@ public void SetGrid(int[,] puzzle)
     {
         UpdateButtonCompletionsHelper();
         UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.color);
-        UIArtifactMenus._instance.OpenArtifactAndShow(0, true);
-        yield return new WaitForSeconds(2);
+        //UIArtifactMenus._instance.OpenArtifactAndShow(0, true);
+        //yield return new WaitForSeconds(2);
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
+        yield return null;
     }  
 }

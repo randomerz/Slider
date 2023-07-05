@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 // ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
@@ -11,6 +12,7 @@ public class UIArtifact : Singleton<UIArtifact>
     public ArtifactTileButton[] buttons;
     [SerializeField] protected int maxMoveQueueSize = 3;
     [SerializeField] private GameObject lightning;
+    [SerializeField] private List<GameObject> fallbackButtonsToSelect; // For when youre on controller and have nothing to select
 
     protected ArtifactTileButton buttonSelected;
     protected List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
@@ -49,7 +51,7 @@ public class UIArtifact : Singleton<UIArtifact>
         ClearQueues();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         //L: Do these ever get unsubscribed? (Do they need to?) (If your name is DesertArtifact yes)
         SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
@@ -66,16 +68,60 @@ public class UIArtifact : Singleton<UIArtifact>
         EnableQueueing();
     }
 
-    private void Update() {
-        if(shouldCountDown && hoverTimer < hoverBuffer) {
+    private void Update()
+    {
+        if (shouldCountDown && hoverTimer < hoverBuffer)
+        {
             hoverTimer += Time.deltaTime;
-            if(hoverTimer > hoverBuffer)
+            if (hoverTimer > hoverBuffer && lastHovered != null)
             {
                 lastHovered.SetSpriteToIslandOrEmpty();
                 lastHovered.SetHighlighted(true);
                 lastHovered = null;
             }
         }
+
+        HandleControllerCheck();
+    }
+
+    private void HandleControllerCheck()
+    {
+        if (!UIArtifactMenus.IsArtifactOpen())
+        {
+            return;
+        }
+
+        // Controller check if nothing is selected, then select the tile 1 or left arrow or right arrow
+        if (!IsButtonValidForSelection(EventSystem.current.currentSelectedGameObject))
+        {
+            foreach (GameObject g in fallbackButtonsToSelect)
+            {
+                if (IsButtonValidForSelection(g))
+                {
+                    Debug.Log("Force picked a new button.");
+                    EventSystem.current.SetSelectedGameObject(g);
+                    return;
+                }
+            }
+        }
+    }
+
+    private bool IsButtonValidForSelection(GameObject g)
+    {
+        // If selected object is null or deactivated
+        if (g == null || !g.activeInHierarchy)
+        {
+            return false;
+        }
+
+        // If selected object has button deactivated
+        Button b = g.GetComponent<Button>();
+        if (b != null && !b.enabled)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public static UIArtifact GetInstance()
@@ -618,14 +664,21 @@ public class UIArtifact : Singleton<UIArtifact>
         int oldCurrY = buttonCurrent.y;
         buttonCurrent.SetPosition(buttonEmpty.x, buttonEmpty.y, true);
         buttonEmpty.SetPosition(oldCurrX, oldCurrY, true);
-
+        
         //since buttons swap, it feels like your hover goes backwards on controller, feels unintuitive.
         //So this will select the tile you swap to after the move
         if (setCurrentAsSelected && Player.GetInstance().GetCurrentControlScheme() == "Controller")
         {
-            EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
-            //buttonEmpty.OnDeselect();
-            //buttonCurrent.OnSelect();
+            if (!SettingsManager.AutoMove)
+            {
+                EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
+            }
+            // but during the final part though when youre doing 8 puzzle and it auto moves, make cursor stay in place
+            else
+            {
+                EventSystem.current.SetSelectedGameObject(buttonEmpty.gameObject);
+                //buttonEmpty.SetControllerHoverHighlighted(true);
+            }
         }
     }
 

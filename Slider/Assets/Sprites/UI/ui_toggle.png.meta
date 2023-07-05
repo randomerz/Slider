@@ -139,7 +139,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 8
         width: 8
         height: 8
       alignment: 0
@@ -160,7 +160,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 8
-        y: 0
+        y: 8
         width: 8
         height: 8
       alignment: 0
@@ -181,7 +181,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
-        y: 0
+        y: 8
         width: 8
         height: 8
       alignment: 0
@@ -202,7 +202,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 24
-        y: 0
+        y: 8
         width: 8
         height: 8
       alignment: 0
@@ -214,6 +214,27 @@ TextureImporter:
       bones: []
       spriteID: b37c80a8257f3a944a7e7bfba043ee29
       internalID: -2045252093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_toggle_0_selected
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f1c9514928bd5d44a6bc59c32689439
+      internalID: 1445555044
       vertices: []
       indices: 
       edges: []
@@ -233,6 +254,7 @@ TextureImporter:
       ui_toggle_0: 5974709360174511827
       ui_toggle_1: 7429639963303955342
       ui_toggle_3: -2045252093
+      ui_toggle_0_selected: 1445555044
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -1,3 +1,4 @@
+using SliderVocalization;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,9 +8,11 @@ using UnityEngine;
 public class VocalizationContext
 {
     public Transform root;
-    public VocalizationContext(Transform root)
+    public VocalizableParagraph topLevelParent;
+    public VocalizationContext(Transform root, VocalizableParagraph topLevelParent)
     {
         this.root = root;
+        this.topLevelParent = topLevelParent;
     }
 
     public float vowelOpenness;
@@ -23,6 +26,7 @@ public class VocalRandomizationContext
 {
     public float wordPitchBase;
     public float wordPitchIntonated;
+    public float lastWordFinalPitch;
     public bool isCurrentWordLow;
 }
 

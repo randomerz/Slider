@@ -16,6 +16,10 @@ namespace SliderVocalization {
     public struct VocalizerParameters
     {
         public Sound synth;
+
+        [Tooltip("Not syllable if not meant to be read by NPC, for example words on the sign")]
+        public bool isPronouncedSyllables;
+
         [Header("Vowel-level configs")]
         [Range(0.5f, 2f), Tooltip("FMOD param: Pitch")]
         public float pitch;
@@ -27,12 +31,10 @@ namespace SliderVocalization {
         public float volumeAdjustmentDb;
         public VocalizerParametersModifier stressedVowelModifiers;
 
-        [Range(1, 10), Tooltip("Higher value means faster interpolation and less rounded sounds")]
+        [Range(0.1f, 10), Tooltip("Higher value means faster interpolation and less rounded sounds")]
         public float lerpSmoothnessInverted;
 
         [Header("Word-level configs")]
-        [Range(0.01f, 0.5f)]
-        public float wordGap;
         [Range(-1f, 1f)]
         public float wordIntonation;
         [Range(-1f, 1f)]

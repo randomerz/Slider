@@ -19,6 +19,7 @@ public class SaveProfile
     private Dictionary<string, bool> bools = new Dictionary<string, bool>();
     private Dictionary<string, string> strings = new Dictionary<string, string>();
     private Dictionary<string, int> ints = new Dictionary<string, int>();
+    private Dictionary<string, float> floats = new Dictionary<string, float>();
     public AchievementStatistic[] AchievementData { get; set; }
 
     // Cached stuff
@@ -148,6 +149,16 @@ public class SaveProfile
     public void SetIntsDictionary(Dictionary<string, int> value)
     {
         ints = value;
+    }
+
+    public Dictionary<string, float> GetFloatsDictionary()
+    {
+        return floats;
+    }
+
+    public void SetFloatsDictionary(Dictionary<string, float> value)
+    {
+        floats = value;
     }
     #endregion
 
@@ -296,6 +307,16 @@ public class SaveProfile
     public void SetInt(string name, int value)
     {
         ints[name] = value;
+    }
+
+    public float GetFloat(string name, float defaultValue = 0)
+    {
+        return floats.GetValueOrDefault(name, defaultValue);
+    }
+
+    public void SetFloat(string name, float value)
+    {
+        floats[name] = value;
     }
     #endregion
 }

@@ -124,6 +124,11 @@ public class STile : MonoBehaviour
                         continue;
 
                     }
+
+                    // do we need this here too?????
+                    if (c.isTrigger && c.CompareTag("LeaveTriggerEnabled"))
+                        continue;
+
                     c.enabled = false;
                     disabledColliders.Add(c);
                 }

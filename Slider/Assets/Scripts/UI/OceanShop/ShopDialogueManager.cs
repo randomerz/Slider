@@ -312,7 +312,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "And you don't have an anchor? Every self-respecting pirate has one.",
+                    "And you don't have an <#2e44f0>anchor</color>? Every self-respecting pirate has one.",
                     TKSprite.Question,
                     () => SetDialogue(
 
@@ -738,6 +738,7 @@ public class ShopDialogueManager : MonoBehaviour
                     "Maybe others know the rest of the song?",
                     TKSprite.Question,
                     () => {
+                        FoggyMusicHintManager.Instance.SetBobHint(false);
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
                     }

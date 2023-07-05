@@ -42,10 +42,16 @@ public class DialogueDisplay : MonoBehaviour
         textTyperText.SetTextSpeed(GameSettings.textSpeed);
         textTyperBG.SetTextSpeed(GameSettings.textSpeed);
         textTyperBG.StartTyping(message);
-        float totalDuration = vocalizer.SetText(parsed, emote);
-        textTyperText.SetTextSpeed(totalDuration / parsed.Length);
-        textTyperBG.SetTextSpeed(totalDuration / parsed.Length);
-        vocalizer.StartReadAll(emote);
+
+        if (AudioManager.useVocalizer && useVocalizer)
+        {
+            float totalDuration = vocalizer.SetText(parsed, emote);
+
+            AudioManager.DampenMusic(this, 0.6f, totalDuration + 0.2f);
+            textTyperText.SetTextSpeed(totalDuration / parsed.Length);
+            textTyperBG.SetTextSpeed(totalDuration / parsed.Length);
+            vocalizer.StartReadAll(emote);
+        }
         // StartCoroutine(TypeSentence(message.ToCharArray()));
     }
 

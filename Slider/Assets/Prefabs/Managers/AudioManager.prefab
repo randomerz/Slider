@@ -131,6 +131,7 @@ MonoBehaviour:
         Data3: 815781785
         Data4: -1936799075
       Path: event:/SFX/Misc/GMTK Pickup
+    canPause: 1
     dopplerScale: 0
   - name: Slide Rumble
     fmodEvent:
@@ -140,6 +141,7 @@ MonoBehaviour:
         Data3: -1040153453
         Data4: 18325320
       Path: event:/SFX/Rumbles and Explosions/Slide Rumble
+    canPause: 1
     dopplerScale: 1
   - name: Slide Explosion
     fmodEvent:
@@ -149,6 +151,7 @@ MonoBehaviour:
         Data3: 1904038537
         Data4: -2051480606
       Path: event:/SFX/Rumbles and Explosions/Slide Explosion
+    canPause: 1
     dopplerScale: 0
   - name: Rumble Decrease 2.5s
     fmodEvent:
@@ -158,6 +161,7 @@ MonoBehaviour:
         Data3: -1694289525
         Data4: 1603943095
       Path: event:/SFX/Rumbles and Explosions/Long Rumble 2.5s
+    canPause: 1
     dopplerScale: 0
   - name: Rumble Decrease 5s
     fmodEvent:
@@ -167,6 +171,7 @@ MonoBehaviour:
         Data3: 1899996591
         Data4: -169996033
       Path: event:/SFX/Rumbles and Explosions/Long Rumble 5s
+    canPause: 1
     dopplerScale: 0
   - name: Rumble Decrease 9s
     fmodEvent:
@@ -176,6 +181,7 @@ MonoBehaviour:
         Data3: -797821818
         Data4: -334665175
       Path: event:/SFX/Rumbles and Explosions/Long Rumble 9s
+    canPause: 1
     dopplerScale: 0
   - name: Rumble Constant 9s
     fmodEvent:
@@ -185,6 +191,7 @@ MonoBehaviour:
         Data3: 965472171
         Data4: 1764040983
       Path: event:/SFX/Rumbles and Explosions/Long Rumble Constant 9s
+    canPause: 1
     dopplerScale: 0
   - name: Rumble Increase 8s
     fmodEvent:
@@ -194,6 +201,7 @@ MonoBehaviour:
         Data3: 725394309
         Data4: -1741667662
       Path: event:/SFX/Rumbles and Explosions/Long Rumble Increase 8s
+    canPause: 1
     dopplerScale: 0
   - name: Artifact Error
     fmodEvent:
@@ -203,6 +211,7 @@ MonoBehaviour:
         Data3: -2120134783
         Data4: -504788968
       Path: event:/SFX/SFXR/Artifact Error
+    canPause: 1
     dopplerScale: 0
   - name: UI Click
     fmodEvent:
@@ -212,6 +221,7 @@ MonoBehaviour:
         Data3: 718599337
         Data4: -1411563401
       Path: event:/SFX/SFXR/UI Click
+    canPause: 0
     dopplerScale: 0
   - name: Hat Click
     fmodEvent:
@@ -221,6 +231,7 @@ MonoBehaviour:
         Data3: 1921376432
         Data4: -2119127444
       Path: event:/SFX/SFXR/Hat Click
+    canPause: 1
     dopplerScale: 0
   - name: NPC Blip
     fmodEvent:
@@ -230,6 +241,7 @@ MonoBehaviour:
         Data3: 0
         Data4: 0
       Path: 
+    canPause: 1
     dopplerScale: 0
   - name: Puzzle Complete
     fmodEvent:
@@ -239,6 +251,7 @@ MonoBehaviour:
         Data3: 677736838
         Data4: -1759630598
       Path: event:/SFX/SFXR/Puzzle Complete
+    canPause: 1
     dopplerScale: 0
   - name: Hurt
     fmodEvent:
@@ -248,6 +261,7 @@ MonoBehaviour:
         Data3: -1849919341
         Data4: 1327211398
       Path: event:/SFX/SFXR/Hurt
+    canPause: 1
     dopplerScale: 0
   - name: Fall
     fmodEvent:
@@ -257,6 +271,7 @@ MonoBehaviour:
         Data3: 3114136
         Data4: -1173462338
       Path: event:/SFX/SFXR/Fall
+    canPause: 0
     dopplerScale: 0
   - name: MagicChimes1
     fmodEvent:
@@ -266,6 +281,7 @@ MonoBehaviour:
         Data3: 946167185
         Data4: -470553028
       Path: event:/SFX/Magic/Magic Chimes1
+    canPause: 1
     dopplerScale: 1
   - name: MagicChimes2
     fmodEvent:
@@ -275,6 +291,7 @@ MonoBehaviour:
         Data3: 2008226204
         Data4: -650800235
       Path: event:/SFX/Magic/Magic Chimes2
+    canPause: 1
     dopplerScale: 1
   - name: TFT Bell
     fmodEvent:
@@ -284,6 +301,7 @@ MonoBehaviour:
         Data3: -373076304
         Data4: 2122563298
       Path: event:/SFX/Magic/TFT Bell
+    canPause: 1
     dopplerScale: 0
   - name: Power On
     fmodEvent:
@@ -293,6 +311,7 @@ MonoBehaviour:
         Data3: -1566772322
         Data4: -246391735
       Path: event:/SFX/Factory/Power On
+    canPause: 1
     dopplerScale: 0
   - name: Power Off
     fmodEvent:
@@ -302,6 +321,7 @@ MonoBehaviour:
         Data3: -959976785
         Data4: 558721145
       Path: event:/SFX/Factory/Power Off
+    canPause: 1
     dopplerScale: 0
   - name: Bottle Sink
     fmodEvent:
@@ -311,6 +331,7 @@ MonoBehaviour:
         Data3: 1573816232
         Data4: 1705598499
       Path: event:/SFX/Ocean/Bottle Sink
+    canPause: 1
     dopplerScale: 0
   - name: Glass Clink
     fmodEvent:
@@ -320,6 +341,7 @@ MonoBehaviour:
         Data3: 304086971
         Data4: 1230667835
       Path: event:/SFX/Ocean/Glass Clink
+    canPause: 1
     dopplerScale: 0
   - name: Conveyor
     fmodEvent:
@@ -329,6 +351,7 @@ MonoBehaviour:
         Data3: -147534192
         Data4: -1220852846
       Path: event:/SFX/Factory/Conveyor
+    canPause: 1
     dopplerScale: 0
   - name: Crocodile Grab Sequence
     fmodEvent:
@@ -338,6 +361,7 @@ MonoBehaviour:
         Data3: 1958267835
         Data4: -1738639728
       Path: event:/SFX/Desert/Croco Grab Sequence
+    canPause: 1
     dopplerScale: 0
   - name: Water Drop Water
     fmodEvent:
@@ -347,6 +371,7 @@ MonoBehaviour:
         Data3: 430265524
         Data4: -1222714988
       Path: event:/SFX/Desert/Big Water Drop
+    canPause: 1
     dopplerScale: 0
   - name: Baboon Screech
     fmodEvent:
@@ -356,6 +381,7 @@ MonoBehaviour:
         Data3: -1924915301
         Data4: 937611837
       Path: event:/SFX/Desert/Baboon Screech
+    canPause: 1
     dopplerScale: 0
   - name: Dice Bump
     fmodEvent:
@@ -365,6 +391,7 @@ MonoBehaviour:
         Data3: 1138196376
         Data4: -2014453397
       Path: event:/SFX/Desert/Dice Bump
+    canPause: 1
     dopplerScale: 0
   - name: Dice Shake
     fmodEvent:
@@ -374,6 +401,7 @@ MonoBehaviour:
         Data3: -1348997469
         Data4: 1799270439
       Path: event:/SFX/Desert/Dice Shake
+    canPause: 1
     dopplerScale: 0
   - name: Bottle Fill
     fmodEvent:
@@ -383,6 +411,7 @@ MonoBehaviour:
         Data3: 1698111138
         Data4: 1034827031
       Path: event:/SFX/Desert/Bottle Bubble Fill
+    canPause: 1
     dopplerScale: 0
   - name: FactoryTimedGateProgress1
     fmodEvent:
@@ -392,6 +421,7 @@ MonoBehaviour:
         Data3: 1947597726
         Data4: 1608839436
       Path: event:/SFX/Factory/FactoryTimedGateProgress1
+    canPause: 1
     dopplerScale: 0
   - name: FactoryTimedGateProgress2
     fmodEvent:
@@ -401,6 +431,7 @@ MonoBehaviour:
         Data3: 1131446694
         Data4: 1292737289
       Path: event:/SFX/Factory/FactoryTimedGateProgress2
+    canPause: 1
     dopplerScale: 0
   - name: FactoryTimedGateProgress3
     fmodEvent:
@@ -410,6 +441,7 @@ MonoBehaviour:
         Data3: -1577689169
         Data4: -1458885182
       Path: event:/SFX/Factory/FactoryTimedGateProgress3
+    canPause: 1
     dopplerScale: 0
   - name: FactoryTimedGateProgress4
     fmodEvent:
@@ -419,6 +451,7 @@ MonoBehaviour:
         Data3: -68815941
         Data4: -1897143703
       Path: event:/SFX/Factory/FactoryTimedGateProgress4
+    canPause: 1
     dopplerScale: 0
   - name: FactoryTimedGateProgress5
     fmodEvent:
@@ -428,6 +461,7 @@ MonoBehaviour:
         Data3: 614243224
         Data4: -1146322477
       Path: event:/SFX/Factory/FactoryTimedGateProgress5
+    canPause: 1
     dopplerScale: 0
   - name: FactoryTimedGateProgress6
     fmodEvent:
@@ -437,6 +471,7 @@ MonoBehaviour:
         Data3: 2101343917
         Data4: 1758749397
       Path: event:/SFX/Factory/FactoryTimedGateProgress6
+    canPause: 1
     dopplerScale: 0
   - name: Debug
     fmodEvent:
@@ -446,6 +481,7 @@ MonoBehaviour:
         Data3: 1067200654
         Data4: 930797071
       Path: event:/SFX/Debug/Debug
+    canPause: 1
     dopplerScale: 1
   - name: Portal
     fmodEvent:
@@ -455,6 +491,7 @@ MonoBehaviour:
         Data3: -1614548827
         Data4: -1490286473
       Path: event:/SFX/Magic/Portal
+    canPause: 1
     dopplerScale: 1
   - name: Record Scratch
     fmodEvent:
@@ -464,6 +501,7 @@ MonoBehaviour:
         Data3: -941530482
         Data4: -1114012601
       Path: event:/SFX/Jungle/Record Scratch
+    canPause: 1
     dopplerScale: 1
   - name: Desync Tear Open
     fmodEvent:
@@ -483,6 +521,16 @@ MonoBehaviour:
         Data4: -1358399614
       Path: event:/SFX/Magic/Desync Tear Close
     dopplerScale: 1
+  - name: Rat Squeak
+    fmodEvent:
+      Guid:
+        Data1: 62348315
+        Data2: 1244939908
+        Data3: 1003720097
+        Data4: 1125836640
+      Path: event:/SFX/Caves/Rat Squeak
+    canPause: 0
+    dopplerScale: 0
   music:
   - name: Main Menu
     fmodEvent:
@@ -601,6 +649,43 @@ MonoBehaviour:
         Data4: 77094655
       Path: event:/Music/MagiTech BGM
     emitter: {fileID: 0}
+  ambience:
+  - name: Waterfall
+    fmodEvent:
+      Guid:
+        Data1: -876547417
+        Data2: 1267356328
+        Data3: -763059281
+        Data4: -476735717
+      Path: event:/Ambience/Waterfall
+    emitter: {fileID: 0}
+  - name: Waterfall Caves
+    fmodEvent:
+      Guid:
+        Data1: 361683603
+        Data2: 1164529194
+        Data3: 1987801021
+        Data4: -410703076
+      Path: event:/Ambience/Waterfall Caves
+    emitter: {fileID: 0}
+  - name: Campfire
+    fmodEvent:
+      Guid:
+        Data1: -1389724339
+        Data2: 1096560050
+        Data3: 1150475672
+        Data4: 1755165757
+      Path: event:/Ambience/Campfire
+    emitter: {fileID: 0}
+  - name: Forest Ambience
+    fmodEvent:
+      Guid:
+        Data1: 1355750639
+        Data2: 1190431554
+        Data3: -1960262746
+        Data4: 1288741103
+      Path: event:/Ambience/Forest Ambience
+    emitter: {fileID: 0}
   soundDampenCurve:
     serializedVersion: 2
     m_Curve:
@@ -640,5 +725,7 @@ MonoBehaviour:
   listenerWorldPosition: {fileID: 9215923887181117521}
   ZLevel: 10
   IndoorIsolatedFromWorld: 0
-  indoorMuteFactor: 0.295
-  duckingFactor: 0.619
+  indoorMuteDB: 5
+  duckingDbFactor: 0.5
+  duckingThreshold: -14
+  dialogueDuckingDbFactor: 0.765

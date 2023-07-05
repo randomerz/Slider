@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ArtifactTabManager : MonoBehaviour 
 {
+    public static System.EventHandler<System.EventArgs> AfterScrollRearrage;
+
     public List<ArtifactTab> tabs = new List<ArtifactTab>();
     protected ArtifactTab realignTab;
     protected ArtifactTab saveTab;
@@ -78,19 +80,18 @@ public class ArtifactTabManager : MonoBehaviour
         UIManager.canOpenMenus = false;
 
         CameraShake.ShakeIncrease(2, 1);
-        AudioManager.Play("Slide Explosion"); // TODO: fix sfx
+        AudioManager.Play("MagicChimes1");
         
         yield return new WaitForSeconds(0.5f);
-        AudioManager.Play("Slide Explosion");
+        AudioManager.Play("Rumble Decrease 5s");
 
         UIEffects.FlashWhite(callbackMiddle: () => {
-            // Do the rearranging!
-            //Debug.Log("Rearranged!");
             SGrid.Current.RearrangeGrid();
-
-
+            
             UIManager.canOpenMenus = true;
             isRearranging = false;
+
+            AfterScrollRearrage?.Invoke(this, new System.EventArgs());
         }, speed: 0.5f);
 
         yield return new WaitForSeconds(1.5f);
@@ -134,6 +135,7 @@ public class ArtifactTabManager : MonoBehaviour
             }
             //Debug.Log("Loaded!");
 
+            PlayerInventory.ReturnAnchorFromMap();
 
             UIEffects.FadeFromWhite();
             CameraShake.Shake(1.5f, 0.75f);

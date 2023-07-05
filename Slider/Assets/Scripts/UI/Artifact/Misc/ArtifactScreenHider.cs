@@ -120,14 +120,14 @@ public class ArtifactScreenHider : MonoBehaviour
 
     private void CheckAddInventoryScreen(object sender, PlayerInventory.InventoryEvent e)
     {
-        // if (PlayerHasCoffee() && e.collectible.name == "Coffee")
-        // {
-        //     AddInventoryScreen();
-        //     PlayerInventory.OnPlayerGetCollectible -= CheckAddInventoryScreen;
-            
-        //     uiArtifactMenus.OpenArtifactAndShow(0, true);
-        //     // StartCoroutine(IAddScreensAndShow(0));
-        // }
+        if (PlayerHasCoffee() && e.collectible.name == "Coffee")
+        {
+            AddInventoryScreen();
+            PlayerInventory.OnPlayerGetCollectible -= CheckAddInventoryScreen;
+
+            //uiArtifactMenus.OpenArtifactAndShow(0, true);
+            // StartCoroutine(IAddScreensAndShow(0));
+        }
     }
 
     private bool PlayerHasCoffee()

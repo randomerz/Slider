@@ -5,8 +5,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
-//L: I moved the STile underneath stuff to static method in STile since it's used in other places.
 public class Player : Singleton<Player>, ISavable, ISTileLocatable
 {
     public static event Action<string> OnControlSchemeChanged;
@@ -26,15 +24,13 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     [SerializeField] private Transform boatGetSTileUnderneathTransform;
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private bool debugDontUpdateStileUnderneath;
-
     [SerializeField] private PlayerInput playerInput;
-
 
 
     private float moveSpeedMultiplier = 1;
     private bool canMove = true;
     private bool noClipEnabled = false;
+    private bool dontUpdateStileUnderneath;
 
     private bool isInHouse = false;
 
@@ -64,7 +60,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         InitSingleton();
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
-        playerInventory.Init();
         UpdatePlayerSpeed();
 
         //playerInput= GetComponent<PlayerInput>();
@@ -72,14 +67,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     private void Start() 
     {
-        UITrackerManager.AddNewTracker(
-            gameObject, 
-            UITrackerManager.DefaultSprites.playerBlackCircle, 
-            UITrackerManager.DefaultSprites.playerBlackCircleEmpty, 
-            UITrackerManager.DefaultSprites.playerWhiteCircle, 
-            UITrackerManager.DefaultSprites.playerWhiteCircleEmpty, 
-            3f
-        );
+        SetTracker(true);
     }
     
     void Update()
@@ -147,10 +135,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         }
 
         // updating childing
-        currentStileUnderneath = GetSTileUnderneath();
+        if(!dontUpdateStileUnderneath)
+            currentStileUnderneath = GetSTileUnderneath();
         // Debug.Log("Currently on: " + currentStileUnderneath);
 
-        if (currentStileUnderneath != null && !debugDontUpdateStileUnderneath)
+        if (currentStileUnderneath != null && !dontUpdateStileUnderneath)
         {
             transform.SetParent(currentStileUnderneath.transform);
         }
@@ -312,6 +301,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         playerInventory.SetCollectiblesList(sp.collectibles);
         playerInventory.SetHasCollectedAnchor(sp.hasCollectedAnchor);
 
+        playerInventory.Init();
+
         // Other init functions
         UpdatePlayerSpeed();
 
@@ -319,7 +310,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         if (profile.GetBool("playerSpawnWithAnchorEquipped"))
         {
             profile.SetBool("playerSpawnWithAnchorEquipped", false);
-
             PlayerInventory.NextItem();
         }
     }
@@ -429,6 +419,35 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         {
             moveSpeed += 1;
         }
+    }
+
+    public void SetTracker(bool value)
+    {
+        if (value)
+        {
+            UITrackerManager.AddNewTracker(
+                gameObject,
+                UITrackerManager.DefaultSprites.playerBlackCircle,
+                UITrackerManager.DefaultSprites.playerBlackCircleEmpty,
+                UITrackerManager.DefaultSprites.playerWhiteCircle,
+                UITrackerManager.DefaultSprites.playerWhiteCircleEmpty,
+                3f
+            );
+        }
+        else
+        {
+            UITrackerManager.RemoveTracker(gameObject);
+        }
+    }
+
+    // This is a dangerous operation! You should probably only use it when the grid is locked.
+    public void SetDontUpdateSTileUnderneath(bool value)
+    {
+        if (SGrid.Current.GetTotalNumTiles() != SGrid.Current.GetNumTilesCollected())
+        {
+            Debug.LogWarning("Updating 'dontUpdateSTileUnderneath' when the grid isn't full. Be warned!");
+        }
+        dontUpdateStileUnderneath = value;
     }
 
     public static bool GetIsInHouse()

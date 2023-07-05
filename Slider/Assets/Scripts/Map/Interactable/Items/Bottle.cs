@@ -63,4 +63,15 @@ public class Bottle : Item
             this.state = bottleState.dirty;
         }
     }
+
+
+    public void PlayerDrinkBottle()
+    {
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position, transform);
+        AudioManager.Play("MagicChimes2");
+        gameObject.SetActive(false);
+
+        // Turn on mirage here
+        SaveSystem.Current.SetBool("desertMirageEnabled", true); // do this somewhere else
+    }
 }

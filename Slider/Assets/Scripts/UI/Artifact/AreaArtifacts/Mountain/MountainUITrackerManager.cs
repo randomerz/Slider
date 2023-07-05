@@ -8,8 +8,8 @@ public class MountainUITrackerManager : UITrackerManager
     public static MountainUITrackerManager _instance;
 #pragma warning restore
 
-    private Vector2 xOffset = new Vector2(38f/34f, -16f/34f);
-    private Vector2 yOffset = new Vector2(38f/34f, 16f/34f);
+    private Vector2 xOffset = new Vector2(40f/34f, -18f/34f);
+    private Vector2 yOffset = new Vector2(40f/34f, 18f/34f);
     private Vector2 xCenterOffset = new Vector2(53f/34f, -29f/34f);
     private Vector2 yCenterOffset = new Vector2(53f/34f, 29f/34f);
     private Vector2 lowerCenter = new Vector2(8.5f, 8.5f);
@@ -24,9 +24,10 @@ public class MountainUITrackerManager : UITrackerManager
     {
         Vector2 position = tracker.GetPosition();
         Vector2 temp = (position - (position.y > 62.5? upperCenter: lowerCenter));
-        Vector2 offset = temp.x * xCenterOffset + temp.y * yCenterOffset + (position.y > 62.5 ? new Vector2(0, 29.5f) : new Vector2(0, -29.5f));
-        //C: TODO: clamp outside of stiles
-        //offset = new Vector3(Mathf.Clamp(offset.x, -62.5f, 62.5f), Mathf.Clamp(offset.y, -57.5f, 57.5f));
+        temp.x = ScaleOutsideCutoff(temp.x, -17, 17, .5f);
+        temp.y = ScaleOutsideCutoff(temp.y, -17, 17, .5f);
+        Vector2 offset = temp.x * xCenterOffset + temp.y * yCenterOffset;
+        offset += (position.y > 62.5 ? new Vector2(0, 29.5f) : new Vector2(0, -29.5f));
         return offset;
     }
 
@@ -36,5 +37,22 @@ public class MountainUITrackerManager : UITrackerManager
         Vector2 temp = (position - (Vector2)currentTile.transform.position);
         Vector2 offset = temp.x * xOffset + temp.y * yOffset;
         return offset;
+    }
+
+    //multiplies the part of num greater than upperCutoff or less than lowerCutoff by scaleFactor
+    //Example: (20, -5, 5, .5) 
+    //20 > 5     20-5 = 15    15 * .5 = 7.5    5 + 7.5 = 12.5
+    private float ScaleOutsideCutoff(float num, float lowerCutoff, float upperCutoff, float scaleFactor)
+    {
+        if(num > upperCutoff) {
+            float excess = num - upperCutoff;
+            return upperCutoff + (excess * scaleFactor);
+        }
+        else if(num < lowerCutoff) {
+            float excess = lowerCutoff - num;
+            return lowerCutoff - (excess * scaleFactor);
+        }
+        else return num;
+       
     }
 }

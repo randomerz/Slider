@@ -80,6 +80,7 @@ namespace SliderVocalization
         float totalDuration;
         float wordIntonationMultiplier;
         float initialPitch;
+        float middlePitch;
         float finalPitch;
         float volumeAdjustmentDB;
         #endregion
@@ -90,8 +91,10 @@ namespace SliderVocalization
             duration = preset.duration * (context.isCurrentWordLow ? (1 - preset.energeticWordSpeedup) : (1 + preset.energeticWordSpeedup));
             totalDuration = duration * characters.Length;
             wordIntonationMultiplier = context.isCurrentWordLow ? (1 - preset.wordIntonation) : (1 + preset.wordIntonation);
-            initialPitch = context.wordPitchBase * wordIntonationMultiplier * (1 + (Random.value - 0.5f) * 0.1f);
-            finalPitch = context.wordPitchIntonated * wordIntonationMultiplier * (1 + (Random.value - 0.5f) * 0.1f);
+            initialPitch = context.lastWordFinalPitch;
+            middlePitch = context.wordPitchIntonated * wordIntonationMultiplier * (1 + (preset.isPronouncedSyllables ? 0f : (Random.value - 0.5f) * 0.1f));
+            finalPitch = context.wordPitchBase * wordIntonationMultiplier * (1 + (preset.isPronouncedSyllables ? 0f : (Random.value - 0.5f) * 0.1f));
+            context.lastWordFinalPitch = finalPitch;
             volumeAdjustmentDB = preset.volumeAdjustmentDb;
             return totalDuration;
         }
@@ -113,6 +116,8 @@ namespace SliderVocalization
                 .WithPriorityOverDucking(true)
                 .WithParameter("VowelForwardness", context.vowelForwardness);
 
+            wrapper.dialogueParent = context.topLevelParent;
+
             playingInstance = AudioManager.Play(
                 ref wrapper
             );
@@ -131,12 +136,23 @@ namespace SliderVocalization
                     playingInstance.Tick(delegate (ref EventInstance inst)
                     {
                         float overallT = (totalT / totalDuration);
-                        inst.setParameterByName("Pitch", Mathf.Lerp(initialPitch, finalPitch, overallT * overallT)); // quadratic ease in
+                        inst.setParameterByName("Pitch", 
+                            overallT < 0.5f ? 
+                                Mathf.Lerp(initialPitch, middlePitch, overallT * 2) 
+                                : Mathf.Lerp(middlePitch, finalPitch, (overallT - 0.5f) * 2));
                         inst.setParameterByName("VowelOpeness", context.vowelOpenness);
                         inst.setParameterByName("VowelForwardness", context.vowelForwardness);
                     });
-                    context.vowelOpenness = Mathf.Lerp(context.vowelOpenness, vowelDescriptor.openness, t * preset.lerpSmoothnessInverted);
-                    context.vowelForwardness = Mathf.Lerp(context.vowelForwardness, vowelDescriptor.forwardness, t * preset.lerpSmoothnessInverted);
+                    if (preset.isPronouncedSyllables)
+                    {
+                        context.vowelOpenness = Mathf.Lerp(context.vowelOpenness, vowelDescriptor.openness, t * preset.lerpSmoothnessInverted);
+                        context.vowelForwardness = Mathf.Lerp(context.vowelForwardness, vowelDescriptor.forwardness, t * preset.lerpSmoothnessInverted);
+                    } else
+                    {
+                        context.vowelOpenness = 0.5f;
+                        context.vowelForwardness = 0.5f;
+                    }
+                    
                     t += Time.deltaTime;
                     totalT += Time.deltaTime;
                     yield return null;

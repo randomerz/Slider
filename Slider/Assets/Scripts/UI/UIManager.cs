@@ -28,7 +28,7 @@ public class UIManager : Singleton<UIManager>
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.OnPressPause());
         //for controller support
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { BackPressed(); });
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { BackPressed(); }); // CONTROLER BIND ONLY
     }
 
     private void OnDisable() {

@@ -86,11 +86,16 @@ public class TavernPassManager : MonoBehaviour, ISavable
         float progress = CalculateProgressPercent(displayedCredits);
         progressBar.value = progress;
 
-        tavernPassButtons[0].SetComplete(PlayerInventory.Contains("Slider 5", Area.Ocean));
+        tavernPassButtons[0].SetComplete(HasSlider5());
         for (int i = 1; i <= displayedCredits; i++)
         {
             tavernPassButtons[creditsToCurrentRewardIndex[i]].SetComplete(true);
         }
+    }
+
+    private bool HasSlider5()
+    {
+        return SGrid.Current.GetStile(5).isTileActive;
     }
 
     public void OnOpenTavernPass()
@@ -244,8 +249,9 @@ public class TavernPassManager : MonoBehaviour, ISavable
                 break;
 
             case 2:
-                // Tavern Bell
+                // Tavern Jukebox
                 if (tavernJukebox != null) tavernJukebox.SetActive(true);
+                SaveSystem.Current.SetBool("oceanTavernJukebox", true);
                 break;
 
             case 3:

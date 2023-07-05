@@ -6,6 +6,7 @@ public class MountainCaveWall : MonoBehaviour, ISavable
 {
     public List<GameObject> makeActiveOnExplosion = new List<GameObject>();
     public List<GameObject> deactivateOnExplosion = new List<GameObject>();
+    public List<GameObject> moveOnExplosion = new List<GameObject>();
     public Minecart mc;
     public GameObject mcSpawn; //blowing up wall
     public GameObject mcLoadSpawn; //loading from entering scene after wall blown up
@@ -25,6 +26,8 @@ public class MountainCaveWall : MonoBehaviour, ISavable
             go.SetActive(true);
         foreach (GameObject go in deactivateOnExplosion)
             go.SetActive(false);
+        foreach (GameObject go in moveOnExplosion)
+            go.transform.position += new Vector3(100, 0, 0);
         StartCoroutine(WaitForMCSpawn());
     }
 
@@ -55,6 +58,11 @@ public class MountainCaveWall : MonoBehaviour, ISavable
             go.SetActive(didBlowUp);
         foreach (GameObject go in deactivateOnExplosion)
             go.SetActive(!didBlowUp);
+        if(didBlowUp)
+        {
+            foreach (GameObject go in moveOnExplosion)
+                go.transform.position += new Vector3(100, 0, 0);
+        }
         if(didBlowUp && mc != null) {
             mc.gameObject.SetActive(true);
             mc.SnapToRail(mcLoadSpawn.transform.position, 2);

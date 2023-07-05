@@ -163,8 +163,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     {
         if (base.transform.position != transform.position)
         {
-            if(poof)
+            if (poof)
+            {
                 Instantiate(poofParticles, base.transform.position, Quaternion.identity);
+                Instantiate(poofParticles, transform.position, Quaternion.identity);
+            }
             base.transform.position = transform.position;
             base.transform.parent = transform;
         }

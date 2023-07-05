@@ -26,7 +26,8 @@ public class NPCRotation : MonoBehaviour
     [SerializeField] Transform off_camera; 
     [SerializeField] Transform coconuts; //porker
     [SerializeField] Transform IkeSpot; //ike
-    
+    [SerializeField] Transform IkeJukebox; //ike when he dances
+
     [SerializeField] private List<GameObject> diceGameObjects = new List<GameObject>();
 
     public bool gotBreadge = false; //saved in oceangrid.cs maybe need to update to Savable in the future
@@ -129,6 +130,9 @@ public class NPCRotation : MonoBehaviour
         {
             traveling_merchant.Teleport(off_camera, false);
         }
+
+
+
         foreach (string person in rotationUpdates)
         {
             switch (person)
@@ -154,10 +158,11 @@ public class NPCRotation : MonoBehaviour
 
                 case "fezziwig": //fezziwig joins
                     fezziwig.Teleport(rightSign, false);
+                    porker.Teleport(rightEntrance, false);
                     SaveSystem.Current.SetBool("oceanFezziwigInTavern", true);
                     break;
                 case "porker"://move porker to the coconuts and change his dialogue
-                    porker.Teleport(coconuts, false);
+                    porker.Teleport(coconuts, true);
                     break;
 
 
@@ -165,18 +170,23 @@ public class NPCRotation : MonoBehaviour
                     break;
             }
         }
+
+        if (SaveSystem.Current.GetBool("oceanTavernJukebox"))
+        {
+            ike.Teleport(IkeJukebox, false);
+        }
+
         rotationUpdates.Clear();
     }
 
     public void MovePorker()
     {
-        if (!SaveSystem.Current.GetBool("oceanPorkerTraining") && PlayerInventory.Contains("Slider 7", Area.Ocean))
-            porker.Teleport(coconuts, true);
+        if (!SaveSystem.Current.GetBool("oceanPickedCoconutUp") && PlayerInventory.Contains("Magical Gem", Area.Ocean))
+            SaveSystem.Current.SetBool("oceanPickedCoconutUp", true);
     }
 
     public void MoveAmberOak(object sender, System.EventArgs e)
     {
-        porker.Teleport(rightEntrance, false);
         ike.Teleport(IkeSpot, false);
         amberOak.Teleport(leftSign, false);
     }

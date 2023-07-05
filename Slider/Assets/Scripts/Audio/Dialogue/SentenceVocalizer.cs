@@ -89,7 +89,7 @@ namespace SliderVocalization
                 {
                     FirstSpokenVocalizer ??= LastSpokenVocalizer;
                     words.Add(LastSpokenVocalizer);
-                    words.Add(WordVocalizer.MakePauseVocalizer(gap));
+                    // words.Add(WordVocalizer.MakePauseVocalizer(gap));
                 }
             }
             if (punctuation == default) punctuation = '.';
@@ -101,7 +101,8 @@ namespace SliderVocalization
                     intonation = Intonation.up;
                     foreach (var keyword in questionNegation)
                     {
-                        if (words[0].characters.StartsWith(keyword))
+                        // most questions starting from the 6 W's tend downward
+                        if (words[0].characters.StartsWith(keyword) && Random.value < 0.75f)
                         {
                             intonation = Intonation.down;
                             break;
@@ -110,7 +111,14 @@ namespace SliderVocalization
                     break;
                 case '.':
                 case '!':
-                    intonation = Intonation.down;
+                    // not realistic, but simulates shouting
+                    if (words.Count <= 3 && Random.value < 0.5f)
+                    {
+                        intonation = Intonation.up;
+                    } else
+                    {
+                        intonation = Intonation.down;
+                    }
                     break;
                 default:
                     intonation = Intonation.flat;
@@ -127,10 +135,17 @@ namespace SliderVocalization
                 float pFirstWordHigh = (Vocalizers.Count <= 3) ? 0.75f : 0.25f;
                 context.isCurrentWordLow = Random.value > pFirstWordHigh;
             }
-            else if (upcoming == LastSpokenVocalizer && intonation == Intonation.up)
+            else if (upcoming == LastSpokenVocalizer)
             {
-                // last word in an upwards intonated sentence is always high
-                context.isCurrentWordLow = false;
+                // match last word intonation with sentence
+                if (intonation == Intonation.up)
+                {
+                    context.isCurrentWordLow = false;
+                }
+                else if (intonation == Intonation.down)
+                {
+                    context.isCurrentWordLow = true;
+                }
             }
             else
             {
@@ -139,6 +154,7 @@ namespace SliderVocalization
 
             // the last word can be heightened or lowered based on intonation
             context.wordPitchBase = preset.pitch;
+            context.lastWordFinalPitch = context.wordPitchBase;
             context.wordPitchIntonated = (upcoming == LastSpokenVocalizer ? GetBasePitchFromIntonation(preset) : preset.pitch);
         }
 

@@ -487,6 +487,7 @@ public class OceanGrid : SGrid
         if ((currentIslandId == 6 || currentIslandId == 7) && !foggyCompleted)
         {
             SetProgressRingActive(true);
+            SaveSystem.Current.SetBool("OceanEnteredFoggy", true); // for FoggyMusicHintManager.cs
         }
         if (currentIslandId != lastIslandId && (lastIslandId == 6 || lastIslandId == 7))
         {
@@ -524,7 +525,7 @@ public class OceanGrid : SGrid
     private void FoggySeasAudio()
     {
         AudioManager.PlayWithPitch("Puzzle Complete", 0.5f + playerIndex * 0.1f);
-        AudioManager.SetGlobalParameter("OceanFoggyProgress", 0);
+        AudioManager.SetGlobalParameter("OceanFoggyProgress", playerIndex);
     }
 
     public bool FoggyCorrectMovement()

@@ -8,6 +8,7 @@ public class MountainGrid : SGrid
 
     [SerializeField] private MountainCaveWall mountainCaveWall;
     [SerializeField] private GemMachine gemMachine;
+    [SerializeField] private SpriteSwapper crystalSpriteSwapper;
 
     private bool playerOnBottom = true;
 
@@ -63,13 +64,12 @@ public class MountainGrid : SGrid
             if(dropTile != null)
             {
                 if(dropTile.y < 2)
-                    return; //using the anchor on the bottom layer does nothing
+                    return; 
                 STile lower = SGrid.Current.GetGrid()[dropTile.x, dropTile.y - 2];
-                if(!lower.isTileActive)  //if this is true, then there is not an active tile below the current tile
+                if(!lower.isTileActive)  
                 {
-                    //C TODO: look at how logan did conveyers and copy that because rn this cancels the whole queue
                     MountainArtifact uiArtifact = (MountainArtifact) MountainArtifact.GetInstance();
-                    UIArtifact.ClearQueues();
+                    //UIArtifact.ClearQueues();
                     uiArtifact.AnchorSwap(dropTile, lower);
                 }
             }
@@ -77,65 +77,38 @@ public class MountainGrid : SGrid
     }
 
     private void Update() {
-        if(playerOnBottom && Player._instance.transform.position.y > 63f) {
+        float playerY = Player._instance.transform.position.y;
+        if (playerOnBottom && playerY > 63f) {
             playerOnBottom = false;
-            if(musicTransitionCoroutine != null)
-                StopCoroutine(musicTransitionCoroutine);
-            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 0, 2));
+            AudioManager.SetGlobalParameter("MountainTemperature", 0f);
         }
-        if(!playerOnBottom && Player._instance.transform.position.y < 63f) {
+        else if (!playerOnBottom && playerY < 63f) {
             playerOnBottom = true;
-            if(musicTransitionCoroutine != null)
-                StopCoroutine(musicTransitionCoroutine);
-            musicTransitionCoroutine = StartCoroutine(TransitionMusic(musicValue, 1, 2));
+            AudioManager.SetGlobalParameter("MountainTemperature", 1);
         }
-    }
 
-    private IEnumerator TransitionMusic(float start, float end, float duration)
-    {
-        float t = 0;
-        while(t < duration) {
-            t += Time.deltaTime;
-            musicValue = Mathf.Lerp(start, end, t/duration);
-            AudioManager.SetMusicParameter("Mountain", "MountainTemperature", musicValue);
-            yield return null;
+        if (playerY < housingOffset / 2)
+        {
+            AudioManager.SetGlobalParameter("MountainTemperature", 0.5f);
         }
-        musicValue = end;
-        AudioManager.SetMusicParameter("Mountain", "MountainTemperature", end);
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker = true)
     {
         if(stile.islandId == 7)
-            CheckTile7Spawn();
+            SaveSystem.Current.SetBool("forceAutoMove", true);
         base.EnableStile(stile, shouldFlicker);
-    }
-
-    private void CheckTile7Spawn()
-    {
-        //UPDATE TO FORCE PARITY
-        int[,] t7exact = new int[,]{{7,1,5,3},{2,6,8,4}};
-        if(!CheckGrid.contains(GetGridString(true), "34_58_16_72" )) 
-        {
-            if(!CheckGrid.contains(GetGridString(true), "34_57_16_82" ))
-            {
-                Minecart mc = FindObjectOfType<Minecart>();
-                mc?.StopMoving();
-            }
-            UIArtifact.ClearQueues();
-            SetGrid(t7exact);
-        }
     }
 
     public void FinishMountain()
     {
-        EnableStile(8);
+        /*EnableStile(8);
 
         int[,] completedPuzzle = new int[2, 4] { {4, 7, 5, 3},
                                                  {2, 6, 8, 1}};
-        SetGrid(completedPuzzle);
+        SetGrid(completedPuzzle);*/
         SaveSystem.Current.SetBool("forceAutoMove", false);
-
+        UpdateButtonCompletions(this, null);
         UIArtifactWorldMap.SetAreaStatus(Area.Mountain, ArtifactWorldMapArea.AreaStatus.color);
         UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
 
@@ -144,18 +117,19 @@ public class MountainGrid : SGrid
 
 
     #region Minecart Specs
+    
+    public void SetCrystalDeliveredTrue() => SetCrystalDelivered();
 
-    public void SetCrystalDelivered(bool value)
+    public void SetCrystalDelivered(bool fromSave = false)
     {
-        crystalDelivered = value;
-        AudioManager.Play("Puzzle Complete");
+        crystalDelivered = true;
+        if(!fromSave)
+            AudioManager.Play("Puzzle Complete");
         SaveSystem.Current.SetBool("MountainCrystalDelivered", crystalDelivered);
+        crystalSpriteSwapper.TurnOn();
     }
 
-    public void CheckCrystalDelivery(Condition c)
-    {
-        c.SetSpec(crystalDelivered);
-    }
+    public void CheckCrystalDelivery(Condition c) => c.SetSpec(crystalDelivered);
 
 
     #endregion
@@ -176,7 +150,8 @@ public class MountainGrid : SGrid
         base.Load(profile);
         mountainCaveWall.Load(profile);
         gemMachine.Load(profile);
-        crystalDelivered = profile.GetBool("MountainCrystalDelivered", crystalDelivered);
+        if(profile.GetBool("MountainCrystalDelivered"))
+            SetCrystalDelivered(true);
         Meltable[] meltables = FindObjectsOfType<Meltable>();
         foreach(Meltable m in meltables)
             m.Load(profile);

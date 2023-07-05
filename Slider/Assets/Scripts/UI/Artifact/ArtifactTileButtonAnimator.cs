@@ -17,7 +17,6 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     //The button is forced down because it is still being moved or is anchored.
     [SerializeField] private bool isForcedDown;
     private bool isHighlighted;
-    private bool isControllerHovered;
     //Button has lightning highlight and pusheddown and has lightning effect around it
     [SerializeField] private bool isLightning;
 
@@ -71,23 +70,9 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         SetPushedDown(isForcedDown);
     }
 
-    public void SetControllerHoverHighlight(bool value)
+    public void SetControllerHoverHighlight(bool value, bool log=false)
     {
-        if (!isControllerHovered && value)
-        {
-            isControllerHovered = true;
-            controllerHoverFrame.gameObject.SetActive(true);
-        }
-        else if (isControllerHovered && !value && !isLightning) //If lightning is active, tile should never be unhighlighted
-        {
-            isControllerHovered = false;
-            controllerHoverFrame.gameObject.SetActive(false);
-            /* we don't actually want to remove other border highlights just cause of controller hover highlight changing
-            foreach (Image i in borders)
-            {
-                i.gameObject.SetActive(false);
-            }*/
-        }
+        controllerHoverFrame.gameObject.SetActive(value);
     }
 
     public void SetHighlighted(bool value)

@@ -362,7 +362,7 @@ MonoBehaviour:
   sourceProjectPath: FMODAssets/Slider/Slider.fspro
   sourceBankPath: FMODAssets/Slider/Build
   sourceBankPathUnformatted: 
-  BankRefreshCooldown: -1
+  BankRefreshCooldown: 1
   ShowBankRefreshWindow: 1
   AutomaticEventLoading: 1
   BankLoadType: 0
@@ -384,6 +384,7 @@ MonoBehaviour:
   MasterBanks:
   - Master
   Banks:
+  - Ambience
   - BGM
   - Dialogue
   - SFX
@@ -400,7 +401,7 @@ MonoBehaviour:
   SharedLibraryTimeSinceStart: 0
   CurrentVersion: 131603
   HideSetupWizard: 1
-  LastEventReferenceScanVersion: 131588
+  LastEventReferenceScanVersion: 131603
   Platforms:
   - {fileID: -9106316238555667765}
   - {fileID: -5067166123110893454}
