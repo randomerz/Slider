@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 924641048}
   - component: {fileID: 924641049}
+  - component: {fileID: 1206446726886503582}
   - component: {fileID: 924641050}
+  - component: {fileID: 7409872347429607120}
   m_Layer: 0
   m_Name: Ladder Sprite
   m_TagString: Untagged
@@ -74,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 529684183
   m_SortingLayer: 7
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1390971693, guid: 8422ad5c335f85c4eb728e5f64b40743, type: 3}
+  m_Sprite: {fileID: -192016820, guid: 8422ad5c335f85c4eb728e5f64b40743, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -85,6 +87,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+--- !u!95 &1206446726886503582
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924641047}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 3f42abfdec31e164286f213b19cce627, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!61 &924641050
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -111,6 +133,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5625, y: 0.125}
   m_EdgeRadius: 0
+--- !u!114 &7409872347429607120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924641047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49d038ae1f6f2a4428f2b795bfa46c86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myStile: {fileID: 0}
+  animator: {fileID: 1206446726886503582}
 --- !u!1001 &5361721074338739308
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -128,7 +164,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2894810818442469172, guid: e8849e9063fd2634987343fcd6794544, type: 3}
       propertyPath: m_Name
-      value: JungleTPAction
+      value: JungleTP Up Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2894810818442469174, guid: e8849e9063fd2634987343fcd6794544, type: 3}
       propertyPath: onSuccess.m_PersistentCalls.m_Calls.Array.size

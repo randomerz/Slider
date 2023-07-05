@@ -18,6 +18,7 @@ public class MomentumGizmo : MonoBehaviour
         {
             animator = GetComponent<Animator>();
         }
+        animator.SetFloat("random", Random.Range(0f, 1f));
     }
 
     private void OnEnable() 
