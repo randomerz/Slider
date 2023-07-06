@@ -15,6 +15,8 @@ public class CaveLight : MonoBehaviour
 
     [SerializeField] private Sprite onSprite;
     [SerializeField] private Sprite offSprite;
+    [SerializeField] private Animator animator;
+    [SerializeField] private ParticleSystem particles;
 
     [SerializeField] private Vector2Int borderPos;
 
@@ -43,6 +45,16 @@ public class CaveLight : MonoBehaviour
     public void SetLightOn(bool value, bool playSound=false)
     {
         spriteRenderer.sprite = value ? onSprite : offSprite;
+        animator.enabled = value;
+        if (value)
+        {
+            particles.Play();
+        }
+        else
+        {
+            particles.Stop();
+        }
+
         if (LightOn != value)
         {
             LightOn = value;
@@ -50,9 +62,9 @@ public class CaveLight : MonoBehaviour
             if (playSound)
             {
                 if (value)
-                    AudioManager.Play("Power On"); 
+                    AudioManager.Play("Power On");
                 else
-                    AudioManager.Play("Power Off"); 
+                    AudioManager.Play("Power Off");
             }
 
             OnLightSwitched?.Invoke(this, new OnLightSwitchedArgs { lightOn = value });

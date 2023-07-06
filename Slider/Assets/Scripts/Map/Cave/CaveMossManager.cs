@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class CaveMossManager : MonoBehaviour
 {
-    private const float colliderForgiveness = 0.25f;
+    private const float colliderForgiveness = 0.35f;
 
     [SerializeField] private Tilemap mossMap;
     [SerializeField] private Tilemap recededMossMap;
