@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class MagiTechArtifact : UIArtifact
@@ -71,7 +69,6 @@ public class MagiTechArtifact : UIArtifact
                 {
                     isDesynchSoundPlaying = true;
                     desyncTearLoopSound = AudioManager.PickSound("Desync Tear Open").AndPlay();
-                    Debug.Log($"REEEEEEEEEEEEEEE {desyncTearLoopSound}");
                 }
                 ArtifactTileButton pastButton = desynchIslandId <= 9 ? GetButton(FindAltId(desynchIslandId)) : GetButton(desynchIslandId);
                 if (isInPast != isPreview) SetLightningPos(pastButton);
@@ -82,13 +79,8 @@ public class MagiTechArtifact : UIArtifact
                 if (isDesynchSoundPlaying)
                 {
                     isDesynchSoundPlaying = false;
-                    //if (desyncTearLoopSound != null)
-                    //{
-                    //    desyncTearLoopSound.Stop();
-                    //}
                     desyncTearLoopSound.Stop();
-                    AudioManager.ManagedInstance thing = AudioManager.PickSound("Desync Tear Close").AndPlay();
-                    Debug.Log($"AAAAAAAAAAAAAAAAAAA {thing}");
+                    AudioManager.PickSound("Desync Tear Close").AndPlay();
                 }
                 DisableLightning(false);
             }
