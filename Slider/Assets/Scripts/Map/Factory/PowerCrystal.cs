@@ -72,8 +72,6 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
 
     private void SetBlackout(bool isBlackout)
     {
-        Debug.Log("Setting blackout to " + isBlackout);
-
         _blackout = isBlackout;
 
         if (isBlackout)
