@@ -122,60 +122,57 @@ public class Box : MonoBehaviour
 
     public virtual void Rotate()
     {
-        if (currentShape != null)
+        // update the box it points in currently to push no shape onto the path
+        Box box = GetBoxInDirection(currentDirection);
+
+        if (box != null)
         {
-            // update the box it points in currently to push no shape onto the path
-            Box box = GetBoxInDirection(currentDirection);
+            box.RecieveShape(paths[currentDirection], null, new List<Box>());
+        }
 
-            if (box != null)
+        if (isDefaultCurrentPath(currentDirection) == paths[currentDirection].getAnimType())
+        {
+            paths[currentDirection].Deactivate();
+        }
+
+        //check each path to see if any is not active alr
+
+        Direction[] ds = { Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN };
+
+        int at = 0;
+
+        for (int i = 0; i < ds.Length; i++)
+        {
+            if (ds[i] == currentDirection) {
+                at = i;
+                break;
+            }
+        }
+
+        for (int i = 1; i <= 4; i++)
+        {
+            Direction d = ds[(at + i) % 4];
+
+            if (!paths.ContainsKey(d))
             {
-                box.RecieveShape(paths[currentDirection], null, new List<Box>());
+                continue;
             }
 
-            if (isDefaultCurrentPath(currentDirection) == paths[currentDirection].getAnimType())
+            currentDirection = d;
+            //turn on path if there is not another using it
+            if (!paths[d].isActive())
             {
-                paths[currentDirection].Deactivate();
-            }
-
-            //check each path to see if any is not active alr
-
-            Direction[] ds = { Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN };
-
-            int at = 0;
-
-            for (int i = 0; i < ds.Length; i++)
-            {
-                if (ds[i] == currentDirection) {
-                    at = i;
-                    break;
-                }
-            }
-
-            for (int i = 1; i <= 4; i++)
-            {
-                Direction d = ds[(at + i) % 4];
-
-                if (!paths.ContainsKey(d))
+                Box next = GetBoxInDirection(currentDirection);
+                if (next != null)
                 {
-                    continue;
-                }
-
-                currentDirection = d;
-                //turn on path if there is not another using it
-                if (!paths[d].isActive())
-                {
-                    Box next = GetBoxInDirection(currentDirection);
-                    if (next != null)
+                    if (currentShape == null)
                     {
-                        if (currentShape == null)
-                        {
-                            return;
-                        }
-
-                        CreateShape(new List<Box>());
+                        return;
                     }
-                    break;
+
+                    CreateShape(new List<Box>());
                 }
+                break;
             }
         }
     }

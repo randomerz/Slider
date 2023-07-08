@@ -105,6 +105,7 @@ public class FactoryMusicController : MonoBehaviour, ISavable
     {
         SetFactoryMusicProgress(4);
         SetFactoryStingerParameter(true);
+        StartCoroutine(ResetFactoryStinger());
     }
 
     private IEnumerator ResetFactoryStinger()

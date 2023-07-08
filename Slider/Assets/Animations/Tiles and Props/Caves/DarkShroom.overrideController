@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: DarkShroom
+  m_Controller: {fileID: 9100000, guid: 74f88e58c9660c646b8c305e06f7bfd5, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 05d870e0844b6e740a39c2fe7cebeedd, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: cf45aedb481efee4b9c8d7696cf47743, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 948793393b6916b47a9258b4e5082686, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 7955eaeccdbe4d24eaed65663d6cc74f, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 6aa1500dc9ffd9b46b65bdb661d003f7, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: bec37bb70a96aa644a7569d7b5960cff, type: 2}

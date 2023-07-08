@@ -88,18 +88,11 @@ public class Blob : MonoBehaviour
                 Destroy(this.gameObject);
             }
 
-            // I think there has to be a better way to do this LMAO
             if (traveledDistance > 2 && traveledDistance < 4)
             {
                 spriteRenderer.sortingOrder = 0;
                 shapeRenderer.sortingOrder = 0;
             }
-
-/*            if (travelDistance - traveledDistance <= 1.25)
-            {
-                renderer.sortingOrder = -2;
-                shapeRenderer.sortingOrder = -2;
-            }*/
 
             // check if i need to change parent then if i do, change
             STile under = SGrid.GetSTileUnderneath(this.gameObject);
@@ -110,7 +103,8 @@ public class Blob : MonoBehaviour
                 return;
             }
 
-            GameObject pathStile = this.transform.parent.transform.parent.transform.parent.gameObject;
+            GameObject path = this.transform.parent.gameObject;
+            GameObject pathStile = path.transform.parent.transform.parent.transform.parent.gameObject; //bro pls theres a better way right
             if (under.transform.gameObject != pathStile)
             {
                 if (pair != null)

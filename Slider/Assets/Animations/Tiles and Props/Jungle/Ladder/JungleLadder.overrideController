@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: JungleLadder
+  m_Controller: {fileID: 9100000, guid: 90e4435b5b0299d47ace827287ff917a, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: f76ff66dc78528b42a35ce3ce1656dd3, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: e5fbf477265cda14d80737096b97d6d7, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: f5afc5ce3b1b960419db525a8d47cb24, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: cea233b054e84c640910cace95833ce6, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: d9cafab0094c478449ccc8ffdef5fb96, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d2002e504a54f2047a450c297cca6b6f, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 511d9797778709a4da490db01ddda95f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 8dce4e6750bd58c4396b129241c4ddb6, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: cbcaaf2a9d3e5b248933da85a39fd319, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: e9be2948a68189c429e09eafe3c49565, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 4295def70904b10458a60637fdc46ede, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 1f99da5c2f78a0f4ba1a8be3a0c3583d, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 94cac87b30275044bb2670ac8aba85d2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 734cdec2fd0985f46add31402afe41bb, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 9afa3630357f1654ea97b2c843cef236, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 4cb9c42c29b2c41429088a55ed42526e, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: ef11f7e0f3a869c4a81832067e52dc5d, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: f1d221a441c1d8048ba0af133accb1d6, type: 2}

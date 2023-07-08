@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: JungleSprout
+  m_Controller: {fileID: 9100000, guid: 74f88e58c9660c646b8c305e06f7bfd5, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 05d870e0844b6e740a39c2fe7cebeedd, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 319104fe47759bf4aa68355a63487889, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 948793393b6916b47a9258b4e5082686, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 667f37dc398da804689b9f1b0d863736, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 6aa1500dc9ffd9b46b65bdb661d003f7, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 0e8d73a257c775346952bbca0e3b8363, type: 2}

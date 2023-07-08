@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LeverInverse
+  m_Controller: {fileID: 9100000, guid: ec227547fc365294aae3f69cb9561d84, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: e774e16c65c60ac49abf1a95c1b689f5, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: f56c91d6c39f99945ae9ad78a361e197, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: f56c91d6c39f99945ae9ad78a361e197, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: e774e16c65c60ac49abf1a95c1b689f5, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: bab49b5695380124bba741c451a0e0d4, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: e02560f353582234d8529af5b1e85442, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: e02560f353582234d8529af5b1e85442, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: bab49b5695380124bba741c451a0e0d4, type: 2}
