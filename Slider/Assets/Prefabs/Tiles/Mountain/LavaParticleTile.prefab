@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3745806570011009729}
   - component: {fileID: 8137663645120573449}
+  - component: {fileID: 3428354338533830262}
   m_Layer: 7
   m_Name: LavaParticleTile
   m_TagString: Untagged
@@ -84,3 +85,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &3428354338533830262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6616690992512762309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20ffbb4c59c5f20459008843cf4ec032, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emitters:
+  - particleSystem: {fileID: 0}
+    dynamic: 0
+  - particleSystem: {fileID: 0}
+    dynamic: 0
+  - particleSystem: {fileID: 0}
+    dynamic: 0
+  - particleSystem: {fileID: 0}
+    dynamic: 0
