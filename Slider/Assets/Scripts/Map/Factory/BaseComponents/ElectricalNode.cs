@@ -132,12 +132,15 @@ public class ElectricalNode : MonoBehaviour
                 return true;
             }
 
-            foreach (ElectricalNode node in curr._incomingNodes)
+            if (curr == this || curr.CanPropagateBackwards())   //Timed gate patch so we don't bypass them.
             {
-                if (node != null && !visited.Contains(node))
+                foreach (ElectricalNode node in curr._incomingNodes)
                 {
-                    visited.Add(node);
-                    stack.Push(node);
+                    if (node != null && !visited.Contains(node))
+                    {
+                        visited.Add(node);
+                        stack.Push(node);
+                    }
                 }
             }
         }
@@ -160,7 +163,7 @@ public class ElectricalNode : MonoBehaviour
             ElectricalNode prev = kv.Value;
             bool nodePowered = _isPowerSource ? true : curr.IsConnectedToPower();
             curr.EvaluateNodeDuringPropagate(nodePowered, prev);
-            if (curr.ShouldPushOutgoingOntoStack(nodePowered, prev))
+            if (curr.CanPropagateForward(prev))
             {
                 foreach (ElectricalNode node in curr._outgoingNodes)
                 {
@@ -174,8 +177,14 @@ public class ElectricalNode : MonoBehaviour
         }
     }
 
-    //These overrides replace EvaluateNodeInput and PushSignalToOutput from the old system
-    protected virtual bool ShouldPushOutgoingOntoStack(bool powered, ElectricalNode prev)
+    //These are for timed gates rn bc of how they buffer signals
+
+    protected virtual bool CanPropagateForward(ElectricalNode prev)   //arg used in overrides
+    {
+        return true;
+    }
+
+    protected virtual bool CanPropagateBackwards()
     {
         return true;
     }

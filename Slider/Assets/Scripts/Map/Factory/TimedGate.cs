@@ -113,7 +113,6 @@ public class TimedGate : ElectricalNode, ISavable
     }
 
     #region ElectricalNode Overrides
-
     protected override bool PoweredConditionsMet()
     {
         bool allInputsPowered = _inputsPowered != null && _inputsPowered.Count >= numInputs;
@@ -142,9 +141,14 @@ public class TimedGate : ElectricalNode, ISavable
         }
     }
 
-    protected override bool ShouldPushOutgoingOntoStack(bool value, ElectricalNode prev)
+    protected override bool CanPropagateForward(ElectricalNode prev)
     {
         return prev == null;    //Only if we started here aka powered the gate.
+    }
+
+    protected override bool CanPropagateBackwards()
+    {
+        return false;   //Triple Wire Bug :skull:
     }
 
     public override void OnPoweredHandler(OnPoweredArgs e)
