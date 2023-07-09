@@ -5,12 +5,14 @@ using UnityEngine;
 public class LavaBucket : MonoBehaviour, ISavable
 {
     [SerializeField] private SpriteSwapper spriteSwapper;
+    [SerializeField] private GameObject particles;
 
     private bool hasLava = false;
 
     public void FillBucket()
     {
         spriteSwapper.TurnOn();
+        particles.SetActive(true);
         hasLava = true;
     }
 
