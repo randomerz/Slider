@@ -1,17 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using System;
 
 public class LavaParticleTile : MonoBehaviour
 {
-    [Serializable]
-    public class LavaParticleEmitter
+    public GameObject[] particleSystems = new GameObject[4]; //0 1 2 3 = E N W S
+
+    public void EnableParticles(int groupNum)
     {
-        public ParticleSystem particleSystem;
-        public bool dynamic;
+        particleSystems[groupNum].SetActive(true);
     }
 
-    public LavaParticleEmitter[] emitters = new LavaParticleEmitter[4]; //0 1 2 3 = E N W S
+    public void DisableParticles(int groupNum)
+    {
+        particleSystems[groupNum].SetActive(false);
+    }
 }
