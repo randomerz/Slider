@@ -21,7 +21,6 @@ public class LavaParticles : MonoBehaviour
                 numtiles++;
             }
         }
-        print(numtiles);
         foreach (var pos in positions)
         {   
             Instantiate(particleTile, this.transform);
