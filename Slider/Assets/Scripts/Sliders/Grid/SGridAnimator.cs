@@ -251,8 +251,8 @@ public class SGridAnimator : MonoBehaviour
 
     private string GetSoundName(SMove move)
     {
-        if(move is SMoveConveyor)
-            return "Conveyer";
+        if (move is SMoveConveyor)
+            return "Conveyor";
         else
             return "Slide Rumble";
     }
