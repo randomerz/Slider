@@ -26,6 +26,22 @@ public class SaveSystem
             current = value;
         }
     }
+
+    public static DeserializationTypeRemapBinder AssemblyRemapBinder
+    {
+        get
+        {
+            if (_assemblyRemapBinder == null)
+            {
+                _assemblyRemapBinder = new DeserializationTypeRemapBinder();
+                _assemblyRemapBinder.AddAssemblyMapping("Assembly-CSharp", "SliderScripts");
+            }
+
+            return _assemblyRemapBinder;
+        }
+    }
+    private static DeserializationTypeRemapBinder _assemblyRemapBinder;
+
     private static SaveProfile current;
     private static int currentIndex = -1; // if -1, then it's a temporary profile
 
@@ -100,6 +116,8 @@ public class SaveSystem
         // Debug.Log($"[File IO] Saving data to file {index}.");
 
         BinaryFormatter formatter = new BinaryFormatter();
+        formatter.Binder = AssemblyRemapBinder;
+
         string path = GetFilePath(index);
         FileStream stream = new FileStream(path, FileMode.Create);
 
@@ -159,6 +177,8 @@ public class SaveSystem
         if (File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Binder = AssemblyRemapBinder;
+
             FileStream stream = new FileStream(path, FileMode.Open);
 
             SerializableSaveProfile profile = formatter.Deserialize(stream) as SerializableSaveProfile;
