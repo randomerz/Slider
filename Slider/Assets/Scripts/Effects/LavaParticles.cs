@@ -11,25 +11,27 @@ public class LavaParticles : MonoBehaviour
     public CompositeCollider2D compositeCollider2D;
     public MeshFilter meshFilter;
     public PolygonCollider2D polygonCollider2D;
+    public ParticleSystem edgeParticles;
+    private int numtiles;
 
     public static List<PolygonCollider2D> colliders = new List<PolygonCollider2D>(); //all active colliders
 
-
-
-
     private void OnEnable() {
         colliders.Add(polygonCollider2D);
+        foreach(LavaParticles particles in FindObjectsOfType<LavaParticles>())
+            particles.UpdateKillTriggers();
     }
 
     private void OnDisable() {
         colliders.Remove(polygonCollider2D);
+        foreach(LavaParticles particles in FindObjectsOfType<LavaParticles>())
+            particles.UpdateKillTriggers();
     }
 
-    [System.Obsolete]
     private void Start() {
         if(tilemap == null) return;
 
-        int numtiles = 0;
+        //int numtiles = 0;
         foreach (var pos in tilemap.cellBounds.allPositionsWithin)
         {   
             if (tilemap.HasTile(pos)) 
@@ -55,16 +57,27 @@ public class LavaParticles : MonoBehaviour
         foreach(ParticleSystem ps in particleSystems)
         {
             var main = ps.main;
+            var emission = edgeParticles.emission;
             main.maxParticles *= numtiles;
-            ps.emissionRate *= numtiles;
+            emission.rateOverTime = 3 * numtiles;
             ps.Stop();
             ps.Play();        
         }
 
     }
 
+   /* private void Update() {
+        var main = edgeParticles.main;
+        var emission = edgeParticles.emission;
+        if(edgeParticles.particleCount < main.maxParticles * 0.7)
+            emission.rateOverTime = 20 * numtiles;
+        else
+            emission.rateOverTime = 3 * numtiles;
+    
+    }*/
 
-    private void UpdateKillTriggers()
+
+    public void UpdateKillTriggers()
     {
         foreach(ParticleSystem ps in particleSystems)
         {
