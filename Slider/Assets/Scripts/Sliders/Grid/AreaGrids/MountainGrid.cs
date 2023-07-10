@@ -62,18 +62,24 @@ public class MountainGrid : SGrid
         {
             STile dropTile = interactArgs.stile;
             if(dropTile != null)
-            {
-                if(dropTile.y < 2)
-                    return; 
-                STile lower = SGrid.Current.GetGrid()[dropTile.x, dropTile.y - 2];
-                if(!lower.isTileActive)  
-                {
-                    MountainArtifact uiArtifact = (MountainArtifact) MountainArtifact.GetInstance();
-                    //UIArtifact.ClearQueues();
-                    uiArtifact.AnchorSwap(dropTile, lower);
-                }
-            }
+                StartCoroutine(WaitThenCheckAnchorDrop(dropTile));
         }        
+    }
+
+    private IEnumerator WaitThenCheckAnchorDrop(STile dropTile)
+    {
+        yield return new WaitUntil(() => !dropTile.IsMoving());
+
+        if(dropTile.y >= 2)
+        {
+            STile lower = SGrid.Current.GetGrid()[dropTile.x, dropTile.y - 2];
+            if(!lower.isTileActive)  
+            {
+                MountainArtifact uiArtifact = (MountainArtifact) MountainArtifact.GetInstance();
+                uiArtifact.AnchorSwap(dropTile, lower);
+            }
+        }
+                
     }
 
     private void Update() {
