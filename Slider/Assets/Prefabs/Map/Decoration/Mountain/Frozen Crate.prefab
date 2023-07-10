@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2225470548696839701}
   - component: {fileID: 2225470548696839702}
   - component: {fileID: 2225470548696839703}
-  m_Layer: 2
+  m_Layer: 14
   m_Name: Frozen Crate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,7 +204,7 @@ MonoBehaviour:
   refreezeFromBroken: 0
   fixBackToFrozen: 0
   freezeTime: 5
-  isFrozen: 1
+  state: 0
   numLavaSources: 0
 --- !u!1 &2225470549052834146
 GameObject:
@@ -217,7 +217,7 @@ GameObject:
   - component: {fileID: 2225470549052834145}
   - component: {fileID: 2225470549052834175}
   - component: {fileID: 2225470549052834144}
-  m_Layer: 2
+  m_Layer: 14
   m_Name: Detect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
