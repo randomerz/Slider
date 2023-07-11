@@ -6,76 +6,45 @@ using UnityEngine.Tilemaps;
 public class LavaParticles : MonoBehaviour
 {
     public Tilemap tilemap;
-    private List<Vector3> tileWorldLocations;
-    public List<ParticleSystem> particleSystems;
-    public CompositeCollider2D compositeCollider2D;
-    public MeshFilter meshFilter;
-    public PolygonCollider2D polygonCollider2D;
+    public GameObject particleTile;
 
-    public static List<PolygonCollider2D> colliders = new List<PolygonCollider2D>(); //all active colliders
-
-
-
-
-    private void OnEnable() {
-        colliders.Add(polygonCollider2D);
-    }
-
-    private void OnDisable() {
-        colliders.Remove(polygonCollider2D);
-    }
-
-    [System.Obsolete]
     private void Start() {
         if(tilemap == null) return;
 
         int numtiles = 0;
+        List<Vector3Int> positions = new List<Vector3Int>();
         foreach (var pos in tilemap.cellBounds.allPositionsWithin)
         {   
             if (tilemap.HasTile(pos)) 
+            {
+                positions.Add(pos);
                 numtiles++;
+            }
         }
-
-        Mesh mesh = compositeCollider2D.CreateMesh(false, false);
-        meshFilter.mesh = mesh;
-
-        //C: scale particles by mesh size
-        
-
-        int numpaths = compositeCollider2D.pathCount;
-        polygonCollider2D.pathCount = numpaths;
-        for(int i = 0; i < numpaths; i++) {
-            Vector2[] points = new Vector2[compositeCollider2D.GetPathPointCount(i)];
-            compositeCollider2D.GetPath(i, points);
-            polygonCollider2D.SetPath(i, points);
-        }
-
-        UpdateKillTriggers();
-
-        foreach(ParticleSystem ps in particleSystems)
-        {
-            var main = ps.main;
-            main.maxParticles *= numtiles;
-            ps.emissionRate *= numtiles;
-            ps.Stop();
-            ps.Play();        
+        foreach (var pos in positions)
+        {   
+            Instantiate(particleTile, this.transform);
+            particleTile.transform.position = pos + new Vector3(0.5f, 0.5f, 0);
+            LavaParticleTile tile = particleTile.GetComponent<LavaParticleTile>();
+            var adjPos = GetAdjPositions(pos);
+            for(int i = 0; i < 4; i++)
+            {
+                var adj = adjPos[i];
+                if(!positions.Contains(adj))
+                    tile.EnableParticles(i);
+                else
+                     tile.DisableParticles(i);
+            }
         }
 
     }
 
-
-    private void UpdateKillTriggers()
+    private Vector3Int[] GetAdjPositions(Vector3Int position)
     {
-        foreach(ParticleSystem ps in particleSystems)
-        {
-            var trigger = ps.trigger;
-            if(trigger.colliderCount > 0)
-            {
-                foreach(PolygonCollider2D collider in colliders)
-                {
-                    trigger.AddCollider(collider);
-                }
-            }
-        }
+        Vector3Int right = position + Vector3Int.right;
+        Vector3Int up = position + Vector3Int.up;
+        Vector3Int left = position + Vector3Int.left;
+        Vector3Int down = position + Vector3Int.down;
+        return new Vector3Int[]{right, up, left, down};
     }
 }

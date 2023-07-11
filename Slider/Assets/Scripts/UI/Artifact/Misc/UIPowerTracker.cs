@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,5 +30,3 @@ public class UIPowerTracker : FlashWhiteUI
         poweredImage.enabled = myNode.Powered && !nodeOnDisabledButton && !FactoryGrid.PlayerInPast;
     }
 }
-
-//This is it? This is the script I've heard so much about and feared all this time? Yes it is.

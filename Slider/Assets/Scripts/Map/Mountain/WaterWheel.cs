@@ -54,6 +54,8 @@ public class WaterWheel : MonoBehaviour
 
     public void AddLava()
     {
+        if(!inLavaStage) return;
+        
         lavaCount++;
         hasAddedLava = true;
         heaterAnimator.SetInteger("Lava",lavaCount);

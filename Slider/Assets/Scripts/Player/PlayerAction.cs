@@ -13,6 +13,7 @@ public class PlayerAction : Singleton<PlayerAction>
     [SerializeField] private GameObject itemDropIndicator;
     [SerializeField] private LayerMask itemMask;
     [SerializeField] private LayerMask dropCollidingMask;
+    [SerializeField] private LayerMask anchorDropCollidingMask;
 
     [SerializeField] private float minimumDropDistance = 0.5f;
     [SerializeField] private float maximumDropDistance = 1.5f;
@@ -69,7 +70,7 @@ public class PlayerAction : Singleton<PlayerAction>
             Mathf.Atan2(raycastDirection.y, raycastDirection.x) * Mathf.Rad2Deg,
             raycastDirection, 
             maximumDropDistance,
-            layerMask:dropCollidingMask
+            layerMask:(pickedItem is Anchor ? anchorDropCollidingMask : dropCollidingMask)
         );
 
         Vector2 closestPossibleDropPosition = basePosition + maximumDropDistance * raycastDirection;
