@@ -426,6 +426,11 @@ public class OceanGrid : SGrid
         }
     }
 
+    public void DisableKnotBox()
+    {
+        if(knotBox.enabled) ToggleKnotBox();
+    }
+
     //public void IsLostGuyBeached(Condition c)
     //{
     //    c.SetSpec(lostGuyMovement.hasBeached);
