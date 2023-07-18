@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class AdvancedOptionsPanel : MonoBehaviour
     [SerializeField] private Slider screenShakeSlider;
     [SerializeField] private Toggle bigTextToggle;
     [SerializeField] private Toggle highContrastTextToggle;
+    [SerializeField] private Toggle hideCursorToggle;
     [SerializeField] private Toggle autoMoveToggle;
     [SerializeField] private Toggle colorblindToggle;
 
@@ -16,6 +18,7 @@ public class AdvancedOptionsPanel : MonoBehaviour
         screenShakeSlider.onValueChanged.AddListener((float value) => { UpdateScreenShake(); });
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
         highContrastTextToggle.onValueChanged.AddListener((bool value) => { UpdateHighContrastText(); });
+        hideCursorToggle.onValueChanged.AddListener((bool value) => { UpdateHideCursor(); });
         autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
         colorblindToggle.onValueChanged.AddListener((bool value) => { UpdateColorblind(); });
     }
@@ -25,6 +28,7 @@ public class AdvancedOptionsPanel : MonoBehaviour
         screenShakeSlider.value = SettingsManager.ScreenShake;
         bigTextToggle.isOn = SettingsManager.BigTextEnabled;
         highContrastTextToggle.isOn = SettingsManager.HighContrastTextEnabled;
+        hideCursorToggle.isOn = SettingsManager.HideCursor;
         autoMoveToggle.isOn = SettingsManager.AutoMove;
         colorblindToggle.isOn = SettingsManager.Colorblind;
     }
@@ -46,6 +50,11 @@ public class AdvancedOptionsPanel : MonoBehaviour
     public void UpdateHighContrastText()
     {
         SettingsManager.HighContrastTextEnabled = highContrastTextToggle.isOn;
+    }
+
+    public void UpdateHideCursor()
+    {
+        SettingsManager.HideCursor = hideCursorToggle.isOn;
     }
 
     public void UpdateAutoMove()

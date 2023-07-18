@@ -283,7 +283,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Ahoy matey! Welcome to Buccaneer Bob's. Here in the Shifting Seas, freedom is our creed. Just don't get lost or overwhelmed--the oceans are filled with treasure.",
+                    "Ahoy matey! Welcome to Buccaneer Bob's. Here in the Shifting Seas, freedom is our creed. Just don't get lost or overwhelmed -- the oceans are filled with treasure.",
                     TKSprite.Normal,
                     () => SetDialogue(
                        
