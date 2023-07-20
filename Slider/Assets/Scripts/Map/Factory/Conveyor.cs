@@ -200,7 +200,7 @@ public class Conveyor : ElectricalNode
         }
 
         //The empty tiles are put at the start of the conveyor belt. (again, for Factory, there's only 1 possible empty tile.)
-        for (int i=0; i<moveLength; i++)
+        for (int i = 0; i < moveLength; i++)
         {
             moves.Add(new Movement(emptyTiles[i], moveStart + dir * i, stiles[emptyTiles[i].x, emptyTiles[i].y].islandId));
         }
