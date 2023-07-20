@@ -511,6 +511,7 @@ MonoBehaviour:
         Data3: 1345641131
         Data4: 257574772
       Path: event:/SFX/Magic/Desync Tear Open
+    canPause: 0
     dopplerScale: 1
   - name: Desync Tear Close
     fmodEvent:
@@ -520,6 +521,7 @@ MonoBehaviour:
         Data3: -394793053
         Data4: -1358399614
       Path: event:/SFX/Magic/Desync Tear Close
+    canPause: 0
     dopplerScale: 1
   - name: Rat Squeak
     fmodEvent:
@@ -529,6 +531,16 @@ MonoBehaviour:
         Data3: 1003720097
         Data4: 1125836640
       Path: event:/SFX/Caves/Rat Squeak
+    canPause: 0
+    dopplerScale: 0
+  - name: Caves Win
+    fmodEvent:
+      Guid:
+        Data1: 1469068729
+        Data2: 1318230195
+        Data3: 865993132
+        Data4: 766685052
+      Path: event:/SFX/Caves/Caves Win
     canPause: 0
     dopplerScale: 0
   music:
