@@ -98,7 +98,8 @@ public class UIArtifact : Singleton<UIArtifact>
             {
                 if (IsButtonValidForSelection(g))
                 {
-                    Debug.Log("Force picked a new button.");
+                    // Noisy in the ocean
+                    //Debug.Log("Force picked a new button.");
                     EventSystem.current.SetSelectedGameObject(g);
                     return;
                 }

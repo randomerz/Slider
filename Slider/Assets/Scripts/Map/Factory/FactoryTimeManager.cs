@@ -123,6 +123,8 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
 
         SpawnPlayerInPast();
         sendingToPast = false;
+
+        SaveSystem.Current.SetBool("FactorySentToPast", true);
     }
 }
 

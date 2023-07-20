@@ -7,13 +7,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 636094197407187458, guid: 04abf86f156985e47acfb3109ef00299, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 700469962639666219, guid: 04abf86f156985e47acfb3109ef00299, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 22100000, guid: df6f0823cf1d70147902cc14a2b3eda9, type: 2}
     - target: {fileID: 1260201685670444486, guid: 04abf86f156985e47acfb3109ef00299, type: 3}
       propertyPath: m_Name
-      value: Shutter Door
+      value: Shutter Door Variant
       objectReference: {fileID: 0}
     - target: {fileID: 1260201685670444487, guid: 04abf86f156985e47acfb3109ef00299, type: 3}
       propertyPath: m_RootOrder
@@ -62,7 +66,7 @@ PrefabInstance:
     - target: {fileID: 1299310475434406675, guid: 04abf86f156985e47acfb3109ef00299, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 710533837, guid: fcfee59a2734d56459e5bba1c9a142a6, type: 3}
+      objectReference: {fileID: -2063840985, guid: fcfee59a2734d56459e5bba1c9a142a6, type: 3}
     - target: {fileID: 2085729900178728809, guid: 04abf86f156985e47acfb3109ef00299, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -70,6 +74,14 @@ PrefabInstance:
     - target: {fileID: 3673858783070087244, guid: 04abf86f156985e47acfb3109ef00299, type: 3}
       propertyPath: m_Size.x
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3673858783070087244, guid: 04abf86f156985e47acfb3109ef00299, type: 3}
+      propertyPath: m_Size.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3673858783070087244, guid: 04abf86f156985e47acfb3109ef00299, type: 3}
+      propertyPath: m_Offset.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3673858783070087244, guid: 04abf86f156985e47acfb3109ef00299, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.x

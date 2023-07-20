@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-//L: This is a stupid class, but I got tired of adding the same fields over and over.
 public class SpriteSwapper : MonoBehaviour
 {
     [SerializeField] private Sprite on;
     [SerializeField] private Sprite off;
     [SerializeField] private SpriteRenderer sr;
-    [SerializeField] private Image image;
+    [SerializeField] protected Image image;
 
-    private void Awake()
+    protected virtual void Awake()
     {
        if (sr == null)
         {

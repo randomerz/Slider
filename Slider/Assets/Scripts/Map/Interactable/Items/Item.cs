@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -28,6 +29,7 @@ public class Item : MonoBehaviour, ISavable
     private bool shouldLoadSavedDataOnStart;
     private int savedIslandIdBuffer;
     private Vector3 savedPositionBuffer;
+    private bool enableColliderOnTriggerExit;
 
     public virtual void Awake()
     {
@@ -61,9 +63,21 @@ public class Item : MonoBehaviour, ISavable
             else
                 SaveSystem.Current.SetInt($"{saveString}_STile", stile.islandId);
 
-            SaveSystem.Current.SetFloat($"{saveString}_LocalX", stile != null ? transform.localPosition.x : transform.position.x);
-            SaveSystem.Current.SetFloat($"{saveString}_LocalY", stile != null ? transform.localPosition.y : transform.position.y);
-            SaveSystem.Current.SetFloat($"{saveString}_LocalZ", stile != null ? transform.localPosition.z : transform.position.z);
+            // We have to handle a bunch of edge cases in case players quit while holding the object
+            Vector3 globalPosition = transform.position;
+            Vector3 stileParentPosition = stile == null ? Vector3.zero : stile.transform.position;
+
+            SaveSystem.Current.SetFloat($"{saveString}_LocalX", (globalPosition - stileParentPosition).x);
+            SaveSystem.Current.SetFloat($"{saveString}_LocalY", (globalPosition - stileParentPosition).y);
+            SaveSystem.Current.SetFloat($"{saveString}_LocalZ", (globalPosition - stileParentPosition).z);
+            
+            bool isPlayerHoldingThis = PlayerInventory.GetCurrentItem() == this;
+            SaveSystem.Current.SetBool($"{saveString}_WasPlayerHolding", isPlayerHoldingThis);
+            if (isPlayerHoldingThis)
+            {
+                SaveSystem.Current.SetFloat($"{saveString}_LocalY", 
+                    (globalPosition - stileParentPosition - new Vector3(0, 0.75f)).y);
+            }
         }
     }
 
@@ -76,11 +90,27 @@ public class Item : MonoBehaviour, ISavable
 
             // SGrid.Current.GetSTile isn't accessible at this time of loading
             shouldLoadSavedDataOnStart = true;
-            savedIslandIdBuffer = SaveSystem.Current.GetInt($"{saveString}_STile");
-            float x = SaveSystem.Current.GetFloat($"{saveString}_LocalX");
-            float y = SaveSystem.Current.GetFloat($"{saveString}_LocalY");
-            float z = SaveSystem.Current.GetFloat($"{saveString}_LocalZ");
+            savedIslandIdBuffer = profile.GetInt($"{saveString}_STile");
+            float x = profile.GetFloat($"{saveString}_LocalX");
+            float y = profile.GetFloat($"{saveString}_LocalY");
+            float z = profile.GetFloat($"{saveString}_LocalZ");
+
+            if (profile.GetBool($"{saveString}_WasPlayerHolding"))
+            {
+                SetCollider(false);
+                enableColliderOnTriggerExit = true;
+            }
+
             savedPositionBuffer = new Vector3(x, y, z);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (enableColliderOnTriggerExit)
+        {
+            enableColliderOnTriggerExit = false;
+            SetCollider(true);
         }
     }
 

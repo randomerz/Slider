@@ -62,18 +62,24 @@ public class MountainGrid : SGrid
         {
             STile dropTile = interactArgs.stile;
             if(dropTile != null)
-            {
-                if(dropTile.y < 2)
-                    return; 
-                STile lower = SGrid.Current.GetGrid()[dropTile.x, dropTile.y - 2];
-                if(!lower.isTileActive)  
-                {
-                    MountainArtifact uiArtifact = (MountainArtifact) MountainArtifact.GetInstance();
-                    //UIArtifact.ClearQueues();
-                    uiArtifact.AnchorSwap(dropTile, lower);
-                }
-            }
+                StartCoroutine(WaitThenCheckAnchorDrop(dropTile));
         }        
+    }
+
+    private IEnumerator WaitThenCheckAnchorDrop(STile dropTile)
+    {
+        yield return new WaitUntil(() => !dropTile.IsMoving());
+
+        if(dropTile.y >= 2)
+        {
+            STile lower = SGrid.Current.GetGrid()[dropTile.x, dropTile.y - 2];
+            if(!lower.isTileActive)  
+            {
+                MountainArtifact uiArtifact = (MountainArtifact) MountainArtifact.GetInstance();
+                uiArtifact.AnchorSwap(dropTile, lower);
+            }
+        }
+                
     }
 
     private void Update() {
@@ -98,21 +104,22 @@ public class MountainGrid : SGrid
         if(stile.islandId == 7)
             SaveSystem.Current.SetBool("forceAutoMove", true);
         base.EnableStile(stile, shouldFlicker);
+         if(stile.islandId == 8)
+            CheckForMountainCompletion();
     }
 
-    public void FinishMountain()
+
+    protected override void CheckForCompletionOnSetGrid()
     {
-        /*EnableStile(8);
+        CheckForMountainCompletion();
+    }
 
-        int[,] completedPuzzle = new int[2, 4] { {4, 7, 5, 3},
-                                                 {2, 6, 8, 1}};
-        SetGrid(completedPuzzle);*/
-        SaveSystem.Current.SetBool("forceAutoMove", false);
-        UpdateButtonCompletions(this, null);
-        UIArtifactWorldMap.SetAreaStatus(Area.Mountain, ArtifactWorldMapArea.AreaStatus.color);
-        UIArtifactMenus._instance.OpenArtifactAndShow(2, true);
-
-        AchievementManager.SetAchievementStat("completedMountain", 1);
+    public void CheckForMountainCompletion() {
+        if(CheckGrid.contains(GetGridString(), "31_58_76_42")) {
+            SaveSystem.Current.SetBool("forceAutoMove", false);
+            StartCoroutine(ShowButtonAndMapCompletions());
+            AchievementManager.SetAchievementStat("completedMountain", 1);
+        }
     }
 
 

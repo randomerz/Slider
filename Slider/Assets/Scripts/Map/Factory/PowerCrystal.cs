@@ -5,6 +5,7 @@ using UnityEngine;
 public class PowerCrystal : Singleton<PowerCrystal>, ISavable
 {
     private bool _blackout = false;
+    private bool _wentToPast = false;
     public static bool Blackout => _instance != null && _instance._blackout;
 
     public delegate void HandleBlackout();
@@ -16,9 +17,17 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
         InitializeSingleton();
     }
 
-    private void Start()
+    public void Save()
     {
-        SetBlackout(_blackout);
+        SaveSystem.Current.SetBool("FactoryBlackout", _blackout);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        _blackout = profile.GetBool("FactoryBlackout");
+        _wentToPast = profile.GetBool("FactorySentToPast");
+
+        SetBlackout(_blackout && !_wentToPast);
     }
 
     public void CheckBlackout(Condition cond)
@@ -28,7 +37,10 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
 
     public void StartCrystalPoweredSequence()
     {
-        StartCoroutine(CrystalPoweredBuildup());
+        if (!_blackout && !_wentToPast)
+        {
+            StartCoroutine(CrystalPoweredBuildup());
+        }
     }
 
     private IEnumerator CrystalPoweredBuildup()
@@ -70,15 +82,5 @@ public class PowerCrystal : Singleton<PowerCrystal>, ISavable
         {
             blackoutEnded?.Invoke();
         }
-    }
-
-    public void Save()
-    {
-        SaveSystem.Current.SetBool("Blackout", _blackout);
-    }
-
-    public void Load(SaveProfile profile)
-    {
-        _blackout = profile.GetBool("Blackout");
     }
 }

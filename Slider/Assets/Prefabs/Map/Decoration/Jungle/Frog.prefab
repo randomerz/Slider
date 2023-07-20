@@ -153,7 +153,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Frog
   spriteRenderer: {fileID: 7030292573405607972}
-  myCollider: {fileID: 0}
+  myCollider: {fileID: 2006064461178112225}
+  myRigidBody: {fileID: 0}
   canKeep: 0
   itemRadius: 0.5
   pickUpDuration: 0.5
@@ -230,6 +231,7 @@ MonoBehaviour:
   OnDrop:
     m_PersistentCalls:
       m_Calls: []
+  saveString: 
 --- !u!58 &2006064461178112225
 CircleCollider2D:
   m_ObjectHideFlags: 0
