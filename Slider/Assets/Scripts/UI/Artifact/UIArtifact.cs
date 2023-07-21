@@ -28,11 +28,16 @@ public class UIArtifact : Singleton<UIArtifact>
     
     private int moveCounter;
 
-    private float hoverBuffer = 0.1f; //Saves hover for this long after moving off if not hoving anything else
+    // Saves hover for this long after moving off if not hoving anything else
+    private float hoverBuffer = 0.1f; 
     private float hoverTimer;
     private bool shouldCountDown;
     private ArtifactTileButton lastHovered;
-    
+
+    // Moves are sped up when a lot are done in a row with this buffer (helps w/ factory conveyor consecutives)
+    private float consecutiveQueueSpeedBuffer = 0.1f;
+    private float consecutiveQueueSpeedTimer;
+
     protected void Awake()
     {
         if (!didInit)
@@ -73,11 +78,20 @@ public class UIArtifact : Singleton<UIArtifact>
         if (shouldCountDown && hoverTimer < hoverBuffer)
         {
             hoverTimer += Time.deltaTime;
-            if (hoverTimer > hoverBuffer && lastHovered != null)
+            if (hoverTimer >= hoverBuffer && lastHovered != null)
             {
                 lastHovered.SetSpriteToIslandOrEmpty();
                 lastHovered.SetHighlighted(true);
                 lastHovered = null;
+            }
+        }
+
+        if (moveCounter > 0 && consecutiveQueueSpeedTimer < consecutiveQueueSpeedBuffer)
+        {
+            consecutiveQueueSpeedTimer += Time.deltaTime;
+            if (consecutiveQueueSpeedTimer >= consecutiveQueueSpeedBuffer)
+            {
+                moveCounter = 0;
             }
         }
 
@@ -98,7 +112,8 @@ public class UIArtifact : Singleton<UIArtifact>
             {
                 if (IsButtonValidForSelection(g))
                 {
-                    Debug.Log("Force picked a new button.");
+                    // Noisy in the ocean
+                    //Debug.Log("Force picked a new button.");
                     EventSystem.current.SetSelectedGameObject(g);
                     return;
                 }
@@ -536,6 +551,7 @@ public class UIArtifact : Singleton<UIArtifact>
                 {
                     move.duration = Mathf.Max(move.duration - (moveCounter) / 10f, move.duration / 2);
                 }
+                consecutiveQueueSpeedTimer = 0;
                 moveCounter += 1;
                 activeMoves.Add(move);
                 SGrid.Current.Move(move);
@@ -546,10 +562,11 @@ public class UIArtifact : Singleton<UIArtifact>
             }
             ProcessQueue();
         }
-        else
-        {
-            moveCounter = 0;
-        }
+        // This has been replaced with a timer
+        // else
+        // {
+        //     moveCounter = 0;
+        // }
     }
 
     public static bool ActiveMovesExist()

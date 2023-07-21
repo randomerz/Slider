@@ -70,6 +70,15 @@ public class SettingsManager : Singleton<SettingsManager>
             WriteCurrentSettingsToPlayerPrefs();
         }
     }
+    public static bool HideCursor
+    {
+        get => _instance.currentSettings.hideCursor;
+        set
+        {
+            _instance.currentSettings.hideCursor = value;
+            WriteCurrentSettingsToPlayerPrefs();
+        }
+    }
     public static bool AutoMove
     {
         get => _instance.currentSettings.autoMove || (!GameUI.instance.isMenuScene && SaveSystem.Current.GetBool("forceAutoMove"));
@@ -139,6 +148,7 @@ struct Settings
     public float screenShake;
     public bool bigTextEnabled;
     public bool highContrastTextEnabled;
+    public bool hideCursor;
     public bool autoMove;
     public bool forceAutoMove;
     public bool colorblindMode;
@@ -149,16 +159,17 @@ struct Settings
     /// <returns></returns>
     public static Settings GetDefaultSettings()
     {
-        return new Settings(0.5f, 0.5f, 1.0f, false, false, false);
+        return new Settings(0.5f, 0.5f, 0.5f, false, false, true, false);
     }
 
-    public Settings(float sfxVolume, float musicVolume, float screenShake, bool bigTextEnabled, bool highContrastTextEnabled, bool autoMove)
+    public Settings(float sfxVolume, float musicVolume, float screenShake, bool bigTextEnabled, bool highContrastTextEnabled, bool hideCursor, bool autoMove)
     {
         this.sfxVolume = sfxVolume;
         this.musicVolume = musicVolume;
         this.screenShake = screenShake;
         this.bigTextEnabled = bigTextEnabled;
         this.highContrastTextEnabled = highContrastTextEnabled;
+        this.hideCursor = hideCursor;
         this.autoMove = autoMove;
         this.forceAutoMove = autoMove;
         this.colorblindMode = true;

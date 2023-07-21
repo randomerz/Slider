@@ -268,7 +268,7 @@ public class SGridAnimator : MonoBehaviour
             volume = shakeDuration - 0.1f;
         }
 
-        if(playSound)
+        if (playSound)
         {
             CameraShake.ShakeConstant(shakeDuration, 0.15f);
             AudioManager

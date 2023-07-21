@@ -90,7 +90,7 @@ public class Printer : MonoBehaviour
         else if (floor && walls && wires)
         {
             // ready to print
-            operatorMessage = "Radical, go turn it on!!!!";
+            SaveSystem.Current.SetBool("factoryBuildATileReady", true);
         }
         else
         {
@@ -116,9 +116,9 @@ public class Printer : MonoBehaviour
         SaveSystem.Current.SetString("FactoryPrinterPartsHint", operatorHint);
 
         // if only one left
-        if (floor && !walls && !wires ||
-            !floor && walls && !wires ||
-            !floor && !walls && wires)
+        if ((floor && !walls && !wires) ||
+            (!floor && walls && !wires) ||
+            (!floor && !walls && wires))
         {
             SaveSystem.Current.SetBool("factoryBuildATileHint", true);
         }

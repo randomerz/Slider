@@ -144,6 +144,9 @@ public class CaveGrid : SGrid
         AudioManager.Play("Slide Rumble");
 
         StartCoroutine(CaveMagicParticleAnimation(GetStile(8).transform.position, 4));
+
+        AudioManager.DampenMusic(this, 0, 9);
+        AudioManager.Play("Caves Win");
     }
 
     public void CavesShake2()
