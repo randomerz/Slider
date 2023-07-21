@@ -347,7 +347,7 @@ public class OceanGrid : SGrid
             AllBuoy() && 
             knotBox.isActiveAndEnabled && 
             knotBoxEnabledLastFrame &&
-            knotBox.CheckLines() == 0
+            knotBox.CheckNumLines() == 0
         );
     }
 
@@ -414,6 +414,9 @@ public class OceanGrid : SGrid
 
                     uiTrackerAddOns[i].target1 = uiTrackerAddOns[next].myRectTransform;
                     uiTrackerAddOns[i].target2 = uiTrackerAddOns[prev].myRectTransform;
+                    uiTrackerAddOns[i].index1 = i;
+                    uiTrackerAddOns[i].index2 = prev;
+                    uiTrackerAddOns[i].knotBox = knotBox;
                 }
             }
             else
