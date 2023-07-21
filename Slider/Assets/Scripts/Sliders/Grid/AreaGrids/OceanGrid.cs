@@ -80,7 +80,8 @@ public class OceanGrid : SGrid
             UpdateButtonCompletions(this, null);
             OnGridMove += UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
-            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletion
+            SGridAnimator.OnSTileMoveStart += CheckBuoyFirstTry;
             UIArtifactMenus.OnArtifactOpened += CheckFinalPlacementsOnMove;
         }
 
@@ -347,7 +348,7 @@ public class OceanGrid : SGrid
             AllBuoy() && 
             knotBox.isActiveAndEnabled && 
             knotBoxEnabledLastFrame &&
-            knotBox.CheckLines() == 0
+            knotBox.CheckNumLines() == 0
         );
     }
 
@@ -389,6 +390,11 @@ public class OceanGrid : SGrid
         c.SetSpec(BuoyConditions());
     }
 
+    public void BuoyFirstTimeCheck(Condition c)
+    {
+        c.SetSpec(knotBox.CheckNumLines() == 0);
+    }
+
     public void ToggleKnotBox()
     {
         if (AllBuoy())
@@ -414,6 +420,9 @@ public class OceanGrid : SGrid
 
                     uiTrackerAddOns[i].target1 = uiTrackerAddOns[next].myRectTransform;
                     uiTrackerAddOns[i].target2 = uiTrackerAddOns[prev].myRectTransform;
+                    uiTrackerAddOns[i].index1 = i;
+                    uiTrackerAddOns[i].index2 = prev;
+                    uiTrackerAddOns[i].knotBox = knotBox;
                 }
             }
             else
@@ -426,10 +435,16 @@ public class OceanGrid : SGrid
         }
     }
 
-    //public void IsLostGuyBeached(Condition c)
-    //{
-    //    c.SetSpec(lostGuyMovement.hasBeached);
-    //}
+    public void DisableKnotBox()
+    {
+        if(knotBox.enabled) ToggleKnotBox();
+    }
+
+    public void EnableKnotBox()
+    {
+        if(!knotBox.enabled) ToggleKnotBox();
+    }
+
 
     // Foggy Seas
 
@@ -624,11 +639,17 @@ public class OceanGrid : SGrid
 
             OnGridMove += UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
-            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
             UIArtifactMenus.OnArtifactOpened += CheckFinalPlacementsOnMove;
 
             SGrid.UpdateButtonCompletions(this, null);
         }
+    }
+    
+    private void CheckBuoyFirstTry(object sender, System.EventArgs e)
+    {
+        if(SaveSystem.Current.GetBool("OceanTalkedToKevin"))
+            SaveSystem.Current.SetBool("OceanFailedFirstBuoy", true);
     }
 
     private void CheckFinalPlacementsOnMove(object sender, System.EventArgs e)

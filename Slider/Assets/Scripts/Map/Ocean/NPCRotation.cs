@@ -18,7 +18,8 @@ public class NPCRotation : MonoBehaviour
     [SerializeField] NPC muncher;
     [SerializeField] Transform leftDice; //vanessa -> amber oak
     [SerializeField] Transform rightDice;// bruce ->catbeard
-    [SerializeField] Transform leftSign;//amberoak -> alien
+    [SerializeField] Transform leftSign;//amberoak 
+    [SerializeField] Transform upperLeftSign; //alien
     [SerializeField] Transform rightSign;//fezziwig
     [SerializeField] Transform leftEntrance; //trav merch
     [SerializeField] Transform rightEntrance; //porker
@@ -143,7 +144,7 @@ public class NPCRotation : MonoBehaviour
                     break;
 
                 case "alien": //alien joins
-                    alien.Teleport(leftSign, false);
+                    alien.Teleport(upperLeftSign, false);
                     break;
 
                 case "diceGirl"://dice ppl leave, catberad and broke replace them
@@ -158,6 +159,7 @@ public class NPCRotation : MonoBehaviour
 
                 case "fezziwig": //fezziwig joins
                     fezziwig.Teleport(rightSign, false);
+                    fezziwig.GetComponent<ChadJump>().EnableCollider();
                     porker.Teleport(rightEntrance, false);
                     SaveSystem.Current.SetBool("oceanFezziwigInTavern", true);
                     break;

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using UnityEngine.Events;
 
 public class KnotBox : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class KnotBox : MonoBehaviour
 
     public ParticleSystem[] particles;
     public Transform[] correctPositions;
+
+    public bool[] linesArr;
 
     // Update is called once per frame
     void Update()
@@ -55,10 +59,11 @@ public class KnotBox : MonoBehaviour
     }
 
 
-    // update + return number of intersects
-    public int CheckLines()
+    //returns a boolean array of if the line at index i is good/bad
+    public bool[] CheckLines()
     {
-        int ret = 0;
+        bool[] ret = new bool[lines.Length];
+
         for (int i = 0; i < lines.Length; i++)
         {
             bool intersects = false;
@@ -76,7 +81,7 @@ public class KnotBox : MonoBehaviour
                     lines[i].startColor = bad;
                     lines[i].endColor = bad;
                     intersects = true;
-                    ret += 1;
+                    ret[i] = true;
                 }
             }
             for(int j = i-2; j >= 0; j--)
@@ -88,7 +93,7 @@ public class KnotBox : MonoBehaviour
                     lines[i].startColor = bad;
                     lines[i].endColor = bad;
                     intersects = true;
-                    ret += 1;
+                    ret[i] = true;
                 }
             }
             for (int j = i + 2; j < lines.Length; j++)
@@ -100,7 +105,7 @@ public class KnotBox : MonoBehaviour
                     lines[i].startColor = bad;
                     lines[i].endColor = bad;
                     intersects = true;
-                    ret += 1;
+                    ret[i] = true;
                 }
             }
             if (!intersects)
@@ -109,8 +114,15 @@ public class KnotBox : MonoBehaviour
                 lines[i].endColor = good;
             }
         }
+        linesArr = ret;
         return ret;
     }
+
+    public int CheckNumLines()
+    {   
+        return CheckLines().Where(c => c).Count();
+    }
+
     public static bool Approximately(float a, float b, float tolerance = 1e-5f) {
         return Mathf.Abs(a - b) <= tolerance;
     }
@@ -138,7 +150,7 @@ public class KnotBox : MonoBehaviour
 
     public void CheckParticles()
     {
-        if (CheckLines() == 0 && particles != null)
+        if (CheckNumLines() == 0 && particles != null)
         {
             foreach (ParticleSystem ps in particles)
             {
@@ -158,12 +170,12 @@ public class KnotBox : MonoBehaviour
 
     public void CheckPuzzle(Condition c)
     {
-        c.SetSpec(CheckLines() == 0);
+        c.SetSpec(CheckNumLines() == 0);
     }
 
     public void CheckPuzzlePartial(Condition c)
     {
-        c.SetSpec(CheckLines() <= 3);
+        c.SetSpec(CheckNumLines() <= 3);
     }
 
     private void OnDrawGizmos()
