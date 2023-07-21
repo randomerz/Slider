@@ -104,7 +104,10 @@ public class ChadJump : MonoBehaviour
         OnJumpFinish?.Invoke();
     }
 
-
+    public void EnableCollider()
+    {
+        npcCollider.enabled = true;
+    }
 
     // Animates Chad Falling
     private IEnumerator Fall()
