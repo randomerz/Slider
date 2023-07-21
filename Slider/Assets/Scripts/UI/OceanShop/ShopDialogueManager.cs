@@ -294,7 +294,12 @@ public class ShopDialogueManager : MonoBehaviour
                     () => {
                         canOverrideDialogue = true;
                         SaveSystem.Current.SetBool("oceanHasTalkedToBob", true);
-                        UpdateDialogue("No Anchor");
+                        if(!PlayerInventory.Instance.GetHasCollectedAnchor())
+                            UpdateDialogue("No Anchor");
+                        else
+                        {
+                          UpdateDialogue("First Time with Anchor");
+                        }
                     }
                 ))
                 ));
@@ -326,8 +331,15 @@ public class ShopDialogueManager : MonoBehaviour
                 ));
                 break;
 
+            case "First Time with Anchor":
+                SetDialogue(new ShopDialogue (
+                    null,
+                    "Ah, I see you've already got an <#2e44f0>anchor</color>! I can tell you'll make a great pirate.",
+                    TKSprite.Happy,
+                    () => UpdateDialogue("Turn in Anchor")
+                ));
+                break;
 
-            
             case "Turn in Anchor":
                 SetDialogue(new ShopDialogue(
                     () => { 
