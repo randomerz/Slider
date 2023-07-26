@@ -543,6 +543,16 @@ MonoBehaviour:
       Path: event:/SFX/Caves/Caves Win
     canPause: 0
     dopplerScale: 0
+  - name: Ocean Waves
+    fmodEvent:
+      Guid:
+        Data1: -674129342
+        Data2: 1133950285
+        Data3: -944018802
+        Data4: 1727944225
+      Path: event:/SFX/Ocean/Ocean Waves
+    canPause: 0
+    dopplerScale: 0
   music:
   - name: Main Menu
     fmodEvent:
