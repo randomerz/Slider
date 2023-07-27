@@ -86,7 +86,7 @@ public class UIArtifact : Singleton<UIArtifact>
             }
         }
 
-        if (moveCounter > 0 && consecutiveQueueSpeedTimer < consecutiveQueueSpeedBuffer)
+        if (moveCounter > 0 && consecutiveQueueSpeedTimer < consecutiveQueueSpeedBuffer && MoveQueueEmpty())
         {
             consecutiveQueueSpeedTimer += Time.deltaTime;
             if (consecutiveQueueSpeedTimer >= consecutiveQueueSpeedBuffer)
