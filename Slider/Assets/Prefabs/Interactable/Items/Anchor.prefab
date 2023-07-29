@@ -471,6 +471,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2413170935885977966, guid: 29ea5a852393c1e44bbf8c46acf1a358, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29ea5a852393c1e44bbf8c46acf1a358, type: 3}
 --- !u!4 &1180829422077755408 stripped
@@ -601,6 +605,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 3000682879685002329}
   myCollider: {fileID: 7895592663859285605}
   canKeep: 1
+  itemRadius: 0.5
   pickUpDuration: 0.5
   xPickUpMotion:
     serializedVersion: 2
@@ -677,6 +682,7 @@ MonoBehaviour:
   OnDrop:
     m_PersistentCalls:
       m_Calls: []
+  saveString: 
   shakeAmount: 0.33
   shakeDuration: 0.4
   trackerSprite: {fileID: 7068379093299224626, guid: 9a913c55ce379ea49825a14ccddfd181, type: 3}

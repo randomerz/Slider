@@ -131,6 +131,7 @@ public class FactoryArtifact : UIArtifact
             } else
             {
                 b.RestoreDefaultIslandSprite();
+                b.RestoreDefaultCompletedSprite();
                 b.GetComponent<ArtifactTBPluginConveyor>().UpdateEmptySprite();
             }
 

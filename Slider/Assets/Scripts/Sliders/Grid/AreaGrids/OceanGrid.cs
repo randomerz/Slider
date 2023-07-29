@@ -669,7 +669,7 @@ public class OceanGrid : SGrid
 
 
             AchievementManager.SetAchievementStat("completedOcean", 1);
-            if(numAnchorUses <= 2) {
+            if (numAnchorUses <= 2) {
                 //Give 2 use Anchor Achievement 
                 AchievementManager.SetAchievementStat("completedOceanMinAnchor", 1);
             }
