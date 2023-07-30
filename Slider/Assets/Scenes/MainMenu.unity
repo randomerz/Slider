@@ -1967,7 +1967,7 @@ PrefabInstance:
     - target: {fileID: 3856850289943068020, guid: 325932cc29aaf3443862a9080e2a4929, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 501441907}
+      objectReference: {fileID: 0}
     - target: {fileID: 3856850289943068020, guid: 325932cc29aaf3443862a9080e2a4929, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
@@ -1991,7 +1991,7 @@ PrefabInstance:
     - target: {fileID: 6584994354779951696, guid: 325932cc29aaf3443862a9080e2a4929, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1360078456}
+      objectReference: {fileID: 0}
     - target: {fileID: 6584994354779951696, guid: 325932cc29aaf3443862a9080e2a4929, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -3658,17 +3658,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6b1d709ed1d7c7418ea980ab066ea8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &501441907 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6687903972435105028, guid: 325932cc29aaf3443862a9080e2a4929, type: 3}
-  m_PrefabInstance: {fileID: 218764804}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &505339299
@@ -6978,29 +6967,29 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Jimmy Huang
+  m_text: 'Jamie Lee
+
+    Jimmy Huang
 
     Kate Tran
 
     Kenneth Wang
 
-    Koushik Thiyagarajan
+    Koushik
+    Thiyagarajan
 
-    Kristian
-    Chappell
+    Kristian Chappell
 
     Logan Bowers
 
     Maddie King
 
-    Max Zhang
+    Max
+    Zhang
 
     Muskaan Gupta
 
-    Nathaniel
-    Koehler
-
-    Nia Bellamy'
+    Nathaniel Koehler'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
   m_sharedMaterial: {fileID: 7572966130275077912, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
@@ -10946,17 +10935,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3046825858971367794, guid: 325932cc29aaf3443862a9080e2a4929, type: 3}
   m_PrefabInstance: {fileID: 218764804}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1360078456 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3856850289943068020, guid: 325932cc29aaf3443862a9080e2a4929, type: 3}
-  m_PrefabInstance: {fileID: 218764804}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1365474508
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13494,25 +13472,27 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Nicolas Cai
+  m_text: 'Nia Bellamy
+
+    Nicolas Cai
 
     Pawan Jayakumar
 
     Reinart Realina
 
-    Sara Inani
+    Sara
+    Inani
 
-    Sudharshan
-    Srinivasan
+    Sudharshan Srinivasan
 
     Thomas Dayton
 
     Travis Bittel
 
-    Tristan Ziegler
+    Tristan
+    Ziegler
 
-    Vu
-    Nguyen
+    Vu Nguyen
 
     Zhenyu Wu
 
@@ -17143,29 +17123,31 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Allison Lu
+  m_text: 'Alan Tao
+
+    Allison Lu
+
+    Avery Greer
 
     Chase O''Brien
 
-    Cynthia Peng
+    Cynthia
+    Peng
 
     Drew Busch
 
-    Eli
-    Corley
+    Eli Corley
 
     Elizabeth Liu
 
     Elliott Chen (Applejack)
 
-    Esther Moon
+    Esther
+    Moon
 
-    Ethan
-    Aristanto
+    Ethan Aristanto
 
-    Gazal Mathur
-
-    Jamie Lee'
+    Gazal Mathur'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
   m_sharedMaterial: {fileID: 7572966130275077912, guid: 00d6975ab8df27d468e1ec1262ad5c66, type: 2}
