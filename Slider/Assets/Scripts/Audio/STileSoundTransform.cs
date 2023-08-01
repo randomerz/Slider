@@ -24,6 +24,11 @@ public class STileSoundTransform : MonoBehaviour
             Vector3 center = Vector3.zero;
             foreach (Transform t in transforms)
             {
+                if (t == null)
+                {
+                    Debug.LogWarning("Something is null!");
+                    continue;
+                }
                 center += t.position;
             }
 

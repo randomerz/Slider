@@ -22,7 +22,7 @@ public class SGridAnimator : MonoBehaviour
     protected float movementDuration = 1f;
 
     private float currMoveDuration = 1f;
-    private const float MAX_POSSIBLE_MOVE_DURATION = 1.5f;
+    private const float MAX_POSSIBLE_MOVE_DURATION = 2.1f;
 
     //private List<SoundWrapper> audioQueue = new List<SoundWrapper>();
     private List<(string soundName, Transform soundTransform, float volume)> audioQueue = new List<(string soundName, Transform soundTransform, float volume)>();
@@ -294,6 +294,10 @@ public class SGridAnimator : MonoBehaviour
 
     private Transform GetSoundTransform(List<Transform> transforms)
     {
+        // If a player is on a tile, then it's transform is 'null' and the sound is not spacial
+        if (transforms.IndexOf(null) != -1)
+            return null;
+
         if (transforms.Count == 1)
             return transforms[0];
 
@@ -331,7 +335,7 @@ public class SGridAnimator : MonoBehaviour
 
         if (playSound)
         {
-            CameraShake.ShakeConstant(shakeDuration, 0.15f * shakeDuration);
+            CameraShake.ShakeConstant(shakeDuration, 0.15f * volume);
             audioQueue.Add((GetSoundName(move), GetSoundTransform(move, root), volume));
             //audioQueue.Add(
             //    AudioManager
@@ -359,7 +363,7 @@ public class SGridAnimator : MonoBehaviour
 
         if (playSound)
         {
-            CameraShake.Shake(shakeDuration, 2 * shakeDuration);
+            CameraShake.Shake(shakeDuration, volume);
             audioQueue.Add(("Slide Explosion", GetSoundTransform(move, root), volume));
             //audioQueue.Add(
             //    AudioManager
