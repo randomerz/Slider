@@ -5,9 +5,6 @@ using UnityEngine;
 public class SGridAnimator : MonoBehaviour
 {
 
-    // set in inspector
-    public AnimationCurve movementCurve;
-    protected float movementDuration = 1f;
 
     public class OnTileMoveArgs : System.EventArgs
     {
@@ -20,7 +17,55 @@ public class SGridAnimator : MonoBehaviour
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndEarly;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
 
+    // set in inspector
+    public AnimationCurve movementCurve;
+    protected float movementDuration = 1f;
+
     private float currMoveDuration = 1f;
+    private const float MAX_POSSIBLE_MOVE_DURATION = 2.1f;
+
+    //private List<SoundWrapper> audioQueue = new List<SoundWrapper>();
+    private List<(string soundName, Transform soundTransform, float volume)> audioQueue = new List<(string soundName, Transform soundTransform, float volume)>();
+    
+    private void LateUpdate()
+    {
+        // Apply a volume filter to sound effects if there are multiple playing at the same time
+        while (audioQueue.Count > 0)
+        {
+            ProccessAudioQueue();
+        }
+    }
+
+    private void ProccessAudioQueue()
+    {
+        (string name, Transform soundTransform, float volume) = audioQueue[0];
+        audioQueue.RemoveAt(0);
+        
+        float maxVolume = volume;
+        List<Transform> transformsToTrack = new List<Transform> { soundTransform };
+
+        for (int i = 0; i < audioQueue.Count; i++)
+        {
+            if (audioQueue[i].soundName == name)
+            {
+                transformsToTrack.Add(audioQueue[i].soundTransform);
+                if (audioQueue[i].volume > maxVolume)
+                {
+                    maxVolume = audioQueue[i].volume;
+                }
+                
+                audioQueue.RemoveAt(i);
+                i--;
+            }
+        }
+
+        AudioManager
+            .PickSound(name)
+            .WithVolume(maxVolume)
+            .WithAttachmentToTransform(GetSoundTransform(transformsToTrack))
+            .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
+            .AndPlay();
+    }
 
     public void ChangeMovementDuration(float value)
     {
@@ -59,7 +104,7 @@ public class SGridAnimator : MonoBehaviour
     
     private bool ShouldAlwaysPlaySound(SMove move)
     {
-        if(move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
+        if (move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
             return false;
         return true;
     }
@@ -94,6 +139,7 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
+
         EffectOnMoveStart(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
 
         float t = 0;
@@ -137,9 +183,7 @@ public class SGridAnimator : MonoBehaviour
         
         EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
     }
-
-    // DC: this is a lot of parameters :)
-
+    
     protected IEnumerator DisableBordersAndColliders(
             STile[,] grid, 
             SGridBackground[,] bgGrid,
@@ -233,21 +277,40 @@ public class SGridAnimator : MonoBehaviour
 
     private Transform GetSoundTransform(SMove move, Transform root)
     {
-        if(move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
+        if (move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
         {
-            //C: Thank you for not letting us create transforms without GameObjects unity very cool
             GameObject g = new GameObject("Sound Transform");
+            g.transform.SetParent(transform);
             STileSoundTransform s = g.AddComponent<STileSoundTransform>();
             s.lerp = 0.25f;
             s.move = move;
-            GameObject.Destroy(g, 1.5f);
+            s.UpdatePosition();
+            GameObject.Destroy(g, MAX_POSSIBLE_MOVE_DURATION);
             return s.transform;
         }
         else
             return root;
     }
 
-   
+    private Transform GetSoundTransform(List<Transform> transforms)
+    {
+        // If a player is on a tile, then it's transform is 'null' and the sound is not spacial
+        if (transforms.IndexOf(null) != -1)
+            return null;
+
+        if (transforms.Count == 1)
+            return transforms[0];
+
+        GameObject g = new GameObject("Sound Transform");
+        g.transform.SetParent(transform);
+        STileSoundTransform s = g.AddComponent<STileSoundTransform>();
+        s.lerp = 0.25f;
+        s.transforms = transforms;
+        s.UpdatePosition();
+        GameObject.Destroy(g, MAX_POSSIBLE_MOVE_DURATION);
+        return s.transform;
+    }
+
 
     private string GetSoundName(SMove move)
     {
@@ -268,15 +331,19 @@ public class SGridAnimator : MonoBehaviour
             volume = shakeDuration - 0.1f;
         }
 
+        volume = Mathf.Clamp(volume, 0.2f, 1);
+
         if (playSound)
         {
-            CameraShake.ShakeConstant(shakeDuration, 0.15f);
-            AudioManager
-                .PickSound(GetSoundName(move))
-                .WithAttachmentToTransform(GetSoundTransform(move, root))
-                .WithVolume(volume)
-                .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
-                .AndPlay();
+            CameraShake.ShakeConstant(shakeDuration, 0.15f * volume);
+            audioQueue.Add((GetSoundName(move), GetSoundTransform(move, root), volume));
+            //audioQueue.Add(
+            //    AudioManager
+            //        .PickSound(GetSoundName(move))
+            //        .WithAttachmentToTransform(GetSoundTransform(move, root))
+            //        .WithVolume(volume)
+            //        .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
+            //);
         }
     }
 
@@ -291,16 +358,20 @@ public class SGridAnimator : MonoBehaviour
             shakeDuration = Mathf.Max(move.duration - (move.moveCounter / 10f), move.duration / 4f);
             volume = shakeDuration - 0.1f;
         }
+        
+        volume = Mathf.Clamp(volume, 0.2f, 1);
 
-        if(playSound)
+        if (playSound)
         {
-            CameraShake.Shake(shakeDuration, 1.0f);
-            AudioManager
-                .PickSound("Slide Explosion")
-                .WithAttachmentToTransform(GetSoundTransform(move, root))
-                .WithVolume(volume)
-                .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
-                .AndPlay();
+            CameraShake.Shake(shakeDuration, volume);
+            audioQueue.Add(("Slide Explosion", GetSoundTransform(move, root), volume));
+            //audioQueue.Add(
+            //    AudioManager
+            //        .PickSound("Slide Explosion")
+            //        .WithAttachmentToTransform(GetSoundTransform(move, root))
+            //        .WithVolume(volume)
+            //        .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
+            //);
         }
     }
 

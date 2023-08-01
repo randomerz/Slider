@@ -82,13 +82,21 @@ namespace SliderVocalization
                 lastCharIsVowel = currCharIsVowel;
             }
             result.vowelClusters = result.clusters.Where(c => c.isVowelCluster && !c.IsEmpty).ToList();
+
+            // Account for words without vowels
+            if (result.vowelClusters.Count == 0)
+            {
+                result.vowelClusters.Add(new PhonemeClusterVocalizer()
+                {
+                    isVowelCluster = true,
+                    characters = new StringBuilder().Append(RandomVowel)
+                });
+            }
+
             result.PlaceStress();
 
-            if (result.vowelClusters.Count != 0)
-            {
-                result.m_Vocalizers = result.vowelClusters.Where(c => c.isStressed).Select(c => c as BaseVocalizer).ToList();
-                if (result.m_Vocalizers.Count == 0) result.m_Vocalizers.Add(result.vowelClusters[0]);
-            }
+            result.m_Vocalizers = result.vowelClusters.Where(c => c.isStressed).Select(c => c as BaseVocalizer).ToList();
+            if (result.m_Vocalizers.Count == 0) result.m_Vocalizers.Add(result.vowelClusters[0]);
 
             return result;
         }

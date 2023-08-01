@@ -317,8 +317,8 @@ public class AudioManager : Singleton<AudioManager>
         float dialogueDbOverThreshold = Mathf.Approximately(0, MaxDialogueVolume01) ?
             0 : Mathf.Max(0, 6 * Mathf.Log(MaxDialogueVolume01, 2) - _instance.dialogueDuckingDbFactor);
         float priorityDuckingDb = dbOverThreshold * _instance.duckingDbFactor;
-        float dialogueDuckingDb = dialogueDbOverThreshold * _instance.dialogueDuckingDbFactor; 
-        
+        float dialogueDuckingDb = dialogueDbOverThreshold * _instance.dialogueDuckingDbFactor;
+
         foreach (ManagedInstance instance in managedInstances)
         {
             if (!paused || !instance.CanPause)

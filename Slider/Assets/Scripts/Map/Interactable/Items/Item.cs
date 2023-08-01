@@ -53,7 +53,7 @@ public class Item : MonoBehaviour, ISavable
         }
     }
 
-    public void Save()
+    public virtual void Save()
     {
         if (saveString != null && saveString != "")
         {
@@ -81,7 +81,7 @@ public class Item : MonoBehaviour, ISavable
         }
     }
 
-    public void Load(SaveProfile profile)
+    public virtual void Load(SaveProfile profile)
     {
         if (saveString != null && saveString != "")
         {

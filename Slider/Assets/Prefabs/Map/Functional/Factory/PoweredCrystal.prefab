@@ -159,7 +159,6 @@ MonoBehaviour:
   powerOnStart: 1
   invertSignal: 0
   affectedByBlackout: 1
-  debugAsPoweredOn: 0
   OnPowered:
     m_PersistentCalls:
       m_Calls: []
@@ -186,7 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eNode: {fileID: 5840491712681476576}
   lineStart: {fileID: 5840491712681476572}
-  anim: {fileID: 6702855552863266906}
+  anim: {fileID: 0}
   OnConductingOn:
     m_PersistentCalls:
       m_Calls: []

@@ -633,13 +633,17 @@ public class Minecart : Item, ISavable
 
     #region save/load
 
-    public void Save()
+    public override void Save()
     {
+        base.Save();
+
         SaveSystem.Current.SetInt("mountainMCState", (int)mcState);
     }
 
-    public void Load(SaveProfile profile)
+    public override void Load(SaveProfile profile)
     {
+        base.Load(profile);
+
         int state = profile.GetInt("mountainMCState");
         mcState = (MinecartState)state;
         UpdateIcon();
