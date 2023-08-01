@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Events;
 
 public class PlayerActionHints : MonoBehaviour, ISavable
@@ -42,7 +40,6 @@ public class PlayerActionHints : MonoBehaviour, ISavable
         Load(SaveSystem.Current);
     }
 
-    //C: Because the hint objects are never actually instantiated I need to do timer logic up here
     void Update()
     {
        foreach(Hint h in hintsList)
@@ -62,7 +59,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     public void TriggerHint(string hint)
     {
         foreach(Hint h in hintsList)
-            if(string.Equals(h.hintName, hint))
+            if(string.Equals(h.hintData.hintName, hint))
                 h.TriggerHint();
     }
 
@@ -70,7 +67,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     public void DisableHint(string hint) 
     {
         foreach(Hint h in hintsList)
-            if(string.Equals(h.hintName, hint) && h.canDisableHint)
+            if(string.Equals(h.hintData.hintName, hint) && h.canDisableHint)
                 h.DisableHint();
     }
 
@@ -82,7 +79,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     public void EnableDisabling(string hint) 
     {
         foreach(Hint h in hintsList)
-            if(string.Equals(h.hintName, hint))
+            if(string.Equals(h.hintData.hintName, hint))
                h.canDisableHint = true;
     }
 
@@ -162,10 +159,6 @@ public class HintData
 public class Hint
 { 
     public HintData hintData;
-
-    public string hintName;  //used when searching through hints
-    public string hintText; //the text of the hint
-    public string controllerHintText; //a separate hint text, if the hint should be different for controller players
     public bool canDisableHint; //can this hint be disabled?
     public double timeUntilTrigger; //how long from triggering the hint until it displays
     public bool isInCountdown = false; //is this hint counting down until display? 
@@ -173,7 +166,6 @@ public class Hint
     public bool shouldDisplay = true; //should this hint display?
     public bool hasBeenCompleted; //has this hint been completed?
     public bool hasBeenAddedToDisplay; //has this hint been displayed?
-    public List<InputRebindButton.Control> controlBinds; //list of control binds to replace in order
 
     public void Save()
     {
@@ -220,69 +212,8 @@ public class Hint
     public void Display() {
         if(shouldDisplay && !hasBeenCompleted && !hasBeenAddedToDisplay)
         {
-           // string hintTextToDisplay = CheckConvertToControllerHintText(hintText);
-            //UIHints.AddHint(ConvertVariablesToStrings(hintTextToDisplay), hintName);
             UIHints.AddHint(hintData);
             hasBeenAddedToDisplay = true;
         }
     }
-
-  /*  public string GetFormattedHintText()
-    {
-        string hintTextToDisplay = CheckConvertToControllerHintText(hintText);
-        string ret = ConvertVariablesToStrings(hintTextToDisplay);
-        return ret;
-    }
-
-    private string CheckConvertToControllerHintText(string message)
-    {
-        if (!controllerHintText.Equals("") && Player.GetInstance().GetCurrentControlScheme() == "Controller")
-        {
-            return controllerHintText;
-        } else { return message; }
-    }
-
-    private string ConvertVariablesToStrings(string message)
-    {
-        
-        int startIndex = 0;
-        int numBinds = 0;
-        while (message.IndexOf('<', startIndex) != -1)
-        {
-            startIndex = message.IndexOf('<', startIndex);
-            // case with \<
-            if (startIndex != 0 && message[startIndex - 1] == '\\')
-            {
-                // continue
-                startIndex += 1;
-                continue;
-            }
-
-            int endIndex = message.IndexOf('>', startIndex);
-            if (endIndex == -1)
-            {
-                // no more ends!
-                break;
-            }
-            numBinds++;
-            InputRebindButton.Control keybind = controlBinds[numBinds - 1];
-            string varResult;
-            if (keybind == InputRebindButton.Control.Move_Left || keybind == InputRebindButton.Control.Move_Right || keybind == InputRebindButton.Control.Move_Up || keybind == InputRebindButton.Control.Move_Down)
-            {
-                var action = Controls.Bindings.FindAction("Move");
-                varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
-            }
-            else
-            {
-                var action = Controls.Bindings.FindAction(keybind.ToString().Replace("_", string.Empty));
-                varResult = Controls.GetBindingDisplayString(action).ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
-            }
-            message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
-        }
-        if(message.IndexOf("W/A/S/D") > -1)
-            message = message.Replace("W/A/S/D", "WASD");
-        return message;
-    }*/
-
-    
 }
