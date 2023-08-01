@@ -93,8 +93,76 @@ public class PlayerActionHints : MonoBehaviour, ISavable
 }
 
 [System.Serializable]
+public class HintData
+{
+    public string hintName;  //used when searching through hints
+    public string hintText; //the text of the hint
+    public string controllerHintText;
+    public List<InputRebindButton.Control> controlBinds; //list of control binds to replace in order
+
+
+    public string GetFormattedHintText()
+    {
+        string hintTextToDisplay = CheckConvertToControllerHintText(hintText);
+        string ret = ConvertVariablesToStrings(hintTextToDisplay);
+        return ret;
+    }
+
+    private string CheckConvertToControllerHintText(string message)
+    {
+        if (!controllerHintText.Equals("") && Player.GetInstance().GetCurrentControlScheme() == "Controller")
+            return controllerHintText;
+        else
+            return message;
+    }
+
+    private string ConvertVariablesToStrings(string message)
+    {
+        int startIndex = 0;
+        int numBinds = 0;
+        while (message.IndexOf('<', startIndex) != -1)
+        {
+            startIndex = message.IndexOf('<', startIndex);
+            // case with \<
+            if (startIndex != 0 && message[startIndex - 1] == '\\')
+            {
+                // continue
+                startIndex += 1;
+                continue;
+            }
+
+            int endIndex = message.IndexOf('>', startIndex);
+            if (endIndex == -1)
+            {
+                // no more ends!
+                break;
+            }
+            numBinds++;
+            InputRebindButton.Control keybind = controlBinds[numBinds - 1];
+            string varResult;
+            if (keybind == InputRebindButton.Control.Move_Left || keybind == InputRebindButton.Control.Move_Right || keybind == InputRebindButton.Control.Move_Up || keybind == InputRebindButton.Control.Move_Down)
+            {
+                var action = Controls.Bindings.FindAction("Move");
+                varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
+            }
+            else
+            {
+                var action = Controls.Bindings.FindAction(keybind.ToString().Replace("_", string.Empty));
+                varResult = Controls.GetBindingDisplayString(action).ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
+            }
+            message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
+        }
+        if(message.IndexOf("W/A/S/D") > -1)
+            message = message.Replace("W/A/S/D", "WASD");
+        return message;
+    }
+} 
+
+[System.Serializable]
 public class Hint
 { 
+    public HintData hintData;
+
     public string hintName;  //used when searching through hints
     public string hintText; //the text of the hint
     public string controllerHintText; //a separate hint text, if the hint should be different for controller players
@@ -109,17 +177,17 @@ public class Hint
 
     public void Save()
     {
-        SaveSystem.Current.SetBool("Hint " + hintName, shouldDisplay);
-        SaveSystem.Current.SetBool("HintCountdown " + hintName, isInCountdown);
-        SaveSystem.Current.SetBool("HintComplete " + hintName, hasBeenCompleted);
+        SaveSystem.Current.SetBool("Hint " + hintData.hintName, shouldDisplay);
+        SaveSystem.Current.SetBool("HintCountdown " +  hintData.hintName, isInCountdown);
+        SaveSystem.Current.SetBool("HintComplete " +  hintData.hintName, hasBeenCompleted);
         hasBeenAddedToDisplay = false;
     }
 
     public void Load(SaveProfile profile)
     {
-        shouldDisplay = profile.GetBool("Hint " + hintName, true);
-        isInCountdown = profile.GetBool("HintCountdown " + hintName);
-        hasBeenCompleted = profile.GetBool("HintComplete " + hintName);
+        shouldDisplay = profile.GetBool("Hint " +  hintData.hintName, true);
+        isInCountdown = profile.GetBool("HintCountdown " +  hintData.hintName);
+        hasBeenCompleted = profile.GetBool("HintComplete " +  hintData.hintName);
         SetBools();
     }
 
@@ -146,16 +214,24 @@ public class Hint
         shouldDisplay = false;
         isInCountdown = false;
         hasBeenCompleted = true;
-        UIHints.RemoveHint(hintName);
+        UIHints.RemoveHint(hintData.hintName);
     }
 
     public void Display() {
         if(shouldDisplay && !hasBeenCompleted && !hasBeenAddedToDisplay)
         {
-            string hintTextToDisplay = CheckConvertToControllerHintText(hintText);
-            UIHints.AddHint(ConvertVariablesToStrings(hintTextToDisplay), hintName);
+           // string hintTextToDisplay = CheckConvertToControllerHintText(hintText);
+            //UIHints.AddHint(ConvertVariablesToStrings(hintTextToDisplay), hintName);
+            UIHints.AddHint(hintData);
             hasBeenAddedToDisplay = true;
         }
+    }
+
+  /*  public string GetFormattedHintText()
+    {
+        string hintTextToDisplay = CheckConvertToControllerHintText(hintText);
+        string ret = ConvertVariablesToStrings(hintTextToDisplay);
+        return ret;
     }
 
     private string CheckConvertToControllerHintText(string message)
@@ -166,7 +242,6 @@ public class Hint
         } else { return message; }
     }
 
-    //C: Yoinked from DialogueDisplay, modified to work with rebinds instead of save variables
     private string ConvertVariablesToStrings(string message)
     {
         
@@ -207,7 +282,7 @@ public class Hint
         if(message.IndexOf("W/A/S/D") > -1)
             message = message.Replace("W/A/S/D", "WASD");
         return message;
-    }
+    }*/
 
     
 }
