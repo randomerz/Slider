@@ -91,9 +91,11 @@ public class UIHints : MonoBehaviour
             StartCoroutine(FadeHintBox(1, 0, () => {
                     activeHint = null;
                 }));
+            }
+            else {
+                StartCoroutine(FadeToNextHint());
+            }
         }
-        }
-        
     }
    
     private void UpdateHint()
@@ -146,6 +148,34 @@ public class UIHints : MonoBehaviour
 
         isFading = false;
         callback?.Invoke();
+        UpdateHint();
+    }
+
+    private IEnumerator FadeToNextHint()
+    {
+        isFading = true;
+        float t = 0;
+        while (t < fadeDuration)
+        {
+            tmproText.alpha = Mathf.Lerp(1, 0, t / fadeDuration);
+
+            yield return null;
+
+            t += Time.deltaTime;
+        }
+        
+        activeHint = hintList[0];
+        t = 0;
+
+        while (t < fadeDuration)
+        {
+            tmproText.alpha = Mathf.Lerp(0, 1, t / fadeDuration);
+
+            yield return null;
+
+            t += Time.deltaTime;
+        }
+        isFading = false;
         UpdateHint();
     }
 

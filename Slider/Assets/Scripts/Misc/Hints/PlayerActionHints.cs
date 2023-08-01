@@ -182,7 +182,6 @@ public class Hint
         hasBeenCompleted = profile.GetBool("HintComplete " +  hintData.hintName);
         SetBools();
     }
-
     
     public void SetBools()
     {
