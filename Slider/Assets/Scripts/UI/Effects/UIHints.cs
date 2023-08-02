@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
-
 public class UIHints : MonoBehaviour
 {
     public static UIHints instance { get; private set; }
-
-    // I would make this a queue but you can't queue.Remove
-    public List<string> hintTexts = new List<string>(); 
-    public List<string> hintIDs = new List<string>(); //C: fixes some potential issues w/ exact hint text
+ 
     public List<string> hintRemovalQueue = new List<string>();
+    public List<HintData> hintList = new List<HintData>();
+
     private bool isVisible;
     public float fadeDuration;
     private bool isFading;
@@ -19,6 +17,8 @@ public class UIHints : MonoBehaviour
     // References
     public CanvasGroup canvasGroup;
     public TextMeshProUGUI tmproText;
+
+    private HintData activeHint;
 
     private void Awake() 
     {
@@ -30,11 +30,15 @@ public class UIHints : MonoBehaviour
         SceneManager.activeSceneChanged += Clear;
     }
 
+    private void Update() 
+    {
+        tmproText.text = activeHint != null ? activeHint.GetFormattedHintText() : "";
+    }
+
     private void Clear(Scene current, Scene next) 
     {
         StopAllCoroutines();
-        hintIDs.Clear();
-        hintTexts.Clear();
+        hintList.Clear();
         canvasGroup.alpha = 0;    
         isVisible = false;
     }
@@ -42,21 +46,19 @@ public class UIHints : MonoBehaviour
     /// <summary>
     /// Adds a hint to the list of hints to be displayed, shown in order added
     /// </summary>
-    /// <param name="hint">String of the hint</param>
-    /// <param name="hintID">String ID of the hint</param>
-    public static void AddHint(string hint, string id) { instance._AddHint(hint, id); }
+    /// <param name="hintData">Hint data to be added</param>
+    public static void AddHint(HintData hintData) { instance._AddHint(hintData); }
 
-    public void _AddHint(string hint, string id)
+    public void _AddHint(HintData hintData)
     {
-        hintTexts.Add(hint);
-        hintIDs.Add(id);
+        hintList.Add(hintData);
         UpdateHint();
     }
 
     /// <summary>
     /// Removes a hint from the list of hints
     /// </summary>
-    /// <param name="hintID">ID of the hint that was added</param>
+    /// <param name="hintID">ID of the hint to be removed</param>
     public static void RemoveHint(string hintID = "") { instance._RemoveHint(hintID); }
 
     public void _RemoveHint(string hintID)
@@ -66,8 +68,12 @@ public class UIHints : MonoBehaviour
             hintID = hintRemovalQueue[0];
             hintRemovalQueue.Remove(hintID);
         }
-        int index = hintIDs.IndexOf(hintID);
-        if (index == -1) 
+        HintData hint = null;
+        for(int i = 0; i < hintList.Count; i++)
+        {
+            if(hintList[i].hintName == hintID) hint = hintList[i];
+        }
+        if (hint == null) 
             return; //C: This happens often and is okay
 
         if(isFading)
@@ -77,31 +83,29 @@ public class UIHints : MonoBehaviour
         }
         else
         {
-            string hint = hintTexts[index];
-            if (!hintTexts.Remove(hint)) {
-                Debug.LogWarning("Tried and failed to remove hint: " + hint); //C: This should not happen
+            if (!hintList.Remove(hint)) {
+                Debug.LogWarning("Tried and failed to remove hint: " + hint.hintName); //C: This should not happen
                 return;
             }
-            hintIDs.Remove(hintID);
-            if(index == 0) {
-            //C: Switched UpdateHint to be in callback
+            if(hintList.Count == 0) {
             StartCoroutine(FadeHintBox(1, 0, () => {
-                    tmproText.text = "";
+                    activeHint = null;
                 }));
+            }
+            else {
+                StartCoroutine(FadeToNextHint());
+            }
         }
-        }
-        
     }
    
     private void UpdateHint()
     {   
         if(!isVisible)
         {
-            if (hintTexts.Count > 0)
+            if (hintList.Count > 0)
             {
-                // fade hint box in
                 isVisible = true;
-                tmproText.text = hintTexts[0];
+                activeHint = hintList[0];
                 StartCoroutine(FadeHintBox(0, 1));
             }
         }
@@ -111,16 +115,16 @@ public class UIHints : MonoBehaviour
             {
                 RemoveHint();
             }
-            if (hintTexts.Count > 0 && tmproText.text.Equals("") )
+            if (hintList.Count > 0 && activeHint == null )
             {
-                tmproText.text = hintTexts[0];
+                activeHint = hintList[0];
                 StartCoroutine(FadeHintBox(0, 1));
             }
-            if (hintTexts.Count == 0)
+            if (hintList.Count == 0)
             {
                 isVisible = false;
                 StartCoroutine(FadeHintBox(1, 0, () => {
-                    tmproText.text = "";
+                    activeHint = null;
                 }));
             }
         }
@@ -147,6 +151,34 @@ public class UIHints : MonoBehaviour
         UpdateHint();
     }
 
+    private IEnumerator FadeToNextHint()
+    {
+        isFading = true;
+        float t = 0;
+        while (t < fadeDuration)
+        {
+            tmproText.alpha = Mathf.Lerp(1, 0, t / fadeDuration);
+
+            yield return null;
+
+            t += Time.deltaTime;
+        }
+        
+        activeHint = hintList[0];
+        t = 0;
+
+        while (t < fadeDuration)
+        {
+            tmproText.alpha = Mathf.Lerp(0, 1, t / fadeDuration);
+
+            yield return null;
+
+            t += Time.deltaTime;
+        }
+        isFading = false;
+        UpdateHint();
+    }
+
     private IEnumerator WaitForRemoval()
     {
         while(isFading)
@@ -155,11 +187,4 @@ public class UIHints : MonoBehaviour
         }
         UpdateHint();
     }
-}
-
-[System.Serializable]
-public class HintDisplay
-{ 
-    public string keyboardHintText;
-    public string controllerHintText;
 }
