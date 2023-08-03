@@ -20,6 +20,7 @@ public class ArtifactHousingButtonsManager : MonoBehaviour
             else
             {
                 b.RestoreDefaultIslandSprite();
+                b.RestoreDefaultCompletedSprite();
             }
 
             b.SetSpriteToIslandOrEmpty();
