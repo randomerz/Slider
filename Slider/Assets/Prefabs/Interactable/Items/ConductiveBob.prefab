@@ -444,6 +444,7 @@ MonoBehaviour:
   OnDrop:
     m_PersistentCalls:
       m_Calls: []
+  saveString: 
 --- !u!1 &6452720972823350865
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,6 +689,10 @@ PrefabInstance:
     - target: {fileID: 2413170935885977964, guid: 29ea5a852393c1e44bbf8c46acf1a358, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2413170935885977966, guid: 29ea5a852393c1e44bbf8c46acf1a358, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29ea5a852393c1e44bbf8c46acf1a358, type: 3}

@@ -6,6 +6,7 @@ public class ChadSrElectricPuzzle : MonoBehaviour
 {
     [SerializeField] private Item itemHolding;
     [SerializeField] private ConductiveElectricalNode itemHoldingNode;
+    [SerializeField] private Collider2D itemElectricalTrigger;
     [SerializeField] private Transform dropItemLoc;
 
     private void OnEnable()
@@ -20,6 +21,7 @@ public class ChadSrElectricPuzzle : MonoBehaviour
 
     private void Start()
     {
+        itemElectricalTrigger.enabled = false;
         itemHolding?.SetCollider(false);
         itemHolding?.OnEquip();
     }
@@ -36,6 +38,7 @@ public class ChadSrElectricPuzzle : MonoBehaviour
 
     private void FinishItemDrop()
     {
+        itemElectricalTrigger.enabled = true;
         itemHolding?.SetCollider(true);
         itemHolding = null;
         itemHoldingNode = null;

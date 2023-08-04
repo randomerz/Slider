@@ -116,9 +116,9 @@ public class Printer : MonoBehaviour
         SaveSystem.Current.SetString("FactoryPrinterPartsHint", operatorHint);
 
         // if only one left
-        if ((floor && !walls && !wires) ||
-            (!floor && walls && !wires) ||
-            (!floor && !walls && wires))
+        if ((!floor && walls && wires) ||
+            (floor && !walls && wires) ||
+            (floor && walls && !wires))
         {
             SaveSystem.Current.SetBool("factoryBuildATileHint", true);
         }

@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Events;
 
 public class PlayerActionHints : MonoBehaviour, ISavable
@@ -42,7 +40,6 @@ public class PlayerActionHints : MonoBehaviour, ISavable
         Load(SaveSystem.Current);
     }
 
-    //C: Because the hint objects are never actually instantiated I need to do timer logic up here
     void Update()
     {
        foreach(Hint h in hintsList)
@@ -62,7 +59,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     public void TriggerHint(string hint)
     {
         foreach(Hint h in hintsList)
-            if(string.Equals(h.hintName, hint))
+            if(string.Equals(h.hintData.hintName, hint))
                 h.TriggerHint();
     }
 
@@ -70,7 +67,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     public void DisableHint(string hint) 
     {
         foreach(Hint h in hintsList)
-            if(string.Equals(h.hintName, hint) && h.canDisableHint)
+            if(string.Equals(h.hintData.hintName, hint) && h.canDisableHint)
                 h.DisableHint();
     }
 
@@ -82,7 +79,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     public void EnableDisabling(string hint) 
     {
         foreach(Hint h in hintsList)
-            if(string.Equals(h.hintName, hint))
+            if(string.Equals(h.hintData.hintName, hint))
                h.canDisableHint = true;
     }
 
@@ -93,83 +90,31 @@ public class PlayerActionHints : MonoBehaviour, ISavable
 }
 
 [System.Serializable]
-public class Hint
-{ 
+public class HintData
+{
     public string hintName;  //used when searching through hints
     public string hintText; //the text of the hint
-    public string controllerHintText; //a separate hint text, if the hint should be different for controller players
-    public bool canDisableHint; //can this hint be disabled?
-    public double timeUntilTrigger; //how long from triggering the hint until it displays
-    public bool isInCountdown = false; //is this hint counting down until display? 
-    public bool triggerOnLoad = false; //should this hint start counting down when the scene is loaded?
-    public bool shouldDisplay = true; //should this hint display?
-    public bool hasBeenCompleted; //has this hint been completed?
-    public bool hasBeenAddedToDisplay; //has this hint been displayed?
+    public string controllerHintText;
     public List<InputRebindButton.Control> controlBinds; //list of control binds to replace in order
 
-    public void Save()
-    {
-        SaveSystem.Current.SetBool("Hint " + hintName, shouldDisplay);
-        SaveSystem.Current.SetBool("HintCountdown " + hintName, isInCountdown);
-        SaveSystem.Current.SetBool("HintComplete " + hintName, hasBeenCompleted);
-        hasBeenAddedToDisplay = false;
-    }
 
-    public void Load(SaveProfile profile)
+    public string GetFormattedHintText()
     {
-        shouldDisplay = profile.GetBool("Hint " + hintName, true);
-        isInCountdown = profile.GetBool("HintCountdown " + hintName);
-        hasBeenCompleted = profile.GetBool("HintComplete " + hintName);
-        SetBools();
-    }
-
-    
-    public void SetBools()
-    {
-        if(triggerOnLoad)
-            isInCountdown = true;
-        if(isInCountdown)
-            canDisableHint = true;
-        if(hasBeenCompleted)
-            shouldDisplay = false;
-    }
-
-    public void TriggerHint()
-    {
-        canDisableHint = true;
-        if(shouldDisplay && !hasBeenCompleted)
-            isInCountdown = true;
-    }
-
-    public void DisableHint()
-    {
-        shouldDisplay = false;
-        isInCountdown = false;
-        hasBeenCompleted = true;
-        UIHints.RemoveHint(hintName);
-    }
-
-    public void Display() {
-        if(shouldDisplay && !hasBeenCompleted && !hasBeenAddedToDisplay)
-        {
-            string hintTextToDisplay = CheckConvertToControllerHintText(hintText);
-            UIHints.AddHint(ConvertVariablesToStrings(hintTextToDisplay), hintName);
-            hasBeenAddedToDisplay = true;
-        }
+        string hintTextToDisplay = CheckConvertToControllerHintText(hintText);
+        string ret = ConvertVariablesToStrings(hintTextToDisplay);
+        return ret;
     }
 
     private string CheckConvertToControllerHintText(string message)
     {
         if (!controllerHintText.Equals("") && Player.GetInstance().GetCurrentControlScheme() == "Controller")
-        {
             return controllerHintText;
-        } else { return message; }
+        else
+            return message;
     }
 
-    //C: Yoinked from DialogueDisplay, modified to work with rebinds instead of save variables
     private string ConvertVariablesToStrings(string message)
     {
-        
         int startIndex = 0;
         int numBinds = 0;
         while (message.IndexOf('<', startIndex) != -1)
@@ -208,6 +153,66 @@ public class Hint
             message = message.Replace("W/A/S/D", "WASD");
         return message;
     }
+} 
 
+[System.Serializable]
+public class Hint
+{ 
+    public HintData hintData;
+    public bool canDisableHint; //can this hint be disabled?
+    public double timeUntilTrigger; //how long from triggering the hint until it displays
+    public bool isInCountdown = false; //is this hint counting down until display? 
+    public bool triggerOnLoad = false; //should this hint start counting down when the scene is loaded?
+    public bool shouldDisplay = true; //should this hint display?
+    public bool hasBeenCompleted; //has this hint been completed?
+    public bool hasBeenAddedToDisplay; //has this hint been displayed?
+
+    public void Save()
+    {
+        SaveSystem.Current.SetBool("Hint " + hintData.hintName, shouldDisplay);
+        SaveSystem.Current.SetBool("HintCountdown " +  hintData.hintName, isInCountdown);
+        SaveSystem.Current.SetBool("HintComplete " +  hintData.hintName, hasBeenCompleted);
+        hasBeenAddedToDisplay = false;
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        shouldDisplay = profile.GetBool("Hint " +  hintData.hintName, true);
+        isInCountdown = profile.GetBool("HintCountdown " +  hintData.hintName);
+        hasBeenCompleted = profile.GetBool("HintComplete " +  hintData.hintName);
+        SetBools();
+    }
     
+    public void SetBools()
+    {
+        if(triggerOnLoad)
+            isInCountdown = true;
+        if(isInCountdown)
+            canDisableHint = true;
+        if(hasBeenCompleted)
+            shouldDisplay = false;
+    }
+
+    public void TriggerHint()
+    {
+        canDisableHint = true;
+        if(shouldDisplay && !hasBeenCompleted)
+            isInCountdown = true;
+    }
+
+    public void DisableHint()
+    {
+        shouldDisplay = false;
+        isInCountdown = false;
+        hasBeenCompleted = true;
+        UIHints.RemoveHint(hintData.hintName);
+    }
+
+    public void Display() {
+        if(shouldDisplay && !hasBeenCompleted && !hasBeenAddedToDisplay)
+        {
+            UIHints.AddHint(hintData);
+            hasBeenAddedToDisplay = true;
+        }
+    }
 }
