@@ -11,21 +11,20 @@ public class LavaParticles : MonoBehaviour
     private void Start() {
         if(tilemap == null) return;
 
-        int numtiles = 0;
         List<Vector3Int> positions = new List<Vector3Int>();
         foreach (var pos in tilemap.cellBounds.allPositionsWithin)
         {   
             if (tilemap.HasTile(pos)) 
             {
                 positions.Add(pos);
-                numtiles++;
+                Debug.Log(pos);
             }
         }
         foreach (var pos in positions)
         {   
-            Instantiate(particleTile, this.transform);
-            particleTile.transform.position = pos + new Vector3(0.5f, 0.5f, 0);
-            LavaParticleTile tile = particleTile.GetComponent<LavaParticleTile>();
+            GameObject go = Instantiate(particleTile, this.transform);
+            go.transform.localPosition = pos + new Vector3(0.5f, 0.5f, 0);
+            LavaParticleTile tile = go.GetComponent<LavaParticleTile>();
             var adjPos = GetAdjPositions(pos);
             for(int i = 0; i < 4; i++)
             {
