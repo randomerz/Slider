@@ -12,6 +12,9 @@ public class GemMachine : MonoBehaviour, ISavable
     public GameObject gemChecker;
     public Animator animator;
 
+    public GameObject brokenObj;
+    public GameObject fixedObj;
+
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
     }
@@ -65,21 +68,21 @@ public class GemMachine : MonoBehaviour, ISavable
     public void Fix()
     {
         isBroken = false;
+        brokenObj.SetActive(false);
+        fixedObj.SetActive(true);
     }
 
     public void Save(){
-        SaveSystem.Current.SetString("mountainNumGems", numGems.ToString());
+        SaveSystem.Current.SetInt("mountainNumGems", numGems);
         SaveSystem.Current.SetBool("mountainGemMachineBroken", isBroken);
     }
 
     public void Load(SaveProfile profile)
     {
-        string temp = profile.GetString("mountainNumGems");
-        if (temp.Equals("mountainNumGems"))
-            numGems = 0;
-        else
-            numGems = int.Parse(profile.GetString("mountainNumGems"));
+        numGems = profile.GetInt("mountainNumGems");
         isBroken = profile.GetBool("mountainGemMachineBroken", true);
+        if(! isBroken)
+            Fix();
     }
 
     public void CheckHasCrystals(Condition c){
