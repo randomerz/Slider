@@ -195,9 +195,11 @@ public class PlayerAction : Singleton<PlayerAction>
         Vector3 direction = itemPos - transform.position;
         Vector3 perp = Vector3.Cross(direction, Vector3.forward).normalized * item.GetComponent<Item>().itemRadius;
 
-        RaycastHit2D[] h1 = Physics2D.RaycastAll(transform.position, direction, direction.magnitude, dropCollidingMask);
-        RaycastHit2D[] h2 = Physics2D.RaycastAll(transform.position + perp, direction, direction.magnitude, dropCollidingMask);
-        RaycastHit2D[] h3 = Physics2D.RaycastAll(transform.position - perp, direction, direction.magnitude, dropCollidingMask);
+        LayerMask layerMask = item.GetComponent<Anchor>() ? anchorDropCollidingMask : dropCollidingMask;
+
+        RaycastHit2D[] h1 = Physics2D.RaycastAll(transform.position, direction, direction.magnitude, layerMask);
+        RaycastHit2D[] h2 = Physics2D.RaycastAll(transform.position + perp, direction, direction.magnitude, layerMask);
+        RaycastHit2D[] h3 = Physics2D.RaycastAll(transform.position - perp, direction, direction.magnitude, layerMask);
 
         return (CheckRaycastList(h1, item) || CheckRaycastList(h2, item) || CheckRaycastList(h3, item));
     }

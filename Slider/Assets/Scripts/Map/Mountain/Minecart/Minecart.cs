@@ -95,9 +95,8 @@ public class Minecart : Item, ISavable
 
     private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(e.stile = currentSTile)
+        if(e.stile == currentSTile)
             canStartMoving = true;
-        //TODO: recalculate target position
         if(mcState == MinecartState.Crystal)
             UpdateState("Empty");
     }
@@ -105,61 +104,58 @@ public class Minecart : Item, ISavable
     private void Update() 
     {
         if(Time.timeScale == 0) return;
+
         if(isMoving && isOnTrack && !collisionPause)
         {
             animator.SetSpeed(1);
-            //Use min of prev pos and target pos to update animation
             float distToPrev = Vector3.Distance(transform.position, prevWorldPos);
             float distToNext = Vector3.Distance(transform.position, targetWorldPos);
 
             //halfway between target positions is when the minecart moves from 1 tile to the next.
             if(!tileSwitch && distToNext < distToPrev)
             {
-                if(currentDirection != nextDirection) {
-                    if(currentDirection == 2 || nextDirection == 2) {
-                        spriteRenderer.flipX = true;
-                        animator.FlipX(true);
-                    }
-                    // isOnCorner = true;
-                    PlayCurveAnimation();
-                }
-                else {
-                    cornerSpeedAmount = 1;
-                    spriteRenderer.flipX = false;
-                    animator.FlipX(false);
-                    PlayStraightAnimation();
-                }
-                
-                tileSwitch = true;
+                UpdateAnimation();
             }
-            //If we reached the target, get the next tile
-            else if(Vector3.Distance(transform.position, targetWorldPos) < 0.0001f)
+
+            if(Vector3.Distance(transform.position, targetWorldPos) > 0.0001f)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * (cornerSpeedAmount * speed));
+            }
+            else
             {
                 transform.position = targetWorldPos;
                 GetNextTile();
                 tileSwitch = false;
             }
-            else
-                transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, Time.deltaTime * (cornerSpeedAmount * speed));
         }
         else if (animator != null)
             animator.SetSpeed(0);
-
-       // minecartAnimator.SetInteger("State", ((int)mcState));
     }
 
+    private void UpdateAnimation()
+    {
+        if(currentDirection != nextDirection) {
+            if(currentDirection == 2 || nextDirection == 2) {
+                spriteRenderer.flipX = true;
+                animator.FlipX(true);
+                }
+            PlayCurveAnimation();
+        }
+        else {
+            cornerSpeedAmount = 1;
+            spriteRenderer.flipX = false;
+            animator.FlipX(false);
+            PlayStraightAnimation();
+        } 
+        tileSwitch = true;
+    }
+
+
+    //TODO: Use raycasts to figure out if should be paused or not
     private void OnCollisionEnter2D(Collision2D other) 
     {
         collidingObjects.Add(other.gameObject);
         collisionPause = true;
-        /*if(other.gameObject.CompareTag("Player"))
-            collisionPause = true;
-        else if ((dropOnNextMove && !other.gameObject.tag.Equals("WorldMapCollider")) 
-                || (other.gameObject.layer == 14 && !dropOnNextMove) //C: Layer 14 is MinecartIgnore
-                || other.gameObject.tag.Equals("MinecartIgnore"))
-            return;
-        else
-            StopMoving();*/
     }
 
     private void OnCollisionExit2D(Collision2D other) 
@@ -167,8 +163,6 @@ public class Minecart : Item, ISavable
         collidingObjects.Remove(other.gameObject);
         if(collidingObjects.Count == 0)
             collisionPause = false;
-        //if(other.gameObject.CompareTag("Player"))
-         //   collisionPause = false;
     }
 
     #region Item
@@ -186,49 +180,46 @@ public class Minecart : Item, ISavable
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
     {
-        //TODO: Change orientation based on drop location
         AddTracker();
 
         STile hitTile = SGrid.GetSTileUnderneath(gameObject);
         Tilemap railmap;
 
-        if(hitTile != null) //Use Stile RM
+        if(hitTile != null)
         {
             railmap = hitTile.allTileMaps.GetComponentInChildren<STileTilemap>().minecartRails;
             railManager = railmap.GetComponent<RailManager>();
             
-            //C: If this is dropped onto rails, it will snap into position
-            if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation))) 
-            {
-                StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
-                SnapToRail(railmap.WorldToCell(dropLocation));
-            }
-            else
-                StartCoroutine(AnimateDrop(dropLocation, callback));
-            
+            DropMinecart(railmap, railManager, dropLocation, callback);
+
             UpdateParent();
             currentSTile = hitTile;
             return hitTile;
         }
-        else if(borderRM) //use border RM
+        else if(borderRM) 
         {
             railManager = borderRM;
             railmap = borderRM.railMap;
 
-            //C: If this is dropped onto rails, it will snap into position
-            if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
-            {
-                StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
-                SnapToRail(railmap.WorldToCell(dropLocation));
-            }
-            else
-                StartCoroutine(AnimateDrop(dropLocation, callback));
+            DropMinecart(railmap, railManager, dropLocation, callback);
+            
             UpdateParentBorder();
             currentSTile = null;
         }
         else
             base.DropItem(dropLocation, callback);
         return null;
+    }
+
+    private void DropMinecart(Tilemap railmap, RailManager railManager, Vector3 dropLocation, System.Action callback)
+    {
+        if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
+        {
+            StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
+            SnapToRail(railmap.WorldToCell(dropLocation));
+        }
+        else
+            StartCoroutine(AnimateDrop(dropLocation, callback));
     }
 
     public override void OnEquip()
@@ -275,7 +266,6 @@ public class Minecart : Item, ISavable
         tileSwitch = false;
     }
 
-    //Places the minecart on the tile at the given position
     public void SnapToRail(Vector3Int pos, int direction = -1)
     {
         transform.position = railManager.railMap.layoutGrid.CellToWorld(pos) + offSet;
@@ -324,7 +314,6 @@ public class Minecart : Item, ISavable
             }    
 
             targetWorldPos = railManager.railMap.layoutGrid.CellToWorld(targetTilePos) + offSet;
-            //currentDirection = targetConnection;
             nextDirection = GetDirection(targetTile, currentDirection);
         }
         else
