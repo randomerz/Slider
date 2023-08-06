@@ -7,6 +7,7 @@ using System;
 public class MoveObjectsOffIce : MonoBehaviour
 {
     public Transform playerRespawn;
+    public LayerMask blocksSpawnMask;
 
     [Serializable]
     public class TileRespawn
@@ -34,24 +35,27 @@ public class MoveObjectsOffIce : MonoBehaviour
         TileBase tile = colliders.GetTile(colliders.WorldToCell(player.position));
         if(tile != null && colliders.ContainsTile(tile))
         {
-            /*if(CheckTileBelow()) 
+            if(CheckTileBelow()) 
             {
-                if(CheckCollidersBelow())
+                Vector3 checkpos = player.position + new Vector3(0, -100, 0);
+                int tries = 0;
+                do
                 {
-
+                    var cast = Physics2D.OverlapCircle(checkpos, 0.5f, blocksSpawnMask);
+                    if(cast == null || cast.gameObject.GetComponent<STile>())
+                    {
+                        AudioManager.Play("Hurt");
+                        player.position = checkpos;
+                        return;
+                    }
+                    else {
+                        checkpos += Vector3.right;
+                        tries++;
+                    }
                 }
-                else
-                {
-                    Transform t = 
-                }
-                //check for colliders
-                //if no colliders, add 100 to player and we good
-                //if no colliders, get the respawn location for the tile and put the player there
+                while (tries < 5);
             }
-            else */
-            
-                player.position = playerRespawn.position;
-            
+            player.position = playerRespawn.position;
             AudioManager.Play("Hurt");
         }
     }
@@ -60,19 +64,43 @@ public class MoveObjectsOffIce : MonoBehaviour
     {
         int objCount = 1;
         foreach(Transform t in otherObjects) {
+            print(t.gameObject.name + " on ice");
             TileBase tile = colliders.GetTile(colliders.WorldToCell(t.position));
             if(tile != null && colliders.ContainsTile(tile)) 
             {
-                Minecart mc = t.GetComponent<Minecart>();
-                /*if(CheckTileBelow())
+                Minecart mc = t.gameObject.GetComponent<Minecart>();
+                bool moved = false;
+                if(CheckTileBelow()) 
                 {
-                    //handle dropping minecart
+                    if(mc != null && mc.isMoving)
+                    {
+                        moved = mc.TryDrop(true);
+                    }
+                    else if (!moved) {
+                        Vector3 checkpos = t.position + new Vector3(0, -100, 0);
+                        int tries = 0;
+                        do
+                        {
+                            var cast = Physics2D.OverlapCircle(checkpos, 0.5f, blocksSpawnMask);
+                            if(cast == null || cast.gameObject.GetComponent<STile>())
+                            {
+                                mc?.StopMoving();
+                                t.position = checkpos;
+                                moved = true;
+                            }
+                            else {
+                                checkpos += Vector3.right;
+                                tries++;
+                            }
+                        }
+                        while (tries < 5 && !moved);
+                    }
                 }
-                else
-                {*/
+                
+                if(!moved) {
                     mc?.StopMoving();
                     t.position = playerRespawn.position + (Mathf.Min(objCount,3)) * Vector3.right;
-                
+                }
                 objCount++;
             }
         }
@@ -80,7 +108,7 @@ public class MoveObjectsOffIce : MonoBehaviour
     }
 
 
-    private bool CheckTileBelow() => stile.y > 2 && SGrid.Current.GetGrid()[stile.x, stile.y - 2].isTileActive;
+    private bool CheckTileBelow() => stile.y > 1 && SGrid.Current.GetGrid()[stile.x, stile.y - 2].isTileActive;
 
     private bool CheckCollidersBelow() => true;
 
@@ -105,8 +133,9 @@ public class MoveObjectsOffIce : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) {
         Transform t = other.transform;
-        if(t != player && (t.GetComponent<Anchor>() || t.GetComponent<Minecart>())){
+        if(t != player && (t.GetComponent<Item>())){
             otherObjects.Add(t);
+            print(t.gameObject.name + " added to ice");
         }
     }
 

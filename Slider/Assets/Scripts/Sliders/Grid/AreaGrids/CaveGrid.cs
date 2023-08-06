@@ -76,6 +76,15 @@ public class CaveGrid : SGrid
         mountainCaveWall.Load(profile); // needed?
     }
 
+    public override void EnableStile(STile stile, bool shouldFlicker = true)
+    {
+        base.EnableStile(stile, shouldFlicker);
+        if(stile.islandId == 7)
+        {
+            AchievementManager.SetAchievementStat("completedBigMoss", 1);
+        }
+    }
+
     public void StartFinalPuzzle() 
     {
         SGridAnimator.OnSTileMoveEnd += checkCompletionsOnMoveFunc;

@@ -7,7 +7,13 @@ public class LavaBucket : MonoBehaviour, ISavable
     [SerializeField] private SpriteSwapper spriteSwapper;
     [SerializeField] private GameObject particles;
 
+    private STile sTile;
+
     private bool hasLava = false;
+
+    private void Awake() {
+        sTile = GetComponentInParent<STile>();
+    }
 
     public void FillBucket()
     {
@@ -22,6 +28,10 @@ public class LavaBucket : MonoBehaviour, ISavable
 
     public void IsFull(Condition c) {
         c.SetSpec(hasLava);
+    }
+
+    public void IsInValidPos(Condition c) {
+        c.SetSpec(sTile != null && sTile.y % 2 == 0);
     }
 
     public void Load(SaveProfile profile)
