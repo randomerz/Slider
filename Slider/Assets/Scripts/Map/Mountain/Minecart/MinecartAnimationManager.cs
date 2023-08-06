@@ -55,7 +55,7 @@ public class MinecartAnimationManager : MonoBehaviour
                 contentsSprite = lavaSprite;
                 break;
             case MinecartState.RepairParts:
-                contentsAnimator = repairPartsAnimator;
+                //contentsAnimator = repairPartsAnimator;
                 contentsSprite = repairPartsSprite;
                 break;
             case MinecartState.Empty:
