@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaterWheel : ISavable
+public class WaterWheel : MonoBehaviour, ISavable
 {
     [SerializeField] private STile stile;
     [SerializeField] private Meltable cog1;

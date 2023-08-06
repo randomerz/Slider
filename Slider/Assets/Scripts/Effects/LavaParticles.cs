@@ -17,7 +17,6 @@ public class LavaParticles : MonoBehaviour
             if (tilemap.HasTile(pos)) 
             {
                 positions.Add(pos);
-                Debug.Log(pos);
             }
         }
         foreach (var pos in positions)
