@@ -406,7 +406,7 @@ public class Minecart : Item, ISavable
         return false;
     }
 
-    private bool TryDrop(bool dropImmediate = false)
+    public bool TryDrop(bool dropImmediate = false)
     {   
         print("Checkign Drop");
         STile tile = CheckDropTileBelow();
@@ -449,13 +449,14 @@ public class Minecart : Item, ISavable
         STile tile = null;
         var colliders = Physics2D.OverlapBoxAll(checkLoc, Vector2.one, 0);
         foreach(Collider2D c in colliders){
-            if(c.GetComponent<STile>() != null) tile = c.GetComponent<STile>();
+            if(c.GetComponent<STile>() != null && c.GetComponent<STile>().isTileActive) 
+                tile = c.GetComponent<STile>();
         }
-        return tile.isTileActive ? tile : null;
+        return tile;
 
     }
 
-    public void Drop(STile tile)
+    private void Drop(STile tile)
     {
         Vector3 checkLoc = transform.position + (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
         transform.position = checkLoc;
