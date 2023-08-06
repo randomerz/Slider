@@ -28,11 +28,11 @@ public class MountainSGridAnimator : SGridAnimator
         if(move is SMoveLayerSwap && tile.isTileActive) {
             if(Player.GetInstance().GetSTileUnderneath() == tile) {
                 //Player on tile, dither world
-                ((MountainSTile) tile).AnimateBorderTileDither(movementDuration);
+                ((MountainSTile) tile).AnimateBorderTileDither(movementDuration * move.duration);
             }
             else {
                 //Player not on tile, dither tile
-                ((MountainSTile) tile).AnimateTileDither(movementDuration);
+                ((MountainSTile) tile).AnimateTileDither(movementDuration * move.duration);
             }
         }
     }

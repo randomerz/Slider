@@ -160,6 +160,11 @@ public class Item : MonoBehaviour, ISavable
         }
     }
 
+    public void SetSortingOrder(int num)
+    {
+        spriteRenderer.sortingOrder = num;
+    }
+
 
     protected IEnumerator AnimatePickUp(Transform target, System.Action callback=null)
     {

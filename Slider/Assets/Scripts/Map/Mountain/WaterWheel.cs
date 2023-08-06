@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaterWheel : MonoBehaviour
+public class WaterWheel : MonoBehaviour, ISavable
 {
     [SerializeField] private STile stile;
     [SerializeField] private Meltable cog1;
@@ -52,15 +52,15 @@ public class WaterWheel : MonoBehaviour
         }
     }
 
-    public void AddLava()
+    public void AddLava(int amount = 1)
     {
         if(!inLavaStage) return;
         
-        lavaCount++;
+        lavaCount += amount;
         hasAddedLava = true;
         heaterAnimator.SetInteger("Lava",lavaCount);
 
-        if(lavaCount == 2){
+        if(lavaCount >= 2){
             SetLavaComplete();
         }
     }
@@ -137,6 +137,29 @@ public class WaterWheel : MonoBehaviour
     public void InLavaMode(Condition c){
         c.SetSpec(inLavaStage);
     }
-
     #endregion
+
+    public void Save()
+    {
+        SaveSystem.Current.SetBool("MountainWaterwheelLavaStage", inLavaStage);
+        SaveSystem.Current.SetInt("MountainHeaterLavaCount", lavaCount);
+        SaveSystem.Current.SetBool("MountainHeaterHasAddedLava", hasAddedLava);
+        SaveSystem.Current.SetBool("MountainHeaterHasMovedTile", hasMovedTile);
+        SaveSystem.Current.SetBool("MountainHeaterFirstPower", firstPower);
+        SaveSystem.Current.SetBool("MountainHeaterFirstLavaPower", firstLavaPower);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        inLavaStage = profile.GetBool("MountainWaterwheelLavaStage", inLavaStage);
+        lavaCount = profile.GetInt("MountainHeaterLavaCount", lavaCount);
+        hasAddedLava = profile.GetBool("MountainHeaterHasAddedLava", hasAddedLava);
+        hasMovedTile = profile.GetBool("MountainHeaterHasMovedTile", hasMovedTile);
+        firstPower = profile.GetBool("MountainHeaterFirstPower", firstPower);
+        firstLavaPower = profile.GetBool("MountainHeaterFirstLavaPower", firstPower);
+
+        if(inLavaStage) ActivateLavaStage();
+        AddLava(lavaCount);
+    }
+
 }
