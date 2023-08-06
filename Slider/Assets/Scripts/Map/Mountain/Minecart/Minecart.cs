@@ -363,6 +363,7 @@ public class Minecart : Item, ISavable
             nextDirection = GetDirection(targetTile, currentDirection);
             return true;
         }
+        print("failed same");
         return false;
     }
 
@@ -403,6 +404,7 @@ public class Minecart : Item, ISavable
                 return true;
             }
         }
+        print("failed diff");
         return false;
     }
 
