@@ -323,6 +323,11 @@ public class Minecart : Item, ISavable
         
     }
 
+    public void SetDropOnNextMove(bool value)
+    {
+        dropOnNextMove = value;
+    }
+
     private bool TryDropOffLedge()
     {
         if(!dropOnNextMove) return false;
