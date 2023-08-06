@@ -9,8 +9,8 @@ public class Minecart : Item, ISavable
     [SerializeField] private float speed = 8.0f; 
     [SerializeField] private float cornerSpeed = 2.0f;
     
-    [SerializeField]    private int currentDirection; //0 = East, 1 = North, 2 = West, 3 = South
-    [SerializeField]    private int nextDirection;
+    private int currentDirection; //0 = East, 1 = North, 2 = West, 3 = South
+    private int nextDirection;
     
     private float baseCornerSpeedMultiplier = 1; // cornerSpeed / speed
     private float cornerSpeedAmount = 1; // lerp between baseCornerSpeedMultiplier and 1
@@ -26,16 +26,15 @@ public class Minecart : Item, ISavable
 
     [Header("Rail Managers")]
     private RailManager railManager;
-    private RailManager savedRM = null;
     private RailManager borderRM; 
 
     [Header("Rail Tiles")]
-    [SerializeField]    private RailTile currentTile;
-    [SerializeField]    private RailTile targetTile;
-    [SerializeField]    public Vector3Int currentTilePos; //position in tilemap grid space
-    [SerializeField]    public Vector3Int targetTilePos; 
-    [SerializeField]    public Vector3 prevWorldPos; //position in world space
-    [SerializeField]    public Vector3 targetWorldPos;
+    private RailTile currentTile;
+    private RailTile targetTile;
+    public Vector3Int currentTilePos; //position in tilemap grid space
+    public Vector3Int targetTilePos; 
+    public Vector3 prevWorldPos; //position in world space
+    public Vector3 targetWorldPos;
 
     public LayerMask collidingMask;
 
@@ -338,11 +337,9 @@ public class Minecart : Item, ISavable
         if(TryGetNextTileDiffRM()) { return;}
 
         //Step 3: if neither of those work, check the drop location to see if there is a rail to drop down onto
-        //If so, do the drop next
-        if(TryDrop()) {print ("Try Drop"); return;}
+        if(TryDrop()) {return;}
 
         //Step 4: if none of that works, stop
-        print("Stop");
         StopMoving();
     }
 
@@ -363,7 +360,6 @@ public class Minecart : Item, ISavable
             nextDirection = GetDirection(targetTile, currentDirection);
             return true;
         }
-        print("failed same");
         return false;
     }
 
@@ -404,18 +400,13 @@ public class Minecart : Item, ISavable
                 return true;
             }
         }
-        print("failed diff");
         return false;
     }
 
     public bool TryDrop(bool dropImmediate = false)
     {   
-        print("Checkign Drop");
         STile tile = CheckDropTileBelow();
         bool canDrop = (dropImmediate || CheckFreeInFront()) && tile != null;
-        print("Nothing in front " + CheckFreeInFront());
-        print("Valid tile below" + tile);
-       //Set up drop for next move
         if(canDrop)
         {
             if(dropImmediate) Drop(tile);
@@ -437,7 +428,6 @@ public class Minecart : Item, ISavable
             print(c.gameObject.name);
             if(c.GetComponent<STile>() == null && c.GetComponentInParent<Minecart>() == null )
             {
-                print("failed " + c.gameObject.name);
                 valid = false;
             }
         }
@@ -481,7 +471,6 @@ public class Minecart : Item, ISavable
         SnapToRailNewSTile(targetLoc); 
         UpdateParent();
     }
-
 
 
     //Returns the outgoing direction from tile when entering from direction
