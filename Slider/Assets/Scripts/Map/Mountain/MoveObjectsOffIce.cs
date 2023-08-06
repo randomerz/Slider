@@ -68,10 +68,16 @@ public class MoveObjectsOffIce : MonoBehaviour
             if(tile != null && colliders.ContainsTile(tile)) 
             {
                 Minecart mc = t.GetComponent<Minecart>();
-                                    bool moved = false;
-
+                bool moved = false;
                 if(CheckTileBelow()) 
                 {
+                    if(mc != null && mc.isMoving)
+                    {
+                        mc.Drop(SGrid.Current.GetGrid()[stile.x, stile.y - 2]);
+                        //moved = mc.TryDropFromIce();
+                        //print ("minecart");
+                    }
+                    else{
                     Vector3 checkpos = t.position + new Vector3(0, -100, 0);
                     int tries = 0;
                     do
@@ -88,9 +94,14 @@ public class MoveObjectsOffIce : MonoBehaviour
                         }
                     }
                     while (tries < 5 && !moved);
+                    }
                 }
-                mc?.StopMoving();
-                if(!moved) t.position = playerRespawn.position + (Mathf.Min(objCount,3)) * Vector3.right;
+                
+               
+                if(!moved) {
+                     mc?.StopMoving();
+                    t.position = playerRespawn.position + (Mathf.Min(objCount,3)) * Vector3.right;
+                }
                 objCount++;
             }
         }
