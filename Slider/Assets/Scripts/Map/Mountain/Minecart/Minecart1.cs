@@ -364,7 +364,7 @@ public class Minecart1 : Item, ISavable
         if(borderRM)
         {
             targetLoc = borderRM.railMap.layoutGrid.WorldToCell(railManager.railMap.layoutGrid.CellToWorld(targetTilePos));
-            if(borderRM.railLocations.Contains(targetLoc));
+            if(borderRM.railLocations.Contains(targetLoc))
             {
                 railManager = borderRM;
                 SnapToRailNewSTile(targetLoc);
