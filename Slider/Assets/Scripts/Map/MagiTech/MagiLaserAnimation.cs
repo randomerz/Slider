@@ -7,10 +7,17 @@ public class MagiLaserAnimation : MonoBehaviour
     public MagiLaser magiLaser;
     public Animator animator;
     public Material laserBeamMaterial;
+    public ParticleSystem particlesSuck;
+    public ParticleSystem particlesBoom;
 
     public void SetPowered(bool value)
     {
         animator.SetBool("Powered", value);
+    }
+
+    public void OnCharge()
+    {
+        particlesSuck.Play();
     }
 
     public void IncreasingCameraShake()
@@ -21,8 +28,10 @@ public class MagiLaserAnimation : MonoBehaviour
     public void OnBurst()
     {
         CameraShake.Shake(0.75f, 0.5f);
-        magiLaser.SetEnabled(true);
+        particlesBoom.Play();
         laserBeamMaterial.SetFloat("_TimeOffset", Time.time);
+        
+        magiLaser.SetEnabled(true);
     }
 
     public void SetEnabledFalse()
