@@ -80,6 +80,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magiLaser: {fileID: 7082959277900609093}
   animator: {fileID: 3059248965235933379}
+  laserBeamMaterial: {fileID: 2100000, guid: d09d0ee489848774dbf3e84f2d8dbfc7, type: 2}
 --- !u!212 &5050199314091129921
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -266,28 +267,8 @@ PrefabInstance:
       value: LaserBeam (1)
       objectReference: {fileID: 0}
     - target: {fileID: 1445572351072417103, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
-      propertyPath: m_SortingLayer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1445572351072417103, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
-      propertyPath: m_UseWorldSpace
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1445572351072417103, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1558999443
-      objectReference: {fileID: 0}
-    - target: {fileID: 1445572351072417103, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
       propertyPath: m_Positions.Array.size
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1445572351072417103, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 1445572351072417103, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
-      propertyPath: m_Parameters.widthMultiplier
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3944379508038369522, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
       propertyPath: m_RootOrder
@@ -361,28 +342,8 @@ PrefabInstance:
       value: LaserBeam
       objectReference: {fileID: 0}
     - target: {fileID: 1445572351072417103, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
-      propertyPath: m_SortingLayer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1445572351072417103, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
-      propertyPath: m_UseWorldSpace
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1445572351072417103, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1558999443
-      objectReference: {fileID: 0}
-    - target: {fileID: 1445572351072417103, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
       propertyPath: m_Positions.Array.size
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1445572351072417103, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 1445572351072417103, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
-      propertyPath: m_Parameters.widthMultiplier
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3944379508038369522, guid: d9ec97ba90ad8457ea394f2c96e7d621, type: 3}
       propertyPath: m_RootOrder

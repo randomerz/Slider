@@ -6,6 +6,7 @@ public class MagiLaserAnimation : MonoBehaviour
 {
     public MagiLaser magiLaser;
     public Animator animator;
+    public Material laserBeamMaterial;
 
     public void SetPowered(bool value)
     {
@@ -21,6 +22,7 @@ public class MagiLaserAnimation : MonoBehaviour
     {
         CameraShake.Shake(0.75f, 0.5f);
         magiLaser.SetEnabled(true);
+        laserBeamMaterial.SetFloat("_TimeOffset", Time.time);
     }
 
     public void SetEnabledFalse()
