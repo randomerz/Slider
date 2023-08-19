@@ -73,7 +73,7 @@ public class UIArtifact : Singleton<UIArtifact>
         EnableQueueing();
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (shouldCountDown && hoverTimer < hoverBuffer)
         {
@@ -533,7 +533,7 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         if (moveQueue.Count > 0)
         {
-            //Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
+            // Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
 
             if (MoveOverlapsWithActiveMove(moveQueue.Peek()))
             {
@@ -565,7 +565,8 @@ public class UIArtifact : Singleton<UIArtifact>
         // This has been replaced with a timer
         // else
         // {
-        //     moveCounter = 0;
+        //     Debug.Log("Queue is empty.");
+        //     // moveCounter = 0;
         // }
     }
 
