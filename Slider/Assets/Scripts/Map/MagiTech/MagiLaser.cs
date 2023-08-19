@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Steamworks;
 using UnityEngine;
 
 public class MagiLaser : MonoBehaviour
@@ -9,40 +10,53 @@ public class MagiLaser : MonoBehaviour
 
     public bool isPowered;
     public bool isEnabled;
-    public LineRenderer lineRenderer, lineRenderer2;
+    public List<LineRenderer> lineRenderers;
     private RaycastHit2D hit;
     private Laserable laserable;
-    private Vector2 curDir, curDir2;
-    private Vector2 curPos, curPos2;
+    // private Vector2 curDir, curDir2;
+    // private Vector2 curPos, curPos2;
 
     public MagiLaserAnimation magiLaserAnimation;
+    public Laserable presentPortalLaserable;
+    public Laserable pastPortalLaserable;
+
+    private const int MAX_LASER_BOUNCES = 32;
 
     private void Update()
     {
-        MakeLaser();
+        ClearLasers();
+        MakeFirstLaser();
     }
 
     public void ClearLasers()
     {
         //canShoot = false;
-        lineRenderer.positionCount = 0;
-        lineRenderer2.positionCount = 0;
+        foreach (LineRenderer lr in lineRenderers)
+        {
+            lr.positionCount = 0;
+        }
     }
 
-    private void MakeLaser()
+    private void MakeFirstLaser()
     {
-        curDir = initDir;
-        curPos = emitPos.position;
-        lineRenderer2.positionCount = 0;
-        DrawLaser(curDir, curPos, lineRenderer);
+        Vector2 curDir = initDir;
+        Vector2 curPos = emitPos.position;
+        // lineRenderer2.positionCount = 0;
+        DrawLaser(curDir, curPos, lineRenderers[0]);
     }
 
-    private void MakePastLaser(Transform transform, Vector2 initDir)
+    private void MakePastLaser(Vector3 hitPosition, Vector2 initDir)
     {
-        Vector3 initPos = transform.position + (Vector3)(initDir*0.8f) + (Vector3.right*100); //Distance to past portal is <100,0,0>
-        curDir2 = initDir;
-        curPos2 = initPos;
-        DrawLaser(curDir2, curPos2, lineRenderer2);
+        Vector3 offset = hitPosition - presentPortalLaserable.transform.position;
+        Vector3 initPos = pastPortalLaserable.transform.position + offset + (Vector3)(initDir * 1.6f);
+        DrawLaser(initDir, initPos, lineRenderers[1]);
+    }
+
+    private void MakeNewPresentLaser(Vector3 hitPosition, Vector2 initDir)
+    {
+        Vector3 offset = hitPosition - pastPortalLaserable.transform.position;
+        Vector3 initPos = presentPortalLaserable.transform.position + offset + (Vector3)(initDir * 0.8f);
+        DrawLaser(initDir, initPos, lineRenderers[2]);
     }
     
     /// <summary>
@@ -55,16 +69,17 @@ public class MagiLaser : MonoBehaviour
     private void DrawLaser(Vector2 dir, Vector2 pos, LineRenderer lr) 
     {
         if (!isEnabled) return;
-        //Set origin point
+
+        // Set origin point
         lr.positionCount = 1;
         lr.SetPosition(lr.positionCount - 1, pos);
-        // bool tp1, tp2 = false;
-        for(int ct = 0; ct < 10; ct++) {
-            hit = Physics2D.Raycast(pos, dir, 50.0f, 4096); //4096 is layermask RayCast
+        
+        for (int ct = 0; ct < MAX_LASER_BOUNCES; ct++) {
+            hit = Physics2D.Raycast(pos, dir, 50.0f, LayerMask.GetMask("LaserRaycast"));
             if (!hit)
             {
                 lr.positionCount++;
-                lr.SetPosition(lr.positionCount - 1, pos + 34.0f * dir);
+                lr.SetPosition(lr.positionCount - 1, pos + 50.0f * dir);
                 break;
             }
 
@@ -81,20 +96,34 @@ public class MagiLaser : MonoBehaviour
 
             if (laserable.IsInteractionType("Passthrough"))
             {
-                pos = hit.transform.position + (Vector3)(dir * 1.1f);
+                // pos = hit.transform.position + (Vector3)(dir * 1.1f);
+                pos = hit.point + dir;
                 continue;
             }
 
             lr.positionCount++;
-            lr.SetPosition(lr.positionCount - 1, laserable.IsInteractionType("Absorb") ? hit.point : hit.transform.position);
+            // lr.SetPosition(lr.positionCount - 1, laserable.IsInteractionType("Absorb") ? hit.point : hit.transform.position);
+            lr.SetPosition(lr.positionCount - 1, hit.point);
 
             if (laserable.IsInteractionType("Reflect")) {
                 dir = laserable.flipDirection ? MirrorTwoReflect(dir) : MirrorOneReflect(dir);
-                pos = hit.transform.position + (Vector3)(dir * 1.1f);
-                continue; //Only time we want to continue is if laser hits a mirror
+                // pos = hit.transform.position + (Vector3)(dir * 1.1f);
+                pos = hit.point + dir;
+                continue;
             } 
-            else if(laserable.IsInteractionType("Portal")) {
-                MakePastLaser(hit.transform, dir); //Will make another laser
+            else if (laserable.IsInteractionType("Portal")) {
+                if (laserable == presentPortalLaserable && lr != lineRenderers[2])
+                {
+                    MakePastLaser(hit.point, dir);
+                }
+                else if (laserable == pastPortalLaserable)
+                {
+                    MakeNewPresentLaser(hit.point, dir);
+                }
+                else
+                {
+                    Debug.LogWarning("Laser hit an unknown portal.");
+                }
             }
             break;
         }
