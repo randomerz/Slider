@@ -245,6 +245,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7082959277900609115}
   - component: {fileID: 7082959277900609093}
+  - component: {fileID: 3769052434671769430}
   m_Layer: 0
   m_Name: Laser
   m_TagString: Untagged
@@ -293,8 +294,22 @@ MonoBehaviour:
   - {fileID: 2237962870591884481}
   - {fileID: 3977953843289640743}
   magiLaserAnimation: {fileID: 7679301335400320138}
+  magiLaserFlashManager: {fileID: 3769052434671769430}
   presentPortalLaserable: {fileID: 0}
   pastPortalLaserable: {fileID: 0}
+--- !u!114 &3769052434671769430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7082959277900609112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1e8b1c703e9ebe47a4af753b92433d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashPrefab: {fileID: 1483651989659969056, guid: 1fad588bee6bf0f45ac884df5ad7ec1e, type: 3}
 --- !u!1001 &414768987705168636
 PrefabInstance:
   m_ObjectHideFlags: 0
