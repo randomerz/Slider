@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 2059906708596412789}
   animator: {fileID: 3995492184245587297}
+  angleDebug: 0
 --- !u!212 &2059906708596412789
 SpriteRenderer:
   m_ObjectHideFlags: 0
