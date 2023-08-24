@@ -10,6 +10,10 @@ public class MagiLaserAnimation : MonoBehaviour
     public ParticleSystem particlesSuck;
     public ParticleSystem particlesBoom;
 
+    private void OnDestroy() {
+        laserBeamMaterial.SetFloat("_TimeOffset", 0);
+    }
+
     public void SetPowered(bool value)
     {
         animator.SetBool("Powered", value);

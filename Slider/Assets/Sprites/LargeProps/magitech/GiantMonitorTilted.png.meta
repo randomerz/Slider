@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 192
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -123,7 +123,70 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GiantMonitorTilted_0
+      name: GiantMonitorTilted_Default
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a3fc0bd562680b4b91c20cb0ce29707
+      internalID: -831267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GiantMonitorTilted_LaserOn_0
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0caec7754957ee4d9339b6f205bf146
+      internalID: -1936136372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GiantMonitorTilted_LaserOn_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1b1e548cd6e506408f1f1a6d436761a
+      internalID: -712074381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GiantMonitorTilted_LaserOn_2
       rect:
         serializedVersion: 2
         x: 0
@@ -137,8 +200,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ffb61fcd89834844ab6a434bc8a7e9d6
-      internalID: -831267
+      spriteID: 3aff13d72201c0047b8f0c60da947450
+      internalID: 1911486259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GiantMonitorTilted_LaserOn_3
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 401ba3535d31dd64a91043a80d1f06ac
+      internalID: -1983188901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GiantMonitorTilted_LaserOff
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.3125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0977992927729034b8230eecbe0f52e3
+      internalID: 1009540630
       vertices: []
       indices: 
       edges: []
@@ -154,7 +259,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      GiantMonitorTilted_0: -831267
+      GiantMonitorTilted_Default: -831267
+      GiantMonitorTilted_LaserOff: 1009540630
+      GiantMonitorTilted_LaserOn_0: -1936136372
+      GiantMonitorTilted_LaserOn_1: -712074381
+      GiantMonitorTilted_LaserOn_2: 1911486259
+      GiantMonitorTilted_LaserOn_3: -1983188901
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

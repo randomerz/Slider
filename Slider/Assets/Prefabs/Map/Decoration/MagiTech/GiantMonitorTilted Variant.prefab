@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -831267, guid: e84e814e40b7c364d9a88d5e36b9764d, type: 3}
+    - target: {fileID: 3929837889328004591, guid: 4854309a1cec3134aa44ead17dffe52e, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5048512443812207881, guid: 4854309a1cec3134aa44ead17dffe52e, type: 3}
       propertyPath: m_Name
       value: GiantMonitorTilted Variant
