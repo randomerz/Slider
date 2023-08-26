@@ -10,7 +10,7 @@ public class Minecart : Item, ISavable
     [SerializeField] private float cornerSpeed = 2.0f;
     
     private int currentDirection; //0 = East, 1 = North, 2 = West, 3 = South
-    private int nextDirection;
+    [SerializeField]    private int nextDirection;
     
     private float baseCornerSpeedMultiplier = 1; // cornerSpeed / speed
     private float cornerSpeedAmount = 1; // lerp between baseCornerSpeedMultiplier and 1
