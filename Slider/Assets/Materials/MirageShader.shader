@@ -7,17 +7,19 @@ Shader "Shaders/Mirage Ui Shader"
         _PixelScale("PixelScale", Float) = 102
         _Amplitude("Amplitude", Float) = 0.07
         _Frequency("Frequency", Float) = 0.012
+        _TimeMultiplier("TimeMultiplier", Float) = 1
+        _TimeOffsetMultiplier("TimeOffsetMultiplier", Float) = 0.1
         [HideInInspector][NoScaleOffset]unity_Lightmaps("unity_Lightmaps", 2DArray) = "" {}
         [HideInInspector][NoScaleOffset]unity_LightmapsInd("unity_LightmapsInd", 2DArray) = "" {}
         [HideInInspector][NoScaleOffset]unity_ShadowMasks("unity_ShadowMasks", 2DArray) = "" {}
-
-        //UI shader BS
-         _StencilComp ("Stencil Comparison", Float) = 8
-        _Stencil ("Stencil ID", Float) = 0
-        _StencilOp ("Stencil Operation", Float) = 0
-        _StencilWriteMask ("Stencil Write Mask", Float) = 255
-        _StencilReadMask ("Stencil Read Mask", Float) = 255
-        _ColorMask ("Color Mask", Float) = 15
+        
+        //Magic UI shader bullshit
+        [HideInInspector]_StencilComp ("Stencil Comparison", Float) = 8
+        [HideInInspector]_Stencil ("Stencil ID", Float) = 0
+        [HideInInspector]_StencilOp ("Stencil Operation", Float) = 0
+        [HideInInspector]_StencilWriteMask ("Stencil Write Mask", Float) = 255
+        [HideInInspector]_StencilReadMask ("Stencil Read Mask", Float) = 255
+        [HideInInspector]_ColorMask ("Color Mask", Float) = 15
     }
     SubShader
     {
@@ -216,6 +218,8 @@ Shader "Shaders/Mirage Ui Shader"
         float _PixelScale;
         float _Amplitude;
         float _Frequency;
+        float _TimeMultiplier;
+        float _TimeOffsetMultiplier;
         CBUFFER_END
         
         
@@ -225,7 +229,7 @@ Shader "Shaders/Mirage Ui Shader"
         SAMPLER(sampler_MainTex);
         
         // Graph Includes
-        #include "Assets/Materials/Lava_World.cginc"
+        #include "Assets/Materials/Shader_Funcs.cginc"
         
         // -- Property used by ScenePickingPass
         #ifdef SCENEPICKINGPASS
@@ -325,12 +329,16 @@ Shader "Shaders/Mirage Ui Shader"
             Unity_Floor_float(_Split_f6ea48e3a1064e1086c0b08ba376ebe9_G_2_Float, _Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float);
             float _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float = _Frequency;
             float _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float = _Amplitude;
+            float _Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float = _TimeOffsetMultiplier;
             float _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float;
-            Unity_Multiply_float_float(0.1, IN.TimeParameters.y, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
+            Unity_Multiply_float_float(_Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float, IN.TimeParameters.y, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
             float _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float;
             Unity_Add_float(IN.TimeParameters.x, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float);
+            float _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float = _TimeMultiplier;
+            float _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float;
+            Unity_Multiply_float_float(_Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float);
             float _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float;
-            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
+            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
             float _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float = _PixelScale;
             float _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float;
             Unity_Multiply_float_float(_SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float, _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float, _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float);
@@ -602,6 +610,8 @@ Shader "Shaders/Mirage Ui Shader"
         float _PixelScale;
         float _Amplitude;
         float _Frequency;
+        float _TimeMultiplier;
+        float _TimeOffsetMultiplier;
         CBUFFER_END
         
         
@@ -611,7 +621,7 @@ Shader "Shaders/Mirage Ui Shader"
         SAMPLER(sampler_MainTex);
         
         // Graph Includes
-        #include "Assets/Materials/Lava_World.cginc"
+        #include "Assets/Materials/Shader_Funcs.cginc"
         
         // -- Property used by ScenePickingPass
         #ifdef SCENEPICKINGPASS
@@ -710,12 +720,16 @@ Shader "Shaders/Mirage Ui Shader"
             Unity_Floor_float(_Split_f6ea48e3a1064e1086c0b08ba376ebe9_G_2_Float, _Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float);
             float _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float = _Frequency;
             float _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float = _Amplitude;
+            float _Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float = _TimeOffsetMultiplier;
             float _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float;
-            Unity_Multiply_float_float(0.1, IN.TimeParameters.y, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
+            Unity_Multiply_float_float(_Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float, IN.TimeParameters.y, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
             float _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float;
             Unity_Add_float(IN.TimeParameters.x, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float);
+            float _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float = _TimeMultiplier;
+            float _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float;
+            Unity_Multiply_float_float(_Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float);
             float _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float;
-            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
+            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
             float _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float = _PixelScale;
             float _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float;
             Unity_Multiply_float_float(_SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float, _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float, _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float);
@@ -986,6 +1000,8 @@ Shader "Shaders/Mirage Ui Shader"
         float _PixelScale;
         float _Amplitude;
         float _Frequency;
+        float _TimeMultiplier;
+        float _TimeOffsetMultiplier;
         CBUFFER_END
         
         
@@ -995,7 +1011,7 @@ Shader "Shaders/Mirage Ui Shader"
         SAMPLER(sampler_MainTex);
         
         // Graph Includes
-        #include "Assets/Materials/Lava_World.cginc"
+        #include "Assets/Materials/Shader_Funcs.cginc"
         
         // -- Property used by ScenePickingPass
         #ifdef SCENEPICKINGPASS
@@ -1094,12 +1110,16 @@ Shader "Shaders/Mirage Ui Shader"
             Unity_Floor_float(_Split_f6ea48e3a1064e1086c0b08ba376ebe9_G_2_Float, _Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float);
             float _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float = _Frequency;
             float _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float = _Amplitude;
+            float _Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float = _TimeOffsetMultiplier;
             float _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float;
-            Unity_Multiply_float_float(0.1, IN.TimeParameters.y, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
+            Unity_Multiply_float_float(_Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float, IN.TimeParameters.y, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
             float _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float;
             Unity_Add_float(IN.TimeParameters.x, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float);
+            float _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float = _TimeMultiplier;
+            float _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float;
+            Unity_Multiply_float_float(_Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float);
             float _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float;
-            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
+            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
             float _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float = _PixelScale;
             float _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float;
             Unity_Multiply_float_float(_SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float, _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float, _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float);
@@ -1196,6 +1216,16 @@ Shader "Shaders/Mirage Ui Shader"
         }
         Pass
         {
+            //Magic UI shader bullshit
+            Stencil
+            {
+                Ref [_Stencil]
+                Comp [_StencilComp]
+                Pass [_StencilOp]
+                ReadMask 255
+                WriteMask 255
+            }
+
             Name "Sprite Unlit"
             Tags
             {
@@ -1207,15 +1237,6 @@ Shader "Shaders/Mirage Ui Shader"
         Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
         ZTest LEqual
         ZWrite Off
-
-        Stencil
-{
-                Ref [_Stencil]
-            Comp [_StencilComp]
-            Pass [_StencilOp]
-            ReadMask 255
-            WriteMask 255
-}
         
         // Debug
         // <None>
@@ -1387,6 +1408,8 @@ Shader "Shaders/Mirage Ui Shader"
         float _PixelScale;
         float _Amplitude;
         float _Frequency;
+        float _TimeMultiplier;
+        float _TimeOffsetMultiplier;
         CBUFFER_END
         
         
@@ -1396,7 +1419,7 @@ Shader "Shaders/Mirage Ui Shader"
         SAMPLER(sampler_MainTex);
         
         // Graph Includes
-        #include "Assets/Materials/Lava_World.cginc"
+        #include "Assets/Materials/Shader_Funcs.cginc"
         
         // -- Property used by ScenePickingPass
         #ifdef SCENEPICKINGPASS
@@ -1496,12 +1519,16 @@ Shader "Shaders/Mirage Ui Shader"
             Unity_Floor_float(_Split_f6ea48e3a1064e1086c0b08ba376ebe9_G_2_Float, _Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float);
             float _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float = _Frequency;
             float _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float = _Amplitude;
+            float _Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float = _TimeOffsetMultiplier;
             float _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float;
-            Unity_Multiply_float_float(0.1, IN.TimeParameters.y, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
+            Unity_Multiply_float_float(_Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float, IN.TimeParameters.y, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
             float _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float;
             Unity_Add_float(IN.TimeParameters.x, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float);
+            float _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float = _TimeMultiplier;
+            float _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float;
+            Unity_Multiply_float_float(_Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float);
             float _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float;
-            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
+            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
             float _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float = _PixelScale;
             float _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float;
             Unity_Multiply_float_float(_SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float, _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float, _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float);

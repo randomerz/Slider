@@ -11,7 +11,7 @@ public class ButtonMirage : MonoBehaviour
     private bool mirageEnabled = false;
 
     private void Start() {
-        SetMirageEnabled(true);
+        SetMirageEnabled(false);
     }
 
     public void SetMirageEnabled(bool enabled)
