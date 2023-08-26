@@ -291,7 +291,6 @@ GameObject:
   - component: {fileID: 7825969581245903107}
   - component: {fileID: 7803031415129755747}
   - component: {fileID: 336505595520237690}
-  - component: {fileID: 7873649364902908666}
   m_Layer: 5
   m_Name: ArtifactButton
   m_TagString: Untagged
@@ -481,21 +480,6 @@ MonoBehaviour:
   isSelectedOnMenuOpen: 0
   selectOnPointerEnter: 0
   deselectOnClick: 0
---- !u!114 &7873649364902908666
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3315272701131278367}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 218d23b3b871e9c4a97ee3d5e26dfd7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  regularMaterial: {fileID: 2100000, guid: 70f0062b51c0a3147b299f0ef859c058, type: 2}
-  mirageMaterial: {fileID: 2100000, guid: 9a2b60b9e71a99249a42f8c5c39b0c7b, type: 2}
-  buttonImage: {fileID: 4266256298353997437}
 --- !u!1 &5255975379809269057
 GameObject:
   m_ObjectHideFlags: 0
