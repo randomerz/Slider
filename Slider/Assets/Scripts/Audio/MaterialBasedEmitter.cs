@@ -1,15 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 
 public class MaterialBasedEmitter : MonoBehaviour
 {
-    [SerializeField]
-    private MonoBehaviour locatableRef;
-
-    [SerializeField]
-    private MaterialSoundMapping mapping;
+    [SerializeField] private MonoBehaviour locatableRef;
+    [SerializeField] private MaterialSoundMapping mapping;
+    [SerializeField] private UnityEvent onStep;
 
     private ISTileLocatable locatable;
 
@@ -35,5 +34,7 @@ public class MaterialBasedEmitter : MonoBehaviour
         Tilemap map = locatable.GetCurrentMaterialTilemap();
         TileBase tileBase = map == null ? null : map.GetTile(map.WorldToCell(locatableRef.transform.position));
         mapping[tileBase].WithAttachmentToTransform(transform).AndPlay();
+
+        onStep?.Invoke();
     }
 }
