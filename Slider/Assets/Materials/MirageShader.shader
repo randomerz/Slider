@@ -1,4 +1,4 @@
-Shader "Shaders/Mirage Ui Shader"
+Shader "Shader Graphs/Mirage Ui Shader"
 {
     Properties
     {
@@ -23,7 +23,6 @@ Shader "Shaders/Mirage Ui Shader"
     }
     SubShader
     {
-        ColorMask [_ColorMask]
         Tags
         {
             "RenderPipeline"="UniversalPipeline"
@@ -254,6 +253,11 @@ Shader "Shaders/Mirage Ui Shader"
             Out = A * B;
         }
         
+        void Unity_Sine_float(float In, out float Out)
+        {
+            Out = sin(In);
+        }
+        
         void Unity_Add_float(float A, float B, out float Out)
         {
             Out = A + B;
@@ -331,14 +335,18 @@ Shader "Shaders/Mirage Ui Shader"
             float _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float = _Amplitude;
             float _Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float = _TimeOffsetMultiplier;
             float _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float;
-            Unity_Multiply_float_float(_Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float, IN.TimeParameters.y, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
-            float _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float;
-            Unity_Add_float(IN.TimeParameters.x, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float);
+            Unity_Multiply_float_float(IN.TimeParameters.x, _Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
+            float _Sine_3aa190cdcf734096860bcd31d28c0d3b_Out_1_Float;
+            Unity_Sine_float(_Multiply_1ef4669138a046019342be9abba394db_Out_2_Float, _Sine_3aa190cdcf734096860bcd31d28c0d3b_Out_1_Float);
             float _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float = _TimeMultiplier;
             float _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float;
-            Unity_Multiply_float_float(_Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float);
+            Unity_Multiply_float_float(_Sine_3aa190cdcf734096860bcd31d28c0d3b_Out_1_Float, _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float);
+            float _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float;
+            Unity_Add_float(IN.TimeParameters.x, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float);
+            float _Multiply_e6f0ceaaa55e41c786198a9c135b6665_Out_2_Float;
+            Unity_Multiply_float_float(_Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, 1.5, _Multiply_e6f0ceaaa55e41c786198a9c135b6665_Out_2_Float);
             float _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float;
-            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
+            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Multiply_e6f0ceaaa55e41c786198a9c135b6665_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
             float _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float = _PixelScale;
             float _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float;
             Unity_Multiply_float_float(_SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float, _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float, _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float);
@@ -646,6 +654,11 @@ Shader "Shaders/Mirage Ui Shader"
             Out = A * B;
         }
         
+        void Unity_Sine_float(float In, out float Out)
+        {
+            Out = sin(In);
+        }
+        
         void Unity_Add_float(float A, float B, out float Out)
         {
             Out = A + B;
@@ -722,14 +735,18 @@ Shader "Shaders/Mirage Ui Shader"
             float _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float = _Amplitude;
             float _Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float = _TimeOffsetMultiplier;
             float _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float;
-            Unity_Multiply_float_float(_Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float, IN.TimeParameters.y, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
-            float _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float;
-            Unity_Add_float(IN.TimeParameters.x, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float);
+            Unity_Multiply_float_float(IN.TimeParameters.x, _Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
+            float _Sine_3aa190cdcf734096860bcd31d28c0d3b_Out_1_Float;
+            Unity_Sine_float(_Multiply_1ef4669138a046019342be9abba394db_Out_2_Float, _Sine_3aa190cdcf734096860bcd31d28c0d3b_Out_1_Float);
             float _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float = _TimeMultiplier;
             float _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float;
-            Unity_Multiply_float_float(_Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float);
+            Unity_Multiply_float_float(_Sine_3aa190cdcf734096860bcd31d28c0d3b_Out_1_Float, _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float);
+            float _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float;
+            Unity_Add_float(IN.TimeParameters.x, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float);
+            float _Multiply_e6f0ceaaa55e41c786198a9c135b6665_Out_2_Float;
+            Unity_Multiply_float_float(_Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, 1.5, _Multiply_e6f0ceaaa55e41c786198a9c135b6665_Out_2_Float);
             float _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float;
-            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
+            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Multiply_e6f0ceaaa55e41c786198a9c135b6665_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
             float _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float = _PixelScale;
             float _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float;
             Unity_Multiply_float_float(_SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float, _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float, _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float);
@@ -1036,6 +1053,11 @@ Shader "Shaders/Mirage Ui Shader"
             Out = A * B;
         }
         
+        void Unity_Sine_float(float In, out float Out)
+        {
+            Out = sin(In);
+        }
+        
         void Unity_Add_float(float A, float B, out float Out)
         {
             Out = A + B;
@@ -1112,14 +1134,18 @@ Shader "Shaders/Mirage Ui Shader"
             float _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float = _Amplitude;
             float _Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float = _TimeOffsetMultiplier;
             float _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float;
-            Unity_Multiply_float_float(_Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float, IN.TimeParameters.y, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
-            float _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float;
-            Unity_Add_float(IN.TimeParameters.x, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float);
+            Unity_Multiply_float_float(IN.TimeParameters.x, _Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
+            float _Sine_3aa190cdcf734096860bcd31d28c0d3b_Out_1_Float;
+            Unity_Sine_float(_Multiply_1ef4669138a046019342be9abba394db_Out_2_Float, _Sine_3aa190cdcf734096860bcd31d28c0d3b_Out_1_Float);
             float _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float = _TimeMultiplier;
             float _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float;
-            Unity_Multiply_float_float(_Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float);
+            Unity_Multiply_float_float(_Sine_3aa190cdcf734096860bcd31d28c0d3b_Out_1_Float, _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float);
+            float _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float;
+            Unity_Add_float(IN.TimeParameters.x, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float);
+            float _Multiply_e6f0ceaaa55e41c786198a9c135b6665_Out_2_Float;
+            Unity_Multiply_float_float(_Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, 1.5, _Multiply_e6f0ceaaa55e41c786198a9c135b6665_Out_2_Float);
             float _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float;
-            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
+            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Multiply_e6f0ceaaa55e41c786198a9c135b6665_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
             float _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float = _PixelScale;
             float _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float;
             Unity_Multiply_float_float(_SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float, _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float, _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float);
@@ -1444,6 +1470,11 @@ Shader "Shaders/Mirage Ui Shader"
             Out = A * B;
         }
         
+        void Unity_Sine_float(float In, out float Out)
+        {
+            Out = sin(In);
+        }
+        
         void Unity_Add_float(float A, float B, out float Out)
         {
             Out = A + B;
@@ -1521,14 +1552,18 @@ Shader "Shaders/Mirage Ui Shader"
             float _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float = _Amplitude;
             float _Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float = _TimeOffsetMultiplier;
             float _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float;
-            Unity_Multiply_float_float(_Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float, IN.TimeParameters.y, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
-            float _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float;
-            Unity_Add_float(IN.TimeParameters.x, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float);
+            Unity_Multiply_float_float(IN.TimeParameters.x, _Property_f2cb83465fcc4ea28cf218f86298cad9_Out_0_Float, _Multiply_1ef4669138a046019342be9abba394db_Out_2_Float);
+            float _Sine_3aa190cdcf734096860bcd31d28c0d3b_Out_1_Float;
+            Unity_Sine_float(_Multiply_1ef4669138a046019342be9abba394db_Out_2_Float, _Sine_3aa190cdcf734096860bcd31d28c0d3b_Out_1_Float);
             float _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float = _TimeMultiplier;
             float _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float;
-            Unity_Multiply_float_float(_Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float);
+            Unity_Multiply_float_float(_Sine_3aa190cdcf734096860bcd31d28c0d3b_Out_1_Float, _Property_95dafe907a8f4c40b69cda0dc1924ba6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float);
+            float _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float;
+            Unity_Add_float(IN.TimeParameters.x, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float, _Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float);
+            float _Multiply_e6f0ceaaa55e41c786198a9c135b6665_Out_2_Float;
+            Unity_Multiply_float_float(_Add_82357bb0bdd341f597a2c76dbbc61e71_Out_2_Float, 1.5, _Multiply_e6f0ceaaa55e41c786198a9c135b6665_Out_2_Float);
             float _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float;
-            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Multiply_6f949b828de242798b1c19d081afe55f_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
+            SinX_float(_Floor_ac4f7a0cd2404194bd12d40537ac67b2_Out_1_Float, _Property_c9a8055ad5004ad39c3aa37683be4d44_Out_0_Float, _Property_85617e4bacba459d9744fb34d94d6ff6_Out_0_Float, _Multiply_e6f0ceaaa55e41c786198a9c135b6665_Out_2_Float, _SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float);
             float _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float = _PixelScale;
             float _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float;
             Unity_Multiply_float_float(_SinXCustomFunction_0dab72e007de477d98506d44b27b7b86_output_4_Float, _Property_dcf4b9d3a382435f862bd45a3b10cb47_Out_0_Float, _Multiply_ffeb2699c6ab46e6b824960432a352b4_Out_2_Float);

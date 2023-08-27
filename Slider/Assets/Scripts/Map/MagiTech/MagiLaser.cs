@@ -58,7 +58,7 @@ public class MagiLaser : MonoBehaviour
     private void MakeNewPresentLaser(Vector3 hitPosition, Vector2 initDir)
     {
         Vector3 offset = hitPosition - pastPortalLaserable.transform.position;
-        Vector3 initPos = presentPortalLaserable.transform.position + offset + (Vector3)(initDir * 0.8f);
+        Vector3 initPos = presentPortalLaserable.transform.position + offset + (Vector3)(initDir * 1.6f);
         DrawLaser(initDir, initPos, lineRenderers[2]);
     }
     
