@@ -6,6 +6,8 @@ public class BatteryProp : MonoBehaviour
 {
     //[SerializeField] private SpriteSwapper spriteSwapper;
 
+    public bool isDecorativeAndOn;
+
     private bool isGateEnabled;
     private bool isDiodeEnabled;
 
@@ -14,15 +16,28 @@ public class BatteryProp : MonoBehaviour
     [SerializeField] private Sprite poweredSprite;
 
     [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private ParticleSystem particlesBurst;
-    [SerializeField] private ParticleSystem particlesConducting;
+    [SerializeField] private List<ParticleSystem> particlesBurst = new List<ParticleSystem>();
+    [SerializeField] private List<ParticleSystem> particlesConducting = new List<ParticleSystem>();
 
+    private void Start() 
+    {
+        if (isDecorativeAndOn)
+        {
+            // SetGateEnabled(true);
+            isGateEnabled = true;
+            isDiodeEnabled = true;
+            SetDiodeEnabled(true);
+        }
+    }
 
     public void SetGateEnabled(bool value)
     {
         if (value && !isGateEnabled)
         {
-            if (particlesBurst) particlesBurst?.Play();
+            foreach (ParticleSystem ps in particlesBurst) 
+            {
+                ps.Play();
+            }
         }
 
         isGateEnabled = value;
@@ -33,15 +48,25 @@ public class BatteryProp : MonoBehaviour
     {
         if (value)
         {
-            if (particlesConducting) particlesConducting?.Play();
+            foreach (ParticleSystem ps in particlesConducting) 
+            {
+                ps.Play();
+            }
+
             if (!isDiodeEnabled)
             {
-                if (particlesBurst) particlesBurst?.Play();
+                foreach (ParticleSystem ps in particlesBurst) 
+                {
+                    ps.Play();
+                }
             }
         }
         else
         {
-            if (particlesConducting) particlesConducting?.Stop();
+            foreach (ParticleSystem ps in particlesConducting) 
+            {
+                ps.Play();
+            }
         }
 
         isDiodeEnabled = value;

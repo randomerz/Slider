@@ -62,7 +62,10 @@ public class PlayerPositionChanger : MonoBehaviour
                 endPos = transform.position + dPos;
                 break;
             case GizmoType.Transform:
-                endPos = goTo.position + dPos;
+                if (goTo != null)
+                {
+                    endPos = goTo.position + dPos;
+                }
                 break;
         }
         // Gizmos.DrawSphere(pos, 0.4f);

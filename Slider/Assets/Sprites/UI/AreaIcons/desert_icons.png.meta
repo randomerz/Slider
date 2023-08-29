@@ -57,7 +57,7 @@ TextureImporter:
       213: 5929301518669501010
     second: desert_icons_17
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -74,11 +74,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -117,6 +118,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -128,6 +131,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -140,6 +144,20 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -149,10 +167,10 @@ TextureImporter:
       name: desert_icons_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 171
-        width: 32
-        height: 32
+        x: 0
+        y: 170
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -170,10 +188,10 @@ TextureImporter:
       name: desert_icons_1
       rect:
         serializedVersion: 2
-        x: 35
-        y: 171
-        width: 32
-        height: 32
+        x: 34
+        y: 170
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -191,10 +209,10 @@ TextureImporter:
       name: desert_icons_2
       rect:
         serializedVersion: 2
-        x: 69
-        y: 171
-        width: 32
-        height: 32
+        x: 68
+        y: 170
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -212,10 +230,10 @@ TextureImporter:
       name: desert_icons_3
       rect:
         serializedVersion: 2
-        x: 1
-        y: 137
-        width: 32
-        height: 32
+        x: 0
+        y: 136
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -233,10 +251,10 @@ TextureImporter:
       name: desert_icons_4
       rect:
         serializedVersion: 2
-        x: 35
-        y: 137
-        width: 32
-        height: 32
+        x: 34
+        y: 136
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -254,10 +272,10 @@ TextureImporter:
       name: desert_icons_5
       rect:
         serializedVersion: 2
-        x: 69
-        y: 137
-        width: 32
-        height: 32
+        x: 68
+        y: 136
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -275,10 +293,10 @@ TextureImporter:
       name: desert_icons_6
       rect:
         serializedVersion: 2
-        x: 1
-        y: 103
-        width: 32
-        height: 32
+        x: 0
+        y: 102
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -296,10 +314,10 @@ TextureImporter:
       name: desert_icons_7
       rect:
         serializedVersion: 2
-        x: 35
-        y: 103
-        width: 32
-        height: 32
+        x: 34
+        y: 102
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -317,10 +335,10 @@ TextureImporter:
       name: desert_icons_8
       rect:
         serializedVersion: 2
-        x: 69
-        y: 103
-        width: 32
-        height: 32
+        x: 68
+        y: 102
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -338,10 +356,10 @@ TextureImporter:
       name: desert_icons_9
       rect:
         serializedVersion: 2
-        x: 1
-        y: 69
-        width: 32
-        height: 32
+        x: 0
+        y: 68
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -359,10 +377,10 @@ TextureImporter:
       name: desert_icons_10
       rect:
         serializedVersion: 2
-        x: 35
-        y: 69
-        width: 32
-        height: 32
+        x: 34
+        y: 68
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -380,10 +398,10 @@ TextureImporter:
       name: desert_icons_11
       rect:
         serializedVersion: 2
-        x: 69
-        y: 69
-        width: 32
-        height: 32
+        x: 68
+        y: 68
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -401,10 +419,10 @@ TextureImporter:
       name: desert_icons_12
       rect:
         serializedVersion: 2
-        x: 1
-        y: 35
-        width: 32
-        height: 32
+        x: 0
+        y: 34
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -422,10 +440,10 @@ TextureImporter:
       name: desert_icons_13
       rect:
         serializedVersion: 2
-        x: 35
-        y: 35
-        width: 32
-        height: 32
+        x: 34
+        y: 34
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -443,10 +461,10 @@ TextureImporter:
       name: desert_icons_14
       rect:
         serializedVersion: 2
-        x: 69
-        y: 35
-        width: 32
-        height: 32
+        x: 68
+        y: 34
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -464,10 +482,10 @@ TextureImporter:
       name: desert_icons_15
       rect:
         serializedVersion: 2
-        x: 1
-        y: 1
-        width: 32
-        height: 32
+        x: 0
+        y: 0
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -485,10 +503,10 @@ TextureImporter:
       name: desert_icons_16
       rect:
         serializedVersion: 2
-        x: 35
-        y: 1
-        width: 32
-        height: 32
+        x: 34
+        y: 0
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -506,10 +524,10 @@ TextureImporter:
       name: desert_icons_17
       rect:
         serializedVersion: 2
-        x: 69
-        y: 1
-        width: 32
-        height: 32
+        x: 68
+        y: 0
+        width: 34
+        height: 34
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -534,27 +552,26 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      desert_icons_17: 5929301518669501010
-      desert_icons_15: 3238598718789771248
-      desert_icons_7: -8045521209783109871
-      desert_icons_2: 8464922974214413793
-      desert_icons_5: -2445121393400162007
-      desert_icons_8: 4044485719352838565
-      desert_icons_11: 4303464458038191160
-      desert_icons_10: -5866793318097696604
-      desert_icons_16: -6460420932617617492
-      desert_icons_14: 393773648217370553
       desert_icons_0: 3875241004937572403
-      desert_icons_6: 1198326862763376502
-      desert_icons_3: 5993531552798058943
-      desert_icons_12: -921239117244722403
-      desert_icons_9: -7088321677899077400
       desert_icons_1: 3138356354255719293
+      desert_icons_10: -5866793318097696604
+      desert_icons_11: 4303464458038191160
+      desert_icons_12: -921239117244722403
       desert_icons_13: -5341604395112426082
+      desert_icons_14: 393773648217370553
+      desert_icons_15: 3238598718789771248
+      desert_icons_16: -6460420932617617492
+      desert_icons_17: 5929301518669501010
+      desert_icons_2: 8464922974214413793
+      desert_icons_3: 5993531552798058943
       desert_icons_4: -497503542258981385
-  spritePackingTag: 
+      desert_icons_5: -2445121393400162007
+      desert_icons_6: 1198326862763376502
+      desert_icons_7: -8045521209783109871
+      desert_icons_8: 4044485719352838565
+      desert_icons_9: -7088321677899077400
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

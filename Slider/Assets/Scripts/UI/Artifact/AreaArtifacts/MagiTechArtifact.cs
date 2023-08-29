@@ -51,8 +51,10 @@ public class MagiTechArtifact : UIArtifact
         Anchor.OnAnchorInteract -= OnAnchorInteract;
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         if (isInPast != PlayerIsInPast)
         {
             isInPast = PlayerIsInPast;
@@ -238,18 +240,17 @@ public class MagiTechArtifact : UIArtifact
         }
         return move;
     }
+
     protected override void QueueMoveFromButtonPair(SMove move, ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        QueueAdd(move);
         ArtifactTileButton currAlt = GetButton(FindAltId(buttonCurrent.islandId));
         ArtifactTileButton emptyAlt = GetButton(FindAltId(buttonEmpty.islandId));
         
         SwapButtons(currAlt, emptyAlt, false);
-        SwapButtons(buttonCurrent, buttonEmpty);
-        ProcessQueue();
-        UpdateMoveOptions();
-        MoveMadeOnArtifact?.Invoke(this, null);
+
+        base.QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
     }
+
     public override void AddButton(STile stile, bool shouldFlicker = true)
     {
         base.AddButton(stile, shouldFlicker);
