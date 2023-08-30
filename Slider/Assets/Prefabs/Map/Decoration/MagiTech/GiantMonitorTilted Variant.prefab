@@ -11,10 +11,14 @@ PrefabInstance:
     - target: {fileID: 3929837889328004591, guid: 4854309a1cec3134aa44ead17dffe52e, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -831267, guid: e84e814e40b7c364d9a88d5e36b9764d, type: 3}
+      objectReference: {fileID: 2915442981718270094, guid: e84e814e40b7c364d9a88d5e36b9764d, type: 3}
     - target: {fileID: 3929837889328004591, guid: 4854309a1cec3134aa44ead17dffe52e, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4481898022775286475, guid: 4854309a1cec3134aa44ead17dffe52e, type: 3}
+      propertyPath: conditionals.onSuccess.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: LaserOn
       objectReference: {fileID: 0}
     - target: {fileID: 5048512443812207881, guid: 4854309a1cec3134aa44ead17dffe52e, type: 3}
       propertyPath: m_Name
@@ -60,6 +64,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6214988639554508183, guid: 4854309a1cec3134aa44ead17dffe52e, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6f77d3071f7b25e4c8afa9191e107414, type: 2}
     m_RemovedComponents:
     - {fileID: 2291193789026168321, guid: 4854309a1cec3134aa44ead17dffe52e, type: 3}
     - {fileID: 6530336094049087036, guid: 4854309a1cec3134aa44ead17dffe52e, type: 3}
