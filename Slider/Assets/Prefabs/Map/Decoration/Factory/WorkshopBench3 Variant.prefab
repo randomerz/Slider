@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1520933189981305147, guid: d33e449f64fe5654ab047eb1ab2b1cee, type: 3}
@@ -13,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 348475216, guid: e3a8be5553fc75d45b8937fdfeba66ef, type: 3}
     - target: {fileID: 1520933189981305148, guid: d33e449f64fe5654ab047eb1ab2b1cee, type: 3}
       propertyPath: m_Name
-      value: WorkshopBench3
+      value: WorkshopBench3 Variant
       objectReference: {fileID: 0}
     - target: {fileID: 1520933189981305149, guid: d33e449f64fe5654ab047eb1ab2b1cee, type: 3}
       propertyPath: m_RootOrder
@@ -59,5 +60,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6346105868392984847, guid: d33e449f64fe5654ab047eb1ab2b1cee, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: c96b55a74d1d2c04282d1dbbdce7efe5, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d33e449f64fe5654ab047eb1ab2b1cee, type: 3}
