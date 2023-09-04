@@ -1,11 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class DesertArtifact : UIArtifact
 {
+    public Dictionary<(int, int), int> currGrid;
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        currGrid = new Dictionary<(int, int), int>();
+    }
     protected override void OnDisable()
     {
         base.OnDisable();
@@ -45,8 +52,6 @@ public class DesertArtifact : UIArtifact
         return options;
     }
 
-    //L: Deleted ButtonDragEnd override because the code was exactly the same and GetMoveOptions is marked virtual so it will automatically call the right one.
-
     public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         SMove move = ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);;
@@ -82,6 +87,11 @@ public class DesertArtifact : UIArtifact
         SSlideSwap move;
         int dx = buttonEmpty.x - buttonCurrent.x;
         int dy = buttonEmpty.y - buttonCurrent.y;
+        Array.ForEach(buttons, plugin =>
+        {
+            currGrid[(plugin.x, plugin.y)] = plugin.islandId;
+        });
+        
         if (dx > 0)
         {
             move = SlideRight();
