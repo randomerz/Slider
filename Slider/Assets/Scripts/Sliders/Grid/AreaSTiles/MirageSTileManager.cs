@@ -33,19 +33,19 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     /// Function that disables mirages either from selecting or from making an artifact move
     /// </summary>
     /// <param name="islandId">0 means disable all mirages</param>
-    public void DisableMirage(int islandId = 0)
+    public void DisableMirage(int islandId = -1)
     {
         Debug.Log($"disable called with: {islandId}");
         //Do player location check and random parenting bs
         int mirageIsland;
-        if (isPlayerOnMirage(out mirageIsland))
-        {
-            Debug.Log($"Player on Mirage! Current mirage: {mirageIsland}");
-            Player.GetInstance().transform.SetParent(grid.GetStile(mirageIsland).transform, false);
-        }
+        //if (isPlayerOnMirage(out mirageIsland))
+        //{
+        //    Debug.Log($"Player on Mirage! Current mirage: {mirageIsland}");
+        //    Player.GetInstance().transform.SetParent(grid.GetStile(mirageIsland).transform, false);
+        //}
         //Insert disable effect
-        if (islandId < 0) return;
-        if (islandId == 0) foreach (GameObject o in mirageSTiles) o.SetActive(false);
+        if (islandId == 0 || islandId > 7) return;
+        if (islandId < 0) foreach (GameObject o in mirageSTiles) o.SetActive(false);
         else mirageSTiles[islandId - 1].gameObject.SetActive(false);
     }
     private bool isPlayerOnMirage(out int islandId)

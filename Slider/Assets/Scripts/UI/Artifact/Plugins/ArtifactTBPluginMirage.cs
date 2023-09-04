@@ -9,10 +9,11 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
     public int mirageIslandId;
     [SerializeField] private List<Sprite> mirageSprites;
     [SerializeField] private STile stile;
+    private ButtonMirage buttonMirage;
     private void OnEnable()
     {
+        buttonMirage = GetComponent<ButtonMirage>();
         DesertArtifact.MoveMadeOnArtifact += MoveMadeOnArtifact;
-        mirageIslandId = -1;
     }
     private void OnDisable()
     {
@@ -20,7 +21,7 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
     }
     public void MirageOnClick()
     {
-        if (mirageIslandId != 0)
+        if (mirageIslandId > 0)
         {
             DisableMirage();
             return;
@@ -39,8 +40,10 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         if (mirageIslandId < 8) 
         {
             button.SetEmptySprite(mirageSprites[mirageIslandId - 1]);
-            button.buttonAnimator.sliderImage.sprite = mirageSprites[mirageIslandId - 1];
+            button.SetIslandSprite(mirageSprites[mirageIslandId - 1]);
+            button.buttonAnimator.sliderImage.sprite = mirageSprites[mirageIslandId - 1]; //I honestly dunno why this line is needed
             stile.sliderCollider.isTrigger = true;
+            buttonMirage.SetMirageEnabled(true);
         }
         //Enable STile
         MirageSTileManager.GetInstance().EnableMirage(mirageIslandId, cords.Item1, cords.Item2);
@@ -49,10 +52,12 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
     private void DisableMirage()
     {
         button.RestoreDefaultEmptySprite();
+        button.RestoreDefaultIslandSprite();
         button.SetSpriteToIslandOrEmpty();
         MirageSTileManager.GetInstance().DisableMirage(mirageIslandId);
-        mirageIslandId = -1;
+        mirageIslandId = 0;
         stile.sliderCollider.isTrigger = false;
+        buttonMirage.SetMirageEnabled(false);
     }
 /*    private void OnDisable()
     {
