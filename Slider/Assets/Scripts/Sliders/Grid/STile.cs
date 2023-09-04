@@ -129,6 +129,10 @@ public class STile : MonoBehaviour
                     if (c.isTrigger && c.CompareTag("LeaveTriggerEnabled"))
                         continue;
 
+                    // make lasers always hit even during movement
+                    if (c.gameObject.layer == LayerMask.NameToLayer("LaserRaycast"))
+                        continue;
+
                     c.enabled = false;
                     disabledColliders.Add(c);
                 }
@@ -140,6 +144,10 @@ public class STile : MonoBehaviour
                     // maybe we should leave all triggers, but that could cause some npc/interacting weirdness
                     // in any case, we need to leave factory buttons enabled for sure
                     if (c.isTrigger && c.CompareTag("LeaveTriggerEnabled"))
+                        continue;
+
+                    // make lasers always hit even during movement
+                    if (c.gameObject.layer == LayerMask.NameToLayer("LaserRaycast"))
                         continue;
 
                     c.enabled = false;
