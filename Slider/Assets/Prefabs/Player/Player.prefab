@@ -523,6 +523,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   locatableRef: {fileID: 380634037254267614}
   mapping: {fileID: 11400000, guid: 5c4933e081b9c984d9f6a61aa91b63f2, type: 2}
+  onStep:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &380634037254267600
 GameObject:
   m_ObjectHideFlags: 0
@@ -896,8 +899,8 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.010416667
-    y: 0.35462964
+    x: 0.011458334
+    y: 0.19444445
     width: 0.16666667
     height: 0.16666666
   near clip plane: 0.1
