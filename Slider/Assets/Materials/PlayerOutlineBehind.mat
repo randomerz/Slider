@@ -83,6 +83,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _TextureSize_a8bafa70555049cc9c16853873a33b50_Texture_1_Texture2D:
+        m_Texture: {fileID: 8400000, guid: 14cc808c8af65de468efac220b6f5ddb, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -142,7 +146,7 @@ Material:
     - _MaskOffset: {r: 0, g: 0, b: 0, a: 0}
     - _MaskSize: {r: 1, g: 1, b: 0, a: 0}
     - _OutlineColor: {r: 0.90196085, g: 0.90196085, b: 0.90196085, a: 0}
-    - _PlayerPosition: {r: 32.38999, g: -6.9425, b: 0, a: 0}
+    - _PlayerPosition: {r: -1000, g: -1000, b: 0, a: 0}
     - _Player_Loc: {r: 0, g: 0, b: 0, a: 0}
     - _RT_Offset: {r: -17, g: -17, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}

@@ -71,6 +71,13 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         SetTracker(true);
     }
+
+    private void OnDisable() {
+        foreach(Material m in ppMaterials)
+        {
+            m.SetVector("_PlayerPosition", new Vector4(-1000, -1000, 0, 0));
+        }    
+    }
     
     void Update()
     {
