@@ -238,7 +238,6 @@ public class PlayerAction : Singleton<PlayerAction>
     private void FinishPicking()
     {
         isPicking = false;
-        itemDropIndicator.SetActive(true);
         pickedItem.transform.SetParent(pickedItemLocation);
     }
 
