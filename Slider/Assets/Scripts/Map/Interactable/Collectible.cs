@@ -68,6 +68,16 @@ public class Collectible : MonoBehaviour
         onCollect.Invoke();
     }
 
+    public void SpawnCollectable()
+    {
+        if(!gameObject.activeSelf)
+        {
+            AudioManager.Play("Puzzle Complete");
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position, transform);
+        }
+        gameObject.SetActive(true);
+    }
+
     public void DespwanCollectable(GameObject item)
     {
         item.SetActive(false);
