@@ -27,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 924641047}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7081004359711402843}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &924641049
 SpriteRenderer:
@@ -89,7 +89,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 1
 --- !u!95 &1206446726886503582
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -106,7 +106,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!61 &924641050
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -117,6 +118,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -152,6 +172,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2894810818442469169, guid: e8849e9063fd2634987343fcd6794544, type: 3}
@@ -165,6 +186,10 @@ PrefabInstance:
     - target: {fileID: 2894810818442469172, guid: e8849e9063fd2634987343fcd6794544, type: 3}
       propertyPath: m_Name
       value: JungleTP Up Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894810818442469174, guid: e8849e9063fd2634987343fcd6794544, type: 3}
+      propertyPath: excludeBoat
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2894810818442469174, guid: e8849e9063fd2634987343fcd6794544, type: 3}
       propertyPath: onSuccess.m_PersistentCalls.m_Calls.Array.size
@@ -243,6 +268,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2894810818442469175, guid: e8849e9063fd2634987343fcd6794544, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 924641048}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8849e9063fd2634987343fcd6794544, type: 3}
 --- !u!4 &7081004359711402843 stripped
 Transform:

@@ -304,7 +304,7 @@ GameObject:
   - component: {fileID: 3473788700108282802}
   - component: {fileID: 5765870306630876239}
   - component: {fileID: 667729183490967736}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Drop Item Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -434,7 +434,6 @@ Transform:
   - {fileID: 5563323968977859811}
   - {fileID: 2327666521070968836}
   - {fileID: 862667735}
-  - {fileID: 3079958767975756846}
   m_Father: {fileID: 380634037254267601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &380634036804812840
@@ -902,8 +901,8 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.011458334
-    y: 0.19444445
+    x: 0.010416667
+    y: 0.35462964
     width: 0.16666667
     height: 0.16666666
   near clip plane: 0.1
@@ -1098,6 +1097,7 @@ Transform:
   - {fileID: 380634037666542965}
   - {fileID: 442539579}
   - {fileID: 4953354079739309683}
+  - {fileID: 3079958767975756846}
   m_Father: {fileID: 380634037254267601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2400050690093764716
@@ -1318,11 +1318,11 @@ Transform:
   m_GameObject: {fileID: 7230769422333249056}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 380634036804812843}
+  m_Father: {fileID: 8551080018860032359}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &4431829965110035657
 Camera:
