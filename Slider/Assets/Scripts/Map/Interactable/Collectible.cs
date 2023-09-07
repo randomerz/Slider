@@ -25,6 +25,8 @@ public class Collectible : MonoBehaviour
 
     [SerializeField] private SpriteRenderer spriteRenderer;
     public UnityEvent onCollect;
+
+    [SerializeField] private ParticleType particle = ParticleType.SmokePoof;
     
     private void Start() 
     {
@@ -57,7 +59,6 @@ public class Collectible : MonoBehaviour
 
     public void DoPickUp()
     {
-        //Debug.Log("Cutscene Triggered");
         ItemPickupEffect.StartCutscene(spriteRenderer.sprite, cData.name, DoOnCollect);
         DespwanCollectable(gameObject);
     }
@@ -73,7 +74,7 @@ public class Collectible : MonoBehaviour
         if(!gameObject.activeSelf)
         {
             AudioManager.Play("Puzzle Complete");
-            ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position, transform);
+            ParticleManager.SpawnParticle(particle, transform.position, transform);
         }
         gameObject.SetActive(true);
     }
