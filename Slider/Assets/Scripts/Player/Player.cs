@@ -25,6 +25,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private List<Material> ppMaterials;
 
 
     private float moveSpeedMultiplier = 1;
@@ -70,6 +71,13 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         SetTracker(true);
     }
+
+    private void OnDisable() {
+        foreach(Material m in ppMaterials)
+        {
+            m.SetVector("_PlayerPosition", new Vector4(-1000, -1000, 0, 0));
+        }    
+    }
     
     void Update()
     {
@@ -88,6 +96,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
         playerAnimator.SetBool("isOnWater", isOnWater);
         // playerAnimator.SetBool("hasSunglasses", hasSunglasses);
+
+        foreach(Material m in ppMaterials)
+        {
+            m.SetVector("_PlayerPosition", new Vector4(transform.position.x, transform.position.y, 0, 0));
+        }
     }
 
     private void FixedUpdate()

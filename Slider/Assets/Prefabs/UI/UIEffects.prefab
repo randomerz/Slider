@@ -31,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2718776578040013634}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -146,7 +145,7 @@ GameObject:
   - component: {fileID: 7648707880996623365}
   - component: {fileID: 7648707880996623387}
   - component: {fileID: 7648707880996623364}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: BlackPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +166,6 @@ RectTransform:
   m_Children:
   - {fileID: 7648707882352258736}
   m_Father: {fileID: 7648707881878403526}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -243,7 +241,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7648707882383368855}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -360,7 +357,7 @@ GameObject:
   - component: {fileID: 7648707881878403547}
   - component: {fileID: 7648707881878403524}
   - component: {fileID: 7648707881878403525}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: CircleMask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -381,7 +378,6 @@ RectTransform:
   m_Children:
   - {fileID: 7648707880996623365}
   m_Father: {fileID: 7648707882090516871}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -441,7 +437,7 @@ MonoBehaviour:
   m_ShowMaskGraphic: 1
 --- !u!95 &7648707881878403525
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -458,7 +454,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7648707882090516864
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,7 +470,7 @@ GameObject:
   - component: {fileID: 7648707882090516868}
   - component: {fileID: 7648707882090516869}
   - component: {fileID: 7648707882090516870}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: WorldCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -494,7 +491,6 @@ RectTransform:
   m_Children:
   - {fileID: 7648707881878403526}
   m_Father: {fileID: 7648707882233313093}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -518,7 +514,9 @@ Canvas:
   m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -1894928119
   m_SortingOrder: -1
   m_TargetDisplay: 0
@@ -655,7 +653,6 @@ RectTransform:
   - {fileID: 7648707882383368855}
   - {fileID: 7648707882090516871}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -694,7 +691,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7648707882383368855}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -783,7 +779,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7648707882383368855}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -851,7 +846,7 @@ GameObject:
   - component: {fileID: 7648707882352258736}
   - component: {fileID: 7648707882352258742}
   - component: {fileID: 7648707882352258743}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -871,7 +866,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7648707880996623365}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -953,7 +947,6 @@ RectTransform:
   - {fileID: 7648707882290023337}
   - {fileID: 7648707881595533459}
   m_Father: {fileID: 7648707882233313093}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -977,7 +970,9 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 414317947
   m_SortingOrder: 2
   m_TargetDisplay: 0
@@ -1073,7 +1068,6 @@ RectTransform:
   m_Children:
   - {fileID: 9181579971159719076}
   m_Father: {fileID: 7648707882383368855}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -1142,9 +1136,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255bb59980d728f468da10fc380a3c0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hintTexts: []
-  hintIDs: []
   hintRemovalQueue: []
+  hintList: []
   fadeDuration: 0.5
   canvasGroup: {fileID: 7685592946410807128}
   tmproText: {fileID: 2507698560058707884}
