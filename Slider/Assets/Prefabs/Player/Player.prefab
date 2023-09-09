@@ -434,7 +434,6 @@ Transform:
   - {fileID: 5563323968977859811}
   - {fileID: 2327666521070968836}
   - {fileID: 862667735}
-  - {fileID: 7130175839369631318}
   m_Father: {fileID: 380634037254267601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &380634036804812840
@@ -564,6 +563,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7130175839369631318}
   - {fileID: 380634036804812843}
   - {fileID: 3473788700108282802}
   - {fileID: 7862666723060419687}
@@ -640,6 +640,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemPickupTransform: {fileID: 5563323968977859811}
   anchorPrefab: {fileID: 7895592663859285606, guid: 943cb2ed11f603141a66c99e265099d4, type: 3}
+  itemSpriteCalls: 0
+  spriteRenderer: {fileID: 0}
 --- !u!50 &380634037254267615
 Rigidbody2D:
   serializedVersion: 4
@@ -869,7 +871,7 @@ Transform:
   m_GameObject: {fileID: 380634037666542966}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 36, y: -9.5, z: 0}
+  m_LocalPosition: {x: -25, y: 34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -902,7 +904,7 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.34062502
+    x: 0.34114584
     y: 0.048148148
     width: 0.33333334
     height: 0.3333333
@@ -914,7 +916,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4194103
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1206,7 +1208,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4194304
+    m_Bits: 4194560
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 90513850f9b859e40a0efe71b1d2bb7a, type: 2}
   m_TargetDisplay: 0
@@ -1316,7 +1318,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 380634036804812843}
+  m_Father: {fileID: 380634037254267601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8977662236931750326
 SpriteRenderer:
