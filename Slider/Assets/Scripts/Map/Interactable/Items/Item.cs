@@ -165,6 +165,11 @@ public class Item : MonoBehaviour, ISavable
         spriteRenderer.sortingOrder = num;
     }
 
+    public virtual void SetLayer(int layer)
+    {
+        spriteRenderer.gameObject.layer = layer;
+    }
+
 
     protected IEnumerator AnimatePickUp(Transform target, System.Action callback=null)
     {

@@ -226,7 +226,7 @@ public class PlayerAction : Singleton<PlayerAction>
             pickedItem.DropItem(itemDropIndicator.transform.position, callback: FinishDropping);
             lastDroppedItem = pickedItem;
             itemDropIndicator.SetActive(false);
-            pickedItem.spriteRenderer.gameObject.layer = LayerMask.NameToLayer("Default");
+            pickedItem.SetLayer(LayerMask.NameToLayer("Default"));
             AudioManager.PlayWithPitch("UI Click", 0.8f);
 
             return true;
@@ -239,7 +239,7 @@ public class PlayerAction : Singleton<PlayerAction>
     {
         isPicking = false;
         pickedItem.transform.SetParent(pickedItemLocation);
-        pickedItem.spriteRenderer.gameObject.layer = LayerMask.NameToLayer("ItemRT");
+        pickedItem.SetLayer(LayerMask.NameToLayer("ItemRT"));
     }
 
     private void FinishDropping()
