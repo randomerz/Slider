@@ -31,7 +31,7 @@ public class Lavafall : MonoBehaviour
     }
 
     public void SetItemSortingOrder(int num){
-        PlayerInventory.Instance.SetItemSortingOrder(num);
+       // PlayerInventory.Instance.SetItemSortingOrder(num);
     }
 }
 
