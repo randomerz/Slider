@@ -459,11 +459,7 @@ public void SetGrid(int[,] puzzle)
     {
         if (!PlayerInventory.Contains(name, myArea))
         {
-            if (!GetCollectible(name).gameObject.activeSelf)
-            {
-                AudioManager.Play("Puzzle Complete");
-            }
-            GetCollectible(name)?.gameObject.SetActive(true);
+            GetCollectible(name)?.SpawnCollectable();
         }
             
     }
@@ -472,11 +468,7 @@ public void SetGrid(int[,] puzzle)
     {
         if (!PlayerInventory.Contains("Slider " + sliderId, myArea))
         {
-            if (!GetCollectible("Slider " + sliderId).gameObject.activeSelf)
-            {
-                AudioManager.Play("Puzzle Complete");
-            }
-            GetCollectible("Slider " + sliderId)?.gameObject.SetActive(true);
+            GetCollectible("Slider " + sliderId)?.SpawnCollectable();
         }
     }
 
