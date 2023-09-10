@@ -14,7 +14,7 @@ public class JungleArtifact : UIArtifact
         {
             //L: Just a normal move
             return base.TryQueueMoveFromButtonPair(buttonCurrent, buttonEmpty);
-        } 
+        }
         else
         {
             //L: Below is to handle the case for if you have linked tiles.
@@ -31,7 +31,10 @@ public class JungleArtifact : UIArtifact
                                                     buttonCurrent.islandId, buttonCurrent.LinkButton.islandId);
 
             Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy, buttonCurrent.islandId);
-            if (SGrid.Current.CanMove(linkedSwap) && (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && moveQueue.Count < maxMoveQueueSize)
+
+            if (SGrid.Current.CanMove(linkedSwap) && 
+                (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && 
+                moveQueue.Count < maxMoveQueueSize)
             {
                 QueueAdd(linkedSwap);
 
@@ -59,6 +62,10 @@ public class JungleArtifact : UIArtifact
         int dx = move.endLoc.x - move.startLoc.x;
         int dy = move.endLoc.y - move.startLoc.y;
         int toCheck = Math.Max(Math.Abs(dx), Math.Abs(dy));
+        if (dx != 0 && dy != 0)
+        {
+            return false;
+        }
         if (dx == 0)
         {
             int dir = dy / Math.Abs(dy);
@@ -83,5 +90,99 @@ public class JungleArtifact : UIArtifact
         }
         return true;
     }
+
+    /// <summary>
+    /// AG: Overriding the UpdatePushedDowns method to get both tiles 2 and 3
+    /// pushed down if you press one or the other. Used in event handling in
+    /// parent UIArtifact class.
+    /// </summary>
+    /// <param name="sender">Event handling parameter</param>
+    /// <param name="e">Event parameter</param>
+    public override void UpdatePushedDowns(object sender, System.EventArgs e)
+    {
+        foreach (ArtifactTileButton b in _instance.buttons)
+        {
+            if (b.gameObject.activeSelf)
+            {
+                if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
+                {
+                    b.SetIsInMove(true);
+                }
+                else if (b.MyStile.hasAnchor)
+                {
+                    continue;
+                }
+                else
+                {
+                    b.SetIsInMove(false);
+                }
+            }
+        }
+    }
+
+    protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
+    {
+        List<ArtifactTileButton> options = new List<ArtifactTileButton>();
+
+        Vector2Int[] dirs = {
+            Vector2Int.right,
+            Vector2Int.up,
+            Vector2Int.left,
+            Vector2Int.down
+        };
+
+        foreach (Vector2Int dir in dirs)
+        {
+            ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
+            int i = 2;
+            while (b != null && !b.TileIsActive)
+            {
+                options.Add(b);
+                if (button.islandId == 2)
+                {
+                    // Buttons above and below
+                    for (int vert = -2; vert <= 2; vert++)
+                    {
+                        ArtifactTileButton c = GetButton(button.x + 1, button.y + vert);
+                        if (c != null && !c.TileIsActive)
+                        {
+                            options.Add(c);
+                        }
+                    }
+                    // To the right
+                    ArtifactTileButton right = GetButton(button.x + 2, button.y);
+                    if (right != null && !right.TileIsActive)
+                    {
+                        options.Add(right);
+                    }
+                }
+                else if (button.islandId == 3)
+                {
+                    // Buttons above and below
+                    for (int vert = -2; vert <= 2; vert++)
+                    {
+                        ArtifactTileButton c = GetButton(button.x - 1, button.y + vert);
+                        if (c != null && !c.TileIsActive)
+                        {
+                            options.Add(c);
+                        }
+                    }
+                    // To the left
+                    ArtifactTileButton left = GetButton(button.x - 2, button.y);
+                    if (left != null && !left.TileIsActive)
+                    {
+                        options.Add(left);
+                    }
+                }
+                b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
+
+                i++;
+            }
+        }
+
+        return options;
+    }
+
+    
 }
 
