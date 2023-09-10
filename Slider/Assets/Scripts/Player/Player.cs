@@ -37,7 +37,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     private bool isInHouse = false;
 
     private STile currentStileUnderneath;
-
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
 
