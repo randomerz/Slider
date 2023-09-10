@@ -42,6 +42,7 @@ public class JungleArtifact : UIArtifact
                 SwapButtons(buttonCurrent, buttonEmpty);
                 SwapButtons(buttonCurrent.LinkButton, GetButton(linkx + dx, linky + dy));
                 ProcessQueue();
+                UpdateMoveOptions();
 
                 return true;
             }
