@@ -29,10 +29,6 @@ public class Lavafall : MonoBehaviour
         foreach(GameObject go in objects)
             go.SetActive(isActive);
     }
-
-    public void SetItemSortingOrder(int num){
-        PlayerInventory.Instance.SetItemSortingOrder(num);
-    }
 }
 
 

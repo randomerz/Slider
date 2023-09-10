@@ -29,6 +29,9 @@ public class PlayerAction : Singleton<PlayerAction>
 
     private HashSet<IInteractable> availableInteractables = new();
 
+    private int itemSortingOrder;
+    private int itemSortingOrderCalls;
+
     private void Awake() 
     {
         InitializeSingleton(overrideExistingInstanceWith: this);
@@ -166,6 +169,7 @@ public class PlayerAction : Singleton<PlayerAction>
             }
 
             PlayerInventory.AddItem(pickedItem);
+            pickedItem.SetSortingOrder(itemSortingOrder);
             pickedItem.PickUpItem(pickedItemLocation.transform, callback: FinishPicking);
 
             AudioManager.PlayWithPitch("UI Click", 1.2f);
@@ -226,7 +230,7 @@ public class PlayerAction : Singleton<PlayerAction>
             pickedItem.DropItem(itemDropIndicator.transform.position, callback: FinishDropping);
             lastDroppedItem = pickedItem;
             itemDropIndicator.SetActive(false);
-
+            pickedItem.SetLayer(LayerMask.NameToLayer("Default"));
             AudioManager.PlayWithPitch("UI Click", 0.8f);
 
             return true;
@@ -239,14 +243,36 @@ public class PlayerAction : Singleton<PlayerAction>
     {
         isPicking = false;
         pickedItem.transform.SetParent(pickedItemLocation);
+        pickedItem.SetLayer(LayerMask.NameToLayer("ItemRT"));
     }
 
     private void FinishDropping()
     {
+        lastDroppedItem.ResetSortingOrder();
         lastDroppedItem.dropCallback();
         isDropping = false;
         itemDropIndicator.SetActive(false);
         pickedItem = null;
+    }
+
+    public void SetItemSortingOrderInc(int num)
+    {
+        itemSortingOrderCalls++;
+        SetItemSortingOrder(num);
+    }
+
+    public void SetItemSortingOrderDec(int num)
+    {
+        itemSortingOrderCalls--;
+        if(itemSortingOrderCalls == 0)
+            SetItemSortingOrder(num);
+
+    }
+
+    public void SetItemSortingOrder(int num)
+    {
+        itemSortingOrder = num;
+        PlayerInventory.Instance.SetItemSortingOrder(num);
     }
 
     public Transform GetPickedItemLocationTransform()
