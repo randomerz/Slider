@@ -26,7 +26,16 @@ public class DG_Player : MonoBehaviour
     public void RevealDice() { diceCover.SetActive(false); }
     public List<int> GetDiceFaces(){ return diceHolder.GetDiceFaces(); }
 
-    public void RemoveADie(){ diceHolder.RemoveADie();}
+    public bool eliminated = false;
+    public void RemoveADie()
+    { 
+        diceHolder.RemoveADie();
+        if (diceHolder.GetDice().Count == 0)
+        {
+            eliminated = true;
+            DG_GameManager.instance.EliminatePlayer(this);
+        }
+    }
 
     public void RollAllDice(){diceHolder.RollAllDice();}
 

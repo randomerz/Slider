@@ -93,6 +93,22 @@ public class DG_CurrentBet : MonoBehaviour
         return bet;
     }
 
+    public int GetLowestPossibleNumDiceBetOfFace(int faceNum) 
+    {
+        int[] bet = new int[2];
+        int currNumDiceBet = NumDiceBet;
+        int currFaceNumBet = FaceNumBet;
+
+        if (faceNum > currFaceNumBet)
+        {
+            return currNumDiceBet;
+        }
+        else
+        {
+            return currNumDiceBet + 1;
+        }
+    }
+
     public float GetProbabilityOfCurrentBet(List<int> knownFaces = null)
     {
         return GetProbabilityOfBet(NumDiceBet, FaceNumBet, knownFaces);
@@ -134,7 +150,7 @@ public class DG_CurrentBet : MonoBehaviour
                 // Add the probability of at least k successes
                 probability += binomialCoefficient * probabilityOfKSuccesses;
             }
-
+            Debug.Log("naive probability of bet [" + NumDiceBet + ", " + FaceNumBet + "] is " + probability * 100 + "%");
             return probability;
         }
         else
@@ -168,6 +184,7 @@ public class DG_CurrentBet : MonoBehaviour
                 probability += binomialCoefficient * probabilityOfKSuccesses;
             }
 
+            Debug.Log("non-naive probability of bet [" + NumDiceBet + ", " + FaceNumBet + "] is " + probability * 100 + "%");
             return probability;
         }
     }

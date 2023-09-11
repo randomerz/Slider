@@ -1,9 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DG_AIPlayer : DG_Player
 {
+    private DG_AIPersonality personality;
+    public void SetPersonality(DG_AIPersonality personality)
+    {
+        this.personality = personality;
+        charIcon = personality.CharacterIconSprite;
+        GetComponent<Image>().sprite = personality.CharacterSprite;
+    }
+
+
+    private float bsThreshold = 0.5f;
+
     public override IEnumerator TakeTurn()
     {
         yield return new WaitForSeconds(1);
@@ -22,6 +34,23 @@ public class DG_AIPlayer : DG_Player
 
         List<int> knownFaces = GetDiceFaces();
 
+        float currBetProbabilityOfBeingTrue = DG_CurrentBet.instance.GetProbabilityOfCurrentBet();
+     
+
+        if (currBetProbabilityOfBeingTrue < bsThreshold)
+        {
+            // Call BS if the current bet's probability of being true is below the threshold
+            yield return DG_GameManager.instance.BSCalled(this);
+        }
+        else
+        {
+            int faceNum = diceHolder.GetMostCommonFace();
+            int numDice = DG_CurrentBet.instance.GetLowestPossibleNumDiceBetOfFace(faceNum);
+            
+            DG_CurrentBet.instance.SetCurrentBet(this, numDice, faceNum);
+        }
+
+        /*
         float currBetProbabilityOfBeingTrue = DG_CurrentBet.instance.GetProbabilityOfCurrentBet(knownFaces);
 
         // Determine the potential new bet based on player knowledge
@@ -55,9 +84,10 @@ public class DG_AIPlayer : DG_Player
         {
             // Otherwise, call BS
             yield return DG_GameManager.instance.BSCalled(this);
-        }
+        }*/
     }
 
+    /*
     private float CalculateNewBetLikelihood(int newBetNumDice, int newBetFaceNum, int currBetNumDice, int currBetFaceNum, List<int> knownFaces)
     {
         // Calculate the likelihood of a new bet being true based on the player's knowledge
@@ -110,7 +140,7 @@ public class DG_AIPlayer : DG_Player
 
         return newBetLikelihood;
     }
-
+    */
 
     public override IEnumerator ChoosePlayDirection()
     {

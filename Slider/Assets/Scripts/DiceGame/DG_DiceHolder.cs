@@ -8,6 +8,7 @@ public class DG_DiceHolder : MonoBehaviour
 {
     [SerializeField]
     private List<DG_Die> Dice;
+    public List<DG_Die> GetDice() { return Dice; }
 
     public void HighlightDiceOfFace(int face, bool includeOnes = true)
     {

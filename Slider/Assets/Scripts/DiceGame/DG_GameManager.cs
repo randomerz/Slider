@@ -18,6 +18,7 @@ public class DG_GameManager : MonoBehaviour
         }
     }
 
+    [SerializeField] private List<DG_AIPersonality> AIPersonalities;
     [SerializeField] private List<DG_Player> players;
 
     public List<int> CurrentTotalDiceFaces { get; private set; }
@@ -31,7 +32,11 @@ public class DG_GameManager : MonoBehaviour
         StartGame();
     }
 
-
+    public void EliminatePlayer(DG_Player player)
+    {
+        players.Remove(player);
+        player.gameObject.SetActive(false);
+    }
 
     public void StartGame()
     {
@@ -65,7 +70,36 @@ public class DG_GameManager : MonoBehaviour
             yield return nextPlayer.TakeTurn();
         }
         bSCalled = false;
-        StartCoroutine(StartRound(playerWhoLostLastRound));
+
+        if (!HumanPlayerStillInGame())
+        {
+            Debug.Log("GAME OVER! YOU LOSE!");
+        }
+        else if (players.Count == 1)
+        {
+            Debug.Log("GAME OVER! YOU WIN!");
+        }
+
+        if (playerWhoLostLastRound == null || playerWhoLostLastRound.eliminated == true)
+        {
+            StartCoroutine(StartRound(players[Random.Range(0,players.Count)]));
+        }
+        else
+        {
+            StartCoroutine(StartRound(playerWhoLostLastRound));
+        }
+    }
+
+    private bool HumanPlayerStillInGame()
+    {
+        foreach (DG_Player player in players)
+        {
+            if (player is DG_HumanPlayer)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void RollAllPlayerDice()
@@ -83,7 +117,8 @@ public class DG_GameManager : MonoBehaviour
     public IEnumerator BSCalled(DG_Player playerCallingBS)
     {
         bSCalled = true;
-        RevealAIDice();
+        //RevealAIDice();
+        RevealAllDice();
         yield return new WaitForSeconds(1);
         HighlightAllDiceOfFace(DG_CurrentBet.instance.FaceNumBet);
 
@@ -104,7 +139,8 @@ public class DG_GameManager : MonoBehaviour
         }
         yield return new WaitForSeconds(2);
         RemoveAllHighlights();
-        ObscureAIDice();
+        //ObscureAIDice();
+        ObscureAllDice();
     }
 
     private void HighlightAllDiceOfFace(int face)
@@ -122,6 +158,14 @@ public class DG_GameManager : MonoBehaviour
         }
     }
 
+    private void RevealAllDice()
+    {
+        foreach (DG_Player player in players)
+        {
+            player.RevealDice();
+        }
+    }
+
     private void RevealAIDice()
     {
         foreach (DG_Player player in players)
@@ -130,6 +174,13 @@ public class DG_GameManager : MonoBehaviour
             {
                 player.RevealDice();
             }
+        }
+    }
+    private void ObscureAllDice()
+    {
+        foreach (DG_Player player in players)
+        {
+            player.ObscureDice();
         }
     }
     private void ObscureAIDice()
