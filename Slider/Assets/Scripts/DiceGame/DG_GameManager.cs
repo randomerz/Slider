@@ -18,7 +18,7 @@ public class DG_GameManager : MonoBehaviour
         }
     }
 
-    [SerializeField] private List<DG_AIPersonality> AIPersonalities;
+    [SerializeField] private List<DG_AIPersonality> AIPersonalities = new List<DG_AIPersonality>();
     [SerializeField] private List<DG_Player> players;
 
     public List<int> CurrentTotalDiceFaces { get; private set; }
@@ -40,12 +40,43 @@ public class DG_GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        AssignAIPersonalities();
         StartCoroutine(StartRound(players[0]));
+    }
+
+    private void AssignAIPersonalities()
+    {
+
+        AIPersonalities = Shuffle(AIPersonalities);
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (players[i] is DG_AIPlayer)
+            {
+                DG_AIPlayer ai_player = (DG_AIPlayer)players[i];
+                ai_player.SetPersonality(AIPersonalities[i]);
+            }
+        }
+    }
+
+    private static System.Random rng = new System.Random();
+    public static List<T> Shuffle<T>(List<T> list)
+    {
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+        return list;
     }
 
     public IEnumerator StartRound(DG_Player startingPlayer)
     {
-        DG_CurrentBet.instance.SetCurrentBet(null, 1, 1);
+        DG_CurrentBet.instance.OnNewRoundStart();
+        
         CurrentTotalDiceFaces.Clear();
         RollAllPlayerDice();
         yield return startingPlayer.TakeTurn();

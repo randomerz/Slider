@@ -11,6 +11,27 @@ public class DG_AIPlayer : DG_Player
         this.personality = personality;
         charIcon = personality.CharacterIconSprite;
         GetComponent<Image>().sprite = personality.CharacterSprite;
+        GenerateBSThreshold();
+    }
+
+    private void Start()
+    {
+        
+    }
+    private void GenerateBSThreshold()
+    {
+        switch (personality.Aggressiveness)
+        {
+            case 1:
+                bsThreshold = Random.Range(0.3f, 0.45f);
+                break;
+            case 2:
+                bsThreshold = Random.Range(0.45f, 0.55f);
+                break;
+            case 3:
+                bsThreshold = Random.Range(0.55f, 0.65f);
+                break;
+        }
     }
 
 
@@ -34,7 +55,25 @@ public class DG_AIPlayer : DG_Player
 
         List<int> knownFaces = GetDiceFaces();
 
-        float currBetProbabilityOfBeingTrue = DG_CurrentBet.instance.GetProbabilityOfCurrentBet();
+        //Smartypants AI assume that each bet means each betting person has at least one die of the kind bet
+        if (personality.Intelligence >= 3 && DG_CurrentBet.instance.betsThisRound.Count > 0)
+        {
+            foreach(Bet bet in DG_CurrentBet.instance.betsThisRound)
+            {
+                knownFaces.Add(bet.faceNumBet);
+            }
+        }
+
+        float currBetProbabilityOfBeingTrue;
+
+        if (personality.Intelligence <= 1) //dumb ah hell players don't consider any known dice faces when betting
+        {
+            currBetProbabilityOfBeingTrue = DG_CurrentBet.instance.GetProbabilityOfCurrentBet();
+        }
+        else
+        {
+            currBetProbabilityOfBeingTrue = DG_CurrentBet.instance.GetProbabilityOfCurrentBet(knownFaces);
+        }
      
 
         if (currBetProbabilityOfBeingTrue < bsThreshold)
@@ -44,9 +83,51 @@ public class DG_AIPlayer : DG_Player
         }
         else
         {
-            int faceNum = diceHolder.GetMostCommonFace();
-            int numDice = DG_CurrentBet.instance.GetLowestPossibleNumDiceBetOfFace(faceNum);
-            
+            int faceNum;
+            int numDice;
+
+            if (personality.Intelligence <= 1)
+            {
+                faceNum = diceHolder.GetMostCommonFace();
+            }
+            else //smarter ai will change the face to be the one most commonly bet around table, if more than their dice of face
+            {
+                faceNum = diceHolder.GetMostCommonFace();
+                int[] commonFaceArr = DG_CurrentBet.instance.GetMostCommonFaceBetThisRound();
+                if (commonFaceArr[1] >= diceHolder.GetNumDieOfFace(faceNum))
+                {
+                    faceNum = commonFaceArr[0];
+                }
+            }
+
+            numDice = DG_CurrentBet.instance.GetLowestPossibleNumDiceBetOfFace(faceNum);
+            //having problem with 1s
+            if (faceNum == 1 && DG_CurrentBet.instance.GetProbabilityOfBet(numDice, faceNum, knownFaces) < 0.4f)
+            {
+                faceNum = Random.Range(2, 7);
+            }
+
+            int probableNumDiceToBet = DG_GameManager.instance.CurrentTotalDiceFaces.Count / 3;
+            if (faceNum == 1) { probableNumDiceToBet = probableNumDiceToBet / 2; }
+
+            switch (personality.Aggressiveness)
+            {
+                case 1:
+                    probableNumDiceToBet = probableNumDiceToBet - 2;
+                    break;
+                case 2:
+                    probableNumDiceToBet = probableNumDiceToBet - 1;
+                    break;
+                case 3:
+                    //probableNumDiceToBet;
+                    break;
+            }
+
+            if (DG_CurrentBet.instance.IsPossibleToBet(probableNumDiceToBet, faceNum))
+            {
+                numDice = probableNumDiceToBet;
+            }
+
             DG_CurrentBet.instance.SetCurrentBet(this, numDice, faceNum);
         }
 

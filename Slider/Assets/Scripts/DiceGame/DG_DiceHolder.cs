@@ -50,6 +50,18 @@ public class DG_DiceHolder : MonoBehaviour
          .FirstOrDefault();
         return (int)modeValue;
     }
+    public int GetNumDieOfFace(int faceNum)
+    {
+        int amount = 0;
+        foreach (DG_Die die in Dice)
+        {
+            if (die.FaceNum == faceNum)
+            {
+                amount++;
+            }
+        }
+        return amount;
+    }
 
     public List<DG_Die> RollAllDice()
     {
