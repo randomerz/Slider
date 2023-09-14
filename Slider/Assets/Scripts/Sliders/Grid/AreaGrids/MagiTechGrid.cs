@@ -14,6 +14,7 @@ public class MagiTechGrid : SGrid
     [SerializeField] private Collider2D fireBoi;
     [SerializeField] private Collider2D hungryBoi;
     [SerializeField] private DesyncItem desyncBurger;
+    [SerializeField] private GameObject contractorBarrel;
     [SerializeField] private Collider2D desertPortalCollider;
 
     private bool hasBurger;
@@ -111,6 +112,20 @@ public class MagiTechGrid : SGrid
     public static bool IsInPast(Transform transform)
     {
         return transform.position.x > 67;
+    }
+
+    #endregion
+
+    #region Misc methods
+
+    public void DisableContractorBarrel()
+    {
+        if (!contractorBarrel.activeSelf)
+        {
+            contractorBarrel.SetActive(false);
+            AudioManager.Play("Puzzle Complete");
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, contractorBarrel.transform.position, contractorBarrel.transform.parent);
+        }
     }
 
     #endregion

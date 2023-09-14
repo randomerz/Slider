@@ -25,9 +25,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private List<Material> ppMaterials;
 
 
     private float moveSpeedMultiplier = 1;
+    private Vector2 directionalMoveSpeedMultiplier = Vector2.one;
     private bool canMove = true;
     private bool noClipEnabled = false;
     private bool dontUpdateStileUnderneath;
@@ -35,7 +37,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     private bool isInHouse = false;
 
     private STile currentStileUnderneath;
-
     private Vector3 lastMoveDir;
     private Vector3 inputDir;
 
@@ -69,6 +70,13 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         SetTracker(true);
     }
+
+    private void OnDisable() {
+        foreach(Material m in ppMaterials)
+        {
+            m.SetVector("_PlayerPosition", new Vector4(-1000, -1000, 0, 0));
+        }    
+    }
     
     void Update()
     {
@@ -87,6 +95,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
         playerAnimator.SetBool("isOnWater", isOnWater);
         // playerAnimator.SetBool("hasSunglasses", hasSunglasses);
+
+        foreach(Material m in ppMaterials)
+        {
+            m.SetVector("_PlayerPosition", new Vector4(transform.position.x, transform.position.y, 0, 0));
+        }
     }
 
     private void FixedUpdate()
@@ -96,7 +109,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             // we offset where the raycast starts because when you're in the boat, the collider is at the boat not the player
             Vector3 basePosition = GetPlayerTransformRaycastPosition();
             Vector3 raycastOffset = transform.position - basePosition;
-            Vector3 target = basePosition + moveSpeed * moveSpeedMultiplier * inputDir.normalized * Time.deltaTime;
+            Vector3 target = basePosition + moveSpeed * moveSpeedMultiplier * Vector3.Scale(directionalMoveSpeedMultiplier, inputDir.normalized) * Time.deltaTime;
             if (noClipEnabled)
             {
                 transform.position = target + raycastOffset;
@@ -104,7 +117,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             else
             {
                 Physics2D.queriesHitTriggers = false;
-                RaycastHit2D raycasthit = Physics2D.Raycast(basePosition, inputDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
+                RaycastHit2D raycasthit = Physics2D.Raycast(basePosition, Vector3.Scale(directionalMoveSpeedMultiplier, inputDir.normalized), moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
 
                 if (raycasthit.collider == null || raycasthit.collider.Equals(this.GetComponent<BoxCollider2D>()))
                 {
@@ -112,7 +125,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
                 }
                 else
                 {
-                    Vector3 testMoveDir = new Vector3(inputDir.x, 0f).normalized;
+                    Vector3 testMoveDir = new Vector3(directionalMoveSpeedMultiplier.x * inputDir.x, 0f).normalized;
                     target = basePosition + moveSpeed * moveSpeedMultiplier * testMoveDir * Time.deltaTime;
                     RaycastHit2D raycasthitX = Physics2D.Raycast(basePosition, testMoveDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
                     if (raycasthitX.collider == null)
@@ -121,7 +134,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
                     }
                     else
                     {
-                        testMoveDir = new Vector3(0f, inputDir.y).normalized;
+                        testMoveDir = new Vector3(0f, directionalMoveSpeedMultiplier.y * inputDir.y).normalized;
                         target = basePosition + moveSpeed * moveSpeedMultiplier * testMoveDir * Time.deltaTime;
                         RaycastHit2D raycasthitY = Physics2D.Raycast(basePosition, testMoveDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
                         if (raycasthitY.collider == null)
@@ -404,6 +417,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     public static void SetMoveSpeedMultiplier(float x)
     {
         _instance.moveSpeedMultiplier = x;
+    }
+
+    public static void SetDirectionalMoveSpeedMultiplier(Vector2 vec)
+    {
+        _instance.directionalMoveSpeedMultiplier = vec;
     }
 
     public void UpdatePlayerSpeed()

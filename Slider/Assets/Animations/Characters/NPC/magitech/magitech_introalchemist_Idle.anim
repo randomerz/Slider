@@ -7,7 +7,7 @@ AnimationClip:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: magitech_introalchemist_Idle
-  serializedVersion: 6
+  serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -18,18 +18,18 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
       value: {fileID: 2502455299600510051, guid: 34c4fc77c56c9c04b8ad78a16e0c1ccb, type: 3}
-    - time: 0.1
-      value: {fileID: -2719678660705564429, guid: 34c4fc77c56c9c04b8ad78a16e0c1ccb, type: 3}
-    - time: 0.18333334
+    - time: 0.5
       value: {fileID: -2719678660705564429, guid: 34c4fc77c56c9c04b8ad78a16e0c1ccb, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
-  m_SampleRate: 60
+    flags: 2
+  m_SampleRate: 2
   m_WrapMode: 2
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -43,16 +43,17 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: 2502455299600510051, guid: 34c4fc77c56c9c04b8ad78a16e0c1ccb, type: 3}
-    - {fileID: -2719678660705564429, guid: 34c4fc77c56c9c04b8ad78a16e0c1ccb, type: 3}
     - {fileID: -2719678660705564429, guid: 34c4fc77c56c9c04b8ad78a16e0c1ccb, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.2
+    m_StopTime: 1
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0

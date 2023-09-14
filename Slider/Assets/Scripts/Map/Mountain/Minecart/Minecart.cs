@@ -10,7 +10,7 @@ public class Minecart : Item, ISavable
     [SerializeField] private float cornerSpeed = 2.0f;
     
     private int currentDirection; //0 = East, 1 = North, 2 = West, 3 = South
-    private int nextDirection;
+    [SerializeField]    private int nextDirection;
     
     private float baseCornerSpeedMultiplier = 1; // cornerSpeed / speed
     private float cornerSpeedAmount = 1; // lerp between baseCornerSpeedMultiplier and 1
@@ -115,6 +115,12 @@ public class Minecart : Item, ISavable
         }
         else if (animator != null)
             animator.SetSpeed(0);
+    }
+
+    public override void SetLayer(int layer)
+    {
+        spriteRenderer.gameObject.layer = layer;
+        animator.SetLayer(layer);
     }
 
     //TODO: Use raycasts to figure out if should be paused or not
