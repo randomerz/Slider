@@ -8,6 +8,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 977498981132819026, guid: fbe9e5e1c99d7514fbdc27cebc2ae485, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8658de2b1c8de184291ac61cf341e94d, type: 3}
+    - target: {fileID: 5664798166563288431, guid: fbe9e5e1c99d7514fbdc27cebc2ae485, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6069105942638589620, guid: fbe9e5e1c99d7514fbdc27cebc2ae485, type: 3}
       propertyPath: m_Name
       value: DiceGame AI Player Variant
@@ -137,3 +145,5 @@ MonoBehaviour:
   playerName: defaultName
   diceHolder: {fileID: 1482987707559172862}
   diceCover: {fileID: 7721921086457107009}
+  charIcon: {fileID: 0}
+  eliminated: 0

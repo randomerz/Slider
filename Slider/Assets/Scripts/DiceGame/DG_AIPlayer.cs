@@ -14,10 +14,9 @@ public class DG_AIPlayer : DG_Player
         GenerateBSThreshold();
     }
 
-    private void Start()
-    {
-        
-    }
+    private float bsThreshold = 0.5f;
+    private float pushThreshold = 0.6f;
+
     private void GenerateBSThreshold()
     {
         switch (personality.Aggressiveness)
@@ -32,14 +31,14 @@ public class DG_AIPlayer : DG_Player
                 bsThreshold = Random.Range(0.55f, 0.65f);
                 break;
         }
+        pushThreshold = bsThreshold + Random.Range(0.07f, 0.14f);
     }
-
-
-    private float bsThreshold = 0.5f;
 
     public override IEnumerator TakeTurn()
     {
         yield return new WaitForSeconds(1);
+
+        yield return DecideToPushOrNot();
 
         yield return DecideToBetOrCallBS();
         /*
@@ -48,89 +47,124 @@ public class DG_AIPlayer : DG_Player
         DG_CurrentBet.instance.SetCurrentBet(this, bet[0], bet[1]); */
     }
 
+    private int facePushedThisTurn = -1;
+
+    private IEnumerator DecideToPushOrNot()
+    {
+        facePushedThisTurn = -1;
+        if (personality.Intelligence > 1 && !alreadyPushedThisRound && diceHolder.HasMoreThanOneDieFace()) //dummy ais do not push ever
+        {
+            int mostCommonFace = diceHolder.GetMostCommonFace();
+
+            float prob = DG_CurrentBet.instance.GetProbabilityOfBet(DG_CurrentBet.instance.GetLowestPossibleNumDiceBetOfFace(mostCommonFace), mostCommonFace);
+
+            if (prob < pushThreshold && prob > bsThreshold)
+            {
+                int rand = Random.Range(0, 3); //even then only 2/3 chance of pushing
+                if (rand == 0 || rand == 1)
+                {
+                    facePushedThisTurn = mostCommonFace;
+                    alreadyPushedThisRound = true;
+                    PushDiceOfFace(mostCommonFace);
+                    yield return new WaitForSeconds(1);
+                }
+            }
+        }
+    }
+
     private IEnumerator DecideToBetOrCallBS()
     {
-        int currBetNumDice = DG_CurrentBet.instance.NumDiceBet;
-        int currBetFaceNum = DG_CurrentBet.instance.FaceNumBet;
-
-        List<int> knownFaces = GetDiceFaces();
-
-        //Smartypants AI assume that each bet means each betting person has at least one die of the kind bet
-        if (personality.Intelligence >= 3 && DG_CurrentBet.instance.betsThisRound.Count > 0)
+        if (facePushedThisTurn != -1)
         {
-            foreach(Bet bet in DG_CurrentBet.instance.betsThisRound)
-            {
-                knownFaces.Add(bet.faceNumBet);
-            }
-        }
-
-        float currBetProbabilityOfBeingTrue;
-
-        if (personality.Intelligence <= 1) //dumb ah hell players don't consider any known dice faces when betting
-        {
-            currBetProbabilityOfBeingTrue = DG_CurrentBet.instance.GetProbabilityOfCurrentBet();
+            DG_CurrentBet.instance.SetCurrentBet(this, DG_CurrentBet.instance.GetLowestPossibleNumDiceBetOfFace(facePushedThisTurn), facePushedThisTurn);
         }
         else
         {
-            currBetProbabilityOfBeingTrue = DG_CurrentBet.instance.GetProbabilityOfCurrentBet(knownFaces);
-        }
-     
+            int currBetNumDice = DG_CurrentBet.instance.NumDiceBet;
+            int currBetFaceNum = DG_CurrentBet.instance.FaceNumBet;
 
-        if (currBetProbabilityOfBeingTrue < bsThreshold)
-        {
-            // Call BS if the current bet's probability of being true is below the threshold
-            yield return DG_GameManager.instance.BSCalled(this);
-        }
-        else
-        {
-            int faceNum;
-            int numDice;
-
-            if (personality.Intelligence <= 1)
+            List<int> knownFaces = GetDiceFaces();
+            if (personality.Intelligence >= 2)
             {
-                faceNum = diceHolder.GetMostCommonFace();
+                knownFaces.AddRange(DG_GameManager.instance.visibleDiceFaces); //Todo: not include own dice that have been pushed previously during the same round
             }
-            else //smarter ai will change the face to be the one most commonly bet around table, if more than their dice of face
+
+            //Smartypants AI assume that each bet means each betting person has at least one die of the kind bet
+            if (personality.Intelligence >= 3 && DG_CurrentBet.instance.betsThisRound.Count > 0)
             {
-                faceNum = diceHolder.GetMostCommonFace();
-                int[] commonFaceArr = DG_CurrentBet.instance.GetMostCommonFaceBetThisRound();
-                if (commonFaceArr[1] >= diceHolder.GetNumDieOfFace(faceNum))
+                foreach (Bet bet in DG_CurrentBet.instance.betsThisRound)
                 {
-                    faceNum = commonFaceArr[0];
+                    knownFaces.Add(bet.faceNumBet);
                 }
             }
 
-            numDice = DG_CurrentBet.instance.GetLowestPossibleNumDiceBetOfFace(faceNum);
-            //having problem with 1s
-            if (faceNum == 1 && DG_CurrentBet.instance.GetProbabilityOfBet(numDice, faceNum, knownFaces) < 0.4f)
+            float currBetProbabilityOfBeingTrue;
+
+            if (personality.Intelligence <= 1) //dumb ah hell players don't consider any known dice faces when betting
             {
-                faceNum = Random.Range(2, 7);
+                currBetProbabilityOfBeingTrue = DG_CurrentBet.instance.GetProbabilityOfCurrentBet();
+            }
+            else
+            {
+                currBetProbabilityOfBeingTrue = DG_CurrentBet.instance.GetProbabilityOfCurrentBet(knownFaces);
             }
 
-            int probableNumDiceToBet = DG_GameManager.instance.CurrentTotalDiceFaces.Count / 3;
-            if (faceNum == 1) { probableNumDiceToBet = probableNumDiceToBet / 2; }
 
-            switch (personality.Aggressiveness)
+            if (currBetProbabilityOfBeingTrue < bsThreshold)
             {
-                case 1:
-                    probableNumDiceToBet = probableNumDiceToBet - 2;
-                    break;
-                case 2:
-                    probableNumDiceToBet = probableNumDiceToBet - 1;
-                    break;
-                case 3:
-                    //probableNumDiceToBet;
-                    break;
+                // Call BS if the current bet's probability of being true is below the threshold
+                yield return DG_GameManager.instance.BSOrExactCalled(this);
             }
-
-            if (DG_CurrentBet.instance.IsPossibleToBet(probableNumDiceToBet, faceNum))
+            else
             {
-                numDice = probableNumDiceToBet;
-            }
+                int faceNum;
+                int numDice;
 
-            DG_CurrentBet.instance.SetCurrentBet(this, numDice, faceNum);
+                if (personality.Intelligence <= 1)
+                {
+                    faceNum = diceHolder.GetMostCommonFace();
+                }
+                else //smarter ai will change the face to be the one most commonly bet around table, if more than their dice of face
+                {
+                    faceNum = diceHolder.GetMostCommonFace();
+                    int[] commonFaceArr = DG_CurrentBet.instance.GetMostCommonFaceBetThisRound();
+                    if (commonFaceArr[1] >= diceHolder.GetNumDieOfFace(faceNum))
+                    {
+                        faceNum = commonFaceArr[0];
+                    }
+                }
+
+                numDice = DG_CurrentBet.instance.GetLowestPossibleNumDiceBetOfFace(faceNum);
+                //having problem with 1s
+                if (faceNum == 1 && DG_CurrentBet.instance.GetProbabilityOfBet(numDice, faceNum, knownFaces) < 0.4f)
+                {
+                    faceNum = Random.Range(2, 7);
+                }
+
+                int probableNumDiceToBet = DG_GameManager.instance.CurrentTotalDiceFaces.Count / 3;
+                if (faceNum == 1) { probableNumDiceToBet = probableNumDiceToBet / 2; }
+
+                switch (personality.Aggressiveness)
+                {
+                    case 1:
+                        probableNumDiceToBet = probableNumDiceToBet - 2;
+                        break;
+                    case 2:
+                        probableNumDiceToBet = probableNumDiceToBet - 1;
+                        break;
+                    case 3:
+                        //probableNumDiceToBet;
+                        break;
+                }
+
+                if (DG_CurrentBet.instance.NewBetIsValid(probableNumDiceToBet, faceNum))
+                {
+                    numDice = probableNumDiceToBet;
+                }
+
+                DG_CurrentBet.instance.SetCurrentBet(this, numDice, faceNum);
+            }
         }
-
         /*
         float currBetProbabilityOfBeingTrue = DG_CurrentBet.instance.GetProbabilityOfCurrentBet(knownFaces);
 

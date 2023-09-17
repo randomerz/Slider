@@ -16,11 +16,15 @@ public class DG_Die : MonoBehaviour
     [SerializeField] private Sprite dieFace6;
 
     [SerializeField] private GameObject highlight;
+    [SerializeField] private GameObject whiteHighlight;
 
     public int FaceNum { get; private set; }
 
-    public void ShowHighlight() { highlight.SetActive(true); }
-    public void HideHighlight() { highlight.SetActive(false); }
+    public void ShowWhiteHighlight() { HideHighlight(); whiteHighlight.SetActive(true); }
+    public void ShowHighlight() { HideHighlight(); highlight.SetActive(true); }
+    public void HideHighlight() { highlight.SetActive(false); whiteHighlight.SetActive(false); }
+
+    public bool covered = true;
 
     public int Roll()
     {

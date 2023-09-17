@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class DG_GameManager : MonoBehaviour
@@ -20,9 +22,17 @@ public class DG_GameManager : MonoBehaviour
 
     [SerializeField] private List<DG_AIPersonality> AIPersonalities = new List<DG_AIPersonality>();
     [SerializeField] private List<DG_Player> players;
+    public List<DG_Player> GetPlayers() {  return players; }
 
+    [SerializeField] private TextMeshProUGUI diceOnTableTextMesh;
+    private int numDiceOnTable;
+
+    public event Action RoundStarted;
+
+    public List<int> visibleDiceFaces = new List<int>();
     public List<int> CurrentTotalDiceFaces { get; private set; }
     public void AddDiceFaceToCurrentTotalDiceFaces(int face) {  CurrentTotalDiceFaces.Add(face); }
+    public void RemoveDiceFaceFromCurrentTotalDiceFaces(int face) { CurrentTotalDiceFaces.Remove(face); }
 
     public DGPlayDirection currentPlayDirection;
 
@@ -40,6 +50,8 @@ public class DG_GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        numDiceOnTable = (players.Count * 6);
+        diceOnTableTextMesh.text = numDiceOnTable.ToString() + " Dice On Table";
         AssignAIPersonalities();
         StartCoroutine(StartRound(players[0]));
     }
@@ -75,10 +87,14 @@ public class DG_GameManager : MonoBehaviour
 
     public IEnumerator StartRound(DG_Player startingPlayer)
     {
+        visibleDiceFaces.Clear();
         DG_CurrentBet.instance.OnNewRoundStart();
         
         CurrentTotalDiceFaces.Clear();
         RollAllPlayerDice();
+
+        RoundStarted?.Invoke();
+
         yield return startingPlayer.TakeTurn();
 
         yield return startingPlayer.ChoosePlayDirection();
@@ -113,7 +129,7 @@ public class DG_GameManager : MonoBehaviour
 
         if (playerWhoLostLastRound == null || playerWhoLostLastRound.eliminated == true)
         {
-            StartCoroutine(StartRound(players[Random.Range(0,players.Count)]));
+            StartCoroutine(StartRound(players[UnityEngine.Random.Range(0,players.Count)]));
         }
         else
         {
@@ -145,20 +161,40 @@ public class DG_GameManager : MonoBehaviour
 
     private DG_Player playerWhoLostLastRound;
 
-    public IEnumerator BSCalled(DG_Player playerCallingBS)
+    public IEnumerator BSOrExactCalled(DG_Player playerCallingBS, bool exactRequired = false)
     {
         bSCalled = true;
+        ObscureAllDice(); //for fix bug :)
+        //RemoveAllHighlights();
         //RevealAIDice();
         RevealAllDice();
         yield return new WaitForSeconds(1);
         HighlightAllDiceOfFace(DG_CurrentBet.instance.FaceNumBet);
 
         yield return new WaitForSeconds(5);
-        bool betTrue = IsCurrentBetTrue();
-        if (betTrue)
+
+        if (exactRequired)
+        {
+            if (IsCurrentBetExact())
+            {
+                Debug.Log(playerCallingBS.playerName + " was exact. No one loses a die.");
+                playerWhoLostLastRound = playerCallingBS;
+            }
+            else
+            {
+                Debug.Log(playerCallingBS.playerName + " lost the round.");
+                playerCallingBS.RemoveADie();
+                numDiceOnTable--;
+                diceOnTableTextMesh.text = numDiceOnTable.ToString() + " Dice On Table";
+                playerWhoLostLastRound = playerCallingBS;
+            }
+        }
+        else if (!exactRequired && IsCurrentBetTrue())
         {
             Debug.Log(playerCallingBS.playerName + " lost the round.");
             playerCallingBS.RemoveADie();
+            numDiceOnTable--;
+            diceOnTableTextMesh.text = numDiceOnTable.ToString() + " Dice On Table";
             playerWhoLostLastRound = playerCallingBS;
         }
         else
@@ -166,6 +202,8 @@ public class DG_GameManager : MonoBehaviour
             DG_Player playerWhoBet = DG_CurrentBet.instance.playerWhoBet;
             Debug.Log(playerWhoBet.playerName + " lost the round.");
             playerWhoBet.RemoveADie();
+            numDiceOnTable--;
+            diceOnTableTextMesh.text = numDiceOnTable.ToString() + " Dice On Table";
             playerWhoLostLastRound = playerWhoBet;
         }
         yield return new WaitForSeconds(2);
@@ -245,11 +283,45 @@ public class DG_GameManager : MonoBehaviour
             }
             if (numMatchingDiceFound >= numDiceRequired)
             {
+                Debug.Log("Found at least " + numMatchingDiceFound + " dice of face " + faceNumRequired + " out of requireed " + numDiceRequired);
                 return true;
             }
         }
         Debug.Log("only " + numMatchingDiceFound + " dice of face " + faceNumRequired + " found, out of needed " + numDiceRequired);
         return false;
     }
+
+    private bool IsCurrentBetExact()
+    {
+        List<int> totalDiceFaces = new List<int>();
+        foreach (DG_Player player in players)
+        {
+            totalDiceFaces.AddRange(player.GetDiceFaces());
+        }
+
+        int faceNumRequired = DG_CurrentBet.instance.FaceNumBet;
+        int numDiceRequired = DG_CurrentBet.instance.NumDiceBet;
+        int numMatchingDiceFound = 0;
+
+        foreach (int diceFace in totalDiceFaces)
+        {
+            if (diceFace == faceNumRequired || diceFace == 1)
+            {
+                numMatchingDiceFound++;
+            }
+        }
+
+        if (numMatchingDiceFound == numDiceRequired)
+        {
+            Debug.Log("exactly " + numMatchingDiceFound + " dice of face " + faceNumRequired + " found, out of needed " + numDiceRequired);
+            return true;
+        }
+        else
+        {
+            Debug.Log(numMatchingDiceFound + " dice of face " + faceNumRequired + " found, but it needed to be exactly " + numDiceRequired);
+            return false;
+        }
+    }
+
 }
 public enum DGPlayDirection { ClockWise, CounterClockWise }

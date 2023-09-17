@@ -90,15 +90,9 @@ public class DG_CurrentBet : MonoBehaviour
         {
             betsThisRound.Clear();
         }
-        SetCurrentBet(null, 1, 1);
+        SetCurrentBet(null, 0, 1);
     }
 
-    public bool IsPossibleToBet(int numDice, int faceNum)
-    {
-        if (numDice < NumDiceBet) { return false; }
-        if (faceNum < FaceNumBet && numDice <= NumDiceBet) { return false; }
-        return true;
-    }
 
     //Todo: show current face of betting player
     public void SetCurrentBet(DG_Player player, int numDice, int faceNum)
@@ -141,6 +135,7 @@ public class DG_CurrentBet : MonoBehaviour
 
         if (numDice < NumDiceBet) { return false; }
         if (faceNum <= FaceNumBet && numDice <= NumDiceBet) { return false; }
+        if (FaceNumBet == 1 && faceNum != 1 && numDice < (NumDiceBet * 2) + 1) { return false; } //switching face off 1s rule
         return true;
     }
 
@@ -165,9 +160,13 @@ public class DG_CurrentBet : MonoBehaviour
 
     public int GetLowestPossibleNumDiceBetOfFace(int faceNum) 
     {
-        int[] bet = new int[2];
         int currNumDiceBet = NumDiceBet;
         int currFaceNumBet = FaceNumBet;
+
+        if (currFaceNumBet == 1 && faceNum != 1) //switching face off 1s rule
+        {
+            return (currNumDiceBet * 2) + 1;
+        }
 
         if (faceNum > currFaceNumBet)
         {

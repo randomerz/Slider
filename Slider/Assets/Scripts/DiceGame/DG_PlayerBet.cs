@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DG_PlayerBet : MonoBehaviour
 {
@@ -22,10 +23,43 @@ public class DG_PlayerBet : MonoBehaviour
 
     }
 
+    [SerializeField] private Button[] faceNumBetArrows;
+
+    public void LockFace(int faceNum)
+    {
+        SetCurrentBet(DG_CurrentBet.instance.GetLowestPossibleNumDiceBetOfFace(faceNum), faceNum);
+
+        foreach (Button button in faceNumBetArrows)
+        {
+            //button.enabled = false;
+            button.gameObject.SetActive(false);
+        }
+    }
+
+    private void UnlockFaceArrows()
+    {
+        foreach (Button button in faceNumBetArrows)
+        {
+            //button.enabled = true;
+            button.gameObject.SetActive(true);
+        }
+    }
+
     private void OnEnable()
     {
-        int[] bet = DG_CurrentBet.instance.GetLowestPossibleBet();
+        int[] bet = new int[2];
+        if (DG_CurrentBet.instance.FaceNumBet == 1)
+        {
+            bet[0] = DG_CurrentBet.instance.NumDiceBet + 1;
+            bet[1] = 1;
+        }
+        else
+        {
+            bet = DG_CurrentBet.instance.GetLowestPossibleBet();
+        }
+
         SetCurrentBet(bet[0], bet[1]);
+        UnlockFaceArrows();
     }
 
     public void IncrementNumDiceBet()
@@ -40,6 +74,14 @@ public class DG_PlayerBet : MonoBehaviour
         if (DG_CurrentBet.instance.NewBetIsValid(NumDiceBet, FaceNumBet + 1))
         {
             SetCurrentBet(NumDiceBet, FaceNumBet + 1);
+        }
+        else if (DG_CurrentBet.instance.FaceNumBet == 1) //switching face off 1s rule
+        {
+            int numDiceLastBet = DG_CurrentBet.instance.NumDiceBet;
+            if (DG_CurrentBet.instance.NewBetIsValid((numDiceLastBet * 2) + 1, FaceNumBet + 1))
+            {
+                SetCurrentBet((numDiceLastBet * 2) + 1, FaceNumBet + 1);
+            }
         }
     }
     public void DecrementNumDiceBet()

@@ -5,24 +5,32 @@ using UnityEngine;
 public class DG_HumanPlayer : DG_Player
 {
     [SerializeField] private DG_PlayerBet playerBet;
+    [SerializeField] private DG_PlayerPush playerPush;
 
     [SerializeField] private GameObject playDirectionChoiceUI;
     [SerializeField] private GameObject humanPlayerTurnUI;
     [SerializeField] private GameObject BsButtonUI;
+    [SerializeField] private GameObject ExactButtonUI;
+
 
     public override IEnumerator TakeTurn()
     {
+        if (!alreadyPushedThisRound && diceHolder.HasMoreThanOneDieFace())
+        {
+            playerPush.gameObject.SetActive(true);
+        }
         humanPlayerTurnUI.SetActive(true);
-        if (DG_CurrentBet.instance.playerWhoBet == null) { BsButtonUI.SetActive(false); }
-        else { BsButtonUI.SetActive(true);}
+        if (DG_CurrentBet.instance.playerWhoBet == null) { BsButtonUI.SetActive(false); ExactButtonUI.SetActive(false); }
+        else { BsButtonUI.SetActive(true); ExactButtonUI.SetActive(true); }
 
-        yield return new WaitUntil(() => (hasBetBeenPlaced || hasBSBeenCalled) );
+        yield return new WaitUntil(() => (hasBetBeenPlaced || hasBSBeenCalled || hasExactBeenCalled) );
 
         if (hasBetBeenPlaced)
         {
             Debug.Log("Human Player placed Bet");
             hasBetBeenPlaced = false;
             hasBSBeenCalled = false;
+            hasExactBeenCalled = false;
             humanPlayerTurnUI.SetActive(false);
             DG_CurrentBet.instance.SetCurrentBet(this, betPlaced[0], betPlaced[1]);
         }
@@ -31,8 +39,18 @@ public class DG_HumanPlayer : DG_Player
             Debug.Log("Human Player called BS");
             hasBetBeenPlaced = false;
             hasBSBeenCalled = false;
+            hasExactBeenCalled = false;
             humanPlayerTurnUI.SetActive(false);
-            yield return DG_GameManager.instance.BSCalled(this);
+            yield return DG_GameManager.instance.BSOrExactCalled(this);
+        }
+        else if (hasExactBeenCalled)
+        {
+            Debug.Log("Human Player called Exact");
+            hasBetBeenPlaced = false;
+            hasBSBeenCalled = false;
+            hasExactBeenCalled = false;
+            humanPlayerTurnUI.SetActive(false);
+            yield return DG_GameManager.instance.BSOrExactCalled(this, true);
         }
     }
 
@@ -78,5 +96,24 @@ public class DG_HumanPlayer : DG_Player
     public void OnCallBSButtonPressed()
     {
         hasBSBeenCalled = true;
+    }
+
+    private bool hasExactBeenCalled = false;
+
+    public void OnExactButtonPressed()
+    {
+        hasExactBeenCalled = true;
+    }
+
+    public void OnPushButtonPressed()
+    {
+        int faceNumPushed = playerPush.FaceNumPushed;
+        if (PlayerHasADieOfFace(faceNumPushed))
+        {
+            alreadyPushedThisRound = true;
+            PushDiceOfFace(faceNumPushed);
+            playerPush.gameObject.SetActive(false);
+            playerBet.LockFace(faceNumPushed);
+        }
     }
 }
