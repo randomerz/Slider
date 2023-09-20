@@ -104,11 +104,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -147,6 +148,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
   cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
@@ -159,6 +161,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -171,6 +174,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -183,6 +187,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -195,6 +200,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -830,6 +836,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: factory_walls_14
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05d7995660b817f42b39321216aa746b
+      internalID: 229696477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -841,39 +868,39 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      factory_walls_28: 1883248438
-      factory_walls_12: -5855415910186159287
-      factory_floor_9: -7486242702885228093
+      factory_floor_1: -2206853299947711291
+      factory_floor_2: 245390070594093492
+      factory_floor_3: -5799260657990219238
       factory_floor_4: -3115385262663827353
-      factory_walls_3: 5181915737899985060
+      factory_floor_5: -4083509027660875622
       factory_floor_6: -3286740173221195825
+      factory_floor_7: -2067817552921758196
+      factory_floor_8: -6166153859588884542
+      factory_floor_9: -7486242702885228093
       factory_walls_0: 854000078829048441
       factory_walls_1: -227354677660036701
+      factory_walls_10: -2681458271809495309
+      factory_walls_11: -6258596149660682450
+      factory_walls_12: -5855415910186159287
+      factory_walls_13: 1760230248699497498
+      factory_walls_14: 229696477
+      factory_walls_18: -1541445073209797729
+      factory_walls_19: 7152565750316581085
+      factory_walls_2: 6135466068098583208
+      factory_walls_20: -6782140867282557337
+      factory_walls_26: 6162867600795283485
+      factory_walls_27: 4253713392269286141
+      factory_walls_28: 1883248438
+      factory_walls_29: 431598344
+      factory_walls_3: 5181915737899985060
+      factory_walls_4: 6986149295922561831
       factory_walls_5: -5694396535989303636
       factory_walls_6: -2372321331741563391
-      factory_walls_2: 6135466068098583208
-      factory_walls_26: 6162867600795283485
-      factory_walls_20: -6782140867282557337
-      factory_walls_4: 6986149295922561831
-      factory_walls_18: -1541445073209797729
-      factory_floor_2: 245390070594093492
-      factory_floor_8: -6166153859588884542
-      factory_walls_29: 431598344
-      factory_walls_8: -1854220074246840335
-      factory_floor_5: -4083509027660875622
-      factory_floor_7: -2067817552921758196
-      factory_floor_3: -5799260657990219238
-      factory_walls_10: -2681458271809495309
-      factory_walls_13: 1760230248699497498
       factory_walls_7: 2568471475763791223
-      factory_walls_11: -6258596149660682450
-      factory_floor_1: -2206853299947711291
-      factory_walls_27: 4253713392269286141
+      factory_walls_8: -1854220074246840335
       factory_walls_9: -1659043098239289736
-      factory_walls_19: 7152565750316581085
-  spritePackingTag: 
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
