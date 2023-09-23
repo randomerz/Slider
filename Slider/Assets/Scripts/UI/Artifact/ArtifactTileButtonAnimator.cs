@@ -48,7 +48,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             {
                 i.gameObject.SetActive(false);
             }
-            // SetHighlighted(isLightning); //Edge case where you set lightning while tile is moving
+            SetHighlighted(isLightning); //Edge case where you set lightning while tile is moving. Needed for desert frag
         }
     }
 
