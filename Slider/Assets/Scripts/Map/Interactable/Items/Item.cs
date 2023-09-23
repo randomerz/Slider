@@ -31,9 +31,12 @@ public class Item : MonoBehaviour, ISavable
     private Vector3 savedPositionBuffer;
     private bool enableColliderOnTriggerExit;
 
+    private int order;
+
     public virtual void Awake()
     {
         spriteOffset = spriteRenderer.transform.localPosition;
+        order = spriteRenderer.sortingOrder;
     }
 
     private void Start()
@@ -163,6 +166,16 @@ public class Item : MonoBehaviour, ISavable
     public void SetSortingOrder(int num)
     {
         spriteRenderer.sortingOrder = num;
+    }
+
+    public void ResetSortingOrder()
+    {
+        spriteRenderer.sortingOrder = order;
+    }
+
+    public virtual void SetLayer(int layer)
+    {
+        spriteRenderer.gameObject.layer = layer;
     }
 
 

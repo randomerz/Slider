@@ -13,6 +13,9 @@ public class PlayerConditionals : MonoBehaviour, IInteractable
     public bool isCarryingItem;
     public string itemNameCheck;
 
+    public bool excludeBoat = false;
+    public bool excludeLand = false;
+
     private bool onActionEnabled = true;
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -33,6 +36,12 @@ public class PlayerConditionals : MonoBehaviour, IInteractable
                         {
                             return;
                         }
+                    }
+
+                    if (Player.GetInstance().GetIsOnWater() && excludeBoat ||
+                    !Player.GetInstance().GetIsOnWater() && excludeLand)
+                    {
+                        return;
                     }
                     
                     Player.GetPlayerAction().AddInteractable(this);

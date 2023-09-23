@@ -17,13 +17,16 @@ public class PlayerInventory : MonoBehaviour
     private static List<Item> equipables = new List<Item>();
     private static IEnumerator<Item> itemIterator = equipables.GetEnumerator();
     private static Item currentItem = null;
-    private static int sortingOrder;
 
     private bool hasCollectedAnchor = false;
     [SerializeField] private Transform itemPickupTransform;
     [SerializeField] private GameObject anchorPrefab;
 
     private bool didInit;
+
+    //public int itemSpriteCalls = 0;
+    public SpriteRenderer spriteRenderer;
+    private static int itemSortingOrder;
 
     public static PlayerInventory Instance
     {
@@ -127,8 +130,6 @@ public class PlayerInventory : MonoBehaviour
     public static void AddCollectibleFromData(Collectible.CollectibleData data) => collectibles.Add(data);
 
     public static void AddCollectible(Collectible collectible) {
-        // Debug.Log("Adding " + collectible.GetArea() + " " + collectible.GetName());
-
         collectibles.Add(collectible.GetCollectibleData());
         OnPlayerGetCollectible?.Invoke(instance, new InventoryEvent {collectible = collectible});
     }
@@ -145,7 +146,7 @@ public class PlayerInventory : MonoBehaviour
         currentItem = itemIterator.Current;
 
         currentItem.OnEquip();
-        Instance.SetItemSortingOrder(sortingOrder);
+        currentItem.SetSortingOrder(itemSortingOrder);
     }
 
     public static void NextItem()
@@ -159,14 +160,13 @@ public class PlayerInventory : MonoBehaviour
             itemIterator = equipables.GetEnumerator();
         }
         bool res = itemIterator.MoveNext();
-        // Debug.Log(currentItem);
-        // Debug.Log(equipables);
+
         if (res)
         {
             currentItem = itemIterator.Current;
             currentItem.gameObject.SetActive(true);
             currentItem.OnEquip();
-            Instance.SetItemSortingOrder(sortingOrder);
+            currentItem.SetSortingOrder(itemSortingOrder);
         }
         else
         {
@@ -187,7 +187,6 @@ public class PlayerInventory : MonoBehaviour
         Item temp = currentItem;
         currentItem = null;
         itemIterator = equipables.GetEnumerator();
-        Instance.SetItemSortingOrder(0);
         return temp;
     }
 
@@ -198,7 +197,6 @@ public class PlayerInventory : MonoBehaviour
         Destroy(currentItem.gameObject);
         currentItem = null;
         itemIterator = equipables.GetEnumerator();
-        Instance.SetItemSortingOrder(0);
     }
 
     public static Item GetCurrentItem()
@@ -208,9 +206,10 @@ public class PlayerInventory : MonoBehaviour
 
     public void SetItemSortingOrder(int num)
     {
-        sortingOrder = num;
-        if(currentItem == null) return;
-        currentItem.SetSortingOrder(num);
+        itemSortingOrder = num;
+        spriteRenderer.sortingOrder = num;
+        if(currentItem != null)
+            currentItem.SetSortingOrder(num);
     }
 
     /// <summary>

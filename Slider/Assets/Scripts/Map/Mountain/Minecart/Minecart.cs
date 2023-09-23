@@ -117,6 +117,12 @@ public class Minecart : Item, ISavable
             animator.SetSpeed(0);
     }
 
+    public override void SetLayer(int layer)
+    {
+        spriteRenderer.gameObject.layer = layer;
+        animator.SetLayer(layer);
+    }
+
     //TODO: Use raycasts to figure out if should be paused or not
     private void OnCollisionEnter2D(Collision2D other) 
     {

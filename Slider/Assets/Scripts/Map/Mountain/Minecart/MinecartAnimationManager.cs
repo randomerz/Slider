@@ -87,6 +87,13 @@ public class MinecartAnimationManager : MonoBehaviour
         lavaAnimator.speed = speed;
       //  repairPartsAnimator.speed = speed;
     }
+
+    public void SetLayer(int layer)
+    {
+        lavaAnimator.gameObject.layer = layer;
+        repairPartsAnimator.gameObject.layer = layer;
+        crystalAnimator.gameObject.layer = layer;
+    }
 }
 
 
