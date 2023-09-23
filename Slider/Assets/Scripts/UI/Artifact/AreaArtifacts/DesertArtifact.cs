@@ -91,7 +91,7 @@ public class DesertArtifact : UIArtifact
     {
         QueueAdd(move);
         //UpdateUI();
-        Debug.Log($"Curr: {buttonCurrent}");
+        //Debug.Log($"Curr: {buttonCurrent}");
         ProcessQueue();
         UpdatePushedDowns(null, null);
         DeselectSelectedButton();
