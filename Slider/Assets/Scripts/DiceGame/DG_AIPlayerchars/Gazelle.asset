@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bedebc3a73aed5e43bdcae0a298225ef, type: 3}
+  m_Name: Gazelle
+  m_EditorClassIdentifier: 
+  playerName: Gazelle
+  CharacterSprite: {fileID: 7278793330974755728, guid: 37df57e45367ff94db3b597e44d99e79, type: 3}
+  CharacterIconSprite: {fileID: 7278793330974755728, guid: 37df57e45367ff94db3b597e44d99e79, type: 3}
+  Intelligence: 2
+  Aggressiveness: 2
