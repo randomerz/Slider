@@ -23,9 +23,11 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
     {
         if (mirageIslandId > 0)
         {
+            Debug.Log("disablemirage");
             DisableMirage();
             return;
         }
+        Debug.Log("selecting");
         button.SelectButton();
     }
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
@@ -46,7 +48,7 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
             buttonMirage.SetMirageEnabled(true);
         }
         //Enable STile
-        MirageSTileManager.GetInstance().EnableMirage(mirageIslandId, cords.Item1, cords.Item2);
+        MirageSTileManager.GetInstance().EnableMirage(mirageIslandId, cords.Item1, cords.Item2, button.islandId);
     }
 
     private void DisableMirage()
@@ -54,7 +56,7 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         button.RestoreDefaultEmptySprite();
         button.RestoreDefaultIslandSprite();
         button.SetSpriteToIslandOrEmpty();
-        MirageSTileManager.GetInstance().DisableMirage(mirageIslandId);
+        MirageSTileManager.GetInstance().DisableMirage(button.islandId, mirageIslandId);
         mirageIslandId = 0;
         stile.sliderCollider.isTrigger = false;
         buttonMirage.SetMirageEnabled(false);
