@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5704842991819039491}
   - component: {fileID: 5704842991819039488}
   - component: {fileID: 5704842991819039489}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: ComputerSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5704842991819039490}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5704842992231942231}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5704842991819039488
 SpriteRenderer:
@@ -87,7 +87,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 1
 --- !u!95 &5704842991819039489
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -104,7 +104,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5704842992231942230
 GameObject:
   m_ObjectHideFlags: 0
@@ -119,7 +120,7 @@ GameObject:
   - component: {fileID: 5704842992231942229}
   - component: {fileID: 5704842992231942227}
   - component: {fileID: 5704842992231942228}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: InteractiveComputer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,6 +134,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5704842992231942230}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -140,7 +142,6 @@ Transform:
   m_Children:
   - {fileID: 5704842991819039491}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5704842992231942224
 MonoBehaviour:
@@ -159,7 +160,6 @@ MonoBehaviour:
   powerOnStart: 0
   invertSignal: 0
   affectedByBlackout: 1
-  debugAsPoweredOn: 0
   OnPowered:
     m_PersistentCalls:
       m_Calls: []
@@ -208,17 +208,6 @@ MonoBehaviour:
   power: {fileID: 5704842992231942224}
   anim: {fileID: 5704842991819039489}
   pConds: {fileID: 5704842992231942229}
-  ppChanger: {fileID: 5704842992231942227}
-  pastTileMaps:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   OnInteract:
     m_PersistentCalls:
       m_Calls: []
@@ -252,7 +241,8 @@ MonoBehaviour:
   addToOnAction: 1
   isCarryingItem: 0
   itemNameCheck: 
-  triggerIsLit: 0
+  excludeBoat: 0
+  excludeLand: 0
 --- !u!114 &5704842992231942227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -279,6 +269,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
