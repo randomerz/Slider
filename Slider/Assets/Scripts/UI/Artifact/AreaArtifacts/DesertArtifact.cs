@@ -6,6 +6,25 @@ using UnityEngine.EventSystems;
 
 public class DesertArtifact : UIArtifact
 {
+    public Dictionary<(int, int), int> currGrid;
+    private List<ATBPair> storedSwaps;
+
+    private class ATBPair
+    {
+        public ArtifactTileButton current;
+        public ArtifactTileButton furthest;
+        public ATBPair(ArtifactTileButton c, ArtifactTileButton f)
+        {
+            current = c;
+            furthest = f;
+        }
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        currGrid = new Dictionary<(int, int), int>();
+        storedSwaps = new List<ATBPair>();
+    }
     protected override void OnDisable()
     {
         base.OnDisable();
@@ -45,8 +64,6 @@ public class DesertArtifact : UIArtifact
         return options;
     }
 
-    //L: Deleted ButtonDragEnd override because the code was exactly the same and GetMoveOptions is marked virtual so it will automatically call the right one.
-
     public override bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         SMove move = ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);;
@@ -57,11 +74,13 @@ public class DesertArtifact : UIArtifact
             {
                 return false;
             }
+            //Maybe do UI swaps here
             QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
             return true;
         }
         else
         {
+            storedSwaps.Clear();
             LogMoveFailure();
             return false;
         }
@@ -70,6 +89,8 @@ public class DesertArtifact : UIArtifact
     protected override void QueueMoveFromButtonPair(SMove move, ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         QueueAdd(move);
+        //UpdateUI();
+        //Debug.Log($"Curr: {buttonCurrent}");
         ProcessQueue();
         UpdatePushedDowns(null, null);
         DeselectSelectedButton();
@@ -82,6 +103,11 @@ public class DesertArtifact : UIArtifact
         SSlideSwap move;
         int dx = buttonEmpty.x - buttonCurrent.x;
         int dy = buttonEmpty.y - buttonCurrent.y;
+        Array.ForEach(buttons, plugin =>
+        {
+            currGrid[(plugin.x, plugin.y)] = plugin.islandId;
+        });
+        
         if (dx > 0)
         {
             move = SlideRight();
@@ -148,6 +174,15 @@ public class DesertArtifact : UIArtifact
         }
     }
 
+    private void UpdateUI()
+    {
+        foreach (ATBPair s in storedSwaps)
+        {
+            SwapButtons(s.current, s.furthest);
+        }
+        storedSwaps.Clear();
+    }
+
     #region SSlideSwap
     //Chen: Below are the 4 methods for sliding all tiles. UI swapping is handled here
     public SSlideSwap SlideRight()
@@ -162,7 +197,7 @@ public class DesertArtifact : UIArtifact
             GetButton(0, col)
             };
 
-            UpdateSwapsAndUI(swaps, tiles, Vector2Int.right);
+            UpdateSwaps(swaps, tiles, Vector2Int.right);
         }
         return new SSlideSwap(swaps);
     }
@@ -178,7 +213,7 @@ public class DesertArtifact : UIArtifact
             GetButton(1, col),
             GetButton(2, col)
             };
-            UpdateSwapsAndUI(swaps, tiles, Vector2Int.left);
+            UpdateSwaps(swaps, tiles, Vector2Int.left);
         }
         return new SSlideSwap(swaps);
     }
@@ -194,7 +229,7 @@ public class DesertArtifact : UIArtifact
             GetButton(row, 1),
             GetButton(row, 0)
             };
-            UpdateSwapsAndUI(swaps, tiles, Vector2Int.up);
+            UpdateSwaps(swaps, tiles, Vector2Int.up);
         }
         return new SSlideSwap(swaps);
     }
@@ -210,12 +245,12 @@ public class DesertArtifact : UIArtifact
             GetButton(row, 1),
             GetButton(row, 2),
             };
-            UpdateSwapsAndUI(swaps, tiles, Vector2Int.down);
+            UpdateSwaps(swaps, tiles, Vector2Int.down);
         }
         return new SSlideSwap(swaps);
     }
 
-    private void UpdateSwapsAndUI(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
+    private void UpdateSwaps(List<Movement> swaps, List<ArtifactTileButton> tiles, Vector2Int dir)
     {
         Vector2Int emptyButtonStart = new Vector2Int(-1, -1);
         Vector2Int emptyButtonEnd = new Vector2Int(-1, -1);
@@ -237,6 +272,7 @@ public class DesertArtifact : UIArtifact
 
 
                     swaps.Add(new Movement(button.x, button.y, furthest.x, furthest.y, button.islandId));
+                    storedSwaps.Add(new ATBPair(button, furthest));
                     SwapButtons(button, furthest);  //L: This is kinda bad to do here since it's a side effect of constructing the move, but I don't want to break it (since I already did)
                 }
             }
