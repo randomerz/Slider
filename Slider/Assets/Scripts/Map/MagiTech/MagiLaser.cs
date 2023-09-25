@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MagiLaser : MonoBehaviour
 {
-    private Vector2 initDir = Vector2.left;
+    [SerializeField] private Vector2 initDir = Vector2.left;
 
     private bool isPowered;
     public bool isEnabled;
