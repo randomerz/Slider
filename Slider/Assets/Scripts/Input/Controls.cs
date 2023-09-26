@@ -90,8 +90,11 @@ public class Controls : Singleton<Controls>
             _bindings = new InputSettings();
         }
         var rebinds = PlayerPrefs.GetString("rebinds");
+
         if (!string.IsNullOrEmpty(rebinds))
         {
+            // 9/23/23 this crashed bc of corrupted player prefs (we think)
+            // we may want to try {} catch {} this with a clear player prefs if it happens again
             _bindings.LoadBindingOverridesFromJson(rebinds);
         }
     }
