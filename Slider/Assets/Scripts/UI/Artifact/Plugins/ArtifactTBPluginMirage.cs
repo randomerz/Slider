@@ -38,7 +38,7 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         DesertArtifact artifact = (DesertArtifact)UIArtifact.GetInstance();
         mirageIslandId = artifact.currGrid[cords];
         //Do some sanity checking on mirageID
-        Debug.Log($"mirage: {mirageIslandId} (x,y): {cords}");
+        //Debug.Log($"mirage: {mirageIslandId} (x,y): {cords}");
         if (mirageIslandId < 8) 
         {
             button.SetEmptySprite(mirageSprites[mirageIslandId - 1]);
@@ -48,7 +48,7 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
             buttonMirage.SetMirageEnabled(true);
         }
         //Enable STile
-        MirageSTileManager.GetInstance().EnableMirage(mirageIslandId, cords.Item1, cords.Item2, button.islandId);
+        MirageSTileManager.GetInstance().EnableMirage(mirageIslandId, cords.Item1, cords.Item2);
     }
 
     private void DisableMirage()
@@ -56,7 +56,7 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         button.RestoreDefaultEmptySprite();
         button.RestoreDefaultIslandSprite();
         button.SetSpriteToIslandOrEmpty();
-        MirageSTileManager.GetInstance().DisableMirage(button.islandId, mirageIslandId);
+        MirageSTileManager.GetInstance().DisableMirage(mirageIslandId);
         mirageIslandId = 0;
         stile.sliderCollider.isTrigger = false;
         buttonMirage.SetMirageEnabled(false);

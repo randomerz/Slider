@@ -59,7 +59,7 @@ public class DesertTabManager : ArtifactTabManager
         artifact.DeselectSelectedButton();
         UpdateMiddleEmpty();
         //Mirage
-        MirageSTileManager.GetInstance().UpdateMirageSTileOnFrag(empty.x, empty.y);
+        //MirageSTileManager.GetInstance().UpdateMirageSTileOnFrag(empty.x, empty.y);
         FragRearrangeOnHoverExit();
     }
 
