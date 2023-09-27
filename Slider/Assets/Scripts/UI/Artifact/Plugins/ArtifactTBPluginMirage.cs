@@ -23,9 +23,11 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
     {
         if (mirageIslandId > 0)
         {
+            Debug.Log("disablemirage");
             DisableMirage();
             return;
         }
+        Debug.Log("selecting");
         button.SelectButton();
     }
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
@@ -36,7 +38,7 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         DesertArtifact artifact = (DesertArtifact)UIArtifact.GetInstance();
         mirageIslandId = artifact.currGrid[cords];
         //Do some sanity checking on mirageID
-        Debug.Log($"mirage: {mirageIslandId} (x,y): {cords}");
+        //Debug.Log($"mirage: {mirageIslandId} (x,y): {cords}");
         if (mirageIslandId < 8) 
         {
             button.SetEmptySprite(mirageSprites[mirageIslandId - 1]);

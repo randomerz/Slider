@@ -7,25 +7,22 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
 {
 
     [SerializeField] private List<GameObject> mirageSTiles;
-    
-    private DesertGrid grid;
+    public static Vector2Int mirageTailPos;
 
     public void Awake()
     {
         InitializeSingleton();
-        grid = GetComponentInParent<DesertGrid>();
+        mirageTailPos = new Vector2Int(-1, -1);
     }
-    private void OnDisable()
-    {
-        DisableMirage();
-    }
+
     public void EnableMirage(int islandId, int x, int y)
     {
-        Debug.Log($"enabled: {islandId}");
         if (islandId > 7) return;
         //Do some STile collider crap
         mirageSTiles[islandId - 1].transform.position = new Vector2(x*17, y*17);
         mirageSTiles[islandId - 1].gameObject.SetActive(true);
+        if (islandId == 7) mirageTailPos = new Vector2Int(x, y);
+        Debug.Log(mirageTailPos);
         //Insert enabling coroutine fading in
     }
     /// <summary>
@@ -34,7 +31,6 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     /// <param name="islandId">0 means disable all mirages</param>
     public void DisableMirage(int islandId = -1)
     {
-        Debug.Log($"disable called with: {islandId}");
         //Do player location check and random parenting bs
         int mirageIsland;
         //if (isPlayerOnMirage(out mirageIsland))
@@ -45,7 +41,9 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
         //Insert disable effect
         if (islandId == 0 || islandId > 7) return;
         if (islandId < 0) foreach (GameObject o in mirageSTiles) o.SetActive(false);
+        if (islandId == 7) mirageTailPos = new Vector2Int(-1, -1);
         else mirageSTiles[islandId - 1].gameObject.SetActive(false);
+        Debug.Log(mirageTailPos);
     }
     private bool isPlayerOnMirage(out int islandId)
     {
@@ -65,6 +63,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
         islandId = -1;
         return false;
     }
+
     public static MirageSTileManager GetInstance()
     {
         return _instance;
