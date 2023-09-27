@@ -32,15 +32,49 @@ public class JungleArtifact : UIArtifact
 
             Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy, buttonCurrent.islandId);
 
+            // AG: Start
+
+            if (dx != 0 && dy != 0)
+            {
+                linkedSwap = new SMoveLinkedSwap(x, y, x, buttonEmpty.y, linkx, linky,
+                                                buttonCurrent.islandId, buttonCurrent.LinkButton.islandId);
+            }
+            else
+            {
+                if (Math.Abs(dx) > 1)
+                {
+                    return TryQueueMoveFromButtonPair(buttonCurrent.LinkButton, buttonEmpty);
+                }
+            }
+
+            // AG: End
+
             if (SGrid.Current.CanMove(linkedSwap) && 
                 (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && 
                 moveQueue.Count < maxMoveQueueSize)
             {
+
+                
+
                 QueueAdd(linkedSwap);
 
-                //L: Swap the current button and the link button
-                SwapButtons(buttonCurrent, buttonEmpty);
-                SwapButtons(buttonCurrent.LinkButton, GetButton(linkx + dx, linky + dy));
+                
+                // AG: Start
+
+                if (dx != 0 && dy != 0)
+                {
+                    SwapButtons(buttonCurrent, GetButton(x, y + dy));
+                    SwapButtons(buttonCurrent.LinkButton, GetButton(linkx, linky + dy));
+                }
+                else
+                {
+                    //L: Swap the current button and the link button
+                    SwapButtons(buttonCurrent, buttonEmpty);
+                    SwapButtons(buttonCurrent.LinkButton, GetButton(linkx + dx, linky + dy));
+                }
+
+                // AG: End
+                
                 ProcessQueue();
                 UpdateMoveOptions();
 
@@ -55,6 +89,11 @@ public class JungleArtifact : UIArtifact
         }
     }
 
+    protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    {
+        return base.ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
+    }
+
     //Checks if the move can happen on the grid.
     //L: This should maybe be checked with GetMoveOptions?
     private bool OpenPath(Movement move)
@@ -63,10 +102,7 @@ public class JungleArtifact : UIArtifact
         int dx = move.endLoc.x - move.startLoc.x;
         int dy = move.endLoc.y - move.startLoc.y;
         int toCheck = Math.Max(Math.Abs(dx), Math.Abs(dy));
-        if (dx != 0 && dy != 0)
-        {
-            return false;
-        }
+
         if (dx == 0)
         {
             int dir = dy / Math.Abs(dy);
@@ -92,98 +128,108 @@ public class JungleArtifact : UIArtifact
         return true;
     }
 
-    /// <summary>
-    /// AG: Overriding the UpdatePushedDowns method to get both tiles 2 and 3
-    /// pushed down if you press one or the other. Used in event handling in
-    /// parent UIArtifact class.
-    /// </summary>
-    /// <param name="sender">Event handling parameter</param>
-    /// <param name="e">Event parameter</param>
-    public override void UpdatePushedDowns(object sender, System.EventArgs e)
-    {
-        foreach (ArtifactTileButton b in _instance.buttons)
-        {
-            if (b.gameObject.activeSelf)
-            {
-                if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
-                {
-                    b.SetIsInMove(true);
-                }
-                else if (b.MyStile.hasAnchor)
-                {
-                    continue;
-                }
-                else
-                {
-                    b.SetIsInMove(false);
-                }
-            }
-        }
-    }
-
+    
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
+        if (button.LinkButton == null)
+        {
+            return base.GetMoveOptions(button);
+        }
+
         List<ArtifactTileButton> options = new List<ArtifactTileButton>();
 
-        Vector2Int[] dirs = {
-            Vector2Int.right,
+        Vector2Int[] dirsVert = {
             Vector2Int.up,
-            Vector2Int.left,
             Vector2Int.down
         };
 
-        foreach (Vector2Int dir in dirs)
+        Vector2Int[] dirsHoriz =
+        {
+            Vector2Int.left,
+            Vector2Int.right
+        };
+
+        // Up and Down
+        foreach (Vector2Int dir in dirsVert)
         {
             ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
+            ArtifactTileButton c = GetButton(button.LinkButton.x + dir.x, button.LinkButton.y + dir.y);
             int i = 2;
-            while (b != null && !b.TileIsActive)
+            while (b != null && !b.TileIsActive && c != null && !c.TileIsActive)
             {
                 options.Add(b);
-                if (button.islandId == 2)
-                {
-                    // Buttons above and below
-                    for (int vert = -2; vert <= 2; vert++)
-                    {
-                        ArtifactTileButton c = GetButton(button.x + 1, button.y + vert);
-                        if (c != null && !c.TileIsActive)
-                        {
-                            options.Add(c);
-                        }
-                    }
-                    // To the right
-                    ArtifactTileButton right = GetButton(button.x + 2, button.y);
-                    if (right != null && !right.TileIsActive)
-                    {
-                        options.Add(right);
-                    }
-                }
-                else if (button.islandId == 3)
-                {
-                    // Buttons above and below
-                    for (int vert = -2; vert <= 2; vert++)
-                    {
-                        ArtifactTileButton c = GetButton(button.x - 1, button.y + vert);
-                        if (c != null && !c.TileIsActive)
-                        {
-                            options.Add(c);
-                        }
-                    }
-                    // To the left
-                    ArtifactTileButton left = GetButton(button.x - 2, button.y);
-                    if (left != null && !left.TileIsActive)
-                    {
-                        options.Add(left);
-                    }
-                }
+                options.Add(c);
                 b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
-
+                c = GetButton(button.LinkButton.x + dir.x * i, button.LinkButton.y + dir.y * i);
                 i++;
+            }
+        }
+
+        // Left and Right
+        foreach (Vector2Int dir in dirsHoriz)
+        {
+            if (button.islandId == 2)
+            {
+                ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
+                if (b != null && dir == Vector2Int.right)
+                {
+                    b = GetButton(button.x + dir.x * 2, button.y + dir.y);
+                    if (b != null && !b.TileIsActive)
+                    {
+                        options.Add(b);
+                    }
+                }
+                else if (dir == Vector2Int.left)
+                {
+                    if (b != null && !b.TileIsActive)
+                    {
+                        options.Add(b);
+                    }
+                }
+            }
+            else if (button.islandId == 3)
+            {
+                ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
+                if (dir == Vector2Int.right)
+                {
+                    if (b != null && !b.TileIsActive)
+                    {
+                        options.Add(b);
+                    }
+                }
+                else if (b != null && dir == Vector2Int.left)
+                {
+                    b = GetButton(button.x + dir.x * 2, button.y + dir.y);
+                    if (b != null && !b.TileIsActive)
+                    {
+                        options.Add(b);
+                    }
+                }
             }
         }
 
         return options;
     }
 
+    private bool _CheckTilePair(ArtifactTileButton c, ArtifactTileButton d, List<ArtifactTileButton> options)
+    {
+
+        if (c != null && !c.TileIsActive && d != null && !d.TileIsActive)
+        {
+            options.Add(c);
+            options.Add(d);
+            return true;
+        }
+        else if ((c != null && c.TileIsActive) || (d != null && d.TileIsActive))
+        {
+            options.Remove(c);
+            options.Remove(d);
+        }
+        return false;
+
+    }
+
     
+
 }
 
