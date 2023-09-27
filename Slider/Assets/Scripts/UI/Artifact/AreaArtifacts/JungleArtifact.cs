@@ -54,11 +54,7 @@ public class JungleArtifact : UIArtifact
                 moveQueue.Count < maxMoveQueueSize)
             {
 
-                
-
                 QueueAdd(linkedSwap);
-
-                
                 // AG: Start
 
                 if (dx != 0 && dy != 0)
@@ -211,25 +207,6 @@ public class JungleArtifact : UIArtifact
         return options;
     }
 
-    private bool _CheckTilePair(ArtifactTileButton c, ArtifactTileButton d, List<ArtifactTileButton> options)
-    {
-
-        if (c != null && !c.TileIsActive && d != null && !d.TileIsActive)
-        {
-            options.Add(c);
-            options.Add(d);
-            return true;
-        }
-        else if ((c != null && c.TileIsActive) || (d != null && d.TileIsActive))
-        {
-            options.Remove(c);
-            options.Remove(d);
-        }
-        return false;
-
-    }
-
-    
 
 }
 
