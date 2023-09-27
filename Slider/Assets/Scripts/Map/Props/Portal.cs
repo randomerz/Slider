@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Portal : MonoBehaviour
 {
     public static event System.EventHandler<OnTimeChangeArgs> OnTimeChange;
     [SerializeField] private bool isInPast;
+
+    [SerializeField] private bool useSpecialEventInstead;
+    public UnityEvent SpecialPortalEvent;
 
     public class OnTimeChangeArgs : System.EventArgs
     {
@@ -22,7 +26,14 @@ public class Portal : MonoBehaviour
         if (collision.tag == "Player")
         {
             AudioManager.Play("Portal");
-            OnTimeChange?.Invoke(this, new OnTimeChangeArgs { fromPast = isInPast });
+            if (!useSpecialEventInstead)
+            {
+                OnTimeChange?.Invoke(this, new OnTimeChangeArgs { fromPast = isInPast });
+            }
+            else
+            {
+                SpecialPortalEvent?.Invoke();
+            }
         }
     }
 }
