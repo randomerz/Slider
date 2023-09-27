@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5749947143752042204}
   - component: {fileID: 5505534928320852272}
   - component: {fileID: 836678563390511870}
+  - component: {fileID: 9068628539132263043}
   m_Layer: 0
   m_Name: Sprout
   m_TagString: Untagged
@@ -121,3 +122,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myStile: {fileID: 0}
   animator: {fileID: 5505534928320852272}
+--- !u!114 &9068628539132263043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9044676260861045408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 017294aa1ebd39f4eb6f3125a351db4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animators:
+  - {fileID: 5505534928320852272}
+  animationNames:
+  - SimpleDynamicGizmoIdle
+  animationTime: 0
+  setOnAwake: 1
+  setOnStart: 0
+  doRandom: 1
+  animationDuration: 1.75

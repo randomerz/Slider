@@ -20,11 +20,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -63,6 +64,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
   cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
@@ -75,6 +77,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -87,6 +90,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -99,6 +103,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -111,6 +116,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -631,33 +637,32 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      butterfly_0: -1205697370
       butterfly_1: -1355438222
-      butterfly_20: 2089364104
+      butterfly_10: 718612115
+      butterfly_11: -184966697
+      butterfly_12: -1809102623
+      butterfly_13: 469978362
+      butterfly_14: 1993748890
       butterfly_15: -720646411
       butterfly_16: 1665896566
-      butterfly_2: -715888106
-      butterfly_6: 1454388410
+      butterfly_17: -310200811
       butterfly_18: 1205840348
-      butterfly_8: 66066407
-      butterfly_10: 718612115
-      butterfly_5: 982286257
-      butterfly_13: 469978362
-      butterfly_9: -2023372808
-      butterfly_12: -1809102623
+      butterfly_19: 267423318
+      butterfly_2: -715888106
+      butterfly_20: 2089364104
+      butterfly_21: -1206293978
       butterfly_22: -106932558
       butterfly_23: -1519424389
-      butterfly_14: 1993748890
-      butterfly_0: -1205697370
-      butterfly_17: -310200811
-      butterfly_4: -1810777541
-      butterfly_11: -184966697
-      butterfly_21: -1206293978
-      butterfly_7: 2081244808
-      butterfly_19: 267423318
       butterfly_3: 1403359569
-  spritePackingTag: 
+      butterfly_4: -1810777541
+      butterfly_5: 982286257
+      butterfly_6: 1454388410
+      butterfly_7: 2081244808
+      butterfly_8: 66066407
+      butterfly_9: -2023372808
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
