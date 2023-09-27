@@ -57,18 +57,23 @@ public class DesertTabManager : ArtifactTabManager
         artifact.TryFragQueueMoveFromButtonPair(middle, empty);
         artifact.UpdatePushedDowns(null, null);
         artifact.DeselectSelectedButton();
-        //FragRearrangeOnHoverExit();
+        UpdateMiddleEmpty();
+        //Mirage
+        //MirageSTileManager.GetInstance().UpdateMirageSTileOnFrag(empty.x, empty.y);
+        FragRearrangeOnHoverExit();
     }
 
     public void FragRearrangeOnHoverEnter()
     {
         rearrangingFragTabAnimator.SetFloat("speed", 4);
         //Preview!
-        middle = UIArtifact.GetButton(1, 1);
-        empty = uiArtifactMenus.uiArtifact.GetButton(9);
-        if (middle.TileIsActive) UIArtifact.SetLightningPos(1, 1);
-        middle.SetLightning(true);
-        empty.SetLightning(true);
+        UpdateMiddleEmpty();
+        if (middle.TileIsActive)
+        {
+            UIArtifact.SetLightningPos(1, 1);
+            middle.SetLightning(true);
+            empty.SetLightning(true);
+        }
     }
 
     public void FragRearrangeOnHoverExit()
@@ -78,5 +83,11 @@ public class DesertTabManager : ArtifactTabManager
         UIArtifact.DisableLightning(true);
         middle.SetLightning(false);
         empty.SetLightning(false);
+    }
+
+    private void UpdateMiddleEmpty()
+    {
+        middle = UIArtifact.GetButton(1, 1);
+        empty = uiArtifactMenus.uiArtifact.GetButton(9);
     }
 }
