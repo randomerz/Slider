@@ -21,6 +21,9 @@ public class DinosaurLaser : MonoBehaviour
 
     private GameObject laserGameObject;
 
+    private bool dinoConnected;
+    public void CheckIsDinoConnected(Condition c) { c.SetSpec(dinoConnected); }
+
     private void Start()
     {
         laserGameObject = transform.GetChild(0).gameObject;
@@ -46,6 +49,11 @@ public class DinosaurLaser : MonoBehaviour
         }
     }
 
+    public void FirstTimeActivate()
+    {
+        StartCoroutine(PlayFirstTimeActivationAnimation());
+    }
+
     private SpriteRenderer currentDinoButt;
     private float lastTimeChecked = 0;
 
@@ -64,24 +72,42 @@ public class DinosaurLaser : MonoBehaviour
 
         }*/
         SpriteRenderer dinoButt = GetDinoButtOnTheLeft();
-        if (dinoButt == null && laserOn) //no dino butt on the left
+        if (dinoButt != null)
+        {
+            dinoConnected = true;
+        }
+        else
+        {
+            dinoConnected = false;
+        }
+        
+
+        if (!dinoConnected && laserOn) //no dino butt on the left
         {
             Debug.Log("turn off");
             //dinoButt.sprite = leftHalfLaserOffSprite;
             //rightHalfSpriteRenderer.sprite = rightHalfLaserOffSprite;
-            StartCoroutine(ActivateHalvesInTime(false, 0.01f, currentDinoButt, rightHalfSpriteRenderer));
+            if (!neverActivatedBefore)
+            {
+                StartCoroutine(ActivateHalvesInTime(false, 0.01f, currentDinoButt, rightHalfSpriteRenderer));
+            }
             currentDinoButt = null;
             laserOn = false;
+            //SaveSystem.Current.SetBool("desertDinoConnected", false);
         } 
-        else if (dinoButt != null && !laserOn)
+        else if (dinoConnected && !laserOn)
         {
             Debug.Log("turn on");
 
-            StartCoroutine(ActivateHalvesInTime(true, 0.5f, dinoButt, rightHalfSpriteRenderer));
+            if (!neverActivatedBefore)
+            {
+                StartCoroutine(ActivateHalvesInTime(true, 0.5f, dinoButt, rightHalfSpriteRenderer));
+            }
             currentDinoButt = dinoButt;
             laserOn = true;
+            //SaveSystem.Current.SetBool("desertDinoConnected", true); 
         }
-        lastTimeChecked= Time.time;
+        lastTimeChecked = Time.time;
     }
 
     private IEnumerator ActivateHalvesInTime(bool on, float time, SpriteRenderer leftHalf, SpriteRenderer rightHalf)
@@ -127,6 +153,7 @@ public class DinosaurLaser : MonoBehaviour
         firstTimeActivationAnimation.SetActive(false);
         Destroy(firstTimeActivationAnimation);
         neverActivatedBefore = false;
+        SaveSystem.Current.SetBool("desertDinoLaserActivatedOnce", true);
     }
 
     private SpriteRenderer GetDinoButtOnTheLeft()
