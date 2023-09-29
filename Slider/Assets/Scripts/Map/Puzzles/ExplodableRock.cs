@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class ExplodableRock : MonoBehaviour, ISavable
 {
-
+    public bool isArmed;
     public bool isExploded;
+    private bool tryingToExplode;
     public string saveString;
 
     public Collider2D myCollider;
     public Animator animator;
+    public GameObject explosiveDecals;
+    public PlayerConditionals bombSignConditional;
+    public List<ParticleSystem> explosionDecalParticles = new List<ParticleSystem>();
     public List<ParticleSystem> explosionParticles = new List<ParticleSystem>();
 
     void Start()
@@ -27,6 +31,12 @@ public class ExplodableRock : MonoBehaviour, ISavable
         {
             FinishExploding();
         }
+
+        if (isArmed && !isExploded)
+        {
+            explosiveDecals.SetActive(true);
+            bombSignConditional.DisableConditionals();
+        }
     }
 
     public void Save()
@@ -34,6 +44,39 @@ public class ExplodableRock : MonoBehaviour, ISavable
         SaveSystem.Current.SetBool(saveString, isExploded);
     }
 
+
+    public void ArmRock()
+    {
+        if (isArmed || isExploded)
+            return;
+        isArmed = true;
+
+        AudioManager.Play("Hat Click");
+
+        explosiveDecals.SetActive(true);
+        bombSignConditional.DisableConditionals();
+
+        foreach (ParticleSystem ps in explosionDecalParticles)
+        {
+            ps.Play();
+        }
+
+        if (tryingToExplode)
+        {
+            Explode();
+        }
+    }
+
+    public void SetTryExplodeRock(bool value)
+    {
+        if (isArmed && value)
+        {
+            ExplodeRock();
+            return;
+        }
+
+        tryingToExplode = value;
+    }
 
     public void ExplodeRock()
     {
@@ -48,6 +91,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
 
     private IEnumerator Explode()
     {
+        explosiveDecals.SetActive(false);
         animator.SetBool("explode", true);
         AudioManager.Play("Slide Explosion");
 

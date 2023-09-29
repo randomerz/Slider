@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Portal : MonoBehaviour
 {
     public static event System.EventHandler<OnTimeChangeArgs> OnTimeChange;
     [SerializeField] private bool isInPast;
+
+    [SerializeField] private bool useSpecialEventInstead;
+    public UnityEvent SpecialPortalEvent;
 
     public class OnTimeChangeArgs : System.EventArgs
     {
@@ -17,11 +21,15 @@ public class Portal : MonoBehaviour
         isInPast = MagiTechGrid.IsInPast(transform);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void OnPlayerEnter()
     {
-        if (collision.tag == "Player")
+        AudioManager.Play("Portal");
+        if (useSpecialEventInstead)
         {
-            AudioManager.Play("Portal");
+            SpecialPortalEvent?.Invoke();
+        }
+        else
+        {
             OnTimeChange?.Invoke(this, new OnTimeChangeArgs { fromPast = isInPast });
         }
     }
