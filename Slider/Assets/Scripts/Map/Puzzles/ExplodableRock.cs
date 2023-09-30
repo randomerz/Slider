@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ExplodableRock : MonoBehaviour, ISavable
 {
-    public bool isArmed;
+    public bool isArmed; // isArmed is not serialized!
     public bool isExploded;
     private bool tryingToExplode;
     public string saveString;
