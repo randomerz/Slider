@@ -22,6 +22,7 @@ public class MagiLaser : MonoBehaviour
     [SerializeField] private Laserable pastPortalLaserable;
 
     private const int MAX_LASER_BOUNCES = 32;
+    private const float PORTAL_LASER_OFFSET = 1.5625f;
 
     private void LateUpdate()
     {
@@ -51,14 +52,14 @@ public class MagiLaser : MonoBehaviour
     private void MakePastLaser(Vector3 hitPosition, Vector2 initDir)
     {
         Vector3 offset = hitPosition - presentPortalLaserable.transform.position;
-        Vector3 initPos = pastPortalLaserable.transform.position + offset + (Vector3)(initDir * 1.6f);
+        Vector3 initPos = pastPortalLaserable.transform.position + offset + (Vector3)(initDir * PORTAL_LASER_OFFSET);
         DrawLaser(initDir, initPos, lineRenderers[1]);
     }
 
     private void MakeNewPresentLaser(Vector3 hitPosition, Vector2 initDir)
     {
         Vector3 offset = hitPosition - pastPortalLaserable.transform.position;
-        Vector3 initPos = presentPortalLaserable.transform.position + offset + (Vector3)(initDir * 1.6f);
+        Vector3 initPos = presentPortalLaserable.transform.position + offset + (Vector3)(initDir * PORTAL_LASER_OFFSET);
         DrawLaser(initDir, initPos, lineRenderers[2]);
     }
     

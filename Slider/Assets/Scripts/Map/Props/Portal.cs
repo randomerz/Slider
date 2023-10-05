@@ -21,19 +21,16 @@ public class Portal : MonoBehaviour
         isInPast = MagiTechGrid.IsInPast(transform);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void OnPlayerEnter()
     {
-        if (collision.tag == "Player")
+        AudioManager.Play("Portal");
+        if (useSpecialEventInstead)
         {
-            AudioManager.Play("Portal");
-            if (!useSpecialEventInstead)
-            {
-                OnTimeChange?.Invoke(this, new OnTimeChangeArgs { fromPast = isInPast });
-            }
-            else
-            {
-                SpecialPortalEvent?.Invoke();
-            }
+            SpecialPortalEvent?.Invoke();
+        }
+        else
+        {
+            OnTimeChange?.Invoke(this, new OnTimeChangeArgs { fromPast = isInPast });
         }
     }
 }
