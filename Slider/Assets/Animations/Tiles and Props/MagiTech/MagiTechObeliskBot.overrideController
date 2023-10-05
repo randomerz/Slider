@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MagiTechObeliskBot
+  m_Controller: {fileID: 9100000, guid: 2ed21fde3c92ac241bd3ad4656f57356, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 2a54d1f3a2764114ca2f3fc265c6d98f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6c28e2f21627f344b98c595ab13bd425, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: aa9eb27aeab2a224ca0037ac04047283, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: e4252608dd5435544a7fa1c226498dd1, type: 2}
