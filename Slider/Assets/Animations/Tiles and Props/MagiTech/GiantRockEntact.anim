@@ -7,7 +7,7 @@ AnimationClip:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: GiantRockEntact
-  serializedVersion: 6
+  serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -18,13 +18,24 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
-      value: {fileID: 21300000, guid: bc6e2d0759bc4c4428f7f169ee2c6eab, type: 3}
+      value: {fileID: -262569833, guid: 29a2cf17ab8db5243af001c8eac58b01, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
+    flags: 2
+  - serializedVersion: 2
+    curve:
+    - time: 0
+      value: {fileID: 1528751695, guid: b6c231ed2321bed44809ee96a4543c7a, type: 3}
+    attribute: m_Sprite
+    path: GiantRockTop
+    classID: 212
+    script: {fileID: 0}
+    flags: 2
   m_SampleRate: 1
   m_WrapMode: 0
   m_Bounds:
@@ -39,8 +50,20 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
+    - serializedVersion: 2
+      path: 815866377
+      attribute: 0
+      script: {fileID: 0}
+      typeID: 212
+      customType: 23
+      isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: bc6e2d0759bc4c4428f7f169ee2c6eab, type: 3}
+    - {fileID: -262569833, guid: 29a2cf17ab8db5243af001c8eac58b01, type: 3}
+    - {fileID: 1528751695, guid: b6c231ed2321bed44809ee96a4543c7a, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

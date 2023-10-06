@@ -6,7 +6,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
 {
     public bool isArmed; // isArmed is not serialized!
     public bool isExploded;
-    private bool tryingToExplode;
+    protected bool tryingToExplode;
     public string saveString;
 
     public Collider2D myCollider;
@@ -45,7 +45,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
     }
 
 
-    public void ArmRock()
+    public virtual void ArmRock()
     {
         if (isArmed || isExploded)
             return;
@@ -67,7 +67,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
         }
     }
 
-    public void SetTryExplodeRock(bool value)
+    public virtual void SetTryExplodeRock(bool value)
     {
         if (isArmed && value)
         {
@@ -106,7 +106,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
         FinishExploding();
     }
 
-    public void FinishExploding()
+    public virtual void FinishExploding()
     {
         animator.SetBool("finishedExploding", true);
         myCollider.enabled = false;
@@ -118,7 +118,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
         CameraShake.Shake(0.5f, 0.75f);
     }
 
-    public void CheckIsExploded(Condition c){
-        c.SetSpec(isExploded);
-    }
+    public void CheckIsArmed(Condition c) => c.SetSpec(isArmed);
+    public void CheckIsExploded(Condition c) => c.SetSpec(isExploded);
+    public void CheckTryingToExplode(Condition c) => c.SetSpec(tryingToExplode);
 }
