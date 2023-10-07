@@ -41,15 +41,19 @@ public class GiantExplodableRock : ExplodableRock, ISavable
 
     private IEnumerator Explode(int variation=0)
     {
+        CameraShake.ShakeIncrease(2f, 0.25f);
+
+        yield return new WaitForSeconds(3f);
+
         explosiveDecals.SetActive(false);
         animator.SetBool("explode", true);
         // AudioManager.Play("Slide Explosion");
 
-        CameraShake.Shake(0.75f, 1);
-        foreach (ParticleSystem p in explosionParticles)
-        {
-            p.Play();
-        }
+        // CameraShake.Shake(0.75f, 1);
+        // foreach (ParticleSystem p in explosionParticles)
+        // {
+        //     p.Play();
+        // }
 
         yield return new WaitForSeconds(1.5f);
 

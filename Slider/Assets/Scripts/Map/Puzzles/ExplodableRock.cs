@@ -15,6 +15,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
     public PlayerConditionals bombSignConditional;
     public List<ParticleSystem> explosionDecalParticles = new List<ParticleSystem>();
     public List<ParticleSystem> explosionParticles = new List<ParticleSystem>();
+    public List<GameObject> raycastColliderObjects = new List<GameObject>();
 
     void Start()
     {
@@ -110,6 +111,11 @@ public class ExplodableRock : MonoBehaviour, ISavable
     {
         animator.SetBool("finishedExploding", true);
         myCollider.enabled = false;
+
+        foreach (GameObject go in raycastColliderObjects)
+        {
+            go.SetActive(false);
+        }
     }
 
     // Exposed for the animation events

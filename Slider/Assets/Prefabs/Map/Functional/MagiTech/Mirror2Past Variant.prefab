@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6623595340840630665, guid: d2de25ac3f7d4c543b20ddd07d7e4846, type: 3}
+      propertyPath: flipDirection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7187210906167296470, guid: d2de25ac3f7d4c543b20ddd07d7e4846, type: 3}
       propertyPath: m_LocalScale.x
       value: -1
@@ -54,7 +58,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7187210906167296471, guid: d2de25ac3f7d4c543b20ddd07d7e4846, type: 3}
       propertyPath: m_Name
-      value: Mirror2Past Variant Variant
+      value: Mirror2Past Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
