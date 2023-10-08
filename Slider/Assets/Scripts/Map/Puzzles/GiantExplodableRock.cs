@@ -28,6 +28,10 @@ public class GiantExplodableRock : ExplodableRock, ISavable
         tryingToExplode = value;
     }
 
+    /// <summary>
+    /// 0 - Fade to nothing. 1 - Cover in smoke. 2 - Instantly disappaer.
+    /// </summary>
+    /// <param name="variation"></param>
     public void ExplodeRock(int variation=0)
     {
         if (isExploded)
@@ -41,19 +45,43 @@ public class GiantExplodableRock : ExplodableRock, ISavable
 
     private IEnumerator Explode(int variation=0)
     {
-        CameraShake.ShakeIncrease(2f, 0.25f);
+        switch (variation)
+        {
+            case 2:
+                CameraShake.ShakeIncrease(1f, 0.25f);
 
-        yield return new WaitForSeconds(3f);
+                yield return new WaitForSeconds(1.25f);
+                
+                // play funny sound
+                FinishExploding();
+
+                yield break;
+            case 0:
+            case 1:
+            default:
+                CameraShake.ShakeIncrease(2f, 0.25f);
+
+                yield return new WaitForSeconds(3f);
+                break;
+        }
 
         explosiveDecals.SetActive(false);
         animator.SetBool("explode", true);
-        // AudioManager.Play("Slide Explosion");
 
-        // CameraShake.Shake(0.75f, 1);
-        // foreach (ParticleSystem p in explosionParticles)
-        // {
-        //     p.Play();
-        // }
+        if (variation == 0)
+        {
+            // play funny sound
+        }
+        else if (variation == 1)
+        {
+            AudioManager.Play("Slide Explosion");
+
+            CameraShake.Shake(0.75f, 1);
+            foreach (ParticleSystem p in explosionParticles)
+            {
+                p.Play();
+            }
+        }
 
         yield return new WaitForSeconds(1.5f);
 
