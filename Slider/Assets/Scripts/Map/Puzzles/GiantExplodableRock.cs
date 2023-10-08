@@ -52,7 +52,7 @@ public class GiantExplodableRock : ExplodableRock, ISavable
 
                 yield return new WaitForSeconds(1.25f);
                 
-                // play funny sound
+                AudioManager.Play("Pop");
                 FinishExploding();
 
                 yield break;
@@ -70,7 +70,7 @@ public class GiantExplodableRock : ExplodableRock, ISavable
 
         if (variation == 0)
         {
-            // play funny sound
+            AudioManager.Play("Bwomp");
         }
         else if (variation == 1)
         {
@@ -81,9 +81,11 @@ public class GiantExplodableRock : ExplodableRock, ISavable
             {
                 p.Play();
             }
+
+            yield return new WaitForSeconds(1f);
         }
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
 
         FinishExploding();
     }

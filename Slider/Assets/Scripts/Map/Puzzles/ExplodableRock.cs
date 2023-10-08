@@ -6,6 +6,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
 {
     public bool isArmed; // isArmed is not serialized!
     public bool isExploded;
+    protected bool finishedExploding;
     protected bool tryingToExplode;
     public string saveString;
 
@@ -125,6 +126,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
     }
 
     public void CheckIsArmed(Condition c) => c.SetSpec(isArmed);
-    public void CheckIsExploded(Condition c) => c.SetSpec(isExploded);
     public void CheckTryingToExplode(Condition c) => c.SetSpec(tryingToExplode);
+    public void CheckIsExploded(Condition c) => c.SetSpec(isExploded);
+    public void CheckFinishedExploding(Condition c) => c.SetSpec(finishedExploding);
 }

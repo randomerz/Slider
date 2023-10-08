@@ -23,13 +23,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2277467775514796994}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8529986348122845579}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7379062662087638973
 GameObject:
@@ -55,13 +55,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7379062662087638973}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8529986348122845579}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6844044390766525512
 MonoBehaviour:
@@ -100,6 +100,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8529986348122845573}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -108,7 +109,6 @@ Transform:
   - {fileID: 4838699127843664436}
   - {fileID: 9215923887181117521}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8529986348122845572
 MonoBehaviour:
@@ -203,6 +203,26 @@ MonoBehaviour:
       Path: event:/SFX/Rumbles and Explosions/Long Rumble Increase 8s
     canPause: 1
     dopplerScale: 0
+  - name: MagicChimes1
+    fmodEvent:
+      Guid:
+        Data1: 1781160218
+        Data2: 1195332244
+        Data3: 946167185
+        Data4: -470553028
+      Path: event:/SFX/Magic/Magic Chimes1
+    canPause: 1
+    dopplerScale: 1
+  - name: MagicChimes2
+    fmodEvent:
+      Guid:
+        Data1: -347604741
+        Data2: 1218313766
+        Data3: 2008226204
+        Data4: -650800235
+      Path: event:/SFX/Magic/Magic Chimes2
+    canPause: 1
+    dopplerScale: 1
   - name: Artifact Error
     fmodEvent:
       Guid:
@@ -253,6 +273,36 @@ MonoBehaviour:
       Path: event:/SFX/SFXR/Puzzle Complete
     canPause: 1
     dopplerScale: 0
+  - name: Pop
+    fmodEvent:
+      Guid:
+        Data1: -890550887
+        Data2: 1176475139
+        Data3: -935569736
+        Data4: 1235257557
+      Path: event:/SFX/Misc/Pop
+    canPause: 0
+    dopplerScale: 1
+  - name: Bwomp
+    fmodEvent:
+      Guid:
+        Data1: 1511912515
+        Data2: 1092761195
+        Data3: -2036105030
+        Data4: 104552538
+      Path: event:/SFX/Misc/Bwomp
+    canPause: 0
+    dopplerScale: 1
+  - name: Debug
+    fmodEvent:
+      Guid:
+        Data1: 1475310652
+        Data2: 1203967059
+        Data3: 1067200654
+        Data4: 930797071
+      Path: event:/SFX/Debug/Debug
+    canPause: 1
+    dopplerScale: 1
   - name: Hurt
     fmodEvent:
       Guid:
@@ -273,26 +323,6 @@ MonoBehaviour:
       Path: event:/SFX/SFXR/Fall
     canPause: 0
     dopplerScale: 0
-  - name: MagicChimes1
-    fmodEvent:
-      Guid:
-        Data1: 1781160218
-        Data2: 1195332244
-        Data3: 946167185
-        Data4: -470553028
-      Path: event:/SFX/Magic/Magic Chimes1
-    canPause: 1
-    dopplerScale: 1
-  - name: MagicChimes2
-    fmodEvent:
-      Guid:
-        Data1: -347604741
-        Data2: 1218313766
-        Data3: 2008226204
-        Data4: -650800235
-      Path: event:/SFX/Magic/Magic Chimes2
-    canPause: 1
-    dopplerScale: 1
   - name: TFT Bell
     fmodEvent:
       Guid:
@@ -323,6 +353,26 @@ MonoBehaviour:
       Path: event:/SFX/Factory/Power Off
     canPause: 1
     dopplerScale: 0
+  - name: Rat Squeak
+    fmodEvent:
+      Guid:
+        Data1: 62348315
+        Data2: 1244939908
+        Data3: 1003720097
+        Data4: 1125836640
+      Path: event:/SFX/Caves/Rat Squeak
+    canPause: 0
+    dopplerScale: 0
+  - name: Caves Win
+    fmodEvent:
+      Guid:
+        Data1: 1469068729
+        Data2: 1318230195
+        Data3: 865993132
+        Data4: 766685052
+      Path: event:/SFX/Caves/Caves Win
+    canPause: 0
+    dopplerScale: 0
   - name: Bottle Sink
     fmodEvent:
       Guid:
@@ -343,16 +393,16 @@ MonoBehaviour:
       Path: event:/SFX/Ocean/Glass Clink
     canPause: 1
     dopplerScale: 0
-  - name: Conveyor
+  - name: Record Scratch
     fmodEvent:
       Guid:
-        Data1: 1949250554
-        Data2: 1166091428
-        Data3: -147534192
-        Data4: -1220852846
-      Path: event:/SFX/Factory/Conveyor
+        Data1: -2056660177
+        Data2: 1156402562
+        Data3: -941530482
+        Data4: -1114012601
+      Path: event:/SFX/Jungle/Record Scratch
     canPause: 1
-    dopplerScale: 0
+    dopplerScale: 1
   - name: Crocodile Grab Sequence
     fmodEvent:
       Guid:
@@ -411,6 +461,16 @@ MonoBehaviour:
         Data3: 1698111138
         Data4: 1034827031
       Path: event:/SFX/Desert/Bottle Bubble Fill
+    canPause: 1
+    dopplerScale: 0
+  - name: Conveyor
+    fmodEvent:
+      Guid:
+        Data1: 1949250554
+        Data2: 1166091428
+        Data3: -147534192
+        Data4: -1220852846
+      Path: event:/SFX/Factory/Conveyor
     canPause: 1
     dopplerScale: 0
   - name: FactoryTimedGateProgress1
@@ -473,16 +533,6 @@ MonoBehaviour:
       Path: event:/SFX/Factory/FactoryTimedGateProgress6
     canPause: 1
     dopplerScale: 0
-  - name: Debug
-    fmodEvent:
-      Guid:
-        Data1: 1475310652
-        Data2: 1203967059
-        Data3: 1067200654
-        Data4: 930797071
-      Path: event:/SFX/Debug/Debug
-    canPause: 1
-    dopplerScale: 1
   - name: Portal
     fmodEvent:
       Guid:
@@ -491,16 +541,6 @@ MonoBehaviour:
         Data3: -1614548827
         Data4: -1490286473
       Path: event:/SFX/Magic/Portal
-    canPause: 1
-    dopplerScale: 1
-  - name: Record Scratch
-    fmodEvent:
-      Guid:
-        Data1: -2056660177
-        Data2: 1156402562
-        Data3: -941530482
-        Data4: -1114012601
-      Path: event:/SFX/Jungle/Record Scratch
     canPause: 1
     dopplerScale: 1
   - name: Desync Tear Open
@@ -523,26 +563,6 @@ MonoBehaviour:
       Path: event:/SFX/Magic/Desync Tear Close
     canPause: 0
     dopplerScale: 1
-  - name: Rat Squeak
-    fmodEvent:
-      Guid:
-        Data1: 62348315
-        Data2: 1244939908
-        Data3: 1003720097
-        Data4: 1125836640
-      Path: event:/SFX/Caves/Rat Squeak
-    canPause: 0
-    dopplerScale: 0
-  - name: Caves Win
-    fmodEvent:
-      Guid:
-        Data1: 1469068729
-        Data2: 1318230195
-        Data3: 865993132
-        Data4: 766685052
-      Path: event:/SFX/Caves/Caves Win
-    canPause: 0
-    dopplerScale: 0
   music:
   - name: Main Menu
     fmodEvent:
