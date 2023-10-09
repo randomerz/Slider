@@ -74,7 +74,7 @@ public class GiantExplodableRock : ExplodableRock, ISavable
         }
         else if (variation == 1)
         {
-            AudioManager.Play("Slide Explosion");
+            AudioManager.Play("Rumble Decrease 5s");
 
             CameraShake.Shake(0.75f, 1);
             foreach (ParticleSystem p in explosionParticles)

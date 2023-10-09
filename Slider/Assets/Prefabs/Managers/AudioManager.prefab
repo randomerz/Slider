@@ -281,7 +281,7 @@ MonoBehaviour:
         Data3: -935569736
         Data4: 1235257557
       Path: event:/SFX/Misc/Pop
-    canPause: 0
+    canPause: 1
     dopplerScale: 1
   - name: Bwomp
     fmodEvent:
@@ -291,7 +291,7 @@ MonoBehaviour:
         Data3: -2036105030
         Data4: 104552538
       Path: event:/SFX/Misc/Bwomp
-    canPause: 0
+    canPause: 1
     dopplerScale: 1
   - name: Debug
     fmodEvent:
@@ -361,7 +361,7 @@ MonoBehaviour:
         Data3: 1003720097
         Data4: 1125836640
       Path: event:/SFX/Caves/Rat Squeak
-    canPause: 0
+    canPause: 1
     dopplerScale: 0
   - name: Caves Win
     fmodEvent:
@@ -371,8 +371,18 @@ MonoBehaviour:
         Data3: 865993132
         Data4: 766685052
       Path: event:/SFX/Caves/Caves Win
-    canPause: 0
+    canPause: 1
     dopplerScale: 0
+  - name: Boat Splash
+    fmodEvent:
+      Guid:
+        Data1: -730723022
+        Data2: 1172596840
+        Data3: -1086559054
+        Data4: -1980096599
+      Path: event:/SFX/Footsteps/player_footstep_water
+    canPause: 1
+    dopplerScale: 1
   - name: Bottle Sink
     fmodEvent:
       Guid:
@@ -551,7 +561,7 @@ MonoBehaviour:
         Data3: 1345641131
         Data4: 257574772
       Path: event:/SFX/Magic/Desync Tear Open
-    canPause: 0
+    canPause: 1
     dopplerScale: 1
   - name: Desync Tear Close
     fmodEvent:
@@ -561,7 +571,7 @@ MonoBehaviour:
         Data3: -394793053
         Data4: -1358399614
       Path: event:/SFX/Magic/Desync Tear Close
-    canPause: 0
+    canPause: 1
     dopplerScale: 1
   music:
   - name: Main Menu
