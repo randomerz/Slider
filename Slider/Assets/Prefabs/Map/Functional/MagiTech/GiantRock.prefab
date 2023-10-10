@@ -925,6 +925,58 @@ MonoBehaviour:
   - {fileID: 3361298863975870174}
   - {fileID: 7687370506203018050}
   - {fileID: 8925876840345608211}
+  collectible: {fileID: 0}
+  collectibleStart: {fileID: 0}
+  collectibleTarget: {fileID: 0}
+  animationDuration: 1
+  xPickUpMotion:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2.1200001
+      outSlope: 2.1200001
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.15625
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.3026316
+      outSlope: 0.3026316
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.47500002
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  yPickUpMotion:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -1.8570981
+      outSlope: -1.8570981
+      tangentMode: 0
+      weightedMode: 2
+      inWeight: 0
+      outWeight: 0.09269327
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 7.4624553
+      outSlope: 7.4624553
+      tangentMode: 0
+      weightedMode: 1
+      inWeight: 0.1838367
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7255555477615261105
 GameObject:
   m_ObjectHideFlags: 0

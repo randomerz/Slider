@@ -5,9 +5,9 @@ using UnityEngine;
 public class ExplodableRock : MonoBehaviour, ISavable
 {
     public bool isArmed; // isArmed is not serialized!
+    protected bool tryingToExplode;
     public bool isExploded;
     protected bool finishedExploding;
-    protected bool tryingToExplode;
     public string saveString;
 
     public Collider2D myCollider;
@@ -26,7 +26,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
         }
     }
     
-    public void Load(SaveProfile profile)
+    public virtual void Load(SaveProfile profile)
     {
         isExploded = profile.GetBool(saveString, false);
         if (isExploded)
@@ -111,6 +111,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
     public virtual void FinishExploding()
     {
         animator.SetBool("finishedExploding", true);
+        finishedExploding = true;
         myCollider.enabled = false;
 
         foreach (GameObject go in raycastColliderObjects)

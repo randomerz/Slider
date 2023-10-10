@@ -6,6 +6,24 @@ public class GiantExplodableRock : ExplodableRock, ISavable
 {
     public List<GameObject> laserRaycastColliders;
 
+    [Header("Collectible Fall Arc")]
+    public Collectible collectible;
+    [SerializeField] private Transform collectibleStart;
+    [SerializeField] private Transform collectibleTarget;
+    [SerializeField] private float animationDuration;
+    [SerializeField] private AnimationCurve xPickUpMotion;
+    [SerializeField] private AnimationCurve yPickUpMotion;
+
+    public override void Load(SaveProfile profile)
+    {
+        base.Load(profile);
+
+        if (isExploded && collectible != null)
+        {
+            FinishCollectibleDrop();
+        }
+    }
+
     public override void ArmRock()
     {
         if (isArmed || isExploded)
@@ -53,6 +71,8 @@ public class GiantExplodableRock : ExplodableRock, ISavable
                 yield return new WaitForSeconds(1.25f);
                 
                 AudioManager.Play("Pop");
+                
+                StartCoroutine(CollectibleDrop());
                 FinishExploding();
 
                 yield break;
@@ -71,6 +91,9 @@ public class GiantExplodableRock : ExplodableRock, ISavable
         if (variation == 0)
         {
             AudioManager.Play("Bwomp");
+            StartCoroutine(CollectibleDrop());
+
+            yield return new WaitForSeconds(1f);
         }
         else if (variation == 1)
         {
@@ -82,10 +105,10 @@ public class GiantExplodableRock : ExplodableRock, ISavable
                 p.Play();
             }
 
-            yield return new WaitForSeconds(1f);
-        }
+            yield return new WaitForSeconds(2f);
 
-        yield return new WaitForSeconds(1f);
+            StartCoroutine(CollectibleDrop());
+        }
 
         FinishExploding();
     }
@@ -98,5 +121,42 @@ public class GiantExplodableRock : ExplodableRock, ISavable
         {
             go.SetActive(false);
         }
+    }
+    
+
+    private IEnumerator CollectibleDrop()
+    {
+        if (collectible == null)
+            yield break;
+
+        collectible.gameObject.SetActive(true);
+        collectible.GetComponent<Collider2D>().enabled = false;
+        Vector3 start = collectibleStart.transform.position;
+
+        float t = 0;
+        while (t < animationDuration)
+        {
+            float x = xPickUpMotion.Evaluate(t / animationDuration);
+            float y = yPickUpMotion.Evaluate(t / animationDuration);
+            Vector3 pos = new Vector3(Mathf.LerpUnclamped(start.x, collectibleTarget.transform.position.x, x),
+                                      Mathf.LerpUnclamped(start.y, collectibleTarget.transform.position.y, y));
+            
+            collectible.transform.position = pos;
+
+            yield return null;
+            t += Time.deltaTime;
+        }
+
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, collectibleTarget.transform.position, collectibleTarget);
+
+        FinishCollectibleDrop();
+    }
+
+    private void FinishCollectibleDrop()
+    {
+        collectible.transform.position = collectibleTarget.transform.position;
+        collectible.GetComponent<Collider2D>().enabled = true;
+        collectible.getSpriteRenderer().sortingLayerName = "Entity";
+        collectible.getSpriteRenderer().sortingOrder = 0;
     }
 }
