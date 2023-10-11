@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class ExplodableRock : MonoBehaviour, ISavable
 {
-    public bool isArmed;
+    public bool isArmed; // isArmed is not serialized!
+    protected bool tryingToExplode;
     public bool isExploded;
-    private bool tryingToExplode;
+    protected bool finishedExploding;
     public string saveString;
 
     public Collider2D myCollider;
@@ -15,6 +16,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
     public PlayerConditionals bombSignConditional;
     public List<ParticleSystem> explosionDecalParticles = new List<ParticleSystem>();
     public List<ParticleSystem> explosionParticles = new List<ParticleSystem>();
+    public List<GameObject> raycastColliderObjects = new List<GameObject>();
 
     void Start()
     {
@@ -24,7 +26,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
         }
     }
     
-    public void Load(SaveProfile profile)
+    public virtual void Load(SaveProfile profile)
     {
         isExploded = profile.GetBool(saveString, false);
         if (isExploded)
@@ -45,7 +47,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
     }
 
 
-    public void ArmRock()
+    public virtual void ArmRock()
     {
         if (isArmed || isExploded)
             return;
@@ -67,7 +69,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
         }
     }
 
-    public void SetTryExplodeRock(bool value)
+    public virtual void SetTryExplodeRock(bool value)
     {
         if (isArmed && value)
         {
@@ -106,10 +108,16 @@ public class ExplodableRock : MonoBehaviour, ISavable
         FinishExploding();
     }
 
-    public void FinishExploding()
+    public virtual void FinishExploding()
     {
         animator.SetBool("finishedExploding", true);
+        finishedExploding = true;
         myCollider.enabled = false;
+
+        foreach (GameObject go in raycastColliderObjects)
+        {
+            go.SetActive(false);
+        }
     }
 
     // Exposed for the animation events
@@ -118,7 +126,8 @@ public class ExplodableRock : MonoBehaviour, ISavable
         CameraShake.Shake(0.5f, 0.75f);
     }
 
-    public void CheckIsExploded(Condition c){
-        c.SetSpec(isExploded);
-    }
+    public void CheckIsArmed(Condition c) => c.SetSpec(isArmed);
+    public void CheckTryingToExplode(Condition c) => c.SetSpec(tryingToExplode);
+    public void CheckIsExploded(Condition c) => c.SetSpec(isExploded);
+    public void CheckFinishedExploding(Condition c) => c.SetSpec(finishedExploding);
 }
