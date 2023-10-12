@@ -220,10 +220,6 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetHighlighted(bool v)
     {
         buttonAnimator.SetHighlighted(v);
-        if (this.LinkButton != null)
-        {
-            this.LinkButton.buttonAnimator.SetHighlighted(v);
-        }
     }
 
     public void SetPushedDown(bool v)
