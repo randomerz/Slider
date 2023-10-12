@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class BoatParticleEffectController : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class BoatParticleEffectController : MonoBehaviour
     public float maxParticleScore = 3;
     public float timeScoreMultiplier = 0.2f;
     private float targetScore; // spawn particle when = 0
+
+    public float numberParticlesUntilSFX = 2;
+    private float sfxCounter = 0;
 
     private Vector3 lastMoveDir;
     private Vector3 lastPlayerPos;
@@ -75,6 +79,19 @@ public class BoatParticleEffectController : MonoBehaviour
     {
         particles.Play();
 
+        HandleAudio();
+
         targetScore = Random.Range(minParticleScore, maxParticleScore);
+    }
+
+    private void HandleAudio()
+    {
+        sfxCounter += 1;
+
+        if (sfxCounter >= numberParticlesUntilSFX)
+        {
+            AudioManager.Play("Boat Splash");
+            sfxCounter = 0;
+        }
     }
 }

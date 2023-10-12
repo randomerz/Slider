@@ -23,6 +23,7 @@ MonoBehaviour:
           Data3: 401503915
           Data4: -833290422
         Path: event:/SFX/Footsteps/player_footstep_grass
+      canPause: 0
       dopplerScale: 0
   - materialTile: {fileID: 11400000, guid: a70c6c495ba175b489b04489ea6301e5, type: 2}
     eventRef:
@@ -34,6 +35,7 @@ MonoBehaviour:
           Data3: -1389713231
           Data4: 305745240
         Path: event:/SFX/Footsteps/player_footstep_wood
+      canPause: 0
       dopplerScale: 0
   - materialTile: {fileID: 11400000, guid: a314c7caee04c3748b9314cb3e89efb7, type: 2}
     eventRef:
@@ -45,6 +47,7 @@ MonoBehaviour:
           Data3: 824886446
           Data4: 374144923
         Path: event:/SFX/Footsteps/player_footstep_concrete
+      canPause: 0
       dopplerScale: 0
   - materialTile: {fileID: 11400000, guid: ae8ecdcbf5e225147b3ea9ea24274a05, type: 2}
     eventRef:
@@ -56,6 +59,7 @@ MonoBehaviour:
           Data3: -1469968472
           Data4: -289132723
         Path: event:/SFX/Footsteps/player_footstep_sand
+      canPause: 0
       dopplerScale: 0
   - materialTile: {fileID: 11400000, guid: ac9eedb037e0b2749becfbf82bbd1056, type: 2}
     eventRef:
@@ -67,6 +71,19 @@ MonoBehaviour:
           Data3: 799483816
           Data4: -1020949563
         Path: event:/SFX/Footsteps/player_footstep_puddle
+      canPause: 0
+      dopplerScale: 0
+  - materialTile: {fileID: 11400000, guid: 0df433b1b723ffb48a3e93bb9f227f21, type: 2}
+    eventRef:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: -730723022
+          Data2: 1172596840
+          Data3: -1086559054
+          Data4: -1980096599
+        Path: event:/SFX/Footsteps/player_footstep_water
+      canPause: 0
       dopplerScale: 0
   - materialTile: {fileID: 11400000, guid: f2322d483786fb04893ba94f2a38ba18, type: 2}
     eventRef:
@@ -78,6 +95,43 @@ MonoBehaviour:
           Data3: 1874025127
           Data4: 782460687
         Path: event:/SFX/Footsteps/player_footstep_metal
+      canPause: 0
+      dopplerScale: 0
+  - materialTile: {fileID: 11400000, guid: f592cedc28cbc4f4a96a4b66d6271c6a, type: 2}
+    eventRef:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: -2007797997
+          Data2: 1138075722
+          Data3: 28751768
+          Data4: 67358667
+        Path: event:/SFX/Footsteps/player_footstep_snow
+      canPause: 0
+      dopplerScale: 0
+  - materialTile: {fileID: 11400000, guid: 963659b0212641043a939d6234ebeb12, type: 2}
+    eventRef:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: 1229370140
+          Data2: 1193746846
+          Data3: 1765073855
+          Data4: 408493533
+        Path: event:/SFX/Footsteps/player_footstep_ice
+      canPause: 0
+      dopplerScale: 0
+  - materialTile: {fileID: 11400000, guid: 179c7b90bc94b6a4182f07d927abb784, type: 2}
+    eventRef:
+      name: 
+      fmodEvent:
+        Guid:
+          Data1: -1255091340
+          Data2: 1173902139
+          Data3: 2045422261
+          Data4: -1731765294
+        Path: event:/SFX/Footsteps/player_footstep_crystal
+      canPause: 0
       dopplerScale: 0
   fallbackMapping:
     name: 
@@ -88,4 +142,5 @@ MonoBehaviour:
         Data3: 401503915
         Data4: -833290422
       Path: event:/SFX/Footsteps/player_footstep_grass
+    canPause: 0
     dopplerScale: 0
