@@ -220,11 +220,19 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetHighlighted(bool v)
     {
         buttonAnimator.SetHighlighted(v);
+        if (this.LinkButton != null)
+        {
+            this.LinkButton.buttonAnimator.SetHighlighted(v);
+        }
     }
 
     public void SetPushedDown(bool v)
     {
         buttonAnimator.SetPushedDown(v);
+        if (this.LinkButton != null)
+        {
+            this.LinkButton.buttonAnimator.SetPushedDown(v);
+        }
     }
 
     public void SetLightning(bool v)
@@ -235,6 +243,10 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetSelected(bool v)
     {
         buttonAnimator.SetSelected(v);
+        if (this.LinkButton != null)
+        {
+            this.LinkButton.buttonAnimator.SetSelected(v);
+        }
     }
 
     public void SetIsInMove(bool v)
