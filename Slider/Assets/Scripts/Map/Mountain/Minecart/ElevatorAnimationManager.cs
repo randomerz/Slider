@@ -90,15 +90,15 @@ public class ElevatorAnimationManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         AudioManager.Play("Fall");
-        CameraShake.ShakeIncrease(0.75f, 1f);
-        yield return new WaitForSeconds(0.75f);
+        CameraShake.ShakeIncrease(1f, 1f);
+        yield return new WaitForSeconds(1f);
         for(int i = 0; i < 10; i++)
         {
             Vector3 random = Random.insideUnitCircle * 1.5f;
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, bottompos.transform.position + random);
         }
         AudioManager.Play("Slide Explosion");
-        CameraShake.ShakeConstant(0.5f, 2f);
+        CameraShake.ShakeConstant(0.5f, 1.5f);
         SetBroken();
     }
 

@@ -10,6 +10,7 @@ public class Item : MonoBehaviour, ISavable
     public SpriteRenderer spriteRenderer;
     [SerializeField] private Collider2D myCollider;
     public bool canKeep = false;
+    [SerializeField] private bool shouldDisableAtStart = false;
     public float itemRadius = 0.5f;
 
     // animation
@@ -54,6 +55,8 @@ public class Item : MonoBehaviour, ISavable
 
             transform.localPosition = savedPositionBuffer;
         }
+        if (shouldDisableAtStart)
+            gameObject.SetActive(false);
     }
 
     public virtual void Save()
