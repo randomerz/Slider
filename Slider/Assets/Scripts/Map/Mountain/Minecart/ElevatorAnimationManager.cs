@@ -11,6 +11,7 @@ public class ElevatorAnimationManager : MonoBehaviour
 
     public List<GameObject> deactivateOnFix;
     public List<GameObject> brokenObj;
+    public GameObject bottompos;
 
    // private bool isAnimating = false;
     private bool isBroken = false;
@@ -90,6 +91,11 @@ public class ElevatorAnimationManager : MonoBehaviour
         AudioManager.Play("Fall");
         CameraShake.Shake(0.75f, 1);
         yield return new WaitForSeconds(0.75f);
+        for(int i = 0; i < 10; i++)
+        {
+            Vector3 random = Random.insideUnitCircle * 1.5f;
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, bottompos.transform.position + random);
+        }
         AudioManager.Play("Slide Explosion");
         SetBroken();
     }

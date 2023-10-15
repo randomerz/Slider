@@ -48,7 +48,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
 
     public void SendMinecartDown(Minecart mc)
     {
-        if(!isBroken || isFixed)
+        if(isBroken && !isFixed)
             return;
         mc.StopMoving();
         animationManager.SendDown();
@@ -58,7 +58,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
 
     public void SendMinecartUp(Minecart mc)
     {
-        if(!isBroken || isFixed)
+        if(isBroken && !isFixed)
             return;
         mc.StopMoving();
         animationManager.SendUp();
@@ -82,6 +82,8 @@ public class MinecartElevator : MonoBehaviour, ISavable
         return SGrid.Current.GetStileAt(0, 1).isTileActive && !SGrid.Current.GetStileAt(0, 1).IsMoving() 
         && SGrid.Current.GetStileAt(0, 3).isTileActive && !SGrid.Current.GetStileAt(0, 3).IsMoving();
     }
+
+    public void CheckIsBroken(Condition c) => c.SetSpec(isBroken);
 
     public void CheckIsFixed(Condition c) => c.SetSpec(isFixed);
 
