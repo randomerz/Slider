@@ -7,7 +7,6 @@ using TMPro;
 public class MainMenuPlayer : MonoBehaviour
 {
     [SerializeField] private PlayerInput playerInput;
-    [SerializeField] private Controls controls;
     [SerializeField] private TMP_InputField newSaveNameInputField;
 
     public void OnControlsChanged()
@@ -15,9 +14,9 @@ public class MainMenuPlayer : MonoBehaviour
         //string newControlScheme = GetCurrentControlScheme();
         string newControlScheme = playerInput.currentControlScheme;
         Debug.Log("Control Scheme changed to: " + newControlScheme);
-        controls.SetCurrentControlScheme(newControlScheme);
+        Controls.CurrentControlScheme = newControlScheme;
 
-        if (newControlScheme == "Keyboard Mouse")
+        if (newControlScheme == Controls.CONTROL_SCHEME_KEYBOARD_MOUSE)
         {
             newSaveNameInputField.Select();
         }

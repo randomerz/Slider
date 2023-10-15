@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using TMPro;
 
+[Obsolete("This class has been replaced by RebindingButton.cs and should no longer be used.")]
 public class InputRebindButton : MonoBehaviour
 {
     [SerializeField] private Control keybind;
@@ -74,7 +75,7 @@ public class InputRebindButton : MonoBehaviour
         rebindOperation.Dispose(); // Stop memory leaks
         action.Enable();
 
-        PlayerPrefs.SetString("rebinds", Controls.Bindings.SaveBindingOverridesAsJson());
+        PlayerPrefs.SetString(Controls.PLAYER_PREFS_REBINDS_KEY, Controls.Bindings.SaveBindingOverridesAsJson());
         Controls.LoadBindings();
 
     }
@@ -108,10 +109,10 @@ public class InputRebindButton : MonoBehaviour
             }
 
             buttonText.text = ShrinkFontSizeIfNeeded(display.ToUpper() 
-                + ": " , Controls.GetBindingDisplayString(action).ToUpper().Replace("PRESS ", "").Replace(" ARROW", ""));
+                + ": " , Controls.BindingDisplayString(keybind).ToUpper().Replace("PRESS ", "").Replace(" ARROW", ""));
         }
 
-        PlayerPrefs.SetString("rebinds", Controls.Bindings.SaveBindingOverridesAsJson());
+        PlayerPrefs.SetString(Controls.PLAYER_PREFS_REBINDS_KEY, Controls.Bindings.SaveBindingOverridesAsJson());
         Controls.LoadBindings();
     }
 
@@ -130,19 +131,6 @@ public class InputRebindButton : MonoBehaviour
             buttonText.fontSize = 14;
             return s1 + s2;
         }
-    }
-
-    public enum Control
-    {
-        Move_Up = 0,
-        Move_Down = 1,
-        Move_Left = 2,
-        Move_Right = 3,
-        Action,
-        CycleEquip,
-        OpenArtifact,
-        Pause,
-        AltViewHold
     }
 }
     

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -95,13 +96,13 @@ public class HintData
     public string hintName;  //used when searching through hints
     public string hintText; //the text of the hint
     public string controllerHintText;
-    public List<InputRebindButton.Control> controlBinds; //list of control binds to replace in order
+    public List<Control> controlBinds; //list of control binds to replace in order
 
 
     public string GetFormattedHintText()
     {
         string hintTextToDisplay = CheckConvertToControllerHintText(hintText);
-        string ret = ConvertVariablesToStrings(hintTextToDisplay);
+        string ret = ReplacePlaceholdersWithControlBindings(hintTextToDisplay);
         return ret;
     }
 
@@ -113,44 +114,28 @@ public class HintData
             return message;
     }
 
-    private string ConvertVariablesToStrings(string message)
+    private string ReplacePlaceholdersWithControlBindings(string message)
     {
-        int startIndex = 0;
-        int numBinds = 0;
-        while (message.IndexOf('<', startIndex) != -1)
-        {
-            startIndex = message.IndexOf('<', startIndex);
-            // case with \<
-            if (startIndex != 0 && message[startIndex - 1] == '\\')
-            {
-                // continue
-                startIndex += 1;
-                continue;
-            }
+        Queue<Control> bindingsToPlace = new(controlBinds);
 
-            int endIndex = message.IndexOf('>', startIndex);
-            if (endIndex == -1)
-            {
-                // no more ends!
-                break;
-            }
-            numBinds++;
-            InputRebindButton.Control keybind = controlBinds[numBinds - 1];
-            string varResult;
-            if (keybind == InputRebindButton.Control.Move_Left || keybind == InputRebindButton.Control.Move_Right || keybind == InputRebindButton.Control.Move_Up || keybind == InputRebindButton.Control.Move_Down)
-            {
-                var action = Controls.Bindings.FindAction("Move");
-                varResult = action.bindings[1 + (int)keybind].ToDisplayString().ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
-            }
-            else
-            {
-                var action = Controls.Bindings.FindAction(keybind.ToString().Replace("_", string.Empty));
-                varResult = Controls.GetBindingDisplayString(action).ToUpper().Replace("PRESS ", "").Replace(" ARROW", "");
-            }
-            message = message.Substring(0, startIndex) + varResult + message.Substring(endIndex + 1);
+        // We sometimes have escaped angle braces that we need to remove
+        message.Replace("/<", "<")
+               .Replace("/>", ">");
+
+        while (message.Contains("<"))
+        {
+            int startOfPlaceholder = message.IndexOf("<");
+            int endOfPlaceholder = message.IndexOf(">");
+            string placeholder = message.Substring(startOfPlaceholder, endOfPlaceholder - startOfPlaceholder + 1);
+
+            string controlBinding = Controls.BindingDisplayString(bindingsToPlace.Dequeue())
+                                            .ToUpper()
+                                            .Replace("PRESS ", "")
+                                            .Replace(" ARROW", "");
+
+            message = message.Replace(placeholder, controlBinding);
         }
-        if(message.IndexOf("W/A/S/D") > -1)
-            message = message.Replace("W/A/S/D", "WASD");
+
         return message;
     }
 } 
