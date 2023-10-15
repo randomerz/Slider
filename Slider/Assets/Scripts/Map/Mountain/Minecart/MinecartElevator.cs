@@ -5,6 +5,7 @@ using UnityEngine;
 public class MinecartElevator : MonoBehaviour, ISavable
 {
     [SerializeField] private bool isFixed;
+    [SerializeField] private bool isBroken;
     public GameObject topPosition;
     public GameObject bottomPosition;
     public Minecart mainMc;
@@ -30,6 +31,11 @@ public class MinecartElevator : MonoBehaviour, ISavable
         isOpen = CheckIfShouldBeOpen();
     }
 
+    public void BreakElevator()
+    {
+        isBroken = true;
+        animationManager.Break();
+    }
 
     public void FixElevator()
     {
@@ -42,7 +48,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
 
     public void SendMinecartDown(Minecart mc)
     {
-        if(!isFixed)
+        if(!isBroken || isFixed)
             return;
         mc.StopMoving();
         animationManager.SendDown();
@@ -52,7 +58,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
 
     public void SendMinecartUp(Minecart mc)
     {
-        if(!isFixed)
+        if(!isBroken || isFixed)
             return;
         mc.StopMoving();
         animationManager.SendUp();
@@ -91,6 +97,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
 
     public void Save()
     {
+        SaveSystem.Current.SetBool("MountainElevatorBroken", isBroken);
         SaveSystem.Current.SetBool("MountainElevatorFixed", isFixed);
         SaveSystem.Current.SetBool("MountainElevatorUp", hasGoneUp);
         SaveSystem.Current.SetBool("MountainElevatorDown", hasGoneDown);
@@ -102,7 +109,10 @@ public class MinecartElevator : MonoBehaviour, ISavable
         hasGoneUp = profile.GetBool("MountainElevatorUp");
         hasGoneDown = profile.GetBool("MountainElevatorDown");
         isFixed = profile.GetBool("MountainElevatorFixed");
+        isBroken = isFixed = profile.GetBool("MountainElevatorBroken");
         if(isFixed)
             animationManager.Repair(true);
+        else if (isBroken)
+            animationManager.Break(true);
     }
 }

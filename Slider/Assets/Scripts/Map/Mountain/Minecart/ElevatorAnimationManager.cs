@@ -10,17 +10,19 @@ public class ElevatorAnimationManager : MonoBehaviour
     [SerializeField] private Animator bottomDoorAnimator;
 
     public List<GameObject> deactivateOnFix;
+    public List<GameObject> brokenObj;
 
    // private bool isAnimating = false;
-    private bool repaired = false;
+    private bool isBroken = false;
+    //private bool repaired = false;
 
     private void Start() {
         topDispAnimator.Play("Disp Top Fade In");
         bottomDispAnimator.Play("Disp Bottom Fade In");
-        if(repaired)
-            OpenDoors();
-        else
-            CloseDoors();
+        // if(!isBroken)
+        //     OpenDoors();
+        // else
+        //     CloseDoors();
     }
 
     public void SendUp()
@@ -69,9 +71,41 @@ public class ElevatorAnimationManager : MonoBehaviour
         //update colliders
     }
 
+    public void Break(bool fromSave = false)
+    {
+        isBroken = true;
+        if(!fromSave)
+        {
+            StartCoroutine(BreakAnimation());
+        }
+        else
+        {
+            SetBroken();
+        }
+    }
+
+    private IEnumerator BreakAnimation()
+    {
+        yield return new WaitForSeconds(3);
+        AudioManager.Play("Fall");
+        CameraShake.Shake(0.75f, 1);
+        yield return new WaitForSeconds(0.75f);
+        AudioManager.Play("Slide Explosion");
+        SetBroken();
+    }
+
+    private void SetBroken()
+    {
+        OpenDoors();
+        foreach(GameObject go in brokenObj)
+        {
+            go.SetActive(true);
+        }
+    }
+
     public void Repair(bool fromSave = false)
     {
-        repaired = true;
+        isBroken = false;
         OpenDoors();
         //delete extra sprites or whatnot
         foreach(GameObject go in deactivateOnFix)
