@@ -16,6 +16,7 @@ public class ElevatorAnimationManager : MonoBehaviour
    // private bool isAnimating = false;
     private bool isBroken = false;
     //private bool repaired = false;
+    public MinecartElevator minecartElevator;
 
     private void Start() {
         topDispAnimator.Play("Disp Top Fade In");
@@ -89,7 +90,7 @@ public class ElevatorAnimationManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         AudioManager.Play("Fall");
-        CameraShake.Shake(0.75f, 1);
+        CameraShake.ShakeIncrease(0.75f, 1f);
         yield return new WaitForSeconds(0.75f);
         for(int i = 0; i < 10; i++)
         {
@@ -97,16 +98,18 @@ public class ElevatorAnimationManager : MonoBehaviour
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, bottompos.transform.position + random);
         }
         AudioManager.Play("Slide Explosion");
+        CameraShake.ShakeConstant(0.5f, 2f);
         SetBroken();
     }
 
     private void SetBroken()
     {
-        OpenDoors();
+        CloseDoors();
         foreach(GameObject go in brokenObj)
         {
             go.SetActive(true);
         }
+        minecartElevator.isInBreakingAnimation = false;
     }
 
     public void Repair(bool fromSave = false)
@@ -114,18 +117,22 @@ public class ElevatorAnimationManager : MonoBehaviour
         isBroken = false;
         OpenDoors();
         //delete extra sprites or whatnot
-        foreach(GameObject go in deactivateOnFix)
+        foreach(GameObject go in brokenObj)
         {
             go.SetActive(false);
-            {
-                if(!fromSave) {
-                    for(int i = 0; i < 10; i++)
-                    {
-                        Vector3 random = Random.insideUnitCircle * 1.5f;
-                        ParticleManager.SpawnParticle(ParticleType.SmokePoof, go.transform.position + random);
-                    }
-                }
-            }
         }
+        // foreach(GameObject go in deactivateOnFix)
+        // {
+        //     go.SetActive(false);
+        //     {
+        //         if(!fromSave) {
+        //             for(int i = 0; i < 10; i++)
+        //             {
+        //                 Vector3 random = Random.insideUnitCircle * 1.5f;
+        //                 ParticleManager.SpawnParticle(ParticleType.SmokePoof, go.transform.position + random);
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
