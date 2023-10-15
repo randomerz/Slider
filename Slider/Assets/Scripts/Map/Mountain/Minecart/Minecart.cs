@@ -463,6 +463,7 @@ public class Minecart : Item, ISavable
         if(rm == null) 
         {
             Derail();
+            UpdateParent();
             return;
         }
 
@@ -470,6 +471,7 @@ public class Minecart : Item, ISavable
         if(!rm.railLocations.Contains(targetLoc))
         {
             Derail();
+            UpdateParent();
             return;
         }
 
