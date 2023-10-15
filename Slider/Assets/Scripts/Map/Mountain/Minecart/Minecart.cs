@@ -555,10 +555,14 @@ public class Minecart : Item, ISavable
         UpdateContentsSprite();
     }
 
-    public void TryAddCrystals()
+    public bool TryAddCrystals()
     {
         if(mcState == MinecartState.Empty)
+        {
             UpdateState("Crystal");
+            return true;
+        }
+        return false;
     }
 
     #endregion
