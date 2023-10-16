@@ -42,6 +42,11 @@ public class MinecartElevator : MonoBehaviour, ISavable
         animationManager.Break();
     }
 
+    public void FixElevator()
+    {
+        FixElevator(false);
+    }
+
     public void FixElevator(bool fromLoad = false)
     {
         isFixed = true;
@@ -81,6 +86,10 @@ public class MinecartElevator : MonoBehaviour, ISavable
         yield return new WaitForSeconds(1.5f);
         mc.StartMoving();
         isSending = false;
+        if(!isBroken && !isFixed)
+        {
+            BreakElevator();
+        }
     }
 
     public bool CheckIfShouldBeOpen()
