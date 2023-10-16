@@ -15,7 +15,7 @@ public class PlayerActionHints : MonoBehaviour, ISavable
 
     private void Awake() {
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => {
-            if (SaveSystem.Current.GetBool("villageTouchedGrass"))
+            if (SGrid.Current.GetArea() != Area.Village || SaveSystem.Current.GetBool("villageTouchedGrass"))
                 ArtifactOpen?.Invoke();
         });
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => PlayerAction?.Invoke());
