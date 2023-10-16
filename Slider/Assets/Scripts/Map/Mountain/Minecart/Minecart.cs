@@ -62,6 +62,7 @@ public class Minecart : Item, ISavable
 
     private bool nextTile = false;
 
+
     public override void Awake() 
     {
         base.Awake();
@@ -427,11 +428,10 @@ public class Minecart : Item, ISavable
 
     private bool CheckFreeInFront()
     {
-        Vector3 checkLoc = prevWorldPos + GetTileOffsetVector(currentDirection);
-        var colliders = Physics2D.OverlapBoxAll(checkLoc, Vector2.one * 0.5f, 0, collidingMask);
+        Vector3 checkloc = prevWorldPos + GetTileOffsetVector(currentDirection);
+        var colliders = Physics2D.OverlapBoxAll(checkloc, Vector2.one * 0.5f, 0, collidingMask);
         bool valid = true;
         foreach(Collider2D c in colliders) {
-            print(c.gameObject.name);
             if(c.GetComponent<STile>() == null && c.GetComponentInParent<Minecart>() == null )
             {
                 valid = false;
@@ -442,13 +442,14 @@ public class Minecart : Item, ISavable
 
     private STile CheckDropTileBelow()
     {
-        Vector3 checkLoc = prevWorldPos + (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
-
+        Vector3 checkloc = prevWorldPos + (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)) + GetTileOffsetVector(currentDirection);
         STile tile = null;
-        var colliders = Physics2D.OverlapBoxAll(checkLoc, Vector2.one, 0);
+        var colliders = Physics2D.OverlapBoxAll(checkloc, Vector2.one * 0.4f, 0);
         foreach(Collider2D c in colliders){
             if(c.GetComponent<STile>() != null && c.GetComponent<STile>().isTileActive) 
+            {
                 tile = c.GetComponent<STile>();
+            }
         }
         return tile;
 
@@ -474,6 +475,7 @@ public class Minecart : Item, ISavable
             UpdateParent();
             return;
         }
+        
 
         railManager = rm;
         SnapToRailNewSTile(targetLoc); 
@@ -504,10 +506,6 @@ public class Minecart : Item, ISavable
     {
         StopMoving();
         ResetTiles();
-        Vector3 derailVector = transform.position 
-                               + speed * 0.3f * getDirectionAsVector(currentDirection)   
-                               + 0.5f * (new Vector3(Random.onUnitSphere.x, Random.onUnitSphere.y, 0));
-       // StartCoroutine(AnimateDerail(derailVector));
     }
 
     public void setCanStartMoving(bool canStart)
