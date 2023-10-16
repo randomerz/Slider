@@ -20,11 +20,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -63,6 +64,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
   cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
@@ -75,6 +77,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -87,6 +90,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -99,6 +103,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -111,6 +116,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -124,7 +130,7 @@ TextureImporter:
         y: 112
         width: 16
         height: 16
-      alignment: 7
+      alignment: 9
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
@@ -589,33 +595,32 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      MinecartCrystals_0: 405655065
+      MinecartCrystals_1: -1309693953
+      MinecartCrystals_10: 984160259
+      MinecartCrystals_11: 187352246
+      MinecartCrystals_12: 592157021
+      MinecartCrystals_13: -1587574530
+      MinecartCrystals_14: 1750358260
+      MinecartCrystals_15: -1534890615
+      MinecartCrystals_16: 1649998622
+      MinecartCrystals_17: -1456119509
+      MinecartCrystals_18: 2094483745
       MinecartCrystals_19: -1613382602
-      MinecartCrystals_23: -872320814
+      MinecartCrystals_2: -1219492129
       MinecartCrystals_20: -1658454099
       MinecartCrystals_21: 238433895
-      MinecartCrystals_12: 592157021
-      MinecartCrystals_16: 1649998622
-      MinecartCrystals_15: -1534890615
-      MinecartCrystals_1: -1309693953
       MinecartCrystals_22: 325333617
-      MinecartCrystals_18: 2094483745
-      MinecartCrystals_0: 405655065
-      MinecartCrystals_10: 984160259
-      MinecartCrystals_9: 26886920
-      MinecartCrystals_11: 187352246
-      MinecartCrystals_4: -78808389
-      MinecartCrystals_2: -1219492129
-      MinecartCrystals_14: 1750358260
+      MinecartCrystals_23: -872320814
       MinecartCrystals_3: 179422821
-      MinecartCrystals_13: -1587574530
-      MinecartCrystals_17: -1456119509
-      MinecartCrystals_6: -1328164965
+      MinecartCrystals_4: -78808389
       MinecartCrystals_5: -960454870
-      MinecartCrystals_8: -83962667
+      MinecartCrystals_6: -1328164965
       MinecartCrystals_7: 1196536271
-  spritePackingTag: 
+      MinecartCrystals_8: -83962667
+      MinecartCrystals_9: 26886920
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

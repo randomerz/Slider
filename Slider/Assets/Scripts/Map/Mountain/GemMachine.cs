@@ -45,7 +45,6 @@ public class GemMachine : MonoBehaviour, ISavable
         if(numGems == 2){
             AudioManager.Play("Puzzle Complete");
             isDone = true;
-            SGrid.Current.EnableStile(8);
         }
     }
 
@@ -80,6 +79,8 @@ public class GemMachine : MonoBehaviour, ISavable
     public void Load(SaveProfile profile)
     {
         numGems = profile.GetInt("mountainNumGems");
+        if(numGems >= 2)
+            isDone = true;
         isBroken = profile.GetBool("mountainGemMachineBroken", true);
         if(! isBroken)
             Fix();
