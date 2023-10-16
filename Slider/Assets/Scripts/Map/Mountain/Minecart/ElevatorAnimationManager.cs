@@ -17,6 +17,7 @@ public class ElevatorAnimationManager : MonoBehaviour
     private bool isBroken = false;
     //private bool repaired = false;
     public MinecartElevator minecartElevator;
+    public List<GameObject> closedDoorColliders;
 
     private void Start() {
         topDispAnimator.Play("Disp Top Fade In");
@@ -63,6 +64,10 @@ public class ElevatorAnimationManager : MonoBehaviour
     {
         topDoorAnimator.Play("Close");
         bottomDoorAnimator.Play("Close");
+        foreach(GameObject go in closedDoorColliders)
+        {
+            go.SetActive(true);
+        }
         //update colliders
     }
 
@@ -70,6 +75,10 @@ public class ElevatorAnimationManager : MonoBehaviour
     {
         topDoorAnimator.Play("Open");
         bottomDoorAnimator.Play("Open");
+        foreach(GameObject go in closedDoorColliders)
+        {
+            go.SetActive(false);
+        }
         //update colliders
     }
 

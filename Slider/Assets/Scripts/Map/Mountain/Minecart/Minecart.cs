@@ -15,7 +15,7 @@ public class Minecart : Item, ISavable
     private float baseCornerSpeedMultiplier = 1; // cornerSpeed / speed
     private float cornerSpeedAmount = 1; // lerp between baseCornerSpeedMultiplier and 1
 
-    private bool isOnTrack;
+    public bool isOnTrack;
     [SerializeField] public bool isMoving {get; private set;} = false;
 
     public Vector3 offSet = new Vector3(0.5f, 0.75f, 0.0f);

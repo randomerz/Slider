@@ -17,6 +17,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
     public bool isSending = false; //true when minecart being sent;
 
     public bool isInBreakingAnimation = false;
+    public GameObject crystalchecker;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveEnd += CheckOpenOnMove;
@@ -35,16 +36,21 @@ public class MinecartElevator : MonoBehaviour, ISavable
 
     public void BreakElevator()
     {
+        crystalchecker.SetActive(true);
         isInBreakingAnimation = true;
         isBroken = true;
         animationManager.Break();
     }
 
-    public void FixElevator()
+    public void FixElevator(bool fromLoad = false)
     {
         isFixed = true;
-        mainMc.UpdateState("Empty");
-        AudioManager.Play("Puzzle Complete");
+        if(!fromLoad)
+        {
+            mainMc.UpdateState("Empty");
+            AudioManager.Play("Puzzle Complete");
+        }
+        crystalchecker.SetActive(false);
         animationManager.Repair();
     }
 
@@ -115,7 +121,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
         isFixed = profile.GetBool("MountainElevatorFixed");
         isBroken = isFixed = profile.GetBool("MountainElevatorBroken");
         if(isFixed)
-            animationManager.Repair(true);
+            FixElevator(true);
         else if (isBroken)
             animationManager.Break(true);
     }
