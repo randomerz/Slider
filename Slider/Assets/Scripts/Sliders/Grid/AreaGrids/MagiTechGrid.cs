@@ -49,11 +49,12 @@ public class MagiTechGrid : SGrid
         contactFilter = new ContactFilter2D();
 
         AudioManager.PlayMusic("MagiTech");
+        AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", IsInPast(Player._instance.transform) ? 0 : 1);
     }
 
     protected void OnEnable()
     {
-        OnTimeChange(this, new Portal.OnTimeChangeArgs {fromPast = IsInPast(Player.GetInstance().transform)});
+        // OnTimeChange(this, new Portal.OnTimeChangeArgs {fromPast = IsInPast(Player.GetInstance().transform)});
         Portal.OnTimeChange += OnTimeChange;
     }
 
@@ -64,8 +65,7 @@ public class MagiTechGrid : SGrid
 
     private void OnTimeChange(object sender, Portal.OnTimeChangeArgs e)
     {
-        bool isFuture = !e.fromPast;
-        AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", isFuture ? 1 : 0);
+        AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", e.fromPast ? 1 : 0);
     }
 
     #region Magitech Mechanics 
