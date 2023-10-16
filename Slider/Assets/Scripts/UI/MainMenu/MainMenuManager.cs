@@ -246,11 +246,10 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
         newSaveProfileIndex = profileIndex;
 
-        if (Controls.Instance.GetCurrentControlScheme() == "Keyboard Mouse")
+        if (Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_KEYBOARD_MOUSE)
         {
             profileNameTextField.Select();
         }
-        //profileNameTextField.ActivateInputField();
         profileNameTextField.text = "";
         UINavigationManager.CurrentMenu = newSavePanel;
         keyboardEnabled = true;

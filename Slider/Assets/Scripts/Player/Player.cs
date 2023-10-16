@@ -176,10 +176,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         string newControlScheme = playerInput.currentControlScheme;
         Debug.Log("Control Scheme changed to: " + newControlScheme);
         OnControlSchemeChanged?.Invoke(newControlScheme);
-        if (Controls.Instance != null)
-        {
-            Controls.Instance.SetCurrentControlScheme(newControlScheme);
-        }
+        Controls.CurrentControlScheme = newControlScheme;
     }
     /*
     public void OnAltViewHold()

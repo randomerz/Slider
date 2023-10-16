@@ -307,4 +307,13 @@ public class MagiTechArtifact : UIArtifact
             }
         }
     }
+
+
+    // for ui icons
+
+    public bool IsDisplayingPast()
+    {
+        // xor
+        return (isInPast && !isPreview) || (!isInPast && isPreview);
+    }
 }
