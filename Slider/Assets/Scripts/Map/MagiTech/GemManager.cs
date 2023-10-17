@@ -6,6 +6,9 @@ using UnityEngine;
 public class GemManager : MonoBehaviour, ISavable
 {
     private Dictionary<Area, bool> gems = new Dictionary<Area, bool>();
+    private Dictionary<Area, GameObject> gemSprites = new();
+
+    public List<GameObject> sprites = new();
 
     public void Save()
     {
@@ -35,6 +38,9 @@ public class GemManager : MonoBehaviour, ISavable
         gems.Add(Area.Desert, SaveSystem.Current.GetBool("magiTechDesert"));
         gems.Add(Area.Jungle, SaveSystem.Current.GetBool("magiTechJungle"));
         gems.Add(Area.MagiTech, SaveSystem.Current.GetBool("magiTechMagiTech"));
+
+        BuildSpriteDictionary();
+        UpdateGemSprites();
     }
 
     public void HasOceanGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Ocean, false));
@@ -46,6 +52,15 @@ public class GemManager : MonoBehaviour, ISavable
     public void HasDesertGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Desert, false));
     public void HasJungleGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Jungle, false));
     public void HasMagiTechGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.MagiTech, false));
+
+    public void BuildSpriteDictionary()
+    {
+        for(int i = 1; i <= sprites.Count; i++)
+        {
+            GameObject sprite = sprites[i-1];
+            gemSprites.Add((Area)(i), sprite);
+        }
+    }
 
     public void HasAllGems(Condition c)
     {
@@ -72,6 +87,7 @@ public class GemManager : MonoBehaviour, ISavable
         {
             gems[itemNameAsEnum] = true;
             //Funni turn-in coroutine
+            UpdateGemSprites();
             PlayerInventory.RemoveAndDestroyItem();
             Debug.Log(itemNameAsEnum);
         }
@@ -84,6 +100,14 @@ public class GemManager : MonoBehaviour, ISavable
         else
         {
             Debug.LogWarning("Tried to turn in invalid item: " + item);
+        }
+    }
+
+    public void UpdateGemSprites()
+    {
+        foreach(Area a in gems.Keys)
+        {
+            gemSprites[a].SetActive(gems[a]);
         }
     }
 }
