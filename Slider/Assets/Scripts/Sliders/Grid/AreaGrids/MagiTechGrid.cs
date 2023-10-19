@@ -117,7 +117,7 @@ public class MagiTechGrid : SGrid
 
     public void TryEnableHint()
     {
-         if(GetNumTilesCollected() >= 1)
+        if(GetNumTilesCollected() >= 1)
             hints.TriggerHint("altview");
     }
 
