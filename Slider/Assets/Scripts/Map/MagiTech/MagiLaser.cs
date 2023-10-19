@@ -7,7 +7,7 @@ public class MagiLaser : MonoBehaviour
 {
     private Vector2 initDir = Vector2.left;
 
-    private bool isPowered;
+    public bool isPowered;
     public bool isEnabled;
     public List<LineRenderer> lineRenderers;
     private RaycastHit2D hit;
@@ -23,6 +23,8 @@ public class MagiLaser : MonoBehaviour
 
     private const int MAX_LASER_BOUNCES = 32;
     private const float PORTAL_LASER_OFFSET = 1.5625f;
+
+    public ArtifactTBPluginLaser laserUI;
 
     private void LateUpdate()
     {
@@ -155,6 +157,7 @@ public class MagiLaser : MonoBehaviour
     {
         isPowered = value;
         magiLaserAnimation.SetPowered(value);
+        laserUI.UpdateSprites();
     }
 
     public void SetEnabled(bool value)

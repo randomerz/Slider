@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;    
 
 //L: This is a way to inject more implementation into a button without using inheritance (since swapping components in Unity doesn't save serialized values).
-public abstract class ArtifactTBPluginLaser : ArtifactTBPlugin
+public class ArtifactTBPluginLaser : ArtifactTBPlugin
 {
     public GameObject[] sprites = new GameObject[4]; //0 = East, 1 = north, 2 = west, 3 = south
     public bool[] edgeblockers = new bool[4];
@@ -19,6 +19,7 @@ public abstract class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public LaserCenterObject centerObject;
     public ArtifactTBPluginLaser otherPortal;
+    public MagiLaser laser;
 
     private int[] mirrorNWSE = {1, 0, 3, 2};
     private int[] mirrorNESW = {3, 2, 1, 0};
@@ -29,6 +30,7 @@ public abstract class ArtifactTBPluginLaser : ArtifactTBPlugin
     {
         button = GetComponentInParent<ArtifactTileButton>();
         tileDict.Add(button, this);
+        ResetSprites();
     }
 
     public void ResetSprites()
@@ -62,7 +64,7 @@ public abstract class ArtifactTBPluginLaser : ArtifactTBPlugin
                 break;
             case LaserCenterObject.PORTAL:
                 nextDir = (direction + 2) % 4;
-                otherPortal.UpdateCenterToEdge(direction);
+                otherPortal.UpdateCenterToEdge(nextDir);
                 return;
             default:
                 nextDir = (direction + 2) % 4;
@@ -76,6 +78,7 @@ public abstract class ArtifactTBPluginLaser : ArtifactTBPlugin
         sprites[direction].SetActive(true);
         if(edgeblockers[direction])
             return;
+        UpdateAdjTile(direction);
     }
 
     public static Vector2Int GetTileOffsetVector(int num)
@@ -102,6 +105,18 @@ public abstract class ArtifactTBPluginLaser : ArtifactTBPlugin
     public override void OnPosChanged()
     {
         if(centerObject is LaserCenterObject.SOURCE)
+        {
+            UpdateSprites();
+        }
+    }
+
+    public void UpdateSprites()
+    {
+        foreach(ArtifactTBPluginLaser l in tileDict.Values)
+        {
+            l.ResetSprites();
+        }
+        if(laser.isPowered)
         {
             UpdateCenterToEdge(2);
         }
