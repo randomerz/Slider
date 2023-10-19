@@ -6,6 +6,7 @@ using UnityEngine;
 public class NPCConditionalsDrawer : PropertyDrawer
 {
     private readonly string[] PROPERTY_NAMES = {
+        "conditionType",
         "conditions",
         "alwaysStartFromBeginning",
         "dialogueChain",

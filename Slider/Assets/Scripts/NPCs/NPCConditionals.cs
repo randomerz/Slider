@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,12 @@ public class NPCConditionals
 {
     [HideInInspector] public string name;
     public List<Condition> conditions;
+    public enum ConditionType
+    {
+        AND,
+        OR,
+    }
+    public ConditionType conditionType = ConditionType.AND;
 
     [Header("Dialogue")]
     public bool alwaysStartFromBeginning;
@@ -41,16 +48,24 @@ public class NPCConditionals
     
     public bool CheckConditions()
     {
+        int numtrue = 0;
         foreach (Condition cond in conditions)
         {
-            if (!cond.CheckCondition())
-            {
-                currentprio = -1 * priority;    //priority is negative so that the dialogue will not be chosen.
-                return false;
-            }
+            numtrue += cond.CheckCondition() ? 1 : 0;
         }
-        currentprio = priority;
-        return true;
+    
+        bool pass = conditionType == ConditionType.AND ? numtrue == conditions.Count : numtrue > 0;
+        if(pass)
+        {
+            currentprio = priority;
+            return true;
+        }
+        else
+        {
+            currentprio = -1 * priority;    //priority is negative so that the dialogue will not be chosen.
+            return false;
+        }
+
     }
 
     public string GetDialogueString(int index)
