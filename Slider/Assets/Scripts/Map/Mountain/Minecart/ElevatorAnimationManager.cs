@@ -10,17 +10,22 @@ public class ElevatorAnimationManager : MonoBehaviour
     [SerializeField] private Animator bottomDoorAnimator;
 
     public List<GameObject> deactivateOnFix;
+    public List<GameObject> brokenObj;
+    public GameObject bottompos;
 
    // private bool isAnimating = false;
-    private bool repaired = false;
+    private bool isBroken = false;
+    //private bool repaired = false;
+    public MinecartElevator minecartElevator;
+    public List<GameObject> closedDoorColliders;
 
     private void Start() {
         topDispAnimator.Play("Disp Top Fade In");
         bottomDispAnimator.Play("Disp Bottom Fade In");
-        if(repaired)
-            OpenDoors();
-        else
-            CloseDoors();
+        // if(!isBroken)
+        //     OpenDoors();
+        // else
+        //     CloseDoors();
     }
 
     public void SendUp()
@@ -59,6 +64,10 @@ public class ElevatorAnimationManager : MonoBehaviour
     {
         topDoorAnimator.Play("Close");
         bottomDoorAnimator.Play("Close");
+        foreach(GameObject go in closedDoorColliders)
+        {
+            go.SetActive(true);
+        }
         //update colliders
     }
 
@@ -66,26 +75,73 @@ public class ElevatorAnimationManager : MonoBehaviour
     {
         topDoorAnimator.Play("Open");
         bottomDoorAnimator.Play("Open");
+        foreach(GameObject go in closedDoorColliders)
+        {
+            go.SetActive(false);
+        }
         //update colliders
+    }
+
+    public void Break(bool fromSave = false)
+    {
+        isBroken = true;
+        if(!fromSave)
+        {
+            StartCoroutine(BreakAnimation());
+        }
+        else
+        {
+            SetBroken();
+        }
+    }
+
+    private IEnumerator BreakAnimation()
+    {
+        yield return new WaitForSeconds(3);
+        AudioManager.Play("Fall");
+        CameraShake.ShakeIncrease(1f, 1f);
+        yield return new WaitForSeconds(1f);
+        for(int i = 0; i < 10; i++)
+        {
+            Vector3 random = Random.insideUnitCircle * 1.5f;
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, bottompos.transform.position + random);
+        }
+        AudioManager.Play("Slide Explosion");
+        CameraShake.ShakeConstant(0.5f, 1.5f);
+        SetBroken();
+    }
+
+    private void SetBroken()
+    {
+        CloseDoors();
+        foreach(GameObject go in brokenObj)
+        {
+            go.SetActive(true);
+        }
+        minecartElevator.isInBreakingAnimation = false;
     }
 
     public void Repair(bool fromSave = false)
     {
-        repaired = true;
+        isBroken = false;
         OpenDoors();
         //delete extra sprites or whatnot
-        foreach(GameObject go in deactivateOnFix)
+        foreach(GameObject go in brokenObj)
         {
             go.SetActive(false);
-            {
-                if(!fromSave) {
-                    for(int i = 0; i < 10; i++)
-                    {
-                        Vector3 random = Random.insideUnitCircle * 1.5f;
-                        ParticleManager.SpawnParticle(ParticleType.SmokePoof, go.transform.position + random);
-                    }
-                }
-            }
         }
+        // foreach(GameObject go in deactivateOnFix)
+        // {
+        //     go.SetActive(false);
+        //     {
+        //         if(!fromSave) {
+        //             for(int i = 0; i < 10; i++)
+        //             {
+        //                 Vector3 random = Random.insideUnitCircle * 1.5f;
+        //                 ParticleManager.SpawnParticle(ParticleType.SmokePoof, go.transform.position + random);
+        //             }
+        //         }
+        //     }
+        // }
     }
 }

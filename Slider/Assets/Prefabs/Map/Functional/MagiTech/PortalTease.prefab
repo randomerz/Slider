@@ -123,12 +123,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animationCooldown: 10
-  playerDeactivateDistance: 5
+  playerDeactivateDistance: 7
   animator: {fileID: 4240898331339911341}
   constantParticles: {fileID: 8574220470685165512}
   burstParticles: {fileID: 9170578705530690167}
   realPortal: {fileID: 8705957471528597836}
   realPortalFlashWhite: {fileID: 3959183705350545558}
+  uiPortalTracker: {fileID: 0}
 --- !u!1001 &8067457795680216510
 PrefabInstance:
   m_ObjectHideFlags: 0

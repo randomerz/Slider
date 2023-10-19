@@ -188,6 +188,17 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""78f04ec1-8b83-4e42-9fe5-cdad4edb2fdd"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard Mouse"",
+                    ""action"": ""AltViewHold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""dd8a5f9e-2c8e-493a-947f-88e1a67a68ac"",
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
@@ -204,17 +215,6 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Controller"",
-                    ""action"": ""AltViewHold"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""78f04ec1-8b83-4e42-9fe5-cdad4edb2fdd"",
-                    ""path"": ""<Keyboard>/leftShift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard Mouse"",
                     ""action"": ""AltViewHold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

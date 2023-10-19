@@ -10,8 +10,8 @@ public class MagiTechGrid : SGrid
 
     public int gridOffset = 100; //C: The X distance between the present and past grid
 
-    [SerializeField] private Collider2D lightningBoi;
-    [SerializeField] private Collider2D fireBoi;
+    [SerializeField] private Collider2D fireStoolZoneCollider;
+    [SerializeField] private Collider2D lightningStoolZoneCollider;
     [SerializeField] private Collider2D hungryBoi;
     [SerializeField] private DesyncItem desyncBurger;
 
@@ -49,11 +49,12 @@ public class MagiTechGrid : SGrid
         contactFilter = new ContactFilter2D();
 
         AudioManager.PlayMusic("MagiTech");
+        AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", IsInPast(Player._instance.transform) ? 0 : 1);
     }
 
     protected void OnEnable()
     {
-        OnTimeChange(this, new Portal.OnTimeChangeArgs {fromPast = IsInPast(Player.GetInstance().transform)});
+        // OnTimeChange(this, new Portal.OnTimeChangeArgs {fromPast = IsInPast(Player.GetInstance().transform)});
         Portal.OnTimeChange += OnTimeChange;
     }
 
@@ -64,8 +65,7 @@ public class MagiTechGrid : SGrid
 
     private void OnTimeChange(object sender, Portal.OnTimeChangeArgs e)
     {
-        bool isFuture = !e.fromPast;
-        AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", isFuture ? 1 : 0);
+        AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", e.fromPast ? 1 : 0);
     }
 
     #region Magitech Mechanics 
@@ -145,12 +145,13 @@ public class MagiTechGrid : SGrid
 
     public void FireHasStool(Condition c)
     {
-        if (SaveSystem.Current.GetBool("magiTechFactory"))
-        {
-            c.SetSpec(true);
-            return;
-        }
-        foreach (Collider2D hit in GetCollidingItems(fireBoi))
+        // if (SaveSystem.Current.GetBool("magiTechFactory"))
+        // {
+        //     c.SetSpec(true);
+        //     return;
+        // }
+
+        foreach (Collider2D hit in GetCollidingItems(fireStoolZoneCollider))
         {
             Item item = hit.GetComponent<Item>();
             if (item != null && item.itemName == "Step Stool")
@@ -159,18 +160,19 @@ public class MagiTechGrid : SGrid
                 return;
             }
         }
+        
         c.SetSpec(false);
     }
 
     public void LightningHasStool(Condition c)
     {
-        if (SaveSystem.Current.GetBool("magiTechFactory"))
-        {
-            c.SetSpec(true);
-            return;
-        }
+        // if (SaveSystem.Current.GetBool("magiTechFactory"))
+        // {
+        //     c.SetSpec(true);
+        //     return;
+        // }
 
-        foreach (Collider2D hit in GetCollidingItems(lightningBoi))
+        foreach (Collider2D hit in GetCollidingItems(lightningStoolZoneCollider))
         {
             Item item = hit.GetComponent<Item>();
             if (item != null && item.itemName == "Step Stool")
@@ -179,6 +181,7 @@ public class MagiTechGrid : SGrid
                 return;
             }
         }
+
         c.SetSpec(false);
     }
 

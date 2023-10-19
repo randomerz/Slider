@@ -15,6 +15,9 @@ public class PortalTease : MonoBehaviour
     public GameObject realPortal;
     public FlashWhite realPortalFlashWhite;
 
+    public MagiTechArtifact magiTechArtifact;
+    public GameObject uiPortalTracker;
+
     void Start()
     {
         if (SaveSystem.Current.GetBool("magitechDesertPortal"))
@@ -51,6 +54,8 @@ public class PortalTease : MonoBehaviour
             animator.SetTrigger("zap");
             ResetTimer();
         }
+
+        UpdateUITracker();
     }
 
     public void ResetTimer()
@@ -80,5 +85,14 @@ public class PortalTease : MonoBehaviour
 
         gameObject.SetActive(false);
         realPortal.SetActive(true);
+    }
+
+    private void UpdateUITracker()
+    {
+        if (magiTechArtifact == null || uiPortalTracker == null)
+            return;
+
+        bool displayingPast = magiTechArtifact.IsDisplayingPast();
+        uiPortalTracker.SetActive(displayingPast && realPortal.activeInHierarchy);
     }
 }
