@@ -47,6 +47,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
                 laserUI.edgeblockers[blockLocation] = false;
             else if(centerObject != LaserCenterObject.NOCHANGE)
                 laserUI.centerObject = centerObject;
+            laserUI.t5RockBS = false;
             UpdateSpritesFromSource();
         }
 
@@ -60,6 +61,8 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     }
 
     public List<LaserableRockUIData> rockdata = new();
+    public bool t5RockBS;
+    public GameObject[] t5Sprites = new GameObject[2];
  
 
     private void Awake()
@@ -93,17 +96,31 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         {
             s.SetActive(false);
         }
+        if(t5RockBS)
+        {
+            foreach(GameObject s in t5Sprites)
+            {
+                s.SetActive(false);
+            }
+        }
         crossings = 0;
     }
 
     public void UpdateEdgeToCenter(int direction)
     {
         if(button.TileIsActive)
-            sprites[direction].SetActive(true);
+        {
+            if(t5RockBS && direction == 1)
+                t5Sprites[0].SetActive(true);
+            else
+                sprites[direction].SetActive(true);
+
+            if(!edgeblockers[direction])
+                return;
+        }
         else
             emptysprites[direction].SetActive(true);
-        if(edgeblockers[direction])
-            return;
+
         crossings++;
         UpdateCenter(direction);
     }
@@ -141,10 +158,17 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public void UpdateCenterToEdge(int direction)
     {
         crossings++;
-        if(edgeblockers[direction])
-            return;
+
         if(button != null && button.TileIsActive)
-            sprites[direction].SetActive(true);
+        {
+            if(edgeblockers[direction])
+                return;
+        
+            if(t5RockBS && direction == 1)
+                t5Sprites[1].SetActive(true);
+            else
+                sprites[direction].SetActive(true);
+        }
         else
             emptysprites[direction].SetActive(true);
 
