@@ -115,7 +115,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
             else
                 sprites[direction].SetActive(true);
 
-            if(!edgeblockers[direction])
+            if(edgeblockers[direction])
                 return;
         }
         else
@@ -161,12 +161,13 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
         if(button != null && button.TileIsActive)
         {
-            if(edgeblockers[direction])
-                return;
-        
             if(t5RockBS && direction == 1)
                 t5Sprites[1].SetActive(true);
-            else
+
+            if(edgeblockers[direction])
+                return;
+                
+            else if(!t5RockBS || direction != 1)
                 sprites[direction].SetActive(true);
         }
         else
