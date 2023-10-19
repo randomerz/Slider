@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System;
+using UnityEngine.UI;
 
 /// <summary>
 /// Handles switching between the various panels available in the controls menu and 
@@ -12,6 +13,7 @@ using System;
 public class ControlsMenuPanelHandler : MonoBehaviour
 {
     [SerializeField] private GameObject[] panels;
+    [SerializeField] private Selectable[] buttons;
 
     public const int KEYBOARD_PANEL = 0;
     public const int CONTROLLER_PANEL = 1;
@@ -19,7 +21,10 @@ public class ControlsMenuPanelHandler : MonoBehaviour
     private void OnEnable()
     {
         bool currentControlSchemeIsController = Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_CONTROLLER;
-        SetCurrentPanel(currentControlSchemeIsController ? CONTROLLER_PANEL : KEYBOARD_PANEL);
+        int currentPanel = currentControlSchemeIsController ? CONTROLLER_PANEL : KEYBOARD_PANEL;
+
+        SetCurrentPanel(currentPanel);
+        UINavigationManager.SetCurrentSelectable(buttons[currentPanel]);
     }
 
     public void SetCurrentPanel(int newPanelIndex)

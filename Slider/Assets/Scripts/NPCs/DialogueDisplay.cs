@@ -59,7 +59,10 @@ public class DialogueDisplay : MonoBehaviour
     {
         if (useVocalizer)
         {
-            StartCoroutine(FadeWhenReady());
+            if (gameObject.activeInHierarchy)
+            {
+                StartCoroutine(FadeWhenReady());
+            }
         }
         else
         {

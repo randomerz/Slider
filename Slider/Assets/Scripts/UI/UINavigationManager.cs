@@ -1,27 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
 /// Handles everything related to UI keyboard navigation. This should be attached to the EventSystem in every scene.
-/// Make sure to setup buttonSets properly — each menu should be matched with all of the navigatable buttons inside of it. Also make sure to
-/// properly update CurrentMenu based on which menu is currently active to keep navigation working properly.
-/// <para/>
-/// <b>Note: It is recommended that we transition away from setting up our button sets on this component and instead use the <see cref="SelectableSet"/>
-/// component attached to UI GameObjects. This will be far more robust, especially in regards to switching scenes and in scenes where there
-/// are lots of different unique UI elements such as the Ocean Shop.</b>
+/// Make sure to properly update CurrentMenu based on which menu is currently active to keep navigation working properly.
 /// </summary>
 /// <remarks>Author: Travis</remarks>
 public class UINavigationManager : Singleton<UINavigationManager>
 {
     private UnityEngine.EventSystems.EventSystem eventSystem;
 
-    [Tooltip("Match each UI panel GameObject with all the navigatable buttons inside of it.")]
-    [SerializeField] private ButtonSet[] selectableSets;
-
-    // We convert our buttonSets into a dictionary at start (dictionaries are not serializable and therefore invisible in the inspector)
     private Dictionary<GameObject, Selectable[]> selectableSetDictionary;
 
     /// <summary>
@@ -81,18 +73,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         InitializeSingleton();
 
         _instance.eventSystem = GetComponent<UnityEngine.EventSystems.EventSystem>();
-
-        if (selectableSets.Length > 0)
-        {
-            Debug.LogWarning("UINavigationManager's ButtonSets field is deprecated. You should be attaching SelectableSet components to " +
-                "your menu objects instead.");
-        }
         selectableSetDictionary = new Dictionary<GameObject, Selectable[]>();
-        foreach (ButtonSet set in selectableSets)
-        {
-            selectableSetDictionary[set.menu] = set.selectables;
-        }
-
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate,
             context =>
@@ -204,6 +185,12 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
         _instance.StartCoroutine(ILockoutSelectablesInCurrentMenu(callback, duration));
     }
+
+    public static void SetCurrentSelectable(Selectable selectable)
+    {
+        selectable.Select();
+    }
+
     private static IEnumerator ILockoutSelectablesInCurrentMenu(System.Action callback, float duration)
     {
         // We need to track all of the ones we disable and then re-enable them, otherwise we would
