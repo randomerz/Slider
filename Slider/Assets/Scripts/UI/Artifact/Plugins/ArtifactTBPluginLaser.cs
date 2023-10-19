@@ -15,6 +15,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         MIRROR_NWSE,
         MIRROR_NESW,
         BLOCK,
+        NOCHANGE,
     }
 
     public LaserCenterObject centerObject;
@@ -25,12 +26,51 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     private int[] mirrorNESW = {3, 2, 1, 0};
 
     public static Dictionary<ArtifactTileButton, ArtifactTBPluginLaser> tileDict = new();
+    public static ArtifactTBPluginLaser source;
+
+    [Serializable]
+    public class LaserableRockUIData
+    {
+        private bool exploded;
+        public ExplodableRock rock;
+        public ArtifactTBPluginLaser laserUI;
+        public int blockLocation;
+        public LaserCenterObject centerObject;
+
+        public void UpdateLaserUI()
+        {
+            if(blockLocation != -1)
+                laserUI.edgeblockers[blockLocation] = false;
+            else if(centerObject != LaserCenterObject.NOCHANGE)
+                laserUI.centerObject = centerObject;
+            UpdateSpritesFromSource();
+        }
+
+        public void CheckForUpdate()
+        {
+            if(!exploded && rock.isExploded)
+            {
+                UpdateLaserUI();
+            }
+        }
+    }
+
+    public List<LaserableRockUIData> rockdata = new();
+ 
 
     private void Awake()
     {
         button = GetComponentInParent<ArtifactTileButton>();
         tileDict.Add(button, this);
         ResetSprites();
+        if(centerObject == LaserCenterObject.SOURCE)
+            source = this;
+    }
+
+    private void Update()
+    {
+        foreach(LaserableRockUIData d in rockdata)
+            d.CheckForUpdate();
     }
 
     public void ResetSprites()
@@ -51,7 +91,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void UpdateCenter(int direction)
     {
-        int nextDir = -1;
+        int nextDir = (direction + 2) % 4;
         switch(centerObject)
         {
             case LaserCenterObject.BLOCK:
@@ -63,11 +103,9 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
                 nextDir = mirrorNESW[direction];
                 break;
             case LaserCenterObject.PORTAL:
-                nextDir = (direction + 2) % 4;
                 otherPortal.UpdateCenterToEdge(nextDir);
                 return;
             default:
-                nextDir = (direction + 2) % 4;
                 break;
         }
         UpdateCenterToEdge(nextDir);
@@ -100,6 +138,9 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
                 tileDict[a].UpdateEdgeToCenter(nextDir);
             }
         }
+
+        //TODO: Go through empty tiles
+
     }
 
     public override void OnPosChanged()
@@ -110,13 +151,18 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         }
     }
 
+    public static void UpdateSpritesFromSource()
+    {
+        source.UpdateSprites();
+    }
+
     public void UpdateSprites()
     {
         foreach(ArtifactTBPluginLaser l in tileDict.Values)
         {
             l.ResetSprites();
         }
-        if(laser.isPowered)
+        if(laser.isEnabled)
         {
             UpdateCenterToEdge(2);
         }

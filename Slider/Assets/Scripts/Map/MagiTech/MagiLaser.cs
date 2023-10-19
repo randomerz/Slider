@@ -157,7 +157,6 @@ public class MagiLaser : MonoBehaviour
     {
         isPowered = value;
         magiLaserAnimation.SetPowered(value);
-        laserUI.UpdateSprites();
     }
 
     public void SetEnabled(bool value)
@@ -167,6 +166,7 @@ public class MagiLaser : MonoBehaviour
         {
             ClearLasers();
         }
+        laserUI.UpdateSprites();
     }
 }
 
