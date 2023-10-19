@@ -70,7 +70,6 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         ResetSprites();
         if(centerObject == LaserCenterObject.SOURCE)
             source = this;
-        print("adding button");
     }
 
     private void OnEnable()
