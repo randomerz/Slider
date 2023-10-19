@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: WaterfallBottom
+  m_Controller: {fileID: 9100000, guid: 51010b62945ec8548ba5c4ef15f76f24, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 236e4bc8d19ebed41a56defc33f69876, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 613f446905464534e94900a7ec136891, type: 2}

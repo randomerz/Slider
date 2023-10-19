@@ -52,6 +52,7 @@ public class Meltable : FlashWhite, ISavable
 
     private float currFreezeTime;
     private float blinkTime;
+    private bool hasFixed = false;
 
     private void OnEnable() {
         sTile = GetComponentInParent<MountainSTile>();
@@ -163,7 +164,7 @@ public class Meltable : FlashWhite, ISavable
         {
             state = MeltableState.FROZEN;
             if(spriteRenderer)
-                spriteRenderer.sprite = frozenSprite;
+                spriteRenderer.sprite = hasFixed && newFrozenSprite != null ? newFrozenSprite : frozenSprite;
             onFreeze?.Invoke();
             currFreezeTime = freezeTime;
         }
@@ -174,6 +175,7 @@ public class Meltable : FlashWhite, ISavable
         if(state == MeltableState.BROKEN) 
         {
             state = MeltableState.MELTED;
+            hasFixed = true;
            // animator.SetBool("Broken", false);
             if(fixBackToFrozen)
                 Freeze();
@@ -207,16 +209,18 @@ public class Meltable : FlashWhite, ISavable
     }
 
     public void ChangeFrozenSprite(){
-        frozenSprite = newFrozenSprite;
+        spriteRenderer.sprite = newFrozenSprite;
     }
 
     public void Save()
     {
         SaveSystem.Current.SetInt(gameObject.name + gameObject.transform.parent.name + "MeltState", ((int)state));
+        SaveSystem.Current.SetBool(gameObject.name + gameObject.transform.parent.name + "HasFixed", hasFixed);
     }
 
     public void Load(SaveProfile profile)
     {
+        hasFixed = SaveSystem.Current.GetBool(gameObject.name + gameObject.transform.parent.name + "HasFixed");
         state = (MeltableState)profile.GetInt(gameObject.name + gameObject.transform.parent.name + "MeltState");
         if(state == MeltableState.FROZEN)
             Freeze(true);

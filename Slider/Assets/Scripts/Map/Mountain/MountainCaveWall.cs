@@ -35,7 +35,7 @@ public class MountainCaveWall : MonoBehaviour, ISavable
     {
         
         mc.gameObject.SetActive(true);
-        mc.UpdateState("RepairParts");
+       // mc.UpdateState("RepairParts");
         yield return new WaitForSeconds(2);
         mc.SnapToRail(mcSpawn.transform.position, 1);
         mc.StartMoving();
