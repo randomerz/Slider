@@ -6,6 +6,7 @@ using UnityEngine;
 public class ArtifactTBPluginLaser : ArtifactTBPlugin
 {
     public GameObject[] sprites = new GameObject[4]; //0 = East, 1 = north, 2 = west, 3 = south
+    public GameObject[] emptysprites = new GameObject[4]; //0 = East, 1 = north, 2 = west, 3 = south
     public bool[] edgeblockers = new bool[4];
     public enum LaserCenterObject
     {
@@ -89,14 +90,21 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         {
             s.SetActive(false);
         }
+        foreach(GameObject s in emptysprites)
+        {
+            s.SetActive(false);
+        }
         crossings = 0;
     }
 
     public void UpdateEdgeToCenter(int direction)
     {
+        if(button.TileIsActive)
+            sprites[direction].SetActive(true);
+        else
+            emptysprites[direction].SetActive(true);
         if(edgeblockers[direction])
             return;
-        sprites[direction].SetActive(true);
         crossings++;
         UpdateCenter(direction);
     }
@@ -134,9 +142,13 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public void UpdateCenterToEdge(int direction)
     {
         crossings++;
-        sprites[direction].SetActive(true);
         if(edgeblockers[direction])
             return;
+        if(button != null && button.TileIsActive)
+            sprites[direction].SetActive(true);
+        else
+            emptysprites[direction].SetActive(true);
+
         if(crossings > MAX_CROSSINGS)
         {
             Debug.LogError("Laser UI in infinite loop. Terminated to prevent stackoverflow");
