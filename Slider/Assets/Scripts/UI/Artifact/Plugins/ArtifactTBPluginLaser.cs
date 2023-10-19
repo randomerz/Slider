@@ -28,6 +28,9 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public static Dictionary<ArtifactTileButton, ArtifactTBPluginLaser> tileDict = new();
     public static ArtifactTBPluginLaser source;
 
+    private int MAX_CROSSINGS = 12;
+    private int crossings = 0;
+
     [Serializable]
     public class LaserableRockUIData
     {
@@ -61,10 +64,16 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     private void Awake()
     {
         button = GetComponentInParent<ArtifactTileButton>();
+        button.plugins.Add(this);
         tileDict.Add(button, this);
         ResetSprites();
         if(centerObject == LaserCenterObject.SOURCE)
             source = this;
+    }
+
+    private void OnEnable()
+    {
+        UpdateSpritesFromSource();
     }
 
     private void Update()
@@ -79,19 +88,30 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         {
             s.SetActive(false);
         }
+        crossings = 0;
     }
 
     public void UpdateEdgeToCenter(int direction)
     {
+        print("laser on tile" + button.islandId);
         if(edgeblockers[direction])
             return;
         sprites[direction].SetActive(true);
+        crossings++;
         UpdateCenter(direction);
     }
 
     public void UpdateCenter(int direction)
     {
+        crossings++;
         int nextDir = (direction + 2) % 4;
+
+        if(!button.TileIsActive)
+        {
+            UpdateCenterToEdge(nextDir);
+            return;
+        }
+
         switch(centerObject)
         {
             case LaserCenterObject.BLOCK:
@@ -113,9 +133,16 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void UpdateCenterToEdge(int direction)
     {
+        print("laser on tile" + button.islandId);
+        crossings++;
         sprites[direction].SetActive(true);
         if(edgeblockers[direction])
             return;
+        if(crossings > MAX_CROSSINGS)
+        {
+            Debug.LogError("Laser UI in infinite loop. Terminated to prevent stackoverflow");
+            return;
+        }
         UpdateAdjTile(direction);
     }
 
@@ -127,9 +154,12 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void UpdateAdjTile(int direction)
     {
+        if(button == null) return;
         int nextX = button.x + GetTileOffsetVector(direction)[0];
         int nextY = button.y + GetTileOffsetVector(direction)[1];
-
+        
+        if(nextX < 0 || nextY < 0 || nextX > 5 || nextY > 2) return;
+        
         int nextDir = (direction + 2) % 4;
         foreach(ArtifactTileButton a in tileDict.Keys)
         {
@@ -138,26 +168,22 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
                 tileDict[a].UpdateEdgeToCenter(nextDir);
             }
         }
-
-        //TODO: Go through empty tiles
-
     }
 
     public override void OnPosChanged()
     {
-        if(centerObject is LaserCenterObject.SOURCE)
-        {
-            UpdateSprites();
-        }
+        UpdateSpritesFromSource();
     }
 
     public static void UpdateSpritesFromSource()
     {
+        if(source == null) return;
         source.UpdateSprites();
     }
 
     public void UpdateSprites()
     {
+        print("updating sprites");
         foreach(ArtifactTBPluginLaser l in tileDict.Values)
         {
             l.ResetSprites();
