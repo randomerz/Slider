@@ -87,7 +87,6 @@ public class GemManager : MonoBehaviour, ISavable
         {
             gems[itemNameAsEnum] = true;
             //Funni turn-in coroutine
-            UpdateGemSprites();
             PlayerInventory.RemoveAndDestroyItem();
             Debug.Log(itemNameAsEnum);
         }
@@ -101,6 +100,7 @@ public class GemManager : MonoBehaviour, ISavable
         {
             Debug.LogWarning("Tried to turn in invalid item: " + item);
         }
+        UpdateGemSprites();
     }
 
     public void UpdateGemSprites()
