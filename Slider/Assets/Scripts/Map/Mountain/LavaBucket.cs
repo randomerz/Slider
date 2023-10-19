@@ -17,13 +17,13 @@ public class LavaBucket : MonoBehaviour, ISavable
 
     public void FillBucket(bool fromSave = false)
     {
-        spriteSwapper.TurnOn();
-        particles.SetActive(true);
-        hasLava = true;
-        if(!fromSave)
+        if(!fromSave && !hasLava)
         {
             AudioManager.Play("Puzzle Complete");
         }
+        spriteSwapper.TurnOn();
+        particles.SetActive(true);
+        hasLava = true;
     }
 
     public void IsEmpty(Condition c) {
