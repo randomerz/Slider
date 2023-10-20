@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class ExplodableRock : MonoBehaviour, ISavable
 {
@@ -18,7 +17,6 @@ public class ExplodableRock : MonoBehaviour, ISavable
     public List<ParticleSystem> explosionDecalParticles = new List<ParticleSystem>();
     public List<ParticleSystem> explosionParticles = new List<ParticleSystem>();
     public List<GameObject> raycastColliderObjects = new List<GameObject>();
-    public ArtifactTBPluginLaser laserUI;
 
     void Start()
     {
