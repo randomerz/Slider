@@ -205,8 +205,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Magic Burger
   spriteRenderer: {fileID: 5465351016639169204}
+  reflectedspriteRenderer: {fileID: 4648158249517568408}
+  reflectionParent: {fileID: 8212317576582511280}
   myCollider: {fileID: 1148001556422117512}
   canKeep: 0
+  shouldDisableAtStart: 0
   itemRadius: 0.5
   pickUpDuration: 0.5
   xPickUpMotion:
@@ -287,6 +290,11 @@ MonoBehaviour:
   presentSprite: {fileID: 0}
   itemPair: {fileID: 0}
   lightning: {fileID: 2009846698}
+--- !u!212 &4648158249517568408 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8115464770616639385, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
+  m_PrefabInstance: {fileID: 3467348929874947585}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5303304525029731762 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8757073712804037555, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
@@ -295,6 +303,11 @@ Transform:
 --- !u!212 &5465351016639169204 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 8919005992056777909, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
+  m_PrefabInstance: {fileID: 3467348929874947585}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8212317576582511280 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4748619368943015089, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
   m_PrefabInstance: {fileID: 3467348929874947585}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3644487501678521790
