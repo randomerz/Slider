@@ -40,7 +40,8 @@ public class Item : MonoBehaviour, ISavable
     {
         spriteOffset = spriteRenderer.transform.localPosition;
         order = spriteRenderer.sortingOrder;
-        reflectedspriteRenderer.sprite = spriteRenderer.sprite;
+        if(reflectedspriteRenderer != null)
+            reflectedspriteRenderer.sprite = spriteRenderer.sprite;
     }
 
     private void Start()

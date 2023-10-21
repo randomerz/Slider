@@ -171,7 +171,9 @@ public class PlayerAction : Singleton<PlayerAction>
 
             PlayerInventory.AddItem(pickedItem);
             pickedItem.SetSortingOrder(itemSortingOrder);
-            pickedItem.PickUpItem(pickedItemLocation.transform, pickedItemReflectionLocation, callback: FinishPicking);
+            pickedItem.PickUpItem(pickedItemLocation.transform, 
+                                    pickedItemReflectionLocation != null ? pickedItemReflectionLocation : pickedItemLocation.transform, 
+                                    callback: FinishPicking);
 
             AudioManager.PlayWithPitch("UI Click", 1.2f);
 
