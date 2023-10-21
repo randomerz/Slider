@@ -203,7 +203,8 @@ public class Item : MonoBehaviour, ISavable
             
             spriteRenderer.transform.position = pos + spriteOffset;
             if(reflectedspriteRenderer != null)
-                reflectedspriteRenderer.transform.position = pos + spriteOffset;
+                reflectedspriteRenderer.transform.localPosition =  spriteRenderer.transform.localPosition;
+            //new Vector3((pos - start).x, -1 * (pos - start).y, pos.z) + start - spriteOffset;
 
             yield return null;
             t += Time.deltaTime;
@@ -218,7 +219,7 @@ public class Item : MonoBehaviour, ISavable
         transform.position = targetPosition;
         spriteRenderer.transform.position = targetPosition + spriteOffset;
         if(reflectedspriteRenderer != null)
-            reflectedspriteRenderer.transform.position = targetPosition + spriteOffset;
+            reflectedspriteRenderer.transform.position =  targetPosition + spriteOffset;
         myCollider.enabled = false;
         OnPickUp?.Invoke();
     }
@@ -250,8 +251,7 @@ public class Item : MonoBehaviour, ISavable
             
             spriteRenderer.transform.position = pos + spriteOffset;
             if(reflectedspriteRenderer != null)
-                reflectedspriteRenderer.transform.position = pos + spriteOffset;
-
+                reflectedspriteRenderer.transform.localPosition = spriteRenderer.transform.localPosition;
             yield return null;
             t -= Time.deltaTime;
         }
@@ -259,8 +259,8 @@ public class Item : MonoBehaviour, ISavable
         // spriteRenderer.sortingOrder = 0; // bring object to render below others
 
         spriteRenderer.transform.position = end.transform.position + spriteOffset;
-          if(reflectedspriteRenderer != null)
-            reflectedspriteRenderer.transform.position = end.transform.position + spriteOffset;
+            if(reflectedspriteRenderer != null)
+                reflectedspriteRenderer.transform.localPosition = spriteRenderer.transform.localPosition;
         OnDrop?.Invoke();
         callback();
         Destroy(start);
