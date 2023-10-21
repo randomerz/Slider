@@ -9,6 +9,7 @@ public class GemManager : MonoBehaviour, ISavable
     private Dictionary<Area, GameObject> gemSprites = new();
 
     public List<GameObject> sprites = new();
+    public List<Transform> poofTransforms = new();
 
     public void Save()
     {
@@ -86,6 +87,7 @@ public class GemManager : MonoBehaviour, ISavable
         if (Enum.TryParse(item.itemName, out Area itemNameAsEnum))
         {
             gems[itemNameAsEnum] = true;
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)itemNameAsEnum - 1].position);
             //Funni turn-in coroutine
             PlayerInventory.RemoveAndDestroyItem();
             Debug.Log(itemNameAsEnum);
@@ -94,6 +96,8 @@ public class GemManager : MonoBehaviour, ISavable
         {
             gems[Area.Factory] = true;
             gems[Area.Mountain] = true;
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)Area.Factory - 1].position);
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)Area.Mountain - 1].position);
             PlayerInventory.RemoveAndDestroyItem();
         }
         else
