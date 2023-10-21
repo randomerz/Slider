@@ -121,7 +121,9 @@ public class PlayerInventory : MonoBehaviour
             AddItem(anchor);
             anchor.RemoveFromTile();
             anchor.transform.SetParent(PlayerAction.Instance.GetPickedItemLocationTransform());
-            anchor.AnimatePickUpEnd(PlayerAction.Instance.GetPickedItemLocationTransform().position);
+            anchor.AnimatePickUpEnd(
+                PlayerAction.Instance.GetPickedItemLocationTransform().position, 
+                PlayerAction.Instance.GetPickedItemReflectionLocationTransform().position);
         }
 
         NextItem();

@@ -656,6 +656,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 765801254}
   m_SourcePrefab: {fileID: 100100000, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
+--- !u!1 &1406321240133876829 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4748619368943015089, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
+  m_PrefabInstance: {fileID: 5936375014707652844}
+  m_PrefabAsset: {fileID: 0}
 --- !u!212 &2521401893178726261 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 8115464770616639385, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
@@ -696,6 +701,7 @@ MonoBehaviour:
   itemName: Anchor
   spriteRenderer: {fileID: 3000682879685002329}
   reflectedspriteRenderer: {fileID: 2521401893178726261}
+  reflectionParent: {fileID: 1406321240133876829}
   myCollider: {fileID: 7895592663859285605}
   canKeep: 1
   shouldDisableAtStart: 0

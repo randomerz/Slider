@@ -9,6 +9,7 @@ public class PlayerAction : Singleton<PlayerAction>
     public Item pickedItem;
 
     [SerializeField] private Transform pickedItemLocation;
+    [SerializeField] private Transform pickedItemReflectionLocation;
     [SerializeField] private Transform boatDropItemBaseTransform;
     [SerializeField] private GameObject itemDropIndicator;
     [SerializeField] private LayerMask itemMask;
@@ -170,7 +171,7 @@ public class PlayerAction : Singleton<PlayerAction>
 
             PlayerInventory.AddItem(pickedItem);
             pickedItem.SetSortingOrder(itemSortingOrder);
-            pickedItem.PickUpItem(pickedItemLocation.transform, callback: FinishPicking);
+            pickedItem.PickUpItem(pickedItemLocation.transform, pickedItemReflectionLocation, callback: FinishPicking);
 
             AudioManager.PlayWithPitch("UI Click", 1.2f);
 
@@ -243,6 +244,7 @@ public class PlayerAction : Singleton<PlayerAction>
     {
         isPicking = false;
         pickedItem.transform.SetParent(pickedItemLocation);
+        pickedItem.reflectionParent?.transform.SetParent(pickedItemReflectionLocation);
         pickedItem.SetLayer(LayerMask.NameToLayer("ItemRT"));
     }
 
@@ -278,6 +280,11 @@ public class PlayerAction : Singleton<PlayerAction>
     public Transform GetPickedItemLocationTransform()
     {
         return pickedItemLocation;
+    }
+
+    public Transform GetPickedItemReflectionLocationTransform()
+    {
+        return pickedItemReflectionLocation;
     }
 
 
