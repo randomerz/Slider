@@ -236,11 +236,18 @@ public class Item : MonoBehaviour, ISavable
         //Create 2 dummy transforms for the animation.
         GameObject start = new GameObject("ItemDropStart");
         start.transform.position = transform.position;
-        GameObject reflectionStart = new GameObject("ItemReflectionDropStart");
-        if(reflectionParent != null)
-            reflectionStart.transform.position = reflectionParent.transform.position;
+        
         GameObject end = new GameObject("ItemDropEnd");
         end.transform.position = target;
+
+        GameObject reflectionStart = new GameObject("ItemReflectionDropStart");
+        if(reflectionParent != null)
+        {
+            reflectionStart.transform.position = PlayerAction.Instance.GetPickedItemReflectionLocationTransform().position + Vector3.up;
+            reflectionParent.transform.parent = transform;
+            reflectionParent.transform.localPosition = Vector3.down;
+        }
+
 
         STile hitStile = SGrid.GetSTileUnderneath(end);
         start.transform.parent = hitStile == null ? null : hitStile.transform;
@@ -249,14 +256,7 @@ public class Item : MonoBehaviour, ISavable
 
         myCollider.enabled = true;
         transform.position = end.transform.position;
-
-        if(reflectionParent != null)
-        {
-            reflectionParent.transform.parent = transform;
-            reflectionParent.transform.localPosition = Vector3.down;
-        }
-
-        //transform.position = target;
+        
         while (t >= 0)
         {
             float x = xPickUpMotion.Evaluate(t / pickUpDuration);
@@ -269,17 +269,15 @@ public class Item : MonoBehaviour, ISavable
             {
                 Vector3 rPos = new Vector3(Mathf.Lerp(end.transform.position.x, reflectionStart.transform.position.x, x),
                                       Mathf.Lerp(end.transform.position.y, reflectionStart.transform.position.y, y));
-                reflectedspriteRenderer.transform.position =  rPos - spriteOffset;
+                reflectedspriteRenderer.transform.position =  rPos + spriteOffset;
             }
             yield return null;
             t -= Time.deltaTime;
         }
 
-        // spriteRenderer.sortingOrder = 0; // bring object to render below others
-
         spriteRenderer.transform.position = end.transform.position + spriteOffset;
         if(reflectedspriteRenderer != null)
-            reflectedspriteRenderer.transform.position = end.transform.position - spriteOffset;
+            reflectedspriteRenderer.transform.position = end.transform.position + spriteOffset;
         OnDrop?.Invoke();
         callback();
         Destroy(start);
