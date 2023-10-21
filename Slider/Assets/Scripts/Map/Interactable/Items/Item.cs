@@ -8,6 +8,7 @@ public class Item : MonoBehaviour, ISavable
 
     public string itemName;
     public SpriteRenderer spriteRenderer;
+    public SpriteRenderer reflectedspriteRenderer;
     [SerializeField] private Collider2D myCollider;
     public bool canKeep = false;
     [SerializeField] private bool shouldDisableAtStart = false;
@@ -201,6 +202,8 @@ public class Item : MonoBehaviour, ISavable
                                       Mathf.Lerp(start.y, target.transform.position.y, y));
             
             spriteRenderer.transform.position = pos + spriteOffset;
+            if(reflectedspriteRenderer != null)
+                reflectedspriteRenderer.transform.position = pos + spriteOffset;
 
             yield return null;
             t += Time.deltaTime;
@@ -214,6 +217,8 @@ public class Item : MonoBehaviour, ISavable
     {
         transform.position = targetPosition;
         spriteRenderer.transform.position = targetPosition + spriteOffset;
+        if(reflectedspriteRenderer != null)
+            reflectedspriteRenderer.transform.position = targetPosition + spriteOffset;
         myCollider.enabled = false;
         OnPickUp?.Invoke();
     }
@@ -244,6 +249,8 @@ public class Item : MonoBehaviour, ISavable
                                       Mathf.Lerp(end.transform.position.y, start.transform.position.y, y));
             
             spriteRenderer.transform.position = pos + spriteOffset;
+            if(reflectedspriteRenderer != null)
+                reflectedspriteRenderer.transform.position = pos + spriteOffset;
 
             yield return null;
             t -= Time.deltaTime;
@@ -252,6 +259,8 @@ public class Item : MonoBehaviour, ISavable
         // spriteRenderer.sortingOrder = 0; // bring object to render below others
 
         spriteRenderer.transform.position = end.transform.position + spriteOffset;
+          if(reflectedspriteRenderer != null)
+            reflectedspriteRenderer.transform.position = end.transform.position + spriteOffset;
         OnDrop?.Invoke();
         callback();
         Destroy(start);
