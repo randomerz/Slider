@@ -214,11 +214,12 @@ public class MagiTechGrid : SGrid
 
     public void TurnInArtifact()
     {
-        //Ensure Scroll of Realign is used
-        if (!(UIArtifact.GetGridString() == "132_76#_548")) // TODO: check for bugs with desync in past T u T
-        {
-            return;
-        }
+        // //Ensure Scroll of Realign is used
+        // if (!(UIArtifact.GetGridString() == "132_76#_548")) // TODO: check for bugs with desync in past T u T
+        // {
+        //     return;
+        // }
+        SaveSystem.Current.SetBool("magitechTurnedInArtifact", true);
         //Disable ability to open artifact
         UIArtifactMenus._instance.hasArtifact = false;
         Debug.Log("Artifact: " + UIArtifactMenus._instance.hasArtifact);
