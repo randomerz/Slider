@@ -37,9 +37,9 @@ public class ArtifactTabManager : MonoBehaviour
     {
         #region SaveLoadRealign Cases
         if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
-        {
-            if (SGrid.Current.GetActiveTiles().Count == SGrid.Current.GetTotalNumTiles() //Realigning case
-                && SGrid.GetNumButtonCompletions() != SGrid.Current.GetTotalNumTiles()) {
+        {   
+            //Realign case
+            if (SGrid.Current.HasAllTiles() && !SGrid.Current.AllButtonsComplete()) {
                 realignTab.SetIsVisible(screenIndex == realignTab.homeScreen);
                 saveTab.SetIsVisible(false);
                 loadTab.SetIsVisible(false);

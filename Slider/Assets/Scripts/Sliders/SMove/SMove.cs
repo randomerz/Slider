@@ -230,7 +230,7 @@ public class SMoveSyncedMove : SMove
         foreach(Movement m in moves)
         {
             STile s = SGrid.Current.GetStile(m.islandId);
-            if(s.isTileActive)
+            if(s!=null && s.isTileActive)
             {   
                 transforms[s.islandId > 9 ? 1 : 0] = s.transform;
             }

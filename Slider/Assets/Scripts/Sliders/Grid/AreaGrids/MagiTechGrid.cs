@@ -98,6 +98,11 @@ public class MagiTechGrid : SGrid
         return Width * Height / 2;
     }
 
+    public override bool AllButtonsComplete()
+    {
+       return GetNumButtonCompletions() == GetTotalNumTiles() * 2;
+    }
+
     public override void Save()
     {
         base.Save();

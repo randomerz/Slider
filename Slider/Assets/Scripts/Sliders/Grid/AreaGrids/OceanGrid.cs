@@ -15,6 +15,7 @@ public class OceanGrid : SGrid
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
     public List<int> buoytiles = new List<int> {1, 3, 4, 8, 9};
+    private List<int> landTiles = new List<int> {1, 2, 4, 8};    
     public OceanDolly introCameraDolly;
     private const string INTRO_CUTSCENE_SAVE_STRING = "oceanIntroCutscene";
 
@@ -690,21 +691,18 @@ public class OceanGrid : SGrid
             for (int y = 0; y < Current.Width; y++)
             {
                 // int tid = current.targetGrid[x, y];
-                string tids = GetTileIdAt(x, y);
+                char tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
-                if (tids == "*")
+                if (tids == '*')
                 {
                     int abid = artifactButton.islandId;
-                    bool isLand = abid == 1 || abid == 2 || abid == 4 || abid == 8; // this is scuffed
-
-                    // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
+                    bool isLand = landTiles.Contains(abid);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, !isLand);
                     UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetHighlighted(isLand);
                 }
                 else
                 {
-                    int tid = int.Parse(tids);
-                    // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+                    int tid = Converter.IntToChar(tids);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
                     UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetHighlighted(artifactButton.islandId != tid);
                 }
