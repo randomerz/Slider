@@ -68,13 +68,13 @@ public class Portal : MonoBehaviour
         Player.SetPosition(otherPortal.spawnPoint.position);
         OnTimeChange?.Invoke(this, new OnTimeChangeArgs { fromPast = portalEnum is PortalEnum.MAGITECH_PAST });
         isTeleporting = false;
+        UIEffects.FadeFromBlack(alpha:0.5f);
     }
     
 
     public void OnPlayerExit()
     {
         if(isTeleporting || recentPortal == this) return;
-        UIEffects.FadeFromBlack(alpha:0.5f);
         playerInPortal = false;
         recentPortal = null;
     }

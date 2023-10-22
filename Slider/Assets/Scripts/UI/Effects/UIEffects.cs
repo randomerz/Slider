@@ -165,7 +165,7 @@ public class UIEffects : Singleton<UIEffects>
         {
             float alpha = Mathf.Lerp(0.5f, 0, t / fadeDuration);
             screenshotCanvasGroup.alpha = alpha;
-            screenshotPanel.transform.localScale = alpha * 2 * Vector3.one;
+            screenshotPanel.transform.localScale = (2 - (alpha * 2)) * Vector3.one;
             screenshotPanel.transform.localRotation *= Quaternion.Euler(new Vector3(0, 0, t * 2));
             yield return null;
             t += (Time.deltaTime * speed);
