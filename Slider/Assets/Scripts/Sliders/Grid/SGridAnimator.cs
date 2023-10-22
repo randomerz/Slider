@@ -277,7 +277,6 @@ public class SGridAnimator : MonoBehaviour
 
     private Transform GetSoundTransform(SMove move, Transform root)
     {
-        print("sound transforms m1");
         if (move is SMoveRotate || move is SSlideSwap || move is SMoveLinkedSwap)
         {
             GameObject g = new GameObject("Sound Transform");
@@ -289,13 +288,20 @@ public class SGridAnimator : MonoBehaviour
             GameObject.Destroy(g, MAX_POSSIBLE_MOVE_DURATION);
             return s.transform;
         }
+        else if(move is SMoveSyncedMove)
+        {
+            Transform[] t = ((SMoveSyncedMove)move).GetTileTransforms();
+            if(((MagiTechArtifact)MagiTechArtifact.GetInstance()).PlayerIsInPast)
+                return t[1];
+            else
+                return t[0];
+        }
         else
             return root;
     }
 
     private Transform GetSoundTransform(List<Transform> transforms)
     {
-        print("sound transforms m2");
         // If a player is on a tile, then it's transform is 'null' and the sound is not spacial
         if (transforms.IndexOf(null) != -1)
             return null;

@@ -223,6 +223,20 @@ public class SMoveSyncedMove : SMove
     {
         return moves[0];
     }
+
+    public Transform[] GetTileTransforms()
+    {
+        Transform[] transforms = new Transform[2];
+        foreach(Movement m in moves)
+        {
+            STile s = SGrid.Current.GetStile(m.islandId);
+            if(s.isTileActive)
+            {   
+                transforms[s.islandId > 9 ? 1 : 0] = s.transform;
+            }
+        }
+        return transforms;
+    }
 }
 
 public class SMoveLinkedSwap : SMove

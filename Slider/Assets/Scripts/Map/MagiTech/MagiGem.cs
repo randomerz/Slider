@@ -34,7 +34,7 @@ public class MagiGem : MonoBehaviour, ISavable
 
     private IEnumerator TransportGemVFXCoroutine()
     {
-        CameraShake.ShakeConstant(1f, 0.4f);
+        CameraShake.ShakeConstant(1f, 0.2f);
         ParticleManager.SpawnParticle(ParticleType.MiniSparkle, transform.position, transform);
 
         yield return new WaitForSeconds(1);
@@ -58,7 +58,7 @@ public class MagiGem : MonoBehaviour, ISavable
         gemMachine.TransportGem(gemItem);
         AudioManager.Play("Puzzle Complete");
 
-        CameraShake.Shake(1f, 1.2f);
+        CameraShake.Shake(1f, 0.5f);
         isTransporting = false;
         
     }
