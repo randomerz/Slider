@@ -44,7 +44,7 @@ public class Portal : MonoBehaviour
         isTeleporting = true;
         if(portalEnum is PortalEnum.MAGITECH_PRESENT || portalEnum is PortalEnum.MAGITECH_PAST)
         {
-            UIEffects.FadeToBlack(callback: Teleport, speed: 2, alpha:0.5f, disableAtEnd: false);
+            UIEffects.FadeToBlack(callback: InitTeleport, speed: 2, alpha:0.5f, disableAtEnd: false);
             playerInPortal = true;
             recentPortal = this;
         }
@@ -56,6 +56,11 @@ public class Portal : MonoBehaviour
         
     }
 
+    private void InitTeleport()
+    {
+        UIEffects.FadeFromScreenshot(Teleport);
+    }
+
     private void Teleport()
     {
         AudioManager.Play("Portal");
@@ -64,6 +69,7 @@ public class Portal : MonoBehaviour
         OnTimeChange?.Invoke(this, new OnTimeChangeArgs { fromPast = portalEnum is PortalEnum.MAGITECH_PAST });
         isTeleporting = false;
     }
+    
 
     public void OnPlayerExit()
     {
