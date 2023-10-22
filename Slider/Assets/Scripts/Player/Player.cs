@@ -28,6 +28,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private List<Material> ppMaterials;
+    [SerializeField] private GameObject lightningEffect;
 
 
     private float moveSpeedMultiplier = 1;
@@ -193,6 +194,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         Debug.Log("Alt View Hold");
     }*/
+
+    public void ToggleLightning(bool val)
+    {
+        lightningEffect.SetActive(val);
+    }
 
     // Here is where we pay for all our Singleton Sins
     public void ResetInventory()

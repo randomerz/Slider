@@ -78,4 +78,10 @@ public class Portal : MonoBehaviour
         playerInPortal = false;
         recentPortal = null;
     }
+
+    public void OnPlayerNear(bool enter)
+    {
+        if(playerInPortal) return;
+        Player.GetInstance().ToggleLightning(enter);
+    }
 }
