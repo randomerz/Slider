@@ -8,7 +8,6 @@ public class MagiGem : MonoBehaviour, ISavable
     public Item gemItem;
     private bool isTransporting;
     public GameObject particles;
-   // public Animator animator;
 
     public void Load(SaveProfile profile) {}
 
@@ -37,17 +36,15 @@ public class MagiGem : MonoBehaviour, ISavable
     {
         CameraShake.ShakeConstant(1f, 0.4f);
         ParticleManager.SpawnParticle(ParticleType.MiniSparkle, transform.position, transform);
-        yield return new WaitForSeconds(1);
-        //start teleport animation
 
+        yield return new WaitForSeconds(1);
+        
+        //start teleport animation
         particles.SetActive(true);
+
         yield return new WaitForSeconds(0.2f);
-        //flash screen white
 
         UIEffects.FlashWhite(speed: 2f);
-
-        //make gem dissapear 
-
         particles.transform.parent = transform.parent;
 
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position);
@@ -61,10 +58,8 @@ public class MagiGem : MonoBehaviour, ISavable
         gemMachine.TransportGem(gemItem);
         AudioManager.Play("Puzzle Complete");
 
-        //screenshake and audio
-
+        CameraShake.Shake(1f, 1.2f);
         isTransporting = false;
-
         
     }
 }
