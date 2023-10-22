@@ -246,7 +246,8 @@ public class PlayerAction : Singleton<PlayerAction>
     {
         isPicking = false;
         pickedItem.transform.SetParent(pickedItemLocation);
-        pickedItem.reflectionParent?.transform.SetParent(pickedItemReflectionLocation);
+        if(pickedItem.reflectionParent != null)
+            pickedItem.reflectionParent.transform.SetParent(pickedItemReflectionLocation);
         pickedItem.SetLayer(LayerMask.NameToLayer("ItemRT"));
     }
 

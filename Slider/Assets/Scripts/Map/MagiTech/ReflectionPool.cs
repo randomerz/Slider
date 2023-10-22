@@ -73,4 +73,10 @@ public class ReflectionPool : MonoBehaviour
             g.SetActive(false);
         }
     }
+
+    public void TurnInArtifact()
+    {
+        SaveSystem.Current.SetBool("magitechTurnedInArtifact", true);
+        UIArtifactMenus.TurnInArtifact();
+    }
 }

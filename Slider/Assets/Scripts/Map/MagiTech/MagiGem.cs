@@ -28,6 +28,7 @@ public class MagiGem : MonoBehaviour, ISavable
 
     public void TransportGem()
     {
+        if(!gemMachine.HasGemTransporter) return;
         isTransporting = true;
         StartCoroutine(TransportGemVFXCoroutine());
     }
