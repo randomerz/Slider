@@ -43,14 +43,14 @@ public class UIEffects : Singleton<UIEffects>
         }
     }
 
-    public static void FadeFromBlack(System.Action callback=null, float speed=1)
+    public static void FadeFromBlack(System.Action callback=null, float speed=1, float alpha = 1f)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 1, 0, callback, speed));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, alpha, 0, callback, speed));
     }
 
-    public static void FadeToBlack(System.Action callback=null, float speed=1, bool disableAtEnd = true)
+    public static void FadeToBlack(System.Action callback=null, float speed=1, bool disableAtEnd = true, float alpha = 1f)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, 1, callback, speed, disableAtEnd));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, alpha, callback, speed, disableAtEnd));
     }
 
     public static void FadeFromWhite(System.Action callback=null, float speed=1)
