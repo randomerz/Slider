@@ -32,8 +32,8 @@ public class Rocket : MonoBehaviour
         List<Vector2> shakeData = new()
         {
             Vector2.zero,
-            new(2.5f, 2f),
-            new(5f, 2f),
+            new(2.5f, 1f),
+            new(5f, 1f),
             new(9f, 0f)
         };
         CameraShake.ShakeCustom(shakeData);

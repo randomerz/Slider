@@ -28,6 +28,7 @@ public class CameraShake : MonoBehaviour
 
         public float GetIntensity()
         {
+            if(elapsedTime < delay) return 0;
             return Mathf.Lerp(startAmount, endAmount, (elapsedTime - delay) / duration);
         }
     }
@@ -78,6 +79,7 @@ public class CameraShake : MonoBehaviour
 
             start *= SettingsManager.ScreenShake;
             end *= SettingsManager.ScreenShake;
+            print((t - prevT + 0.05f, start, end, prevT));
             CameraShakeData data = new CameraShakeData(t - prevT + 0.05f, start, end, prevT);
             shakeData.Add(data);
         }
@@ -113,7 +115,6 @@ public class CameraShake : MonoBehaviour
                 data.elapsedTime += Time.deltaTime;
             }
         }
-        print(maxShake);
         return maxShake;
     }
 
