@@ -136,6 +136,8 @@ public class HintData
             message = message.Replace(placeholder, controlBinding);
         }
 
+        message = message.Replace("W/A/S/D", "WASD");
+
         return message;
     }
 } 
