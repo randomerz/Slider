@@ -536,14 +536,14 @@ PrefabInstance:
     - target: {fileID: 1716388143414768187, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 5049116215420832317}
+      objectReference: {fileID: 8055468265078416187}
     - target: {fileID: 1716388143414768187, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: BackPressed
+      value: IncrementCurrentPanel
       objectReference: {fileID: 0}
     - target: {fileID: 1716388143414768187, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UIManager, SliderScripts
+      value: ControlsMenuPanelHandler, SliderScripts
       objectReference: {fileID: 0}
     - target: {fileID: 1961284822964263873, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
@@ -608,6 +608,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8055468265078416187 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5498380119411019640, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
+  m_PrefabInstance: {fileID: 2559432323804048451}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3193040993723520762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 899eafd8069e3504c86352777db106ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &4631612431080406899
