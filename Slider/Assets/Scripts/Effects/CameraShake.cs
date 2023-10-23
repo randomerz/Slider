@@ -5,9 +5,12 @@ using System.Collections.Generic;
 public class CameraShake : MonoBehaviour
 {
     public Transform baseTransform;
+    [Tooltip("The camera attached to the player prefab.")]
     public CinemachineVirtualCamera cmCamera;
+    [Tooltip("If there are other cameras in the scene that should also be shook, like dollies.")]
+    public List<CinemachineVirtualCamera> otherCMCameras;
     
-    private static CinemachineBasicMultiChannelPerlin cmPerlin;
+    private static List<CinemachineBasicMultiChannelPerlin> cmPerlins = new List<CinemachineBasicMultiChannelPerlin>();
     public static List<CameraShakeData> shakeData = new List<CameraShakeData>();
 
     public class CameraShakeData
@@ -40,9 +43,14 @@ public class CameraShake : MonoBehaviour
             Debug.LogWarning("Camera Shake is missing base!");
         }
 
+        cmPerlins.Clear();
         if (cmCamera != null)
         {
-            cmPerlin = cmCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            cmPerlins.Add(cmCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>());
+        }
+        foreach (CinemachineVirtualCamera c in otherCMCameras)
+        {
+            cmPerlins.Add(c.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>());
         }
     }
 
@@ -79,7 +87,7 @@ public class CameraShake : MonoBehaviour
 
             start *= SettingsManager.ScreenShake;
             end *= SettingsManager.ScreenShake;
-            print((t - prevT + 0.05f, start, end, prevT));
+            // print((t - prevT + 0.05f, start, end, prevT));
             CameraShakeData data = new CameraShakeData(t - prevT + 0.05f, start, end, prevT);
             shakeData.Add(data);
         }
@@ -121,6 +129,9 @@ public class CameraShake : MonoBehaviour
     private void Shake(float amount)
     {
         transform.position = baseTransform.position + UnityEngine.Random.insideUnitSphere * amount;
-        if (cmPerlin != null) cmPerlin.m_AmplitudeGain = amount;
+        foreach (CinemachineBasicMultiChannelPerlin perlin in cmPerlins) 
+        {
+            perlin.m_AmplitudeGain = amount;
+        }
     }
 }

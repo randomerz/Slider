@@ -13,8 +13,6 @@ public class Rocket : MonoBehaviour
     public AnimationCurve rocketCurve;
     private bool isPlaying;
     private float rocketDuration = 8.0f;
-    public CameraShake mainCamShake;
-    public CameraShake dollyCamShake;
 
     public void StartRocketCutscene()
     {
@@ -27,8 +25,6 @@ public class Rocket : MonoBehaviour
         UIEffects.FadeToBlack(disableAtEnd: false);
         yield return new WaitForSeconds(1.1f);
         Player.GetSpriteRenderer().enabled = false;
-        mainCamShake.enabled = false;
-        dollyCamShake.enabled = true;
         List<Vector2> shakeData = new()
         {
             Vector2.zero,
@@ -37,6 +33,7 @@ public class Rocket : MonoBehaviour
             new(9f, 0f)
         };
         CameraShake.ShakeCustom(shakeData);
+        // CameraShake.Shake(rocketDuration, 1);
         rocketCameraDolly.StartTrack(true);
 
         float t = 0f;
