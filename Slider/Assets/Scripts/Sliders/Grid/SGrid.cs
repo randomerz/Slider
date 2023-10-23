@@ -285,9 +285,9 @@ public void SetGrid(int[,] puzzle)
         return returnList;
     }
 
-    protected static string GetTileIdAt(int x, int y)
+    protected static char GetTileIdAt(int x, int y)
     {
-        return Current.targetGrid[(Current.Height - y - 1) * Current.Width + x].ToString();
+        return Current.targetGrid[(Current.Height - y - 1) * Current.Width + x];
     }
 
     /// <summary>
@@ -349,6 +349,16 @@ public void SetGrid(int[,] puzzle)
     public virtual int GetTotalNumTiles()
     {
         return Width * Height;
+    }
+
+    public bool HasAllTiles()
+    {
+        return GetNumTilesCollected() == GetTotalNumTiles();
+    }
+
+    public virtual bool AllButtonsComplete()
+    {
+       return GetNumButtonCompletions() == GetTotalNumTiles();
     }
     
 
@@ -664,15 +674,15 @@ public void SetGrid(int[,] puzzle)
         for (int x = 0; x < Current.Width; x++) {
             for (int y = 0; y < Current.Height; y++) {
                 // int tid = current.targetGrid[x, y];
-                string tids = GetTileIdAt(x, y);
+                char tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
-                if (tids == "*") 
+                if (tids == '*') 
                 {
                     // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, true);
                 }
                 else if (artifactButton != null) {
-                    int tid = int.Parse(tids);
+                    int tid = Converter.IntToChar(tids);
                     // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
                 }
@@ -692,14 +702,14 @@ public void SetGrid(int[,] puzzle)
         int numComplete = 0;
         for (int x = 0; x < Current.Width; x++) {
             for (int y = 0; y < Current.Height; y++) {
-                string tids = GetTileIdAt(x, y);
+                char tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
-                if (tids == "*") 
+                if (tids == '*') 
                 {
                     numComplete += 1;
                 }
                 else {
-                    int tid = int.Parse(tids);
+                    int tid = Converter.IntToChar(tids);
                     //Debug.Log("tid: " + tid + " artifactButton: " + artifactButton);
                     if (artifactButton.islandId == tid)
                         numComplete += 1;

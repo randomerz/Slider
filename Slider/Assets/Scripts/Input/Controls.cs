@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -23,18 +24,18 @@ using UnityEngine.InputSystem;
 /// <remarks>Author: Travis</remarks>
 public class Controls : Singleton<Controls>
 {
-    //I'm sorry Mr. Travis. I'm stroking
-    public static Controls Instance => _instance;
-
-
     private static InputSettings _bindings;
 
+    public static string CurrentControlScheme { get; set; } = CONTROL_SCHEME_KEYBOARD_MOUSE;
+
+    public const string CONTROL_SCHEME_KEYBOARD_MOUSE = "Keyboard Mouse";
+
+    public const string CONTROL_SCHEME_CONTROLLER = "Controller";
+
     /// <summary>
-    /// <b>Revisit this when we start looking into controller support!</b>
+    /// The key used to store binding overrides in PlayerPrefs.
     /// </summary>
-    [SerializeField] private string currentControlScheme = "Keyboard Mouse";
-    public void SetCurrentControlScheme(string currentControlScheme) { this.currentControlScheme = currentControlScheme; }
-    public string GetCurrentControlScheme() { return currentControlScheme; }
+    public const string PLAYER_PREFS_REBINDS_KEY = "rebinds";
 
     /// <summary>
     /// Returns an instance of InputSettings containing our current bindings. If the bindings are not yet loaded, this will load them 
@@ -89,14 +90,11 @@ public class Controls : Singleton<Controls>
         {
             _bindings = new InputSettings();
         }
-        var rebinds = PlayerPrefs.GetString("rebinds");
+        var rebinds = PlayerPrefs.GetString(PLAYER_PREFS_REBINDS_KEY);
 
-        if (!string.IsNullOrEmpty(rebinds))
-        {
-            // 9/23/23 this crashed bc of corrupted player prefs (we think)
-            // we may want to try {} catch {} this with a clear player prefs if it happens again
-            _bindings.LoadBindingOverridesFromJson(rebinds);
-        }
+        _bindings.Disable();
+        _bindings.LoadBindingOverridesFromJson(rebinds);
+        _bindings.Enable();
     }
 
     /// <summary>
@@ -154,21 +152,74 @@ public class Controls : Singleton<Controls>
     }
 
     /// <summary>
-    /// Use this to get a UI-ready display string for the bindings on the passed in action.
-    /// <para/>
-    /// <b>Use this instead of action.GetBindingDisplayString because this method considers the current control scheme.</b>
+    /// Returns the control with no underscores and with a space before each capital letter.
     /// </summary>
-    /// <param name="onlyShowKey">Whether the string returned should only include the key (e.g. "E") and not modifiers like "Press", "Hold", etc.</param>
+    /// <param name="control"></param>
     /// <returns></returns>
-    public static string GetBindingDisplayString(InputAction action, bool onlyShowKey = false)
+    public static string ControlDisplayString(Control control)
     {
-        if (onlyShowKey)
+        string controlDisplayString = control.ToString().Replace("_", "");
+        IEnumerable<string> controlDisplayStringWithSpaces = controlDisplayString.Select(c => char.IsUpper(c) ? $" {c}" : c.ToString());
+        return string.Concat(controlDisplayStringWithSpaces)
+                     .TrimStart(); // Remove the space added before the first character (e.g. "MoveLeft" -> " Move Left" -> "Move Left")
+    }
+
+    /// <summary>
+    /// Use this to get a UI-ready display string for the current binding for the passed in control.
+    /// </summary>
+    /// <param name="control">The control to get the current binding for</param>
+    /// <param name="forSpecificScheme">If specified, returns the control for the particular group 
+    /// (CONTROL_SCHEME_KEYBOARD_MOUSE or CONTROL_SCHEME_CONTROLLER.) Otherwise, returns the binding
+    /// for the current ControlScheme.</param>
+    /// <returns></returns>
+    public static string BindingDisplayString(Control control, string forSpecificScheme = null)
+    {
+        InputAction inputActionForControl = InputActionForControl(control);
+        if (control.ToString().Contains("Move"))
         {
-            return action.GetBindingDisplayString(group: _instance.currentControlScheme).Replace("Hold", "").Replace("Press", "");
+            return InputActionRebindingExtensions.GetBindingDisplayString(inputActionForControl, BindingIndex(control));
         }
         else
         {
-            return action.GetBindingDisplayString(group: _instance.currentControlScheme);
+            string controlScheme = forSpecificScheme ?? CurrentControlScheme;
+            return inputActionForControl?.GetBindingDisplayString(group: controlScheme);
+        }
+    }
+
+    public static InputAction InputActionForControl(Control control)
+    {
+        string controlActionSearchString = InputActionSearchString(control);
+        return Bindings.FindAction(controlActionSearchString);
+    }
+
+    private static string InputActionSearchString(Control control)
+    {
+        string controlAsString = control.ToString();
+        if (controlAsString.Contains("Move"))
+        {
+            return "Move";
+        }
+        return controlAsString;
+    }
+
+    /// <summary>
+    /// For composite actions (in our case, just movement), we need to target a specific binding index to overwrite a particular direction.
+    /// Our Controls enum is set up to let us use the int value of the movement controls as the binding index (Up = 1, Down = 2, etc.)
+    /// For all other bindings, we just return 0 since there is only one binding to change.
+    /// <b>Note: This assumes all of the keyboard bindings are the first in the list for each action 
+    /// (e.g for movement "W" needs to come before "Left Joystick".) If that isn't the case, this will break.</b>
+    /// </summary>
+    /// <param name="control"></param>
+    /// <returns></returns>
+    public static int BindingIndex(Control control)
+    {
+        if (InputActionSearchString(control) == "Move")
+        {
+            return (int)control;
+        } 
+        else
+        {
+            return 0;
         }
     }
 
@@ -181,6 +232,16 @@ public class Controls : Singleton<Controls>
     {
         if (coroutine != null)
             _instance.StopCoroutine(coroutine);
+    }
+
+    /// <summary>
+    /// Resets all control bindings to the default controls and deletes any overrides stored in PlayerPrefs.
+    /// </summary>
+    public static void ResetAllBindingsToDefaults()
+    {
+        _bindings.RemoveAllBindingOverrides();
+        PlayerPrefs.SetString(PLAYER_PREFS_REBINDS_KEY, _bindings.SaveBindingOverridesAsJson());
+        LoadBindings();
     }
 }
 
@@ -329,4 +390,17 @@ public class BindingHeldBehavior : BindingBehavior
     {
         return binding.controls.ToList().Where((control) => control.IsPressed()).Count() > 0;
     }
+}
+
+public enum Control
+{
+    Move_Up = 1,
+    Move_Down = 2,
+    Move_Left = 3,
+    Move_Right = 4,
+    Action,
+    CycleEquip,
+    OpenArtifact,
+    Pause,
+    AltViewHold
 }

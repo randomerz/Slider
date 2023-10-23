@@ -9,13 +9,13 @@ public class Minecart : Item, ISavable
     [SerializeField] private float speed = 8.0f; 
     [SerializeField] private float cornerSpeed = 2.0f;
     
-    private int currentDirection; //0 = East, 1 = North, 2 = West, 3 = South
+    public int currentDirection; //0 = East, 1 = North, 2 = West, 3 = South
     [SerializeField]    private int nextDirection;
     
     private float baseCornerSpeedMultiplier = 1; // cornerSpeed / speed
     private float cornerSpeedAmount = 1; // lerp between baseCornerSpeedMultiplier and 1
 
-    private bool isOnTrack;
+    public bool isOnTrack;
     [SerializeField] public bool isMoving {get; private set;} = false;
 
     public Vector3 offSet = new Vector3(0.5f, 0.75f, 0.0f);
@@ -61,6 +61,7 @@ public class Minecart : Item, ISavable
     public Sprite trackerSpriteCrystal;
 
     private bool nextTile = false;
+
 
     public override void Awake() 
     {
@@ -186,9 +187,9 @@ public class Minecart : Item, ISavable
 
     #region Item
 
-    public override void PickUpItem(Transform pickLocation, System.Action callback = null)
+    public override void PickUpItem(Transform pickLocation, Transform reflectionLocation, System.Action callback = null)
     {
-        base.PickUpItem(pickLocation, callback);
+        base.PickUpItem(pickLocation, reflectionLocation, callback);
         VarManager.instance.SetBoolOn("MountainHasPickedUpMinecart");
         UITrackerManager.RemoveTracker(this.gameObject);
         animator.ChangeAnimationState("IDLE");
@@ -427,11 +428,10 @@ public class Minecart : Item, ISavable
 
     private bool CheckFreeInFront()
     {
-        Vector3 checkLoc = prevWorldPos + GetTileOffsetVector(currentDirection);
-        var colliders = Physics2D.OverlapBoxAll(checkLoc, Vector2.one * 0.5f, 0, collidingMask);
+        Vector3 checkloc = prevWorldPos + GetTileOffsetVector(currentDirection);
+        var colliders = Physics2D.OverlapBoxAll(checkloc, Vector2.one * 0.5f, 0, collidingMask);
         bool valid = true;
         foreach(Collider2D c in colliders) {
-            print(c.gameObject.name);
             if(c.GetComponent<STile>() == null && c.GetComponentInParent<Minecart>() == null )
             {
                 valid = false;
@@ -442,13 +442,14 @@ public class Minecart : Item, ISavable
 
     private STile CheckDropTileBelow()
     {
-        Vector3 checkLoc = prevWorldPos + (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
-
+        Vector3 checkloc = prevWorldPos + (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)) + GetTileOffsetVector(currentDirection);
         STile tile = null;
-        var colliders = Physics2D.OverlapBoxAll(checkLoc, Vector2.one, 0);
+        var colliders = Physics2D.OverlapBoxAll(checkloc, Vector2.one * 0.4f, 0);
         foreach(Collider2D c in colliders){
             if(c.GetComponent<STile>() != null && c.GetComponent<STile>().isTileActive) 
+            {
                 tile = c.GetComponent<STile>();
+            }
         }
         return tile;
 
@@ -463,6 +464,7 @@ public class Minecart : Item, ISavable
         if(rm == null) 
         {
             Derail();
+            UpdateParent();
             return;
         }
 
@@ -470,8 +472,10 @@ public class Minecart : Item, ISavable
         if(!rm.railLocations.Contains(targetLoc))
         {
             Derail();
+            UpdateParent();
             return;
         }
+        
 
         railManager = rm;
         SnapToRailNewSTile(targetLoc); 
@@ -502,10 +506,6 @@ public class Minecart : Item, ISavable
     {
         StopMoving();
         ResetTiles();
-        Vector3 derailVector = transform.position 
-                               + speed * 0.3f * getDirectionAsVector(currentDirection)   
-                               + 0.5f * (new Vector3(Random.onUnitSphere.x, Random.onUnitSphere.y, 0));
-       // StartCoroutine(AnimateDerail(derailVector));
     }
 
     public void setCanStartMoving(bool canStart)
@@ -555,10 +555,14 @@ public class Minecart : Item, ISavable
         UpdateContentsSprite();
     }
 
-    public void TryAddCrystals()
+    public bool TryAddCrystals()
     {
         if(mcState == MinecartState.Empty)
+        {
             UpdateState("Crystal");
+            return true;
+        }
+        return false;
     }
 
     #endregion

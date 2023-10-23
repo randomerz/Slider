@@ -27,6 +27,13 @@ public class UIPowerTracker : FlashWhiteUI
     private void UpdatePoweredImageEnabled()
     {
         bool nodeOnDisabledButton = button != null && !button.TileIsActive;
-        poweredImage.enabled = myNode.Powered && !nodeOnDisabledButton && !FactoryGrid.PlayerInPast;
+        if (SGrid.Current is FactoryGrid)
+        {
+            poweredImage.enabled = myNode.Powered && !nodeOnDisabledButton && !FactoryGrid.PlayerInPast;
+        }
+        else
+        {
+            poweredImage.enabled = myNode.Powered && !nodeOnDisabledButton;
+        }
     }
 }

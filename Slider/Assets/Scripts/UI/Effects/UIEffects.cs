@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 // ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class UIEffects : Singleton<UIEffects>
@@ -13,6 +14,10 @@ public class UIEffects : Singleton<UIEffects>
     public GameObject whitePanel;
     public CanvasGroup whitePanelCanvasGroup;
     public float flashDuration = 1;
+
+    public GameObject screenshotPanel;
+    public CanvasGroup screenshotCanvasGroup;
+    public Image screenshotImage;
 
     //private static UIEffects _instance;
 
@@ -43,14 +48,14 @@ public class UIEffects : Singleton<UIEffects>
         }
     }
 
-    public static void FadeFromBlack(System.Action callback=null, float speed=1)
+    public static void FadeFromBlack(System.Action callback=null, float speed=1, float alpha = 1f)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 1, 0, callback, speed));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, alpha, 0, callback, speed));
     }
 
-    public static void FadeToBlack(System.Action callback=null, float speed=1, bool disableAtEnd = true)
+    public static void FadeToBlack(System.Action callback=null, float speed=1, bool disableAtEnd = true, float alpha = 1f)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, 1, callback, speed, disableAtEnd));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.blackPanel, _instance.blackPanelCanvasGroup, 0, alpha, callback, speed, disableAtEnd));
     }
 
     public static void FadeFromWhite(System.Action callback=null, float speed=1)
@@ -68,6 +73,11 @@ public class UIEffects : Singleton<UIEffects>
         StartEffectCoroutine(_instance.FlashCoroutine(callbackMiddle, callbackEnd, speed));
     }
 
+    public static void FadeFromScreenshot(System.Action screenshotCallback = null, System.Action callbackEnd = null, float speed = 1)
+    {
+        StartEffectCoroutine(_instance.ScreenshotCoroutine(screenshotCallback, callbackEnd, speed), false);
+    }
+
     public static void ClearScreen()
     {
         _instance.blackPanel.SetActive(false);
@@ -76,13 +86,14 @@ public class UIEffects : Singleton<UIEffects>
         _instance.whitePanelCanvasGroup.alpha = 0;
     }
 
-    private static void StartEffectCoroutine(IEnumerator coroutine)
+    private static void StartEffectCoroutine(IEnumerator coroutine, bool stopable = true)
     {
         if (previousCoroutine != null)
         {
             _instance.StopCoroutine(previousCoroutine);
         }
-        previousCoroutine = _instance.StartCoroutine(coroutine);
+        var c = _instance.StartCoroutine(coroutine);
+        previousCoroutine = stopable ? c : null;
     }
 
 
@@ -134,6 +145,32 @@ public class UIEffects : Singleton<UIEffects>
         whitePanelCanvasGroup.alpha = 0;
         whitePanel.SetActive(false);
         
+        callbackEnd?.Invoke();
+    }
+
+    private IEnumerator ScreenshotCoroutine(System.Action screenshotCallback = null, System.Action callbackEnd = null, float speed = 1)
+    {
+        yield return new WaitForEndOfFrame();
+        var screenshot = ScreenCapture.CaptureScreenshotAsTexture();
+        Sprite sprite = Sprite.Create(screenshot, new Rect(0, 0, Screen.width, Screen.height), new Vector2(0, 0));
+        screenshotImage.sprite = sprite;
+        screenshotPanel.SetActive(true);
+        screenshotCanvasGroup.alpha = 0.5f;
+        screenshotPanel.transform.localScale = Vector3.one;
+        screenshotPanel.transform.localRotation = Quaternion.identity;
+        screenshotCallback?.Invoke();
+
+        float t = 0;
+        while (t < fadeDuration)
+        {
+            float alpha = Mathf.Lerp(0.5f, 0, t / fadeDuration);
+            screenshotCanvasGroup.alpha = alpha;
+            screenshotPanel.transform.localScale = (2 - (alpha * 2)) * Vector3.one;
+            screenshotPanel.transform.localRotation *= Quaternion.Euler(new Vector3(0, 0, t * 2));
+            yield return null;
+            t += (Time.deltaTime * speed);
+        }
+        screenshotPanel.SetActive(false);
         callbackEnd?.Invoke();
     }
 }

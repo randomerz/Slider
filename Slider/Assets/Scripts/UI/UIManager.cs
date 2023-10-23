@@ -171,7 +171,7 @@ public class UIManager : Singleton<UIManager>
         controlsPanel.SetActive(true);
 
         UINavigationManager.CurrentMenu = controlsPanel;
-        UINavigationManager.SelectBestButtonInCurrentMenu();
+        // Button gets set based on which controls panel is active (Keyboard or Controller)
     }
     public void OpenAdvOptions()
     {

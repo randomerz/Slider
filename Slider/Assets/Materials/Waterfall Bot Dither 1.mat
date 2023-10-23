@@ -37,7 +37,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BottomTextures:
-        m_Texture: {fileID: 18700000, guid: 6f6e2ac12e730a14c9f51572e1ae93a5, type: 3}
+        m_Texture: {fileID: 18700000, guid: ded0e6a0fdac22a44b0069d9e7a1b63d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -58,8 +58,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FPS: 1
+    - _FPS: 3
     - _NumFrames: 4
     m_Colors:
     - _ColorMask: {r: 0.7529413, g: 0.3764706, b: 0.7529413, a: 1}
+    - _Scale: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

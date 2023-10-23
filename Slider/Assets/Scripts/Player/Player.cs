@@ -23,9 +23,12 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     [SerializeField] private GameObject boatGameObject;
     [SerializeField] private Transform boatGetSTileUnderneathTransform;
     [SerializeField] private Animator playerAnimator;
+    [SerializeField] private Animator reflectionAnimator;
+    [SerializeField] private SpriteRenderer reflectionSpriteRenderer;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private List<Material> ppMaterials;
+    [SerializeField] private GameObject lightningEffect;
 
 
     private float moveSpeedMultiplier = 1;
@@ -86,14 +89,23 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         if (inputDir.x < 0)
         {
             playerSpriteRenderer.flipX = true;
+            if(reflectionSpriteRenderer != null)
+                reflectionSpriteRenderer.flipX = true;
         }
         else if (inputDir.x > 0)
         {
             playerSpriteRenderer.flipX = false;
+            if(reflectionSpriteRenderer != null)
+                reflectionSpriteRenderer.flipX = false;
         }
 
         playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
         playerAnimator.SetBool("isOnWater", isOnWater);
+        if(reflectionAnimator != null)
+        {
+            reflectionAnimator.SetBool("isRunning", inputDir.magnitude != 0);
+            reflectionAnimator.SetBool("isOnWater", isOnWater);
+        }
         // playerAnimator.SetBool("hasSunglasses", hasSunglasses);
 
         foreach(Material m in ppMaterials)
@@ -172,20 +184,21 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     /// </summary>
     public void OnControlsChanged()
     {
-        //string newControlScheme = GetCurrentControlScheme();
-        string newControlScheme = playerInput.currentControlScheme;
-        Debug.Log("Control Scheme changed to: " + newControlScheme);
+        string newControlScheme = GetCurrentControlScheme();
+        //Debug.Log("Control Scheme changed to: " + newControlScheme);
         OnControlSchemeChanged?.Invoke(newControlScheme);
-        if (Controls.Instance != null)
-        {
-            Controls.Instance.SetCurrentControlScheme(newControlScheme);
-        }
+        Controls.CurrentControlScheme = newControlScheme;
     }
     /*
     public void OnAltViewHold()
     {
         Debug.Log("Alt View Hold");
     }*/
+
+    public void ToggleLightning(bool val)
+    {
+        lightningEffect.SetActive(val);
+    }
 
     // Here is where we pay for all our Singleton Sins
     public void ResetInventory()

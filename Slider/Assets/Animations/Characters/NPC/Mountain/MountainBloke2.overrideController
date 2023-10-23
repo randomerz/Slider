@@ -7,7 +7,9 @@ AnimatorOverrideController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MountainBloke2
-  m_Controller: {fileID: 9100000, guid: 6e5c778dd4cc84654b238e65e0afdd46, type: 2}
+  m_Controller: {fileID: 9100000, guid: 318b6535f97449a4ab2be2754f455147, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: 4881d12e2b0b14afda11fbdae859ee36, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 7d9ff3118ddc03846b11cc5f0de42f7e, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 69c83739fa0037a43b6a0fccb3d6c6a2, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 28eef42460ccda24999e67db23d992a3, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 1cc7304dd1a85ca44ae4383bfd110a56, type: 2}
