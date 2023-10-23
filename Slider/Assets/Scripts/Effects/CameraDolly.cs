@@ -79,19 +79,26 @@ public class CameraDolly : MonoBehaviour
             yield return null;
             t += Time.deltaTime;
         }
-
-        UIEffects.FadeToBlack(
-            () => EndTrack(DontReturnToPlayerOnEnd)
-        );
-
-        while (t < duration)
+        
+        if(DontReturnToPlayerOnEnd)
         {
-            float x = (t / duration);
+            EndTrack(DontReturnToPlayerOnEnd);
+        }
+        else
+            {
+            UIEffects.FadeToBlack(
+                () => EndTrack(DontReturnToPlayerOnEnd)
+            );
 
-            dolly.m_PathPosition = pathMovementCurve.Evaluate(x) * (numWaypoints - 1);
+            while (t < duration)
+            {
+                float x = (t / duration);
 
-            yield return null;
-            t += Time.deltaTime;
+                dolly.m_PathPosition = pathMovementCurve.Evaluate(x) * (numWaypoints - 1);
+
+                yield return null;
+                t += Time.deltaTime;
+            }
         }
     }
 
@@ -110,8 +117,8 @@ public class CameraDolly : MonoBehaviour
             UIEffects.FadeFromBlack();
             UIManager.canOpenMenus = true;
             Player.SetCanMove(true);
+            virtualCamera.Priority = -15;
         }
-        virtualCamera.Priority = -15;
         OnRollercoasterEnd?.Invoke(this, null);
         skipPromptSlider.gameObject.SetActive(false);
         Controls.UnregisterBindingBehavior(dollySkipBindingBehavior);
