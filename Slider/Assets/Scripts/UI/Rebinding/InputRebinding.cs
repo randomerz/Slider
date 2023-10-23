@@ -33,14 +33,22 @@ public class InputRebinding
                       .Start()
                       .OnComplete((InputActionRebindingExtensions.RebindingOperation rebindingOperation) =>
                       {
-                          Controls.Bindings.Enable();
-                          rebindingOperation.Dispose();
+                          CompleteRebindingOperation(rebindingOperation);
                           RemoveDuplicateBindings(controlToRebind);
                           WriteCurrentBindingsToPlayerPrefs();
-
-                          OnRebindCompleted?.Invoke();
-                          rebindIsInProgress = false;
+                      })
+                      .OnCancel((InputActionRebindingExtensions.RebindingOperation rebindingOperation) =>
+                      {
+                          CompleteRebindingOperation(rebindingOperation);
                       });
+    }
+
+    private static void CompleteRebindingOperation(InputActionRebindingExtensions.RebindingOperation rebindingOperation)
+    {
+        Controls.Bindings.Enable();
+        rebindingOperation.Dispose();
+        OnRebindCompleted?.Invoke();
+        rebindIsInProgress = false;
     }
 
     private static void RemoveDuplicateBindings(Control controlThatWasJustRebound)
