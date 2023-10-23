@@ -14,7 +14,7 @@ public class JungleArtifact : UIArtifact
         {
             //L: Just a normal move
             return base.TryQueueMoveFromButtonPair(buttonCurrent, buttonEmpty);
-        } 
+        }
         else
         {
             //L: Below is to handle the case for if you have linked tiles.
@@ -31,14 +31,48 @@ public class JungleArtifact : UIArtifact
                                                     buttonCurrent.islandId, buttonCurrent.LinkButton.islandId);
 
             Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy, buttonCurrent.islandId);
-            if (SGrid.Current.CanMove(linkedSwap) && (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && moveQueue.Count < maxMoveQueueSize)
-            {
-                QueueAdd(linkedSwap);
 
-                //L: Swap the current button and the link button
-                SwapButtons(buttonCurrent, buttonEmpty);
-                SwapButtons(buttonCurrent.LinkButton, GetButton(linkx + dx, linky + dy));
+            // AG: Start
+
+            if (dx != 0 && dy != 0)
+            {
+                linkedSwap = new SMoveLinkedSwap(x, y, x, buttonEmpty.y, linkx, linky,
+                                                buttonCurrent.islandId, buttonCurrent.LinkButton.islandId);
+            }
+            else
+            {
+                if (Math.Abs(dx) > 1)
+                {
+                    return TryQueueMoveFromButtonPair(buttonCurrent.LinkButton, buttonEmpty);
+                }
+            }
+
+            // AG: End
+
+            if (SGrid.Current.CanMove(linkedSwap) && 
+                (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && 
+                moveQueue.Count < maxMoveQueueSize)
+            {
+
+                QueueAdd(linkedSwap);
+                // AG: Start
+
+                if (dx != 0 && dy != 0)
+                {
+                    SwapButtons(buttonCurrent, GetButton(x, y + dy));
+                    SwapButtons(buttonCurrent.LinkButton, GetButton(linkx, linky + dy));
+                }
+                else
+                {
+                    //L: Swap the current button and the link button
+                    SwapButtons(buttonCurrent, buttonEmpty);
+                    SwapButtons(buttonCurrent.LinkButton, GetButton(linkx + dx, linky + dy));
+                }
+
+                // AG: End
+                
                 ProcessQueue();
+                UpdateMoveOptions();
 
                 return true;
             }
@@ -51,6 +85,11 @@ public class JungleArtifact : UIArtifact
         }
     }
 
+    protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    {
+        return base.ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
+    }
+
     //Checks if the move can happen on the grid.
     //L: This should maybe be checked with GetMoveOptions?
     private bool OpenPath(Movement move)
@@ -59,6 +98,7 @@ public class JungleArtifact : UIArtifact
         int dx = move.endLoc.x - move.startLoc.x;
         int dy = move.endLoc.y - move.startLoc.y;
         int toCheck = Math.Max(Math.Abs(dx), Math.Abs(dy));
+
         if (dx == 0)
         {
             int dir = dy / Math.Abs(dy);
@@ -83,5 +123,90 @@ public class JungleArtifact : UIArtifact
         }
         return true;
     }
+
+    
+    protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
+    {
+        if (button.LinkButton == null)
+        {
+            return base.GetMoveOptions(button);
+        }
+
+        List<ArtifactTileButton> options = new List<ArtifactTileButton>();
+
+        Vector2Int[] dirsVert = {
+            Vector2Int.up,
+            Vector2Int.down
+        };
+
+        Vector2Int[] dirsHoriz =
+        {
+            Vector2Int.left,
+            Vector2Int.right
+        };
+
+        // Up and Down
+        foreach (Vector2Int dir in dirsVert)
+        {
+            ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
+            ArtifactTileButton c = GetButton(button.LinkButton.x + dir.x, button.LinkButton.y + dir.y);
+            int i = 2;
+            while (b != null && !b.TileIsActive && c != null && !c.TileIsActive)
+            {
+                options.Add(b);
+                options.Add(c);
+                b = GetButton(button.x + dir.x * i, button.y + dir.y * i);
+                c = GetButton(button.LinkButton.x + dir.x * i, button.LinkButton.y + dir.y * i);
+                i++;
+            }
+        }
+
+        // Left and Right
+        foreach (Vector2Int dir in dirsHoriz)
+        {
+            if (button.islandId == 2)
+            {
+                ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
+                if (b != null && dir == Vector2Int.right)
+                {
+                    b = GetButton(button.x + dir.x * 2, button.y + dir.y);
+                    if (b != null && !b.TileIsActive)
+                    {
+                        options.Add(b);
+                    }
+                }
+                else if (dir == Vector2Int.left)
+                {
+                    if (b != null && !b.TileIsActive)
+                    {
+                        options.Add(b);
+                    }
+                }
+            }
+            else if (button.islandId == 3)
+            {
+                ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
+                if (dir == Vector2Int.right)
+                {
+                    if (b != null && !b.TileIsActive)
+                    {
+                        options.Add(b);
+                    }
+                }
+                else if (b != null && dir == Vector2Int.left)
+                {
+                    b = GetButton(button.x + dir.x * 2, button.y + dir.y);
+                    if (b != null && !b.TileIsActive)
+                    {
+                        options.Add(b);
+                    }
+                }
+            }
+        }
+
+        return options;
+    }
+
+
 }
 

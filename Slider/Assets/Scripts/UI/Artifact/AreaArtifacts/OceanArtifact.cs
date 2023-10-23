@@ -149,6 +149,7 @@ public class OceanArtifact : UIArtifact
                 tb[i].SetPosition(SMoveRotateArr[(i + 1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y, true);
             }
 
+            AudioManager.Play("Ocean Waves");
             // SGrid.current.Move(rotate);
             ProcessQueue();
             
@@ -157,7 +158,6 @@ public class OceanArtifact : UIArtifact
         {
             LogMoveFailure();
         }
-
         OnButtonInteract?.Invoke(this, null);
     }
 
@@ -172,6 +172,7 @@ public class OceanArtifact : UIArtifact
             {
                 return;
             }
+
 
             int minX = peekedMove.moves[0].startLoc.x;
             int minY = peekedMove.moves[0].startLoc.y;
