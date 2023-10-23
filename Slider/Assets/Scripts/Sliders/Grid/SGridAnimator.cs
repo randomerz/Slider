@@ -288,6 +288,14 @@ public class SGridAnimator : MonoBehaviour
             GameObject.Destroy(g, MAX_POSSIBLE_MOVE_DURATION);
             return s.transform;
         }
+        else if(move is SMoveSyncedMove)
+        {
+            Transform[] t = ((SMoveSyncedMove)move).GetTileTransforms();
+            if(((MagiTechArtifact)MagiTechArtifact.GetInstance()).PlayerIsInPast)
+                return t[1];
+            else
+                return t[0];
+        }
         else
             return root;
     }

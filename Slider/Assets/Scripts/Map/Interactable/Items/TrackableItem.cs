@@ -6,9 +6,9 @@ public class TrackableItem : Item
 {
     private bool trackerEnabled;
 
-    public override void PickUpItem(Transform pickLocation, System.Action callback = null)
+    public override void PickUpItem(Transform pickLocation, Transform reflectionLoation, System.Action callback = null)
     {
-        base.PickUpItem(pickLocation, callback);
+        base.PickUpItem(pickLocation, reflectionLoation, callback);
         UITrackerManager.RemoveTracker(this.gameObject);
     }
 

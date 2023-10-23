@@ -60,6 +60,11 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         return _instance != null && _instance.isArtifactOpen;
     }
 
+    public static void TurnInArtifact()
+    {
+        _instance.hasArtifact = false;
+    }
+
     private void OnPressArtifact()
     {
         if (isArtifactOpen)

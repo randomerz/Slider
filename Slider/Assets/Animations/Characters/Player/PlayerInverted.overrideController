@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PlayerInverted
+  m_Controller: {fileID: 9100000, guid: 716b9a27e2f0da8458f3f3e6427c119f, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 6a9146cf877e1ef43925caceb2e77db6, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d464d61b2b7210340974b6b57db0ec7b, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 1221a2a04b0bba647be9a7e283b9eae9, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 1221a2a04b0bba647be9a7e283b9eae9, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 2b6b8464d9840a147941b616bdf37aca, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: aee4c33cc859f9041bd06e36c26d6cac, type: 2}

@@ -78,9 +78,9 @@ public class RopeCoil : Item
         );
     }
 
-    public override void PickUpItem(Transform pickLocation, System.Action callback = null) // pickLocation may be moving
+    public override void PickUpItem(Transform pickLocation, Transform reflectionLocation, System.Action callback = null) // pickLocation may be moving
     {
-        base.PickUpItem(pickLocation, callback);
+        base.PickUpItem(pickLocation, reflectionLocation, callback);
         isPicked = true;
         UpdatePlayerSpeed();
     }
