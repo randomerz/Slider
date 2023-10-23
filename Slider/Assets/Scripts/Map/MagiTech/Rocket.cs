@@ -8,6 +8,7 @@ public class Rocket : MonoBehaviour
 {
     public CameraDolly rocketCameraDolly;
     public GameObject rocket;
+    public SpriteRenderer rocketSpriteRenderer;
     public Transform rocketStart;
     public Transform rocketEnd;
     public AnimationCurve rocketCurve;
@@ -22,6 +23,7 @@ public class Rocket : MonoBehaviour
 
     private IEnumerator RocketCutscene()
     {
+        rocketSpriteRenderer.sortingOrder = 25; // set to entity 25
         UIEffects.FadeToBlack(disableAtEnd: false);
         yield return new WaitForSeconds(1.1f);
         Player.GetSpriteRenderer().enabled = false;
