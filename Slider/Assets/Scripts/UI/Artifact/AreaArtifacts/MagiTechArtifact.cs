@@ -10,7 +10,7 @@ public class MagiTechArtifact : UIArtifact
     *   the corresponding location in the past, since this is the location we need
     *   to compare against to check for move possibility
     */
-    public Vector2Int desynchLocation = new Vector2Int(-1, -1);
+    public static Vector2Int desynchLocation = new Vector2Int(-1, -1);
 
     //C: likewise this is the ID of the *opposite* Stile
     public int desynchIslandId = -1;
@@ -245,10 +245,26 @@ public class MagiTechArtifact : UIArtifact
     {
         ArtifactTileButton currAlt = GetButton(FindAltId(buttonCurrent.islandId));
         ArtifactTileButton emptyAlt = GetButton(FindAltId(buttonEmpty.islandId));
-        
-        SwapButtons(currAlt, emptyAlt, false);
 
-        base.QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
+        //If Not a desync, swap both pairs of buttons
+        if(move is SMoveSyncedMove)
+        {
+            SwapButtons(currAlt, emptyAlt, false);
+            base.QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
+        }
+        //Else, find the correct button pair and swap them
+        else
+        {
+            int idInMove = move.moves[0].islandId;
+            if(currAlt.islandId == idInMove || emptyAlt.islandId == idInMove)
+            {
+                base.QueueMoveFromButtonPair(move, currAlt, emptyAlt);
+            }
+            else
+            {
+                base.QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
+            }
+        }
     }
 
     public override void AddButton(STile stile, bool shouldFlicker = true)

@@ -20,7 +20,8 @@ public class ArtifactTileButton : MonoBehaviour
     private Sprite completedSpriteDefault;
     [SerializeField] private Sprite hoverSprite;
     [SerializeField] private Sprite blankSprite;
-    [SerializeField] protected List<ArtifactTBPlugin> plugins;
+    [SerializeField] public List<ArtifactTBPlugin> plugins;
+
 
     // public static bool canComplete = false;
     public bool isComplete = false;

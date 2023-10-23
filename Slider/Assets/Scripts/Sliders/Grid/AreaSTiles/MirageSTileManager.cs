@@ -32,7 +32,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     public void DisableMirage(int islandId = -1)
     {
         //Do player location check and random parenting bs
-        int mirageIsland;
+        //int mirageIsland;
         //if (isPlayerOnMirage(out mirageIsland))
         //{
         //    Debug.Log($"Player on Mirage! Current mirage: {mirageIsland}");
