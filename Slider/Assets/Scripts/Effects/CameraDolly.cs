@@ -31,7 +31,7 @@ public class CameraDolly : MonoBehaviour
         numWaypoints = path.m_Waypoints.Length;
     }
 
-    public void StartTrack()
+    public void StartTrack(bool DontReturnToPlayerOnEnd = false)
     {
         virtualCamera.Priority = 15;
 
@@ -45,7 +45,7 @@ public class CameraDolly : MonoBehaviour
         );
         Controls.RegisterBindingBehavior(dollySkipBindingBehavior);
 
-        StartCoroutine(Rollercoaster());
+        StartCoroutine(Rollercoaster(DontReturnToPlayerOnEnd));
     }
 
     private void InitializeSkipPrompt()
@@ -61,7 +61,7 @@ public class CameraDolly : MonoBehaviour
         skipPromptSlider.value = holdAnimationCurve.Evaluate(durationButtonHeldSoFar / holdDurationToSkip);
     }
     
-    protected virtual IEnumerator Rollercoaster()
+    protected virtual IEnumerator Rollercoaster(bool DontReturnToPlayerOnEnd = false)
     {
         UIEffects.FadeFromBlack();
         UIManager.canOpenMenus = false;
@@ -81,7 +81,7 @@ public class CameraDolly : MonoBehaviour
         }
 
         UIEffects.FadeToBlack(
-            () => EndTrack()
+            () => EndTrack(DontReturnToPlayerOnEnd)
         );
 
         while (t < duration)
@@ -103,11 +103,14 @@ public class CameraDolly : MonoBehaviour
         StopAllCoroutines(); // Stops the dolly movement and prevents FadeToBlack from being called twice
     }
 
-    protected void EndTrack()
+    protected void EndTrack(bool DontReturnToPlayerOnEnd = false)
     {
-        UIEffects.FadeFromBlack();
-        UIManager.canOpenMenus = true;
-        Player.SetCanMove(true);
+        if(!DontReturnToPlayerOnEnd)
+        {
+            UIEffects.FadeFromBlack();
+            UIManager.canOpenMenus = true;
+            Player.SetCanMove(true);
+        }
         virtualCamera.Priority = -15;
         OnRollercoasterEnd?.Invoke(this, null);
         skipPromptSlider.gameObject.SetActive(false);

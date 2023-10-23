@@ -10,7 +10,7 @@ public class OceanDolly : CameraDolly
     public NPC intern2;
 
     public float fadeDuration;
-    protected override IEnumerator Rollercoaster()
+    protected override IEnumerator Rollercoaster(bool DontReturnToPlayerOnEnd = false)
     {
         UIEffects.FadeFromBlack();
         UIManager.canOpenMenus = false;
