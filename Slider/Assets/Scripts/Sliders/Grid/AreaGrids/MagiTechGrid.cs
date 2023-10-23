@@ -98,6 +98,11 @@ public class MagiTechGrid : SGrid
         return Width * Height / 2;
     }
 
+    public override bool AllButtonsComplete()
+    {
+       return GetNumButtonCompletions() == GetTotalNumTiles() * 2;
+    }
+
     public override void Save()
     {
         base.Save();
@@ -205,18 +210,6 @@ public class MagiTechGrid : SGrid
         List<Collider2D> list = new();
         collider.OverlapCollider(contactFilter, list);
         return list;
-    }
-
-    public void TurnInArtifact()
-    {
-        //Ensure Scroll of Realign is used
-        if (!(UIArtifact.GetGridString() == "132_76#_548")) // TODO: check for bugs with desync in past T u T
-        {
-            return;
-        }
-        //Disable ability to open artifact
-        UIArtifactMenus._instance.hasArtifact = false;
-        Debug.Log("Artifact: " + UIArtifactMenus._instance.hasArtifact);
     }
 
     public void HasOneOre(Condition c)

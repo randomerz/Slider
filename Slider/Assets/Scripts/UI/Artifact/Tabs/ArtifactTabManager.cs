@@ -37,9 +37,9 @@ public class ArtifactTabManager : MonoBehaviour
     {
         #region SaveLoadRealign Cases
         if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
-        {
-            if (SGrid.Current.GetActiveTiles().Count == SGrid.Current.GetTotalNumTiles() //Realigning case
-                && SGrid.GetNumButtonCompletions() != SGrid.Current.GetTotalNumTiles()) {
+        {   
+            //Realign case
+            if (SGrid.Current.HasAllTiles() && !SGrid.Current.AllButtonsComplete()) {
                 realignTab.SetIsVisible(screenIndex == realignTab.homeScreen);
                 saveTab.SetIsVisible(false);
                 loadTab.SetIsVisible(false);
@@ -79,6 +79,8 @@ public class ArtifactTabManager : MonoBehaviour
         UIManager.InvokeCloseAllMenus();
         UIManager.canOpenMenus = false;
 
+        yield return new WaitUntil(() => UIArtifact.GetInstance().MoveQueueEmpty());
+
         CameraShake.ShakeIncrease(2, 1);
         AudioManager.Play("MagicChimes1");
         
@@ -116,9 +118,19 @@ public class ArtifactTabManager : MonoBehaviour
 
     public void SaveOnClick()
     {
+        if (isRearranging)
+            return;
+        isRearranging = true;
+        StartCoroutine(ISaveOnClick());
+    }
+
+    private IEnumerator ISaveOnClick()
+    {
+        yield return new WaitUntil(() => UIArtifact.GetInstance().MoveQueueEmpty());
         SGrid.Current.SaveRealigningGrid();
         uiArtifactMenus.uiArtifact.FlickerAllOnce();
         SetSaveLoadTabSprites(true);
+        isRearranging = false;
     }
 
     // Load tab
@@ -127,32 +139,35 @@ public class ArtifactTabManager : MonoBehaviour
     {
         if (SGrid.Current.realigningGrid != null)
         {
-            // Do the rearranging!
-            SGrid.Current.LoadRealigningGrid();
-            foreach (ArtifactTileButton button in uiArtifactMenus.uiArtifact.buttons)
-            {
-                button.SetHighlighted(false);
-            }
-            //Debug.Log("Loaded!");
-
-            PlayerInventory.ReturnAnchorFromMap();
-
-            UIEffects.FadeFromWhite();
-            CameraShake.Shake(1.5f, 0.75f);
-            AudioManager.Play("Slide Explosion");
-
-            SetSaveLoadTabSprites(false);
+            if (isRearranging)
+                return;
+            isRearranging = true;
+            StartCoroutine(ILoadOnClick());  
         }
         else
         {
             AudioManager.Play("Artifact Error");
         }
-        // StartCoroutine(ILoadOnClick());
     }
 
     private IEnumerator ILoadOnClick()
     {
-        yield return null;
+        yield return new WaitUntil(() => UIArtifact.GetInstance().MoveQueueEmpty());
+
+        SGrid.Current.LoadRealigningGrid();
+        foreach (ArtifactTileButton button in uiArtifactMenus.uiArtifact.buttons)
+        {
+            button.SetHighlighted(false);
+        }
+
+        PlayerInventory.ReturnAnchorFromMap();
+
+        UIEffects.FadeFromWhite();
+        CameraShake.Shake(1.5f, 0.75f);
+        AudioManager.Play("Slide Explosion");
+
+        SetSaveLoadTabSprites(false);
+        isRearranging = false;
     }
 
     public void LoadOnHoverEnter()
