@@ -32,8 +32,8 @@ public class JungleArtifact : UIArtifact
 
             Movement movecoords = new Movement(linkx, linky, linkx + dx, linky + dy, buttonCurrent.islandId);
 
-            // AG: Start
 
+            // if we do a diagonal click, make sure to swap the correct tiles
             if (dx != 0 && dy != 0)
             {
                 linkedSwap = new SMoveLinkedSwap(x, y, x, buttonEmpty.y, linkx, linky,
@@ -41,13 +41,12 @@ public class JungleArtifact : UIArtifact
             }
             else
             {
+                // horizontal idk why
                 if (Math.Abs(dx) > 1)
                 {
                     return TryQueueMoveFromButtonPair(buttonCurrent.LinkButton, buttonEmpty);
                 }
             }
-
-            // AG: End
 
             if (SGrid.Current.CanMove(linkedSwap) && 
                 (OpenPath(movecoords) || GetButton(linkx + dx, linky + dy) == buttonCurrent) && 
@@ -55,21 +54,19 @@ public class JungleArtifact : UIArtifact
             {
 
                 QueueAdd(linkedSwap);
-                // AG: Start
 
                 if (dx != 0 && dy != 0)
                 {
+                    // diagonal case
                     SwapButtons(buttonCurrent, GetButton(x, y + dy));
                     SwapButtons(buttonCurrent.LinkButton, GetButton(linkx, linky + dy));
                 }
                 else
                 {
-                    //L: Swap the current button and the link button
+                    // vert/horiz case
                     SwapButtons(buttonCurrent, buttonEmpty);
                     SwapButtons(buttonCurrent.LinkButton, GetButton(linkx + dx, linky + dy));
                 }
-
-                // AG: End
                 
                 ProcessQueue();
                 UpdateMoveOptions();
@@ -83,11 +80,6 @@ public class JungleArtifact : UIArtifact
                 return false;
             }
         }
-    }
-
-    protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
-    {
-        return base.ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
     }
 
     //Checks if the move can happen on the grid.
