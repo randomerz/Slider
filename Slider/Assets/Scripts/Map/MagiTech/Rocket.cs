@@ -25,6 +25,8 @@ public class Rocket : MonoBehaviour
         UIEffects.FadeToBlack(disableAtEnd: false);
         yield return new WaitForSeconds(1.1f);
         Player.GetSpriteRenderer().enabled = false;
+
+        CameraShake.ShakeIncrease(2.5f, 2f);
         rocketCameraDolly.StartTrack(true);
 
         float t = 0f;
@@ -35,6 +37,7 @@ public class Rocket : MonoBehaviour
                                       Mathf.Lerp(rocketStart.position.y, rocketEnd.position.y, y));
             rocket.transform.position = pos;
             t += Time.deltaTime;
+            
             yield return null;
         }
 

@@ -7,7 +7,6 @@ public class EndOfGameManager : MonoBehaviour
     void Start()
     {
         UIEffects.FadeFromBlack();
-        Cursor.visible = true;
     }
     
 }
