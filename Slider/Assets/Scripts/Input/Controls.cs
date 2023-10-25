@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR;
 
 /// <summary>
 /// This provides a way to get control bindings without having to load the bindings in multiple places, which is inefficient
@@ -68,6 +69,14 @@ public class Controls : Singleton<Controls>
         // DC: See https://forum.unity.com/threads/input-system-1-4-1-released.1306062/
         // Might be able to remove this line after input system 1.4.3
         InputSystem.settings.SetInternalFeatureFlag("DISABLE_SHORTCUT_SUPPORT", true);
+
+        InputSystem.onDeviceChange += (UnityEngine.InputSystem.InputDevice device, InputDeviceChange change) =>
+        {
+            if (device is Gamepad && change == InputDeviceChange.Disconnected)
+            {
+                UIManager.OpenPause();
+            }
+        };
 
         if (_bindings == null)
         {
