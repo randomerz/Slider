@@ -20,7 +20,7 @@ public class ArtifactTileButton : MonoBehaviour
     private Sprite completedSpriteDefault;
     [SerializeField] private Sprite hoverSprite;
     [SerializeField] private Sprite blankSprite;
-    [SerializeField] private List<ArtifactTBPlugin> plugins;
+    [SerializeField] public List<ArtifactTBPlugin> plugins;
 
     // public static bool canComplete = false;
     public bool isComplete = false;
@@ -225,6 +225,10 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetPushedDown(bool v)
     {
         buttonAnimator.SetPushedDown(v);
+        if (this.LinkButton != null)
+        {
+            this.LinkButton.buttonAnimator.SetPushedDown(v);
+        }
     }
 
     public void SetLightning(bool v)
@@ -235,6 +239,10 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetSelected(bool v)
     {
         buttonAnimator.SetSelected(v);
+        if (this.LinkButton != null)
+        {
+            this.LinkButton.buttonAnimator.SetSelected(v);
+        }
     }
 
     public void SetIsInMove(bool v)

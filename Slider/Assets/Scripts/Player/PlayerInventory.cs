@@ -121,7 +121,10 @@ public class PlayerInventory : MonoBehaviour
             AddItem(anchor);
             anchor.RemoveFromTile();
             anchor.transform.SetParent(PlayerAction.Instance.GetPickedItemLocationTransform());
-            anchor.AnimatePickUpEnd(PlayerAction.Instance.GetPickedItemLocationTransform().position);
+            anchor.reflectedspriteRenderer?.transform.SetParent(PlayerAction.Instance.GetPickedItemReflectionLocationTransform());
+            anchor.AnimatePickUpEnd(
+                PlayerAction.Instance.GetPickedItemLocationTransform().position, 
+                PlayerAction.Instance.GetPickedItemReflectionLocationTransform().position);
         }
 
         NextItem();
@@ -139,6 +142,7 @@ public class PlayerInventory : MonoBehaviour
         if (currentItem != null)
         {
             currentItem.gameObject.SetActive(false);
+            currentItem.reflectionParent?.SetActive(false);
         }
         equipables.Insert(0, item);
         itemIterator = equipables.GetEnumerator();
@@ -154,6 +158,7 @@ public class PlayerInventory : MonoBehaviour
         if (currentItem != null)
         {
             currentItem.gameObject.SetActive(false);
+            currentItem.reflectionParent?.SetActive(false);
         }
         else
         {
@@ -165,6 +170,7 @@ public class PlayerInventory : MonoBehaviour
         {
             currentItem = itemIterator.Current;
             currentItem.gameObject.SetActive(true);
+            currentItem.reflectionParent?.SetActive(true);
             currentItem.OnEquip();
             currentItem.SetSortingOrder(itemSortingOrder);
         }
@@ -194,6 +200,7 @@ public class PlayerInventory : MonoBehaviour
     {
         if (currentItem != null)
             equipables.Remove(currentItem);
+        Destroy(currentItem.reflectionParent?.gameObject);
         Destroy(currentItem.gameObject);
         currentItem = null;
         itemIterator = equipables.GetEnumerator();

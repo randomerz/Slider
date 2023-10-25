@@ -24,10 +24,6 @@ using UnityEngine.InputSystem;
 /// <remarks>Author: Travis</remarks>
 public class Controls : Singleton<Controls>
 {
-    //I'm sorry Mr. Travis. I'm stroking
-    public static Controls Instance => _instance;
-
-
     private static InputSettings _bindings;
 
     public static string CurrentControlScheme { get; set; } = CONTROL_SCHEME_KEYBOARD_MOUSE;
@@ -96,8 +92,6 @@ public class Controls : Singleton<Controls>
         }
         var rebinds = PlayerPrefs.GetString(PLAYER_PREFS_REBINDS_KEY);
 
-        // 9/23/23 this crashed bc of corrupted player prefs (we think)
-        // we may want to try {} catch {} this with a clear player prefs if it happens again
         _bindings.Disable();
         _bindings.LoadBindingOverridesFromJson(rebinds);
         _bindings.Enable();
@@ -173,7 +167,12 @@ public class Controls : Singleton<Controls>
     /// <summary>
     /// Use this to get a UI-ready display string for the current binding for the passed in control.
     /// </summary>
-    public static string BindingDisplayString(Control control)
+    /// <param name="control">The control to get the current binding for</param>
+    /// <param name="forSpecificScheme">If specified, returns the control for the particular group 
+    /// (CONTROL_SCHEME_KEYBOARD_MOUSE or CONTROL_SCHEME_CONTROLLER.) Otherwise, returns the binding
+    /// for the current ControlScheme.</param>
+    /// <returns></returns>
+    public static string BindingDisplayString(Control control, string forSpecificScheme = null)
     {
         InputAction inputActionForControl = InputActionForControl(control);
         if (control.ToString().Contains("Move"))
@@ -182,8 +181,8 @@ public class Controls : Singleton<Controls>
         }
         else
         {
-            
-            return inputActionForControl?.GetBindingDisplayString(group: CurrentControlScheme);
+            string controlScheme = forSpecificScheme ?? CurrentControlScheme;
+            return inputActionForControl?.GetBindingDisplayString(group: controlScheme);
         }
     }
 

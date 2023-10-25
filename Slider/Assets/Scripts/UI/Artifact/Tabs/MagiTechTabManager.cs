@@ -8,6 +8,7 @@ public class MagiTechTabManager : ArtifactTabManager
     [SerializeField] private Animator previewTabAnimator;
 
     private BindingHeldBehavior bindingHeldBehavior;
+    private bool tabEnabled;
 
     protected override void Awake()
     {
@@ -54,7 +55,7 @@ public class MagiTechTabManager : ArtifactTabManager
     public override void SetCurrentScreen(int screenIndex)
     {
         base.SetCurrentScreen(screenIndex);
-        previewTab.SetIsVisible(screenIndex == previewTab.homeScreen);
+        previewTab.SetIsVisible(screenIndex == previewTab.homeScreen && tabEnabled);
         MagiTechArtifact artifact = (MagiTechArtifact) uiArtifactMenus.uiArtifact;
         previewTabAnimator.SetFloat("speed", artifact.PlayerIsInPast ? -1 : 1);
     }
@@ -74,5 +75,10 @@ public class MagiTechTabManager : ArtifactTabManager
         artifact.SetPreview(false);
         previewTabAnimator.SetBool("isHovered", false);
         previewTabAnimator.SetFloat("speed", previewTabAnimator.GetFloat("speed") * -1);
+    }
+
+    public void EnableTab()
+    {
+        tabEnabled = true;
     }
 }

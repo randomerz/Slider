@@ -19,6 +19,9 @@ public class MagiTechGrid : SGrid
     private bool hasDesyncBurger;
     private int numOres = 0;
 
+    [SerializeField] private MagiTechTabManager tabManager;
+    [SerializeField] private PlayerActionHints hints;
+
     private ContactFilter2D contactFilter;
 
     /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
@@ -78,6 +81,10 @@ public class MagiTechGrid : SGrid
             {
                 CollectStile(s);
             }
+            if(s.islandId == 1)
+            {
+                tabManager.EnableTab();
+            }
         }
     }
 
@@ -91,6 +98,11 @@ public class MagiTechGrid : SGrid
         return Width * Height / 2;
     }
 
+    public override bool AllButtonsComplete()
+    {
+       return GetNumButtonCompletions() == GetTotalNumTiles() * 2;
+    }
+
     public override void Save()
     {
         base.Save();
@@ -99,11 +111,19 @@ public class MagiTechGrid : SGrid
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
+        if(GetNumTilesCollected() >= 1)
+            tabManager.EnableTab();
     }
 
     public static bool IsInPast(Transform transform)
     {
         return transform.position.x > 67;
+    }
+
+    public void TryEnableHint()
+    {
+        if(GetNumTilesCollected() >= 1)
+            hints.TriggerHint("altview");
     }
 
     #endregion
@@ -190,18 +210,6 @@ public class MagiTechGrid : SGrid
         List<Collider2D> list = new();
         collider.OverlapCollider(contactFilter, list);
         return list;
-    }
-
-    public void TurnInArtifact()
-    {
-        //Ensure Scroll of Realign is used
-        if (!(UIArtifact.GetGridString() == "132_76#_548")) // TODO: check for bugs with desync in past T u T
-        {
-            return;
-        }
-        //Disable ability to open artifact
-        UIArtifactMenus._instance.hasArtifact = false;
-        Debug.Log("Artifact: " + UIArtifactMenus._instance.hasArtifact);
     }
 
     public void HasOneOre(Condition c)

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RebindingButton : MonoBehaviour
 {
@@ -20,6 +21,11 @@ public class RebindingButton : MonoBehaviour
 
     public void OnClick()
     {
+        // Disallow starting keyboard rebind operations with controller
+        if (WasPressedUsingController())
+        {
+            return;
+        }
         InputRebinding.StartInteractiveRebindOperation(control);
     }
 
@@ -30,9 +36,14 @@ public class RebindingButton : MonoBehaviour
 
     private string GetBindingDisplayStringForControl(Control control)
     {
-        return Controls.BindingDisplayString(control)
+        return Controls.BindingDisplayString(control, forSpecificScheme: Controls.CONTROL_SCHEME_KEYBOARD_MOUSE)
                        .ToUpper()
                        .Replace("PRESS ", "")
                        .Replace(" ARROW", "");
+    }
+
+    private bool WasPressedUsingController()
+    {
+        return Gamepad.current == null ? false : Gamepad.current.buttonSouth.IsPressed();
     }
 }
