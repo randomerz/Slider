@@ -78,10 +78,18 @@ public class UINavigationManager : Singleton<UINavigationManager>
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate,
             context =>
             {
-                if (CurrentMenu != null && InMouseControlMode)
+                if (CurrentMenu != null)
                 {
-                    InMouseControlMode = false;
+                    if (InMouseControlMode)
+                    {
+                        InMouseControlMode = false;
+                    }
+                    if (!ButtonInCurrentMenuIsSelected())
+                    {
+                        SelectBestButtonInCurrentMenu();
+                    }
                 }
+                
             }
         );
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Submit,
@@ -135,7 +143,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
         foreach (Selectable selectable in _instance.selectableSetDictionary[_instance._currentMenu])
         {
-            if (_instance.eventSystem.currentSelectedGameObject == selectable.gameObject)
+            if (selectable != null && _instance.eventSystem.currentSelectedGameObject == selectable.gameObject)
             {
                 return true;
             }
