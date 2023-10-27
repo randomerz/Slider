@@ -150,6 +150,7 @@ GameObject:
   - component: {fileID: 5498380119411019640}
   - component: {fileID: 7249333003060260181}
   - component: {fileID: 8240544774789074384}
+  - component: {fileID: 4547627681717567063}
   m_Layer: 5
   m_Name: ControlsPanel
   m_TagString: Untagged
@@ -276,6 +277,19 @@ MonoBehaviour:
   - {fileID: 1256706386528512802}
   - {fileID: 5664485496592134390}
   - {fileID: 3757119346397488088}
+--- !u!114 &4547627681717567063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138034111241829049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ba608890f571ba41a7a2b2dfcf74dab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentMenu: {fileID: 0}
 --- !u!1 &4308301024995417417
 GameObject:
   m_ObjectHideFlags: 0
@@ -1494,12 +1508,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2591337261829208435}
     - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4547627681717567063}
+    - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: BackPressed
+      value: MoveToParentMenu
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UIManager, SliderScripts
+      value: UIMenu, SliderScripts
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541341, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_Name

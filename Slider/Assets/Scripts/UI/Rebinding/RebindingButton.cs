@@ -44,6 +44,6 @@ public class RebindingButton : MonoBehaviour
 
     private bool WasPressedUsingController()
     {
-        return Gamepad.current == null ? false : Gamepad.current.buttonSouth.IsPressed();
+        return Gamepad.current != null && Gamepad.current.buttonSouth.IsPressed();
     }
 }

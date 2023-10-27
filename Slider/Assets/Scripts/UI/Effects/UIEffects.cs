@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class UIEffects : Singleton<UIEffects>
 {
     public GameObject blackPanel;
@@ -42,7 +41,7 @@ public class UIEffects : Singleton<UIEffects>
 
     private void OnSceneChange(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name.Equals(MainMenuManager.GetInstance()?.cutsceneSceneName))
+        if (scene.name.Equals(NewSavePanelManager.CUTSCENE_SCENE_NAME))
         {
             _instance.blackPanel.SetActive(false);
         }
