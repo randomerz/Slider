@@ -666,6 +666,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba608890f571ba41a7a2b2dfcf74dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onOpen:
+    m_PersistentCalls:
+      m_Calls: []
+  onClose:
+    m_PersistentCalls:
+      m_Calls: []
   parentMenu: {fileID: 5049116214890196649}
 --- !u!1 &64657716 stripped
 GameObject:
@@ -1422,6 +1428,14 @@ PrefabInstance:
       propertyPath: mainMenuManager
       value: 
       objectReference: {fileID: 901309740}
+    - target: {fileID: 1959899098469952525, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: savePanelManager
+      value: 
+      objectReference: {fileID: 735139353}
+    - target: {fileID: 1959899098469952525, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: newSavePanelManager
+      value: 
+      objectReference: {fileID: 1949098313}
     - target: {fileID: 4374941736755909752, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1542,6 +1556,70 @@ PrefabInstance:
       propertyPath: m_SpriteState.m_SelectedSprite
       value: 
       objectReference: {fileID: 6641034709832212186, guid: 212c8e84c5e9d2a43b00694bf844aced, type: 3}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 735139352}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 196640732}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 1299817383}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: MoveToMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: Click
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIMenu, SliderScripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: MainMenuSaveButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: UIClick, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 1949098312}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UIMenu, SliderScripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4878303943482852191, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
       propertyPath: m_Name
       value: Left Save Button
@@ -5311,6 +5389,7 @@ GameObject:
   - component: {fileID: 735139349}
   - component: {fileID: 735139351}
   - component: {fileID: 735139352}
+  - component: {fileID: 735139353}
   m_Layer: 5
   m_Name: SavesPanel
   m_TagString: Untagged
@@ -5410,7 +5489,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba608890f571ba41a7a2b2dfcf74dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onOpen:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 735139353}
+        m_TargetAssemblyTypeName: SavePanelManager, SliderScripts
+        m_MethodName: OpenSaves
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onClose:
+    m_PersistentCalls:
+      m_Calls: []
   parentMenu: {fileID: 5049116214890196649}
+--- !u!114 &735139353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735139347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9092584164a48a24ea102668e56a8110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newSavePanelManager: {fileID: 1949098313}
 --- !u!1 &735333817
 GameObject:
   m_ObjectHideFlags: 0
@@ -6574,7 +6684,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 574cc9ca96af4e44097a97926181dcb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cutsceneSceneName: IntroCutscene
   titleAnimator: {fileID: 1613696529}
   textAnimator: {fileID: 1814126339}
   playerAnimator: {fileID: 39868089}
@@ -6582,13 +6691,6 @@ MonoBehaviour:
   mainMenuQuitButtonAnimator: {fileID: 1121971053}
   mainMenuBackgroundAnimator: {fileID: 1873760204}
   mainMenuPanel: {fileID: 5049116214890196632}
-  savesPanel: {fileID: 735139347}
-  newSavePanel: {fileID: 1949098307}
-  profileNameTextField: {fileID: 2083773582}
-  optionsPanel: {fileID: 1625422018}
-  advancedOptionsPanel: {fileID: 1348729284}
-  controlsPanel: {fileID: 1014698322}
-  creditsPanel: {fileID: 60457618}
   continueButton: {fileID: 1589369357}
   continueText: {fileID: 1117386655}
   playButton: {fileID: 16079678}
@@ -7954,17 +8056,12 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1631032016384002369, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
   m_PrefabInstance: {fileID: 1014698320}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1014698322 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1138034111241829049, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
-  m_PrefabInstance: {fileID: 1014698320}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1014698323 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4547627681717567063, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
   m_PrefabInstance: {fileID: 1014698320}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1014698322}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ba608890f571ba41a7a2b2dfcf74dab, type: 3}
@@ -8221,6 +8318,14 @@ PrefabInstance:
       propertyPath: mainMenuManager
       value: 
       objectReference: {fileID: 901309740}
+    - target: {fileID: 1959899098469952525, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: savePanelManager
+      value: 
+      objectReference: {fileID: 735139353}
+    - target: {fileID: 1959899098469952525, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: newSavePanelManager
+      value: 
+      objectReference: {fileID: 1949098313}
     - target: {fileID: 4653869308099428880, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
       propertyPath: deselectOnClick
       value: 1
@@ -8337,6 +8442,70 @@ PrefabInstance:
       propertyPath: m_SpriteState.m_SelectedSprite
       value: 
       objectReference: {fileID: 6641034709832212186, guid: 212c8e84c5e9d2a43b00694bf844aced, type: 3}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 735139352}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1023934775}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 1842977512}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: MoveToMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: Click
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIMenu, SliderScripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: MainMenuSaveButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: UIClick, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 1949098312}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UIMenu, SliderScripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4878303943482852191, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
       propertyPath: m_Name
       value: Middle Save Button
@@ -10076,6 +10245,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1299817383 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4653869308099428880, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+  m_PrefabInstance: {fileID: 196640730}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 218799d69c253b34ca4c489b41cd26db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1303712303
 GameObject:
   m_ObjectHideFlags: 0
@@ -10520,16 +10700,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 606731107}
     - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 901309740}
+      objectReference: {fileID: 1949098313}
     - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: StartNewGame
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: MainMenuManager, Assembly-CSharp
+      value: NewSavePanelManager, SliderScripts
       objectReference: {fileID: 0}
     - target: {fileID: 6285492530829541341, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_Name
@@ -10556,6 +10740,14 @@ PrefabInstance:
       propertyPath: mainMenuManager
       value: 
       objectReference: {fileID: 901309740}
+    - target: {fileID: 1959899098469952525, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: savePanelManager
+      value: 
+      objectReference: {fileID: 735139353}
+    - target: {fileID: 1959899098469952525, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: newSavePanelManager
+      value: 
+      objectReference: {fileID: 1949098313}
     - target: {fileID: 4374941736755909752, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -10676,6 +10868,70 @@ PrefabInstance:
       propertyPath: m_SpriteState.m_SelectedSprite
       value: 
       objectReference: {fileID: 6641034709832212186, guid: 212c8e84c5e9d2a43b00694bf844aced, type: 3}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 735139352}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1338343437}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 1575932758}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: MoveToMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: Click
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIMenu, SliderScripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: MainMenuSaveButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: UIClick, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 1949098312}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UIMenu, SliderScripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 4878303943482852177, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4878303943482852191, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
       propertyPath: m_Name
       value: Right Save Button
@@ -10842,11 +11098,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1348729284 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1285901772815984486, guid: 325932cc29aaf3443862a9080e2a4929, type: 3}
-  m_PrefabInstance: {fileID: 218764804}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1348729285 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3046825858971367794, guid: 325932cc29aaf3443862a9080e2a4929, type: 3}
@@ -10857,7 +11108,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2697626335321032846, guid: 325932cc29aaf3443862a9080e2a4929, type: 3}
   m_PrefabInstance: {fileID: 218764804}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1348729284}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ba608890f571ba41a7a2b2dfcf74dab, type: 3}
@@ -12628,6 +12879,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1575932758 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4653869308099428880, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+  m_PrefabInstance: {fileID: 1338343435}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 218799d69c253b34ca4c489b41cd26db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1576517278
 GameObject:
   m_ObjectHideFlags: 0
@@ -12981,11 +13243,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
---- !u!1 &1625422018 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3252435886930719925, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
-  m_PrefabInstance: {fileID: 590637395}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1625422019 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7221933079104180209, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
@@ -12996,7 +13253,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6473400322286170107, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
   m_PrefabInstance: {fileID: 590637395}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1625422018}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ba608890f571ba41a7a2b2dfcf74dab, type: 3}
@@ -15196,6 +15453,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1842977512 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4653869308099428880, guid: d9010a3e1c6483348b299aaf79a0e1df, type: 3}
+  m_PrefabInstance: {fileID: 1023934773}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 218799d69c253b34ca4c489b41cd26db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1845861509
 GameObject:
   m_ObjectHideFlags: 0
@@ -16073,6 +16341,7 @@ GameObject:
   - component: {fileID: 1949098309}
   - component: {fileID: 1949098311}
   - component: {fileID: 1949098312}
+  - component: {fileID: 1949098313}
   m_Layer: 5
   m_Name: NewSavePanel
   m_TagString: Untagged
@@ -16195,7 +16464,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba608890f571ba41a7a2b2dfcf74dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onOpen:
+    m_PersistentCalls:
+      m_Calls: []
+  onClose:
+    m_PersistentCalls:
+      m_Calls: []
   parentMenu: {fileID: 735139352}
+--- !u!114 &1949098313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1949098307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71917466c3784c845a7e9c67c53c33b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profileNameTextField: {fileID: 2083773582}
 --- !u!224 &2017847845 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1388496677168054970, guid: 4f344bcb07c63b54bbd4de834fc1061d, type: 3}
@@ -16466,14 +16754,14 @@ PrefabInstance:
     - target: {fileID: 8017564828789371741, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 901309740}
+      objectReference: {fileID: 735139353}
     - target: {fileID: 8017564828789371741, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ToggleDeleteMode
       objectReference: {fileID: 0}
     - target: {fileID: 8017564828789371741, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: MainMenuManager, Assembly-CSharp
+      value: SavePanelManager, SliderScripts
       objectReference: {fileID: 0}
     - target: {fileID: 8017564828789371742, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
       propertyPath: m_Sprite
@@ -16782,10 +17070,10 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 901309740}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+      - m_Target: {fileID: 1949098313}
+        m_TargetAssemblyTypeName: NewSavePanelManager, SliderScripts
         m_MethodName: OnTextFieldChangeText
-        m_Mode: 0
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -17560,6 +17848,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba608890f571ba41a7a2b2dfcf74dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onOpen:
+    m_PersistentCalls:
+      m_Calls: []
+  onClose:
+    m_PersistentCalls:
+      m_Calls: []
   parentMenu: {fileID: 0}
 --- !u!114 &5049116215407165328
 MonoBehaviour:

@@ -11,9 +11,7 @@ using TMPro;
 //  - fix Continue button (see in Update())
 public class MainMenuManager : Singleton<MainMenuManager>
 {
-    public string cutsceneSceneName;
-
-    private int newSaveProfileIndex = -1;
+    
     private int continueProfileIndex = -1;
 
     [Header("Animators")]
@@ -24,15 +22,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     public Animator mainMenuQuitButtonAnimator;
     public Animator mainMenuBackgroundAnimator;
 
-    [Header("Panels")]
     public GameObject mainMenuPanel;
-    public GameObject savesPanel;
-    public GameObject newSavePanel;
-    public TMP_InputField profileNameTextField;
-    public GameObject optionsPanel;
-    public GameObject advancedOptionsPanel;
-    public GameObject controlsPanel;
-    public GameObject creditsPanel;
 
     [Header("Other References")]
     public Button continueButton;
@@ -43,18 +33,10 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     private System.IDisposable listener;
 
-    private bool skippedSavePicking;
-
-    public bool keyboardEnabled {get; private set;}
+    public static bool KeyboardEnabled { get; set; }
     
     private void Awake() {
         InitializeSingleton(this);
-
-        //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); });
-        //why was below line commented out before? Uncommenting it so player can use "B" to go back with controller on menus
-        //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => { AudioManager.Play("UI Click"); CloseCurrentPanel(); }); // CONTROLER BIND ONLY
-        //Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate, context 
-        //    => { if (!UINavigationManager.ButtonInCurrentMenuIsSelected()) { UINavigationManager.SelectBestButtonInCurrentMenu(); } });
     }
 
     void Start()
@@ -69,7 +51,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         // any key listener moved to OpenCutscene()
     }
 
-    public static MainMenuManager GetInstance(){
+    public static MainMenuManager GetInstance() {
         return _instance;
     }
 
@@ -162,171 +144,10 @@ public class MainMenuManager : Singleton<MainMenuManager>
         yield return new WaitForEndOfFrame();
         UINavigationManager.SelectBestButtonInCurrentMenu();
     }
-
-    #region UI stuff
-
-    /*public void CloseCurrentPanel()
-    {
-        if (advancedOptionsPanel.activeSelf || controlsPanel.activeSelf)
-        {
-            OpenOptions();
-            UINavigationManager.CurrentMenu = optionsPanel;
-        }
-        else if (newSavePanel.activeSelf)
-        {
-            OpenSaves();
-            UINavigationManager.CurrentMenu = savesPanel;
-        }
-        else if (MainMenuSaveButton.deleteMode)
-        {
-            SetDeleteMode(false);
-        }
-        else if (savesPanel.activeSelf || optionsPanel.activeSelf || creditsPanel.activeSelf)
-        {
-            CloseAllPanels();
-            CheckContinueButton();
-            UINavigationManager.CurrentMenu = mainMenuPanel;
-        }
-        else
-        {
-            QuitGame();
-        }
-
-        StartCoroutine(ISelectTopmostButton());
-    }*/
-
-    public void CloseAllPanels()
-    {
-        savesPanel.SetActive(false);
-        newSavePanel.SetActive(false);
-        optionsPanel.SetActive(false);
-        advancedOptionsPanel.SetActive(false);
-        controlsPanel.SetActive(false);
-        creditsPanel.SetActive(false);
-
-        UINavigationManager.CurrentMenu = mainMenuPanel;
-        StartCoroutine(ISelectTopmostButton());
-    }
-
-    public void OpenSaves()
-    {
-        if (!AreAnyProfilesLoaded() && !skippedSavePicking)
-        {
-            skippedSavePicking = true;
-            OpenNewSave(0);
-            return;
-        }
-
-        CloseAllPanels();
-        savesPanel.SetActive(true);
-        UINavigationManager.CurrentMenu = savesPanel;
-
-        SetDeleteMode(false);
-    }
-
-    public void SetDeleteMode(bool value)
-    {
-        MainMenuSaveButton.deleteMode = value;
-
-        foreach (MainMenuSaveButton b in saveProfileButtons)
-        {
-            b.UpdateButton();
-        }
-    }
-
-    public void ToggleDeleteMode()
-    {
-        SetDeleteMode(!MainMenuSaveButton.deleteMode);
-    }
-
-    public void OpenNewSave(int profileIndex)
-    {
-        CloseAllPanels();
-        newSavePanel.SetActive(true);
-
-        newSaveProfileIndex = profileIndex;
-
-        if (Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_KEYBOARD_MOUSE)
-        {
-            profileNameTextField.Select();
-        }
-        profileNameTextField.text = "";
-        UINavigationManager.CurrentMenu = newSavePanel;
-        keyboardEnabled = true;
-    }
-
-    public void OnTextFieldChangeText(string text)
-    {
-        if (text.Contains("\n"))
-        {
-            profileNameTextField.text = text.Replace("\n", "");
-            StartNewGame();
-        }
-    }
-
-    /*public void OpenOptions()
-    {
-        CloseAllPanels();
-        optionsPanel.SetActive(true);
-        UINavigationManager.CurrentMenu = optionsPanel;
-        StartCoroutine(ISelectTopmostButton());
-    }
-
-    public void OpenAdvancedOptions()
-    {
-        CloseAllPanels();
-        advancedOptionsPanel.SetActive(true);
-        UINavigationManager.CurrentMenu = advancedOptionsPanel;
-        StartCoroutine(ISelectTopmostButton());
-    }
-
-    public void OpenControls()
-    {
-        CloseAllPanels();
-        controlsPanel.SetActive(true);
-        UINavigationManager.CurrentMenu = controlsPanel;
-        StartCoroutine(ISelectTopmostButton());
-    }
-
-    public void OpenCredits()
-    {
-        CloseAllPanels();
-        creditsPanel.SetActive(true);
-        UINavigationManager.CurrentMenu = creditsPanel;
-        StartCoroutine(ISelectTopmostButton());
-    }*/
-
-    #endregion
     
     public void QuitGame()
     {
         Debug.Log("Quitting game");
         Application.Quit(0);
-    }
-
-    public void StartNewGame()
-    {
-        if(keyboardEnabled)
-        {
-            string profileName = profileNameTextField.text;
-
-            if (profileName.Length == 0)
-                return;
-
-            keyboardEnabled = false;
-
-            SaveSystem.SetProfile(newSaveProfileIndex, new SaveProfile(profileName));
-            SaveSystem.SetCurrentProfile(newSaveProfileIndex);
-
-            LoadCutscene();
-        }
-    }
-
-    public void LoadCutscene()
-    {
-        // SceneManager.LoadSceneAsync(cutsceneSceneName, LoadSceneMode.Additive);
-        UIEffects.FadeToBlack(() => {SceneManager.LoadScene(cutsceneSceneName);  
-                                    UINavigationManager.CurrentMenu = null;}, 1, false);
-        
     }
 }

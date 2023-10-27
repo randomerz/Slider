@@ -27,7 +27,9 @@ public class Controls : Singleton<Controls>
 {
     private static InputSettings _bindings;
 
+    public static Action OnControlSchemeChanged;
     public static string CurrentControlScheme { get; set; } = CONTROL_SCHEME_KEYBOARD_MOUSE;
+
 
     public const string CONTROL_SCHEME_KEYBOARD_MOUSE = "Keyboard Mouse";
 

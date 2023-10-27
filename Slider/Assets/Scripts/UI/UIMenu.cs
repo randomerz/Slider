@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class UIMenu : MonoBehaviour
 {
-    [SerializeField] private Action onOpen;
-    [SerializeField] private Action onClose;
+    [SerializeField] private UnityEvent onOpen;
+    [SerializeField] private UnityEvent onClose;
     [SerializeField] private UIMenu parentMenu;
 
     private BindingBehavior returnToPreviousMenuBehavior;
@@ -19,8 +20,6 @@ public class UIMenu : MonoBehaviour
     /// <param name="previousMenu"></param>
     public void Open(UIMenu previousMenu = null)
     {
-        Debug.Log($"Opening {gameObject.name}");
-
         if (previousMenu != null && !IsChildMenuOf(previousMenu))
         {
             previousMenu.Close();
@@ -42,8 +41,6 @@ public class UIMenu : MonoBehaviour
     /// </summary>
     public void Close()
     {
-        Debug.Log($"Closing {gameObject.name}");
-
         gameObject.SetActive(false);
         onClose?.Invoke();
 
