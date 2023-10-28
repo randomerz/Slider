@@ -17,8 +17,8 @@ public class UIManager : Singleton<UIManager>
         pauseBindingBehavior = new(this, Controls.Bindings.UI.Pause, context => { if (!PauseManager.IsPaused) PauseManager.SetPauseState(true); });
         Controls.RegisterBindingBehavior(pauseBindingBehavior);
 
-        // Disable the pause binding behavior when the pause menu is already open. If we don't do this, the pause menu will be closed and
-        // then immediately re-opened.
+        // Disable the pause binding behavior when the pause menu is already open. If we don't do this,
+        // the pause menu will be closed and then immediately re-opened.
         PauseManager.PauseStateChanged += SetPauseBindingBehaviorEnabledAfterEndOfFrame;
     }
 
