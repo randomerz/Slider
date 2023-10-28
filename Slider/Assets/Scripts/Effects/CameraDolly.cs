@@ -60,11 +60,12 @@ public class CameraDolly : MonoBehaviour
     {
         skipPromptSlider.value = holdAnimationCurve.Evaluate(durationButtonHeldSoFar / holdDurationToSkip);
     }
-    
+
     protected virtual IEnumerator Rollercoaster(bool DontReturnToPlayerOnEnd = false)
     {
         UIEffects.FadeFromBlack();
-        UIManager.canOpenMenus = false;
+        PauseManager.AddPauseRestriction(owner: gameObject);
+
         Player.SetCanMove(false);
 
         float t = 0;
@@ -115,7 +116,7 @@ public class CameraDolly : MonoBehaviour
         if(!DontReturnToPlayerOnEnd)
         {
             UIEffects.FadeFromBlack();
-            UIManager.canOpenMenus = true;
+            PauseManager.RemovePauseRestriction(owner: gameObject);
             Player.SetCanMove(true);
             virtualCamera.Priority = -15;
         }

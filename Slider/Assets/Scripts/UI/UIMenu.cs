@@ -10,8 +10,6 @@ public class UIMenu : MonoBehaviour
     [SerializeField] private UnityEvent onClose;
     [SerializeField] private UIMenu parentMenu;
 
-    private BindingBehavior returnToPreviousMenuBehavior;
-
     /// <summary>
     /// First, this method deactivates the previous menu by calling <see cref="Close"/> on it unless 
     /// that menu is a parent menu of this one. Then it sets the GameObject for this UIMenu active
@@ -29,9 +27,6 @@ public class UIMenu : MonoBehaviour
         gameObject.SetActive(true);
         UINavigationManager.CurrentMenu = gameObject;
         onOpen?.Invoke();
-
-        returnToPreviousMenuBehavior = new(Controls.Bindings.UI.Cancel, (_) => MoveToParentMenu());
-        Controls.RegisterBindingBehavior(returnToPreviousMenuBehavior);
     }
 
     /// <summary>
@@ -42,12 +37,8 @@ public class UIMenu : MonoBehaviour
     public void Close()
     {
         gameObject.SetActive(false);
+        UINavigationManager.CurrentMenu = null;
         onClose?.Invoke();
-
-        if (returnToPreviousMenuBehavior != null)
-        {
-            Controls.UnregisterBindingBehavior(returnToPreviousMenuBehavior);
-        }
     }
 
     public void MoveToMenu(UIMenu menu)
@@ -55,11 +46,24 @@ public class UIMenu : MonoBehaviour
         menu.Open(previousMenu: this);
     }
 
+    /// <summary>
+    /// Moves to the immediate parent menu of this UI Menu. If the parent menu is null,
+    /// this instead closes the current menu.
+    /// </summary>
     public void MoveToParentMenu()
     {
+        // Setting the parent to the menu itself indicates a menu which cannot be closed by pressing Back/Cancel
+        if (parentMenu == this)
+        {
+            return;
+        }
         if (parentMenu != null)
         {
             MoveToMenu(parentMenu);
+        }
+        else
+        {
+            Close();
         }
     }
 
@@ -80,6 +84,12 @@ public class UIMenu : MonoBehaviour
             {
                 return true;
             }
+            // A menu which cannot be closed using Back/Cancel has itself as a parent, so we
+            // need to break out to avoid an infinite loop
+            if (currentParent.parentMenu == currentParent)
+            {
+                break;
+            }
             currentParent = currentParent.parentMenu;
         }
         return false;
@@ -91,7 +101,7 @@ public class UIMenu : MonoBehaviour
         // and working our way down to the immediate parent of this menu
         Stack<UIMenu> parentsInOrderOfHierarchy = new();
         UIMenu currentParent = parentMenu;
-        while (currentParent != null)
+        while (currentParent != null && currentParent.parentMenu != currentParent)
         {
             parentsInOrderOfHierarchy.Push(currentParent);
             currentParent = currentParent.parentMenu;

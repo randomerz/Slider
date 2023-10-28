@@ -45,14 +45,24 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     {
         PlayerInventory.OnPlayerGetCollectible += CloseArtifactListener;
         ItemPickupEffect.OnCutsceneStart += CloseArtifactListener;
-        UIManager.OnCloseAllMenus += CloseArtifactListenerNoOpen;
+        //UIManager.OnCloseAllMenus += CloseArtifactListenerNoOpen;
+        PauseManager.PauseStateChanged += OnPauseStateChanged;
+    }
+
+    private void OnPauseStateChanged(bool newPausedState)
+    {
+        if (newPausedState)
+        {
+            CloseArtifact(false);
+        }
     }
 
     private void OnDisable() 
     {
         PlayerInventory.OnPlayerGetCollectible -= CloseArtifactListener;
         ItemPickupEffect.OnCutsceneStart -= CloseArtifactListener;
-        UIManager.OnCloseAllMenus -= CloseArtifactListenerNoOpen;
+        //UIManager.OnCloseAllMenus -= CloseArtifactListenerNoOpen;
+        PauseManager.PauseStateChanged -= OnPauseStateChanged;
     }
 
     public static bool IsArtifactOpen()
@@ -71,7 +81,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         {
             CloseArtifact();
         }
-        else if (!UIManager.IsUIOpen())
+        else if (!PauseManager.IsPaused)
         {
             OpenArtifact();
         }
@@ -79,23 +89,16 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
     public void OpenArtifact()
     {
-        if (!UIManager.canOpenMenus || isClosing || !hasArtifact)
+        if (!PauseManager.CanPause() || isClosing || !hasArtifact)
         {
-            // Debug.LogWarning("UIManager: " + UIManager.canOpenMenus);
-            // Debug.LogWarning("isClosing: " + isClosing);
-            // Debug.LogWarning("hasArtifact: " + hasArtifact);
             return;
         }
 
         artifactPanel.SetActive(true);
         isArtifactOpen = true;
 
-        // UIManager.PauseGameGlobal();
-        UIManager.canOpenMenus = false;
-        
-        // scuffed parts
+        PauseManager.AddPauseRestriction(owner: gameObject);
         Player.SetCanMove(false);
-        Time.timeScale = 1;
 
         artifactAnimator.SetBool("isVisible", true);
         uiArtifact.FlickerNewTiles();
@@ -109,10 +112,9 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         {
             isArtifactOpen = false;
             uiArtifact.DeselectSelectedButton();
-            Player.SetCanMove(true);
 
-            UIManager.CloseUI();
-            UIManager.canOpenMenus = canOpen;
+            Player.SetCanMove(true);
+            PauseManager.RemovePauseRestriction(owner: gameObject);
 
             artifactAnimator.SetBool("isVisible", false);
             isClosing = true;

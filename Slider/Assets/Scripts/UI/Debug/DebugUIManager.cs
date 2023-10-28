@@ -58,8 +58,7 @@ public class DebugUIManager : MonoBehaviour
 
         if (isDebugOpen)
         {
-            UIManager.PauseGameGlobal();
-            UIManager.canOpenMenus = false;
+            PauseManager.AddPauseRestriction(owner: gameObject);
 
             Player.SetCanMove(false);
 
@@ -70,8 +69,7 @@ public class DebugUIManager : MonoBehaviour
         }
         else
         {
-            UIManager.CloseUI();
-            UIManager.canOpenMenus = true;
+            PauseManager.RemovePauseRestriction(owner: gameObject);
             Player.SetCanMove(true);
         }
     }
@@ -83,9 +81,8 @@ public class DebugUIManager : MonoBehaviour
             isDebugOpen = false;
             Player.SetCanMove(true);
             debugPanel.SetActive(false);
-            
-            UIManager.CloseUI();
-            UIManager.canOpenMenus = true;
+
+            PauseManager.RemovePauseRestriction(owner: gameObject);
         }
     }
 
@@ -261,7 +258,8 @@ public class DebugUIManager : MonoBehaviour
         foreach (Collectible c in SGrid.Current.GetCollectibles())
             if(!excludeSliders && !c.name.Contains("Slider"))
                 c.DoPickUp();
-        UIManager.CloseUI();
+        //UIManager.CloseUI();
+        PauseManager.SetPauseState(false);
     }
 
     //C: Gives all collectables for that area

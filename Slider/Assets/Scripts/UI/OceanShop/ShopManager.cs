@@ -303,8 +303,9 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     // Called when you walk up to the tavernkeeper and press 'E'
     public void OpenShop()
     {
-        UIManager.PauseGameGlobal();
-        UIManager.canOpenMenus = false;
+        //UIManager.PauseGameGlobal();
+        PauseManager.SetPauseState(true);
+        PauseManager.AddPauseRestriction(owner: gameObject);
 
         // scuffed parts
         Player.SetCanMove(false);
@@ -335,8 +336,8 @@ public class ShopManager : Singleton<ShopManager>, ISavable
 
         CloseAllPanels();
         uiShopPanel.SetActive(false);
-        UIManager.canOpenMenus = true;
-        UIManager.CloseUI();
+        PauseManager.RemovePauseRestriction(owner: gameObject);
+        PauseManager.SetPauseState(false);
 
         Player.SetCanMove(true);
     }
