@@ -89,14 +89,18 @@ public class AudioManager : Singleton<AudioManager>
 
     void Awake()
     {
+        /*UIManager.OnPause += delegate (object sender, EventArgs e)
+        {
+            SetPaused(true);
+        };
         UIManager.OnResume += delegate (object sender, EventArgs e)
         {
             SetPaused(false);
-        };
+        };*/
 
-        UIManager.OnPause += delegate (object sender, EventArgs e)
+        PauseManager.PauseStateChanged += (bool newPauseState) =>
         {
-            SetPaused(true);
+            SetPaused(newPauseState);
         };
 
         DebugUIManager.OnOpenDebug += delegate (object sender, EventArgs e)

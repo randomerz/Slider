@@ -7,6 +7,8 @@ using System;
 
 public class MainMenuSaveButton : MonoBehaviour
 {
+    [SerializeField] private SavePanelManager savePanelManager;
+
     public TextMeshProUGUI profileNameText;
     public TextMeshProUGUI completionText;
     public TextMeshProUGUI timeText;
@@ -16,8 +18,6 @@ public class MainMenuSaveButton : MonoBehaviour
     private SaveProfile profile;
 
     private static bool deleteMode;
-
-    public NewSavePanelManager newSavePanelManager;
 
     private static Action onDeleteModeChanged;
 
@@ -109,7 +109,7 @@ public class MainMenuSaveButton : MonoBehaviour
         if (profile == null)
         {
             // create new profile
-            newSavePanelManager.OpenNewSave(profileIndex);
+            savePanelManager.OpenNewSave(profileIndex);
         }
         else
         {
@@ -127,6 +127,7 @@ public class MainMenuSaveButton : MonoBehaviour
 
     private void LoadThisProfile()
     {
+        UIEffects.FadeToBlack();
         SaveSystem.LoadSaveProfile(profileIndex);
     }
 

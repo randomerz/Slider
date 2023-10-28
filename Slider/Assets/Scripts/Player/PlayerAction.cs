@@ -120,7 +120,7 @@ public class PlayerAction : Singleton<PlayerAction>
 
     private void Action() 
     {
-        if (UIManager.IsUIOpen() || UIArtifactMenus.IsArtifactOpen() || !Player.GetCanMove())
+        if (PauseManager.IsPaused || UIArtifactMenus.IsArtifactOpen() || !Player.GetCanMove())
             return;
 
         bool successfullyPickedUpItem = AttemptItemPickup();
@@ -134,7 +134,7 @@ public class PlayerAction : Singleton<PlayerAction>
 
     private void CycleEquip()
     {
-        if (isPicking || UIManager.IsUIOpen() || UIArtifactMenus.IsArtifactOpen()) 
+        if (isPicking || PauseManager.IsPaused || UIArtifactMenus.IsArtifactOpen()) 
         {
             return;
         }

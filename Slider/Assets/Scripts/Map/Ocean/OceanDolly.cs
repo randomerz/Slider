@@ -13,7 +13,7 @@ public class OceanDolly : CameraDolly
     protected override IEnumerator Rollercoaster(bool DontReturnToPlayerOnEnd = false)
     {
         UIEffects.FadeFromBlack();
-        UIManager.canOpenMenus = false;
+        PauseManager.AddPauseRestriction(owner: gameObject);
         Player.SetCanMove(false);
 
         float t = 0;

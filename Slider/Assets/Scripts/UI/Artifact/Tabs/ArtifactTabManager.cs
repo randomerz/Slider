@@ -76,8 +76,8 @@ public class ArtifactTabManager : MonoBehaviour
 
     private IEnumerator IRearrangeOnClick()
     {
-        UIManager.InvokeCloseAllMenus();
-        UIManager.canOpenMenus = false;
+        PauseManager.SetPauseState(false);
+        PauseManager.AddPauseRestriction(owner: gameObject);
 
         yield return new WaitUntil(() => UIArtifact.GetInstance().MoveQueueEmpty());
 
@@ -89,8 +89,8 @@ public class ArtifactTabManager : MonoBehaviour
 
         UIEffects.FlashWhite(callbackMiddle: () => {
             SGrid.Current.RearrangeGrid();
-            
-            UIManager.canOpenMenus = true;
+
+            PauseManager.RemovePauseRestriction(owner: gameObject);
             isRearranging = false;
 
             AfterScrollRearrage?.Invoke(this, new System.EventArgs());
