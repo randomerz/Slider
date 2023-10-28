@@ -113,7 +113,11 @@ public class UINavigationManager : Singleton<UINavigationManager>
         {
             if (CurrentMenu != null)
             {
-                CurrentMenu.GetComponent<UIMenu>().MoveToParentMenu();
+                UIMenu menu = CurrentMenu.GetComponent<UIMenu>();
+                if (menu != null)
+                {
+                    menu.MoveToParentMenu();
+                }
             }
         });
 

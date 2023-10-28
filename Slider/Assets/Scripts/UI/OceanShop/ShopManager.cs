@@ -1,11 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.InputSystem;
 using TMPro;
 
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class ShopManager : Singleton<ShopManager>, ISavable
 {
     //private static ShopManager _instance;
@@ -304,7 +301,7 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     public void OpenShop()
     {
         //UIManager.PauseGameGlobal();
-        PauseManager.SetPauseState(true);
+        //PauseManager.SetPauseState(true);
         PauseManager.AddPauseRestriction(owner: gameObject);
 
         // scuffed parts
@@ -337,7 +334,7 @@ public class ShopManager : Singleton<ShopManager>, ISavable
         CloseAllPanels();
         uiShopPanel.SetActive(false);
         PauseManager.RemovePauseRestriction(owner: gameObject);
-        PauseManager.SetPauseState(false);
+        //PauseManager.SetPauseState(false);
 
         Player.SetCanMove(true);
     }
