@@ -34,6 +34,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     private float moveSpeedMultiplier = 1;
     private Vector2 directionalMoveSpeedMultiplier = Vector2.one;
     private bool canMove = true;
+    private bool canAnimateMovement = true;
     private bool noClipEnabled = false;
     private bool dontUpdateStileUnderneath;
 
@@ -65,8 +66,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, context => _instance.UpdateMove(context.ReadValue<Vector2>()));
         UpdatePlayerSpeed();
-
-        //playerInput= GetComponent<PlayerInput>();
     }
 
     private void Start() 
@@ -74,8 +73,9 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         SetTracker(true);
     }
 
-    private void OnDisable() {
-        foreach(Material m in ppMaterials)
+    private void OnDisable() 
+    {
+        foreach (Material m in ppMaterials)
         {
             m.SetVector("_PlayerPosition", new Vector4(-1000, -1000, 0, 0));
         }    
@@ -83,30 +83,29 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     
     void Update()
     {
-
-        // inputDir = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
-        if (inputDir.x < 0)
+        if (canAnimateMovement)
         {
-            playerSpriteRenderer.flipX = true;
-            if(reflectionSpriteRenderer != null)
-                reflectionSpriteRenderer.flipX = true;
-        }
-        else if (inputDir.x > 0)
-        {
-            playerSpriteRenderer.flipX = false;
-            if(reflectionSpriteRenderer != null)
-                reflectionSpriteRenderer.flipX = false;
-        }
+            if (inputDir.x < 0)
+            {
+                playerSpriteRenderer.flipX = true;
+                if (reflectionSpriteRenderer != null)
+                    reflectionSpriteRenderer.flipX = true;
+            }
+            else if (inputDir.x > 0)
+            {
+                playerSpriteRenderer.flipX = false;
+                if (reflectionSpriteRenderer != null)
+                    reflectionSpriteRenderer.flipX = false;
+            }
 
-        playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
-        playerAnimator.SetBool("isOnWater", isOnWater);
-        if(reflectionAnimator != null)
-        {
-            reflectionAnimator.SetBool("isRunning", inputDir.magnitude != 0);
-            reflectionAnimator.SetBool("isOnWater", isOnWater);
+            playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
+            playerAnimator.SetBool("isOnWater", isOnWater);
+            if (reflectionAnimator != null)
+            {
+                reflectionAnimator.SetBool("isRunning", inputDir.magnitude != 0);
+                reflectionAnimator.SetBool("isOnWater", isOnWater);
+            }
         }
-        // playerAnimator.SetBool("hasSunglasses", hasSunglasses);
 
         foreach(Material m in ppMaterials)
         {
@@ -121,7 +120,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             // we offset where the raycast starts because when you're in the boat, the collider is at the boat not the player
             Vector3 basePosition = GetPlayerTransformRaycastPosition();
             Vector3 raycastOffset = transform.position - basePosition;
-            Vector3 target = basePosition + moveSpeed * moveSpeedMultiplier * Vector3.Scale(directionalMoveSpeedMultiplier, inputDir.normalized) * Time.deltaTime;
+            Vector3 target = basePosition + moveSpeed * moveSpeedMultiplier * Time.deltaTime * Vector3.Scale(directionalMoveSpeedMultiplier, inputDir.normalized);
             if (noClipEnabled)
             {
                 transform.position = target + raycastOffset;
@@ -138,7 +137,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
                 else
                 {
                     Vector3 testMoveDir = new Vector3(directionalMoveSpeedMultiplier.x * inputDir.x, 0f).normalized;
-                    target = basePosition + moveSpeed * moveSpeedMultiplier * testMoveDir * Time.deltaTime;
+                    target = basePosition + moveSpeed * moveSpeedMultiplier * Time.deltaTime * testMoveDir;
                     RaycastHit2D raycasthitX = Physics2D.Raycast(basePosition, testMoveDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
                     if (raycasthitX.collider == null)
                     {
@@ -147,7 +146,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
                     else
                     {
                         testMoveDir = new Vector3(0f, directionalMoveSpeedMultiplier.y * inputDir.y).normalized;
-                        target = basePosition + moveSpeed * moveSpeedMultiplier * testMoveDir * Time.deltaTime;
+                        target = basePosition + moveSpeed * moveSpeedMultiplier * Time.deltaTime * testMoveDir;
                         RaycastHit2D raycasthitY = Physics2D.Raycast(basePosition, testMoveDir.normalized, moveSpeed * moveSpeedMultiplier * Time.deltaTime, LayerMask.GetMask("Default"));
                         if (raycasthitY.collider == null)
                         {
@@ -189,11 +188,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         OnControlSchemeChanged?.Invoke(newControlScheme);
         Controls.CurrentControlScheme = newControlScheme;
     }
-    /*
-    public void OnAltViewHold()
-    {
-        Debug.Log("Alt View Hold");
-    }*/
 
     public void ToggleLightning(bool val)
     {
@@ -354,11 +348,20 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         return _instance.lastMoveDir;
     }
 
-    public static void SetCanMove(bool value) {
-        _instance.canMove = value;
+    public static void SetCanMove(bool canMove, bool canAnimateMovement=true) 
+    {
+        _instance.canMove = canMove;
+        _instance.canAnimateMovement = canAnimateMovement;
+
+        if (!canAnimateMovement)
+        {
+            _instance.playerAnimator.SetBool("isRunning", false);
+            _instance.reflectionAnimator?.SetBool("isRunning", false);
+        }
     }
 
-    public static bool GetCanMove(){
+    public static bool GetCanMove()
+    {
         return _instance.canMove;
     }
 

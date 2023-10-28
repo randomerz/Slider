@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class OceanArtifact : UIArtifact
 {
     public UIRotateParams[] rotateParams; // Bot Left, BR, TL, TR
+    public Transform[] waveSlideSoundOrigins; // Bot Left, BR, TL, TR
     public OceanArtifactHighlights oceanHighlights;
 
     private bool canRotate = true;
@@ -149,7 +150,7 @@ public class OceanArtifact : UIArtifact
                 tb[i].SetPosition(SMoveRotateArr[(i + 1) % tb.Count].x, SMoveRotateArr[(i + 1) % tb.Count].y, true);
             }
 
-            AudioManager.Play("Ocean Waves");
+            AudioManager.Play("Slide Ocean", waveSlideSoundOrigins[x + y * 2]);
             // SGrid.current.Move(rotate);
             ProcessQueue();
             

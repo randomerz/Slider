@@ -54,6 +54,11 @@ public class CameraShake : MonoBehaviour
         }
     }
 
+    private void Start() 
+    {
+        CheckMissingCamerasWarning();
+    }
+
     public static void Shake(float duration, float amount)
     {
         amount *= SettingsManager.ScreenShake;
@@ -132,6 +137,17 @@ public class CameraShake : MonoBehaviour
         foreach (CinemachineBasicMultiChannelPerlin perlin in cmPerlins) 
         {
             perlin.m_AmplitudeGain = amount;
+        }
+    }
+
+    private void CheckMissingCamerasWarning()
+    {
+        foreach (CinemachineVirtualCamera vcam in FindObjectsOfType<CinemachineVirtualCamera>(includeInactive: true))
+        {
+            if (cmCamera != vcam && !otherCMCameras.Contains(vcam))
+            {
+                Debug.LogWarning($"Virtual Camera '{vcam.gameObject}' will not be affected by screen shake. Add it to 'otherCMCameras' if it should.");
+            }
         }
     }
 }
