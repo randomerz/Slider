@@ -244,7 +244,7 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Submit (No Space/E)"",
+                    ""name"": ""SubmitOnly"",
                     ""type"": ""Button"",
                     ""id"": ""29ded7da-09f0-41c8-a4d1-91d01e633d92"",
                     ""expectedControlType"": ""Button"",
@@ -948,7 +948,7 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard Mouse;Controller"",
-                    ""action"": ""Submit (No Space/E)"",
+                    ""action"": ""SubmitOnly"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1076,7 +1076,7 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
         m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
-        m_UI_SubmitNoSpaceE = m_UI.FindAction("Submit (No Space/E)", throwIfNotFound: true);
+        m_UI_SubmitOnly = m_UI.FindAction("SubmitOnly", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
         m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
         m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
@@ -1228,7 +1228,7 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_Navigate;
     private readonly InputAction m_UI_Submit;
-    private readonly InputAction m_UI_SubmitNoSpaceE;
+    private readonly InputAction m_UI_SubmitOnly;
     private readonly InputAction m_UI_Cancel;
     private readonly InputAction m_UI_Point;
     private readonly InputAction m_UI_Click;
@@ -1249,7 +1249,7 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         public UIActions(@InputSettings wrapper) { m_Wrapper = wrapper; }
         public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
         public InputAction @Submit => m_Wrapper.m_UI_Submit;
-        public InputAction @SubmitNoSpaceE => m_Wrapper.m_UI_SubmitNoSpaceE;
+        public InputAction @SubmitOnly => m_Wrapper.m_UI_SubmitOnly;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
         public InputAction @Point => m_Wrapper.m_UI_Point;
         public InputAction @Click => m_Wrapper.m_UI_Click;
@@ -1279,9 +1279,9 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
             @Submit.started += instance.OnSubmit;
             @Submit.performed += instance.OnSubmit;
             @Submit.canceled += instance.OnSubmit;
-            @SubmitNoSpaceE.started += instance.OnSubmitNoSpaceE;
-            @SubmitNoSpaceE.performed += instance.OnSubmitNoSpaceE;
-            @SubmitNoSpaceE.canceled += instance.OnSubmitNoSpaceE;
+            @SubmitOnly.started += instance.OnSubmitOnly;
+            @SubmitOnly.performed += instance.OnSubmitOnly;
+            @SubmitOnly.canceled += instance.OnSubmitOnly;
             @Cancel.started += instance.OnCancel;
             @Cancel.performed += instance.OnCancel;
             @Cancel.canceled += instance.OnCancel;
@@ -1334,9 +1334,9 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
             @Submit.started -= instance.OnSubmit;
             @Submit.performed -= instance.OnSubmit;
             @Submit.canceled -= instance.OnSubmit;
-            @SubmitNoSpaceE.started -= instance.OnSubmitNoSpaceE;
-            @SubmitNoSpaceE.performed -= instance.OnSubmitNoSpaceE;
-            @SubmitNoSpaceE.canceled -= instance.OnSubmitNoSpaceE;
+            @SubmitOnly.started -= instance.OnSubmitOnly;
+            @SubmitOnly.performed -= instance.OnSubmitOnly;
+            @SubmitOnly.canceled -= instance.OnSubmitOnly;
             @Cancel.started -= instance.OnCancel;
             @Cancel.performed -= instance.OnCancel;
             @Cancel.canceled -= instance.OnCancel;
@@ -1479,7 +1479,7 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
     {
         void OnNavigate(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);
-        void OnSubmitNoSpaceE(InputAction.CallbackContext context);
+        void OnSubmitOnly(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnPoint(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);

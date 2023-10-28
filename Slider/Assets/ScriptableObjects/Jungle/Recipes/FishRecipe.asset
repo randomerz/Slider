@@ -10,18 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d5a8884413557c45befff1ff53c32b3, type: 3}
-  m_Name: FemaleRecipe
+  m_Name: FishRecipe
   m_EditorClassIdentifier: 
-  result: {fileID: 11400000, guid: 050273f0be21e204590b0f20a64e3303, type: 2}
+  result: {fileID: 11400000, guid: f3344b5ea6996644ea7ced665000b5dc, type: 2}
   combinations:
   - ingredients:
+    - {fileID: 11400000, guid: 76675a2db3290714f95b9c4099fbdd50, type: 2}
     - {fileID: 11400000, guid: d7f95dae23bf4f243986051c558577ab, type: 2}
-    - {fileID: 11400000, guid: b2bd5d14c82b5e84a88a8d9ef917d170, type: 2}
   - ingredients:
+    - {fileID: 11400000, guid: 76675a2db3290714f95b9c4099fbdd50, type: 2}
     - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
-    - {fileID: 11400000, guid: b2bd5d14c82b5e84a88a8d9ef917d170, type: 2}
     - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
-  - ingredients:
-    - {fileID: 11400000, guid: c69c312efe4e4034fa00f822ec758ee2, type: 2}
-    - {fileID: 11400000, guid: c69c312efe4e4034fa00f822ec758ee2, type: 2}
-    - {fileID: 11400000, guid: d7f95dae23bf4f243986051c558577ab, type: 2}

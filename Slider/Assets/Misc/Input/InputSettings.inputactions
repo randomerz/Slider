@@ -222,7 +222,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Submit (No Space/E)",
+                    "name": "SubmitOnly",
                     "type": "Button",
                     "id": "29ded7da-09f0-41c8-a4d1-91d01e633d92",
                     "expectedControlType": "Button",
@@ -926,7 +926,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard Mouse;Controller",
-                    "action": "Submit (No Space/E)",
+                    "action": "SubmitOnly",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

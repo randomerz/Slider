@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d5a8884413557c45befff1ff53c32b3, type: 3}
-  m_Name: RailRecipe
+  m_Name: PopsicleRecipe
   m_EditorClassIdentifier: 
-  result: {fileID: 11400000, guid: 52415c36c0147ab4a9b2827b9b77fce0, type: 2}
+  result: {fileID: 11400000, guid: 4bd7341275259d845b13f33df0c617a7, type: 2}
   combinations:
   - ingredients:
-    - {fileID: 11400000, guid: 9fe4d8c8a34ed474caa56fa52b639ff1, type: 2}
-    - {fileID: 11400000, guid: 9fe4d8c8a34ed474caa56fa52b639ff1, type: 2}
-    - {fileID: 11400000, guid: 9fe4d8c8a34ed474caa56fa52b639ff1, type: 2}
+    - {fileID: 11400000, guid: c69c312efe4e4034fa00f822ec758ee2, type: 2}
+    - {fileID: 11400000, guid: c3e593ac582187144af28d63cac51845, type: 2}
+    - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}

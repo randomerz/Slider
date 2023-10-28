@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 using System;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem.XInput;
 
 /// <summary>
 /// Handles switching between the various panels available in the controls menu and 
@@ -14,7 +15,6 @@ using TMPro;
 public class ControlsMenuPanelHandler : MonoBehaviour
 {
     [SerializeField] private GameObject[] panels;
-    [SerializeField] private Selectable[] buttons;
     [SerializeField] private TextMeshProUGUI titleText;
     
     public const int KEYBOARD_PANEL = 0;
@@ -24,20 +24,19 @@ public class ControlsMenuPanelHandler : MonoBehaviour
         "Controller"
     };
 
-    private int current_panel = 0;
+    private int currentPanel = 0;
 
     private void OnEnable()
     {
         bool currentControlSchemeIsController = Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_CONTROLLER;
-        int currentPanel = currentControlSchemeIsController ? CONTROLLER_PANEL : KEYBOARD_PANEL;
+        currentPanel = currentControlSchemeIsController ? CONTROLLER_PANEL : KEYBOARD_PANEL;
 
         SetCurrentPanel(currentPanel);
-        UINavigationManager.SetCurrentSelectable(buttons[currentPanel]);
     }
 
     public void SetCurrentPanel(int newPanelIndex)
     {
-        current_panel = newPanelIndex;
+        currentPanel = newPanelIndex;
         titleText.text = SCHEME_NAMES[newPanelIndex];
         for (int i = 0; i < panels.Length; i++)
         {
@@ -45,8 +44,19 @@ public class ControlsMenuPanelHandler : MonoBehaviour
         }
     }
 
-    public void IncrementCurrentPanel()
+    public void MoveToNextPanel()
     {
-        SetCurrentPanel((current_panel + 1) % panels.Length);
+        int newIndex = (currentPanel + 1) % panels.Length;
+        SetCurrentPanel(newIndex);
+    }
+
+    public void MoveToPreviousPanel()
+    {
+        int newIndex = currentPanel - 1;
+        if (newIndex < 0)
+        {
+            newIndex = panels.Length - 1;
+        }
+        SetCurrentPanel(newIndex);
     }
 }

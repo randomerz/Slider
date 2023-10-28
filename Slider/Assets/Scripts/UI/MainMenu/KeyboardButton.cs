@@ -12,7 +12,7 @@ public class KeyboardButton : MonoBehaviour
 
     public void Click()
     {
-        if(MainMenuManager.GetInstance().keyboardEnabled) 
+        if(MainMenuManager.KeyboardEnabled) 
         {
             AudioManager.Play("UI Click");
             inputField.text += character.text;
@@ -21,7 +21,7 @@ public class KeyboardButton : MonoBehaviour
 
     public void DeleteClick()
     {
-        if (inputField.text.Length  > 0 && MainMenuManager.GetInstance().keyboardEnabled)
+        if (inputField.text.Length  > 0 && MainMenuManager.KeyboardEnabled)
         {
             inputField.text = inputField.text.Substring(0, inputField.text.Length - 1);
         }

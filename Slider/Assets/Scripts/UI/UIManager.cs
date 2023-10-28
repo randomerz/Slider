@@ -131,20 +131,21 @@ public class UIManager : Singleton<UIManager>
         
     }
 
-
-
-    public void OpenPause()
+    public static void OpenPause()
     {
-       // UIManager.canOpenMenus = false;
+        if (GameUI.instance.isMenuScene)
+            return;
+
+
         if (!couldOpenMenusLastFrame)
             return;
 
-        pausePanel.SetActive(true);
-        optionsPanel.SetActive(false);
-        controlsPanel.SetActive(false);
-        advOptionsPanel.SetActive(false);
+        _instance.pausePanel.SetActive(true);
+        _instance.optionsPanel.SetActive(false);
+        _instance.controlsPanel.SetActive(false);
+        _instance.advOptionsPanel.SetActive(false);
 
-        UINavigationManager.CurrentMenu = pausePanel;
+        UINavigationManager.CurrentMenu = _instance.pausePanel;
         UINavigationManager.SelectBestButtonInCurrentMenu();
     }
 
@@ -171,7 +172,7 @@ public class UIManager : Singleton<UIManager>
         controlsPanel.SetActive(true);
 
         UINavigationManager.CurrentMenu = controlsPanel;
-        // Button gets set based on which controls panel is active (Keyboard or Controller)
+        UINavigationManager.SelectBestButtonInCurrentMenu();
     }
     public void OpenAdvOptions()
     {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 /// <summary>
 /// Handles enabling and disabling the overlay which covers the controls menu while a rebind operation is in progress.
@@ -12,11 +13,23 @@ public class RebindOverlayHandler : MonoBehaviour
     [SerializeField] private GameObject rebindingOverlayPanel;
     [SerializeField] private TextMeshProUGUI rebindingOverlayPanelText;
 
+    private Action<Control> showRebindingOverlayPanel;
+    private Action hideRebindingOverlayPanel;
+
     private void Awake()
     {
-        InputRebinding.OnRebindStarted += ShowRebindingPanelForCurrentRebindOperation;
-        InputRebinding.OnRebindCompleted += () => rebindingOverlayPanel.SetActive(false);
+        showRebindingOverlayPanel = ShowRebindingPanelForCurrentRebindOperation;
+        hideRebindingOverlayPanel = () => rebindingOverlayPanel.SetActive(false);
+
+        InputRebinding.OnRebindStarted += showRebindingOverlayPanel;
+        InputRebinding.OnRebindCompleted += hideRebindingOverlayPanel;
         rebindingOverlayPanel.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        InputRebinding.OnRebindStarted -= showRebindingOverlayPanel;
+        InputRebinding.OnRebindCompleted -= hideRebindingOverlayPanel;
     }
 
     private void ShowRebindingPanelForCurrentRebindOperation(Control control)
