@@ -8,7 +8,20 @@ public class PausePanelHandler : MonoBehaviour
 
     private void Awake()
     {
-        PauseManager.PauseStateChanged += (bool isPaused) => { if (isPaused) pausePanel.Open(); };
+        PauseManager.PauseStateChanged += OpenPauseMenuWhenPaused;
+    }
+
+    private void OpenPauseMenuWhenPaused(bool isPaused)
+    {
+        if (isPaused)
+        {
+            pausePanel.Open();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        PauseManager.PauseStateChanged -= OpenPauseMenuWhenPaused;
     }
 
     // Called by OnClose on the Pause Panel UIMenu

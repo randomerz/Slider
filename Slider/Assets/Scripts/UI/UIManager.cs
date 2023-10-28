@@ -8,25 +8,34 @@ using System.Collections;
 
 public class UIManager : Singleton<UIManager>
 {
+    private ManagedBindingBehavior pauseBindingBehavior;
+
     private void Awake()
     {
         InitializeSingleton();
 
-        ManagedBindingBehavior bindingBehavior = new(this, Controls.Bindings.UI.Pause, context => PauseManager.SetPauseState(true));
-        Controls.RegisterBindingBehavior(bindingBehavior);
+        pauseBindingBehavior = new(this, Controls.Bindings.UI.Pause, context => { if (!PauseManager.IsPaused) PauseManager.SetPauseState(true); });
+        Controls.RegisterBindingBehavior(pauseBindingBehavior);
 
         // Disable the pause binding behavior when the pause menu is already open. If we don't do this, the pause menu will be closed and
         // then immediately re-opened.
-        PauseManager.PauseStateChanged += (isPaused) =>
-        {
-            _instance.StartCoroutine(SetPauseBindingBehaviorEnabledAfterEndOfFrame(bindingBehavior, isPaused));
-        };
+        PauseManager.PauseStateChanged += SetPauseBindingBehaviorEnabledAfterEndOfFrame;
     }
 
-    private IEnumerator SetPauseBindingBehaviorEnabledAfterEndOfFrame(BindingBehavior bindingBehavior, bool isPaused)
+    private void OnDestroy()
+    {
+        PauseManager.PauseStateChanged -= SetPauseBindingBehaviorEnabledAfterEndOfFrame;
+    }
+
+    private void SetPauseBindingBehaviorEnabledAfterEndOfFrame(bool isPaused)
+    {
+        StartCoroutine(ISetPauseBindingBehaviorEnabledAfterEndOfFrame(isPaused));
+    }
+
+    private IEnumerator ISetPauseBindingBehaviorEnabledAfterEndOfFrame(bool isPaused)
     {
         yield return new WaitForEndOfFrame();
-        bindingBehavior.isEnabled = !isPaused;
+        pauseBindingBehavior.isEnabled = !isPaused;
     }
 
     public void LoadMainMenu()
@@ -47,5 +56,4 @@ public class UIManager : Singleton<UIManager>
         Application.Quit();
         Debug.Log("Quitting game!");
     }
-
 }

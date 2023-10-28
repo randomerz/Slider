@@ -18,7 +18,6 @@ public class UIMenu : MonoBehaviour
     /// <param name="previousMenu"></param>
     public void Open(UIMenu previousMenu = null)
     {
-        Debug.Log($"Opening {gameObject.name}");
         if (previousMenu != null && !IsChildMenuOf(previousMenu))
         {
             previousMenu.Close();
