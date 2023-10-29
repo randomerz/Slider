@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class PauseManager
 {
@@ -33,14 +34,21 @@ public class PauseManager
 
     public static void RemovePauseRestriction(PauseRestriction restrictionToRemove)
     {
-        pauseRestrictions.Remove(restrictionToRemove);
+        Controls.StartCoroutineOnInstance(IRemovePauseRestrictions(restrictionToRemove));
     }
 
     public static void RemovePauseRestriction(GameObject owner)
     {
-        pauseRestrictions.Where(restriction => restriction.owner == owner)
-                         .ToList()
-                         .ForEach(restriction => RemovePauseRestriction(restriction));
+        List<PauseRestriction> restrictionsWithMatchingOwner
+            = pauseRestrictions.Where(restriction => restriction.owner == owner).ToList();
+        
+        Controls.StartCoroutineOnInstance(IRemovePauseRestrictions(restrictionsWithMatchingOwner.ToArray()));
+    }
+
+    private static IEnumerator IRemovePauseRestrictions(params PauseRestriction[] restrictions)
+    {
+        yield return new WaitForEndOfFrame();
+        restrictions.ToList().ForEach(restriction => pauseRestrictions.Remove(restriction));
     }
 
     public static void RemoveAllPauseRestrictions()
@@ -55,11 +63,18 @@ public class PauseManager
         {
             return;
         }
+        Controls.StartCoroutineOnInstance(IUpdateIsPausedAfterEndOfFrame(paused));
+    }
 
-        IsPaused = newPauseState;
+    // We want to wait until the end the frame to unpause so we avoid double behavior
+    // from inputs (like Escape unpausing and immediately re-pausing)
+    private static IEnumerator IUpdateIsPausedAfterEndOfFrame(bool newValue)
+    {
+        yield return new WaitForEndOfFrame();
+
+        IsPaused = newValue;
         Time.timeScale = IsPaused ? 0 : 1;
-
-        PauseStateChanged?.Invoke(paused);
+        PauseStateChanged?.Invoke(newValue);
     }
 
     /// <summary>
@@ -77,7 +92,7 @@ public class PauseManager
     /// a reference to the PauseRestriction returned by <see cref="AddPauseRestriction"/>.
     /// You can instead call <see cref=""/>
     /// </summary>
-    public struct PauseRestriction 
+    public struct PauseRestriction
     {
         public GameObject owner;
 

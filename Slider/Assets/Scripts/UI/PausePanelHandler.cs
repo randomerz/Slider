@@ -9,6 +9,8 @@ public class PausePanelHandler : MonoBehaviour
     private void Awake()
     {
         PauseManager.PauseStateChanged += OpenPauseMenuWhenPaused;
+
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => { if (!PauseManager.IsPaused) PauseManager.SetPauseState(true); });
     }
 
     private void OpenPauseMenuWhenPaused(bool isPaused)
