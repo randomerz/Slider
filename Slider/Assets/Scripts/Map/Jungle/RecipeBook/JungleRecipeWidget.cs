@@ -33,7 +33,7 @@ public class JungleRecipeWidget : MonoBehaviour
             recipeImages[i].enabled = i < ingredients.Count;
             if (i < ingredients.Count)
             {
-                recipeImages[i].sprite = ingredients[i].sprite;
+                recipeImages[i].sprite = ingredients[i].fullSprite;
             }
         }
     }

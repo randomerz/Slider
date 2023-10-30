@@ -937,6 +937,7 @@ GameObject:
   - component: {fileID: 1630858886002972033}
   - component: {fileID: 7840738406028113282}
   - component: {fileID: 8608250833993848931}
+  - component: {fileID: 7801328092157353854}
   m_Layer: 0
   m_Name: Recipe TV Set
   m_TagString: Untagged
@@ -990,6 +991,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recipeBookCamera: {fileID: 3718516918875222872}
+--- !u!114 &7801328092157353854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4698086174680627837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce163f95e3532a34f9727c067b93c652, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allShapes:
+  - {fileID: 11400000, guid: 6aba8c43d5ab0184fba6af61e57a26c9, type: 2}
+  - {fileID: 11400000, guid: 152b17ae5aedf244caf554a1464c0475, type: 2}
+  - {fileID: 11400000, guid: d5d88f977a082a349b8bcff523017470, type: 2}
+  - {fileID: 11400000, guid: d7f95dae23bf4f243986051c558577ab, type: 2}
+  - {fileID: 11400000, guid: 4265f37cd68269049a169ae5b3f904b0, type: 2}
+  - {fileID: 11400000, guid: 9fe4d8c8a34ed474caa56fa52b639ff1, type: 2}
+  - {fileID: 11400000, guid: 050273f0be21e204590b0f20a64e3303, type: 2}
+  - {fileID: 11400000, guid: f3344b5ea6996644ea7ced665000b5dc, type: 2}
+  - {fileID: 11400000, guid: bac17a5f9ee04324b8ce25a3090fb5a9, type: 2}
+  - {fileID: 11400000, guid: 83be8899655b5b046882925a8cb05d18, type: 2}
+  - {fileID: 11400000, guid: 57ed20a22f1c4ed47964976355b8fb7e, type: 2}
+  - {fileID: 11400000, guid: c69c312efe4e4034fa00f822ec758ee2, type: 2}
+  - {fileID: 11400000, guid: ecfa5f8c8fb496442a92f00472886a80, type: 2}
+  - {fileID: 11400000, guid: f0429030654561640bba4e46f2d0c866, type: 2}
+  - {fileID: 11400000, guid: 0d38327afe2f3584c813b475ccf91522, type: 2}
+  - {fileID: 11400000, guid: 3ff2f45c619a21840a5bc4d392aed53c, type: 2}
+  - {fileID: 11400000, guid: b2bd5d14c82b5e84a88a8d9ef917d170, type: 2}
+  - {fileID: 11400000, guid: 4bd7341275259d845b13f33df0c617a7, type: 2}
+  - {fileID: 11400000, guid: b39209e8376caeb40aa2b36b517e3990, type: 2}
+  - {fileID: 11400000, guid: 52415c36c0147ab4a9b2827b9b77fce0, type: 2}
+  - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
+  - {fileID: 11400000, guid: 0206b95db3fa6224f91235d7a1abe94f, type: 2}
+  - {fileID: 11400000, guid: c3e593ac582187144af28d63cac51845, type: 2}
+  - {fileID: 11400000, guid: 76675a2db3290714f95b9c4099fbdd50, type: 2}
+  recipeList: {fileID: 11400000, guid: fc4da6d866679aa4783b5e895f04ad29, type: 2}
 --- !u!1 &5391947222521041912
 GameObject:
   m_ObjectHideFlags: 0

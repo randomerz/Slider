@@ -32,7 +32,7 @@ public class Blob : MonoBehaviour
     {
         carry = shape;
         SpriteRenderer spriteRenderer = shapeRenderer;
-        spriteRenderer.sprite = carry.sprite;
+        spriteRenderer.sprite = carry.fullSprite;
 
         flip = defaultAnim;
         if (flip)

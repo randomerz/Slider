@@ -23,9 +23,9 @@ public class JungleRecipeBookUI : MonoBehaviour
         currentShapeIndex = index;
         currentShape = recipeList.list[index].result;
         
-        displayImage.sprite = currentShape.sprite;
-        displayNameText.text = currentShape.name;
-        displayNumberText.text = index.ToString().PadLeft(2, '0');
+        displayImage.sprite = currentShape.GetDisplaySprite();
+        displayNameText.text = currentShape.GetDisplayName();
+        displayNumberText.text = (index + 1).ToString().PadLeft(2, '0');
 
         int totalRecipes = recipeList.list[index].combinations.Count;
         int completedRecipes = totalRecipes - 1;
