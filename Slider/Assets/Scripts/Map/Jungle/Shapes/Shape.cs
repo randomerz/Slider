@@ -11,7 +11,6 @@ public class Shape : ScriptableObject
     [FormerlySerializedAs("name")]
     public string shapeName;
 
-
     [FormerlySerializedAs("sprite")]
     public Sprite fullSprite;
     public Sprite outlineSprite;
@@ -19,8 +18,11 @@ public class Shape : ScriptableObject
 
     public Sprite GetDisplaySprite()
     {
-        JungleRecipeBookSave.ShapeStatus status = JungleRecipeBookSave.GetCompletionStatus(this);
-        
+        return GetDisplaySprite(JungleRecipeBookSave.GetCompletionStatus(this));
+    }
+
+    public Sprite GetDisplaySprite(JungleRecipeBookSave.ShapeStatus status)
+    {
         switch (status)
         {
             case JungleRecipeBookSave.ShapeStatus.Full:
@@ -46,7 +48,7 @@ public class Shape : ScriptableObject
                 return shapeName;
             case JungleRecipeBookSave.ShapeStatus.Outline:
             case JungleRecipeBookSave.ShapeStatus.PendingOutline:
-                return Regex.Replace(shapeName, "[a-zA-Z]", "?");
+                return Regex.Replace(shapeName, "[a-zA-Z]", "_");
             case JungleRecipeBookSave.ShapeStatus.None:
             default:
                 return "???";

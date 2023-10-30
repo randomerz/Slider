@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Discord;
 using UnityEngine;
 
 public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
@@ -14,11 +15,14 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
 
     public const string COMPLETION_STATUS_SAVE_PREFIX = "JungleCompletionStatus_";
     public const string NUMBER_CREATED_SAVE_PREFIX = "JungleNumberCreated_";
+    public const string NUMBER_COMBINATION_CREATED_SAVE_PREFIX = "JungleNumberCombinationCreated_"; // JungleNumberCombinationCreated_Circle_0 = 10
+                                                                                                    // JungleNumberCombinationCreated_{Result}_{Index} = Number
 
-    private static Dictionary<Shape, ShapeStatus> completionStatus = new();
-    private static Dictionary<Shape, int> numberCreated = new();
+    private static readonly Dictionary<Shape, ShapeStatus> completionStatus = new();
+    private static readonly Dictionary<Shape, int> numShapeCreated = new();
 
     [SerializeField] private List<Shape> allShapes = new();
+    [SerializeField] private List<Shape> initialKnownShapes = new();
     [SerializeField] private RecipeList recipeList;
 
     private void Awake()
@@ -28,10 +32,29 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
 
     public void Load(SaveProfile profile)
     {
+        InitializeSingleton();
+
         foreach (Shape s in allShapes)
         {
             completionStatus[s] = (ShapeStatus)profile.GetInt(COMPLETION_STATUS_SAVE_PREFIX + s.shapeName);
-            numberCreated[s] = profile.GetInt(NUMBER_CREATED_SAVE_PREFIX + s.shapeName);
+            numShapeCreated[s] = profile.GetInt(NUMBER_CREATED_SAVE_PREFIX + s.shapeName);
+        }
+
+        foreach (Shape s in initialKnownShapes)
+        {
+            completionStatus[s] = ShapeStatus.Full;
+            if (numShapeCreated[s] == 0)
+            {
+                IncrementNumberCreated(s);
+            }
+        }
+
+        foreach (Recipe r in recipeList.list)
+        {
+            for (int i = 0; i < r.combinations.Count; i++)
+            {
+                r.combinations[i].numberOfTimesCreated = profile.GetInt(NUMBER_CREATED_SAVE_PREFIX + $"{r.result.shapeName}_{i}");
+            }
         }
     }
 
@@ -42,9 +65,17 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
             SaveSystem.Current.SetInt(COMPLETION_STATUS_SAVE_PREFIX + s.shapeName, (int)completionStatus[s]);
         }
 
-        foreach (Shape s in numberCreated.Keys)
+        foreach (Shape s in numShapeCreated.Keys)
         {
-            SaveSystem.Current.SetInt(NUMBER_CREATED_SAVE_PREFIX + s.shapeName, numberCreated[s]);
+            SaveSystem.Current.SetInt(NUMBER_CREATED_SAVE_PREFIX + s.shapeName, numShapeCreated[s]);
+        }
+
+        foreach (Recipe r in recipeList.list)
+        {
+            for (int i = 0; i < r.combinations.Count; i++)
+            {
+                SaveSystem.Current.SetInt(NUMBER_CREATED_SAVE_PREFIX + $"{r.result.shapeName}_{i}", r.combinations[i].numberOfTimesCreated);
+            }
         }
     }
 
@@ -66,49 +97,36 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
 
     public static int GetNumberCreated(Shape shape)
     {
-        if (!numberCreated.ContainsKey(shape))
+        if (!numShapeCreated.ContainsKey(shape))
         {
             Debug.LogWarning("Added a missing key: " + shape.shapeName);
-            numberCreated[shape] = 0;
+            numShapeCreated[shape] = 0;
         }
         
-        return numberCreated[shape];
+        return numShapeCreated[shape];
     }
 
     public static void IncrementNumberCreated(Shape shape)
     {
-        numberCreated[shape] += 1;
-        if (numberCreated[shape] == 1)
+        numShapeCreated[shape] += 1;
+        if (numShapeCreated[shape] == 1)
         {
-            CheckCompletionUpdates(shape);
+            CheckCompletionUpdates();
         }
     }
 
-    private static void CheckCompletionUpdates(Shape shape)
+    private static void CheckCompletionUpdates()
     {
-        if (!completionStatus.ContainsKey(shape))
-        {
-            Debug.LogWarning("Added a missing key: " + shape.shapeName);
-            completionStatus[shape] = ShapeStatus.None;
-        }
-
-        if (!numberCreated.ContainsKey(shape))
-        {
-            Debug.LogWarning("Added a missing key: " + shape.shapeName);
-            numberCreated[shape] = 0;
-        }
-
-
-        if (numberCreated[shape] > 0)
-        {
-            completionStatus[shape] = ShapeStatus.Full;
-            return;
-        }
-
         foreach (Recipe r in _instance.recipeList.list)
         {
-            if (r.result == shape)
+            Shape shape = r.result;
+            if (numShapeCreated[shape] > 0)
             {
+                completionStatus[shape] = ShapeStatus.Full;
+            }
+            else
+            {
+                // Debug.Log($"Checking {shape.shapeName} combinations...");
                 foreach (Recipe.Shapes shapes in r.combinations)
                 {
                     if (shapes.isSecondaryRecipe)
@@ -117,7 +135,6 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
                     if (ValidForOutline(shapes.ingredients))
                     {
                         completionStatus[shape] = ShapeStatus.Outline;
-                        break;
                     }
                 }
             }
@@ -129,10 +146,12 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
         foreach (Shape s in shapes)
         {
             if (completionStatus[s] != ShapeStatus.Full && completionStatus[s] != ShapeStatus.PendingFull)
+            {
                 return false;
+            }
         }
 
-        return false;
+        return true;
     }
 
 }

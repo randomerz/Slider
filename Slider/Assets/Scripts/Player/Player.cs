@@ -100,7 +100,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
             playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
             playerAnimator.SetBool("isOnWater", isOnWater);
-            if (reflectionAnimator != null)
+            if (reflectionAnimator != null && reflectionAnimator.isActiveAndEnabled)
             {
                 reflectionAnimator.SetBool("isRunning", inputDir.magnitude != 0);
                 reflectionAnimator.SetBool("isOnWater", isOnWater);

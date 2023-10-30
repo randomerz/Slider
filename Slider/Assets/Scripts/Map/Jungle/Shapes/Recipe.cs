@@ -10,7 +10,7 @@ public class Recipe : ScriptableObject
     {
         public List<Shape> ingredients;
         public bool isSecondaryRecipe;
-        [HideInInspector] public int numberOfTimesCreated;
+        [HideInInspector] public int numberOfTimesCreated; // Serialized in JungleRecipeBookSave.cs
     }
 
     public Shape result;
@@ -22,6 +22,7 @@ public class Recipe : ScriptableObject
         {
             if (AllIngredients(shapes, combo)) 
             {
+                combo.numberOfTimesCreated += 1;
                 return result;
             }
         }

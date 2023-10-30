@@ -40,12 +40,12 @@ public class JungleRecipeBookUI : MonoBehaviour
 
         for (int i = 0; i < 3; i++)
         {
-            List<Shape> ingredients = null;
+            Recipe.Shapes shapes = null;
             if (index + i < recipeList.list[currentShapeIndex].combinations.Count)
             {
-                ingredients = recipeList.list[currentShapeIndex].combinations[index + i].ingredients;
+                shapes = recipeList.list[currentShapeIndex].combinations[index + i];
             }
-            recipeWidgets[i].SetIngredientsOrNull(ingredients);
+            recipeWidgets[i].SetIngredientsOrNull(shapes, recipeList.list[currentShapeIndex].result);
         }
     }
 
