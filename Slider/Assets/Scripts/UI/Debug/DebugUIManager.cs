@@ -12,7 +12,7 @@ public class DebugUIManager : MonoBehaviour
     public static bool disableConveyers;
 
     public GameObject debugPanel;
-    public bool isDebugOpen;
+    public static bool isDebugOpen;
 
     public TMP_InputField consoleText;
 
@@ -49,41 +49,38 @@ public class DebugUIManager : MonoBehaviour
     {
         if (Player.GetInstance() == null || !GameManager.instance.debugModeActive)
             return;
-        isDebugOpen = !isDebugOpen;
-        debugPanel.SetActive(isDebugOpen);
-        if(isDebugOpen)
-            OnOpenDebug?.Invoke(this, new EventArgs());
+        
+        if(!isDebugOpen)
+            OpenDebug();
         else
-            OnCloseDebug?.Invoke(this, new EventArgs());
+            CloseDebug();
+    }
 
-        if (isDebugOpen)
-        {
-            PauseManager.AddPauseRestriction(owner: gameObject);
+    private void OpenDebug()
+    {
+        if(isDebugOpen) return;
 
-            Player.SetCanMove(false);
+        isDebugOpen = true;
+        debugPanel.SetActive(true);
+        OnOpenDebug?.Invoke(this, new EventArgs());
+        PauseManager.AddPauseRestriction(owner: gameObject);
+        Player.SetCanMove(false);
 
-            consoleText.Select();
-            consoleText.ActivateInputField();
-            consoleText.text = "";
-            commandIndex = commandHistory.Count + 1;
-        }
-        else
-        {
-            PauseManager.RemovePauseRestriction(owner: gameObject);
-            Player.SetCanMove(true);
-        }
+        consoleText.Select();
+        consoleText.ActivateInputField();
+        consoleText.text = "";
+        commandIndex = commandHistory.Count + 1;
     }
 
     private void CloseDebug()
     {
-        if (isDebugOpen)
-        {
-            isDebugOpen = false;
-            Player.SetCanMove(true);
-            debugPanel.SetActive(false);
-
-            PauseManager.RemovePauseRestriction(owner: gameObject);
-        }
+        if (!isDebugOpen) return;
+        
+        isDebugOpen = false;
+        OnCloseDebug?.Invoke(this, new EventArgs());
+        Player.SetCanMove(true);
+        debugPanel.SetActive(false);
+        PauseManager.RemovePauseRestriction(owner: gameObject);
     }
 
     public void SetScene(string sceneName)
