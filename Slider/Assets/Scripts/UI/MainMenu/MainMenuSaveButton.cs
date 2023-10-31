@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class MainMenuSaveButton : MonoBehaviour
 {
+    [SerializeField] private SavePanelManager savePanelManager;
+
     public TextMeshProUGUI profileNameText;
     public TextMeshProUGUI completionText;
     public TextMeshProUGUI timeText;
@@ -14,19 +17,36 @@ public class MainMenuSaveButton : MonoBehaviour
     [SerializeField] private int profileIndex = -1;
     private SaveProfile profile;
 
-    public static bool deleteMode;
+    private static bool deleteMode;
 
-    public MainMenuManager mainMenuManager;
+    private static Action onDeleteModeChanged;
 
     private void OnEnable() 
     {
         ReadProfileFromSave();
         UpdateButton();
+
+        onDeleteModeChanged += UpdateButton;
+    }
+
+    private void OnDisable()
+    {
+        onDeleteModeChanged -= UpdateButton;
+    }
+
+    public static void SetDeleteMode(bool value)
+    {
+        deleteMode = value;
+        onDeleteModeChanged?.Invoke();
+    }
+
+    public static void ToggleDeleteMode()
+    {
+        SetDeleteMode(!deleteMode);
     }
 
     public void UpdateButton()
     {
-
         if (profile != null)
         {
             completionText.gameObject.SetActive(true);
@@ -89,7 +109,7 @@ public class MainMenuSaveButton : MonoBehaviour
         if (profile == null)
         {
             // create new profile
-            mainMenuManager.OpenNewSave(profileIndex);
+            savePanelManager.OpenNewSave(profileIndex);
         }
         else
         {
@@ -107,6 +127,7 @@ public class MainMenuSaveButton : MonoBehaviour
 
     private void LoadThisProfile()
     {
+        UIEffects.FadeToBlack();
         SaveSystem.LoadSaveProfile(profileIndex);
     }
 

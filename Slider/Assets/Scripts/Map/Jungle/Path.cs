@@ -74,7 +74,7 @@ public class Path : MonoBehaviour
         //delete blobs if wrong shape or wrong direction
         //this is so gross I should see if i can fix the if statement
         bool deleted = false;
-        if (defaultAnim != right || (currentShape != null && !shape.name.Equals(currentShape.name)))
+        if (defaultAnim != right || (currentShape != null && !shape.shapeName.Equals(currentShape.shapeName)))
         {
             foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
             {

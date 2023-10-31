@@ -17,6 +17,15 @@ public class PlayerConditionals : MonoBehaviour, IInteractable
     public bool excludeLand = false;
 
     private bool onActionEnabled = true;
+    public Collider2D myCollider;
+
+    private void Awake() 
+    {
+        if (myCollider == null)
+        {
+            myCollider = GetComponent<Collider2D>();
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -121,6 +130,21 @@ public class PlayerConditionals : MonoBehaviour, IInteractable
         if (addToOnAction)
         {
             onActionEnabled = true;
+            CheckForPlayer();
+        }
+    }
+
+    private void CheckForPlayer()
+    {
+        ContactFilter2D filter = new ContactFilter2D();
+        // filter.SetLayerMask(LayerMask.NameToLayer("Player"));
+        filter.NoFilter();
+        
+        List<Collider2D> results = new();
+        myCollider.OverlapCollider(filter, results);
+        foreach (Collider2D c in results)
+        {
+            OnTriggerEnter2D(c);
         }
     }
 

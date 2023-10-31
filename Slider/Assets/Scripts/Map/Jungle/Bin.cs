@@ -34,6 +34,7 @@ public class Bin : Box
         //add the shape
         recievedShapes[path] = shape;
 
+        JungleRecipeBookSave.IncrementNumberCreated(shape);
 /*        if( shape != null)
         {
             //broadcast a shape has been made

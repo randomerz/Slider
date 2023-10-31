@@ -1,11 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.InputSystem;
 using TMPro;
 
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class ShopManager : Singleton<ShopManager>, ISavable
 {
     //private static ShopManager _instance;
@@ -303,8 +300,9 @@ public class ShopManager : Singleton<ShopManager>, ISavable
     // Called when you walk up to the tavernkeeper and press 'E'
     public void OpenShop()
     {
-        UIManager.PauseGameGlobal();
-        UIManager.canOpenMenus = false;
+        //UIManager.PauseGameGlobal();
+        //PauseManager.SetPauseState(true);
+        PauseManager.AddPauseRestriction(owner: gameObject);
 
         // scuffed parts
         Player.SetCanMove(false);
@@ -335,8 +333,8 @@ public class ShopManager : Singleton<ShopManager>, ISavable
 
         CloseAllPanels();
         uiShopPanel.SetActive(false);
-        UIManager.canOpenMenus = true;
-        UIManager.CloseUI();
+        PauseManager.RemovePauseRestriction(owner: gameObject);
+        //PauseManager.SetPauseState(false);
 
         Player.SetCanMove(true);
     }

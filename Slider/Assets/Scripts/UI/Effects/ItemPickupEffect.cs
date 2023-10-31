@@ -33,6 +33,8 @@ public class ItemPickupEffect : MonoBehaviour
     {
         _instance.itemText.text = itemName + " Acquired!";
         _instance.itemImage.sprite = itemSprite;
+        _instance.itemImage.SetNativeSize();
+        _instance.itemImage.rectTransform.localScale = 1f / 16f * Vector3.one;
         _instance.StartCoroutine(_instance.Cutscene(onTextVisibleCallback));
         AudioManager.DampenMusic(itemSprite, 0.2f, _instance.soundDampenLength);
 
@@ -46,7 +48,7 @@ public class ItemPickupEffect : MonoBehaviour
         animator.SetBool("isVisible", true);
         AudioManager.PickSound("Item Pick Up").WithPriorityOverDucking(true).AndPlay();
 
-        UIManager.canOpenMenus = false;
+        PauseManager.AddPauseRestriction(owner: gameObject);
         Player.SetCanMove(false);
 
         Player.GetSpriteRenderer().sortingLayerName = "ScreenEffects";
@@ -67,7 +69,7 @@ public class ItemPickupEffect : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         maskObject.SetActive(false);
-        UIManager.canOpenMenus = true;
+        PauseManager.RemovePauseRestriction(owner: gameObject);
         Player.SetCanMove(true);
         Player.GetSpriteRenderer().sortingLayerName = "Entity";
         NPCDialogueContext.dialogueEnabledAllNPC = true;

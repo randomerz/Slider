@@ -12,7 +12,7 @@ public class BoatParticleEffectController : MonoBehaviour
     public float timeScoreMultiplier = 0.2f;
     private float targetScore; // spawn particle when = 0
 
-    public float numberParticlesUntilSFX = 2;
+    private float numberParticlesUntilSFX = 3;
     private float sfxCounter = 0;
 
     private Vector3 lastMoveDir;
@@ -88,9 +88,9 @@ public class BoatParticleEffectController : MonoBehaviour
     {
         sfxCounter += 1;
 
+        AudioManager.PlayWithVolume("Boat Splash", sfxCounter >= numberParticlesUntilSFX ? 1 : 0.25f);
         if (sfxCounter >= numberParticlesUntilSFX)
         {
-            AudioManager.Play("Boat Splash");
             sfxCounter = 0;
         }
     }

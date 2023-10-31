@@ -20,11 +20,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -63,6 +64,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
   cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
@@ -75,6 +77,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -87,6 +90,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -99,6 +103,20 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -566,6 +584,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: jungle_items_22
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd0b2e6f131565047be30fc1920481a8
+      internalID: 1315310404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_items_23
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e62f88bed54909428d398256aabd31f
+      internalID: 1929233691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -577,31 +637,32 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      jungle_items_13: -1818000484
-      jungle_items_17: 1133198587
-      jungle_items_5: 388771958
-      jungle_items_3: -927767847
-      jungle_items_20: 592789589
-      jungle_items_14: 716890590
-      jungle_items_1: -1339769838
-      jungle_items_7: 1418266012
-      jungle_items_15: -959201949
-      jungle_items_2: 1920871051
-      jungle_items_12: 726833102
-      jungle_items_4: 96887141
-      jungle_items_6: 1122402136
-      jungle_items_8: -1758882137
-      jungle_items_18: 1336272697
-      jungle_items_21: -1512208282
-      jungle_items_19: 578426237
-      jungle_items_11: 449859264
       jungle_items_0: -173427235
-      jungle_items_9: 1279206853
-      jungle_items_16: -832246323
+      jungle_items_1: -1339769838
       jungle_items_10: 1673907523
-  spritePackingTag: 
+      jungle_items_11: 449859264
+      jungle_items_12: 726833102
+      jungle_items_13: -1818000484
+      jungle_items_14: 716890590
+      jungle_items_15: -959201949
+      jungle_items_16: -832246323
+      jungle_items_17: 1133198587
+      jungle_items_18: 1336272697
+      jungle_items_19: 578426237
+      jungle_items_2: 1920871051
+      jungle_items_20: 592789589
+      jungle_items_21: -1512208282
+      jungle_items_22: 1315310404
+      jungle_items_23: 1929233691
+      jungle_items_3: -927767847
+      jungle_items_4: 96887141
+      jungle_items_5: 388771958
+      jungle_items_6: 1122402136
+      jungle_items_7: 1418266012
+      jungle_items_8: -1758882137
+      jungle_items_9: 1279206853
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

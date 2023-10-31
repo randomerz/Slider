@@ -30,11 +30,11 @@ public class JungleShapeManager : Singleton<JungleShapeManager>, ISavable
         }
 
         //check if correct shape
-        if (held.itemName.Equals(wanted.name))
+        if (held.itemName.Equals(wanted.shapeName))
         {
             //print("Turn in " + wanted.name);
             PlayerInventory.RemoveAndDestroyItem();
-            SaveSystem.Current.SetBool(_instance.prefix + wanted.name, true);
+            SaveSystem.Current.SetBool(_instance.prefix + wanted.shapeName, true);
         }
 
         return false;

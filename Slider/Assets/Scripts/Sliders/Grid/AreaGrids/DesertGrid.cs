@@ -123,6 +123,48 @@ public class DesertGrid : SGrid
 
     }
 
+    /// <summary>
+    /// Identical to <see cref="SGrid.GetGridString(bool)"/> except that this method considers
+    /// mirage tiles. The ID used for a mirage tile id the ID of its equivalent non-mirage tile 
+    /// (e.g. the ID of the mirage tile of tile 5 is 5.)
+    /// </summary>
+    /// <returns></returns>
+    public static string GetGridString()
+    {
+        STile[,] grid = ((DesertGrid)Current).grid;
+
+        Dictionary<Vector2Int, int> mirageTileIdsToPositions = MirageSTileManager.GetActiveMirageTileIdsByPosition();
+
+        string s = "";
+        for (int y = grid.GetLength(1) - 1; y >= 0; y--)
+        {
+            for (int x = 0; x < grid.GetLength(0); x++)
+            {
+                if (grid[x, y].isTileActive)
+                {
+                    s += Converter.IntToChar(grid[x, y].islandId);
+                }
+                else
+                {
+                    Vector2Int tilePosition = new Vector2Int(x, y);
+                    if (mirageTileIdsToPositions.ContainsKey(tilePosition))
+                    {
+                        s += mirageTileIdsToPositions[tilePosition];
+                    } 
+                    else
+                    {
+                        s += "#";
+                    }
+                }
+            }
+            if (y != 0)
+            {
+                s += "_";
+            }
+        }
+        return s;
+    }
+
     public override void Save() 
     {
         base.Save();

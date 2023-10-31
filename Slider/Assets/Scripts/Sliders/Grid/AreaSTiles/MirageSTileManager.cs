@@ -2,12 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class MirageSTileManager : Singleton<MirageSTileManager>
 {
 
     [SerializeField] private List<GameObject> mirageSTiles;
     public static Vector2Int mirageTailPos;
+
+    /// <summary>
+    /// The scale factor from the position of a tile on the grid to the transform.position of the tile.
+    /// </summary>
+    private static int GRID_POSITION_TO_WORLD_POSITION = 17;
 
     public void Awake()
     {
@@ -19,10 +25,12 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     {
         if (islandId > 7) return;
         //Do some STile collider crap
-        mirageSTiles[islandId - 1].transform.position = new Vector2(x*17, y*17);
+        mirageSTiles[islandId - 1].transform.position = new Vector2(x * GRID_POSITION_TO_WORLD_POSITION, y * GRID_POSITION_TO_WORLD_POSITION);
         mirageSTiles[islandId - 1].gameObject.SetActive(true);
         if (islandId == 7) mirageTailPos = new Vector2Int(x, y);
         Debug.Log(mirageTailPos);
+
+        Debug.Log($"travis: {DesertGrid.GetGridString()}");
         //Insert enabling coroutine fading in
     }
     /// <summary>
@@ -45,6 +53,39 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
         else mirageSTiles[islandId - 1].gameObject.SetActive(false);
         Debug.Log(mirageTailPos);
     }
+
+    /// <summary>
+    /// Returns a dictionary of each grid position, represented by Vector2Int ,
+    /// to the ID of the mirage tile currently active on that grid position.
+    /// If no mirage tile is active on that position, that position does not
+    /// appear in the dictionary.
+    /// </summary>
+    public static Dictionary<Vector2Int, int> GetActiveMirageTileIdsByPosition()
+    {
+        List<GameObject> mirageTiles = _instance.mirageSTiles;
+
+        Dictionary<Vector2Int, int> tileIdToPosition = new();
+
+        for (int tileId = 0; tileId < mirageTiles.Count; tileId++)
+        {
+            GameObject mirageTile = mirageTiles[tileId];
+            if (mirageTile.activeInHierarchy)
+            {
+                Vector2Int mirageTileGridPosition = GridPositionFromWorldPosition(mirageTile.transform.position);
+                tileIdToPosition[mirageTileGridPosition] = tileId + 1;
+            }
+        }
+
+        return tileIdToPosition;
+    }
+
+    private static Vector2Int GridPositionFromWorldPosition(Vector2 worldPosition)
+    {
+        int x = (int)(worldPosition.x / GRID_POSITION_TO_WORLD_POSITION);
+        int y = (int)(worldPosition.y / GRID_POSITION_TO_WORLD_POSITION);
+        return new Vector2Int(x, y);
+    }
+
     private bool isPlayerOnMirage(out int islandId)
     {
         Vector2 pos = Player.GetInstance().transform.position;
