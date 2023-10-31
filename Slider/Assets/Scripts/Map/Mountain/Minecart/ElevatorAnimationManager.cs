@@ -18,6 +18,7 @@ public class ElevatorAnimationManager : MonoBehaviour
     //private bool repaired = false;
     public MinecartElevator minecartElevator;
     public List<GameObject> closedDoorColliders;
+    public Animator generatorAnimator;
 
     private void Start() {
         topDispAnimator.Play("Disp Top Fade In");
@@ -97,7 +98,12 @@ public class ElevatorAnimationManager : MonoBehaviour
 
     private IEnumerator BreakAnimation()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
+        generatorAnimator.Play("Break");
+        yield return new WaitForSeconds(1.3f);
+        AudioManager.Play("Power Off");
+        CameraShake.Shake(0.4f, 0.3f);
+        yield return new WaitForSeconds(0.5f);
         AudioManager.Play("Fall");
         CameraShake.ShakeIncrease(1f, 1f);
         yield return new WaitForSeconds(1f);
@@ -119,29 +125,21 @@ public class ElevatorAnimationManager : MonoBehaviour
             go.SetActive(true);
         }
         minecartElevator.isInBreakingAnimation = false;
+        generatorAnimator.Play("Broken");
     }
 
     public void Repair(bool fromSave = false)
     {
+        generatorAnimator.Play("Fixed");
         isBroken = false;
         OpenDoors();
-        //delete extra sprites or whatnot
         foreach(GameObject go in brokenObj)
         {
             go.SetActive(false);
         }
-        // foreach(GameObject go in deactivateOnFix)
-        // {
-        //     go.SetActive(false);
-        //     {
-        //         if(!fromSave) {
-        //             for(int i = 0; i < 10; i++)
-        //             {
-        //                 Vector3 random = Random.insideUnitCircle * 1.5f;
-        //                 ParticleManager.SpawnParticle(ParticleType.SmokePoof, go.transform.position + random);
-        //             }
-        //         }
-        //     }
-        // }
+        if(!fromSave)
+        {
+            AudioManager.Play("Power On");
+        }
     }
 }
