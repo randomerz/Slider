@@ -15,8 +15,12 @@ public class LavaBucket : MonoBehaviour, ISavable
         sTile = GetComponentInParent<STile>();
     }
 
-    public void FillBucket()
+    public void FillBucket(bool fromSave = false)
     {
+        if(!fromSave && !hasLava)
+        {
+            AudioManager.Play("Puzzle Complete");
+        }
         spriteSwapper.TurnOn();
         particles.SetActive(true);
         hasLava = true;
@@ -38,7 +42,7 @@ public class LavaBucket : MonoBehaviour, ISavable
     {
         hasLava = profile.GetBool("MountainLavaBucket", hasLava);
         if(hasLava)
-            FillBucket();
+            FillBucket(true);
     }
 
     public void Save()
