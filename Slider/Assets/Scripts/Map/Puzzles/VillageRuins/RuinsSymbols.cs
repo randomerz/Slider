@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RuinsSymbols : MonoBehaviour
 {
-    public FlashWhite[] ruinSymbols = new FlashWhite[4];
+    public FlashWhiteSprite[] ruinSymbols = new FlashWhiteSprite[4];
     public SpriteRenderer ruinsHole;
 
     private void Start()
@@ -18,7 +18,7 @@ public class RuinsSymbols : MonoBehaviour
 
     public void SetSprites(bool value)
     {
-        foreach (FlashWhite s in ruinSymbols)
+        foreach (FlashWhiteSprite s in ruinSymbols)
         {
             s.SetSpriteActive(value);
         }

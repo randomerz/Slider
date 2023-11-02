@@ -131,7 +131,7 @@ TextureImporter:
         width: 3
         height: 3
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -139,6 +139,27 @@ TextureImporter:
       bones: []
       spriteID: 34240c24a4e47f341b02a4db423e0632
       internalID: 781303996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RecipeUIIcons_hashtag
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 22
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1356ef6883b70a340a323be6bf7b2c9e
+      internalID: -1121873450
       vertices: []
       indices: 
       edges: []
@@ -154,6 +175,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      RecipeUIIcons_hashtag: -1121873450
       RecipeUIIcons_plus: 781303996
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
