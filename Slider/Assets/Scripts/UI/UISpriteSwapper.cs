@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UISpriteSwapper : FlashWhiteUI
+public class UISpriteSwapper : FlashWhiteImage
 {
     [SerializeField] private Sprite on;
     [SerializeField] private Sprite off;

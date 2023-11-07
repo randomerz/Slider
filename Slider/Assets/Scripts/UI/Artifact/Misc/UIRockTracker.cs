@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIRockTracker : FlashWhiteUI
+public class UIRockTracker : FlashWhiteImage
 {
     [SerializeField] private Image rockedImage;
     [SerializeField] private ExplodableRock myRock;

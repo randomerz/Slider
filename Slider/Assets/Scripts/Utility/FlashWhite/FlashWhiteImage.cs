@@ -5,11 +5,13 @@ using System;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
-public class FlashWhiteUI : MonoBehaviour
+public class FlashWhiteImage : MonoBehaviour, IFlashWhite
 {
     private Image mySprite;
     public Material whiteSpriteMat;
     private Material oldMat;
+    
+    public float flashTime = 0.25f;
 
     protected virtual void Awake()
     {
@@ -18,14 +20,14 @@ public class FlashWhiteUI : MonoBehaviour
 
     private void OnDisable()
     {
-        if(oldMat != null)
+        if (oldMat != null)
             mySprite.material = oldMat;
     }
 
     public void Flash(int n, Action callback = null)
     {
         StopAllCoroutines();
-        if(mySprite == null)
+        if (mySprite == null)
             UpdateRefs();
         StartCoroutine(_Flash(n, callback));
     }
@@ -33,7 +35,7 @@ public class FlashWhiteUI : MonoBehaviour
     private void UpdateRefs()
     {
         mySprite = GetComponent<Image>();
-        oldMat ??= mySprite.material;
+        oldMat = oldMat != null ? oldMat : mySprite.material;
     }
 
     public void SetSpriteActive(bool value)
@@ -48,14 +50,14 @@ public class FlashWhiteUI : MonoBehaviour
         {
             mySprite.material = whiteSpriteMat;
 
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(flashTime);
 
             mySprite.material = oldMat;
 
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(flashTime);
         }
 
-        if(callback !=null)
+        if (callback !=null)
             callback?.Invoke();
     }
 }

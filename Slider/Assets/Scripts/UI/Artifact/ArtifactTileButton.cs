@@ -34,8 +34,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     protected Sprite islandSprite;
     protected Sprite emptySprite;
-
-    private FlashWhiteUI[] buttonIcons; //power lines, minecarft junctions, etc
+    private FlashWhiteImage[] buttonIcons; //power lines, minecarft junctions, etc
     private bool dontUpdateDefaultSpriteOnAwake;
 
     public STile MyStile {
@@ -95,7 +94,7 @@ public class ArtifactTileButton : MonoBehaviour
     protected virtual void Start()
     {
         UpdateTileActive();
-        buttonIcons = GetComponentsInChildren<FlashWhiteUI>();
+        buttonIcons = GetComponentsInChildren<FlashWhiteImage>();
     }
 
     public void OnSelect()
@@ -289,8 +288,7 @@ public class ArtifactTileButton : MonoBehaviour
             SetSpriteToIslandOrEmpty();
             yield return new WaitForSeconds(.25f);
         }
-        
-        foreach(FlashWhiteUI e in buttonIcons)
+        foreach (FlashWhiteImage e in buttonIcons)
             if(e.gameObject.activeSelf)
                 e.Flash(numFlickers);
 

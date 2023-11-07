@@ -15,7 +15,7 @@ public class RuinsArrow : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private ParticleSystem arrowParticles;
     [SerializeField] private ParticleTrail particleTrail;
-    [SerializeField] private FlashWhite arrowFlash;
+    [SerializeField] private IFlashWhite arrowFlash;
     [SerializeField] private RuinsMapIcons mapIcons;
 
     private bool anyRodsOn;

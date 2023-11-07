@@ -4,11 +4,13 @@ using UnityEngine;
 using System;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class FlashWhite : MonoBehaviour
+public class FlashWhiteSprite : MonoBehaviour, IFlashWhite
 {
     private SpriteRenderer mySprite;
     public Material whiteSpriteMat;
     private Material oldMat;
+
+    public float flashTime = 0.25f;
 
     void Awake()
     {
@@ -27,17 +29,17 @@ public class FlashWhite : MonoBehaviour
         mySprite.enabled = value;
     }
 
-    private IEnumerator _Flash(int n, Action callback, float time = 0.25f)
+    private IEnumerator _Flash(int n, Action callback)
     {
         for (int i = 0; i < n; i++)
         {
             mySprite.material = whiteSpriteMat;
 
-            yield return new WaitForSeconds(time);
+            yield return new WaitForSeconds(flashTime);
 
             mySprite.material = oldMat;
 
-            yield return new WaitForSeconds(time);
+            yield return new WaitForSeconds(flashTime);
         }
 
         callback?.Invoke();
