@@ -19,7 +19,7 @@ public class JungleRecipeBook : MonoBehaviour
 
     private void Start() 
     {
-        jungleRecipeBookUI.SetCurrentShape(0);
+        jungleRecipeBookUI.SetCurrentShape(0, withSound: false);
     }
 
     public void ToggleEngagedWithTV()
@@ -54,6 +54,8 @@ public class JungleRecipeBook : MonoBehaviour
             SetPlayerToControllerPosition();
             Player.SetCanMove(false, canAnimateMovement: false);
             controllerConditionals.DisableConditionals();
+            
+            AudioManager.PickSound("Hat Click").WithVolume(0.3f).WithPitch(1.05f).AndPlay();
         }
         else
         {
@@ -68,6 +70,8 @@ public class JungleRecipeBook : MonoBehaviour
 
             Player.SetCanMove(true, canAnimateMovement: true);
             controllerConditionals.EnableConditionals();
+            
+            AudioManager.PickSound("Hat Click").WithVolume(0.25f).WithPitch(1f).AndPlay();
         }
     }
 

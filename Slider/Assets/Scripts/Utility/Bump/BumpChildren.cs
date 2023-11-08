@@ -17,8 +17,13 @@ public class BumpChildren : MonoBehaviour
         }
     }
     
-    public void DoBump(int n, Action callback = null)
+    public void DoBump(bool withSound = true, Action callback = null)
     {
+        if (withSound)
+        {
+            AudioManager.PlayWithVolume("Hat Click", 0.05f);
+        }
+
         for (int i = 0; i < children.Count; i++)
         {
             children[i].DoBump(i == 0 ? callback : null);
