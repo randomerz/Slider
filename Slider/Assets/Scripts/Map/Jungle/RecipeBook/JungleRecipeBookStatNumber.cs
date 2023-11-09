@@ -37,7 +37,33 @@ public class JungleRecipeBookStatNumber : MonoBehaviour
 
         if (useDecimal)
         {
+            string s = myNumber.ToString();
 
+            if (s.StartsWith("."))
+            {
+                s = "0" + s;
+            }
+
+            int offset = numberImages.Count - Mathf.Min(numberImages.Count, s.Length);
+            char[] charArray = s.ToCharArray();
+
+            for (int i = 0; i < numberImages.Count; i++)
+            {
+                if (i < offset)
+                {
+                    numberImages[i].sprite = emptySprite;
+                    continue;
+                }
+                if (charArray[i] == '.')
+                {
+                    numberImages[i].sprite = decimalSprite;
+                    continue;
+                }
+                else
+                {
+                    numberImages[i].sprite = numberSprites[charArray[i] - '0'];
+                }
+            }
         }
         else
         {
