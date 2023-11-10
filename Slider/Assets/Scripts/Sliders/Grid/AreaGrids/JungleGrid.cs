@@ -133,10 +133,6 @@ public class JungleGrid : SGrid
         }
     }
 
-    public void PlayerCollectedRaceRewards(Condition c) {
-        c.SetSpec(PlayerInventory.Contains(GetCollectible("Boots")));
-    }
-
     // Broken bridge -- puzzle 7
 
     public void TurnInRail()

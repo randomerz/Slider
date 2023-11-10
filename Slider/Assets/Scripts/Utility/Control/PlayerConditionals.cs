@@ -16,7 +16,7 @@ public class PlayerConditionals : MonoBehaviour, IInteractable
     public bool excludeBoat = false;
     public bool excludeLand = false;
 
-    private bool onActionEnabled = true;
+    [HideInInspector] public bool onActionEnabled = true;
     public Collider2D myCollider;
 
     private void Awake() 
