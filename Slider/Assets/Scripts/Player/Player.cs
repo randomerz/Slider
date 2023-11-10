@@ -107,10 +107,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             }
         }
 
-        foreach(Material m in ppMaterials)
-        {
-            m.SetVector("_PlayerPosition", new Vector4(transform.position.x, transform.position.y, 0, 0));
-        }
     }
 
     private void FixedUpdate()
@@ -170,6 +166,14 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         else
         {
             transform.SetParent(null);
+        }
+    }
+
+    private void LateUpdate()
+    {
+        foreach(Material m in ppMaterials)
+        {
+            m.SetVector("_PlayerPosition", new Vector4(transform.position.x, transform.position.y, 0, 0));
         }
     }
     //Jroo: Either says "Keyboard Mouse" or "Controller" based on last input
