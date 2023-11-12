@@ -19,7 +19,6 @@ public class ChadRace : MonoBehaviour
         RaceEnded
     };
 
-    public UnityEvent onRaceWon;
     public Transform finishingLine;
     public Transform player;
     public float speed;
@@ -137,7 +136,7 @@ public class ChadRace : MonoBehaviour
                 }
                 else {
                     // Chad has made it to the finish line
-                    onRaceWon.Invoke();
+                    OnRaceWin();
                     // chadEndLocal = transform.localPosition;
                     raceState = State.ChadWon;
                     ActivateSpeedLines(false);
@@ -236,7 +235,7 @@ public class ChadRace : MonoBehaviour
 
             StartCoroutine(SetParameterTemporary("JungleChadEnd", 1, 0));
             DisplayAndTriggerDialogue("Dangit, I don't know how you won, especially with my faster boots.");
-            onRaceWon.Invoke();
+            OnRaceWin();
         }
     }
 
@@ -264,6 +263,12 @@ public class ChadRace : MonoBehaviour
         }
     }
 
+    public void OnRaceWin()
+    {
+        AudioManager.Play("Puzzle Complete");
+        ParticleManager.SpawnParticle(ParticleType.MiniSparkle, finishingLine.transform.position + Vector3.up, finishingLine.transform);
+    }
+
     // Conditionals stuff for Chad Dialogue
     public void TrackNotSetup(Condition cond) => cond.SetSpec(raceState == State.TrackNotSetup);
     public void NotStarted(Condition cond) => cond.SetSpec(raceState == State.NotStarted);
@@ -279,15 +284,6 @@ public class ChadRace : MonoBehaviour
         // Assume that the target location is up and to the right of the starting point
         Vector3 targetDirection = transform.position.x >= endPoint.x ? new Vector3(0,1,0) : new Vector3(1,0,0);
         transform.position += speed * targetDirection * Time.deltaTime;
-
-        //if (raceState != State.PlayerWon)
-        //{
-        //    ActivateSpeedLines(true);
-        //}
-        //else
-        //{
-        //    ActivateSpeedLines(false);
-        //}
 
         // Assigns chad's current parent to the objects of the stile that he is currently over
         transform.parent = SGrid.GetSTileUnderneath(gameObject).transform;
@@ -313,7 +309,6 @@ public class ChadRace : MonoBehaviour
     }
 
     private void DisplayAndTriggerDialogue(string message) {
-        //countDownDialogue.dialogueChain[0].dialogue = message;
         SaveSystem.Current.SetString("jungleChadSpeak", message);
         npcScript.TypeCurrentDialogueSafe();
     }
@@ -326,13 +321,6 @@ public class ChadRace : MonoBehaviour
         
         AudioManager.SetGlobalParameter(parameterName, value2);
     }
-
-    //private DialogueData ConstructChadDialogueStart()
-    //{
-    //    var dialogue = new DialogueData();
-    //    dialogue.dialogue = "Bet I could beat you to the bell (e to start).";
-    //    return dialogue;
-    //}
 
     public void UpdateChadEnd()
     {
