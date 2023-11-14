@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine;
+using UnityEditor;
 
 // Chad race should be attatched to chad
 public class ChadRace : MonoBehaviour
@@ -19,6 +20,7 @@ public class ChadRace : MonoBehaviour
         RaceEnded
     };
 
+    public Transform startingLine;
     public Transform finishingLine;
     public Transform player;
     public float speed;
@@ -33,19 +35,12 @@ public class ChadRace : MonoBehaviour
     private Vector2 chadStartLocal;
     private Vector2 playerStart;
     private Vector2 endPoint;
-    private Vector2 chadEndLocal;
     private State raceState;
-    private bool inStart;
     private float startTime;
-
-#pragma warning disable
-    // Keeps track if this is the first time the play has tried the race with the current tile positions
-    private bool firstTime;
-#pragma warning restore
-
-    private float jungleChadEnd;
+    private int dialogueCurrentTime;
 
     [SerializeField] private ParticleSystem[] speedLinesList;
+    private bool speedLinesOn;
 
 
     private void OnEnable()
@@ -65,20 +60,9 @@ public class ChadRace : MonoBehaviour
     {
         // Setting all the starting params
         tilesAdjacent = false;
-        inStart = false;
-        firstTime = true;
         raceState = State.NotStarted;
         // Chad's start location relative to the starting stile will always be the same
         chadStartLocal = transform.localPosition;
-
-        // Setting the chadimator initial bools
-        chadimator.SetBool("isWalking", false);
-        chadimator.SetBool("isSad", false);
-
-        // Setting the first time dialogue
-        //countDownDialogue.dialogueChain.Clear();
-        //countDownDialogue.dialogueChain.Add(ConstructChadDialogueStart());
-        //npcScript.AddNewConditionals(countDownDialogue);
     }
 
     // Update is called once per frame
@@ -92,6 +76,7 @@ public class ChadRace : MonoBehaviour
                     raceState = State.NotStarted;
                 }
                 break;
+
             case State.NotStarted:
                 if (!tilesAdjacent)
                 {
@@ -102,27 +87,13 @@ public class ChadRace : MonoBehaviour
                 break;
 
             case State.Started:
-                SaveSystem.Current.SetBool("jungleChadRaceHasStarted", true);
-                player.position = playerStart;
-                float timeDiff = Time.unscaledTime - startTime;
-                if (timeDiff < 3) {
-                    DisplayAndTriggerDialogue((int)(4 - (Time.unscaledTime - startTime)) + "");
-                    ActivateSpeedLines(false);
-                } else {
-                    DisplayAndTriggerDialogue("GO!");
-                    ActivateSpeedLines(true);
-                    chadimator.SetBool("isWalking", true);
-                    raceState = State.Running;
-
-                    // AudioManager.SetMusicParameter("Jungle", "JungleChadStarted", 1); // magnet to start of race
-                    // AudioManager.SetMusicParameter("Jungle", "JungleChadWon", 0);
-                    StartCoroutine(SetParameterTemporary("JungleChadStarted", 1, 0));
-                }
+                HandleStartCountdown();
                 break;
 
             case State.Running:
-                ActivateSpeedLines(true);
-                if (!tilesAdjacent) {
+
+                if (!tilesAdjacent) 
+                {
                     // The player has cheated
                     AudioManager.Play("Record Scratch");
                     StartCoroutine(SetParameterTemporary("JungleChadEnd", 1, 0));
@@ -130,16 +101,17 @@ public class ChadRace : MonoBehaviour
                     DisplayAndTriggerDialogue("Hey, no changing the track before the race is done!");
                     ActivateSpeedLines(false);
                     raceState = State.Cheated;
-                } else if (transform.position.y <= endPoint.y) {
+                } 
+                else if (transform.position.y <= endPoint.y) 
+                {
                     MoveChad();
-                    ActivateSpeedLines(true);
                 }
-                else {
+                else 
+                {
                     // Chad has made it to the finish line
                     OnRaceWin();
                     // chadEndLocal = transform.localPosition;
                     raceState = State.ChadWon;
-                    ActivateSpeedLines(false);
                     StartCoroutine(SetParameterTemporary("JungleChadEnd", 1, 0));
                     DisplayAndTriggerDialogue("Pfft, too easy. Come back when you're fast enough to compete with me.");
                 }
@@ -148,9 +120,6 @@ public class ChadRace : MonoBehaviour
 
             case State.Cheated:
                 chadimator.SetBool("isWalking", false);
-                // transform.localPosition = chadEndLocal;
-                firstTime = true;
-                //CheckChad(jungleGrid, null);
                 
                 if (tilesAdjacent)
                 {
@@ -180,36 +149,29 @@ public class ChadRace : MonoBehaviour
                 break;
 
             case State.ChadWon:
-                ActivateSpeedLines(false);
                 chadimator.SetBool("isWalking", false);
                 transform.position = finishingLine.transform.position;
 
-                // AudioManager.SetMusicParameter("Jungle", "JungleChadStarted", 0);
-                // AudioManager.SetMusicParameter("Jungle", "JungleChadWon", 1);
-                jungleChadEnd = 1;
                 break;
 
             case State.PlayerWon:
                 // Not entirely sure why, but an offset of .5 in x gets chad in the right spot at the end
-                ActivateSpeedLines(false);
-                if (transform.localPosition.y < finishingLine.localPosition.y) {
+                if (transform.localPosition.y < finishingLine.localPosition.y) 
+                {
                     MoveChad();
-                } else {
+                } else 
+                {
                     transform.localPosition = finishingLine.localPosition;
                     chadimator.SetBool("isWalking", false);
                     chadimator.SetBool("isSad", true);
 
                     if (PlayerInventory.Contains(jungleGrid.GetCollectible("Boots")))
                     {
-                        DisplayAndTriggerDialogue("I'll beat you next time, explorer.");
                         raceState = State.RaceEnded;
                     }
-
-                    // AudioManager.SetMusicParameter("Jungle", "JungleChadStarted", 0);
-                    // AudioManager.SetMusicParameter("Jungle", "JungleChadWon", 2);
-                    jungleChadEnd = 1;
                 }
                 break;
+
             case State.RaceEnded:
                 break;
 
@@ -221,6 +183,40 @@ public class ChadRace : MonoBehaviour
         }
     }
 
+    private void HandleStartCountdown()
+    {
+        SaveSystem.Current.SetBool("jungleChadRaceHasStarted", true);
+        player.position = playerStart;
+
+        int timeSinceStart = (int)(Time.time - startTime);
+
+        if (timeSinceStart < 3) 
+        {
+            if (dialogueCurrentTime != 3 - timeSinceStart)
+            {
+                dialogueCurrentTime = 3 - timeSinceStart;  // 3... 2... 1...
+                // Just changed
+                AudioManager.Play("Pop");
+            }
+            DisplayAndTriggerDialogue(dialogueCurrentTime.ToString());
+        } 
+        else 
+        {
+            if (dialogueCurrentTime != 0)
+            {
+                dialogueCurrentTime = 0;
+                AudioManager.PlayWithPitch("Pop", 1.2f);
+                ParticleManager.SpawnParticle(ParticleType.MiniSparkle, startingLine.transform.position + new Vector3(0, 0.5f), startingLine.transform);
+                ActivateSpeedLines(true);
+            }
+            DisplayAndTriggerDialogue("GO!");
+            chadimator.SetBool("isWalking", true);
+            StartCoroutine(SetParameterTemporary("JungleChadStarted", 1, 0));
+
+            raceState = State.Running;
+        }
+    }
+
     public void CheckChad(object sender, System.EventArgs e)
     {
         if (SGrid.Current.GetGrid() != null)
@@ -228,38 +224,32 @@ public class ChadRace : MonoBehaviour
     }
 
     
-
-    public void PlayerEnteredEnd() {
+    public void PlayerEnteredEnd() 
+    {
         if (raceState == State.Running) {
             raceState = State.PlayerWon;
 
             StartCoroutine(SetParameterTemporary("JungleChadEnd", 1, 0));
-            DisplayAndTriggerDialogue("Dangit, I don't know how you won, especially with my faster boots.");
             OnRaceWin();
         }
     }
 
-    // Invoked by the NPC collider when the player is within the NPC's interact range
-    public void InStartPosition() {
-        inStart = true;
-    }
-
-    // Invoked by the NPC collider when the player exits the NPC's interact range
-    public void NotInStartPosition() {
-        inStart = false;
-    }
-
     // Invoked by Player Conditionals on success
     public void StartQueued() {
-        if (inStart && tilesAdjacent && (raceState != State.Started && raceState != State.Running && raceState != State.PlayerWon
-                && raceState != State.RaceEnded)) {
+        if (tilesAdjacent && 
+            raceState != State.Started && 
+            raceState != State.Running && 
+            raceState != State.PlayerWon && 
+            raceState != State.RaceEnded)
+        {
             endPoint = finishingLine.position;
             transform.parent = startStileObjects;
             transform.localPosition = chadStartLocal;
-            raceState = State.Started;
             playerStart = new Vector2(transform.position.x, transform.position.y - 1);
-            startTime = Time.unscaledTime;
+            startTime = Time.time;
             playerConditional.DisableConditionals();
+            
+            raceState = State.Started;
         }
     }
 
@@ -267,6 +257,7 @@ public class ChadRace : MonoBehaviour
     {
         AudioManager.Play("Puzzle Complete");
         ParticleManager.SpawnParticle(ParticleType.MiniSparkle, finishingLine.transform.position + Vector3.up, finishingLine.transform);
+        ActivateSpeedLines(false);
     }
 
     // Conditionals stuff for Chad Dialogue
@@ -279,11 +270,12 @@ public class ChadRace : MonoBehaviour
     public void RaceEnded(Condition cond) => cond.SetSpec(raceState == State.RaceEnded);
 
     // Private helper methods
-    private void MoveChad() {
+    private void MoveChad() 
+    {
         // Chad goes all the way in the x direction before going in the y direction
         // Assume that the target location is up and to the right of the starting point
-        Vector3 targetDirection = transform.position.x >= endPoint.x ? new Vector3(0,1,0) : new Vector3(1,0,0);
-        transform.position += speed * targetDirection * Time.deltaTime;
+        Vector3 targetDirection = transform.position.x >= endPoint.x ? Vector3.up : Vector3.right;
+        transform.position += speed * Time.deltaTime * targetDirection;
 
         // Assigns chad's current parent to the objects of the stile that he is currently over
         transform.parent = SGrid.GetSTileUnderneath(gameObject).transform;
@@ -291,16 +283,20 @@ public class ChadRace : MonoBehaviour
 
     private void ActivateSpeedLines(bool activate)
     {
-        if (activate)
+        if (activate == speedLinesOn)
         {
-            foreach (ParticleSystem lines in speedLinesList)
+            return;
+        }
+
+        speedLinesOn = activate;
+
+        foreach (ParticleSystem lines in speedLinesList)
+        {
+            if (speedLinesOn)
             {
                 lines.Play();
             }
-        }
-        else
-        {
-            foreach (ParticleSystem lines in speedLinesList)
+            else
             {
                 lines.Stop();
             }
@@ -308,7 +304,13 @@ public class ChadRace : MonoBehaviour
         
     }
 
-    private void DisplayAndTriggerDialogue(string message) {
+    private void DisplayAndTriggerDialogue(string message) 
+    {
+        if (SaveSystem.Current.GetString("jungleChadSpeak") == message)
+        {
+            return;
+        }
+
         SaveSystem.Current.SetString("jungleChadSpeak", message);
         npcScript.TypeCurrentDialogueSafe();
     }
@@ -320,15 +322,6 @@ public class ChadRace : MonoBehaviour
         yield return new WaitForSeconds(1);
         
         AudioManager.SetGlobalParameter(parameterName, value2);
-    }
-
-    public void UpdateChadEnd()
-    {
-        if (jungleChadEnd == 1)
-        {
-            StartCoroutine(SetParameterTemporary("JungleChadEnd", 1, 0));
-            jungleChadEnd = 0;
-        }
     }
 
     // agony

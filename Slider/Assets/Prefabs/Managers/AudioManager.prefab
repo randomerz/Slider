@@ -253,16 +253,6 @@ MonoBehaviour:
       Path: event:/SFX/SFXR/Hat Click
     canPause: 1
     dopplerScale: 0
-  - name: NPC Blip
-    fmodEvent:
-      Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
-    canPause: 1
-    dopplerScale: 0
   - name: Puzzle Complete
     fmodEvent:
       Guid:
