@@ -6,8 +6,8 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RaceDoctorIdle
-  serializedVersion: 6
+  m_Name: RaceDoctor_Idle
+  serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -18,17 +18,19 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
-      value: {fileID: -8478181190504002165, guid: d07386c5fab7f4341a14887f86a8a083, type: 3}
+      value: {fileID: 3199537259048575436, guid: fdd427b0c715d254981a764d97a3fb8b, type: 3}
     - time: 0.5
-      value: {fileID: -6870253636229277887, guid: d07386c5fab7f4341a14887f86a8a083, type: 3}
+      value: {fileID: 497366473960457859, guid: fdd427b0c715d254981a764d97a3fb8b, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
+    flags: 2
   m_SampleRate: 2
-  m_WrapMode: 0
+  m_WrapMode: 2
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
@@ -41,9 +43,11 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: -8478181190504002165, guid: d07386c5fab7f4341a14887f86a8a083, type: 3}
-    - {fileID: -6870253636229277887, guid: d07386c5fab7f4341a14887f86a8a083, type: 3}
+    - {fileID: 3199537259048575436, guid: fdd427b0c715d254981a764d97a3fb8b, type: 3}
+    - {fileID: 497366473960457859, guid: fdd427b0c715d254981a764d97a3fb8b, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

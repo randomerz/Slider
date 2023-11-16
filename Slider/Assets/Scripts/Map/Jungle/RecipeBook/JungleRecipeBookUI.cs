@@ -14,6 +14,7 @@ public class JungleRecipeBookUI : MonoBehaviour
     public TextMeshProUGUI recipeCompletionText;
     public List<JungleRecipeWidget> recipeWidgets; // There are three of these
     public List<BumpChildren> bumps; // Unit can't serialize interfaces :(
+    public List<JungleRecipeBookStatNumber> statNumbers; // Unit can't serialize interfaces :(
 
     private int currentShapeIndex; // Horizontal
     private int currentRecipePageIndex; // Vertical
@@ -21,12 +22,12 @@ public class JungleRecipeBookUI : MonoBehaviour
 
     private const float BUMP_DELAY = 1f / 16f;
 
-    public void SetCurrentShape(int index)
+    public void SetCurrentShape(int index, bool withSound = true)
     {
-        StartCoroutine(_SetCurrentShape(index));
+        StartCoroutine(_SetCurrentShape(index, withSound));
     }
 
-    private IEnumerator _SetCurrentShape(int index)
+    private IEnumerator _SetCurrentShape(int index, bool withSound = true)
     {
         currentShapeIndex = index;
         currentShape = recipeList.list[index].result;
@@ -37,11 +38,11 @@ public class JungleRecipeBookUI : MonoBehaviour
 
         for (int i = 0; i < 3; i++)
         {
-            bumps[i].DoBump(1);
+            bumps[i].DoBump(withSound: withSound && index == currentShapeIndex);
             yield return new WaitForSeconds(BUMP_DELAY / 2);
         }
 
-        bumps[3].DoBump(1);
+        bumps[3].DoBump(withSound: withSound && index == currentShapeIndex);
 
         int totalRecipes = recipeList.list[index].combinations.Count;
         int completedRecipes = 0;
@@ -56,15 +57,15 @@ public class JungleRecipeBookUI : MonoBehaviour
 
         yield return new WaitForSeconds(BUMP_DELAY);
 
-        SetCurrentRecipeDisplay(index, 0);
+        SetCurrentRecipeDisplay(index, 0, withSound && index == currentShapeIndex);
     }
 
-    public void SetCurrentRecipeDisplay(int currentShapeIndex, int recipeIndex)
+    public void SetCurrentRecipeDisplay(int currentShapeIndex, int recipeIndex, bool withSound = true)
     {
-        StartCoroutine(_SetCurrentRecipeDisplay(currentShapeIndex, recipeIndex));
+        StartCoroutine(_SetCurrentRecipeDisplay(currentShapeIndex, recipeIndex, withSound));
     }
 
-    private IEnumerator _SetCurrentRecipeDisplay(int currentShapeIndex, int recipeIndex)
+    private IEnumerator _SetCurrentRecipeDisplay(int currentShapeIndex, int recipeIndex, bool withSound = true)
     {
         currentRecipePageIndex = recipeIndex;
 
@@ -77,9 +78,23 @@ public class JungleRecipeBookUI : MonoBehaviour
             }
             recipeWidgets[i].SetIngredientsOrNull(shapes, recipeList.list[currentShapeIndex].result);
 
-            bumps[i + 4].DoBump(1);
+            bumps[i + 4].DoBump(withSound: withSound && shapes != null && currentRecipePageIndex == recipeIndex);
 
             yield return new WaitForSeconds(BUMP_DELAY);
+        }
+
+        // Putting it here bc lazy
+        UpdateStats(withSound && currentRecipePageIndex == recipeIndex);
+    }
+
+    private void UpdateStats(bool withSound = true)
+    {
+        // Stats bump
+        bumps[7].DoBump(withSound: withSound);
+
+        foreach (JungleRecipeBookStatNumber n in statNumbers)
+        {
+            n.RefreshNumber();
         }
     }
 

@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class Box : MonoBehaviour
 {
-    protected Dictionary<Direction, Path> paths = new Dictionary<Direction, Path>();
+    public Dictionary<Direction, Path> paths = new Dictionary<Direction, Path>();
 
     public List<Shape> shapes;
-    protected int currentShapeIndex = 0;
+    public int currentShapeIndex = 0;
 
     public Shape currentShape;
 

@@ -108,6 +108,17 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
 
     public static void IncrementNumberCreated(Shape shape)
     {
+        if (shape == null)
+        {
+            return;
+        }
+
+        if (!numShapeCreated.ContainsKey(shape))
+        {
+            Debug.LogWarning("Added a missing key: " + shape.shapeName);
+            numShapeCreated[shape] = 0;
+        }
+
         numShapeCreated[shape] += 1;
         if (numShapeCreated[shape] == 1)
         {

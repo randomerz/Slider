@@ -32,7 +32,6 @@ public class DesyncLever : Lever
     
     public void UpdatePairState()
     {
-        Debug.Log("desync: " + isDesynced + " power: " + _isPowered);
         if (!isDesynced) leverPair.SetState(!this._isPowered); //C: Because the actual power state doesn't update until after a coroutine 
     }
 
