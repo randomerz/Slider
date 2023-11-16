@@ -90,17 +90,20 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     {
         foreach(GameObject s in sprites)
         {
-            s.SetActive(false);
+            if(s!= null)
+                s.SetActive(false);
         }
         foreach(GameObject s in emptysprites)
         {
-            s.SetActive(false);
+            if(s!= null)
+                s.SetActive(false);
         }
         if(t5RockBS)
         {
             foreach(GameObject s in t5Sprites)
             {
-                s.SetActive(false);
+                if(s!= null)
+                    s.SetActive(false);
             }
         }
         crossings = 0;
