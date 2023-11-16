@@ -57,7 +57,7 @@ TextureImporter:
       213: -4094437381134746123
     second: jungle_icons_17
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -74,11 +74,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -117,6 +118,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -128,6 +131,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -140,6 +144,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -152,6 +157,20 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -546,27 +565,26 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      jungle_icons_7: 3513826606549969740
-      jungle_icons_11: 3487241736956060554
-      jungle_icons_4: 5583192047068207659
+      jungle_icons_0: 7556890186780223143
+      jungle_icons_1: 7264795979817727026
       jungle_icons_10: 424151812874646765
+      jungle_icons_11: 3487241736956060554
       jungle_icons_12: -7770933024648965157
+      jungle_icons_13: -1504112796457199294
+      jungle_icons_14: -6524022154057537461
+      jungle_icons_15: 6763222635574550948
       jungle_icons_16: -2495183365624516681
+      jungle_icons_17: -4094437381134746123
+      jungle_icons_2: 2059836041951503374
       jungle_icons_3: -3142586766093940877
+      jungle_icons_4: 5583192047068207659
       jungle_icons_5: 177679386795622942
       jungle_icons_6: 6588977595924754622
-      jungle_icons_2: 2059836041951503374
-      jungle_icons_15: 6763222635574550948
-      jungle_icons_1: 7264795979817727026
-      jungle_icons_17: -4094437381134746123
-      jungle_icons_13: -1504112796457199294
-      jungle_icons_9: 3847549224946233677
-      jungle_icons_0: 7556890186780223143
+      jungle_icons_7: 3513826606549969740
       jungle_icons_8: -905303426410023366
-      jungle_icons_14: -6524022154057537461
-  spritePackingTag: 
+      jungle_icons_9: 3847549224946233677
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
