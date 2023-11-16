@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 9
@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 120
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -121,7 +121,301 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: magitech_portculis_Open_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 40
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 145fe02089ebb0a70800000000000000
+      internalID: 8794332257449866561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_ToClosed_0
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 40
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da3f88523e174f770800000000000000
+      internalID: 8643658805232071597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_ToClosed_1
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 40
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4c3fdc9b29d19050800000000000000
+      internalID: 5805660175995976778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_ToClosed_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 20
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0e9678026d963830800000000000000
+      internalID: 4050597959240687119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_ToClosed_3
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 20
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6de32783c8a775250800000000000000
+      internalID: 5933345776744939222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_ToClosed_4
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 20
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 927b34522aaa27a00800000000000000
+      internalID: 752851701110912809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_ToClosed_5
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 20
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b51a6286688d76030800000000000000
+      internalID: 3487994508206317915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_Closed_0
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 20
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 926a8c51df4b7dbc0800000000000000
+      internalID: -3758336364932192727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_ToOpen_0
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 20
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bdd3200d3f07bb50800000000000000
+      internalID: 6608767732859264434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_ToOpen_1
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 20
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7fac36d2440503d0800000000000000
+      internalID: -3241179671714549892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_ToOpen_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 800ce79c82d147b10800000000000000
+      internalID: 1978238197338914824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_ToOpen_3
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 0
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f02fbfa5bf610440800000000000000
+      internalID: 4900320695684112625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_ToOpen_4
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 0
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f99d66b6fb578e130800000000000000
+      internalID: 3596253767456446879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_portculis_ToOpen_5
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 40
+        width: 40
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.05}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1dc6528d7c9245110800000000000000
+      internalID: 1248668934990032081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -132,7 +426,21 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      magitech_portculis_Closed_0: -3758336364932192727
+      magitech_portculis_Open_0: 8794332257449866561
+      magitech_portculis_ToClosed_0: 8643658805232071597
+      magitech_portculis_ToClosed_1: 5805660175995976778
+      magitech_portculis_ToClosed_2: 4050597959240687119
+      magitech_portculis_ToClosed_3: 5933345776744939222
+      magitech_portculis_ToClosed_4: 752851701110912809
+      magitech_portculis_ToClosed_5: 3487994508206317915
+      magitech_portculis_ToOpen_0: 6608767732859264434
+      magitech_portculis_ToOpen_1: -3241179671714549892
+      magitech_portculis_ToOpen_2: 1978238197338914824
+      magitech_portculis_ToOpen_3: 4900320695684112625
+      magitech_portculis_ToOpen_4: 3596253767456446879
+      magitech_portculis_ToOpen_5: 1248668934990032081
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

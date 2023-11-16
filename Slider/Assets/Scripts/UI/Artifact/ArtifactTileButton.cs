@@ -34,7 +34,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     protected Sprite islandSprite;
     protected Sprite emptySprite;
-    private FlashWhiteImage[] buttonIcons; //power lines, minecarft junctions, etc
+    private FlashWhiteImage[] buttonIcons; // power lines, minecarft junctions, etc
     private bool dontUpdateDefaultSpriteOnAwake;
 
     public STile MyStile {

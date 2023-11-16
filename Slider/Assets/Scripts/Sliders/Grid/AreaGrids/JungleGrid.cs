@@ -113,10 +113,6 @@ public class JungleGrid : SGrid
     
     // Puzzle 5 - Chad Race
     
-    
-    public void OnRaceWon() {
-        AudioManager.Play("Puzzle Complete");
-    }
 
     public void SpawnChadRewards() {
         Collectible c = GetCollectible("Boots");

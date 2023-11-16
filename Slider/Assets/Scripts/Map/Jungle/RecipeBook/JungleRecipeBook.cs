@@ -55,7 +55,7 @@ public class JungleRecipeBook : MonoBehaviour
             Player.SetCanMove(false, canAnimateMovement: false);
             controllerConditionals.DisableConditionals();
             
-            AudioManager.PickSound("Hat Click").WithVolume(0.3f).WithPitch(1.05f).AndPlay();
+            AudioManager.PickSound("UI Click").WithVolume(0.3f).WithPitch(1.05f).AndPlay();
         }
         else
         {
@@ -71,7 +71,7 @@ public class JungleRecipeBook : MonoBehaviour
             Player.SetCanMove(true, canAnimateMovement: true);
             controllerConditionals.EnableConditionals();
             
-            AudioManager.PickSound("Hat Click").WithVolume(0.25f).WithPitch(1f).AndPlay();
+            AudioManager.PickSound("UI Click").WithVolume(0.25f).WithPitch(1f).AndPlay();
         }
     }
 
