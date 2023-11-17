@@ -1328,6 +1328,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4718551623475633134}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4611049892532024502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5631578847454272583}
+  - component: {fileID: 2763283411838266651}
+  m_Layer: 0
+  m_Name: Hint Guy Link
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5631578847454272583
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611049892532024502}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1630858886002972033}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2763283411838266651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611049892532024502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7dde290968b3d549ba6696cade05cd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hintNPC: {fileID: 0}
 --- !u!1 &4679639833931829211
 GameObject:
   m_ObjectHideFlags: 0
@@ -1477,6 +1522,7 @@ Transform:
   - {fileID: 228550686766894585}
   - {fileID: 4718551623475633134}
   - {fileID: 1861083112377777894}
+  - {fileID: 5631578847454272583}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7840738406028113282
@@ -1493,6 +1539,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jungleRecipeBookUI: {fileID: 2001713547070166945}
   jungleCameraControl: {fileID: 8608250833993848931}
+  jungleRecipeBookHints: {fileID: 2763283411838266651}
   controllerConditionals: {fileID: 6956930528462404156}
   playerControllerPosition: {fileID: 3045768264613505264}
 --- !u!114 &8608250833993848931
@@ -2136,6 +2183,7 @@ MonoBehaviour:
   itemNameCheck: 
   excludeBoat: 0
   excludeLand: 0
+  onActionEnabled: 1
   myCollider: {fileID: 2802987117356246363}
 --- !u!1 &6554910315454454270
 GameObject:

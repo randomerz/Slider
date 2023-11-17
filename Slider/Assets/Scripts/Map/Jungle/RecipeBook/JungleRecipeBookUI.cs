@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,6 +7,8 @@ using UnityEngine.UI;
 
 public class JungleRecipeBookUI : MonoBehaviour
 {
+    public static EventHandler<System.EventArgs> onScreenChange;
+
     public RecipeList recipeList;
 
     public Image displayImage;
@@ -102,12 +105,14 @@ public class JungleRecipeBookUI : MonoBehaviour
     {
         int index = (currentShapeIndex + 1) % recipeList.list.Count;
         SetCurrentShape(index);
+        onScreenChange?.Invoke(this, null);
     }
 
     public void DecrementCurrentShape()
     {
         int index = (currentShapeIndex + recipeList.list.Count - 1) % recipeList.list.Count;
         SetCurrentShape(index);
+        onScreenChange?.Invoke(this, null);
     }
 
     public void IncrementRecipeDisplay()

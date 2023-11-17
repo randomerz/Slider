@@ -165,4 +165,23 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
         return true;
     }
 
+    public static bool AllRecipesCompleted()
+    {
+        foreach (Recipe r in _instance.recipeList.list)
+        {
+            Shape shape = r.result;
+            foreach (Recipe.Shapes shapes in r.combinations)
+            {
+                if (shapes.isSecondaryRecipe)
+                    continue;
+                
+                if (shapes.numberOfTimesCreated == 0)
+                {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
 }
