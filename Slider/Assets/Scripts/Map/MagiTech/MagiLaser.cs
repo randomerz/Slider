@@ -168,5 +168,8 @@ public class MagiLaser : MonoBehaviour
         }
         laserUI.UpdateSprites();
     }
+
+    public void CheckIsPowered(Condition c) => c.SetSpec(isPowered);
+    public void CheckIsEnabled(Condition c) => c.SetSpec(isEnabled);
 }
 
