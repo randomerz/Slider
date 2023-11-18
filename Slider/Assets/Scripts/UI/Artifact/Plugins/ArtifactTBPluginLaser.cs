@@ -5,9 +5,9 @@ using UnityEngine;
 //L: This is a way to inject more implementation into a button without using inheritance (since swapping components in Unity doesn't save serialized values).
 public class ArtifactTBPluginLaser : ArtifactTBPlugin
 {
-    public GameObject[] sprites = new GameObject[4]; //0 = East, 1 = north, 2 = west, 3 = south
-    public GameObject[] emptysprites = new GameObject[4]; //0 = East, 1 = north, 2 = west, 3 = south
-    public bool[] edgeblockers = new bool[4];
+    public GameObject[] sprites; //0 = East, 1 = north, 2 = west, 3 = south
+    public GameObject[] emptysprites; //0 = East, 1 = north, 2 = west, 3 = south
+    public bool[] edgeblockers;
     public enum LaserCenterObject
     {
         NONE,
@@ -26,7 +26,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     private int[] mirrorNWSE = {1, 0, 3, 2};
     private int[] mirrorNESW = {3, 2, 1, 0};
 
-    public static Dictionary<ArtifactTileButton, ArtifactTBPluginLaser> tileDict = new();
+    public static Dictionary<ArtifactTileButton, ArtifactTBPluginLaser> tileDict;
     public static ArtifactTBPluginLaser source;
 
     private int MAX_CROSSINGS = 12;
@@ -60,15 +60,17 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         }
     }
 
-    public List<LaserableRockUIData> rockdata = new();
+    public List<LaserableRockUIData> rockdata;
     public bool t5RockBS;
-    public GameObject[] t5Sprites = new GameObject[2];
+    public GameObject[] t5Sprites;
  
 
     private void Awake()
     {
         button = GetComponentInParent<ArtifactTileButton>();
         button.plugins.Add(this);
+        if(tileDict == null)
+            tileDict = new();
         tileDict.Add(button, this);
         ResetSprites();
         if(centerObject == LaserCenterObject.SOURCE)
@@ -78,6 +80,11 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     private void OnEnable()
     {
         UpdateSpritesFromSource();
+    }
+
+    private void OnDestroy()
+    {
+        tileDict.Clear();
     }
 
     private void Update()
@@ -116,8 +123,13 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
             if(t5RockBS && direction == 1)
                 t5Sprites[0].SetActive(true);
             else
-                sprites[direction].SetActive(true);
-
+            {
+                var g = sprites[direction];
+                if(g==null)
+                    print("Sprite " + direction + " from array is null");
+                else
+                    g.SetActive(true);
+            }
             if(edgeblockers[direction])
                 return;
         }
@@ -222,6 +234,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void UpdateSprites()
     {
+        print(tileDict.Count);
         foreach(ArtifactTBPluginLaser l in tileDict.Values)
         {
             l.ResetSprites();
