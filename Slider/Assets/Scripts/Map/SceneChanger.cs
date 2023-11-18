@@ -32,9 +32,10 @@ public class SceneChanger : MonoBehaviour
 
         if (isSpawnPosRelative)
             SceneSpawns.relativePos = Player.GetPosition() - transform.position;
-        
+
         //We want to disable menus before made to black 
-        UIManager.InvokeCloseAllMenus(true); 
+        //UIManager.InvokeCloseAllMenus(true); 
+        PauseManager.SetPauseState(false);
 
         // Start a fade to black and then load the scene once it finishes
         UIEffects.FadeToBlack(() => { StartLoadingScene(); }, 2);

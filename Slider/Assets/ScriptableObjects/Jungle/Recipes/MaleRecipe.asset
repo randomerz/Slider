@@ -17,11 +17,14 @@ MonoBehaviour:
   - ingredients:
     - {fileID: 11400000, guid: d7f95dae23bf4f243986051c558577ab, type: 2}
     - {fileID: 11400000, guid: 3ff2f45c619a21840a5bc4d392aed53c, type: 2}
+    isSecondaryRecipe: 0
   - ingredients:
     - {fileID: 11400000, guid: d7f95dae23bf4f243986051c558577ab, type: 2}
     - {fileID: 11400000, guid: c69c312efe4e4034fa00f822ec758ee2, type: 2}
     - {fileID: 11400000, guid: 76675a2db3290714f95b9c4099fbdd50, type: 2}
+    isSecondaryRecipe: 1
   - ingredients:
     - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
     - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
     - {fileID: 11400000, guid: 3ff2f45c619a21840a5bc4d392aed53c, type: 2}
+    isSecondaryRecipe: 1

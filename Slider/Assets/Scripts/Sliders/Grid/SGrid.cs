@@ -90,7 +90,7 @@ public class SGrid : Singleton<SGrid>, ISavable
             UpdateButtonCompletions(this, null);
         }
         
-        UIEffects.FadeFromBlack(() => {UIManager.SetCanOpenMenus(true);});
+        UIEffects.FadeFromBlack(() => PauseManager.RemoveAllPauseRestrictions());
     }
 
     //For deriving classes: Make sure InitArea is called before Init!
@@ -488,7 +488,8 @@ public void SetGrid(int[,] puzzle)
         {
             ActivateCollectible(name);
             GetCollectible(name).transform.position = Player.GetPosition();
-            UIManager.CloseUI();
+            //UIManager.CloseUI();
+            PauseManager.SetPauseState(false);
         }
     }
 

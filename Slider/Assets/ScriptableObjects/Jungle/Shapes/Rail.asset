@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d6f2f3827a682f41a59736616c5e6d4, type: 3}
   m_Name: Rail
   m_EditorClassIdentifier: 
-  name: Rail
-  sprite: {fileID: -1512208282, guid: ad1723bb7f8e50943af2f2a117e67a95, type: 3}
+  shapeName: Rail
+  fullSprite: {fileID: -1512208282, guid: ad1723bb7f8e50943af2f2a117e67a95, type: 3}
+  outlineSprite: {fileID: -1826859516, guid: 5baa2f126be27c6498cbfe1c7321a50c, type: 3}
+  emptySprite: {fileID: 2140021150, guid: 190b7667e56d6c3428c1d6f8bae35348, type: 3}

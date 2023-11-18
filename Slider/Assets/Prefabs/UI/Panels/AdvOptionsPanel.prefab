@@ -172,6 +172,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba608890f571ba41a7a2b2dfcf74dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onOpen:
+    m_PersistentCalls:
+      m_Calls: []
+  onClose:
+    m_PersistentCalls:
+      m_Calls: []
   parentMenu: {fileID: 0}
 --- !u!1 &1539095658701119917
 GameObject:

@@ -632,6 +632,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba608890f571ba41a7a2b2dfcf74dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onOpen:
+    m_PersistentCalls:
+      m_Calls: []
+  onClose:
+    m_PersistentCalls:
+      m_Calls: []
   parentMenu: {fileID: 0}
 --- !u!1 &4329572372207034148
 GameObject:
@@ -1656,6 +1662,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 3516294938470570099}
     - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_SpriteState.m_SelectedSprite
       value: 

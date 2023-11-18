@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using System;
 
 
-public class Meltable : FlashWhite, ISavable
+public class Meltable : FlashWhiteSprite, ISavable
 {
     [Header("Sprites")]
    // [SerializeField] private Animator animator; C: Will switch over later

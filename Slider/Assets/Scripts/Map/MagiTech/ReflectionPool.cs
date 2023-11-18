@@ -88,7 +88,8 @@ public class ReflectionPool : MonoBehaviour
         foreach(GameObject go in cutsceneParticles)
             go.SetActive(true);
         AudioManager.Play("Slide Rumble");
-        UIManager.CloseUI();
+        //UIManager.CloseUI();
+        PauseManager.SetPauseState(false);
         UIArtifactMenus.TurnInArtifact();
         npc.SetActive(false);
         CameraShake.ShakeIncrease(4, 0.5f);

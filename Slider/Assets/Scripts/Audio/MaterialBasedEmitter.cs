@@ -26,7 +26,7 @@ public class MaterialBasedEmitter : MonoBehaviour
 
     public void Step()
     {
-        if (UIManager.IsUIOpen() || UIArtifactMenus.IsArtifactOpen() || !Player.GetCanMove()) // from PlayerAction.cs
+        if (PauseManager.IsPaused || UIArtifactMenus.IsArtifactOpen() || !Player.GetCanMove()) // from PlayerAction.cs
         {
             return;
         }

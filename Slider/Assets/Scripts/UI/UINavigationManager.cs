@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -110,6 +109,17 @@ public class UINavigationManager : Singleton<UINavigationManager>
                 }
             }
         );
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Cancel, (_) =>
+        {
+            if (CurrentMenu != null)
+            {
+                UIMenu menu = CurrentMenu.GetComponent<UIMenu>();
+                if (menu != null)
+                {
+                    menu.MoveToParentMenu();
+                }
+            }
+        });
 
         // Have you tried turning the EventSystem off and on again?
         SceneManager.sceneLoaded += (Scene s1, LoadSceneMode mode) => {

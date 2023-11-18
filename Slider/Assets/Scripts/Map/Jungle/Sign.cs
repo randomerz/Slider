@@ -88,26 +88,17 @@ public class Sign : Box
         {
             if (recievedShapes[paths[d]] != null)
             {
-                // print(recievedShapes[paths[d]]);
-                // print(d);
                 shapesRecieved.Add(recievedShapes[paths[d]]);
             }
         }
 
-/*        print(this.gameObject.name + " merging");
-        foreach (Shape s in shapesRecieved)
-        {
-            print(s.name);
-        }*/
 
         foreach (Recipe recipe in recipes.list)
         {
-            //print(recipe.result.name);
             Shape hold = recipe.Check(shapesRecieved);
             if (hold != null)
             {
                 currentShape = hold;
-               // print("merged: " + currentShape.type);
                 return;
             }
         }

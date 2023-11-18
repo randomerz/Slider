@@ -76,7 +76,7 @@ public class Controls : Singleton<Controls>
         {
             if (device is Gamepad && change == InputDeviceChange.Disconnected)
             {
-                UIManager.OpenPause();
+                PauseManager.SetPauseState(true);
             }
         };
 

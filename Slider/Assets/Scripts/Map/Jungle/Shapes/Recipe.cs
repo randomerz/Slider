@@ -9,7 +9,10 @@ public class Recipe : ScriptableObject
     public class Shapes
     {
         public List<Shape> ingredients;
+        public bool isSecondaryRecipe;
+        [HideInInspector] public int numberOfTimesCreated; // Serialized in JungleRecipeBookSave.cs
     }
+
     public Shape result;
     public List<Shapes> combinations = new List<Shapes>();
 
@@ -19,6 +22,7 @@ public class Recipe : ScriptableObject
         {
             if (AllIngredients(shapes, combo)) 
             {
+                combo.numberOfTimesCreated += 1;
                 return result;
             }
         }
@@ -28,7 +32,7 @@ public class Recipe : ScriptableObject
 
     public bool AllIngredients(List<Shape> shapes, Shapes combo)
     {
-        //check each combo to see if they are the shapes being passed in
+        // check each combo to see if they are the shapes being passed in
         List<Shape> ingredients = combo.ingredients;
 
         if (shapes.Count != ingredients.Count)
@@ -44,7 +48,7 @@ public class Recipe : ScriptableObject
             hold.Add(shape);
         }
 
-        //check if they all have the same things
+        // check if they all have the same things
         foreach (Shape ingredient in ingredients)
         {
             bool removed = hold.Remove(ingredient);

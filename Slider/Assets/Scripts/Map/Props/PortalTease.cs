@@ -13,7 +13,7 @@ public class PortalTease : MonoBehaviour
     public ParticleSystem burstParticles;
 
     public GameObject realPortal;
-    public FlashWhite realPortalFlashWhite;
+    public IFlashWhite realPortalFlashWhite;
 
     public MagiTechArtifact magiTechArtifact;
     public GameObject uiPortalTracker;

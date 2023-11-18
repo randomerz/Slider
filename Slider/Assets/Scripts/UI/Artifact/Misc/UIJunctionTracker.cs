@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIJunctionTracker : FlashWhiteUI
+public class UIJunctionTracker : FlashWhiteImage
 {
     [SerializeField] private Image image;
     [SerializeField] private MinecartJunctionNode myNode;

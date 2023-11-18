@@ -12,7 +12,7 @@ public class DebugUIManager : MonoBehaviour
     public static bool disableConveyers;
 
     public GameObject debugPanel;
-    public bool isDebugOpen;
+    public static bool isDebugOpen;
 
     public TMP_InputField consoleText;
 
@@ -49,44 +49,38 @@ public class DebugUIManager : MonoBehaviour
     {
         if (Player.GetInstance() == null || !GameManager.instance.debugModeActive)
             return;
-        isDebugOpen = !isDebugOpen;
-        debugPanel.SetActive(isDebugOpen);
-        if(isDebugOpen)
-            OnOpenDebug?.Invoke(this, new EventArgs());
+        
+        if(!isDebugOpen)
+            OpenDebug();
         else
-            OnCloseDebug?.Invoke(this, new EventArgs());
+            CloseDebug();
+    }
 
-        if (isDebugOpen)
-        {
-            UIManager.PauseGameGlobal();
-            UIManager.canOpenMenus = false;
+    private void OpenDebug()
+    {
+        if(isDebugOpen) return;
 
-            Player.SetCanMove(false);
+        isDebugOpen = true;
+        debugPanel.SetActive(true);
+        OnOpenDebug?.Invoke(this, new EventArgs());
+        PauseManager.AddPauseRestriction(owner: gameObject);
+        Player.SetCanMove(false);
 
-            consoleText.Select();
-            consoleText.ActivateInputField();
-            consoleText.text = "";
-            commandIndex = commandHistory.Count + 1;
-        }
-        else
-        {
-            UIManager.CloseUI();
-            UIManager.canOpenMenus = true;
-            Player.SetCanMove(true);
-        }
+        consoleText.Select();
+        consoleText.ActivateInputField();
+        consoleText.text = "";
+        commandIndex = commandHistory.Count + 1;
     }
 
     private void CloseDebug()
     {
-        if (isDebugOpen)
-        {
-            isDebugOpen = false;
-            Player.SetCanMove(true);
-            debugPanel.SetActive(false);
-            
-            UIManager.CloseUI();
-            UIManager.canOpenMenus = true;
-        }
+        if (!isDebugOpen) return;
+        
+        isDebugOpen = false;
+        OnCloseDebug?.Invoke(this, new EventArgs());
+        Player.SetCanMove(true);
+        debugPanel.SetActive(false);
+        PauseManager.RemovePauseRestriction(owner: gameObject);
     }
 
     public void SetScene(string sceneName)
@@ -261,7 +255,8 @@ public class DebugUIManager : MonoBehaviour
         foreach (Collectible c in SGrid.Current.GetCollectibles())
             if(!excludeSliders && !c.name.Contains("Slider"))
                 c.DoPickUp();
-        UIManager.CloseUI();
+        //UIManager.CloseUI();
+        PauseManager.SetPauseState(false);
     }
 
     //C: Gives all collectables for that area

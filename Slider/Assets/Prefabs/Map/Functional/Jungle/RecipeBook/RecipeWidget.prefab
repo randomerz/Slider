@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 1932098833442868952}
   - component: {fileID: 4138046262023846460}
   - component: {fileID: 755048762173874339}
+  - component: {fileID: 851212072335618101}
+  - component: {fileID: 3665897269736151998}
   m_Layer: 0
   m_Name: RecipeIcon (1)
   m_TagString: Untagged
@@ -75,6 +77,59 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &851212072335618101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4105260956071890136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e53cc9672a33504e8efda90823c6a1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whiteSpriteMat: {fileID: 2100000, guid: 8ecef4a34f6e0c1439cfff70d767a625, type: 2}
+  flashTime: 0.25
+--- !u!114 &3665897269736151998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4105260956071890136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13eef5e95d3b6cf4e9cc756c9fb130f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useRectTransform: 1
+  bumpDifference: {x: 0, y: 0.0625, z: 0}
+  bumpDuration: 0.25
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4810627865604094593
 GameObject:
   m_ObjectHideFlags: 0
@@ -86,6 +141,7 @@ GameObject:
   - component: {fileID: 354810750474053926}
   - component: {fileID: 360447811570676783}
   - component: {fileID: 2400187109015726464}
+  - component: {fileID: 1367757118770980465}
   m_Layer: 0
   m_Name: PlusIcon (1)
   m_TagString: Untagged
@@ -150,6 +206,45 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1367757118770980465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4810627865604094593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13eef5e95d3b6cf4e9cc756c9fb130f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useRectTransform: 1
+  bumpDifference: {x: 0, y: 0.0625, z: 0}
+  bumpDuration: 0.25
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6165158378486256818
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,6 +256,7 @@ GameObject:
   - component: {fileID: 1460883459300925314}
   - component: {fileID: 3871277212396958207}
   - component: {fileID: 215267600148247884}
+  - component: {fileID: 5154241319480202421}
   m_Layer: 0
   m_Name: PlusIcon (2)
   m_TagString: Untagged
@@ -225,6 +321,45 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5154241319480202421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6165158378486256818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13eef5e95d3b6cf4e9cc756c9fb130f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useRectTransform: 1
+  bumpDifference: {x: 0, y: 0.0625, z: 0}
+  bumpDuration: 0.25
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7388046128885778910
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,6 +371,7 @@ GameObject:
   - component: {fileID: 9168006872464108376}
   - component: {fileID: 4613904014490050437}
   - component: {fileID: 8012652644246485846}
+  - component: {fileID: 6397361538963966478}
   m_Layer: 0
   m_Name: RecipeIcon (2)
   m_TagString: Untagged
@@ -300,6 +436,45 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6397361538963966478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7388046128885778910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13eef5e95d3b6cf4e9cc756c9fb130f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useRectTransform: 1
+  bumpDifference: {x: 0, y: 0.0625, z: 0}
+  bumpDuration: 0.25
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7649868941405477876
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,6 +486,7 @@ GameObject:
   - component: {fileID: 4198016697659801843}
   - component: {fileID: 6075358305954989718}
   - component: {fileID: 6639300097255774543}
+  - component: {fileID: 14248979024350093}
   m_Layer: 0
   m_Name: RecipeIcon (3)
   m_TagString: Untagged
@@ -375,6 +551,45 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &14248979024350093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7649868941405477876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13eef5e95d3b6cf4e9cc756c9fb130f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useRectTransform: 1
+  bumpDifference: {x: 0, y: 0.0625, z: 0}
+  bumpDuration: 0.25
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8013141835945356350
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,6 +600,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8802734562557857475}
   - component: {fileID: 6650780052353555765}
+  - component: {fileID: 944098505509376849}
   m_Layer: 0
   m_Name: RecipeWidget
   m_TagString: Untagged
@@ -435,3 +651,17 @@ MonoBehaviour:
   plusSignImages:
   - {fileID: 2400187109015726464}
   - {fileID: 215267600148247884}
+--- !u!114 &944098505509376849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8013141835945356350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b7eacef8e0eda047abf80693db2b8fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  children: []
+  shouldFindChildrenAutomatically: 1

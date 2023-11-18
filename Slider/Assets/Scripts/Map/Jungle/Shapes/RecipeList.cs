@@ -7,6 +7,4 @@ using UnityEngine;
 public class RecipeList : ScriptableObject
 {
     public List<Recipe> list = new List<Recipe>();
-    //private int index = -1;
-
 }

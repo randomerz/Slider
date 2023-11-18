@@ -253,16 +253,6 @@ MonoBehaviour:
       Path: event:/SFX/SFXR/Hat Click
     canPause: 1
     dopplerScale: 0
-  - name: NPC Blip
-    fmodEvent:
-      Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
-    canPause: 1
-    dopplerScale: 0
   - name: Puzzle Complete
     fmodEvent:
       Guid:
@@ -403,6 +393,16 @@ MonoBehaviour:
       Path: event:/SFX/Ocean/Glass Clink
     canPause: 1
     dopplerScale: 0
+  - name: Slide Ocean
+    fmodEvent:
+      Guid:
+        Data1: -674129342
+        Data2: 1133950285
+        Data3: -944018802
+        Data4: 1727944225
+      Path: event:/SFX/Ocean/Slide Ocean
+    canPause: 1
+    dopplerScale: 1
   - name: Record Scratch
     fmodEvent:
       Guid:

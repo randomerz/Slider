@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{d7d19a42-b54d-4396-8e6a-bbc72156fe66}">
 		<property name="name">
-			<value>Ocean Waves</value>
+			<value>Slide Ocean</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -56,7 +56,11 @@
 			<destination>{d179b94e-43ce-4a5b-ae00-6bca3598c2b0}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{56e34513-88ef-47fa-8ffe-0c7bc0694be0}" />
+	<object class="EventAutomatableProperties" id="{56e34513-88ef-47fa-8ffe-0c7bc0694be0}">
+		<property name="maximumDistance">
+			<value>150</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{062e9ad9-91a5-4b73-964c-de2e5f37d8a6}" />
 	<object class="GroupTrack" id="{0e466d6b-152c-4b2e-8bfb-80d519504e98}">
 		<relationship name="modules">
@@ -97,9 +101,6 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{f8540a3d-9bb6-43ff-9605-76bcfeb5d386}">
-		<property name="volume">
-			<value>10</value>
-		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -120,7 +121,11 @@
 			<destination>{2209a3a1-1462-4f85-8d41-9885136bdc77}</destination>
 		</relationship>
 	</object>
-	<object class="MixerBusPanner" id="{709f9692-ddba-43ee-9f65-b62e784cb781}" />
+	<object class="MixerBusPanner" id="{709f9692-ddba-43ee-9f65-b62e784cb781}">
+		<property name="surroundPanExtent">
+			<value>60</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{b94d480f-a854-4548-9dbe-83281ccb184d}" />
 	<object class="MixerBusEffectChain" id="{2a1a9e05-d532-4a6c-9a63-bdc31aa7d6d4}">
 		<relationship name="effects">
@@ -129,6 +134,9 @@
 	</object>
 	<object class="MixerBusPanner" id="{2ba5caa8-2e2d-47d2-9aca-9e5d823877b4}" />
 	<object class="SpatialiserEffect" id="{b80faea3-a13f-47b2-adf2-1ff6cc94d42d}">
+		<property name="maximumDistance">
+			<value>150</value>
+		</property>
 		<property name="extentMode">
 			<value>1</value>
 		</property>
@@ -137,6 +145,9 @@
 	<object class="SpatialiserEffect" id="{2209a3a1-1462-4f85-8d41-9885136bdc77}">
 		<property name="distanceRolloffType">
 			<value>3</value>
+		</property>
+		<property name="maximumDistance">
+			<value>150</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{3373f580-47fb-4dbd-ba8d-6d79f7eb1dcf}" />

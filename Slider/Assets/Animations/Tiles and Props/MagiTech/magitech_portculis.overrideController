@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: magitech_portculis
+  m_Controller: {fileID: 9100000, guid: c813364fe8762a647a3099bb76ca3fed, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 4cd389e52ce8e9941b6b4929a0cea2ad, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 86aa64eff6071cd43b4d0c45647a1147, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: b09e9e22454515447b8e580a9b0b021b, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d89dc8749f5ed554fb17a370303f1068, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 49b04bca6ec697946a389862a3ed3007, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 936cb99a752aa33409ede39b090b8e43, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 4befed79b82b47c4aba84d2b4a321502, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: cde7e10061f2bd44aaab002e2e2d2bc8, type: 2}

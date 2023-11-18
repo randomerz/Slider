@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIPowerTracker : FlashWhiteUI
+public class UIPowerTracker : FlashWhiteImage
 {
     [SerializeField] private Image poweredImage;
     [SerializeField] private ElectricalNode myNode;
