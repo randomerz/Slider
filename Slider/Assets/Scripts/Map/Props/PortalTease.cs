@@ -18,6 +18,8 @@ public class PortalTease : MonoBehaviour
     public MagiTechArtifact magiTechArtifact;
     public GameObject uiPortalTracker;
 
+    public List<GameObject> teaseGO;
+
     void Start()
     {
         if (SaveSystem.Current.GetBool("magitechDesertPortal"))
@@ -80,10 +82,11 @@ public class PortalTease : MonoBehaviour
             ParticleManager.SpawnParticle(
                 ParticleType.SmokePoof, realPortal.transform.position, realPortal.transform
             );
-            realPortalFlashWhite.Flash(1);
+            //realPortalFlashWhite.Flash(1);
         }
 
-        gameObject.SetActive(false);
+        foreach(GameObject g in teaseGO)
+            g.SetActive(false);
         realPortal.SetActive(true);
     }
 
