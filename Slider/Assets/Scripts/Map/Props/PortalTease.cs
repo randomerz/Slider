@@ -13,18 +13,17 @@ public class PortalTease : MonoBehaviour
     public ParticleSystem burstParticles;
 
     public GameObject realPortal;
-    public IFlashWhite realPortalFlashWhite;
 
     public MagiTechArtifact magiTechArtifact;
     public GameObject uiPortalTracker;
 
-    public List<GameObject> teaseGO;
-
+    public SpriteRenderer teaseSpriteRenderer;
+    
     void Start()
     {
         if (SaveSystem.Current.GetBool("magitechDesertPortal"))
         {
-            EnableRealPortal(false);
+            EnableRealPortal(true);
             return;
         }
 
@@ -70,11 +69,11 @@ public class PortalTease : MonoBehaviour
         burstParticles.Play();
     }
 
-    public void EnableRealPortal(bool withSound=true)
+    public void EnableRealPortal(bool fromSave=false)
     {
         SaveSystem.Current.SetBool("magitechDesertPortal", true);
 
-        if (withSound)
+        if (!fromSave)
         {
             AudioManager.Play("MagicChimes2");
             AudioManager.Play("RumbleDecrease2.5s");
@@ -82,11 +81,11 @@ public class PortalTease : MonoBehaviour
             ParticleManager.SpawnParticle(
                 ParticleType.SmokePoof, realPortal.transform.position, realPortal.transform
             );
-            //realPortalFlashWhite.Flash(1);
+
         }
 
-        foreach(GameObject g in teaseGO)
-            g.SetActive(false);
+        teaseSpriteRenderer.enabled = false;
+        animator.enabled = false;
         realPortal.SetActive(true);
     }
 
