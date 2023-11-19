@@ -133,7 +133,7 @@ public class DesertGrid : SGrid
     {
         STile[,] grid = ((DesertGrid)Current).grid;
 
-        Dictionary<Vector2Int, int> mirageTileIdsToPositions = MirageSTileManager.GetActiveMirageTileIdsByPosition();
+        Dictionary<Vector2Int, char> mirageTileIdsToPositions = MirageSTileManager.GetActiveMirageTileIdsByPosition();
 
         string s = "";
         for (int y = grid.GetLength(1) - 1; y >= 0; y--)

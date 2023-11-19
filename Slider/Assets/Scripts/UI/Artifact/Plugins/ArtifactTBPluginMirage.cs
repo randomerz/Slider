@@ -23,11 +23,11 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
     {
         if (mirageIslandId > 0)
         {
-            Debug.Log("disablemirage");
+            //Debug.Log("disablemirage");
             DisableMirage();
             return;
         }
-        Debug.Log("selecting");
+        //Debug.Log("selecting");
         button.SelectButton();
     }
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
@@ -60,6 +60,8 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         mirageIslandId = 0;
         stile.sliderCollider.isTrigger = false;
         buttonMirage.SetMirageEnabled(false);
+
+        DesertArtifact.MirageDisappeared?.Invoke(this, new System.EventArgs());
     }
 /*    private void OnDisable()
     {
