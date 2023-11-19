@@ -228,6 +228,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void UpdateSprites()
     {
+        if(tileDict == null) return;
         foreach(ArtifactTBPluginLaser l in tileDict.Values)
         {
             l.ResetSprites();
