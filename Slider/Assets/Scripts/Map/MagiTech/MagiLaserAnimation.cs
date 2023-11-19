@@ -42,4 +42,10 @@ public class MagiLaserAnimation : MonoBehaviour
     {
         magiLaser.SetEnabled(false);
     }
+
+    public void PowerFromLoad()
+    {
+        animator.Play("Loop");
+        animator.SetBool("Powered", true);
+    }
 }

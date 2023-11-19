@@ -123,13 +123,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
             if(t5RockBS && direction == 1)
                 t5Sprites[0].SetActive(true);
             else
-            {
-                var g = sprites[direction];
-                if(g==null)
-                    print("Sprite " + direction + " from array is null");
-                else
-                    g.SetActive(true);
-            }
+                sprites[direction].SetActive(true);
             if(edgeblockers[direction])
                 return;
         }
@@ -234,7 +228,6 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void UpdateSprites()
     {
-        print(tileDict.Count);
         foreach(ArtifactTBPluginLaser l in tileDict.Values)
         {
             l.ResetSprites();
