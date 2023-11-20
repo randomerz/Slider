@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PipeLiquid : MonoBehaviour
 {
@@ -9,11 +10,19 @@ public class PipeLiquid : MonoBehaviour
     private Vector3[] points;
     private float[] distance; 
 
+    [SerializeField] private string saveString;
+    public bool isFilling;
+    public bool isFull;
+
+    public UnityEvent OnIsFull;
+    public UnityEvent OnIsEmpty;
+    public UnityEvent OnStartFill;
+
 
     private void Awake()
     {
         SavePoints();
-        Fill(Vector2.zero);
+        SetPipeEmpty();
     }
 
     private void SavePoints()
@@ -41,6 +50,9 @@ public class PipeLiquid : MonoBehaviour
 
     private IEnumerator AnimateFill(Vector2 startState, Vector2 endState, float duration)
     {
+        isFull = false;
+        isFilling = true;
+        OnStartFill?.Invoke();
         Fill(startState);
         float t = 0;
         while (t < duration)
@@ -51,6 +63,16 @@ public class PipeLiquid : MonoBehaviour
             yield return null;
         }
         Fill(endState);
+        isFilling = false;
+        if(endState == Vector2.up)
+        {
+            isFull = true;
+            OnIsFull?.Invoke();
+        }
+        else if (endState[0] == endState[1])
+        {
+            OnIsEmpty?.Invoke();
+        }
     }
 
     private void Fill(Vector2 state)
@@ -117,5 +139,37 @@ public class PipeLiquid : MonoBehaviour
     public void FillPipe(float duration)
     {
         StartCoroutine(AnimateFill(Vector2.zero, Vector2.up, duration));
-    } 
+    }
+
+    public void SetPipeFull()
+    {
+        Fill(Vector2.up);
+        OnIsFull?.Invoke();
+    }
+
+    public void SetPipeEmpty()
+    {
+        Fill(Vector2.zero);
+        OnIsEmpty?.Invoke();
+    }
+
+    public void EmptyPipeStartToEnd()
+    {
+        StartCoroutine(AnimateFill(Vector2.up, Vector2.one, FILLDURATION));
+    }
+
+    public void EmptyPipeEndToStart()
+    {
+        StartCoroutine(AnimateFill(Vector2.up, Vector2.zero, FILLDURATION));
+    }
+
+    public void IsPipeFilling(Condition c)
+    {
+        c.SetSpec(isFilling);
+    }
+
+    public void IsPipeFull(Condition c)
+    {
+        c.SetSpec(isFull);
+    }
 }
