@@ -45,12 +45,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _HorizontalScale: 10
+    - _HorizontalScale: 16
     - _Scale: 29
-    - _VerticalScale: 29
+    - _VerticalScale: 32
     m_Colors:
     - _ColorMask: {r: 0.9960785, g: 0, b: 0.9960785, a: 0}
-    - _RTOffset: {r: 18.75, g: -12.25, b: 0, a: 0}
+    - _RTOffset: {r: 15, g: -14, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &6399460578524351220
 MonoBehaviour:
