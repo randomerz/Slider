@@ -7,12 +7,6 @@ public class PipeLiquid : MonoBehaviour
     [SerializeField] private float FILLDURATION = 5f;
     [SerializeField] private LineRenderer lineRenderer;
     private Vector3[] points;
-    /// <summary>
-    /// array of (p-1) normalized distances between points. 
-    /// 
-    /// For example, consider points (0,0), (0,3), and (4,0)
-    /// Then distance will be [3/8, 5/8]
-    /// </summary>
     private float[] distance; 
 
 
@@ -28,15 +22,15 @@ public class PipeLiquid : MonoBehaviour
         points = new Vector3[numPoints];
         lineRenderer.GetPositions(points);
 
-        distance = new float[numPoints - 1];
+        distance = new float[numPoints];
         float totalDistance = 0;
-        for(int i = 0; i < numPoints - 1; i++)
+        for(int i = 1; i < numPoints; i++)
         {
             Vector3 currPoint = points[i];
-            Vector3 nextPoint = points[i+1];
-            float d = Vector3.Distance(currPoint, nextPoint);
+            Vector3 prevPoint = points[i-1];
+            float d = Vector3.Distance(prevPoint, currPoint);
             totalDistance += d;
-            distance[i] = d;
+            distance[i] = totalDistance;
         }
         
         for(int i = 0; i < distance.Length; i++)
@@ -108,6 +102,8 @@ public class PipeLiquid : MonoBehaviour
                 }
             }
         }
+        if(endPos == 1)
+            newPositions.Add(points[^1]);
         
         lineRenderer.positionCount = newPositions.Count;
         lineRenderer.SetPositions(newPositions.ToArray());
