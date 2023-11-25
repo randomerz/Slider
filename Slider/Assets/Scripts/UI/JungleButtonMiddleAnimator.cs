@@ -12,6 +12,15 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
     [SerializeField] private Sprite blankSprite;
     private Sprite connectorSprite;
 
+    public Sprite ConnectorSprite
+    {
+        get { return connectorSprite; }
+        set {
+            connectorSprite = value; 
+            image.sprite = connectorSprite;
+        }
+    }
+
     [SerializeField] private Image pushedDownFrame;
 
     private FlashWhiteImage icon;
@@ -23,28 +32,23 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
     void Awake()
     {
         flickeringStarted = false;
-        connectorSprite = image.sprite;
+        ConnectorSprite = image.sprite;
         flickeringDone = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Connector script works");
         if (tile2 != null)
         {
-            Debug.Log($"ICON 1: {icon}");
             if (!tile2.TileIsActive)
             {
-                Debug.Log("HALP");
                 image.gameObject.SetActive(false);
             } else
             {
-                Debug.Log($"PLS / HAS FLICKERED: {flickeringStarted}");
                 image.gameObject.SetActive(true);
                 if (!flickeringStarted)
                 {
-                    Debug.Log($"ICON: {icon}");
                     StartCoroutine(NewButtonFlicker(3));
                     flickeringStarted = true;
                 }
@@ -57,10 +61,17 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
         }
     }
 
+    void OnDisable()
+    {
+        if (flickeringStarted)
+        {
+            flickeringDone = true;
+        }
+    }
+
     // yoinked from ArtifactTileButtonAnimator.cs
     public void SetPushedDown(bool value)
     {
-        Debug.Log($"PUSHED DOWN: {value}");
         if (value)
         {
             image.rectTransform.anchoredPosition = new Vector3(18.5f, -1);
@@ -86,7 +97,6 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
         }
         // Special case since there should only be one
         image.gameObject.SetActive(true);
-        Debug.Log("Connector flicker activated");
         //if (icon.gameObject.activeSelf)
         //    icon.Flash(numFlickers);
         
@@ -102,12 +112,11 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
         image.sprite = connectorSprite;
     }
 
+    // logic yoinked from same script
     public void SetSpriteToIslandOrEmpty()
     {
         if (tile2.TileIsActive)
         {
-            // TODO:  correction ->                     should be completed sprite else default sprite
-            //tile2.buttonAnimator.sliderImage.sprite = tile2.isComplete ? image.sprite : image.sprite;
             image.sprite = connectorSprite;
             
         }

@@ -95,7 +95,6 @@ public class ArtifactTileButton : MonoBehaviour
     {
         UpdateTileActive();
         buttonIcons = GetComponentsInChildren<FlashWhiteImage>();
-        Debug.Log($"PAIN: {buttonIcons.Length}");
     }
 
     public void OnSelect()
