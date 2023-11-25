@@ -11,13 +11,14 @@ GameObject:
   - component: {fileID: 4311060666515570628}
   - component: {fileID: 2612161701912113620}
   - component: {fileID: 6105978248783066365}
+  - component: {fileID: 3080225696741148246}
   m_Layer: 5
   m_Name: JungleSignDirection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4311060666515570628
 RectTransform:
   m_ObjectHideFlags: 0
@@ -52,7 +53,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5635073574016294962}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -75,3 +76,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3080225696741148246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5635073574016294962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dccd5fc020492274e9aa068b6894dd80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whiteSpriteMat: {fileID: 2100000, guid: 8ecef4a34f6e0c1439cfff70d767a625, type: 2}
+  flashTime: 0.25
+  mainSignImage: {fileID: 6105978248783066365}
+  directionSprites:
+  - {fileID: 1945202176, guid: 37928a572363b8c44ba9a4065ac5921a, type: 3}
+  - {fileID: 1777905297, guid: 37928a572363b8c44ba9a4065ac5921a, type: 3}
+  - {fileID: 1867261135, guid: 37928a572363b8c44ba9a4065ac5921a, type: 3}
+  - {fileID: 1123594129, guid: 37928a572363b8c44ba9a4065ac5921a, type: 3}
+  mySign: {fileID: 0}

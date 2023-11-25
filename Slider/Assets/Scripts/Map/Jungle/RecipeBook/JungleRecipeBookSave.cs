@@ -108,6 +108,17 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
 
     public static void IncrementNumberCreated(Shape shape)
     {
+        if (shape == null)
+        {
+            return;
+        }
+
+        if (!numShapeCreated.ContainsKey(shape))
+        {
+            Debug.LogWarning("Added a missing key: " + shape.shapeName);
+            numShapeCreated[shape] = 0;
+        }
+
         numShapeCreated[shape] += 1;
         if (numShapeCreated[shape] == 1)
         {
@@ -154,4 +165,23 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
         return true;
     }
 
+    public static bool AllRecipesCompleted()
+    {
+        foreach (Recipe r in _instance.recipeList.list)
+        {
+            Shape shape = r.result;
+            foreach (Recipe.Shapes shapes in r.combinations)
+            {
+                if (shapes.isSecondaryRecipe)
+                    continue;
+                
+                if (shapes.numberOfTimesCreated == 0)
+                {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
 }

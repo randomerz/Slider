@@ -9,8 +9,10 @@ public class JungleGrid : SGrid
     public List<GameObject> jungleBridgeRails;
     public List<GameObject> jungleBridges;
     public GameObject minecartProp;
+    public GameObject factoryDoor;
 
-    public override void Init() {
+    public override void Init() 
+    {
         InitArea(Area.Jungle);
         base.Init();
     }
@@ -30,6 +32,28 @@ public class JungleGrid : SGrid
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
+        
+
+        if (profile.GetBool("jungleBridgeFixed"))
+        {
+            FixBridge();
+        }
+        else if (profile.GetBool("jungleTurnedInMinecart"))
+        {
+            minecartProp.SetActive(true);
+        }
+        else if (profile.GetBool("jungleTurnedInRail"))
+        {
+            foreach (GameObject g in jungleBridgeRails)
+            {
+                g.SetActive(true);
+            }
+        }
+
+        if (profile.GetBool("jungleFactoryDoorOpened"))
+        {
+            OpenFactoryDoor();
+        }
     }
 
     public override void EnableStile(STile stile, bool shouldFlicker=true)
@@ -189,9 +213,42 @@ public class JungleGrid : SGrid
     }
 
     public void CheckForJungleCompletion() {
-        if(CheckGrid.contains(GetGridString(), "718_523_964")) {
+        if (IsJungleComplete()) 
+        {
             StartCoroutine(ShowButtonAndMapCompletions());
             AchievementManager.SetAchievementStat("completedJungle", 1);
+        }
+    }
+
+    public void IsJungleComplete(Condition c) => c.SetSpec(IsJungleComplete());
+    public bool IsJungleComplete() => CheckGrid.contains(GetGridString(), "718_523_964");
+    public void IsRailComplete(Condition c) => c.SetSpec(IsRailComplete());
+    public bool IsRailComplete() => CheckGrid.contains(GetGridString(), "((718)|(781))_..._...");
+
+    public void SetSecretaryCheckFlags()
+    {
+        if (IsJungleComplete())
+        {
+            SaveSystem.Current.SetBool("jungleSecretaryAllComplete", true);
+        }
+        if (IsRailComplete())
+        {
+            SaveSystem.Current.SetBool("jungleSecretaryRailComplete", true);
+        }
+    }
+
+    public void OpenFactoryDoor()
+    {
+        factoryDoor.SetActive(false);
+
+        if (SaveSystem.Current.GetBool("jungleTurnedInMinecart"))
+            return;
+
+        SaveSystem.Current.SetBool("jungleFactoryDoorOpened", true);
+
+        for (int i = -2; i <= 2; i++)
+        {
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, factoryDoor.transform.position + new Vector3(0.5f, i), factoryDoor.transform);
         }
     }
 }
