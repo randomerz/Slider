@@ -28,6 +28,19 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     [SerializeField] private List<Image> frames;
     [SerializeField] private List<Image> borders;
 
+
+    public bool IsPushedDown
+    {
+        get
+        {
+            return isPushedDown;
+        }
+        private set
+        {
+            isPushedDown = value;
+        }
+    }
+
     public void SetPushedDown(bool value)
     {
         value = value || isForcedDown;
