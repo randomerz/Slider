@@ -51,7 +51,7 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
                 if (flickeringDone)
                 {
                     SetPushedDown(tile2.buttonAnimator.IsPushedDown);
-
+                    image.sprite = connectorSprite;
                 }
             }
         }
@@ -99,6 +99,7 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
             yield return new WaitForSeconds(.25f);
         }
         flickeringDone = true;
+        image.sprite = connectorSprite;
     }
 
     public void SetSpriteToIslandOrEmpty()
