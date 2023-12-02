@@ -30,8 +30,6 @@ public class MountainGrid : SGrid
     private bool crystalDelivered = false;
     private float musicValue = 0;
 
-    private Coroutine musicTransitionCoroutine;
-
     public override void Init() {
         InitArea(Area.Mountain);
         base.Init();

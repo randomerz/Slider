@@ -13,9 +13,6 @@ public class ElevatorAnimationManager : MonoBehaviour
     public List<GameObject> brokenObj;
     public GameObject bottompos;
 
-   // private bool isAnimating = false;
-    private bool isBroken = false;
-    //private bool repaired = false;
     public MinecartElevator minecartElevator;
     public List<GameObject> closedDoorColliders;
     public Animator generatorAnimator;
@@ -23,10 +20,6 @@ public class ElevatorAnimationManager : MonoBehaviour
     private void Start() {
         topDispAnimator.Play("Disp Top Fade In");
         bottomDispAnimator.Play("Disp Bottom Fade In");
-        // if(!isBroken)
-        //     OpenDoors();
-        // else
-        //     CloseDoors();
     }
 
     public void SendUp()
@@ -40,9 +33,7 @@ public class ElevatorAnimationManager : MonoBehaviour
     }
 
     private IEnumerator SendCoroutine(string sendAnimName)
-    {
-       // isAnimating = true;
-        
+    {        
         topDispAnimator.Play("Disp Top Fade Out");
         bottomDispAnimator.Play("Disp Bottom Fade Out");
         yield return new WaitForSeconds(0.333f);
@@ -57,8 +48,6 @@ public class ElevatorAnimationManager : MonoBehaviour
         bottomDispAnimator.Play("Disp Bottom Fade In");
 
         yield return new WaitForSeconds(1f);
-
-       // isAnimating = false;
     }
 
     private void CloseDoors()
@@ -69,7 +58,6 @@ public class ElevatorAnimationManager : MonoBehaviour
         {
             go.SetActive(true);
         }
-        //update colliders
     }
 
     private void OpenDoors()
@@ -80,12 +68,10 @@ public class ElevatorAnimationManager : MonoBehaviour
         {
             go.SetActive(false);
         }
-        //update colliders
     }
 
     public void Break(bool fromSave = false)
     {
-        isBroken = true;
         if(!fromSave)
         {
             StartCoroutine(BreakAnimation());
@@ -131,7 +117,6 @@ public class ElevatorAnimationManager : MonoBehaviour
     public void Repair(bool fromSave = false)
     {
         generatorAnimator.Play("Fixed");
-        isBroken = false;
         OpenDoors();
         foreach(GameObject go in brokenObj)
         {

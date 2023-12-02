@@ -12,11 +12,6 @@ public class MagiTechGrid : SGrid
 
     [SerializeField] private Collider2D fireStoolZoneCollider;
     [SerializeField] private Collider2D lightningStoolZoneCollider;
-    [SerializeField] private Collider2D hungryBoi;
-    [SerializeField] private DesyncItem desyncBurger;
-
-    private bool hasBurger;
-    private bool hasDesyncBurger;
     private int numOres = 0;
 
     [SerializeField] private MagiTechTabManager tabManager;
@@ -143,25 +138,6 @@ public class MagiTechGrid : SGrid
     #endregion
 
     #region Conditions
-    public void HasTwoBurgers(Condition c)
-    {
-        if (!desyncBurger.IsDesynced)
-        {
-            c.SetSpec(false);
-            return;
-        }
-
-        foreach (Collider2D hit in GetCollidingItems(hungryBoi))
-        {
-            Item item = hit.GetComponent<Item>();
-            if (item != null)
-            {
-                hasBurger = item.itemName == "Burger" || hasBurger;
-                hasDesyncBurger = item.itemName == desyncBurger.itemName || hasDesyncBurger;
-            }
-        }
-        c.SetSpec(hasBurger && hasDesyncBurger);
-    }
 
     public void FireHasStool(Condition c)
     {
