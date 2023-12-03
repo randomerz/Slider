@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ArtifactTBPluginDesync : ArtifactTBPlugin
 {
-    public Sprite emptyDesynchSprite;
+    public Sprite emptyDesyncSprite;
 
     private void Awake()
     {
@@ -19,9 +20,9 @@ public class ArtifactTBPluginDesync : ArtifactTBPlugin
 
     public void UpdateEmptySprite()
     {
-        bool isDesynced = button.x == MagiTechArtifact.desynchLocation.x &&  button.y == MagiTechArtifact.desynchLocation.y;
+        bool isDesynced = button.x == MagiTechArtifact.desyncLocation.x &&  button.y == MagiTechArtifact.desyncLocation.y;
         if(isDesynced)
-            button.SetEmptySprite(emptyDesynchSprite);
+            button.SetEmptySprite(emptyDesyncSprite);
         else
             button.RestoreDefaultEmptySprite();
     }

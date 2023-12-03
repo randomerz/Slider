@@ -10,13 +10,13 @@ public class MagiTechArtifact : UIArtifact
     *   the corresponding location in the past, since this is the location we need
     *   to compare against to check for move possibility
     */
-    public static Vector2Int desynchLocation = new Vector2Int(-1, -1);
+    public static Vector2Int desyncLocation = new Vector2Int(-1, -1);
 
     //C: likewise this is the ID of the *opposite* Stile
-    public int desynchIslandId = -1;
+    public int desyncIslandId = -1;
 
-    public UnityEvent onDesynchStart;
-    public UnityEvent onDesynchEnd;
+    public UnityEvent onDesyncStart;
+    public UnityEvent onDesyncEnd;
 
     public bool PlayerIsInPast
     {
@@ -28,7 +28,7 @@ public class MagiTechArtifact : UIArtifact
     }
     private bool isInPast = false;
     private bool isPreview = false;
-    private bool isDesynchSoundPlaying = false;
+    private bool isDesyncSoundPlaying = false;
 
     private AudioManager.ManagedInstance desyncTearLoopSound;
 
@@ -61,26 +61,26 @@ public class MagiTechArtifact : UIArtifact
             SetButtonsAndBackground(isInPast);
         }
         //Lightning stuff
-        if (desynchIslandId != -1)
+        if (desyncIslandId != -1)
         {
-            ArtifactTileButton desyncedButton = GetButton(desynchIslandId);
+            ArtifactTileButton desyncedButton = GetButton(desyncIslandId);
             UpdateButtonPositions();
-            if (desynchLocation.x != desyncedButton.x || desynchLocation.y != desyncedButton.y)
+            if (desyncLocation.x != desyncedButton.x || desyncLocation.y != desyncedButton.y)
             {
-                if (!isDesynchSoundPlaying)
+                if (!isDesyncSoundPlaying)
                 {
-                    isDesynchSoundPlaying = true;
+                    isDesyncSoundPlaying = true;
                     desyncTearLoopSound = AudioManager.PickSound("Desync Tear Open").AndPlay();
                 }
-                ArtifactTileButton pastButton = desynchIslandId <= 9 ? GetButton(FindAltId(desynchIslandId)) : GetButton(desynchIslandId);
+                ArtifactTileButton pastButton = desyncIslandId <= 9 ? GetButton(FindAltId(desyncIslandId)) : GetButton(desyncIslandId);
                 if (isInPast != isPreview) SetLightningPos(pastButton);
                 else SetLightningPos(GetButton(FindAltId(pastButton.islandId)));
             }
             else
             {
-                if (isDesynchSoundPlaying)
+                if (isDesyncSoundPlaying)
                 {
-                    isDesynchSoundPlaying = false;
+                    isDesyncSoundPlaying = false;
                     desyncTearLoopSound.Stop();
                     AudioManager.PickSound("Desync Tear Close").AndPlay();
                 }
@@ -97,18 +97,18 @@ public class MagiTechArtifact : UIArtifact
         {
             if (interactArgs.drop)
             {
-                desynchLocation = FindAltCoords(dropTile.x, dropTile.y);
-                desynchIslandId = FindAltId(dropTile.islandId);
-                GetButton(desynchIslandId).SetLightning(true);
+                desyncLocation = FindAltCoords(dropTile.x, dropTile.y);
+                desyncIslandId = FindAltId(dropTile.islandId);
+                GetButton(desyncIslandId).SetLightning(true);
                 GetButton(dropTile.islandId).SetLightning(true);
-                onDesynchStart.Invoke();
+                onDesyncStart.Invoke();
             }
-            else if (desynchIslandId != -1) //L: Might break smth, but techincally desync only ends if it began in the first place.
+            else if (desyncIslandId != -1) //L: Might break smth, but techincally desync only ends if it began in the first place.
             {
-                onDesynchEnd.Invoke();
-                RestoreOnEndDesynch();
-                desynchLocation = new Vector2Int(-1, -1);
-                desynchIslandId = -1;
+                onDesyncEnd.Invoke();
+                RestoreOnEndDesync();
+                desyncLocation = new Vector2Int(-1, -1);
+                desyncIslandId = -1;
             }
             GetButton(dropTile.islandId).buttonAnimator.SetAnchored(interactArgs.drop);
         }
@@ -116,10 +116,10 @@ public class MagiTechArtifact : UIArtifact
 
 
     /* C: moves the tiles on the non-anchored timeline to align with the tiles on the 
-     * anchored timeline. We need to both restore the tile that was desynched and
+     * anchored timeline. We need to both restore the tile that was desynced and
      * the non-active tiles, since they might no longer be aligned
      */
-    private void RestoreOnEndDesynch()
+    private void RestoreOnEndDesync()
     {
         STile[,] temp = SGrid.Current.GetGrid();
         int[,] currGrid = new int[6, 3];
@@ -133,7 +133,7 @@ public class MagiTechArtifact : UIArtifact
             }
         }
 
-        int offset = (desynchLocation.x / 3) * 3;
+        int offset = (desyncLocation.x / 3) * 3;
         for (int x = 0; x < 3; x++)
         {
             for (int y = 0; y < 3; y++)
@@ -142,16 +142,16 @@ public class MagiTechArtifact : UIArtifact
             }
         }
         DisableLightning(true);
-        GetButton(desynchIslandId).SetLightning(false);
-        GetButton(FindAltId(desynchIslandId)).SetLightning(false);
+        GetButton(desyncIslandId).SetLightning(false);
+        GetButton(FindAltId(desyncIslandId)).SetLightning(false);
         UpdatePushedDowns(null, null);
-        // C: you can uncomment this if desynching isn't working, it might help locate the source of the problem
+        // C: you can uncomment this if desyncing isn't working, it might help locate the source of the problem
         // PrintGrid(currGrid, newGrid);
 
         SGrid.Current.SetGrid(newGrid);
     }
 
-    //C: debugging tool if desynch gets broken
+    //C: debugging tool if desync gets broken
     public void PrintGrid(int[,] currGrid, int[,] newGrid)
     {
         string output = "";
@@ -194,7 +194,7 @@ public class MagiTechArtifact : UIArtifact
         {
             ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
             int i = 2;
-            while (b != null && !b.TileIsActive && !CheckDesynch(button, b)
+            while (b != null && !b.TileIsActive && !CheckDesync(button, b)
             && button.x / 3 == b.x / 3)
             {
                 options.Add(b);
@@ -206,14 +206,14 @@ public class MagiTechArtifact : UIArtifact
     }
 
     //L: Negating this so that it returns true when there is a desync.
-    private bool CheckDesynch(ArtifactTileButton selected, ArtifactTileButton empty)
+    private bool CheckDesync(ArtifactTileButton selected, ArtifactTileButton empty)
     {
-        if (desynchLocation.x != -1)
+        if (desyncLocation.x != -1)
         {
             //If we're trying to 
-            return !(selected.islandId == desynchIslandId) && (empty.x == desynchLocation.x && empty.y == desynchLocation.y);
+            return !(selected.islandId == desyncIslandId) && (empty.x == desyncLocation.x && empty.y == desyncLocation.y);
         }
-        return false; //C: No desynch active, so valid move
+        return false; //C: No desync active, so valid move
     }
 
     //C: basically just modulus. Used to find corresponding values on either side of the grid
@@ -230,7 +230,7 @@ public class MagiTechArtifact : UIArtifact
     protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         SMove move;
-        if (buttonCurrent.islandId == desynchIslandId)
+        if (buttonCurrent.islandId == desyncIslandId)
         {
             move = base.ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
         }
