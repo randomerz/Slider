@@ -6,11 +6,7 @@ using UnityEngine.Events;
 public class Portal : MonoBehaviour
 {
     public static event System.EventHandler<OnTimeChangeArgs> OnTimeChange;
-    // [SerializeField] private bool isInPast;
-
-    // [SerializeField] private bool useSpecialEventInstead;
-    // public UnityEvent SpecialPortalEvent;
-
+    
     public enum PortalEnum
     {
         MAGITECH_PRESENT,
@@ -31,11 +27,6 @@ public class Portal : MonoBehaviour
     {
         public bool fromPast;
     }
-
-    // private void Start()
-    // {
-    //     isInPast = MagiTechGrid.IsInPast(transform);
-    // }
 
     public void OnPlayerEnter()
     {
@@ -64,7 +55,6 @@ public class Portal : MonoBehaviour
     private void Teleport()
     {
         AudioManager.Play("Portal");
-        //screenshot effect
         Player.SetPosition(otherPortal.spawnPoint.position);
         OnTimeChange?.Invoke(this, new OnTimeChangeArgs { fromPast = portalEnum is PortalEnum.MAGITECH_PAST });
         isTeleporting = false;

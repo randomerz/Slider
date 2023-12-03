@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Steamworks;
 using UnityEngine;
 
-public class MagiLaser : MonoBehaviour
+public class MagiLaser : MonoBehaviour, ISavable
 {
     private Vector2 initDir = Vector2.left;
 
@@ -155,6 +155,7 @@ public class MagiLaser : MonoBehaviour
 
     public void SetPowered(bool value)
     {
+        if(value == isPowered) return;
         isPowered = value;
         magiLaserAnimation.SetPowered(value);
     }
@@ -167,6 +168,25 @@ public class MagiLaser : MonoBehaviour
             ClearLasers();
         }
         laserUI.UpdateSprites();
+    }
+
+    public void CheckIsPowered(Condition c) => c.SetSpec(isPowered);
+    public void CheckIsEnabled(Condition c) => c.SetSpec(isEnabled);
+
+    public void Save()
+    {
+        SaveSystem.Current.SetBool("MagiLaserIsEnabled", isEnabled);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        isEnabled = profile.GetBool("MagiLaserIsEnabled");
+        if(isEnabled)
+        {
+            isPowered = true;
+            magiLaserAnimation.PowerFromLoad();
+        }
+        SetEnabled(isEnabled);
     }
 }
 

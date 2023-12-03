@@ -14,6 +14,7 @@ public class JungleRecipeBook : MonoBehaviour
 
     [SerializeField] private JungleRecipeBookUI jungleRecipeBookUI;
     [SerializeField] private JungleRecipeBookCameraControl jungleCameraControl;
+    [SerializeField] private JungleRecipeBookHints jungleRecipeBookHints;
     [SerializeField] private PlayerConditionals controllerConditionals; // the controller gameobject not control scheme
     [SerializeField] private Transform playerControllerPosition;
 
@@ -34,6 +35,8 @@ public class JungleRecipeBook : MonoBehaviour
 
         if (value)
         {
+            jungleRecipeBookHints.StartHintRoutine();
+
             // Add bindings
             directionalBindingBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Move, 
                 context => HandleDirectionalInput(context.ReadValue<Vector2>())
@@ -59,6 +62,8 @@ public class JungleRecipeBook : MonoBehaviour
         }
         else
         {
+            jungleRecipeBookHints.StopHintRoutine();
+
             // Undo previous bindings
             Controls.UnregisterBindingBehavior(directionalBindingBehavior);
             Controls.UnregisterBindingBehavior(quitBindingBehaviorAction);
@@ -72,6 +77,12 @@ public class JungleRecipeBook : MonoBehaviour
             controllerConditionals.EnableConditionals();
             
             AudioManager.PickSound("UI Click").WithVolume(0.25f).WithPitch(1f).AndPlay();
+        }
+
+        if (JungleRecipeBookSave.AllRecipesCompleted())
+        {
+            // idk if we need to check if it's been given already
+            Debug.Log("Give jungle achievement!");
         }
     }
 
@@ -130,4 +141,6 @@ public class JungleRecipeBook : MonoBehaviour
         Player.GetSpriteRenderer().flipX = false;
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, playerControllerPosition.position, playerControllerPosition);
     }
+
+    public void IsEngagedWithTV(Condition c) => c.SetSpec(engagedWithTV);
 }

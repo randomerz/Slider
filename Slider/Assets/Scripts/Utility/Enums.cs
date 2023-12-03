@@ -10,14 +10,14 @@ public static class Areas
     {
         Area.None => "None",
         Area.Village => "Exploring the Village",
-        Area.Caves => "Spleunking the Caves",
+        Area.Caves => "Speluking in the Caves",
         Area.Ocean => "Sailing the Ocean",
         Area.Jungle => "Traversing the Jungle",
         Area.Desert => "Trekking Through the Desert",
-        Area.Factory => "Powering Up in the Factory",
+        Area.Factory => "Powering up the Factory",
         Area.Mountain => "Riding Through the Mountain",
         Area.Military => "Commiting Warcrimes",
-        Area.MagiTech => "Playing With Time Portals",
+        Area.MagiTech => "Playing With Portals",
         // Area.Space => "Exploring the Galaxy",
         _ => "None"
     };
