@@ -9,6 +9,7 @@ public class JungleGrid : SGrid
     public List<GameObject> jungleBridgeRails;
     public List<GameObject> jungleBridges;
     public GameObject minecartProp;
+    public Animator secretaryTVAnimator;
     public GameObject factoryDoor;
 
     public override void Init() 
@@ -20,6 +21,8 @@ public class JungleGrid : SGrid
     protected override void Start()
     {
         base.Start();
+
+        UpdateSecretaryTV();
 
         AudioManager.PlayMusic("Jungle");
     }
@@ -60,77 +63,85 @@ public class JungleGrid : SGrid
     {
         if (GetNumTilesCollected() == 3)
         {
-            string s = GetGridString(true);
-            int location2 = s.IndexOf("2");
-            int x2 = location2 % 3;
-            int y2 = 2 - (location2 / 3);
-            STile two = grid[x2, y2];
+            HandleSTile3Placement(stile);
+        }
 
-            bool doubleSwap = false;
-            if (!CheckGrid.contains(s, "23"))
+        base.EnableStile(stile, shouldFlicker);
+
+        chadRace.CheckChad(this, null);
+        UpdateSecretaryTV();
+    }
+
+    private void HandleSTile3Placement(STile stile)
+    {
+        string s = GetGridString(true);
+        int location2 = s.IndexOf("2");
+        int x2 = location2 % 3;
+        int y2 = 2 - (location2 / 3);
+        STile two = grid[x2, y2];
+
+        bool doubleSwap = false;
+        if (!CheckGrid.contains(s, "23"))
+        {
+            if (x2 == 2 && stile.x == 0) { 
+
+                doubleSwap = true;
+            } else if (stile.x == 0)
             {
-                if (x2 == 2 && stile.x == 0) { 
-
+                STile other = grid[x2 + 1, y2];
+                if (other.isTileActive)
+                {
                     doubleSwap = true;
-                } else if (stile.x == 0)
-                {
-                    STile other = grid[x2 + 1, y2];
-                    if (other.isTileActive)
-                    {
-                        doubleSwap = true;
-                    }
-                    else
-                    {
-                        SwapTiles(stile, other);
-                    }
-                } else
-                {
-                    STile other = grid[stile.x - 1, stile.y];
-                    if (other.isTileActive)
-                    {
-                        doubleSwap = true;
-                    }
-                    else
-                    {
-                        SwapTiles(two, other);
-                    }
                 }
-            } 
-
-            if (doubleSwap)
+                else
+                {
+                    SwapTiles(stile, other);
+                }
+            } else
             {
-                List<STile> tiles = new List<STile>();
-                //options for tile 2
-                for (int i = 0; i < 2; i ++)
+                STile other = grid[stile.x - 1, stile.y];
+                if (other.isTileActive)
                 {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        tiles.Add(grid[i, j]);
-                    }
+                    doubleSwap = true;
                 }
-
-                foreach (STile tile in tiles)
+                else
                 {
-                    if (tile.isTileActive)
-                    {
-                        continue;
-                    }
-                    if (grid[tile.x + 1, tile.y].isTileActive)
-                    {
-                        continue;
-                    }
-
-                    STile other2 = tile;
-                    STile other3 = grid[tile.x + 1, tile.y];
-
-                    SwapTiles(other2, two);
-                    SwapTiles(other3, stile);
-                    break;
+                    SwapTiles(two, other);
                 }
             }
+        } 
+
+        if (doubleSwap)
+        {
+            List<STile> tiles = new List<STile>();
+            //options for tile 2
+            for (int i = 0; i < 2; i ++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    tiles.Add(grid[i, j]);
+                }
+            }
+
+            foreach (STile tile in tiles)
+            {
+                if (tile.isTileActive)
+                {
+                    continue;
+                }
+                if (grid[tile.x + 1, tile.y].isTileActive)
+                {
+                    continue;
+                }
+
+                STile other2 = tile;
+                STile other3 = grid[tile.x + 1, tile.y];
+
+                SwapTiles(other2, two);
+                SwapTiles(other3, stile);
+                break;
+            }
         }
-        base.EnableStile(stile, shouldFlicker);
-        chadRace.CheckChad(this, null);
     }
 
     // === Jungle Puzzle Specific ===
@@ -210,9 +221,11 @@ public class JungleGrid : SGrid
     protected override void CheckForCompletionOnSetGrid()
     {
         CheckForJungleCompletion();
+        UpdateSecretaryTV();
     }
 
-    public void CheckForJungleCompletion() {
+    public void CheckForJungleCompletion() 
+    {
         if (IsJungleComplete()) 
         {
             StartCoroutine(ShowButtonAndMapCompletions());
@@ -234,6 +247,22 @@ public class JungleGrid : SGrid
         if (IsRailComplete())
         {
             SaveSystem.Current.SetBool("jungleSecretaryRailComplete", true);
+        }
+    }
+
+    private void UpdateSecretaryTV()
+    {
+        if (IsJungleComplete())
+        {
+            secretaryTVAnimator.Play("Jung Status Good");
+        }
+        else if (IsRailComplete())
+        {
+            secretaryTVAnimator.Play("Jung Status Railed");
+        }
+        else
+        {
+            secretaryTVAnimator.Play("Jung Status Bad");
         }
     }
 

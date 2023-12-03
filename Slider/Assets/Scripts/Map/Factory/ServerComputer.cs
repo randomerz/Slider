@@ -8,12 +8,21 @@ public class ServerComputer : MonoBehaviour
     [SerializeField] private ElectricalNode power;
     [SerializeField] private Animator anim;
     [SerializeField] private PlayerConditionals pConds;
+    [SerializeField] private bool isDecoration;
 
     public UnityEvent OnInteract;
 
     private void Awake()
     {
         pConds?.DisableConditionals();
+    }
+
+    private void Start() 
+    {
+        if (isDecoration)
+        {
+            TurnOn();
+        }
     }
 
     private void OnEnable()
