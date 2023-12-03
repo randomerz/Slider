@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 320
+    maxTextureSize: 384
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -127,7 +127,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 192
+        y: 256
         width: 64
         height: 64
       alignment: 9
@@ -148,7 +148,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 192
+        y: 256
         width: 64
         height: 64
       alignment: 9
@@ -169,7 +169,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 128
-        y: 192
+        y: 256
         width: 64
         height: 64
       alignment: 9
@@ -190,7 +190,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 192
-        y: 192
+        y: 256
         width: 64
         height: 64
       alignment: 9
@@ -211,7 +211,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 256
-        y: 192
+        y: 256
         width: 64
         height: 64
       alignment: 9
@@ -231,8 +231,8 @@ TextureImporter:
       name: GiantMonitor_Laser Health_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 128
+        x: 320
+        y: 256
         width: 64
         height: 64
       alignment: 9
@@ -252,8 +252,8 @@ TextureImporter:
       name: GiantMonitor_Laser Health_5
       rect:
         serializedVersion: 2
-        x: 0
-        y: 128
+        x: 320
+        y: 256
         width: 64
         height: 64
       alignment: 9
@@ -273,8 +273,8 @@ TextureImporter:
       name: GiantMonitor_Laser Health_6
       rect:
         serializedVersion: 2
-        x: 64
-        y: 128
+        x: 0
+        y: 192
         width: 64
         height: 64
       alignment: 9
@@ -294,8 +294,8 @@ TextureImporter:
       name: GiantMonitor_Laser Health_7
       rect:
         serializedVersion: 2
-        x: 64
-        y: 128
+        x: 0
+        y: 192
         width: 64
         height: 64
       alignment: 9
@@ -316,7 +316,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 192
+        y: 256
         width: 64
         height: 64
       alignment: 9
@@ -336,8 +336,8 @@ TextureImporter:
       name: GiantMonitor_Laser Health_9
       rect:
         serializedVersion: 2
-        x: 128
-        y: 128
+        x: 64
+        y: 192
         width: 64
         height: 64
       alignment: 9
@@ -357,8 +357,8 @@ TextureImporter:
       name: GiantMonitor_Laser Health_10
       rect:
         serializedVersion: 2
-        x: 192
-        y: 128
+        x: 128
+        y: 192
         width: 64
         height: 64
       alignment: 9
@@ -378,8 +378,8 @@ TextureImporter:
       name: GiantMonitor_Laser Health_11
       rect:
         serializedVersion: 2
-        x: 256
-        y: 128
+        x: 192
+        y: 192
         width: 64
         height: 64
       alignment: 9
@@ -399,8 +399,8 @@ TextureImporter:
       name: GiantMonitor_Laser Health_12
       rect:
         serializedVersion: 2
-        x: 0
-        y: 64
+        x: 256
+        y: 192
         width: 64
         height: 64
       alignment: 9
@@ -420,8 +420,8 @@ TextureImporter:
       name: GiantMonitor_Laser Health_13
       rect:
         serializedVersion: 2
-        x: 0
-        y: 64
+        x: 256
+        y: 192
         width: 64
         height: 64
       alignment: 9
@@ -441,8 +441,8 @@ TextureImporter:
       name: GiantMonitor_Laser Health_14
       rect:
         serializedVersion: 2
-        x: 64
-        y: 64
+        x: 320
+        y: 192
         width: 64
         height: 64
       alignment: 9
@@ -462,8 +462,8 @@ TextureImporter:
       name: GiantMonitor_Laser Health_15
       rect:
         serializedVersion: 2
-        x: 64
-        y: 64
+        x: 320
+        y: 192
         width: 64
         height: 64
       alignment: 9
@@ -483,8 +483,8 @@ TextureImporter:
       name: GiantMonitor_Rocket Health Bad_0
       rect:
         serializedVersion: 2
-        x: 128
-        y: 64
+        x: 0
+        y: 128
         width: 64
         height: 64
       alignment: 9
@@ -504,8 +504,8 @@ TextureImporter:
       name: GiantMonitor_Rocket Health Bad_1
       rect:
         serializedVersion: 2
-        x: 192
-        y: 64
+        x: 64
+        y: 128
         width: 64
         height: 64
       alignment: 9
@@ -525,8 +525,8 @@ TextureImporter:
       name: GiantMonitor_Rocket Health Bad_2
       rect:
         serializedVersion: 2
-        x: 256
-        y: 64
+        x: 128
+        y: 128
         width: 64
         height: 64
       alignment: 9
@@ -546,8 +546,8 @@ TextureImporter:
       name: GiantMonitor_Rocket Health Bad_3
       rect:
         serializedVersion: 2
-        x: 256
-        y: 64
+        x: 128
+        y: 128
         width: 64
         height: 64
       alignment: 9
@@ -567,8 +567,8 @@ TextureImporter:
       name: GiantMonitor_Rocket Health Bad_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 192
+        y: 128
         width: 64
         height: 64
       alignment: 9
@@ -588,8 +588,8 @@ TextureImporter:
       name: GiantMonitor_Rocket Health Bad_5
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 192
+        y: 128
         width: 64
         height: 64
       alignment: 9
@@ -609,8 +609,8 @@ TextureImporter:
       name: GiantMonitor_Rocket Health Good_0
       rect:
         serializedVersion: 2
-        x: 64
-        y: 0
+        x: 256
+        y: 128
         width: 64
         height: 64
       alignment: 9
@@ -630,8 +630,8 @@ TextureImporter:
       name: GiantMonitor_Rocket Health Good_1
       rect:
         serializedVersion: 2
-        x: 128
-        y: 0
+        x: 320
+        y: 128
         width: 64
         height: 64
       alignment: 9
@@ -651,8 +651,8 @@ TextureImporter:
       name: GiantMonitor_Rocket Health Good_2
       rect:
         serializedVersion: 2
-        x: 192
-        y: 0
+        x: 0
+        y: 64
         width: 64
         height: 64
       alignment: 9
@@ -672,8 +672,8 @@ TextureImporter:
       name: GiantMonitor_Rocket Health Good_3
       rect:
         serializedVersion: 2
-        x: 192
-        y: 0
+        x: 0
+        y: 64
         width: 64
         height: 64
       alignment: 9
@@ -693,8 +693,8 @@ TextureImporter:
       name: GiantMonitor_Rocket Health Good_4
       rect:
         serializedVersion: 2
-        x: 256
-        y: 0
+        x: 64
+        y: 64
         width: 64
         height: 64
       alignment: 9
@@ -714,8 +714,8 @@ TextureImporter:
       name: GiantMonitor_Rocket Health Good_5
       rect:
         serializedVersion: 2
-        x: 256
-        y: 0
+        x: 64
+        y: 64
         width: 64
         height: 64
       alignment: 9
@@ -727,6 +727,153 @@ TextureImporter:
       bones: []
       spriteID: f72b0f9925ec945f0800000000000000
       internalID: -771859006952000897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GiantMonitor_Jung Status Bad_0
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.28125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 857278e59fe62e0c0800000000000000
+      internalID: -4547950656378951848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GiantMonitor_Jung Status Bad_1
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.28125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0b6b61493a1a44a0800000000000000
+      internalID: -6608440669999764726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GiantMonitor_Jung Status Bad_2
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.28125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cad686e3094ba4cd0800000000000000
+      internalID: -2573045705473495636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GiantMonitor_Jung Status Railed_0
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.28125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14ccaea6013ee9ea0800000000000000
+      internalID: -5864000005137052607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GiantMonitor_Jung Status Railed_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.28125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13ccfbdc304c1ae30800000000000000
+      internalID: 4513103822217792561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GiantMonitor_Jung Status Railed_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.28125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f04fd9928f9b53f30800000000000000
+      internalID: 4554751073656370191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GiantMonitor_Jung Status Good_0
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.28125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d65acec09c0320460800000000000000
+      internalID: 7206375993809610093
       vertices: []
       indices: 
       edges: []
@@ -743,6 +890,13 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       GiantMonitor_Idle_0: 2229970102028371360
+      GiantMonitor_Jung Status Bad_0: -4547950656378951848
+      GiantMonitor_Jung Status Bad_1: -6608440669999764726
+      GiantMonitor_Jung Status Bad_2: -2573045705473495636
+      GiantMonitor_Jung Status Good_0: 7206375993809610093
+      GiantMonitor_Jung Status Railed_0: -5864000005137052607
+      GiantMonitor_Jung Status Railed_1: 4513103822217792561
+      GiantMonitor_Jung Status Railed_2: 4554751073656370191
       GiantMonitor_Laser Health_0: -19880095478798878
       GiantMonitor_Laser Health_1: -1752009304452948356
       GiantMonitor_Laser Health_10: -1313283462925347427

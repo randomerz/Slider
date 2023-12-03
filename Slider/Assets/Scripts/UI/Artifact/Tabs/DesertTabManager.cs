@@ -9,6 +9,8 @@ public class DesertTabManager : ArtifactTabManager
     private ArtifactTileButton middle;
     public override void SetCurrentScreen(int screenIndex)
     {
+        if(realignTab == null)
+            InitTabs();
         if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
         {
             if (SGrid.Current.GetActiveTiles().Count == SGrid.Current.GetTotalNumTiles() //Realigning case

@@ -240,4 +240,9 @@ public class Box : MonoBehaviour
     {
        return DirectionUtil.D2V(currentDirection);
     }
+
+    public void IsDirectionRight(Condition c) => c.SetSpec(currentDirection == Direction.RIGHT);
+    public void IsDirectionUp(Condition c) => c.SetSpec(currentDirection == Direction.UP);
+    public void IsDirectionLeft(Condition c) => c.SetSpec(currentDirection == Direction.LEFT);
+    public void IsDirectionDown(Condition c) => c.SetSpec(currentDirection == Direction.DOWN);
 }

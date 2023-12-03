@@ -28,6 +28,11 @@ public class ArtifactTabManager : MonoBehaviour
 
     protected virtual void Awake()
     {
+        InitTabs();
+    }
+
+    protected void InitTabs()
+    {
         realignTab = tabs[0];
         saveTab = tabs[1];
         loadTab = tabs[2];
@@ -35,6 +40,8 @@ public class ArtifactTabManager : MonoBehaviour
 
     public virtual void SetCurrentScreen(int screenIndex)
     {
+        if(realignTab == null)
+            InitTabs();
         #region SaveLoadRealign Cases
         if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
         {   
@@ -53,7 +60,7 @@ public class ArtifactTabManager : MonoBehaviour
             }
         }
         else
-        {
+        { 
             realignTab.SetIsVisible(false);
             saveTab.SetIsVisible(false);
             loadTab.SetIsVisible(false);
