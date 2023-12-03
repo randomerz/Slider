@@ -19,6 +19,8 @@ public class MagiTechGrid : SGrid
 
     private ContactFilter2D contactFilter;
 
+    public List<GameObject> BridgeObjects;
+
     /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
     and the right 9 STiles represent the past. The past tile will have an islandID
     exactly 9 more than its corresponding present tile. Note that in strings, the past tiles
@@ -108,6 +110,8 @@ public class MagiTechGrid : SGrid
         base.Load(profile);
         if(GetNumTilesCollected() >= 1)
             tabManager.EnableTab();
+        if(profile.GetBool("magitechBridgeFixed"))
+            LowerDrawbridge(true);
     }
 
     public static bool IsInPast(Transform transform)
@@ -136,6 +140,19 @@ public class MagiTechGrid : SGrid
     }
 
     #endregion
+
+    public void LowerDrawbridge(bool fromSave = false)
+    {
+        if(!fromSave)
+        {
+            SaveSystem.Current.SetBool("magitechBridgeFixed", true);
+            AudioManager.Play("Puzzle Complete");
+        }
+        foreach(GameObject g in BridgeObjects)
+        {
+            g.SetActive(false);
+        }
+    }
 
     #region Conditions
 
