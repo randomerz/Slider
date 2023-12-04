@@ -167,7 +167,10 @@ public class MagiLaser : MonoBehaviour, ISavable
         {
             ClearLasers();
         }
-        laserUI.UpdateSprites();
+        if (SGrid.Current.GetArea() == Area.MagiTech) //Desert uses Laser too but does not have laser UI
+        {
+            laserUI.UpdateSprites();
+        }
     }
 
     public void CheckIsPowered(Condition c) => c.SetSpec(isPowered);
