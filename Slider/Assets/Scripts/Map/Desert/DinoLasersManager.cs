@@ -1,23 +1,21 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+//using static Cinemachine.CinemachineSmoothPath;
 
 public class DinoLasersManager : MonoBehaviour
 {
-    private bool debugSkipFezziwigActivation = true;
+    [SerializeField] private bool debugSkipFezziwigActivation = false; //allows lasers on from the start
 
     [SerializeField] private Sprite leftHalfLaserOffSprite;
     [SerializeField] private Sprite leftHalfLaserOnSprite;
     [SerializeField] private Sprite rightHalfLaserOffSprite;
     [SerializeField] private Sprite rightHalfLaserOnSprite;
-
     
-    [SerializeField] private DinosaurLaser[] dinoLasers; //0 is normal tile 4 laser, 1 is mirage tile 4 laser 
+    [SerializeField] private DinoLaser[] dinoLasers; //0 is normal tile 4 laser, 1 is mirage tile 4 laser 
     [SerializeField] private SpriteRenderer[] dinoButtSpriteRenderers; //0 is normal tile 7 butt, 1 is mirage tile 7 butt 
 
     private bool moveEndWasCheckedThisFrame = false;
-    private bool moveStartWasCheckedThisFrame = false;
+    //private bool moveStartWasCheckedThisFrame = false;
 
     [SerializeField] private GameObject firstTimeActivationAnimation;
     private const string desertDinoLaserActivatedAlready = "desertDinoLaserActivatedAlready";
@@ -47,7 +45,7 @@ public class DinoLasersManager : MonoBehaviour
         {
             Destroy(firstTimeActivationAnimation);
 
-            foreach (DinosaurLaser dinoLaser in dinoLasers)
+            foreach (DinoLaser dinoLaser in dinoLasers)
             {
                 dinoLaser.EnableSpriteRenderer(true);//now using post laser dino head (broken skull)
             }
@@ -67,14 +65,12 @@ public class DinoLasersManager : MonoBehaviour
     private void LateUpdate()
     {
         moveEndWasCheckedThisFrame = false;
-        moveStartWasCheckedThisFrame = false;
+        //moveStartWasCheckedThisFrame = false;
     }
 
     private void OnDisable()
     {
-        SGridAnimator.OnSTileMoveEnd -= OnMoveEnd;
-        //SGridAnimator.OnSTileMoveStart -= OnMoveStart;
-        DesertArtifact.MirageDisappeared -= OnMirageDisappeared;
+        RemoveAllLasersPermanently();
     }
 
 
@@ -87,15 +83,15 @@ public class DinoLasersManager : MonoBehaviour
             CheckEnableLasers();
         }
     }
-
+    /*
     private void OnMoveStart(object sender, System.EventArgs e)
     {
         if (!moveStartWasCheckedThisFrame)
         {
             moveStartWasCheckedThisFrame = true;
-            //CheckDisableLasers();
+            CheckDisableLasers();
         }
-    }
+    }*/
 
     private void OnMirageDisappeared(object sender, System.EventArgs e)
     {
@@ -185,7 +181,7 @@ public class DinoLasersManager : MonoBehaviour
         }
     }
 
-    private void ActivateHead(bool on, DinosaurLaser dinoLaser)
+    private void ActivateHead(bool on, DinoLaser dinoLaser)
     {
         if (on)
         {
@@ -198,31 +194,6 @@ public class DinoLasersManager : MonoBehaviour
             dinoLaser.EnableLaser(false);
         }
     }
-    /*
-    private IEnumerator ActivateHalvesInTime(bool on, float time)
-    {
-        SpriteRenderer leftHalf = connectedDinoButtSpriteRenderer;
-        SpriteRenderer rightHalf = rightHalfSpriteRenderer;
-
-        yield return new WaitForSeconds(time);
-
-        if (on)
-        {
-            leftHalf.sprite = leftHalfLaserOnSprite;
-            rightHalf.sprite = rightHalfLaserOnSprite;
-            //laserGameObject.SetActive(true);
-            laser.SetEnabled(true);
-            laserOn = true;
-        }
-        else
-        {
-            leftHalf.sprite = leftHalfLaserOffSprite;
-            rightHalf.sprite = rightHalfLaserOffSprite;
-            //laserGameObject.SetActive(false);
-            laser.SetEnabled(false);
-            laserOn = false;
-        }
-    }*/
 
     public void FirstTimeActivate()
     {
@@ -231,43 +202,45 @@ public class DinoLasersManager : MonoBehaviour
 
     private IEnumerator PlayFirstTimeActivationAnimation()
     {
-        //if (!(tileId == 'd')) { yield break; } //Only play this on the mirage laser
-
-        Debug.Log("first time animation");
-        //cameraDolly.path.m_Waypoints;
-        /*
-        Waypoint waypoint = new Waypoint();
-        waypoint.position = transform.position - new Vector3(5, 0, 0);
-        Waypoint[] waypoints = { waypoint };
-        cameraDolly.path.m_Waypoints = waypoints;
-
-        cameraDolly.StartTrack();
-        */
         yield return new WaitForSeconds(2);
 
         firstTimeActivationAnimation.SetActive(true);
-        //firstTimeActivationAnimation.GetComponent<Animator>().Play();
-        yield return new WaitForSeconds(2.167f);// We love magic waits
+
+        yield return new WaitForSeconds(2.167f); // We love magic waits - time of the animation
 
         firstTimeActivationAnimation.SetActive(false);
         Destroy(firstTimeActivationAnimation);
 
-        foreach (DinosaurLaser dinoLaser in dinoLasers)
+        foreach (DinoLaser dinoLaser in dinoLasers)
         {
-            dinoLaser.EnableSpriteRenderer(true);//now using post laser dino head (broken skull)
+            dinoLaser.EnableSpriteRenderer(true); // now using post laser dino head (broken skull)
         }
 
-        //neverActivatedBefore = false;
         SaveSystem.Current.SetBool("desertDinoLaserActivatedAlready", true);
 
         SGridAnimator.OnSTileMoveEnd -= UpdateCanFirstTimeActivate;
         DesertArtifact.MirageDisappeared -= UpdateCanFirstTimeActivate;
 
         SGridAnimator.OnSTileMoveEnd += OnMoveEnd;
-        //SGridAnimator.OnSTileMoveStart += OnMoveStart;
         DesertArtifact.MirageDisappeared += OnMirageDisappeared;
 
         CheckEnableLasers();
-        //StartCoroutine(ActivateHalvesInTime(true, 0f));
+    }
+
+    public void RemoveAllLasersPermanently()
+    {
+        foreach (DinoLaser dinoLaser in dinoLasers)
+        {
+            ActivateHead(false, dinoLaser);
+        }
+
+        foreach (SpriteRenderer dinoButt in dinoButtSpriteRenderers)
+        {
+            ActivateButt(false, dinoButt);
+        }
+
+        SGridAnimator.OnSTileMoveEnd -= OnMoveEnd;
+        //SGridAnimator.OnSTileMoveStart -= OnMoveStart;
+        DesertArtifact.MirageDisappeared -= OnMirageDisappeared;
     }
 }
