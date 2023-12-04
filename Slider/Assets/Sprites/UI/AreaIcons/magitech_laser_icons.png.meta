@@ -257,7 +257,7 @@ TextureImporter:
         width: 2
         height: 9
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -278,7 +278,7 @@ TextureImporter:
         width: 2
         height: 9
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -286,6 +286,27 @@ TextureImporter:
       bones: []
       spriteID: f5131d5d455425b4dbd1678822496624
       internalID: 147240972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_laser_icons_8
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 6
+        width: 25
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8cba97d03818a3240b1f0abb89626a67
+      internalID: -914795509
       vertices: []
       indices: 
       edges: []
@@ -309,6 +330,7 @@ TextureImporter:
       magitech_laser_icons_5: -1596475238
       magitech_laser_icons_6: 694935638
       magitech_laser_icons_7: 147240972
+      magitech_laser_icons_8: -914795509
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
