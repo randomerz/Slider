@@ -17,13 +17,13 @@ public class DesertSafe : MonoBehaviour
 
     public void OnLasered()
     {
-        Debug.Log("Safe lasered!");
+        //Debug.Log("Safe lasered!");
         currentlyLasered = true;
     }
 
     public void OnUnLasered()
     {
-        Debug.Log("Safe Unlasered!");
+       // Debug.Log("Safe Unlasered!");
         currentlyLasered = false;
     }
 
@@ -53,7 +53,7 @@ public class DesertSafe : MonoBehaviour
 
     private void MeltSafe()
     {
-        Debug.Log("Safe Melted!");
+        //Debug.Log("Safe Melted!");
         melted = true;
 
         mirageSpriteRenderer.sprite = meltedMirageSprite;

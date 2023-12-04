@@ -15,6 +15,8 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     /// </summary>
     private static int GRID_POSITION_TO_WORLD_POSITION = 17;
 
+    private const string ALPHABET = "ABCDEFG";
+
     public void Awake()
     {
         InitializeSingleton();
@@ -43,7 +45,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
         int mirageIsland;
         if (isPlayerOnMirage(out mirageIsland))
         {
-            Debug.Log($"Player on Mirage! Current mirage: {mirageIsland}");
+            //Debug.Log($"Player on Mirage! Current mirage: {mirageIsland}");
             //Player.GetInstance().transform.SetParent(grid.GetStile(mirageIsland).transform, false);
         }
         //Insert disable effect
@@ -73,14 +75,12 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
             {
                 Vector2Int mirageTileGridPosition = GridPositionFromWorldPosition(mirageTile.transform.position);
                 //tileIdToPosition[mirageTileGridPosition] = tileId + 1;
-                tileIdToPosition[mirageTileGridPosition] = alphabet[tileId];
+                tileIdToPosition[mirageTileGridPosition] = ALPHABET[tileId];
             }
         }
 
         return tileIdToPosition;
     }
-
-    private static string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
     private static Vector2Int GridPositionFromWorldPosition(Vector2 worldPosition)
     {

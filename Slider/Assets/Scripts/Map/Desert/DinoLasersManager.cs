@@ -21,23 +21,7 @@ public class DinoLasersManager : MonoBehaviour
     private const string desertDinoLaserActivatedAlready = "desertDinoLaserActivatedAlready";
 
     private bool canFirstTimeActivate = false;
-    public void CheckCanFirstTimeActivate(Condition c) 
-    {
-        c.SetSpec(canFirstTimeActivate); 
-    }
-
-    private void UpdateCanFirstTimeActivate(object sender, System.EventArgs e)
-    {
-        bool activatedPreviously = SaveSystem.Current.GetBool(desertDinoLaserActivatedAlready);
-
-        string gridString = DesertGrid.GetGridString();
-        Debug.Log("FIRST TIME ACTIVATE LASER Checking " + gridString);
-
-        if (!activatedPreviously && (CheckGrid.contains(gridString, "7d") || CheckGrid.contains(gridString, "gd"))) //normal tail | mirage head
-        {
-            canFirstTimeActivate = true;
-        }
-    }
+    public void CheckCanFirstTimeActivate(Condition c) { c.SetSpec(canFirstTimeActivate); }
 
     private void Start()
     {
@@ -73,6 +57,18 @@ public class DinoLasersManager : MonoBehaviour
         RemoveAllLasersPermanently();
     }
 
+    private void UpdateCanFirstTimeActivate(object sender, System.EventArgs e)
+    {
+        bool activatedPreviously = SaveSystem.Current.GetBool(desertDinoLaserActivatedAlready);
+
+        string gridString = DesertGrid.GetGridString();
+        //Debug.Log("FIRST TIME ACTIVATE LASER Checking " + gridString);
+
+        if (!activatedPreviously && (CheckGrid.contains(gridString, "7D") || CheckGrid.contains(gridString, "GD"))) //normal tail | mirage head
+        {
+            canFirstTimeActivate = true;
+        }
+    }
 
     private void OnMoveEnd(object sender, System.EventArgs e)
     {
@@ -95,14 +91,14 @@ public class DinoLasersManager : MonoBehaviour
 
     private void OnMirageDisappeared(object sender, System.EventArgs e)
     {
-        Debug.Log("On Mirage Disaapear");
+        //Debug.Log("On Mirage Disaapear");
         CheckDisableLasers();
     }
 
     private void CheckEnableLasers()
     {
         string gridString = DesertGrid.GetGridString();
-        Debug.Log("ENABLE LASERS Checking " + gridString);
+        //Debug.Log("ENABLE LASERS Checking " + gridString);
 
         if (CheckGrid.contains(gridString, "74")) //normal tail | normal head
         {
@@ -110,19 +106,19 @@ public class DinoLasersManager : MonoBehaviour
             ActivateHead(true, dinoLasers[0]);
         }
 
-        if (CheckGrid.contains(gridString, "g4")) //mirage tail | normal head
+        if (CheckGrid.contains(gridString, "G4")) //mirage tail | normal head
         {
             ActivateButt(true, dinoButtSpriteRenderers[1]);
             ActivateHead(true, dinoLasers[0]);
         }
 
-        if (CheckGrid.contains(gridString, "7d")) //normal tail | mirage head
+        if (CheckGrid.contains(gridString, "7D")) //normal tail | mirage head
         {
             ActivateButt(true, dinoButtSpriteRenderers[0]);
             ActivateHead(true, dinoLasers[1]);
         }
 
-        if (CheckGrid.contains(gridString, "gd")) //mirage tail | mirage head
+        if (CheckGrid.contains(gridString, "GD")) //mirage tail | mirage head
         {
             ActivateButt(true, dinoButtSpriteRenderers[1]);
             ActivateHead(true, dinoLasers[1]);
@@ -132,7 +128,7 @@ public class DinoLasersManager : MonoBehaviour
     private void CheckDisableLasers()
     {
         string gridString = DesertGrid.GetGridString();
-        Debug.Log("DISABLE LASERS Checking " + gridString);
+        //Debug.Log("DISABLE LASERS Checking " + gridString);
 
         bool normalButtConnected = false;
         bool normalHeadConnected = false;
@@ -145,19 +141,19 @@ public class DinoLasersManager : MonoBehaviour
             normalHeadConnected = true;
         }
 
-        if (CheckGrid.contains(gridString, "g4")) //mirage tail | normal head
+        if (CheckGrid.contains(gridString, "G4")) //mirage tail | normal head
         {
             mirageButtConnected = true;
             normalHeadConnected = true;
         }
 
-        if (CheckGrid.contains(gridString, "7d")) //normal tail | mirage head
+        if (CheckGrid.contains(gridString, "7D")) //normal tail | mirage head
         {
             normalButtConnected = true;
             mirageHeadConnected = true;
         }
 
-        if (CheckGrid.contains(gridString, "gd")) //mirage tail | mirage head
+        if (CheckGrid.contains(gridString, "GD")) //mirage tail | mirage head
         {
             mirageButtConnected = true;
             mirageHeadConnected = true;
@@ -209,7 +205,7 @@ public class DinoLasersManager : MonoBehaviour
         yield return new WaitForSeconds(2.167f); // We love magic waits - time of the animation
 
         firstTimeActivationAnimation.SetActive(false);
-        Destroy(firstTimeActivationAnimation);
+        //Destroy(firstTimeActivationAnimation);
 
         foreach (DinoLaser dinoLaser in dinoLasers)
         {
