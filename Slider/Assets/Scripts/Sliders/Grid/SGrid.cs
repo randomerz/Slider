@@ -488,6 +488,7 @@ public void SetGrid(int[,] puzzle)
         {
             ActivateCollectible(name);
             GetCollectible(name).transform.position = Player.GetPosition();
+            GetCollectible(name).transform.parent = null;
             //UIManager.CloseUI();
             PauseManager.SetPauseState(false);
         }

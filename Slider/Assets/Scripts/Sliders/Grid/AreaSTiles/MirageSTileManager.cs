@@ -13,9 +13,8 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     /// <summary>
     /// The scale factor from the position of a tile on the grid to the transform.position of the tile.
     /// </summary>
-    private static int GRID_POSITION_TO_WORLD_POSITION = 17;
-
-    private const string ALPHABET = "ABCDEFG";
+    private const int GRID_POSITION_TO_WORLD_POSITION = 17;
+    private const string ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public void Awake()
     {
@@ -30,11 +29,12 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
         mirageSTiles[islandId - 1].transform.position = new Vector2(x * GRID_POSITION_TO_WORLD_POSITION, y * GRID_POSITION_TO_WORLD_POSITION);
         mirageSTiles[islandId - 1].gameObject.SetActive(true);
         if (islandId == 7) mirageTailPos = new Vector2Int(x, y);
-        Debug.Log(mirageTailPos);
+        // Debug.Log(mirageTailPos);
 
-        Debug.Log($"travis: {DesertGrid.GetGridString()}");
+        // Debug.Log($"travis: {DesertGrid.GetGridString()}");
         //Insert enabling coroutine fading in
     }
+    
     /// <summary>
     /// Function that disables mirages either from selecting or from making an artifact move
     /// </summary>
