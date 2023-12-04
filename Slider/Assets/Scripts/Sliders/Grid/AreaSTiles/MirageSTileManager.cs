@@ -13,7 +13,8 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     /// <summary>
     /// The scale factor from the position of a tile on the grid to the transform.position of the tile.
     /// </summary>
-    private static int GRID_POSITION_TO_WORLD_POSITION = 17;
+    private const int GRID_POSITION_TO_WORLD_POSITION = 17;
+    private const string ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public void Awake()
     {
@@ -28,11 +29,12 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
         mirageSTiles[islandId - 1].transform.position = new Vector2(x * GRID_POSITION_TO_WORLD_POSITION, y * GRID_POSITION_TO_WORLD_POSITION);
         mirageSTiles[islandId - 1].gameObject.SetActive(true);
         if (islandId == 7) mirageTailPos = new Vector2Int(x, y);
-        Debug.Log(mirageTailPos);
+        // Debug.Log(mirageTailPos);
 
-        Debug.Log($"travis: {DesertGrid.GetGridString()}");
+        // Debug.Log($"travis: {DesertGrid.GetGridString()}");
         //Insert enabling coroutine fading in
     }
+    
     /// <summary>
     /// Function that disables mirages either from selecting or from making an artifact move
     /// </summary>
@@ -40,12 +42,12 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     public void DisableMirage(int islandId = -1)
     {
         //Do player location check and random parenting bs
-        //int mirageIsland;
-        //if (isPlayerOnMirage(out mirageIsland))
-        //{
-        //    Debug.Log($"Player on Mirage! Current mirage: {mirageIsland}");
-        //    Player.GetInstance().transform.SetParent(grid.GetStile(mirageIsland).transform, false);
-        //}
+        int mirageIsland;
+        if (isPlayerOnMirage(out mirageIsland))
+        {
+            //Debug.Log($"Player on Mirage! Current mirage: {mirageIsland}");
+            //Player.GetInstance().transform.SetParent(grid.GetStile(mirageIsland).transform, false);
+        }
         //Insert disable effect
         if (islandId == 0 || islandId > 7) return;
         if (islandId < 0) foreach (GameObject o in mirageSTiles) o.SetActive(false);
@@ -60,11 +62,11 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     /// If no mirage tile is active on that position, that position does not
     /// appear in the dictionary.
     /// </summary>
-    public static Dictionary<Vector2Int, int> GetActiveMirageTileIdsByPosition()
+    public static Dictionary<Vector2Int, char> GetActiveMirageTileIdsByPosition()
     {
         List<GameObject> mirageTiles = _instance.mirageSTiles;
 
-        Dictionary<Vector2Int, int> tileIdToPosition = new();
+        Dictionary<Vector2Int, char> tileIdToPosition = new();
 
         for (int tileId = 0; tileId < mirageTiles.Count; tileId++)
         {
@@ -72,7 +74,8 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
             if (mirageTile.activeInHierarchy)
             {
                 Vector2Int mirageTileGridPosition = GridPositionFromWorldPosition(mirageTile.transform.position);
-                tileIdToPosition[mirageTileGridPosition] = tileId + 1;
+                //tileIdToPosition[mirageTileGridPosition] = tileId + 1;
+                tileIdToPosition[mirageTileGridPosition] = ALPHABET[tileId];
             }
         }
 

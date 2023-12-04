@@ -132,7 +132,8 @@ public class PlayerInventory : MonoBehaviour
 
     public static void AddCollectibleFromData(Collectible.CollectibleData data) => collectibles.Add(data);
 
-    public static void AddCollectible(Collectible collectible) {
+    public static void AddCollectible(Collectible collectible) 
+    {
         collectibles.Add(collectible.GetCollectibleData());
         OnPlayerGetCollectible?.Invoke(instance, new InventoryEvent {collectible = collectible});
     }
