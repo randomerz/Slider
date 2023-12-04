@@ -5,6 +5,8 @@ using UnityEngine.UIElements;
 
 public class DinoLasersManager : MonoBehaviour
 {
+    private bool debugSkipFezziwigActivation = true;
+
     [SerializeField] private Sprite leftHalfLaserOffSprite;
     [SerializeField] private Sprite leftHalfLaserOnSprite;
     [SerializeField] private Sprite rightHalfLaserOffSprite;
@@ -38,12 +40,28 @@ public class DinoLasersManager : MonoBehaviour
             canFirstTimeActivate = true;
         }
     }
-    
-    private void OnEnable()
+
+    private void Start()
     {
-        SGridAnimator.OnSTileMoveEnd += UpdateCanFirstTimeActivate;
-        //SGridAnimator.OnSTileMoveStart += OnMoveStart;
-        DesertArtifact.MirageDisappeared += UpdateCanFirstTimeActivate;
+        if (debugSkipFezziwigActivation)
+        {
+            Destroy(firstTimeActivationAnimation);
+
+            foreach (DinosaurLaser dinoLaser in dinoLasers)
+            {
+                dinoLaser.EnableSpriteRenderer(true);//now using post laser dino head (broken skull)
+            }
+
+            SaveSystem.Current.SetBool("desertDinoLaserActivatedAlready", true);
+
+            SGridAnimator.OnSTileMoveEnd += OnMoveEnd;
+            DesertArtifact.MirageDisappeared += OnMirageDisappeared;
+        }
+        else
+        {
+            SGridAnimator.OnSTileMoveEnd += UpdateCanFirstTimeActivate;
+            DesertArtifact.MirageDisappeared += UpdateCanFirstTimeActivate;
+        }
     }
 
     private void LateUpdate()
