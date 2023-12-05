@@ -162,6 +162,8 @@ public class MagiTechGrid : SGrid
             }
             else if (desyncIslandId != -1)
             {
+                DesyncActive = false;
+                onDesyncEndWorld?.Invoke();
                 desyncLocation = new Vector2Int(-1, -1);
                 desyncIslandId = -1;
             }
@@ -305,6 +307,11 @@ public class MagiTechGrid : SGrid
     public void IsDesyncActive(Condition c)
     {
         c.SetSpec(DesyncActive);
+    }
+
+    public void IsPlayerOnDesyncTile(Condition c)
+    {
+        c.SetSpec(DesyncActive && Player.GetInstance().GetSTileUnderneath().islandId == desyncIslandId);
     }
     #endregion
 }
