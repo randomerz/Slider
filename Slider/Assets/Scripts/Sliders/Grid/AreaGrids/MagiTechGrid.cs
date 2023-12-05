@@ -159,39 +159,11 @@ public class MagiTechGrid : SGrid
             {
                 desyncLocation = FindAltCoords(dropTile.x, dropTile.y);
                 desyncIslandId = FindAltId(dropTile.islandId);
-                //GetButton(desyncIslandId).SetLightning(true);
-               // GetButton(dropTile.islandId).SetLightning(true);
-               // onDesyncStart.Invoke();
             }
-            else if (desyncIslandId != -1) //L: Might break smth, but techincally desync only ends if it began in the first place.
+            else if (desyncIslandId != -1)
             {
-              //  onDesyncEnd.Invoke();
-              //  RestoreOnEndDesync();
                 desyncLocation = new Vector2Int(-1, -1);
                 desyncIslandId = -1;
-            }
-           // GetButton(dropTile.islandId).buttonAnimator.SetAnchored(interactArgs.drop);
-        }
-    }
-
-    private void OnSTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if(e.stile.islandId == desyncIslandId)
-        {
-            if(e.prevPos == desyncLocation) //moving away from "correct" location
-            {
-                print("Desync Start");
-            }
-        }
-    }
-
-    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if(e.stile.islandId == desyncIslandId)
-        {
-            if(e.stile.x == desyncLocation.x && e.stile.y == desyncLocation.y) //back to "correct" location
-            {
-                print("Desync End");
             }
         }
     }
@@ -205,6 +177,31 @@ public class MagiTechGrid : SGrid
     {        
         return (islandId == 9) ? 18 : (islandId + 9) % 18;
     }
+
+    private void OnSTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if(e.stile.islandId == desyncIslandId)
+        {
+            if(e.prevPos == desyncLocation) //moving away from "correct" location
+            {
+                DesyncActive = true;
+                onDesyncStartWorld?.Invoke();
+            }
+        }
+    }
+
+    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if(e.stile.islandId == desyncIslandId)
+        {
+            if(e.stile.x == desyncLocation.x && e.stile.y == desyncLocation.y) //back to "correct" location
+            {
+                DesyncActive = false;
+                onDesyncEndWorld?.Invoke();
+            }
+        }
+    }
+
 
     #endregion
 
@@ -303,6 +300,11 @@ public class MagiTechGrid : SGrid
     public void IncrementOres()
     {
         numOres++;
+    }
+
+    public void IsDesyncActive(Condition c)
+    {
+        c.SetSpec(DesyncActive);
     }
     #endregion
 }
