@@ -103,8 +103,14 @@ public class MagiTechArtifact : UIArtifact
                 GetButton(dropTile.islandId).SetLightning(true);
                 onDesyncStart.Invoke();
             }
-            else if (desyncIslandId != -1) //L: Might break smth, but techincally desync only ends if it began in the first place.
+            else if (desyncIslandId != -1)
             {
+                if (isDesyncSoundPlaying)
+                {
+                    isDesyncSoundPlaying = false;
+                    desyncTearLoopSound.Stop();
+                    AudioManager.PickSound("Desync Tear Close").AndPlay();
+                }
                 onDesyncEnd.Invoke();
                 RestoreOnEndDesync();
                 desyncLocation = new Vector2Int(-1, -1);
