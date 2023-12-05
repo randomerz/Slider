@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MagiTechGrid : SGrid
 {
@@ -10,12 +11,31 @@ public class MagiTechGrid : SGrid
 
     public int gridOffset = 100; //C: The X distance between the present and past grid
 
+     /*C: Note that this is on the *opposite* side of the grid from the anchor.
+    *   IE if the anchor is dropped at (2,1), in the present, this vector will be (5, 1),
+    *   the corresponding location in the past, since this is the location we need
+    *   to compare against
+    */
+    public Vector2Int desyncLocation = new Vector2Int(-1, -1);
+
+    //C: likewise this is the ID of the *opposite* Stile
+    public int desyncIslandId = -1;
+
+    //True when the opposite tile is at a different location
+    public bool DesyncActive = false;
+
+
+    public UnityEvent onDesyncStartWorld;
+    public UnityEvent onDesyncEndWorld;
+
     [SerializeField] private Collider2D fireStoolZoneCollider;
     [SerializeField] private Collider2D lightningStoolZoneCollider;
     private int numOres = 0;
 
     [SerializeField] private MagiTechTabManager tabManager;
     [SerializeField] private PlayerActionHints hints;
+
+    
 
     private ContactFilter2D contactFilter;
 
@@ -54,13 +74,18 @@ public class MagiTechGrid : SGrid
 
     protected void OnEnable()
     {
-        // OnTimeChange(this, new Portal.OnTimeChangeArgs {fromPast = IsInPast(Player.GetInstance().transform)});
         Portal.OnTimeChange += OnTimeChange;
+        Anchor.OnAnchorInteract += OnAnchorInteract;
+        SGridAnimator.OnSTileMoveStart += OnSTileMoveStart;
+        SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
     }
 
     protected void OnDisable()
     {
         Portal.OnTimeChange -= OnTimeChange;
+        Anchor.OnAnchorInteract -= OnAnchorInteract;
+        SGridAnimator.OnSTileMoveStart -= OnSTileMoveStart;
+        SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
     }
 
     private void OnTimeChange(object sender, Portal.OnTimeChangeArgs e)
@@ -123,6 +148,62 @@ public class MagiTechGrid : SGrid
     {
         if(GetNumTilesCollected() >= 1)
             hints.TriggerHint("altview");
+    }
+
+    private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs interactArgs)
+    {
+        STile dropTile = interactArgs.stile;
+        if (dropTile != null)
+        {
+            if (interactArgs.drop)
+            {
+                desyncLocation = FindAltCoords(dropTile.x, dropTile.y);
+                desyncIslandId = FindAltId(dropTile.islandId);
+                //GetButton(desyncIslandId).SetLightning(true);
+               // GetButton(dropTile.islandId).SetLightning(true);
+               // onDesyncStart.Invoke();
+            }
+            else if (desyncIslandId != -1) //L: Might break smth, but techincally desync only ends if it began in the first place.
+            {
+              //  onDesyncEnd.Invoke();
+              //  RestoreOnEndDesync();
+                desyncLocation = new Vector2Int(-1, -1);
+                desyncIslandId = -1;
+            }
+           // GetButton(dropTile.islandId).buttonAnimator.SetAnchored(interactArgs.drop);
+        }
+    }
+
+    private void OnSTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if(e.stile.islandId == desyncIslandId)
+        {
+            if(e.prevPos == desyncLocation) //moving away from "correct" location
+            {
+                print("Desync Start");
+            }
+        }
+    }
+
+    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if(e.stile.islandId == desyncIslandId)
+        {
+            if(e.stile.x == desyncLocation.x && e.stile.y == desyncLocation.y) //back to "correct" location
+            {
+                print("Desync End");
+            }
+        }
+    }
+
+    private Vector2Int FindAltCoords(int x, int y)
+    {
+        return new Vector2Int((x + 3) % 6, y);
+    }
+
+    private int FindAltId(int islandId)
+    {        
+        return (islandId == 9) ? 18 : (islandId + 9) % 18;
     }
 
     #endregion
