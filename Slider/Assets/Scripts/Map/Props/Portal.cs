@@ -9,6 +9,7 @@ public class Portal : MonoBehaviour
     
     public enum PortalEnum
     {
+        NONE,
         MAGITECH_PRESENT,
         MAGITECH_PAST,
         MAGITECH_TO_DESERT,
@@ -20,7 +21,7 @@ public class Portal : MonoBehaviour
     public Portal otherPortal;
     public Transform spawnPoint;
     public static bool playerInPortal;
-    public static Portal recentPortal;
+    public static PortalEnum recentPortal;
     private bool isTeleporting;
 
     public class OnTimeChangeArgs : System.EventArgs
@@ -31,13 +32,15 @@ public class Portal : MonoBehaviour
     public void OnPlayerEnter()
     {
         if(playerInPortal || isTeleporting) return;
-
-        isTeleporting = true;
+        // if(recentPortal == PortalEnum.MAGITECH_TO_DESERT && portalEnum == PortalEnum.DESERT_TO_MAGITECH
+        // || recentPortal == PortalEnum.DESERT_TO_MAGITECH && portalEnum == PortalEnum.MAGITECH_TO_DESERT)
+        //     return;
+        playerInPortal = true;
+        recentPortal = portalEnum;
         if(portalEnum is PortalEnum.MAGITECH_PRESENT || portalEnum is PortalEnum.MAGITECH_PAST)
         {
             UIEffects.FadeToBlack(callback: InitTeleport, speed: 2, alpha:0.5f, disableAtEnd: false);
-            playerInPortal = true;
-            recentPortal = this;
+            isTeleporting = true;
         }
         else
         {
@@ -64,9 +67,9 @@ public class Portal : MonoBehaviour
 
     public void OnPlayerExit()
     {
-        if(isTeleporting || recentPortal == this) return;
+        if(isTeleporting || recentPortal == portalEnum) return;
         playerInPortal = false;
-        recentPortal = null;
+        recentPortal = PortalEnum.NONE;
     }
 
     public void OnPlayerNear(bool enter)
