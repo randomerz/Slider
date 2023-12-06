@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class DesyncItem : Item
 {
-    [SerializeField] private Sprite pastSprite;
-    [SerializeField] private Sprite presentSprite;
     [SerializeField] private DesyncItem itemPair;
     [SerializeField] private GameObject lightning;
+    
     private bool isItemInPast;
     private STile originTile;
     private bool isDesynced;
