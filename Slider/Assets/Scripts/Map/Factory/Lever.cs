@@ -12,7 +12,7 @@ public class Lever : ElectricalNode
     private PlayerConditionals _pConds;
 
     private bool _isAnimating;
-    private bool _targetVisualOn;
+    protected bool _targetVisualOn;
 
     public bool debugLog;
 
@@ -63,7 +63,6 @@ public class Lever : ElectricalNode
         base.Update();
         if (ShouldFlip())
         {
-            //Switch();
             SwitchVisuals();
         } 
     }
@@ -90,13 +89,11 @@ public class Lever : ElectricalNode
     }
 
 
-    public void Switch()
+    public virtual void Switch()
     {
         AudioManager.Play("UI Click");
 
         _targetVisualOn = !_targetVisualOn;
-
-        //SetState(!PoweredConditionsMet());
     }
 
     private void SwitchVisuals()

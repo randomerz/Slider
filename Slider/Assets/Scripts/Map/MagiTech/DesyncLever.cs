@@ -4,47 +4,63 @@ using UnityEngine;
 
 public class DesyncLever : Lever
 {
-    //Had to make pair DesyncLever because I apparently can't access the power state of a Lever in DesyncLever
     [SerializeField] private DesyncLever leverPair;
     [SerializeField] private GameObject lightning;
-    private STile originTile;
-    private bool isInPast;
+
+    private STile currentTile;
+    private bool isPastLever;
     private bool isDesynced;
 
-    public bool IsDesynced { get => isDesynced; }
+    //public bool IsDesynced { get => isDesynced; }
+
     private void Start()
     {
-        originTile = SGrid.GetSTileUnderneath(gameObject);
+        currentTile = SGrid.GetSTileUnderneath(gameObject);
+        isPastLever = MagiTechGrid.IsInPast(transform);
     }
 
-    private new void OnEnable()
+    protected override void OnEnable()
     {
         base.OnEnable();
-        isInPast = MagiTechGrid.IsInPast(transform);
-        Anchor.OnAnchorInteract += CheckLeverOnAnchorInteract;
+        MagiTechGrid.OnDesyncStartWorld += OnDesyncStartWorld;
+        MagiTechGrid.OnDesyncEndWorld += OnDesyncEndWorld;
     }
 
-    private new void OnDisable()
+    protected override void OnDisable()
     {
         base.OnDisable();
-        Anchor.OnAnchorInteract -= CheckLeverOnAnchorInteract;
-    }
-    
-    public void UpdatePairState()
-    {
-        if (!isDesynced) leverPair.SetState(!this._isPowered); //C: Because the actual power state doesn't update until after a coroutine 
+        MagiTechGrid.OnDesyncStartWorld -= OnDesyncStartWorld;
+        MagiTechGrid.OnDesyncEndWorld -= OnDesyncEndWorld;
     }
 
-    private void CheckLeverOnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
+    public override void Switch()
     {
-        isDesynced = e.drop && (leverPair.IsDesynced || (originTile != null && originTile.hasAnchor));
-        if (!isDesynced) ResetToInitialAfterDesync();
+        base.Switch();
+        if(isPastLever && !isDesynced)
+        {
+            leverPair.Switch();
+        }
+    }
+
+
+    
+    private void OnDesyncStartWorld(object sender, MagiTechGrid.OnDesyncArgs e)
+    {
+        isDesynced = currentTile.islandId == e.desyncIslandId;
         lightning.SetActive(isDesynced);
     }
 
-    private void ResetToInitialAfterDesync()
+    private void OnDesyncEndWorld(object sender, MagiTechGrid.OnDesyncArgs e)
     {
-        //Whatever state leaves the first door open
-        if (!isInPast) SetState(leverPair._isPowered);
+        isDesynced = false;
+        lightning.SetActive(false);
+        UpdateOtherState();
+    }
+
+    public void UpdateOtherState()
+    {
+        if(!isPastLever || isDesynced) return;
+        if(leverPair._targetVisualOn != _targetVisualOn)
+            leverPair.Switch();
     }
 }
