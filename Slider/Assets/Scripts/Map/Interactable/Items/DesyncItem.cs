@@ -6,8 +6,9 @@ public class DesyncItem : Item
 {
     [SerializeField] private DesyncItem itemPair;
     [SerializeField] private GameObject lightning;
-    
+
     private bool isItemInPast;
+    private bool fromPast;
     private STile originTile;
     private bool isDesynced;
 
@@ -17,6 +18,7 @@ public class DesyncItem : Item
     private void Start()
     {
         isItemInPast = MagiTechGrid.IsInPast(transform);
+        fromPast = isItemInPast;
         originTile = SGrid.GetSTileUnderneath(gameObject);
     }
 
@@ -36,24 +38,24 @@ public class DesyncItem : Item
         MagiTechGrid.OnDesyncEndWorld -= OnDesyncEndWorld;
     }
 
-    private void CheckItemsOnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
-    {
-        isDesynced = e.drop && originTile != null && originTile.hasAnchor;
-        itemPair.gameObject.SetActive(isItemInPast || IsDesynced);
-        lightning.SetActive(IsDesynced);
-    }
+    // private void CheckItemsOnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
+    // {
+    //     isDesynced = e.drop && originTile != null && originTile.hasAnchor;
+    //     itemPair.gameObject.SetActive(isItemInPast || IsDesynced);
+    //     lightning.SetActive(IsDesynced);
+    // }
 
     private void OnDesyncStartWorld(object sender, MagiTechGrid.OnDesyncArgs e)
     {
         isDesynced = originTile.islandId == e.desyncIslandId;
-        itemPair.gameObject.SetActive(isItemInPast || IsDesynced);
+        gameObject.SetActive(isItemInPast || IsDesynced || fromPast);
         lightning.SetActive(IsDesynced);
     }
 
     private void OnDesyncEndWorld(object sender, MagiTechGrid.OnDesyncArgs e)
     {
         isDesynced = false;
-        itemPair.gameObject.SetActive(isItemInPast || IsDesynced);
+        gameObject.SetActive(isItemInPast || IsDesynced || fromPast);
         lightning.SetActive(IsDesynced);
     }
 
@@ -64,7 +66,7 @@ public class DesyncItem : Item
         
         bool eitherDesynced = MagiTechGrid.IsTileDesynced(originTile) || MagiTechGrid.IsTileDesynced(itemPair.originTile);
         
-        if(eitherDesynced || isItemInPast)
+        if(eitherDesynced || isItemInPast || itemPair.fromPast)
         {
             itemPair.gameObject.SetActive(true);
         }

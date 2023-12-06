@@ -264,7 +264,7 @@ public class MagiTechGrid : SGrid
         foreach (Collider2D hit in GetCollidingItems(fireStoolZoneCollider))
         {
             Item item = hit.GetComponent<Item>();
-            if (item != null && item.itemName == "Step Stool" || item.itemName == "Past Step Stool")
+            if (item != null && (item.itemName == "Step Stool" || item.itemName == "Past Step Stool"))
             {
                 c.SetSpec(true);
                 return;
@@ -285,7 +285,7 @@ public class MagiTechGrid : SGrid
         foreach (Collider2D hit in GetCollidingItems(lightningStoolZoneCollider))
         {
             Item item = hit.GetComponent<Item>();
-            if (item != null && item.itemName == "Step Stool" || item.itemName == "Past Step Stool")
+            if (item != null && (item.itemName == "Step Stool" || item.itemName == "Past Step Stool"))
             {
                 c.SetSpec(true);
                 return;
