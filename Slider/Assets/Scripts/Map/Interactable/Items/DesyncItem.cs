@@ -9,23 +9,37 @@ public class DesyncItem : Item
 
     private bool isItemInPast;
     private bool fromPast;
-    private STile originTile;
+    private STile currentTile;
     private bool isDesynced;
-
-    public bool IsDesynced { get => isDesynced; }
+    private DesyncItem presentItem;
+    private DesyncItem pastItem;
 
 
     private void Start()
     {
+        Init();
+    }
+
+    private void Init()
+    {
         isItemInPast = MagiTechGrid.IsInPast(transform);
         fromPast = isItemInPast;
-        originTile = SGrid.GetSTileUnderneath(gameObject);
+        currentTile = SGrid.GetSTileUnderneath(gameObject);
+        if(fromPast)
+        {
+            pastItem = this;
+            presentItem = itemPair;
+        }
+        else
+        {
+            pastItem = itemPair;
+            presentItem = this;
+        }
     }
 
     private void OnEnable()
     {
         Portal.OnTimeChange += CheckItemsOnTeleport;
-       // Anchor.OnAnchorInteract += CheckItemsOnAnchorInteract;
         MagiTechGrid.OnDesyncStartWorld += OnDesyncStartWorld;
         MagiTechGrid.OnDesyncEndWorld += OnDesyncEndWorld;
     }
@@ -33,30 +47,95 @@ public class DesyncItem : Item
     private void OnDisable()
     {
         Portal.OnTimeChange -= CheckItemsOnTeleport;
-       // Anchor.OnAnchorInteract -= CheckItemsOnAnchorInteract;
         MagiTechGrid.OnDesyncStartWorld -= OnDesyncStartWorld;
         MagiTechGrid.OnDesyncEndWorld -= OnDesyncEndWorld;
     }
 
-    // private void CheckItemsOnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
-    // {
-    //     isDesynced = e.drop && originTile != null && originTile.hasAnchor;
-    //     itemPair.gameObject.SetActive(isItemInPast || IsDesynced);
-    //     lightning.SetActive(IsDesynced);
-    // }
+    private void Update()
+    {
+        UpdateCurrentTile();
+    }
+
+    public override STile DropItem(Vector3 dropLocation, System.Action callback=null)
+    {
+        STile tile = base.DropItem(dropLocation, callback);
+        currentTile = tile;
+        return tile;
+    }
+
+    private void UpdateCurrentTile()
+    {
+        if(PlayerInventory.GetCurrentItem() != null && PlayerInventory.GetCurrentItem().itemName == itemName)
+        {
+            STile tile = Player.GetInstance().GetSTileUnderneath();
+            if(currentTile != tile)
+            {
+                currentTile = tile;
+                if(isDesynced && !MagiTechGrid.IsTileDesynced(currentTile))
+                {
+                    //edge case: if we are carrying the present item, we must remove it from inventory and place it where the player is before disabling 
+                    if(this == presentItem)
+                    {
+                        ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position);
+                        PlayerInventory.RemoveItem();
+                        transform.position = Player.GetPosition();
+                        transform.SetParent(Player.GetInstance().GetSTileUnderneath().transform);
+                    }
+                    isDesynced = false;
+                    UpdateItemPair();
+
+                }
+                else if(!isDesynced && MagiTechGrid.IsTileDesynced(currentTile))
+                {
+                    isDesynced = true;
+                    UpdateItemPair();
+                }
+            }
+        }
+    }
 
     private void OnDesyncStartWorld(object sender, MagiTechGrid.OnDesyncArgs e)
     {
-        isDesynced = originTile.islandId == e.desyncIslandId;
-        gameObject.SetActive(isItemInPast || IsDesynced || fromPast);
-        lightning.SetActive(IsDesynced);
+        isDesynced = currentTile.islandId == e.desyncIslandId;
+        UpdateItemPair();
     }
 
     private void OnDesyncEndWorld(object sender, MagiTechGrid.OnDesyncArgs e)
     {
         isDesynced = false;
-        gameObject.SetActive(isItemInPast || IsDesynced || fromPast);
-        lightning.SetActive(IsDesynced);
+        UpdateItemPair();
+    }
+
+    // private bool CheckIfShouldBeActive()
+    // {
+    //     bool eitherDesynced = presentItem.isDesynced || pastItem.isDesynced;
+    //     bool shouldBeActive = fromPast || eitherDesynced || isItemInPast;
+    //     return shouldBeActive;
+    // }
+
+    // private void SetActiveIfShouldBe()
+    // {
+    //     gameObject.SetActive(CheckIfShouldBeActive());
+    //     lightning.SetActive(isDesynced);
+    // }
+
+    // private void SetBothItemsActiveIfShouldBe()
+    // {
+    //     presentItem.SetActiveIfShouldBe();
+    //     pastItem.SetActiveIfShouldBe();
+    // }
+
+    private void UpdateItemPair()
+    {
+        pastItem.UpdateLightning();
+        bool presentShouldBeActive = presentItem.isDesynced || pastItem.isDesynced || pastItem.isItemInPast;
+        presentItem.gameObject.SetActive(presentShouldBeActive);
+        presentItem.UpdateLightning();
+    }
+
+    private void UpdateLightning()
+    {
+        lightning.SetActive(isDesynced);
     }
 
     private void CheckItemsOnTeleport(object sender, Portal.OnTimeChangeArgs e)
@@ -64,21 +143,6 @@ public class DesyncItem : Item
         if (PlayerInventory.GetCurrentItem() != null && PlayerInventory.GetCurrentItem().name == name) 
             isItemInPast = !e.fromPast;
         
-        bool eitherDesynced = MagiTechGrid.IsTileDesynced(originTile) || MagiTechGrid.IsTileDesynced(itemPair.originTile);
-        
-        if(eitherDesynced || isItemInPast || itemPair.fromPast)
-        {
-            itemPair.gameObject.SetActive(true);
-        }
-        else
-        {
-            itemPair.gameObject.SetActive(false);
-        }
-        //Debug.Log("isItemInPast: " + isItemInPast + " originTile: " + originTile.hasAnchor);
-        // if (!isItemInPast && !originTile.hasAnchor)
-        // {
-        //     itemPair.gameObject.SetActive(false);
-        // }
-        // else itemPair.gameObject.SetActive(true);
+        UpdateItemPair();
     }
 }
