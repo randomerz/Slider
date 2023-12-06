@@ -6,7 +6,7 @@ public class DesyncItem : Item
 {
     [SerializeField] private Sprite pastSprite;
     [SerializeField] private Sprite presentSprite;
-    [SerializeField] private Item itemPair;
+    [SerializeField] private DesyncItem itemPair;
     [SerializeField] private GameObject lightning;
     private bool isItemInPast;
     private STile originTile;
@@ -24,13 +24,17 @@ public class DesyncItem : Item
     private void OnEnable()
     {
         Portal.OnTimeChange += CheckItemsOnTeleport;
-        Anchor.OnAnchorInteract += CheckItemsOnAnchorInteract;
+       // Anchor.OnAnchorInteract += CheckItemsOnAnchorInteract;
+        MagiTechGrid.OnDesyncStartWorld += OnDesyncStartWorld;
+        MagiTechGrid.OnDesyncEndWorld += OnDesyncEndWorld;
     }
 
     private void OnDisable()
     {
         Portal.OnTimeChange -= CheckItemsOnTeleport;
-        Anchor.OnAnchorInteract -= CheckItemsOnAnchorInteract;
+       // Anchor.OnAnchorInteract -= CheckItemsOnAnchorInteract;
+        MagiTechGrid.OnDesyncStartWorld -= OnDesyncStartWorld;
+        MagiTechGrid.OnDesyncEndWorld -= OnDesyncEndWorld;
     }
 
     private void CheckItemsOnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
@@ -40,14 +44,40 @@ public class DesyncItem : Item
         lightning.SetActive(IsDesynced);
     }
 
+    private void OnDesyncStartWorld(object sender, MagiTechGrid.OnDesyncArgs e)
+    {
+        isDesynced = originTile.islandId == e.desyncIslandId;
+        itemPair.gameObject.SetActive(isItemInPast || IsDesynced);
+        lightning.SetActive(IsDesynced);
+    }
+
+    private void OnDesyncEndWorld(object sender, MagiTechGrid.OnDesyncArgs e)
+    {
+        isDesynced = false;
+        itemPair.gameObject.SetActive(isItemInPast || IsDesynced);
+        lightning.SetActive(IsDesynced);
+    }
+
     private void CheckItemsOnTeleport(object sender, Portal.OnTimeChangeArgs e)
     {
-        if (PlayerInventory.GetCurrentItem() != null && PlayerInventory.GetCurrentItem().name == name) isItemInPast = !e.fromPast;
-        //Debug.Log("isItemInPast: " + isItemInPast + " originTile: " + originTile.hasAnchor);
-        if (!isItemInPast && !originTile.hasAnchor)
+        if (PlayerInventory.GetCurrentItem() != null && PlayerInventory.GetCurrentItem().name == name) 
+            isItemInPast = !e.fromPast;
+        
+        bool eitherDesynced = MagiTechGrid.IsTileDesynced(originTile) || MagiTechGrid.IsTileDesynced(itemPair.originTile);
+        
+        if(eitherDesynced || isItemInPast)
+        {
+            itemPair.gameObject.SetActive(true);
+        }
+        else
         {
             itemPair.gameObject.SetActive(false);
         }
-        else itemPair.gameObject.SetActive(true);
+        //Debug.Log("isItemInPast: " + isItemInPast + " originTile: " + originTile.hasAnchor);
+        // if (!isItemInPast && !originTile.hasAnchor)
+        // {
+        //     itemPair.gameObject.SetActive(false);
+        // }
+        // else itemPair.gameObject.SetActive(true);
     }
 }

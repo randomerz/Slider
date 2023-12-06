@@ -24,9 +24,20 @@ public class MagiTechGrid : SGrid
     //True when the opposite tile is at a different location
     public bool DesyncActive = false;
 
+    public class OnDesyncArgs : EventArgs
+    {
+        public int desyncIslandId;
+        public Vector2Int desyncLocation;
 
-    public UnityEvent onDesyncStartWorld;
-    public UnityEvent onDesyncEndWorld;
+        public OnDesyncArgs(int desyncIslandId, Vector2Int desyncLocation)
+        {
+            this.desyncIslandId = desyncIslandId;
+            this.desyncLocation = desyncLocation;
+        }
+    }
+
+    public static EventHandler<OnDesyncArgs> OnDesyncStartWorld;
+    public static EventHandler<OnDesyncArgs> OnDesyncEndWorld;
 
     [SerializeField] private Collider2D fireStoolZoneCollider;
     [SerializeField] private Collider2D lightningStoolZoneCollider;
@@ -163,7 +174,7 @@ public class MagiTechGrid : SGrid
             else if (desyncIslandId != -1)
             {
                 DesyncActive = false;
-                onDesyncEndWorld?.Invoke();
+                OnDesyncEndWorld?.Invoke(this, new(desyncIslandId, desyncLocation));
                 desyncLocation = new Vector2Int(-1, -1);
                 desyncIslandId = -1;
             }
@@ -187,7 +198,7 @@ public class MagiTechGrid : SGrid
             if(e.prevPos == desyncLocation) //moving away from "correct" location
             {
                 DesyncActive = true;
-                onDesyncStartWorld?.Invoke();
+                OnDesyncStartWorld?.Invoke(this, new(desyncIslandId, desyncLocation));
             }
         }
     }
@@ -199,9 +210,15 @@ public class MagiTechGrid : SGrid
             if(e.stile.x == desyncLocation.x && e.stile.y == desyncLocation.y) //back to "correct" location
             {
                 DesyncActive = false;
-                onDesyncEndWorld?.Invoke();
+                OnDesyncEndWorld?.Invoke(this, new(desyncIslandId, desyncLocation));
             }
         }
+    }
+
+    public static bool IsTileDesynced(STile tile)
+    {
+        var m = Current as MagiTechGrid;
+        return m.DesyncActive && m.desyncIslandId == tile.islandId;
     }
 
 
