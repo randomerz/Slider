@@ -99,6 +99,8 @@ public class DesyncItem : Item
                 transform.SetParent(Player.GetInstance().GetSTileUnderneath().transform);
                 SetLayer(LayerMask.NameToLayer("Item"));
                 ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position);
+                myCollider.enabled = true;
+                ResetSortingOrder();
                 gameObject.SetActive(false);
                 UpdateLightning();
             }
