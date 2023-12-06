@@ -217,6 +217,7 @@ public class MagiTechGrid : SGrid
 
     public static bool IsTileDesynced(STile tile)
     {
+        if(tile == null) return false;
         var m = Current as MagiTechGrid;
         return m.DesyncActive && m.desyncIslandId == tile.islandId;
     }

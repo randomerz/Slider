@@ -42,6 +42,7 @@ public class DesyncItem : Item
         Portal.OnTimeChange += CheckItemsOnTeleport;
         MagiTechGrid.OnDesyncStartWorld += OnDesyncStartWorld;
         MagiTechGrid.OnDesyncEndWorld += OnDesyncEndWorld;
+        CheckDesyncOnEnable();
     }
 
     private void OnDisable()
@@ -71,26 +72,45 @@ public class DesyncItem : Item
             if(currentTile != tile)
             {
                 currentTile = tile;
-                if(isDesynced && !MagiTechGrid.IsTileDesynced(currentTile))
-                {
-                    //edge case: if we are carrying the present item, we must remove it from inventory and place it where the player is before disabling 
-                    if(this == presentItem)
-                    {
-                        ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position);
-                        PlayerInventory.RemoveItem();
-                        transform.position = Player.GetPosition();
-                        transform.SetParent(Player.GetInstance().GetSTileUnderneath().transform);
-                    }
-                    isDesynced = false;
-                    UpdateItemPair();
-
-                }
-                else if(!isDesynced && MagiTechGrid.IsTileDesynced(currentTile))
-                {
-                    isDesynced = true;
-                    UpdateItemPair();
-                }
+                UpdateDesyncOnChangeTile();
             }
+        }
+    }
+
+    private void CheckDesyncOnEnable()
+    {
+        if(!isDesynced && MagiTechGrid.IsTileDesynced(currentTile))
+        {
+             isDesynced = true;
+            UpdateItemPair();
+        }
+    }
+
+    private void UpdateDesyncOnChangeTile()
+    {
+        if(isDesynced && !MagiTechGrid.IsTileDesynced(currentTile))
+        {
+            isDesynced = false;
+            //edge case: if we are carrying the present item and the past item isn't in the past or desynced, we must remove it from inventory and place it where the player is before disabling 
+            if(this == presentItem && !(pastItem.isDesynced || pastItem.isItemInPast))
+            {
+                PlayerInventory.RemoveItem();
+                transform.position = Player.GetPosition();
+                transform.SetParent(Player.GetInstance().GetSTileUnderneath().transform);
+                SetLayer(LayerMask.NameToLayer("Item"));
+                ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position);
+                gameObject.SetActive(false);
+                UpdateLightning();
+            }
+            else
+            {
+                UpdateItemPair();
+            }
+        }
+        else if(!isDesynced && MagiTechGrid.IsTileDesynced(currentTile))
+        {
+            isDesynced = true;
+            UpdateItemPair();
         }
     }
 
@@ -106,30 +126,15 @@ public class DesyncItem : Item
         UpdateItemPair();
     }
 
-    // private bool CheckIfShouldBeActive()
-    // {
-    //     bool eitherDesynced = presentItem.isDesynced || pastItem.isDesynced;
-    //     bool shouldBeActive = fromPast || eitherDesynced || isItemInPast;
-    //     return shouldBeActive;
-    // }
-
-    // private void SetActiveIfShouldBe()
-    // {
-    //     gameObject.SetActive(CheckIfShouldBeActive());
-    //     lightning.SetActive(isDesynced);
-    // }
-
-    // private void SetBothItemsActiveIfShouldBe()
-    // {
-    //     presentItem.SetActiveIfShouldBe();
-    //     pastItem.SetActiveIfShouldBe();
-    // }
-
     private void UpdateItemPair()
     {
         pastItem.UpdateLightning();
         bool presentShouldBeActive = presentItem.isDesynced || pastItem.isDesynced || pastItem.isItemInPast;
-        presentItem.gameObject.SetActive(presentShouldBeActive);
+        if(presentItem.gameObject.activeSelf != presentShouldBeActive)
+        {
+            presentItem.gameObject.SetActive(presentShouldBeActive);
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
+        }
         presentItem.UpdateLightning();
     }
 
