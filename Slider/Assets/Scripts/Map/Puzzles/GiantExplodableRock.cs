@@ -6,14 +6,6 @@ public class GiantExplodableRock : ExplodableRock, ISavable
 {
     public List<GameObject> laserRaycastColliders;
 
-    [Header("Collectible Fall Arc")]
-    public Collectible collectible;
-    [SerializeField] private Transform collectibleStart;
-    [SerializeField] private Transform collectibleTarget;
-    [SerializeField] private float animationDuration;
-    [SerializeField] private AnimationCurve xPickUpMotion;
-    [SerializeField] private AnimationCurve yPickUpMotion;
-
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
@@ -124,39 +116,5 @@ public class GiantExplodableRock : ExplodableRock, ISavable
     }
     
 
-    private IEnumerator CollectibleDrop()
-    {
-        if (collectible == null)
-            yield break;
-
-        collectible.gameObject.SetActive(true);
-        collectible.GetComponent<Collider2D>().enabled = false;
-        Vector3 start = collectibleStart.transform.position;
-
-        float t = 0;
-        while (t < animationDuration)
-        {
-            float x = xPickUpMotion.Evaluate(t / animationDuration);
-            float y = yPickUpMotion.Evaluate(t / animationDuration);
-            Vector3 pos = new Vector3(Mathf.LerpUnclamped(start.x, collectibleTarget.transform.position.x, x),
-                                      Mathf.LerpUnclamped(start.y, collectibleTarget.transform.position.y, y));
-            
-            collectible.transform.position = pos;
-
-            yield return null;
-            t += Time.deltaTime;
-        }
-
-        ParticleManager.SpawnParticle(ParticleType.SmokePoof, collectibleTarget.transform.position, collectibleTarget);
-
-        FinishCollectibleDrop();
-    }
-
-    private void FinishCollectibleDrop()
-    {
-        collectible.transform.position = collectibleTarget.transform.position;
-        collectible.GetComponent<Collider2D>().enabled = true;
-        collectible.getSpriteRenderer().sortingLayerName = "Entity";
-        collectible.getSpriteRenderer().sortingOrder = 0;
-    }
+    
 }

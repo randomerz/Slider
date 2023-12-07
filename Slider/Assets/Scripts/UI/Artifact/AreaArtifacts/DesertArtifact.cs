@@ -9,6 +9,9 @@ public class DesertArtifact : UIArtifact
     public Dictionary<(int, int), int> currGrid;
     private Queue<List<ATBPair>> storedSwaps;
     private List<ATBPair> latestSwaps;
+
+    public static System.EventHandler<System.EventArgs> MirageDisappeared;
+
     private class ATBPair
     {
         public ArtifactTileButton current;

@@ -133,15 +133,6 @@ public class Item : MonoBehaviour, ISavable
     {
         StartCoroutine(AnimateDrop(dropLocation, callback));
         
-        // Collider2D hit = Physics2D.OverlapPoint(dropLocation, LayerMask.GetMask("Slider"));
-        // if (hit == null || hit.GetComponent<STile>() == null)
-        // {
-        //     gameObject.transform.parent = null;
-        //     //Debug.LogWarning("Player isn't on top of a slider!");
-        //     return null;
-        // }
-
-        // STile hitTile = hit.GetComponent<STile>();
         STile hitStile = SGrid.GetSTileUnderneath(gameObject);
         
         if (hitStile == null) 
@@ -163,7 +154,6 @@ public class Item : MonoBehaviour, ISavable
 
     public virtual void OnEquip()
     {
-        // Player.SetMoveSpeedMultiplier(1f);
         foreach (GameObject go in enableOnDrop)
         {
             go.SetActive(false);
@@ -185,14 +175,12 @@ public class Item : MonoBehaviour, ISavable
         spriteRenderer.gameObject.layer = layer;
     }
 
-
     protected IEnumerator AnimatePickUp(Transform target, Transform reflectionTarget, System.Action callback=null)
     {
         foreach (GameObject go in enableOnDrop)
         {
             go.SetActive(false);
         }
-        // spriteRenderer.sortingOrder = 1; // bring object to render above others
 
         float t = 0;
 
@@ -211,7 +199,6 @@ public class Item : MonoBehaviour, ISavable
                                       Mathf.Lerp(start.y, reflectionTarget.transform.position.y, y));
                 reflectedspriteRenderer.transform.position =  rPos - spriteOffset;
             }
-            //new Vector3((pos - start).x, -1 * (pos - start).y, pos.z) + start - spriteOffset;
 
             yield return null;
             t += Time.deltaTime;

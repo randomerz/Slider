@@ -197,7 +197,7 @@ public class PlayerAction : Singleton<PlayerAction>
 
     private bool CheckItemRaycast(Collider2D item)
     {
-        if(item == null || item.GetComponent<Item>() == null) return false;
+        if(item == null || item.GetComponent<Item>() == null) return false;        
         Vector3 itemPos = item.transform.position;
         Vector3 direction = itemPos - transform.position;
         Vector3 perp = Vector3.Cross(direction, Vector3.forward).normalized * item.GetComponent<Item>().itemRadius;

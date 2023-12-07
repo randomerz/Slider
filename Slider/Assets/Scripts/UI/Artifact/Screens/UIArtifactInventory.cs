@@ -15,6 +15,9 @@ public class UIArtifactInventory : MonoBehaviour
 
 
     [Header("Special Collectible Counters")] // could be refactored
+    public ArtifactInventoryCollectible oilCollectible;
+    public TextMeshProUGUI sunglassesCount;
+    public TextMeshProUGUI oilCount;
     public TextMeshProUGUI breadgeCount;
 
     private void OnEnable() 
@@ -38,6 +41,16 @@ public class UIArtifactInventory : MonoBehaviour
             c.SetVisible(PlayerInventory.Contains(c.collectibleName));
         }
 
+        for (int i = 1; i <= 3; i++)
+        {
+            // Collectibles are called "Oil #1", "Oil #2", "Oil #3"
+            if (PlayerInventory.Contains($"{oilCollectible.collectibleName} #{i}"))
+            {
+                oilCollectible.SetVisible(true);
+                break;
+            }
+        }
+
         anchorCollectible.SetVisible(PlayerInventory.Instance.GetHasCollectedAnchor());
 
         scrollCollectible.SetVisible(PlayerInventory.Contains("Scroll of Realigning"));
@@ -53,14 +66,30 @@ public class UIArtifactInventory : MonoBehaviour
     private void UpdateCollectibleCounters(object sender, PlayerInventory.InventoryEvent e)
     {
         int numBreadge = 0;
+        int numSunglasses = 0;
+        int numOil = 0;
 
         for (int i = 1; i <= 9; i++)
         {
             if (PlayerInventory.Contains("Breadge", (Area)i))
                 numBreadge += 1;
+            if (PlayerInventory.Contains("Sunglasses", (Area)i))
+                numSunglasses += 1;
+        }
+
+        for (int i = 1; i <= 3; i++)
+        {
+            if (PlayerInventory.Contains($"Oil #{i}"))
+                numOil += 1;
         }
         
         breadgeCount.text = numBreadge.ToString();
         breadgeCount.gameObject.SetActive(numBreadge > 1);
+        
+        sunglassesCount.text = numSunglasses.ToString();
+        sunglassesCount.gameObject.SetActive(numSunglasses > 1);
+        
+        oilCount.text = numOil.ToString();
+        oilCount.gameObject.SetActive(numOil > 1);
     }
 }

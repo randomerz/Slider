@@ -62,4 +62,8 @@ public class Hut : Box
         insignia.sprite = insignias[currentShapeIndex];
         CreateShape(new List<Box>());
     }
+    
+    public void IsShapeTriangle(Condition c) => c.SetSpec(currentShape.shapeName == "Triangle");
+    public void IsShapeSemiCircle(Condition c) => c.SetSpec(currentShape.shapeName == "Semicircle");
+    public void IsShapeLine(Condition c) => c.SetSpec(currentShape.shapeName == "Line");
 }

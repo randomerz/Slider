@@ -14,8 +14,8 @@ public class GemManager : MonoBehaviour, ISavable
 
     private bool hasGemTransporter;
     public bool HasGemTransporter => hasGemTransporter;
-
-    public GameObject rocketCheck;
+    
+    public PipeLiquid pipeLiquid;
 
     public void Save()
     {
@@ -32,6 +32,8 @@ public class GemManager : MonoBehaviour, ISavable
         SaveSystem.Current.SetBool("magiTechMagitech", gems.GetValueOrDefault(Area.MagiTech));
 
         SaveSystem.Current.SetBool("MagitechHasGemTransporter", hasGemTransporter);
+        SaveSystem.Current.SetBool("MagitechGFuelFilling", pipeLiquid.isFilling);
+        SaveSystem.Current.SetBool("MagitechGFuelFull", pipeLiquid.isFull);
     }
 
     public void Load(SaveProfile profile)
@@ -54,8 +56,10 @@ public class GemManager : MonoBehaviour, ISavable
         if(profile.GetBool("MagitechHasGemTransporter"))
             EnableGemTransporter();
         
-        if(HasAllGems())
+        if(profile.GetBool("MagitechGFuelFull"))
             EnableGFuel(true);
+        else if (profile.GetBool("MagitechGFuelFilling"))
+            EnableGFuel(false);
     }
 
     public void HasOceanGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Ocean, false));
@@ -119,10 +123,10 @@ public class GemManager : MonoBehaviour, ISavable
             Debug.LogWarning("Tried to turn in invalid item: " + item);
         }
         UpdateGemSprites();
-        if(HasAllGems())
-        {
-            EnableGFuel();
-        }
+        // if(HasAllGems())
+        // {
+        //     EnableGFuel();
+        // }
     }
 
     public void UpdateGemSprites()
@@ -145,9 +149,12 @@ public class GemManager : MonoBehaviour, ISavable
         return true;
     }
 
-    private void EnableGFuel(bool fromSave = false)
+    public void EnableGFuel(bool fillImmediate = false)
     {
-        rocketCheck.SetActive(true);
+        if(fillImmediate)
+            pipeLiquid.SetPipeFull();
+        else
+            pipeLiquid.FillPipe();
     }
 
     public void EnableGemTransporter()
