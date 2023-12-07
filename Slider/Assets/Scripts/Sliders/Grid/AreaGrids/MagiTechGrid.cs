@@ -78,7 +78,7 @@ public class MagiTechGrid : SGrid
     {
         base.Start();
         contactFilter = new ContactFilter2D();
-
+        
         AudioManager.PlayMusic("MagiTech");
         AudioManager.SetMusicParameter("MagiTech", "MagiTechIsFuture", IsInPast(Player._instance.transform) ? 0 : 1);
     }
