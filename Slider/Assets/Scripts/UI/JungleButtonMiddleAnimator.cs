@@ -52,9 +52,9 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
                     StartCoroutine(NewButtonFlicker(3));
                     flickeringStarted = true;
                 }
+                SetPushedDown(tile2.buttonAnimator.IsPushedDown);
                 if (flickeringDone)
                 {
-                    SetPushedDown(tile2.buttonAnimator.IsPushedDown);
                     image.sprite = connectorSprite;
                 }
             }
