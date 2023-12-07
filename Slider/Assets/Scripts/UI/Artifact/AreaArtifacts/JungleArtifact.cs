@@ -210,6 +210,7 @@ public class JungleArtifact : UIArtifact
             ArtifactTileButton linkButton = button.LinkButton;
             if (buttonSelected != null && buttonSelected.Equals(linkButton))
             {
+
                 DeselectSelectedButton();
             } else
             {
