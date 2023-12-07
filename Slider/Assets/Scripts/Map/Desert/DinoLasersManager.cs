@@ -25,6 +25,11 @@ public class DinoLasersManager : MonoBehaviour
 
     private void Start()
     {
+       SubscribeToEvents();
+    }
+
+    private void SubscribeToEvents()
+    {
         if (debugSkipFezziwigActivation)
         {
             Destroy(firstTimeActivationAnimation);
@@ -54,7 +59,22 @@ public class DinoLasersManager : MonoBehaviour
 
     private void OnDisable()
     {
+        UnSubscribeFromEvents();
         RemoveAllLasersPermanently();
+    }
+
+    private void UnSubscribeFromEvents()
+    {
+        if (debugSkipFezziwigActivation)
+        {
+            SGridAnimator.OnSTileMoveEnd -= OnMoveEnd;
+            DesertArtifact.MirageDisappeared -= OnMirageDisappeared;
+        }
+        else
+        {
+            SGridAnimator.OnSTileMoveEnd -= UpdateCanFirstTimeActivate;
+            DesertArtifact.MirageDisappeared -= UpdateCanFirstTimeActivate;
+        }
     }
 
     private void UpdateCanFirstTimeActivate(object sender, System.EventArgs e)

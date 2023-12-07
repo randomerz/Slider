@@ -22,21 +22,17 @@ public class Laserable : MonoBehaviour
     public bool isLasered;
     public UnityEvent OnLasered;
     public UnityEvent OnUnLasered;
-
-    private void OnEnable()
+  
+    public void Laser()
     {
-        SGridAnimator.OnSTileMoveStart += OnSTileMoveStart;
+        isLasered = true;
+        OnLasered?.Invoke();
     }
 
-    private void OnDisable()
+    public void UnLaser()
     {
-        SGridAnimator.OnSTileMoveStart -= OnSTileMoveStart;
-    }
-
-    private  void OnSTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (isLasered) OnUnLasered?.Invoke();
         isLasered = false;
+        OnUnLasered?.Invoke();
     }
 
     public bool IsInteractionType(string type)

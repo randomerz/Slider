@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Steamworks;
 using UnityEngine;
 
 public class MagiLaser : MonoBehaviour, ISavable
@@ -14,6 +13,8 @@ public class MagiLaser : MonoBehaviour, ISavable
     private Laserable laserable;
     // private Vector2 curDir, curDir2;
     // private Vector2 curPos, curPos2;
+    private List<Laserable> lastFrameLaserables = new();
+    private List<Laserable> thisFrameLaserables = new();
 
     [SerializeField] private MagiLaserAnimation magiLaserAnimation;
     [SerializeField] private MagiLaserFlashManager magiLaserFlashManager;
@@ -30,6 +31,7 @@ public class MagiLaser : MonoBehaviour, ISavable
     {
         ClearLasers();
         MakeFirstLaser();
+        UpdateLaserables();
     }
 
     public void ClearLasers()
@@ -97,8 +99,7 @@ public class MagiLaser : MonoBehaviour, ISavable
                 return;
             }
 
-            laserable.isLasered = true;
-            laserable.OnLasered?.Invoke();
+            thisFrameLaserables.Add(laserable);
 
             if (laserable.IsInteractionType("Passthrough"))
             {
@@ -143,6 +144,24 @@ public class MagiLaser : MonoBehaviour, ISavable
             }
             break;
         }
+    }
+
+    private void UpdateLaserables()
+    {
+        foreach(Laserable l in lastFrameLaserables)
+        {
+            if(!thisFrameLaserables.Contains(l))
+                l.UnLaser();
+        }
+        foreach(Laserable l in thisFrameLaserables)
+        {
+            if(!lastFrameLaserables.Contains(l))
+                l.Laser();
+        }
+
+        lastFrameLaserables.Clear();
+        lastFrameLaserables.AddRange(thisFrameLaserables);
+        thisFrameLaserables.Clear();
     }
 
     private Vector2 MirrorOneReflect(Vector2 dir) {
