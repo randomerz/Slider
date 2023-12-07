@@ -199,6 +199,27 @@ public class JungleArtifact : UIArtifact
         return options;
     }
 
+    public override void SelectButton(ArtifactTileButton button, bool isDragged = false)
+    {
+        if (button.LinkButton == null)
+        {
+            base.SelectButton(button, isDragged);
+        }
+        else
+        {
+            ArtifactTileButton linkButton = button.LinkButton;
+            if (buttonSelected != null && buttonSelected.Equals(linkButton))
+            {
+
+                DeselectSelectedButton();
+            } else
+            {
+                base.SelectButton(button, isDragged);
+            }
+        }
+
+    }
+
 
 }
 
