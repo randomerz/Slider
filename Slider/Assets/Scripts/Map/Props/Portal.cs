@@ -32,9 +32,7 @@ public class Portal : MonoBehaviour
     public void OnPlayerEnter()
     {
         if(playerInPortal || isTeleporting) return;
-        // if(recentPortal == PortalEnum.MAGITECH_TO_DESERT && portalEnum == PortalEnum.DESERT_TO_MAGITECH
-        // || recentPortal == PortalEnum.DESERT_TO_MAGITECH && portalEnum == PortalEnum.MAGITECH_TO_DESERT)
-        //     return;
+        
         playerInPortal = true;
         recentPortal = portalEnum;
         if(portalEnum is PortalEnum.MAGITECH_PRESENT || portalEnum is PortalEnum.MAGITECH_PAST)

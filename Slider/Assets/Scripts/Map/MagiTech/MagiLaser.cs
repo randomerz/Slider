@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Steamworks;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class MagiLaser : MonoBehaviour, ISavable
 {
