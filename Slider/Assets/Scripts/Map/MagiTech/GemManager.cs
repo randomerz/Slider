@@ -140,7 +140,6 @@ public class GemManager : MonoBehaviour, ISavable
 
     private bool HasAllGems()
     {
-        return true;
         foreach (bool b in gems.Values)
         {
             if (!b)
