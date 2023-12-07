@@ -329,7 +329,9 @@ public class MagiTechGrid : SGrid
 
     public void IsPlayerOnDesyncTile(Condition c)
     {
-        c.SetSpec(DesyncActive && Player.GetInstance().GetSTileUnderneath().islandId == desyncIslandId);
+        c.SetSpec(DesyncActive && 
+        Player.GetInstance().GetSTileUnderneath() != null &&
+        Player.GetInstance().GetSTileUnderneath().islandId == desyncIslandId);
     }
     #endregion
 }
