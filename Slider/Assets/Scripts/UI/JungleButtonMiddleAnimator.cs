@@ -7,6 +7,11 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 public class JungleButtonMiddleAnimator : MonoBehaviour
 {
     [SerializeField] private Image image;
+
+    public Image Image
+    {
+        get { return image; }
+    }
     //[SerializeField] private GameObject artifactPanel;
     [SerializeField] private ArtifactTileButton tile2;
     [SerializeField] private Sprite blankSprite;
@@ -22,6 +27,11 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
     }
 
     [SerializeField] private Image pushedDownFrame;
+
+    public Image PushedDownFrame
+    {
+        get { return pushedDownFrame; }
+    }
 
     private FlashWhiteImage icon;
 
@@ -52,7 +62,6 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
                     StartCoroutine(NewButtonFlicker(3));
                     flickeringStarted = true;
                 }
-                SetPushedDown(tile2.buttonAnimator.IsPushedDown);
                 if (flickeringDone)
                 {
                     image.sprite = connectorSprite;
@@ -66,24 +75,6 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
         if (flickeringStarted)
         {
             flickeringDone = true;
-        }
-    }
-
-    // yoinked from ArtifactTileButtonAnimator.cs
-    public void SetPushedDown(bool value)
-    {
-        if (value)
-        {
-            image.rectTransform.anchoredPosition = new Vector3(18.5f, -1);
-            //highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, -1);
-            pushedDownFrame.gameObject.SetActive(true);
-            // if (!isLightning) highlightedFrame.gameObject.SetActive(false); //We don't disable the highlight if lightning
-        }
-        else
-        {
-            image.rectTransform.anchoredPosition = new Vector3(18.5f, 0);
-            pushedDownFrame.gameObject.SetActive(false);
-            //highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, 0);
         }
     }
 
