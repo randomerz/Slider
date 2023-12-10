@@ -465,10 +465,10 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         {
             UITrackerManager.AddNewTracker(
                 gameObject,
-                UITrackerManager.DefaultSprites.playerBlackCircle,
-                UITrackerManager.DefaultSprites.playerBlackCircleEmpty,
-                UITrackerManager.DefaultSprites.playerWhiteCircle,
-                UITrackerManager.DefaultSprites.playerWhiteCircleEmpty,
+                UITrackerManager.DefaultSprites.playerFullBlackCircle,
+                UITrackerManager.DefaultSprites.playerFullBlackCircleEmpty,
+                UITrackerManager.DefaultSprites.playerFullWhiteCircle,
+                UITrackerManager.DefaultSprites.playerFullWhiteCircleEmpty,
                 3f
             );
         }

@@ -85,6 +85,11 @@ public class UITrackerManager : MonoBehaviour
     public Sprite playerBlackCircleEmpty;
     public Sprite playerWhiteCircle;
     public Sprite playerWhiteCircleEmpty;
+    
+    public Sprite playerFullBlackCircle;
+    public Sprite playerFullBlackCircleEmpty;
+    public Sprite playerFullWhiteCircle;
+    public Sprite playerFullWhiteCircleEmpty;
 
 
     public enum DefaultSprites {
@@ -99,6 +104,10 @@ public class UITrackerManager : MonoBehaviour
         playerBlackCircleEmpty,
         playerWhiteCircle,
         playerWhiteCircleEmpty,
+        playerFullBlackCircle,
+        playerFullBlackCircleEmpty,
+        playerFullWhiteCircle,
+        playerFullWhiteCircleEmpty,
     }
 
     protected virtual void Awake() {
@@ -313,6 +322,14 @@ public class UITrackerManager : MonoBehaviour
                 return _instance.playerWhiteCircle;
             case DefaultSprites.playerWhiteCircleEmpty:
                 return _instance.playerWhiteCircleEmpty;
+            case DefaultSprites.playerFullBlackCircle:
+                return _instance.playerFullBlackCircle;
+            case DefaultSprites.playerFullBlackCircleEmpty:
+                return _instance.playerFullBlackCircleEmpty;
+            case DefaultSprites.playerFullWhiteCircle:
+                return _instance.playerFullWhiteCircle;
+            case DefaultSprites.playerFullWhiteCircleEmpty:
+                return _instance.playerFullWhiteCircleEmpty;
 
         }
         Debug.LogWarning("Couldn't find pin!");
