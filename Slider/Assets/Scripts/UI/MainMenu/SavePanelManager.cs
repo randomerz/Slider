@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class SavePanelManager : MonoBehaviour
@@ -9,18 +10,25 @@ public class SavePanelManager : MonoBehaviour
     [SerializeField] private UIMenu savePanel;
     [SerializeField] private UIMenu newSavePanel;
 
-    private bool skippedSavePicking;
+    // We skip save picking if there are no saves and go straight to the new save menu. When we hit escape, we want
+    // to come back here and not immediately go *back* to the new save menu.
+    private bool hasAlreadySkippedSavePicking = false;
 
     public void OpenSaves()
     {
-        if (!AreAnyProfilesLoaded() && !skippedSavePicking)
+        if (!AreAnyProfilesLoaded() && !hasAlreadySkippedSavePicking)
         {
-            skippedSavePicking = true;
-            newSavePanelManager.OpenNewSave(0);
+            hasAlreadySkippedSavePicking = true;
+            OpenNewSave(0);
             return;
         }
 
         MainMenuSaveButton.SetDeleteMode(false);
+    }
+
+    private void OnDisable()
+    {
+        hasAlreadySkippedSavePicking = false;
     }
 
     public void ToggleDeleteMode()
