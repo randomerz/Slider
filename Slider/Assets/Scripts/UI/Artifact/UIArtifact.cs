@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class UIArtifact : Singleton<UIArtifact>
 {
 
@@ -509,14 +508,16 @@ public class UIArtifact : Singleton<UIArtifact>
         MoveMadeOnArtifact?.Invoke(this, null);
     }
 
-    public void QueueAdd(SMove move)
+    // changed to protected
+    protected void QueueAdd(SMove move)
     {
         //L: Got rid of count check because literally every time this is called there's a check before.
         moveQueue.Enqueue(move);
     }
 
     //DON'T CALL DIRECTLY ANYMORE (call ProcessQueue instead)
-    public virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    // changed to protected
+    protected virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (e != null)
         {

@@ -13,6 +13,8 @@ public class VillageGrid : SGrid
     [SerializeField] private SinWaveAnimation catSinWave;
 
     private bool fishOn;
+    [SerializeField] private ParticleSystem specialFishParticle1;
+    [SerializeField] private ParticleSystem specialFishParticle2;
 
     [SerializeField] private RuinsSymbols ruinsSymbols;
     [SerializeField] private GameObject ruinsFragment; // for finishing caves before village
@@ -184,6 +186,22 @@ public class VillageGrid : SGrid
         }
     }
 
+    private IEnumerator SpawnSpecialFish()
+    {
+        yield return new WaitForSeconds(2);
+        
+        specialFishParticle1.Play();
+
+        yield return new WaitForSeconds(0.5f);
+        
+        specialFishParticle2.Play();
+    }
+
+    public void PlayDigSound()
+    {
+        AudioManager.Play("UI Hat");
+    }
+
     // Puzzle 8 - 8puzzle
     private void CheckHole()
     {
@@ -332,5 +350,17 @@ public class VillageGrid : SGrid
         SaveSystem.Current.SetBool("caveDoorExploded", true);
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");
+    }
+
+    public void ForceEnableCompletionsForTrailer()
+    {
+        Debug.LogWarning("Forcing completions on!");
+
+        checkCompletion = true;
+        SaveSystem.Current.SetBool("villageCompletion", checkCompletion);
+
+        OnGridMove += UpdateButtonCompletions; // this is probably not needed
+        UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
+        
     }
 }
