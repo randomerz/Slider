@@ -300,7 +300,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8175251183880460350, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
   m_PrefabInstance: {fileID: 6943651184120002341}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 209398033}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -670,6 +670,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onClose:
+    m_PersistentCalls:
+      m_Calls: []
+  onMoveToParentMenu:
     m_PersistentCalls:
       m_Calls: []
   parentMenu: {fileID: 5049116214890196649}
@@ -1788,6 +1791,11 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &209398033 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8175251183880460336, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+  m_PrefabInstance: {fileID: 6943651184120002341}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &212318910
 GameObject:
   m_ObjectHideFlags: 0
@@ -5521,6 +5529,9 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   onClose:
+    m_PersistentCalls:
+      m_Calls: []
+  onMoveToParentMenu:
     m_PersistentCalls:
       m_Calls: []
   parentMenu: {fileID: 5049116214890196649}
@@ -10241,6 +10252,18 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8175251183880460351, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
   m_PrefabInstance: {fileID: 6943651184120002341}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1288482256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 209398033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb7fc6e3f855db046a25f2f09995f24b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1291141388 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8017564828789371741, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
@@ -16488,6 +16511,9 @@ MonoBehaviour:
   onClose:
     m_PersistentCalls:
       m_Calls: []
+  onMoveToParentMenu:
+    m_PersistentCalls:
+      m_Calls: []
   parentMenu: {fileID: 735139352}
 --- !u!114 &1949098313
 MonoBehaviour:
@@ -17876,6 +17902,21 @@ MonoBehaviour:
   onClose:
     m_PersistentCalls:
       m_Calls: []
+  onMoveToParentMenu:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 901309740}
+        m_TargetAssemblyTypeName: MainMenuManager, SliderScripts
+        m_MethodName: QuitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   parentMenu: {fileID: 5049116214890196649}
 --- !u!114 &5049116215407165328
 MonoBehaviour:
@@ -18269,7 +18310,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8175251183880460336, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1288482256}
   m_SourcePrefab: {fileID: 100100000, guid: 765336eeb9046094ebc3d52093721ecc, type: 3}
 --- !u!1001 &8529986348584801427
 PrefabInstance:

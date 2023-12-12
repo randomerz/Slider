@@ -149,7 +149,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         UINavigationManager.SelectBestButtonInCurrentMenu();
     }
     
-    public void QuitGame()
+    public static void QuitGame()
     {
         Debug.Log("Quitting game");
         Application.Quit(0);

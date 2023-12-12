@@ -8,6 +8,7 @@ public class UIMenu : MonoBehaviour
 {
     [SerializeField] private UnityEvent onOpen;
     [SerializeField] private UnityEvent onClose;
+    [SerializeField] private UnityEvent onMoveToParentMenu;
     [SerializeField] private UIMenu parentMenu;
 
     /// <summary>
@@ -48,23 +49,23 @@ public class UIMenu : MonoBehaviour
 
     /// <summary>
     /// Moves to the immediate parent menu of this UI Menu. If the parent menu is null,
-    /// this instead closes the current menu.
+    /// this instead closes the current menu. If the parent menu is the menu itself, the menu cannot be closed.
     /// </summary>
     public void MoveToParentMenu()
     {
         // Setting the parent to the menu itself indicates a menu which cannot be closed by pressing Back/Cancel
-        if (parentMenu == this)
+        if (parentMenu != this)
         {
-            return;
+            if (parentMenu != null)
+            {
+                MoveToMenu(parentMenu);
+            }
+            else
+            {
+                Close();
+            }
         }
-        if (parentMenu != null)
-        {
-            MoveToMenu(parentMenu);
-        }
-        else
-        {
-            Close();
-        }
+        onMoveToParentMenu?.Invoke();
     }
 
     /// <summary>
