@@ -16661,6 +16661,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 735139348}
     m_Modifications:
+    - target: {fileID: 7810075557241369116, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
+      propertyPath: deselectOnClick
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8017564828789371731, guid: e9bd327a8428a3948a6fddd1a82ba5ba, type: 3}
       propertyPath: m_Name
       value: Edit Button

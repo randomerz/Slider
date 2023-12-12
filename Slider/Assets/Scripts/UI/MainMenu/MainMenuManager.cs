@@ -51,18 +51,19 @@ public class MainMenuManager : Singleton<MainMenuManager>
         // any key listener moved to OpenCutscene()
     }
 
-    public static MainMenuManager GetInstance() {
+    public static MainMenuManager GetInstance() 
+    {
         return _instance;
     }
 
-    private void OnDisable() {
+    private void OnDisable() 
+    {
         listener?.Dispose();
     }
 
-    private void Update() {
-        // todo: fix this
-        // continueButton.interactable = SaveSystem.Current != null;
-        // continueText.color = SaveSystem.Current != null ? GameSettings.white : GameSettings.darkGray;
+    private void Update() 
+    {
+        CheckContinueButton();
     }
 
     private void OnAnyButtonPress() 
@@ -85,10 +86,13 @@ public class MainMenuManager : Singleton<MainMenuManager>
             continueText.color = GameSettings.lightGray;
             return false;
         }
-        continueProfileIndex = SaveSystem.GetRecentlyPlayedIndex();
-        continueButton.interactable = true;
-        continueText.color = GameSettings.white;
-        return true;
+        else
+        {
+            continueProfileIndex = SaveSystem.GetRecentlyPlayedIndex();
+            continueButton.interactable = true;
+            continueText.color = GameSettings.white;
+            return true;
+        }
     }
 
     public void ContinueGame()

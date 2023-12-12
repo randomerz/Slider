@@ -11,11 +11,11 @@ public class Converter
     /// <returns>The corresponding char to the input num</returns>
     public static char IntToChar(int num)
     {
-        return (num > 9) ? (char)('A' -  10 + num) : (char)('0' + num);
+        return (num > 9) ? (char)('A' - 10 + num) : (char)('0' + num);
     }
 
     public static int CharToInt(char c)
     {
-        return (c > '9') ? (c - 'A' +  10) : (c - '0');
+        return (c > '9') ? (c - 'A' + 10) : (c - '0');
     }
 }

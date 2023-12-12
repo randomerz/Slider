@@ -333,4 +333,16 @@ public class VillageGrid : SGrid
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");
     }
+
+    public void ForceEnableCompletionsForTrailer()
+    {
+        Debug.LogWarning("Forcing completions on!");
+
+        checkCompletion = true;
+        SaveSystem.Current.SetBool("villageCompletion", checkCompletion);
+
+        OnGridMove += UpdateButtonCompletions; // this is probably not needed
+        UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
+        
+    }
 }
