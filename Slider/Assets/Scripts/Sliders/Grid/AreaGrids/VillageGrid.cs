@@ -13,6 +13,8 @@ public class VillageGrid : SGrid
     [SerializeField] private SinWaveAnimation catSinWave;
 
     private bool fishOn;
+    [SerializeField] private ParticleSystem specialFishParticle1;
+    [SerializeField] private ParticleSystem specialFishParticle2;
 
     [SerializeField] private RuinsSymbols ruinsSymbols;
     [SerializeField] private GameObject ruinsFragment; // for finishing caves before village
@@ -182,6 +184,22 @@ public class VillageGrid : SGrid
             fishOn = true;
             particleSpawner.GetComponent<ParticleSpawner>().SetFishOn();
         }
+    }
+
+    private IEnumerator SpawnSpecialFish()
+    {
+        yield return new WaitForSeconds(2);
+        
+        specialFishParticle1.Play();
+
+        yield return new WaitForSeconds(0.5f);
+        
+        specialFishParticle2.Play();
+    }
+
+    public void PlayDigSound()
+    {
+        AudioManager.Play("UI Hat");
     }
 
     // Puzzle 8 - 8puzzle

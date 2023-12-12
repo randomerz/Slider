@@ -31,6 +31,7 @@ public class FlashWhiteSprite : MonoBehaviour, IFlashWhite
 
     private IEnumerator _Flash(int n, Action callback)
     {
+        Debug.Log($"flash");
         for (int i = 0; i < n; i++)
         {
             mySprite.material = whiteSpriteMat;
