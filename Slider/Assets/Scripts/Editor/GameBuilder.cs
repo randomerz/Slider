@@ -18,6 +18,8 @@ public class GameBuilder
         string buildRootPath = GetArg("buildRootPath");
         string filename = GetArg("filename");
 
+        Debug.Log($"Build Root Path: {buildRootPath}");
+
         BuildPlayer(BuildTarget.StandaloneWindows64, buildRootPath, filename);
         BuildPlayer(BuildTarget.StandaloneOSX, buildRootPath, filename);
         BuildPlayer(BuildTarget.StandaloneLinux64, buildRootPath, filename);
@@ -40,9 +42,8 @@ public class GameBuilder
         string filename = GetProjectName();
 
         BuildPlayer(BuildTarget.StandaloneWindows64, buildRootPath, filename);
-        //BuildPlayer(BuildTarget.StandaloneOSX, buildRootPath, filename);
-        //BuildPlayer(BuildTarget.StandaloneLinux64, buildRootPath, filename);
-
+        BuildPlayer(BuildTarget.StandaloneOSX, buildRootPath, filename);
+        BuildPlayer(BuildTarget.StandaloneLinux64, buildRootPath, filename);
     }
 
     // this is the main player builder function
