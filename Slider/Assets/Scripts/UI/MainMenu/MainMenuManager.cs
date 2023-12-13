@@ -7,8 +7,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using TMPro;
 
-// TODO: 
-//  - fix Continue button (see in Update())
 public class MainMenuManager : Singleton<MainMenuManager>
 {
     
@@ -28,6 +26,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     public Button continueButton;
     public TextMeshProUGUI continueText;
     public Button playButton;
+    public MainMenuWashingMachineManager washingMachineManager;
 
     public MainMenuSaveButton[] saveProfileButtons;
 
@@ -133,6 +132,8 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
         AudioManager.SetGlobalParameter("MainMenuActivated", 1);
 
+        washingMachineManager.Activate();
+        
         UINavigationManager.CurrentMenu = mainMenuPanel;
         UINavigationManager.LockoutSelectablesInCurrentMenu(SelectTopmostButton, 1);
     }

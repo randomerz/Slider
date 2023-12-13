@@ -9,6 +9,7 @@ public class TrailerCutScene3 : MonoBehaviour
     public CinemachineVirtualCamera cmWorldCam;
     public UIArtifact uiArtifact;
     public PixelPerfectCamera mainCameraPixelPerfect;
+    public List<CanvasGroup> logoCanvasGroups;
     
 
     // public GameObject[] tiles;
@@ -51,6 +52,7 @@ public class TrailerCutScene3 : MonoBehaviour
         // Swap 1/9
         uiArtifact.TryQueueMoveFromButtonPair(uiArtifact.GetButton(1), uiArtifact.GetButton(9));
         cmWorldCam.Priority = 0;
+        StartCoroutine(FadeAwayLogo(2));
 
         yield return new WaitForSeconds(1.01f);
         
@@ -60,5 +62,25 @@ public class TrailerCutScene3 : MonoBehaviour
         yield return new WaitForSeconds(2);
 
         mainCameraPixelPerfect.enabled = true;
+    }
+
+    private IEnumerator FadeAwayLogo(float duration)
+    {
+        float t = 0;
+        while (t < duration)
+        {
+            foreach (CanvasGroup g in logoCanvasGroups)
+            {
+                g.alpha = 1 - (t / duration);
+            }
+
+            yield return null;
+            t += Time.deltaTime;
+        }
+
+        foreach (CanvasGroup g in logoCanvasGroups)
+        {
+            g.alpha = 0;
+        }
     }
 }

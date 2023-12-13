@@ -199,7 +199,7 @@ public class VillageGrid : SGrid
 
     public void PlayDigSound()
     {
-        AudioManager.Play("UI Hat");
+        AudioManager.Play("Hat Click");
     }
 
     // Puzzle 8 - 8puzzle

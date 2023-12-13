@@ -158,7 +158,7 @@ public class KnotBox : MonoBehaviour
             }
             if (SGrid.Current is VillageGrid)
             {
-                AudioManager.Play("UI Hat");
+                AudioManager.Play("Hat Click");
             }
         }
     }
