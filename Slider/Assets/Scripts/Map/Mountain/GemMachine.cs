@@ -26,7 +26,7 @@ public class GemMachine : MonoBehaviour, ISavable
 
     private void CheckMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(e.stile == sTile)
+        if (e.stile == sTile)
             ResetGems();
     }
 
@@ -69,8 +69,14 @@ public class GemMachine : MonoBehaviour, ISavable
     public void Fix()
     {
         isBroken = false;
-        brokenObj.SetActive(false);
-        fixedObj.SetActive(true);
+        if (brokenObj != null)
+        {
+            brokenObj.SetActive(false);
+        }
+        if (fixedObj != null)
+        {
+            fixedObj.SetActive(true);
+        }
     }
 
     

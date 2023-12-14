@@ -132,7 +132,7 @@ public class GemManager : MonoBehaviour, ISavable
         {
             gemSprites[a].SetActive(gems[a]);
         }
-        if(HasAllGems())
+        if (HasAllGems())
         {
             animator.Play("Active");
         }
@@ -179,5 +179,11 @@ public class GemManager : MonoBehaviour, ISavable
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)Area.Mountain - 1].position);
         }
         UpdateGemSprites();
+    }
+
+    // For debug/trailer purposes
+    public void TrailerActivateMachine()
+    {
+        animator.Play("Active");
     }
 }
