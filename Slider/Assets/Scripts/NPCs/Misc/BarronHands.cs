@@ -13,7 +13,6 @@ public class BarronHands : MonoBehaviour
         foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips) 
         {
             string n = clip.name.Substring(ANIMATION_NAME_PREFIX.Length);
-            Debug.Log(n);
             animationNames.Add(n);
         }
     }

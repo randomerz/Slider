@@ -2319,7 +2319,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8279323558221872075
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4013,9 +4013,9 @@ RectTransform:
   - {fileID: 8279323558716772642}
   m_Father: {fileID: 8279323558863308650}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 7, y: -40}
   m_SizeDelta: {x: 70, y: 14}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8279323558721153787
@@ -7310,7 +7310,7 @@ GameObject:
   - component: {fileID: 8279323559290781161}
   - component: {fileID: 8279323559290781165}
   m_Layer: 5
-  m_Name: The Impact Zone
+  m_Name: The Flats
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7760,9 +7760,9 @@ RectTransform:
   - {fileID: 8279323558168620923}
   m_Father: {fileID: 8279323558863308650}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 7, y: -10}
   m_SizeDelta: {x: 70, y: 14}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8279323559339082726
@@ -10985,9 +10985,9 @@ RectTransform:
   - {fileID: 8279323559551938633}
   m_Father: {fileID: 8279323558863308650}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 7, y: -25}
   m_SizeDelta: {x: 70, y: 14}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8279323559902231070
