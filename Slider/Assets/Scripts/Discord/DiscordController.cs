@@ -60,7 +60,7 @@ public class DiscordController : Singleton<DiscordController>
     {
         var activityManager = discord.GetActivityManager();
 
-        var state = "At the Start Screen";
+        var state = "In the menus";
         if (SGrid.Current != null)
         {
             state = $"{SGrid.Current.MyArea.GetDiscordName()} ({SGrid.Current.GetNumTilesCollected()} / {SGrid.Current.GetTotalNumTiles()})";

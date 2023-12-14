@@ -235,7 +235,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         sp.position[1] = pos.y;
         sp.position[2] = pos.z;
         sp.isOnWater = isOnWater;
-        sp.isInHouse = isInHouse;
 
         // PlayerInventory
         sp.collectibles = new List<Collectible.CollectibleData>(GetPlayerInventory().GetCollectiblesList());
@@ -294,7 +293,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         if (profile == null || profile.GetSerializablePlayer() == null)
         {
             playerInventory.Reset();
-            SetIsInHouse(transform.position.y <= houseYThreshold);
             return;
         }
 
@@ -303,7 +301,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         // Player
 
         SetIsOnWater(sp.isOnWater);
-        SetIsInHouse(sp.isInHouse);
+        SetIsInHouse(transform.position.y <= houseYThreshold);
 
         // Update position
         if (GameManager.instance.debugModeActive && DebugUIManager.justDidSetScene)

@@ -152,8 +152,8 @@ public class GemManager : MonoBehaviour, ISavable
 
     public void EnableGFuel(bool fillImmediate = false)
     {
-        if(pipeLiquid.isFilling || pipeLiquid.isFull) return;
-        if(fillImmediate)
+        if (pipeLiquid.isFilling || pipeLiquid.isFull) return;
+        if (fillImmediate)
             pipeLiquid.SetPipeFull();
         else
             pipeLiquid.FillPipe();
