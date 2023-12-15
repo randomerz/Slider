@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class PipeLiquid : MonoBehaviour
 {
-    [SerializeField] private float FILLDURATION = 5f;
+    [FormerlySerializedAs("FILLDURATION")]
+    [SerializeField] private float fillDuration = 5f;
     [SerializeField] private LineRenderer lineRenderer;
     private Vector3[] points;
     private float[] distance; 
 
-    [SerializeField] private string saveString;
     public bool isFilling;
     public bool isFull;
 
@@ -18,9 +19,21 @@ public class PipeLiquid : MonoBehaviour
     public UnityEvent OnIsEmpty;
     public UnityEvent OnStartFill;
 
+    private bool didInit;
 
     private void Awake()
     {
+        Init();
+    }
+
+    private void Init()
+    {
+        if (didInit)
+        {
+            return;
+        }
+        didInit = true;
+
         SavePoints();
         SetPipeEmpty();
     }
@@ -50,6 +63,11 @@ public class PipeLiquid : MonoBehaviour
 
     private IEnumerator AnimateFill(Vector2 startState, Vector2 endState, float duration)
     {
+        if (!didInit)
+        {
+            Init();
+        }
+
         isFull = false;
         isFilling = true;
         OnStartFill?.Invoke();
@@ -83,7 +101,12 @@ public class PipeLiquid : MonoBehaviour
     //Fills the segment of the pipe (0-1) from start to end.
     private void Fill(float startPos, float endPos)
     {
-        if(startPos >= endPos)
+        if (!didInit)
+        {
+            Init();
+        }
+        
+        if (startPos >= endPos)
         {
             lineRenderer.positionCount = 0;
             return;
@@ -91,19 +114,19 @@ public class PipeLiquid : MonoBehaviour
 
         List<Vector3> newPositions = new();
 
-        for(int i = 0; i < distance.Length - 1; i++)
+        for (int i = 0; i < distance.Length - 1; i++)
         {
             float currDistance = distance[i];
             float nextDistance = distance[i + 1];
             Vector3 currStart = points[i];
             Vector3 currEnd = points[i + 1];
 
-            if(endPos < currDistance || startPos > nextDistance) //not included
+            if (endPos < currDistance || startPos > nextDistance) //not included
                 continue;
-            else if(startPos < currDistance) //include start
+            else if (startPos < currDistance) //include start
             {
                 newPositions.Add(currStart);
-                if(endPos < nextDistance)
+                if (endPos < nextDistance)
                 {
                     float t = (endPos - currDistance) / (nextDistance - currDistance);
                     Vector3 v = Vector3.Lerp(currStart, currEnd, t);
@@ -133,7 +156,7 @@ public class PipeLiquid : MonoBehaviour
 
     public void FillPipe()
     {
-        FillPipe(FILLDURATION);
+        FillPipe(fillDuration);
     }
 
     public void FillPipe(float duration)
@@ -155,12 +178,12 @@ public class PipeLiquid : MonoBehaviour
 
     public void EmptyPipeStartToEnd()
     {
-        StartCoroutine(AnimateFill(Vector2.up, Vector2.one, FILLDURATION));
+        StartCoroutine(AnimateFill(Vector2.up, Vector2.one, fillDuration));
     }
 
     public void EmptyPipeEndToStart()
     {
-        StartCoroutine(AnimateFill(Vector2.up, Vector2.zero, FILLDURATION));
+        StartCoroutine(AnimateFill(Vector2.up, Vector2.zero, fillDuration));
     }
 
     public void IsPipeFilling(Condition c)

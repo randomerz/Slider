@@ -23,10 +23,16 @@ public class DiscordController : Singleton<DiscordController>
     {
         if (discord == null)
         {
-            // Going with not requiring Discord seems like the safer option to me.
-            // Not entirely sure of the consequences here to be honest
-            discord = new Discord.Discord(CLIENT_ID, (ulong) Discord.CreateFlags.NoRequireDiscord);
-            //InvokeRepeating("UpdateActivity", 0, 5);
+            try {
+                // Going with not requiring Discord seems like the safer option to me.
+                // Not entirely sure of the consequences here to be honest
+                discord = new Discord.Discord(CLIENT_ID, (ulong) Discord.CreateFlags.NoRequireDiscord);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[Discord] Could not connect to Discord client: {e.Message}\n{e.StackTrace}");
+                return;
+            }
 
             // We need our epoch time for tracking time elapsed
             TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
@@ -60,7 +66,7 @@ public class DiscordController : Singleton<DiscordController>
     {
         var activityManager = discord.GetActivityManager();
 
-        var state = "At the Start Screen";
+        var state = "In the menus";
         if (SGrid.Current != null)
         {
             state = $"{SGrid.Current.MyArea.GetDiscordName()} ({SGrid.Current.GetNumTilesCollected()} / {SGrid.Current.GetTotalNumTiles()})";
