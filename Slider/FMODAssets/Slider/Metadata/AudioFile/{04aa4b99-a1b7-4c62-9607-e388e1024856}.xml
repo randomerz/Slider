@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{04aa4b99-a1b7-4c62-9607-e388e1024856}">
+		<property name="assetPath">
+			<value>SFX/Pickup/magitech_pickup.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>8.75</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{d8f08288-15bb-4f0d-b3d6-616c13ec65d6}</destination>
+		</relationship>
+	</object>
+</objects>

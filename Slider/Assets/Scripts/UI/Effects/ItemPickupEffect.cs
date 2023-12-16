@@ -46,7 +46,13 @@ public class ItemPickupEffect : MonoBehaviour
         NPCDialogueContext.dialogueEnabledAllNPC = false;
         maskObject.SetActive(true);
         animator.SetBool("isVisible", true);
-        AudioManager.PickSound("Item Pick Up").WithPriorityOverDucking(true).AndPlay();
+
+        string pickupArea = "Village";
+        if (SGrid.Current != null)
+        {
+            pickupArea = SGrid.Current.GetArea().ToString();
+        }
+        AudioManager.PickSound($"{pickupArea} Pick Up").WithPriorityOverDucking(true).AndPlay();
 
         PauseManager.AddPauseRestriction(owner: gameObject);
         Player.SetCanMove(false);
