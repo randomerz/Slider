@@ -312,6 +312,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             DebugUIManager.justDidSetScene = false;
 
             SetIsOnWater(SGrid.Current.MyArea == Area.Ocean);
+            SetIsInHouse(SGrid.Current.MyArea == Area.Village);
         }
         else
         {
@@ -465,10 +466,10 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         {
             UITrackerManager.AddNewTracker(
                 gameObject,
-                UITrackerManager.DefaultSprites.playerBlackCircle,
-                UITrackerManager.DefaultSprites.playerBlackCircleEmpty,
-                UITrackerManager.DefaultSprites.playerWhiteCircle,
-                UITrackerManager.DefaultSprites.playerWhiteCircleEmpty,
+                UITrackerManager.DefaultSprites.playerFullBlackCircle,
+                UITrackerManager.DefaultSprites.playerFullBlackCircleEmpty,
+                UITrackerManager.DefaultSprites.playerFullWhiteCircle,
+                UITrackerManager.DefaultSprites.playerFullWhiteCircleEmpty,
                 3f
             );
         }

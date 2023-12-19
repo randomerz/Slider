@@ -18,14 +18,11 @@ public class Collectible : MonoBehaviour
         }
     }
 
-    [SerializeField] private CollectibleData cData;
-
-    
-    [SerializeField] private bool shouldDisableAtStart = false;
-
-    [SerializeField] private SpriteRenderer spriteRenderer;
     public UnityEvent onCollect;
 
+    [SerializeField] private CollectibleData cData;
+    [SerializeField] private bool shouldDisableAtStart = false;
+    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private ParticleType particle = ParticleType.SmokePoof;
     
     private void Start() 
@@ -34,6 +31,11 @@ public class Collectible : MonoBehaviour
             cData.area = SGrid.Current.GetArea();
         if (shouldDisableAtStart)
             gameObject.SetActive(false);
+    }
+
+    public void AttachToTileUnderneath()
+    {
+        TileUtil.AttachToTileUnderneath(gameObject);
     }
 
     public CollectibleData GetCollectibleData() 
@@ -90,6 +92,11 @@ public class Collectible : MonoBehaviour
         {
             DoPickUp();
         }
+    }
+
+    public void AttachToSTileUnderneath()
+    {
+        TileUtil.AttachToTileUnderneath(gameObject);
     }
 
 

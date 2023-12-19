@@ -70,7 +70,9 @@ public class OceanGrid : SGrid
         {
             note.enabled = false;
         }
-        Pan();
+
+        // No more ocean cutscene
+        // Pan();
 
     }
 

@@ -123,14 +123,94 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sounds:
-  - name: Item Pick Up
+  - name: Village Pick Up
     fmodEvent:
       Guid:
         Data1: 400541038
         Data2: 1183998670
         Data3: 815781785
         Data4: -1936799075
-      Path: event:/SFX/Misc/GMTK Pickup
+      Path: event:/SFX/Pickup/Village Pickup
+    canPause: 1
+    dopplerScale: 0
+  - name: Caves Pick Up
+    fmodEvent:
+      Guid:
+        Data1: 670099126
+        Data2: 1089566610
+        Data3: -1348584018
+        Data4: -787228742
+      Path: event:/SFX/Pickup/Caves Pickup
+    canPause: 1
+    dopplerScale: 0
+  - name: Ocean Pick Up
+    fmodEvent:
+      Guid:
+        Data1: -2033476097
+        Data2: 1297117771
+        Data3: -1368610404
+        Data4: -516113980
+      Path: event:/SFX/Pickup/Ocean Pickup
+    canPause: 1
+    dopplerScale: 0
+  - name: Jungle Pick Up
+    fmodEvent:
+      Guid:
+        Data1: 2078067620
+        Data2: 1281250460
+        Data3: -263830348
+        Data4: 843015676
+      Path: event:/SFX/Pickup/Jungle Pickup
+    canPause: 1
+    dopplerScale: 0
+  - name: Desert Pick Up
+    fmodEvent:
+      Guid:
+        Data1: 1586243796
+        Data2: 1178530903
+        Data3: 2032029834
+        Data4: 1069418180
+      Path: event:/SFX/Pickup/Desert Pickup
+    canPause: 1
+    dopplerScale: 0
+  - name: Factory Pick Up
+    fmodEvent:
+      Guid:
+        Data1: -1192076191
+        Data2: 1337931856
+        Data3: -1876130158
+        Data4: 243207537
+      Path: event:/SFX/Pickup/Factory Pickup
+    canPause: 1
+    dopplerScale: 0
+  - name: Military Pick Up
+    fmodEvent:
+      Guid:
+        Data1: -1952789388
+        Data2: 1101049937
+        Data3: 1402262672
+        Data4: 406777478
+      Path: event:/SFX/Pickup/Military Pickup
+    canPause: 1
+    dopplerScale: 0
+  - name: Mountain Pick Up
+    fmodEvent:
+      Guid:
+        Data1: -737796569
+        Data2: 1242552059
+        Data3: -1955795068
+        Data4: 906226114
+      Path: event:/SFX/Pickup/Mountain Pickup
+    canPause: 1
+    dopplerScale: 0
+  - name: MagiTech Pick Up
+    fmodEvent:
+      Guid:
+        Data1: -2134189523
+        Data2: 1093224003
+        Data3: -437220945
+        Data4: 695999102
+      Path: event:/SFX/Pickup/MagiTech Pickup
     canPause: 1
     dopplerScale: 0
   - name: Slide Rumble
