@@ -12,11 +12,15 @@ public class OceanBuoys : MonoBehaviour
     private void OnEnable()
     {
         SGridAnimator.OnSTileMoveEnd += BuoySuccessEffectsCheck;
+        SGridAnimator.OnSTileMoveStart += CheckBuoyFirstTry;
+
     }
 
     private void OnDisable()
     {
         SGridAnimator.OnSTileMoveEnd -= BuoySuccessEffectsCheck;
+        SGridAnimator.OnSTileMoveStart -= CheckBuoyFirstTry;
+
     }
 
     private void LateUpdate() {
@@ -123,6 +127,12 @@ public class OceanBuoys : MonoBehaviour
     public void BuoyFirstTimeCheck(Condition c)
     {
         c.SetSpec(knotBox.CheckNumLines() == 0);
+    }
+
+    private void CheckBuoyFirstTry(object sender, System.EventArgs e)
+    {
+        if(SaveSystem.Current.GetBool("OceanTalkedToKevin"))
+            SaveSystem.Current.SetBool("OceanFailedFirstBuoy", true);
     }
 
     

@@ -10,9 +10,9 @@ public class OceanGrid : SGrid
     // public KnotBox knotBox;
     // public GameObject buoyUITrackerPrefab;
     // private bool knotBoxEnabledLastFrame;
-    public BottleManager bottleManager;
+   // public BottleManager bottleManager;
     public NPCRotation npcRotation;
-    public OceanArtifact oceanArtifact; // used for the final quest to lock movement
+    public OceanArtifact oceanArtifact; 
     public GameObject treesToJungle;
     // public List<int> buoytiles = new List<int> {1, 3, 4, 8, 9};
     private List<int> landTiles = new List<int> {1, 2, 4, 8};    
@@ -43,10 +43,10 @@ public class OceanGrid : SGrid
 
     private bool isCompleted = false;
 
-    [Header("Foggy Progress Notes")]
-    [SerializeField] private List<SpriteRenderer> progressNotes;
-    [SerializeField] private Sprite emptyNote, fullNote;
-    [SerializeField] private GameObject sparklePrefab;
+    // [Header("Foggy Progress Notes")]
+    // [SerializeField] private List<SpriteRenderer> progressNotes;
+    // [SerializeField] private Sprite emptyNote, fullNote;
+    // [SerializeField] private GameObject sparklePrefab;
 
     public override void Init()
     {
@@ -66,10 +66,10 @@ public class OceanGrid : SGrid
         AudioManager.PlayMusic("Ocean Tavern", false); // for FMOD effects
         AudioManager.PlayMusic("Ocean uwu", false); // for FMOD effects
 
-        foreach (SpriteRenderer note in progressNotes)
-        {
-            note.enabled = false;
-        }
+        // foreach (SpriteRenderer note in progressNotes)
+        // {
+        //     note.enabled = false;
+        // }
 
         // No more ocean cutscene
         // Pan();
@@ -84,7 +84,7 @@ public class OceanGrid : SGrid
             OnGridMove += UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletion
-            SGridAnimator.OnSTileMoveStart += CheckBuoyFirstTry;
+            // SGridAnimator.OnSTileMoveStart += CheckBuoyFirstTry;
             UIArtifactMenus.OnArtifactOpened += CheckFinalPlacementsOnMove;
         }
 
@@ -116,42 +116,42 @@ public class OceanGrid : SGrid
         Anchor.OnAnchorInteract -= OnAnchorInteract;
     }
 
-    private void Update()
-    {
-        UpdateRomeoReason();
+    // private void Update()
+    // {
+    //     UpdateRomeoReason();
         
-        //Get tile the player is on. if it change from last update, find the direction the player moved. Add direction to list of moves. put list in checkfoggy. only why on fog tiles
-        //UpdatePlayerMovement();
-    }
+    //     //Get tile the player is on. if it change from last update, find the direction the player moved. Add direction to list of moves. put list in checkfoggy. only why on fog tiles
+    //     //UpdatePlayerMovement();
+    // }
 
-    private void UpdateRomeoReason()
-    {
-        string reason = "The path is obstructed!";
-        string gridString = GetGridString();
+    // private void UpdateRomeoReason()
+    // {
+    //     string reason = "The path is obstructed!";
+    //     string gridString = GetGridString();
         
-        if (gridString[0] == '2' || gridString[0] == '8')
-        {
-            reason = "There is land in the way!";
-        }
-        else if (gridString[0] == '4')
-        {
-            reason = "The shipwreck is in the way!";
-        }
-        else if (gridString[0] == '5')
-        {
-            reason = "The island is in the way!";
-        }
-        else if (gridString[0] == '9')
-        {
-            reason = "The volcano is in the way!";
-        }
-        else if (gridString[0] == '.')
-        {
-            reason = "The space in front of me is empty!";
-        }
+    //     if (gridString[0] == '2' || gridString[0] == '8')
+    //     {
+    //         reason = "There is land in the way!";
+    //     }
+    //     else if (gridString[0] == '4')
+    //     {
+    //         reason = "The shipwreck is in the way!";
+    //     }
+    //     else if (gridString[0] == '5')
+    //     {
+    //         reason = "The island is in the way!";
+    //     }
+    //     else if (gridString[0] == '9')
+    //     {
+    //         reason = "The volcano is in the way!";
+    //     }
+    //     else if (gridString[0] == '.')
+    //     {
+    //         reason = "The space in front of me is empty!";
+    //     }
 
-        SaveSystem.Current.SetString("oceanRomeoReason", reason);
-    }
+    //     SaveSystem.Current.SetString("oceanRomeoReason", reason);
+    // }
     
     // private void LateUpdate() {
     //     knotBoxEnabledLastFrame = knotBox.isActiveAndEnabled;
@@ -166,7 +166,7 @@ public class OceanGrid : SGrid
     public override void Save()
     {
         base.Save();
-        SaveSystem.Current.SetBool("oceanRJBottleDelivery", bottleManager.puzzleSolved);
+        //SaveSystem.Current.SetBool("oceanRJBottleDelivery", bottleManager.puzzleSolved);
         //SaveSystem.Current.SetBool("oceanFoggyIslandReached", foggyCompleted);
         SaveSystem.Current.SetBool("oceanUnlockedAllSliders", npcRotation.unlockedAllSliders);
         SaveSystem.Current.SetBool("oceanBreadgeCollected", npcRotation.gotBreadge);
@@ -182,7 +182,7 @@ public class OceanGrid : SGrid
 
         treesToJungle.SetActive(!profile.GetBool("oceanTreesRemoved"));
 
-        bottleManager.puzzleSolved = profile.GetBool("oceanRJBottleDelivery");
+        //bottleManager.puzzleSolved = profile.GetBool("oceanRJBottleDelivery");
         //foggyCompleted = profile.GetBool("oceanFoggyIslandReached");
         npcRotation.unlockedAllSliders = profile.GetBool("oceanUnlockedAllSliders");
         npcRotation.gotBreadge = profile.GetBool("oceanBreadgeCollected");
@@ -220,12 +220,12 @@ public class OceanGrid : SGrid
         {
             if (stile1y < 2)
             {
-                if (CheckTile2PlacementHelper(stile, stile1x + 1, stile1y + 1))
+                if (TrySwapTile2(stile, stile1x + 1, stile1y + 1))
                     return;
             }
             else if (stile1y > 0)
             {
-                if (CheckTile2PlacementHelper(stile, stile1x + 1, stile1y - 1))
+                if (TrySwapTile2(stile, stile1x + 1, stile1y - 1))
                     return;
             }
         }
@@ -233,12 +233,12 @@ public class OceanGrid : SGrid
         {
             if (stile1y < 2)
             {
-                if (CheckTile2PlacementHelper(stile, stile1x - 1, stile1y + 1))
+                if (TrySwapTile2(stile, stile1x - 1, stile1y + 1))
                     return;
             }
             else if (stile1y > 0)
             {
-                if (CheckTile2PlacementHelper(stile, stile1x - 1, stile1y - 1))
+                if (TrySwapTile2(stile, stile1x - 1, stile1y - 1))
                     return;
             }
         }
@@ -246,7 +246,7 @@ public class OceanGrid : SGrid
         // wah wah u couldnt swap it for some reason boohoo
     }
 
-    private bool CheckTile2PlacementHelper(STile slider2, int x, int y)
+    private bool TrySwapTile2(STile slider2, int x, int y)
     {
         STile other = GetStileAt(x, y);
         if (other.islandId != 1)
@@ -294,13 +294,10 @@ public class OceanGrid : SGrid
 
     public void CheckShipwreck(object sender, System.EventArgs e)
     {
-        if (IsShipwreckAdjacent())
+        if (IsShipwreckAdjacent() && !PlayerInventory.Contains("Treasure Chest"))
         {
-            if (!PlayerInventory.Contains("Treasure Chest"))
-            {
-                burriedTreasure.SetActive(true);
-                burriedTreasureParticles.Play();
-            }
+            burriedTreasure.SetActive(true);
+            burriedTreasureParticles.Play();
         }
         else
         {
@@ -649,11 +646,11 @@ public class OceanGrid : SGrid
         }
     }
     
-    private void CheckBuoyFirstTry(object sender, System.EventArgs e)
-    {
-        if(SaveSystem.Current.GetBool("OceanTalkedToKevin"))
-            SaveSystem.Current.SetBool("OceanFailedFirstBuoy", true);
-    }
+    // private void CheckBuoyFirstTry(object sender, System.EventArgs e)
+    // {
+    //     if(SaveSystem.Current.GetBool("OceanTalkedToKevin"))
+    //         SaveSystem.Current.SetBool("OceanFailedFirstBuoy", true);
+    // }
 
     private void CheckFinalPlacementsOnMove(object sender, System.EventArgs e)
     {
@@ -692,7 +689,6 @@ public class OceanGrid : SGrid
         {
             for (int y = 0; y < Current.Width; y++)
             {
-                // int tid = current.targetGrid[x, y];
                 char tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
                 if (tids == '*')
@@ -704,7 +700,7 @@ public class OceanGrid : SGrid
                 }
                 else
                 {
-                    int tid = Converter.IntToChar(tids);
+                    int tid = Converter.CharToInt(tids);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
                     UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetHighlighted(artifactButton.islandId != tid);
                 }
@@ -712,7 +708,7 @@ public class OceanGrid : SGrid
         }
     }
 
-    public void ClearTreesToJungle() // called in ShopDialogueManager
+    public void ClearTreesToJungle()
     {
         SaveSystem.Current.SetBool("oceanTreesRemoved", true);
         treesToJungle.SetActive(false);
