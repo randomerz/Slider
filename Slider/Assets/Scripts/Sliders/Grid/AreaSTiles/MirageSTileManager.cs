@@ -35,6 +35,8 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
         InitializeSingleton();
         mirageTailPos = new Vector2Int(-1, -1);
         //mirageEnableQueue = new Queue<MirageEnableArgs>();
+
+        mirageButtons = UIArtifact._instance.transform.parent.GetComponentsInChildren<ArtifactTBPluginMirage>().ToList();
     }
 
     private void OnEnable()
