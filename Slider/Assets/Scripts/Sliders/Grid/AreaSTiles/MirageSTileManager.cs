@@ -41,27 +41,13 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
 
     private void OnEnable()
     {
-        SGridAnimator.OnSTileMoveEndLate += OnSTileMoveEndLate;
+        SGridAnimator.OnSTileMoveStart += CheckPlayerOnMirageSTile;
+        SGridAnimator.OnSTileMoveEndLate += EnableMirageAfterSMove;
     }
     private void OnDisable()
     {
-        SGridAnimator.OnSTileMoveEndLate -= OnSTileMoveEndLate;
-    }
-
-    private void OnSTileMoveEndLate(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        if (!SaveSystem.Current.GetBool("desertMirage")) return; //Maybe add a collectible check?
-        Debug.Log("STileMoveEndLateCalled");
-        if (UIArtifact.GetInstance().MoveQueueEmpty())
-        {
-            //No new moves should be queued before mirage tiles are enabled
-            foreach (ArtifactTBPluginMirage button in mirageButtons)
-            {
-                var buttonBase = button.GetComponent<ArtifactTileButton>();
-                EnableMirage(button.mirageIslandId, buttonBase.x, buttonBase.y);
-            }
-  
-        }
+        SGridAnimator.OnSTileMoveStart -= CheckPlayerOnMirageSTile;
+        SGridAnimator.OnSTileMoveEndLate -= EnableMirageAfterSMove;
     }
 
     public void EnableMirage(int islandId, int x, int y)
@@ -83,32 +69,53 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     /// <param name="islandId">0 means disable all mirages</param>
     public void DisableMirage(int islandId = -1)
     {
-        //Do player location check and random parenting bs
-        int mirageIsland;
-        if (isPlayerOnMirage(out mirageIsland))
-        {
-            Debug.Log($"Player on Mirage! Current mirage: {mirageIsland}");
-            //Player.GetInstance().transform.SetParent(grid.GetStile(mirageIsland).transform, false);
-            Debug.Log($"{mirageIsland} == {islandId}?");
-            if (mirageIsland == islandId)
-            {
-                Debug.Log(mirageIsland);
-                //The mirage that just got disabled (player could be on enabled tile)
-                STile realSTile = DesertGrid.Current.GetStile(islandId);
-                Vector3 relativePos = Player._instance.transform.position - mirageSTiles[islandId - 1].transform.position;
-                Player.SetPosition(realSTile.transform.position + relativePos);
-
-                //Play the funny sound, maybe make it more "mystical" or something idk.
-                AudioManager.Play("Hurt");
-                UIEffects.FadeFromBlack(null, 1.5f);
-            }
-        }
         //Insert disable effect
         if (islandId == 0 || islandId > 7) return;
         if (islandId < 0) foreach (GameObject o in mirageSTiles) o.SetActive(false);
         //if (islandId == 7) mirageTailPos = new Vector2Int(-1, -1);
         else mirageSTiles[islandId - 1].gameObject.SetActive(false);
         //Debug.Log(mirageTailPos);
+    }
+
+    private void EnableMirageAfterSMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (!SaveSystem.Current.GetBool("desertMirage")) return; //Maybe add a collectible check?
+        Debug.Log("STileMoveEndLateCalled");
+        if (UIArtifact.GetInstance().MoveQueueEmpty())
+        {
+            //No new moves should be queued before mirage tiles are enabled
+            foreach (ArtifactTBPluginMirage button in mirageButtons)
+            {
+                var buttonBase = button.GetComponent<ArtifactTileButton>();
+                EnableMirage(button.mirageIslandId, buttonBase.x, buttonBase.y);
+            }
+
+        }
+    }
+
+    private void CheckPlayerOnMirageSTile(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        //This assumes mirages get disabled every smove (which is kinda bad)
+
+        int mirageIsland;
+        bool playerOnMirage = isPlayerOnMirage(out mirageIsland);
+
+        if (playerOnMirage)
+        {
+            //Debug.Log($"Player on Mirage! Current mirage: {mirageIsland}");
+            //Debug.Log($"{mirageIsland} == {islandId}?");
+
+            //The mirage that just got disabled (player could be on enabled tile)
+            STile realSTile = DesertGrid.Current.GetStile(mirageIsland);
+            Vector3 relativePos = Player._instance.transform.position - mirageSTiles[mirageIsland - 1].transform.position;
+            realSTile.SetBorderColliders(false);
+            Player.SetParent(realSTile.transform);
+            Player.SetPosition(realSTile.transform.position + relativePos);
+
+            //Play the funny sound, maybe make it more "mystical" or something idk.
+            AudioManager.Play("Hurt");
+            UIEffects.FadeFromBlack(null, 1.5f);
+        }
     }
 
     /// <summary>
