@@ -225,10 +225,11 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetPushedDown(bool v)
     {
         buttonAnimator.SetPushedDown(v);
-        if (this.LinkButton != null)
-        {
-            this.LinkButton.buttonAnimator.SetPushedDown(v);
-        }
+    }
+
+    public void SetLinkPushedDown()
+    {
+        this.LinkButton.SetPushedDown(!this.LinkButton.buttonAnimator.IsPushedDown);
     }
 
     public void SetLightning(bool v)

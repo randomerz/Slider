@@ -18,6 +18,7 @@ public class PortalTease : MonoBehaviour
     public GameObject uiPortalTracker;
 
     public SpriteRenderer teaseSpriteRenderer;
+    private bool realPortalEnabled = false;
     
     void Start()
     {
@@ -72,11 +73,11 @@ public class PortalTease : MonoBehaviour
     public void EnableRealPortal(bool fromSave=false)
     {
         SaveSystem.Current.SetBool("magitechDesertPortal", true);
-
+        realPortalEnabled = true;
         if (!fromSave)
         {
             AudioManager.Play("MagicChimes2");
-            AudioManager.Play("RumbleDecrease2.5s");
+            AudioManager.Play("Rumble Decrease 2.5s");
 
             ParticleManager.SpawnParticle(
                 ParticleType.SmokePoof, realPortal.transform.position, realPortal.transform
@@ -96,5 +97,10 @@ public class PortalTease : MonoBehaviour
 
         bool displayingPast = magiTechArtifact.IsDisplayingPast();
         uiPortalTracker.SetActive(displayingPast && realPortal.activeInHierarchy);
+    }
+
+    public void IsRealPortalEnabled(Condition c)
+    {
+        c.SetSpec(realPortalEnabled);
     }
 }

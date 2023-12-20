@@ -7,8 +7,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using TMPro;
 
-// TODO: 
-//  - fix Continue button (see in Update())
 public class MainMenuManager : Singleton<MainMenuManager>
 {
     
@@ -28,6 +26,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     public Button continueButton;
     public TextMeshProUGUI continueText;
     public Button playButton;
+    public MainMenuWashingMachineManager washingMachineManager;
 
     public MainMenuSaveButton[] saveProfileButtons;
 
@@ -51,18 +50,19 @@ public class MainMenuManager : Singleton<MainMenuManager>
         // any key listener moved to OpenCutscene()
     }
 
-    public static MainMenuManager GetInstance() {
+    public static MainMenuManager GetInstance() 
+    {
         return _instance;
     }
 
-    private void OnDisable() {
+    private void OnDisable() 
+    {
         listener?.Dispose();
     }
 
-    private void Update() {
-        // todo: fix this
-        // continueButton.interactable = SaveSystem.Current != null;
-        // continueText.color = SaveSystem.Current != null ? GameSettings.white : GameSettings.darkGray;
+    private void Update() 
+    {
+        CheckContinueButton();
     }
 
     private void OnAnyButtonPress() 
@@ -85,10 +85,13 @@ public class MainMenuManager : Singleton<MainMenuManager>
             continueText.color = GameSettings.lightGray;
             return false;
         }
-        continueProfileIndex = SaveSystem.GetRecentlyPlayedIndex();
-        continueButton.interactable = true;
-        continueText.color = GameSettings.white;
-        return true;
+        else
+        {
+            continueProfileIndex = SaveSystem.GetRecentlyPlayedIndex();
+            continueButton.interactable = true;
+            continueText.color = GameSettings.white;
+            return true;
+        }
     }
 
     public void ContinueGame()
@@ -129,6 +132,8 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
         AudioManager.SetGlobalParameter("MainMenuActivated", 1);
 
+        washingMachineManager.Activate();
+        
         UINavigationManager.CurrentMenu = mainMenuPanel;
         UINavigationManager.LockoutSelectablesInCurrentMenu(SelectTopmostButton, 1);
     }
@@ -145,7 +150,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         UINavigationManager.SelectBestButtonInCurrentMenu();
     }
     
-    public void QuitGame()
+    public static void QuitGame()
     {
         Debug.Log("Quitting game");
         Application.Quit(0);

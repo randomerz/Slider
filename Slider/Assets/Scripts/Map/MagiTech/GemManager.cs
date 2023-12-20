@@ -16,6 +16,7 @@ public class GemManager : MonoBehaviour, ISavable
     public bool HasGemTransporter => hasGemTransporter;
     
     public PipeLiquid pipeLiquid;
+    public Animator animator;
 
     public void Save()
     {
@@ -123,10 +124,6 @@ public class GemManager : MonoBehaviour, ISavable
             Debug.LogWarning("Tried to turn in invalid item: " + item);
         }
         UpdateGemSprites();
-        // if(HasAllGems())
-        // {
-        //     EnableGFuel();
-        // }
     }
 
     public void UpdateGemSprites()
@@ -134,6 +131,10 @@ public class GemManager : MonoBehaviour, ISavable
         foreach(Area a in gems.Keys)
         {
             gemSprites[a].SetActive(gems[a]);
+        }
+        if (HasAllGems())
+        {
+            animator.Play("Active");
         }
     }
 
@@ -151,7 +152,8 @@ public class GemManager : MonoBehaviour, ISavable
 
     public void EnableGFuel(bool fillImmediate = false)
     {
-        if(fillImmediate)
+        if (pipeLiquid.isFilling || pipeLiquid.isFull) return;
+        if (fillImmediate)
             pipeLiquid.SetPipeFull();
         else
             pipeLiquid.FillPipe();
@@ -177,5 +179,11 @@ public class GemManager : MonoBehaviour, ISavable
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)Area.Mountain - 1].position);
         }
         UpdateGemSprites();
+    }
+
+    // For debug/trailer purposes
+    public void TrailerActivateMachine()
+    {
+        animator.Play("Active");
     }
 }

@@ -10,7 +10,7 @@ public class RuinsArrowRod : MonoBehaviour
     public ParticleSystem rodParticles;
 
     public SpriteRenderer runesSpriteRenderer;
-    public IFlashWhite runesFlash;
+    public FlashWhiteSprite runesFlash;
 
     private bool onLastFrame;
 

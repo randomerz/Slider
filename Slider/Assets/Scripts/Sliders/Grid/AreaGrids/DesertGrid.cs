@@ -18,12 +18,12 @@ public class DesertGrid : SGrid
     [SerializeField] private ArtifactHousingButtonsManager artifactHousingButtonsManager;
     [SerializeField] private GameObject templeTrapBlockingRoom;
     [SerializeField] private GameObject templeTrapBlockingRoomCollider;
-    [SerializeField] private Collider2D portalCollider; //Desert Portal
-    [SerializeField] private MagiLaser portalLaser;
+    // [SerializeField] private Collider2D portalCollider; //Desert Portal
+    // [SerializeField] private MagiLaser portalLaser;
 
     private bool campfireIsLit = false;
-    private bool portalEnabled = false;
-    private bool portalLaserEnabled = false;
+    // private bool portalEnabled = false;
+    // private bool portalLaserEnabled = false;
     private Coroutine shuffleBuildUpCoroutine;
     private Coroutine placeTile9Coroutine;
 
@@ -69,8 +69,8 @@ public class DesertGrid : SGrid
             ArtifactTabManager.AfterScrollRearrage += OnScrollRearrage;
         }
 
-        portalCollider.enabled = portalEnabled;
-        portalLaser.isEnabled = portalLaserEnabled;
+        // portalCollider.enabled = portalEnabled;
+        // portalLaser.isEnabled = portalLaserEnabled;
     }
 
     private void OnDisable() {
@@ -133,7 +133,7 @@ public class DesertGrid : SGrid
     {
         STile[,] grid = ((DesertGrid)Current).grid;
 
-        Dictionary<Vector2Int, int> mirageTileIdsToPositions = MirageSTileManager.GetActiveMirageTileIdsByPosition();
+        Dictionary<Vector2Int, char> mirageTileIdsToPositions = MirageSTileManager.GetActiveMirageTileIdsByPosition();
 
         string s = "";
         for (int y = grid.GetLength(1) - 1; y >= 0; y--)
@@ -180,8 +180,8 @@ public class DesertGrid : SGrid
 
         campfireIsLit = profile.GetBool("desertCamp");
         checkCompletion = profile.GetBool("desertCheckCompletion");
-        portalEnabled = profile.GetBool("magiTechDesertPortal");
-        portalLaserEnabled = profile.GetBool("magiTechDesertLaser");
+        // portalEnabled = profile.GetBool("magiTechDesertPortal");
+        // portalLaserEnabled = profile.GetBool("magiTechDesertLaser");
 
         if (SaveSystem.Current.GetBool("desertIsInTemple"))
         {

@@ -14,6 +14,7 @@ public class GemMachine : MonoBehaviour, ISavable
 
     public GameObject brokenObj;
     public GameObject fixedObj;
+    public PipeLiquid pipeLiquid;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
@@ -25,7 +26,7 @@ public class GemMachine : MonoBehaviour, ISavable
 
     private void CheckMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(e.stile == sTile)
+        if (e.stile == sTile)
             ResetGems();
     }
 
@@ -37,7 +38,7 @@ public class GemMachine : MonoBehaviour, ISavable
         gemChecker.SetActive(isPowered && !isBroken);
     }
 
-    public void addGem(){
+    public void AddGem(){
         animator.Play("AbsorbGem");
         if(!isPowered || isBroken)
             return;
@@ -45,6 +46,7 @@ public class GemMachine : MonoBehaviour, ISavable
         if(numGems == 2){
             AudioManager.Play("Puzzle Complete");
             isDone = true;
+            EnableGoo();
         }
     }
 
@@ -67,9 +69,25 @@ public class GemMachine : MonoBehaviour, ISavable
     public void Fix()
     {
         isBroken = false;
-        brokenObj.SetActive(false);
-        fixedObj.SetActive(true);
+        if (brokenObj != null)
+        {
+            brokenObj.SetActive(false);
+        }
+        if (fixedObj != null)
+        {
+            fixedObj.SetActive(true);
+        }
     }
+
+    
+    public void EnableGoo(bool fillImmediate = false)
+    {
+        if(fillImmediate)
+            pipeLiquid.SetPipeFull();
+        else
+            pipeLiquid.FillPipe();
+    }
+
 
     public void Save(){
         SaveSystem.Current.SetInt("mountainNumGems", numGems);
@@ -82,8 +100,13 @@ public class GemMachine : MonoBehaviour, ISavable
         if(numGems >= 2)
             isDone = true;
         isBroken = profile.GetBool("mountainGemMachineBroken", true);
-        if(! isBroken)
+        if(!isBroken)
             Fix();
+        
+        if(profile.GetBool("MountainGooFull"))
+            EnableGoo(true);
+        else if (profile.GetBool("MountainGooFilling"))
+            EnableGoo();
     }
 
     public void CheckHasCrystals(Condition c){

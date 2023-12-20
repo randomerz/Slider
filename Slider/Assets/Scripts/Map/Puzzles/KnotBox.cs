@@ -156,6 +156,10 @@ public class KnotBox : MonoBehaviour
             {
                 ps.Play();
             }
+            if (SGrid.Current is VillageGrid)
+            {
+                AudioManager.Play("Hat Click");
+            }
         }
     }
 

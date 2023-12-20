@@ -233,7 +233,7 @@ public class PlayerAction : Singleton<PlayerAction>
             pickedItem.DropItem(itemDropIndicator.transform.position, callback: FinishDropping);
             lastDroppedItem = pickedItem;
             itemDropIndicator.SetActive(false);
-            pickedItem.SetLayer(LayerMask.NameToLayer("Default"));
+            pickedItem.SetLayer(LayerMask.NameToLayer("Item"));
             AudioManager.PlayWithPitch("UI Click", 0.8f);
 
             return true;

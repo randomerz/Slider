@@ -1417,6 +1417,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7221933079104180209}
     m_Modifications:
+    - target: {fileID: 6060830020627463826, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: deselectOnClick
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6285492530584628488, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_text
       value: 'Adv Options
@@ -1576,6 +1580,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7221933079104180209}
     m_Modifications:
+    - target: {fileID: 6060830020627463826, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: deselectOnClick
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6285492530584628488, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_text
       value: 'Back
@@ -1723,6 +1731,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7221933079104180209}
     m_Modifications:
+    - target: {fileID: 6060830020627463826, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: deselectOnClick
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6285492530584628488, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_text
       value: Controls

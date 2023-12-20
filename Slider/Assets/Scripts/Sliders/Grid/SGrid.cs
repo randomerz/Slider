@@ -488,6 +488,7 @@ public void SetGrid(int[,] puzzle)
         {
             ActivateCollectible(name);
             GetCollectible(name).transform.position = Player.GetPosition();
+            GetCollectible(name).transform.parent = null;
             //UIManager.CloseUI();
             PauseManager.SetPauseState(false);
         }
@@ -674,17 +675,14 @@ public void SetGrid(int[,] puzzle)
     {
         for (int x = 0; x < Current.Width; x++) {
             for (int y = 0; y < Current.Height; y++) {
-                // int tid = current.targetGrid[x, y];
                 char tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
                 if (tids == '*') 
                 {
-                    // UIArtifact.SetButtonComplete(current.grid[x, y].islandId, true);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, true);
                 }
                 else if (artifactButton != null) {
-                    int tid = Converter.IntToChar(tids);
-                    // UIArtifact.SetButtonComplete(tid, current.grid[x, y].islandId == tid);
+                    int tid = Converter.CharToInt(tids);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
                 }
             }
@@ -710,8 +708,7 @@ public void SetGrid(int[,] puzzle)
                     numComplete += 1;
                 }
                 else {
-                    int tid = Converter.IntToChar(tids);
-                    //Debug.Log("tid: " + tid + " artifactButton: " + artifactButton);
+                    int tid = Converter.CharToInt(tids);
                     if (artifactButton.islandId == tid)
                         numComplete += 1;
                 }
