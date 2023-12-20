@@ -48,7 +48,8 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
             buttonMirage.SetMirageEnabled(true);
         }
         //Enable STile
-        MirageSTileManager.GetInstance().EnableMirage(mirageIslandId, cords.Item1, cords.Item2);
+        //MirageSTileManager.GetInstance().EnableMirage(mirageIslandId, cords.Item1, cords.Item2);
+        //MirageSTileManager.GetInstance().QueueMirage(mirageIslandId, cords.Item1, cords.Item2);
     }
 
     private void DisableMirage()
