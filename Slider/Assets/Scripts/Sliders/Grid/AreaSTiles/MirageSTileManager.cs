@@ -51,7 +51,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
         //Insert disable effect
         if (islandId == 0 || islandId > 7) return;
         if (islandId < 0) foreach (GameObject o in mirageSTiles) o.SetActive(false);
-        if (islandId == 7) mirageTailPos = new Vector2Int(-1, -1);
+        //if (islandId == 7) mirageTailPos = new Vector2Int(-1, -1);
         else mirageSTiles[islandId - 1].gameObject.SetActive(false);
         Debug.Log(mirageTailPos);
     }

@@ -24,8 +24,8 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         if (mirageIslandId > 0)
         {
             //Debug.Log("disablemirage");
-            DisableMirage();
-            return;
+            //DisableMirage();
+            //return;
         }
         //Debug.Log("selecting");
         button.SelectButton();
