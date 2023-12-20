@@ -7,14 +7,14 @@ public class OceanGrid : SGrid
     public GameObject burriedGuyNPC;
     public GameObject burriedTreasure;
     public ParticleSystem burriedTreasureParticles;
-    public KnotBox knotBox;
-    public GameObject buoyUITrackerPrefab;
-    private bool knotBoxEnabledLastFrame;
+    // public KnotBox knotBox;
+    // public GameObject buoyUITrackerPrefab;
+    // private bool knotBoxEnabledLastFrame;
     public BottleManager bottleManager;
     public NPCRotation npcRotation;
     public OceanArtifact oceanArtifact; // used for the final quest to lock movement
     public GameObject treesToJungle;
-    public List<int> buoytiles = new List<int> {1, 3, 4, 8, 9};
+    // public List<int> buoytiles = new List<int> {1, 3, 4, 8, 9};
     private List<int> landTiles = new List<int> {1, 2, 4, 8};    
     public OceanDolly introCameraDolly;
     private const string INTRO_CUTSCENE_SAVE_STRING = "oceanIntroCutscene";
@@ -93,7 +93,7 @@ public class OceanGrid : SGrid
         SGridAnimator.OnSTileMoveEnd += CheckVolcano;
         UIArtifactMenus.OnArtifactOpened += CheckVolcano;
 
-        SGridAnimator.OnSTileMoveEnd += BuoySuccessEffectsCheck;
+        // SGridAnimator.OnSTileMoveEnd += BuoySuccessEffectsCheck;
         Anchor.OnAnchorInteract += OnAnchorInteract;
     }
 
@@ -112,7 +112,7 @@ public class OceanGrid : SGrid
         SGridAnimator.OnSTileMoveEnd -= CheckVolcano;
         UIArtifactMenus.OnArtifactOpened -= CheckVolcano;
         
-        SGridAnimator.OnSTileMoveEnd -= BuoySuccessEffectsCheck;
+        // SGridAnimator.OnSTileMoveEnd -= BuoySuccessEffectsCheck;
         Anchor.OnAnchorInteract -= OnAnchorInteract;
     }
 
@@ -153,9 +153,9 @@ public class OceanGrid : SGrid
         SaveSystem.Current.SetString("oceanRomeoReason", reason);
     }
     
-    private void LateUpdate() {
-        knotBoxEnabledLastFrame = knotBox.isActiveAndEnabled;
-    }
+    // private void LateUpdate() {
+    //     knotBoxEnabledLastFrame = knotBox.isActiveAndEnabled;
+    // }
     
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
     {
@@ -345,108 +345,108 @@ public class OceanGrid : SGrid
         }
     }
 
-    private bool BuoyConditions()
-    {
-        return (
-            AllBuoy() && 
-            knotBox.isActiveAndEnabled && 
-            knotBoxEnabledLastFrame &&
-            knotBox.CheckNumLines() == 0
-        );
-    }
+    // private bool BuoyConditions()
+    // {
+    //     return (
+    //         AllBuoy() && 
+    //         knotBox.isActiveAndEnabled && 
+    //         knotBoxEnabledLastFrame &&
+    //         knotBox.CheckNumLines() == 0
+    //     );
+    // }
 
-    private void BuoySuccessEffectsCheck(object sender, System.EventArgs e)
-    {
-        if (PlayerInventory.Contains("Golden Fish"))
-            return;
+    // private void BuoySuccessEffectsCheck(object sender, System.EventArgs e)
+    // {
+    //     if (PlayerInventory.Contains("Golden Fish"))
+    //         return;
 
-        if (BuoyConditions())
-        {
-            knotBox.CheckParticles();
-            AudioManager.Play("Puzzle Complete");
-        }
-    }
+    //     if (BuoyConditions())
+    //     {
+    //         knotBox.CheckParticles();
+    //         AudioManager.Play("Puzzle Complete");
+    //     }
+    // }
 
-    public void BuoyAllFound(Condition c)
-    {
-        c.SetSpec(AllBuoy());
-    }
+    // public void BuoyAllFound(Condition c)
+    // {
+    //     c.SetSpec(AllBuoy());
+    // }
 
-    //C: Returns if all the required buoy tiles are active
-    public bool AllBuoy()
-    {
-        return SGrid.AreTilesActive(GetStiles(buoytiles));
-    }
+    // //C: Returns if all the required buoy tiles are active
+    // public bool AllBuoy()
+    // {
+    //     return SGrid.AreTilesActive(GetStiles(buoytiles));
+    // }
 
-    public void knotBoxEnabled(Condition c)
-    {
-        c.SetSpec(knotBox.isActiveAndEnabled && AllBuoy());
-    }
+    // public void knotBoxEnabled(Condition c)
+    // {
+    //     c.SetSpec(knotBox.isActiveAndEnabled && AllBuoy());
+    // }
 
-    public void knotBoxDisabled(Condition c)
-    {
-        c.SetSpec(!knotBox.isActiveAndEnabled && AllBuoy());
-    }
+    // public void knotBoxDisabled(Condition c)
+    // {
+    //     c.SetSpec(!knotBox.isActiveAndEnabled && AllBuoy());
+    // }
 
-    public void BuoyCheck(Condition c)
-    {
-        c.SetSpec(BuoyConditions());
-    }
+    // public void BuoyCheck(Condition c)
+    // {
+    //     c.SetSpec(BuoyConditions());
+    // }
 
-    public void BuoyFirstTimeCheck(Condition c)
-    {
-        c.SetSpec(knotBox.CheckNumLines() == 0);
-    }
+    // public void BuoyFirstTimeCheck(Condition c)
+    // {
+    //     c.SetSpec(knotBox.CheckNumLines() == 0);
+    // }
 
-    public void ToggleKnotBox()
-    {
-        if (AllBuoy())
-        {
-            knotBox.enabled = !knotBox.enabled;
-            knotBox.CheckLines();
-            if (knotBox.enabled)
-            {
-                List<UITrackerBuoyAddOn> uiTrackerAddOns = new List<UITrackerBuoyAddOn>();
-                foreach (GameObject knotnode in knotBox.knotnodes)
-                {
-                    GameObject buoyUITrackerGO = Instantiate(buoyUITrackerPrefab);
-                    UITracker buoyUITracker = buoyUITrackerGO.GetComponent<UITracker>();
-                    uiTrackerAddOns.Add(buoyUITrackerGO.GetComponent<UITrackerBuoyAddOn>());
+    // public void ToggleKnotBox()
+    // {
+    //     if (AllBuoy())
+    //     {
+    //         knotBox.enabled = !knotBox.enabled;
+    //         knotBox.CheckLines();
+    //         if (knotBox.enabled)
+    //         {
+    //             List<UITrackerBuoyAddOn> uiTrackerAddOns = new List<UITrackerBuoyAddOn>();
+    //             foreach (GameObject knotnode in knotBox.knotnodes)
+    //             {
+    //                 GameObject buoyUITrackerGO = Instantiate(buoyUITrackerPrefab);
+    //                 UITracker buoyUITracker = buoyUITrackerGO.GetComponent<UITracker>();
+    //                 uiTrackerAddOns.Add(buoyUITrackerGO.GetComponent<UITrackerBuoyAddOn>());
 
-                    UITrackerManager.AddNewCustomTracker(buoyUITracker, knotnode);
-                }
+    //                 UITrackerManager.AddNewCustomTracker(buoyUITracker, knotnode);
+    //             }
 
-                for (int i = 0; i < uiTrackerAddOns.Count; i++)
-                {
-                    int next = (i + 1) % uiTrackerAddOns.Count;
-                    int prev = (i + uiTrackerAddOns.Count - 1) % uiTrackerAddOns.Count;
+    //             for (int i = 0; i < uiTrackerAddOns.Count; i++)
+    //             {
+    //                 int next = (i + 1) % uiTrackerAddOns.Count;
+    //                 int prev = (i + uiTrackerAddOns.Count - 1) % uiTrackerAddOns.Count;
 
-                    uiTrackerAddOns[i].target1 = uiTrackerAddOns[next].myRectTransform;
-                    uiTrackerAddOns[i].target2 = uiTrackerAddOns[prev].myRectTransform;
-                    uiTrackerAddOns[i].index1 = i;
-                    uiTrackerAddOns[i].index2 = prev;
-                    uiTrackerAddOns[i].knotBox = knotBox;
-                }
-            }
-            else
-            {
-                foreach (GameObject knotnode in knotBox.knotnodes)
-                {
-                    UITrackerManager.RemoveTracker(knotnode);
-                }
-            }
-        }
-    }
+    //                 uiTrackerAddOns[i].target1 = uiTrackerAddOns[next].myRectTransform;
+    //                 uiTrackerAddOns[i].target2 = uiTrackerAddOns[prev].myRectTransform;
+    //                 uiTrackerAddOns[i].index1 = i;
+    //                 uiTrackerAddOns[i].index2 = prev;
+    //                 uiTrackerAddOns[i].knotBox = knotBox;
+    //             }
+    //         }
+    //         else
+    //         {
+    //             foreach (GameObject knotnode in knotBox.knotnodes)
+    //             {
+    //                 UITrackerManager.RemoveTracker(knotnode);
+    //             }
+    //         }
+    //     }
+    // }
 
-    public void DisableKnotBox()
-    {
-        if(knotBox.enabled) ToggleKnotBox();
-    }
+    // public void DisableKnotBox()
+    // {
+    //     if(knotBox.enabled) ToggleKnotBox();
+    // }
 
-    public void EnableKnotBox()
-    {
-        if(!knotBox.enabled) ToggleKnotBox();
-    }
+    // public void EnableKnotBox()
+    // {
+    //     if(!knotBox.enabled) ToggleKnotBox();
+    // }
 
 
     // Foggy Seas
