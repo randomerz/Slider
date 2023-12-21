@@ -25,6 +25,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     private bool playerInDialogueTrigger;
     private bool isTypingDialogue;
     private bool waitingForPlayerAction;
+    public bool IsTypingDialogue { get => isTypingDialogue; }
 
     private Coroutine delayBeforeNextDialogueCoroutine;
 
