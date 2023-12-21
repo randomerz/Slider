@@ -4,17 +4,23 @@ using UnityEngine;
 public class BarronHands : MonoBehaviour
 {
     public Animator animator;
+    public SpriteRenderer spriteRenderer;
+    public SpriteRenderer barronSpriteRenderer;
     private readonly List<string> animationNames = new();
     private const string ANIMATION_NAME_PREFIX = "BarronHands_";
     
     private void Awake()
     {
-        
         foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips) 
         {
             string n = clip.name.Substring(ANIMATION_NAME_PREFIX.Length);
             animationNames.Add(n);
         }
+    }
+
+    private void LateUpdate()
+    {
+        spriteRenderer.flipX = barronSpriteRenderer.flipX;
     }
 
     /// <summary>

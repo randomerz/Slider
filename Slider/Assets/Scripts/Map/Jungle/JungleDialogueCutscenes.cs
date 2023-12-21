@@ -41,6 +41,11 @@ public class JungleDialogueCutscenes : MonoBehaviour
         {
             SaveSystem.Current.SetBool("JungleStandUp3", true);
         }
+
+        if (PlayerInventory.Contains("Slider 5", Area.Jungle))
+        {
+            SaveSystem.Current.SetBool("JungleRaceIsHappening", true);
+        }
     }
 
     public void DoBarronIntroCutscene()
