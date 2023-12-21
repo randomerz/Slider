@@ -19,7 +19,10 @@ public class DialogueDisplay : MonoBehaviour
 
     void Start()
     {
-        ping.transform.position = new Vector2(transform.position.x, transform.position.y + 1);
+        if (ping.transform.localPosition == Vector3.zero)
+        {
+            ping.transform.position = new Vector2(transform.position.x, transform.position.y + 1);
+        }
     }
 
     public void DisplaySentence(string message, NPCEmotes.Emotes emote)

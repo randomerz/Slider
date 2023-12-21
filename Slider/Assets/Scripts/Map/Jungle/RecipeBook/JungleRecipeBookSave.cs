@@ -27,7 +27,10 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
 
     private void Awake()
     {
-        InitializeSingleton();
+        if (_instance == null)
+        {
+            InitializeSingleton();
+        }
     }
 
     public void Load(SaveProfile profile)

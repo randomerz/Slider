@@ -252,6 +252,11 @@ public class JungleGrid : SGrid
 
     private void UpdateSecretaryTV()
     {
+        if (!secretaryTVAnimator.isActiveAndEnabled)
+        {
+            return;
+        }
+
         if (IsJungleComplete())
         {
             secretaryTVAnimator.Play("Jung Status Good");
