@@ -189,10 +189,10 @@ public class DesertArtifact : UIArtifact
             return;
         }
         List<ATBPair> pairs = storedSwaps.Dequeue();
-        Debug.Log($"# moves remaining: {storedSwaps.Count}");
+        //Debug.Log($"# moves remaining: {storedSwaps.Count}");
         foreach (ATBPair s in pairs)
         {
-            Debug.Log($"current: {s.current} furthest: {s.furthest} \n target pos: {s.furthest.x}{s.furthest.y}");
+            //Debug.Log($"current: {s.current} furthest: {s.furthest} \n target pos: {s.furthest.x}{s.furthest.y}");
             SwapButtons(s.current, s.furthest);
         }
     }
