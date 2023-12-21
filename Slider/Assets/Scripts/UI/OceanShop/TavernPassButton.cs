@@ -13,6 +13,8 @@ public class TavernPassButton : MonoBehaviour
     public Sprite completedSprite;
     public Sprite selectedSprite;
 
+    public new ParticleSystem particleSystem;
+
     public void Deselect()
     {
         image.sprite = isComplete ? completedSprite : defaultSprite;
@@ -29,5 +31,11 @@ public class TavernPassButton : MonoBehaviour
 
         if (image.sprite != selectedSprite)
             image.sprite = completedSprite;
+    }
+
+    public void PlayEffect()
+    {
+        particleSystem.Play();
+        AudioManager.Play("Hat Click");
     }
 }

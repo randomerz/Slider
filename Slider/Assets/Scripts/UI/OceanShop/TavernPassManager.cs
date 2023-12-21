@@ -266,6 +266,7 @@ public class TavernPassManager : MonoBehaviour, ISavable
         }
 
         tavernPassButtons[tier].SetComplete(true);
+        tavernPassButtons[tier].PlayEffect();
         SaveSystem.SaveGame("Tavern Pass Reward");
 
         // string rewardName = tavernPassButtons[tier].rewardName;
