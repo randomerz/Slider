@@ -4,7 +4,6 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
-using UnityEngine.InputSystem.EnhancedTouch;
 
 public class Player : Singleton<Player>, ISavable, ISTileLocatable
 {
