@@ -27,7 +27,13 @@ public class UIAnchorInteraction : MonoBehaviour
         {
             ArtifactTileButton anchorbutton = uiArtifactMenus.uiArtifact.GetButton(dropTile.islandId);
             if(anchorbutton != null)
+            {
                 anchorbutton.buttonAnimator.SetAnchored(interactArgs.drop);
+                if (anchorbutton.LinkButton != null)
+                {
+                    anchorbutton.LinkButton.buttonAnimator.SetAnchored(interactArgs.drop);
+                }
+            }
         }
         
 
@@ -40,7 +46,14 @@ public class UIAnchorInteraction : MonoBehaviour
         {
             ArtifactTileButton anchorbutton = uiArtifactMenus.uiArtifact.GetButton(dropTile.islandId);
             if(anchorbutton != null)
+            {
                 anchorbutton.buttonAnimator.SetAnchored(true);
+                if (anchorbutton.LinkButton != null)
+                {
+                    anchorbutton.LinkButton.buttonAnimator.SetAnchored(true);
+                }
+            }
+
         }
     }
     
