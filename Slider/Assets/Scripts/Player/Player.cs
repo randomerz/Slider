@@ -9,6 +9,13 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 {
     public static event Action<string> OnControlSchemeChanged;
 
+    public class HousingChangeArgs : System.EventArgs
+    {
+        public bool newIsInHouse;
+    }
+
+    public static System.EventHandler<HousingChangeArgs> OnHousingChanged;
+
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5;
     [SerializeField] private bool isOnWater = false;
@@ -498,6 +505,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         AudioManager.SetListenerIsIndoor(isInHouse);
         _instance.isInHouse = isInHouse;
+
+        OnHousingChanged?.Invoke(_instance, new HousingChangeArgs { newIsInHouse = isInHouse });
     }
 
     public bool GetIsOnWater()
