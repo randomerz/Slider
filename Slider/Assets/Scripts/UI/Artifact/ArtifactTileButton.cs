@@ -225,6 +225,10 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetPushedDown(bool v)
     {
         buttonAnimator.SetPushedDown(v);
+        if (this.LinkButton != null)
+        {
+            this.LinkButton.buttonAnimator.SetPushedDown(v);
+        }
     }
 
     public void SetLinkPushedDown()
@@ -249,6 +253,10 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetIsInMove(bool v)
     {
         buttonAnimator.SetIsForcedDown(v && TileIsActive);
+        if (this.LinkButton != null)
+        {
+            this.LinkButton.buttonAnimator.SetIsForcedDown(v && TileIsActive);
+        }
     }
 
     public void SetComplete(bool value)
