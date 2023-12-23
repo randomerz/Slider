@@ -8,7 +8,7 @@ public class BarronWalkStart : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
-        BarronHands.SetIsWalking(true);
+        animator.GetComponent<BarronHandsReference>().barronHands.SetIsWalking(true);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -21,7 +21,7 @@ public class BarronWalkStart : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
-        BarronHands.SetIsWalking(false);
+        animator.GetComponent<BarronHandsReference>().barronHands.SetIsWalking(false);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

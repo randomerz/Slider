@@ -58,6 +58,14 @@ public class DialogueDisplay : MonoBehaviour
         // StartCoroutine(TypeSentence(message.ToCharArray()));
     }
 
+    public void StopVocalizer()
+    {
+        if (AudioManager.useVocalizer && useVocalizer)
+        {
+            vocalizer.Stop();
+        }
+    }
+
     public void FadeAwayDialogue()
     {
         if (useVocalizer)

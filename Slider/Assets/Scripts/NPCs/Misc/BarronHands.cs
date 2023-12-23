@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BarronHands : Singleton<BarronHands>
+public class BarronHands : MonoBehaviour
 {
     public Animator animator;
     public SpriteRenderer spriteRenderer;
@@ -11,8 +11,6 @@ public class BarronHands : Singleton<BarronHands>
     
     private void Awake()
     {
-        InitializeSingleton();
-
         foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips) 
         {
             string n = clip.name.Substring(ANIMATION_NAME_PREFIX.Length);
@@ -47,8 +45,8 @@ public class BarronHands : Singleton<BarronHands>
         animator.Play(animationName);
     }
 
-    public static void SetIsWalking(bool value)
+    public void SetIsWalking(bool value)
     {
-        _instance.animator.SetBool("isWalking", value);
+        animator.SetBool("isWalking", value);
     }
 }
