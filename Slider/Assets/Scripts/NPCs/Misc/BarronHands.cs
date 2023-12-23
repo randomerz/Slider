@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BarronHands : MonoBehaviour
+public class BarronHands : Singleton<BarronHands>
 {
     public Animator animator;
     public SpriteRenderer spriteRenderer;
@@ -11,6 +11,8 @@ public class BarronHands : MonoBehaviour
     
     private void Awake()
     {
+        InitializeSingleton();
+
         foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips) 
         {
             string n = clip.name.Substring(ANIMATION_NAME_PREFIX.Length);
@@ -26,6 +28,7 @@ public class BarronHands : MonoBehaviour
     /// <summary>
     /// List of supported animations (probably):
     /// - Raised
+    /// - Walking
     /// - Down
     /// - Close
     /// - Pointing
@@ -42,5 +45,10 @@ public class BarronHands : MonoBehaviour
         }
 
         animator.Play(animationName);
+    }
+
+    public static void SetIsWalking(bool value)
+    {
+        _instance.animator.SetBool("isWalking", value);
     }
 }
