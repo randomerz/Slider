@@ -2,13 +2,13 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{17dfc56e-62ce-4692-99d7-9f309dca8e8c}">
 		<property name="name">
-			<value>GMTK Pickup</value>
+			<value>Village Pickup</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{f8ca73ce-e6ec-4c6e-bdde-57f796cff8c6}</destination>
+			<destination>{fa65ca96-66bb-4fda-b085-e809fb0e5fc4}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{4f2f1de9-3a32-4ba7-bbdb-cc3b4e002591}</destination>
@@ -32,7 +32,7 @@
 			<destination>{411a5494-44bd-4e3e-bdbc-0a4339d3abc3}</destination>
 		</relationship>
 		<relationship name="banks">
-			<destination>{fab766ae-bab9-4276-962d-d094a6519530}</destination>
+			<destination>{9ff15b18-01d0-4f42-9817-12f2ed6e4030}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixer" id="{4f2f1de9-3a32-4ba7-bbdb-cc3b4e002591}">
@@ -53,7 +53,7 @@
 			<destination>{37874ecc-4a75-42ad-886a-c1517c31b78e}</destination>
 		</relationship>
 		<relationship name="output">
-			<destination>{621a6f1a-1718-4519-b033-c62a33040a92}</destination>
+			<destination>{b0fb9a0e-95d8-42fc-a13c-ada91b02759d}</destination>
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{e28d4322-7285-457e-9cc2-81e0c08ef7b8}" />

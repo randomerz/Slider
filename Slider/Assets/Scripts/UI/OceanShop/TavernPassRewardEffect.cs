@@ -42,7 +42,7 @@ public class TavernPassRewardEffect : MonoBehaviour
 
     private IEnumerator Effect(System.Action onTextVisibleCallback=null)
     {
-        AudioManager.Play("Item Pick Up");
+        AudioManager.Play("Ocean Pick Up");
         displayText.gameObject.SetActive(false);
 
         float t = 0;
