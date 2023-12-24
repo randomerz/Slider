@@ -48,6 +48,7 @@ public class SGrid : Singleton<SGrid>, ISavable
     [SerializeField] protected Collectible[] collectibles;
     [SerializeField] protected SGridAnimator gridAnimator;
     [SerializeField] protected STileTilemap worldGridTilemaps;
+    [SerializeField] protected SGridTilesExplored gridTilesExplored;
     [SerializeField] protected AudioModifierOverrides audioModifierOverrides;
 
     //L: This is the end goal for the slider puzzle.
@@ -88,6 +89,11 @@ public class SGrid : Singleton<SGrid>, ISavable
         if (checkCompletion)
         {
             UpdateButtonCompletions(this, null);
+        }
+
+        if (gridTilesExplored == null)
+        {
+            Debug.LogError("SGridTilesExplored is null. Please add the script to the 8Puzzle Game Object and assign the reference.");
         }
         
         UIEffects.FadeFromBlack(() => PauseManager.RemoveAllPauseRestrictions());

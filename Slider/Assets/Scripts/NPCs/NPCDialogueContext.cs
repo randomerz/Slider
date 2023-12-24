@@ -25,6 +25,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     private bool playerInDialogueTrigger;
     private bool isTypingDialogue;
     private bool waitingForPlayerAction;
+    public bool IsTypingDialogue { get => isTypingDialogue; }
 
     private Coroutine delayBeforeNextDialogueCoroutine;
 
@@ -175,6 +176,11 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     {
         if (DialogueEnabled && !CurrDchainIsEmpty())
         {
+            if (isTypingDialogue)
+            {
+                display.StopVocalizer();
+            }
+
             display.DisplaySentence(context.CurrCond.GetDialogueString(CurrDchainIndex), CurrDchain[CurrDchainIndex].emoteOnStart);
 
             isTypingDialogue = true;

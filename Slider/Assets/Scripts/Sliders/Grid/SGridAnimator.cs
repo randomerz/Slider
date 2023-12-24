@@ -16,6 +16,7 @@ public class SGridAnimator : MonoBehaviour
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndEarly;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
+    public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndLate; //:clown emoji
 
     // set in inspector
     public AnimationCurve movementCurve;
@@ -180,7 +181,15 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-        
+
+        OnSTileMoveEndLate?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = moveCoords.startLoc,
+            smove = move,
+            moveDuration = currMoveDuration
+        });
+
         EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
     }
     
