@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class MagiGem : MonoBehaviour, ISavable
 {
@@ -24,6 +26,18 @@ public class MagiGem : MonoBehaviour, ISavable
     private void Start()
     {
         gemItem = GetComponent<Item>();
+    }
+
+    public void EnableGem()
+    {
+        if (Enum.TryParse(gemItem.itemName, out Area itemNameAsEnum))
+        {
+            gemItem.gameObject.SetActive(!gemMachine.HasAreaGem(itemNameAsEnum));
+        }
+        else if (gemItem.itemName == "Mountory")
+        {
+            gemItem.gameObject.SetActive(!gemMachine.HasAreaGem(Area.Mountain));
+        }   
     }
 
     public void TransportGem()
