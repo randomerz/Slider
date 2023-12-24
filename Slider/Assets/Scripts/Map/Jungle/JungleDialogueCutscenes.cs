@@ -36,6 +36,16 @@ public class JungleDialogueCutscenes : MonoBehaviour
         {
             SaveSystem.Current.SetBool("JungleBarronIntro4", true);
         }
+
+        if (SaveSystem.Current.GetBool("JungleStandUp2"))
+        {
+            SaveSystem.Current.SetBool("JungleStandUp3", true);
+        }
+
+        if (PlayerInventory.Contains("Slider 5", Area.Jungle))
+        {
+            SaveSystem.Current.SetBool("JungleRaceIsHappening", true);
+        }
     }
 
     public void DoBarronIntroCutscene()
@@ -85,6 +95,99 @@ public class JungleDialogueCutscenes : MonoBehaviour
         barron.AdvanceDialogueChain();
 
         currentCoroutine = null;
+    }
+
+    public void DoStandUpCutscene()
+    {
+        if (currentCoroutine == null)
+        {
+            currentCoroutine = StartCoroutine(StandUpCutscene());
+        }
+    }
+
+    private IEnumerator StandUpCutscene()
+    {
+        Log("- Alright, let's give it 5 minutes for everyone to get here");
+        SaveSystem.Current.SetBool("JungleStandUp1", true);
+
+        yield return null;
+
+        barron.TypeCurrentDialogue();
+
+        yield return new WaitWhile(() => barron.IsTypingDialogue());
+        
+        // awkward timing because of mysterious bug
+        justin.TypeCurrentDialogue();
+        joe.TypeCurrentDialogue();
+        yield return new WaitForSeconds(DEFAULT_TIME_BETWEEN_DIALOGUES);
+        
+        Log("- .........");
+        
+        yield return new WaitWhile(() => barron.IsTypingDialogue());
+        yield return new WaitForSeconds(DEFAULT_TIME_BETWEEN_DIALOGUES);
+        
+        Log("- Okay well let's just get started then. Justin?");
+        
+        yield return new WaitWhile(() => barron.IsTypingDialogue());
+        yield return new WaitForSeconds(DEFAULT_TIME_BETWEEN_DIALOGUES);
+        
+        Log("> I finished finalizing R&D, ready for you to take a look boss!");
+        justin.AdvanceDialogueChain();
+        
+        yield return new WaitWhile(() => justin.IsTypingDialogue());
+        yield return new WaitForSeconds(DEFAULT_TIME_BETWEEN_DIALOGUES);
+        barron.AdvanceDialogueChain();
+        
+        Log("- Great, I'll definetely come by when I have time.");
+        
+        yield return new WaitWhile(() => barron.IsTypingDialogue());
+        yield return new WaitForSeconds(DEFAULT_TIME_BETWEEN_DIALOGUES);
+        
+        Log("- Joe, how about you?");
+        
+        yield return new WaitWhile(() => barron.IsTypingDialogue());
+        yield return new WaitForSeconds(DEFAULT_TIME_BETWEEN_DIALOGUES);
+        
+        Log("> Oh uh... I've got my sticks sending up.");
+        joe.AdvanceDialogueChain();
+        
+        yield return new WaitWhile(() => joe.IsTypingDialogue());
+        yield return new WaitForSeconds(DEFAULT_TIME_BETWEEN_DIALOGUES);
+        
+        Log("> I've also been having some trouble with my J*ra cards so I had to sort that out.");
+        
+        yield return new WaitWhile(() => joe.IsTypingDialogue());
+        yield return new WaitForSeconds(DEFAULT_TIME_BETWEEN_DIALOGUES);
+        
+        Log("- Sounds good, don't hesitate to ask around for help!");
+        barron.AdvanceDialogueChain();
+        
+        yield return new WaitWhile(() => barron.IsTypingDialogue());
+        yield return new WaitForSeconds(DEFAULT_TIME_BETWEEN_DIALOGUES);
+        
+        Log("- Well it looks like everyone else is busy. Before we wrap up though,");
+        
+        yield return new WaitWhile(() => barron.IsTypingDialogue());
+        yield return new WaitForSeconds(DEFAULT_TIME_BETWEEN_DIALOGUES);
+        
+        Log("- Would everyone please welcome the new intern!");
+        
+        yield return new WaitWhile(() => barron.IsTypingDialogue());
+
+        yield return new WaitForSeconds(DEFAULT_TIME_BETWEEN_DIALOGUES / 2);
+        SaveSystem.Current.SetBool("JungleStandUp2", true);
+        justin.AdvanceDialogueChain();
+        joe.AdvanceDialogueChain();
+
+        yield return null;
+
+        Log("> Welcome");
+        justin.TypeCurrentDialogue();
+
+        yield return new WaitForSeconds(0.25f);
+
+        Log("> Welcome");
+        joe.TypeCurrentDialogue();
     }
 
     public void Log(string message)
