@@ -120,69 +120,13 @@ public class MagiTechArtifact : UIArtifact
         }
     }
 
-
-    /* C: moves the tiles on the non-anchored timeline to align with the tiles on the 
-     * anchored timeline. We need to both restore the tile that was desynced and
-     * the non-active tiles, since they might no longer be aligned
-     */
     private void RestoreOnEndDesync()
     {
-        STile[,] temp = SGrid.Current.GetGrid();
-        int[,] currGrid = new int[6, 3];
-        int[,] newGrid = new int[6, 3];
-        for (int x = 0; x < 6; x++)
-        {
-            for (int y = 0; y < 3; y++)
-            {
-                currGrid[x, y] = temp[x, y].islandId;
-                newGrid[x, y] = temp[x, y].islandId;
-            }
-        }
 
-        int offset = (desyncLocation.x / 3) * 3;
-        for (int x = 0; x < 3; x++)
-        {
-            for (int y = 0; y < 3; y++)
-            {
-                newGrid[x + offset, y] = FindAltId(currGrid[x - offset + 3, y]);
-            }
-        }
         DisableLightning(true);
         GetButton(desyncIslandId).SetLightning(false);
         GetButton(FindAltId(desyncIslandId)).SetLightning(false);
         UpdatePushedDowns(null, null);
-        // C: you can uncomment this if desyncing isn't working, it might help locate the source of the problem
-        // PrintGrid(currGrid, newGrid);
-
-        SGrid.Current.SetGrid(newGrid);
-    }
-
-    //C: debugging tool if desync gets broken
-    public void PrintGrid(int[,] currGrid, int[,] newGrid)
-    {
-        string output = "";
-
-        for (int y = 2; y >= 0; y--)
-        {
-            for (int x = 0; x < 6; x++)
-            {
-                output += currGrid[x, y];
-                output += "\t";
-            }
-            output += "\n";
-        }
-        output += "\n";
-        output += "\n";
-        for (int y = 2; y >= 0; y--)
-        {
-            for (int x = 0; x < 6; x++)
-            {
-                output += newGrid[x, y];
-                output += "\t";
-            }
-            output += "\n";
-        }
-        Debug.Log(output);
     }
 
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
@@ -200,7 +144,7 @@ public class MagiTechArtifact : UIArtifact
         {
             ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
             int i = 2;
-            while (b != null && !b.TileIsActive && !CheckDesync(button, b)
+            while (b != null && !b.TileIsActive && !DoesDesyncBlockMove(button, b)
             && button.x / 3 == b.x / 3)
             {
                 options.Add(b);
@@ -211,13 +155,14 @@ public class MagiTechArtifact : UIArtifact
         return options;
     }
 
-    //L: Negating this so that it returns true when there is a desync.
-    private bool CheckDesync(ArtifactTileButton selected, ArtifactTileButton empty)
+    //Checks if the "empty" space should actually be blocked by the desync tile
+    private bool DoesDesyncBlockMove(ArtifactTileButton selected, ArtifactTileButton empty)
     {
         if (desyncLocation.x != -1)
         {
-            //If we're trying to 
-            return !(selected.islandId == desyncIslandId) && (empty.x == desyncLocation.x && empty.y == desyncLocation.y);
+            bool selectedIsDesync = selected.islandId == desyncIslandId;
+            bool emptyIsDesync = empty.x == desyncLocation.x && empty.y == desyncLocation.y;
+            return !selectedIsDesync && emptyIsDesync;
         }
         return false; //C: No desync active, so valid move
     }
