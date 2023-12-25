@@ -57,5 +57,7 @@ public class DesertSafe : MonoBehaviour
         melted = true;
 
         mirageSpriteRenderer.sprite = meltedMirageSprite;
+
+        VarManager.instance.SetBoolOn("desertSafeMelted");
     }
 }
