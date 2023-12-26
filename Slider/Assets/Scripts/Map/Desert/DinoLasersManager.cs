@@ -41,13 +41,13 @@ public class DinoLasersManager : MonoBehaviour
 
             SaveSystem.Current.SetBool("desertDinoLaserActivatedAlready", true);
 
-            SGridAnimator.OnSTileMoveEnd += OnMoveEnd;
-            DesertArtifact.MirageDisappeared += OnMirageDisappeared;
+            SGridAnimator.OnSTileMoveEndLateLate += OnMoveEnd;
+            //DesertArtifact.MirageDisappeared += OnMirageDisappeared;
         }
         else
         {
-            SGridAnimator.OnSTileMoveEnd += UpdateCanFirstTimeActivate;
-            DesertArtifact.MirageDisappeared += UpdateCanFirstTimeActivate;
+            SGridAnimator.OnSTileMoveEndLateLate += UpdateCanFirstTimeActivate;
+            //DesertArtifact.MirageDisappeared += UpdateCanFirstTimeActivate;
         }
     }
 
@@ -67,13 +67,13 @@ public class DinoLasersManager : MonoBehaviour
     {
         if (debugSkipFezziwigActivation)
         {
-            SGridAnimator.OnSTileMoveEnd -= OnMoveEnd;
-            DesertArtifact.MirageDisappeared -= OnMirageDisappeared;
+            SGridAnimator.OnSTileMoveEndLateLate -= OnMoveEnd;
+            //DesertArtifact.MirageDisappeared -= OnMirageDisappeared;
         }
         else
         {
-            SGridAnimator.OnSTileMoveEnd -= UpdateCanFirstTimeActivate;
-            DesertArtifact.MirageDisappeared -= UpdateCanFirstTimeActivate;
+            SGridAnimator.OnSTileMoveEndLateLate -= UpdateCanFirstTimeActivate;
+            //DesertArtifact.MirageDisappeared -= UpdateCanFirstTimeActivate;
         }
     }
 
@@ -108,17 +108,17 @@ public class DinoLasersManager : MonoBehaviour
             CheckDisableLasers();
         }
     }*/
-
+    /*
     private void OnMirageDisappeared(object sender, System.EventArgs e)
     {
         //Debug.Log("On Mirage Disaapear");
         CheckDisableLasers();
     }
-
+    */
     private void CheckEnableLasers()
     {
         string gridString = DesertGrid.GetGridString();
-        //Debug.Log("ENABLE LASERS Checking " + gridString);
+        Debug.Log("ENABLE LASERS Checking " + gridString);
 
         if (CheckGrid.contains(gridString, "74")) //normal tail | normal head
         {
@@ -234,11 +234,11 @@ public class DinoLasersManager : MonoBehaviour
 
         SaveSystem.Current.SetBool("desertDinoLaserActivatedAlready", true);
 
-        SGridAnimator.OnSTileMoveEnd -= UpdateCanFirstTimeActivate;
-        DesertArtifact.MirageDisappeared -= UpdateCanFirstTimeActivate;
+        SGridAnimator.OnSTileMoveEndLateLate -= UpdateCanFirstTimeActivate;
+        //DesertArtifact.MirageDisappeared -= UpdateCanFirstTimeActivate;
 
-        SGridAnimator.OnSTileMoveEnd += OnMoveEnd;
-        DesertArtifact.MirageDisappeared += OnMirageDisappeared;
+        SGridAnimator.OnSTileMoveEndLateLate += OnMoveEnd;
+        //DesertArtifact.MirageDisappeared += OnMirageDisappeared;
 
         CheckEnableLasers();
     }
@@ -255,8 +255,8 @@ public class DinoLasersManager : MonoBehaviour
             ActivateButt(false, dinoButt);
         }
 
-        SGridAnimator.OnSTileMoveEnd -= OnMoveEnd;
+        SGridAnimator.OnSTileMoveEndLateLate -= OnMoveEnd;
         //SGridAnimator.OnSTileMoveStart -= OnMoveStart;
-        DesertArtifact.MirageDisappeared -= OnMirageDisappeared;
+        //DesertArtifact.MirageDisappeared -= OnMirageDisappeared;
     }
 }
