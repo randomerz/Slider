@@ -10,6 +10,7 @@ public class GemManager : MonoBehaviour, ISavable
 
     public List<GameObject> sprites = new();
     public List<Transform> poofTransforms = new();
+    [Tooltip("Put in world progression order (Village->Caves)")]
     public List<Item> gemItems = new();
 
     private bool hasGemTransporter;
@@ -53,6 +54,7 @@ public class GemManager : MonoBehaviour, ISavable
 
         BuildSpriteDictionary();
         UpdateGemSprites();
+        UpdateGemItems();
 
         if(profile.GetBool("MagitechHasGemTransporter"))
             EnableGemTransporter();
@@ -72,7 +74,10 @@ public class GemManager : MonoBehaviour, ISavable
     public void HasDesertGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Desert, false));
     public void HasJungleGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Jungle, false));
     public void HasMagiTechGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.MagiTech, false));
-
+    public bool HasAreaGem(Area area)
+    {
+        return gems.GetValueOrDefault(area, false);
+    }
     public void BuildSpriteDictionary()
     {
         for(int i = 1; i <= sprites.Count; i++)
@@ -137,7 +142,20 @@ public class GemManager : MonoBehaviour, ISavable
             animator.Play("Active");
         }
     }
-
+    //Only affects gems enabled by default in MagiTech
+    private void UpdateGemItems()
+    {
+        if (gemItems.Count != 8)
+        {
+            Debug.LogWarning("gemItems not properly set in Inspector!");
+            return;
+        }
+        gemItems[1].gameObject.SetActive(!gems[Area.Caves]);
+        gemItems[2].gameObject.SetActive(!gems[Area.Ocean]);
+        gemItems[3].gameObject.SetActive(!gems[Area.Jungle]);
+        gemItems[6].gameObject.SetActive(!gems[Area.Military]);
+        gemItems[7].gameObject.SetActive(!gems[Area.MagiTech]);
+    }
     private bool HasAllGems()
     {
         foreach (bool b in gems.Values)
