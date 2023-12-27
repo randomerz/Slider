@@ -20,34 +20,48 @@ public class UITracker : MonoBehaviour
     private float defaultBlinkTime;
     private float blinkTime;
     private float timeToSwap;
+    private float defaultTimeUntilBlinkRepeat = -1;
+    private float timeUntilBlinkRepeat; // start countdown same time as blink starts
 
     private void Update() 
     {
         if (shouldBlink)
         {
-            if (blinkTime > 0 && timeToSwap < 0.5f)//blinkTime)
+            if (blinkTime > 0)
             {
-                if (timeToSwap < 0)
+                if (timeToSwap > 0.5f || 0 > timeToSwap)
                 {
                     image.sprite = DetermineCurrentSprite(false);
-                    image.SetNativeSize();
-                    timeToSwap = 1;//2 * blinkTime;
                 }
                 else
                 {
                     // set to blink sprite
                     image.sprite = DetermineCurrentSprite(true);
-                    image.SetNativeSize();
                 }
             }
             else
             {
+                if (timeUntilBlinkRepeat < 0 && defaultTimeUntilBlinkRepeat != -1)
+                {
+                    // repeat blink
+                    blinkTime = defaultBlinkTime;
+                    timeToSwap = 1;
+                    timeUntilBlinkRepeat = defaultTimeUntilBlinkRepeat;
+                }
                 image.sprite = DetermineCurrentSprite(false);
                 image.SetNativeSize();
             }
 
             timeToSwap -= Time.deltaTime;
             blinkTime -= Time.deltaTime;
+            timeUntilBlinkRepeat -= Time.deltaTime;
+
+            if (timeToSwap < 0)
+            {
+                timeToSwap = 1;
+            }
+
+            image.SetNativeSize();
         }
     }
 
@@ -70,6 +84,7 @@ public class UITracker : MonoBehaviour
         {
             blinkTime = defaultBlinkTime;
             timeToSwap = 1;
+            timeUntilBlinkRepeat = defaultTimeUntilBlinkRepeat;
         }
     }
 
@@ -96,7 +111,7 @@ public class UITracker : MonoBehaviour
         return false;
     }
 
-    public void StartBlinking(Sprite blinkSprite, float blinkTime)
+    public void StartBlinking(Sprite blinkSprite, float blinkTime, float timeUntilBlinkRepeat)
     {
         shouldBlink = true;
         defaultSprite = image.sprite;
@@ -104,6 +119,8 @@ public class UITracker : MonoBehaviour
         this.defaultBlinkTime = blinkTime;
         this.blinkTime = blinkTime;
         timeToSwap = 1;//2 * blinkTime;
+        this.defaultTimeUntilBlinkRepeat = timeUntilBlinkRepeat;
+        this.timeUntilBlinkRepeat = timeUntilBlinkRepeat;
     }
 
     public void SetOffMapSprites(Sprite defaultOffMapSprite, Sprite blinkOffMapSprite)

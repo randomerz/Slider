@@ -30,9 +30,6 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     [SerializeField] private List<Image> frames;
     [SerializeField] private List<Image> borders;
 
-    [SerializeField] private JungleButtonMiddleAnimator jungleButtonMiddleAnimator;
-
-
     public bool IsPushedDown
     {
         get
@@ -53,11 +50,6 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             isPushedDown = true;
             sliderImage.rectTransform.anchoredPosition = new Vector3(0, -1);
             highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, -1);
-            if (jungleButtonMiddleAnimator != null)
-            {
-                jungleButtonMiddleAnimator.Image.rectTransform.anchoredPosition = new Vector3(18.5f, -1);
-                jungleButtonMiddleAnimator.PushedDownFrame.gameObject.SetActive(true);
-            }
             pushedDownFrame.gameObject.SetActive(true);
             // if (!isLightning) highlightedFrame.gameObject.SetActive(false); //We don't disable the highlight if lightning
         }
@@ -66,11 +58,6 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             isPushedDown = false;
             sliderImage.rectTransform.anchoredPosition = new Vector3(0, 0);
             highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, 0);
-            if (jungleButtonMiddleAnimator != null)
-            {
-                jungleButtonMiddleAnimator.Image.rectTransform.anchoredPosition = new Vector3(18.5f, 0);
-                jungleButtonMiddleAnimator.PushedDownFrame.gameObject.SetActive(false);
-            }
             foreach (Image i in frames)
             {
                 i.gameObject.SetActive(false);

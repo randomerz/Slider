@@ -256,7 +256,7 @@ public class UIArtifact : Singleton<UIArtifact>
             if (b.MyStile == stile)
             {
                 b.UpdateTileActive();
-                b.SetShouldFlicker(shouldFlicker);
+                // b.SetShouldFlicker(shouldFlicker);
                 break;
             }
         }
@@ -843,7 +843,8 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         foreach (ArtifactTileButton b in buttons)
         {
-            if (b.gameObject.activeSelf && b.shouldFlicker)
+            bool wasTileExplored = SGrid.Current.gridTilesExplored != null && SGrid.Current.gridTilesExplored.IsTileExplored(b.islandId);
+            if (b.gameObject.activeSelf && !wasTileExplored && b.TileIsActive)
             {
                 b.Flicker(3);
             }

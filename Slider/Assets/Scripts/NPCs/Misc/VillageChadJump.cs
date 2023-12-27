@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class VillageChadJump : MonoBehaviour 
 {
-    private void OnEnable() {
+    private void OnEnable() 
+    {
         SGridAnimator.OnSTileMoveEnd += TipOnTileMove;
     }
 
-    private void OnDisable() {
+    private void OnDisable() 
+    {
         SGridAnimator.OnSTileMoveEnd -= TipOnTileMove;
     }
 

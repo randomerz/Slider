@@ -8,6 +8,7 @@ using UnityEngine.Serialization;
 public class ArtifactTileButton : MonoBehaviour
 {
     private const int UI_OFFSET = 37;
+    private const float SECONDS_BETWEEN_REPEAT_NEW_FLICKER = 8.5f;
 
     public ArtifactTileButtonAnimator buttonAnimator;
     public RectTransform imageRectTransform;
@@ -30,7 +31,7 @@ public class ArtifactTileButton : MonoBehaviour
     public int x;
     public int y;
 
-    public bool shouldFlicker = false;
+    // public bool shouldFlicker = false;
 
     protected Sprite islandSprite;
     protected Sprite emptySprite;
@@ -94,7 +95,7 @@ public class ArtifactTileButton : MonoBehaviour
     protected virtual void Start()
     {
         UpdateTileActive();
-        buttonIcons = GetComponentsInChildren<FlashWhiteImage>();
+        buttonIcons = GetComponentsInChildren<FlashWhiteImage>(includeInactive: true);
     }
 
     public void OnSelect()
@@ -273,20 +274,20 @@ public class ArtifactTileButton : MonoBehaviour
         SetSpriteToIslandOrEmpty();
     }
 
-    public void SetShouldFlicker(bool shouldFlicker)
-    {
-        this.shouldFlicker = shouldFlicker;
-    }
+    // public void SetShouldFlicker(bool shouldFlicker)
+    // {
+    //     this.shouldFlicker = shouldFlicker;
+    // }
 
-    public void Flicker(int numFlickers) 
+    public void Flicker(int numFlickers)
     {
-        shouldFlicker = false;
+        // shouldFlicker = false;
         StartCoroutine(NewButtonFlicker(numFlickers));
     }
 
     public void FlickerImmediate(int numFlickers)
     {
-        shouldFlicker = false;
+        // shouldFlicker = false;
         StartCoroutine(NewButtonFlicker(numFlickers, true));
     }
 
@@ -296,15 +297,21 @@ public class ArtifactTileButton : MonoBehaviour
         GetComponent<RectTransform>().anchoredPosition = pos;
     }
 
-    private IEnumerator NewButtonFlicker(int numFlickers, bool startOnBlank=false) {
+    private IEnumerator NewButtonFlicker(int numFlickers, bool startOnBlank=false) 
+    {
         if (!startOnBlank)
         {
             SetSpriteToIslandOrEmpty();
             yield return new WaitForSeconds(.25f);
         }
+
         foreach (FlashWhiteImage e in buttonIcons)
-            if(e.gameObject.activeSelf)
+        {
+            if (e.gameObject.activeSelf)
+            {
                 e.Flash(numFlickers);
+            }
+        }
 
         for (int i = 0; i < numFlickers; i++) 
         {
@@ -313,5 +320,25 @@ public class ArtifactTileButton : MonoBehaviour
             SetSpriteToIslandOrEmpty();
             yield return new WaitForSeconds(.25f);
         }
+
+        if (IsTileExplored())
+        {
+            yield break;
+        }
+        
+        yield return new WaitForSeconds(SECONDS_BETWEEN_REPEAT_NEW_FLICKER);
+        
+        // if it's still unexplored then repeat
+        if (IsTileExplored())
+        {
+            yield break;
+        }
+
+        StartCoroutine(NewButtonFlicker(numFlickers, startOnBlank));
+    }
+
+    private bool IsTileExplored()
+    {
+        return SGrid.Current.gridTilesExplored != null && SGrid.Current.gridTilesExplored.IsTileExplored(islandId);
     }
 }
