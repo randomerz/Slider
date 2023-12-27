@@ -19,12 +19,14 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     private bool isHighlighted;
     //Button has lightning highlight and pusheddown and has lightning effect around it
     [SerializeField] private bool isLightning;
+    //Button is highlighted by desert scroll
+    private bool isScrollHighlighted;
 
     private Coroutine positionAnimatorCoroutine;
     [SerializeField] private float positionAnimationDuration;
     [SerializeField] private AnimationCurve positionAnimationCurve;
 
-    [Header("Alt Styles")] // 0 - Normal, 1 - lightning
+    [Header("Alt Styles")] // 0 - Normal, 1 - lightning, 2 - scroll
     [SerializeField] private List<Image> frames;
     [SerializeField] private List<Image> borders;
 
@@ -74,6 +76,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
                 i.gameObject.SetActive(false);
             }
             SetHighlighted(isLightning); //Edge case where you set lightning while tile is moving. Needed for desert frag
+            SetHighlighted(isScrollHighlighted); //needed for desert frag?
         }
     }
 
@@ -107,7 +110,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             isHighlighted = true;
             highlightedFrame.gameObject.SetActive(true);
         }
-        else if (isHighlighted && !value && !isLightning) //If lightning is active, tile should never be unhighlighted
+        else if (isHighlighted && !value && !isLightning && !isScrollHighlighted) //If lightning is active, tile should never be unhighlighted
         {
             isHighlighted = false;
             foreach (Image i in borders)
@@ -148,6 +151,39 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             if (isPushedDown) pushedDownFrame.gameObject.SetActive(true);
         }
         isLightning = value;
+    }
+
+    public void SetScrollHighlight(bool value)
+    {
+        if (!isScrollHighlighted && value)
+        {
+            highlightedFrame.gameObject.SetActive(false);
+            pushedDownFrame.gameObject.SetActive(false);
+            Image scrollPushedDown = frames[2];
+            Image scrollHighlight = borders[2];
+            pushedDownFrame = scrollPushedDown;
+            highlightedFrame = scrollHighlight;
+            if (isForcedDown)
+            {
+                pushedDownFrame.gameObject.SetActive(true);
+            }
+            else
+            {
+                pushedDownFrame.gameObject.SetActive(false);
+                highlightedFrame.gameObject.SetActive(true);//When scroll is active, tile should always be highlighted
+            }
+        }
+        else if (isScrollHighlighted && !value)
+        {
+            highlightedFrame.gameObject.SetActive(false);
+            pushedDownFrame.gameObject.SetActive(false);
+            Image PushedDown = frames[0];
+            Image Highlighted = borders[0];
+            pushedDownFrame = PushedDown;
+            highlightedFrame = Highlighted;
+            if (isPushedDown) pushedDownFrame.gameObject.SetActive(true);
+        }
+        isScrollHighlighted = value;
     }
 
     public void AnimatePositionFrom(Vector2 position)

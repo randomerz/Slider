@@ -79,8 +79,8 @@ public class DesertTabManager : ArtifactTabManager
         {
             UpdateFragSwapTile();
             UIArtifact.SetLightningPos(1, 1);
-            middle.SetLightning(true);
-            fragSwapTile.SetLightning(true);
+            middle.SetScrollHighlight(true);
+            fragSwapTile.SetScrollHighlight(true);
         }
     }
 
@@ -94,10 +94,10 @@ public class DesertTabManager : ArtifactTabManager
         rearrangingFragTabAnimator.SetFloat("speed", 1);
         //Reset preview
         UIArtifact.DisableLightning(true);
-        middle.SetLightning(false);
+        middle.SetScrollHighlight(false);
         if (fragSwapTile != null)
         {
-            fragSwapTile.SetLightning(false);
+            fragSwapTile.SetScrollHighlight(false);
         }
     }
 
@@ -130,9 +130,9 @@ public class DesertTabManager : ArtifactTabManager
             foreach(ArtifactTileButton emptyTile in emptyTiles)
             {
                 fragSwapTile = emptyTile;
-                fragSwapTile.SetLightning(true);
+                fragSwapTile.SetScrollHighlight(true);
                 yield return new WaitForSeconds(1);
-                fragSwapTile.SetLightning(false);
+                fragSwapTile.SetScrollHighlight(false);
             }
         }
     }
