@@ -188,6 +188,8 @@ public class JungleDialogueCutscenes : MonoBehaviour
 
         Log("> Welcome");
         joe.TypeCurrentDialogue();
+
+        currentCoroutine = null;
     }
 
     public void Log(string message)

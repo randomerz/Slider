@@ -29,8 +29,9 @@ public class UITrackerManager : MonoBehaviour
         public Sprite offMapSprite;
         public Sprite offMapBlinkSprite;
         public float blinkTime;
+        public float timeUntilBlinkRepeat;
 
-        public UITrackerData(GameObject target, Sprite sprite, Sprite blinkSprite, Sprite offMapSprite, Sprite offMapBlinkSprite, float blinkTime) : this()
+        public UITrackerData(GameObject target, Sprite sprite, Sprite blinkSprite, Sprite offMapSprite, Sprite offMapBlinkSprite, float blinkTime, float timeUntilBlinkRepeat) : this()
         {
             this.target = target;
             this.sprite = sprite;
@@ -38,6 +39,7 @@ public class UITrackerManager : MonoBehaviour
             this.offMapSprite = offMapSprite;
             this.offMapBlinkSprite = offMapBlinkSprite;
             this.blinkTime = blinkTime;
+            this.timeUntilBlinkRepeat = timeUntilBlinkRepeat;
         }
     }
 
@@ -49,8 +51,9 @@ public class UITrackerManager : MonoBehaviour
         public DefaultSprites offMapSprite;
         public DefaultSprites offMapBlinkSprite;
         public float blinkTime;
+        public float timeUntilBlinkRepeat;
 
-        public UITrackerEnumData(GameObject target, DefaultSprites sprite, DefaultSprites blinkSprite, DefaultSprites offMapSprite, DefaultSprites offMapBlinkSprite, float blinkTime) : this()
+        public UITrackerEnumData(GameObject target, DefaultSprites sprite, DefaultSprites blinkSprite, DefaultSprites offMapSprite, DefaultSprites offMapBlinkSprite, float blinkTime, float timeUntilBlinkRepeat) : this()
         {
             this.target = target;
             this.sprite = sprite;
@@ -58,17 +61,12 @@ public class UITrackerManager : MonoBehaviour
             this.offMapSprite = offMapSprite;
             this.offMapBlinkSprite = offMapBlinkSprite;
             this.blinkTime = blinkTime;
+            this.timeUntilBlinkRepeat = timeUntilBlinkRepeat;
         }
     }
 
     private static List<UITrackerData> uiTrackerBuffer = new List<UITrackerData>();
     private static List<UITrackerEnumData> uiTrackerEnumBuffer = new List<UITrackerEnumData>();
-    // private static List<GameObject> objectBuffer = new List<GameObject>();
-    // private static List<Sprite> spriteBuffer = new List<Sprite>();
-    // private static List<Sprite> blinkSpriteBuffer = new List<Sprite>();
-    // private static List<DefaultSprites> enumBuffer = new List<DefaultSprites>();
-    // private static List<DefaultSprites> blinkEnumBuffer = new List<DefaultSprites>();
-    // private static List<float> blinkTimeBuffer = new List<float>();
 
     private static List<GameObject> removeBuffer = new List<GameObject>();
 
@@ -125,12 +123,6 @@ public class UITrackerManager : MonoBehaviour
                 x--;
             }
         }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
     }
 
     // Update is called once per frame
@@ -206,7 +198,7 @@ public class UITrackerManager : MonoBehaviour
         if (uiTrackerBuffer.Count > 0) {
             for (int i = 0; i < uiTrackerBuffer.Count; i++) {
                 UITrackerData uid = uiTrackerBuffer[i];
-                AddNewTracker(uid.target, uid.sprite, uid.blinkSprite, uid.offMapSprite, uid.offMapBlinkSprite, uid.blinkTime);
+                AddNewTracker(uid.target, uid.sprite, uid.blinkSprite, uid.offMapSprite, uid.offMapBlinkSprite, uid.blinkTime, uid.timeUntilBlinkRepeat);
             }
             uiTrackerBuffer.Clear();
         }
@@ -214,7 +206,7 @@ public class UITrackerManager : MonoBehaviour
         if (uiTrackerEnumBuffer.Count > 0) {
             for (int i = 0; i < uiTrackerEnumBuffer.Count; i++) {
                 UITrackerEnumData uid = uiTrackerEnumBuffer[i];
-                AddNewTracker(uid.target, uid.sprite, uid.blinkSprite, uid.offMapSprite, uid.offMapBlinkSprite, uid.blinkTime);
+                AddNewTracker(uid.target, uid.sprite, uid.blinkSprite, uid.offMapSprite, uid.offMapBlinkSprite, uid.blinkTime, uid.timeUntilBlinkRepeat);
             }
             uiTrackerEnumBuffer.Clear();
         }
@@ -234,7 +226,8 @@ public class UITrackerManager : MonoBehaviour
         DefaultSprites blinkSprite=DefaultSprites.circleEmpty, 
         DefaultSprites offMapSprite=DefaultSprites.none, 
         DefaultSprites offMapBlinkSprite=DefaultSprites.none, 
-        float blinkTime=-1
+        float blinkTime=-1,
+        float timeUntilBlinkRepeat=-1
     ) {
         if (target == null)
         {
@@ -242,11 +235,11 @@ public class UITrackerManager : MonoBehaviour
             return;
         }
         if (_instance == null) {
-            uiTrackerEnumBuffer.Add(new UITrackerEnumData(target, sprite, blinkSprite, offMapSprite, offMapBlinkSprite, blinkTime));
+            uiTrackerEnumBuffer.Add(new UITrackerEnumData(target, sprite, blinkSprite, offMapSprite, offMapBlinkSprite, blinkTime, timeUntilBlinkRepeat));
             return;
         }
 
-        AddNewTracker(target, EnumToSprite(sprite), EnumToSprite(blinkSprite), EnumToSprite(offMapSprite), EnumToSprite(offMapBlinkSprite), blinkTime);
+        AddNewTracker(target, EnumToSprite(sprite), EnumToSprite(blinkSprite), EnumToSprite(offMapSprite), EnumToSprite(offMapBlinkSprite), blinkTime, timeUntilBlinkRepeat);
     }
     
     public static void AddNewTracker(
@@ -255,7 +248,8 @@ public class UITrackerManager : MonoBehaviour
         Sprite blinkSprite=null, 
         Sprite offMapSprite=null, 
         Sprite offMapBlinkSprite=null, 
-        float blinkTime=-1
+        float blinkTime=-1,
+        float timeUntilBlinkRepeat=-1
     ) {
         if (target == null)
         {
@@ -263,7 +257,7 @@ public class UITrackerManager : MonoBehaviour
             return;
         }
         if (_instance == null) {
-            uiTrackerBuffer.Add(new UITrackerData(target, sprite, blinkSprite, offMapSprite, offMapBlinkSprite, blinkTime));
+            uiTrackerBuffer.Add(new UITrackerData(target, sprite, blinkSprite, offMapSprite, offMapBlinkSprite, blinkTime, timeUntilBlinkRepeat));
             return;
         }
 
@@ -274,7 +268,7 @@ public class UITrackerManager : MonoBehaviour
 
         if (blinkTime != -1)
         {
-            uiTracker.StartBlinking(blinkSprite, blinkTime);
+            uiTracker.StartBlinking(blinkSprite, blinkTime, timeUntilBlinkRepeat);
         }
 
         if (offMapSprite != null)
@@ -335,16 +329,6 @@ public class UITrackerManager : MonoBehaviour
         Debug.LogWarning("Couldn't find pin!");
         return null;
     }
-
-    // private static void AddToBuffer(GameObject target, Sprite sprite, Sprite blinkSprite, DefaultSprites ds, DefaultSprites bs, float blinkTime)
-    // {
-    //     objectBuffer.Add(target);
-    //     spriteBuffer.Add(sprite);
-    //     blinkSpriteBuffer.Add(blinkSprite);
-    //     enumBuffer.Add(ds);
-    //     blinkEnumBuffer.Add(bs);
-    //     blinkTimeBuffer.Add(blinkTime);
-    // }
 
     public static void RemoveTracker(GameObject toRemove) {
         if (_instance == null){

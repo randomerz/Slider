@@ -471,14 +471,30 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         if (value)
         {
-            UITrackerManager.AddNewTracker(
-                gameObject,
-                UITrackerManager.DefaultSprites.playerFullBlackCircle,
-                UITrackerManager.DefaultSprites.playerFullBlackCircleEmpty,
-                UITrackerManager.DefaultSprites.playerFullWhiteCircle,
-                UITrackerManager.DefaultSprites.playerFullWhiteCircleEmpty,
-                3f
-            );
+            if (SettingsManager.MiniPlayerIcon)
+            {
+                UITrackerManager.AddNewTracker(
+                    gameObject,
+                    UITrackerManager.DefaultSprites.playerBlackCircle,
+                    UITrackerManager.DefaultSprites.playerBlackCircleEmpty,
+                    UITrackerManager.DefaultSprites.playerWhiteCircle,
+                    UITrackerManager.DefaultSprites.playerWhiteCircleEmpty,
+                    blinkTime: 3f,
+                    timeUntilBlinkRepeat: 10f
+                );
+            }
+            else
+            {
+                UITrackerManager.AddNewTracker(
+                    gameObject,
+                    UITrackerManager.DefaultSprites.playerFullBlackCircle,
+                    UITrackerManager.DefaultSprites.playerFullBlackCircleEmpty,
+                    UITrackerManager.DefaultSprites.playerFullWhiteCircle,
+                    UITrackerManager.DefaultSprites.playerFullWhiteCircleEmpty,
+                    blinkTime: 3f,
+                    timeUntilBlinkRepeat: 10f
+                );
+            }
         }
         else
         {
