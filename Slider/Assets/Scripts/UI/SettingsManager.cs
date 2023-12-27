@@ -79,6 +79,15 @@ public class SettingsManager : Singleton<SettingsManager>
             WriteCurrentSettingsToPlayerPrefs();
         }
     }
+    public static bool MiniPlayerIcon
+    {
+        get => _instance.currentSettings.miniPlayerIcon;
+        set
+        {
+            _instance.currentSettings.miniPlayerIcon = value;
+            WriteCurrentSettingsToPlayerPrefs();
+        }
+    }
     public static bool AutoMove
     {
         get => _instance.currentSettings.autoMove || (!GameUI.instance.isMenuScene && SaveSystem.Current.GetBool("forceAutoMove"));
@@ -149,6 +158,7 @@ struct Settings
     public bool bigTextEnabled;
     public bool highContrastTextEnabled;
     public bool hideCursor;
+    public bool miniPlayerIcon;
     public bool autoMove;
     public bool forceAutoMove;
     public bool colorblindMode;
@@ -159,10 +169,19 @@ struct Settings
     /// <returns></returns>
     public static Settings GetDefaultSettings()
     {
-        return new Settings(0.5f, 0.5f, 0.5f, false, false, true, false);
+        return new Settings(
+            sfxVolume: 0.5f, 
+            musicVolume: 0.5f, 
+            screenShake: 0.5f, 
+            bigTextEnabled: false, 
+            highContrastTextEnabled: false, 
+            hideCursor: true, 
+            miniPlayerIcon: false,
+            autoMove: false
+        );
     }
 
-    public Settings(float sfxVolume, float musicVolume, float screenShake, bool bigTextEnabled, bool highContrastTextEnabled, bool hideCursor, bool autoMove)
+    public Settings(float sfxVolume, float musicVolume, float screenShake, bool bigTextEnabled, bool highContrastTextEnabled, bool hideCursor, bool miniPlayerIcon, bool autoMove)
     {
         this.sfxVolume = sfxVolume;
         this.musicVolume = musicVolume;
@@ -170,6 +189,7 @@ struct Settings
         this.bigTextEnabled = bigTextEnabled;
         this.highContrastTextEnabled = highContrastTextEnabled;
         this.hideCursor = hideCursor;
+        this.miniPlayerIcon = miniPlayerIcon;
         this.autoMove = autoMove;
         this.forceAutoMove = autoMove;
         this.colorblindMode = true;

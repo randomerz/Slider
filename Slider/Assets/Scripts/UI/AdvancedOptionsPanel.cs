@@ -10,6 +10,7 @@ public class AdvancedOptionsPanel : MonoBehaviour
     [SerializeField] private Toggle bigTextToggle;
     [SerializeField] private Toggle highContrastTextToggle;
     [SerializeField] private Toggle hideCursorToggle;
+    [SerializeField] private Toggle miniPlayerIconToggle;
     [SerializeField] private Toggle autoMoveToggle;
     [SerializeField] private Toggle colorblindToggle;
 
@@ -19,6 +20,7 @@ public class AdvancedOptionsPanel : MonoBehaviour
         bigTextToggle.onValueChanged.AddListener((bool value) => { UpdateBigText(); });
         highContrastTextToggle.onValueChanged.AddListener((bool value) => { UpdateHighContrastText(); });
         hideCursorToggle.onValueChanged.AddListener((bool value) => { UpdateHideCursor(); });
+        miniPlayerIconToggle.onValueChanged.AddListener((bool value) => { UpdateMiniPlayerIcon(); });
         autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
         colorblindToggle.onValueChanged.AddListener((bool value) => { UpdateColorblind(); });
     }
@@ -29,6 +31,7 @@ public class AdvancedOptionsPanel : MonoBehaviour
         bigTextToggle.isOn = SettingsManager.BigTextEnabled;
         highContrastTextToggle.isOn = SettingsManager.HighContrastTextEnabled;
         hideCursorToggle.isOn = SettingsManager.HideCursor;
+        miniPlayerIconToggle.isOn = SettingsManager.MiniPlayerIcon;
         autoMoveToggle.isOn = SettingsManager.AutoMove;
         colorblindToggle.isOn = SettingsManager.Colorblind;
     }
@@ -55,6 +58,11 @@ public class AdvancedOptionsPanel : MonoBehaviour
     public void UpdateHideCursor()
     {
         SettingsManager.HideCursor = hideCursorToggle.isOn;
+    }
+
+    public void UpdateMiniPlayerIcon()
+    {
+        SettingsManager.MiniPlayerIcon = miniPlayerIconToggle.isOn;
     }
 
     public void UpdateAutoMove()

@@ -48,8 +48,8 @@ public class SGrid : Singleton<SGrid>, ISavable
     [SerializeField] protected Collectible[] collectibles;
     [SerializeField] protected SGridAnimator gridAnimator;
     [SerializeField] protected STileTilemap worldGridTilemaps;
-    [SerializeField] protected SGridTilesExplored gridTilesExplored;
     [SerializeField] protected AudioModifierOverrides audioModifierOverrides;
+    public SGridTilesExplored gridTilesExplored;
 
     //L: This is the end goal for the slider puzzle.
     //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)

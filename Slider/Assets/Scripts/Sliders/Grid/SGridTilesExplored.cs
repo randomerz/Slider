@@ -44,17 +44,27 @@ public class SGridTilesExplored : MonoBehaviour
         }
     }
 
+    public bool IsTileExplored(int stileId)
+    {
+        return IsTileExplored(myArea, stileId);
+    }
+
     public bool IsTileExplored(Area area, int stileId)
     {
         return SaveSystem.Current.GetBool(BuildSaveString(area, stileId));
     }
 
-    public void SetTileExplored(Area area, int stileId)
+    public void SetTileExplored(int stileId)
+    {
+        SetTileExplored(myArea, stileId);
+    }
+
+    public virtual void SetTileExplored(Area area, int stileId)
     {
         SaveSystem.Current.SetBool(BuildSaveString(area, stileId), true);
     }
 
-    private string BuildSaveString(Area area, int stileId)
+    protected string BuildSaveString(Area area, int stileId)
     {
         return $"{TILE_EXPLORED_PREFIX}_{area.ToString()}_{stileId.ToString("D2")}";
     }
