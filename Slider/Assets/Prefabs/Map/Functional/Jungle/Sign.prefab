@@ -304,6 +304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shapes: []
+  currentShapeIndex: 0
   currentShape: {fileID: 0}
   left: {fileID: 0}
   right: {fileID: 0}
@@ -445,6 +446,8 @@ MonoBehaviour:
   itemNameCheck: 
   excludeBoat: 0
   excludeLand: 0
+  onActionEnabled: 1
+  myCollider: {fileID: 0}
 --- !u!1 &4852848545585317209
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,3 +554,9 @@ MonoBehaviour:
   bumpAnimationSprites:
   - {fileID: 745285067, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
   - {fileID: -1616351788, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
+  signShapeSprites:
+  - {fileID: 161961073, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
+  - {fileID: 346288199, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
+  - {fileID: 1296073732, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
+  sign: {fileID: 4852848544237912660}
+  hut: {fileID: 0}
