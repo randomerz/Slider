@@ -5,6 +5,7 @@ public class UIPowerTracker : FlashWhiteImage
 {
     [SerializeField] private Image poweredImage;
     [SerializeField] private ElectricalNode myNode;
+    [SerializeField] private bool enabledInFactoryPast;
 
     private ArtifactTileButton button;
 
@@ -29,7 +30,7 @@ public class UIPowerTracker : FlashWhiteImage
         bool nodeOnDisabledButton = button != null && !button.TileIsActive;
         if (SGrid.Current is FactoryGrid)
         {
-            poweredImage.enabled = myNode.Powered && !nodeOnDisabledButton && !FactoryGrid.PlayerInPast;
+            poweredImage.enabled = myNode.Powered && !nodeOnDisabledButton && (enabledInFactoryPast == FactoryGrid.PlayerInPast);
         }
         else
         {

@@ -101,14 +101,19 @@ public class PastLargeCrystal : ElectricalNode
             SGrid.Current.GetCollectible("Slider 7").DoOnCollect();
         if (!PlayerInventory.Contains("Slider 8", Area.Factory)) 
             SGrid.Current.GetCollectible("Slider 8").DoOnCollect();
+        
+        SGrid.Current.ActivateSliderCollectible(9);
 
         foreach (GameObject go in particles)
         {
             go.SetActive(false);
         }
 
-        if(!SaveSystem.Current.GetBool("ChadSrPuzzleComplete")) //if the bool is true that means we did kill him, so we want to give achievement if it is false
+        // if the bool is true that means we did kill him, so we want to give achievement if it is false
+        if (!SaveSystem.Current.GetBool("ChadSrPuzzleComplete"))
+        {
             AchievementManager.SetAchievementStat("sparedChadSr", 1);
+        }
 
         StopAllCoroutines();
     }
