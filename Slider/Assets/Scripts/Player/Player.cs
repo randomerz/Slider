@@ -24,16 +24,20 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     // [SerializeField] private Sprite trackerSprite;
     [SerializeField] private PlayerAction playerAction;
     [SerializeField] private PlayerInventory playerInventory;
+    [SerializeField] private PlayerInput playerInput;
+    
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
+    [SerializeField] private Animator playerAnimator;
+
     [SerializeField] private Collider2D colliderPlayerVers;
     [SerializeField] private Collider2D colliderBoatVers;
     [SerializeField] private GameObject boatGameObject;
     [SerializeField] private Transform boatGetSTileUnderneathTransform;
-    [SerializeField] private Animator playerAnimator;
+    [SerializeField] private Transform feetTransform;
+
     [SerializeField] private Animator reflectionAnimator;
     [SerializeField] private SpriteRenderer reflectionSpriteRenderer;
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private PlayerInput playerInput;
+    // [SerializeField] private Rigidbody2D rb;
     [SerializeField] private List<Material> ppMaterials;
     [SerializeField] private GameObject lightningEffect;
 
@@ -198,11 +202,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         //Debug.Log("Control Scheme changed to: " + newControlScheme);
         OnControlSchemeChanged?.Invoke(newControlScheme);
         Controls.CurrentControlScheme = newControlScheme;
-    }
-
-    public void ToggleLightning(bool val)
-    {
-        lightningEffect.SetActive(val);
     }
 
     // Here is where we pay for all our Singleton Sins
@@ -435,6 +434,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         }
     }
 
+    public Transform GetPlayerFeetTransform()
+    {
+        return feetTransform;
+    }
+
     public STile GetSTileUnderneath()
     {
         Transform transformToUse = isOnWater ? boatGetSTileUnderneathTransform : transform;
@@ -544,6 +548,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         boatGameObject.SetActive(isOnWater);
 
         UpdatePlayerSpeed();
+    }
+
+    public void ToggleLightning(bool val)
+    {
+        lightningEffect.SetActive(val);
     }
 
     Tilemap ISTileLocatable.GetCurrentMaterialTilemap()

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &344383347597719050
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3289890148026213770}
+  m_Layer: 9
+  m_Name: ReflectionPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3289890148026213770
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344383347597719050}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8757073712804037555}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4607457495645169290
 GameObject:
   m_ObjectHideFlags: 0
@@ -55,6 +86,7 @@ MonoBehaviour:
   myCollider: {fileID: 4607457495645169289}
   canKeep: 0
   shouldDisableAtStart: 0
+  doReflectionCalculations: 0
   itemRadius: 0.5
   pickUpDuration: 0.5
   xPickUpMotion:
@@ -123,6 +155,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  isOnlyUsedByPlayer: 1
+  reflectionPivot: {fileID: 3289890148026213770}
   enableOnDrop: []
   OnPickUp:
     m_PersistentCalls:
@@ -203,7 +237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1377165000954439523}
   m_Layer: 9
-  m_Name: Reflection
+  m_Name: Reflection Old
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -254,7 +288,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3289890148026213770}
   m_Father: {fileID: 4607457495645169288}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8919005992056777909
@@ -325,7 +360,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3134409940144489800
 Transform:
   m_ObjectHideFlags: 0

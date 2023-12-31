@@ -432,6 +432,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5563323968977859811}
+  - {fileID: 2698063896132148759}
   - {fileID: 2327666521070968836}
   - {fileID: 862667735}
   m_Father: {fileID: 380634037254267601}
@@ -588,16 +589,16 @@ MonoBehaviour:
   isOnWater: 0
   playerAction: {fileID: 3635922835001186329}
   playerInventory: {fileID: 3255215873672854460}
+  playerInput: {fileID: 5205933783250344951}
   playerSpriteRenderer: {fileID: 380634036804812840}
+  playerAnimator: {fileID: 380634036804812841}
   colliderPlayerVers: {fileID: 380634037254267612}
   colliderBoatVers: {fileID: 3512278234758974931}
   boatGameObject: {fileID: 8233378363419931551}
   boatGetSTileUnderneathTransform: {fileID: 4231884321243647961}
-  playerAnimator: {fileID: 380634036804812841}
+  feetTransform: {fileID: 2698063896132148759}
   reflectionAnimator: {fileID: 239047775219109754}
   reflectionSpriteRenderer: {fileID: 898321707553667257}
-  rb: {fileID: 380634037254267615}
-  playerInput: {fileID: 5205933783250344951}
   ppMaterials:
   - {fileID: 2100000, guid: 85eaa3c69664c4047a1ca5f137ae44f0, type: 2}
   lightningEffect: {fileID: 613895373068361188}
@@ -909,7 +910,7 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.019791668
+    x: 0.022395834
     y: 0.35462964
     width: 0.16666667
     height: 0.16666666
@@ -1984,6 +1985,37 @@ MonoBehaviour:
   m_CropFrameX: 1
   m_CropFrameY: 1
   m_StretchFill: 0
+--- !u!1 &8216675715813354621
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2698063896132148759}
+  m_Layer: 8
+  m_Name: Feet Location
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2698063896132148759
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8216675715813354621}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.4375, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 380634036804812843}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8233378363419931551
 GameObject:
   m_ObjectHideFlags: 0
