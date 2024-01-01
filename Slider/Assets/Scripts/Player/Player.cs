@@ -34,9 +34,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     [SerializeField] private GameObject boatGameObject;
     [SerializeField] private Transform boatGetSTileUnderneathTransform;
     [SerializeField] private Transform feetTransform;
-
-    [SerializeField] private Animator reflectionAnimator;
-    [SerializeField] private SpriteRenderer reflectionSpriteRenderer;
+    
     // [SerializeField] private Rigidbody2D rb;
     [SerializeField] private List<Material> ppMaterials;
     [SerializeField] private GameObject lightningEffect;
@@ -99,23 +97,14 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             if (inputDir.x < 0)
             {
                 playerSpriteRenderer.flipX = true;
-                if (reflectionSpriteRenderer != null)
-                    reflectionSpriteRenderer.flipX = true;
             }
             else if (inputDir.x > 0)
             {
                 playerSpriteRenderer.flipX = false;
-                if (reflectionSpriteRenderer != null)
-                    reflectionSpriteRenderer.flipX = false;
             }
 
             playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
             playerAnimator.SetBool("isOnWater", isOnWater);
-            if (reflectionAnimator != null && reflectionAnimator.isActiveAndEnabled)
-            {
-                reflectionAnimator.SetBool("isRunning", inputDir.magnitude != 0);
-                reflectionAnimator.SetBool("isOnWater", isOnWater);
-            }
         }
 
     }
@@ -367,7 +356,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         if (!canAnimateMovement)
         {
             _instance.playerAnimator.SetBool("isRunning", false);
-            _instance.reflectionAnimator?.SetBool("isRunning", false);
         }
     }
 

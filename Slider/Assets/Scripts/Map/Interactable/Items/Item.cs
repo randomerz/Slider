@@ -7,8 +7,6 @@ public class Item : MonoBehaviour, ISavable
 {
     public string itemName;
     public SpriteRenderer spriteRenderer;
-    public SpriteRenderer reflectedspriteRenderer;
-    public GameObject reflectionParent;
     [SerializeField] protected Collider2D myCollider;
     public bool canKeep = false;
     [SerializeField] private bool shouldDisableAtStart = false;
@@ -51,8 +49,6 @@ public class Item : MonoBehaviour, ISavable
         }
         reflectionOffset = reflectionPivot.transform.position - transform.position;
         order = spriteRenderer.sortingOrder;
-        if(reflectedspriteRenderer != null)
-            reflectedspriteRenderer.sprite = spriteRenderer.sprite;
     }
 
     private void Start()
@@ -135,9 +131,9 @@ public class Item : MonoBehaviour, ISavable
         }
     }
 
-    public virtual void PickUpItem(Transform pickLocation, Transform reflectionPickLocation, System.Action callback=null) // pickLocation may be moving
+    public virtual void PickUpItem(Transform pickLocation, System.Action callback=null) // pickLocation may be moving
     {
-        StartCoroutine(AnimatePickUp(pickLocation, reflectionPickLocation, callback));
+        StartCoroutine(AnimatePickUp(pickLocation, callback));
     }
 
     public virtual STile DropItem(Vector3 dropLocation, System.Action callback=null) 
@@ -186,7 +182,7 @@ public class Item : MonoBehaviour, ISavable
         spriteRenderer.gameObject.layer = layer;
     }
 
-    protected IEnumerator AnimatePickUp(Transform target, Transform reflectionTarget, System.Action callback=null)
+    protected IEnumerator AnimatePickUp(Transform target, System.Action callback=null)
     {
         foreach (GameObject go in enableOnDrop)
         {
@@ -229,13 +225,6 @@ public class Item : MonoBehaviour, ISavable
                 reflectionPivot.position = reflectionPos;
             }
 
-            if(reflectedspriteRenderer != null)
-            {
-                Vector3 rPos = new Vector3(Mathf.Lerp(start.x, reflectionTarget.transform.position.x, x),
-                                      Mathf.Lerp(start.y, reflectionTarget.transform.position.y, y));
-                reflectedspriteRenderer.transform.position =  rPos - spriteOffset;
-            }
-
             yield return null;
             t += Time.deltaTime;
         }
@@ -251,16 +240,14 @@ public class Item : MonoBehaviour, ISavable
             Destroy(reflEnd.gameObject);
         }
 
-        AnimatePickUpEnd(target.position, reflectionTarget.position);
+        AnimatePickUpEnd(target.position);
         callback();
     }
 
-    public void AnimatePickUpEnd(Vector3 targetPosition, Vector3 reflectionTargetPosition)
+    public void AnimatePickUpEnd(Vector3 targetPosition)
     {
         transform.position = targetPosition;
         spriteRenderer.transform.position = targetPosition + spriteOffset;
-        if(reflectedspriteRenderer != null)
-            reflectedspriteRenderer.transform.position =  reflectionTargetPosition - spriteOffset;
         myCollider.enabled = false;
         OnPickUp?.Invoke();
     }
@@ -276,14 +263,6 @@ public class Item : MonoBehaviour, ISavable
         GameObject end = new GameObject("ItemDropEnd");
         end.transform.position = target;
 
-        GameObject reflectionStart = new GameObject("ItemReflectionDropStart");
-        if(reflectionParent != null)
-        {
-            reflectionStart.transform.position = PlayerAction.Instance.GetPickedItemReflectionLocationTransform().position + Vector3.up;
-            reflectionParent.transform.parent = transform;
-            reflectionParent.transform.localPosition = Vector3.down;
-        }
-
         Transform reflStart = null;
         Transform reflEnd = null;
         if (doReflectionCalculations)
@@ -298,7 +277,6 @@ public class Item : MonoBehaviour, ISavable
 
         STile hitStile = SGrid.GetSTileUnderneath(end);
         start.transform.parent = hitStile == null ? null : hitStile.transform;
-        reflectionStart.transform.parent = hitStile == null ? null : hitStile.transform;
         end.transform.parent = hitStile == null ? null : hitStile.transform;
         reflectionPivot.SetParent(transform);
 
@@ -320,24 +298,15 @@ public class Item : MonoBehaviour, ISavable
                 reflectionPivot.position = reflectionPos;
             }
             
-            if(reflectedspriteRenderer != null)
-            {
-                Vector3 rPos = new Vector3(Mathf.Lerp(end.transform.position.x, reflectionStart.transform.position.x, x),
-                                      Mathf.Lerp(end.transform.position.y, reflectionStart.transform.position.y, y));
-                reflectedspriteRenderer.transform.position =  rPos + spriteOffset;
-            }
             yield return null;
             t -= Time.deltaTime;
         }
 
         spriteRenderer.transform.position = end.transform.position + spriteOffset;
-        if(reflectedspriteRenderer != null)
-            reflectedspriteRenderer.transform.position = end.transform.position + spriteOffset;
         OnDrop?.Invoke();
         callback();
         Destroy(start);
         Destroy(end);
-        Destroy(reflectionStart);
         if (doReflectionCalculations)
         {
             Destroy(reflStart.gameObject);
