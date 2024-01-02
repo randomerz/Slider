@@ -25,13 +25,14 @@ public class MoveObjectsOffIce : MonoBehaviour
 
     private void Start() 
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        player = Player.GetInstance().transform;
         colliders = GetComponent<Tilemap>();
         stile = GetComponentInParent<STile>();
     }
 
     public void CheckPlayerOnIce()
     {
+        if(player == null) return;
         TileBase tile = colliders.GetTile(colliders.WorldToCell(player.position));
         if(tile != null && colliders.ContainsTile(tile))
         {
