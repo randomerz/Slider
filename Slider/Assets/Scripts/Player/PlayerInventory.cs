@@ -183,8 +183,12 @@ public class PlayerInventory : MonoBehaviour
 
     public static Item RemoveItem()
     {
+
         if (currentItem != null)
+        {
             equipables.Remove(currentItem);
+            currentItem.SetLayer(LayerMask.NameToLayer("Item"));
+        }
         Item temp = currentItem;
         currentItem = null;
         itemIterator = equipables.GetEnumerator();
@@ -194,8 +198,11 @@ public class PlayerInventory : MonoBehaviour
     public static void RemoveAndDestroyItem()
     {
         if (currentItem != null)
+        {
             equipables.Remove(currentItem);
-        Destroy(currentItem.gameObject);
+            currentItem.SetLayer(LayerMask.NameToLayer("Item"));
+            Destroy(currentItem.gameObject);
+        }
         currentItem = null;
         itemIterator = equipables.GetEnumerator();
     }
@@ -224,10 +231,9 @@ public class PlayerInventory : MonoBehaviour
 
     public static bool Contains(string collectibleName, Area area=Area.None) {
         foreach (Collectible.CollectibleData cd in collectibles) {
-            if ((cd.name == collectibleName) && 
-                (area == Area.None || area == cd.area))
+            if (cd.name == collectibleName 
+                && (area == Area.None || area == cd.area))
             {
-                // Debug.Log("Found a match for " + area + " " + collectibleName);
                 return true;
             }
         }

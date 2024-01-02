@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,8 +13,10 @@ public class TavernPassButton : MonoBehaviour
     public Sprite defaultSprite;
     public Sprite completedSprite;
     public Sprite selectedSprite;
-
+    
+    public GameObject RTImage;
     public new ParticleSystem particleSystem;
+    private float EFFECT_DURATION = 5f;
 
     public void Deselect()
     {
@@ -35,7 +38,15 @@ public class TavernPassButton : MonoBehaviour
 
     public void PlayEffect()
     {
+        StartCoroutine(EffectCoroutine());
+    }
+
+    private IEnumerator EffectCoroutine()
+    {
+        RTImage.SetActive(true);
         particleSystem.Play();
         AudioManager.Play("Hat Click");
+        yield return new WaitForSeconds(EFFECT_DURATION);
+        RTImage.SetActive(false);
     }
 }
