@@ -21,9 +21,9 @@ public class LargeRockItem : Item
         }
     }
 
-    public override void PickUpItem(Transform pickLocation, Transform reflectionLocation, System.Action callback = null) // pickLocation may be moving
+    public override void PickUpItem(Transform pickLocation, System.Action callback = null) // pickLocation may be moving
     {
-        base.PickUpItem(pickLocation, reflectionLocation, callback);
+        base.PickUpItem(pickLocation, callback);
         
         Player.SetMoveSpeedMultiplier(0.75f);
     }

@@ -116,7 +116,8 @@ public class TavernPassManager : MonoBehaviour, ISavable
                 GiveRewards(0);
                 IncrementButton();
                 ShopManager.CanClosePanel = true;
-            });
+            },
+            () => tavernPassButtons[0].PlayEffect());
 
             return;
         }
@@ -187,13 +188,18 @@ public class TavernPassManager : MonoBehaviour, ISavable
                     ShopManager.CanClosePanel = true;
 
                     GiveRewards(tier);
-                });
+                },
+                () => tavernPassButtons[tier].PlayEffect());
                 yield break;
             }
 
             canvasZoomer.DoZoomReleaseBig(2);
-            yield return rewardEffect.StartEffectCoroutine(rewardName, rewardSprite, () => GiveRewards(tier));
-            
+            yield return rewardEffect.StartEffectCoroutine(
+                rewardName, 
+                rewardSprite, 
+                () => GiveRewards(tier), 
+                () => tavernPassButtons[tier].PlayEffect()
+            );
 
             IncrementButton();
         }
