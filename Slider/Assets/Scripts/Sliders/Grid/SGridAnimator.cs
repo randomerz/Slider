@@ -202,7 +202,7 @@ public class SGridAnimator : MonoBehaviour
     {
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
 
-        // disable borders colliders
+        // enable borders colliders
         foreach (Vector2Int p in borders.Keys)
         {
             if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1))
@@ -243,7 +243,7 @@ public class SGridAnimator : MonoBehaviour
         }
 
 
-        // enable border colliders
+        // disable border colliders
         foreach (Vector2Int p in borders.Keys)
         {
             if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1))

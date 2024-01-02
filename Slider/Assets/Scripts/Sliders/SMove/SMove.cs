@@ -32,12 +32,31 @@ public class SMove
 
         foreach (Vector2Int p in positions)
         {
-            AddBorder(p, 0, p + Vector2Int.right);
-            AddBorder(p, 1, p + Vector2Int.up);
-            AddBorder(p, 2, p + Vector2Int.left);
-            AddBorder(p, 3, p + Vector2Int.down);
-        }
+            // In MagiTech, moves in the right side of present (x=2) shouldn't trigger borders on left side of past (x=3) and vice versa
+            if(SGrid.Current.MyArea == Area.MagiTech)
+            {
+                if(p.x == 2)
+                    AddBorder(p, 0, -1 * Vector2Int.one);
+                else
+                    AddBorder(p, 0, p + Vector2Int.right);
 
+                AddBorder(p, 1, p + Vector2Int.up);
+
+                if(p.x == 3)
+                    AddBorder(p, 2, -1 * Vector2Int.one);
+                else
+                    AddBorder(p, 2, p + Vector2Int.left);
+                
+                AddBorder(p, 3, p + Vector2Int.down);  
+            }
+            else
+            {
+                AddBorder(p, 0, p + Vector2Int.right);
+                AddBorder(p, 1, p + Vector2Int.up);
+                AddBorder(p, 2, p + Vector2Int.left);
+                AddBorder(p, 3, p + Vector2Int.down);
+            }
+        }
         return borders;
     }
 
