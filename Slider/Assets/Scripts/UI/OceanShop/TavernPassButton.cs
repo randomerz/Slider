@@ -18,6 +18,11 @@ public class TavernPassButton : MonoBehaviour
     public new ParticleSystem particleSystem;
     private float EFFECT_DURATION = 5f;
 
+    private void OnEnable()
+    {
+        RTImage.SetActive(false);
+    }
+
     public void Deselect()
     {
         image.sprite = isComplete ? completedSprite : defaultSprite;
@@ -38,7 +43,8 @@ public class TavernPassButton : MonoBehaviour
 
     public void PlayEffect()
     {
-        StartCoroutine(EffectCoroutine());
+        if(gameObject.activeInHierarchy)
+            StartCoroutine(EffectCoroutine());
     }
 
     private IEnumerator EffectCoroutine()
