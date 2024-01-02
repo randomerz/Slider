@@ -388,6 +388,7 @@ MonoBehaviour:
   selectedSprite: {fileID: -221187813, guid: 39e0f921dba1ccc4e97c36fca985e772, type: 3}
   RTImage: {fileID: 7872607633883503390}
   particleSystem: {fileID: 0}
+  flashWhite: {fileID: 5556076112847096838}
 --- !u!1 &5126999278248871461
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,6 +400,7 @@ GameObject:
   - component: {fileID: 3535924483251073706}
   - component: {fileID: 2957704648105009118}
   - component: {fileID: 6117189401826818893}
+  - component: {fileID: 5556076112847096838}
   m_Layer: 5
   m_Name: Button Image
   m_TagString: Untagged
@@ -463,6 +465,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5556076112847096838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5126999278248871461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e53cc9672a33504e8efda90823c6a1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whiteSpriteMat: {fileID: 2100000, guid: 8ecef4a34f6e0c1439cfff70d767a625, type: 2}
+  flashTime: 0.25
 --- !u!1 &7872607633883503390
 GameObject:
   m_ObjectHideFlags: 0

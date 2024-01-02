@@ -16,6 +16,7 @@ public class TavernPassButton : MonoBehaviour
     
     public GameObject RTImage;
     public new ParticleSystem particleSystem;
+    public FlashWhiteImage flashWhite;
     private float EFFECT_DURATION = 5f;
 
     private void OnEnable()
@@ -51,6 +52,7 @@ public class TavernPassButton : MonoBehaviour
     {
         RTImage.SetActive(true);
         particleSystem.Play();
+        flashWhite.Flash(1);
         AudioManager.Play("Hat Click");
         yield return new WaitForSeconds(EFFECT_DURATION);
         RTImage.SetActive(false);
