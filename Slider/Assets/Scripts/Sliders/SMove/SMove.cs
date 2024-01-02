@@ -197,17 +197,19 @@ public class SMoveMountainSwap: SMove
 }
 
 //C: used in magitech to move a tile in the past/present at the same time
-public class SMoveSyncedMove : SMove
+public class SMoveMagiTechMove : SMove
 {
-    public SMoveSyncedMove(int x1, int y1, int x2, int y2, int islandId1, int islandId2)
+    public bool shouldSync;
+
+    public SMoveMagiTechMove(int x1, int y1, int x2, int y2, int islandId1, int islandId2, bool shouldSync=true)
     {
-        foreach (Movement m in (new SMoveSwap(x1, y1, x2, y2, islandId1, islandId2)).moves)
+        this.shouldSync = shouldSync;
+
+        moves.AddRange(new SMoveSwap(x1, y1, x2, y2, islandId1, islandId2).moves);
+
+        if (shouldSync)
         {
-            moves.Add(m);
-        }
-        foreach (Movement m in (new SMoveSwap(FindAlt(x1, 3), y1, FindAlt(x2, 3), y2, FindAlt(islandId1, 9), FindAlt(islandId2, 9))).moves)
-        {
-            moves.Add(m);
+            moves.AddRange(new SMoveSwap(FindAlt(x1, 3), y1, FindAlt(x2, 3), y2, FindAlt(islandId1, 9), FindAlt(islandId2, 9)).moves);
         }
     }
 
