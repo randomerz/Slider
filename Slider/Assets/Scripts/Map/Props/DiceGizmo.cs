@@ -61,6 +61,21 @@ public class DiceGizmo : MonoBehaviour, ISavable
         SaveSystem.Current.SetInt(saveString, value);
     }
 
+    public void CheckSeven(Condition c)
+    {
+        c.SetSpec(otherDice != null && value + otherDice.value == 7);
+    }
+
+    public void CheckNotSeven(Condition c)
+    {
+        c.SetSpec(otherDice != null && value + otherDice.value != 7);
+    }
+
+    public void CheckNine(Condition c)
+    {
+        c.SetSpec(otherDice != null && value + otherDice.value == 9);
+    }
+
     public void CheckElevens(Condition c)
     {
         c.SetSpec(otherDice != null && value + otherDice.value == 11);
