@@ -54,14 +54,19 @@ public class SGridTilesExplored : MonoBehaviour
         return SaveSystem.Current.GetBool(BuildSaveString(area, stileId));
     }
 
-    public void SetTileExplored(int stileId)
+    public void SetTileExplored(int stileId, bool explored=true)
     {
-        SetTileExplored(myArea, stileId);
+        SetTileExplored(myArea, stileId, explored);
     }
 
-    public virtual void SetTileExplored(Area area, int stileId)
+    public virtual void SetTileExplored(Area area, int stileId, bool explored=true)
     {
-        SaveSystem.Current.SetBool(BuildSaveString(area, stileId), true);
+        SaveSystem.Current.SetBool(BuildSaveString(area, stileId), explored);
+
+        if (!explored)
+        {
+            areAllTilesExplored = false;
+        }
     }
 
     protected string BuildSaveString(Area area, int stileId)
@@ -71,7 +76,7 @@ public class SGridTilesExplored : MonoBehaviour
 
     private void UpdateAllTilesExplored(object sender, SGrid.OnSTileCollectedArgs e)
     {
-        int numTilesCollected = SGrid.Current.GetNumTilesCollected();
+        int numTilesCollected = SGrid.Current.GetActiveTiles().Count;
         for (int i = 1; i <= numTilesCollected; i++)
         {
             if (!IsTileExplored(myArea, i))

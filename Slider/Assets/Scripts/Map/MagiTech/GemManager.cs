@@ -112,9 +112,7 @@ public class GemManager : MonoBehaviour, ISavable
         {
             gems[itemNameAsEnum] = true;
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)itemNameAsEnum - 1].position);
-            //Funni turn-in coroutine
-            PlayerInventory.RemoveAndDestroyItem();
-            Debug.Log(itemNameAsEnum);
+            PlayerInventory.RemoveItem().gameObject.SetActive(false);
         }
         else if (item.itemName == "Mountory")
         {
@@ -122,11 +120,11 @@ public class GemManager : MonoBehaviour, ISavable
             gems[Area.Mountain] = true;
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)Area.Factory - 1].position);
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)Area.Mountain - 1].position);
-            PlayerInventory.RemoveAndDestroyItem();
+            PlayerInventory.RemoveItem().gameObject.SetActive(false);
         }
         else
         {
-            Debug.LogWarning("Tried to turn in invalid item: " + item);
+            Debug.LogError("Tried to turn in invalid item: " + item);
         }
         UpdateGemSprites();
     }
@@ -142,7 +140,7 @@ public class GemManager : MonoBehaviour, ISavable
             animator.Play("Active");
         }
     }
-    //Only affects gems enabled by default in MagiTech
+    
     private void UpdateGemItems()
     {
         if (gemItems.Count != 8)
@@ -154,8 +152,9 @@ public class GemManager : MonoBehaviour, ISavable
         gemItems[2].gameObject.SetActive(!gems[Area.Ocean]);
         gemItems[3].gameObject.SetActive(!gems[Area.Jungle]);
         gemItems[6].gameObject.SetActive(!gems[Area.Military]);
-        gemItems[7].gameObject.SetActive(!gems[Area.MagiTech]);
+        // gemItems[7].gameObject.SetActive(!gems[Area.MagiTech]);
     }
+
     private bool HasAllGems()
     {
         foreach (bool b in gems.Values)

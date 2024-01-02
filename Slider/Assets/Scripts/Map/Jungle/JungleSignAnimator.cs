@@ -12,6 +12,10 @@ public class JungleSignAnimator : MonoBehaviour
     [Header("Set references")]
     public Sprite[] signDirectionsSprites; // right up left down
     public Sprite[] bumpAnimationSprites; // bump1 bump2 -> normal sprite
+    public Sprite[] signShapeSprites; //triangle, circle, stick
+    [SerializeField] private Sign sign;
+    [SerializeField] private Hut hut;
+
 
     private const float ANIMATION_DELAY = 0.06125f;
 
@@ -42,7 +46,20 @@ public class JungleSignAnimator : MonoBehaviour
         spriteRenderer.sprite = DirectionToSprite(direction);
         bumpCoroutine = null;
     }
+    private IEnumerator BumpAnimation(int shapeIndex)
+    {
+        spriteRenderer.sprite = bumpAnimationSprites[0];
+        AudioManager.Play("UI Click");
 
+        yield return new WaitForSeconds(ANIMATION_DELAY);
+
+        spriteRenderer.sprite = bumpAnimationSprites[1];
+
+        yield return new WaitForSeconds(ANIMATION_DELAY);
+
+        spriteRenderer.sprite = signShapeSprites[shapeIndex];
+        bumpCoroutine = null;
+    }
     private Sprite DirectionToSprite(Vector2 direction)
     {
         int index = (int)(Mathf.Atan2(direction.y, direction.x) / (Mathf.PI / 2) + 4) % 4;
@@ -59,36 +76,28 @@ public class JungleSignAnimator : MonoBehaviour
 
     public void UpdateDirection()
     {
-        Sign s = null;
-        Hut h = null;
-
-        GameObject parent = this.transform.parent.gameObject;
-        if (parent != null)
+        if (hut != null)
         {
-            s = parent.GetComponent<Sign>();
-        }
-
-        if (parent != null)
-        {
-            GameObject grandparent = parent.transform.parent.gameObject;
-            if (grandparent != null)
-            {
-                h = grandparent.GetComponent<Hut>();
-            }
-        }
-
-        if (h != null)
-        {
-            Vector2 direction = h.GetDirection();
+            Vector2 direction = hut.GetDirection();
            // print(direction);
             SetDirection(direction);
-        } else if (s != null)
+        } else if (sign != null)
         {
-            Vector2 direction = s.GetDirection();
+            Vector2 direction = sign.GetDirection();
             SetDirection(direction);
         } else
         {
             SetRandomDirection();
+        }
+    }
+
+    public void UpdateShape()
+    {       
+        if (hut != null)
+        {
+            if (bumpCoroutine != null)
+                StopCoroutine(bumpCoroutine);
+            bumpCoroutine = StartCoroutine(BumpAnimation(hut.currentShapeIndex));
         }
     }
 }

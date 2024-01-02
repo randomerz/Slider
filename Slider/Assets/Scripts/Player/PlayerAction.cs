@@ -171,9 +171,7 @@ public class PlayerAction : Singleton<PlayerAction>
 
             PlayerInventory.AddItem(pickedItem);
             pickedItem.SetSortingOrder(itemSortingOrder);
-            pickedItem.PickUpItem(pickedItemLocation.transform, 
-                                    pickedItemReflectionLocation != null ? pickedItemReflectionLocation : pickedItemLocation.transform, 
-                                    callback: FinishPicking);
+            pickedItem.PickUpItem(pickedItemLocation.transform, callback: FinishPicking);
 
             AudioManager.PlayWithPitch("UI Click", 1.2f);
 
@@ -246,8 +244,6 @@ public class PlayerAction : Singleton<PlayerAction>
     {
         isPicking = false;
         pickedItem.transform.SetParent(pickedItemLocation);
-        if(pickedItem.reflectionParent != null)
-            pickedItem.reflectionParent.transform.SetParent(pickedItemReflectionLocation);
         pickedItem.SetLayer(LayerMask.NameToLayer("ItemRT"));
     }
 
