@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class GemManager : MonoBehaviour, ISavable
 {
+    private const string NUM_REMAINING_GEMS_STRING = "magiTechNumRemainingGems";
+
     private Dictionary<Area, bool> gems = new Dictionary<Area, bool>();
     private Dictionary<Area, GameObject> gemSprites = new();
 
@@ -74,10 +76,12 @@ public class GemManager : MonoBehaviour, ISavable
     public void HasDesertGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Desert, false));
     public void HasJungleGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Jungle, false));
     public void HasMagiTechGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.MagiTech, false));
+
     public bool HasAreaGem(Area area)
     {
         return gems.GetValueOrDefault(area, false);
     }
+
     public void BuildSpriteDictionary()
     {
         for(int i = 1; i <= sprites.Count; i++)
@@ -131,6 +135,7 @@ public class GemManager : MonoBehaviour, ISavable
 
     public void UpdateGemSprites()
     {
+        UpdateNumRemainingGems();
         foreach(Area a in gems.Keys)
         {
             gemSprites[a].SetActive(gems[a]);
@@ -153,6 +158,21 @@ public class GemManager : MonoBehaviour, ISavable
         gemItems[3].gameObject.SetActive(!gems[Area.Jungle]);
         gemItems[6].gameObject.SetActive(!gems[Area.Military]);
         // gemItems[7].gameObject.SetActive(!gems[Area.MagiTech]);
+    }
+
+    private void UpdateNumRemainingGems()
+    {
+        int num = 0;
+
+        foreach (bool b in gems.Values)
+        {
+            if (!b)
+            {
+                num += 1;
+            }
+        }
+
+        SaveSystem.Current.SetString(NUM_REMAINING_GEMS_STRING, num.ToString());
     }
 
     private bool HasAllGems()

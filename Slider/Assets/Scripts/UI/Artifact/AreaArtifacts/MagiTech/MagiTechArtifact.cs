@@ -13,7 +13,7 @@ public class MagiTechArtifact : UIArtifact
     public static Vector2Int desyncLocation = new Vector2Int(-1, -1);
 
     //C: likewise this is the ID of the *opposite* Stile
-    public int desyncIslandId = -1;
+    public static int desyncIslandId = -1;
 
     public UnityEvent onDesyncStart;
     public UnityEvent onDesyncEnd;
@@ -35,6 +35,7 @@ public class MagiTechArtifact : UIArtifact
     public Image background;
     public Sprite presentBackgroundSprite;
     public Sprite pastBackgroundSprite;
+    public Sprite emptyDesyncSprite;
 
 
     protected override void OnEnable()
@@ -60,11 +61,12 @@ public class MagiTechArtifact : UIArtifact
             isInPast = PlayerIsInPast;
             SetButtonsAndBackground(isInPast);
         }
-        //Lightning stuff
+
         if (desyncIslandId != -1)
         {
+            // Lightning stuff
             ArtifactTileButton desyncedButton = GetButton(desyncIslandId);
-            UpdateButtonPositions();
+            // UpdateButtonPositions();
             if (desyncLocation.x != desyncedButton.x || desyncLocation.y != desyncedButton.y)
             {
                 if (!isDesyncSoundPlaying)
@@ -72,7 +74,7 @@ public class MagiTechArtifact : UIArtifact
                     isDesyncSoundPlaying = true;
                     desyncTearLoopSound = AudioManager.PickSound("Desync Tear Open").AndPlay();
                 }
-                ArtifactTileButton pastButton = desyncIslandId <= 9 ? GetButton(FindAltId(desyncIslandId)) : GetButton(desyncIslandId);
+                ArtifactTileButton pastButton = desyncIslandId <= 9 ? GetButton(FindAltId(desyncIslandId)) : desyncedButton;
                 if (isInPast != isPreview) SetLightningPos(pastButton);
                 else SetLightningPos(GetButton(FindAltId(pastButton.islandId)));
             }
@@ -86,8 +88,32 @@ public class MagiTechArtifact : UIArtifact
                 }
                 DisableLightning(false);
             }
+
+            UpdateDesyncDitherBackgrounds();
         }
-        else DisableLightning(true);
+        else 
+        {
+            DisableLightning(true);
+        }
+    }
+
+    private void UpdateDesyncDitherBackgrounds()
+    {
+        foreach (ArtifactTileButton b in buttons)
+        {
+            b.RestoreDefaultEmptySpriteIfNotDefault();
+        }
+
+        ArtifactTileButton desyncedButton = GetButton(desyncIslandId);
+        Vector2Int bg1Coords = FindAltCoords(desyncedButton.x, desyncedButton.y);
+        ArtifactTileButton desyncBG1 = GetButton(bg1Coords.x, bg1Coords.y);
+        desyncBG1.SetEmptySprite(emptyDesyncSprite);
+        desyncBG1.SetSpriteToIslandOrEmpty();
+        ArtifactTileButton altButton = GetButton(FindAltId(desyncIslandId));
+        Vector2Int bg2Coords = FindAltCoords(altButton.x, altButton.y);
+        ArtifactTileButton desyncBG2 = GetButton(bg2Coords.x, bg2Coords.y);
+        desyncBG2.SetEmptySprite(emptyDesyncSprite);
+        desyncBG2.SetSpriteToIslandOrEmpty();
     }
 
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs interactArgs)
@@ -122,11 +148,15 @@ public class MagiTechArtifact : UIArtifact
 
     private void RestoreOnEndDesync()
     {
-
         DisableLightning(true);
         GetButton(desyncIslandId).SetLightning(false);
         GetButton(FindAltId(desyncIslandId)).SetLightning(false);
         UpdatePushedDowns(null, null);
+        // To fix dithers
+        foreach (ArtifactTileButton b in buttons)
+        {
+            b.RestoreDefaultEmptySpriteIfNotDefault();
+        }
     }
 
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
@@ -168,12 +198,12 @@ public class MagiTechArtifact : UIArtifact
     }
 
     //C: basically just modulus. Used to find corresponding values on either side of the grid
-    private Vector2Int FindAltCoords(int x, int y)
+    public static Vector2Int FindAltCoords(int x, int y)
     {
         return new Vector2Int((x + 3) % 6, y);
     }
 
-    private int FindAltId(int islandId)
+    public static int FindAltId(int islandId)
     {        
         return (islandId == 9) ? 18 : (islandId + 9) % 18;
     }
@@ -242,6 +272,7 @@ public class MagiTechArtifact : UIArtifact
     {
         SetButtonsAndBackground(isInPast != enable);
         isPreview = enable;
+        UpdateButtonPositions();
     }
 
     private void UpdateButtonPositions()
