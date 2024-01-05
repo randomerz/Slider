@@ -117,9 +117,7 @@ public class MagiTechArtifact : UIArtifact
 
         ArtifactTileButton desyncedButton = GetButton(desyncIslandId);
         Vector2Int bg1Coords = FindAltCoords(desyncedButton.x, desyncedButton.y);
-        Debug.Log(bg1Coords);
         ArtifactTileButton desyncBG1 = GetButton(bg1Coords.x, bg1Coords.y);
-        Debug.Log(desyncBG1);
         desyncBG1.SetEmptySprite(emptyDesyncSprite);
         desyncBG1.SetSpriteToIslandOrEmpty();
         ArtifactTileButton altButton = GetButton(FindAltId(desyncIslandId));
