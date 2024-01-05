@@ -76,7 +76,7 @@ public class SGridTilesExplored : MonoBehaviour
 
     private void UpdateAllTilesExplored(object sender, SGrid.OnSTileCollectedArgs e)
     {
-        int numTilesCollected = SGrid.Current.GetNumTilesCollected();
+        int numTilesCollected = SGrid.Current.GetActiveTiles().Count;
         for (int i = 1; i <= numTilesCollected; i++)
         {
             if (!IsTileExplored(myArea, i))

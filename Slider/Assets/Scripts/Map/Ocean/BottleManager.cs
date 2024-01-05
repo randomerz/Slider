@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BottleManager : MonoBehaviour
+public class BottleManager : MonoBehaviour, ISavable
 {
     private const string validTiles = "1367"; //these tiles have a water path for the bottle
     
@@ -37,15 +37,56 @@ public class BottleManager : MonoBehaviour
 
     public void OnEnable()
     {
-        //subscribe stile move end to update counter
         UIArtifact.OnButtonInteract += UpdateBottleLocation;
     }
 
+    private void Update()
+    {
+        UpdateRomeoReason();
+    }
 
     public void OnDisable()
     {
-        //unsubscribe stile move end to update counter
         UIArtifact.OnButtonInteract -= UpdateBottleLocation;
+    }
+    
+    public void Save()
+    {
+        SaveSystem.Current.SetBool("oceanRJBottleDelivery", puzzleSolved);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        puzzleSolved = profile.GetBool("oceanRJBottleDelivery");
+    }
+
+    private void UpdateRomeoReason()
+    {
+        string reason = "The path is obstructed!";
+        string gridString = SGrid.GetGridString();
+        
+        if (gridString[0] == '2' || gridString[0] == '8')
+        {
+            reason = "There is land in the way!";
+        }
+        else if (gridString[0] == '4')
+        {
+            reason = "The shipwreck is in the way!";
+        }
+        else if (gridString[0] == '5')
+        {
+            reason = "The island is in the way!";
+        }
+        else if (gridString[0] == '9')
+        {
+            reason = "The volcano is in the way!";
+        }
+        else if (gridString[0] == '.')
+        {
+            reason = "The space in front of me is empty!";
+        }
+
+        SaveSystem.Current.SetString("oceanRomeoReason", reason);
     }
 
     private IEnumerator StartBottleMovementAnimation(Vector3 start, Vector3 end, float moveDuration)
@@ -70,18 +111,17 @@ public class BottleManager : MonoBehaviour
         if(puzzleActive)
         {
             turncounter+=1;
-            if (turncounter >2)
+            if (turncounter > 2)
             {
                 DestroyBottle();
             }
             else
-                StartCoroutine(StartBottleMovementAnimation(positions[turncounter-1] ,positions[turncounter], 1));
+                StartCoroutine(StartBottleMovementAnimation(positions[turncounter-1], positions[turncounter], 1));
         }
     }
 
     private IEnumerator DestroyBottleExecutor()
     {
-        //Debug.Log("deleting bottle");
         if (bottle != null)
             bottle.GetComponent<Animator>().SetBool("IsSinking", true);
 
@@ -105,11 +145,9 @@ public class BottleManager : MonoBehaviour
         UITrackerManager.RemoveTracker(tempBottleGO);
     }
 
-    //so that juliet can call it
     public void DestroyBottle()
     {
         StartCoroutine(DestroyBottleExecutor());
-        // DestroyBottleExecutor();
     }
 
     public void CreateNewBottle()
@@ -125,7 +163,7 @@ public class BottleManager : MonoBehaviour
             bottle.transform.SetParent(bottleParentStile.transform);
 
             turncounter = 0;
-            bottle.transform.localPosition = positions[(int)(turncounter)];
+            bottle.transform.localPosition = positions[turncounter];
 
             GameObject bottleTrackerGO = Instantiate(uiTrackerSinkingBottlePrefab);
             bottleUITracker = bottleTrackerGO.GetComponent<UITracker>();
@@ -134,7 +172,6 @@ public class BottleManager : MonoBehaviour
 
             bottleIsInWater = false;
             RomeoBottleSpawnAnimation(bottle);
-            
         }
     }
 
@@ -152,12 +189,10 @@ public class BottleManager : MonoBehaviour
             romeosBottle.transform.SetParent(romeosBottleHolder);
             romeosBottle.transform.localPosition = Vector3.zero;
         });
-        // yield return new WaitUntil(() => true) ;
     }
 
     public void InvalidTile(Condition c)
     {
-       //only tiles 1,3, and 8 have a water path for the bottle to go through
        if( CheckGrid.contains(SGrid.GetGridString(),$"[{validTiles}].._..._..."))
         {
             c.SetSpec(false);
@@ -186,6 +221,7 @@ public class BottleManager : MonoBehaviour
             c.SetSpec(false);
         }
     }
+
 }
 
 

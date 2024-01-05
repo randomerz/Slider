@@ -121,6 +121,10 @@ public class MagiTechGrid : SGrid
         }
     }
 
+    /// <summary>
+    /// Magitech returns HALF of the total number of tiles.
+    /// </summary>
+    /// <returns></returns>
     public override int GetNumTilesCollected()
     {
         return base.GetNumTilesCollected() / 2;

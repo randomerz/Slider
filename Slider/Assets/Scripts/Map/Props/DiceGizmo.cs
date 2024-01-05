@@ -61,6 +61,21 @@ public class DiceGizmo : MonoBehaviour, ISavable
         SaveSystem.Current.SetInt(saveString, value);
     }
 
+    public void CheckSeven(Condition c)
+    {
+        c.SetSpec(otherDice != null && value + otherDice.value == 7);
+    }
+
+    public void CheckNotSeven(Condition c)
+    {
+        c.SetSpec(otherDice != null && value + otherDice.value != 7);
+    }
+
+    public void CheckNine(Condition c)
+    {
+        c.SetSpec(otherDice != null && value + otherDice.value == 9);
+    }
+
     public void CheckElevens(Condition c)
     {
         c.SetSpec(otherDice != null && value + otherDice.value == 11);
@@ -177,7 +192,7 @@ public class DiceGizmo : MonoBehaviour, ISavable
 
     private void UpdateDiceOnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
     {
-        if (myStile.hasAnchor && e.drop) //There could be an edge case where hasAnchor hasn't quite updated but it's dice
+        if (e.stile == myStile && e.drop)
         {
             changeValue(1);
         }
@@ -185,21 +200,6 @@ public class DiceGizmo : MonoBehaviour, ISavable
 
     private void FindSTile()
     {
-        // Transform curr = transform;
-        // int i = 0;
-        // while (curr.parent != null && i < 100)
-        // {
-        //     if (curr.GetComponent<STile>() != null)
-        //     {
-        //         myStile = curr.GetComponent<STile>();
-        //         return;
-        //     }
-
-        //     // Debug.Log(curr.name);
-        //     curr = curr.parent;
-        //     i += 1;
-        // }
-
         myStile = transform.GetComponentInParent<STile>();
 
         if (myStile == null)

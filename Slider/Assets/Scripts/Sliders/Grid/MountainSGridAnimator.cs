@@ -25,7 +25,7 @@ public class MountainSGridAnimator : SGridAnimator
     protected override void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile, bool playSound)
     {
         base.EffectOnMoveStart(move, movement, root, tile, playSound);
-        if(move is SMoveLayerSwap && tile.isTileActive) {
+        if((move as SMoveMountainSwap).isLayerSwap && tile.isTileActive) {
             if(Player.GetInstance().GetSTileUnderneath() == tile) {
                 //Player on tile, dither world
                 ((MountainSTile) tile).AnimateBorderTileDither(movementDuration * move.duration);

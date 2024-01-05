@@ -12,7 +12,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     public ArtifactTileButtonAnimator buttonAnimator;
     public RectTransform imageRectTransform;
-    [SerializeField] private UIArtifact buttonManager;
+    public UIArtifact buttonManager;
 
     [FormerlySerializedAs("emptySprite")]
     [SerializeField] private Sprite emptySpriteDefault;
@@ -78,7 +78,7 @@ public class ArtifactTileButton : MonoBehaviour
         }
     }
 
-    private void Init()
+    public void Init()
     {
         LinkButton = null;
         completedSpriteDefault = completedSprite;
@@ -182,6 +182,15 @@ public class ArtifactTileButton : MonoBehaviour
         emptySprite = emptySpriteDefault;
     }
 
+    public void RestoreDefaultEmptySpriteIfNotDefault(bool andUpdate=true)
+    {
+        if (emptySprite != emptySpriteDefault)
+        {
+            emptySprite = emptySpriteDefault;
+            SetSpriteToIslandOrEmpty();
+        }
+    }
+
     public void SetIslandSprite(Sprite s)
     {
         dontUpdateDefaultSpriteOnAwake = true;
@@ -196,7 +205,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SetEmptySprite(Sprite s)
     {
-        dontUpdateDefaultSpriteOnAwake = true;
+        // dontUpdateDefaultSpriteOnAwake = true;
         emptySprite = s;
     }
 
@@ -274,20 +283,13 @@ public class ArtifactTileButton : MonoBehaviour
         SetSpriteToIslandOrEmpty();
     }
 
-    // public void SetShouldFlicker(bool shouldFlicker)
-    // {
-    //     this.shouldFlicker = shouldFlicker;
-    // }
-
     public void Flicker(int numFlickers)
     {
-        // shouldFlicker = false;
         StartCoroutine(NewButtonFlicker(numFlickers));
     }
 
     public void FlickerImmediate(int numFlickers)
     {
-        // shouldFlicker = false;
         StartCoroutine(NewButtonFlicker(numFlickers, true));
     }
 
