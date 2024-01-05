@@ -120,6 +120,7 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
         // cut everything off
         CameraShake.StopShake();
         AudioManager.StopAllSoundAndMusic();
+        AudioManager.PlayMusic("Factory");
 
         SpawnPlayerInPast();
         sendingToPast = false;
