@@ -24,14 +24,10 @@ public class ArtifactTileButton : MonoBehaviour
     [SerializeField] public List<ArtifactTBPlugin> plugins;
 
 
-    // public static bool canComplete = false;
     public bool isComplete = false;
-    // public bool isInMove = false;
     public int islandId = -1;
     public int x;
     public int y;
-
-    // public bool shouldFlicker = false;
 
     protected Sprite islandSprite;
     protected Sprite emptySprite;

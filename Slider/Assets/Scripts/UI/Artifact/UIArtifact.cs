@@ -12,13 +12,13 @@ public class UIArtifact : Singleton<UIArtifact>
     [SerializeField] protected int maxMoveQueueSize = 3;
     [SerializeField] private GameObject lightning;
     [SerializeField] private GameObject lightningImage;
-    [SerializeField] private List<GameObject> fallbackButtonsToSelect; // For when youre on controller and have nothing to select
+    [SerializeField] private List<GameObject> fallbackButtonsToSelect; // For when you're on controller and have nothing to select
 
     protected ArtifactTileButton buttonSelected;
     protected List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
-    protected List<SMove> activeMoves = new List<SMove>();    // DC: Current list of moves being performed 
-    protected Queue<SMove> moveQueue = new Queue<SMove>();    //L: Queue of moves to perform on the grid from the artifact
-    protected bool playerCanAddSMoves; // this is not serialized by area! should it be? meh
+    protected List<SMove> activeMoves = new List<SMove>();    //Current list of moves being performed 
+    protected Queue<SMove> moveQueue = new Queue<SMove>();    //Queue of moves to perform on the grid from the artifact
+    protected bool playerCanAddSMoves;
     protected bool playerCanQueue;
 
     private bool didInit;
@@ -48,7 +48,6 @@ public class UIArtifact : Singleton<UIArtifact>
 
     protected virtual void OnEnable()
     {
-        //SelectButton(buttons[0]);
     }
 
     protected virtual void OnDisable()
@@ -58,7 +57,7 @@ public class UIArtifact : Singleton<UIArtifact>
 
     protected virtual void Start()
     {
-        //L: Do these ever get unsubscribed? (Do they need to?) (If your name is DesertArtifact yes)
+        //Only unsubscribed in DesertArtifact
         SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
         SGridAnimator.OnSTileMoveEnd += UpdatePushedDowns;
         OnButtonInteract += UpdatePushedDowns;
@@ -112,8 +111,6 @@ public class UIArtifact : Singleton<UIArtifact>
             {
                 if (IsButtonValidForSelection(g))
                 {
-                    // Noisy in the ocean
-                    //Debug.Log("Force picked a new button.");
                     EventSystem.current.SetSelectedGameObject(g);
                     return;
                 }
@@ -257,7 +254,6 @@ public class UIArtifact : Singleton<UIArtifact>
             if (b.MyStile == stile)
             {
                 b.UpdateTileActive();
-                // b.SetShouldFlicker(shouldFlicker);
                 break;
             }
         }
