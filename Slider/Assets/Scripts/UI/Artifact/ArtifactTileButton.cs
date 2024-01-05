@@ -24,14 +24,10 @@ public class ArtifactTileButton : MonoBehaviour
     [SerializeField] public List<ArtifactTBPlugin> plugins;
 
 
-    // public static bool canComplete = false;
     public bool isComplete = false;
-    // public bool isInMove = false;
     public int islandId = -1;
     public int x;
     public int y;
-
-    // public bool shouldFlicker = false;
 
     protected Sprite islandSprite;
     protected Sprite emptySprite;
@@ -128,7 +124,7 @@ public class ArtifactTileButton : MonoBehaviour
         if (animateChange && TileIsActive)
         {
             // The "Travel" direction
-            Vector2 dif = new Vector2(x - this.x, y - this.y).normalized;
+            Vector2 dif = CalculatePositionAnimationVector(x,y);
             buttonAnimator.AnimatePositionFrom(-dif * 2);
         }
 
@@ -143,6 +139,11 @@ public class ArtifactTileButton : MonoBehaviour
         });
 
         SetSpriteToIslandOrEmpty();
+    }
+
+    protected virtual Vector2 CalculatePositionAnimationVector(int x, int y)
+    {
+        return new Vector2(x - this.x, y - this.y).normalized;
     }
 
     public void SetSpriteToIslandOrEmpty()
@@ -290,7 +291,7 @@ public class ArtifactTileButton : MonoBehaviour
 
     protected virtual void SetAnchoredPos(int x, int y)
     {
-        Vector3 pos = new Vector3((x % SGrid.Current.Height) - 1, y - 1) * UI_OFFSET; //C: i refuse to make everything into MT buttons
+        Vector3 pos = new Vector3((x % SGrid.Current.Height) - 1, y - 1) * UI_OFFSET; 
         GetComponent<RectTransform>().anchoredPosition = pos;
     }
 

@@ -14,6 +14,8 @@ using UnityEngine;
 /// </summary>
 public class FactoryMusicController : MonoBehaviour, ISavable
 {
+    public const float FACTORY_STINGER_DURATION = 9; // in seconds
+
     private int musicProgressionParameter;
 
     private void OnEnable()
