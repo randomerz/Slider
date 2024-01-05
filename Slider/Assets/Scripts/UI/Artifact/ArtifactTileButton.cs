@@ -124,7 +124,7 @@ public class ArtifactTileButton : MonoBehaviour
         if (animateChange && TileIsActive)
         {
             // The "Travel" direction
-            Vector2 dif = new Vector2(x - this.x, y - this.y).normalized;
+            Vector2 dif = CalculatePositionAnimationVector(x,y);
             buttonAnimator.AnimatePositionFrom(-dif * 2);
         }
 
@@ -139,6 +139,11 @@ public class ArtifactTileButton : MonoBehaviour
         });
 
         SetSpriteToIslandOrEmpty();
+    }
+
+    protected virtual Vector2 CalculatePositionAnimationVector(int x, int y)
+    {
+        return new Vector2(x - this.x, y - this.y).normalized;
     }
 
     public void SetSpriteToIslandOrEmpty()
