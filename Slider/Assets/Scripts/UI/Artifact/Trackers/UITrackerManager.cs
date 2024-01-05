@@ -125,46 +125,54 @@ public class UITrackerManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         CheckBuffers();
+        PruneDestroyedTrackers();
+        
+        foreach (UITracker tracker in targets) {
+            UpdateTrackerPostion(tracker);
+        }
+    }
 
+    private void PruneDestroyedTrackers()
+    {
         for (int x = 0; x < targets.Count; x++) {
             if (targets[x].target == null) {
                 Destroy(targets[x].gameObject);
                 targets.RemoveAt(x);
                 x--;
-                Debug.LogWarning("Removed a tracker pointing to a destroyed object");
+                Debug.LogWarning("Removed a UI tracker pointing to a destroyed object. Destroyed objects should remove their own trackers.");
             }
         }
+    }
 
-        foreach (UITracker tracker in targets) {
-            currentTile = tracker.GetSTile();
-            tracker.gameObject.SetActive(tracker.target.activeInHierarchy);
+    private void UpdateTrackerPostion(UITracker tracker)
+    {
+        currentTile = tracker.GetSTile();
+        tracker.gameObject.SetActive(tracker.target.activeInHierarchy);
 
-            if (currentTile != null) 
+        if (currentTile != null) 
+        {
+            currentButton = uiArtifactMenus.uiArtifact.GetButton(currentTile.islandId);
+            tracker.image.rectTransform.SetParent(currentButton.imageRectTransform);
+            
+            Vector2 offset = CalculateOffset(tracker);
+            if (tracker.GetIsInHouse() && !trackHousingAccurately)
             {
-                currentButton = uiArtifactMenus.uiArtifact.GetButton(currentTile.islandId);
-                tracker.image.rectTransform.SetParent(currentButton.imageRectTransform);
-                
-                Vector2 offset = CalculateOffset(tracker);
-                if (tracker.GetIsInHouse() && !trackHousingAccurately)
-                {
-                    tracker.image.rectTransform.anchoredPosition = Vector2.zero;
-                }
-                else
-                {
-                    tracker.image.rectTransform.anchoredPosition = offset;
-                }
+                tracker.image.rectTransform.anchoredPosition = Vector2.zero;
             }
             else
             {
-                tracker.image.rectTransform.SetParent(artifactPanel.GetComponent<RectTransform>());
-
-                Vector2 offset = CalculateOffsetNullTile(tracker);
                 tracker.image.rectTransform.anchoredPosition = offset;
             }
+        }
+        else
+        {
+            tracker.image.rectTransform.SetParent(artifactPanel.GetComponent<RectTransform>());
+
+            Vector2 offset = CalculateOffsetNullTile(tracker);
+            tracker.image.rectTransform.anchoredPosition = offset;
         }
     }
 
