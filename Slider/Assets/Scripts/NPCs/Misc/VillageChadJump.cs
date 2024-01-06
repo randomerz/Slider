@@ -4,16 +4,6 @@ using UnityEngine;
 
 public class VillageChadJump : MonoBehaviour 
 {
-    private void OnEnable() 
-    {
-        SGridAnimator.OnSTileMoveEnd += TipOnTileMove;
-    }
-
-    private void OnDisable() 
-    {
-        SGridAnimator.OnSTileMoveEnd -= TipOnTileMove;
-    }
-
     public float timeTipped = 2;
     private float timeTillNormal;
     private bool isOnRock;
@@ -26,6 +16,19 @@ public class VillageChadJump : MonoBehaviour
     private void Start() 
     {
         isFallen = SaveSystem.Current.GetBool("villageCompletion");
+    }
+
+    private void OnEnable() 
+    {
+        if (isFallen)
+        {
+            SGridAnimator.OnSTileMoveEnd += TipOnTileMove;
+        }
+    }
+
+    private void OnDisable() 
+    {
+        SGridAnimator.OnSTileMoveEnd -= TipOnTileMove;
     }
 
     private void Update() 
