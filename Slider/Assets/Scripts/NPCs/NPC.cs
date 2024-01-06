@@ -7,9 +7,7 @@ using UnityEngine.Serialization;
 
 public class NPC : MonoBehaviourContextSubscriber<NPC>
 {
-    private readonly string poofParticleName = "SmokePoof Variant";
-
-    [SerializeField] private string characterName;
+    [SerializeField] public string characterName;
     [SerializeField] private List<NPCConditionals> conds;
     public float speed;
 
@@ -28,7 +26,6 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private NPCDialogueContext dialogueCtx;
     private NPCWalkingContext walkingCtx;
     private STile currentStileUnderneath;
-    private GameObject poofParticles;
 
     // For editor
     [HideInInspector] public bool autoSetWaitUntilPlayerAction = true;
@@ -48,7 +45,6 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     private new void Awake()
     {
         base.Awake();
-        poofParticles = Resources.Load<GameObject>(poofParticleName);
         SetCondPrioritiesToArrayPos();
     }
 
@@ -130,6 +126,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     {
         dialogueCtx.TypeNextDialogueInChain();
     }
+
+    public bool IsTypingDialogue()
+    {
+        return dialogueCtx.IsTypingDialogue;
+    }
     #endregion Dialogue
 
     #region Walking
@@ -165,8 +166,8 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         {
             if (poof)
             {
-                Instantiate(poofParticles, base.transform.position, Quaternion.identity);
-                Instantiate(poofParticles, transform.position, Quaternion.identity);
+                ParticleManager.SpawnParticle(ParticleType.SmokePoof, base.transform.position, transform);
+                ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position, transform);
             }
             base.transform.position = transform.position;
             base.transform.parent = transform;
@@ -250,7 +251,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
 
     public void makeFaceRight()
     {
-        if(spriteDefaultFacingLeft)
+        if (spriteDefaultFacingLeft)
         {
             sr.flipX = true;
         }

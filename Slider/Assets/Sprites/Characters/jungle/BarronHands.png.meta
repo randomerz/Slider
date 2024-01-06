@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 192
+    maxTextureSize: 240
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -291,11 +291,179 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BarronHands_Down_0
+      name: BarronHands_Walk_0
       rect:
         serializedVersion: 2
         x: 96
         y: 96
+        width: 48
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d437a417e96855260800000000000000
+      internalID: 7085717603801002829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BarronHands_Walk_1
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 96
+        width: 48
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e12a30e099beae730800000000000000
+      internalID: 4029291859233972766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BarronHands_Walk_2
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 96
+        width: 48
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b913f5d67494e9bb0800000000000000
+      internalID: -4927420371170283109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BarronHands_Walk_3
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 96
+        width: 48
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db5e2aa9dfe608c90800000000000000
+      internalID: -7169608571273681475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BarronHands_Walk_4
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 96
+        width: 48
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 513dbbdd8d2b71bd0800000000000000
+      internalID: -2659460410436234475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BarronHands_Walk_5
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 96
+        width: 48
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f902c2bb640bf750800000000000000
+      internalID: 6339665761061177846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BarronHands_Walk_6
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 96
+        width: 48
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47a833e7578aa8770800000000000000
+      internalID: 8613882459881441908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BarronHands_Walk_7
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 96
+        width: 48
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb2f1052919d544f0800000000000000
+      internalID: -845030653043805505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BarronHands_Down_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
         width: 48
         height: 32
       alignment: 9
@@ -315,8 +483,8 @@ TextureImporter:
       name: BarronHands_Down_1
       rect:
         serializedVersion: 2
-        x: 96
-        y: 96
+        x: 0
+        y: 64
         width: 48
         height: 32
       alignment: 9
@@ -336,8 +504,8 @@ TextureImporter:
       name: BarronHands_Down_2
       rect:
         serializedVersion: 2
-        x: 96
-        y: 96
+        x: 0
+        y: 64
         width: 48
         height: 32
       alignment: 9
@@ -357,8 +525,8 @@ TextureImporter:
       name: BarronHands_Down_3
       rect:
         serializedVersion: 2
-        x: 144
-        y: 96
+        x: 48
+        y: 64
         width: 48
         height: 32
       alignment: 9
@@ -378,8 +546,8 @@ TextureImporter:
       name: BarronHands_Down_4
       rect:
         serializedVersion: 2
-        x: 144
-        y: 96
+        x: 48
+        y: 64
         width: 48
         height: 32
       alignment: 9
@@ -399,8 +567,8 @@ TextureImporter:
       name: BarronHands_Down_5
       rect:
         serializedVersion: 2
-        x: 144
-        y: 96
+        x: 48
+        y: 64
         width: 48
         height: 32
       alignment: 9
@@ -420,8 +588,8 @@ TextureImporter:
       name: BarronHands_Down_6
       rect:
         serializedVersion: 2
-        x: 144
-        y: 96
+        x: 48
+        y: 64
         width: 48
         height: 32
       alignment: 9
@@ -441,8 +609,8 @@ TextureImporter:
       name: BarronHands_Down_7
       rect:
         serializedVersion: 2
-        x: 96
-        y: 96
+        x: 0
+        y: 64
         width: 48
         height: 32
       alignment: 9
@@ -462,7 +630,7 @@ TextureImporter:
       name: BarronHands_Close_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 96
         y: 64
         width: 48
         height: 32
@@ -483,7 +651,7 @@ TextureImporter:
       name: BarronHands_Close_1
       rect:
         serializedVersion: 2
-        x: 0
+        x: 96
         y: 64
         width: 48
         height: 32
@@ -504,7 +672,7 @@ TextureImporter:
       name: BarronHands_Close_2
       rect:
         serializedVersion: 2
-        x: 0
+        x: 96
         y: 64
         width: 48
         height: 32
@@ -525,7 +693,7 @@ TextureImporter:
       name: BarronHands_Close_3
       rect:
         serializedVersion: 2
-        x: 48
+        x: 144
         y: 64
         width: 48
         height: 32
@@ -546,7 +714,7 @@ TextureImporter:
       name: BarronHands_Close_4
       rect:
         serializedVersion: 2
-        x: 48
+        x: 144
         y: 64
         width: 48
         height: 32
@@ -567,7 +735,7 @@ TextureImporter:
       name: BarronHands_Close_5
       rect:
         serializedVersion: 2
-        x: 48
+        x: 144
         y: 64
         width: 48
         height: 32
@@ -588,7 +756,7 @@ TextureImporter:
       name: BarronHands_Close_6
       rect:
         serializedVersion: 2
-        x: 48
+        x: 144
         y: 64
         width: 48
         height: 32
@@ -609,7 +777,7 @@ TextureImporter:
       name: BarronHands_Close_7
       rect:
         serializedVersion: 2
-        x: 0
+        x: 96
         y: 64
         width: 48
         height: 32
@@ -630,7 +798,7 @@ TextureImporter:
       name: BarronHands_Pointing_0
       rect:
         serializedVersion: 2
-        x: 96
+        x: 192
         y: 64
         width: 48
         height: 32
@@ -651,7 +819,7 @@ TextureImporter:
       name: BarronHands_Pointing_1
       rect:
         serializedVersion: 2
-        x: 96
+        x: 192
         y: 64
         width: 48
         height: 32
@@ -672,7 +840,7 @@ TextureImporter:
       name: BarronHands_Pointing_2
       rect:
         serializedVersion: 2
-        x: 96
+        x: 192
         y: 64
         width: 48
         height: 32
@@ -693,8 +861,8 @@ TextureImporter:
       name: BarronHands_Pointing_3
       rect:
         serializedVersion: 2
-        x: 144
-        y: 64
+        x: 0
+        y: 32
         width: 48
         height: 32
       alignment: 9
@@ -714,8 +882,8 @@ TextureImporter:
       name: BarronHands_Pointing_4
       rect:
         serializedVersion: 2
-        x: 144
-        y: 64
+        x: 0
+        y: 32
         width: 48
         height: 32
       alignment: 9
@@ -735,8 +903,8 @@ TextureImporter:
       name: BarronHands_Pointing_5
       rect:
         serializedVersion: 2
-        x: 144
-        y: 64
+        x: 0
+        y: 32
         width: 48
         height: 32
       alignment: 9
@@ -756,8 +924,8 @@ TextureImporter:
       name: BarronHands_Pointing_6
       rect:
         serializedVersion: 2
-        x: 144
-        y: 64
+        x: 0
+        y: 32
         width: 48
         height: 32
       alignment: 9
@@ -777,7 +945,7 @@ TextureImporter:
       name: BarronHands_Pointing_7
       rect:
         serializedVersion: 2
-        x: 96
+        x: 192
         y: 64
         width: 48
         height: 32
@@ -798,7 +966,7 @@ TextureImporter:
       name: BarronHands_Waving_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 48
         y: 32
         width: 48
         height: 32
@@ -819,7 +987,7 @@ TextureImporter:
       name: BarronHands_Waving_1
       rect:
         serializedVersion: 2
-        x: 48
+        x: 96
         y: 32
         width: 48
         height: 32
@@ -840,7 +1008,7 @@ TextureImporter:
       name: BarronHands_Waving_2
       rect:
         serializedVersion: 2
-        x: 48
+        x: 96
         y: 32
         width: 48
         height: 32
@@ -861,7 +1029,7 @@ TextureImporter:
       name: BarronHands_Waving_3
       rect:
         serializedVersion: 2
-        x: 96
+        x: 144
         y: 32
         width: 48
         height: 32
@@ -882,7 +1050,7 @@ TextureImporter:
       name: BarronHands_Waving_4
       rect:
         serializedVersion: 2
-        x: 96
+        x: 144
         y: 32
         width: 48
         height: 32
@@ -903,7 +1071,7 @@ TextureImporter:
       name: BarronHands_Waving_5
       rect:
         serializedVersion: 2
-        x: 144
+        x: 192
         y: 32
         width: 48
         height: 32
@@ -924,7 +1092,7 @@ TextureImporter:
       name: BarronHands_Waving_6
       rect:
         serializedVersion: 2
-        x: 144
+        x: 192
         y: 32
         width: 48
         height: 32
@@ -945,7 +1113,7 @@ TextureImporter:
       name: BarronHands_Waving_7
       rect:
         serializedVersion: 2
-        x: 0
+        x: 48
         y: 32
         width: 48
         height: 32
@@ -1181,6 +1349,14 @@ TextureImporter:
       BarronHands_Shrug_5: 1310937509950741011
       BarronHands_Shrug_6: 1299949820041969502
       BarronHands_Shrug_7: -915840844473888978
+      BarronHands_Walk_0: 7085717603801002829
+      BarronHands_Walk_1: 4029291859233972766
+      BarronHands_Walk_2: -4927420371170283109
+      BarronHands_Walk_3: -7169608571273681475
+      BarronHands_Walk_4: -2659460410436234475
+      BarronHands_Walk_5: 6339665761061177846
+      BarronHands_Walk_6: 8613882459881441908
+      BarronHands_Walk_7: -845030653043805505
       BarronHands_Waving_0: -2596534424460111841
       BarronHands_Waving_1: 4985892606194399462
       BarronHands_Waving_2: 9083148079737758882

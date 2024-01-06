@@ -8,6 +8,7 @@ public class JungleRecipeBookHints : MonoBehaviour
     private Coroutine hintCoroutine;
 
     public NPC hintNPC;
+    public Transform hintPosition;
     
     private const float HINT_DELAY = 4;
     private const string JUNGLE_UI_HINT_TEXT = "jungleUIHintText";
@@ -42,6 +43,11 @@ public class JungleRecipeBookHints : MonoBehaviour
 
     public void StartHintRoutine()
     {
+        if (hintNPC.transform.position != hintPosition.position)
+        {
+            return;
+        }
+        
         hintCoroutine = StartCoroutine(HintRoutine());
     }
 
@@ -83,6 +89,7 @@ public class JungleRecipeBookHints : MonoBehaviour
         int hintIndex = UnityEngine.Random.Range(0, HINTS_GENERAL.Length);
         if (hasGeneralHintBeenUsed[hintIndex])
         {
+            hintCoroutine = null;
             yield break;
         }
 

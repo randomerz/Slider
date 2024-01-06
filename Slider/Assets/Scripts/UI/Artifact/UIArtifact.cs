@@ -256,7 +256,7 @@ public class UIArtifact : Singleton<UIArtifact>
             if (b.MyStile == stile)
             {
                 b.UpdateTileActive();
-                b.SetShouldFlicker(shouldFlicker);
+                // b.SetShouldFlicker(shouldFlicker);
                 break;
             }
         }
@@ -296,7 +296,8 @@ public class UIArtifact : Singleton<UIArtifact>
         DeselectSelectedButton();
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
-        if (!dragged.TileIsActive || dragged.MyStile.hasAnchor || !playerCanAddSMoves)
+        if (!dragged.TileIsActive || dragged.MyStile.hasAnchor
+            || (dragged.LinkButton != null && dragged.LinkButton.MyStile.hasAnchor) || !playerCanAddSMoves)
         {
             return;
         }
@@ -320,6 +321,10 @@ public class UIArtifact : Singleton<UIArtifact>
         if (!dragged.TileIsActive)// || dragged.isForcedDown)
         {
             return; //player didn't start drag on a button, don't do anything.
+        }
+        if (dragged.MyStile.hasAnchor || (dragged.LinkButton != null && dragged.LinkButton.MyStile.hasAnchor))
+        {
+            return;
         }
 
         List<ArtifactTileButton> moveOptions = GetMoveOptions(dragged);
@@ -438,7 +443,8 @@ public class UIArtifact : Singleton<UIArtifact>
             }
 
             List<ArtifactTileButton> moveOptionButtons = GetMoveOptions(button);
-            bool buttonWithLockedMovement = moveOptionButtons.Count == 0 || button.MyStile.hasAnchor;
+            bool buttonWithLockedMovement = moveOptionButtons.Count == 0 || button.MyStile.hasAnchor
+                || (button.LinkButton != null && button.LinkButton.MyStile.hasAnchor);
             if (buttonWithLockedMovement)
             {
                 return;
@@ -787,7 +793,7 @@ public class UIArtifact : Singleton<UIArtifact>
                     //Debug.Log(b.islandId);
                     b.SetIsInMove(true);
                 }
-                else if (b.MyStile.hasAnchor)
+                else if (b.MyStile.hasAnchor || (b.LinkButton != null && b.LinkButton.MyStile.hasAnchor))
                 {
                     continue;
                 }
@@ -837,7 +843,8 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         foreach (ArtifactTileButton b in buttons)
         {
-            if (b.gameObject.activeSelf && b.shouldFlicker)
+            bool wasTileExplored = SGrid.Current.gridTilesExplored != null && SGrid.Current.gridTilesExplored.IsTileExplored(b.islandId);
+            if (b.gameObject.activeSelf && !wasTileExplored && b.TileIsActive)
             {
                 b.Flicker(3);
             }

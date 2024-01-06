@@ -7,52 +7,21 @@ public class OceanGrid : SGrid
     public GameObject burriedGuyNPC;
     public GameObject burriedTreasure;
     public ParticleSystem burriedTreasureParticles;
-    public KnotBox knotBox;
-    public GameObject buoyUITrackerPrefab;
-    private bool knotBoxEnabledLastFrame;
-    public BottleManager bottleManager;
     public NPCRotation npcRotation;
-    public OceanArtifact oceanArtifact; // used for the final quest to lock movement
+    public OceanArtifact oceanArtifact; 
     public GameObject treesToJungle;
-    public List<int> buoytiles = new List<int> {1, 3, 4, 8, 9};
     private List<int> landTiles = new List<int> {1, 2, 4, 8};    
-    public OceanDolly introCameraDolly;
-    private const string INTRO_CUTSCENE_SAVE_STRING = "oceanIntroCutscene";
-
-    private Vector2Int[] correctPath =
-    {
-        Vector2Int.left,
-        Vector2Int.down,
-        Vector2Int.left,
-        Vector2Int.left,
-        Vector2Int.up,
-        Vector2Int.left,
-    };
-    private int playerIndex = 0;
-    private Vector2Int playerMovement;
-    private int lastIslandId = 1;
-    private bool foggyCompleted;
-    // public GameObject fog6;
-    // public GameObject fog7;
-    public FogAnimationController fogAnimationController6;
-    public FogAnimationController fogAnimationController7;
-    public GameObject fogIsland;
-    private int fogIslandId; //tile which fog island was found on
     private int numAnchorUses;
     [SerializeField] private Volcano volcano;
 
     private bool isCompleted = false;
 
-    [Header("Foggy Progress Notes")]
-    [SerializeField] private List<SpriteRenderer> progressNotes;
-    [SerializeField] private Sprite emptyNote, fullNote;
-    [SerializeField] private GameObject sparklePrefab;
+
 
     public override void Init()
     {
         InitArea(Area.Ocean);
         base.Init();
-        
     }
 
 
@@ -60,20 +29,10 @@ public class OceanGrid : SGrid
     {
         base.Start();
         burriedGuyNPC.SetActive(false);
-        fogIsland.SetActive(false);
 
         AudioManager.PlayMusic("Ocean");
         AudioManager.PlayMusic("Ocean Tavern", false); // for FMOD effects
         AudioManager.PlayMusic("Ocean uwu", false); // for FMOD effects
-
-        foreach (SpriteRenderer note in progressNotes)
-        {
-            note.enabled = false;
-        }
-
-        // No more ocean cutscene
-        // Pan();
-
     }
 
     private void OnEnable()
@@ -84,7 +43,6 @@ public class OceanGrid : SGrid
             OnGridMove += UpdateButtonCompletions; // this is probably not needed
             UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
             SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletion
-            SGridAnimator.OnSTileMoveStart += CheckBuoyFirstTry;
             UIArtifactMenus.OnArtifactOpened += CheckFinalPlacementsOnMove;
         }
 
@@ -92,8 +50,6 @@ public class OceanGrid : SGrid
         UIArtifactMenus.OnArtifactOpened += CheckShipwreck;
         SGridAnimator.OnSTileMoveEnd += CheckVolcano;
         UIArtifactMenus.OnArtifactOpened += CheckVolcano;
-
-        SGridAnimator.OnSTileMoveEnd += BuoySuccessEffectsCheck;
         Anchor.OnAnchorInteract += OnAnchorInteract;
     }
 
@@ -111,50 +67,7 @@ public class OceanGrid : SGrid
         UIArtifactMenus.OnArtifactOpened -= CheckShipwreck;
         SGridAnimator.OnSTileMoveEnd -= CheckVolcano;
         UIArtifactMenus.OnArtifactOpened -= CheckVolcano;
-        
-        SGridAnimator.OnSTileMoveEnd -= BuoySuccessEffectsCheck;
         Anchor.OnAnchorInteract -= OnAnchorInteract;
-    }
-
-    private void Update()
-    {
-        UpdateRomeoReason();
-        
-        //Get tile the player is on. if it change from last update, find the direction the player moved. Add direction to list of moves. put list in checkfoggy. only why on fog tiles
-        UpdatePlayerMovement();
-    }
-
-    private void UpdateRomeoReason()
-    {
-        string reason = "The path is obstructed!";
-        string gridString = GetGridString();
-        
-        if (gridString[0] == '2' || gridString[0] == '8')
-        {
-            reason = "There is land in the way!";
-        }
-        else if (gridString[0] == '4')
-        {
-            reason = "The shipwreck is in the way!";
-        }
-        else if (gridString[0] == '5')
-        {
-            reason = "The island is in the way!";
-        }
-        else if (gridString[0] == '9')
-        {
-            reason = "The volcano is in the way!";
-        }
-        else if (gridString[0] == '.')
-        {
-            reason = "The space in front of me is empty!";
-        }
-
-        SaveSystem.Current.SetString("oceanRomeoReason", reason);
-    }
-    
-    private void LateUpdate() {
-        knotBoxEnabledLastFrame = knotBox.isActiveAndEnabled;
     }
     
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
@@ -166,8 +79,6 @@ public class OceanGrid : SGrid
     public override void Save()
     {
         base.Save();
-        SaveSystem.Current.SetBool("oceanRJBottleDelivery", bottleManager.puzzleSolved);
-        SaveSystem.Current.SetBool("oceanFoggyIslandReached", foggyCompleted);
         SaveSystem.Current.SetBool("oceanUnlockedAllSliders", npcRotation.unlockedAllSliders);
         SaveSystem.Current.SetBool("oceanBreadgeCollected", npcRotation.gotBreadge);
         SaveSystem.Current.SetInt("oceanAnchorUses", numAnchorUses);
@@ -182,8 +93,6 @@ public class OceanGrid : SGrid
 
         treesToJungle.SetActive(!profile.GetBool("oceanTreesRemoved"));
 
-        bottleManager.puzzleSolved = profile.GetBool("oceanRJBottleDelivery");
-        foggyCompleted = profile.GetBool("oceanFoggyIslandReached");
         npcRotation.unlockedAllSliders = profile.GetBool("oceanUnlockedAllSliders");
         npcRotation.gotBreadge = profile.GetBool("oceanBreadgeCollected");
         numAnchorUses = profile.GetInt("oceanAnchorUses");
@@ -220,12 +129,12 @@ public class OceanGrid : SGrid
         {
             if (stile1y < 2)
             {
-                if (CheckTile2PlacementHelper(stile, stile1x + 1, stile1y + 1))
+                if (TrySwapTile2(stile, stile1x + 1, stile1y + 1))
                     return;
             }
             else if (stile1y > 0)
             {
-                if (CheckTile2PlacementHelper(stile, stile1x + 1, stile1y - 1))
+                if (TrySwapTile2(stile, stile1x + 1, stile1y - 1))
                     return;
             }
         }
@@ -233,12 +142,12 @@ public class OceanGrid : SGrid
         {
             if (stile1y < 2)
             {
-                if (CheckTile2PlacementHelper(stile, stile1x - 1, stile1y + 1))
+                if (TrySwapTile2(stile, stile1x - 1, stile1y + 1))
                     return;
             }
             else if (stile1y > 0)
             {
-                if (CheckTile2PlacementHelper(stile, stile1x - 1, stile1y - 1))
+                if (TrySwapTile2(stile, stile1x - 1, stile1y - 1))
                     return;
             }
         }
@@ -246,7 +155,7 @@ public class OceanGrid : SGrid
         // wah wah u couldnt swap it for some reason boohoo
     }
 
-    private bool CheckTile2PlacementHelper(STile slider2, int x, int y)
+    private bool TrySwapTile2(STile slider2, int x, int y)
     {
         STile other = GetStileAt(x, y);
         if (other.islandId != 1)
@@ -294,13 +203,10 @@ public class OceanGrid : SGrid
 
     public void CheckShipwreck(object sender, System.EventArgs e)
     {
-        if (IsShipwreckAdjacent())
+        if (IsShipwreckAdjacent() && !PlayerInventory.Contains("Treasure Chest"))
         {
-            if (!PlayerInventory.Contains("Treasure Chest"))
-            {
-                burriedTreasure.SetActive(true);
-                burriedTreasureParticles.Play();
-            }
+            burriedTreasure.SetActive(true);
+            burriedTreasureParticles.Play();
         }
         else
         {
@@ -345,272 +251,6 @@ public class OceanGrid : SGrid
         }
     }
 
-    private bool BuoyConditions()
-    {
-        return (
-            AllBuoy() && 
-            knotBox.isActiveAndEnabled && 
-            knotBoxEnabledLastFrame &&
-            knotBox.CheckNumLines() == 0
-        );
-    }
-
-    private void BuoySuccessEffectsCheck(object sender, System.EventArgs e)
-    {
-        if (PlayerInventory.Contains("Golden Fish"))
-            return;
-
-        if (BuoyConditions())
-        {
-            knotBox.CheckParticles();
-            AudioManager.Play("Puzzle Complete");
-        }
-    }
-
-    public void BuoyAllFound(Condition c)
-    {
-        c.SetSpec(AllBuoy());
-    }
-
-    //C: Returns if all the required buoy tiles are active
-    public bool AllBuoy()
-    {
-        return SGrid.AreTilesActive(GetStiles(buoytiles));
-    }
-
-    public void knotBoxEnabled(Condition c)
-    {
-        c.SetSpec(knotBox.isActiveAndEnabled && AllBuoy());
-    }
-
-    public void knotBoxDisabled(Condition c)
-    {
-        c.SetSpec(!knotBox.isActiveAndEnabled && AllBuoy());
-    }
-
-    public void BuoyCheck(Condition c)
-    {
-        c.SetSpec(BuoyConditions());
-    }
-
-    public void BuoyFirstTimeCheck(Condition c)
-    {
-        c.SetSpec(knotBox.CheckNumLines() == 0);
-    }
-
-    public void ToggleKnotBox()
-    {
-        if (AllBuoy())
-        {
-            knotBox.enabled = !knotBox.enabled;
-            knotBox.CheckLines();
-            if (knotBox.enabled)
-            {
-                List<UITrackerBuoyAddOn> uiTrackerAddOns = new List<UITrackerBuoyAddOn>();
-                foreach (GameObject knotnode in knotBox.knotnodes)
-                {
-                    GameObject buoyUITrackerGO = Instantiate(buoyUITrackerPrefab);
-                    UITracker buoyUITracker = buoyUITrackerGO.GetComponent<UITracker>();
-                    uiTrackerAddOns.Add(buoyUITrackerGO.GetComponent<UITrackerBuoyAddOn>());
-
-                    UITrackerManager.AddNewCustomTracker(buoyUITracker, knotnode);
-                }
-
-                for (int i = 0; i < uiTrackerAddOns.Count; i++)
-                {
-                    int next = (i + 1) % uiTrackerAddOns.Count;
-                    int prev = (i + uiTrackerAddOns.Count - 1) % uiTrackerAddOns.Count;
-
-                    uiTrackerAddOns[i].target1 = uiTrackerAddOns[next].myRectTransform;
-                    uiTrackerAddOns[i].target2 = uiTrackerAddOns[prev].myRectTransform;
-                    uiTrackerAddOns[i].index1 = i;
-                    uiTrackerAddOns[i].index2 = prev;
-                    uiTrackerAddOns[i].knotBox = knotBox;
-                }
-            }
-            else
-            {
-                foreach (GameObject knotnode in knotBox.knotnodes)
-                {
-                    UITrackerManager.RemoveTracker(knotnode);
-                }
-            }
-        }
-    }
-
-    public void DisableKnotBox()
-    {
-        if(knotBox.enabled) ToggleKnotBox();
-    }
-
-    public void EnableKnotBox()
-    {
-        if(!knotBox.enabled) ToggleKnotBox();
-    }
-
-
-    // Foggy Seas
-
-    public void CheckFoggySeas(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        bool correct = FoggyCorrectMovement();
-        
-        if (GetStile(6).isTileActive && GetStile(7).isTileActive && foggyCompleted)
-        {
-            if(Player.GetInstance().GetSTileUnderneath().islandId == fogIslandId && correct) 
-            {
-                STile playerStile = Player.GetInstance().GetSTileUnderneath();
-                fogIsland.transform.position = playerStile.transform.position;
-                fogIsland.transform.SetParent(playerStile.transform);
-                fogIsland.SetActive(true);
-                SetProgressRingActive(false);
-
-                if (fogIslandId == 6)
-                {
-                    // fog6.SetActive(false);
-                    fogAnimationController6.SetIsVisible(false);
-                }
-                else
-                {
-                    // fog7.SetActive(false);
-                    fogAnimationController7.SetIsVisible(false);
-                }
-            }
-        }
-        else
-        {
-            fogAnimationController6.SetIsVisible(true);
-            fogAnimationController7.SetIsVisible(true);
-            // fog6.SetActive(true);
-            // fog7.SetActive(true);
-        }
-        
-    }
-
-    private void UpdatePlayerMovement()
-    {
-
-        if (Player.GetInstance().GetSTileUnderneath() == null)
-        {
-            if (lastIslandId == 6 || lastIslandId == 7)
-            {
-                lastIslandId = 1;
-                failFoggy();
-                SetProgressRingActive(false);
-            }
-            return;
-        }
-
-        int currentIslandId = Player.GetInstance().GetSTileUnderneath().islandId;
-        if ((currentIslandId == 6 || currentIslandId == 7) && !foggyCompleted)
-        {
-            SetProgressRingActive(true);
-            SaveSystem.Current.SetBool("OceanEnteredFoggy", true); // for FoggyMusicHintManager.cs
-        }
-        if (currentIslandId != lastIslandId && (lastIslandId == 6 || lastIslandId == 7))
-        {
-
-            // fog7.SetActive(true);
-            // fog6.SetActive(true);
-            fogAnimationController6.SetIsVisible(true);
-            fogAnimationController7.SetIsVisible(true);
-            fogIsland.SetActive(false);
-            //SetProgressRingActive(true);
-
-            if (currentIslandId != 6 && currentIslandId != 7)
-            {
-                failFoggy();
-                SetProgressRingActive(false);
-            }
-            else
-            {
-                STile current = GetStile(currentIslandId);
-                STile old = GetStile(lastIslandId);
-
-                Vector2Int currentPos = new Vector2Int(current.x, current.y);
-                Vector2Int oldPos = new Vector2Int(old.x, old.y);
-
-                playerMovement = currentPos - oldPos;
-                CheckFoggySeas(this, null);
-            }
-        }
-
-
-        lastIslandId = currentIslandId;
-
-    }
-
-    private void FoggySeasAudio()
-    {
-        AudioManager.PlayWithPitch("Puzzle Complete", 0.5f + playerIndex * 0.1f);
-        AudioManager.SetGlobalParameter("OceanFoggyProgress", playerIndex);
-    }
-
-    public bool FoggyCorrectMovement()
-    {
-        // Debug.Log("player index: " + playerIndex+ " correct path: " + correctPath.Length);
-        if(playerIndex == correctPath.Length - 1 && !foggyCompleted && correctPath[playerIndex] == playerMovement)
-        {
-            playerIndex++;
-            FoggyCompleted();
-            return true; //only returns true the first time u complete this puzzle basically
-        }
-        else if (0 <= playerIndex && playerIndex < correctPath.Length - 1 && correctPath[playerIndex] == playerMovement)
-        {
-            playerIndex++;
-            FoggySeasAudio();
-            progressNotes[playerIndex - 1].sprite = fullNote;
-            return false;
-        }
-        else
-        {
-            failFoggy();
-            return false;
-        }
-
-    }
-
-    private void failFoggy()
-    {
-        if (playerIndex != 0 && playerIndex != 6)
-        {
-            AudioManager.Play("Artifact Error");
-        }
-
-        playerIndex = 0;
-        foggyCompleted = false; // DC: idk why we made it only completable once
-        AudioManager.SetGlobalParameter("OceanFoggyProgress", 0);
-        foreach (SpriteRenderer note in progressNotes)
-        {
-            if (note.sprite.Equals(fullNote))
-            {
-                Instantiate(sparklePrefab, note.gameObject.transform.position, Quaternion.identity);
-            }
-            note.sprite = emptyNote;
-        }
-    }
-
-    private void FoggyCompleted()
-    {
-        foggyCompleted = true;
-        fogIslandId = Player.GetInstance().GetSTileUnderneath().islandId;
-        for(int i =0; i < correctPath.Length; i++)
-            progressNotes[i].sprite = emptyNote;
-    }
-
-    private void SetProgressRingActive(bool active)
-    {
-        foreach (SpriteRenderer note in progressNotes)
-        {
-            note.enabled = active;
-            if (!active)
-            {
-
-                Instantiate(sparklePrefab, note.gameObject.transform.position, Quaternion.identity);
-            }
-        }
-    }
-
     // Final puzzle
 
     public void IsCompleted(Condition c)
@@ -649,12 +289,6 @@ public class OceanGrid : SGrid
         }
     }
     
-    private void CheckBuoyFirstTry(object sender, System.EventArgs e)
-    {
-        if(SaveSystem.Current.GetBool("OceanTalkedToKevin"))
-            SaveSystem.Current.SetBool("OceanFailedFirstBuoy", true);
-    }
-
     private void CheckFinalPlacementsOnMove(object sender, System.EventArgs e)
     {
         if (!isCompleted && IsFinalPuzzleMatching())
@@ -692,7 +326,6 @@ public class OceanGrid : SGrid
         {
             for (int y = 0; y < Current.Width; y++)
             {
-                // int tid = current.targetGrid[x, y];
                 char tids = GetTileIdAt(x, y);
                 ArtifactTileButton artifactButton = UIArtifact.GetButton(x, y);
                 if (tids == '*')
@@ -704,7 +337,7 @@ public class OceanGrid : SGrid
                 }
                 else
                 {
-                    int tid = Converter.IntToChar(tids);
+                    int tid = Converter.CharToInt(tids);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
                     UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetHighlighted(artifactButton.islandId != tid);
                 }
@@ -712,25 +345,11 @@ public class OceanGrid : SGrid
         }
     }
 
-    public void ClearTreesToJungle() // called in ShopDialogueManager
+    public void ClearTreesToJungle()
     {
         SaveSystem.Current.SetBool("oceanTreesRemoved", true);
         treesToJungle.SetActive(false);
         CameraShake.Shake(1, 2);
         AudioManager.Play("Slide Explosion");
-    }
-
-    public void Pan()
-    {
-        if (!SaveSystem.Current.GetBool(INTRO_CUTSCENE_SAVE_STRING))
-        {
-            SaveSystem.Current.SetBool(INTRO_CUTSCENE_SAVE_STRING, true);
-            introCameraDolly.StartTrack();
-        }
-        else
-        {
-            introCameraDolly.intern1.gameObject.SetActive(false);
-            introCameraDolly.intern2.gameObject.SetActive(false);
-        }
     }
 }

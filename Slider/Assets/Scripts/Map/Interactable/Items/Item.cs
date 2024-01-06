@@ -5,14 +5,12 @@ using UnityEngine.Events;
 
 public class Item : MonoBehaviour, ISavable
 {
-
     public string itemName;
     public SpriteRenderer spriteRenderer;
-    public SpriteRenderer reflectedspriteRenderer;
-    public GameObject reflectionParent;
     [SerializeField] protected Collider2D myCollider;
     public bool canKeep = false;
     [SerializeField] private bool shouldDisableAtStart = false;
+    public bool doReflectionCalculations;
     public float itemRadius = 0.5f;
 
     // animation
@@ -21,6 +19,9 @@ public class Item : MonoBehaviour, ISavable
     [SerializeField] private AnimationCurve xPickUpMotion;
     [SerializeField] private AnimationCurve yPickUpMotion;
     private Vector3 spriteOffset; // for sprite pivot stuff
+    [SerializeField] private bool isOnlyUsedByPlayer = true;
+    [SerializeField] private Transform reflectionPivot;
+    private Vector3 reflectionOffset;
 
     [SerializeField] protected GameObject[] enableOnDrop;
 
@@ -39,9 +40,15 @@ public class Item : MonoBehaviour, ISavable
     public virtual void Awake()
     {
         spriteOffset = spriteRenderer.transform.localPosition;
+        if (reflectionPivot == null)
+        {
+            Debug.LogWarning($"Reflection Pivot was not assigned on {name}. Creating a make-shift pivot...");
+            reflectionPivot = new GameObject("Reflection Pivot").transform;
+            reflectionPivot.parent = transform;
+            reflectionPivot.position = transform.position;
+        }
+        reflectionOffset = reflectionPivot.transform.position - transform.position;
         order = spriteRenderer.sortingOrder;
-        if(reflectedspriteRenderer != null)
-            reflectedspriteRenderer.sprite = spriteRenderer.sprite;
     }
 
     private void Start()
@@ -124,9 +131,9 @@ public class Item : MonoBehaviour, ISavable
         }
     }
 
-    public virtual void PickUpItem(Transform pickLocation, Transform reflectionPickLocation, System.Action callback=null) // pickLocation may be moving
+    public virtual void PickUpItem(Transform pickLocation, System.Action callback=null) // pickLocation may be moving
     {
-        StartCoroutine(AnimatePickUp(pickLocation, reflectionPickLocation, callback));
+        StartCoroutine(AnimatePickUp(pickLocation, callback));
     }
 
     public virtual STile DropItem(Vector3 dropLocation, System.Action callback=null) 
@@ -175,7 +182,7 @@ public class Item : MonoBehaviour, ISavable
         spriteRenderer.gameObject.layer = layer;
     }
 
-    protected IEnumerator AnimatePickUp(Transform target, Transform reflectionTarget, System.Action callback=null)
+    protected IEnumerator AnimatePickUp(Transform target, System.Action callback=null)
     {
         foreach (GameObject go in enableOnDrop)
         {
@@ -185,6 +192,24 @@ public class Item : MonoBehaviour, ISavable
         float t = 0;
 
         Vector3 start = new Vector3(transform.position.x, transform.position.y);
+
+        Transform reflStart = null;
+        Transform reflEnd = null;
+        if (doReflectionCalculations)
+        {
+            reflStart = new GameObject("ItemReflectionPivotStart").transform;
+            reflStart.position = reflectionPivot.transform.position;
+
+            // Reflection pick ups only work with player bc its only in magitech for now
+            reflEnd = new GameObject("ItemReflectionPivotEnd").transform;
+            reflEnd.position = target.transform.position + reflectionOffset; // If an NPC is picking this up it's a bit weird
+            if (isOnlyUsedByPlayer)
+            {
+                reflEnd.parent = Player.GetInstance().GetPlayerFeetTransform();
+                reflEnd.localPosition = Vector3.zero;
+            }
+        }
+
         while (t < pickUpDuration)
         {
             float x = xPickUpMotion.Evaluate(t / pickUpDuration);
@@ -193,27 +218,36 @@ public class Item : MonoBehaviour, ISavable
                                       Mathf.Lerp(start.y, target.transform.position.y, y));
             
             spriteRenderer.transform.position = pos + spriteOffset;
-            if(reflectedspriteRenderer != null)
+            
+            if (doReflectionCalculations && reflectionPivot != null)
             {
-                Vector3 rPos = new Vector3(Mathf.Lerp(start.x, reflectionTarget.transform.position.x, x),
-                                      Mathf.Lerp(start.y, reflectionTarget.transform.position.y, y));
-                reflectedspriteRenderer.transform.position =  rPos - spriteOffset;
+                Vector3 reflectionPos = new Vector3(pos.x, Mathf.Lerp(reflStart.position.y, reflEnd.position.y, x));
+                reflectionPivot.position = reflectionPos;
             }
 
             yield return null;
             t += Time.deltaTime;
         }
 
-        AnimatePickUpEnd(target.position, reflectionTarget.position);
+        if (doReflectionCalculations)
+        {
+            if (isOnlyUsedByPlayer)
+            {
+                reflectionPivot.SetParent(Player.GetInstance().GetPlayerFeetTransform());
+            }
+
+            Destroy(reflStart.gameObject);
+            Destroy(reflEnd.gameObject);
+        }
+
+        AnimatePickUpEnd(target.position);
         callback();
     }
 
-    public void AnimatePickUpEnd(Vector3 targetPosition, Vector3 reflectionTargetPosition)
+    public void AnimatePickUpEnd(Vector3 targetPosition)
     {
         transform.position = targetPosition;
         spriteRenderer.transform.position = targetPosition + spriteOffset;
-        if(reflectedspriteRenderer != null)
-            reflectedspriteRenderer.transform.position =  reflectionTargetPosition - spriteOffset;
         myCollider.enabled = false;
         OnPickUp?.Invoke();
     }
@@ -229,19 +263,22 @@ public class Item : MonoBehaviour, ISavable
         GameObject end = new GameObject("ItemDropEnd");
         end.transform.position = target;
 
-        GameObject reflectionStart = new GameObject("ItemReflectionDropStart");
-        if(reflectionParent != null)
+        Transform reflStart = null;
+        Transform reflEnd = null;
+        if (doReflectionCalculations)
         {
-            reflectionStart.transform.position = PlayerAction.Instance.GetPickedItemReflectionLocationTransform().position + Vector3.up;
-            reflectionParent.transform.parent = transform;
-            reflectionParent.transform.localPosition = Vector3.down;
-        }
+            reflStart = new GameObject("ItemReflectionPivotStart").transform;
+            reflStart.position = reflectionPivot.transform.position;
 
+            // Reflection pick ups only work with player bc its only in magitech for now
+            reflEnd = new GameObject("ItemReflectionPivotEnd").transform;
+            reflEnd.position = end.transform.position + reflectionOffset;
+        }
 
         STile hitStile = SGrid.GetSTileUnderneath(end);
         start.transform.parent = hitStile == null ? null : hitStile.transform;
-        reflectionStart.transform.parent = hitStile == null ? null : hitStile.transform;
         end.transform.parent = hitStile == null ? null : hitStile.transform;
+        reflectionPivot.SetParent(transform);
 
         myCollider.enabled = true;
         transform.position = end.transform.position;
@@ -254,24 +291,27 @@ public class Item : MonoBehaviour, ISavable
                                       Mathf.Lerp(end.transform.position.y, start.transform.position.y, y));
             
             spriteRenderer.transform.position = pos + spriteOffset;
-            if(reflectedspriteRenderer != null)
+
+            if (doReflectionCalculations && reflectionPivot != null)
             {
-                Vector3 rPos = new Vector3(Mathf.Lerp(end.transform.position.x, reflectionStart.transform.position.x, x),
-                                      Mathf.Lerp(end.transform.position.y, reflectionStart.transform.position.y, y));
-                reflectedspriteRenderer.transform.position =  rPos + spriteOffset;
+                Vector3 reflectionPos = new Vector3(pos.x, Mathf.Lerp(reflEnd.position.y, reflStart.position.y, x));
+                reflectionPivot.position = reflectionPos;
             }
+            
             yield return null;
             t -= Time.deltaTime;
         }
 
         spriteRenderer.transform.position = end.transform.position + spriteOffset;
-        if(reflectedspriteRenderer != null)
-            reflectedspriteRenderer.transform.position = end.transform.position + spriteOffset;
         OnDrop?.Invoke();
         callback();
         Destroy(start);
         Destroy(end);
-        Destroy(reflectionStart);
+        if (doReflectionCalculations)
+        {
+            Destroy(reflStart.gameObject);
+            Destroy(reflEnd.gameObject);
+        }
     }
     
     public virtual void dropCallback()

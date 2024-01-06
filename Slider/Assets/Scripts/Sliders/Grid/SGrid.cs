@@ -49,6 +49,7 @@ public class SGrid : Singleton<SGrid>, ISavable
     [SerializeField] protected SGridAnimator gridAnimator;
     [SerializeField] protected STileTilemap worldGridTilemaps;
     [SerializeField] protected AudioModifierOverrides audioModifierOverrides;
+    public SGridTilesExplored gridTilesExplored;
 
     //L: This is the end goal for the slider puzzle.
     //It is derived from the order of tiles in the puzzle doc. (EX: 624897153 for the starting Village)
@@ -76,6 +77,11 @@ public class SGrid : Singleton<SGrid>, ISavable
     {
         foreach (Collectible c in collectibles)
         {
+            if (c == null)
+            {
+                Debug.LogError("Null Collectible in SGrid. Did you delete a collectible item? Make sure to remove it from the list on Sgrid");
+            }
+
             if (PlayerInventory.Contains(c))
             {
                 c.gameObject.SetActive(false);
@@ -88,6 +94,11 @@ public class SGrid : Singleton<SGrid>, ISavable
         if (checkCompletion)
         {
             UpdateButtonCompletions(this, null);
+        }
+
+        if (gridTilesExplored == null)
+        {
+            Debug.LogError("SGridTilesExplored is null. Please add the script to the 8Puzzle Game Object and assign the reference.");
         }
         
         UIEffects.FadeFromBlack(() => PauseManager.RemoveAllPauseRestrictions());

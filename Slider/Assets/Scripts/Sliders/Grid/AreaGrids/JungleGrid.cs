@@ -74,7 +74,7 @@ public class JungleGrid : SGrid
 
     private void HandleSTile3Placement(STile stile)
     {
-        string s = GetGridString(true);
+        string s = GetGridString(true).Replace("_", "");
         int location2 = s.IndexOf("2");
         int x2 = location2 % 3;
         int y2 = 2 - (location2 / 3);
@@ -252,6 +252,11 @@ public class JungleGrid : SGrid
 
     private void UpdateSecretaryTV()
     {
+        if (!secretaryTVAnimator.isActiveAndEnabled)
+        {
+            return;
+        }
+
         if (IsJungleComplete())
         {
             secretaryTVAnimator.Play("Jung Status Good");

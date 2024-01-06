@@ -13,7 +13,7 @@ public class MagiTechArtifact : UIArtifact
     public static Vector2Int desyncLocation = new Vector2Int(-1, -1);
 
     //C: likewise this is the ID of the *opposite* Stile
-    public int desyncIslandId = -1;
+    public static int desyncIslandId = -1;
 
     public UnityEvent onDesyncStart;
     public UnityEvent onDesyncEnd;
@@ -35,6 +35,7 @@ public class MagiTechArtifact : UIArtifact
     public Image background;
     public Sprite presentBackgroundSprite;
     public Sprite pastBackgroundSprite;
+    public Sprite emptyDesyncSprite;
 
 
     protected override void OnEnable()
@@ -60,11 +61,12 @@ public class MagiTechArtifact : UIArtifact
             isInPast = PlayerIsInPast;
             SetButtonsAndBackground(isInPast);
         }
-        //Lightning stuff
+
         if (desyncIslandId != -1)
         {
+            // Lightning stuff
             ArtifactTileButton desyncedButton = GetButton(desyncIslandId);
-            UpdateButtonPositions();
+            // UpdateButtonPositions();
             if (desyncLocation.x != desyncedButton.x || desyncLocation.y != desyncedButton.y)
             {
                 if (!isDesyncSoundPlaying)
@@ -72,7 +74,7 @@ public class MagiTechArtifact : UIArtifact
                     isDesyncSoundPlaying = true;
                     desyncTearLoopSound = AudioManager.PickSound("Desync Tear Open").AndPlay();
                 }
-                ArtifactTileButton pastButton = desyncIslandId <= 9 ? GetButton(FindAltId(desyncIslandId)) : GetButton(desyncIslandId);
+                ArtifactTileButton pastButton = desyncIslandId <= 9 ? GetButton(FindAltId(desyncIslandId)) : desyncedButton;
                 if (isInPast != isPreview) SetLightningPos(pastButton);
                 else SetLightningPos(GetButton(FindAltId(pastButton.islandId)));
             }
@@ -86,8 +88,32 @@ public class MagiTechArtifact : UIArtifact
                 }
                 DisableLightning(false);
             }
+
+            UpdateDesyncDitherBackgrounds();
         }
-        else DisableLightning(true);
+        else 
+        {
+            DisableLightning(true);
+        }
+    }
+
+    private void UpdateDesyncDitherBackgrounds()
+    {
+        foreach (ArtifactTileButton b in buttons)
+        {
+            b.RestoreDefaultEmptySpriteIfNotDefault();
+        }
+
+        ArtifactTileButton desyncedButton = GetButton(desyncIslandId);
+        Vector2Int bg1Coords = FindAltCoords(desyncedButton.x, desyncedButton.y);
+        ArtifactTileButton desyncBG1 = GetButton(bg1Coords.x, bg1Coords.y);
+        desyncBG1.SetEmptySprite(emptyDesyncSprite);
+        desyncBG1.SetSpriteToIslandOrEmpty();
+        ArtifactTileButton altButton = GetButton(FindAltId(desyncIslandId));
+        Vector2Int bg2Coords = FindAltCoords(altButton.x, altButton.y);
+        ArtifactTileButton desyncBG2 = GetButton(bg2Coords.x, bg2Coords.y);
+        desyncBG2.SetEmptySprite(emptyDesyncSprite);
+        desyncBG2.SetSpriteToIslandOrEmpty();
     }
 
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs interactArgs)
@@ -120,69 +146,17 @@ public class MagiTechArtifact : UIArtifact
         }
     }
 
-
-    /* C: moves the tiles on the non-anchored timeline to align with the tiles on the 
-     * anchored timeline. We need to both restore the tile that was desynced and
-     * the non-active tiles, since they might no longer be aligned
-     */
     private void RestoreOnEndDesync()
     {
-        STile[,] temp = SGrid.Current.GetGrid();
-        int[,] currGrid = new int[6, 3];
-        int[,] newGrid = new int[6, 3];
-        for (int x = 0; x < 6; x++)
-        {
-            for (int y = 0; y < 3; y++)
-            {
-                currGrid[x, y] = temp[x, y].islandId;
-                newGrid[x, y] = temp[x, y].islandId;
-            }
-        }
-
-        int offset = (desyncLocation.x / 3) * 3;
-        for (int x = 0; x < 3; x++)
-        {
-            for (int y = 0; y < 3; y++)
-            {
-                newGrid[x + offset, y] = FindAltId(currGrid[x - offset + 3, y]);
-            }
-        }
         DisableLightning(true);
         GetButton(desyncIslandId).SetLightning(false);
         GetButton(FindAltId(desyncIslandId)).SetLightning(false);
         UpdatePushedDowns(null, null);
-        // C: you can uncomment this if desyncing isn't working, it might help locate the source of the problem
-        // PrintGrid(currGrid, newGrid);
-
-        SGrid.Current.SetGrid(newGrid);
-    }
-
-    //C: debugging tool if desync gets broken
-    public void PrintGrid(int[,] currGrid, int[,] newGrid)
-    {
-        string output = "";
-
-        for (int y = 2; y >= 0; y--)
+        // To fix dithers
+        foreach (ArtifactTileButton b in buttons)
         {
-            for (int x = 0; x < 6; x++)
-            {
-                output += currGrid[x, y];
-                output += "\t";
-            }
-            output += "\n";
+            b.RestoreDefaultEmptySpriteIfNotDefault();
         }
-        output += "\n";
-        output += "\n";
-        for (int y = 2; y >= 0; y--)
-        {
-            for (int x = 0; x < 6; x++)
-            {
-                output += newGrid[x, y];
-                output += "\t";
-            }
-            output += "\n";
-        }
-        Debug.Log(output);
     }
 
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
@@ -200,7 +174,7 @@ public class MagiTechArtifact : UIArtifact
         {
             ArtifactTileButton b = GetButton(button.x + dir.x, button.y + dir.y);
             int i = 2;
-            while (b != null && !b.TileIsActive && !CheckDesync(button, b)
+            while (b != null && !b.TileIsActive && !DoesDesyncBlockMove(button, b)
             && button.x / 3 == b.x / 3)
             {
                 options.Add(b);
@@ -211,24 +185,25 @@ public class MagiTechArtifact : UIArtifact
         return options;
     }
 
-    //L: Negating this so that it returns true when there is a desync.
-    private bool CheckDesync(ArtifactTileButton selected, ArtifactTileButton empty)
+    //Checks if the "empty" space should actually be blocked by the desync tile
+    private bool DoesDesyncBlockMove(ArtifactTileButton selected, ArtifactTileButton empty)
     {
         if (desyncLocation.x != -1)
         {
-            //If we're trying to 
-            return !(selected.islandId == desyncIslandId) && (empty.x == desyncLocation.x && empty.y == desyncLocation.y);
+            bool selectedIsDesync = selected.islandId == desyncIslandId;
+            bool emptyIsDesync = empty.x == desyncLocation.x && empty.y == desyncLocation.y;
+            return !selectedIsDesync && emptyIsDesync;
         }
         return false; //C: No desync active, so valid move
     }
 
     //C: basically just modulus. Used to find corresponding values on either side of the grid
-    private Vector2Int FindAltCoords(int x, int y)
+    public static Vector2Int FindAltCoords(int x, int y)
     {
         return new Vector2Int((x + 3) % 6, y);
     }
 
-    private int FindAltId(int islandId)
+    public static int FindAltId(int islandId)
     {        
         return (islandId == 9) ? 18 : (islandId + 9) % 18;
     }
@@ -238,11 +213,11 @@ public class MagiTechArtifact : UIArtifact
         SMove move;
         if (buttonCurrent.islandId == desyncIslandId)
         {
-            move = base.ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
+            move = new SMoveMagiTechMove(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, shouldSync: false);
         }
         else
         {
-            move = new SMoveSyncedMove(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+            move = new SMoveMagiTechMove(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, shouldSync: true);
         }
         return move;
     }
@@ -252,17 +227,17 @@ public class MagiTechArtifact : UIArtifact
         ArtifactTileButton currAlt = GetButton(FindAltId(buttonCurrent.islandId));
         ArtifactTileButton emptyAlt = GetButton(FindAltId(buttonEmpty.islandId));
 
-        //If Not a desync, swap both pairs of buttons
-        if(move is SMoveSyncedMove)
+        // If Not a desync, swap both pairs of buttons
+        if ((move as SMoveMagiTechMove).shouldSync)
         {
             SwapButtons(currAlt, emptyAlt, false);
             base.QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
         }
-        //Else, find the correct button pair and swap them
+        // Else, find the correct button pair and swap them
         else
         {
             int idInMove = move.moves[0].islandId;
-            if(currAlt.islandId == idInMove || emptyAlt.islandId == idInMove)
+            if (currAlt.islandId == idInMove || emptyAlt.islandId == idInMove)
             {
                 base.QueueMoveFromButtonPair(move, currAlt, emptyAlt);
             }
@@ -297,6 +272,7 @@ public class MagiTechArtifact : UIArtifact
     {
         SetButtonsAndBackground(isInPast != enable);
         isPreview = enable;
+        UpdateButtonPositions();
     }
 
     private void UpdateButtonPositions()

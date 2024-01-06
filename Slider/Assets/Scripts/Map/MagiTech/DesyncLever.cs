@@ -36,7 +36,7 @@ public class DesyncLever : Lever
     public override void Switch()
     {
         base.Switch();
-        if(isPastLever && !isDesynced)
+        if(isPastLever && !isDesynced && !leverPair.isDesynced)
         {
             leverPair.Switch();
         }

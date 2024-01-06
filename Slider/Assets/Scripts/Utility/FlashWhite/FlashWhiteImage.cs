@@ -21,14 +21,22 @@ public class FlashWhiteImage : MonoBehaviour, IFlashWhite
     private void OnDisable()
     {
         if (oldMat != null)
+        {
             mySprite.material = oldMat;
+        }
     }
 
     public void Flash(int n, Action callback = null)
     {
         StopAllCoroutines();
         if (mySprite == null)
+        {
             UpdateRefs();
+        }
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
         StartCoroutine(_Flash(n, callback));
     }
 

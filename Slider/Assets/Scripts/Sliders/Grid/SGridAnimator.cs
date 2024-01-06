@@ -16,6 +16,8 @@ public class SGridAnimator : MonoBehaviour
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveStart;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndEarly;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
+    public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndLate; //:clown emoji
+    public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndLateLate; //got lotion on my tile, strokin my tile
 
     // set in inspector
     public AnimationCurve movementCurve;
@@ -180,7 +182,23 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-        
+
+        OnSTileMoveEndLate?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = moveCoords.startLoc,
+            smove = move,
+            moveDuration = currMoveDuration
+        });
+
+        OnSTileMoveEndLateLate?.Invoke(this, new OnTileMoveArgs
+        {
+            stile = stile,
+            prevPos = moveCoords.startLoc,
+            smove = move,
+            moveDuration = currMoveDuration
+        });
+
         EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
     }
     
@@ -193,7 +211,7 @@ public class SGridAnimator : MonoBehaviour
     {
         Dictionary<Vector2Int, List<int>> borders = move.GenerateBorders();
 
-        // disable borders colliders
+        // enable borders colliders
         foreach (Vector2Int p in borders.Keys)
         {
             if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1))
@@ -234,7 +252,7 @@ public class SGridAnimator : MonoBehaviour
         }
 
 
-        // enable border colliders
+        // disable border colliders
         foreach (Vector2Int p in borders.Keys)
         {
             if (0 <= p.x && p.x < bgGrid.GetLength(0) && 0 <= p.y && p.y < bgGrid.GetLength(1))
@@ -288,10 +306,10 @@ public class SGridAnimator : MonoBehaviour
             GameObject.Destroy(g, MAX_POSSIBLE_MOVE_DURATION);
             return s.transform;
         }
-        else if(move is SMoveSyncedMove)
+        else if (move is SMoveMagiTechMove && (move as SMoveMagiTechMove).shouldSync)
         {
-            Transform[] t = ((SMoveSyncedMove)move).GetTileTransforms();
-            if(((MagiTechArtifact)MagiTechArtifact.GetInstance()).PlayerIsInPast)
+            Transform[] t = (move as SMoveMagiTechMove).GetTileTransforms();
+            if ((MagiTechArtifact.GetInstance() as MagiTechArtifact).PlayerIsInPast)
                 return t[1];
             else
                 return t[0];

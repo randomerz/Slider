@@ -9,6 +9,13 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 {
     public static event Action<string> OnControlSchemeChanged;
 
+    public class HousingChangeArgs : System.EventArgs
+    {
+        public bool newIsInHouse;
+    }
+
+    public static System.EventHandler<HousingChangeArgs> OnHousingChanged;
+
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5;
     [SerializeField] private bool isOnWater = false;
@@ -17,16 +24,18 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     // [SerializeField] private Sprite trackerSprite;
     [SerializeField] private PlayerAction playerAction;
     [SerializeField] private PlayerInventory playerInventory;
+    [SerializeField] private PlayerInput playerInput;
+    
     [SerializeField] private SpriteRenderer playerSpriteRenderer;
+    [SerializeField] private Animator playerAnimator;
+
     [SerializeField] private Collider2D colliderPlayerVers;
     [SerializeField] private Collider2D colliderBoatVers;
     [SerializeField] private GameObject boatGameObject;
     [SerializeField] private Transform boatGetSTileUnderneathTransform;
-    [SerializeField] private Animator playerAnimator;
-    [SerializeField] private Animator reflectionAnimator;
-    [SerializeField] private SpriteRenderer reflectionSpriteRenderer;
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private Transform feetTransform;
+    
+    // [SerializeField] private Rigidbody2D rb;
     [SerializeField] private List<Material> ppMaterials;
     [SerializeField] private GameObject lightningEffect;
 
@@ -88,23 +97,14 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             if (inputDir.x < 0)
             {
                 playerSpriteRenderer.flipX = true;
-                if (reflectionSpriteRenderer != null)
-                    reflectionSpriteRenderer.flipX = true;
             }
             else if (inputDir.x > 0)
             {
                 playerSpriteRenderer.flipX = false;
-                if (reflectionSpriteRenderer != null)
-                    reflectionSpriteRenderer.flipX = false;
             }
 
             playerAnimator.SetBool("isRunning", inputDir.magnitude != 0);
             playerAnimator.SetBool("isOnWater", isOnWater);
-            if (reflectionAnimator != null && reflectionAnimator.isActiveAndEnabled)
-            {
-                reflectionAnimator.SetBool("isRunning", inputDir.magnitude != 0);
-                reflectionAnimator.SetBool("isOnWater", isOnWater);
-            }
         }
 
     }
@@ -191,11 +191,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         //Debug.Log("Control Scheme changed to: " + newControlScheme);
         OnControlSchemeChanged?.Invoke(newControlScheme);
         Controls.CurrentControlScheme = newControlScheme;
-    }
-
-    public void ToggleLightning(bool val)
-    {
-        lightningEffect.SetActive(val);
     }
 
     // Here is where we pay for all our Singleton Sins
@@ -361,7 +356,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         if (!canAnimateMovement)
         {
             _instance.playerAnimator.SetBool("isRunning", false);
-            _instance.reflectionAnimator?.SetBool("isRunning", false);
         }
     }
 
@@ -428,6 +422,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         }
     }
 
+    public Transform GetPlayerFeetTransform()
+    {
+        return feetTransform;
+    }
+
     public STile GetSTileUnderneath()
     {
         Transform transformToUse = isOnWater ? boatGetSTileUnderneathTransform : transform;
@@ -464,14 +463,30 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         if (value)
         {
-            UITrackerManager.AddNewTracker(
-                gameObject,
-                UITrackerManager.DefaultSprites.playerFullBlackCircle,
-                UITrackerManager.DefaultSprites.playerFullBlackCircleEmpty,
-                UITrackerManager.DefaultSprites.playerFullWhiteCircle,
-                UITrackerManager.DefaultSprites.playerFullWhiteCircleEmpty,
-                3f
-            );
+            if (SettingsManager.MiniPlayerIcon)
+            {
+                UITrackerManager.AddNewTracker(
+                    gameObject,
+                    UITrackerManager.DefaultSprites.playerBlackCircle,
+                    UITrackerManager.DefaultSprites.playerBlackCircleEmpty,
+                    UITrackerManager.DefaultSprites.playerWhiteCircle,
+                    UITrackerManager.DefaultSprites.playerWhiteCircleEmpty,
+                    blinkTime: 3f,
+                    timeUntilBlinkRepeat: 10f
+                );
+            }
+            else
+            {
+                UITrackerManager.AddNewTracker(
+                    gameObject,
+                    UITrackerManager.DefaultSprites.playerFullBlackCircle,
+                    UITrackerManager.DefaultSprites.playerFullBlackCircleEmpty,
+                    UITrackerManager.DefaultSprites.playerFullWhiteCircle,
+                    UITrackerManager.DefaultSprites.playerFullWhiteCircleEmpty,
+                    blinkTime: 3f,
+                    timeUntilBlinkRepeat: 10f
+                );
+            }
         }
         else
         {
@@ -498,6 +513,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         AudioManager.SetListenerIsIndoor(isInHouse);
         _instance.isInHouse = isInHouse;
+
+        OnHousingChanged?.Invoke(_instance, new HousingChangeArgs { newIsInHouse = isInHouse });
     }
 
     public bool GetIsOnWater()
@@ -519,6 +536,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         boatGameObject.SetActive(isOnWater);
 
         UpdatePlayerSpeed();
+    }
+
+    public void ToggleLightning(bool val)
+    {
+        lightningEffect.SetActive(val);
     }
 
     Tilemap ISTileLocatable.GetCurrentMaterialTilemap()

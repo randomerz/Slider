@@ -17,16 +17,16 @@ public class TavernPassRewardEffect : MonoBehaviour
     private const float MAX_MASK_SIZE = 480;
     private const float SOUND_DAMPEN_LENGTH = 2;
 
-    public void StartEffect(string name, Sprite sprite, System.Action onTextVisibleCallback=null)
+    public void StartEffect(string name, Sprite sprite, System.Action onTextVisibleCallback=null, System.Action onEndEffectCallback=null)
     {
         InitEffect(name, sprite);
-        StartCoroutine(Effect(onTextVisibleCallback));
+        StartCoroutine(Effect(onTextVisibleCallback, onEndEffectCallback));
     }
 
-    public IEnumerator StartEffectCoroutine(string name, Sprite sprite, System.Action onTextVisibleCallback=null)
+    public IEnumerator StartEffectCoroutine(string name, Sprite sprite, System.Action onTextVisibleCallback=null, System.Action onEndEffectCallback=null)
     {
         InitEffect(name, sprite);
-        yield return Effect(onTextVisibleCallback);
+        yield return Effect(onTextVisibleCallback, onEndEffectCallback);
     }
 
     private void InitEffect(string name, Sprite sprite)
@@ -40,7 +40,7 @@ public class TavernPassRewardEffect : MonoBehaviour
         AudioManager.DampenMusic(this, 0.2f, SOUND_DAMPEN_LENGTH);
     }
 
-    private IEnumerator Effect(System.Action onTextVisibleCallback=null)
+    private IEnumerator Effect(System.Action onTextVisibleCallback=null, System.Action onEndEffectCallback=null)
     {
         AudioManager.Play("Ocean Pick Up");
         displayText.gameObject.SetActive(false);
@@ -71,7 +71,8 @@ public class TavernPassRewardEffect : MonoBehaviour
             yield return null;
             t += Time.deltaTime;
         }
-
+        
+        onEndEffectCallback?.Invoke();
         gameObject.SetActive(false);
     }
 }

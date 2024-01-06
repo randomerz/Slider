@@ -121,6 +121,10 @@ public class MagiTechGrid : SGrid
         }
     }
 
+    /// <summary>
+    /// Magitech returns HALF of the total number of tiles.
+    /// </summary>
+    /// <returns></returns>
     public override int GetNumTilesCollected()
     {
         return base.GetNumTilesCollected() / 2;
@@ -138,6 +142,10 @@ public class MagiTechGrid : SGrid
 
     public override void Save()
     {
+        if (desyncIslandId != -1)
+        {
+            EndDesync();
+        }
         base.Save();
     }
 
@@ -173,12 +181,43 @@ public class MagiTechGrid : SGrid
             }
             else if (desyncIslandId != -1)
             {
-                DesyncActive = false;
-                OnDesyncEndWorld?.Invoke(this, new(desyncIslandId, desyncLocation));
-                desyncLocation = new Vector2Int(-1, -1);
-                desyncIslandId = -1;
+                EndDesync();
             }
         }
+    }
+
+    private void EndDesync()
+    {
+        RestoreGridFromDesync();
+        DesyncActive = false;
+        OnDesyncEndWorld?.Invoke(this, new(desyncIslandId, desyncLocation));
+        desyncLocation = new Vector2Int(-1, -1);
+        desyncIslandId = -1;
+    }
+
+    private void RestoreGridFromDesync()
+    {
+        STile[,] temp = Current.GetGrid();
+        int[,] currGrid = new int[6, 3];
+        int[,] newGrid = new int[6, 3];
+        for (int x = 0; x < 6; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                currGrid[x, y] = temp[x, y].islandId;
+                newGrid[x, y] = temp[x, y].islandId;
+            }
+        }
+
+        int offset = (desyncLocation.x / 3) * 3;
+        for (int x = 0; x < 3; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                newGrid[x + offset, y] = FindAltId(currGrid[x - offset + 3, y]);
+            }
+        }
+        Current.SetGrid(newGrid);
     }
 
     private Vector2Int FindAltCoords(int x, int y)

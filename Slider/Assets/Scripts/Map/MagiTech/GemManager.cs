@@ -5,11 +5,14 @@ using UnityEngine;
 
 public class GemManager : MonoBehaviour, ISavable
 {
+    private const string NUM_REMAINING_GEMS_STRING = "magiTechNumRemainingGems";
+
     private Dictionary<Area, bool> gems = new Dictionary<Area, bool>();
     private Dictionary<Area, GameObject> gemSprites = new();
 
     public List<GameObject> sprites = new();
     public List<Transform> poofTransforms = new();
+    [Tooltip("Put in world progression order (Village->Caves)")]
     public List<Item> gemItems = new();
 
     private bool hasGemTransporter;
@@ -53,6 +56,7 @@ public class GemManager : MonoBehaviour, ISavable
 
         BuildSpriteDictionary();
         UpdateGemSprites();
+        UpdateGemItems();
 
         if(profile.GetBool("MagitechHasGemTransporter"))
             EnableGemTransporter();
@@ -72,6 +76,11 @@ public class GemManager : MonoBehaviour, ISavable
     public void HasDesertGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Desert, false));
     public void HasJungleGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Jungle, false));
     public void HasMagiTechGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.MagiTech, false));
+
+    public bool HasAreaGem(Area area)
+    {
+        return gems.GetValueOrDefault(area, false);
+    }
 
     public void BuildSpriteDictionary()
     {
@@ -107,9 +116,7 @@ public class GemManager : MonoBehaviour, ISavable
         {
             gems[itemNameAsEnum] = true;
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)itemNameAsEnum - 1].position);
-            //Funni turn-in coroutine
-            PlayerInventory.RemoveAndDestroyItem();
-            Debug.Log(itemNameAsEnum);
+            PlayerInventory.RemoveItem().gameObject.SetActive(false);
         }
         else if (item.itemName == "Mountory")
         {
@@ -117,17 +124,18 @@ public class GemManager : MonoBehaviour, ISavable
             gems[Area.Mountain] = true;
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)Area.Factory - 1].position);
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)Area.Mountain - 1].position);
-            PlayerInventory.RemoveAndDestroyItem();
+            PlayerInventory.RemoveItem().gameObject.SetActive(false);
         }
         else
         {
-            Debug.LogWarning("Tried to turn in invalid item: " + item);
+            Debug.LogError("Tried to turn in invalid item: " + item);
         }
         UpdateGemSprites();
     }
 
     public void UpdateGemSprites()
     {
+        UpdateNumRemainingGems();
         foreach(Area a in gems.Keys)
         {
             gemSprites[a].SetActive(gems[a]);
@@ -136,6 +144,35 @@ public class GemManager : MonoBehaviour, ISavable
         {
             animator.Play("Active");
         }
+    }
+    
+    private void UpdateGemItems()
+    {
+        if (gemItems.Count != 8)
+        {
+            Debug.LogWarning("gemItems not properly set in Inspector!");
+            return;
+        }
+        gemItems[1].gameObject.SetActive(!gems[Area.Caves]);
+        gemItems[2].gameObject.SetActive(!gems[Area.Ocean]);
+        gemItems[3].gameObject.SetActive(!gems[Area.Jungle]);
+        gemItems[6].gameObject.SetActive(!gems[Area.Military]);
+        // gemItems[7].gameObject.SetActive(!gems[Area.MagiTech]);
+    }
+
+    private void UpdateNumRemainingGems()
+    {
+        int num = 0;
+
+        foreach (bool b in gems.Values)
+        {
+            if (!b)
+            {
+                num += 1;
+            }
+        }
+
+        SaveSystem.Current.SetString(NUM_REMAINING_GEMS_STRING, num.ToString());
     }
 
     private bool HasAllGems()

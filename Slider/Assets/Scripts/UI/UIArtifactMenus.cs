@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 
-// ** THIS CLASS HAS BEEN UPDATED TO USE THE NEW SINGLETON BASE CLASS. PLEASE REPORT NEW ISSUES YOU SUSPECT ARE RELATED TO THIS CHANGE TO TRAVIS AND/OR DANIEL! **
 public class UIArtifactMenus : Singleton<UIArtifactMenus>
 {
     public static System.EventHandler<System.EventArgs> OnArtifactOpened;

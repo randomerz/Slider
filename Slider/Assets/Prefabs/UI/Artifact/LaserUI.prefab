@@ -89,6 +89,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   whiteSpriteMat: {fileID: 2100000, guid: 8ecef4a34f6e0c1439cfff70d767a625, type: 2}
+  flashTime: 0.25
 --- !u!1 &2730039380566352154
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,6 +162,8 @@ MonoBehaviour:
   otherPortal: {fileID: 0}
   laser: {fileID: 0}
   rockdata: []
+  t5RockBS: 0
+  t5Sprites: []
 --- !u!1 &5512507318371252356
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,7 +182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5662952312542418009
 RectTransform:
   m_ObjectHideFlags: 0
@@ -250,6 +253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   whiteSpriteMat: {fileID: 2100000, guid: 8ecef4a34f6e0c1439cfff70d767a625, type: 2}
+  flashTime: 0.25
 --- !u!1 &5625261002651327284
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,7 +272,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4934474145133502656
 RectTransform:
   m_ObjectHideFlags: 0
@@ -339,6 +343,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   whiteSpriteMat: {fileID: 2100000, guid: 8ecef4a34f6e0c1439cfff70d767a625, type: 2}
+  flashTime: 0.25
 --- !u!1 &5895162826960119659
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,7 +362,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8511772767109440006
 RectTransform:
   m_ObjectHideFlags: 0
@@ -428,6 +433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   whiteSpriteMat: {fileID: 2100000, guid: 8ecef4a34f6e0c1439cfff70d767a625, type: 2}
+  flashTime: 0.25
 --- !u!1 &6490564934101015707
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,6 +523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   whiteSpriteMat: {fileID: 2100000, guid: 8ecef4a34f6e0c1439cfff70d767a625, type: 2}
+  flashTime: 0.25
 --- !u!1 &7863790598470301610
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,6 +613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   whiteSpriteMat: {fileID: 2100000, guid: 8ecef4a34f6e0c1439cfff70d767a625, type: 2}
+  flashTime: 0.25
 --- !u!1 &7920268439624104618
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,7 +632,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2858988397573780639
 RectTransform:
   m_ObjectHideFlags: 0
@@ -695,6 +703,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   whiteSpriteMat: {fileID: 2100000, guid: 8ecef4a34f6e0c1439cfff70d767a625, type: 2}
+  flashTime: 0.25
 --- !u!1 &9092906949592861681
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,3 +793,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   whiteSpriteMat: {fileID: 2100000, guid: 8ecef4a34f6e0c1439cfff70d767a625, type: 2}
+  flashTime: 0.25

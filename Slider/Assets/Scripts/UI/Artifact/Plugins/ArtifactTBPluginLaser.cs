@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;    
 
-//L: This is a way to inject more implementation into a button without using inheritance (since swapping components in Unity doesn't save serialized values).
 public class ArtifactTBPluginLaser : ArtifactTBPlugin
 {
     public GameObject[] sprites; //0 = East, 1 = north, 2 = west, 3 = south
@@ -63,6 +62,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public List<LaserableRockUIData> rockdata;
     public bool t5RockBS;
     public GameObject[] t5Sprites;
+    public LaserUIOffMap laserUIOffMap;
  
 
     private void Awake()
@@ -201,6 +201,11 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         if(button == null) return;
         int nextX = button.x + GetTileOffsetVector(direction)[0];
         int nextY = button.y + GetTileOffsetVector(direction)[1];
+
+        if(button.y == 2 && button.x == 3 && nextX == 2)
+        {
+            laserUIOffMap.ShowLaser();
+        }
         
         if(nextX < 0 || nextY < 0 || nextX > 5 || nextY > 2) return;
         if(button.x > 2 != nextX > 2) return;
@@ -214,6 +219,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
             }
         }
     }
+
 
     public override void OnPosChanged()
     {
@@ -229,6 +235,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public void UpdateSprites()
     {
         if(tileDict == null) return;
+        laserUIOffMap.HideLaser();
         foreach(ArtifactTBPluginLaser l in tileDict.Values)
         {
             l.ResetSprites();
