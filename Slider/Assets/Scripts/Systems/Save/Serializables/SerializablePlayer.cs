@@ -8,6 +8,7 @@ public class SerializablePlayer
     // Player
     public float[] position; // is this a good idea?
     public bool isOnWater;
+    public bool isInHouse;
 
     // Player Inventory
     public List<Collectible.CollectibleData> collectibles = new List<Collectible.CollectibleData>();
