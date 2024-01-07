@@ -11,9 +11,6 @@ public class GameManager : MonoBehaviour
     public SceneInitializer sceneInitializer;
     public GameSaver gameAutoSaver;
 
-    // constant for other scripts to reference
-    public bool debugModeActive;
-
     private void Awake() {
         if (instance == null) {
             instance = this;
