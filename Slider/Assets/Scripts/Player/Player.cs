@@ -301,7 +301,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         SetIsInHouse(sp.isInHouse);
 
         // Update position
-        if (GameManager.instance.debugModeActive && DebugUIManager.justDidSetScene)
+        if (SettingsManager.DevConsole && DebugUIManager.justDidSetScene)
         {
             // skip setting position if just did SetScene()
             DebugUIManager.justDidSetScene = false;
