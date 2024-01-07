@@ -52,6 +52,15 @@ public class MagiTechArtifact : UIArtifact
         Anchor.OnAnchorInteract -= OnAnchorInteract;
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        foreach(ArtifactTileButton b in buttons)
+        {
+            b.UpdateTileActive();
+        }
+    }
+
     protected override void Update()
     {
         base.Update();
@@ -103,6 +112,8 @@ public class MagiTechArtifact : UIArtifact
         {
             b.RestoreDefaultEmptySpriteIfNotDefault();
         }
+
+        if(desyncIslandId == -1) return;
 
         ArtifactTileButton desyncedButton = GetButton(desyncIslandId);
         Vector2Int bg1Coords = FindAltCoords(desyncedButton.x, desyncedButton.y);
