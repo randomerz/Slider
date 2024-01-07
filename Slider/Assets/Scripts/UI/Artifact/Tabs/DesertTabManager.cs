@@ -17,8 +17,11 @@ public class DesertTabManager : ArtifactTabManager
     [SerializeField] private PlayerActionHints playerActionHints;
 
     [SerializeField] private Sprite[] tabSprites; //0 = top left, 1 = top middle, 2 = top right, 3 = left middle, 4 = right middle, 5 = bottom left, 6 = bottom middle, 7 = bottom right
+    /*
     [SerializeField] private GameObject grayMiddleTab;
     private Image grayMiddleTabImage;
+    private Vector2 grayMiddleTabHoverPos;
+    private Vector2 grayMiddleTabOGPos;*/
     public override void SetCurrentScreen(int screenIndex)
     {
         if(realignTab == null)
@@ -61,7 +64,10 @@ public class DesertTabManager : ArtifactTabManager
 
     private void Start()
     {
+        /*
         grayMiddleTabImage = grayMiddleTab.GetComponent<Image>();
+        grayMiddleTabOGPos = grayMiddleTab.transform.position;
+        grayMiddleTabHoverPos = new Vector2(grayMiddleTabOGPos.x + 1, grayMiddleTabOGPos.y);*/
         SubscribeToEvents();
     }
 
@@ -72,6 +78,7 @@ public class DesertTabManager : ArtifactTabManager
 
     private void OnMoveEnd(object sender, System.EventArgs e)
     {
+        /*
         middle = UIArtifact.GetButton(1, 1);
 
         if (middle.TileIsActive && !grayMiddleTabImage.enabled)
@@ -81,7 +88,7 @@ public class DesertTabManager : ArtifactTabManager
         else if (!middle.TileIsActive && grayMiddleTabImage.enabled)
         {
             grayMiddleTabImage.enabled = false;
-        }
+        }*/
     }
 
     public void FragRearrangeOnClick()
@@ -102,18 +109,14 @@ public class DesertTabManager : ArtifactTabManager
             playerActionHints.DisableHint("scrollscrap");
             successfullyUsedOnceBefore = true;
         }
-        //UpdateMiddleAndFragSwapTile();
-        //Mirage
-        //MirageSTileManager.GetInstance().UpdateMirageSTileOnFrag(empty.x, empty.y);
+
         FragRearrangeOnHoverExit();
     }
 
     public void FragRearrangeOnHoverEnter()
     {
-        //rearrangingFragTabAnimator.SetFloat("speed", 4);
-        //rearrangingFragTabAnimator.StartPlayback();
         rearrangingFragTabAnimator.enabled = false;
-        grayMiddleTab.transform.position = new Vector2(grayMiddleTab.transform.position.x + 1, grayMiddleTab.transform.position.y);
+        //grayMiddleTab.transform.position = grayMiddleTabHoverPos;
 
         //Preview!
         middle = UIArtifact.GetButton(1, 1);
@@ -123,7 +126,7 @@ public class DesertTabManager : ArtifactTabManager
             UpdateFragSwapTile();
             UIArtifact.SetLightningPos(1, 1);
             middle.SetScrollHighlight(true);
-            //fragSwapTile.SetScrollHighlight(true);
+
             SetFragSwapTile(fragSwapTile);
         }
     }
@@ -135,10 +138,8 @@ public class DesertTabManager : ArtifactTabManager
             StopCoroutine(fragSwapTileCycleRoutine);
         }
 
-        //rearrangingFragTabAnimator.SetFloat("speed", 1);
-        //rearrangingFragTabAnimator.StopPlayback();
         rearrangingFragTabAnimator.enabled = true;
-        grayMiddleTab.transform.position = new Vector2(grayMiddleTab.transform.position.x - 1, grayMiddleTab.transform.position.y);
+        //grayMiddleTab.transform.position = grayMiddleTabOGPos;
 
         //Reset preview
         UIArtifact.DisableLightning(true);
