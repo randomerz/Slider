@@ -10,7 +10,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     [SerializeField] private List<GameObject> mirageSTiles;
     [SerializeField] private List<ArtifactTBPluginMirage> mirageButtons;
     public static Vector2Int mirageTailPos;
-
+    public static EventHandler OnMirageSTilesEnabled;
     //struct MirageEnableArgs
     //{
     //    public int islandId, x, y;
@@ -28,7 +28,6 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     /// The scale factor from the position of a tile on the grid to the transform.position of the tile.
     /// </summary>
     private const int GRID_POSITION_TO_WORLD_POSITION = 17;
-    private const string ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public void Awake()
     {
@@ -91,6 +90,8 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
             }
 
         }
+
+        OnMirageSTilesEnabled?.Invoke(this, null);
     }
 
     private void CheckPlayerOnMirageSTile(object sender, SGridAnimator.OnTileMoveArgs e)
@@ -98,7 +99,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
         //This assumes mirages get disabled every smove (which is kinda bad)
 
         int mirageIsland;
-        bool playerOnMirage = isPlayerOnMirage(out mirageIsland);
+        bool playerOnMirage = IsPlayerOnMirage(out mirageIsland);
 
         if (playerOnMirage)
         {
@@ -136,8 +137,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
             if (mirageTile.activeInHierarchy)
             {
                 Vector2Int mirageTileGridPosition = GridPositionFromWorldPosition(mirageTile.transform.position);
-                //tileIdToPosition[mirageTileGridPosition] = tileId + 1;
-                tileIdToPosition[mirageTileGridPosition] = ALPHABET[tileId];
+                tileIdToPosition[mirageTileGridPosition] = (char)('A' + tileId);
             }
         }
 
@@ -151,7 +151,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
         return new Vector2Int(x, y);
     }
 
-    private bool isPlayerOnMirage(out int islandId)
+    private bool IsPlayerOnMirage(out int islandId)
     {
         Vector2 pos = Player.GetInstance().transform.position;
         float offset = 8.5f;

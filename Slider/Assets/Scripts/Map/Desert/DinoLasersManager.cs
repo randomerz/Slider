@@ -41,12 +41,12 @@ public class DinoLasersManager : MonoBehaviour
 
             SaveSystem.Current.SetBool("desertDinoLaserActivatedAlready", true);
 
-            SGridAnimator.OnSTileMoveEndLateLate += OnMoveEnd;
+            MirageSTileManager.OnMirageSTilesEnabled += OnMoveEnd;
             //DesertArtifact.MirageDisappeared += OnMirageDisappeared;
         }
         else
         {
-            SGridAnimator.OnSTileMoveEndLateLate += UpdateCanFirstTimeActivate;
+            MirageSTileManager.OnMirageSTilesEnabled += UpdateCanFirstTimeActivate;
             //DesertArtifact.MirageDisappeared += UpdateCanFirstTimeActivate;
         }
     }
@@ -67,12 +67,12 @@ public class DinoLasersManager : MonoBehaviour
     {
         if (debugSkipFezziwigActivation)
         {
-            SGridAnimator.OnSTileMoveEndLateLate -= OnMoveEnd;
+            MirageSTileManager.OnMirageSTilesEnabled -= OnMoveEnd;
             //DesertArtifact.MirageDisappeared -= OnMirageDisappeared;
         }
         else
         {
-            SGridAnimator.OnSTileMoveEndLateLate -= UpdateCanFirstTimeActivate;
+            MirageSTileManager.OnMirageSTilesEnabled -= UpdateCanFirstTimeActivate;
             //DesertArtifact.MirageDisappeared -= UpdateCanFirstTimeActivate;
         }
     }
@@ -234,10 +234,10 @@ public class DinoLasersManager : MonoBehaviour
 
         SaveSystem.Current.SetBool("desertDinoLaserActivatedAlready", true);
 
-        SGridAnimator.OnSTileMoveEndLateLate -= UpdateCanFirstTimeActivate;
+        MirageSTileManager.OnMirageSTilesEnabled -= UpdateCanFirstTimeActivate;
         //DesertArtifact.MirageDisappeared -= UpdateCanFirstTimeActivate;
 
-        SGridAnimator.OnSTileMoveEndLateLate += OnMoveEnd;
+        MirageSTileManager.OnMirageSTilesEnabled += OnMoveEnd;
         //DesertArtifact.MirageDisappeared += OnMirageDisappeared;
 
         CheckEnableLasers();
@@ -255,7 +255,7 @@ public class DinoLasersManager : MonoBehaviour
             ActivateButt(false, dinoButt);
         }
 
-        SGridAnimator.OnSTileMoveEndLateLate -= OnMoveEnd;
+        MirageSTileManager.OnMirageSTilesEnabled-= OnMoveEnd;
         //SGridAnimator.OnSTileMoveStart -= OnMoveStart;
         //DesertArtifact.MirageDisappeared -= OnMirageDisappeared;
     }

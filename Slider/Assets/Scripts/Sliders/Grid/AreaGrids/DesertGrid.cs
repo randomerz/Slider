@@ -125,8 +125,8 @@ public class DesertGrid : SGrid
 
     /// <summary>
     /// Identical to <see cref="SGrid.GetGridString(bool)"/> except that this method considers
-    /// mirage tiles. The ID used for a mirage tile id the ID of its equivalent non-mirage tile 
-    /// (e.g. the ID of the mirage tile of tile 5 is 5.)
+    /// mirage tiles. The ID used for a mirage tile id the Letter corresponding to the non-mirage tile 
+    /// (e.g. the ID of the mirage tile of tile 1 is A.)
     /// </summary>
     /// <returns></returns>
     public static string GetGridString()

@@ -17,7 +17,7 @@ public class SGridAnimator : MonoBehaviour
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndEarly;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndLate; //:clown emoji
-    public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndLateLate; //got lotion on my tile, strokin my tile
+   // public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndLateLate; //got lotion on my tile, strokin my tile
 
     // set in inspector
     public AnimationCurve movementCurve;
