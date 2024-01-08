@@ -80,7 +80,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     private void EnableMirageAfterSMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (!SaveSystem.Current.GetBool("desertMirage")) return; //Maybe add a collectible check?
-        Debug.Log("STileMoveEndLateCalled");
+        //Debug.Log("STileMoveEndLateCalled");
         if (UIArtifact.GetInstance().MoveQueueEmpty())
         {
             //No new moves should be queued before mirage tiles are enabled

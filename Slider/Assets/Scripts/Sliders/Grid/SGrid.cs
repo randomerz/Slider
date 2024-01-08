@@ -77,6 +77,11 @@ public class SGrid : Singleton<SGrid>, ISavable
     {
         foreach (Collectible c in collectibles)
         {
+            if (c == null)
+            {
+                Debug.LogError("Null Collectible in SGrid. Did you delete a collectible item? Make sure to remove it from the list on Sgrid");
+            }
+
             if (PlayerInventory.Contains(c))
             {
                 c.gameObject.SetActive(false);

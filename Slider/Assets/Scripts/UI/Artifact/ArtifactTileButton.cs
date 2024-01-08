@@ -252,6 +252,11 @@ public class ArtifactTileButton : MonoBehaviour
         buttonAnimator.SetLightning(v);
     }
 
+    public void SetScrollHighlight(bool v)
+    {
+        buttonAnimator.SetScrollHighlight(v);
+    }
+
     public void SetSelected(bool v)
     {
         buttonAnimator.SetSelected(v);
