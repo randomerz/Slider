@@ -17,33 +17,11 @@ public class DesertTabManager : ArtifactTabManager
     [SerializeField] private PlayerActionHints playerActionHints;
 
     [SerializeField] private Sprite[] tabSprites; //0 = top left, 1 = top middle, 2 = top right, 3 = left middle, 4 = right middle, 5 = bottom left, 6 = bottom middle, 7 = bottom right
-    /*
+
     [SerializeField] private GameObject grayMiddleTab;
-    private Image grayMiddleTabImage;
-    private Vector2 grayMiddleTabHoverPos;
-    private Vector2 grayMiddleTabOGPos;*/
 
     private Sprite[,] tabSpritesArray;
 
-    private void OnEnable()
-    {
-        SubscribeToEvents();
-    }
-
-    private void OnDisable()
-    {
-        UnSubscribeFromEvents();
-    }
-
-    private void SubscribeToEvents()
-    {
-        SGridAnimator.OnSTileMoveEndLateLate += OnMoveEnd;
-    }
-
-    private void UnSubscribeFromEvents()
-    {
-        SGridAnimator.OnSTileMoveEndLateLate -= OnMoveEnd;
-    }
 
     private void Start()
     {
@@ -69,21 +47,13 @@ public class DesertTabManager : ArtifactTabManager
             InitTabs();
         if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
         {
-            if (SGrid.Current.GetActiveTiles().Count == SGrid.Current.GetTotalNumTiles() //Realigning case
-                && SGrid.GetNumButtonCompletions() != SGrid.Current.GetTotalNumTiles())
+            if (IsInRealignMode())
             {
-                realignTab.SetIsVisible(screenIndex == realignTab.homeScreen);
-                saveTab.SetIsVisible(false);
-                loadTab.SetIsVisible(false);
-                fragRealignTab.SetIsVisible(false);
+                EnableRealignTab(screenIndex);
             }
-            else //Save Load Case
+            else 
             {
-                realignTab.SetIsVisible(false);
-                saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
-                loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
-                SetSaveLoadTabSprites(SGrid.Current.HasRealigningGrid());
-                fragRealignTab.SetIsVisible(false);
+                EnableSaveLoadTab(screenIndex);
             }
         }
         else if (PlayerInventory.Contains("Scroll Frag", Area.Desert) && SGrid.Current.GetActiveTiles().Count != SGrid.Current.GetTotalNumTiles())
@@ -92,45 +62,65 @@ public class DesertTabManager : ArtifactTabManager
         }
         else
         {
-            realignTab.SetIsVisible(false);
-            saveTab.SetIsVisible(false);
-            loadTab.SetIsVisible(false);
-            fragRealignTab.SetIsVisible(false);
-            //This is cursed but I have no idea what else to do for the moment
-            UIArtifact.DisableLightning(true);
-            middle?.SetLightning(false);
-            fragSwapTile?.SetLightning(false);
+           DisableTabs();
         }
     }
 
-    // private void Start()
-    // {
-    //     /*
-    //     grayMiddleTabImage = grayMiddleTab.GetComponent<Image>();
-    //     grayMiddleTabOGPos = grayMiddleTab.transform.position;
-    //     grayMiddleTabHoverPos = new Vector2(grayMiddleTabOGPos.x + 1, grayMiddleTabOGPos.y);*/
-    //     SubscribeToEvents();
-    // }
-
-
-    private void OnMoveEnd(object sender, System.EventArgs e)
+    private bool IsInRealignMode()
     {
-        /*
-        middle = UIArtifact.GetButton(1, 1);
+        return SGrid.Current.GetActiveTiles().Count == SGrid.Current.GetTotalNumTiles()
+                && SGrid.GetNumButtonCompletions() != SGrid.Current.GetTotalNumTiles();
+    }
 
-        if (middle.TileIsActive && !grayMiddleTabImage.enabled)
+    private void EnableRealignTab(int screenIndex)
+    {
+        realignTab.SetIsVisible(screenIndex == realignTab.homeScreen);
+        saveTab.SetIsVisible(false);
+        loadTab.SetIsVisible(false);
+        fragRealignTab.SetIsVisible(false);
+    }
+
+    private void EnableSaveLoadTab(int screenIndex)
+    {
+        realignTab.SetIsVisible(false);
+        saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
+        loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
+        SetSaveLoadTabSprites(SGrid.Current.HasRealigningGrid());
+        fragRealignTab.SetIsVisible(false);
+    }
+
+    private void DisableTabs()
+    {
+        realignTab.SetIsVisible(false);
+        saveTab.SetIsVisible(false);
+        loadTab.SetIsVisible(false);
+        fragRealignTab.SetIsVisible(false);
+        UIArtifact.DisableLightning(true);
+        middle?.SetLightning(false);
+        fragSwapTile?.SetLightning(false);
+    }
+
+    private void Update()
+    {
+        UpdateGrayTab();
+    }
+
+    private void UpdateGrayTab()
+    {
+        middle = UIArtifact.GetButton(1, 1);
+        if(middle != null && middle.TileIsActive) 
         {
-            grayMiddleTabImage.enabled = true;
+            grayMiddleTab.SetActive(false);
         }
-        else if (!middle.TileIsActive && grayMiddleTabImage.enabled)
+        else
         {
-            grayMiddleTabImage.enabled = false;
-        }*/
+            grayMiddleTab.SetActive(true);
+        }
     }
 
     public void FragRearrangeOnClick()
     {
-        // Do the rearranging!
+        middle = UIArtifact.GetButton(1, 1);
         if (middle == fragSwapTile || !middle.TileIsActive)
         {
             AudioManager.Play("Artifact Error");
@@ -153,7 +143,6 @@ public class DesertTabManager : ArtifactTabManager
     public void FragRearrangeOnHoverEnter()
     {
         rearrangingFragTabAnimator.enabled = false;
-        //grayMiddleTab.transform.position = grayMiddleTabHoverPos;
 
         //Preview!
         middle = UIArtifact.GetButton(1, 1);
@@ -170,13 +159,13 @@ public class DesertTabManager : ArtifactTabManager
 
     public void FragRearrangeOnHoverExit()
     {
+        middle = UIArtifact.GetButton(1, 1);
         if (fragSwapTileCycleRoutine != null)
         {
             StopCoroutine(fragSwapTileCycleRoutine);
         }
 
         rearrangingFragTabAnimator.enabled = true;
-        //grayMiddleTab.transform.position = grayMiddleTabOGPos;
 
         //Reset preview
         UIArtifact.DisableLightning(true);

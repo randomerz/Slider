@@ -191,13 +191,13 @@ public class SGridAnimator : MonoBehaviour
             moveDuration = currMoveDuration
         });
 
-        OnSTileMoveEndLateLate?.Invoke(this, new OnTileMoveArgs
-        {
-            stile = stile,
-            prevPos = moveCoords.startLoc,
-            smove = move,
-            moveDuration = currMoveDuration
-        });
+        // OnSTileMoveEndLateLate?.Invoke(this, new OnTileMoveArgs
+        // {
+        //     stile = stile,
+        //     prevPos = moveCoords.startLoc,
+        //     smove = move,
+        //     moveDuration = currMoveDuration
+        // });
 
         EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
     }
