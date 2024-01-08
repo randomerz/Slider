@@ -22,6 +22,47 @@ public class DesertTabManager : ArtifactTabManager
     private Image grayMiddleTabImage;
     private Vector2 grayMiddleTabHoverPos;
     private Vector2 grayMiddleTabOGPos;*/
+
+    private Sprite[,] tabSpritesArray;
+
+    private void OnEnable()
+    {
+        SubscribeToEvents();
+    }
+
+    private void OnDisable()
+    {
+        UnSubscribeFromEvents();
+    }
+
+    private void SubscribeToEvents()
+    {
+        SGridAnimator.OnSTileMoveEndLateLate += OnMoveEnd;
+    }
+
+    private void UnSubscribeFromEvents()
+    {
+        SGridAnimator.OnSTileMoveEndLateLate -= OnMoveEnd;
+    }
+
+    private void Start()
+    {
+        BuildTabSpritesArray();
+    }
+
+    private void BuildTabSpritesArray()
+    {
+        tabSpritesArray = new Sprite[3,3];
+        for(int i = 0; i < 8; i ++)
+        {
+            int loc = i < 4 ? i : i+1;
+            int y = (8 - loc) / 3;
+            int x = loc % 3;
+            tabSpritesArray[x,y] = tabSprites[i];
+        }
+    }
+
+
     public override void SetCurrentScreen(int screenIndex)
     {
         if(realignTab == null)
@@ -62,19 +103,15 @@ public class DesertTabManager : ArtifactTabManager
         }
     }
 
-    private void Start()
-    {
-        /*
-        grayMiddleTabImage = grayMiddleTab.GetComponent<Image>();
-        grayMiddleTabOGPos = grayMiddleTab.transform.position;
-        grayMiddleTabHoverPos = new Vector2(grayMiddleTabOGPos.x + 1, grayMiddleTabOGPos.y);*/
-        SubscribeToEvents();
-    }
+    // private void Start()
+    // {
+    //     /*
+    //     grayMiddleTabImage = grayMiddleTab.GetComponent<Image>();
+    //     grayMiddleTabOGPos = grayMiddleTab.transform.position;
+    //     grayMiddleTabHoverPos = new Vector2(grayMiddleTabOGPos.x + 1, grayMiddleTabOGPos.y);*/
+    //     SubscribeToEvents();
+    // }
 
-    private void SubscribeToEvents()
-    {
-        SGridAnimator.OnSTileMoveEndLateLate += OnMoveEnd;
-    }
 
     private void OnMoveEnd(object sender, System.EventArgs e)
     {
@@ -127,7 +164,7 @@ public class DesertTabManager : ArtifactTabManager
             UIArtifact.SetLightningPos(1, 1);
             middle.SetScrollHighlight(true);
 
-            SetFragSwapTile(fragSwapTile);
+            SetFragIconToShowSwapTile(fragSwapTile);
         }
     }
 
@@ -167,7 +204,7 @@ public class DesertTabManager : ArtifactTabManager
         else
         {
             fragSwapTile = uiArtifactMenus.uiArtifact.GetButton(9);
-            SetFragSwapTile(fragSwapTile);
+            SetFragIconToShowSwapTile(fragSwapTile);
         }
     }
 
@@ -180,58 +217,16 @@ public class DesertTabManager : ArtifactTabManager
             foreach(ArtifactTileButton emptyTile in emptyTiles)
             {
                 fragSwapTile = emptyTile;
-                SetFragSwapTile(fragSwapTile);
+                SetFragIconToShowSwapTile(fragSwapTile);
                 yield return new WaitForSeconds(1);
                 fragSwapTile.SetScrollHighlight(false);
             }
         }
     }
 
-    private void SetFragSwapTile(ArtifactTileButton tile)
+    private void SetFragIconToShowSwapTile(ArtifactTileButton tile)
     {
         tile.SetScrollHighlight(true);
-
-        switch (tile.x)
-        {
-            case (0):
-                switch (tile.y)
-                {
-                    case (0):
-                        rearrangingFragTabImage.sprite = tabSprites[5];
-                        break;
-                    case (1):
-                        rearrangingFragTabImage.sprite = tabSprites[3];
-                        break;
-                    case (2):
-                        rearrangingFragTabImage.sprite = tabSprites[0];
-                        break;
-                }
-                break;
-            case (1):
-                switch (tile.y)
-                {
-                    case (0):
-                        rearrangingFragTabImage.sprite = tabSprites[6];
-                        break;
-                    case (2):
-                        rearrangingFragTabImage.sprite = tabSprites[1];
-                        break;
-                }
-                break;
-            case (2):
-                switch (tile.y)
-                {
-                    case (0):
-                        rearrangingFragTabImage.sprite = tabSprites[7];
-                        break;
-                    case (1):
-                        rearrangingFragTabImage.sprite = tabSprites[4];
-                        break;
-                    case (2):
-                        rearrangingFragTabImage.sprite = tabSprites[2];
-                        break;
-                }
-                break;
-        }
+        rearrangingFragTabImage.sprite = tabSpritesArray[tile.x, tile.y];
     }
 }
