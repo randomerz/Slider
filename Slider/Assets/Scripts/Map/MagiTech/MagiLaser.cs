@@ -27,6 +27,16 @@ public class MagiLaser : MonoBehaviour, ISavable
 
     public ArtifactTBPluginLaser laserUI;
 
+    public void EnableLaser()
+    {
+        isEnabled = true;
+    }
+
+    public void DisableLaser()
+    {
+        isEnabled = false;
+    }
+
     private void LateUpdate()
     {
         ClearLasers();
