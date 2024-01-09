@@ -104,9 +104,10 @@ public class MainMenuManager : Singleton<MainMenuManager>
         yield return null;
 
         listener = InputSystem.onAnyButtonPress.Call(ctrl => OnAnyButtonPress()); // this is really janky, we may want to switch to "press start"
+        UIEffects.ClearScreen(); // From EndOfGameManager.GoToMainMenu()
 
         yield return new WaitForSeconds(1f);
-            
+        
         CameraShake.ShakeIncrease(2.1f, 0.1f);
 
         yield return new WaitForSeconds(2f);
