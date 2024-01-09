@@ -11,18 +11,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     [SerializeField] private List<ArtifactTBPluginMirage> mirageButtons;
     public static Vector2Int mirageTailPos;
     public static EventHandler OnMirageSTilesEnabled;
-    //struct MirageEnableArgs
-    //{
-    //    public int islandId, x, y;
-
-    //    public MirageEnableArgs(int islandId, int x, int y)
-    //    {
-    //        this.islandId = islandId;
-    //        this.x = x;
-    //        this.y = y;
-    //    }
-    //}
-    //private Queue<MirageEnableArgs> mirageEnableQueue;
+    public List<STileTilemap> MirageMaterialTileMaps;
 
     /// <summary>
     /// The scale factor from the position of a tile on the grid to the transform.position of the tile.
@@ -151,7 +140,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
         return new Vector2Int(x, y);
     }
 
-    private bool IsPlayerOnMirage(out int islandId)
+    public bool IsPlayerOnMirage(out int islandId)
     {
         Vector2 pos = Player.GetInstance().transform.position;
         float offset = 8.5f;
@@ -173,5 +162,10 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     public static MirageSTileManager GetInstance()
     {
         return _instance;
+    }
+
+    public STileTilemap GetMaterialTileMap(int mirageIslandId)
+    {
+        return MirageMaterialTileMaps[mirageIslandId - 1];
     }
 }

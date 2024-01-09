@@ -123,6 +123,16 @@ public class DesertGrid : SGrid
 
     }
 
+    public override STileTilemap GetWorldGridTilemaps()
+    {
+        int mirageIslandID;
+        if(MirageSTileManager.GetInstance().IsPlayerOnMirage(out mirageIslandID))
+        {
+            return MirageSTileManager.GetInstance().GetMaterialTileMap(mirageIslandID);
+        }
+        return worldGridTilemaps;
+    }
+
     /// <summary>
     /// Identical to <see cref="SGrid.GetGridString(bool)"/> except that this method considers
     /// mirage tiles. The ID used for a mirage tile id the Letter corresponding to the non-mirage tile 
