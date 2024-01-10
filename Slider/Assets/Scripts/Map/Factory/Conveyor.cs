@@ -11,6 +11,7 @@ public class Conveyor : ElectricalNode
     [SerializeField] private int length;
 
     [SerializeField] private FactoryArtifact artifact;
+    [SerializeField] private ConveyorOverrideHandler conveyorOverride;
 
     [SerializeField] private List<Animator> animators;
 
@@ -64,7 +65,7 @@ public class Conveyor : ElectricalNode
 
     public bool ConveyorIsPowered()
     {
-        return Powered && !PowerCrystal.Blackout && !FactoryGrid.PlayerInPast && !DebugUIManager.disableConveyers;
+        return Powered && !PowerCrystal.Blackout && !FactoryGrid.PlayerInPast && !DebugUIManager.disableConveyers && !OverrideActive();
     }
 
     private void UpdateConveyorStatus()
@@ -74,6 +75,11 @@ public class Conveyor : ElectricalNode
         });
 
         TryQueueConveyorMove();
+    }
+
+    public bool OverrideActive()
+    {
+        return conveyorOverride.IsOn;
     }
 
     private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
