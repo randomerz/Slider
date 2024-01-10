@@ -10,12 +10,14 @@ class ConveyorUIData : ScriptableObject
         public Vector2Int pos;
         public Sprite emptyPowered;
         public Sprite emptyUnpowered;
+        public Sprite emptyOverride;
 
-        public ConveyorDataItem(Vector2Int pos, Sprite emptyPowered, Sprite emptyUnpowered)
+        public ConveyorDataItem(Vector2Int pos, Sprite emptyPowered, Sprite emptyUnpowered, Sprite emptyOverride)
         {
             this.pos = pos;
             this.emptyPowered = emptyPowered;
             this.emptyUnpowered = emptyUnpowered;
+            this.emptyOverride = emptyOverride;
         }
     }
 

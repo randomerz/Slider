@@ -11,6 +11,7 @@ public class Conveyor : ElectricalNode
     [SerializeField] private int length;
 
     [SerializeField] private FactoryArtifact artifact;
+    [SerializeField] private ConveyorOverrideHandler conveyorOverride;
 
     [SerializeField] private List<Animator> animators;
 
@@ -28,7 +29,7 @@ public class Conveyor : ElectricalNode
     private void Start()
     {
         animators.ForEach((a) => {
-            a.SetFloat("speed", ConveyorIsPowered() ? 2 : 0);
+            a.SetFloat("speed", ConveyorIsPoweredAndActive() ? 2 : 0);
         });
 
         if (artifact == null)
@@ -62,18 +63,23 @@ public class Conveyor : ElectricalNode
         base.OnPoweredHandler(e);
     }
 
-    public bool ConveyorIsPowered()
+    public bool ConveyorIsPoweredAndActive()
     {
-        return Powered && !PowerCrystal.Blackout && !FactoryGrid.PlayerInPast && !DebugUIManager.disableConveyers;
+        return Powered && !PowerCrystal.Blackout && !FactoryGrid.PlayerInPast && !DebugUIManager.disableConveyers && !OverrideActive();
     }
 
     private void UpdateConveyorStatus()
     {
         animators.ForEach((a) => {
-            a.SetFloat("speed", ConveyorIsPowered() ? 2 : 0);
+            a.SetFloat("speed", ConveyorIsPoweredAndActive() ? 2 : 0);
         });
 
         TryQueueConveyorMove();
+    }
+
+    public bool OverrideActive()
+    {
+        return conveyorOverride.IsOn;
     }
 
     private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
@@ -88,7 +94,7 @@ public class Conveyor : ElectricalNode
 
     private void TryQueueConveyorMove()
     {
-        if (ConveyorIsPowered() && !waitingToQueueAndFinishMove)
+        if (ConveyorIsPoweredAndActive() && !waitingToQueueAndFinishMove)
         {
             SMoveConveyor move = ConstructMove();
             if (move != null)
@@ -130,7 +136,7 @@ public class Conveyor : ElectricalNode
     {
         //Construct a brand new move because it might have changed! (ex: tile moving in front of conveyor, so have to push both tiles).
         SMoveConveyor newMove = ConstructMove();
-        if (ConveyorIsPowered() && newMove != null)
+        if (ConveyorIsPoweredAndActive() && newMove != null)
         {
             artifact.QueueMoveToFront(newMove);
         }
