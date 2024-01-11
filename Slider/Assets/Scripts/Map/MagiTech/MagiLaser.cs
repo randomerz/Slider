@@ -27,6 +27,16 @@ public class MagiLaser : MonoBehaviour, ISavable
 
     public ArtifactTBPluginLaser laserUI;
 
+    public void EnableLaser()
+    {
+        isEnabled = true;
+    }
+
+    public void DisableLaser()
+    {
+        isEnabled = false;
+    }
+
     private void LateUpdate()
     {
         ClearLasers();
@@ -131,10 +141,6 @@ public class MagiLaser : MonoBehaviour, ISavable
                 else if (laserable == pastPortalLaserable)
                 {
                     MakeNewPresentLaser(hit.point, dir);
-                }
-                else
-                {
-                    Debug.LogWarning("Laser hit an unknown portal.");
                 }
             }
             else if (laserable.IsInteractionType("Absorb")) 

@@ -17,32 +17,43 @@ public class DesertTabManager : ArtifactTabManager
     [SerializeField] private PlayerActionHints playerActionHints;
 
     [SerializeField] private Sprite[] tabSprites; //0 = top left, 1 = top middle, 2 = top right, 3 = left middle, 4 = right middle, 5 = bottom left, 6 = bottom middle, 7 = bottom right
-    /*
+
     [SerializeField] private GameObject grayMiddleTab;
-    private Image grayMiddleTabImage;
-    private Vector2 grayMiddleTabHoverPos;
-    private Vector2 grayMiddleTabOGPos;*/
+
+    private Sprite[,] tabSpritesArray;
+
+
+    private void Start()
+    {
+        BuildTabSpritesArray();
+    }
+
+    private void BuildTabSpritesArray()
+    {
+        tabSpritesArray = new Sprite[3,3];
+        for(int i = 0; i < 8; i ++)
+        {
+            int loc = i < 4 ? i : i+1;
+            int y = (8 - loc) / 3;
+            int x = loc % 3;
+            tabSpritesArray[x,y] = tabSprites[i];
+        }
+    }
+
+
     public override void SetCurrentScreen(int screenIndex)
     {
         if(realignTab == null)
             InitTabs();
         if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
         {
-            if (SGrid.Current.GetActiveTiles().Count == SGrid.Current.GetTotalNumTiles() //Realigning case
-                && SGrid.GetNumButtonCompletions() != SGrid.Current.GetTotalNumTiles())
+            if (IsInRealignMode())
             {
-                realignTab.SetIsVisible(screenIndex == realignTab.homeScreen);
-                saveTab.SetIsVisible(false);
-                loadTab.SetIsVisible(false);
-                fragRealignTab.SetIsVisible(false);
+                EnableRealignTab(screenIndex);
             }
-            else //Save Load Case
+            else 
             {
-                realignTab.SetIsVisible(false);
-                saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
-                loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
-                SetSaveLoadTabSprites(SGrid.Current.HasRealigningGrid());
-                fragRealignTab.SetIsVisible(false);
+                EnableSaveLoadTab(screenIndex);
             }
         }
         else if (PlayerInventory.Contains("Scroll Frag", Area.Desert) && SGrid.Current.GetActiveTiles().Count != SGrid.Current.GetTotalNumTiles())
@@ -51,49 +62,65 @@ public class DesertTabManager : ArtifactTabManager
         }
         else
         {
-            realignTab.SetIsVisible(false);
-            saveTab.SetIsVisible(false);
-            loadTab.SetIsVisible(false);
-            fragRealignTab.SetIsVisible(false);
-            //This is cursed but I have no idea what else to do for the moment
-            UIArtifact.DisableLightning(true);
-            middle?.SetLightning(false);
-            fragSwapTile?.SetLightning(false);
+           DisableTabs();
         }
     }
 
-    private void Start()
+    private bool IsInRealignMode()
     {
-        /*
-        grayMiddleTabImage = grayMiddleTab.GetComponent<Image>();
-        grayMiddleTabOGPos = grayMiddleTab.transform.position;
-        grayMiddleTabHoverPos = new Vector2(grayMiddleTabOGPos.x + 1, grayMiddleTabOGPos.y);*/
-        SubscribeToEvents();
+        return SGrid.Current.GetActiveTiles().Count == SGrid.Current.GetTotalNumTiles()
+                && SGrid.GetNumButtonCompletions() != SGrid.Current.GetTotalNumTiles();
     }
 
-    private void SubscribeToEvents()
+    private void EnableRealignTab(int screenIndex)
     {
-        SGridAnimator.OnSTileMoveEndLateLate += OnMoveEnd;
+        realignTab.SetIsVisible(screenIndex == realignTab.homeScreen);
+        saveTab.SetIsVisible(false);
+        loadTab.SetIsVisible(false);
+        fragRealignTab.SetIsVisible(false);
     }
 
-    private void OnMoveEnd(object sender, System.EventArgs e)
+    private void EnableSaveLoadTab(int screenIndex)
     {
-        /*
+        realignTab.SetIsVisible(false);
+        saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
+        loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
+        SetSaveLoadTabSprites(SGrid.Current.HasRealigningGrid());
+        fragRealignTab.SetIsVisible(false);
+    }
+
+    private void DisableTabs()
+    {
+        realignTab.SetIsVisible(false);
+        saveTab.SetIsVisible(false);
+        loadTab.SetIsVisible(false);
+        fragRealignTab.SetIsVisible(false);
+        UIArtifact.DisableLightning(true);
+        middle?.SetLightning(false);
+        fragSwapTile?.SetLightning(false);
+    }
+
+    private void Update()
+    {
+        UpdateGrayTab();
+    }
+
+    private void UpdateGrayTab()
+    {
         middle = UIArtifact.GetButton(1, 1);
-
-        if (middle.TileIsActive && !grayMiddleTabImage.enabled)
+        if(middle != null && middle.TileIsActive) 
         {
-            grayMiddleTabImage.enabled = true;
+            grayMiddleTab.SetActive(false);
         }
-        else if (!middle.TileIsActive && grayMiddleTabImage.enabled)
+        else
         {
-            grayMiddleTabImage.enabled = false;
-        }*/
+            grayMiddleTab.SetActive(true);
+        }
     }
 
     public void FragRearrangeOnClick()
     {
-        // Do the rearranging!
+        middle = UIArtifact.GetButton(1, 1);
         if (middle == fragSwapTile || !middle.TileIsActive)
         {
             AudioManager.Play("Artifact Error");
@@ -116,7 +143,6 @@ public class DesertTabManager : ArtifactTabManager
     public void FragRearrangeOnHoverEnter()
     {
         rearrangingFragTabAnimator.enabled = false;
-        //grayMiddleTab.transform.position = grayMiddleTabHoverPos;
 
         //Preview!
         middle = UIArtifact.GetButton(1, 1);
@@ -127,19 +153,19 @@ public class DesertTabManager : ArtifactTabManager
             UIArtifact.SetLightningPos(1, 1);
             middle.SetScrollHighlight(true);
 
-            SetFragSwapTile(fragSwapTile);
+            SetFragIconToShowSwapTile(fragSwapTile);
         }
     }
 
     public void FragRearrangeOnHoverExit()
     {
+        middle = UIArtifact.GetButton(1, 1);
         if (fragSwapTileCycleRoutine != null)
         {
             StopCoroutine(fragSwapTileCycleRoutine);
         }
 
         rearrangingFragTabAnimator.enabled = true;
-        //grayMiddleTab.transform.position = grayMiddleTabOGPos;
 
         //Reset preview
         UIArtifact.DisableLightning(true);
@@ -167,7 +193,7 @@ public class DesertTabManager : ArtifactTabManager
         else
         {
             fragSwapTile = uiArtifactMenus.uiArtifact.GetButton(9);
-            SetFragSwapTile(fragSwapTile);
+            SetFragIconToShowSwapTile(fragSwapTile);
         }
     }
 
@@ -180,58 +206,16 @@ public class DesertTabManager : ArtifactTabManager
             foreach(ArtifactTileButton emptyTile in emptyTiles)
             {
                 fragSwapTile = emptyTile;
-                SetFragSwapTile(fragSwapTile);
+                SetFragIconToShowSwapTile(fragSwapTile);
                 yield return new WaitForSeconds(1);
                 fragSwapTile.SetScrollHighlight(false);
             }
         }
     }
 
-    private void SetFragSwapTile(ArtifactTileButton tile)
+    private void SetFragIconToShowSwapTile(ArtifactTileButton tile)
     {
         tile.SetScrollHighlight(true);
-
-        switch (tile.x)
-        {
-            case (0):
-                switch (tile.y)
-                {
-                    case (0):
-                        rearrangingFragTabImage.sprite = tabSprites[5];
-                        break;
-                    case (1):
-                        rearrangingFragTabImage.sprite = tabSprites[3];
-                        break;
-                    case (2):
-                        rearrangingFragTabImage.sprite = tabSprites[0];
-                        break;
-                }
-                break;
-            case (1):
-                switch (tile.y)
-                {
-                    case (0):
-                        rearrangingFragTabImage.sprite = tabSprites[6];
-                        break;
-                    case (2):
-                        rearrangingFragTabImage.sprite = tabSprites[1];
-                        break;
-                }
-                break;
-            case (2):
-                switch (tile.y)
-                {
-                    case (0):
-                        rearrangingFragTabImage.sprite = tabSprites[7];
-                        break;
-                    case (1):
-                        rearrangingFragTabImage.sprite = tabSprites[4];
-                        break;
-                    case (2):
-                        rearrangingFragTabImage.sprite = tabSprites[2];
-                        break;
-                }
-                break;
-        }
+        rearrangingFragTabImage.sprite = tabSpritesArray[tile.x, tile.y];
     }
 }
