@@ -10,8 +10,15 @@ public class DesertCasino : MonoBehaviour
     public SpriteRenderer[] casinoCeilingSprites;
     public List<Animator> casinoSigns;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
+    {
+        if (SaveSystem.Current.GetBool("desertDiscoBallFell"))
+        {
+            RemoveDiceItem();
+        }
+    }
+
+    private void Update()
     {
         UpdateDistanceToCasino();
     }

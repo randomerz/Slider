@@ -7,21 +7,13 @@ public class DesertTemple : MonoBehaviour, ISavable
     [SerializeField] private ArtifactHousingButtonsManager artifactHousingButtonsManager;
     [SerializeField] private GameObject templeTrapBlockingRoom;
     [SerializeField] private GameObject templeTrapBlockingRoomCollider;
-    // [SerializeField] private Collider2D portalCollider; //Desert Portal
-    // [SerializeField] private MagiLaser portalLaser;
-
-    // private bool portalEnabled = false;
-    // private bool portalLaserEnabled = false;
     private Coroutine shuffleBuildUpCoroutine;
 
-    public void Save() 
-    {
-
-    }
+    public void Save() {}
 
     public void Load(SaveProfile profile)
     {
-        if (SaveSystem.Current.GetBool("desertIsInTemple"))
+        if (profile.GetBool("desertIsInTemple"))
         {
             SetIsInTemple(true);
         }
