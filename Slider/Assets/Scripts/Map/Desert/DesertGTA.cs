@@ -69,6 +69,7 @@ public class DesertGTA : MonoBehaviour, ISavable
         laserCollider.SetActive(false);
         explodedWall = true;
         isExploding = false;
+        SaveSystem.Current.SetBool("DesertBlewUpCasinoWall", true);
     }
 
     public void BlewUpCasinoWall(Condition c)

@@ -142,10 +142,6 @@ public class MagiLaser : MonoBehaviour, ISavable
                 {
                     MakeNewPresentLaser(hit.point, dir);
                 }
-                else
-                {
-                    Debug.LogWarning("Laser hit an unknown portal.");
-                }
             }
             else if (laserable.IsInteractionType("Absorb")) 
             {
