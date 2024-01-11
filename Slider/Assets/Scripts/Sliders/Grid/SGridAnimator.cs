@@ -17,7 +17,6 @@ public class SGridAnimator : MonoBehaviour
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndEarly;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEnd;
     public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndLate; //:clown emoji
-   // public static event System.EventHandler<OnTileMoveArgs> OnSTileMoveEndLateLate; //got lotion on my tile, strokin my tile
 
     // set in inspector
     public AnimationCurve movementCurve;
@@ -190,14 +189,6 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
-
-        // OnSTileMoveEndLateLate?.Invoke(this, new OnTileMoveArgs
-        // {
-        //     stile = stile,
-        //     prevPos = moveCoords.startLoc,
-        //     smove = move,
-        //     moveDuration = currMoveDuration
-        // });
 
         EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
     }
