@@ -13,7 +13,7 @@ public class DesertGrid : SGrid
     public Item diceItem;
     public DiceGizmo dice1;
     public DiceGizmo dice2;
-    public SpriteRenderer[] casinoCeilingSprites;
+    public SpriteRenderer[] casinoCeilingSprites;//
     public List<Animator> casinoSigns;
 //    [SerializeField] private ArtifactHousingButtonsManager artifactHousingButtonsManager;
 //     [SerializeField] private GameObject templeTrapBlockingRoom;
