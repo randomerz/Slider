@@ -41,7 +41,7 @@ namespace SliderVocalization
             this.Stop();
             
             // Technically this is done within the coroutine, but I'm not sure if there is guarantee that the coroutine will evaluate on the first frame
-            // Setting this to playing will prevent multi-start issues
+            // Setting this to playing will *guarantee* multi-start issues
             (this as IVocalizerComposite<SentenceVocalizer>).StateTransition(VocalizerCompositeState.Playing);
             
             StartCoroutine(

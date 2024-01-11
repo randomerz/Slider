@@ -175,10 +175,13 @@ namespace SliderVocalization
 
         public override void Stop()
         {
-            if (playingInstance != null)
-            {
-                playingInstance.Stop();
-            }
+            // AT: commenting this out prevents stopping mid-word even if a stop signal is issued
+            // TODO: please uncomment if stopping mid-word is intended!
+            
+            // if (playingInstance != null)
+            // {
+            //     playingInstance.Stop();
+            // }
         }
     }
 }
