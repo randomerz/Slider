@@ -26,7 +26,7 @@ namespace SliderVocalization
         private WordVocalizer _Current;
         private WordVocalizer FirstSpokenVocalizer;
         private WordVocalizer LastSpokenVocalizer;
-        private VocalizerCompositeStatus _Status;
+        private VocalizerCompositeState _state;
 
         public enum Intonation { flat, up, down };
         public Intonation intonation;
@@ -157,10 +157,11 @@ namespace SliderVocalization
             context.lastWordFinalPitch = context.wordPitchBase;
             context.wordPitchIntonated = (upcoming == LastSpokenVocalizer ? GetBasePitchFromIntonation(preset) : preset.pitch);
         }
-
-        public WordVocalizer GetCurrent() => _Current;
-        void IVocalizerComposite<WordVocalizer>.SetCurrent(WordVocalizer value) => _Current = value;
-        public VocalizerCompositeStatus GetStatus() => _Status;
-        void IVocalizerComposite<WordVocalizer>.SetStatus(VocalizerCompositeStatus value) => _Status = value;
+        
+        public VocalizerCompositeState GetVocalizationState() => _state;
+        void IVocalizerComposite<WordVocalizer>.SetVocalizationState(VocalizerCompositeState newState)
+        {
+            _state = newState;
+        }
     }
 }

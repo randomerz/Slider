@@ -32,7 +32,7 @@ namespace SliderVocalization
         private List<BaseVocalizer> m_Vocalizers;
 
         private BaseVocalizer _Current;
-        private VocalizerCompositeStatus _Status;
+        private VocalizerCompositeState _state;
 
         internal string characters;
         private List<PhonemeClusterVocalizer> clusters;
@@ -172,10 +172,11 @@ namespace SliderVocalization
             return s;
         }
 
-        public BaseVocalizer GetCurrent() => _Current;
-        void IVocalizerComposite<BaseVocalizer>.SetCurrent(BaseVocalizer value) => _Current = value;
-        public VocalizerCompositeStatus GetStatus() => _Status;
-        void IVocalizerComposite<BaseVocalizer>.SetStatus(VocalizerCompositeStatus value) => _Status = value;
+        public VocalizerCompositeState GetVocalizationState() => _state;
+        void IVocalizerComposite<BaseVocalizer>.SetVocalizationState(VocalizerCompositeState newState)
+        {
+            _state = newState;
+        }
 
         void IVocalizerComposite<BaseVocalizer>.PreRandomize(
             VocalizerParameters preset, VocalRandomizationContext context, BaseVocalizer upcoming)

@@ -1,3 +1,4 @@
+using System;
 using SliderVocalization;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using UnityEngine;
 
 namespace SliderVocalization
 {
+    
     /// <summary>
     /// Composite instead of class due to possible multi-inheritance requirements. For example a vocalizer might need to be a Monobehaviour
     /// </summary>
@@ -15,12 +17,43 @@ namespace SliderVocalization
 
         bool IVocalizer.IsEmpty => Vocalizers.Count == 0;
 
-        public T GetCurrent();
-        protected void SetCurrent(T value);
-        public VocalizerCompositeStatus GetStatus();
-        protected void SetStatus(VocalizerCompositeStatus value);
-
         internal void PreRandomize(VocalizerParameters preset, VocalRandomizationContext context, T upcoming);
+        
+        public VocalizerCompositeState GetVocalizationState();
+        internal void SetVocalizationState(VocalizerCompositeState newState);
+
+        public VocalizerCompositeState StateTransition(VocalizerCompositeState newState)
+        {
+            var oldState = GetVocalizationState();
+            bool canSet;
+            
+            switch (newState)
+            {
+                case VocalizerCompositeState.CanPlay:
+                    canSet = true;
+                    break;
+                case VocalizerCompositeState.Playing:
+                    canSet = oldState == VocalizerCompositeState.CanPlay;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
+            }
+
+            if (canSet)
+            {
+                SetVocalizationState(newState);
+                return newState;
+            }
+            else
+            {
+                return oldState;
+            }
+        }
+
+        public WaitUntil WaitUntilCanPlay()
+        {
+            return new(() => GetVocalizationState() == VocalizerCompositeState.CanPlay);
+        }
 
         float IVocalizer.RandomizeVocalization (VocalizerParameters preset, VocalRandomizationContext context)
         {
@@ -41,8 +74,8 @@ namespace SliderVocalization
 
         IEnumerator IVocalizer.Vocalize(VocalizerParameters preset, VocalizationContext context, int idx, int lengthOfComposite)
         {
-            yield return new WaitUntil(() => GetStatus() == VocalizerCompositeStatus.CanPlay);
-            SetStatus(VocalizerCompositeStatus.Playing);
+            StateTransition(VocalizerCompositeState.Playing);
+            
             if (Vocalizers == null)
             {
                 Debug.LogWarning($"{ToString()} => vocalizers null");
@@ -51,21 +84,27 @@ namespace SliderVocalization
             for (int i = 0; i < Vocalizers.Count; i++)
             {
                 var v = Vocalizers[i];
-                SetCurrent(v);
                 yield return v.Vocalize(preset, context, idx: i, lengthOfComposite: Vocalizers.Count);
-                if (GetStatus() == VocalizerCompositeStatus.Stopping) break;
             }
-            SetStatus(VocalizerCompositeStatus.CanPlay);
+
+            StateTransition(VocalizerCompositeState.CanPlay);
         }
 
         void IVocalizer.Stop()
         {
-            if (GetStatus() == VocalizerCompositeStatus.Playing)
+            foreach (var voc in Vocalizers)
             {
-                GetCurrent()?.Stop();
-                ClearProgress();
-                SetStatus(VocalizerCompositeStatus.Stopping);
+                voc.Stop();
             }
+
+            ClearProgress();
+            
+            if (this is MonoBehaviour self)
+            {
+                self.StopAllCoroutines();
+            }
+
+            StateTransition(VocalizerCompositeState.CanPlay);
         }
 
         void IVocalizer.ClearProgress()
@@ -77,33 +116,36 @@ namespace SliderVocalization
         }
     }
 
-    public enum VocalizerCompositeStatus
+    public enum VocalizerCompositeState
     {
         CanPlay,
-        Playing,
-        Stopping
+        Playing
     }
 }
 public static class VocalizerCompositeExtensions
 {
-    public static bool GetIsEmpty<T>(this T composite) where T : IVocalizer => (composite as IVocalizer).IsEmpty;
+    public static bool GetIsEmpty<T>(this IVocalizerComposite<T> composite) where T : IVocalizer
+        => composite.IsEmpty;
 
-    public static IEnumerator Vocalize<T>(
-        this T composite, VocalizerParameters preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
+    public static IEnumerator Vocalize<T>(this IVocalizerComposite<T> composite, VocalizerParameters preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1)
         where T : IVocalizer
         => composite.Vocalize(preset, context, idx, lengthOfComposite);
 
-    public static void Stop<T>(this T composite) where T : IVocalizer
+    public static void Stop<T>(this IVocalizerComposite<T> composite) 
+        where T : IVocalizer
     {
         composite.Stop();
-        if (composite is VocalizableParagraph)
+        if (composite is VocalizableParagraph paragraph)
         {
-            VocalizableParagraph.speakers.Remove(composite as VocalizableParagraph);
-            AudioManager.StopDampen(composite as VocalizableParagraph);
+            VocalizableParagraph.speakers.Remove(paragraph);
+            AudioManager.StopDampen(paragraph);
         }
     }
 
-    public static void ClearProgress<T>(this T composite)
+    public static void MarkAsStarted<T>(this IVocalizerComposite<T> composite) where T : IVocalizer =>
+        composite.StateTransition(VocalizerCompositeState.Playing);
+
+    public static void ClearProgress<T>(this IVocalizerComposite<T> composite)
          where T : IVocalizer
         => composite.ClearProgress();
 }
