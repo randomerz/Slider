@@ -142,6 +142,9 @@ public static class VocalizerCompositeExtensions
         }
     }
 
+    public static void MarkAsStarted<T>(this IVocalizerComposite<T> composite) where T : IVocalizer =>
+        composite.StateTransition(VocalizerCompositeState.Playing);
+
     public static void ClearProgress<T>(this IVocalizerComposite<T> composite)
          where T : IVocalizer
         => composite.ClearProgress();

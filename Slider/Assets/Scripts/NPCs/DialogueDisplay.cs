@@ -42,7 +42,6 @@ public class DialogueDisplay : MonoBehaviour
         textSpecialBG.StopEffects();
 
         string parsed = textTyperText.StartTyping(message);
-        Debug.LogWarning($"display sentence {parsed}");
         
         textTyperBG.StartTyping(message);
         
@@ -71,23 +70,7 @@ public class DialogueDisplay : MonoBehaviour
 
     public void FadeAwayDialogue()
     {
-        if (useVocalizer)
-        {
-            if (gameObject.activeInHierarchy)
-            {
-                StartCoroutine(FadeWhenReady());
-            }
-        }
-        else
-        {
-            canvas.SetActive(false);
-        }
-    }
-
-    IEnumerator FadeWhenReady()
-    {
         vocalizer.Stop();
-        yield return (vocalizer as IVocalizerComposite<SentenceVocalizer>).WaitUntilCanPlay();
         canvas.SetActive(false);
     }
 

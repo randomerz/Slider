@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -41,8 +39,8 @@ namespace SliderVocalization
             this.Stop();
             
             // Technically this is done within the coroutine, but I'm not sure if there is guarantee that the coroutine will evaluate on the first frame
-            // Setting this to playing will *guarantee* multi-start issues
-            (this as IVocalizerComposite<SentenceVocalizer>).StateTransition(VocalizerCompositeState.Playing);
+            // Setting this to playing will *guarantee* no multi-start issues
+            this.MarkAsStarted();
             
             StartCoroutine(
                 this.Vocalize(
@@ -60,11 +58,11 @@ namespace SliderVocalization
         {
             this.text = text;
             sentences = SentenceVocalizer.Parse(this.text) ?? new();
-
+            
             return (this as IVocalizer).RandomizeVocalization(
                 ((VocalizerParameters)preset).ModifyWith(modifierLibrary[emote], createClone: true), new()
                 );
-        }
+        } 
 
         void IVocalizerComposite<SentenceVocalizer>.PreRandomize(
             VocalizerParameters preset, VocalRandomizationContext context, SentenceVocalizer upcoming) { }
