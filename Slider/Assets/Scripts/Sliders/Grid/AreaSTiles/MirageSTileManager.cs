@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Text;
 
 public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 {
@@ -21,6 +22,25 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     private const int GRID_POSITION_TO_WORLD_POSITION = 17;
 
     private const string MIRAGE_ENABLED_SAVE_STRING = "DesertMirageEnabled";
+    private const string MIRAGE_TILES_SAVE_STRING = "DesertMirageTiles";
+
+    private List<MirageTileData> enabledMirageTiles = new();
+
+    private class MirageTileData
+    {
+        public int orignalTileID;
+        public int buttonID;
+        public int x;
+        public int y;
+
+        public MirageTileData(int orignalTileID, int buttonID, int x, int y)
+        {
+            this.orignalTileID = orignalTileID;
+            this.buttonID = buttonID;
+            this.x = x;
+            this.y = y;
+        }
+    }
 
     public void Save()
     {
@@ -29,6 +49,31 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
             UnSubscribeMirageEvents();
         }
         SaveSystem.Current.SetBool(MIRAGE_ENABLED_SAVE_STRING, mirageEnabled);
+        SaveSystem.Current.SetString(MIRAGE_TILES_SAVE_STRING, BuildMirageTilesSaveString());
+    }
+
+    private string BuildMirageTilesSaveString()
+    {
+        if(enabledMirageTiles == null) return "XXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+        StringBuilder s = new();
+        for(int i = 1; i <= 7; i++)
+        {
+            MirageTileData data = null;
+            foreach(MirageTileData d in enabledMirageTiles)
+            {
+                if(d.orignalTileID == i)
+                    data = d;
+            }   
+            if(data == null)
+            {
+                s.Append("XXXX");
+            }
+            else
+            {
+                s.Append($"{data.orignalTileID}{data.buttonID}{data.x}{data.y}");
+            }
+        }
+        return s.ToString();
     }
 
     public void Load(SaveProfile profile)
@@ -38,6 +83,33 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
         {
             EnableMirage();
         }
+        EnableMirageTilesFromSave(profile.GetString(MIRAGE_ENABLED_SAVE_STRING));
+    }
+
+    private void EnableMirageTilesFromSave(string saveString)
+    {
+        enabledMirageTiles = new();
+        for(int i = 0; i < 7; i++)
+        {
+            string s = saveString.Substring(4 * i, 4 * (i+1));
+            char[] c = s.ToCharArray();
+            if(c[0] != 'X')
+            {
+                int[] ints = CharToInt(c);
+                EnableMirageTile(ints[0], ints[1], ints[2], ints[3]);
+                enabledMirageTiles.Add(new(ints[0], ints[1], ints[2], ints[3]));
+            }
+        }
+    }
+
+    private int[] CharToInt(char[] chars)
+    {
+        int[] ints = new int[chars.Length];
+        for(int i = 0; i < chars.Length; i++)
+        {
+            ints[i] = chars[i] - '0';
+        }
+        return ints;
     }
 
     public void Awake()
@@ -83,11 +155,12 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     public void DisableMirageVFX() {}
 
-    public void EnableMirageTile(int islandId, int x, int y)
+    public void EnableMirageTile(int islandId, int buttonID, int x, int y)
     {
         if (islandId > 7 || islandId < 1) return;
         mirageSTiles[islandId - 1].transform.position = new Vector2(x * GRID_POSITION_TO_WORLD_POSITION, y * GRID_POSITION_TO_WORLD_POSITION);
         mirageSTiles[islandId - 1].gameObject.SetActive(true);
+        enabledMirageTiles.Add(new(islandId, buttonID, x, y));
     }
     
     /// <summary>
@@ -97,9 +170,22 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     public void DisableMirageTile(int islandId = -1)
     {
         //Insert disable effect
+        RemoveMirageData(islandId);
         if (islandId == 0 || islandId > 7) return;
         if (islandId < 0) foreach (GameObject o in mirageSTiles) o.SetActive(false);
         else mirageSTiles[islandId - 1].gameObject.SetActive(false);
+    }
+
+    private void RemoveMirageData(int islandId)
+    {
+        MirageTileData d = null;
+        foreach(MirageTileData data in enabledMirageTiles)
+        {
+            if(data.orignalTileID == islandId)
+                d = data;
+        }
+        if(d == null) return;
+        enabledMirageTiles.Remove(d);
     }
 
     private void EnableMirageTilesAfterSMove(object sender, SGridAnimator.OnTileMoveArgs e)
@@ -111,7 +197,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
             foreach (ArtifactTBPluginMirage button in mirageButtons)
             {
                 var buttonBase = button.GetComponent<ArtifactTileButton>();
-                EnableMirageTile(button.mirageIslandId, buttonBase.x, buttonBase.y);
+                EnableMirageTile(button.mirageIslandId, button.buttonIslandId, buttonBase.x, buttonBase.y);
             }
 
         }

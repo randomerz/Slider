@@ -7,11 +7,18 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
     //disable mirage button called on click based on bool flag and whnever a move is made
     //if desertMirage is true, do any mirage things. but if false, revert to normal behavior and don't enable the foggy vfx for the tile
     public int mirageIslandId;
+    public int buttonIslandId;
     public ArtifactTBPluginLaser myLaserPlugin;
     [SerializeField] private List<ArtifactTBPluginLaser> laserPlugins;
     [SerializeField] private List<Sprite> mirageSprites;
     [SerializeField] private STile stile;
     private ButtonMirage buttonMirage;
+
+    private void Awake()
+    {
+        buttonIslandId = GetComponentInParent<ArtifactTileButton>().islandId;
+    }
+    
     private void OnEnable()
     {
         buttonMirage = GetComponent<ButtonMirage>();
