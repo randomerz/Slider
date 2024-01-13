@@ -296,7 +296,12 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     {
         if(laser.isEnabled)
         {
+            print("updating laser from tile" + islandId);
             UpdateCenterToEdge(sourceDir);
+        }
+        else
+        {
+            print("laser disabled on tile" + islandId);
         }
     }
 

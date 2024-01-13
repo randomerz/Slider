@@ -18,5 +18,6 @@ public class DinoLaser : MonoBehaviour
     public void EnableLaser(bool on)
     {
         laser.SetEnabled(on);
+        ArtifactTBPluginLaser.UpdateSpritesFromSource();
     }
 }
