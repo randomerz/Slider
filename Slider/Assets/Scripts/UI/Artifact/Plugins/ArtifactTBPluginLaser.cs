@@ -36,6 +36,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     private int crossings = 0;
 
     public Sprite[] originalSprites; 
+    public int islandId;
 
 
     [Serializable]
@@ -80,6 +81,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
             tileDict = new();
         tileDict.Add(button, this);
         SaveSprites();
+        islandId = GetComponentInParent<ArtifactTileButton>().islandId;
         ResetSprites();
         if(centerObject == LaserCenterObject.SOURCE)
             AddSource();
@@ -137,14 +139,14 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void UpdateEdgeToCenter(int direction)
     {
-        if(button.TileIsActive)
+        if(button.TileIsActive || MirageIsActive())
         {
             if(t5RockBS && direction == 1)
                 t5Sprites[0].SetActive(true);
             else
             {
                 sprites[direction].SetActive(true);
-                print("Edge " + direction + " active for tile " + GetComponentInParent<ArtifactTileButton>().islandId);
+              //  print("Edge " + direction + " active for tile " + GetComponentInParent<ArtifactTileButton>().islandId);
             }
             if(edgeblockers[direction])
                 return;
@@ -156,13 +158,19 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         UpdateCenter(direction);
     }
 
+    private bool MirageIsActive()
+    {
+        if(MirageSTileManager.GetInstance() == null) return false;
+        return(islandId !=  GetComponentInParent<ArtifactTileButton>().islandId);
+    }
+
     public void UpdateCenter(int direction)
     {
-        print("updating center for tile" + GetComponentInParent<ArtifactTileButton>().islandId + " " + centerObject);
+      //  print("updating center for tile" + GetComponentInParent<ArtifactTileButton>().islandId + " " + centerObject);
         crossings++;
         int nextDir = (direction + 2) % 4;
 
-        if(!button.TileIsActive)
+        if(!button.TileIsActive && !MirageIsActive())
         {
             UpdateCenterToEdge(nextDir);
             return;
@@ -192,7 +200,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     {
         crossings++;
 
-        if(button != null && button.TileIsActive)
+        if(button != null && (button.TileIsActive || MirageIsActive()))
         {
             if(t5RockBS && direction == 1)
                 t5Sprites[1].SetActive(true);
@@ -203,7 +211,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
             else if(!t5RockBS || direction != 1)
             {
                 sprites[direction].SetActive(true);
-                print("Edge" + direction + "active for tile" + GetComponentInParent<ArtifactTileButton>().islandId);
+                //print("Edge" + direction + "active for tile" + GetComponentInParent<ArtifactTileButton>().islandId);
             }
         }
         else
@@ -268,7 +276,6 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public static void UpdateSpritesFromSource()
     {
         if(sources == null) return;
-        print(sources.Count);
         ResetAllSprites();
         foreach(ArtifactTBPluginLaser source in sources)
         {
@@ -295,12 +302,13 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void CopyDataFromMirageSource(ArtifactTBPluginLaser original)
     {
-        print("copying data for tile" + GetComponentInParent<ArtifactTileButton>().islandId);
+        print("copying data for tile "  + islandId + " from tile " + original.islandId);
+        islandId = original.islandId;
         centerObject = original.centerObject;
         sourceDir = original.sourceDir;
         if(centerObject == LaserCenterObject.SOURCE)
         {
-            laser = original.laser;
+            //laser = original.laser;
             AddSource();
         }
         foreach(Image image in GetComponentsInChildren<Image>())
@@ -313,6 +321,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     private void UpdateImages(ArtifactTBPluginLaser original)
     {
+        print("updating images for tile " + islandId);
         for(int i = 0 ; i < 4; i++)
         {
             sprites[i].GetComponent<Image>().sprite = original.originalSprites[i];
@@ -327,6 +336,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         {
             image.material = regularMaterial;
         }
+        islandId = GetComponentInParent<ArtifactTileButton>().islandId;
         RemoveSource();
         ResetImages();
         UpdateSpritesFromSource();
