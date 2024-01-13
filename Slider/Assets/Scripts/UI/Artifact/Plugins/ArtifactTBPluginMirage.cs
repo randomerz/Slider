@@ -59,6 +59,7 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         buttonMirage.SetMirageEnabled(true);
 
         ArtifactTBPluginLaser laserPlugin = laserPlugins[mirageIslandId - 1];
+        print(laserPlugin);
         myLaserPlugin.CopyDataFromMirageSource(laserPlugin);
     }
 

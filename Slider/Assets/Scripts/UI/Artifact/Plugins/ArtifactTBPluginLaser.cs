@@ -30,10 +30,10 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public static Dictionary<ArtifactTileButton, ArtifactTBPluginLaser> tileDict;
     public static HashSet<ArtifactTBPluginLaser> sources;
 
-    private int MAX_CROSSINGS = 12;
+    private int MAX_CROSSINGS = 40; 
     private int crossings = 0;
 
-    public Sprite[] originalSprites = new Sprite[4]; 
+    private Sprite[] originalSprites = null;
     public int islandId;
     public int originalIslandId;
 
@@ -80,8 +80,6 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
             tileDict = new();
         tileDict.Add(button, this);
         SaveSprites();
-        islandId = GetComponentInParent<ArtifactTileButton>().islandId;
-        originalIslandId = islandId;
         ResetSprites();
         if(centerObject == LaserCenterObject.SOURCE)
             AddSource();
@@ -317,13 +315,15 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     private void UpdateImages(ArtifactTBPluginLaser original)
     {
-        if(original.originalSprites == null || original.originalSprites.Length != 4) 
+        if(original.originalSprites == null) 
             original.SaveSprites();
         for(int i = 0 ; i < 4; i++)
         {
             var newSprite = original.originalSprites[i];
             if(newSprite != null)
                 sprites[i].GetComponent<Image>().sprite = newSprite;
+            else
+                print("new sprite is null!");
         }
     }
 
