@@ -21,6 +21,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public LaserCenterObject centerObject;
     public ArtifactTBPluginLaser otherPortal;
     public MagiLaser laser;
+    public int sourceDir;
 
     private int[] mirrorNWSE = {1, 0, 3, 2};
     private int[] mirrorNESW = {3, 2, 1, 0};
@@ -235,14 +236,15 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public void UpdateSprites()
     {
         if(tileDict == null) return;
-        laserUIOffMap.HideLaser();
+        if(laserUIOffMap != null)
+            laserUIOffMap.HideLaser();
         foreach(ArtifactTBPluginLaser l in tileDict.Values)
         {
             l.ResetSprites();
         }
         if(laser.isEnabled)
         {
-            UpdateCenterToEdge(2);
+            UpdateCenterToEdge(sourceDir);
         }
     }
 }

@@ -8,6 +8,7 @@ public class MagiLaser : MonoBehaviour, ISavable
 
     public bool isPowered;
     public bool isEnabled;
+    public string SaveString;
     public List<LineRenderer> lineRenderers;
     private RaycastHit2D hit;
     private Laserable laserable;
@@ -192,10 +193,11 @@ public class MagiLaser : MonoBehaviour, ISavable
         {
             ClearLasers();
         }
-        if (SGrid.Current.GetArea() == Area.MagiTech) //Desert uses Laser too but does not have laser UI
-        {
-            laserUI.UpdateSprites();
-        }
+        // if (SGrid.Current.GetArea() == Area.MagiTech) //Desert uses Laser too but does not have laser UI
+        // {
+            if(laserUI != null)
+                laserUI.UpdateSprites();
+        //}
     }
 
     public void CheckIsPowered(Condition c) => c.SetSpec(isPowered);
@@ -203,12 +205,15 @@ public class MagiLaser : MonoBehaviour, ISavable
 
     public void Save()
     {
-        SaveSystem.Current.SetBool("MagiLaserIsEnabled", isEnabled);
+        if(SaveString != null && SaveString != "")
+            SaveSystem.Current.SetBool(SaveString, isEnabled);
     }
 
     public void Load(SaveProfile profile)
     {
-        isEnabled = profile.GetBool("MagiLaserIsEnabled");
+        if(SaveString == null || SaveString == "") return;
+
+        isEnabled = profile.GetBool(SaveString);
         if(isEnabled)
         {
             isPowered = true;

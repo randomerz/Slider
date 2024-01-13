@@ -62,9 +62,6 @@ public class DesertSafe : MonoBehaviour
         VarManager.instance.SetBoolOn("desertSafeMelted");
 
         dinoLasersManager.RemoveAllLasersPermanently();
-
-        // Turn on mirage here
-        //SaveSystem.Current.SetBool("desertMirageEnabled", false); // do this somewhere else
-        SaveSystem.Current.SetBool("desertMirage", false);
+        MirageSTileManager.GetInstance().DisableMirage();
     }
 }

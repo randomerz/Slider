@@ -32,7 +32,7 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
     }
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
     {
-        if (!SaveSystem.Current.GetBool("desertMirage")) return; //Maybe add a collectible check?
+        if (!MirageSTileManager.GetInstance().MirageEnabled) return; //Maybe add a collectible check?
         DisableMirage();
         (int, int) cords = (button.x, button.y);
         DesertArtifact artifact = (DesertArtifact)UIArtifact.GetInstance();
