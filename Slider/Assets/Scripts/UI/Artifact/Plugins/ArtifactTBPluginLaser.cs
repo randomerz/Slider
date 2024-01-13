@@ -23,8 +23,6 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public ArtifactTBPluginLaser otherPortal;
     public MagiLaser laser;
     public int sourceDir;
-    [SerializeField] private Material regularMaterial;
-    [SerializeField] private Material mirageMaterial;
 
     private int[] mirrorNWSE = {1, 0, 3, 2};
     private int[] mirrorNESW = {3, 2, 1, 0};
@@ -313,12 +311,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         sourceDir = original.sourceDir;
         if(centerObject == LaserCenterObject.SOURCE)
         {
-            //laser = original.laser;
             AddSource();
-        }
-        foreach(Image image in GetComponentsInChildren<Image>())
-        {
-            image.material = mirageMaterial;
         }
         UpdateImages(original);
         UpdateSpritesFromSource();
@@ -337,10 +330,6 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     {
         print("clearing data for tile" + + GetComponentInParent<ArtifactTileButton>().islandId);
         centerObject = LaserCenterObject.NONE;
-        foreach(Image image in GetComponentsInChildren<Image>())
-        {
-            image.material = regularMaterial;
-        }
         islandId = GetComponentInParent<ArtifactTileButton>().islandId;
         RemoveSource();
         ResetImages();
