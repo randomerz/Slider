@@ -27,7 +27,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     private int[] mirrorNESW = {3, 2, 1, 0};
 
     public static Dictionary<ArtifactTileButton, ArtifactTBPluginLaser> tileDict;
-    public static ArtifactTBPluginLaser source;
+    public static List<ArtifactTBPluginLaser> sources;
 
     private int MAX_CROSSINGS = 12;
     private int crossings = 0;
@@ -75,7 +75,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         tileDict.Add(button, this);
         ResetSprites();
         if(centerObject == LaserCenterObject.SOURCE)
-            source = this;
+            AddSource();
     }
 
     private void OnEnable()
@@ -221,6 +221,18 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         }
     }
 
+    public void AddSource()
+    {
+        if(sources == null)
+            sources = new();
+        sources.Add(this);
+    }
+
+    public void RemoveSource()
+    {
+        if(sources == null) return;
+        sources.Remove(this);
+    }
 
     public override void OnPosChanged()
     {
@@ -229,8 +241,11 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public static void UpdateSpritesFromSource()
     {
-        if(source == null) return;
-        source.UpdateSprites();
+        if(sources == null) return;
+        foreach(ArtifactTBPluginLaser source in sources)
+        {
+            source.UpdateSprites();
+        }
     }
 
     public void UpdateSprites()
@@ -246,5 +261,24 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         {
             UpdateCenterToEdge(sourceDir);
         }
+    }
+
+    public void CopyDataFromMirageSource(ArtifactTBPluginLaser original)
+    {
+        centerObject = original.centerObject;
+        sourceDir = original.sourceDir;
+        if(centerObject == LaserCenterObject.SOURCE)
+        {
+            laser = original.laser;
+            AddSource();
+        }
+        UpdateSpritesFromSource();
+    }
+
+    public void ClearDataOnMirageDisable()
+    {
+        centerObject = LaserCenterObject.NONE;
+        RemoveSource();
+        UpdateSpritesFromSource();
     }
 }
