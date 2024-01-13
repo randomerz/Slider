@@ -69,12 +69,10 @@ public class DinoLasersManager : MonoBehaviour
         if (debugSkipFezziwigActivation)
         {
             MirageSTileManager.OnMirageSTilesEnabled -= OnMoveEnd;
-            //DesertArtifact.MirageDisappeared -= OnMirageDisappeared;
         }
         else
         {
             MirageSTileManager.OnMirageSTilesEnabled -= UpdateCanFirstTimeActivate;
-            //DesertArtifact.MirageDisappeared -= UpdateCanFirstTimeActivate;
         }
     }
 
@@ -83,7 +81,6 @@ public class DinoLasersManager : MonoBehaviour
         bool activatedPreviously = SaveSystem.Current.GetBool(desertDinoLaserActivatedAlready);
 
         string gridString = DesertGrid.GetGridString();
-        //Debug.Log("FIRST TIME ACTIVATE LASER Checking " + gridString);
 
         if (!activatedPreviously && (CheckGrid.contains(gridString, "7D") || CheckGrid.contains(gridString, "GD"))) //normal tail | mirage head
         {
@@ -109,7 +106,7 @@ public class DinoLasersManager : MonoBehaviour
     private void CheckEnableLasers()
     {
         string gridString = DesertGrid.GetGridString();
-        if(ShouldNeverHaveLasers()) return;
+        if(ShouldNeverHaveLasers() || !MirageSTileManager.GetInstance().MirageEnabled) return;
 
         if (CheckGrid.contains(gridString, "74")) //normal tail | normal head
         {
