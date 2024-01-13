@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;    
+using UnityEngine;
+using UnityEngine.UI;
 
 public class ArtifactTBPluginLaser : ArtifactTBPlugin
 {
@@ -22,6 +23,8 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public ArtifactTBPluginLaser otherPortal;
     public MagiLaser laser;
     public int sourceDir;
+    [SerializeField] private Material regularMaterial;
+    [SerializeField] private Material mirageMaterial;
 
     private int[] mirrorNWSE = {1, 0, 3, 2};
     private int[] mirrorNESW = {3, 2, 1, 0};
@@ -31,6 +34,9 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     private int MAX_CROSSINGS = 12;
     private int crossings = 0;
+
+    public Sprite[] originalSprites; 
+
 
     [Serializable]
     public class LaserableRockUIData
@@ -73,9 +79,19 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         if(tileDict == null)
             tileDict = new();
         tileDict.Add(button, this);
+        SaveSprites();
         ResetSprites();
         if(centerObject == LaserCenterObject.SOURCE)
             AddSource();
+    }
+
+    private void SaveSprites()
+    {
+        originalSprites = new Sprite[4];
+        for(int i = 0 ; i < 4; i++)
+        {
+            originalSprites[i] = sprites[i].GetComponent<Image>().sprite;
+        }
     }
 
     private void OnEnable()
@@ -114,6 +130,8 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
                     s.SetActive(false);
             }
         }
+        if(laserUIOffMap != null)
+            laserUIOffMap.HideLaser();
         crossings = 0;
     }
 
@@ -124,7 +142,10 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
             if(t5RockBS && direction == 1)
                 t5Sprites[0].SetActive(true);
             else
+            {
                 sprites[direction].SetActive(true);
+                print("Edge " + direction + " active for tile " + GetComponentInParent<ArtifactTileButton>().islandId);
+            }
             if(edgeblockers[direction])
                 return;
         }
@@ -137,6 +158,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void UpdateCenter(int direction)
     {
+        print("updating center for tile" + GetComponentInParent<ArtifactTileButton>().islandId + " " + centerObject);
         crossings++;
         int nextDir = (direction + 2) % 4;
 
@@ -149,6 +171,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         switch(centerObject)
         {
             case LaserCenterObject.BLOCK:
+                print("blocked");
                 return;
             case LaserCenterObject.MIRROR_NWSE:
                 nextDir = mirrorNWSE[direction];
@@ -178,7 +201,10 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
                 return;
                 
             else if(!t5RockBS || direction != 1)
+            {
                 sprites[direction].SetActive(true);
+                print("Edge" + direction + "active for tile" + GetComponentInParent<ArtifactTileButton>().islandId);
+            }
         }
         else
             emptysprites[direction].SetActive(true);
@@ -242,21 +268,25 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public static void UpdateSpritesFromSource()
     {
         if(sources == null) return;
+        print(sources.Count);
+        ResetAllSprites();
         foreach(ArtifactTBPluginLaser source in sources)
         {
             source.UpdateSprites();
         }
     }
 
-    public void UpdateSprites()
+    private static void ResetAllSprites()
     {
         if(tileDict == null) return;
-        if(laserUIOffMap != null)
-            laserUIOffMap.HideLaser();
         foreach(ArtifactTBPluginLaser l in tileDict.Values)
         {
             l.ResetSprites();
         }
+    }
+
+    public void UpdateSprites()
+    {
         if(laser.isEnabled)
         {
             UpdateCenterToEdge(sourceDir);
@@ -265,6 +295,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void CopyDataFromMirageSource(ArtifactTBPluginLaser original)
     {
+        print("copying data for tile" + GetComponentInParent<ArtifactTileButton>().islandId);
         centerObject = original.centerObject;
         sourceDir = original.sourceDir;
         if(centerObject == LaserCenterObject.SOURCE)
@@ -272,13 +303,40 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
             laser = original.laser;
             AddSource();
         }
+        foreach(Image image in GetComponentsInChildren<Image>())
+        {
+            image.material = mirageMaterial;
+        }
+        UpdateImages(original);
         UpdateSpritesFromSource();
+    }
+
+    private void UpdateImages(ArtifactTBPluginLaser original)
+    {
+        for(int i = 0 ; i < 4; i++)
+        {
+            sprites[i].GetComponent<Image>().sprite = original.originalSprites[i];
+        }
     }
 
     public void ClearDataOnMirageDisable()
     {
+        print("clearing data for tile" + + GetComponentInParent<ArtifactTileButton>().islandId);
         centerObject = LaserCenterObject.NONE;
+        foreach(Image image in GetComponentsInChildren<Image>())
+        {
+            image.material = regularMaterial;
+        }
         RemoveSource();
+        ResetImages();
         UpdateSpritesFromSource();
+    }
+
+    private void ResetImages()
+    {
+        for(int i = 0 ; i < 4; i++)
+        {
+            sprites[i].GetComponent<Image>().sprite = originalSprites[i];
+        }
     }
 }
