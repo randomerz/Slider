@@ -84,12 +84,13 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
         {
             EnableMirage();
         }
-        EnableMirageTilesFromSave(profile.GetString(MIRAGE_TILES_SAVE_STRING));
+        EnableMirageTilesFromSave(profile.GetString(MIRAGE_TILES_SAVE_STRING, ""));
     }
 
     private void EnableMirageTilesFromSave(string saveString)
     {
         enabledMirageTiles = new();
+        print(saveString);
         if(saveString == null || saveString == "") return;
         for(int i = 0; i < 7; i++)
         {
@@ -100,8 +101,17 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
                 int[] ints = CharToInt(c);
                 EnableMirageTile(ints[0], ints[1], ints[2], ints[3]);
                 enabledMirageTiles.Add(new(ints[0], ints[1], ints[2], ints[3]));
+                if(ints[1] == 8)
+                {
+                    mirageButtons[0].EnableMirageButton(ints[0]);
+                }
+                else
+                {
+                    mirageButtons[1].EnableMirageButton(ints[0]);
+                }
             }
         }
+        OnMirageSTilesEnabled?.Invoke(this, null);
     }
 
     private int[] CharToInt(char[] chars)
@@ -117,7 +127,6 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     public void Awake()
     {
         InitializeSingleton();
-        mirageButtons = UIArtifact._instance.transform.parent.GetComponentsInChildren<ArtifactTBPluginMirage>().ToList();
     }
 
     private void SubscibeMirageEvents()

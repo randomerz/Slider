@@ -33,8 +33,9 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     private int MAX_CROSSINGS = 12;
     private int crossings = 0;
 
-    public Sprite[] originalSprites; 
+    public Sprite[] originalSprites = new Sprite[4]; 
     public int islandId;
+    private int originalIslandId;
 
 
     [Serializable]
@@ -80,6 +81,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         tileDict.Add(button, this);
         SaveSprites();
         islandId = GetComponentInParent<ArtifactTileButton>().islandId;
+        originalIslandId = islandId;
         ResetSprites();
         if(centerObject == LaserCenterObject.SOURCE)
             AddSource();
@@ -313,16 +315,19 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     private void UpdateImages(ArtifactTBPluginLaser original)
     {
+        if(original.originalSprites == null || original.originalSprites.Length != 4) return;
         for(int i = 0 ; i < 4; i++)
         {
-            sprites[i].GetComponent<Image>().sprite = original.originalSprites[i];
+            var newSprite = original.originalSprites[i];
+            if(newSprite != null)
+                sprites[i].GetComponent<Image>().sprite = newSprite;
         }
     }
 
     public void ClearDataOnMirageDisable()
     {
         centerObject = LaserCenterObject.NONE;
-        islandId = GetComponentInParent<ArtifactTileButton>().islandId;
+        islandId = originalIslandId;
         RemoveSource();
         ResetImages();
         UpdateSpritesFromSource();

@@ -12,16 +12,10 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
     [SerializeField] private List<ArtifactTBPluginLaser> laserPlugins;
     [SerializeField] private List<Sprite> mirageSprites;
     [SerializeField] private STile stile;
-    private ButtonMirage buttonMirage;
+    [SerializeField] private ButtonMirage buttonMirage;
 
-    private void Awake()
-    {
-        buttonIslandId = GetComponentInParent<ArtifactTileButton>().islandId;
-    }
-    
     private void OnEnable()
     {
-        buttonMirage = GetComponent<ButtonMirage>();
         DesertArtifact.MoveMadeOnArtifact += MoveMadeOnArtifact;
     }
     private void OnDisable()
@@ -36,6 +30,11 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
 
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
     {
+        CheckForMirage();
+    }
+
+    private void CheckForMirage()
+    {
         if (!MirageSTileManager.GetInstance().MirageEnabled) return; 
 
         DisableMirageButton();
@@ -45,19 +44,21 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
 
         if (mirageIslandId < 8) 
         {
-            EnableMirageButton();
+            EnableMirageButton(mirageIslandId);
         }
     }
 
-    private void EnableMirageButton()
+    public void EnableMirageButton(int id)
     {
+        print("enabling mirage " + id + " on button " + buttonIslandId);
+        mirageIslandId = id;
         button.SetEmptySprite(mirageSprites[mirageIslandId - 1]);
         button.SetIslandSprite(mirageSprites[mirageIslandId - 1]);
-        button.buttonAnimator.sliderImage.sprite = mirageSprites[mirageIslandId - 1]; //I honestly dunno why this line is needed
+        button.SetSpriteToIsland();
+       // button.buttonAnimator.sliderImage.sprite = mirageSprites[mirageIslandId - 1]; //I honestly dunno why this line is needed
         stile.sliderCollider.isTrigger = true;
         buttonMirage.SetMirageEnabled(true);
 
-        //Todo: copy laser TB plugin data from old tile to new tile
         ArtifactTBPluginLaser laserPlugin = laserPlugins[mirageIslandId - 1];
         myLaserPlugin.CopyDataFromMirageSource(laserPlugin);
     }

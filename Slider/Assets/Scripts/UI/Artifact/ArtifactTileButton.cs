@@ -29,7 +29,7 @@ public class ArtifactTileButton : MonoBehaviour
     public int x;
     public int y;
 
-    protected Sprite islandSprite;
+    public Sprite islandSprite;
     protected Sprite emptySprite;
     private FlashWhiteImage[] buttonIcons; // power lines, minecarft junctions, etc
     private bool dontUpdateDefaultSpriteOnAwake;
@@ -158,9 +158,16 @@ public class ArtifactTileButton : MonoBehaviour
         }
     }
 
+    public void SetSpriteToIsland()
+    {
+        print("setting sprite to island " + islandId);
+        buttonAnimator.sliderImage.sprite = isComplete ? completedSprite : islandSprite;
+    }
+
     public void SetSpriteToEmpty()
     {
         buttonAnimator.sliderImage.sprite = emptySprite;
+        print("setting sprite to empty " + islandId);
     }
 
     public void SetSpriteToHover()
@@ -171,6 +178,7 @@ public class ArtifactTileButton : MonoBehaviour
     public void RestoreDefaultIslandSprite()
     {
         islandSprite = islandSpriteDefault;
+        print("restoring default sprite " + islandId);
     }
 
     public void RestoreDefaultCompletedSprite()
