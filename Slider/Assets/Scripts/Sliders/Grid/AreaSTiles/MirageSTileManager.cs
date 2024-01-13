@@ -54,7 +54,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     private string BuildMirageTilesSaveString()
     {
-        if(enabledMirageTiles == null) return "XXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+        if(enabledMirageTiles == null) return "";
         StringBuilder s = new();
         for(int i = 1; i <= 7; i++)
         {
@@ -73,6 +73,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
                 s.Append($"{data.orignalTileID}{data.buttonID}{data.x}{data.y}");
             }
         }
+       // print(s.ToString());
         return s.ToString();
     }
 
@@ -83,15 +84,16 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
         {
             EnableMirage();
         }
-        EnableMirageTilesFromSave(profile.GetString(MIRAGE_ENABLED_SAVE_STRING));
+        EnableMirageTilesFromSave(profile.GetString(MIRAGE_TILES_SAVE_STRING));
     }
 
     private void EnableMirageTilesFromSave(string saveString)
     {
         enabledMirageTiles = new();
+        if(saveString == null || saveString == "") return;
         for(int i = 0; i < 7; i++)
         {
-            string s = saveString.Substring(4 * i, 4 * (i+1));
+            string s = saveString.Substring(4 * i, 4);
             char[] c = s.ToCharArray();
             if(c[0] != 'X')
             {
