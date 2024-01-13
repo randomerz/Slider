@@ -140,6 +140,27 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
         SGridAnimator.OnSTileMoveStart -= RemovePlayerOnMirageSTile;
         SGridAnimator.OnSTileMoveEndLate -= EnableMirageTilesAfterSMove;
     }
+    
+    private void Start()
+    {
+        EnableButtonsOnStart();
+    }
+
+    private void EnableButtonsOnStart()
+    {
+        foreach(MirageTileData d in enabledMirageTiles)
+        {
+            if(d.buttonID == 8)
+            {
+                mirageButtons[0].EnableMirageButton(d.orignalTileID);
+            }
+            else
+            {
+                mirageButtons[1].EnableMirageButton(d.orignalTileID);
+            }
+            
+        }  
+    }
 
 
     public void EnableMirage()
