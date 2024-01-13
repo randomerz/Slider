@@ -43,7 +43,6 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     public void Awake()
     {
         InitializeSingleton();
-   //     mirageTailPos = new Vector2Int(-1, -1);
         mirageButtons = UIArtifact._instance.transform.parent.GetComponentsInChildren<ArtifactTBPluginMirage>().ToList();
     }
 
@@ -73,9 +72,13 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     {
         mirageEnabled = false;
         UnSubscribeMirageEvents();
+        RemovePlayerOnMirageSTile();
         DisableMirageVFX();
-        DisableMirage(-1);
-        //remove and disable lasers;
+        foreach(ArtifactTBPluginMirage button in mirageButtons)
+        {
+            button.DisableMirageButton();
+        }
+        DisableMirageTile(-1);
     }
 
     public void DisableMirageVFX() {}
@@ -91,7 +94,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     /// Function that disables mirages either from selecting or from making an artifact move
     /// </summary>
     /// <param name="islandId">0 means disable all mirages</param>
-    public void DisableMirage(int islandId = -1)
+    public void DisableMirageTile(int islandId = -1)
     {
         //Insert disable effect
         if (islandId == 0 || islandId > 7) return;

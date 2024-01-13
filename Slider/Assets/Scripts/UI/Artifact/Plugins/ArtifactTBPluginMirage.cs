@@ -21,17 +21,12 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
     {
         DesertArtifact.MoveMadeOnArtifact -= MoveMadeOnArtifact;
     }
+
     public void MirageOnClick()
     {
-        if (mirageIslandId > 0)
-        {
-            //Debug.Log("disablemirage");
-            //DisableMirage();
-            //return;
-        }
-        //Debug.Log("selecting");
         button.SelectButton();
     }
+
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
     {
         if (!MirageSTileManager.GetInstance().MirageEnabled) return; 
@@ -60,12 +55,12 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         myLaserPlugin.CopyDataFromMirageSource(laserPlugin);
     }
 
-    private void DisableMirageButton()
+    public void DisableMirageButton()
     {
         button.RestoreDefaultEmptySprite();
         button.RestoreDefaultIslandSprite();
         button.SetSpriteToIslandOrEmpty();
-        MirageSTileManager.GetInstance().DisableMirage(mirageIslandId);
+        MirageSTileManager.GetInstance().DisableMirageTile(mirageIslandId);
         mirageIslandId = 0;
         stile.sliderCollider.isTrigger = false;
         buttonMirage.SetMirageEnabled(false);
