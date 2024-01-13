@@ -35,7 +35,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public Sprite[] originalSprites = new Sprite[4]; 
     public int islandId;
-    private int originalIslandId;
+    public int originalIslandId;
 
 
     [Serializable]
@@ -160,6 +160,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     private bool MirageIsActive()
     {
         if(MirageSTileManager.GetInstance() == null) return false;
+        if(GetComponentInParent<ArtifactTileButton>() == null) return false;
         return(islandId !=  GetComponentInParent<ArtifactTileButton>().islandId);
     }
 
@@ -210,7 +211,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
                 sprites[direction].SetActive(true);
             }
         }
-        else
+        else if(emptysprites != null && emptysprites[direction] != null)
             emptysprites[direction].SetActive(true);
 
         if(crossings > MAX_CROSSINGS)
@@ -302,6 +303,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void CopyDataFromMirageSource(ArtifactTBPluginLaser original)
     {
+        print("copying laser UI data from " + original.islandId);
         islandId = original.islandId;
         centerObject = original.centerObject;
         sourceDir = original.sourceDir;
@@ -315,7 +317,8 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     private void UpdateImages(ArtifactTBPluginLaser original)
     {
-        if(original.originalSprites == null || original.originalSprites.Length != 4) return;
+        if(original.originalSprites == null || original.originalSprites.Length != 4) 
+            original.SaveSprites();
         for(int i = 0 ; i < 4; i++)
         {
             var newSprite = original.originalSprites[i];

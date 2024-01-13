@@ -55,7 +55,6 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         button.SetEmptySprite(mirageSprites[mirageIslandId - 1]);
         button.SetIslandSprite(mirageSprites[mirageIslandId - 1]);
         button.SetSpriteToIsland();
-       // button.buttonAnimator.sliderImage.sprite = mirageSprites[mirageIslandId - 1]; //I honestly dunno why this line is needed
         stile.sliderCollider.isTrigger = true;
         buttonMirage.SetMirageEnabled(true);
 

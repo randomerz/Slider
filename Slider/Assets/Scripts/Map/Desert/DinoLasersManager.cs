@@ -25,6 +25,7 @@ public class DinoLasersManager : MonoBehaviour
 
     private void Start()
     {
+        CheckEnableLasers();
         SubscribeToEvents();
         if(ShouldNeverHaveLasers())
             RemoveAllLasersPermanently();

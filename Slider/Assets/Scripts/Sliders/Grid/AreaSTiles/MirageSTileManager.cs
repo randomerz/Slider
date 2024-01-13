@@ -56,6 +56,8 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     {
         if(enabledMirageTiles == null) return "";
         StringBuilder s = new();
+        if(enabledMirageTiles.Count > 2) 
+            Debug.LogWarning("more than 2 mirage tiles saved! This should not happen!");
         for(int i = 1; i <= 7; i++)
         {
             MirageTileData data = null;
@@ -100,7 +102,6 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
             {
                 int[] ints = CharToInt(c);
                 EnableMirageTile(ints[0], ints[1], ints[2], ints[3]);
-                enabledMirageTiles.Add(new(ints[0], ints[1], ints[2], ints[3]));
                 if(ints[1] == 8)
                 {
                     mirageButtons[0].EnableMirageButton(ints[0]);
@@ -150,6 +151,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     {
         foreach(MirageTileData d in enabledMirageTiles)
         {
+            EnableMirageTile(d.orignalTileID, d.buttonID, d.x, d.y, false);
             if(d.buttonID == 8)
             {
                 mirageButtons[0].EnableMirageButton(d.orignalTileID);
@@ -158,7 +160,6 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
             {
                 mirageButtons[1].EnableMirageButton(d.orignalTileID);
             }
-            
         }  
     }
 
@@ -187,12 +188,26 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     public void DisableMirageVFX() {}
 
-    public void EnableMirageTile(int islandId, int buttonID, int x, int y)
+    public void EnableMirageTile(int islandId, int buttonID, int x, int y, bool addData = true)
     {
         if (islandId > 7 || islandId < 1) return;
         mirageSTiles[islandId - 1].transform.position = new Vector2(x * GRID_POSITION_TO_WORLD_POSITION, y * GRID_POSITION_TO_WORLD_POSITION);
         mirageSTiles[islandId - 1].gameObject.SetActive(true);
-        enabledMirageTiles.Add(new(islandId, buttonID, x, y));
+        if(addData)
+            AddMirageTileData(islandId, buttonID, x, y);
+    }
+
+    private void AddMirageTileData(int islandId, int buttonIslandId, int x, int y)
+    {
+        MirageTileData remove = null;
+        foreach(MirageTileData data in enabledMirageTiles)
+        {
+            if(data.buttonID == buttonIslandId)
+                remove = data;
+        }
+        if(remove != null)
+            enabledMirageTiles.Remove(remove);
+        enabledMirageTiles.Add(new(islandId, buttonIslandId, x, y));
     }
     
     /// <summary>
