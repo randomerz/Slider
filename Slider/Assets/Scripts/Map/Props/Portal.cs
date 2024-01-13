@@ -29,6 +29,14 @@ public class Portal : MonoBehaviour
         public bool fromPast;
     }
 
+    [System.Serializable]
+    public class DesertPortalUI
+    {
+        public GameObject UIPortalIcon;
+        public ArtifactTBPluginLaser laserPlugin;
+    }
+    public DesertPortalUI desertPortalUI;
+
     public void OnPlayerEnter()
     {
         if(playerInPortal || isTeleporting) return;
@@ -74,5 +82,12 @@ public class Portal : MonoBehaviour
     {
         if(playerInPortal) return;
         Player.GetInstance().ToggleLightning(enter);
+    }
+
+    public void EnableDesertUIPortal()
+    {
+        desertPortalUI.UIPortalIcon.SetActive(true);
+        desertPortalUI.laserPlugin.AddSource();
+        ArtifactTBPluginLaser.UpdateSpritesFromSource();
     }
 }
