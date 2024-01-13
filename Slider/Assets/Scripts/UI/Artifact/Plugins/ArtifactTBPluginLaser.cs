@@ -301,7 +301,6 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void CopyDataFromMirageSource(ArtifactTBPluginLaser original)
     {
-        print("copying laser UI data from " + original.islandId);
         islandId = original.islandId;
         centerObject = original.centerObject;
         sourceDir = original.sourceDir;
@@ -322,8 +321,6 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
             var newSprite = original.originalSprites[i];
             if(newSprite != null)
                 sprites[i].GetComponent<Image>().sprite = newSprite;
-            else
-                print("new sprite is null!");
         }
     }
 

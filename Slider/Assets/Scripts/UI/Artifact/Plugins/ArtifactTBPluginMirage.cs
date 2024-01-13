@@ -50,7 +50,6 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
 
     public void EnableMirageButton(int id)
     {
-        print("enabling mirage " + id + " on button " + buttonIslandId);
         mirageIslandId = id;
         button.SetEmptySprite(mirageSprites[mirageIslandId - 1]);
         button.SetIslandSprite(mirageSprites[mirageIslandId - 1]);
