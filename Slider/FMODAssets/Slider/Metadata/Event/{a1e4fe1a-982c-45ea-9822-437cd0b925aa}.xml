@@ -73,7 +73,7 @@
 			<destination>{7aa602b4-cf2f-44f7-8cde-2b8d9f4a3e6a}</destination>
 		</relationship>
 		<relationship name="modules">
-			<destination>{2c513b7d-95e9-4f04-a79d-858a8dce3e40}</destination>
+			<destination>{0e4c5908-e8a6-41b8-a4f4-083d3f6a9dbd}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{5b20b1e8-9fe6-4de3-b220-2ecb8dd8bcb2}</destination>
@@ -93,11 +93,12 @@
 	<object class="Timeline" id="{72d2429a-960c-4ecd-a763-4a62bb2abedf}">
 		<relationship name="modules">
 			<destination>{93f82fc9-43de-4e18-9a71-9874c0c34178}</destination>
-			<destination>{2c513b7d-95e9-4f04-a79d-858a8dce3e40}</destination>
+			<destination>{0e4c5908-e8a6-41b8-a4f4-083d3f6a9dbd}</destination>
 		</relationship>
 		<relationship name="markers">
 			<destination>{f4c9a0a6-6f77-4c52-b512-26e8d3cc75d7}</destination>
 			<destination>{ab1fdc55-e9e1-4ee4-9fad-db5c91206585}</destination>
+			<destination>{98398266-99af-42a3-b569-742629ebaec7}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{c35ae272-ab1d-4d56-a350-c4610535226f}">
@@ -150,12 +151,12 @@
 			<destination>{6210e2cc-ad46-417e-93cd-0b06cacf9872}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{2c513b7d-95e9-4f04-a79d-858a8dce3e40}">
+	<object class="SingleSound" id="{0e4c5908-e8a6-41b8-a4f4-083d3f6a9dbd}">
 		<property name="length">
-			<value>1.8</value>
+			<value>1.8717460317460317</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{fd42afb8-8500-4df4-b778-cb57b29c2539}</destination>
+			<destination>{fe55dca3-ae0c-48ff-8af1-70d5b7185708}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{5b20b1e8-9fe6-4de3-b220-2ecb8dd8bcb2}">
@@ -237,6 +238,20 @@
 		</property>
 		<property name="name">
 			<value>End</value>
+		</property>
+		<relationship name="timeline">
+			<destination>{72d2429a-960c-4ecd-a763-4a62bb2abedf}</destination>
+		</relationship>
+		<relationship name="markerTrack">
+			<destination>{1ce58c37-fd4e-43c5-bdb9-ca4a92ff4df2}</destination>
+		</relationship>
+	</object>
+	<object class="LoopRegion" id="{98398266-99af-42a3-b569-742629ebaec7}">
+		<property name="position">
+			<value>0.059999999999999998</value>
+		</property>
+		<property name="length">
+			<value>1.24</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{72d2429a-960c-4ecd-a763-4a62bb2abedf}</destination>
@@ -393,10 +408,10 @@
 			<value>1.02999997</value>
 		</property>
 		<property name="fftSize">
-			<value>1500</value>
+			<value>4096</value>
 		</property>
 		<property name="overlap">
-			<value>3.79999995</value>
+			<value>1</value>
 		</property>
 		<relationship name="automators">
 			<destination>{5d450e3d-9e97-40a8-8a93-10fd31dfb3b7}</destination>
