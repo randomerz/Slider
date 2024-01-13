@@ -30,12 +30,12 @@ public class MagiLaser : MonoBehaviour, ISavable
 
     public void EnableLaser()
     {
-        isEnabled = true;
+        SetEnabled(true);
     }
 
     public void DisableLaser()
     {
-        isEnabled = false;
+        SetEnabled(false);
     }
 
     private void LateUpdate()
@@ -193,11 +193,10 @@ public class MagiLaser : MonoBehaviour, ISavable
         {
             ClearLasers();
         }
-        // if (SGrid.Current.GetArea() == Area.MagiTech) //Desert uses Laser too but does not have laser UI
-        // {
-            if(laserUI != null)
-                laserUI.UpdateSprites();
-        //}
+
+        if(laserUI != null)
+            laserUI.AddSource();
+
     }
 
     public void CheckIsPowered(Condition c) => c.SetSpec(isPowered);

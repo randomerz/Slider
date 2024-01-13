@@ -28,7 +28,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     private int[] mirrorNESW = {3, 2, 1, 0};
 
     public static Dictionary<ArtifactTileButton, ArtifactTBPluginLaser> tileDict;
-    public static List<ArtifactTBPluginLaser> sources;
+    public static HashSet<ArtifactTBPluginLaser> sources;
 
     private int MAX_CROSSINGS = 12;
     private int crossings = 0;
@@ -258,6 +258,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         if(sources == null)
             sources = new();
         sources.Add(this);
+        UpdateSprites();
     }
 
     public void RemoveSource()
