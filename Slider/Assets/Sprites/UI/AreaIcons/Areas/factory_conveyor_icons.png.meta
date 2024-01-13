@@ -182,7 +182,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 14b10b032748621c0800000000000000
+      spriteID: bcfd50714b787904581511c284c681ed
       internalID: -4528786749296469183
       vertices: []
       indices: 
@@ -192,8 +192,8 @@ TextureImporter:
       name: factory_conveyor_icons_2
       rect:
         serializedVersion: 2
-        x: 0
-        y: 64
+        x: 64
+        y: 96
         width: 32
         height: 32
       alignment: 0
@@ -203,7 +203,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1885b4de5fb409c60800000000000000
+      spriteID: e0e7d54aa5bb859418ae80a6be5e4641
       internalID: 7822836072362760321
       vertices: []
       indices: 
@@ -213,6 +213,27 @@ TextureImporter:
       name: factory_conveyor_icons_3
       rect:
         serializedVersion: 2
+        x: 0
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e107c6f1c178b2745853b6253563c5cd
+      internalID: -539219023217082086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_conveyor_icons_4
+      rect:
+        serializedVersion: 2
         x: 32
         y: 64
         width: 32
@@ -224,28 +245,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a114301c72f4488f0800000000000000
-      internalID: -539219023217082086
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: factory_conveyor_icons_4
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 32
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 28b643f42fca3e780800000000000000
+      spriteID: db162a1a81b450a448992426742b6b2e
       internalID: -8654883902165062782
       vertices: []
       indices: 
@@ -255,8 +255,8 @@ TextureImporter:
       name: factory_conveyor_icons_5
       rect:
         serializedVersion: 2
-        x: 32
-        y: 32
+        x: 64
+        y: 64
         width: 32
         height: 32
       alignment: 0
@@ -266,7 +266,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ce808fa5e8254e070800000000000000
+      spriteID: 924054a8c0e3dcc47a87c33d89285d8c
       internalID: 8134717598302996716
       vertices: []
       indices: 
@@ -277,6 +277,69 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08d8057688a425e43b778883ee3f525f
+      internalID: -955056725521051819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_conveyor_icons_7
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e85d1b465dfb43e4aab6be89c53d33b2
+      internalID: 1846914300276952454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_conveyor_icons_8
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddb71638d3f8c8740b085cc4827cae73
+      internalID: 1993952028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_conveyor_icons_9
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 0
         width: 32
         height: 32
@@ -287,14 +350,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 55f48fed7f4feb2f0800000000000000
-      internalID: -955056725521051819
+      spriteID: 3db2138a6a46d3b4ab9f514eb7702cac
+      internalID: 1323905472
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: factory_conveyor_icons_7
+      name: factory_conveyor_icons_10
       rect:
         serializedVersion: 2
         x: 32
@@ -308,8 +371,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 68dc89e45ce81a910800000000000000
-      internalID: 1846914300276952454
+      spriteID: 001e5b6f86844934aa3532be015aaaeb
+      internalID: 1943658090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: factory_conveyor_icons_11
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41fc403f63ff5a343af1b17a0c3234b2
+      internalID: 1320167253
       vertices: []
       indices: 
       edges: []
@@ -327,12 +411,16 @@ TextureImporter:
     nameFileIdTable:
       factory_conveyor_icons_0: 8575672161871386233
       factory_conveyor_icons_1: -4528786749296469183
+      factory_conveyor_icons_10: 1943658090
+      factory_conveyor_icons_11: 1320167253
       factory_conveyor_icons_2: 7822836072362760321
       factory_conveyor_icons_3: -539219023217082086
       factory_conveyor_icons_4: -8654883902165062782
       factory_conveyor_icons_5: 8134717598302996716
       factory_conveyor_icons_6: -955056725521051819
       factory_conveyor_icons_7: 1846914300276952454
+      factory_conveyor_icons_8: 1993952028
+      factory_conveyor_icons_9: 1323905472
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -99,6 +99,7 @@ public class DesertArtifact : UIArtifact
         QueueAdd(move);
         UpdateUI();
         //Debug.Log($"Curr: {buttonCurrent}");
+        AudioManager.Play("Slider Sand");
         ProcessQueue();
         UpdatePushedDowns(null, null);
         DeselectSelectedButton();

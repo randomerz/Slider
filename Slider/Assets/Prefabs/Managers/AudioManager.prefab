@@ -663,6 +663,16 @@ MonoBehaviour:
       Path: event:/SFX/Magic/Desync Tear Close
     canPause: 1
     dopplerScale: 1
+  - name: Slider Sand
+    fmodEvent:
+      Guid:
+        Data1: 1232058098
+        Data2: 1290244825
+        Data3: 151735444
+        Data4: 1157576329
+      Path: event:/SFX/Desert/Slider Sand
+    canPause: 1
+    dopplerScale: 1
   music:
   - name: Main Menu
     fmodEvent:

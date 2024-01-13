@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using SliderVocalization;
 using UnityEngine;
 using Paragraph = SliderVocalization.VocalizableParagraph;
 
@@ -41,50 +42,35 @@ public class DialogueDisplay : MonoBehaviour
         textSpecialBG.StopEffects();
 
         string parsed = textTyperText.StartTyping(message);
+        
+        textTyperBG.StartTyping(message);
+        
         // in rare cases NaN is used at first iteration and blocks dialogue typing
+        
         textTyperText.SetTextSpeed(GameSettings.textSpeed);
         textTyperBG.SetTextSpeed(GameSettings.textSpeed);
-        textTyperBG.StartTyping(message);
-
+        
         if (AudioManager.useVocalizer && useVocalizer)
         {
             float totalDuration = vocalizer.SetText(parsed, emote);
 
-            AudioManager.DampenMusic(this, 0.6f, totalDuration + 0.2f);
             textTyperText.SetTextSpeed(totalDuration / parsed.Length);
             textTyperBG.SetTextSpeed(totalDuration / parsed.Length);
-            vocalizer.StartReadAll(emote);
-        }
-        // StartCoroutine(TypeSentence(message.ToCharArray()));
-    }
 
-    public void StopVocalizer()
-    {
-        if (AudioManager.useVocalizer && useVocalizer)
-        {
-            vocalizer.Stop();
+            AudioManager.DampenMusic(this, 0.6f, totalDuration + 0.2f);
+
+            if (vocalizer.GetVocalizationState() == VocalizerCompositeState.CanPlay)
+            {
+                vocalizer.StartReadAll(emote);
+            }
         }
+        
+        // StartCoroutine(TypeSentence(message.ToCharArray()));
     }
 
     public void FadeAwayDialogue()
     {
-        if (useVocalizer)
-        {
-            if (gameObject.activeInHierarchy)
-            {
-                StartCoroutine(FadeWhenReady());
-            }
-        }
-        else
-        {
-            canvas.SetActive(false);
-        }
-    }
-
-    IEnumerator FadeWhenReady()
-    {
         vocalizer.Stop();
-        yield return vocalizer.WaitUntilCanPlay();
         canvas.SetActive(false);
     }
 

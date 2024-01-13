@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -18,14 +16,12 @@ namespace SliderVocalization
         public List<SentenceVocalizer> Vocalizers => sentences;
 
         private SentenceVocalizer _Current;
-        private VocalizerCompositeStatus _Status;
-
-        public WaitUntil WaitUntilCanPlay() => new (() => _Status == VocalizerCompositeStatus.CanPlay);
+        private VocalizerCompositeState _state;
 
         public static VocalizableParagraph SoloSpeaker => speakers.Count > 0 ? speakers[^1] : null;
         internal static List<VocalizableParagraph> speakers = new();
 
-        internal void StartReadSentence(SentenceVocalizer voc, NPCEmotes.Emotes emote)
+        internal void StartReadSentence_Debug(SentenceVocalizer voc, NPCEmotes.Emotes emote)
         {
             this.Stop();
             voc.Stop();
@@ -36,12 +32,21 @@ namespace SliderVocalization
 
         public void StartReadAll(NPCEmotes.Emotes emote)
         {
-            this.Stop();
-
             speakers.Add(this);
-
+ 
             currentVocalizationContext = new(transform, this);
-            StartCoroutine(this.Vocalize(((VocalizerParameters)preset).ModifyWith(modifierLibrary[emote], createClone: true), currentVocalizationContext));
+            
+            this.Stop();
+            
+            // Technically this is done within the coroutine, but I'm not sure if there is guarantee that the coroutine will evaluate on the first frame
+            // Setting this to playing will *guarantee* no multi-start issues
+            this.MarkAsStarted();
+            
+            StartCoroutine(
+                this.Vocalize(
+                    ((VocalizerParameters)preset).ModifyWith(modifierLibrary[emote], createClone: true), 
+                    currentVocalizationContext)
+                );
         }
 
         /// <summary>
@@ -53,19 +58,29 @@ namespace SliderVocalization
         {
             this.text = text;
             sentences = SentenceVocalizer.Parse(this.text) ?? new();
-
+            
             return (this as IVocalizer).RandomizeVocalization(
                 ((VocalizerParameters)preset).ModifyWith(modifierLibrary[emote], createClone: true), new()
                 );
-        }
+        } 
 
         void IVocalizerComposite<SentenceVocalizer>.PreRandomize(
             VocalizerParameters preset, VocalRandomizationContext context, SentenceVocalizer upcoming) { }
-        
-        public SentenceVocalizer GetCurrent() => _Current;
-        void IVocalizerComposite<SentenceVocalizer>.SetCurrent(SentenceVocalizer value) => _Current = value;
-        public VocalizerCompositeStatus GetStatus() => _Status;
-        void IVocalizerComposite<SentenceVocalizer>.SetStatus(VocalizerCompositeStatus value) => _Status = value;
+
+        public VocalizerCompositeState GetVocalizationState()
+        {
+            return _state;
+        }
+
+        void IVocalizerComposite<SentenceVocalizer>.SetVocalizationState(VocalizerCompositeState newState)
+        {
+            _state = newState;
+        }
+
+        public override string ToString()
+        {
+            return Text;
+        }
     }
 
 #if UNITY_EDITOR
@@ -83,7 +98,7 @@ namespace SliderVocalization
 
             if (Application.isPlaying)
             {
-                EditorGUILayout.LabelField(reader.GetStatus().ToString());
+                EditorGUILayout.LabelField(reader.GetVocalizationState().ToString());
 
                 GUIStyle textAreaStyle = new(EditorStyles.textArea)
                 {
@@ -105,7 +120,7 @@ namespace SliderVocalization
                         reader.StartReadAll(emote);
                     }
                 }
-                if (reader.GetStatus() == VocalizerCompositeStatus.Playing)
+                if (reader.GetVocalizationState() == VocalizerCompositeState.Playing)
                 {
                     if (GUILayout.Button("Stop"))
                     {
@@ -127,7 +142,7 @@ namespace SliderVocalization
                         EditorGUILayout.LabelField(v.punctuation.ToString());
                         if (Application.isPlaying && GUILayout.Button("Read clause"))
                         {
-                            reader.StartReadSentence(v, emote);
+                            reader.StartReadSentence_Debug(v, emote);
                         }
                         EditorGUILayout.EndHorizontal();
                         string sentence = "";

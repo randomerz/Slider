@@ -47,7 +47,7 @@ public class DebugUIManager : MonoBehaviour
 
     private void OnPressDebug() 
     {
-        if (Player.GetInstance() == null || !GameManager.instance.debugModeActive)
+        if (Player.GetInstance() == null || !SettingsManager.DevConsole)
             return;
         
         if(!isDebugOpen)

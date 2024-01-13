@@ -1,6 +1,5 @@
 using FMOD.Studio;
 using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -31,6 +30,7 @@ namespace SliderVocalization
             if (float.IsNormal(preset.clauseGap) && !float.IsNegative(preset.clauseGap))
                 yield return new WaitForSeconds(preset.clauseGap);
         }
+
         public override void Stop() { }
 
         public override string ToString()
@@ -155,7 +155,7 @@ namespace SliderVocalization
                     
                     t += Time.deltaTime;
                     totalT += Time.deltaTime;
-                    yield return null;
+                    yield return new WaitForFixedUpdate();
                 }
             }
             Stop();
@@ -175,7 +175,13 @@ namespace SliderVocalization
 
         public override void Stop()
         {
-            playingInstance?.Stop();
+            // AT: commenting this out prevents stopping mid-word even if a stop signal is issued
+            // TODO: please uncomment if stopping mid-word is intended!
+            
+            // if (playingInstance != null)
+            // {
+            //     playingInstance.Stop();
+            // }
         }
     }
 }

@@ -69,7 +69,7 @@
 			<destination>{ed574431-f54f-4c53-bb89-bf0acbf9089f}</destination>
 		</relationship>
 		<relationship name="modules">
-			<destination>{73d11a18-65f0-49b1-81f5-679f84660497}</destination>
+			<destination>{aaa2bae6-1707-4b9e-8bdb-5fbbb6896526}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{d691a3f2-158c-44aa-abfd-3ec7d9ecc92b}</destination>
@@ -77,7 +77,7 @@
 	</object>
 	<object class="Timeline" id="{5e4897f7-69c1-4529-8c31-8ab6d7c32427}">
 		<relationship name="modules">
-			<destination>{73d11a18-65f0-49b1-81f5-679f84660497}</destination>
+			<destination>{aaa2bae6-1707-4b9e-8bdb-5fbbb6896526}</destination>
 		</relationship>
 		<relationship name="markers">
 			<destination>{8a738b43-fcf6-4252-95e5-4f7db7b630fb}</destination>
@@ -120,12 +120,12 @@
 			<destination>{135b23eb-90b9-4f84-95da-7eff206f6c91}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{73d11a18-65f0-49b1-81f5-679f84660497}">
+	<object class="SingleSound" id="{aaa2bae6-1707-4b9e-8bdb-5fbbb6896526}">
 		<property name="length">
-			<value>1.8</value>
+			<value>1.8717460317460317</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{fd42afb8-8500-4df4-b778-cb57b29c2539}</destination>
+			<destination>{fe55dca3-ae0c-48ff-8af1-70d5b7185708}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{d691a3f2-158c-44aa-abfd-3ec7d9ecc92b}">
@@ -332,7 +332,7 @@
 			<value>0.889999986</value>
 		</property>
 		<property name="fftSize">
-			<value>1380</value>
+			<value>1980</value>
 		</property>
 		<property name="overlap">
 			<value>1</value>
@@ -343,10 +343,10 @@
 			<value>1.02999997</value>
 		</property>
 		<property name="fftSize">
-			<value>1500</value>
+			<value>2420</value>
 		</property>
 		<property name="overlap">
-			<value>3.79999995</value>
+			<value>1</value>
 		</property>
 		<relationship name="automators">
 			<destination>{135b23eb-90b9-4f84-95da-7eff206f6c91}</destination>
