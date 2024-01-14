@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor.Rendering;
 
 public class UIArtifactMenus : Singleton<UIArtifactMenus>
 {
