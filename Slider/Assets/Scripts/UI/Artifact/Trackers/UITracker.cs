@@ -67,7 +67,7 @@ public class UITracker : MonoBehaviour
 
     private Sprite DetermineCurrentSprite(bool blink)
     {
-        if (shouldCheckOffMap && (GetSTile() == null && !OnMirageTile()))
+        if (shouldCheckOffMap && (GetSTile(out _) == null))
         {
             // offmap sprite
             return blink ? blinkOffMapSprite : defaultOffMapSprite;
@@ -103,8 +103,25 @@ public class UITracker : MonoBehaviour
         image.SetNativeSize();
     }
 
-    public STile GetSTile() {
-        return SGrid.GetSTileUnderneath(target);
+    public GameObject GetSTile(out int islandId) {
+        islandId = -1;
+        if(MirageSTileManager.GetInstance() != null)
+        {
+            var m = MirageSTileManager.GetInstance();
+            if(m.IsObjectOnMirage(target.transform, out islandId))
+            {
+                var t = m.GetMirageTileForUI(islandId);
+                islandId = m.GetButtonIslandID(islandId);
+                return t;
+            }
+        }
+        STile tile = SGrid.GetSTileUnderneath(target);
+        if(tile != null)
+        {
+            islandId = tile.islandId;
+            return tile.gameObject;
+        }
+        return null; 
     }
 
     public Vector2 GetPosition() {

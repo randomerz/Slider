@@ -149,12 +149,13 @@ public class UITrackerManager : MonoBehaviour
 
     private void UpdateTrackerPostion(UITracker tracker)
     {
-        currentTile = tracker.GetSTile();
+        int islandId;
+        currentTile = tracker.GetSTile(out islandId);
         tracker.gameObject.SetActive(tracker.target.activeInHierarchy);
 
         if (currentTile != null) 
         {
-            currentButton = uiArtifactMenus.uiArtifact.GetButton(currentTile.islandId);
+            currentButton = uiArtifactMenus.uiArtifact.GetButton(islandId);
             tracker.image.rectTransform.SetParent(currentButton.imageRectTransform);
             
             Vector2 offset = CalculateOffset(tracker);
