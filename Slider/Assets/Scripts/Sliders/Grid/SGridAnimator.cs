@@ -121,6 +121,8 @@ public class SGridAnimator : MonoBehaviour
     // if animate is false, will wait and then TP to destination (ex. mountain going up/down)
     protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true, bool playSound = true)
     {
+        print("started moving at" + Time.time);
+
         //isMoving = true;
         bool isPlayerOnStile = (Player.GetInstance().GetSTileUnderneath() != null &&
                                 Player.GetInstance().GetSTileUnderneath().islandId == stile.islandId);
@@ -181,6 +183,8 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
+
+        print("move ended at " + Time.time);
 
         OnSTileMoveEndLate?.Invoke(this, new OnTileMoveArgs
         {

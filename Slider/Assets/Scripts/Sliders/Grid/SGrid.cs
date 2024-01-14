@@ -526,6 +526,7 @@ public void SetGrid(int[,] puzzle)
         }
         STile[,] oldGrid = grid;
         grid = newGrid;
+        print("newGrid set at " + Time.time);
 
         OnGridMove?.Invoke(this, new OnGridMoveArgs { oldGrid = oldGrid, grid = grid });
     }
