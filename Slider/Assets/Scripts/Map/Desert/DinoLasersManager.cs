@@ -25,7 +25,11 @@ public class DinoLasersManager : MonoBehaviour
 
     private void Start()
     {
-       SubscribeToEvents();
+        UpdateCanFirstTimeActivate();
+        CheckEnableLasers();
+        SubscribeToEvents();
+        if(ShouldNeverHaveLasers())
+            RemoveAllLasersPermanently();
     }
 
     private void SubscribeToEvents()
@@ -41,13 +45,12 @@ public class DinoLasersManager : MonoBehaviour
 
             SaveSystem.Current.SetBool("desertDinoLaserActivatedAlready", true);
 
-            SGridAnimator.OnSTileMoveEndLateLate += OnMoveEnd;
+            MirageSTileManager.OnMirageSTilesEnabled += OnMoveEnd;
             //DesertArtifact.MirageDisappeared += OnMirageDisappeared;
         }
         else
         {
-            SGridAnimator.OnSTileMoveEndLateLate += UpdateCanFirstTimeActivate;
-            //DesertArtifact.MirageDisappeared += UpdateCanFirstTimeActivate;
+            MirageSTileManager.OnMirageSTilesEnabled += UpdateCanFirstTimeActivate;
         }
     }
 
@@ -67,22 +70,24 @@ public class DinoLasersManager : MonoBehaviour
     {
         if (debugSkipFezziwigActivation)
         {
-            SGridAnimator.OnSTileMoveEndLateLate -= OnMoveEnd;
-            //DesertArtifact.MirageDisappeared -= OnMirageDisappeared;
+            MirageSTileManager.OnMirageSTilesEnabled -= OnMoveEnd;
         }
         else
         {
-            SGridAnimator.OnSTileMoveEndLateLate -= UpdateCanFirstTimeActivate;
-            //DesertArtifact.MirageDisappeared -= UpdateCanFirstTimeActivate;
+            MirageSTileManager.OnMirageSTilesEnabled -= UpdateCanFirstTimeActivate;
         }
     }
 
     private void UpdateCanFirstTimeActivate(object sender, System.EventArgs e)
     {
+        UpdateCanFirstTimeActivate();
+    }
+
+    private void UpdateCanFirstTimeActivate()
+    {
         bool activatedPreviously = SaveSystem.Current.GetBool(desertDinoLaserActivatedAlready);
 
         string gridString = DesertGrid.GetGridString();
-        //Debug.Log("FIRST TIME ACTIVATE LASER Checking " + gridString);
 
         if (!activatedPreviously && (CheckGrid.contains(gridString, "7D") || CheckGrid.contains(gridString, "GD"))) //normal tail | mirage head
         {
@@ -99,26 +104,16 @@ public class DinoLasersManager : MonoBehaviour
             CheckEnableLasers();
         }
     }
-    /*
-    private void OnMoveStart(object sender, System.EventArgs e)
+
+    private bool ShouldNeverHaveLasers()
     {
-        if (!moveStartWasCheckedThisFrame)
-        {
-            moveStartWasCheckedThisFrame = true;
-            CheckDisableLasers();
-        }
-    }*/
-    /*
-    private void OnMirageDisappeared(object sender, System.EventArgs e)
-    {
-        //Debug.Log("On Mirage Disaapear");
-        CheckDisableLasers();
+        return SaveSystem.Current.GetBool("desertSafeMelted") || PlayerInventory.Contains("Slider 8", Area.Desert);
     }
-    */
+
     private void CheckEnableLasers()
     {
         string gridString = DesertGrid.GetGridString();
-        Debug.Log("ENABLE LASERS Checking " + gridString);
+        if(ShouldNeverHaveLasers() || !MirageSTileManager.GetInstance().MirageEnabled || ! SaveSystem.Current.GetBool("desertDinoLaserActivatedAlready")) return;
 
         if (CheckGrid.contains(gridString, "74")) //normal tail | normal head
         {
@@ -148,7 +143,6 @@ public class DinoLasersManager : MonoBehaviour
     private void CheckDisableLasers()
     {
         string gridString = DesertGrid.GetGridString();
-        //Debug.Log("DISABLE LASERS Checking " + gridString);
 
         bool normalButtConnected = false;
         bool normalHeadConnected = false;
@@ -222,10 +216,9 @@ public class DinoLasersManager : MonoBehaviour
 
         firstTimeActivationAnimation.SetActive(true);
 
-        yield return new WaitForSeconds(2.167f); // We love magic waits - time of the animation
+        yield return new WaitForSeconds(2.167f); 
 
         firstTimeActivationAnimation.SetActive(false);
-        //Destroy(firstTimeActivationAnimation);
 
         foreach (DinoLaser dinoLaser in dinoLasers)
         {
@@ -234,11 +227,9 @@ public class DinoLasersManager : MonoBehaviour
 
         SaveSystem.Current.SetBool("desertDinoLaserActivatedAlready", true);
 
-        SGridAnimator.OnSTileMoveEndLateLate -= UpdateCanFirstTimeActivate;
-        //DesertArtifact.MirageDisappeared -= UpdateCanFirstTimeActivate;
+        MirageSTileManager.OnMirageSTilesEnabled -= UpdateCanFirstTimeActivate;
 
-        SGridAnimator.OnSTileMoveEndLateLate += OnMoveEnd;
-        //DesertArtifact.MirageDisappeared += OnMirageDisappeared;
+        MirageSTileManager.OnMirageSTilesEnabled += OnMoveEnd;
 
         CheckEnableLasers();
     }
@@ -255,8 +246,6 @@ public class DinoLasersManager : MonoBehaviour
             ActivateButt(false, dinoButt);
         }
 
-        SGridAnimator.OnSTileMoveEndLateLate -= OnMoveEnd;
-        //SGridAnimator.OnSTileMoveStart -= OnMoveStart;
-        //DesertArtifact.MirageDisappeared -= OnMirageDisappeared;
+        MirageSTileManager.OnMirageSTilesEnabled-= OnMoveEnd;
     }
 }

@@ -547,7 +547,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         if (currentStileUnderneath == null)
         {
-            var fallback = SGrid.GetWorldGridTilemaps();
+            var fallback = SGrid.Current.GetWorldGridTilemaps();
             if (fallback == null) 
                 return null;
             else 

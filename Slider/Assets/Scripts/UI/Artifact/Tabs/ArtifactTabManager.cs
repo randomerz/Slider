@@ -26,6 +26,8 @@ public class ArtifactTabManager : MonoBehaviour
 
     private int[,] originalGrid;
 
+    private bool inPreview;
+
     protected virtual void Awake()
     {
         InitTabs();
@@ -179,33 +181,34 @@ public class ArtifactTabManager : MonoBehaviour
 
     public void LoadOnHoverEnter()
     {
-        //get the realignGrid, put the button stuff in the order based on that, then call bggrid set
         if(SGrid.Current.realigningGrid != null)
         {
-            // Debug.Log("Previewed!");
-            uiArtifactMenus.uiArtifact.DeselectSelectedButton();
-            originalGrid = new int[SGrid.Current.Width, SGrid.Current.Height];
-            for (int x = 0; x < SGrid.Current.Width; x++)
+            StartCoroutine(ILoadOnHoverEnter());
+        }
+    }
+
+    private IEnumerator ILoadOnHoverEnter()
+    {
+        yield return new WaitUntil(() => UIArtifact.GetInstance().MoveQueueEmpty());
+        inPreview = true;
+        uiArtifactMenus.uiArtifact.DeselectSelectedButton();
+        originalGrid = new int[SGrid.Current.Width, SGrid.Current.Height];
+        for (int x = 0; x < SGrid.Current.Width; x++)
+        {
+            for (int y = 0; y < SGrid.Current.Height; y++)
             {
-                for (int y = 0; y < SGrid.Current.Height; y++)
-                {
-                    //Debug.Log(SGrid.current.saveGrid[x, y] + " button array index: " + (SGrid.current.saveGrid[x, y] - 1) + " " + x + " " + y);
-                    int tid = SGrid.Current.GetGrid()[x, y].islandId;
-                    originalGrid[x, y] = tid;
-                    uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]).SetPosition(x, y, false);
-                    uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]).SetHighlighted(true);
-                }
+                int tid = SGrid.Current.GetGrid()[x, y].islandId;
+                originalGrid[x, y] = tid;
+                uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]).SetPosition(x, y, false);
+                uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]).SetHighlighted(true);
             }
         }
     }
 
     public void LoadOnHoverExit()
     {
-        //reset
-        //get the id's from the grid
-        if (SGrid.Current.realigningGrid != null)
+        if (SGrid.Current.realigningGrid != null && inPreview)
         {
-            //Debug.Log("Reset!");
             for (int x = 0; x < SGrid.Current.Width; x++)
             {
                 for (int y = 0; y < SGrid.Current.Height; y++)

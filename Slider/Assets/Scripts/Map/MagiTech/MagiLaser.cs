@@ -8,6 +8,7 @@ public class MagiLaser : MonoBehaviour, ISavable
 
     public bool isPowered;
     public bool isEnabled;
+    public string SaveString;
     public List<LineRenderer> lineRenderers;
     private RaycastHit2D hit;
     private Laserable laserable;
@@ -26,6 +27,16 @@ public class MagiLaser : MonoBehaviour, ISavable
     private const float PORTAL_LASER_OFFSET = 1.5625f;
 
     public ArtifactTBPluginLaser laserUI;
+
+    public void EnableLaser()
+    {
+        SetEnabled(true);
+    }
+
+    public void DisableLaser()
+    {
+        SetEnabled(false);
+    }
 
     private void LateUpdate()
     {
@@ -132,10 +143,6 @@ public class MagiLaser : MonoBehaviour, ISavable
                 {
                     MakeNewPresentLaser(hit.point, dir);
                 }
-                else
-                {
-                    Debug.LogWarning("Laser hit an unknown portal.");
-                }
             }
             else if (laserable.IsInteractionType("Absorb")) 
             {
@@ -186,10 +193,10 @@ public class MagiLaser : MonoBehaviour, ISavable
         {
             ClearLasers();
         }
-        if (SGrid.Current.GetArea() == Area.MagiTech) //Desert uses Laser too but does not have laser UI
-        {
-            laserUI.UpdateSprites();
-        }
+
+        if(laserUI != null)
+            laserUI.AddSource();
+
     }
 
     public void CheckIsPowered(Condition c) => c.SetSpec(isPowered);
@@ -197,12 +204,15 @@ public class MagiLaser : MonoBehaviour, ISavable
 
     public void Save()
     {
-        SaveSystem.Current.SetBool("MagiLaserIsEnabled", isEnabled);
+        if(SaveString != null && SaveString != "")
+            SaveSystem.Current.SetBool(SaveString, isEnabled);
     }
 
     public void Load(SaveProfile profile)
     {
-        isEnabled = profile.GetBool("MagiLaserIsEnabled");
+        if(SaveString == null || SaveString == "") return;
+
+        isEnabled = profile.GetBool(SaveString);
         if(isEnabled)
         {
             isPowered = true;

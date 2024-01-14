@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class desertScrollFragTabHintPrompt : MonoBehaviour
+public class DesertScrollFragTabHintPrompt : MonoBehaviour
 {
     private bool promptedPreviously = false;
 

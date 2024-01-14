@@ -408,10 +408,11 @@ public void SetGrid(int[,] puzzle)
         return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>());
     }
 
-    public static STileTilemap GetWorldGridTilemaps()
+    public virtual STileTilemap GetWorldGridTilemaps()
     {
-        return _instance == null ? null : _instance.worldGridTilemaps;
+        return worldGridTilemaps;
     }
+
 
     public static AudioModifierOverrides GetAudioModifierOverrides()
     {

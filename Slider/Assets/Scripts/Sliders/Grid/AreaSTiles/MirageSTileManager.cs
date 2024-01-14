@@ -2,117 +2,300 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+using System.Text;
 
-public class MirageSTileManager : Singleton<MirageSTileManager>
+public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 {
-
     [SerializeField] private List<GameObject> mirageSTiles;
     [SerializeField] private List<ArtifactTBPluginMirage> mirageButtons;
-    public static Vector2Int mirageTailPos;
+    //public static Vector2Int mirageTailPos;
+    public static EventHandler OnMirageSTilesEnabled;
+    public List<STileTilemap> MirageMaterialTileMaps;
 
-    //struct MirageEnableArgs
-    //{
-    //    public int islandId, x, y;
-
-    //    public MirageEnableArgs(int islandId, int x, int y)
-    //    {
-    //        this.islandId = islandId;
-    //        this.x = x;
-    //        this.y = y;
-    //    }
-    //}
-    //private Queue<MirageEnableArgs> mirageEnableQueue;
+    private bool mirageEnabled;
+    public bool MirageEnabled => mirageEnabled;
 
     /// <summary>
     /// The scale factor from the position of a tile on the grid to the transform.position of the tile.
     /// </summary>
     private const int GRID_POSITION_TO_WORLD_POSITION = 17;
-    private const string ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    private const string MIRAGE_ENABLED_SAVE_STRING = "DesertMirageEnabled";
+    private const string MIRAGE_TILES_SAVE_STRING = "DesertMirageTiles";
+
+    private List<MirageTileData> enabledMirageTiles = new();
+
+    private class MirageTileData
+    {
+        public int orignalTileID;
+        public int buttonID;
+        public int x;
+        public int y;
+
+        public MirageTileData(int orignalTileID, int buttonID, int x, int y)
+        {
+            this.orignalTileID = orignalTileID;
+            this.buttonID = buttonID;
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    public void Save()
+    {
+        if(mirageEnabled)
+        {
+            UnSubscribeMirageEvents();
+        }
+        SaveSystem.Current.SetBool(MIRAGE_ENABLED_SAVE_STRING, mirageEnabled);
+        //SaveSystem.Current.SetString(MIRAGE_TILES_SAVE_STRING, BuildMirageTilesSaveString());
+        BuildMirageTileSaveStrings();
+    }
+
+    private string BuildMirageTilesSaveString(int buttonId, string parameter) => $"{MIRAGE_TILES_SAVE_STRING}_{buttonId}_{parameter}";
+
+    private void BuildMirageTileSaveStrings()
+    {
+        foreach(MirageTileData data in enabledMirageTiles)
+        {
+            SaveSystem.Current.SetInt(BuildMirageTilesSaveString(data.buttonID, "originalTileId"), data.orignalTileID);
+            SaveSystem.Current.SetInt(BuildMirageTilesSaveString(data.buttonID, "xPosition"), data.x);
+            SaveSystem.Current.SetInt(BuildMirageTilesSaveString(data.buttonID, "yPosition"), data.y);
+        }
+    }
+
+    // private string BuildMirageTilesSaveString()
+    // {
+    //     if(enabledMirageTiles == null) return "";
+    //     StringBuilder s = new();
+    //     if(enabledMirageTiles.Count > 2) 
+    //         Debug.LogWarning("more than 2 mirage tiles saved! This should not happen!");
+    //     for(int i = 1; i <= 7; i++)
+    //     {
+    //         MirageTileData data = null;
+    //         foreach(MirageTileData d in enabledMirageTiles)
+    //         {
+    //             if(d.orignalTileID == i)
+    //                 data = d;
+    //         }   
+    //         if(data == null)
+    //         {
+    //             s.Append("XXXX");
+    //         }
+    //         else
+    //         {
+    //             s.Append($"{data.orignalTileID}{data.buttonID}{data.x}{data.y}");
+    //         }
+    //     }
+    //    // print(s.ToString());
+    //     return s.ToString();
+    // }
+
+    public void Load(SaveProfile profile)
+    {
+        mirageEnabled = profile.GetBool(MIRAGE_ENABLED_SAVE_STRING);
+        if(mirageEnabled)
+        {
+            EnableMirage();
+        }
+        EnableMirageTilesFromSave(profile);
+    }
+
+    private void EnableMirageTilesFromSave(SaveProfile profile)
+    {
+        for(int buttonID = 8; buttonID <=9; buttonID++)
+        {
+            int originalID = profile.GetInt(BuildMirageTilesSaveString(buttonID, "originalTileId"));
+            int x = profile.GetInt(BuildMirageTilesSaveString(buttonID, "xPosition"));
+            int y = profile.GetInt(BuildMirageTilesSaveString(buttonID, "yPosition"));
+            if(originalID != 0)
+            {
+                EnableMirageTile(originalID, buttonID, x, y);
+            }
+        }
+    }
+
+    // private void EnableMirageTilesFromSave(string saveString)
+    // {
+    //     enabledMirageTiles = new();
+    //     print(saveString);
+    //     if(saveString == null || saveString == "") return;
+    //     for(int i = 0; i < 7; i++)
+    //     {
+    //         string s = saveString.Substring(4 * i, 4);
+    //         char[] c = s.ToCharArray();
+    //         if(c[0] != 'X')
+    //         {
+    //             int[] ints = CharToInt(c);
+    //             EnableMirageTile(ints[0], ints[1], ints[2], ints[3]);
+    //             if(ints[1] == 8)
+    //             {
+    //                 mirageButtons[0].EnableMirageButton(ints[0]);
+    //             }
+    //             else
+    //             {
+    //                 mirageButtons[1].EnableMirageButton(ints[0]);
+    //             }
+    //         }
+    //     }
+    //     OnMirageSTilesEnabled?.Invoke(this, null);
+    // }
+
+    // private int[] CharToInt(char[] chars)
+    // {
+    //     int[] ints = new int[chars.Length];
+    //     for(int i = 0; i < chars.Length; i++)
+    //     {
+    //         ints[i] = chars[i] - '0';
+    //     }
+    //     return ints;
+    // }
 
     public void Awake()
     {
         InitializeSingleton();
-        mirageTailPos = new Vector2Int(-1, -1);
-        //mirageEnableQueue = new Queue<MirageEnableArgs>();
-
-        mirageButtons = UIArtifact._instance.transform.parent.GetComponentsInChildren<ArtifactTBPluginMirage>().ToList();
     }
 
-    private void OnEnable()
+    private void SubscibeMirageEvents()
     {
-        SGridAnimator.OnSTileMoveStart += CheckPlayerOnMirageSTile;
-        SGridAnimator.OnSTileMoveEndLate += EnableMirageAfterSMove;
-    }
-    private void OnDisable()
-    {
-        SGridAnimator.OnSTileMoveStart -= CheckPlayerOnMirageSTile;
-        SGridAnimator.OnSTileMoveEndLate -= EnableMirageAfterSMove;
+        SGridAnimator.OnSTileMoveStart += RemovePlayerOnMirageSTile;
+        SGridAnimator.OnSTileMoveEndLate += EnableMirageTilesAfterSMove;
     }
 
-    public void EnableMirage(int islandId, int x, int y)
+    private void UnSubscribeMirageEvents()
+    {
+        SGridAnimator.OnSTileMoveStart -= RemovePlayerOnMirageSTile;
+        SGridAnimator.OnSTileMoveEndLate -= EnableMirageTilesAfterSMove;
+    }
+    
+    private void Start()
+    {
+        EnableButtonsOnStart();
+    }
+
+    private void EnableButtonsOnStart()
+    {
+        foreach(MirageTileData d in enabledMirageTiles)
+        {
+            EnableMirageTile(d.orignalTileID, d.buttonID, d.x, d.y, false);
+            if(d.buttonID == 8)
+            {
+                mirageButtons[0].EnableMirageButton(d.orignalTileID);
+            }
+            else
+            {
+                mirageButtons[1].EnableMirageButton(d.orignalTileID);
+            }
+        }  
+    }
+
+
+    public void EnableMirage()
+    {
+        mirageEnabled = true;
+        SubscibeMirageEvents();
+        EnableMirageVFX();
+    }
+
+    public void EnableMirageVFX() {}
+
+    public void DisableMirage()
+    {
+        mirageEnabled = false;
+        UnSubscribeMirageEvents();
+        RemovePlayerOnMirageSTile();
+        DisableMirageVFX();
+        foreach(ArtifactTBPluginMirage button in mirageButtons)
+        {
+            button.DisableMirageButton();
+        }
+        DisableMirageTile(-1);
+    }
+
+    public void DisableMirageVFX() {}
+
+    public void EnableMirageTile(int islandId, int buttonID, int x, int y, bool addData = true)
     {
         if (islandId > 7 || islandId < 1) return;
-        //Do some STile collider crap
         mirageSTiles[islandId - 1].transform.position = new Vector2(x * GRID_POSITION_TO_WORLD_POSITION, y * GRID_POSITION_TO_WORLD_POSITION);
         mirageSTiles[islandId - 1].gameObject.SetActive(true);
-        if (islandId == 7) mirageTailPos = new Vector2Int(x, y);
-        // Debug.Log(mirageTailPos);
+        if(addData)
+            AddMirageTileData(islandId, buttonID, x, y);
+    }
 
-        // Debug.Log($"travis: {DesertGrid.GetGridString()}");
-        //Insert enabling coroutine fading in
+    private void AddMirageTileData(int islandId, int buttonIslandId, int x, int y)
+    {
+        MirageTileData remove = null;
+        foreach(MirageTileData data in enabledMirageTiles)
+        {
+            if(data.buttonID == buttonIslandId)
+                remove = data;
+        }
+        if(remove != null)
+            enabledMirageTiles.Remove(remove);
+        enabledMirageTiles.Add(new(islandId, buttonIslandId, x, y));
     }
     
     /// <summary>
     /// Function that disables mirages either from selecting or from making an artifact move
     /// </summary>
     /// <param name="islandId">0 means disable all mirages</param>
-    public void DisableMirage(int islandId = -1)
+    public void DisableMirageTile(int islandId = -1)
     {
         //Insert disable effect
+        RemoveMirageData(islandId);
         if (islandId == 0 || islandId > 7) return;
         if (islandId < 0) foreach (GameObject o in mirageSTiles) o.SetActive(false);
-        //if (islandId == 7) mirageTailPos = new Vector2Int(-1, -1);
         else mirageSTiles[islandId - 1].gameObject.SetActive(false);
-        //Debug.Log(mirageTailPos);
     }
 
-    private void EnableMirageAfterSMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    private void RemoveMirageData(int islandId)
     {
-        if (!SaveSystem.Current.GetBool("desertMirage")) return; //Maybe add a collectible check?
-        //Debug.Log("STileMoveEndLateCalled");
+        MirageTileData d = null;
+        foreach(MirageTileData data in enabledMirageTiles)
+        {
+            if(data.orignalTileID == islandId)
+                d = data;
+        }
+        if(d == null) return;
+        enabledMirageTiles.Remove(d);
+    }
+
+    private void EnableMirageTilesAfterSMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        if (!mirageEnabled) return; 
         if (UIArtifact.GetInstance().MoveQueueEmpty())
         {
             //No new moves should be queued before mirage tiles are enabled
             foreach (ArtifactTBPluginMirage button in mirageButtons)
             {
                 var buttonBase = button.GetComponent<ArtifactTileButton>();
-                EnableMirage(button.mirageIslandId, buttonBase.x, buttonBase.y);
+                EnableMirageTile(button.mirageIslandId, button.buttonIslandId, buttonBase.x, buttonBase.y);
             }
 
         }
+
+        OnMirageSTilesEnabled?.Invoke(this, null);
     }
 
-    private void CheckPlayerOnMirageSTile(object sender, SGridAnimator.OnTileMoveArgs e)
+    private void RemovePlayerOnMirageSTile(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        //This assumes mirages get disabled every smove (which is kinda bad)
+        RemovePlayerOnMirageSTile();
+    }
 
+    private void RemovePlayerOnMirageSTile()
+    {
         int mirageIsland;
-        bool playerOnMirage = isPlayerOnMirage(out mirageIsland);
+        bool playerOnMirage = IsPlayerOnMirage(out mirageIsland);
 
         if (playerOnMirage)
         {
-            //Debug.Log($"Player on Mirage! Current mirage: {mirageIsland}");
-            //Debug.Log($"{mirageIsland} == {islandId}?");
-
-            //The mirage that just got disabled (player could be on enabled tile)
             STile realSTile = DesertGrid.Current.GetStile(mirageIsland);
             Vector3 relativePos = Player._instance.transform.position - mirageSTiles[mirageIsland - 1].transform.position;
             realSTile.SetBorderColliders(false);
             Player.SetParent(realSTile.transform);
             Player.SetPosition(realSTile.transform.position + relativePos);
 
-            //Play the funny sound, maybe make it more "mystical" or something idk.
             AudioManager.Play("Hurt");
             UIEffects.FadeFromBlack(null, 1.5f);
         }
@@ -136,8 +319,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
             if (mirageTile.activeInHierarchy)
             {
                 Vector2Int mirageTileGridPosition = GridPositionFromWorldPosition(mirageTile.transform.position);
-                //tileIdToPosition[mirageTileGridPosition] = tileId + 1;
-                tileIdToPosition[mirageTileGridPosition] = ALPHABET[tileId];
+                tileIdToPosition[mirageTileGridPosition] = (char)('A' + tileId);
             }
         }
 
@@ -151,7 +333,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
         return new Vector2Int(x, y);
     }
 
-    private bool isPlayerOnMirage(out int islandId)
+    public bool IsPlayerOnMirage(out int islandId)
     {
         Vector2 pos = Player.GetInstance().transform.position;
         float offset = 8.5f;
@@ -174,4 +356,16 @@ public class MirageSTileManager : Singleton<MirageSTileManager>
     {
         return _instance;
     }
+
+    public STileTilemap GetMaterialTileMap(int mirageIslandId)
+    {
+        return MirageMaterialTileMaps[mirageIslandId - 1];
+    }
+
+    public void IsMirageEnabled(Condition c)
+    {
+        c.SetSpec(mirageEnabled);
+    }
+
+   
 }
