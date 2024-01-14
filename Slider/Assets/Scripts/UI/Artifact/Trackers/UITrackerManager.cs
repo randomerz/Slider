@@ -11,7 +11,7 @@ public class UITrackerManager : MonoBehaviour
     
     protected virtual Vector2 center => new Vector2(17, 17);
     protected ArtifactTileButton currentButton;
-    protected STile currentTile;
+    protected GameObject currentTile;
     protected float scale = 27f/17f;
     protected virtual float centerScale => 37f / 17f;
 

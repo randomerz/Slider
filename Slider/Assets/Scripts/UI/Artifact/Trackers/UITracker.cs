@@ -67,7 +67,7 @@ public class UITracker : MonoBehaviour
 
     private Sprite DetermineCurrentSprite(bool blink)
     {
-        if (shouldCheckOffMap && GetSTile() == null)
+        if (shouldCheckOffMap && (GetSTile() == null && !OnMirageTile()))
         {
             // offmap sprite
             return blink ? blinkOffMapSprite : defaultOffMapSprite;
@@ -76,6 +76,12 @@ public class UITracker : MonoBehaviour
         {
             return blink ? blinkSprite : defaultSprite;
         }
+    }
+
+    private bool OnMirageTile()
+    {
+        if(MirageSTileManager.GetInstance() == null) return false;
+        else return MirageSTileManager.GetInstance().IsObjectOnMirage(target.transform, out _);
     }
 
     private void OnEnable() 

@@ -335,7 +335,13 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     public bool IsPlayerOnMirage(out int islandId)
     {
-        Vector2 pos = Player.GetInstance().transform.position;
+        return IsObjectOnMirage(Player.GetInstance().transform, out islandId);
+    }
+
+    public bool IsObjectOnMirage(Transform t, out int islandId)
+    {
+        Vector2 pos = t.position;
+
         float offset = 8.5f;
         for (int i = 0; i < 7; i++)
         {
