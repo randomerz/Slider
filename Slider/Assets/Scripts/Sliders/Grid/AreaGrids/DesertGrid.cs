@@ -28,6 +28,16 @@ public class DesertGrid : SGrid
         base.Start();
         AudioManager.PlayMusic("Desert");
         AudioManager.PlayMusic("Desert Casino", false);
+        GiveTilesIfFromMagitech();
+    }
+
+    private void GiveTilesIfFromMagitech()
+    {
+        if(PlayerInventory.Contains("Slider 1", Area.MagiTech))
+        {
+            for (int i = 1; i <= 9; i++)
+            Current.GetCollectible("Slider " + i)?.DoPickUp(true);
+        }
     }
     
     private void OnEnable() {

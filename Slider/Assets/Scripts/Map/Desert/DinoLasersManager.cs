@@ -25,6 +25,8 @@ public class DinoLasersManager : MonoBehaviour
 
     private void Start()
     {
+        UpdateCanFirstTimeActivate();
+        CheckEnableLasers();
         SubscribeToEvents();
         if(ShouldNeverHaveLasers())
             RemoveAllLasersPermanently();
@@ -78,6 +80,11 @@ public class DinoLasersManager : MonoBehaviour
 
     private void UpdateCanFirstTimeActivate(object sender, System.EventArgs e)
     {
+        UpdateCanFirstTimeActivate();
+    }
+
+    private void UpdateCanFirstTimeActivate()
+    {
         bool activatedPreviously = SaveSystem.Current.GetBool(desertDinoLaserActivatedAlready);
 
         string gridString = DesertGrid.GetGridString();
@@ -106,7 +113,7 @@ public class DinoLasersManager : MonoBehaviour
     private void CheckEnableLasers()
     {
         string gridString = DesertGrid.GetGridString();
-        if(ShouldNeverHaveLasers() || !MirageSTileManager.GetInstance().MirageEnabled) return;
+        if(ShouldNeverHaveLasers() || !MirageSTileManager.GetInstance().MirageEnabled || ! SaveSystem.Current.GetBool("desertDinoLaserActivatedAlready")) return;
 
         if (CheckGrid.contains(gridString, "74")) //normal tail | normal head
         {
