@@ -223,6 +223,21 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
             AddMirageTileData(islandId, buttonID, x, y);
     }
 
+    public GameObject GetMirageTileForUI(int islandId)
+    {
+        return mirageSTiles[islandId - 1];
+    }
+
+    public int GetButtonIslandID(int mirageID)
+    {
+        foreach(MirageTileData d in enabledMirageTiles)
+        {
+            if(d.orignalTileID == mirageID)
+                return d.buttonID;
+        }
+        return -1;
+    }
+
     private void AddMirageTileData(int islandId, int buttonIslandId, int x, int y)
     {
         MirageTileData remove = null;
@@ -335,7 +350,15 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     public bool IsPlayerOnMirage(out int islandId)
     {
-        Vector2 pos = Player.GetInstance().transform.position;
+        return IsObjectOnMirage(Player.GetInstance().transform, out islandId);
+    }
+
+    public bool IsObjectOnMirage(Transform t, out int islandId)
+    {
+        islandId = -1;
+        if(!mirageEnabled) return false;
+
+        Vector2 pos = t.position;
         float offset = 8.5f;
         for (int i = 0; i < 7; i++)
         {
@@ -348,7 +371,6 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
                return true;
             }
         }
-        islandId = -1;
         return false;
     }
 
