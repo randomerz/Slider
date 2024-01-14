@@ -48,35 +48,48 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
             UnSubscribeMirageEvents();
         }
         SaveSystem.Current.SetBool(MIRAGE_ENABLED_SAVE_STRING, mirageEnabled);
-        SaveSystem.Current.SetString(MIRAGE_TILES_SAVE_STRING, BuildMirageTilesSaveString());
+        //SaveSystem.Current.SetString(MIRAGE_TILES_SAVE_STRING, BuildMirageTilesSaveString());
+        BuildMirageTileSaveStrings();
     }
 
-    private string BuildMirageTilesSaveString()
+    private string BuildMirageTilesSaveString(int buttonId, string parameter) => $"{MIRAGE_TILES_SAVE_STRING}_{buttonId}_{parameter}";
+
+    private void BuildMirageTileSaveStrings()
     {
-        if(enabledMirageTiles == null) return "";
-        StringBuilder s = new();
-        if(enabledMirageTiles.Count > 2) 
-            Debug.LogWarning("more than 2 mirage tiles saved! This should not happen!");
-        for(int i = 1; i <= 7; i++)
+        foreach(MirageTileData data in enabledMirageTiles)
         {
-            MirageTileData data = null;
-            foreach(MirageTileData d in enabledMirageTiles)
-            {
-                if(d.orignalTileID == i)
-                    data = d;
-            }   
-            if(data == null)
-            {
-                s.Append("XXXX");
-            }
-            else
-            {
-                s.Append($"{data.orignalTileID}{data.buttonID}{data.x}{data.y}");
-            }
+            SaveSystem.Current.SetInt(BuildMirageTilesSaveString(data.buttonID, "originalTileId"), data.orignalTileID);
+            SaveSystem.Current.SetInt(BuildMirageTilesSaveString(data.buttonID, "xPosition"), data.x);
+            SaveSystem.Current.SetInt(BuildMirageTilesSaveString(data.buttonID, "yPosition"), data.y);
         }
-       // print(s.ToString());
-        return s.ToString();
     }
+
+    // private string BuildMirageTilesSaveString()
+    // {
+    //     if(enabledMirageTiles == null) return "";
+    //     StringBuilder s = new();
+    //     if(enabledMirageTiles.Count > 2) 
+    //         Debug.LogWarning("more than 2 mirage tiles saved! This should not happen!");
+    //     for(int i = 1; i <= 7; i++)
+    //     {
+    //         MirageTileData data = null;
+    //         foreach(MirageTileData d in enabledMirageTiles)
+    //         {
+    //             if(d.orignalTileID == i)
+    //                 data = d;
+    //         }   
+    //         if(data == null)
+    //         {
+    //             s.Append("XXXX");
+    //         }
+    //         else
+    //         {
+    //             s.Append($"{data.orignalTileID}{data.buttonID}{data.x}{data.y}");
+    //         }
+    //     }
+    //    // print(s.ToString());
+    //     return s.ToString();
+    // }
 
     public void Load(SaveProfile profile)
     {
@@ -85,44 +98,58 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
         {
             EnableMirage();
         }
-        EnableMirageTilesFromSave(profile.GetString(MIRAGE_TILES_SAVE_STRING, ""));
+        EnableMirageTilesFromSave(profile);
     }
 
-    private void EnableMirageTilesFromSave(string saveString)
+    private void EnableMirageTilesFromSave(SaveProfile profile)
     {
-        enabledMirageTiles = new();
-        print(saveString);
-        if(saveString == null || saveString == "") return;
-        for(int i = 0; i < 7; i++)
+        for(int buttonID = 8; buttonID <=9; buttonID++)
         {
-            string s = saveString.Substring(4 * i, 4);
-            char[] c = s.ToCharArray();
-            if(c[0] != 'X')
+            int originalID = profile.GetInt(BuildMirageTilesSaveString(buttonID, "originalTileId"));
+            int x = profile.GetInt(BuildMirageTilesSaveString(buttonID, "xPosition"));
+            int y = profile.GetInt(BuildMirageTilesSaveString(buttonID, "yPosition"));
+            if(originalID != 0)
             {
-                int[] ints = CharToInt(c);
-                EnableMirageTile(ints[0], ints[1], ints[2], ints[3]);
-                if(ints[1] == 8)
-                {
-                    mirageButtons[0].EnableMirageButton(ints[0]);
-                }
-                else
-                {
-                    mirageButtons[1].EnableMirageButton(ints[0]);
-                }
+                EnableMirageTile(originalID, buttonID, x, y);
             }
         }
-        OnMirageSTilesEnabled?.Invoke(this, null);
     }
 
-    private int[] CharToInt(char[] chars)
-    {
-        int[] ints = new int[chars.Length];
-        for(int i = 0; i < chars.Length; i++)
-        {
-            ints[i] = chars[i] - '0';
-        }
-        return ints;
-    }
+    // private void EnableMirageTilesFromSave(string saveString)
+    // {
+    //     enabledMirageTiles = new();
+    //     print(saveString);
+    //     if(saveString == null || saveString == "") return;
+    //     for(int i = 0; i < 7; i++)
+    //     {
+    //         string s = saveString.Substring(4 * i, 4);
+    //         char[] c = s.ToCharArray();
+    //         if(c[0] != 'X')
+    //         {
+    //             int[] ints = CharToInt(c);
+    //             EnableMirageTile(ints[0], ints[1], ints[2], ints[3]);
+    //             if(ints[1] == 8)
+    //             {
+    //                 mirageButtons[0].EnableMirageButton(ints[0]);
+    //             }
+    //             else
+    //             {
+    //                 mirageButtons[1].EnableMirageButton(ints[0]);
+    //             }
+    //         }
+    //     }
+    //     OnMirageSTilesEnabled?.Invoke(this, null);
+    // }
+
+    // private int[] CharToInt(char[] chars)
+    // {
+    //     int[] ints = new int[chars.Length];
+    //     for(int i = 0; i < chars.Length; i++)
+    //     {
+    //         ints[i] = chars[i] - '0';
+    //     }
+    //     return ints;
+    // }
 
     public void Awake()
     {

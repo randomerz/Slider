@@ -294,9 +294,6 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         {
             UpdateCenterToEdge(sourceDir);
         }
-        else
-        {
-        }
     }
 
     public void CopyDataFromMirageSource(ArtifactTBPluginLaser original)
