@@ -465,7 +465,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 232.5, y: -99.99999}
+  m_AnchoredPosition: {x: 1032.5, y: -550}
   m_SizeDelta: {x: 135, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &489835718307361683
@@ -677,7 +677,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 5, y: 0}
-  m_SizeDelta: {x: 80, y: 10}
+  m_SizeDelta: {x: 80, y: 12}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &2407078806100890154
 MonoBehaviour:
@@ -692,13 +692,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 6584994354779951696}
+    m_SelectOnDown: {fileID: 2854545521066907676}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -710,7 +710,7 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: -1804859290, guid: f9f0df6a1229ebe45ba017a8b75699f5, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -779,7 +779,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 87.5, y: -99.99999}
+  m_AnchoredPosition: {x: 887.5, y: -550}
   m_SizeDelta: {x: 135, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &247688936754756821
@@ -843,7 +843,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 5, y: 0}
+  m_SizeDelta: {x: 8, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1943646243557729219
 CanvasRenderer:
@@ -866,14 +866,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.90196085, g: 0.90196085, b: 0.90196085, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 1822622808, guid: f9f0df6a1229ebe45ba017a8b75699f5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1173,6 +1173,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 2407078806100890154}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 6641521956016764101}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
+      value: 
+      objectReference: {fileID: 3665229635888079946}
     - target: {fileID: 3107217637005192652, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_Name
       value: Big Text
@@ -1300,6 +1316,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 6641521956016764101}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 6584994354779951696}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
+      value: 
+      objectReference: {fileID: 3656018002212032120}
     - target: {fileID: 3107217637005192652, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_Name
       value: Auto Move
@@ -1434,7 +1466,11 @@ PrefabInstance:
     - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 3656018002212032120}
+      objectReference: {fileID: 3803020554438856913}
+    - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 2407078806100890154}
     - target: {fileID: 6285492530829541331, guid: a251bed476ecbe741969521e66693b15, type: 3}
       propertyPath: m_SpriteState.m_SelectedSprite
       value: 
@@ -1577,13 +1613,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 2516356009623412150}
+      objectReference: {fileID: 3656018002212032120}
     - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
       objectReference: {fileID: 6584994354779951696}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 2516356009623412150}
     - target: {fileID: 3107217637005192652, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_Name
       value: Dev Console
@@ -1710,13 +1754,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 2516356009623412150}
+      objectReference: {fileID: 4825194216756218461}
     - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 6584994354779951696}
+      objectReference: {fileID: 3803020554438856913}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 2516356009623412150}
     - target: {fileID: 3107217637005192652, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_Name
       value: Colorblind Mode
@@ -1842,6 +1894,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 2407078806100890154}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 4825194216756218461}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 2854545521066907676}
     - target: {fileID: 3107217637005192652, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_Name
       value: Hide Cursor
@@ -1967,6 +2035,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 3665229635888079946}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 3656018002212032120}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 6641521956016764101}
     - target: {fileID: 3107217637005192652, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_Name
       value: Mini Player Icon
@@ -2092,6 +2176,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 2854545521066907676}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 2516356009623412150}
+    - target: {fileID: 2682924259085669523, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
+      value: 
+      objectReference: {fileID: 4825194216756218461}
     - target: {fileID: 3107217637005192652, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_Name
       value: Contrast Text
