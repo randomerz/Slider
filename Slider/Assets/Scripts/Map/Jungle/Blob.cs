@@ -109,7 +109,10 @@ public class Blob : MonoBehaviour
             {
                 if (pair != null)
                 {
-                    this.gameObject.transform.SetParent(pair.transform);
+                    this.transform.SetParent(pair.transform);
+                    Vector2 position = this.transform.localPosition;
+                    position.y = 0;
+                    this.gameObject.transform.localPosition = position;
                 }
                 else
                 {

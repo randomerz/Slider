@@ -205,9 +205,14 @@ public class Path : MonoBehaviour
         return defaultAnim;
     }
 
-    public void ChangePair()
+    public void DeletePair()
     {
         pair = null;
+    }
+
+    public void ChangePair()
+    {
+        //pair = null;
         Vector2 one = new Vector2(1, 0);
         Vector2 two = new Vector2(-1, 0);
 
@@ -226,26 +231,33 @@ public class Path : MonoBehaviour
         //want to find the closest bin or box and stile
         if (checkOne.collider != null)
         {
-            pair = checkOne.collider.gameObject.GetComponent<Path>();
-            if (!pair.transform.parent.Equals(this.transform.parent))
+            Path other = checkOne.collider.gameObject.GetComponent<Path>();
+            if (!other.transform.parent.Equals(this.transform.parent))
             {
-                pair.pair = this;
-            }
-            else
-            {
-                pair = null;
+                if (this.gameObject.name == "house right")
+                {
+                    print(other.gameObject.name);
+                }
+                other.pair = this;
+                pair = other;
+
+                if (this.gameObject.name == "house right")
+                {
+                    print(other.pair);
+                }
             }
         }
         if (checkTwo.collider != null && pair == null)
         {
-            pair = checkTwo.collider.gameObject.GetComponent<Path>();
-            if (!pair.transform.parent.Equals(this.transform.parent))
+            Path other = checkTwo.collider.gameObject.GetComponent<Path>();
+            if (!other.transform.parent.Equals(this.transform.parent))
             {
-                pair.pair = this;
-            }
-            else
-            {
-                pair = null; 
+                if (this.gameObject.name == "house right")
+                {
+                    print(other.gameObject.name);
+                }
+                other.pair = this;
+                pair = other;
             }
         }
 

@@ -48,14 +48,6 @@ public class Sign : Box
         }
     }
 
-    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        foreach (Direction d in paths.Keys)
-        {
-            paths[d].ChangePair();
-        }
-    }
-
     public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
 

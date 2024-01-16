@@ -48,10 +48,11 @@ public class Box : MonoBehaviour
         foreach (Direction d in paths.Keys)
         {
             paths[d].Deactivate();
+            paths[d].DeletePair();
         }
     }
 
-    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    protected void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         foreach (Direction d in paths.Keys)
         {
