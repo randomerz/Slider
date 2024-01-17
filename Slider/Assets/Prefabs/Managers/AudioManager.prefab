@@ -553,6 +553,16 @@ MonoBehaviour:
       Path: event:/SFX/Desert/Dice Shake
     canPause: 1
     dopplerScale: 0
+  - name: Slider Sand
+    fmodEvent:
+      Guid:
+        Data1: 1232058098
+        Data2: 1290244825
+        Data3: 151735444
+        Data4: 1157576329
+      Path: event:/SFX/Desert/Slider Sand
+    canPause: 1
+    dopplerScale: 1
   - name: Bottle Fill
     fmodEvent:
       Guid:
@@ -663,14 +673,44 @@ MonoBehaviour:
       Path: event:/SFX/Magic/Desync Tear Close
     canPause: 1
     dopplerScale: 1
-  - name: Slider Sand
+  - name: Footstep Concrete
     fmodEvent:
       Guid:
-        Data1: 1232058098
-        Data2: 1290244825
-        Data3: 151735444
-        Data4: 1157576329
-      Path: event:/SFX/Desert/Slider Sand
+        Data1: 915774245
+        Data2: 1170405450
+        Data3: 824886446
+        Data4: 374144923
+      Path: event:/SFX/Footsteps/player_footstep_concrete
+    canPause: 1
+    dopplerScale: 1
+  - name: Footstep Grass
+    fmodEvent:
+      Guid:
+        Data1: 1401915951
+        Data2: 1078907725
+        Data3: 401503915
+        Data4: -833290422
+      Path: event:/SFX/Footsteps/player_footstep_grass
+    canPause: 1
+    dopplerScale: 1
+  - name: Footstep Metal
+    fmodEvent:
+      Guid:
+        Data1: 928224416
+        Data2: 1111412477
+        Data3: 1874025127
+        Data4: 782460687
+      Path: event:/SFX/Footsteps/player_footstep_metal
+    canPause: 1
+    dopplerScale: 1
+  - name: Footstep Wood
+    fmodEvent:
+      Guid:
+        Data1: -428681772
+        Data2: 1182053985
+        Data3: -1389713231
+        Data4: 305745240
+      Path: event:/SFX/Footsteps/player_footstep_wood
     canPause: 1
     dopplerScale: 1
   music:

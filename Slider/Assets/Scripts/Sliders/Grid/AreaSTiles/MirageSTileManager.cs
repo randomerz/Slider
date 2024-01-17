@@ -22,6 +22,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     private const string MIRAGE_ENABLED_SAVE_STRING = "DesertMirageEnabled";
     private const string MIRAGE_TILES_SAVE_STRING = "DesertMirageTiles";
+    private List<int> POSSIBLE_MIRAGE_TILES = new() { 8, 9 };
 
     private List<MirageTileData> enabledMirageTiles = new();
 
@@ -56,6 +57,12 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     private void BuildMirageTileSaveStrings()
     {
+        // Clear out old data
+        foreach (int buttonID in POSSIBLE_MIRAGE_TILES)
+        {
+            SaveSystem.Current.SetInt(BuildMirageTilesSaveString(buttonID, "originalTileId"), -1);
+        }
+        
         foreach(MirageTileData data in enabledMirageTiles)
         {
             SaveSystem.Current.SetInt(BuildMirageTilesSaveString(data.buttonID, "originalTileId"), data.orignalTileID);
@@ -103,12 +110,12 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     private void EnableMirageTilesFromSave(SaveProfile profile)
     {
-        for(int buttonID = 8; buttonID <=9; buttonID++)
+        foreach (int buttonID in POSSIBLE_MIRAGE_TILES)
         {
-            int originalID = profile.GetInt(BuildMirageTilesSaveString(buttonID, "originalTileId"));
+            int originalID = profile.GetInt(BuildMirageTilesSaveString(buttonID, "originalTileId"), -1);
             int x = profile.GetInt(BuildMirageTilesSaveString(buttonID, "xPosition"));
             int y = profile.GetInt(BuildMirageTilesSaveString(buttonID, "yPosition"));
-            if(originalID != 0)
+            if(originalID != -1)
             {
                 EnableMirageTile(originalID, buttonID, x, y);
             }
