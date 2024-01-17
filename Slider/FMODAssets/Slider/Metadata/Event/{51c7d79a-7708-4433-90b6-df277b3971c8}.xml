@@ -103,6 +103,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{a8fa2467-8d96-4184-a63d-3e0c5576f74b}">
+		<property name="volume">
+			<value>-4</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -192,8 +195,23 @@
 		<property name="decayTime">
 			<value>2000</value>
 		</property>
+		<property name="earlyDelay">
+			<value>34</value>
+		</property>
+		<property name="lateDelay">
+			<value>63</value>
+		</property>
+		<property name="diffusion">
+			<value>31.5</value>
+		</property>
+		<property name="lowShelfGain">
+			<value>-8.5</value>
+		</property>
+		<property name="highCut">
+			<value>4400</value>
+		</property>
 		<property name="wetLevel">
-			<value>-80</value>
+			<value>-39</value>
 		</property>
 	</object>
 	<object class="RandomizerModulator" id="{0fdac831-226f-4b7b-8721-01d943bc96ec}">
