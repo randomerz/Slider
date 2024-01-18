@@ -43,7 +43,7 @@ public class MountainArtifact : UIArtifact
         SMove move;
         //If swapping layers, the difference in y values will be 2
         if(Mathf.Abs(buttonCurrent.y - buttonEmpty.y) < 2) {
-            move = new SMoveMountainSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, isLayerSwap: true);
+            move = new SMoveMountainSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, isLayerSwap: false);
         }
         else {
             move = new SMoveMountainSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, isLayerSwap: true);

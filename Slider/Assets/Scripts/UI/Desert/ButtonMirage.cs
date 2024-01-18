@@ -10,10 +10,6 @@ public class ButtonMirage : MonoBehaviour
     [SerializeField] private Image buttonImage;
     private bool mirageEnabled = false;
 
-    private void Start() {
-        SetMirageEnabled(false);
-    }
-
     public void SetMirageEnabled(bool enabled)
     {
         mirageEnabled = enabled;
