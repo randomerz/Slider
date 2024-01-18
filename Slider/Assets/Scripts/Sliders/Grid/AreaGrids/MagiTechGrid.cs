@@ -51,7 +51,8 @@ public class MagiTechGrid : SGrid
 
     [SerializeField] private Collider2D fireStoolZoneCollider;
     [SerializeField] private Collider2D lightningStoolZoneCollider;
-    private int numOres = 0;
+
+    private int numOil = 0;
 
     [SerializeField] private MagiTechTabManager tabManager;
     [SerializeField] private PlayerActionHints hints;
@@ -156,6 +157,7 @@ public class MagiTechGrid : SGrid
         {
             EndDesync();
         }
+        SaveSystem.Current.SetInt("MagitechOilCollected", numOil);
         base.Save();
     }
 
@@ -166,6 +168,8 @@ public class MagiTechGrid : SGrid
             tabManager.EnableTab();
         if(profile.GetBool("magitechBridgeFixed"))
             LowerDrawbridge(true);
+        numOil = profile.GetInt("MagitechOilCollected");
+
     }
 
     public static bool IsInPast(Transform transform)
@@ -356,23 +360,23 @@ public class MagiTechGrid : SGrid
         return list;
     }
 
-    public void HasOneOre(Condition c)
+    public void HasOneOil(Condition c)
     {
-        c.SetSpec(numOres == 1);
+        c.SetSpec(numOil == 1);
     }
 
-    public void HasTwoOres(Condition c)
+    public void HasTwoOil(Condition c)
     {
-        c.SetSpec(numOres == 2);
+        c.SetSpec(numOil == 2);
     }
-    public void HasThreeOres(Condition c)
+    public void HasThreeOil(Condition c)
     {
-        c.SetSpec(numOres == 3);
+        c.SetSpec(numOil == 3);
     }
 
-    public void IncrementOres()
+    public void IncrementOil()
     {
-        numOres++;
+        numOil++;
     }
 
     public void IsDesyncActive(Condition c)
@@ -384,7 +388,8 @@ public class MagiTechGrid : SGrid
     {
         c.SetSpec(DesyncActive && 
         Player.GetInstance().GetSTileUnderneath() != null &&
-        Player.GetInstance().GetSTileUnderneath().islandId == desyncIslandId);
+        (Player.GetInstance().GetSTileUnderneath().islandId == desyncIslandId ||
+        Player.GetInstance().GetSTileUnderneath().islandId == desyncAnchoredIslandId));
     }
     #endregion
 }
