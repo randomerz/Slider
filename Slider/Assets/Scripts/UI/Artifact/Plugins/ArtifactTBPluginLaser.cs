@@ -78,7 +78,8 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         button.plugins.Add(this);
         if(tileDict == null)
             tileDict = new();
-        tileDict.Add(button, this);
+        if(!tileDict.ContainsKey(button))
+            tileDict.Add(button, this);
         SaveSprites();
         ResetSprites();
         if(centerObject == LaserCenterObject.SOURCE)
