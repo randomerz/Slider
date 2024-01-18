@@ -9,7 +9,7 @@ public class Item : MonoBehaviour, ISavable
     public SpriteRenderer spriteRenderer;
     [SerializeField] protected Collider2D myCollider;
     public bool canKeep = false;
-    [SerializeField] private bool shouldDisableAtStart = false;
+    public bool shouldDisableAtStart = false;
     public bool doReflectionCalculations;
     public float itemRadius = 0.5f;
 
