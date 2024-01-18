@@ -10,12 +10,15 @@ public class KeyboardButton : MonoBehaviour
     public TMP_InputField inputField;
     public TextMeshProUGUI character;
 
+    private const int MAX_PROFILE_NAME_LENGTH = 10;
+
     public void Click()
     {
         if(MainMenuManager.KeyboardEnabled) 
         {
             AudioManager.Play("UI Click");
-            inputField.text += character.text;
+            if(inputField.text.Length < MAX_PROFILE_NAME_LENGTH)
+                inputField.text += character.text;
         }
     }
 
