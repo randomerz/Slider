@@ -22,7 +22,9 @@ public class Portal : MonoBehaviour
     public Transform spawnPoint;
     public static bool playerInPortal;
     public static PortalEnum recentPortal;
+    public static Portal recentPortalObj;
     private bool isTeleporting;
+    public Transform desyncItemFallbackSpawn;
 
     public class OnTimeChangeArgs : System.EventArgs
     {
@@ -43,6 +45,7 @@ public class Portal : MonoBehaviour
         
         playerInPortal = true;
         recentPortal = portalEnum;
+        recentPortalObj = this;
         if(portalEnum is PortalEnum.MAGITECH_PRESENT || portalEnum is PortalEnum.MAGITECH_PAST)
         {
             UIEffects.FadeToBlack(callback: InitTeleport, speed: 2, alpha:0.5f, disableAtEnd: false);
@@ -76,6 +79,7 @@ public class Portal : MonoBehaviour
         if(isTeleporting || recentPortal == portalEnum) return;
         playerInPortal = false;
         recentPortal = PortalEnum.NONE;
+        recentPortalObj = null;
     }
 
     public void OnPlayerNear(bool enter)
