@@ -143,22 +143,7 @@ public class DesyncItem : Item
             //edge case: if we are carrying the present item and the past item isn't in the past or desynced, we must remove it from inventory and place it where the player is before disabling 
             if(this == presentItem && !(pastItem.isDesynced || pastItem.isItemInPast))
             {
-                PlayerInventory.RemoveItem();
-                //Make sure it doesn't end up inside the portal
-                if(Portal.playerInPortal && Portal.recentPortalObj != null)
-                {
-                   transform.position = Portal.recentPortalObj.desyncItemFallbackSpawn.position; 
-                }
-                else
-                {
-                    transform.position = Player.GetPosition();
-                }
-                transform.SetParent(Player.GetInstance().GetSTileUnderneath().transform);
-                SetLayer(LayerMask.NameToLayer("Item"));
-                ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position);
-                ResetSortingOrder();
-                SetDesyncItemActive(false);
-                UpdateLightning();
+                RemoveItemFromPlayerInventory();
             }
             else
             {
@@ -170,6 +155,26 @@ public class DesyncItem : Item
             isDesynced = true;
             UpdateItemPair();
         }
+    }
+
+    private void RemoveItemFromPlayerInventory()
+    {
+        PlayerInventory.RemoveItem();
+        //Make sure it doesn't end up inside the portal
+        if(Portal.playerInPortal && Portal.recentPortalObj != null)
+        {
+            transform.position = Portal.recentPortalObj.desyncItemFallbackSpawn.position; 
+        }
+        else
+        {
+            transform.position = Player.GetPosition();
+        }
+        transform.SetParent(Player.GetInstance().GetSTileUnderneath().transform);
+        SetLayer(LayerMask.NameToLayer("Item"));
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position);
+        ResetSortingOrder();
+        SetDesyncItemActive(false);
+        UpdateLightning();
     }
 
     private void OnDesyncStartWorld(object sender, MagiTechGrid.OnDesyncArgs e)
@@ -184,14 +189,24 @@ public class DesyncItem : Item
         UpdateItemPair();
     }
 
-    private void UpdateItemPair()
+    private void UpdateItemPair(bool fromPortal = false)
     {
         pastItem.UpdateLightning();
         bool presentShouldBeActive = presentItem.isDesynced || pastItem.isDesynced || pastItem.isItemInPast;
         if(presentItem.itemDoesNotExist == presentShouldBeActive) //these should normally be opposite, IE if present doesn't exist but should be active, then we must update the present item state
         {   
-            presentItem.SetDesyncItemActive(presentShouldBeActive);
-            ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
+            if(fromPortal 
+            && PlayerInventory.GetCurrentItem() != null 
+            && PlayerInventory.GetCurrentItem().itemName == itemName
+            && this == presentItem)
+            {
+                RemoveItemFromPlayerInventory();
+            }
+            else
+            {
+                presentItem.SetDesyncItemActive(presentShouldBeActive);
+                ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
+            }
         }
         presentItem.UpdateLightning();
     }
@@ -216,6 +231,6 @@ public class DesyncItem : Item
     {
         if (PlayerInventory.GetCurrentItem() != null && PlayerInventory.GetCurrentItem().name == name) 
             isItemInPast = !e.fromPast;
-        UpdateItemPair();
+        UpdateItemPair(true);
     }
 }
