@@ -21,6 +21,11 @@ public class DesyncItem : Item
     private void Start()
     {
         Init();
+
+        if (saveString == "" && trackerSprite != null)
+        {
+            Debug.LogWarning("Save string for item was empty, but tracker sprite was not. Is this intended?");
+        }
     }
 
     private void Init()
@@ -92,7 +97,7 @@ public class DesyncItem : Item
     public override void PickUpItem(Transform pickLocation, System.Action callback = null) 
     {
         base.PickUpItem(pickLocation, callback);
-        if(isTracked)
+        if (trackerSprite)
         {
             UITrackerManager.RemoveTracker(gameObject);
         }
@@ -101,13 +106,16 @@ public class DesyncItem : Item
     public override void Save()
     {
         base.Save();
-        SaveSystem.Current.SetBool($"{saveString}_IsTracked", isTracked);
+        if (saveString != null && saveString != "")
+        {
+            SaveSystem.Current.SetBool($"{saveString}_IsTracked", isTracked);
+        }
     }
 
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
-        if(profile.GetBool($"{saveString}_IsTracked"))
+        if (saveString != null && saveString != "" && profile.GetBool($"{saveString}_IsTracked"))
         {
             AddTracker();
         }
