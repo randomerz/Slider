@@ -144,13 +144,20 @@ public class DesyncItem : Item
             if(this == presentItem && !(pastItem.isDesynced || pastItem.isItemInPast))
             {
                 PlayerInventory.RemoveItem();
-                transform.position = Player.GetPosition();
+                //Make sure it doesn't end up inside the portal
+                if(Portal.playerInPortal && Portal.recentPortalObj != null)
+                {
+                   transform.position = Portal.recentPortalObj.desyncItemFallbackSpawn.position; 
+                }
+                else
+                {
+                    transform.position = Player.GetPosition();
+                }
                 transform.SetParent(Player.GetInstance().GetSTileUnderneath().transform);
                 SetLayer(LayerMask.NameToLayer("Item"));
                 ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position);
-                myCollider.enabled = true;
                 ResetSortingOrder();
-                gameObject.SetActive(false);
+                SetDesyncItemActive(false);
                 UpdateLightning();
             }
             else
@@ -209,7 +216,6 @@ public class DesyncItem : Item
     {
         if (PlayerInventory.GetCurrentItem() != null && PlayerInventory.GetCurrentItem().name == name) 
             isItemInPast = !e.fromPast;
-        print(gameObject.name + " in past " + isItemInPast);
         UpdateItemPair();
     }
 }
