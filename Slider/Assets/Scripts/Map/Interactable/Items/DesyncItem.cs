@@ -15,6 +15,7 @@ public class DesyncItem : Item
     private DesyncItem presentItem;
     private DesyncItem pastItem;
     private bool isTracked;
+    private bool itemDoesNotExist;
 
 
     private void Start()
@@ -180,7 +181,7 @@ public class DesyncItem : Item
     {
         pastItem.UpdateLightning();
         bool presentShouldBeActive = presentItem.isDesynced || pastItem.isDesynced || pastItem.isItemInPast;
-        if(presentItem.gameObject.activeSelf != presentShouldBeActive)
+        if(presentItem.itemDoesNotExist == presentShouldBeActive) //these should normally be opposite, IE if present doesn't exist but should be active, then we must update the present item state
         {   
             presentItem.SetDesyncItemActive(presentShouldBeActive);
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
@@ -190,7 +191,7 @@ public class DesyncItem : Item
 
     private void SetDesyncItemActive(bool active)
     {
-        print("setting " + gameObject.name + " active " + active);
+        itemDoesNotExist = !active;
         spriteRenderer.enabled = active;
         myCollider.enabled = active;
         if(isTracked)
@@ -208,7 +209,7 @@ public class DesyncItem : Item
     {
         if (PlayerInventory.GetCurrentItem() != null && PlayerInventory.GetCurrentItem().name == name) 
             isItemInPast = !e.fromPast;
-        
+        print(gameObject.name + " in past " + isItemInPast);
         UpdateItemPair();
     }
 }
