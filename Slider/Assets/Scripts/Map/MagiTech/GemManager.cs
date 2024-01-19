@@ -56,7 +56,6 @@ public class GemManager : MonoBehaviour, ISavable
 
         BuildSpriteDictionary();
         UpdateGemSprites();
-        UpdateGemItems();
 
         if(profile.GetBool("MagitechHasGemTransporter"))
             EnableGemTransporter();
@@ -135,6 +134,8 @@ public class GemManager : MonoBehaviour, ISavable
 
     public void UpdateGemSprites()
     {
+        if(gemSprites == null || gemSprites.Keys.Count != 9)
+            BuildSpriteDictionary();
         UpdateNumRemainingGems();
         foreach(Area a in gems.Keys)
         {
@@ -146,20 +147,6 @@ public class GemManager : MonoBehaviour, ISavable
         }
     }
     
-    private void UpdateGemItems()
-    {
-        if (gemItems.Count != 8)
-        {
-            Debug.LogWarning("gemItems not properly set in Inspector!");
-            return;
-        }
-        gemItems[1].gameObject.SetActive(!gems[Area.Caves]);
-        gemItems[2].gameObject.SetActive(!gems[Area.Ocean]);
-        gemItems[3].gameObject.SetActive(!gems[Area.Jungle]);
-        gemItems[6].gameObject.SetActive(!gems[Area.Military]);
-        // gemItems[7].gameObject.SetActive(!gems[Area.MagiTech]);
-    }
-
     private void UpdateNumRemainingGems()
     {
         int num = 0;

@@ -5,11 +5,16 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 213454291184950064, guid: dc53b5fe8adca0445a3a038f940a5764, type: 3}
       propertyPath: m_Name
-      value: Rock
+      value: Rock Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2416538211894646757, guid: dc53b5fe8adca0445a3a038f940a5764, type: 3}
+      propertyPath: m_Size.y
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 2845302207818694714, guid: dc53b5fe8adca0445a3a038f940a5764, type: 3}
       propertyPath: m_RootOrder
@@ -60,4 +65,7 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -4734289747635884056, guid: 8430daea8e9e7044eb96828952d8c28a, type: 3}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc53b5fe8adca0445a3a038f940a5764, type: 3}

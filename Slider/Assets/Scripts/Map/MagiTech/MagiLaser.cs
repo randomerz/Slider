@@ -106,7 +106,7 @@ public class MagiLaser : MonoBehaviour, ISavable
 
             if (!laserable)
             {
-                Debug.LogWarning(hit + " does not have a Laserable component! Doing nothing");
+                Debug.LogWarning(hit.collider.gameObject.name + " does not have a Laserable component! Doing nothing");
                 return;
             }
 

@@ -81,7 +81,7 @@ public class DesyncItem : Item
     {
         if(!isDesynced && MagiTechGrid.IsTileDesynced(currentTile))
         {
-             isDesynced = true;
+            isDesynced = true;
             UpdateItemPair();
         }
     }
@@ -118,7 +118,7 @@ public class DesyncItem : Item
 
     private void OnDesyncStartWorld(object sender, MagiTechGrid.OnDesyncArgs e)
     {
-        isDesynced = currentTile.islandId == e.desyncIslandId;
+        isDesynced = currentTile.islandId == e.desyncIslandId || currentTile.islandId == e.anchoredTileIslandId;
         UpdateItemPair();
     }
 
@@ -133,7 +133,8 @@ public class DesyncItem : Item
         pastItem.UpdateLightning();
         bool presentShouldBeActive = presentItem.isDesynced || pastItem.isDesynced || pastItem.isItemInPast;
         if(presentItem.gameObject.activeSelf != presentShouldBeActive)
-        {
+        {   
+            //Todo: have particles/phantom effect/smth to show where object was
             presentItem.gameObject.SetActive(presentShouldBeActive);
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
         }

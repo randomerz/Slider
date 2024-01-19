@@ -12,6 +12,14 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 88125750, guid: 5a06b3d6da0c98f44a4e5a16eb51ab5f, type: 3}
+    - target: {fileID: 1522212488521409320, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1522212488521409320, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
+      propertyPath: m_SpriteSortPoint
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3985302522749898748, guid: 4411b797eb0856a4586a0b52b69bed6b, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -108,11 +116,12 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: -1.080143, y: 0.8279705}
-  - {x: -1.3790894, y: 0.8265228}
-  - {x: -2.568266, y: 0.23189926}
-  - {x: -1.4840508, y: -0.3842373}
-  - {x: -1.0601921, y: -0.38864136}
+  - {x: -1, y: 0.75}
+  - {x: -1.375, y: 0.75}
+  - {x: -2.5625, y: 0.21875}
+  - {x: -1.375, y: -0.375}
+  - {x: -1, y: -0.375}
+  - {x: -1, y: 0.75}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
