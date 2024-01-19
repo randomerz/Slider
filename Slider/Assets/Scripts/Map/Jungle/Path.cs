@@ -236,14 +236,14 @@ public class Path : MonoBehaviour
             {
                 if (this.gameObject.name == "house right")
                 {
-                    print(other.gameObject.name);
+                    // print(other.gameObject.name);
                 }
                 other.pair = this;
                 pair = other;
 
                 if (this.gameObject.name == "house right")
                 {
-                    print(other.pair);
+                    // print(other.pair);
                 }
             }
         }
