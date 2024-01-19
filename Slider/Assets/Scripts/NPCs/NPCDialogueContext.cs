@@ -395,7 +395,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
             string triggerMsg = playerInDialogueTrigger ? "\n\t- player still in trigger" : "";
             string dontInterruptMsg = NPCGivingDontInterruptDialogue() ? "\n\t- don't interrupt signal" : "";
 
-            Debug.LogError($"Do not interrupt!{activeMsg}{triggerMsg}{dontInterruptMsg}");
+            // Debug.LogError($"Do not interrupt!{activeMsg}{triggerMsg}{dontInterruptMsg}");
         }
 
         return shouldDeactivate;
