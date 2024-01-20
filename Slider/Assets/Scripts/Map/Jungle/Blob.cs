@@ -98,12 +98,7 @@ public class Blob : MonoBehaviour
 
             if (under == null)
             {
-/*                if (this.transform.parent.gameObject.name == "sign2 up")
-                {
-                    print("floating");
-                }
-
-                Destroy(this.gameObject);*/
+                //Destroy(this.gameObject);
                 return;
             }
 
