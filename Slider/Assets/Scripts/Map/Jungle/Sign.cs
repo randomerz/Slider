@@ -50,11 +50,11 @@ public class Sign : Box
 
     public override void RecieveShape(Path path, Shape shape, List<string> parents)
     {
-        if (this.gameObject.name == "Sign 2.2")
+        if (this.gameObject.name == "Double sign 6.1")
         {
             if (shape == null)
             {
-                print("recieve " + null + " from ");
+                print("recieve null from ");
             } else
             {
                 print("recieve " + shape.name + " from ");
@@ -94,6 +94,14 @@ public class Sign : Box
             if (recievedShapes[paths[d]] != null)
             {
                 shapesRecieved.Add(recievedShapes[paths[d]]);
+            }
+        }
+
+        if (this.gameObject.name == "Double sign 6.1") {
+            print("recieved shapes");
+            foreach (Shape shape in shapesRecieved)
+            {
+                print(shape.name);
             }
         }
 

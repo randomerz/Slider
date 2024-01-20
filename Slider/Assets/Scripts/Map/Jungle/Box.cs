@@ -93,11 +93,11 @@ public class Box : MonoBehaviour
 
     public virtual void CreateShape(List<string> parents)
     {
-        if (this.gameObject.name == "Sign 2.2")
+/*        if (this.gameObject.name == "Sign 2.2")
         {
             print(this.gameObject.name + " is sending shape " + currentShape);
             print(currentDirection);
-        }
+        }*/
 
         parents.Add(this.gameObject.name);
 
@@ -134,7 +134,7 @@ public class Box : MonoBehaviour
         if (box != null)
         {
             List<string> parents = new List<string>();
-            parents.Add(box.gameObject.name);
+            parents.Add(this.gameObject.name);
             box.RecieveShape(paths[currentDirection], null, parents);
         }
         
