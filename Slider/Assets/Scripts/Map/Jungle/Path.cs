@@ -218,18 +218,10 @@ public class Path : MonoBehaviour
         Vector2 one = new Vector2(1, 0);
         Vector2 two = new Vector2(-1, 0);
 
-
-        Vector3 offset = new Vector3(0, 0.5f, 0);
-
-        if (!horizontal)
-        {
-            offset = new Vector3(-0.5f, 0, 0);
-        }
-
         Physics2D.queriesStartInColliders = false;
 
-        RaycastHit2D checkOne = Physics2D.Raycast(transform.position + offset, one.normalized, (1 + this.transform.localScale.x / 2), LayerMask.GetMask("JunglePaths"));
-        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position + offset, two.normalized, (1 + this.transform.localScale.x / 2), LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, (1 + this.transform.localScale.x / 2), LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, (1 + this.transform.localScale.x / 2), LayerMask.GetMask("JunglePaths"));
 
         //want to find the closest bin or box and stile
         if (checkOne.collider != null)
@@ -246,10 +238,6 @@ public class Path : MonoBehaviour
             Path other = checkTwo.collider.gameObject.GetComponent<Path>();
             if (!other.transform.parent.Equals(this.transform.parent))
             {
-                if (this.gameObject.name == "house right")
-                {
-                    print(other.gameObject.name);
-                }
                 other.pair = this;
                 pair = other;
             }
@@ -258,7 +246,7 @@ public class Path : MonoBehaviour
         Physics2D.queriesStartInColliders = true;
     }
 
-    void OnDrawGizmosSelected()
+    void OnDrawGizmos()
     {
         // Draws a 5 unit long red line in front of the object
         if (horizontal)
@@ -281,9 +269,9 @@ public class Path : MonoBehaviour
         }
 
         Vector3 directionone = transform.TransformDirection(one * (1 + this.transform.localScale.x / 2));
-        Gizmos.DrawRay(transform.position + offset, directionone);
+        Gizmos.DrawRay(transform.position, directionone);
         Vector3 directiontwo = transform.TransformDirection(two * (1 + this.transform.localScale.x / 2));
-        Gizmos.DrawRay(transform.position + offset, directiontwo);
+        Gizmos.DrawRay(transform.position, directiontwo);
 
     }
 }
