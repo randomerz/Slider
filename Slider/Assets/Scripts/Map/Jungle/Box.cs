@@ -93,11 +93,11 @@ public class Box : MonoBehaviour
 
     public virtual void CreateShape(List<string> parents)
     {
-/*        if (this.gameObject.name == "Sign 2.2")
+        if (this.gameObject.name == "Sign 5.1")
         {
             print(this.gameObject.name + " is sending shape " + currentShape);
             print(currentDirection);
-        }*/
+        }
 
         parents.Add(this.gameObject.name);
 

@@ -50,12 +50,13 @@ public class Sign : Box
 
     public override void RecieveShape(Path path, Shape shape, List<string> parents)
     {
-/*        if (this.gameObject.name == "Double sign 6.1")
+        if (this.gameObject.name == "Sign 5.1")
         {
             if (shape == null)
             {
                 print("recieve null from ");
-            } else
+            }
+            else
             {
                 print("recieve " + shape.name + " from ");
             }
@@ -63,7 +64,7 @@ public class Sign : Box
             {
                 print(parent);
             }
-        }*/
+        }
 
         // && (shape != null && this.currentShape != null)
         //this isn't working
@@ -74,6 +75,10 @@ public class Sign : Box
 
         if (path.pair != null)
         {
+            if (this.gameObject.name == "Sign 5.1")
+            {
+                print("boop");
+            }
             recievedShapes[path.pair] = shape;
             this.MergeShapes();
             this.CreateShape(parents);
@@ -96,14 +101,15 @@ public class Sign : Box
                 shapesRecieved.Add(recievedShapes[paths[d]]);
             }
         }
-/*
-        if (this.gameObject.name == "Double sign 6.1") {
+
+        if (this.gameObject.name == "Sign 5.1")
+        {
             print("recieved shapes");
             foreach (Shape shape in shapesRecieved)
             {
                 print(shape.name);
             }
-        }*/
+        }
 
 
         foreach (Recipe recipe in recipes.list)

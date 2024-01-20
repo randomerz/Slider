@@ -96,16 +96,16 @@ public class Blob : MonoBehaviour
             // check if i need to change parent then if i do, change
             STile under = SGrid.GetSTileUnderneath(this.gameObject);
 
-/*            if (under == null)
+            if (under == null)
             {
-                if (this.transform.parent.gameObject.name == "sign2 up")
+/*                if (this.transform.parent.gameObject.name == "sign2 up")
                 {
                     print("floating");
                 }
 
-                Destroy(this.gameObject);
+                Destroy(this.gameObject);*/
                 return;
-            }*/
+            }
 
             GameObject path = this.transform.parent.gameObject;
             GameObject pathStile = path.transform.parent.transform.parent.transform.parent.gameObject; //bro pls theres a better way right
@@ -188,6 +188,7 @@ public class Blob : MonoBehaviour
             shapeRenderer.material.color = c;
             yield return new WaitForSeconds(0.1667f);
         }
+        Destroy(this.gameObject);
     }
 
     public void fadeOut()
