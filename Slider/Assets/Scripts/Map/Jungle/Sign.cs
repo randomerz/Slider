@@ -7,6 +7,8 @@ public class Sign : Box
 {
     public RecipeList recipes;
     public Dictionary<Path, Shape> recievedShapes = new Dictionary<Path, Shape>();
+
+    public Shape question;
     
     // Start is called before the first frame update
     void Awake()
@@ -122,9 +124,12 @@ public class Sign : Box
         {
             currentShape = null;
         }
-        else
+        else if (shapesRecieved.Count == 1)
         {
             currentShape = shapesRecieved[0];
+        } else
+        {
+            currentShape = question;
         }
     }
 }

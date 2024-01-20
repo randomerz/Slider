@@ -214,7 +214,6 @@ public class Path : MonoBehaviour
 
     public void ChangePair()
     {
-        //pair = null;
         Vector2 one = new Vector2(1, 0);
         Vector2 two = new Vector2(-1, 0);
         float length = this.transform.localScale.x;
@@ -223,7 +222,6 @@ public class Path : MonoBehaviour
         {
             one = new Vector2(0, 1);
             two = new Vector2(0, -1);
-           // length = this.transform.localScale.y;
         }
 
         Physics2D.queriesStartInColliders = false;
@@ -258,11 +256,6 @@ public class Path : MonoBehaviour
                     }
                 }
             }
-        }
-
-        if (this.gameObject.name == "house down test" && checkOne.Length == 0 && checkTwo.Length == 0)
-        {
-            print("no hits");
         }
 
         Physics2D.queriesStartInColliders = true;
