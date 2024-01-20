@@ -621,10 +621,10 @@ MonoBehaviour:
     m_Bits: 33280
   dropCollidingMask:
     serializedVersion: 2
-    m_Bits: 18961
+    m_Bits: 33573393
   anchorDropCollidingMask:
     serializedVersion: 2
-    m_Bits: 2577
+    m_Bits: 33557009
   minimumDropDistance: 0.35
   maximumDropDistance: 1
   dropBoxcastWidth: 1
@@ -907,8 +907,8 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.061458338
-    y: 0.35462964
+    x: 0.041666668
+    y: 0.31388888
     width: 0.16666667
     height: 0.16666666
   near clip plane: 0.1

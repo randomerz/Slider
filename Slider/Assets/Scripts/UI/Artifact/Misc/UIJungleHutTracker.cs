@@ -48,6 +48,17 @@ public class UIJungleHutTracker : FlashWhiteImage
                 !nodeOnDisabledButton &&
                 myHut.currentDirection == DIRECTIONS[i]
             );
+
+            if (myHut is DoubleSign)
+            {
+                directionImages[i].enabled = (
+                    !nodeOnDisabledButton &&
+                    (
+                        myHut.currentDirection == DIRECTIONS[i] ||
+                        (myHut as DoubleSign).secondCurrentDirection == DIRECTIONS[i]
+                    )
+                );
+            }
         }
     }
 }

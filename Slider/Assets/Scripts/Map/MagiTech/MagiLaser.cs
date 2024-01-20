@@ -8,6 +8,7 @@ public class MagiLaser : MonoBehaviour, ISavable
 
     public bool isPowered;
     public bool isEnabled;
+    public string SaveString;
     public List<LineRenderer> lineRenderers;
     private RaycastHit2D hit;
     private Laserable laserable;
@@ -29,12 +30,12 @@ public class MagiLaser : MonoBehaviour, ISavable
 
     public void EnableLaser()
     {
-        isEnabled = true;
+        SetEnabled(true);
     }
 
     public void DisableLaser()
     {
-        isEnabled = false;
+        SetEnabled(false);
     }
 
     private void LateUpdate()
@@ -105,7 +106,7 @@ public class MagiLaser : MonoBehaviour, ISavable
 
             if (!laserable)
             {
-                Debug.LogWarning(hit + " does not have a Laserable component! Doing nothing");
+                Debug.LogWarning(hit.collider.gameObject.name + " does not have a Laserable component! Doing nothing");
                 return;
             }
 
@@ -192,10 +193,10 @@ public class MagiLaser : MonoBehaviour, ISavable
         {
             ClearLasers();
         }
-        if (SGrid.Current.GetArea() == Area.MagiTech) //Desert uses Laser too but does not have laser UI
-        {
-            laserUI.UpdateSprites();
-        }
+
+        if(laserUI != null)
+            laserUI.AddSource();
+
     }
 
     public void CheckIsPowered(Condition c) => c.SetSpec(isPowered);
@@ -203,12 +204,15 @@ public class MagiLaser : MonoBehaviour, ISavable
 
     public void Save()
     {
-        SaveSystem.Current.SetBool("MagiLaserIsEnabled", isEnabled);
+        if(SaveString != null && SaveString != "")
+            SaveSystem.Current.SetBool(SaveString, isEnabled);
     }
 
     public void Load(SaveProfile profile)
     {
-        isEnabled = profile.GetBool("MagiLaserIsEnabled");
+        if(SaveString == null || SaveString == "") return;
+
+        isEnabled = profile.GetBool(SaveString);
         if(isEnabled)
         {
             isPowered = true;

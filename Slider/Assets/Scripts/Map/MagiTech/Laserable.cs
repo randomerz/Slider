@@ -22,6 +22,14 @@ public class Laserable : MonoBehaviour
     public bool isLasered;
     public UnityEvent OnLasered;
     public UnityEvent OnUnLasered;
+
+    private void Start()
+    {
+        if (gameObject.layer != LayerMask.NameToLayer("LaserRaycast"))
+        {
+            Debug.LogWarning("Warning: Object with Laserable component is not on 'LayerRaycast' Layer.");
+        }
+    }
   
     public void Laser()
     {

@@ -109,7 +109,10 @@ public class Blob : MonoBehaviour
             {
                 if (pair != null)
                 {
-                    this.gameObject.transform.SetParent(pair.transform);
+                    this.transform.SetParent(pair.transform);
+                    Vector2 position = this.transform.localPosition;
+                    position.y = 0;
+                    this.gameObject.transform.localPosition = position;
                 }
                 else
                 {
@@ -168,12 +171,16 @@ public class Blob : MonoBehaviour
     public IEnumerator fadeOutAnimation()
     {
         Color c = spriteRenderer.material.color;
-        for (float alpha = 1f; alpha >= 0; alpha -= 0.25f)
+
+        if (c.a > 0)
         {
-            c.a = alpha;
-            spriteRenderer.material.color = c;
-            shapeRenderer.material.color = c;
-            yield return new WaitForSeconds(0.1667f);
+            for (float alpha = 1f; alpha >= 0; alpha -= 0.25f)
+            {
+                c.a = alpha;
+                spriteRenderer.material.color = c;
+                shapeRenderer.material.color = c;
+                yield return new WaitForSeconds(0.1667f);
+            }
         }
     }
 

@@ -10,10 +10,13 @@ public class DistanceBasedAmbience : MonoBehaviour
     public List<Transform> distanceNodes = new List<Transform>();
     private Transform playerTransform;
 
+    private static Dictionary<string, float> nameToMinDist = new();
+
     private void Start()
     {
         playerTransform = Player.GetInstance().transform;
         AudioManager.PlayAmbience(ambienceName);
+        nameToMinDist[ambienceName] = Mathf.Infinity;
         UpdateParameter();
     }
 
@@ -28,6 +31,11 @@ public class DistanceBasedAmbience : MonoBehaviour
         UpdateParameter();
     }
 
+    private void LateUpdate()
+    {
+        SendParameter();
+    }
+
     private void UpdateParameter()
     {
         float minDistance = Mathf.Infinity;
@@ -39,6 +47,15 @@ public class DistanceBasedAmbience : MonoBehaviour
             }
         }
 
-        AudioManager.SetGlobalParameter(ambienceGlobalParameterName, minDistance);
+        nameToMinDist[ambienceName] = Mathf.Min(minDistance, nameToMinDist[ambienceName]);
+    }
+
+    private void SendParameter()
+    {
+        if (nameToMinDist[ambienceName] != Mathf.Infinity)
+        {
+            AudioManager.SetGlobalParameter(ambienceGlobalParameterName, nameToMinDist[ambienceName]);
+            nameToMinDist[ambienceName] = Mathf.Infinity;
+        }
     }
 }
