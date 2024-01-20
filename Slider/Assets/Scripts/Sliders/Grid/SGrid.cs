@@ -77,6 +77,11 @@ public class SGrid : Singleton<SGrid>, ISavable
     {
         foreach (Collectible c in collectibles)
         {
+            if (c == null)
+            {
+                Debug.LogError("Null Collectible in SGrid. Did you delete a collectible item? Make sure to remove it from the list on Sgrid");
+            }
+
             if (PlayerInventory.Contains(c))
             {
                 c.gameObject.SetActive(false);
@@ -403,10 +408,11 @@ public void SetGrid(int[,] puzzle)
         return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>());
     }
 
-    public static STileTilemap GetWorldGridTilemaps()
+    public virtual STileTilemap GetWorldGridTilemaps()
     {
-        return _instance == null ? null : _instance.worldGridTilemaps;
+        return worldGridTilemaps;
     }
+
 
     public static AudioModifierOverrides GetAudioModifierOverrides()
     {

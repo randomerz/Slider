@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4607457495645169288, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
@@ -77,10 +78,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4015862400581203686, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4607457495645169290, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1690357596}
   m_SourcePrefab: {fileID: 100100000, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
 --- !u!212 &4270746312086674425 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 8919005992056777909, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
+  m_PrefabInstance: {fileID: 4648297098585028428}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7866126353396617926 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3289890148026213770, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
   m_PrefabInstance: {fileID: 4648297098585028428}
   m_PrefabAsset: {fileID: 0}
 --- !u!58 &9183661778721542597 stripped
@@ -109,6 +121,9 @@ MonoBehaviour:
   spriteRenderer: {fileID: 4270746312086674425}
   myCollider: {fileID: 9183661778721542597}
   canKeep: 0
+  shouldDisableAtStart: 0
+  doReflectionCalculations: 0
+  itemRadius: 0.5
   pickUpDuration: 0.5
   xPickUpMotion:
     serializedVersion: 2
@@ -176,6 +191,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  isOnlyUsedByPlayer: 1
+  reflectionPivot: {fileID: 7866126353396617926}
   enableOnDrop: []
   OnPickUp:
     m_PersistentCalls:
@@ -183,5 +200,6 @@ MonoBehaviour:
   OnDrop:
     m_PersistentCalls:
       m_Calls: []
+  saveString: 
   shakeAmount: 0.33
   shakeDuration: 0.4

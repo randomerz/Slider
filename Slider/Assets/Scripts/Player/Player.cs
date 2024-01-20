@@ -301,7 +301,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         SetIsInHouse(sp.isInHouse);
 
         // Update position
-        if (GameManager.instance.debugModeActive && DebugUIManager.justDidSetScene)
+        if (SettingsManager.DevConsole && DebugUIManager.justDidSetScene)
         {
             // skip setting position if just did SetScene()
             DebugUIManager.justDidSetScene = false;
@@ -547,7 +547,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         if (currentStileUnderneath == null)
         {
-            var fallback = SGrid.GetWorldGridTilemaps();
+            var fallback = SGrid.Current.GetWorldGridTilemaps();
             if (fallback == null) 
                 return null;
             else 

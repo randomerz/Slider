@@ -11,13 +11,14 @@ public class UIArtifact : Singleton<UIArtifact>
     public ArtifactTileButton[] buttons;
     [SerializeField] protected int maxMoveQueueSize = 3;
     [SerializeField] private GameObject lightning;
-    [SerializeField] private List<GameObject> fallbackButtonsToSelect; // For when youre on controller and have nothing to select
+    [SerializeField] private GameObject lightningImage;
+    [SerializeField] private List<GameObject> fallbackButtonsToSelect; // For when you're on controller and have nothing to select
 
     protected ArtifactTileButton buttonSelected;
     protected List<ArtifactTileButton> moveOptionButtons = new List<ArtifactTileButton>();
-    protected List<SMove> activeMoves = new List<SMove>();    // DC: Current list of moves being performed 
-    protected Queue<SMove> moveQueue = new Queue<SMove>();    //L: Queue of moves to perform on the grid from the artifact
-    protected bool playerCanAddSMoves; // this is not serialized by area! should it be? meh
+    protected List<SMove> activeMoves = new List<SMove>();    //Current list of moves being performed 
+    protected Queue<SMove> moveQueue = new Queue<SMove>();    //Queue of moves to perform on the grid from the artifact
+    protected bool playerCanAddSMoves;
     protected bool playerCanQueue;
 
     private bool didInit;
@@ -47,7 +48,6 @@ public class UIArtifact : Singleton<UIArtifact>
 
     protected virtual void OnEnable()
     {
-        //SelectButton(buttons[0]);
     }
 
     protected virtual void OnDisable()
@@ -57,7 +57,7 @@ public class UIArtifact : Singleton<UIArtifact>
 
     protected virtual void Start()
     {
-        //L: Do these ever get unsubscribed? (Do they need to?) (If your name is DesertArtifact yes)
+        //Only unsubscribed in DesertArtifact
         SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
         SGridAnimator.OnSTileMoveEnd += UpdatePushedDowns;
         OnButtonInteract += UpdatePushedDowns;
@@ -111,8 +111,6 @@ public class UIArtifact : Singleton<UIArtifact>
             {
                 if (IsButtonValidForSelection(g))
                 {
-                    // Noisy in the ocean
-                    //Debug.Log("Force picked a new button.");
                     EventSystem.current.SetSelectedGameObject(g);
                     return;
                 }
@@ -256,7 +254,6 @@ public class UIArtifact : Singleton<UIArtifact>
             if (b.MyStile == stile)
             {
                 b.UpdateTileActive();
-                // b.SetShouldFlicker(shouldFlicker);
                 break;
             }
         }
@@ -318,7 +315,7 @@ public class UIArtifact : Singleton<UIArtifact>
         PointerEventData data = (PointerEventData)eventData;
 
         ArtifactTileButton dragged = data.pointerDrag.GetComponent<ArtifactTileButton>();
-        if (!dragged.TileIsActive)// || dragged.isForcedDown)
+        if (!dragged.TileIsActive)
         {
             return; //player didn't start drag on a button, don't do anything.
         }
@@ -475,15 +472,12 @@ public class UIArtifact : Singleton<UIArtifact>
         buttonSelected = null;
 
         ClearMoveOptions();
-
-        //OnButtonInteract?.Invoke(this, null);
     }
 
     #endregion
 
     #region Queue
 
-    //L: This is the new CheckAndSwap
     public virtual bool TryQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         SMove move = ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
@@ -514,15 +508,12 @@ public class UIArtifact : Singleton<UIArtifact>
         MoveMadeOnArtifact?.Invoke(this, null);
     }
 
-    // changed to protected
     protected void QueueAdd(SMove move)
     {
-        //L: Got rid of count check because literally every time this is called there's a check before.
         moveQueue.Enqueue(move);
     }
 
-    //DON'T CALL DIRECTLY ANYMORE (call ProcessQueue instead)
-    // changed to protected
+    //DON'T CALL DIRECTLY (call ProcessQueue instead)
     protected virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         if (e != null)
@@ -540,7 +531,6 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         if (moveQueue.Count > 0)
         {
-            // Debug.Log("Checking next queued move! Currently queue has " + moveQueue.Count + " moves...");
 
             if (MoveOverlapsWithActiveMove(moveQueue.Peek()))
             {
@@ -569,12 +559,6 @@ public class UIArtifact : Singleton<UIArtifact>
             }
             ProcessQueue();
         }
-        // This has been replaced with a timer
-        // else
-        // {
-        //     Debug.Log("Queue is empty.");
-        //     // moveCounter = 0;
-        // }
     }
 
     public static bool ActiveMovesExist()
@@ -668,7 +652,7 @@ public class UIArtifact : Singleton<UIArtifact>
         return options;
     }
 
-    protected void LogMoveFailure() //As Stephen He's Dad would say.
+    protected void LogMoveFailure() 
     {
         string debug;
         if (!playerCanQueue)
@@ -713,7 +697,6 @@ public class UIArtifact : Singleton<UIArtifact>
         {
             if (m.Overlaps(move))
             {
-                // Debug.Log("Move conflicts!");
                 return true;
             }
         }
@@ -788,9 +771,8 @@ public class UIArtifact : Singleton<UIArtifact>
         {
             if (b.gameObject.activeSelf)
             {
-                if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
+                if (IsStileInActiveMoves(b.islandId))
                 {
-                    //Debug.Log(b.islandId);
                     b.SetIsInMove(true);
                 }
                 else if (b.MyStile.hasAnchor || (b.LinkButton != null && b.LinkButton.MyStile.hasAnchor))
@@ -808,11 +790,14 @@ public class UIArtifact : Singleton<UIArtifact>
     #region Lightning Crap
     public static void SetLightningPos(ArtifactTileButton b)
     {
-        //Debug.Log("Set Lightning Pos!");
-        if (_instance.lightning == null) Debug.LogError("Lightning was not found! Set in inspector?");
+        if (_instance.lightning == null || _instance.lightningImage == null) 
+        {
+            Debug.LogError("Lightning and/or Lightning Image was not found! Set in inspector.");
+            return;
+        }
         _instance.lightning.transform.SetParent(b.transform);
         _instance.lightning.transform.position = b.transform.position;
-        _instance.lightning.gameObject.SetActive(true);
+        _instance.lightningImage.gameObject.SetActive(true);
         b.SetLightning(true);
     }
 
@@ -830,11 +815,11 @@ public class UIArtifact : Singleton<UIArtifact>
 
     public static void DisableLightning(bool disableHighlight)
     {
-        if (!_instance.lightning.gameObject.activeInHierarchy)
+        if (!_instance.lightningImage.gameObject.activeInHierarchy)
         {
             return;
         }
-        _instance.lightning.gameObject.SetActive(false);
+        _instance.lightningImage.gameObject.SetActive(false);
         if (disableHighlight) _instance.lightning.transform.GetComponentInParent<ArtifactTileButton>().SetLightning(false);
     }
     #endregion
@@ -855,7 +840,8 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         foreach (ArtifactTileButton b in buttons)
         {
-            b.Flicker(1);
+            if(b.gameObject.activeSelf)
+                b.Flicker(1);
         }
     }
 

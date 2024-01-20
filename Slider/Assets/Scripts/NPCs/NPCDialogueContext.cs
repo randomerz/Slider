@@ -110,10 +110,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
             HandleDialogueFinished();
         }
 
-        if (DialogueShouldDeactivate())
-        {
-            DeactivateDialogueBox();
-        }
+        TryDeactivateDialogueBox(false);
     }
 
     public void SetDialogueEnabled(bool value)
@@ -142,10 +139,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     {
         playerInDialogueTrigger = false;
 
-        if (DialogueShouldDeactivate())
-        {
-            DeactivateDialogueBox();
-        }
+        TryDeactivateDialogueBox(true);
         Player.GetPlayerAction().RemoveInteractable(this);
     }
 
@@ -176,11 +170,6 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     {
         if (DialogueEnabled && !CurrDchainIsEmpty())
         {
-            if (isTypingDialogue)
-            {
-                display.StopVocalizer();
-            }
-
             display.DisplaySentence(context.CurrCond.GetDialogueString(CurrDchainIndex), CurrDchain[CurrDchainIndex].emoteOnStart);
 
             isTypingDialogue = true;
@@ -274,6 +263,19 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
         if (CurrDchainIndex == CurrDchain.Count - 1)
         {
             Player.GetPlayerAction().RemoveInteractable(this);
+        }
+    }
+
+    private bool TryDeactivateDialogueBox(bool logReason)
+    {
+        if (DialogueShouldDeactivate(logReason))
+        {
+            DeactivateDialogueBox();
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -383,9 +385,20 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
         return cachedEventFlags.ContainsKey(context.CurrCondIndex) && cachedEventFlags[context.CurrCondIndex].ContainsKey(CurrDchainIndex);
     }
 
-    private bool DialogueShouldDeactivate()
+    private bool DialogueShouldDeactivate(bool logReason)
     {
-        return dialogueBoxIsActive && !playerInDialogueTrigger && !NPCGivingDontInterruptDialogue();
+        bool shouldDeactivate = dialogueBoxIsActive && !playerInDialogueTrigger && !NPCGivingDontInterruptDialogue();
+        
+        if (!shouldDeactivate && logReason)
+        {
+            string activeMsg = dialogueBoxIsActive ? "" : "\n\t- inactive";
+            string triggerMsg = playerInDialogueTrigger ? "\n\t- player still in trigger" : "";
+            string dontInterruptMsg = NPCGivingDontInterruptDialogue() ? "\n\t- don't interrupt signal" : "";
+
+            // Debug.LogError($"Do not interrupt!{activeMsg}{triggerMsg}{dontInterruptMsg}");
+        }
+
+        return shouldDeactivate;
     }
 
     private DialogueData CurrentDialogue()

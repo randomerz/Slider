@@ -21,6 +21,12 @@ public class MagiTechGrid : SGrid
     //C: likewise this is the ID of the *opposite* Stile
     public int desyncIslandId = -1;
 
+    //Location of the anchored tile
+    public Vector2Int desyncAnchoredTileLocation = new Vector2Int(-1, -1);
+
+    //ID of anchored tile
+    public int desyncAnchoredIslandId = -1;
+
     //True when the opposite tile is at a different location
     public bool DesyncActive = false;
 
@@ -28,11 +34,15 @@ public class MagiTechGrid : SGrid
     {
         public int desyncIslandId;
         public Vector2Int desyncLocation;
+        public int anchoredTileIslandId;
+        public Vector2Int anchoredTileLocation;
 
-        public OnDesyncArgs(int desyncIslandId, Vector2Int desyncLocation)
+        public OnDesyncArgs(int desyncIslandId, Vector2Int desyncLocation, int anchoredTileIslandId, Vector2Int anchoredTileLocation)
         {
             this.desyncIslandId = desyncIslandId;
             this.desyncLocation = desyncLocation;
+            this.anchoredTileIslandId = anchoredTileIslandId;
+            this.anchoredTileLocation = anchoredTileLocation;
         }
     }
 
@@ -41,7 +51,8 @@ public class MagiTechGrid : SGrid
 
     [SerializeField] private Collider2D fireStoolZoneCollider;
     [SerializeField] private Collider2D lightningStoolZoneCollider;
-    private int numOres = 0;
+
+    private int numOil = 0;
 
     [SerializeField] private MagiTechTabManager tabManager;
     [SerializeField] private PlayerActionHints hints;
@@ -146,6 +157,7 @@ public class MagiTechGrid : SGrid
         {
             EndDesync();
         }
+        SaveSystem.Current.SetInt("MagitechOilCollected", numOil);
         base.Save();
     }
 
@@ -156,6 +168,8 @@ public class MagiTechGrid : SGrid
             tabManager.EnableTab();
         if(profile.GetBool("magitechBridgeFixed"))
             LowerDrawbridge(true);
+        numOil = profile.GetInt("MagitechOilCollected");
+
     }
 
     public static bool IsInPast(Transform transform)
@@ -178,6 +192,8 @@ public class MagiTechGrid : SGrid
             {
                 desyncLocation = FindAltCoords(dropTile.x, dropTile.y);
                 desyncIslandId = FindAltId(dropTile.islandId);
+                desyncAnchoredTileLocation = new(dropTile.x, dropTile.y);
+                desyncAnchoredIslandId = dropTile.islandId;
             }
             else if (desyncIslandId != -1)
             {
@@ -190,9 +206,11 @@ public class MagiTechGrid : SGrid
     {
         RestoreGridFromDesync();
         DesyncActive = false;
-        OnDesyncEndWorld?.Invoke(this, new(desyncIslandId, desyncLocation));
+        OnDesyncEndWorld?.Invoke(this, new(desyncIslandId, desyncLocation, desyncAnchoredIslandId, desyncAnchoredTileLocation));
         desyncLocation = new Vector2Int(-1, -1);
         desyncIslandId = -1;
+        desyncAnchoredTileLocation = new Vector2Int(-1, -1);
+        desyncAnchoredIslandId = -1;
     }
 
     private void RestoreGridFromDesync()
@@ -237,7 +255,7 @@ public class MagiTechGrid : SGrid
             if(e.prevPos == desyncLocation) //moving away from "correct" location
             {
                 DesyncActive = true;
-                OnDesyncStartWorld?.Invoke(this, new(desyncIslandId, desyncLocation));
+                OnDesyncStartWorld?.Invoke(this, new(desyncIslandId, desyncLocation, desyncAnchoredIslandId, desyncAnchoredTileLocation));
             }
         }
     }
@@ -249,7 +267,7 @@ public class MagiTechGrid : SGrid
             if(e.stile.x == desyncLocation.x && e.stile.y == desyncLocation.y) //back to "correct" location
             {
                 DesyncActive = false;
-                OnDesyncEndWorld?.Invoke(this, new(desyncIslandId, desyncLocation));
+                OnDesyncEndWorld?.Invoke(this, new(desyncIslandId, desyncLocation, desyncAnchoredIslandId, desyncAnchoredTileLocation));
             }
         }
     }
@@ -258,7 +276,7 @@ public class MagiTechGrid : SGrid
     {
         if(tile == null) return false;
         var m = Current as MagiTechGrid;
-        return m.DesyncActive && m.desyncIslandId == tile.islandId;
+        return m.DesyncActive && (m.desyncIslandId == tile.islandId || m.desyncAnchoredIslandId == tile.islandId);
     }
 
 
@@ -342,23 +360,23 @@ public class MagiTechGrid : SGrid
         return list;
     }
 
-    public void HasOneOre(Condition c)
+    public void HasOneOil(Condition c)
     {
-        c.SetSpec(numOres == 1);
+        c.SetSpec(numOil == 1);
     }
 
-    public void HasTwoOres(Condition c)
+    public void HasTwoOil(Condition c)
     {
-        c.SetSpec(numOres == 2);
+        c.SetSpec(numOil == 2);
     }
-    public void HasThreeOres(Condition c)
+    public void HasThreeOil(Condition c)
     {
-        c.SetSpec(numOres == 3);
+        c.SetSpec(numOil == 3);
     }
 
-    public void IncrementOres()
+    public void IncrementOil()
     {
-        numOres++;
+        numOil++;
     }
 
     public void IsDesyncActive(Condition c)
@@ -370,7 +388,8 @@ public class MagiTechGrid : SGrid
     {
         c.SetSpec(DesyncActive && 
         Player.GetInstance().GetSTileUnderneath() != null &&
-        Player.GetInstance().GetSTileUnderneath().islandId == desyncIslandId);
+        (Player.GetInstance().GetSTileUnderneath().islandId == desyncIslandId ||
+        Player.GetInstance().GetSTileUnderneath().islandId == desyncAnchoredIslandId));
     }
     #endregion
 }

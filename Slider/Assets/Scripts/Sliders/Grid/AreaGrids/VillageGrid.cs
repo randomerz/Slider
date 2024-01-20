@@ -350,6 +350,15 @@ public class VillageGrid : SGrid
         SaveSystem.Current.SetBool("caveDoorExploded", true);
         CameraShake.Shake(1f, 3.5f);
         AudioManager.Play("Slide Explosion");
+
+        for (int i = 0; i < 5; i++)
+        {
+            ParticleManager.SpawnParticle(
+                ParticleType.SmokePoof, 
+                caveDoorEntrance.transform.position + 2 * Random.insideUnitSphere,
+                caveDoorEntrance.transform
+            );
+        }
     }
 
     public void ForceEnableCompletionsForTrailer()

@@ -5,13 +5,15 @@ using UnityEngine;
 //L: A representation of a move made on the artifact, as well as the borders around the move that prevent the player from clipping.
 public class SMove
 {
-    public float duration = 1.0f;   //Normalized to movement duration in SGridAnimator
+    public float duration = 1.0f;   // Normalized to movement duration in SGridAnimator
     public bool forceFullDuration = false; // must be manually set
-    public List<Movement> moves = new List<Movement>();
-    public HashSet<Vector2Int> positions = new HashSet<Vector2Int>(); // i think this is a set of the positions?
-    public Dictionary<Vector2Int, List<int>> borders = new Dictionary<Vector2Int, List<int>>(); //(pos of tile, borders {0, 1, 2, 3})
+    public List<Movement> moves = new(); // Should be set when SMove is created
+    public HashSet<Vector2Int> positions = new(); // A set of positions that the SMove covers (usually the endpoints of various Movements)
+    public Dictionary<Vector2Int, List<int>> borders = new(); // (pos of tile, borders {0, 1, 2, 3})
 
-    public int moveCounter; // for internal use
+    public int moveCounter; // for internal use by SGridAnimator usually
+
+    protected static Vector2Int NONE_VECTOR = new Vector2Int(-999999, -999999);
 
     public virtual Dictionary<Vector2Int, List<int>> GenerateBorders()
     {
@@ -30,34 +32,20 @@ public class SMove
             }
         }
 
+        AddBordersByPositions(positions);
+
+        return borders;
+    }
+
+    protected virtual void AddBordersByPositions(HashSet<Vector2Int> positions)
+    {
         foreach (Vector2Int p in positions)
         {
-            // In MagiTech, moves in the right side of present (x=2) shouldn't trigger borders on left side of past (x=3) and vice versa
-            if(SGrid.Current.MyArea == Area.MagiTech)
-            {
-                if(p.x == 2)
-                    AddBorder(p, 0, -1 * Vector2Int.one);
-                else
-                    AddBorder(p, 0, p + Vector2Int.right);
-
-                AddBorder(p, 1, p + Vector2Int.up);
-
-                if(p.x == 3)
-                    AddBorder(p, 2, -1 * Vector2Int.one);
-                else
-                    AddBorder(p, 2, p + Vector2Int.left);
-                
-                AddBorder(p, 3, p + Vector2Int.down);  
-            }
-            else
-            {
-                AddBorder(p, 0, p + Vector2Int.right);
-                AddBorder(p, 1, p + Vector2Int.up);
-                AddBorder(p, 2, p + Vector2Int.left);
-                AddBorder(p, 3, p + Vector2Int.down);
-            }
+            AddBorder(p, 0, p + Vector2Int.right);
+            AddBorder(p, 1, p + Vector2Int.up);
+            AddBorder(p, 2, p + Vector2Int.left);
+            AddBorder(p, 3, p + Vector2Int.down);
         }
-        return borders;
     }
 
     //L: side - 0, 1, 2, 3 corresponding to right, up, left, and down sides of a tile
@@ -175,60 +163,74 @@ public class SMoveSwap : SMove
     }
 }
 
-public class SMoveLayerSwap: SMove
+public class SMoveMountainSwap: SMove
 {
-    public SMoveLayerSwap(int x1, int y1, int x2, int y2, int islandId1, int islandId2)
+    public bool isLayerSwap = false;
+
+    public SMoveMountainSwap(int x1, int y1, int x2, int y2, int islandId1, int islandId2, bool isLayerSwap=false)
     {
         moves.Add(new Movement(x1, y1, x2, y2, islandId1));
         moves.Add(new Movement(x2, y2, x1, y1, islandId2));
+        this.isLayerSwap = isLayerSwap;
     }
 
-    public override Dictionary<Vector2Int, List<int>> GenerateBorders()
+    // In Mountain, the world is a 2x4 grid but the world is two separate 2x2 grids.
+    // Moves on the top of mountain (y=1) shouldn't trigger borders on bottom of mountain (y=2)
+    protected override void AddBordersByPositions(HashSet<Vector2Int> positions)
     {
-        positions.Clear();
-        borders.Clear();
-
-        foreach (Movement m in moves)
-        {
-            positions.Add(new Vector2Int(m.startLoc.x, m.startLoc.y));
-            positions.Add(new Vector2Int(m.endLoc.x, m.endLoc.y));
-        }
-
         foreach (Vector2Int p in positions)
         {
-            AddBorder(p, 0, p + Vector2Int.right);
-            AddBorder(p, 1, p + Vector2Int.up);
-            AddBorder(p, 2, p + Vector2Int.left);
-            AddBorder(p, 3, p + Vector2Int.down);
-        }
+            if (p.y == 1) // Bottom of mountain
+                AddBorder(p, 1, NONE_VECTOR);
+            else
+                AddBorder(p, 1, p + Vector2Int.up);
 
-        /*
-         * C:
-         * if we are starting from y=0 or y=2, then the sum of start and end y is 2. We should not have a top
-         * border on y=1. If we are starting from y=1 or y-3, then the sum of the start and end y is 4.
-         * We should not have a bottom border on y=2
-         *
-         */
-        if(moves[0].startLoc.y + moves[0].endLoc.y == 2)
-            borders[new Vector2Int(moves[0].startLoc.x, 1)].Remove(1);
-        else
-            borders[new Vector2Int(moves[0].startLoc.x, 2)].Remove(3);        
-        return borders;
+            if (p.y == 2) // Top of mountain
+                AddBorder(p, 3, NONE_VECTOR);
+            else
+                AddBorder(p, 3, p + Vector2Int.down);
+
+            AddBorder(p, 0, p + Vector2Int.right);
+            AddBorder(p, 2, p + Vector2Int.left);
+        }
     }
 }
 
 //C: used in magitech to move a tile in the past/present at the same time
-public class SMoveSyncedMove : SMove
+public class SMoveMagiTechMove : SMove
 {
-    public SMoveSyncedMove(int x1, int y1, int x2, int y2, int islandId1, int islandId2)
+    public bool shouldSync;
+
+    public SMoveMagiTechMove(int x1, int y1, int x2, int y2, int islandId1, int islandId2, bool shouldSync=true)
     {
-        foreach (Movement m in (new SMoveSwap(x1, y1, x2, y2, islandId1, islandId2)).moves)
+        this.shouldSync = shouldSync;
+
+        moves.AddRange(new SMoveSwap(x1, y1, x2, y2, islandId1, islandId2).moves);
+
+        if (shouldSync)
         {
-            moves.Add(m);
+            moves.AddRange(new SMoveSwap(FindAlt(x1, 3), y1, FindAlt(x2, 3), y2, FindAlt(islandId1, 9), FindAlt(islandId2, 9)).moves);
         }
-        foreach (Movement m in (new SMoveSwap(FindAlt(x1, 3), y1, FindAlt(x2, 3), y2, FindAlt(islandId1, 9), FindAlt(islandId2, 9))).moves)
+    }
+
+    // In MagiTech, the world is a 6x3 grid but the world is two separate 3x3 grids.
+    // Moves in the right side of present (x=2) shouldn't trigger borders on left side of past (x=3) and vice versa
+    protected override void AddBordersByPositions(HashSet<Vector2Int> positions)
+    {
+        foreach (Vector2Int p in positions)
         {
-            moves.Add(m);
+            if (p.x == 2) // Right side of present
+                AddBorder(p, 0, NONE_VECTOR);
+            else
+                AddBorder(p, 0, p + Vector2Int.right);
+
+            if (p.x == 3) // Left side of past
+                AddBorder(p, 2, NONE_VECTOR);
+            else
+                AddBorder(p, 2, p + Vector2Int.left);
+
+            AddBorder(p, 1, p + Vector2Int.up);
+            AddBorder(p, 3, p + Vector2Int.down);
         }
     }
 

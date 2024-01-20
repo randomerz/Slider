@@ -105,8 +105,18 @@ public class SettingsManager : Singleton<SettingsManager>
         get => _instance.currentSettings.colorblindMode;
         set
         {
-            // Big text doesn't actually exist, but when it does... we'll be ready.
             _instance.currentSettings.colorblindMode = value;
+            WriteCurrentSettingsToPlayerPrefs();
+        }
+    }
+
+    // Synonymous with Debug Mode
+    public static bool DevConsole
+    {
+        get => _instance.currentSettings.devConsoleEnabled;
+        set
+        {
+            _instance.currentSettings.devConsoleEnabled = value;
             WriteCurrentSettingsToPlayerPrefs();
         }
     }
@@ -162,6 +172,7 @@ struct Settings
     public bool autoMove;
     public bool forceAutoMove;
     public bool colorblindMode;
+    public bool devConsoleEnabled;
 
     /// <summary>
     /// Returns an instance of Settings with volumes set to 50% and big text disabled.
@@ -177,12 +188,22 @@ struct Settings
             highContrastTextEnabled: false, 
             hideCursor: true, 
             miniPlayerIcon: false,
-            autoMove: false
+            autoMove: false,
+            devConsoleEnabled: false
         );
     }
 
-    public Settings(float sfxVolume, float musicVolume, float screenShake, bool bigTextEnabled, bool highContrastTextEnabled, bool hideCursor, bool miniPlayerIcon, bool autoMove)
-    {
+    public Settings(
+        float sfxVolume, 
+        float musicVolume, 
+        float screenShake, 
+        bool bigTextEnabled, 
+        bool highContrastTextEnabled, 
+        bool hideCursor, 
+        bool miniPlayerIcon, 
+        bool autoMove,
+        bool devConsoleEnabled
+    ) {
         this.sfxVolume = sfxVolume;
         this.musicVolume = musicVolume;
         this.screenShake = screenShake;
@@ -191,6 +212,7 @@ struct Settings
         this.hideCursor = hideCursor;
         this.miniPlayerIcon = miniPlayerIcon;
         this.autoMove = autoMove;
+        this.devConsoleEnabled = devConsoleEnabled;
         this.forceAutoMove = autoMove;
         this.colorblindMode = true;
     }

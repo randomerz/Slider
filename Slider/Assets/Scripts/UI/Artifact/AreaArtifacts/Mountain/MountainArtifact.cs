@@ -43,10 +43,10 @@ public class MountainArtifact : UIArtifact
         SMove move;
         //If swapping layers, the difference in y values will be 2
         if(Mathf.Abs(buttonCurrent.y - buttonEmpty.y) < 2) {
-            move = new SMoveSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+            move = new SMoveMountainSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, isLayerSwap: false);
         }
         else {
-            move = new SMoveLayerSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+            move = new SMoveMountainSwap(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, isLayerSwap: true);
         }
         return move;
     }
@@ -54,7 +54,7 @@ public class MountainArtifact : UIArtifact
     public void AnchorSwap(STile s1, STile s2)
     {
         //We can't just call CheckandSwap because CanMove will return false due to the anchor
-        SMove move = new SMoveLayerSwap(s1.x, s1.y, s2.x, s2.y, s1.islandId, s2.islandId);
+        SMove move = new SMoveMountainSwap(s1.x, s1.y, s2.x, s2.y, s1.islandId, s2.islandId, isLayerSwap: true);
         QueueMoveFromButtonPair(move, GetButton(s1.islandId), GetButton(s2.islandId));
     }
 }

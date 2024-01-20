@@ -57,7 +57,7 @@ public class RainDrop : MonoBehaviour
     {
         if (stile == null)
         {
-            STileTilemap fallback = SGrid.GetWorldGridTilemaps();
+            STileTilemap fallback = SGrid.Current.GetWorldGridTilemaps();
             if (fallback == null) 
                 return null;
             else 

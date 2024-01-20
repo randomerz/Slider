@@ -8,6 +8,7 @@ public class DesertSafe : MonoBehaviour
     [SerializeField] private Sprite meltedMirageSprite;
 
     [SerializeField] private float timeToBeLaseredForMelt;
+    [SerializeField] private DinoLasersManager dinoLasersManager;
 
     private bool currentlyLasered = false;
     private bool melted = false;
@@ -57,5 +58,10 @@ public class DesertSafe : MonoBehaviour
         melted = true;
 
         mirageSpriteRenderer.sprite = meltedMirageSprite;
+
+        VarManager.instance.SetBoolOn("desertSafeMelted");
+
+        dinoLasersManager.RemoveAllLasersPermanently();
+        MirageSTileManager.GetInstance().DisableMirage();
     }
 }

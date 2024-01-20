@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class MagiGem : MonoBehaviour, ISavable
 {
@@ -11,7 +10,17 @@ public class MagiGem : MonoBehaviour, ISavable
     private bool isTransporting;
     public GameObject particles;
 
-    public void Load(SaveProfile profile) {}
+    public void Load(SaveProfile profile) {
+        if(gemItem == null)
+        {
+            Debug.LogError("gem null on " + gameObject.name);
+            return;
+        }
+        if(!gemItem.shouldDisableAtStart)
+        {
+            EnableGem(); //if gem active by default, disable if already collected
+        }
+    }
 
     //fix edge cases for leaving scene
     public void Save()
@@ -21,11 +30,6 @@ public class MagiGem : MonoBehaviour, ISavable
             gemMachine.TransportGem(gemItem);
             gemMachine.Save();
         }
-    }
-
-    private void Start()
-    {
-        gemItem = GetComponent<Item>();
     }
 
     public void EnableGem()

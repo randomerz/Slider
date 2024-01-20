@@ -52,6 +52,15 @@ public class MagiTechArtifact : UIArtifact
         Anchor.OnAnchorInteract -= OnAnchorInteract;
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        foreach(ArtifactTileButton b in buttons)
+        {
+            b.UpdateTileActive();
+        }
+    }
+
     protected override void Update()
     {
         base.Update();
@@ -103,6 +112,8 @@ public class MagiTechArtifact : UIArtifact
         {
             b.RestoreDefaultEmptySpriteIfNotDefault();
         }
+
+        if(desyncIslandId == -1) return;
 
         ArtifactTileButton desyncedButton = GetButton(desyncIslandId);
         Vector2Int bg1Coords = FindAltCoords(desyncedButton.x, desyncedButton.y);
@@ -213,11 +224,11 @@ public class MagiTechArtifact : UIArtifact
         SMove move;
         if (buttonCurrent.islandId == desyncIslandId)
         {
-            move = base.ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
+            move = new SMoveMagiTechMove(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, shouldSync: false);
         }
         else
         {
-            move = new SMoveSyncedMove(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId);
+            move = new SMoveMagiTechMove(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, shouldSync: true);
         }
         return move;
     }
@@ -227,17 +238,17 @@ public class MagiTechArtifact : UIArtifact
         ArtifactTileButton currAlt = GetButton(FindAltId(buttonCurrent.islandId));
         ArtifactTileButton emptyAlt = GetButton(FindAltId(buttonEmpty.islandId));
 
-        //If Not a desync, swap both pairs of buttons
-        if(move is SMoveSyncedMove)
+        // If Not a desync, swap both pairs of buttons
+        if ((move as SMoveMagiTechMove).shouldSync)
         {
             SwapButtons(currAlt, emptyAlt, false);
             base.QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
         }
-        //Else, find the correct button pair and swap them
+        // Else, find the correct button pair and swap them
         else
         {
             int idInMove = move.moves[0].islandId;
-            if(currAlt.islandId == idInMove || emptyAlt.islandId == idInMove)
+            if (currAlt.islandId == idInMove || emptyAlt.islandId == idInMove)
             {
                 base.QueueMoveFromButtonPair(move, currAlt, emptyAlt);
             }

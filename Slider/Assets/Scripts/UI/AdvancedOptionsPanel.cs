@@ -13,6 +13,7 @@ public class AdvancedOptionsPanel : MonoBehaviour
     [SerializeField] private Toggle miniPlayerIconToggle;
     [SerializeField] private Toggle autoMoveToggle;
     [SerializeField] private Toggle colorblindToggle;
+    [SerializeField] private Toggle devConsoleToggle;
 
     private void Awake()
     {
@@ -23,6 +24,7 @@ public class AdvancedOptionsPanel : MonoBehaviour
         miniPlayerIconToggle.onValueChanged.AddListener((bool value) => { UpdateMiniPlayerIcon(); });
         autoMoveToggle.onValueChanged.AddListener((bool value) => { UpdateAutoMove(); });
         colorblindToggle.onValueChanged.AddListener((bool value) => { UpdateColorblind(); });
+        devConsoleToggle.onValueChanged.AddListener((bool value) => { UpdateDevConsole(); });
     }
 
     private void OnEnable()
@@ -34,6 +36,7 @@ public class AdvancedOptionsPanel : MonoBehaviour
         miniPlayerIconToggle.isOn = SettingsManager.MiniPlayerIcon;
         autoMoveToggle.isOn = SettingsManager.AutoMove;
         colorblindToggle.isOn = SettingsManager.Colorblind;
+        devConsoleToggle.isOn = SettingsManager.DevConsole;
     }
 
     public void UpdateScreenShake()
@@ -73,5 +76,10 @@ public class AdvancedOptionsPanel : MonoBehaviour
     public void UpdateColorblind()
     {
         SettingsManager.Colorblind = colorblindToggle.isOn;
+    }
+
+    public void UpdateDevConsole()
+    {
+        SettingsManager.DevConsole = devConsoleToggle.isOn;
     }
 }

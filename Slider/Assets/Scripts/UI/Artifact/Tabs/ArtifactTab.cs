@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class ArtifactTab : MonoBehaviour
 {
@@ -14,11 +16,32 @@ public class ArtifactTab : MonoBehaviour
     public int homeScreen = 0; // default screen = artifact screen
 
     public Animator tabAnimator;
+    public Image controllerSelectedImage;
+
+    private bool selected;
     
     void Start()
     {
         gameObject.SetActive(isActive); // this is bad but should work for now? no it's bad >:(
         UpdateVisibility();
+    }
+
+    private void OnEnable()
+    {
+        Controls.OnControlSchemeChanged += OnControlSchemeChanged;
+    }
+
+    private void OnDisable()
+    {
+        Controls.OnControlSchemeChanged -= OnControlSchemeChanged;
+    }
+
+    private void OnControlSchemeChanged()
+    {
+        if(Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_KEYBOARD_MOUSE)
+        {
+            Deselect();
+        }
     }
 
     public bool GetIsVisible()
@@ -71,5 +94,23 @@ public class ArtifactTab : MonoBehaviour
     public void HoverExit()
     {
         OnHoverExit?.Invoke();
+    }
+
+    public void Select()
+    {
+        if(Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_CONTROLLER)
+        {
+            print("selected");
+            controllerSelectedImage.enabled = true;
+            selected = true;
+            OnHoverEnter?.Invoke();
+        }
+    }
+
+    public void Deselect()
+    {
+        controllerSelectedImage.enabled = false;
+        if(selected)
+            OnHoverExit?.Invoke();
     }
 }

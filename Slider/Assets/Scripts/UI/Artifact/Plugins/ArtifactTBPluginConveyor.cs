@@ -84,7 +84,20 @@ public class ArtifactTBPluginConveyor : ArtifactTBPlugin
         {
             if (conveyorData.pos.Equals(conveyor.StartPos))
             {
-                return conveyor.Powered ? conveyorData.emptyPowered : conveyorData.emptyUnpowered;
+                Sprite sprite = null;
+                if (conveyor.OverrideActive())
+                {
+                    sprite = conveyorData.emptyOverride;
+                } else if (conveyor.ConveyorIsPoweredAndActive())
+                {
+                    sprite = conveyorData.emptyPowered;
+                }
+                else
+                {
+                    sprite = conveyorData.emptyUnpowered;
+                }
+
+                return sprite;
             }
         }
 

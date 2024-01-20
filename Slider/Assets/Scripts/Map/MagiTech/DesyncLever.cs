@@ -36,17 +36,15 @@ public class DesyncLever : Lever
     public override void Switch()
     {
         base.Switch();
-        if(isPastLever && !isDesynced)
+        if(isPastLever && !isDesynced && !leverPair.isDesynced)
         {
             leverPair.Switch();
         }
     }
-
-
     
     private void OnDesyncStartWorld(object sender, MagiTechGrid.OnDesyncArgs e)
     {
-        isDesynced = currentTile.islandId == e.desyncIslandId;
+        isDesynced = currentTile.islandId == e.desyncIslandId || currentTile.islandId == e.anchoredTileIslandId;
         lightning.SetActive(isDesynced);
     }
 
