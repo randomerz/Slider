@@ -1,2 +1,0 @@
-This UnityPackage contains Nice Vibrations v2.0.1, the last version before Unity 2019.3.x.
-If for some reason you'd prefer running this old version, just remove entirely the current version from your project, and import this UnityPackage instead.
