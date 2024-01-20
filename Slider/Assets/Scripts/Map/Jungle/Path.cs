@@ -217,30 +217,52 @@ public class Path : MonoBehaviour
         //pair = null;
         Vector2 one = new Vector2(1, 0);
         Vector2 two = new Vector2(-1, 0);
+        float length = this.transform.localScale.x;
+
+        if (!horizontal)
+        {
+            one = new Vector2(0, 1);
+            two = new Vector2(0, -1);
+           // length = this.transform.localScale.y;
+        }
 
         Physics2D.queriesStartInColliders = false;
 
-        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, (1 + this.transform.localScale.x / 2), LayerMask.GetMask("JunglePaths"));
-        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, (1 + this.transform.localScale.x / 2), LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D[] checkOne = Physics2D.RaycastAll(transform.position, one.normalized, (1 + length / 2), LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D[] checkTwo = Physics2D.RaycastAll(transform.position, two.normalized, (1 + length / 2), LayerMask.GetMask("JunglePaths"));
 
-        //want to find the closest bin or box and stile
-        if (checkOne.collider != null)
+        foreach (RaycastHit2D hit in checkOne)
         {
-            Path other = checkOne.collider.gameObject.GetComponent<Path>();
-            if (!other.transform.parent.Equals(this.transform.parent))
+            if (hit.collider != null)
             {
-                other.pair = this;
-                pair = other;
+                Path other = hit.collider.gameObject.GetComponent<Path>();
+                if (!other.transform.parent.Equals(this.transform.parent) && this.horizontal == other.horizontal)
+                {
+                    other.pair = this;
+                    pair = other;
+                    break;
+                }
             }
         }
-        if (checkTwo.collider != null && pair == null)
+        if (pair == null)
         {
-            Path other = checkTwo.collider.gameObject.GetComponent<Path>();
-            if (!other.transform.parent.Equals(this.transform.parent))
+            foreach (RaycastHit2D hit in checkTwo)
             {
-                other.pair = this;
-                pair = other;
+                if (hit.collider != null)
+                {
+                    Path other = hit.collider.gameObject.GetComponent<Path>();
+                    if (!other.transform.parent.Equals(this.transform.parent))
+                    {
+                        other.pair = this;
+                        pair = other;
+                    }
+                }
             }
+        }
+
+        if (this.gameObject.name == "house down test" && checkOne.Length == 0 && checkTwo.Length == 0)
+        {
+            print("no hits");
         }
 
         Physics2D.queriesStartInColliders = true;
@@ -248,7 +270,6 @@ public class Path : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        // Draws a 5 unit long red line in front of the object
         if (horizontal)
         {
             Gizmos.color = Color.red;
@@ -260,13 +281,6 @@ public class Path : MonoBehaviour
 
         Vector2 one = new Vector2(1, 0);
         Vector2 two = new Vector2(-1, 0);
-
-        Vector3 offset = new Vector3(0, 0.5f, 0);
-
-        if (!horizontal)
-        {
-            offset = new Vector3(-0.5f, 0, 0);
-        }
 
         Vector3 directionone = transform.TransformDirection(one * (1 + this.transform.localScale.x / 2));
         Gizmos.DrawRay(transform.position, directionone);
