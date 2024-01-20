@@ -18,8 +18,15 @@ MonoBehaviour:
     - {fileID: 11400000, guid: b2bd5d14c82b5e84a88a8d9ef917d170, type: 2}
     - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
     isSecondaryRecipe: 0
+    numberOfTimesCreated: 0
   - ingredients:
     - {fileID: 11400000, guid: c69c312efe4e4034fa00f822ec758ee2, type: 2}
     - {fileID: 11400000, guid: c69c312efe4e4034fa00f822ec758ee2, type: 2}
     - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
     isSecondaryRecipe: 1
+    numberOfTimesCreated: 0
+  - ingredients:
+    - {fileID: 11400000, guid: 15fb403af3c3bea4b8e8429f9fb96a29, type: 2}
+    - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
+    isSecondaryRecipe: 1
+    numberOfTimesCreated: 0
