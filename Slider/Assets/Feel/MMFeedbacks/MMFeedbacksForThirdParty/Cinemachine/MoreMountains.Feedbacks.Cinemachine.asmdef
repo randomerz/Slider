@@ -1,0 +1,24 @@
+{
+    "name": "MoreMountains.Feedbacks.Cinemachine",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:8087d854c1f812e4b9a74437dfc524e0",
+        "GUID:4a1cb1490dc4df8409b2580d6b44e75e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.cinemachine",
+            "expression": "[1.0.0,3.0.0-pre]",
+            "define": "MM_CINEMACHINE"
+        }
+    ],
+    "noEngineReferences": false
+}

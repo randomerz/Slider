@@ -1,0 +1,24 @@
+{
+    "name": "MoreMountains.Feedbacks.TextMeshPro",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:8087d854c1f812e4b9a74437dfc524e0",
+        "GUID:4a1cb1490dc4df8409b2580d6b44e75e",
+        "GUID:1dbcca72f42070548a895178556c5bc3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.textmeshpro",
+            "expression": "1.0.0",
+            "define": "MM_TEXTMESHPRO"
+        }
+    ],
+    "noEngineReferences": false
+}

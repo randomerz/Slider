@@ -1,0 +1,452 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6480c3a11ef13143b71f9c64c7da64c, type: 3}
+  m_Name: DrumSequence
+  m_EditorClassIdentifier: 
+  Length: 3.2
+  OriginalSequence:
+    Line: []
+  EndSilenceDuration: 0.3
+  SequenceTracks:
+  - ID: 0
+    TrackColor: {r: 1, g: 0, b: 0, a: 1}
+    Key: 32
+    Active: 1
+    State: 0
+    Initialized: 1
+  - ID: 1
+    TrackColor: {r: 1, g: 0.627451, b: 0.47843137, a: 1}
+    Key: 32
+    Active: 1
+    State: 0
+    Initialized: 1
+  - ID: 2
+    TrackColor: {r: 1, g: 0.7529412, b: 0.79607844, a: 1}
+    Key: 32
+    Active: 1
+    State: 0
+    Initialized: 1
+  - ID: 3
+    TrackColor: {r: 0.6784314, g: 1, b: 0.18431373, a: 1}
+    Key: 32
+    Active: 1
+    State: 0
+    Initialized: 1
+  - ID: 4
+    TrackColor: {r: 1, g: 0, b: 0, a: 1}
+    Key: 32
+    Active: 1
+    State: 0
+    Initialized: 1
+  - ID: 5
+    TrackColor: {r: 0, g: 1, b: 0.49803922, a: 1}
+    Key: 32
+    Active: 1
+    State: 0
+    Initialized: 1
+  - ID: 6
+    TrackColor: {r: 0.5294118, g: 0.80784315, b: 0.92156863, a: 1}
+    Key: 32
+    Active: 1
+    State: 0
+    Initialized: 1
+  - ID: 7
+    TrackColor: {r: 1, g: 0.89411765, b: 0.88235295, a: 1}
+    Key: 32
+    Active: 1
+    State: 0
+    Initialized: 1
+  - ID: 8
+    TrackColor: {r: 1, g: 0.49803922, b: 0.3137255, a: 1}
+    Key: 32
+    Active: 1
+    State: 0
+    Initialized: 1
+  - ID: 9
+    TrackColor: {r: 0.4862745, g: 0.9882353, b: 0, a: 1}
+    Key: 32
+    Active: 1
+    State: 0
+    Initialized: 1
+  - ID: 10
+    TrackColor: {r: 0.49803922, g: 1, b: 0.83137256, a: 1}
+    Key: 32
+    Active: 1
+    State: 0
+    Initialized: 1
+  Quantized: 1
+  TargetBPM: 300
+  QuantizedSequence:
+  - Line:
+    - Timestamp: 0
+      ID: 0
+    - Timestamp: 0.2
+      ID: 0
+    - Timestamp: 0.4
+      ID: 0
+    - Timestamp: 0.6
+      ID: -1
+    - Timestamp: 0.8
+      ID: 0
+    - Timestamp: 1
+      ID: -1
+    - Timestamp: 1.2
+      ID: 0
+    - Timestamp: 1.4
+      ID: -1
+    - Timestamp: 1.6
+      ID: 0
+    - Timestamp: 1.8000001
+      ID: 0
+    - Timestamp: 2
+      ID: 0
+    - Timestamp: 2.2
+      ID: -1
+    - Timestamp: 2.4
+      ID: 0
+    - Timestamp: 2.6000001
+      ID: -1
+    - Timestamp: 2.8
+      ID: 0
+    - Timestamp: 3
+      ID: -1
+  - Line:
+    - Timestamp: 0
+      ID: 1
+    - Timestamp: 0.2
+      ID: 1
+    - Timestamp: 0.4
+      ID: -1
+    - Timestamp: 0.6
+      ID: -1
+    - Timestamp: 0.8
+      ID: 1
+    - Timestamp: 1
+      ID: -1
+    - Timestamp: 1.2
+      ID: -1
+    - Timestamp: 1.4
+      ID: -1
+    - Timestamp: 1.6
+      ID: 1
+    - Timestamp: 1.8000001
+      ID: 1
+    - Timestamp: 2
+      ID: -1
+    - Timestamp: 2.2
+      ID: -1
+    - Timestamp: 2.4
+      ID: 1
+    - Timestamp: 2.6000001
+      ID: -1
+    - Timestamp: 2.8
+      ID: -1
+    - Timestamp: 3
+      ID: -1
+  - Line:
+    - Timestamp: 0
+      ID: 2
+    - Timestamp: 0.2
+      ID: -1
+    - Timestamp: 0.4
+      ID: 2
+    - Timestamp: 0.6
+      ID: -1
+    - Timestamp: 0.8
+      ID: -1
+    - Timestamp: 1
+      ID: -1
+    - Timestamp: 1.2
+      ID: -1
+    - Timestamp: 1.4
+      ID: -1
+    - Timestamp: 1.6
+      ID: 2
+    - Timestamp: 1.8000001
+      ID: -1
+    - Timestamp: 2
+      ID: 2
+    - Timestamp: 2.2
+      ID: -1
+    - Timestamp: 2.4
+      ID: -1
+    - Timestamp: 2.6000001
+      ID: -1
+    - Timestamp: 2.8
+      ID: -1
+    - Timestamp: 3
+      ID: -1
+  - Line:
+    - Timestamp: 0
+      ID: 3
+    - Timestamp: 0.2
+      ID: -1
+    - Timestamp: 0.4
+      ID: -1
+    - Timestamp: 0.6
+      ID: -1
+    - Timestamp: 0.8
+      ID: 3
+    - Timestamp: 1
+      ID: -1
+    - Timestamp: 1.2
+      ID: -1
+    - Timestamp: 1.4
+      ID: -1
+    - Timestamp: 1.6
+      ID: 3
+    - Timestamp: 1.8000001
+      ID: -1
+    - Timestamp: 2
+      ID: -1
+    - Timestamp: 2.2
+      ID: -1
+    - Timestamp: 2.4
+      ID: 3
+    - Timestamp: 2.6000001
+      ID: -1
+    - Timestamp: 2.8
+      ID: -1
+    - Timestamp: 3
+      ID: -1
+  - Line:
+    - Timestamp: 0
+      ID: -1
+    - Timestamp: 0.2
+      ID: -1
+    - Timestamp: 0.4
+      ID: -1
+    - Timestamp: 0.6
+      ID: -1
+    - Timestamp: 0.8
+      ID: -1
+    - Timestamp: 1
+      ID: -1
+    - Timestamp: 1.2
+      ID: 4
+    - Timestamp: 1.4
+      ID: -1
+    - Timestamp: 1.6
+      ID: -1
+    - Timestamp: 1.8000001
+      ID: -1
+    - Timestamp: 2
+      ID: -1
+    - Timestamp: 2.2
+      ID: -1
+    - Timestamp: 2.4
+      ID: -1
+    - Timestamp: 2.6000001
+      ID: -1
+    - Timestamp: 2.8
+      ID: 4
+    - Timestamp: 3
+      ID: -1
+  - Line:
+    - Timestamp: 0
+      ID: -1
+    - Timestamp: 0.2
+      ID: -1
+    - Timestamp: 0.4
+      ID: 5
+    - Timestamp: 0.6
+      ID: 5
+    - Timestamp: 0.8
+      ID: -1
+    - Timestamp: 1
+      ID: -1
+    - Timestamp: 1.2
+      ID: 5
+    - Timestamp: 1.4
+      ID: 5
+    - Timestamp: 1.6
+      ID: -1
+    - Timestamp: 1.8000001
+      ID: -1
+    - Timestamp: 2
+      ID: 5
+    - Timestamp: 2.2
+      ID: 5
+    - Timestamp: 2.4
+      ID: -1
+    - Timestamp: 2.6000001
+      ID: -1
+    - Timestamp: 2.8
+      ID: 5
+    - Timestamp: 3
+      ID: 5
+  - Line:
+    - Timestamp: 0
+      ID: -1
+    - Timestamp: 0.2
+      ID: -1
+    - Timestamp: 0.4
+      ID: 6
+    - Timestamp: 0.6
+      ID: -1
+    - Timestamp: 0.8
+      ID: -1
+    - Timestamp: 1
+      ID: -1
+    - Timestamp: 1.2
+      ID: 6
+    - Timestamp: 1.4
+      ID: -1
+    - Timestamp: 1.6
+      ID: -1
+    - Timestamp: 1.8000001
+      ID: -1
+    - Timestamp: 2
+      ID: 6
+    - Timestamp: 2.2
+      ID: -1
+    - Timestamp: 2.4
+      ID: -1
+    - Timestamp: 2.6000001
+      ID: -1
+    - Timestamp: 2.8
+      ID: 6
+    - Timestamp: 3
+      ID: -1
+  - Line:
+    - Timestamp: 0
+      ID: 7
+    - Timestamp: 0.2
+      ID: 7
+    - Timestamp: 0.4
+      ID: -1
+    - Timestamp: 0.6
+      ID: 7
+    - Timestamp: 0.8
+      ID: -1
+    - Timestamp: 1
+      ID: -1
+    - Timestamp: 1.2
+      ID: 7
+    - Timestamp: 1.4
+      ID: 7
+    - Timestamp: 1.6
+      ID: 7
+    - Timestamp: 1.8000001
+      ID: 7
+    - Timestamp: 2
+      ID: -1
+    - Timestamp: 2.2
+      ID: 7
+    - Timestamp: 2.4
+      ID: -1
+    - Timestamp: 2.6000001
+      ID: -1
+    - Timestamp: 2.8
+      ID: 7
+    - Timestamp: 3
+      ID: 7
+  - Line:
+    - Timestamp: 0
+      ID: 8
+    - Timestamp: 0.2
+      ID: 8
+    - Timestamp: 0.4
+      ID: -1
+    - Timestamp: 0.6
+      ID: -1
+    - Timestamp: 0.8
+      ID: -1
+    - Timestamp: 1
+      ID: -1
+    - Timestamp: 1.2
+      ID: -1
+    - Timestamp: 1.4
+      ID: -1
+    - Timestamp: 1.6
+      ID: 8
+    - Timestamp: 1.8000001
+      ID: 8
+    - Timestamp: 2
+      ID: -1
+    - Timestamp: 2.2
+      ID: -1
+    - Timestamp: 2.4
+      ID: 8
+    - Timestamp: 2.6000001
+      ID: -1
+    - Timestamp: 2.8
+      ID: -1
+    - Timestamp: 3
+      ID: -1
+  - Line:
+    - Timestamp: 0
+      ID: 9
+    - Timestamp: 0.2
+      ID: -1
+    - Timestamp: 0.4
+      ID: -1
+    - Timestamp: 0.6
+      ID: -1
+    - Timestamp: 0.8
+      ID: -1
+    - Timestamp: 1
+      ID: -1
+    - Timestamp: 1.2
+      ID: -1
+    - Timestamp: 1.4
+      ID: -1
+    - Timestamp: 1.6
+      ID: 9
+    - Timestamp: 1.8000001
+      ID: -1
+    - Timestamp: 2
+      ID: -1
+    - Timestamp: 2.2
+      ID: -1
+    - Timestamp: 2.4
+      ID: -1
+    - Timestamp: 2.6000001
+      ID: -1
+    - Timestamp: 2.8
+      ID: -1
+    - Timestamp: 3
+      ID: -1
+  - Line:
+    - Timestamp: 0
+      ID: -1
+    - Timestamp: 0.2
+      ID: 10
+    - Timestamp: 0.4
+      ID: 10
+    - Timestamp: 0.6
+      ID: -1
+    - Timestamp: 0.8
+      ID: -1
+    - Timestamp: 1
+      ID: -1
+    - Timestamp: 1.2
+      ID: -1
+    - Timestamp: 1.4
+      ID: -1
+    - Timestamp: 1.6
+      ID: -1
+    - Timestamp: 1.8000001
+      ID: 10
+    - Timestamp: 2
+      ID: 10
+    - Timestamp: 2.2
+      ID: -1
+    - Timestamp: 2.4
+      ID: -1
+    - Timestamp: 2.6000001
+      ID: -1
+    - Timestamp: 2.8
+      ID: -1
+    - Timestamp: 3
+      ID: -1
+  RandomizeTrackColorsButton: 0

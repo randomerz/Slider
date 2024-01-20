@@ -1,0 +1,6 @@
+framework module LofeltHaptics {
+  umbrella header "LofeltHaptics.h"
+
+  export *
+  module * { export * }
+}
