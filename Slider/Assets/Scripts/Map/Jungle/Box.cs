@@ -18,7 +18,7 @@ public class Box : MonoBehaviour
     public Path bottom;
 
     protected List<Vector2> directions = new List<Vector2>();
-    public Direction currentDirection = Direction.RIGHT; //you should set at the start 
+    public Direction currentDirection; //you should set at the start 
 
     void Awake()
     {
@@ -91,10 +91,15 @@ public class Box : MonoBehaviour
         // }
     }
 
-    public virtual void CreateShape(List<Box> parents)
+    public virtual void CreateShape(List<string> parents)
     {
-       // print(this.gameObject.name + " is sending shape " + currentShape);
-        //print(currentDirection);
+        if (this.gameObject.name == "Sign test" || this.gameObject.name == "Sign (1) test")
+        {
+            print(this.gameObject.name + " is sending shape " + currentShape);
+            print(currentDirection);
+        }
+
+        parents.Add(this.gameObject.name);
 
         Box next = GetBoxInDirection(currentDirection);
         if (next != null)
@@ -116,7 +121,7 @@ public class Box : MonoBehaviour
     }
 
 
-    public virtual void RecieveShape(Path path, Shape shape, List<Box> parents)
+    public virtual void RecieveShape(Path path, Shape shape, List<string> parents)
     {
         
     }
@@ -128,7 +133,7 @@ public class Box : MonoBehaviour
 
         if (box != null)
         {
-            box.RecieveShape(paths[currentDirection], null, new List<Box>());
+            box.RecieveShape(paths[currentDirection], null, new List<string>());
         }
         
         paths[currentDirection].Deactivate();
@@ -168,7 +173,7 @@ public class Box : MonoBehaviour
                         return;
                     }
 
-                    CreateShape(new List<Box>());
+                    CreateShape(new List<string>());
                 }
                 break;
             }
@@ -182,7 +187,7 @@ public class Box : MonoBehaviour
         Physics2D.queriesStartInColliders = false;
         Physics2D.queriesHitTriggers = false;
 
-        RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, v.normalized, 100, LayerMask.GetMask("JungleSigns"));
+        RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, v.normalized, 20, LayerMask.GetMask("JungleSigns"));
 
         Box nextBox = null;
         float distanceTo = 100;

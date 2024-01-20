@@ -29,7 +29,7 @@ public class Bin : Box
         //print("no shape");
     }
 
-    public override void RecieveShape(Path path, Shape shape, List<Box> parents)
+    public override void RecieveShape(Path path, Shape shape, List<string> parents)
     {
         //add the shape
         recievedShapes[path] = shape;

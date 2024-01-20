@@ -6,7 +6,7 @@ public class DoubleSign : Sign
 {
     public Direction secondCurrentDirection = Direction.UP; 
 
-    public override void CreateShape(List<Box> parents) {
+    public override void CreateShape(List<string> parents) {
         Box next = GetBoxInDirection(currentDirection);
         Box next2 = GetBoxInDirection(secondCurrentDirection);
 
@@ -53,13 +53,13 @@ public class DoubleSign : Sign
 
         if (box != null && isDefaultCurrentPath(currentDirection) == paths[currentDirection].getAnimType())
         {
-            box.RecieveShape(paths[currentDirection], null, new List<Box>());
+            box.RecieveShape(paths[currentDirection], null, new List<string>());
             paths[currentDirection].Deactivate();
         }
         
         if (box2 != null && isDefaultCurrentPath(secondCurrentDirection) == paths[secondCurrentDirection].getAnimType())
         {
-            box2.RecieveShape(paths[secondCurrentDirection], null, new List<Box>());
+            box2.RecieveShape(paths[secondCurrentDirection], null, new List<string>());
             paths[secondCurrentDirection].Deactivate();
         }
         
@@ -133,7 +133,7 @@ public class DoubleSign : Sign
                 }
             }
 
-            CreateShape(new List<Box>());
+            CreateShape(new List<string>());
             break;
         }
     }

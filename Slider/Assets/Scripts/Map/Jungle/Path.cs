@@ -9,7 +9,7 @@ using UnityEngine;
 public class Path : MonoBehaviour
 {
     public bool active = false;
-    private bool creatingBlobs = true;
+    [SerializeField] private bool creatingBlobs = true;
     public Path pair;
     private Shape currentShape = null;
     bool defaultAnim = true; //used to see if the sprite needs to be flipped
@@ -83,7 +83,7 @@ public class Path : MonoBehaviour
             }
         }
 
-            currentShape = shape;
+        currentShape = shape;
 
         if (right)
         {
