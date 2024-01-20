@@ -261,7 +261,7 @@ public class Path : MonoBehaviour
         Physics2D.queriesStartInColliders = true;
     }
 
-    void OnDrawGizmos()
+    void OnDrawGizmosSelected()
     {
         if (horizontal)
         {
