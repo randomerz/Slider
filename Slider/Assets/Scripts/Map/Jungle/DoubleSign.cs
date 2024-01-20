@@ -7,14 +7,15 @@ public class DoubleSign : Sign
     public Direction secondCurrentDirection = Direction.UP; 
 
     public override void CreateShape(List<string> parents) {
-        if (currentShape == null)
+/*        if (currentShape == null)
         {
             print("Double sign sending null");
         }
         else
         {
             print("Double sign sending shape " + currentShape.name);
-        }
+        }*/
+
         Box next = GetBoxInDirection(currentDirection);
         Box next2 = GetBoxInDirection(secondCurrentDirection);
 

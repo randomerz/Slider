@@ -50,7 +50,7 @@ public class Sign : Box
 
     public override void RecieveShape(Path path, Shape shape, List<string> parents)
     {
-        if (this.gameObject.name == "Double sign 6.1")
+/*        if (this.gameObject.name == "Double sign 6.1")
         {
             if (shape == null)
             {
@@ -63,7 +63,7 @@ public class Sign : Box
             {
                 print(parent);
             }
-        }
+        }*/
 
         // && (shape != null && this.currentShape != null)
         //this isn't working
@@ -96,14 +96,14 @@ public class Sign : Box
                 shapesRecieved.Add(recievedShapes[paths[d]]);
             }
         }
-
+/*
         if (this.gameObject.name == "Double sign 6.1") {
             print("recieved shapes");
             foreach (Shape shape in shapesRecieved)
             {
                 print(shape.name);
             }
-        }
+        }*/
 
 
         foreach (Recipe recipe in recipes.list)
