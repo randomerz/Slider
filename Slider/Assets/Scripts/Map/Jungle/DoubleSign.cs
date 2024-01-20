@@ -51,15 +51,17 @@ public class DoubleSign : Sign
         Box box = GetBoxInDirection(currentDirection);
         Box box2 = GetBoxInDirection(secondCurrentDirection);
 
+        List<string> parents = new List<string>();
+        parents.Add(this.gameObject.name);
         if (box != null && isDefaultCurrentPath(currentDirection) == paths[currentDirection].getAnimType())
         {
-            box.RecieveShape(paths[currentDirection], null, new List<string>());
+            box.RecieveShape(paths[currentDirection], null, parents);
             paths[currentDirection].Deactivate();
         }
         
         if (box2 != null && isDefaultCurrentPath(secondCurrentDirection) == paths[secondCurrentDirection].getAnimType())
         {
-            box2.RecieveShape(paths[secondCurrentDirection], null, new List<string>());
+            box2.RecieveShape(paths[secondCurrentDirection], null, parents);
             paths[secondCurrentDirection].Deactivate();
         }
         
