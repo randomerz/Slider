@@ -50,14 +50,14 @@ public class Sign : Box
 
     public override void RecieveShape(Path path, Shape shape, List<string> parents)
     {
-        if(this.gameObject.name == "Sign test")
+/*        if(this.gameObject.name == "Sign test")
         {
             print("recieve " + shape.name + " from " + parents[parents.Count - 1]);
             foreach (string parent in parents)
             {
                 print(parent);
             }
-        }
+        }*/
 
        // && (shape != null && this.currentShape != null)
        //this isn't working

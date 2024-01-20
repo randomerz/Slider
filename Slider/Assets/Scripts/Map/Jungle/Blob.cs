@@ -43,11 +43,11 @@ public class Blob : MonoBehaviour
         this.travelDistance = travelDistance;
         this.pair = pair;
 
-/*        if ((direction == Direction.LEFT || direction == Direction.RIGHT))
-        {
-            renderer.sortingOrder = -2;
-            shapeRenderer.sortingOrder = -2;
-        }*/
+        /*        if ((direction == Direction.LEFT || direction == Direction.RIGHT))
+                {
+                    renderer.sortingOrder = -2;
+                    shapeRenderer.sortingOrder = -2;
+                }*/
     }
 
     public void setTraveledDistance(float traveled)
@@ -72,7 +72,6 @@ public class Blob : MonoBehaviour
 
     void FixedUpdate()
     {
-
         if (jumping)
         {
             Jump();
@@ -97,11 +96,16 @@ public class Blob : MonoBehaviour
             // check if i need to change parent then if i do, change
             STile under = SGrid.GetSTileUnderneath(this.gameObject);
 
-            if (under == null)
+/*            if (under == null)
             {
+                if (this.transform.parent.gameObject.name == "sign2 up")
+                {
+                    print("floating");
+                }
+
                 Destroy(this.gameObject);
                 return;
-            }
+            }*/
 
             GameObject path = this.transform.parent.gameObject;
             GameObject pathStile = path.transform.parent.transform.parent.transform.parent.gameObject; //bro pls theres a better way right

@@ -45,6 +45,7 @@ public class Path : MonoBehaviour
 
         BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
         travelDistance = (int)this.transform.localScale.x; // + 0.5f
+
         if (pair != null)
         {
             travelDistance += (int)pair.transform.localScale.x;
