@@ -130,11 +130,8 @@ public class Box : MonoBehaviour
         {
             box.RecieveShape(paths[currentDirection], null, new List<Box>());
         }
-
-        if (isDefaultCurrentPath(currentDirection) == paths[currentDirection].getAnimType())
-        {
-            paths[currentDirection].Deactivate();
-        }
+        
+        paths[currentDirection].Deactivate();
 
         //check each path to see if any is not active alr
 

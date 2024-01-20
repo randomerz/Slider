@@ -172,15 +172,17 @@ public class Blob : MonoBehaviour
     {
         Color c = spriteRenderer.material.color;
 
-        if (c.a > 0)
+        for (float alpha = c.a; alpha >= 0; alpha -= 0.25f)
         {
-            for (float alpha = 1f; alpha >= 0; alpha -= 0.25f)
+            if (alpha < 0)
             {
-                c.a = alpha;
-                spriteRenderer.material.color = c;
-                shapeRenderer.material.color = c;
-                yield return new WaitForSeconds(0.1667f);
+                alpha = 0;
             }
+
+            c.a = alpha;
+            spriteRenderer.material.color = c;
+            shapeRenderer.material.color = c;
+            yield return new WaitForSeconds(0.1667f);
         }
     }
 
@@ -196,7 +198,7 @@ public class Blob : MonoBehaviour
     public IEnumerator fadeInAnimation()
     {
         Color c = spriteRenderer.material.color;
-        for (float alpha = 0f; alpha <= 1; alpha += 0.25f)
+        for (float alpha = 0f; alpha <= 1 && speed > 0; alpha += 0.25f)
         {
             c.a = alpha;
             spriteRenderer.material.color = c;

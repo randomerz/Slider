@@ -83,7 +83,7 @@ public class Path : MonoBehaviour
             }
         }
 
-        currentShape = shape;
+            currentShape = shape;
 
         if (right)
         {
@@ -169,6 +169,7 @@ public class Path : MonoBehaviour
             }
         }
 
+
         //fade in blobs
         foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
         {
@@ -234,17 +235,8 @@ public class Path : MonoBehaviour
             Path other = checkOne.collider.gameObject.GetComponent<Path>();
             if (!other.transform.parent.Equals(this.transform.parent))
             {
-                if (this.gameObject.name == "house right")
-                {
-                    print(other.gameObject.name);
-                }
                 other.pair = this;
                 pair = other;
-
-                if (this.gameObject.name == "house right")
-                {
-                    print(other.pair);
-                }
             }
         }
         if (checkTwo.collider != null && pair == null)
