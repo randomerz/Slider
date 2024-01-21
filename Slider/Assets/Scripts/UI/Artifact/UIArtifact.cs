@@ -58,7 +58,7 @@ public class UIArtifact : Singleton<UIArtifact>
     protected virtual void Start()
     {
         //Only unsubscribed in DesertArtifact
-        SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
+        //SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
         SGridAnimator.OnSTileMoveEnd += UpdatePushedDowns;
         OnButtonInteract += UpdatePushedDowns;
     }
@@ -514,16 +514,12 @@ public class UIArtifact : Singleton<UIArtifact>
     }
 
     //DON'T CALL DIRECTLY (call ProcessQueue instead)
-    protected virtual void QueueCheckAfterMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    public virtual void QueueCheckAfterMove(SMove lastMove)
     {
-        if (e != null)
+        if (activeMoves.Contains(lastMove))
         {
-            if (activeMoves.Contains(e.smove))
-            {
-                activeMoves.Remove(e.smove);
-            }
+            activeMoves.Remove(lastMove);
         }
-
         ProcessQueue();
     }
 

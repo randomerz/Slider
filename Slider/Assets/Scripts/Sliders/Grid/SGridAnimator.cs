@@ -80,7 +80,7 @@ public class SGridAnimator : MonoBehaviour
     }
 
 
-    public virtual void Move(SMove move, STile[,] grid)
+    public virtual void Move(SMove move, STile[,] grid, int movenum)
     {
         List<Coroutine> moveCoroutines = new List<Coroutine>();
         bool playSound = true;
@@ -88,7 +88,7 @@ public class SGridAnimator : MonoBehaviour
         {
             if (grid[m.startLoc.x, m.startLoc.y].isTileActive)
             {
-                moveCoroutines.Add(DetermineAndStartMoving(move, grid, m, playSound || ShouldAlwaysPlaySound(move)));
+                moveCoroutines.Add(DetermineAndStartMoving(move, grid, m, playSound || ShouldAlwaysPlaySound(move), movenum));
                 playSound = false;
             }
             else
@@ -106,17 +106,17 @@ public class SGridAnimator : MonoBehaviour
     }
 
     //C: Added to avoid duplicated code in mountian section
-    protected virtual Coroutine DetermineAndStartMoving(SMove move, STile[,] grid, Movement m, bool playSound)
+    protected virtual Coroutine DetermineAndStartMoving(SMove move, STile[,] grid, Movement m, bool playSound, int movenum)
     {
-        return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move, playSound:playSound));
+        return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move, playSound:playSound, movenum:movenum));
     }
 
     // move is only here so we can pass it into the event
     // C: if animate is true, will animate to destination (this is the case 99% of the time)
     // if animate is false, will wait and then TP to destination (ex. mountain going up/down)
-    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true, bool playSound = true)
+    protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, int movenum, bool animate = true, bool playSound = true)
     {
-        print("started moving at" + Time.time);
+        print("started move " + movenum+ " at " + Time.time);
 
         //isMoving = true;
         bool isPlayerOnStile = (Player.GetInstance().GetSTileUnderneath() != null &&
@@ -179,7 +179,7 @@ public class SGridAnimator : MonoBehaviour
             moveDuration = currMoveDuration
         });
 
-        print("move ended at " + Time.time);
+        print("move " + movenum+ " ended at " + Time.time);
 
         OnSTileMoveEndLate?.Invoke(this, new OnTileMoveArgs
         {
@@ -190,6 +190,7 @@ public class SGridAnimator : MonoBehaviour
         });
 
         EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
+        UIArtifact.GetInstance().QueueCheckAfterMove(move);
     }
     
     protected IEnumerator DisableBordersAndColliders(
