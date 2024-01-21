@@ -50,43 +50,38 @@ public class Sign : Box
         }
     }
 
-    public override void RecieveShape(Path path, Shape shape, List<string> parents)
+    public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
-/*        if (this.gameObject.name == "Sign 5.1")
+        if (parents.Contains(this))
         {
-            if (shape == null)
-            {
-                print("recieve null from ");
-            }
-            else
-            {
-                print("recieve " + shape.name + " from ");
-            }
-            foreach (string parent in parents)
-            {
-                print(parent);
-            }
-        }*/
-
-        // && (shape != null && this.currentShape != null)
-        //this isn't working
-        if (parents.Contains(this.gameObject.name))
-        {
+            path.Deactivate();
             return;
         }
 
         if (path.pair != null)
         {
             recievedShapes[path.pair] = shape;
-            this.MergeShapes();
-            this.CreateShape(parents);
         }
         else
         {
             recievedShapes[path] = shape;
-            this.MergeShapes();
-            this.CreateShape(parents);
         }
+
+        
+        MergeShapes();
+
+        if (shape != null) {
+            currParents.AddRange(parents);
+        } else {
+            if (currentShape == null) {
+                currParents = parents;
+            } else {
+                foreach (Box parent in parents) {
+                    currParents.Remove(parent);
+                }
+            }
+        }
+        CreateShape();
     }
     public void MergeShapes()
     {
@@ -99,16 +94,6 @@ public class Sign : Box
                 shapesRecieved.Add(recievedShapes[paths[d]]);
             }
         }
-/*
-        if (this.gameObject.name == "Sign 5.1")
-        {
-            print("recieved shapes");
-            foreach (Shape shape in shapesRecieved)
-            {
-                print(shape.name);
-            }
-        }*/
-
 
         foreach (Recipe recipe in recipes.list)
         {
@@ -123,6 +108,7 @@ public class Sign : Box
         if (shapesRecieved.Count == 0)
         {
             currentShape = null;
+            currParents = new List<Box>();
         }
         else if (shapesRecieved.Count == 1)
         {

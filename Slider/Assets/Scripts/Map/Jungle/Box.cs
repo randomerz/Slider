@@ -18,7 +18,9 @@ public class Box : MonoBehaviour
     public Path bottom;
 
     protected List<Vector2> directions = new List<Vector2>();
-    public Direction currentDirection; //you should set at the start 
+    public Direction currentDirection;
+
+    [SerializeField] protected List<Box> currParents = new List<Box>();
 
     void Awake()
     {
@@ -85,21 +87,13 @@ public class Box : MonoBehaviour
         {
             paths[Direction.DOWN] = bottom;
         }
-
-        // if (paths.Keys.Count == 0) {
-        //     print(this.gameObject.name);
-        // }
     }
 
-    public virtual void CreateShape(List<string> parents)
+    public virtual void CreateShape()
     {
-/*        if (this.gameObject.name == "Sign 5.1")
-        {
-            print(this.gameObject.name + " is sending shape " + currentShape);
-            print(currentDirection);
-        }*/
-
-        parents.Add(this.gameObject.name);
+        if (!currParents.Contains(this)) {
+            currParents.Add(this);
+        }
 
         Box next = GetBoxInDirection(currentDirection);
         if (next != null)
@@ -108,20 +102,22 @@ public class Box : MonoBehaviour
             {
                 if (!paths[currentDirection].isActive() || paths[currentDirection].getAnimType() == isDefaultCurrentPath(currentDirection))
                 {
-                    paths[currentDirection].Activate(isDefaultCurrentPath(currentDirection), currentShape); 
+                    paths[currentDirection].Activate(isDefaultCurrentPath(currentDirection), currentShape);
+                    List<Box> parents = GetParents(); 
                     next.RecieveShape(paths[currentDirection], currentShape, parents);
                 }
             }
             else
             {
                 paths[currentDirection].Deactivate();
+                List<Box> parents = GetParents();
                 next.RecieveShape(paths[currentDirection], currentShape, parents);
             }
         }
     }
 
 
-    public virtual void RecieveShape(Path path, Shape shape, List<string> parents)
+    public virtual void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
         
     }
@@ -133,8 +129,8 @@ public class Box : MonoBehaviour
 
         if (box != null)
         {
-            List<string> parents = new List<string>();
-            parents.Add(this.gameObject.name);
+            List<Box> parents = new List<Box>();
+            parents.Add(this);
             box.RecieveShape(paths[currentDirection], null, parents);
         }
         
@@ -166,10 +162,10 @@ public class Box : MonoBehaviour
                 continue;
             }
 
-            currentDirection = d;
             //turn on path if there is not another using it
             if (!paths[d].isActive())
             {
+                currentDirection = d;
                 Box next = GetBoxInDirection(currentDirection);
                 if (next != null)
                 {
@@ -178,7 +174,7 @@ public class Box : MonoBehaviour
                         return;
                     }
 
-                    CreateShape(new List<string>());
+                    CreateShape();
                 }
                 break;
             }
@@ -247,6 +243,16 @@ public class Box : MonoBehaviour
     public Vector2 GetDirection()
     {
        return DirectionUtil.D2V(currentDirection);
+    }
+
+    public List<Box> GetParents(){
+        List<Box> parents = new List<Box>();
+
+        foreach (Box parent in currParents) {
+            parents.Add(parent);
+        }
+
+        return parents;
     }
 
     public void IsDirectionRight(Condition c) => c.SetSpec(currentDirection == Direction.RIGHT);

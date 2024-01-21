@@ -17,7 +17,8 @@ public class Hut : Box
         }
 
         currentShape = shapes[currentShapeIndex];
-        CreateShape(new List<string>());
+        currParents = new List<Box>();
+        CreateShape();
     }
 
     private void OnEnable()
@@ -36,7 +37,8 @@ public class Hut : Box
 
     private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
-        CreateShape(new List<string>());
+        currParents = new List<Box>();
+        CreateShape();
     }
     private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
@@ -44,7 +46,8 @@ public class Hut : Box
         {
             paths[d].ChangePair();
         }
-        CreateShape(new List<string>());
+        currParents = new List<Box>();
+        CreateShape();
     }
 
     public void ChangeShape()
@@ -53,14 +56,16 @@ public class Hut : Box
 
         if (box != null)
         {
-            box.RecieveShape(paths[currentDirection], null, new List<string>());
+            List<Box> parents = new List<Box>();
+            box.RecieveShape(paths[currentDirection], null, parents);
         }
         paths[currentDirection].Deactivate();
 
         currentShapeIndex = (currentShapeIndex + 1) % shapes.Count;
         currentShape = shapes[currentShapeIndex];
         insignia.sprite = insignias[currentShapeIndex];
-        CreateShape(new List<string>());
+        currParents = new List<Box>();
+        CreateShape();
     }
     
     public void IsShapeTriangle(Condition c) => c.SetSpec(currentShape.shapeName == "Triangle");

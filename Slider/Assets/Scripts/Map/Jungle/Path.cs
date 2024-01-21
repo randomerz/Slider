@@ -180,7 +180,6 @@ public class Path : MonoBehaviour
 
     public void Deactivate()
     {
-        //currentShape = null;
         active = false;
 
         if (pair != null && pair.isActive())
