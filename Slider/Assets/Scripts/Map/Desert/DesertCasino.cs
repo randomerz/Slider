@@ -88,7 +88,4 @@ public class DesertCasino : MonoBehaviour
     {
         return CheckGrid.contains(SGrid.GetGridString(), "56");
     }
-
-
-    
 }
