@@ -137,20 +137,21 @@ public class MagiTechGrid : SGrid
         //All enabling logic handled by present tile
         if(stile.islandId > 9) return;
 
-        CheckDesyncTilePlacement(stile);
-        base.EnableStile(stile, shouldFlicker);
+        if(ShouldCheckDesyncTilePlacement(stile))
+            CheckDesyncTilePlacement(stile);
 
+        base.EnableStile(stile, shouldFlicker);
         STile altTile = GetStile(stile.islandId + 9);
         base.EnableStile(altTile, shouldFlicker);
     }
 
+    private bool ShouldCheckDesyncTilePlacement(STile tile)
+    {
+        return DesyncActive && !tile.isTileActive;
+    }
+
     private void CheckDesyncTilePlacement(STile presentTile)
     {
-        if(desyncIslandId == -1) return;
-        if(presentTile.isTileActive) return;
-
-        print("checking desync placement");
-
         if(presentTile.islandId == 9) //if spawning the 9th tile and desync is active, then we have to end the desync for the tile to spawn correctly
         {
             EndDesync();
