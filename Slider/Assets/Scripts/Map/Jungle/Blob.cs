@@ -43,11 +43,11 @@ public class Blob : MonoBehaviour
         this.travelDistance = travelDistance;
         this.pair = pair;
 
-/*        if ((direction == Direction.LEFT || direction == Direction.RIGHT))
-        {
-            renderer.sortingOrder = -2;
-            shapeRenderer.sortingOrder = -2;
-        }*/
+        /*        if ((direction == Direction.LEFT || direction == Direction.RIGHT))
+                {
+                    renderer.sortingOrder = -2;
+                    shapeRenderer.sortingOrder = -2;
+                }*/
     }
 
     public void setTraveledDistance(float traveled)
@@ -72,7 +72,6 @@ public class Blob : MonoBehaviour
 
     void FixedUpdate()
     {
-
         if (jumping)
         {
             Jump();
@@ -99,7 +98,7 @@ public class Blob : MonoBehaviour
 
             if (under == null)
             {
-                Destroy(this.gameObject);
+                //Destroy(this.gameObject);
                 return;
             }
 
@@ -172,16 +171,19 @@ public class Blob : MonoBehaviour
     {
         Color c = spriteRenderer.material.color;
 
-        if (c.a > 0)
+        for (float alpha = c.a; alpha >= 0; alpha -= 0.25f)
         {
-            for (float alpha = 1f; alpha >= 0; alpha -= 0.25f)
+            if (alpha < 0)
             {
-                c.a = alpha;
-                spriteRenderer.material.color = c;
-                shapeRenderer.material.color = c;
-                yield return new WaitForSeconds(0.1667f);
+                alpha = 0;
             }
+
+            c.a = alpha;
+            spriteRenderer.material.color = c;
+            shapeRenderer.material.color = c;
+            yield return new WaitForSeconds(0.1667f);
         }
+        Destroy(this.gameObject);
     }
 
     public void fadeOut()
@@ -196,7 +198,7 @@ public class Blob : MonoBehaviour
     public IEnumerator fadeInAnimation()
     {
         Color c = spriteRenderer.material.color;
-        for (float alpha = 0f; alpha <= 1; alpha += 0.25f)
+        for (float alpha = 0f; alpha <= 1 && speed > 0; alpha += 0.25f)
         {
             c.a = alpha;
             spriteRenderer.material.color = c;
