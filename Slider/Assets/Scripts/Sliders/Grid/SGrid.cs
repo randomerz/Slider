@@ -287,6 +287,11 @@ public void SetGrid(int[,] puzzle)
         return Current.grid[x,y];
     }
 
+    public STile GetStileAt(Vector2Int loc)
+    {
+        return Current.grid[loc.x, loc.y];
+    }
+
     public List<STile> GetStiles(List<int> idList)
     {
         List<STile> returnList = new List<STile>();
