@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MountainSGridAnimator : SGridAnimator
 {
-    protected override Coroutine DetermineMoveType(SMove move, STile[,] grid, Movement m, bool playSound)
+    protected override Coroutine DetermineAndStartMoving(SMove move, STile[,] grid, Movement m, bool playSound)
     {
         int diff = m.endLoc.y - m.startLoc.y;
         bool onSameLevel = (Mathf.Abs(diff) <= 1); 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{0eacafe7-069c-40dd-a4e5-7194f1d0d8ff}">
+		<property name="name">
+			<value>AmbienceDistToLaser</value>
+		</property>
+		<relationship name="folder">
+			<destination>{076b9c86-d860-4db7-af07-2980b2d4c9c0}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{49560ac0-4178-4d35-bc42-174119f6525d}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{49560ac0-4178-4d35-bc42-174119f6525d}">
+		<property name="maximum">
+			<value>10</value>
+		</property>
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>10</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

@@ -7,6 +7,8 @@ public class Sign : Box
 {
     public RecipeList recipes;
     public Dictionary<Path, Shape> recievedShapes = new Dictionary<Path, Shape>();
+
+    public Shape question;
     
     // Start is called before the first frame update
     void Awake()
@@ -48,37 +50,38 @@ public class Sign : Box
         }
     }
 
-    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
-    {
-        foreach (Direction d in paths.Keys)
-        {
-            paths[d].ChangePair();
-        }
-    }
-
     public override void RecieveShape(Path path, Shape shape, List<Box> parents)
     {
-
-       // && (shape != null && this.currentShape != null)
         if (parents.Contains(this))
         {
+            path.Deactivate();
             return;
         }
-
-        parents.Add(this);
 
         if (path.pair != null)
         {
             recievedShapes[path.pair] = shape;
-            this.MergeShapes();
-            this.CreateShape(parents);
         }
         else
         {
             recievedShapes[path] = shape;
-            this.MergeShapes();
-            this.CreateShape(parents);
         }
+
+        
+        MergeShapes();
+
+        if (shape != null) {
+            currParents.AddRange(parents);
+        } else {
+            if (currentShape == null) {
+                currParents = parents;
+            } else {
+                foreach (Box parent in parents) {
+                    currParents.Remove(parent);
+                }
+            }
+        }
+        CreateShape();
     }
     public void MergeShapes()
     {
@@ -91,7 +94,6 @@ public class Sign : Box
                 shapesRecieved.Add(recievedShapes[paths[d]]);
             }
         }
-
 
         foreach (Recipe recipe in recipes.list)
         {
@@ -106,10 +108,14 @@ public class Sign : Box
         if (shapesRecieved.Count == 0)
         {
             currentShape = null;
+            currParents = new List<Box>();
         }
-        else
+        else if (shapesRecieved.Count == 1)
         {
             currentShape = shapesRecieved[0];
+        } else
+        {
+            currentShape = question;
         }
     }
 }

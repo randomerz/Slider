@@ -20,7 +20,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     /// </summary>
     private const int GRID_POSITION_TO_WORLD_POSITION = 17;
 
-    private const string MIRAGE_ENABLED_SAVE_STRING = "DesertMirageEnabled";
+    public const string MIRAGE_ENABLED_SAVE_STRING = "DesertMirageEnabled";
     private const string MIRAGE_TILES_SAVE_STRING = "DesertMirageTiles";
     private List<int> POSSIBLE_MIRAGE_TILES = new() { 8, 9 };
 
@@ -44,10 +44,6 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     public void Save()
     {
-        if(mirageEnabled)
-        {
-            UnSubscribeMirageEvents();
-        }
         SaveSystem.Current.SetBool(MIRAGE_ENABLED_SAVE_STRING, mirageEnabled);
         //SaveSystem.Current.SetString(MIRAGE_TILES_SAVE_STRING, BuildMirageTilesSaveString());
         BuildMirageTileSaveStrings();
@@ -178,6 +174,11 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     private void Start()
     {
         EnableButtonsOnStart();
+    }
+
+    private void OnDisable()
+    {
+        UnSubscribeMirageEvents();
     }
 
     private void EnableButtonsOnStart()

@@ -42,10 +42,17 @@ public class TavernPassButton : MonoBehaviour
             image.sprite = completedSprite;
     }
 
+    public void DisableRenderTexture()
+    {
+        RTImage.SetActive(false);
+    }
+
     public void PlayEffect()
     {
-        if(gameObject.activeInHierarchy)
+        if (gameObject.activeInHierarchy)
+        {
             StartCoroutine(EffectCoroutine());
+        }
     }
 
     private IEnumerator EffectCoroutine()

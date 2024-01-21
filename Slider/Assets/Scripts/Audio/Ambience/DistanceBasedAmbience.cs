@@ -9,6 +9,7 @@ public class DistanceBasedAmbience : MonoBehaviour
     public float ambienceGlobalParameterDefaultValue;
     public List<Transform> distanceNodes = new List<Transform>();
     private Transform playerTransform;
+    [SerializeField] private bool isEnabled = true;
 
     private static Dictionary<string, float> nameToMinDist = new();
 
@@ -17,7 +18,11 @@ public class DistanceBasedAmbience : MonoBehaviour
         playerTransform = Player.GetInstance().transform;
         AudioManager.PlayAmbience(ambienceName);
         nameToMinDist[ambienceName] = Mathf.Infinity;
-        UpdateParameter();
+        if (isEnabled)
+        {
+            UpdateParameter();
+            SendParameter();
+        }
     }
 
     private void OnDestroy()
@@ -28,12 +33,34 @@ public class DistanceBasedAmbience : MonoBehaviour
 
     private void Update()
     {
-        UpdateParameter();
+        if (isEnabled)
+        {
+            UpdateParameter();
+        }
     }
 
     private void LateUpdate()
     {
-        SendParameter();
+        if (isEnabled)
+        {
+            SendParameter();
+        }
+    }
+
+    public void SetParameterEnabled(bool isEnabled)
+    {
+        this.isEnabled = isEnabled;
+
+        if (isEnabled)
+        {
+            UpdateParameter();
+            SendParameter();
+        }
+        else
+        {
+            AudioManager.SetGlobalParameter(ambienceGlobalParameterName, Mathf.Infinity);
+            nameToMinDist[ambienceName] = Mathf.Infinity;
+        }
     }
 
     private void UpdateParameter()

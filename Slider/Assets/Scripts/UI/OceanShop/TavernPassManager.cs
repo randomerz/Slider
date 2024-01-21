@@ -189,7 +189,10 @@ public class TavernPassManager : MonoBehaviour, ISavable
 
                     GiveRewards(tier);
                 },
-                () => tavernPassButtons[tier].PlayEffect());
+                () => {
+                    DisableButtonPassRenderTextures();
+                    tavernPassButtons[tier].PlayEffect();
+                });
                 yield break;
             }
 
@@ -198,7 +201,10 @@ public class TavernPassManager : MonoBehaviour, ISavable
                 rewardName, 
                 rewardSprite, 
                 () => GiveRewards(tier), 
-                () => tavernPassButtons[tier].PlayEffect()
+                () => {
+                    DisableButtonPassRenderTextures();
+                    tavernPassButtons[tier].PlayEffect();
+                }
             );
 
             IncrementButton();
@@ -216,6 +222,14 @@ public class TavernPassManager : MonoBehaviour, ISavable
 
         if (displayedCredits < currentNumCredits)
             StartCoroutine(UpdateProgressBar());
+    }
+
+    private void DisableButtonPassRenderTextures()
+    {
+        foreach (TavernPassButton b in tavernPassButtons)
+        {
+            b.DisableRenderTexture();
+        }
     }
 
     private IEnumerator AnimateProgressBar(float from, float to)
