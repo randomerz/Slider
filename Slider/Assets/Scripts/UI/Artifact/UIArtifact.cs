@@ -512,7 +512,8 @@ public class UIArtifact : Singleton<UIArtifact>
         moveQueue.Enqueue(move);
     }
 
-    //DON'T CALL DIRECTLY (call ProcessQueue instead)
+    //Should only be called from SGridAnimator for ensuring the most recent move is marked inactive before starting the next move
+    //If trying to call this move elsewhere, you should call ProcessQueue instead
     public virtual void QueueCheckAfterMove(SMove lastMove)
     {
         if (activeMoves.Contains(lastMove))
