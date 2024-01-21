@@ -167,6 +167,8 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
+        
+        UIArtifact.GetInstance().SetMoveInactive(move);
 
         OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
         {
@@ -185,7 +187,7 @@ public class SGridAnimator : MonoBehaviour
         });
 
         EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
-        UIArtifact.GetInstance().QueueCheckAfterMove(move);
+        UIArtifact.GetInstance().ProcessQueue();
     }
     
     protected IEnumerator DisableBordersAndColliders(
