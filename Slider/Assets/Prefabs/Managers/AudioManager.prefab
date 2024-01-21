@@ -503,6 +503,16 @@ MonoBehaviour:
       Path: event:/SFX/Jungle/Record Scratch
     canPause: 1
     dopplerScale: 1
+  - name: Jackal Jump
+    fmodEvent:
+      Guid:
+        Data1: 244485494
+        Data2: 1175358609
+        Data3: 1213481372
+        Data4: -1217751123
+      Path: event:/SFX/Desert/Jackal Jump
+    canPause: 1
+    dopplerScale: 1
   - name: Crocodile Grab Sequence
     fmodEvent:
       Guid:
@@ -671,6 +681,16 @@ MonoBehaviour:
         Data3: -394793053
         Data4: -1358399614
       Path: event:/SFX/Magic/Desync Tear Close
+    canPause: 1
+    dopplerScale: 1
+  - name: Laser Start
+    fmodEvent:
+      Guid:
+        Data1: -24633881
+        Data2: 1273401045
+        Data3: -131659632
+        Data4: 1519040509
+      Path: event:/SFX/Magic/Laser Start
     canPause: 1
     dopplerScale: 1
   - name: Footstep Concrete
@@ -867,6 +887,15 @@ MonoBehaviour:
         Data3: -1960262746
         Data4: 1288741103
       Path: event:/Ambience/Forest Ambience
+    emitter: {fileID: 0}
+  - name: Laser Ambience
+    fmodEvent:
+      Guid:
+        Data1: -268719974
+        Data2: 1210375164
+        Data3: 1937589907
+        Data4: -1284581935
+      Path: event:/Ambience/Laser Ambience
     emitter: {fileID: 0}
   soundDampenCurve:
     serializedVersion: 2
