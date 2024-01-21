@@ -40,8 +40,6 @@ public class SGrid : Singleton<SGrid>, ISavable
 
     public int[,] realigningGrid;
 
-    private int movenum;
-
     [SerializeField] protected int width;
     [SerializeField] protected int height;
     [SerializeField] protected int housingOffset = -150;
@@ -518,8 +516,7 @@ public void SetGrid(int[,] puzzle)
     //L: Updates internal state (the grid[,]) based on result of SMove. See Move in SGridAnimator for the actual moving of the tiles.
     public virtual void Move(SMove move)
     {
-        movenum++;
-        gridAnimator.Move(move, grid, movenum);
+        gridAnimator.Move(move, grid);
 
         STile[,] newGrid = new STile[Width, Height];
         System.Array.Copy(grid, newGrid, Width * Height);
@@ -530,7 +527,6 @@ public void SetGrid(int[,] puzzle)
         }
         STile[,] oldGrid = grid;
         grid = newGrid;
-        print("newGrid for move " + movenum + " set at " + Time.time);
 
         OnGridMove?.Invoke(this, new OnGridMoveArgs { oldGrid = oldGrid, grid = grid });
     }

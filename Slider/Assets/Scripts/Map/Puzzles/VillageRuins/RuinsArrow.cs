@@ -100,7 +100,6 @@ public class RuinsArrow : MonoBehaviour
                 particleTrail.StopRepeating();
                 particleTrail.SpawnParticleTrail(true);
             }
-            Debug.LogError("Arrow Active");
         }
         else
         {

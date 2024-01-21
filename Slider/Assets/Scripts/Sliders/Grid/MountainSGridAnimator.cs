@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MountainSGridAnimator : SGridAnimator
 {
-    protected override Coroutine DetermineAndStartMoving(SMove move, STile[,] grid, Movement m, bool playSound, int movenum)
+    protected override Coroutine DetermineAndStartMoving(SMove move, STile[,] grid, Movement m, bool playSound)
     {
         int diff = m.endLoc.y - m.startLoc.y;
         bool onSameLevel = (Mathf.Abs(diff) <= 1); 
@@ -19,7 +19,7 @@ public class MountainSGridAnimator : SGridAnimator
             else
                 CameraZoom.MoveDown(movementDuration);
         }
-        return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move, animate:onSameLevel, playSound: playSound, movenum:movenum));
+        return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move, animate:onSameLevel, playSound: playSound));
     }
 
     protected override void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile, bool playSound)

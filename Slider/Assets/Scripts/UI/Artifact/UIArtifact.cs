@@ -58,7 +58,6 @@ public class UIArtifact : Singleton<UIArtifact>
     protected virtual void Start()
     {
         //Only unsubscribed in DesertArtifact
-        //SGridAnimator.OnSTileMoveEnd += QueueCheckAfterMove;
         SGridAnimator.OnSTileMoveEnd += UpdatePushedDowns;
         OnButtonInteract += UpdatePushedDowns;
     }
