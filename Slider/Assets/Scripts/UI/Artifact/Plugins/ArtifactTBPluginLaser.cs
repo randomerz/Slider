@@ -30,11 +30,12 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public static Dictionary<ArtifactTileButton, ArtifactTBPluginLaser> tileDict;
     public static HashSet<ArtifactTBPluginLaser> sources;
 
-    private int MAX_CROSSINGS = 12;
+    private int MAX_CROSSINGS = 40; 
     private int crossings = 0;
 
-    public Sprite[] originalSprites; 
+    private Sprite[] originalSprites = null;
     public int islandId;
+    public int originalIslandId;
 
 
     [Serializable]
@@ -77,9 +78,9 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         button.plugins.Add(this);
         if(tileDict == null)
             tileDict = new();
-        tileDict.Add(button, this);
+        if(!tileDict.ContainsKey(button))
+            tileDict.Add(button, this);
         SaveSprites();
-        islandId = GetComponentInParent<ArtifactTileButton>().islandId;
         ResetSprites();
         if(centerObject == LaserCenterObject.SOURCE)
             AddSource();
@@ -158,6 +159,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     private bool MirageIsActive()
     {
         if(MirageSTileManager.GetInstance() == null) return false;
+        if(GetComponentInParent<ArtifactTileButton>() == null) return false;
         return(islandId !=  GetComponentInParent<ArtifactTileButton>().islandId);
     }
 
@@ -208,7 +210,7 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
                 sprites[direction].SetActive(true);
             }
         }
-        else
+        else if(emptysprites != null && emptysprites[direction] != null)
             emptysprites[direction].SetActive(true);
 
         if(crossings > MAX_CROSSINGS)
@@ -293,9 +295,6 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         {
             UpdateCenterToEdge(sourceDir);
         }
-        else
-        {
-        }
     }
 
     public void CopyDataFromMirageSource(ArtifactTBPluginLaser original)
@@ -313,16 +312,20 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     private void UpdateImages(ArtifactTBPluginLaser original)
     {
+        if(original.originalSprites == null) 
+            original.SaveSprites();
         for(int i = 0 ; i < 4; i++)
         {
-            sprites[i].GetComponent<Image>().sprite = original.originalSprites[i];
+            var newSprite = original.originalSprites[i];
+            if(newSprite != null)
+                sprites[i].GetComponent<Image>().sprite = newSprite;
         }
     }
 
     public void ClearDataOnMirageDisable()
     {
         centerObject = LaserCenterObject.NONE;
-        islandId = GetComponentInParent<ArtifactTileButton>().islandId;
+        islandId = originalIslandId;
         RemoveSource();
         ResetImages();
         UpdateSpritesFromSource();

@@ -1120,7 +1120,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2620790811287915176
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5057,14 +5057,34 @@ PrefabInstance:
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2945055798636389022, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3135322476549557995, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -750603938, guid: b4c915f27fdd7ac4baadae484b4a7ec5, type: 3}
+    - target: {fileID: 3135322476549557995, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4888207467151214732, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_Name
       value: SaveTab
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888207467151214732, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5784956991121000631, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -4027872714659165598, guid: 57383093ed3240843b38f3dd8db5fa52, type: 3}
+    - target: {fileID: 5784956991121000631, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5977019481711291614, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -5072,6 +5092,14 @@ PrefabInstance:
     - target: {fileID: 7321911721164597235, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_SizeDelta.y
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8438971775645026413, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8854758544846693103, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9361,9 +9389,25 @@ PrefabInstance:
       propertyPath: OnHoverEnter.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2945055798636389022, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3135322476549557995, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4888207467151214732, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_Name
       value: RealigningTab
+      objectReference: {fileID: 0}
+    - target: {fileID: 5784956991121000631, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8438971775645026413, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10449,14 +10493,34 @@ PrefabInstance:
       propertyPath: OnHoverEnter.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2945055798636389022, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3135322476549557995, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -750603938, guid: b4c915f27fdd7ac4baadae484b4a7ec5, type: 3}
+    - target: {fileID: 3135322476549557995, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4888207467151214732, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_Name
       value: LoadTab
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888207467151214732, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5784956991121000631, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -4027872714659165598, guid: 57383093ed3240843b38f3dd8db5fa52, type: 3}
+    - target: {fileID: 5784956991121000631, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5977019481711291614, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -10464,6 +10528,14 @@ PrefabInstance:
     - target: {fileID: 7321911721164597235, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_SizeDelta.y
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8438971775645026413, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8854758544846693103, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

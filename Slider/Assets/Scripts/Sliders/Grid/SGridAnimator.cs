@@ -80,20 +80,15 @@ public class SGridAnimator : MonoBehaviour
     }
 
 
-    public virtual void Move(SMove move, STile[,] grid = null)
+    public virtual void Move(SMove move, STile[,] grid)
     {
-        if (grid == null)
-        {
-            grid = SGrid.Current.GetGrid();
-        }
-
         List<Coroutine> moveCoroutines = new List<Coroutine>();
         bool playSound = true;
         foreach (Movement m in move.moves)
         {
             if (grid[m.startLoc.x, m.startLoc.y].isTileActive)
             {
-                moveCoroutines.Add(DetermineMoveType(move, grid, m, playSound || ShouldAlwaysPlaySound(move)));
+                moveCoroutines.Add(DetermineAndStartMoving(move, grid, m, playSound || ShouldAlwaysPlaySound(move)));
                 playSound = false;
             }
             else
@@ -111,7 +106,7 @@ public class SGridAnimator : MonoBehaviour
     }
 
     //C: Added to avoid duplicated code in mountian section
-    protected virtual Coroutine DetermineMoveType(SMove move, STile[,] grid, Movement m, bool playSound)
+    protected virtual Coroutine DetermineAndStartMoving(SMove move, STile[,] grid, Movement m, bool playSound)
     {
         return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move, playSound:playSound));
     }
@@ -144,6 +139,7 @@ public class SGridAnimator : MonoBehaviour
         });
 
         EffectOnMoveStart(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
+        stile.SetGridPosition(moveCoords.endLoc);
 
         float t = 0;
         currMoveDuration = movementDuration * move.duration;
@@ -165,7 +161,6 @@ public class SGridAnimator : MonoBehaviour
             stile.SetBorderColliders(false);
         }
 
-        stile.SetGridPosition(moveCoords.endLoc);
         stile.SetMovingDirection(Vector2.zero);
 
         OnSTileMoveEndEarly?.Invoke(this, new OnTileMoveArgs
