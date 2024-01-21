@@ -132,6 +132,101 @@ public class MagiTechGrid : SGrid
         }
     }
 
+    public override void EnableStile(STile stile, bool shouldFlicker = true)
+    {
+        //All enabling logic handled by present tile
+        if(stile.islandId > 9) return;
+
+        if(ShouldCheckDesyncTilePlacement(stile))
+            CheckDesyncTilePlacement(stile);
+
+        base.EnableStile(stile, shouldFlicker);
+        STile altTile = GetStile(stile.islandId + 9);
+        base.EnableStile(altTile, shouldFlicker);
+    }
+
+    private bool ShouldCheckDesyncTilePlacement(STile tile)
+    {
+        return DesyncActive && !tile.isTileActive;
+    }
+
+    private void CheckDesyncTilePlacement(STile presentTile)
+    {
+        if(presentTile.islandId == 9) //if spawning the 9th tile and desync is active, then we have to end the desync for the tile to spawn correctly
+        {
+            EndDesync();
+            return;
+        }
+
+        STile pastTile = FindAltStile(presentTile);
+        if(TilesAligned(presentTile, pastTile))
+            return;
+        
+        //check if either tile has an empty space in other dimension before resorting to swapping both tiles
+        if(IsTileFreeInBothDimenions(presentTile))
+        {
+            STile swap = FindTileAtSameCoordsInOtherDimenions(presentTile);
+            SwapTiles(swap, pastTile);
+            return;
+        }
+        if(IsTileFreeInBothDimenions(pastTile))
+        {
+            STile swap = FindTileAtSameCoordsInOtherDimenions(pastTile);
+            SwapTiles(swap, presentTile);
+            return;
+        }
+
+        Vector2Int firstFreeSpace = FindLocationFreeInBothDimensions();
+        if(firstFreeSpace.x == -1)
+        {
+            Debug.LogError("No grid space free in both dimensions");
+            return;
+        }
+
+        STile presentSwap = GetStileAt(firstFreeSpace);
+        STile pastSwap = GetStileAt(FindAltCoords(firstFreeSpace));
+        SwapTiles(presentTile, presentSwap);
+        SwapTiles(pastTile, pastSwap);
+    }
+
+    private STile FindAltStile(STile sTile)
+    {
+        int altId = FindAltId(sTile.islandId);
+        return GetStile(altId);
+    }
+
+    private bool TilesAligned(STile tile1, STile tile2)
+    {
+        return tile1.x == ((tile2.x + 3) % 6) && tile1.y == tile2.y;
+    }
+
+    private STile FindTileAtSameCoordsInOtherDimenions(STile sTile)
+    {
+        Vector2Int altCoords = FindAltCoords(sTile.x, sTile.y);
+        return GetStileAt(altCoords);
+    }
+
+    private bool IsTileFreeInBothDimenions(STile tile)
+    {
+        if(tile.isTileActive) return false;
+        return !FindTileAtSameCoordsInOtherDimenions(tile).isTileActive;
+    }
+
+    private Vector2Int FindLocationFreeInBothDimensions()
+    {
+        for(int x = 0; x < 3; x++)
+        {
+            for(int y = 0; y < 3; y++)
+            {
+                if (!GetStileAt(x, y).isTileActive && !GetStileAt(FindAltCoords(x,y)).isTileActive)
+                {
+                    return new (x,y);
+                }
+            }
+        }
+        return new(-1, -1);
+    }
+
     /// <summary>
     /// Magitech returns HALF of the total number of tiles.
     /// </summary>
@@ -236,6 +331,11 @@ public class MagiTechGrid : SGrid
             }
         }
         Current.SetGrid(newGrid);
+    }
+
+    private Vector2Int FindAltCoords(Vector2Int v)
+    {
+        return new Vector2Int((v.x + 3) % 6, v.y);
     }
 
     private Vector2Int FindAltCoords(int x, int y)

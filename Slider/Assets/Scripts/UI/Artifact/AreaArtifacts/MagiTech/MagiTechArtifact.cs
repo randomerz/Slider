@@ -203,7 +203,10 @@ public class MagiTechArtifact : UIArtifact
         {
             bool selectedIsDesync = selected.islandId == desyncIslandId;
             bool emptyIsDesync = empty.x == desyncLocation.x && empty.y == desyncLocation.y;
-            return !selectedIsDesync && emptyIsDesync;
+            ArtifactTileButton altButton = GetButton(desyncIslandId);
+            Vector2Int altCoords = FindAltCoords(altButton.x, altButton.y);
+            bool emptyIsDesyncInOtherDimension = empty.x == altCoords.x && empty.y == altCoords.y;
+            return !selectedIsDesync && (emptyIsDesync || emptyIsDesyncInOtherDimension);
         }
         return false; //C: No desync active, so valid move
     }
