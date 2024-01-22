@@ -24,7 +24,20 @@ public class UIArtifactInventory : MonoBehaviour
     private void OnEnable() 
     {
         UpdateIcons();
-        UpdateText("Collection");
+        if(Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_CONTROLLER)
+        {
+            ArtifactInventoryCollectible s = GetLeftmostSelectible();
+            if(s != null)
+            {
+                s.controllerSelectible.Select();
+                s.controllerSelectionImage.enabled = true;
+                s.UpdateInventoryName();
+            }
+            else
+                UpdateText("Collection");
+        }
+        else
+            UpdateText("Collection");
 
         UpdateCollectibleCounters(this, null);
         PlayerInventory.OnPlayerGetCollectible += UpdateCollectibleCounters;
