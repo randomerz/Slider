@@ -38,6 +38,7 @@ public class Portal : MonoBehaviour
         public ArtifactTBPluginLaser laserPlugin;
     }
     public DesertPortalUI desertPortalUI;
+    public UILaserManager uILaserManager;
 
     public void OnPlayerEnter()
     {
@@ -91,7 +92,7 @@ public class Portal : MonoBehaviour
     public void EnableDesertUIPortal()
     {
         desertPortalUI.UIPortalIcon.SetActive(true);
-        desertPortalUI.laserPlugin.AddSource();
-        ArtifactTBPluginLaser.UpdateSpritesFromSource();
+        uILaserManager.AddSource(desertPortalUI.laserPlugin.laserUIData);
+        uILaserManager.UpdateSpritesFromSource();
     }
 }

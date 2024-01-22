@@ -27,6 +27,12 @@ public class MagiLaser : MonoBehaviour, ISavable
     private const float PORTAL_LASER_OFFSET = 1.5625f;
 
     public ArtifactTBPluginLaser laserUI;
+    public UILaserManager uILaserManager;
+
+    private void Start()
+    {
+        SetEnabled(isEnabled);
+    }
 
     public void EnableLaser()
     {
@@ -195,7 +201,10 @@ public class MagiLaser : MonoBehaviour, ISavable
         }
 
         if(laserUI != null)
-            laserUI.AddSource();
+        {
+            laserUI.Init();            
+            uILaserManager.AddSource(laserUI.laserUIData);
+        }
 
     }
 
@@ -218,7 +227,6 @@ public class MagiLaser : MonoBehaviour, ISavable
             isPowered = true;
             magiLaserAnimation.PowerFromLoad();
         }
-        SetEnabled(isEnabled);
     }
 }
 
