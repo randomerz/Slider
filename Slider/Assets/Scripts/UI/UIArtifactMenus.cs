@@ -46,7 +46,6 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         //For controller support
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => _instance.CloseArtifact());
 
-        Player.OnControlSchemeChanged += ToggleNavigation;
     }
 
     private void ToggleNavigation(string s)
@@ -69,7 +68,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         {
             navMode.Add(s, s.navigation.mode);
         }
-        ToggleNavigation(Controls.CurrentControlScheme);
+        //ToggleNavigation(Controls.CurrentControlScheme);
     }
 
 
@@ -114,6 +113,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         ItemPickupEffect.OnCutsceneStart += CloseArtifactListener;
         //UIManager.OnCloseAllMenus += CloseArtifactListenerNoOpen;
         PauseManager.PauseStateChanged += OnPauseStateChanged;
+        Player.OnControlSchemeChanged += ToggleNavigation;
     }
 
     private void OnPauseStateChanged(bool newPausedState)
@@ -130,6 +130,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         ItemPickupEffect.OnCutsceneStart -= CloseArtifactListener;
         //UIManager.OnCloseAllMenus -= CloseArtifactListenerNoOpen;
         PauseManager.PauseStateChanged -= OnPauseStateChanged;
+        Player.OnControlSchemeChanged -= ToggleNavigation;
     }
 
     public static bool IsArtifactOpen()

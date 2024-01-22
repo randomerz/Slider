@@ -41,6 +41,7 @@ RectTransform:
   - {fileID: 4638367238076048122}
   - {fileID: 4854889403324356510}
   - {fileID: 4679218757311917297}
+  - {fileID: 942672927959932950}
   - {fileID: 1760573643996560786}
   m_Father: {fileID: 5299525292738477791}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1564,7 +1565,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5299525292738477791}
+  m_Father: {fileID: 2945070205895354944}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1593,7 +1594,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1644,7 +1645,6 @@ RectTransform:
   - {fileID: 2620790811287915176}
   - {fileID: 6180708746785304689}
   - {fileID: 2945070205895354944}
-  - {fileID: 942672927959932950}
   m_Father: {fileID: 1535392932922167342}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}

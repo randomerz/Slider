@@ -87,6 +87,11 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
         }
     }
 
+    public void Start()
+    {
+        ToggleNavigation(Controls.CurrentControlScheme);
+    }
+
     // this is bc we refactored this to be a singleton
     public static void SetAreaStatus(Area area, ArtifactWorldMapArea.AreaStatus status)
     {
@@ -149,6 +154,11 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
         Player.OnControlSchemeChanged += ToggleNavigation;
     }
 
+    private void OnDisable()
+    {
+        Player.OnControlSchemeChanged -= ToggleNavigation;
+    }
+
     private void ToggleNavigation(string s)
     {
         if(s == Controls.CONTROL_SCHEME_CONTROLLER)
@@ -156,15 +166,16 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
             foreach(ArtifactWorldMapArea a in mapAreas)
             {
                 a.ToggleControllerSelect(true);
+                a.SelectCurrentArea(s);
             }
         }
         else
         {
             foreach(ArtifactWorldMapArea a in mapAreas)
             {
-                a.ToggleControllerSelect(true);
+                a.ToggleControllerSelect(false);
             }
-            controllerSelectImage.sprite = empty;
+            ClearControllerSelectionSprite();
         }
         
     }
@@ -172,5 +183,10 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
     public void UpdateControllerSelectionSprite(Sprite s)
     {
         controllerSelectImage.sprite = s;
+    }
+
+    public void ClearControllerSelectionSprite()
+    {
+        controllerSelectImage.sprite = empty;
     }
 }

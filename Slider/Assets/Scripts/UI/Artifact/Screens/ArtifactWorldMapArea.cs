@@ -32,11 +32,26 @@ public class ArtifactWorldMapArea : MonoBehaviour
     public Selectable controllerSelectible;
 
     private bool needsToUpdateSprite = false;
-    private bool selected;
 
     private void Start() 
     {
         playerPin.gameObject.SetActive(SGrid.Current.GetArea() == myArea);
+    }
+
+    public void SelectCurrentArea(string controls)
+    {
+        if(controls != Controls.CONTROL_SCHEME_CONTROLLER) return;
+        if(SGrid.Current.GetArea() == myArea)
+        {
+            controllerSelectible.Select();
+            OnSelect();
+        }
+
+    }
+
+    private void OnEnable()
+    {
+        SelectCurrentArea(Controls.CurrentControlScheme);
     }
 
     private void OnDisable() 
@@ -56,6 +71,8 @@ public class ArtifactWorldMapArea : MonoBehaviour
 
         areaStatus = status;
         needsToUpdateSprite = true;
+        if(Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_CONTROLLER)
+            ToggleControllerSelect(true);
         return true;
     }
 
@@ -117,15 +134,22 @@ public class ArtifactWorldMapArea : MonoBehaviour
 
     public void ToggleControllerSelect(bool val)
     {
-        controllerSelectible.enabled = val;        
+        if(controllerSelectible == null) return;
+        var nav = controllerSelectible.navigation;
+        nav.mode = val && areaStatus >= AreaStatus.silhouette ? Navigation.Mode.Automatic : Navigation.Mode.None;
+        controllerSelectible.navigation = nav;
     }
 
     public void OnSelect()
     {
         if(Controls.CurrentControlScheme != Controls.CONTROL_SCHEME_CONTROLLER) return;
-        selected = true;
         worldmap.UpdateControllerSelectionSprite(controllerSelectSprite);
         UpdateAreaName();
+    }
+
+    public void OnDeselect()
+    {
+        worldmap.ClearControllerSelectionSprite();
     }
 
 }
