@@ -356,7 +356,12 @@ public class LaserableRockUIData
             laserUI.laserUIData.edgeblockers[blockLocation] = false;
         else if(centerObject != LaserCenterObject.NOCHANGE)
             laserUI.laserUIData.centerObject = centerObject;
-        laserUI.laserUIData.t5RockBS = false;
+        if(laserUI.laserUIData.t5RockBS)
+        {
+            laserUI.laserUIData.t5Sprites[0].SetActive(false);
+            laserUI.laserUIData.t5Sprites[0].SetActive(false);
+            laserUI.laserUIData.t5RockBS = false;
+        }
     }
 
     public bool CheckForUpdate()
