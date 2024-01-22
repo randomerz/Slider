@@ -64,12 +64,6 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
         laserUIData = uILaserManager.AddData(this, button);
     }
 
-    private void Update()
-    {
-        foreach(LaserableRockUIData d in laserUIData.rockdata)
-            d.CheckForUpdate();
-    }
-
     public override void OnPosChanged()
     {
         uILaserManager.UpdateSpritesFromSource();
@@ -359,18 +353,19 @@ public class LaserableRockUIData
     public void UpdateLaserUI()
     {
         if(blockLocation != -1)
-            laserUI.edgeblockers[blockLocation] = false;
+            laserUI.laserUIData.edgeblockers[blockLocation] = false;
         else if(centerObject != LaserCenterObject.NOCHANGE)
-            laserUI.centerObject = centerObject;
-        laserUI.t5RockBS = false;
-        //UpdateSpritesFromSource();
+            laserUI.laserUIData.centerObject = centerObject;
+        laserUI.laserUIData.t5RockBS = false;
     }
 
-    public void CheckForUpdate()
+    public bool CheckForUpdate()
     {
         if(!exploded && rock.isExploded)
         {
             UpdateLaserUI();
+            return true;
         }
+        else return false;
     }
 }

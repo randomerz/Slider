@@ -7,6 +7,19 @@ public class UILaserManager : MonoBehaviour
 {
     public Dictionary<ArtifactTileButton, LaserUIData> buttonToLaserUI;
     public HashSet<LaserUIData> sources;
+    public List<LaserableRockUIData> rockData;
+
+    private void Update()
+    {
+        foreach(LaserableRockUIData d in rockData)
+        {
+            if(d.CheckForUpdate())
+            {
+                UpdateSpritesFromSource();
+            }
+        }
+    }
+
 
     public LaserUIData AddData(ArtifactTBPluginLaser pluginLaser, ArtifactTileButton button)
     {
@@ -15,7 +28,8 @@ public class UILaserManager : MonoBehaviour
         LaserUIData data = new(pluginLaser, this, button);
         data.Init();
         buttonToLaserUI.Add(button, data);
-
+        if(data.rockdata != null)
+            rockData.AddRange(data.rockdata);
         return data;
     }
 
