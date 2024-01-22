@@ -289,14 +289,14 @@ public class ArtifactTileButton : MonoBehaviour
         SetSpriteToIslandOrEmpty();
     }
 
-    public void Flicker(int numFlickers)
+    public void Flicker(int numFlickers, bool repeat = true)
     {
-        StartCoroutine(NewButtonFlicker(numFlickers));
+        StartCoroutine(NewButtonFlicker(numFlickers, repeat: repeat));
     }
 
     public void FlickerImmediate(int numFlickers)
     {
-        StartCoroutine(NewButtonFlicker(numFlickers, true));
+        StartCoroutine(NewButtonFlicker(numFlickers, true, false));
     }
 
     protected virtual void SetAnchoredPos(int x, int y)
@@ -305,7 +305,7 @@ public class ArtifactTileButton : MonoBehaviour
         GetComponent<RectTransform>().anchoredPosition = pos;
     }
 
-    private IEnumerator NewButtonFlicker(int numFlickers, bool startOnBlank=false) 
+    private IEnumerator NewButtonFlicker(int numFlickers, bool startOnBlank=false, bool repeat = true) 
     {
         if (!startOnBlank)
         {
@@ -333,6 +333,9 @@ public class ArtifactTileButton : MonoBehaviour
         {
             yield break;
         }
+
+        if(!repeat)
+            yield break;
         
         yield return new WaitForSeconds(SECONDS_BETWEEN_REPEAT_NEW_FLICKER);
         
