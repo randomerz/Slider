@@ -25,10 +25,14 @@ public class ArtifactWorldMapArea : MonoBehaviour
     public Sprite silhouetteSprite;
     public Sprite oneBitSprite;
     public Sprite colorSprite;
+    public Sprite controllerSelectSprite;
 
     public Material whiteSpriteMat;
 
+    public Selectable controllerSelectible;
+
     private bool needsToUpdateSprite = false;
+    private bool selected;
 
     private void Start() 
     {
@@ -110,4 +114,18 @@ public class ArtifactWorldMapArea : MonoBehaviour
             worldmap.UpdateText(myArea.GetDisplayName());
         }
     }
+
+    public void ToggleControllerSelect(bool val)
+    {
+        controllerSelectible.enabled = val;        
+    }
+
+    public void OnSelect()
+    {
+        if(Controls.CurrentControlScheme != Controls.CONTROL_SCHEME_CONTROLLER) return;
+        selected = true;
+        worldmap.UpdateControllerSelectionSprite(controllerSelectSprite);
+        UpdateAreaName();
+    }
+
 }

@@ -12,6 +12,8 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
     private Dictionary<Area, ArtifactWorldMapArea> areaToMapArea = new Dictionary<Area, ArtifactWorldMapArea>();
     private Dictionary<Area, ArtifactWorldMapArea.AreaStatus> areaToStatus;
     public GameObject inventoryText;
+    public Image controllerSelectImage;
+    public Sprite empty;
 
     private bool didInit = false;
 
@@ -144,5 +146,31 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
         {
             leftArrowButton.Select();
         }
+        Player.OnControlSchemeChanged += ToggleNavigation;
+    }
+
+    private void ToggleNavigation(string s)
+    {
+        if(s == Controls.CONTROL_SCHEME_CONTROLLER)
+        {
+            foreach(ArtifactWorldMapArea a in mapAreas)
+            {
+                a.ToggleControllerSelect(true);
+            }
+        }
+        else
+        {
+            foreach(ArtifactWorldMapArea a in mapAreas)
+            {
+                a.ToggleControllerSelect(true);
+            }
+            controllerSelectImage.sprite = empty;
+        }
+        
+    }
+
+    public void UpdateControllerSelectionSprite(Sprite s)
+    {
+        controllerSelectImage.sprite = s;
     }
 }
