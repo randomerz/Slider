@@ -48,6 +48,11 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
     }
 
+    private void Start()
+    {
+        ToggleNavigation(Controls.CurrentControlScheme);
+    }
+
     private void ToggleNavigation(string s)
     {
         if (s == Controls.CONTROL_SCHEME_CONTROLLER)
@@ -68,16 +73,16 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         {
             navMode.Add(s, s.navigation.mode);
         }
-        //ToggleNavigation(Controls.CurrentControlScheme);
+        ToggleNavigation(Controls.CurrentControlScheme);
     }
 
 
     private void DisableNavigation()
     {
-        //RemoveDestroyedButtons();
+        print("disabling navigation");
         foreach(Selectable s in selectibles)
         {
-            if(s.gameObject == null || !s.gameObject.activeInHierarchy) continue;
+            if(s.gameObject == null) continue;
             var nav = s.navigation;
             nav.mode = Navigation.Mode.None;
             s.navigation = nav;
@@ -86,25 +91,13 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
     private void EnableNavigation()
     {
-        //RemoveDestroyedButtons();
         foreach(Button s in selectibles)
         {
-            if(s.gameObject == null || !s.gameObject.activeInHierarchy) continue;
+            if(s.gameObject == null) continue;
             var nav = s.navigation;
             nav.mode = navMode[s];
             s.navigation = nav;
         }
-    }
-
-    private void RemoveDestroyedButtons()
-    {
-        List<Button> remove = new();
-        foreach(Button s in selectibles)
-        {
-            if(s == null || s.gameObject == null)
-                remove.Add(s);
-        }
-        selectibles = selectibles.Except(remove).ToList();
     }
 
     private void OnEnable() 
