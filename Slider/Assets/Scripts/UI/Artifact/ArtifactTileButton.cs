@@ -289,14 +289,14 @@ public class ArtifactTileButton : MonoBehaviour
         SetSpriteToIslandOrEmpty();
     }
 
-    public void Flicker(int numFlickers, bool repeat = true)
+    public void Flicker(int numFlickers, bool repeat=true)
     {
         StartCoroutine(NewButtonFlicker(numFlickers, repeat: repeat));
     }
 
     public void FlickerImmediate(int numFlickers)
     {
-        StartCoroutine(NewButtonFlicker(numFlickers, true, false));
+        StartCoroutine(NewButtonFlicker(numFlickers, startOnBlank: true, repeat: false));
     }
 
     protected virtual void SetAnchoredPos(int x, int y)
@@ -305,11 +305,17 @@ public class ArtifactTileButton : MonoBehaviour
         GetComponent<RectTransform>().anchoredPosition = pos;
     }
 
-    private IEnumerator NewButtonFlicker(int numFlickers, bool startOnBlank=false, bool repeat = true) 
+    private IEnumerator NewButtonFlicker(int numFlickers, bool startOnBlank=false, bool repeat=true) 
     {
-        if (!startOnBlank)
+        SetSpriteToIslandOrEmpty();
+            
+        if (startOnBlank)
         {
-            SetSpriteToIslandOrEmpty();
+            // We wait until end of frame because sliderImage.sprite is written to often (usually by queue things)
+            yield return new WaitForEndOfFrame();
+        }
+        else
+        {
             yield return new WaitForSeconds(.25f);
         }
 
@@ -329,13 +335,15 @@ public class ArtifactTileButton : MonoBehaviour
             yield return new WaitForSeconds(.25f);
         }
 
-        if (IsTileExplored())
+        if (!repeat)
         {
             yield break;
         }
 
-        if(!repeat)
+        if (IsTileExplored())
+        {
             yield break;
+        }
         
         yield return new WaitForSeconds(SECONDS_BETWEEN_REPEAT_NEW_FLICKER);
         
