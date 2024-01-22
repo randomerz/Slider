@@ -833,8 +833,17 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         foreach (ArtifactTileButton b in buttons)
         {
-            if(b.gameObject.activeSelf)
-                b.Flicker(1);
+            if (b.gameObject.activeSelf)
+                b.Flicker(1, repeat:false);
+        }
+    }
+
+    public void FlickerActiveOnce()
+    {
+        foreach (ArtifactTileButton b in buttons)
+        {
+            if (b.TileIsActive)
+                b.Flicker(1, repeat:false);
         }
     }
 

@@ -79,13 +79,17 @@ public class DesertCasino : MonoBehaviour
 
     public void CheckDiceValues(Condition c)
     {
-        if (CheckCasinoTogether() && dice1.value + dice2.value == 11) c.SetSpec(true);
-        else if (SaveSystem.Current.GetBool("desertDice")) c.SetSpec(true);
+        if (CheckCasinoTogether() && dice1.value + dice2.value == 11) 
+            c.SetSpec(true);
+        else if (SaveSystem.Current.GetBool("desertDice")) 
+            c.SetSpec(true);
         else c.SetSpec(false);
     }
 
     public bool CheckCasinoTogether()
     {
-        return CheckGrid.contains(SGrid.GetGridString(), "56");
+        return CheckGrid.contains(SGrid.GetGridString(), "56")
+        && !SGrid.Current.GetStile(5).IsMoving()
+        && !SGrid.Current.GetStile(6).IsMoving();
     }
 }
