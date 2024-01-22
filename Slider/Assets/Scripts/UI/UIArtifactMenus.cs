@@ -76,6 +76,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     {
         foreach(Selectable s in selectibles)
         {
+            if(!s.gameObject.activeInHierarchy) continue;
             var nav = s.navigation;
             nav.mode = Navigation.Mode.None;
             s.navigation = nav;
@@ -86,6 +87,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     {
         foreach(Button s in selectibles)
         {
+            if(!s.gameObject.activeInHierarchy) continue;
             var nav = s.navigation;
             nav.mode = navMode[s];
             s.navigation = nav;
