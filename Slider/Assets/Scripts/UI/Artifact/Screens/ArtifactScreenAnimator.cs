@@ -150,17 +150,26 @@ public class ArtifactScreenAnimator : MonoBehaviour
         {
             if(prevIndex == 0)
             {
-                Selectable s = inventory.GetLeftmostSelectible();
+                ArtifactInventoryCollectible s = inventory.GetLeftmostSelectible();
                 if(s != null)
-                s.Select();
+                {
+                    s.controllerSelectible.Select();
+                    s.controllerSelectionImage.enabled = true;
+                    s.UpdateInventoryName();
+                }
             }
 
             if(prevIndex == 2)
             {
-                Selectable s = inventory.GetRightmostSelectible();
+                ArtifactInventoryCollectible s = inventory.GetRightmostSelectible();
                 if(s != null)
-                s.Select();
+                {
+                    s.controllerSelectible.Select();
+                    s.controllerSelectionImage.enabled = true;
+                    s.UpdateInventoryName();
+                }
             }
+
         }
 
         // map screen

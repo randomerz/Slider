@@ -94,30 +94,30 @@ public class UIArtifactInventory : MonoBehaviour
         oilCount.gameObject.SetActive(numOil > 1);
     }
 
-    public Selectable GetLeftmostSelectible()
+    public ArtifactInventoryCollectible GetLeftmostSelectible()
     {
-        Selectable leftmost = null;
+        ArtifactInventoryCollectible leftmost = null;
         float smallestX = float.MaxValue;
         foreach(ArtifactInventoryCollectible c in collectibles)
         {
             if(c.controllerSelectible.enabled && c.transform.position.x < smallestX)
             {
-                leftmost = c.controllerSelectible;
+                leftmost = c;
                 smallestX = c.transform.position.x;
             }
         }
         return leftmost;
     }
 
-    public Selectable GetRightmostSelectible()
+    public ArtifactInventoryCollectible GetRightmostSelectible()
     {
-        Selectable rightMost = null;
+        ArtifactInventoryCollectible rightMost = null;
         float largestX = float.MinValue;
         foreach(ArtifactInventoryCollectible c in collectibles)
         {
             if(c.controllerSelectible.enabled && c.transform.position.x > largestX)
             {
-                rightMost = c.controllerSelectible;
+                rightMost = c;
                 largestX = c.transform.position.x;
             }
         }
