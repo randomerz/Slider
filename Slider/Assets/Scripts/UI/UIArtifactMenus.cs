@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class UIArtifactMenus : Singleton<UIArtifactMenus>
 {
@@ -18,7 +19,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     private bool isArtifactOpen;
     private bool isClosing = false;
 
-    private Button[] selectibles;
+    private List<Button> selectibles;
     private Dictionary<Button, Navigation.Mode> navMode;
 
 
@@ -63,7 +64,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     private void SaveSelectibles()
     {
         navMode = new();
-        selectibles = GetComponentsInChildren<Button>(true);
+        selectibles = GetComponentsInChildren<Button>(true).ToList();
         foreach(Button s in selectibles)
         {
             navMode.Add(s, s.navigation.mode);
@@ -74,6 +75,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
     private void DisableNavigation()
     {
+        RemoveDestroyedButtons();
         foreach(Selectable s in selectibles)
         {
             if(!s.gameObject.activeInHierarchy) continue;
@@ -85,6 +87,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
     private void EnableNavigation()
     {
+        RemoveDestroyedButtons();
         foreach(Button s in selectibles)
         {
             if(!s.gameObject.activeInHierarchy) continue;
@@ -92,6 +95,17 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
             nav.mode = navMode[s];
             s.navigation = nav;
         }
+    }
+
+    private void RemoveDestroyedButtons()
+    {
+        List<Button> remove = new();
+        foreach(Button s in selectibles)
+        {
+            if(s == null || s.gameObject == null)
+                remove.Add(s);
+        }
+        selectibles = selectibles.Except(remove).ToList();
     }
 
     private void OnEnable() 

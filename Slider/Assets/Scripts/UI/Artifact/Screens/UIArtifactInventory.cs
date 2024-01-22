@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class UIArtifactInventory : MonoBehaviour
 {
@@ -91,5 +92,35 @@ public class UIArtifactInventory : MonoBehaviour
         
         oilCount.text = numOil.ToString();
         oilCount.gameObject.SetActive(numOil > 1);
+    }
+
+    public Selectable GetLeftmostSelectible()
+    {
+        Selectable leftmost = null;
+        float smallestX = float.MaxValue;
+        foreach(ArtifactInventoryCollectible c in collectibles)
+        {
+            if(c.controllerSelectible.enabled && c.transform.position.x < smallestX)
+            {
+                leftmost = c.controllerSelectible;
+                smallestX = c.transform.position.x;
+            }
+        }
+        return leftmost;
+    }
+
+    public Selectable GetRightmostSelectible()
+    {
+        Selectable rightMost = null;
+        float largestX = float.MinValue;
+        foreach(ArtifactInventoryCollectible c in collectibles)
+        {
+            if(c.controllerSelectible.enabled && c.transform.position.x > largestX)
+            {
+                rightMost = c.controllerSelectible;
+                largestX = c.transform.position.x;
+            }
+        }
+        return rightMost;
     }
 }
