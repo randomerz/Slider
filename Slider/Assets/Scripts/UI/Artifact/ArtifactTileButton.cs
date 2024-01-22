@@ -289,9 +289,9 @@ public class ArtifactTileButton : MonoBehaviour
         SetSpriteToIslandOrEmpty();
     }
 
-    public void Flicker(int numFlickers)
+    public void Flicker(int numFlickers, bool repeat = true)
     {
-        StartCoroutine(NewButtonFlicker(numFlickers));
+        StartCoroutine(NewButtonFlicker(numFlickers, repeat: repeat));
     }
 
     public void FlickerImmediate(int numFlickers)

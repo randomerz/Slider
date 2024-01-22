@@ -834,7 +834,7 @@ public class UIArtifact : Singleton<UIArtifact>
         foreach (ArtifactTileButton b in buttons)
         {
             if(b.gameObject.activeSelf)
-                b.Flicker(1);
+                b.Flicker(1, repeat:false);
         }
     }
 
