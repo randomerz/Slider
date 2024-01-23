@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class UIArtifactMenus : Singleton<UIArtifactMenus>
 {
@@ -18,7 +19,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     private bool isArtifactOpen;
     private bool isClosing = false;
 
-    private Button[] selectibles;
+    private List<Button> selectibles;
     private Dictionary<Button, Navigation.Mode> navMode;
 
 
@@ -45,7 +46,11 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         //For controller support
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => _instance.CloseArtifact());
 
-        Player.OnControlSchemeChanged += ToggleNavigation;
+    }
+
+    private void Start()
+    {
+        ToggleNavigation(Controls.CurrentControlScheme);
     }
 
     private void ToggleNavigation(string s)
@@ -63,7 +68,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     private void SaveSelectibles()
     {
         navMode = new();
-        selectibles = GetComponentsInChildren<Button>(true);
+        selectibles = GetComponentsInChildren<Button>(true).ToList();
         foreach(Button s in selectibles)
         {
             navMode.Add(s, s.navigation.mode);
@@ -76,6 +81,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     {
         foreach(Selectable s in selectibles)
         {
+            if(s.gameObject == null) continue;
             var nav = s.navigation;
             nav.mode = Navigation.Mode.None;
             s.navigation = nav;
@@ -86,6 +92,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     {
         foreach(Button s in selectibles)
         {
+            if(s.gameObject == null) continue;
             var nav = s.navigation;
             nav.mode = navMode[s];
             s.navigation = nav;
@@ -98,6 +105,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         ItemPickupEffect.OnCutsceneStart += CloseArtifactListener;
         //UIManager.OnCloseAllMenus += CloseArtifactListenerNoOpen;
         PauseManager.PauseStateChanged += OnPauseStateChanged;
+        Player.OnControlSchemeChanged += ToggleNavigation;
     }
 
     private void OnPauseStateChanged(bool newPausedState)
@@ -114,6 +122,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         ItemPickupEffect.OnCutsceneStart -= CloseArtifactListener;
         //UIManager.OnCloseAllMenus -= CloseArtifactListenerNoOpen;
         PauseManager.PauseStateChanged -= OnPauseStateChanged;
+        Player.OnControlSchemeChanged -= ToggleNavigation;
     }
 
     public static bool IsArtifactOpen()
