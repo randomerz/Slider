@@ -150,24 +150,12 @@ public class ArtifactScreenAnimator : MonoBehaviour
         {
             if(prevIndex == 0)
             {
-                ArtifactInventoryCollectible s = inventory.GetLeftmostSelectible();
-                if(s != null)
-                {
-                    s.controllerSelectible.Select();
-                    s.controllerSelectionImage.enabled = true;
-                    s.UpdateInventoryName();
-                }
+                inventory.TrySelectLeftmostSelectible();
             }
 
             if(prevIndex == 2)
             {
-                ArtifactInventoryCollectible s = inventory.GetRightmostSelectible();
-                if(s != null)
-                {
-                    s.controllerSelectible.Select();
-                    s.controllerSelectionImage.enabled = true;
-                    s.UpdateInventoryName();
-                }
+                inventory.TrySelectRightmostSelectible();
             }
 
         }

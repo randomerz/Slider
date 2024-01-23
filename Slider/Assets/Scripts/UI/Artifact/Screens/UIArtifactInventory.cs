@@ -26,14 +26,7 @@ public class UIArtifactInventory : MonoBehaviour
         UpdateIcons();
         if(Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_CONTROLLER)
         {
-            ArtifactInventoryCollectible s = GetLeftmostSelectible();
-            if(s != null)
-            {
-                s.controllerSelectible.Select();
-                s.controllerSelectionImage.enabled = true;
-                s.UpdateInventoryName();
-            }
-            else
+            if(!TrySelectLeftmostSelectible())
                 UpdateText("Collection");
         }
         else
@@ -107,7 +100,7 @@ public class UIArtifactInventory : MonoBehaviour
         oilCount.gameObject.SetActive(numOil > 1);
     }
 
-    public ArtifactInventoryCollectible GetLeftmostSelectible()
+    public bool TrySelectLeftmostSelectible()
     {
         ArtifactInventoryCollectible leftmost = null;
         float smallestX = float.MaxValue;
@@ -119,10 +112,15 @@ public class UIArtifactInventory : MonoBehaviour
                 smallestX = c.transform.position.x;
             }
         }
-        return leftmost;
+        if(leftmost !=null)
+        {
+            Select(leftmost);
+            return true;
+        }
+        return false;
     }
 
-    public ArtifactInventoryCollectible GetRightmostSelectible()
+    public void TrySelectRightmostSelectible()
     {
         ArtifactInventoryCollectible rightMost = null;
         float largestX = float.MinValue;
@@ -134,6 +132,14 @@ public class UIArtifactInventory : MonoBehaviour
                 largestX = c.transform.position.x;
             }
         }
-        return rightMost;
+        if(rightMost != null)
+            Select(rightMost);
+    }
+
+    private void Select(ArtifactInventoryCollectible s)
+    {
+        s.controllerSelectible.Select();
+        s.controllerSelectionImage.enabled = true;
+        s.UpdateInventoryName();
     }
 }

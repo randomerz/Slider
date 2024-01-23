@@ -188,7 +188,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     public void OnControlsChanged()
     {
         string newControlScheme = GetCurrentControlScheme();
-        Debug.Log("Control Scheme changed to: " + newControlScheme);
+        //Debug.Log("Control Scheme changed to: " + newControlScheme);
         OnControlSchemeChanged?.Invoke(newControlScheme);
         Controls.CurrentControlScheme = newControlScheme;
     }

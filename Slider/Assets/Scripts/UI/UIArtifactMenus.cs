@@ -79,7 +79,6 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
 
     private void DisableNavigation()
     {
-        print("disabling navigation");
         foreach(Selectable s in selectibles)
         {
             if(s.gameObject == null) continue;
