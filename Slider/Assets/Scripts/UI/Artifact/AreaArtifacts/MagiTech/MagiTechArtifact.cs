@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -81,7 +82,7 @@ public class MagiTechArtifact : UIArtifact
                 if (!isDesyncSoundPlaying)
                 {
                     isDesyncSoundPlaying = true;
-                    desyncTearLoopSound = AudioManager.PickSound("Desync Tear Open").AndPlay();
+                    desyncTearLoopSound = AudioManager.Play("Desync Tear Open");
                 }
                 ArtifactTileButton pastButton = desyncIslandId <= 9 ? GetButton(FindAltId(desyncIslandId)) : desyncedButton;
                 if (isInPast != isPreview) SetLightningPos(pastButton);
@@ -91,9 +92,11 @@ public class MagiTechArtifact : UIArtifact
             {
                 if (isDesyncSoundPlaying)
                 {
+                    // Likely not needed but its good to be safe?
                     isDesyncSoundPlaying = false;
                     desyncTearLoopSound.Stop();
-                    AudioManager.PickSound("Desync Tear Close").AndPlay();
+                    AudioManager.Play("Desync Tear Close");
+                    StartCoroutine(DelayedDesyncEndTileCrash());
                 }
                 DisableLightning(false);
             }
@@ -146,7 +149,8 @@ public class MagiTechArtifact : UIArtifact
                 {
                     isDesyncSoundPlaying = false;
                     desyncTearLoopSound.Stop();
-                    AudioManager.PickSound("Desync Tear Close").AndPlay();
+                    AudioManager.Play("Desync Tear Close");
+                    StartCoroutine(DelayedDesyncEndTileCrash());
                 }
                 onDesyncEnd.Invoke();
                 RestoreOnEndDesync();
@@ -155,6 +159,16 @@ public class MagiTechArtifact : UIArtifact
             }
             GetButton(dropTile.islandId).buttonAnimator.SetAnchored(interactArgs.drop);
         }
+    }
+
+    private IEnumerator DelayedDesyncEndTileCrash()
+    {
+        CameraShake.ShakeIncrease(0.7f, 0.2f);
+
+        yield return new WaitForSeconds(0.7f);
+
+        AudioManager.PlayWithVolume("Slide Explosion", 0.35f);
+        CameraShake.Shake(0.5f, 0.25f);
     }
 
     private void RestoreOnEndDesync()

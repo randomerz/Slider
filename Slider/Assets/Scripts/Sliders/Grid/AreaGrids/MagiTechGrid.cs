@@ -299,6 +299,12 @@ public class MagiTechGrid : SGrid
 
     private void EndDesync()
     {
+        if (desyncLocation != FindAltCoords(desyncAnchoredTileLocation))
+        {
+            AudioManager.PlayWithVolume("Slide Explosion", 0.35f);
+            CameraShake.Shake(0.5f, 0.25f);
+        }
+
         RestoreGridFromDesync();
         DesyncActive = false;
         OnDesyncEndWorld?.Invoke(this, new(desyncIslandId, desyncLocation, desyncAnchoredIslandId, desyncAnchoredTileLocation));
