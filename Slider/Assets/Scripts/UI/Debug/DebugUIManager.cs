@@ -287,7 +287,6 @@ public class DebugUIManager : MonoBehaviour
             int x = i % width;
             int y = i / width;
             puzzle[x, y] = Converter.CharToInt(pattern[i]);
-            print(puzzle[x,y]);
         }
 
         SGrid.Current.SetGrid(puzzle);
