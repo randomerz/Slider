@@ -274,10 +274,6 @@ public class DebugUIManager : MonoBehaviour
         SGrid grid = SGrid.Current;
         int width = grid.Width;
         int height = grid.Height;
-
-        print(width);
-        print(height);
-
         if (pattern.Length != width * height)
         {
             Debug.LogWarning("Input pattern was not the size of this SGrid!");
@@ -289,8 +285,7 @@ public class DebugUIManager : MonoBehaviour
         for (int i = 0; i < pattern.Length; i++)
         {
             int x = i % width;
-            int y = i / height;
-            print(x + " " + y);
+            int y = i / width;
             puzzle[x, y] = Converter.CharToInt(pattern[i]);
             print(puzzle[x,y]);
         }
