@@ -37,10 +37,14 @@ public class Hut : Box
 
     private void OnSTileEnabled(object sender, SGrid.OnSTileEnabledArgs e)
     {
+        foreach (Direction d in paths.Keys)
+        {
+            paths[d].ChangePair();
+        }
         currParents = new List<Box>();
         CreateShape();
     }
-    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    protected override void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         foreach (Direction d in paths.Keys)
         {

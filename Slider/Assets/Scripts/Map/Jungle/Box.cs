@@ -54,7 +54,7 @@ public class Box : MonoBehaviour
         }
     }
 
-    protected void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    protected virtual void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         foreach (Direction d in paths.Keys)
         {
