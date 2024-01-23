@@ -7,32 +7,33 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
     //disable mirage button called on click based on bool flag and whnever a move is made
     //if desertMirage is true, do any mirage things. but if false, revert to normal behavior and don't enable the foggy vfx for the tile
     public int mirageIslandId;
+    public int buttonIslandId;
     public ArtifactTBPluginLaser myLaserPlugin;
     [SerializeField] private List<ArtifactTBPluginLaser> laserPlugins;
     [SerializeField] private List<Sprite> mirageSprites;
     [SerializeField] private STile stile;
-    private ButtonMirage buttonMirage;
+    [SerializeField] private ButtonMirage buttonMirage;
+
     private void OnEnable()
     {
-        buttonMirage = GetComponent<ButtonMirage>();
         DesertArtifact.MoveMadeOnArtifact += MoveMadeOnArtifact;
     }
     private void OnDisable()
     {
         DesertArtifact.MoveMadeOnArtifact -= MoveMadeOnArtifact;
     }
+
     public void MirageOnClick()
     {
-        if (mirageIslandId > 0)
-        {
-            //Debug.Log("disablemirage");
-            //DisableMirage();
-            //return;
-        }
-        //Debug.Log("selecting");
         button.SelectButton();
     }
+
     private void MoveMadeOnArtifact(object sender, System.EventArgs e)
+    {
+        CheckForMirage();
+    }
+
+    private void CheckForMirage()
     {
         if (!MirageSTileManager.GetInstance().MirageEnabled) return; 
 
@@ -43,33 +44,33 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
 
         if (mirageIslandId < 8) 
         {
-            EnableMirageButton();
+            EnableMirageButton(mirageIslandId);
         }
     }
 
-    private void EnableMirageButton()
+    public void EnableMirageButton(int id)
     {
+        mirageIslandId = id;
         button.SetEmptySprite(mirageSprites[mirageIslandId - 1]);
         button.SetIslandSprite(mirageSprites[mirageIslandId - 1]);
-        button.buttonAnimator.sliderImage.sprite = mirageSprites[mirageIslandId - 1]; //I honestly dunno why this line is needed
+        button.SetSpriteToIsland();
         stile.sliderCollider.isTrigger = true;
         buttonMirage.SetMirageEnabled(true);
 
-        //Todo: copy laser TB plugin data from old tile to new tile
         ArtifactTBPluginLaser laserPlugin = laserPlugins[mirageIslandId - 1];
-        myLaserPlugin.CopyDataFromMirageSource(laserPlugin);
+        myLaserPlugin.laserUIData.CopyDataFromMirageSource(laserPlugin.laserUIData);
     }
 
-    private void DisableMirageButton()
+    public void DisableMirageButton()
     {
         button.RestoreDefaultEmptySprite();
         button.RestoreDefaultIslandSprite();
         button.SetSpriteToIslandOrEmpty();
-        MirageSTileManager.GetInstance().DisableMirage(mirageIslandId);
+        MirageSTileManager.GetInstance().DisableMirageTile(mirageIslandId);
         mirageIslandId = 0;
         stile.sliderCollider.isTrigger = false;
         buttonMirage.SetMirageEnabled(false);
-        myLaserPlugin.ClearDataOnMirageDisable();
+        myLaserPlugin.laserUIData.ClearDataOnMirageDisable();
 
         DesertArtifact.MirageDisappeared?.Invoke(this, new System.EventArgs());
     }

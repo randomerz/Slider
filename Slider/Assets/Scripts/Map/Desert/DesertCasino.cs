@@ -38,6 +38,11 @@ public class DesertCasino : MonoBehaviour
         float dist5 = s5.isTileActive ? (pp - new Vector3(s5x, s5.transform.position.y)).magnitude : 17; // center
         STile s6 = SGrid.Current.GetStile(6);
         float s6x = s6.transform.position.x + Mathf.Clamp(pp.x - s6.transform.position.x, -8.5f, 0);
+        if (PlayerInventory.Contains("Slider 9", Area.Desert))
+        {
+            // Let's look into the casino for the final part!
+            s6x = s6.transform.position.x + Mathf.Clamp(pp.x - s6.transform.position.x, -8.5f, 8.5f);
+        }
         float dist6 = s6.isTileActive ? (pp - new Vector3(s6x, s6.transform.position.y)).magnitude : 17; // center
         return Mathf.Min(dist5, dist6);
 
@@ -74,16 +79,17 @@ public class DesertCasino : MonoBehaviour
 
     public void CheckDiceValues(Condition c)
     {
-        if (CheckCasinoTogether() && dice1.value + dice2.value == 11) c.SetSpec(true);
-        else if (SaveSystem.Current.GetBool("desertDice")) c.SetSpec(true);
+        if (CheckCasinoTogether() && dice1.value + dice2.value == 11) 
+            c.SetSpec(true);
+        else if (SaveSystem.Current.GetBool("desertDice")) 
+            c.SetSpec(true);
         else c.SetSpec(false);
     }
 
     public bool CheckCasinoTogether()
     {
-        return CheckGrid.contains(SGrid.GetGridString(), "56");
+        return CheckGrid.contains(SGrid.GetGridString(), "56")
+        && !SGrid.Current.GetStile(5).IsMoving()
+        && !SGrid.Current.GetStile(6).IsMoving();
     }
-
-
-    
 }

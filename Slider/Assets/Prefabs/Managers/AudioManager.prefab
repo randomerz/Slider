@@ -503,6 +503,16 @@ MonoBehaviour:
       Path: event:/SFX/Jungle/Record Scratch
     canPause: 1
     dopplerScale: 1
+  - name: Jackal Jump
+    fmodEvent:
+      Guid:
+        Data1: 244485494
+        Data2: 1175358609
+        Data3: 1213481372
+        Data4: -1217751123
+      Path: event:/SFX/Desert/Jackal Jump
+    canPause: 1
+    dopplerScale: 1
   - name: Crocodile Grab Sequence
     fmodEvent:
       Guid:
@@ -553,6 +563,16 @@ MonoBehaviour:
       Path: event:/SFX/Desert/Dice Shake
     canPause: 1
     dopplerScale: 0
+  - name: Slider Sand
+    fmodEvent:
+      Guid:
+        Data1: 1232058098
+        Data2: 1290244825
+        Data3: 151735444
+        Data4: 1157576329
+      Path: event:/SFX/Desert/Slider Sand
+    canPause: 1
+    dopplerScale: 1
   - name: Bottle Fill
     fmodEvent:
       Guid:
@@ -663,14 +683,54 @@ MonoBehaviour:
       Path: event:/SFX/Magic/Desync Tear Close
     canPause: 1
     dopplerScale: 1
-  - name: Slider Sand
+  - name: Laser Start
     fmodEvent:
       Guid:
-        Data1: 1232058098
-        Data2: 1290244825
-        Data3: 151735444
-        Data4: 1157576329
-      Path: event:/SFX/Desert/Slider Sand
+        Data1: -24633881
+        Data2: 1273401045
+        Data3: -131659632
+        Data4: 1519040509
+      Path: event:/SFX/Magic/Laser Start
+    canPause: 1
+    dopplerScale: 1
+  - name: Footstep Concrete
+    fmodEvent:
+      Guid:
+        Data1: 915774245
+        Data2: 1170405450
+        Data3: 824886446
+        Data4: 374144923
+      Path: event:/SFX/Footsteps/player_footstep_concrete
+    canPause: 1
+    dopplerScale: 1
+  - name: Footstep Grass
+    fmodEvent:
+      Guid:
+        Data1: 1401915951
+        Data2: 1078907725
+        Data3: 401503915
+        Data4: -833290422
+      Path: event:/SFX/Footsteps/player_footstep_grass
+    canPause: 1
+    dopplerScale: 1
+  - name: Footstep Metal
+    fmodEvent:
+      Guid:
+        Data1: 928224416
+        Data2: 1111412477
+        Data3: 1874025127
+        Data4: 782460687
+      Path: event:/SFX/Footsteps/player_footstep_metal
+    canPause: 1
+    dopplerScale: 1
+  - name: Footstep Wood
+    fmodEvent:
+      Guid:
+        Data1: -428681772
+        Data2: 1182053985
+        Data3: -1389713231
+        Data4: 305745240
+      Path: event:/SFX/Footsteps/player_footstep_wood
     canPause: 1
     dopplerScale: 1
   music:
@@ -827,6 +887,15 @@ MonoBehaviour:
         Data3: -1960262746
         Data4: 1288741103
       Path: event:/Ambience/Forest Ambience
+    emitter: {fileID: 0}
+  - name: Laser Ambience
+    fmodEvent:
+      Guid:
+        Data1: -268719974
+        Data2: 1210375164
+        Data3: 1937589907
+        Data4: -1284581935
+      Path: event:/Ambience/Laser Ambience
     emitter: {fileID: 0}
   soundDampenCurve:
     serializedVersion: 2

@@ -289,9 +289,9 @@ public class SaveProfile
     /// </summary>
     /// <param name="name">The name of the string in the dictionary. Generally, try to follow: "areaBooleanName"</param>
     /// <returns></returns>
-    public string GetString(string name)
+    public string GetString(string name, string defaultValue = null)
     {
-        return strings.GetValueOrDefault(name, name);
+        return strings.GetValueOrDefault(name, defaultValue == null ? name : defaultValue);
     }
 
     public void SetString(string name, string value)

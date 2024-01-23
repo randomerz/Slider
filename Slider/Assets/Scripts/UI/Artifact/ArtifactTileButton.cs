@@ -29,7 +29,7 @@ public class ArtifactTileButton : MonoBehaviour
     public int x;
     public int y;
 
-    protected Sprite islandSprite;
+    public Sprite islandSprite;
     protected Sprite emptySprite;
     private FlashWhiteImage[] buttonIcons; // power lines, minecarft junctions, etc
     private bool dontUpdateDefaultSpriteOnAwake;
@@ -158,6 +158,11 @@ public class ArtifactTileButton : MonoBehaviour
         }
     }
 
+    public void SetSpriteToIsland()
+    {
+        buttonAnimator.sliderImage.sprite = isComplete ? completedSprite : islandSprite;
+    }
+
     public void SetSpriteToEmpty()
     {
         buttonAnimator.sliderImage.sprite = emptySprite;
@@ -284,14 +289,14 @@ public class ArtifactTileButton : MonoBehaviour
         SetSpriteToIslandOrEmpty();
     }
 
-    public void Flicker(int numFlickers)
+    public void Flicker(int numFlickers, bool repeat=true)
     {
-        StartCoroutine(NewButtonFlicker(numFlickers));
+        StartCoroutine(NewButtonFlicker(numFlickers, repeat: repeat));
     }
 
     public void FlickerImmediate(int numFlickers)
     {
-        StartCoroutine(NewButtonFlicker(numFlickers, true));
+        StartCoroutine(NewButtonFlicker(numFlickers, startOnBlank: true, repeat: false));
     }
 
     protected virtual void SetAnchoredPos(int x, int y)
@@ -300,11 +305,17 @@ public class ArtifactTileButton : MonoBehaviour
         GetComponent<RectTransform>().anchoredPosition = pos;
     }
 
-    private IEnumerator NewButtonFlicker(int numFlickers, bool startOnBlank=false) 
+    private IEnumerator NewButtonFlicker(int numFlickers, bool startOnBlank=false, bool repeat=true) 
     {
-        if (!startOnBlank)
+        SetSpriteToIslandOrEmpty();
+            
+        if (startOnBlank)
         {
-            SetSpriteToIslandOrEmpty();
+            // We wait until end of frame because sliderImage.sprite is written to often (usually by queue things)
+            yield return new WaitForEndOfFrame();
+        }
+        else
+        {
             yield return new WaitForSeconds(.25f);
         }
 
@@ -322,6 +333,11 @@ public class ArtifactTileButton : MonoBehaviour
             yield return new WaitForSeconds(.25f);
             SetSpriteToIslandOrEmpty();
             yield return new WaitForSeconds(.25f);
+        }
+
+        if (!repeat)
+        {
+            yield break;
         }
 
         if (IsTileExplored())

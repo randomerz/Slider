@@ -62,9 +62,12 @@ public class FactoryArtifact : UIArtifact
 
     private void UndoMovesAfterOverlap(List<SMove> newMoveQueue, SMove moveToCheck) {
         int cutIndex = newMoveQueue.Count;
+        HashSet<ArtifactTileButton> movedButtons = new();
+        bool shouldDoEffects = false;
+
         for (int i = 1; i < newMoveQueue.Count; i++)
         {
-            //SMoveConveyor should never interfere, but just in case we don't want them to be undone.
+            // SMoveConveyor should never interfere, but just in case we don't want them to be undone.
             if (newMoveQueue[i].Overlaps(moveToCheck))
             {
                 cutIndex = i;
@@ -72,21 +75,27 @@ public class FactoryArtifact : UIArtifact
             }
         }
 
-        //Undo the moves on the artifact in the reverse order that they were made.
-        for (int i = newMoveQueue.Count-1; i >= cutIndex; i--)
+        // Undo the moves on the artifact in the reverse order that they were made.
+        for (int i = newMoveQueue.Count - 1; i >= cutIndex; i--)
         {
             UndoSwapsBasedOnMove(newMoveQueue[i]);
             newMoveQueue.RemoveAt(i);
+            shouldDoEffects = true;
+        }
+
+        if (shouldDoEffects)
+        {
+            // Effects
+            AudioManager.Play("Artifact Error");
         }
     }
 
     private void SwapButtonsBasedOnMove(SMove move)
     {
-        var buttonToNewPos = new Dictionary<ArtifactTileButton, Vector2Int>();
+        Dictionary<ArtifactTileButton, Vector2Int> buttonToNewPos = new();
+
         foreach (Movement m in move.moves)
         {
-            //Debug.Log($"Button Pos: {m.startLoc}");
-            //Debug.Log($"Button end pos: {m.endLoc}");
             ArtifactTileButton b = GetButton(m.startLoc.x, m.startLoc.y);
             buttonToNewPos[b] = m.endLoc;
         }
@@ -101,7 +110,7 @@ public class FactoryArtifact : UIArtifact
 
     private void UndoSwapsBasedOnMove(SMove move)
     {
-        var buttonToNewPos = new Dictionary<ArtifactTileButton, Vector2Int>();
+        Dictionary<ArtifactTileButton, Vector2Int> buttonToNewPos = new();
         foreach (Movement m in move.moves)
         {
             ArtifactTileButton b = GetButton(m.endLoc.x, m.endLoc.y);
@@ -110,11 +119,12 @@ public class FactoryArtifact : UIArtifact
 
         foreach (var b in buttonToNewPos.Keys)
         {
-            if (b.isActiveAndEnabled)   //Can't start coroutines on inactive button.
+            b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y, false);
+            
+            if (b.TileIsActive)
             {
                 b.FlickerImmediate(1);
             }
-            b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y, false);
         }
 
         UpdateMoveOptions();

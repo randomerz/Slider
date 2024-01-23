@@ -59,9 +59,12 @@ public class Collectible : MonoBehaviour
     }
 
 
-    public void DoPickUp()
+    public void DoPickUp(bool skipCutscene = false)
     {
-        ItemPickupEffect.StartCutscene(spriteRenderer.sprite, cData.name, DoOnCollect);
+        if(!skipCutscene)
+            ItemPickupEffect.StartCutscene(spriteRenderer.sprite, cData.name, DoOnCollect);
+        else
+            DoOnCollect();
         DespwanCollectable(gameObject);
     }
 
