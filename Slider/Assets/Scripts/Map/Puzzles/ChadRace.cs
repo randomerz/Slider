@@ -74,7 +74,7 @@ public class ChadRace : MonoBehaviour, ISavable
             case State.TrackNotSetup:
                 if (tilesAdjacent)
                 {
-                    DisplayAndTriggerDialogue("Bet I could beat you to the bell.");
+                    DisplayAndTriggerDialogue("Ready to race?");
                     raceState = State.NotStarted;
                 }
                 break;

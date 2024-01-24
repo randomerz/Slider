@@ -207,7 +207,7 @@ public class JungleGrid : SGrid
         
         foreach (GameObject g in jungleBridges)
         {
-            g.SetActive(true);
+            g.SetActive(false);
         }
     }
 
