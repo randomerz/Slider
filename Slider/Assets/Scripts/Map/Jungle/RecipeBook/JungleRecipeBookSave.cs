@@ -31,6 +31,11 @@ public class JungleRecipeBookSave : Singleton<JungleRecipeBookSave>, ISavable
         {
             InitializeSingleton();
         }
+
+        if (allShapes.Count != recipeList.list.Count + 4)
+        {
+            Debug.LogWarning("Warning: Did you forget to add a shape from the recipe list to 'allShapes'?");
+        }
     }
 
     public void Load(SaveProfile profile)

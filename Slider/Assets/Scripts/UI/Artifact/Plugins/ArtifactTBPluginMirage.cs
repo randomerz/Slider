@@ -58,7 +58,7 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         buttonMirage.SetMirageEnabled(true);
 
         ArtifactTBPluginLaser laserPlugin = laserPlugins[mirageIslandId - 1];
-        myLaserPlugin.CopyDataFromMirageSource(laserPlugin);
+        myLaserPlugin.laserUIData.CopyDataFromMirageSource(laserPlugin.laserUIData);
     }
 
     public void DisableMirageButton()
@@ -70,7 +70,7 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         mirageIslandId = 0;
         stile.sliderCollider.isTrigger = false;
         buttonMirage.SetMirageEnabled(false);
-        myLaserPlugin.ClearDataOnMirageDisable();
+        myLaserPlugin.laserUIData.ClearDataOnMirageDisable();
 
         DesertArtifact.MirageDisappeared?.Invoke(this, new System.EventArgs());
     }

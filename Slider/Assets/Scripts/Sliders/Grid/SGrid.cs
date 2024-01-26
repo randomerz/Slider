@@ -287,6 +287,11 @@ public void SetGrid(int[,] puzzle)
         return Current.grid[x,y];
     }
 
+    public STile GetStileAt(Vector2Int loc)
+    {
+        return Current.grid[loc.x, loc.y];
+    }
+
     public List<STile> GetStiles(List<int> idList)
     {
         List<STile> returnList = new List<STile>();
@@ -516,12 +521,13 @@ public void SetGrid(int[,] puzzle)
     //L: Updates internal state (the grid[,]) based on result of SMove. See Move in SGridAnimator for the actual moving of the tiles.
     public virtual void Move(SMove move)
     {
-        gridAnimator.Move(move);
+        gridAnimator.Move(move, grid);
 
         STile[,] newGrid = new STile[Width, Height];
         System.Array.Copy(grid, newGrid, Width * Height);
         foreach (Movement m in move.moves)
         {
+            // We might want to update STile X and Y here instead of in SGridAnimator as well
             newGrid[m.endLoc.x, m.endLoc.y] = grid[m.startLoc.x, m.startLoc.y];
         }
         STile[,] oldGrid = grid;

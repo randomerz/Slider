@@ -83,6 +83,8 @@ public class UIEffects : Singleton<UIEffects>
         _instance.blackPanelCanvasGroup.alpha = 0;
         _instance.whitePanel.SetActive(false);
         _instance.whitePanelCanvasGroup.alpha = 0;
+        _instance.screenshotPanel.SetActive(false);
+        _instance.screenshotCanvasGroup.alpha = 0;
     }
 
     private static void StartEffectCoroutine(IEnumerator coroutine, bool stopable = true)
@@ -90,6 +92,7 @@ public class UIEffects : Singleton<UIEffects>
         if (previousCoroutine != null)
         {
             _instance.StopCoroutine(previousCoroutine);
+            ClearScreen();
         }
         var c = _instance.StartCoroutine(coroutine);
         previousCoroutine = stopable ? c : null;
