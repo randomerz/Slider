@@ -635,7 +635,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -643,6 +643,27 @@ TextureImporter:
       bones: []
       spriteID: cb5242c5f2b72b4498f795b5cd4bc66a
       internalID: 1284176938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_items_outline_25
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db3cd4027c9251843a9897a58d4d925e
+      internalID: 543197177
       vertices: []
       indices: 
       edges: []
@@ -676,6 +697,7 @@ TextureImporter:
       jungle_items_outline_22: 397293939
       jungle_items_outline_23: -1007183762
       jungle_items_outline_24: 1284176938
+      jungle_items_outline_25: 543197177
       jungle_items_outline_3: 861074992
       jungle_items_outline_4: 1231390793
       jungle_items_outline_5: -1417048283

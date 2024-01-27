@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 
 // Chad race should be attatched to chad
-public class ChadRace : MonoBehaviour
+public class ChadRace : MonoBehaviour, ISavable
 {
     enum State {
         TrackNotSetup,
@@ -31,6 +31,7 @@ public class ChadRace : MonoBehaviour
     public NPC npcScript;
     public GameObject talkingCanvas;
     public PlayerConditionals playerConditional;
+    public GameObject startingFlag;
 
     private Vector2 chadStartLocal;
     private Vector2 playerStart;
@@ -42,6 +43,7 @@ public class ChadRace : MonoBehaviour
     [SerializeField] private ParticleSystem[] speedLinesList;
     private bool speedLinesOn;
 
+    private const string SAVE_STRING_PLAYER_WON = "JungleChadRacePlayerWon";
 
     private void OnEnable()
     {
@@ -72,7 +74,7 @@ public class ChadRace : MonoBehaviour
             case State.TrackNotSetup:
                 if (tilesAdjacent)
                 {
-                    DisplayAndTriggerDialogue("Bet I could beat you to the bell.");
+                    DisplayAndTriggerDialogue("Ready to race?");
                     raceState = State.NotStarted;
                 }
                 break;
@@ -80,7 +82,7 @@ public class ChadRace : MonoBehaviour
             case State.NotStarted:
                 if (!tilesAdjacent)
                 {
-                    DisplayAndTriggerDialogue("Set up a track to the bell.");
+                    DisplayAndTriggerDialogue("Race time! Set up a track to the bell.");
                     raceState = State.TrackNotSetup;
                 }
                 ActivateSpeedLines(false);
@@ -183,6 +185,42 @@ public class ChadRace : MonoBehaviour
         }
     }
 
+    public void Save()
+    {
+        if (raceState == State.PlayerWon)
+        {
+            SaveSystem.Current.SetBool(SAVE_STRING_PLAYER_WON, true);
+        }
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        if (profile.GetBool(SAVE_STRING_PLAYER_WON))
+        {
+            raceState = State.PlayerWon;
+        }
+
+        if (profile.GetBool(JungleShapeManager.GetSaveString("Flag")))
+        {
+            PlaceStartingFlag(true);
+        }
+        else
+        {
+            startingFlag.SetActive(false);
+        }
+    }
+
+    public void PlaceStartingFlag(bool fromSave=false)
+    {
+        startingFlag.SetActive(true);
+
+        if (!fromSave)
+        {
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, startingFlag.transform.position, startingFlag.transform);
+            AudioManager.Play("Hat Click");
+        }
+    }
+
     private void HandleStartCountdown()
     {
         SaveSystem.Current.SetBool("jungleChadRaceHasStarted", true);
@@ -237,6 +275,7 @@ public class ChadRace : MonoBehaviour
     // Invoked by Player Conditionals on success
     public void StartQueued() {
         if (tilesAdjacent && 
+            SaveSystem.Current.GetBool(JungleShapeManager.GetSaveString("Flag")) &&
             raceState != State.Started && 
             raceState != State.Running && 
             raceState != State.PlayerWon && 

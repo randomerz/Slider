@@ -12,6 +12,8 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
     private Dictionary<Area, ArtifactWorldMapArea> areaToMapArea = new Dictionary<Area, ArtifactWorldMapArea>();
     private Dictionary<Area, ArtifactWorldMapArea.AreaStatus> areaToStatus;
     public GameObject inventoryText;
+    public Image controllerSelectImage;
+    public Sprite empty;
 
     private bool didInit = false;
 
@@ -85,6 +87,11 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
         }
     }
 
+    public void Start()
+    {
+        ToggleNavigation(Controls.CurrentControlScheme);
+    }
+
     // this is bc we refactored this to be a singleton
     public static void SetAreaStatus(Area area, ArtifactWorldMapArea.AreaStatus status)
     {
@@ -144,5 +151,42 @@ public class UIArtifactWorldMap : Singleton<UIArtifactWorldMap>, ISavable
         {
             leftArrowButton.Select();
         }
+        Player.OnControlSchemeChanged += ToggleNavigation;
+    }
+
+    private void OnDisable()
+    {
+        Player.OnControlSchemeChanged -= ToggleNavigation;
+    }
+
+    private void ToggleNavigation(string s)
+    {
+        if(s == Controls.CONTROL_SCHEME_CONTROLLER)
+        {
+            foreach(ArtifactWorldMapArea a in mapAreas)
+            {
+                a.ToggleControllerSelect(true);
+                a.SelectCurrentArea(s);
+            }
+        }
+        else
+        {
+            foreach(ArtifactWorldMapArea a in mapAreas)
+            {
+                a.ToggleControllerSelect(false);
+            }
+            ClearControllerSelectionSprite();
+        }
+        
+    }
+
+    public void UpdateControllerSelectionSprite(Sprite s)
+    {
+        controllerSelectImage.sprite = s;
+    }
+
+    public void ClearControllerSelectionSprite()
+    {
+        controllerSelectImage.sprite = empty;
     }
 }
