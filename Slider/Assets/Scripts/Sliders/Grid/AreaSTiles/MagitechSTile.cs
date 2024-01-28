@@ -36,7 +36,7 @@ public class MagitechSTile : STile
 
     private void CheckDesyncStart(object sender, MagiTechGrid.OnDesyncArgs e)
     {
-        if (e.anchoredTileIslandId == islandId || MagiTechArtifact.FindAltId(e.anchoredTileIslandId) == islandId)
+        if (e.anchoredTileIslandId == islandId || e.desyncIslandId == islandId)
         {
             SetDesyncParticles(true);
         }
@@ -44,7 +44,7 @@ public class MagitechSTile : STile
 
     private void CheckDesyncEnd(object sender, MagiTechGrid.OnDesyncArgs e)
     {
-        if (e.anchoredTileIslandId == islandId || MagiTechArtifact.FindAltId(e.anchoredTileIslandId) == islandId)
+        if (e.anchoredTileIslandId == islandId || e.desyncIslandId == islandId)
         {
             SetDesyncParticles(false);
         }

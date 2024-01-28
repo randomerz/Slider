@@ -175,10 +175,11 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
 
     public void AnimatePositionFrom(Vector2 position)
     {
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = Vector2.zero;
         // In cases where object spawns and moves before artifact is opened, i.e. Loading game into Factory conveyors
         if (!gameObject.activeInHierarchy)
             return;
-
         if (positionAnimatorCoroutine != null)
         {
             StopCoroutine(positionAnimatorCoroutine);
