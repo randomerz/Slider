@@ -40,6 +40,7 @@ public class ChadSrElectricPuzzle : MonoBehaviour
     {
         itemElectricalTrigger.enabled = true;
         itemHolding?.SetCollider(true);
+        itemHolding.saveString = "factoryChadSrBob";
         itemHolding = null;
         itemHoldingNode = null;
         SaveSystem.Current.SetBool("ChadSrPuzzleComplete", true);

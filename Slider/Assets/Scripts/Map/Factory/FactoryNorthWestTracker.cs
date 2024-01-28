@@ -52,7 +52,7 @@ public class FactoryNorthWestTracker : MonoBehaviour
                 // if left door is closed -> softlock
                 if (!IsLeftDoorPowered())
                 {
-                    Debug.Log("Softlock!");
+                    SaveSystem.Current.SetBool("factoryClosetSoftlock", true);
                 }
                 break;
         }
