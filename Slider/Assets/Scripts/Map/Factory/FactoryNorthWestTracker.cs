@@ -42,6 +42,13 @@ public class FactoryNorthWestTracker : MonoBehaviour
                             SaveSystem.Current.SetBool("factoryBobCheated", true);
                         }
                     }
+
+                    if(SaveSystem.Current.GetBool("factoryClosetSoftlock"))
+                    {
+                        //was softlocked and escaped
+                        SaveSystem.Current.SetBool("factoryClosetSoftlock", false);
+                        SaveSystem.Current.SetBool("factoryEscapedClosetSoftlock", true);
+                    }
                 }
                 break;
 
@@ -53,6 +60,8 @@ public class FactoryNorthWestTracker : MonoBehaviour
                 if (!IsLeftDoorPowered())
                 {
                     SaveSystem.Current.SetBool("factoryClosetSoftlock", true);
+                    SaveSystem.Current.SetBool("factoryEscapedClosetSoftlock", false);
+
                 }
                 break;
         }
