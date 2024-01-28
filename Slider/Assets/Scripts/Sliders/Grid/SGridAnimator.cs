@@ -144,14 +144,17 @@ public class SGridAnimator : MonoBehaviour
         {
             t += Time.deltaTime;
             
+            Vector2 pos = moveCoords.startLoc;
             if(animate)
             {
                 float s = movementCurve.Evaluate(Mathf.Min(t / currMoveDuration, 1));
-                Vector2 pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
-                stile.SetMovingPosition(pos);
+                pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
             }
+            stile.SetMovingPosition(pos);
+
             yield return null;
         }
+        stile.SetMovingPosition(moveCoords.endLoc);
         
         if (isPlayerOnStile)
         {
