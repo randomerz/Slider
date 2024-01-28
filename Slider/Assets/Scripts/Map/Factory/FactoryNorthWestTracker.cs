@@ -42,6 +42,13 @@ public class FactoryNorthWestTracker : MonoBehaviour
                             SaveSystem.Current.SetBool("factoryBobCheated", true);
                         }
                     }
+
+                    if(SaveSystem.Current.GetBool("factoryClosetSoftlock"))
+                    {
+                        //was softlocked and escaped
+                        SaveSystem.Current.SetBool("factoryClosetSoftlock", false);
+                        SaveSystem.Current.SetBool("factoryEscapedClosetSoftlock", true);
+                    }
                 }
                 break;
 
@@ -52,7 +59,9 @@ public class FactoryNorthWestTracker : MonoBehaviour
                 // if left door is closed -> softlock
                 if (!IsLeftDoorPowered())
                 {
-                    Debug.Log("Softlock!");
+                    SaveSystem.Current.SetBool("factoryClosetSoftlock", true);
+                    SaveSystem.Current.SetBool("factoryEscapedClosetSoftlock", false);
+
                 }
                 break;
         }
