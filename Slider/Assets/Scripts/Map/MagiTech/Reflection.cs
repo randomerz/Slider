@@ -55,6 +55,7 @@ public class Reflection : MonoBehaviour
     {
         mySpriteRenderer.sprite = targetSpriteRenderer.sprite;
         mySpriteRenderer.flipX = targetSpriteRenderer.flipX;
+        mySpriteRenderer.enabled = targetSpriteRenderer.enabled;
         // Color? Other attributes?
     }
 }

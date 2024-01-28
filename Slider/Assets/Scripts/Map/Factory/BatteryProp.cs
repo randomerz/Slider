@@ -65,7 +65,7 @@ public class BatteryProp : MonoBehaviour
         {
             foreach (ParticleSystem ps in particlesConducting) 
             {
-                ps.Play();
+                ps.Stop();
             }
         }
 

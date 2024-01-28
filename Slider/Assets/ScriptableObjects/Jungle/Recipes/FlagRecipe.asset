@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d5a8884413557c45befff1ff53c32b3, type: 3}
+  m_Name: FlagRecipe
+  m_EditorClassIdentifier: 
+  result: {fileID: 11400000, guid: 15fb403af3c3bea4b8e8429f9fb96a29, type: 2}
+  combinations:
+  - ingredients:
+    - {fileID: 11400000, guid: c69c312efe4e4034fa00f822ec758ee2, type: 2}
+    - {fileID: 11400000, guid: c3e593ac582187144af28d63cac51845, type: 2}
+    isSecondaryRecipe: 0
+    numberOfTimesCreated: 0
+  - ingredients:
+    - {fileID: 11400000, guid: c69c312efe4e4034fa00f822ec758ee2, type: 2}
+    - {fileID: 11400000, guid: 76675a2db3290714f95b9c4099fbdd50, type: 2}
+    - {fileID: 11400000, guid: 76675a2db3290714f95b9c4099fbdd50, type: 2}
+    isSecondaryRecipe: 1
+    numberOfTimesCreated: 0

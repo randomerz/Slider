@@ -216,9 +216,14 @@ public class DinoLasersManager : MonoBehaviour
 
         firstTimeActivationAnimation.SetActive(true);
 
+        CameraShake.ShakeIncrease(0.5f, 2);
+
         yield return new WaitForSeconds(2.167f); 
 
         firstTimeActivationAnimation.SetActive(false);
+
+        CameraShake.Shake(1, 1);
+        AudioManager.Play("Slide Explosion", firstTimeActivationAnimation.transform);
 
         foreach (DinoLaser dinoLaser in dinoLasers)
         {

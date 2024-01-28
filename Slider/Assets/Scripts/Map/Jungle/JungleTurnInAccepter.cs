@@ -1,18 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class JungleTurnInAccepter : MonoBehaviour
 {
-
     public Shape neededShape;
-/*    //might wanna refactor this to just auto find it
-    private JungleShapeManager jm;*/
-
-    void Start()
-    {
-        //jm = (JungleShapeManager)FindObjectOfType(typeof(JungleShapeManager));
-    }
+    public UnityEvent onSuccessfulTurnIn;
 
     // on trigger call the jm to see what shape the player and pass the shape you need then do stuff if it is the same
     //set flag as tru and remove shape from player
@@ -20,6 +14,10 @@ public class JungleTurnInAccepter : MonoBehaviour
 
     public void OnShapeTriggerEnter()
     {
-        bool removed = JungleShapeManager.TurnInShape(neededShape);
+        bool successful = JungleShapeManager.TurnInShape(neededShape);
+        if (successful)
+        {
+            onSuccessfulTurnIn?.Invoke();
+        }
     }
 }

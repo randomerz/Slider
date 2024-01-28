@@ -207,7 +207,7 @@ public class DesertTabManager : ArtifactTabManager
             {
                 fragSwapTile = emptyTile;
                 SetFragIconToShowSwapTile(fragSwapTile);
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(0.5f);
                 fragSwapTile.SetScrollHighlight(false);
             }
         }

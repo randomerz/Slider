@@ -4,9 +4,23 @@ using UnityEngine;
 
 public class MagitechBurgerPuzzle : MonoBehaviour
 {
+    public DesyncItem presentBurger;
+    public DesyncItem pastBurger;
     private bool hasBurger;
     private bool hasDesyncBurger;
     private bool hasBurgerInPast;
+
+    public void AddTrackers()
+    {
+        presentBurger.SetIsTracked(true);
+        pastBurger.SetIsTracked(true);
+    }
+
+    public void RemoveTrackers()
+    {
+        presentBurger.SetIsTracked(false);
+        pastBurger.SetIsTracked(false);
+    }
 
     public void SetHasBurger(bool value)
     {

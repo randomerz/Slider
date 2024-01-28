@@ -20,7 +20,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     /// </summary>
     private const int GRID_POSITION_TO_WORLD_POSITION = 17;
 
-    private const string MIRAGE_ENABLED_SAVE_STRING = "DesertMirageEnabled";
+    public const string MIRAGE_ENABLED_SAVE_STRING = "DesertMirageEnabled";
     private const string MIRAGE_TILES_SAVE_STRING = "DesertMirageTiles";
     private List<int> POSSIBLE_MIRAGE_TILES = new() { 8, 9 };
 
@@ -44,12 +44,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     public void Save()
     {
-        if(mirageEnabled)
-        {
-            UnSubscribeMirageEvents();
-        }
         SaveSystem.Current.SetBool(MIRAGE_ENABLED_SAVE_STRING, mirageEnabled);
-        //SaveSystem.Current.SetString(MIRAGE_TILES_SAVE_STRING, BuildMirageTilesSaveString());
         BuildMirageTileSaveStrings();
     }
 
@@ -70,33 +65,6 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
             SaveSystem.Current.SetInt(BuildMirageTilesSaveString(data.buttonID, "yPosition"), data.y);
         }
     }
-
-    // private string BuildMirageTilesSaveString()
-    // {
-    //     if(enabledMirageTiles == null) return "";
-    //     StringBuilder s = new();
-    //     if(enabledMirageTiles.Count > 2) 
-    //         Debug.LogWarning("more than 2 mirage tiles saved! This should not happen!");
-    //     for(int i = 1; i <= 7; i++)
-    //     {
-    //         MirageTileData data = null;
-    //         foreach(MirageTileData d in enabledMirageTiles)
-    //         {
-    //             if(d.orignalTileID == i)
-    //                 data = d;
-    //         }   
-    //         if(data == null)
-    //         {
-    //             s.Append("XXXX");
-    //         }
-    //         else
-    //         {
-    //             s.Append($"{data.orignalTileID}{data.buttonID}{data.x}{data.y}");
-    //         }
-    //     }
-    //    // print(s.ToString());
-    //     return s.ToString();
-    // }
 
     public void Load(SaveProfile profile)
     {
@@ -122,42 +90,6 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
         }
     }
 
-    // private void EnableMirageTilesFromSave(string saveString)
-    // {
-    //     enabledMirageTiles = new();
-    //     print(saveString);
-    //     if(saveString == null || saveString == "") return;
-    //     for(int i = 0; i < 7; i++)
-    //     {
-    //         string s = saveString.Substring(4 * i, 4);
-    //         char[] c = s.ToCharArray();
-    //         if(c[0] != 'X')
-    //         {
-    //             int[] ints = CharToInt(c);
-    //             EnableMirageTile(ints[0], ints[1], ints[2], ints[3]);
-    //             if(ints[1] == 8)
-    //             {
-    //                 mirageButtons[0].EnableMirageButton(ints[0]);
-    //             }
-    //             else
-    //             {
-    //                 mirageButtons[1].EnableMirageButton(ints[0]);
-    //             }
-    //         }
-    //     }
-    //     OnMirageSTilesEnabled?.Invoke(this, null);
-    // }
-
-    // private int[] CharToInt(char[] chars)
-    // {
-    //     int[] ints = new int[chars.Length];
-    //     for(int i = 0; i < chars.Length; i++)
-    //     {
-    //         ints[i] = chars[i] - '0';
-    //     }
-    //     return ints;
-    // }
-
     public void Awake()
     {
         InitializeSingleton();
@@ -178,6 +110,11 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     private void Start()
     {
         EnableButtonsOnStart();
+    }
+
+    private void OnDisable()
+    {
+        UnSubscribeMirageEvents();
     }
 
     private void EnableButtonsOnStart()
@@ -296,7 +233,6 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
             }
 
         }
-
         OnMirageSTilesEnabled?.Invoke(this, null);
     }
 

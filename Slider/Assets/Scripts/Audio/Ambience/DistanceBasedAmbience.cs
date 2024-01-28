@@ -9,12 +9,20 @@ public class DistanceBasedAmbience : MonoBehaviour
     public float ambienceGlobalParameterDefaultValue;
     public List<Transform> distanceNodes = new List<Transform>();
     private Transform playerTransform;
+    [SerializeField] private bool isEnabled = true;
+
+    private static Dictionary<string, float> nameToMinDist = new();
 
     private void Start()
     {
         playerTransform = Player.GetInstance().transform;
         AudioManager.PlayAmbience(ambienceName);
-        UpdateParameter();
+        nameToMinDist[ambienceName] = Mathf.Infinity;
+        if (isEnabled)
+        {
+            UpdateParameter();
+            SendParameter();
+        }
     }
 
     private void OnDestroy()
@@ -25,7 +33,34 @@ public class DistanceBasedAmbience : MonoBehaviour
 
     private void Update()
     {
-        UpdateParameter();
+        if (isEnabled)
+        {
+            UpdateParameter();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (isEnabled)
+        {
+            SendParameter();
+        }
+    }
+
+    public void SetParameterEnabled(bool isEnabled)
+    {
+        this.isEnabled = isEnabled;
+
+        if (isEnabled)
+        {
+            UpdateParameter();
+            SendParameter();
+        }
+        else
+        {
+            AudioManager.SetGlobalParameter(ambienceGlobalParameterName, Mathf.Infinity);
+            nameToMinDist[ambienceName] = Mathf.Infinity;
+        }
     }
 
     private void UpdateParameter()
@@ -39,6 +74,15 @@ public class DistanceBasedAmbience : MonoBehaviour
             }
         }
 
-        AudioManager.SetGlobalParameter(ambienceGlobalParameterName, minDistance);
+        nameToMinDist[ambienceName] = Mathf.Min(minDistance, nameToMinDist[ambienceName]);
+    }
+
+    private void SendParameter()
+    {
+        if (nameToMinDist[ambienceName] != Mathf.Infinity)
+        {
+            AudioManager.SetGlobalParameter(ambienceGlobalParameterName, nameToMinDist[ambienceName]);
+            nameToMinDist[ambienceName] = Mathf.Infinity;
+        }
     }
 }

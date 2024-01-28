@@ -8,6 +8,7 @@ public class FactoryMagnet : MonoBehaviour
     public ParticleSystem topParticles;
     public ParticleSystem bottomParticles;
     public FactoryMagnet magnetPair;
+    public GameObject uiIcon;
 
     [SerializeField] private bool powerOnStart;
 
@@ -52,6 +53,8 @@ public class FactoryMagnet : MonoBehaviour
         bool isPowered = GetPowered();
         poweredSprite.enabled = isPowered;
         bobAnimation.enabled = isPowered;
+        if(uiIcon)
+            uiIcon.SetActive(isPowered);
         if (isPowered)
         {
             topParticles.Play();

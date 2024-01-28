@@ -85,6 +85,7 @@ public class FactoryMusicController : MonoBehaviour, ISavable
         if (isInPast)
         {
             SetFactoryMusicProgress(5);
+            AudioManager.PlayMusic("Factory");
             AudioManager.PlayAmbience("Forest Ambience");
         }
         else if (PlayerInventory.Contains("Slider 8", Area.Factory))

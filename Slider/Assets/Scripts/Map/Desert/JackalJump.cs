@@ -96,6 +96,8 @@ public class JackalJump : MonoBehaviour
         jackalAnimator.SetBool("isSpinning", true);
         jackalAnimator.SetBool("isFrozen", false);
 
+        AudioManager.Play("Jackal Jump", jackalGameObject.transform);
+
         Vector3 startPos = jackalGameObject.transform.position;
         float t = 0;
         while (t < jumpDuration)
@@ -131,9 +133,6 @@ public class JackalJump : MonoBehaviour
         jackalAnimator.SetBool("isSpinning", false);
         jackalCollider.enabled = true;
         isJumping = false;
-
-        yield return new WaitForSeconds (1.5f);
-
         didJump = true;
     }
 

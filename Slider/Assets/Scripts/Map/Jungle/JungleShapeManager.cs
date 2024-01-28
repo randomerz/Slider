@@ -8,7 +8,7 @@ public class JungleShapeManager : Singleton<JungleShapeManager>, ISavable
 {
     //refactor later to just be a singleton
     //public static JungleShapeManager instance { get; private set; }
-    private string prefix = "jungleTurnedIn_";
+    private const string prefix = "jungleTurnedIn_";
 
     private void Awake()
     {
@@ -19,9 +19,14 @@ public class JungleShapeManager : Singleton<JungleShapeManager>, ISavable
         DontDestroyOnLoad(gameObject);
     }
 
+    public static string GetSaveString(string shape)
+    {
+        return $"{prefix}{shape}";
+    }
+
     public static bool TurnInShape(Shape wanted)
     {
-        //get teh item the player is holding
+        // get teh item the player is holding
         Item held = PlayerInventory.GetCurrentItem();
 
         if (held == null)
@@ -29,12 +34,12 @@ public class JungleShapeManager : Singleton<JungleShapeManager>, ISavable
             return false;
         }
 
-        //check if correct shape
+        // check if correct shape
         if (held.itemName.Equals(wanted.shapeName))
         {
-            //print("Turn in " + wanted.name);
             PlayerInventory.RemoveAndDestroyItem();
-            SaveSystem.Current.SetBool(_instance.prefix + wanted.shapeName, true);
+            SaveSystem.Current.SetBool(GetSaveString(wanted.shapeName), true);
+            return true;
         }
 
         return false;
