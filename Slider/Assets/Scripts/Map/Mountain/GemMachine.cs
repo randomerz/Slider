@@ -16,6 +16,24 @@ public class GemMachine : MonoBehaviour, ISavable
     public GameObject fixedObj;
     public PipeLiquid pipeLiquid;
 
+    public enum GemMachinePhase
+    {
+        INITIAL,
+        BROKEN,
+        FIXED,
+        FULLY_GOOED
+    }
+
+    public GemMachinePhase phase = GemMachinePhase.INITIAL;
+
+    private void Start() {
+        sTile = GetComponentInParent<STile>();
+    }
+
+    private void Update() {
+        gemChecker.SetActive(isPowered && !isBroken);
+    }
+
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
     }
@@ -30,24 +48,47 @@ public class GemMachine : MonoBehaviour, ISavable
             ResetGems();
     }
 
-    private void Start() {
-        sTile = GetComponentInParent<STile>();
-    }
-
-    private void Update() {
-        gemChecker.SetActive(isPowered && !isBroken);
-    }
-
     public void AddGem(){
-        animator.Play("AbsorbGem");
         if(!isPowered || isBroken)
+        {
+            Debug.LogWarning("Gem machine took gem when it should not");
             return;
-        numGems++;
-        if(numGems == 2){
-            AudioManager.Play("Puzzle Complete");
-            isDone = true;
-            EnableGoo();
         }
+
+        animator.Play("AbsorbGem");
+
+        switch(phase)
+        {
+            case GemMachinePhase.INITIAL:
+                print("take gem and blow up generator");
+                break;
+            case GemMachinePhase.BROKEN:
+                print("this should not happen");
+                break;
+            case GemMachinePhase.FIXED:
+                print("add gem");
+                break;
+            case GemMachinePhase.FULLY_GOOED:
+                print("idk yet lol");
+                break;
+        }
+        
+        // numGems++;
+        // if(numGems == 2){
+        //     AudioManager.Play("Puzzle Complete");
+        //     isDone = true;
+        //     EnableGoo();
+        // }
+    }
+
+    private void IntialGemAbsorb()
+    {
+
+    }
+
+    private void AddGemToContainer()
+    {
+
     }
 
     public void RemoveGem(){
@@ -79,6 +120,8 @@ public class GemMachine : MonoBehaviour, ISavable
         }
     }
 
+
+
     
     public void EnableGoo(bool fillImmediate = false)
     {
@@ -92,10 +135,14 @@ public class GemMachine : MonoBehaviour, ISavable
     public void Save(){
         SaveSystem.Current.SetInt("mountainNumGems", numGems);
         SaveSystem.Current.SetBool("mountainGemMachineBroken", isBroken);
+        
+        SaveSystem.Current.SetInt("mountainGemMachinePhase", (int)phase);
     }
 
     public void Load(SaveProfile profile)
     {
+        phase = (GemMachinePhase) profile.GetInt("mountainGemMachinePhase");
+
         numGems = profile.GetInt("mountainNumGems");
         if(numGems >= 2)
             isDone = true;
