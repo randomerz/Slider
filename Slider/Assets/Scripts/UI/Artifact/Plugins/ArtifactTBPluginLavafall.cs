@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class ArtifactLavafallPlugin : ArtifactTBPlugin
 {
@@ -11,7 +12,7 @@ public class ArtifactLavafallPlugin : ArtifactTBPlugin
         UpdateUI();
     }
 
-    public override void OnPosChanged()
+    private void Update()
     {
         UpdateUI();
     }
