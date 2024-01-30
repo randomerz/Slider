@@ -283,7 +283,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Ahoy matey! Welcome to Buccaneer Bob's. Here in the Shifting Seas, freedom is our creed. Just don't get lost or overwhelmed -- the oceans are filled with treasure.",
+                    "Ahoy matey! Welcome to Buccaneer Bob's. Here in the Shifting Seas, freedom is our creed. Just don't get lost -- the oceans are filled with treasure.",
                     TKSprite.Normal,
                     () => SetDialogue(
                        
@@ -319,13 +319,13 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "And you don't have an <#2e44f0>anchor</color>? Every self-respecting pirate has one!",
+                    "And you don't have an <#2e44f0>anchor</color>? Every self-respecting pirate has an anchor!",
                     TKSprite.Question,
                     () => SetDialogue(
 
                 new ShopDialogue(
                     null,
-                    "Quickly, go find one. I don't want people seein' an anchorless schmuck in my tavern. Bring one back and I'll see what I can do for you.",
+                    "Quickly now, go find one. I don't want people seein' an anchorless schmuck in my tavern. Bring one back and I'll see what I can do for you.",
                     TKSprite.Angry,
                     () => shopManager.CloseShop()
                 ))
@@ -360,12 +360,12 @@ public class ShopDialogueManager : MonoBehaviour
                     () => {
                         canOverrideDialogue = false;
                     },
-                    "Well, we've got a new- Oh, what's that? Your cat? You want to head to the east?",
+                    "Well, we've got a new business model- Oh, what's that? Your cat, <var>Cat</var>? I wager that's what the boys saw floating eastward!",
                     TKSprite.Happy,
                     () => {
                         SetDialogue(new ShopDialogue(
                     null,
-                    "You better keep yourself safe - military was deployed there. Even blocked off access from the Shifting Seas. If you really want to go, I reckon you ought to go around the long way, through Canopy Town and the Factory.",
+                    "You'd better keep yourself safe - military was deployed there. Even blocked off access from the Shifting Seas. If you really want to go, I reckon you ought to go around the long way, through Canopy Town and the Factory.",
                     TKSprite.Angry,
                     () => {
                         UIArtifactWorldMap.SetAreaStatus(Area.Jungle, ArtifactWorldMapArea.AreaStatus.silhouette);
@@ -373,12 +373,12 @@ public class ShopDialogueManager : MonoBehaviour
 
                         SetDialogue(new ShopDialogue(
                     null,
-                    "But, I can help with that of course! Look pal, we're trying a new, \"Business\" model. Remember that tavern pass I mentioned?",
+                    "But don't worry, I've got something perfect for you! Look pal, we're trying a new, \"Business\" model. Remember that tavern pass I mentioned?",
                     TKSprite.Question,
                     () => {
                         SetDialogue(new ShopDialogue(
                     null,
-                    "How it works is, YOU bring me treasures from around the sea, and I'll give you some points. Get enough points and you'll get a reward! For the last reward, I can even help you get your cat.",
+                    "How it works is, YOU bring me treasures from around the sea, and I'LL give you some points. Get enough points and you'll get a reward! For the last reward, I can even help you reach your cat.",
                     TKSprite.Normal,
                     () => {
                         shopManager.OpenMainPanel();
@@ -432,7 +432,7 @@ public class ShopDialogueManager : MonoBehaviour
             case "Turn in Golden Fish":
                 SetDialogue(new ShopDialogue(
                     null,
-                    "Don't really know what I'm supposed to do with this one, but I'll take it.",
+                    "Catch of the day, eh? They say a golden fish brings good tidings.",
                     TKSprite.Question,
                     null
                 ));
@@ -472,12 +472,12 @@ public class ShopDialogueManager : MonoBehaviour
                         shopManager.OpenDialoguePanel();
                         (SGrid.Current as OceanGrid).StartFinalChallenge();
                     },
-                    "Well... to be honest, never expected you to finish my battle pass. You really wanna find your cat, eh?",
+                    "Well... to be honest, never expected you to finish my battle pass. You really wanna find <var>Cat</var>?, eh?",
                     TKSprite.Normal,
                     () => {
                         SetDialogue(new ShopDialogue(
                     null,
-                    "Now that you've about explored the whole darned ocean, I reckon it's about time to put things in their rightful places.",
+                    "Now that you've about explored the whole damn ocean, I reckon it's about time to put things in their rightful places.",
                     TKSprite.Question,
                     () => {
                         SetDialogue(new ShopDialogue(
@@ -489,7 +489,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                         SetDialogue(new ShopDialogue(
                     null,
-                    "I'll bust out the old axe and cut the trees above the tavern.",
+                    "I'll bust out the old axe and cut the trees north of the tavern.",
                     TKSprite.Happy,
                     () => {
                         canOverrideDialogue = true;
@@ -646,13 +646,13 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Grew up in Stonybrook Village, lived the quiet life but I always wanted more. Joined a pirate crew young, eventually retired and set up business here.",
+                    "Grew up in Stonybrook Village, lived the quiet life but I always wanted more. Joined a pirate crew young, eventually retired and took up business here.",
                     TKSprite.Normal,
                     () => SetDialogue(
 
                 new ShopDialogue(
                     null,
-                    "Wanted to stay close to the sea and my people. Can't say I'm not lucky to have lived the life I have.",
+                    "I wanted to stay close to the sea and my people. Can't say I'm not lucky to have lived the life I have.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
@@ -668,7 +668,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "The Tavern Pass we're trying out is pretty neat, huh? I'm always here to help if you're ever lost too.",
+                    "The Tavern Pass we're trying out is pretty neat, huh?",
                     TKSprite.Normal,
                     () => SetDialogue(
 
@@ -686,12 +686,20 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "Anyways, I can definitely help you out to Canopy Town if you finish our Tavern Pass.",
+                    "Anyways, I can definitely help you on your way to Canopy Town if you finish our Tavern Pass.",
+                    TKSprite.Normal,
+                    () => SetDialogue(
+
+                new ShopDialogue(
+                    null,
+                    "Remember: If you ever run into trouble, Bob's is the one-stop-shop for all the seafaring advice you'll ever need!",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
                         shopManager.OpenTalkPanel();
                     }
+                ))
+
                 ))
 
                 ))
@@ -713,7 +721,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "Beware of disturbing the seas though. Too much water can sink even the heaviest messages.",
+                    "Beware of disturbing the seas though. Too much water can sink even the most heartfelt messages.",
                     TKSprite.Normal,
                     () => {
                         canOverrideDialogue = true;
@@ -744,7 +752,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "Some fellow, Fezziwig, been messing around with some magicks. This whole world's gone a bit crazy recently, hasn't it?",
+                    "Some funky fellow, Fezziwig, been messing around with some magicks. This whole world's gone a bit crazy recently, hasn't it?",
                     TKSprite.Question,
                     () => {
                         canOverrideDialogue = true;
@@ -913,11 +921,11 @@ public class ShopDialogueManager : MonoBehaviour
 
                         UIArtifactWorldMap.SetAreaStatus(Area.Jungle, ArtifactWorldMapArea.AreaStatus.silhouette);
                     },
-                    "Treetop town in the jungle to the North.",
+                    "A treetop town in the jungle to the North. Used to be nice and quiet, perfect for a picnic.",
                     TKSprite.Normal,
                     () => SetDialogue(new ShopDialogue(
                     null,
-                    "Some bloke named Barron hurried into the place and started up all sorts of business and noise.",
+                    "Some blowhard named Barron hurried into the place and started up all sorts of business and noise.",
                     TKSprite.Angry,
                     () => {
                         canOverrideDialogue = true;
@@ -958,7 +966,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                         UIArtifactWorldMap.SetAreaStatus(Area.Desert, ArtifactWorldMapArea.AreaStatus.silhouette);
                     },
-                    "The flat land to the east, now a hot-zone full our nation's military.",
+                    "The plains to the east, now a hot-zone full our nation's military.",
                     TKSprite.Normal,
                     () => SetDialogue(new ShopDialogue(
                     null,
@@ -983,7 +991,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "You want to know how to get up to the stars?",
+                    "You want to know how to get up amongst the stars?",
                     TKSprite.Question,
                     () => SetDialogue(new ShopDialogue(
                     null,
