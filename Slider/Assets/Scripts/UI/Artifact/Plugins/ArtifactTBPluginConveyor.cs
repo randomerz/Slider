@@ -3,10 +3,10 @@
 
 public class ArtifactTBPluginConveyor : ArtifactTBPlugin
 {
-    [SerializeField]
-    private ConveyorUIData conveyorData;
-    [SerializeField]
-    private Conveyor[] conveyors;
+    [SerializeField] private ConveyorUIData conveyorData;
+    [SerializeField] private Conveyor[] conveyors;
+    [SerializeField] private ConveyorOverrideHandler conveyorOverride;
+
 
     private void Awake()
     {
@@ -29,6 +29,9 @@ public class ArtifactTBPluginConveyor : ArtifactTBPlugin
         {
             conveyor.OnPowered.AddListener(OnConveyorPowered);
         }
+
+        conveyorOverride.OnOverrideStart += OnConveyorOverrideChanged;
+        conveyorOverride.OnOverrideEnd += OnConveyorOverrideChanged;
     }
 
     private void OnDisable()
@@ -37,7 +40,17 @@ public class ArtifactTBPluginConveyor : ArtifactTBPlugin
         {
             conveyor.OnPowered.RemoveListener(OnConveyorPowered);
         }
+
+        conveyorOverride.OnOverrideStart -= OnConveyorOverrideChanged;
+        conveyorOverride.OnOverrideEnd -= OnConveyorOverrideChanged;
     }
+
+    //I was gonna do this, but the artifact tiles were flickering :(
+    //private void Update()
+    //{
+    //    UpdateEmptySprite();
+    //    button.SetSpriteToIslandOrEmpty();
+    //}
 
     #region ArtifactTBPlugin Implementation
     public override void OnPosChanged()
@@ -48,6 +61,12 @@ public class ArtifactTBPluginConveyor : ArtifactTBPlugin
 
     //Remember that this won't run if the artifact is disabled!
     private void OnConveyorPowered(ElectricalNode.OnPoweredArgs e)
+    {
+        UpdateEmptySprite();
+        button.SetSpriteToIslandOrEmpty();
+    }
+
+    private void OnConveyorOverrideChanged()
     {
         UpdateEmptySprite();
         button.SetSpriteToIslandOrEmpty();
