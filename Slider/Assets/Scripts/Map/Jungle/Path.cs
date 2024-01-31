@@ -9,7 +9,7 @@ using UnityEngine;
 public class Path : MonoBehaviour
 {
     public bool active = false;
-    private bool creatingBlobs = true;
+    [SerializeField] private bool creatingBlobs = true;
     public Path pair;
     private Shape currentShape = null;
     bool defaultAnim = true; //used to see if the sprite needs to be flipped
@@ -45,6 +45,7 @@ public class Path : MonoBehaviour
 
         BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
         travelDistance = (int)this.transform.localScale.x; // + 0.5f
+
         if (pair != null)
         {
             travelDistance += (int)pair.transform.localScale.x;
@@ -169,6 +170,7 @@ public class Path : MonoBehaviour
             }
         }
 
+
         //fade in blobs
         foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
         {
@@ -178,7 +180,6 @@ public class Path : MonoBehaviour
 
     public void Deactivate()
     {
-        //currentShape = null;
         active = false;
 
         if (pair != null && pair.isActive())
@@ -205,12 +206,16 @@ public class Path : MonoBehaviour
         return defaultAnim;
     }
 
-    public void ChangePair()
+    public void DeletePair()
     {
         pair = null;
+    }
+
+    public void ChangePair()
+    {
         Vector2 one = new Vector2(1, 0);
         Vector2 two = new Vector2(-1, 0);
-
+        float length = this.transform.localScale.x;
 
         if (!horizontal)
         {
@@ -220,35 +225,59 @@ public class Path : MonoBehaviour
 
         Physics2D.queriesStartInColliders = false;
 
-        RaycastHit2D checkOne = Physics2D.Raycast(transform.position, one.normalized, 7, LayerMask.GetMask("JunglePaths"));
-        RaycastHit2D checkTwo = Physics2D.Raycast(transform.position, two.normalized, 7, LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D[] checkOne = Physics2D.RaycastAll(transform.position, one.normalized, (1 + length / 2), LayerMask.GetMask("JunglePaths"));
+        RaycastHit2D[] checkTwo = Physics2D.RaycastAll(transform.position, two.normalized, (1 + length / 2), LayerMask.GetMask("JunglePaths"));
 
-        //want to find the closest bin or box and stile
-        if (checkOne.collider != null)
+        foreach (RaycastHit2D hit in checkOne)
         {
-            pair = checkOne.collider.gameObject.GetComponent<Path>();
-            if (!pair.transform.parent.Equals(this.transform.parent))
+            if (hit.collider != null)
             {
-                pair.pair = this;
-            }
-            else
-            {
-                pair = null;
+                Path other = hit.collider.gameObject.GetComponent<Path>();
+                if (!other.transform.parent.Equals(this.transform.parent) && this.horizontal == other.horizontal)
+                {
+                    other.pair = this;
+                    pair = other;
+                    break;
+                }
             }
         }
-        if (checkTwo.collider != null && pair == null)
+        if (pair == null)
         {
-            pair = checkTwo.collider.gameObject.GetComponent<Path>();
-            if (!pair.transform.parent.Equals(this.transform.parent))
+            foreach (RaycastHit2D hit in checkTwo)
             {
-                pair.pair = this;
-            }
-            else
-            {
-                pair = null; 
+                if (hit.collider != null)
+                {
+                    Path other = hit.collider.gameObject.GetComponent<Path>();
+                    if (!other.transform.parent.Equals(this.transform.parent))
+                    {
+                        other.pair = this;
+                        pair = other;
+                    }
+                }
             }
         }
 
         Physics2D.queriesStartInColliders = true;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (horizontal)
+        {
+            Gizmos.color = Color.red;
+        }
+        else
+        {
+            Gizmos.color = Color.blue;
+        }
+
+        Vector2 one = new Vector2(1, 0);
+        Vector2 two = new Vector2(-1, 0);
+
+        Vector3 directionone = transform.TransformDirection(one * (1 + this.transform.localScale.x / 2));
+        Gizmos.DrawRay(transform.position, directionone);
+        Vector3 directiontwo = transform.TransformDirection(two * (1 + this.transform.localScale.x / 2));
+        Gizmos.DrawRay(transform.position, directiontwo);
+
     }
 }

@@ -62,8 +62,8 @@ public class CameraShake : MonoBehaviour
     public static void Shake(float duration, float amount)
     {
         amount *= SettingsManager.ScreenShake;
-       CameraShakeData data = new CameraShakeData(duration, amount, 0, 0);
-       shakeData.Add(data);
+        CameraShakeData data = new CameraShakeData(duration, amount, 0, 0);
+        shakeData.Add(data);
     }
 
     public static void ShakeConstant(float duration, float amount)

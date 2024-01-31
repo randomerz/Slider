@@ -84,6 +84,7 @@ MonoBehaviour:
   laserBeamMaterial: {fileID: 2100000, guid: d09d0ee489848774dbf3e84f2d8dbfc7, type: 2}
   particlesSuck: {fileID: 6589261545262517841}
   particlesBoom: {fileID: 4813635593941732947}
+  ambience: {fileID: 2758881428178700899}
 --- !u!212 &5050199314091129921
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -202,6 +203,56 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 5.25, y: 1.25}
   m_EdgeRadius: 0
+--- !u!1 &2195520540452265222
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7767374632093914444}
+  - component: {fileID: 2758881428178700899}
+  m_Layer: 0
+  m_Name: LaserAmbienceManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7767374632093914444
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2195520540452265222}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7082959277900609115}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2758881428178700899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2195520540452265222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66583c0850c76494bb2bd00d1d3b27ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ambienceName: Laser Ambience
+  ambienceGlobalParameterName: AmbienceDistToLaser
+  ambienceGlobalParameterDefaultValue: 10
+  distanceNodes:
+  - {fileID: 7767374632093914444}
+  isEnabled: 0
 --- !u!1 &3912155690370626800
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,6 +322,7 @@ Transform:
   - {fileID: 4448469534451284348}
   - {fileID: 1551054487237753498}
   - {fileID: 5111083645309584783}
+  - {fileID: 7767374632093914444}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7082959277900609093
@@ -286,17 +338,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initDir: {x: -1, y: 0}
-  emitPos: {fileID: 5111083645309584783}
   isPowered: 0
   isEnabled: 0
+  SaveString: 
   lineRenderers:
   - {fileID: 8521951286683249754}
   - {fileID: 2237962870591884481}
   - {fileID: 3977953843289640743}
   magiLaserAnimation: {fileID: 7679301335400320138}
   magiLaserFlashManager: {fileID: 3769052434671769430}
+  emitPos: {fileID: 5111083645309584783}
   presentPortalLaserable: {fileID: 0}
   pastPortalLaserable: {fileID: 0}
+  laserUI: {fileID: 0}
 --- !u!114 &3769052434671769430
 MonoBehaviour:
   m_ObjectHideFlags: 0

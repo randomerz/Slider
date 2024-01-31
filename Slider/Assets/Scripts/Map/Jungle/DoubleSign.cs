@@ -6,9 +6,22 @@ public class DoubleSign : Sign
 {
     public Direction secondCurrentDirection = Direction.UP; 
 
-    public override void CreateShape(List<Box> parents) {
+    public override void CreateShape() {
+/*        if (currentShape == null)
+        {
+            print("Double sign sending null");
+        }
+        else
+        {
+            print("Double sign sending shape " + currentShape.name);
+        }*/
+
         Box next = GetBoxInDirection(currentDirection);
         Box next2 = GetBoxInDirection(secondCurrentDirection);
+
+        if (!currParents.Contains(this)){
+            currParents.Add(this);
+        }
 
         if (next != null)
         {
@@ -16,13 +29,15 @@ public class DoubleSign : Sign
             {
                 if (!paths[currentDirection].isActive() || paths[currentDirection].getAnimType() == isDefaultCurrentPath(currentDirection))
                 {
-                    paths[currentDirection].Activate(isDefaultCurrentPath(currentDirection), currentShape); 
+                    paths[currentDirection].Activate(isDefaultCurrentPath(currentDirection), currentShape);
+                    List<Box> parents = GetParents(); 
                     next.RecieveShape(paths[currentDirection], currentShape, parents);
                 }
             }
             else
             {
                 paths[currentDirection].Deactivate();
+                List<Box> parents = GetParents();
                 next.RecieveShape(paths[currentDirection], currentShape, parents);
             }
         }
@@ -33,108 +48,98 @@ public class DoubleSign : Sign
                 if (!paths[secondCurrentDirection].isActive() || paths[secondCurrentDirection].getAnimType() == isDefaultCurrentPath(secondCurrentDirection))
                 {
                     paths[secondCurrentDirection].Activate(isDefaultCurrentPath(secondCurrentDirection), currentShape); 
+                    List<Box> parents = GetParents();
                     next2.RecieveShape(paths[secondCurrentDirection], currentShape, parents);
                 }
             }
             else
             {
                 paths[secondCurrentDirection].Deactivate();
+                List<Box> parents = GetParents();
                 next2.RecieveShape(paths[secondCurrentDirection], currentShape, parents);
             }
         }
     }
 
-//TODO: work on rotate since it is not fully polished and doesn't really turn when stuff is in the way
+    public override void RecieveShape(Path path, Shape shape, List<Box> parents)
+    {
+        if (parents.Contains(this))
+        {
+            path.Deactivate();
+            return;
+        }
+
+        if (shape != null) {
+            currParents = parents;
+        }
+
+        //check if it is the input path
+        if (path.pair != paths[currentDirection] && path.pair != paths[secondCurrentDirection]) {
+            if (path.pair != null)
+            {
+                recievedShapes[path.pair] = shape;
+                MergeShapes();
+                CreateShape();
+            }
+            else
+            {
+                recievedShapes[path] = shape;
+                this.MergeShapes();
+                this.CreateShape();
+            }
+        } else {
+            path.Deactivate();
+        }
+    }
+
     public override void Rotate()
     {
+        if (currentShape != null) {
+            return;
+        }
+
         // update the box it points in currently to push no shape onto the path
         Box box = GetBoxInDirection(currentDirection);
         Box box2 = GetBoxInDirection(secondCurrentDirection);
 
         if (box != null && isDefaultCurrentPath(currentDirection) == paths[currentDirection].getAnimType())
         {
-            box.RecieveShape(paths[currentDirection], null, new List<Box>());
+            List<Box> parents = new List<Box>();
+            parents.Add(this);
+
+            box.RecieveShape(paths[currentDirection], null, parents);
             paths[currentDirection].Deactivate();
         }
         
         if (box2 != null && isDefaultCurrentPath(secondCurrentDirection) == paths[secondCurrentDirection].getAnimType())
         {
-            box2.RecieveShape(paths[secondCurrentDirection], null, new List<Box>());
+
+            List<Box> parents = new List<Box>();
+            parents.Add(this);
+
+            box2.RecieveShape(paths[secondCurrentDirection], null, parents);
             paths[secondCurrentDirection].Deactivate();
         }
         
         //check each path to see if any is not active alr
-        Direction[] ds = { Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN };
+        Direction[] ds = { Direction.LEFT, Direction.UP, Direction.RIGHT };
 
-        // at should be less than at2
-        int at = 0;
-        int at2 = 0;
-        int found = 0;
+        Direction hold1 = currentDirection;
+        Direction hold2 = secondCurrentDirection;
 
         for (int i = 0; i < ds.Length; i++)
         {
-            if (ds[i] == currentDirection) {
-                at = i;
-                found++;
-                if (found == 2) { 
-                    break;
-                }
-            }
-            if (ds[i] == secondCurrentDirection) {
-                at2 = i;
-                found++;
-                if (found == 2) { 
-                    break;
-                }
-            }
-        }
-
-        if (at > at2) {
-            int temp = at;
-            at = at2;
-            at2 = temp;
-        }
-
-        // no need to loop just pass to the next one
-        for (int i = 1; i <= 4; i++)
-        {
-            Direction d = ds[(at2 + i) % 4];
-
-            if (!paths.ContainsKey(d))
-            {
+            if (ds[i] == hold1) {
                 continue;
             }
-
-            secondCurrentDirection = d;
-            //turn on path if there is not another using it
-            if (!paths[d].isActive())
-            {
-                Box next = GetBoxInDirection(d);
-                if (next != null)
-                {
-                    if (currentShape == null)
-                    {
-                        return;
-                    }
-                }
+            else if (ds[i] == hold2) {
+                currentDirection = hold2;
+            } else {
+                secondCurrentDirection = ds[i];
+                paths[ds[i]].Deactivate();
             }
-
-            //do it for the path behind
-            currentDirection = ds[(at + 1) % 4];
-            if (!paths[currentDirection].isActive())
-            {
-                Box next = GetBoxInDirection(currentDirection);
-                if (next != null)
-                {
-                    if (currentShape == null)
-                    {
-                        return;
-                    }
-                }
-            }
-
-            CreateShape(new List<Box>());
-            break;
         }
+
+        CreateShape();
     }
 }

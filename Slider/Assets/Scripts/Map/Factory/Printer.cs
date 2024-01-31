@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,30 @@ public class Printer : MonoBehaviour
     private bool walls = false;
     private bool floor = false;
     private bool wires = false;
+
+    private void OnEnable()
+    {
+        PowerCrystal.blackoutStarted += HandleBlackoutStarted;
+        PowerCrystal.blackoutEnded += HandleBlackoutEnded;
+    }
+
+    private void OnDisable()
+    {
+        PowerCrystal.blackoutStarted -= HandleBlackoutStarted;
+        PowerCrystal.blackoutEnded -= HandleBlackoutEnded;
+    }
+
+    private void HandleBlackoutStarted()
+    {
+        bodyAnim.speed = 0;
+        headAnim.speed = 0;
+    }
+
+    private void HandleBlackoutEnded()
+    {
+        bodyAnim.speed = 1;
+        headAnim.speed = 1;
+    }
 
     void Start()
     {

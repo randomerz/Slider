@@ -155,7 +155,7 @@ namespace SliderVocalization
                     
                     t += Time.deltaTime;
                     totalT += Time.deltaTime;
-                    yield return null;
+                    yield return new WaitForFixedUpdate();
                 }
             }
             Stop();

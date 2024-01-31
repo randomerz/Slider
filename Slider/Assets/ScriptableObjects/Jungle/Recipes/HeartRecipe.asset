@@ -17,14 +17,16 @@ MonoBehaviour:
   - ingredients:
     - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
     - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
-    - {fileID: 11400000, guid: c3e593ac582187144af28d63cac51845, type: 2}
-    isSecondaryRecipe: 0
-  - ingredients:
-    - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
-    - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
     - {fileID: 11400000, guid: 76675a2db3290714f95b9c4099fbdd50, type: 2}
     isSecondaryRecipe: 0
+    numberOfTimesCreated: 0
   - ingredients:
     - {fileID: 11400000, guid: 57ed20a22f1c4ed47964976355b8fb7e, type: 2}
     - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
     isSecondaryRecipe: 1
+    numberOfTimesCreated: 0
+  - ingredients:
+    - {fileID: 11400000, guid: ecfa5f8c8fb496442a92f00472886a80, type: 2}
+    - {fileID: 11400000, guid: 050273f0be21e204590b0f20a64e3303, type: 2}
+    isSecondaryRecipe: 1
+    numberOfTimesCreated: 0

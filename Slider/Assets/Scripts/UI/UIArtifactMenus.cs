@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
+using UnityEngine.UI;
+using System.Linq;
 
 public class UIArtifactMenus : Singleton<UIArtifactMenus>
 {
@@ -17,6 +19,10 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
     private bool isArtifactOpen;
     private bool isClosing = false;
 
+    private List<Button> selectibles;
+    private Dictionary<Button, Navigation.Mode> navMode;
+
+
     private void Awake() 
     {
         InitializeSingleton();
@@ -29,6 +35,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
             Debug.LogWarning("You might need to update my UIArtifact reference!");
         }
         DisableArtPanel();
+        SaveSelectibles();
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Pause, context => _instance.CloseArtifact());
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => _instance.OnPressArtifact());
@@ -38,6 +45,58 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.CycleEquip, context => _instance.screenAnimator.CycleScreen()); // CONTROLER BIND ONLY
         //For controller support
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Back, context => _instance.CloseArtifact());
+
+    }
+
+    private void Start()
+    {
+        ToggleNavigation(Controls.CurrentControlScheme);
+    }
+
+    private void ToggleNavigation(string s)
+    {
+        if (s == Controls.CONTROL_SCHEME_CONTROLLER)
+        {
+            EnableNavigation();
+        } 
+        else
+        {
+            DisableNavigation();
+        }
+    }
+
+    private void SaveSelectibles()
+    {
+        navMode = new();
+        selectibles = GetComponentsInChildren<Button>(true).ToList();
+        foreach(Button s in selectibles)
+        {
+            navMode.Add(s, s.navigation.mode);
+        }
+        ToggleNavigation(Controls.CurrentControlScheme);
+    }
+
+
+    private void DisableNavigation()
+    {
+        foreach(Selectable s in selectibles)
+        {
+            if(s.gameObject == null) continue;
+            var nav = s.navigation;
+            nav.mode = Navigation.Mode.None;
+            s.navigation = nav;
+        }
+    }
+
+    private void EnableNavigation()
+    {
+        foreach(Button s in selectibles)
+        {
+            if(s.gameObject == null) continue;
+            var nav = s.navigation;
+            nav.mode = navMode[s];
+            s.navigation = nav;
+        }
     }
 
     private void OnEnable() 
@@ -46,6 +105,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         ItemPickupEffect.OnCutsceneStart += CloseArtifactListener;
         //UIManager.OnCloseAllMenus += CloseArtifactListenerNoOpen;
         PauseManager.PauseStateChanged += OnPauseStateChanged;
+        Player.OnControlSchemeChanged += ToggleNavigation;
     }
 
     private void OnPauseStateChanged(bool newPausedState)
@@ -62,6 +122,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         ItemPickupEffect.OnCutsceneStart -= CloseArtifactListener;
         //UIManager.OnCloseAllMenus -= CloseArtifactListenerNoOpen;
         PauseManager.PauseStateChanged -= OnPauseStateChanged;
+        Player.OnControlSchemeChanged -= ToggleNavigation;
     }
 
     public static bool IsArtifactOpen()
