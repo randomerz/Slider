@@ -15,7 +15,9 @@ public class GemMachine : MonoBehaviour, ISavable
     public GameObject brokenObj;
     public GameObject fixedObj;
     public PipeLiquid pipeLiquid;
-
+    
+    public Minecart minecart;
+    
     public enum GemMachinePhase
     {
         INITIAL,

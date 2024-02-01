@@ -19,6 +19,12 @@ public class MinecartElevator : MonoBehaviour, ISavable
     public bool isInBreakingAnimation = false;
     public GameObject crystalchecker;
 
+    public enum ElevatorState {
+        INTIAL,
+        BROKEN,
+        FIXED
+    }
+
     private void OnEnable() {
         SGridAnimator.OnSTileMoveEnd += CheckOpenOnMove;
         SGridAnimator.OnSTileMoveStart += CheckOpenOnMove;
