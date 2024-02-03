@@ -97,6 +97,7 @@ public class GemMachine : MonoBehaviour, ISavable
         }
 
         animator.Play("AbsorbGem");
+        minecart.UpdateState("empty");
 
         switch(gemMachineState)
         {
