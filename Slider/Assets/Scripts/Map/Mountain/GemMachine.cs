@@ -18,7 +18,7 @@ public class GemMachine : MonoBehaviour, ISavable
     
     public Minecart minecart;
     
-    public enum GemMachinePhase
+    public enum GemMachineState
     {
         INITIAL,
         BROKEN,
@@ -26,15 +26,15 @@ public class GemMachine : MonoBehaviour, ISavable
         FULLY_GOOED
     }
 
-    public GemMachinePhase phase = GemMachinePhase.INITIAL;
+    public GemMachineState gemMachineState = GemMachineState.INITIAL;
 
     private void Start() {
         sTile = GetComponentInParent<STile>();
     }
 
-    private void Update() {
-        gemChecker.SetActive(isPowered && !isBroken);
-    }
+    // private void Update() {
+    //     gemChecker.SetActive(isPowered && !isBroken);
+    // }
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
@@ -50,6 +50,22 @@ public class GemMachine : MonoBehaviour, ISavable
             ResetGems();
     }
 
+    public void BreakGemMachine() => BreakGemMachine(false);
+    
+    public void BreakGemMachine(bool fromSave = false)
+    {
+        brokenObj.SetActive(true);
+        fixedObj.SetActive(false);
+    }
+
+    public void FixGemMachine() => FixGemMachine(false);
+
+    public void FixGemMachine(bool fromSave = false)
+    {
+        brokenObj.SetActive(false);
+        fixedObj.SetActive(true);
+    }
+
     public void AddGem(){
         if(!isPowered || isBroken)
         {
@@ -59,18 +75,18 @@ public class GemMachine : MonoBehaviour, ISavable
 
         animator.Play("AbsorbGem");
 
-        switch(phase)
+        switch(gemMachineState)
         {
-            case GemMachinePhase.INITIAL:
+            case GemMachineState.INITIAL:
                 print("take gem and blow up generator");
                 break;
-            case GemMachinePhase.BROKEN:
+            case GemMachineState.BROKEN:
                 print("this should not happen");
                 break;
-            case GemMachinePhase.FIXED:
+            case GemMachineState.FIXED:
                 print("add gem");
                 break;
-            case GemMachinePhase.FULLY_GOOED:
+            case GemMachineState.FULLY_GOOED:
                 print("idk yet lol");
                 break;
         }
@@ -83,21 +99,23 @@ public class GemMachine : MonoBehaviour, ISavable
         // }
     }
 
-    private void IntialGemAbsorb()
-    {
+    // private void IntialGemAbsorb()
+    // {
 
-    }
+    // }
 
-    private void AddGemToContainer()
-    {
+    // private void AddGemToContainer()
+    // {
 
-    }
+    // }
 
     public void RemoveGem(){
         numGems--;
     }
 
     public void ResetGems(){
+        if(gemMachineState != GemMachineState.FIXED) return;
+
         numGems = 0;
     }
 
@@ -135,22 +153,20 @@ public class GemMachine : MonoBehaviour, ISavable
 
 
     public void Save(){
-        SaveSystem.Current.SetInt("mountainNumGems", numGems);
-        SaveSystem.Current.SetBool("mountainGemMachineBroken", isBroken);
-        
-        SaveSystem.Current.SetInt("mountainGemMachinePhase", (int)phase);
+        SaveSystem.Current.SetInt("mountainGemMachineNumGems", numGems);        
+        SaveSystem.Current.SetInt("mountainGemMachinePhase", (int)gemMachineState);
     }
 
     public void Load(SaveProfile profile)
     {
-        phase = (GemMachinePhase) profile.GetInt("mountainGemMachinePhase");
+        gemMachineState = (GemMachineState) profile.GetInt("mountainGemMachinePhase");
 
-        numGems = profile.GetInt("mountainNumGems");
-        if(numGems >= 2)
-            isDone = true;
-        isBroken = profile.GetBool("mountainGemMachineBroken", true);
-        if(!isBroken)
-            Fix();
+        // numGems = profile.GetInt("mountainNumGems");
+        // if(numGems >= 2)
+        //     isDone = true;
+        // isBroken = profile.GetBool("mountainGemMachineBroken", true);
+        // if(!isBroken)
+        //     Fix();
         
         if(profile.GetBool("MountainGooFull"))
             EnableGoo(true);
