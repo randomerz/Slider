@@ -61,6 +61,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
         crystalchecker.SetActive(true);
         isInBreakingAnimation = true;
         animationManager.Break();
+        pylon.SetActive(false);
     }
 
     public void FixElevator()

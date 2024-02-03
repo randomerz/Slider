@@ -7,8 +7,8 @@ public class GemMachine : MonoBehaviour, ISavable
     private int numGems;
     private STile sTile;
     private bool isPowered;
-    private bool isDone;
-    private bool isBroken = true;
+    // private bool isDone;
+    // private bool isBroken = true;
     public GameObject gemChecker;
     public Animator animator;
 
@@ -17,6 +17,7 @@ public class GemMachine : MonoBehaviour, ISavable
     public PipeLiquid pipeLiquid;
     
     public Minecart minecart;
+    public Transform smokeTransform;
     
     public enum GemMachineState
     {
@@ -52,26 +53,44 @@ public class GemMachine : MonoBehaviour, ISavable
             ResetGems();
     }
 
+    public void BreakGemMachineCutscene()
+    {
+        BreakGemMachine();
+    }
+
     public void BreakGemMachine() => BreakGemMachine(false);
     
     public void BreakGemMachine(bool fromSave = false)
     {
+        gemMachineState = GemMachineState.BROKEN;
         brokenObj.SetActive(true);
         fixedObj.SetActive(false);
+        gemChecker.SetActive(false);
         if(!fromSave)
+        {   
             elevator.BreakElevator();
+            AudioManager.Play("Slide Explosion");
+            CameraShake.Shake(1f, 0.5f);
+            for(int i = 0; i < 10; i++)
+            {
+                Vector3 random = Random.insideUnitCircle;
+                ParticleManager.SpawnParticle(ParticleType.SmokePoof, smokeTransform.position + random);
+            }
+        }
     }
 
     public void FixGemMachine() => FixGemMachine(false);
 
     public void FixGemMachine(bool fromSave = false)
     {
+        gemMachineState = GemMachineState.FIXED;
         brokenObj.SetActive(false);
         fixedObj.SetActive(true);
+        gemChecker.SetActive(true);
     }
 
     public void AddGem(){
-        if(!isPowered || isBroken)
+        if(!isPowered || gemMachineState == GemMachineState.BROKEN)
         {
             Debug.LogWarning("Gem machine took gem when it should not");
             return;
@@ -82,10 +101,7 @@ public class GemMachine : MonoBehaviour, ISavable
         switch(gemMachineState)
         {
             case GemMachineState.INITIAL:
-                print("take gem and blow up generator");
-                break;
-            case GemMachineState.BROKEN:
-                print("this should not happen");
+                numGems = 1;
                 break;
             case GemMachineState.FIXED:
                 print("add gem");
@@ -131,18 +147,18 @@ public class GemMachine : MonoBehaviour, ISavable
         isPowered = value;
     }
 
-    public void Fix()
-    {
-        isBroken = false;
-        if (brokenObj != null)
-        {
-            brokenObj.SetActive(false);
-        }
-        if (fixedObj != null)
-        {
-            fixedObj.SetActive(true);
-        }
-    }
+    // public void Fix()
+    // {
+    //     isBroken = false;
+    //     if (brokenObj != null)
+    //     {
+    //         brokenObj.SetActive(false);
+    //     }
+    //     if (fixedObj != null)
+    //     {
+    //         fixedObj.SetActive(true);
+    //     }
+    // }
 
 
 
@@ -178,15 +194,28 @@ public class GemMachine : MonoBehaviour, ISavable
             EnableGoo();
     }
 
-    public void CheckHasCrystals(Condition c){
-        c.SetSpec(isDone);
-    }
+    // public void CheckHasCrystals(Condition c){
+    //     c.SetSpec(isDone);
+    // }
 
     public void CheckIsPowered(Condition c){
         c.SetSpec(isPowered);
     }
 
+    public void CheckIsBroken(Condition c)
+    {
+        c.SetSpec(gemMachineState == GemMachineState.BROKEN);
+    }
+
     public void CheckIsFixed(Condition c){
-        c.SetSpec(!isBroken);
+        c.SetSpec(gemMachineState == GemMachineState.FIXED);
+    }
+
+    public void CheckHasFirstCrystal(Condition c){
+        c.SetSpec(numGems == 1 && gemMachineState == GemMachineState.INITIAL);
+    }
+
+    public void CheckIntialCrystalCutscene(Condition c){
+        c.SetSpec(isPowered && numGems == 1 && gemMachineState == GemMachineState.INITIAL);
     }
 }
