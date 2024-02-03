@@ -28,6 +28,8 @@ public class GemMachine : MonoBehaviour, ISavable
 
     public GemMachineState gemMachineState = GemMachineState.INITIAL;
 
+    public MinecartElevator elevator;
+
     private void Start() {
         sTile = GetComponentInParent<STile>();
     }
@@ -56,6 +58,8 @@ public class GemMachine : MonoBehaviour, ISavable
     {
         brokenObj.SetActive(true);
         fixedObj.SetActive(false);
+        if(!fromSave)
+            elevator.BreakElevator();
     }
 
     public void FixGemMachine() => FixGemMachine(false);
