@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: WW_SmallGear
+  m_Controller: {fileID: 9100000, guid: 756304129dfad814fb194ab7adefdad5, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: f09bc10dd4c992a4e81ada1ba80d0679, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 0610273bb10ea1f4cb9b26213e9549d7, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: f193f49bc38c29e4d9f77ab9cf40a37f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 62cce707ac1b01a4889308e7d8dfd976, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 57419fcebb345c444ab4ae54343d39ea, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 8e222e430b7f0404fb8cdd773aa7e868, type: 2}
