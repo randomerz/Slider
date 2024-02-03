@@ -9,7 +9,6 @@ public class ElevatorAnimationManager : MonoBehaviour
     [SerializeField] private Animator bottomDispAnimator;
     [SerializeField] private Animator bottomDoorAnimator;
 
-    public List<GameObject> deactivateOnFix;
     public List<GameObject> brokenObj;
     public GameObject bottompos;
 
