@@ -18,7 +18,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
 
     public bool isInBreakingAnimation = false;
     public GameObject crystalchecker;
-    public GameObject powerBox;
+    public ElectricalNode pylon;
 
     public bool anchorGeneratorPower;
 
@@ -60,8 +60,8 @@ public class MinecartElevator : MonoBehaviour, ISavable
         elevatorState = ElevatorState.BROKEN;
         crystalchecker.SetActive(true);
         isInBreakingAnimation = true;
-        animationManager.Break();
-        powerBox.SetActive(false);
+        animationManager.Break(fromSave);
+        pylon.StartSignal(false);
     }
 
     public void FixElevator()
@@ -77,7 +77,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
         elevatorState = ElevatorState.FIXED;
         crystalchecker.SetActive(false);
         animationManager.Repair();
-        powerBox.SetActive(false);
+        pylon.StartSignal(false);
 
         if(!fromSave)
         {
