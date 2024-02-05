@@ -109,14 +109,15 @@ public class WaterWheelAnimator : MonoBehaviour
                 return;
             }
 
-            if (gearAnimators[0].state == WW_GearAnimator.State.Clicking)
-            {
-                return;
-            }
+            // if (gearAnimators[0].state == WW_GearAnimator.State.Clicking)
+            // {
+            //     return;
+            // }
 
             bool passedFrozenGear = false;
             for (int i = 0; i < gearAnimators.Count; i++)
             {
+
                 WW_GearAnimator ga = gearAnimators[i];
 
                 if ((i == 2 && isGear2Frozen) || (i == 4 && isGear4Frozen))
@@ -125,6 +126,11 @@ public class WaterWheelAnimator : MonoBehaviour
                     passedFrozenGear = true;
                     continue;
                 }
+
+                // if (gearAnimators[0].state == WW_GearAnimator.State.Clicking)
+                // {
+                //     continue;
+                // }
 
                 if (!passedFrozenGear)
                 {

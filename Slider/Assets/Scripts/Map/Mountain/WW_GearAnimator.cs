@@ -18,12 +18,11 @@ public class WW_GearAnimator : MonoBehaviour
     [HideInInspector]
     public WW_GearAnimator nextGear;
 
-    [HideInInspector]
     public State state;
 
     void Start()
     {
-        
+        SetCurrentState(state, true);
     }
 
     // Called by animator
@@ -32,12 +31,14 @@ public class WW_GearAnimator : MonoBehaviour
         // If the next gear is not moving (unfrozen), try to set it to click
         if (nextGear != null && nextGear.state == State.NotMoving)
         {
-            nextGear.SetCurrentState(State.NotMoving);
+            nextGear.SetCurrentState(State.Clicking);
         }
     }
 
-    public void SetCurrentState(State state)
+    public void SetCurrentState(State state, bool fromStart = false)
     {
+        if(!fromStart && this.state == state) return;
+
         this.state = state;
         switch (state)
         {
