@@ -54,6 +54,8 @@ public class Meltable : FlashWhiteSprite, ISavable
     private float blinkTime;
     private bool hasFixed = false;
 
+    public List<Lava> lavasources = new();
+
     private void OnEnable() {
         sTile = GetComponentInParent<MountainSTile>();
         SGridAnimator.OnSTileMoveEndEarly += CheckFreezeOnMoveEnd; //C: Has to be early + delay or else tile in args is null
@@ -185,13 +187,16 @@ public class Meltable : FlashWhiteSprite, ISavable
         }
     }
 
-    public void RemoveLava()
+    public void RemoveLava(Lava lava)
     {
+        lavasources.Remove(lava);
         numLavaSources--;
     }
 
-    public void AddLava()
+    public void AddLava(Lava lava)
     {
+        if(!lavasources.Contains(lava))
+                lavasources.Add(lava);
         numLavaSources++;
         Melt();
     }

@@ -212,6 +212,10 @@ public class GemMachine : MonoBehaviour, ISavable
         c.SetSpec(gemMachineState == GemMachineState.FIXED);
     }
 
+    public void CheckIsFixedAndPowered(Condition c){
+        c.SetSpec(gemMachineState == GemMachineState.FIXED && isPowered);
+    }
+
     public void CheckHasFirstCrystal(Condition c){
         c.SetSpec(numGems == 1 && gemMachineState == GemMachineState.INITIAL);
     }

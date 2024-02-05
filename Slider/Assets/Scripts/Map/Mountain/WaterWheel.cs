@@ -16,6 +16,7 @@ public class WaterWheel : MonoBehaviour, ISavable
     private bool hasMovedTile = false;
     private bool firstPower = false;
     private bool firstLavaPower = false;
+    public WaterWheelAnimator animator;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
@@ -70,13 +71,13 @@ public class WaterWheel : MonoBehaviour, ISavable
         if(!inLavaStage) return;
         if(lavaCount > 1)
         {
-            cog2.RemoveLava();
+           // cog2.RemoveLava();
             cog2.SetRefreezeOnTop(true);
 
         }
         if(lavaCount > 0)
         {
-            cog1.RemoveLava();
+           // cog1.RemoveLava();
             cog1.SetRefreezeOnTop(true);
         }
         lavaCount = 0;
@@ -92,10 +93,10 @@ public class WaterWheel : MonoBehaviour, ISavable
     public void SetLavaComplete()
     {
         inLavaStage = false;
-        cog2.AddLava();
+        //cog2.AddLava();
         cog2.Melt();
         cog2.SetRefreezeOnTop(false);
-        cog1.AddLava();
+       // cog1.AddLava();
         cog1.Melt();
         cog1.SetRefreezeOnTop(false);
     }

@@ -118,6 +118,8 @@ public class STile : MonoBehaviour
                     {
                         // DC: disabling these is weird because they have a 2d tilemap collider and a composite collider?
                         // Debug.LogWarning("Found a tilemap " + name + ", " + c.name + " while moving tiles! This may result in unexpected behavior.");
+                        if (c.isTrigger && c.CompareTag("LeaveTriggerEnabled"))
+                            continue;
 
                         c.gameObject.SetActive(false);
                         disabledColliderTilemaps.Add(c.gameObject);

@@ -69,7 +69,7 @@ public class WW_GearAnimator : MonoBehaviour
     {
         iceGameObject.SetActive(enabled);
 
-        if (enabled)
+        if (enabled && ParticleManager.Instance != null)
         {
             ParticleManager.SpawnParticle(ParticleType.MiniSparkle, transform.position, transform);
         }
