@@ -23,6 +23,11 @@ public class FactoryGrid : SGrid
         base.Start();
 
         AudioManager.PlayMusic("Factory");
+
+        if (PlayerInPast)
+        {
+            Player.SetIsInHouse(true);
+        }
     }
 
     private void Update()

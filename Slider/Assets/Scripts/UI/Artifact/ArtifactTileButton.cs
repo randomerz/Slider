@@ -205,6 +205,11 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void SetCompletedSprite(Sprite s)
     {
+        // In case this is called before Init()
+        if (completedSpriteDefault == null)
+        {
+            completedSpriteDefault = completedSprite;
+        }
         dontUpdateDefaultSpriteOnAwake = true;
         completedSprite = s;
     }
