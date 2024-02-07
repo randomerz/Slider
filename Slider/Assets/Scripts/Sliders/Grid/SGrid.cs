@@ -112,6 +112,7 @@ public class SGrid : Singleton<SGrid>, ISavable
 
         SaveSystem.Current.SetLastArea(myArea);
 
+        // This is why Load() gets called multiple times when you enter a scene
         Load(SaveSystem.Current); // DC: this won't cause run order issues right :)
         SetBGGrid(bgGridTiles);
 
@@ -599,6 +600,8 @@ public void SetGrid(int[,] puzzle)
     }
 
     //L: Used in the save system to load a grid as opposed to using SetGrid(STile[], STile[]) with default tiles positions.
+    // Warning: This gets called twice when an area is initialized. Once during Awake()/Init() by the scene initializer,
+    //          and again during the general Load() call. Removing the Awake() call will affect magitech desync loading.
     public virtual void Load(SaveProfile profile) 
     { 
         // Default vars

@@ -250,8 +250,9 @@ public class MagiTechGrid : SGrid
     {
         if (desyncIslandId != -1)
         {
-            EndDesync();
+            Debug.Log("[Saves] Saved during a desync in magitech.");
         }
+        SaveSystem.Current.SetInt("MagitechSavedDesyncIslandId", desyncIslandId);
         SaveSystem.Current.SetInt("MagitechOilCollected", numOil);
         base.Save();
     }
@@ -259,12 +260,38 @@ public class MagiTechGrid : SGrid
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
-        if(GetNumTilesCollected() >= 1)
+
+        if (GetNumTilesCollected() >= 1)
+        {
             tabManager.EnableTab();
-        if(profile.GetBool("magitechBridgeFixed"))
+        }
+        if (profile.GetBool("magitechBridgeFixed"))
+        {
             LowerDrawbridge(true);
+        }
         numOil = profile.GetInt("MagitechOilCollected");
 
+        if (!IsGridSafeOnLoad())
+        {
+            if (profile.GetInt("MagitechSavedDesyncIslandId", -1) != -1)
+            {
+                // Registered and detected a desync -- fixing!
+                Debug.Log("[Saves] Desync was registered on load. Attempting to fix grid.");
+                RestoreGridFromDesyncFromLoad();
+            }
+            else
+            {
+                Debug.LogError("[Saves] Grid appears to have a desync (or some other problem on load) without it being saved. Attempting to fix.");
+                RestoreGridFromDesyncFromLoad();
+            }
+        }
+        else
+        {
+            if (profile.GetInt("MagitechSavedDesyncIslandId", -1) != -1)
+            {
+                Debug.LogWarning("[Saves] Desync was saved but grid appeared to be okay. Doing nothing.");
+            }
+        }
     }
 
     public static bool IsInPast(Transform transform)
@@ -274,8 +301,10 @@ public class MagiTechGrid : SGrid
 
     public void TryEnableHint()
     {
-        if(GetNumTilesCollected() >= 1)
+        if (GetNumTilesCollected() >= 1)
+        {
             hints.TriggerHint("altview");
+        }
     }
 
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs interactArgs)
@@ -328,6 +357,40 @@ public class MagiTechGrid : SGrid
             for (int y = 0; y < 3; y++)
             {
                 newGrid[x + offset, y] = FindAltId(currGrid[x - offset + 3, y]);
+            }
+        }
+        Current.SetGrid(newGrid);
+    }
+
+    private bool IsGridSafeOnLoad()
+    {
+        for (int x = 0; x < 3; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                Vector2Int altCoords = FindAltCoords(x, y);
+                if (grid[x, y].islandId != FindAltId(grid[altCoords.x, altCoords.y].islandId))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Similar function as above, but will always make past tile match to present tiles
+    private void RestoreGridFromDesyncFromLoad()
+    {
+        // SGrid is initialized before Player is, so we need to make sure the player is properly childed.
+        Player._instance.UpdateSTileUnderneath();
+
+        int[,] newGrid = new int[6, 3];
+        for (int x = 0; x < 3; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                newGrid[x, y] = grid[x, y].islandId;
+                newGrid[x + 3, y] = FindAltId(newGrid[x, y]);
             }
         }
         Current.SetGrid(newGrid);
