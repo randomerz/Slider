@@ -345,19 +345,12 @@ public class SGridAnimator : MonoBehaviour
             volume = shakeDuration - 0.1f;
         }
 
-        volume = Mathf.Clamp(volume, 0.2f, 1);
+        volume = Mathf.Clamp(volume, 0.1f, 1);
 
         if (playSound)
         {
             CameraShake.ShakeConstant(shakeDuration, 0.15f * volume);
             audioQueue.Add((GetSoundName(move), GetSoundTransform(move, root), volume));
-            //audioQueue.Add(
-            //    AudioManager
-            //        .PickSound(GetSoundName(move))
-            //        .WithAttachmentToTransform(GetSoundTransform(move, root))
-            //        .WithVolume(volume)
-            //        .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
-            //);
         }
     }
 
@@ -373,19 +366,12 @@ public class SGridAnimator : MonoBehaviour
             volume = shakeDuration - 0.1f;
         }
         
-        volume = Mathf.Clamp(volume, 0.2f, 1);
+        volume = Mathf.Clamp(volume, 0.1f, 1);
 
         if (playSound)
         {
             CameraShake.Shake(shakeDuration, volume);
             audioQueue.Add(("Slide Explosion", GetSoundTransform(move, root), volume));
-            //audioQueue.Add(
-            //    AudioManager
-            //        .PickSound("Slide Explosion")
-            //        .WithAttachmentToTransform(GetSoundTransform(move, root))
-            //        .WithVolume(volume)
-            //        .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
-            //);
         }
     }
 

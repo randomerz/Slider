@@ -712,7 +712,11 @@ public class AudioManager : Singleton<AudioManager>
             bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref position);
             if (indoorStatusDisagree)
             {
-                soundWrapper.fmodInstance.setVolume(Mathf.Pow(2, Mathf.Max(0, 6 * Mathf.Log(soundWrapper.volume, 2) - indoorMuteDb)) / 6);
+                soundWrapper.fmodInstance.setVolume(Mathf.Pow(2, 6 * Mathf.Log(soundWrapper.volume, 2) - indoorMuteDb) / 6);
+            }
+            else
+            {
+                soundWrapper.fmodInstance.setVolume(soundWrapper.volume);
             }
             soundWrapper.fmodInstance.set3DAttributes(position.To3DAttributes());
             soundWrapper.fmodInstance.start();
@@ -721,6 +725,7 @@ public class AudioManager : Singleton<AudioManager>
         public void Stop()
         {
             soundWrapper.fmodInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            soundWrapper.fmodInstance.setVolume(0);
             soundWrapper.fmodInstance.release();
         }
 
@@ -749,7 +754,8 @@ public class AudioManager : Singleton<AudioManager>
                 bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref shiftedPosition);
                 if (indoorStatusDisagree) volumeDb -= indoorMuteDb;
                 soundWrapper.fmodInstance.set3DAttributes(shiftedPosition.To3DAttributes());
-                soundWrapper.fmodInstance.setVolume(Mathf.Pow(2, volumeDb / 6));
+                volumeDb = Mathf.Pow(2, volumeDb / 6);
+                soundWrapper.fmodInstance.setVolume(volumeDb);
             }
             else
             {
@@ -766,7 +772,8 @@ public class AudioManager : Singleton<AudioManager>
                     velocity = (v * soundWrapper.sound.dopplerScale).ToFMODVector()
                 });
                 if (indoorStatusDisagree) volumeDb -= indoorMuteDb;
-                soundWrapper.fmodInstance.setVolume(Mathf.Pow(2, volumeDb / 6));
+                volumeDb = Mathf.Pow(2, volumeDb / 6);
+                soundWrapper.fmodInstance.setVolume(volumeDb);
             }
         }
 
