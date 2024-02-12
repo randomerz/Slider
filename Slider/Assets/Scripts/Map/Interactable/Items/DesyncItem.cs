@@ -18,8 +18,10 @@ public class DesyncItem : Item
     private bool itemDoesNotExist;
 
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
+
         Init();
 
         if (saveString == "" && trackerSprite != null)
@@ -61,8 +63,9 @@ public class DesyncItem : Item
         MagiTechGrid.OnDesyncEndWorld -= OnDesyncEndWorld;
     }
 
-    private void Update()
+    public override void Update()
     {
+        base.Update();
         UpdateCurrentTile();
     }
 
