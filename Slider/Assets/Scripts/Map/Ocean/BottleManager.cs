@@ -131,7 +131,8 @@ public class BottleManager : MonoBehaviour, ISavable
         puzzleActive = false;
         bottleParentStile = null;
 
-        bottleUITracker.GetComponent<Animator>().SetBool("sink", true);
+        if(bottleUITracker != null)
+            bottleUITracker.GetComponent<Animator>().SetBool("sink", true);
         bottleUITracker = null;
         
         romeosBottle.spriteRenderer.enabled = true;
@@ -210,7 +211,7 @@ public class BottleManager : MonoBehaviour, ISavable
 
     public void MessageDelivered(Condition c)
     {
-        if ((turncounter < 3 && bottleParentStile != null && bottleParentStile.x == 2 && bottleParentStile.y == 0) || puzzleSolved)
+        if ((puzzleActive && turncounter < 3 && bottleParentStile != null && bottleParentStile.x == 2 && bottleParentStile.y == 0) || puzzleSolved)
         {
             c.SetSpec(true);
             puzzleSolved = true;

@@ -1,84 +1,114 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
-public class DesertGTA : MonoBehaviour, ISavable
+
+public class DesertGTA : ExplodableRock
 {
-    private bool explodedWall = false;
-    private bool explosivesPlaced = false;
-    [SerializeField] private List<GameObject> placableExplosives;
-    [SerializeField] private GameObject laserCollider;
-    public List<GameObject> removeAfterExplosion;
-    public PlayerConditionals bombSignConditional;
-    private bool isExploding;
+    [Header("GTA")]
+    public PlayableDirector director;
 
-    
-    public void Save()
-    {
-        SaveSystem.Current.SetBool("DesertBlewUpCasinoWall", explodedWall);
-    }
+    public List<GameObject> gameObjectsWallToEnable = new();
+    public List<GameObject> gameObjectsWallToDisable = new();
+    public List<GameObject> gameObjectsDoorToEnable = new();
+    public List<GameObject> gameObjectsDoorToDisable = new();
+    public List<Animator> animators = new();
 
-    public void Load(SaveProfile profile)
+    public float duckingDuration;
+
+    private void Awake()
     {
-        explodedWall = profile.GetBool("DesertBlewUpCasinoWall");
-        if(explodedWall)
+        foreach (GameObject go in raycastColliderObjects)
         {
-            EndExplosion(true);
+            go.SetActive(false);
         }
     }
 
-
-    public void PlaceExplosives()
+    public override void Load(SaveProfile profile)
     {
-        if(explosivesPlaced) return;
-        //if(!PlayerInventory.Contains("Explosives", Area.Military)) return;
+        base.Load(profile);
 
-        explosivesPlaced = true;
-        foreach(GameObject g in placableExplosives)
+        if (isExploded)
         {
-            g.SetActive(true);
+            UpdateExplosionWallGameObjects();
+            UpdateExplosionDoorGameObjects();
+            FinishAnimators();
         }
-        AudioManager.Play("Hat Click");
-        bombSignConditional.DisableConditionals();
-        laserCollider.SetActive(true);
     }
 
-    public void ExplodeCasinoWall()
+    public override void ArmRock()
     {
-        StartCoroutine(ExplodeCasinoWallCoroutine());
-    }
-
-    private IEnumerator ExplodeCasinoWallCoroutine()
-    {
-        isExploding = true;
-        AudioManager.Play("Slide Explosion");
-        yield return new WaitForSeconds(2);
-        EndExplosion();
-    }
-
-    public void EndExplosion(bool fromSave = false)
-    {
-        foreach(GameObject g in removeAfterExplosion)
+        if (!PlayerInventory.Contains("Explosives", Area.Military))
         {
-            g.SetActive(false);
+            return;
         }
-        foreach(GameObject g in placableExplosives)
+
+        base.ArmRock();
+
+        foreach (GameObject go in raycastColliderObjects)
         {
-            g.SetActive(false);
+            go.SetActive(true);
         }
-        laserCollider.SetActive(false);
-        explodedWall = true;
-        isExploding = false;
-        SaveSystem.Current.SetBool("DesertBlewUpCasinoWall", true);
     }
 
-    public void BlewUpCasinoWall(Condition c)
+    public override void ExplodeRock()
     {
-        c.SetSpec(explodedWall);
+        if (isExploded)
+            return;
+
+        isExploded = true;
+        Save();
+
+        AudioManager.DampenMusic(this, 0.2f, duckingDuration);
+        director.Play();
     }
 
-    public void IsBlowingUpCasinoWall(Condition c)
+    public override void FinishExploding()
     {
-        c.SetSpec(isExploding);
+        finishedExploding = true;
+
+        foreach (GameObject go in raycastColliderObjects)
+        {
+            go.SetActive(false);
+        }
+    }
+
+    // Exposed for director
+    public void DisableMagitechLaser()
+    {
+        Debug.Log("TODO: Disable laser!");
+    }
+
+    public void UpdateExplosionWallGameObjects()
+    {
+        foreach (GameObject go in gameObjectsWallToEnable)
+        {
+            go.SetActive(true);
+        }
+        foreach (GameObject go in gameObjectsWallToDisable)
+        {
+            go.SetActive(false);
+        }
+    }
+
+    public void UpdateExplosionDoorGameObjects()
+    {
+        foreach (GameObject go in gameObjectsDoorToEnable)
+        {
+            go.SetActive(true);
+        }
+        foreach (GameObject go in gameObjectsDoorToDisable)
+        {
+            go.SetActive(false);
+        }
+    }
+
+    public void FinishAnimators()
+    {
+        foreach (Animator a in animators)
+        {
+            a.SetBool("finishedExploding", true);
+        }
     }
 }

@@ -32,8 +32,10 @@ public class RopeCoil : Item
         }
     }
 
-    private void Update() 
+    public override void Update() 
     {
+        base.Update();
+
         // update index
         float distance = Vector3.Distance(transform.position, treeLineRendererTransform.position);
         float unlerp = Mathf.InverseLerp(minDist, maxDist, distance);

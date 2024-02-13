@@ -45,7 +45,7 @@ public class SGridData
         {
             for (int y = 0; y < sgrid.Height; y++)
             {
-                STileData std = new STileData(sgrid.GetGrid()[x, y]);
+                STileData std = new STileData(sgrid.GetStileAt(x, y));
                 
                 if (std.x != x || std.y != y)
                 {

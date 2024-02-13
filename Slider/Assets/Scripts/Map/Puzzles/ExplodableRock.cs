@@ -40,6 +40,10 @@ public class ExplodableRock : MonoBehaviour, ISavable
         if (isExploded)
         {
             FinishExploding();
+            if (collectible != null)
+            {
+                FinishCollectibleDrop();
+            }
         }
 
         if (isArmed && !isExploded)
@@ -73,7 +77,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
 
         if (tryingToExplode)
         {
-            Explode();
+            ExplodeRock();
         }
     }
 
@@ -88,7 +92,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
         tryingToExplode = value;
     }
 
-    public void ExplodeRock()
+    public virtual void ExplodeRock()
     {
         if (isExploded)
             return;

@@ -25,6 +25,9 @@ public class NPCAnimatorController : MonoBehaviour
 
     public void Play(string stateName)
     {
+        if (!myAnimator.gameObject.activeInHierarchy)
+            return;
+            
         if (stateName == "" && currentState == "")
             return;
         

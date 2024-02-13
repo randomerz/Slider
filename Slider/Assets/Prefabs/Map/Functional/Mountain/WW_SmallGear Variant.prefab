@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4153111185979807290
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 890833065369603301, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_Name
+      value: WW_SmallGear Sprite
+      objectReference: {fileID: 0}
+    - target: {fileID: 1903660953402650381, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -53017172092046838, guid: dcb18b301d720884daa2058776cc1afd, type: 3}
+    - target: {fileID: 1994936537561936051, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 218be95e61a4bfe48beb14dd7021fa25, type: 2}
+    - target: {fileID: 2510631740096831560, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -53017172092046838, guid: dcb18b301d720884daa2058776cc1afd, type: 3}
+    - target: {fileID: 3358679569885304275, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_Name
+      value: WW_SmallGear Collider
+      objectReference: {fileID: 0}
+    - target: {fileID: 3808323369306112061, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_Name
+      value: WW_SmallGear Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460907112556401574, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460907112556401574, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460907112556401574, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460907112556401574, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460907112556401574, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460907112556401574, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460907112556401574, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460907112556401574, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460907112556401574, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460907112556401574, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7536287195440846283, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 218be95e61a4bfe48beb14dd7021fa25, type: 2}
+    - target: {fileID: 8160599788567220876, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}
+      propertyPath: m_Radius
+      value: 0.375
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e63d34a3af57a684e9b3c8ac9ad2070f, type: 3}

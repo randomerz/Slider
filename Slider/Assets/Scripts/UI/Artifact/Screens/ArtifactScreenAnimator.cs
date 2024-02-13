@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ArtifactScreenAnimator : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class ArtifactScreenAnimator : MonoBehaviour
     public Animator rightArrowAnimator;
     public Animator leftArrowAnimator;
     public ArtifactTabManager tabManager;
+    public UIArtifactInventory inventory;
 
     private void OnEnable() 
     {
@@ -118,16 +120,15 @@ public class ArtifactScreenAnimator : MonoBehaviour
         }
 
         yield return new WaitForSeconds(duration);
+        
+        OnScreenChange(target, currentScreenIndex);
 
         currentScreenIndex = target;
 
         SetScreensActive(false);
         screens[currentScreenIndex].gameObject.SetActive(true);
         animators[currentScreenIndex].SetBool("isVisible", true);
-        // UpdateArrowVisibility(false);
-
         switchCouroutine = null;
-        OnScreenChange(currentScreenIndex);
 
         if (targetScreenIndex != currentScreenIndex)
             SwitchScreens(targetScreenIndex);
@@ -142,8 +143,22 @@ public class ArtifactScreenAnimator : MonoBehaviour
         }
     }
 
-    private void OnScreenChange(int index)
+    private void OnScreenChange(int index, int prevIndex)
     {
+        //inventory
+        if(index == 1)
+        {
+            if(prevIndex == 0)
+            {
+                inventory.TrySelectLeftmostSelectible();
+            }
+
+            if(prevIndex == 2)
+            {
+                inventory.TrySelectRightmostSelectible();
+            }
+
+        }
 
         // map screen
         if (index == 2)

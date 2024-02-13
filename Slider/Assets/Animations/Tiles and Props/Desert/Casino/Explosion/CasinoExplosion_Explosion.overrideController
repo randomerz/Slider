@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CasinoExplosion_Explosion
+  m_Controller: {fileID: 9100000, guid: dbd39fb28b307b54fb73a608a2afcb76, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: ba1a589ee284ac14cbef3ab11bb742b5, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d2e76d41d58477541b5a95e6f12ef2d3, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: d0d3e4f53d682524da89d6e8a2635d5a, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 8290a42bde995c84f94baa5051cd93cf, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 5610e9de8f2c5fc4891a43a8a4e18f7f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 0ca7a34b9bd48cb428299d7070b671c8, type: 2}

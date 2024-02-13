@@ -9,7 +9,7 @@ public class Item : MonoBehaviour, ISavable
     public SpriteRenderer spriteRenderer;
     [SerializeField] protected Collider2D myCollider;
     public bool canKeep = false;
-    [SerializeField] private bool shouldDisableAtStart = false;
+    public bool shouldDisableAtStart = false;
     public bool doReflectionCalculations;
     public float itemRadius = 0.5f;
 
@@ -33,7 +33,7 @@ public class Item : MonoBehaviour, ISavable
     private bool shouldLoadSavedDataOnStart;
     private int savedIslandIdBuffer;
     private Vector3 savedPositionBuffer;
-    private bool enableColliderOnTriggerExit;
+    private bool enableColliderWhenPlayerFar;
 
     private int order;
 
@@ -51,7 +51,7 @@ public class Item : MonoBehaviour, ISavable
         order = spriteRenderer.sortingOrder;
     }
 
-    private void Start()
+    public virtual void Start()
     {
         if (shouldLoadSavedDataOnStart)
         {
@@ -115,19 +115,22 @@ public class Item : MonoBehaviour, ISavable
             if (profile.GetBool($"{saveString}_WasPlayerHolding"))
             {
                 SetCollider(false);
-                enableColliderOnTriggerExit = true;
+                enableColliderWhenPlayerFar = true;
             }
 
             savedPositionBuffer = new Vector3(x, y, z);
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    public virtual void Update() 
     {
-        if (enableColliderOnTriggerExit)
+        if (enableColliderWhenPlayerFar)
         {
-            enableColliderOnTriggerExit = false;
-            SetCollider(true);
+            if (Vector3.Distance(Player.GetPosition(), transform.position) > 0.75f)
+            {
+                enableColliderWhenPlayerFar = false;
+                SetCollider(true);
+            }
         }
     }
 

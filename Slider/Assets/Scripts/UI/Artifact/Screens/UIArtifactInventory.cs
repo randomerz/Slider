@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class UIArtifactInventory : MonoBehaviour
 {
@@ -23,7 +24,13 @@ public class UIArtifactInventory : MonoBehaviour
     private void OnEnable() 
     {
         UpdateIcons();
-        UpdateText("Collection");
+        if(Controls.CurrentControlScheme == Controls.CONTROL_SCHEME_CONTROLLER)
+        {
+            if(!TrySelectLeftmostSelectible())
+                UpdateText("Collection");
+        }
+        else
+            UpdateText("Collection");
 
         UpdateCollectibleCounters(this, null);
         PlayerInventory.OnPlayerGetCollectible += UpdateCollectibleCounters;
@@ -41,7 +48,7 @@ public class UIArtifactInventory : MonoBehaviour
             c.SetVisible(PlayerInventory.Contains(c.collectibleName));
         }
 
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 4; i++)
         {
             // Collectibles are called "Oil #1", "Oil #2", "Oil #3"
             if (PlayerInventory.Contains($"{oilCollectible.collectibleName} #{i}"))
@@ -77,7 +84,7 @@ public class UIArtifactInventory : MonoBehaviour
                 numSunglasses += 1;
         }
 
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 4; i++)
         {
             if (PlayerInventory.Contains($"Oil #{i}"))
                 numOil += 1;
@@ -91,5 +98,48 @@ public class UIArtifactInventory : MonoBehaviour
         
         oilCount.text = numOil.ToString();
         oilCount.gameObject.SetActive(numOil > 1);
+    }
+
+    public bool TrySelectLeftmostSelectible()
+    {
+        ArtifactInventoryCollectible leftmost = null;
+        float smallestX = float.MaxValue;
+        foreach(ArtifactInventoryCollectible c in collectibles)
+        {
+            if(c.controllerSelectible.enabled && c.transform.position.x < smallestX)
+            {
+                leftmost = c;
+                smallestX = c.transform.position.x;
+            }
+        }
+        if(leftmost !=null)
+        {
+            Select(leftmost);
+            return true;
+        }
+        return false;
+    }
+
+    public void TrySelectRightmostSelectible()
+    {
+        ArtifactInventoryCollectible rightMost = null;
+        float largestX = float.MinValue;
+        foreach(ArtifactInventoryCollectible c in collectibles)
+        {
+            if(c.controllerSelectible.enabled && c.transform.position.x > largestX)
+            {
+                rightMost = c;
+                largestX = c.transform.position.x;
+            }
+        }
+        if(rightMost != null)
+            Select(rightMost);
+    }
+
+    private void Select(ArtifactInventoryCollectible s)
+    {
+        s.controllerSelectible.Select();
+        s.controllerSelectionImage.enabled = true;
+        s.UpdateInventoryName();
     }
 }

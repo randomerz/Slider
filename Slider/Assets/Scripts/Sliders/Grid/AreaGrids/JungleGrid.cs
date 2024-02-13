@@ -41,18 +41,14 @@ public class JungleGrid : SGrid
         {
             FixBridge();
         }
-        else if (profile.GetBool("jungleTurnedInMinecart"))
+        if (profile.GetBool("jungleTurnedInMinecart"))
         {
-            minecartProp.SetActive(true);
+            EnableMinecart();
         }
-        else if (profile.GetBool("jungleTurnedInRail"))
+        if (profile.GetBool("jungleTurnedInRail"))
         {
-            foreach (GameObject g in jungleBridgeRails)
-            {
-                g.SetActive(true);
-            }
+            EnableRail();
         }
-
         if (profile.GetBool("jungleFactoryDoorOpened"))
         {
             OpenFactoryDoor();
@@ -149,19 +145,10 @@ public class JungleGrid : SGrid
     // Puzzle 5 - Chad Race
     
 
-    public void SpawnChadRewards() {
-        Collectible c = GetCollectible("Boots");
-        if (!PlayerInventory.Contains(c))
-        {
-            c.gameObject.SetActive(true);
-        }
-
-        c = GetCollectible("Slider 6");
-            
-        if (!PlayerInventory.Contains(c))
-        {
-            c.gameObject.SetActive(true);
-        }
+    public void SpawnChadRewards() 
+    {
+        ActivateCollectible("Boots");
+        ActivateSliderCollectible(6);
     }
 
     // Broken bridge -- puzzle 7
@@ -173,7 +160,11 @@ public class JungleGrid : SGrid
 
         SaveSystem.Current.SetBool("jungleTurnedInRail", true);
         AudioManager.Play("Puzzle Complete");
+        EnableRail();
+    }
 
+    private void EnableRail()
+    {
         if (SaveSystem.Current.GetBool("jungleTurnedInMinecart"))
         {
             FixBridge();
@@ -194,11 +185,13 @@ public class JungleGrid : SGrid
             
         SaveSystem.Current.SetBool("jungleTurnedInMinecart", true);
         AudioManager.Play("Puzzle Complete");
+        EnableMinecart();
+    }
 
-        PlayerInventory.RemoveAndDestroyItem();
-
+    private void EnableMinecart()
+    {
         minecartProp.SetActive(true);
-        // particlemanager.poof
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, minecartProp.transform.position, minecartProp.transform);
 
         if (SaveSystem.Current.GetBool("jungleTurnedInRail"))
         {
@@ -214,7 +207,7 @@ public class JungleGrid : SGrid
         
         foreach (GameObject g in jungleBridges)
         {
-            g.SetActive(true);
+            g.SetActive(false);
         }
     }
 

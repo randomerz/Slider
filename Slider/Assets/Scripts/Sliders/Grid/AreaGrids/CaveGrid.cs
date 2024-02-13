@@ -176,6 +176,10 @@ public class CaveGrid : SGrid
         CameraShake.Shake(1.5f, 2.5f);
         AudioManager.Play("Slide Explosion");
         UIEffects.FlashWhite();
+
+        yield return new WaitForSeconds(1.0f);
+
+        FinishCaves();
     }
 
     // Puzzle 8 - light  up caves

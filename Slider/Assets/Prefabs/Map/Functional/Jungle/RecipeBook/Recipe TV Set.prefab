@@ -53,6 +53,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9fe4d8c8a34ed474caa56fa52b639ff1, type: 2}
   - {fileID: 11400000, guid: 050273f0be21e204590b0f20a64e3303, type: 2}
   - {fileID: 11400000, guid: f3344b5ea6996644ea7ced665000b5dc, type: 2}
+  - {fileID: 11400000, guid: 6541ea0abd3f9f24e86388e3415c5d69, type: 2}
+  - {fileID: 11400000, guid: 15fb403af3c3bea4b8e8429f9fb96a29, type: 2}
   - {fileID: 11400000, guid: bac17a5f9ee04324b8ce25a3090fb5a9, type: 2}
   - {fileID: 11400000, guid: 83be8899655b5b046882925a8cb05d18, type: 2}
   - {fileID: 11400000, guid: 57ed20a22f1c4ed47964976355b8fb7e, type: 2}
@@ -73,7 +75,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c69c312efe4e4034fa00f822ec758ee2, type: 2}
   - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
   - {fileID: 11400000, guid: 76675a2db3290714f95b9c4099fbdd50, type: 2}
-  - {fileID: 11400000, guid: c69c312efe4e4034fa00f822ec758ee2, type: 2}
   recipeList: {fileID: 11400000, guid: fc4da6d866679aa4783b5e895f04ad29, type: 2}
 --- !u!1 &465157543927050415
 GameObject:
@@ -1373,6 +1374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hintNPC: {fileID: 0}
+  hintPosition: {fileID: 0}
 --- !u!1 &4679639833931829211
 GameObject:
   m_ObjectHideFlags: 0

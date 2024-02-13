@@ -18,7 +18,9 @@ public class Box : MonoBehaviour
     public Path bottom;
 
     protected List<Vector2> directions = new List<Vector2>();
-    public Direction currentDirection = Direction.RIGHT; //you should set at the start 
+    public Direction currentDirection;
+
+    [SerializeField] protected List<Box> currParents = new List<Box>();
 
     void Awake()
     {
@@ -48,10 +50,11 @@ public class Box : MonoBehaviour
         foreach (Direction d in paths.Keys)
         {
             paths[d].Deactivate();
+            paths[d].DeletePair();
         }
     }
 
-    private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
+    protected virtual void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         foreach (Direction d in paths.Keys)
         {
@@ -84,16 +87,13 @@ public class Box : MonoBehaviour
         {
             paths[Direction.DOWN] = bottom;
         }
-
-        // if (paths.Keys.Count == 0) {
-        //     print(this.gameObject.name);
-        // }
     }
 
-    public virtual void CreateShape(List<Box> parents)
+    public virtual void CreateShape()
     {
-       // print(this.gameObject.name + " is sending shape " + currentShape);
-        //print(currentDirection);
+        if (!currParents.Contains(this)) {
+            currParents.Add(this);
+        }
 
         Box next = GetBoxInDirection(currentDirection);
         if (next != null)
@@ -102,13 +102,15 @@ public class Box : MonoBehaviour
             {
                 if (!paths[currentDirection].isActive() || paths[currentDirection].getAnimType() == isDefaultCurrentPath(currentDirection))
                 {
-                    paths[currentDirection].Activate(isDefaultCurrentPath(currentDirection), currentShape); 
+                    paths[currentDirection].Activate(isDefaultCurrentPath(currentDirection), currentShape);
+                    List<Box> parents = GetParents(); 
                     next.RecieveShape(paths[currentDirection], currentShape, parents);
                 }
             }
             else
             {
                 paths[currentDirection].Deactivate();
+                List<Box> parents = GetParents();
                 next.RecieveShape(paths[currentDirection], currentShape, parents);
             }
         }
@@ -127,10 +129,12 @@ public class Box : MonoBehaviour
 
         if (box != null)
         {
-            box.RecieveShape(paths[currentDirection], null, new List<Box>());
+            List<Box> parents = new List<Box>();
+            parents.Add(this);
+            box.RecieveShape(paths[currentDirection], null, parents);
         }
-
-        if (isDefaultCurrentPath(currentDirection) == paths[currentDirection].getAnimType())
+        
+        if (paths[currentDirection].getAnimType() == isDefaultCurrentPath(currentDirection))
         {
             paths[currentDirection].Deactivate();
         }
@@ -158,10 +162,10 @@ public class Box : MonoBehaviour
                 continue;
             }
 
-            currentDirection = d;
             //turn on path if there is not another using it
             if (!paths[d].isActive())
             {
+                currentDirection = d;
                 Box next = GetBoxInDirection(currentDirection);
                 if (next != null)
                 {
@@ -170,7 +174,7 @@ public class Box : MonoBehaviour
                         return;
                     }
 
-                    CreateShape(new List<Box>());
+                    CreateShape();
                 }
                 break;
             }
@@ -184,7 +188,7 @@ public class Box : MonoBehaviour
         Physics2D.queriesStartInColliders = false;
         Physics2D.queriesHitTriggers = false;
 
-        RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, v.normalized, 100, LayerMask.GetMask("JungleSigns"));
+        RaycastHit2D[] tileCheck = Physics2D.RaycastAll(transform.position, v.normalized, 40, LayerMask.GetMask("JungleSigns"));
 
         Box nextBox = null;
         float distanceTo = 100;
@@ -239,6 +243,16 @@ public class Box : MonoBehaviour
     public Vector2 GetDirection()
     {
        return DirectionUtil.D2V(currentDirection);
+    }
+
+    public List<Box> GetParents(){
+        List<Box> parents = new List<Box>();
+
+        foreach (Box parent in currParents) {
+            parents.Add(parent);
+        }
+
+        return parents;
     }
 
     public void IsDirectionRight(Condition c) => c.SetSpec(currentDirection == Direction.RIGHT);

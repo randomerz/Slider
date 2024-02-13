@@ -249,6 +249,23 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         return dialogueCtx.DialogueEnabled && !dialogueCtx.NPCGivingDontInterruptDialogue();
     }
 
+    /// <summary>
+    /// Warning: This method will not work if "spriteDefaultFacingLeft" is not properly set.
+    /// </summary>
+    public void SetFacingRight(bool shouldFaceRight)
+    {
+        /*
+        defaultLeft | shouldFaceRight | flipX
+        1           | 1               | 1
+        1           | 0               | 0
+        0           | 1               | 0
+        0           | 0               | 1
+        */
+
+        sr.flipX = !(spriteDefaultFacingLeft ^ shouldFaceRight);
+    }
+
+    // (deprecated) Used somewhere in ocean by npc I think :(
     public void makeFaceRight()
     {
         if (spriteDefaultFacingLeft)

@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 231593806802926245, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
@@ -85,7 +86,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 231593806802926245, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -98.5
+      value: -97.5
       objectReference: {fileID: 0}
     - target: {fileID: 231593806802926245, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -349,7 +350,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7321911721164597235, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7321911721164597235, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -364,6 +365,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 22100000, guid: c2d165d855459ec4fa55a4458d78107e, type: 2}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3030265520208236623, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1792032949256799696}
   m_SourcePrefab: {fileID: 100100000, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}
 --- !u!1 &838131393238579954 stripped
 GameObject:
@@ -372,7 +379,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &1792032949256799696
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -389,7 +396,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &3333563357521655752 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1148202772003347829, guid: 5cd4c8dec37b40d47a225c53ed615799, type: 3}

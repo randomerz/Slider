@@ -12,6 +12,7 @@ public class ExplodingBarrel : MonoBehaviour
     public UnityEvent OnExplode;
 
     private GameObject explosionEffect;
+    private bool barrelsExploded;
 
     private void Start()
     {
@@ -25,6 +26,11 @@ public class ExplodingBarrel : MonoBehaviour
 
     public void Explode()
     {
+        if (barrelsExploded)
+        {
+            return;
+        }
+
         StartCoroutine(ExplodeRoutine());
     }
 
@@ -56,6 +62,7 @@ public class ExplodingBarrel : MonoBehaviour
 
     private void DestroyBarrels()
     {
+        barrelsExploded = true;
         foreach (Transform location in explosionLocations)
         {
             Destroy(location.gameObject);

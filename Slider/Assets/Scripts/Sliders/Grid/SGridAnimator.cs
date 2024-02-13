@@ -20,9 +20,8 @@ public class SGridAnimator : MonoBehaviour
 
     // set in inspector
     public AnimationCurve movementCurve;
-    protected float movementDuration = 1f;
+    protected float movementDurationMultiplier = 1f;
 
-    private float currMoveDuration = 1f;
     private const float MAX_POSSIBLE_MOVE_DURATION = 2.1f;
 
     //private List<SoundWrapper> audioQueue = new List<SoundWrapper>();
@@ -70,30 +69,25 @@ public class SGridAnimator : MonoBehaviour
 
     public void ChangeMovementDuration(float value)
     {
-        movementDuration = value;
+        movementDurationMultiplier = value;
     }
 
 
     public float GetMovementDuration()
     {
-        return movementDuration;
+        return movementDurationMultiplier;
     }
 
 
-    public virtual void Move(SMove move, STile[,] grid = null)
+    public virtual void Move(SMove move, STile[,] grid)
     {
-        if (grid == null)
-        {
-            grid = SGrid.Current.GetGrid();
-        }
-
         List<Coroutine> moveCoroutines = new List<Coroutine>();
         bool playSound = true;
         foreach (Movement m in move.moves)
         {
             if (grid[m.startLoc.x, m.startLoc.y].isTileActive)
             {
-                moveCoroutines.Add(DetermineMoveType(move, grid, m, playSound || ShouldAlwaysPlaySound(move)));
+                moveCoroutines.Add(DetermineAndStartMoving(move, grid, m, playSound || ShouldAlwaysPlaySound(move)));
                 playSound = false;
             }
             else
@@ -111,7 +105,7 @@ public class SGridAnimator : MonoBehaviour
     }
 
     //C: Added to avoid duplicated code in mountian section
-    protected virtual Coroutine DetermineMoveType(SMove move, STile[,] grid, Movement m, bool playSound)
+    protected virtual Coroutine DetermineAndStartMoving(SMove move, STile[,] grid, Movement m, bool playSound)
     {
         return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move, playSound:playSound));
     }
@@ -121,7 +115,6 @@ public class SGridAnimator : MonoBehaviour
     // if animate is false, will wait and then TP to destination (ex. mountain going up/down)
     protected IEnumerator StartMovingAnimation(STile stile, Movement moveCoords, SMove move, bool animate = true, bool playSound = true)
     {
-        //isMoving = true;
         bool isPlayerOnStile = (Player.GetInstance().GetSTileUnderneath() != null &&
                                 Player.GetInstance().GetSTileUnderneath().islandId == stile.islandId);
 
@@ -132,6 +125,8 @@ public class SGridAnimator : MonoBehaviour
             stile.SetBorderColliders(true);
         }
 
+        float currMoveDuration = movementDurationMultiplier * move.duration;
+        currMoveDuration = Mathf.Min(currMoveDuration, MAX_POSSIBLE_MOVE_DURATION);
 
         OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
         {
@@ -141,10 +136,10 @@ public class SGridAnimator : MonoBehaviour
             moveDuration = currMoveDuration
         });
 
-        EffectOnMoveStart(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
+        EffectOnMoveStart(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, currMoveDuration, playSound);
+        stile.SetGridPosition(moveCoords.endLoc);
 
         float t = 0;
-        currMoveDuration = movementDuration * move.duration;
         while (t < currMoveDuration)
         {
             t += Time.deltaTime;
@@ -163,7 +158,6 @@ public class SGridAnimator : MonoBehaviour
             stile.SetBorderColliders(false);
         }
 
-        stile.SetGridPosition(moveCoords.endLoc);
         stile.SetMovingDirection(Vector2.zero);
 
         OnSTileMoveEndEarly?.Invoke(this, new OnTileMoveArgs
@@ -173,6 +167,8 @@ public class SGridAnimator : MonoBehaviour
             smove = move,
             moveDuration = currMoveDuration
         });
+        
+        UIArtifact.GetInstance().SetMoveInactive(move);
 
         OnSTileMoveEnd?.Invoke(this, new OnTileMoveArgs
         {
@@ -190,7 +186,8 @@ public class SGridAnimator : MonoBehaviour
             moveDuration = currMoveDuration
         });
 
-        EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
+        EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, currMoveDuration, playSound);
+        UIArtifact.GetInstance().ProcessQueue();
     }
     
     protected IEnumerator DisableBordersAndColliders(
@@ -337,7 +334,7 @@ public class SGridAnimator : MonoBehaviour
             return "Slide Rumble";
     }
 
-    protected virtual void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile, bool playSound)
+    protected virtual void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile, float currMoveDuration, bool playSound)
     {
         float shakeDuration = currMoveDuration + 0.1f;
         float volume = currMoveDuration;
@@ -348,24 +345,17 @@ public class SGridAnimator : MonoBehaviour
             volume = shakeDuration - 0.1f;
         }
 
-        volume = Mathf.Clamp(volume, 0.2f, 1);
+        volume = Mathf.Clamp(volume, 0.1f, 1);
 
         if (playSound)
         {
             CameraShake.ShakeConstant(shakeDuration, 0.15f * volume);
             audioQueue.Add((GetSoundName(move), GetSoundTransform(move, root), volume));
-            //audioQueue.Add(
-            //    AudioManager
-            //        .PickSound(GetSoundName(move))
-            //        .WithAttachmentToTransform(GetSoundTransform(move, root))
-            //        .WithVolume(volume)
-            //        .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
-            //);
         }
     }
 
 
-    protected void EffectOnMoveFinish(SMove move, Movement movement, Transform root, STile tile, bool playSound)
+    protected void EffectOnMoveFinish(SMove move, Movement movement, Transform root, STile tile, float currMoveDuration, bool playSound)
     {
         float shakeDuration = currMoveDuration / 2;
         float volume = currMoveDuration;
@@ -376,19 +366,12 @@ public class SGridAnimator : MonoBehaviour
             volume = shakeDuration - 0.1f;
         }
         
-        volume = Mathf.Clamp(volume, 0.2f, 1);
+        volume = Mathf.Clamp(volume, 0.1f, 1);
 
         if (playSound)
         {
             CameraShake.Shake(shakeDuration, volume);
             audioQueue.Add(("Slide Explosion", GetSoundTransform(move, root), volume));
-            //audioQueue.Add(
-            //    AudioManager
-            //        .PickSound("Slide Explosion")
-            //        .WithAttachmentToTransform(GetSoundTransform(move, root))
-            //        .WithVolume(volume)
-            //        .WithIndoorStatus(SoundWrapper.IndoorStatus.AlwaysOutdoor)
-            //);
         }
     }
 

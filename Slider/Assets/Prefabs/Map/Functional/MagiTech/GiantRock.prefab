@@ -67,6 +67,8 @@ MonoBehaviour:
   itemNameCheck: 
   excludeBoat: 0
   excludeLand: 0
+  onActionEnabled: 1
+  myCollider: {fileID: 0}
 --- !u!212 &373424648924040205
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -116,7 +118,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &1905850612611915875
@@ -920,11 +922,6 @@ MonoBehaviour:
   - {fileID: 3361298863975870174}
   - {fileID: 7687370506203018050}
   - {fileID: 8925876840345608211}
-  laserRaycastColliders:
-  - {fileID: 3068296424537647684}
-  - {fileID: 3361298863975870174}
-  - {fileID: 7687370506203018050}
-  - {fileID: 8925876840345608211}
   collectible: {fileID: 0}
   collectibleStart: {fileID: 0}
   collectibleTarget: {fileID: 0}
@@ -977,6 +974,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  laserRaycastColliders:
+  - {fileID: 3068296424537647684}
+  - {fileID: 3361298863975870174}
+  - {fileID: 7687370506203018050}
+  - {fileID: 8925876840345608211}
 --- !u!1 &7255555477615261105
 GameObject:
   m_ObjectHideFlags: 0
@@ -1617,7 +1619,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.125
+      value: -0.125
       objectReference: {fileID: 0}
     - target: {fileID: 4413067525347147419, guid: 49793d016cc9c4fedb265cbb5df63929, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2833,7 +2835,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.25, y: 0.5}
+  m_Offset: {x: -0.25, y: 1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -2844,7 +2846,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 6, y: 4}
+  m_Size: {x: 6, y: 3}
   m_EdgeRadius: 0
 --- !u!4 &5247906406386083860 stripped
 Transform:
