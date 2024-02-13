@@ -77,7 +77,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
 
         if (tryingToExplode)
         {
-            Explode();
+            ExplodeRock();
         }
     }
 

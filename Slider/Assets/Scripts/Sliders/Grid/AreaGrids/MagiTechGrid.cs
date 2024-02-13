@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class MagiTechGrid : SGrid
 {
@@ -61,7 +62,9 @@ public class MagiTechGrid : SGrid
 
     private ContactFilter2D contactFilter;
 
-    public List<GameObject> BridgeObjects;
+    [FormerlySerializedAs("BridgeObjects")]
+    public List<GameObject> bridgeObjects;
+    public List<GameObject> bridgeFenceObjects;
 
     /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
     and the right 9 STiles represent the past. The past tile will have an islandID
@@ -466,9 +469,13 @@ public class MagiTechGrid : SGrid
             SaveSystem.Current.SetBool("magitechBridgeFixed", true);
             AudioManager.Play("Puzzle Complete");
         }
-        foreach(GameObject g in BridgeObjects)
+        foreach(GameObject g in bridgeObjects)
         {
             g.SetActive(false);
+        }
+        foreach(GameObject g in bridgeFenceObjects)
+        {
+            g.SetActive(true);
         }
     }
 
