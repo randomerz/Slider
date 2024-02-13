@@ -20,9 +20,8 @@ public class SGridAnimator : MonoBehaviour
 
     // set in inspector
     public AnimationCurve movementCurve;
-    protected float movementDuration = 1f;
+    protected float movementDurationMultiplier = 1f;
 
-    private float currMoveDuration = 1f;
     private const float MAX_POSSIBLE_MOVE_DURATION = 2.1f;
 
     //private List<SoundWrapper> audioQueue = new List<SoundWrapper>();
@@ -70,13 +69,13 @@ public class SGridAnimator : MonoBehaviour
 
     public void ChangeMovementDuration(float value)
     {
-        movementDuration = value;
+        movementDurationMultiplier = value;
     }
 
 
     public float GetMovementDuration()
     {
-        return movementDuration;
+        return movementDurationMultiplier;
     }
 
 
@@ -126,6 +125,8 @@ public class SGridAnimator : MonoBehaviour
             stile.SetBorderColliders(true);
         }
 
+        float currMoveDuration = movementDurationMultiplier * move.duration;
+        currMoveDuration = Mathf.Min(currMoveDuration, MAX_POSSIBLE_MOVE_DURATION);
 
         OnSTileMoveStart?.Invoke(this, new OnTileMoveArgs
         {
@@ -135,11 +136,10 @@ public class SGridAnimator : MonoBehaviour
             moveDuration = currMoveDuration
         });
 
-        EffectOnMoveStart(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
+        EffectOnMoveStart(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, currMoveDuration, playSound);
         stile.SetGridPosition(moveCoords.endLoc);
 
         float t = 0;
-        currMoveDuration = movementDuration * move.duration;
         while (t < currMoveDuration)
         {
             t += Time.deltaTime;
@@ -186,7 +186,7 @@ public class SGridAnimator : MonoBehaviour
             moveDuration = currMoveDuration
         });
 
-        EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, playSound);
+        EffectOnMoveFinish(move, moveCoords, isPlayerOnStile ? null : stile.transform, stile, currMoveDuration, playSound);
         UIArtifact.GetInstance().ProcessQueue();
     }
     
@@ -334,7 +334,7 @@ public class SGridAnimator : MonoBehaviour
             return "Slide Rumble";
     }
 
-    protected virtual void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile, bool playSound)
+    protected virtual void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile, float currMoveDuration, bool playSound)
     {
         float shakeDuration = currMoveDuration + 0.1f;
         float volume = currMoveDuration;
@@ -355,7 +355,7 @@ public class SGridAnimator : MonoBehaviour
     }
 
 
-    protected void EffectOnMoveFinish(SMove move, Movement movement, Transform root, STile tile, bool playSound)
+    protected void EffectOnMoveFinish(SMove move, Movement movement, Transform root, STile tile, float currMoveDuration, bool playSound)
     {
         float shakeDuration = currMoveDuration / 2;
         float volume = currMoveDuration;
