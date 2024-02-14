@@ -80,23 +80,6 @@ public class DesyncItem : Item
         return tile;
     }
 
-    public void SetIsTracked(bool val)
-    {
-        isTracked = val;
-        if(isTracked)
-            AddTracker();
-        else
-            UITrackerManager.RemoveTracker(gameObject);
-    }
-
-    private void AddTracker()
-    {
-        if(trackerSprite != null)
-            UITrackerManager.AddNewTracker(gameObject, trackerSprite);
-        else
-            UITrackerManager.AddNewTracker(gameObject);
-    }
-
     public override void PickUpItem(Transform pickLocation, System.Action callback = null) 
     {
         base.PickUpItem(pickLocation, callback);
@@ -172,7 +155,7 @@ public class DesyncItem : Item
     {
         PlayerInventory.RemoveItem();
         //Make sure it doesn't end up inside the portal
-        if(Portal.playerInPortal && Portal.recentPortalObj != null)
+        if (Portal.playerInPortal && Portal.recentPortalObj != null)
         {
             transform.position = Portal.recentPortalObj.desyncItemFallbackSpawn.position; 
         }
@@ -186,6 +169,23 @@ public class DesyncItem : Item
         ResetSortingOrder();
         SetDesyncItemActive(false);
         UpdateLightning();
+    }
+
+    public void SetIsTracked(bool val)
+    {
+        isTracked = val;
+        if (isTracked)
+            AddTracker();
+        else
+            UITrackerManager.RemoveTracker(gameObject);
+    }
+
+    private void AddTracker()
+    {
+        if (trackerSprite != null)
+            UITrackerManager.AddNewTracker(gameObject, trackerSprite);
+        else
+            UITrackerManager.AddNewTracker(gameObject);
     }
 
     private void OnDesyncStartWorld(object sender, MagiTechGrid.OnDesyncArgs e)

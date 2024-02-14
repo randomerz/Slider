@@ -62,7 +62,6 @@ public class MagiTechGrid : SGrid
 
     private ContactFilter2D contactFilter;
 
-    [FormerlySerializedAs("BridgeObjects")]
     public List<GameObject> bridgeObjects;
     public List<GameObject> bridgeFenceObjects;
 
@@ -448,20 +447,6 @@ public class MagiTechGrid : SGrid
 
     #endregion
 
-    #region Misc methods
-
-    public void DisableContractorBarrel()
-    {
-        // if (!contractorBarrel.activeSelf)
-        // {
-        //     contractorBarrel.SetActive(false);
-        //     AudioManager.Play("Puzzle Complete");
-        //     ParticleManager.SpawnParticle(ParticleType.SmokePoof, contractorBarrel.transform.position, contractorBarrel.transform.parent);
-        // }
-    }
-
-    #endregion
-
     public void LowerDrawbridge(bool fromSave = false)
     {
         if(!fromSave)
@@ -481,46 +466,35 @@ public class MagiTechGrid : SGrid
 
     #region Conditions
 
-    public void FireHasStool(Condition c)
+    public void FireHasStool(Condition c) => c.SetSpec(FireHasStool());
+    public void LightningHasStool(Condition c) => c.SetSpec(LightningHasStool());
+    
+    public bool FireHasStool()
     {
-        // if (SaveSystem.Current.GetBool("magiTechFactory"))
-        // {
-        //     c.SetSpec(true);
-        //     return;
-        // }
-
         foreach (Collider2D hit in GetCollidingItems(fireStoolZoneCollider))
         {
             Item item = hit.GetComponent<Item>();
             if (item != null && (item.itemName == "Step Stool" || item.itemName == "Past Step Stool"))
             {
-                c.SetSpec(true);
-                return;
+                return true;
             }
         }
         
-        c.SetSpec(false);
+        return false;
     }
 
-    public void LightningHasStool(Condition c)
+    public bool LightningHasStool()
     {
-        // if (SaveSystem.Current.GetBool("magiTechFactory"))
-        // {
-        //     c.SetSpec(true);
-        //     return;
-        // }
-
         foreach (Collider2D hit in GetCollidingItems(lightningStoolZoneCollider))
         {
             Item item = hit.GetComponent<Item>();
             if (item != null && (item.itemName == "Step Stool" || item.itemName == "Past Step Stool"))
             {
-                c.SetSpec(true);
-                return;
+                return true;
             }
         }
-
-        c.SetSpec(false);
+        
+        return false;
     }
 
     private List<Collider2D> GetCollidingItems(Collider2D collider)
@@ -530,24 +504,16 @@ public class MagiTechGrid : SGrid
         return list;
     }
 
-    public void HasOneOil(Condition c)
-    {
-        c.SetSpec(numOil == 1);
-    }
-
-    public void HasTwoOil(Condition c)
-    {
-        c.SetSpec(numOil == 2);
-    }
-    public void HasThreeOil(Condition c)
-    {
-        c.SetSpec(numOil == 3);
-    }
+    public void HasOneOil(Condition c) => c.SetSpec(numOil == 1);
+    public void HasTwoOil(Condition c) => c.SetSpec(numOil == 2);
+    public void HasThreeOil(Condition c) => c.SetSpec(numOil == 3);
+    public void HasFourOil(Condition c) => c.SetSpec(numOil == 4);
 
     public void IncrementOil()
     {
         numOil++;
     }
+    #endregion
 
     public void IsDesyncActive(Condition c)
     {
@@ -561,5 +527,4 @@ public class MagiTechGrid : SGrid
         (Player.GetInstance().GetSTileUnderneath().islandId == desyncIslandId ||
         Player.GetInstance().GetSTileUnderneath().islandId == desyncAnchoredIslandId));
     }
-    #endregion
 }
