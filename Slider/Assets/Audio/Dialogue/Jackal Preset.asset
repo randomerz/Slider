@@ -24,9 +24,11 @@ MonoBehaviour:
         Path: event:/Dialogue/jackal
       canPause: 0
       dopplerScale: 0
-    isPronouncedSyllables: 1
+    isPronouncePerClause: 1
+    isPronouncedSyllables: 0
+    maximumFadeout: 0.5
     pitch: 0.825
-    duration: 0.1404
+    duration: 0.1905
     volume: 1
     volumeAdjustmentDb: 0
     stressedVowelModifiers:

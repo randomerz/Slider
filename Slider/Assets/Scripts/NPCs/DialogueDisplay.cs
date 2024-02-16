@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using SliderVocalization;
 using UnityEngine;
 using Paragraph = SliderVocalization.VocalizableParagraph;

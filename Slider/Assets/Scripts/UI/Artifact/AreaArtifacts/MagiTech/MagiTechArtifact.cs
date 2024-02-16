@@ -94,7 +94,7 @@ public class MagiTechArtifact : UIArtifact
                 {
                     // Likely not needed but its good to be safe?
                     isDesyncSoundPlaying = false;
-                    desyncTearLoopSound.Stop();
+                    desyncTearLoopSound.HardStop();
                     AudioManager.Play("Desync Tear Close");
                     StartCoroutine(DelayedDesyncEndTileCrash());
                 }
@@ -148,7 +148,7 @@ public class MagiTechArtifact : UIArtifact
                 if (isDesyncSoundPlaying)
                 {
                     isDesyncSoundPlaying = false;
-                    desyncTearLoopSound.Stop();
+                    desyncTearLoopSound.SoftStop();
                     AudioManager.Play("Desync Tear Close");
                     StartCoroutine(DelayedDesyncEndTileCrash());
                 }

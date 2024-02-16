@@ -17,8 +17,14 @@ namespace SliderVocalization {
     {
         public Sound synth;
 
+        [Tooltip("One sound per clause instead of per word / vowel group")]
+        public bool isPronouncePerClause;
+
         [Tooltip("Not syllable if not meant to be read by NPC, for example words on the sign")]
         public bool isPronouncedSyllables;
+
+        [Tooltip("Maximum fadeout time for a sound to clean up itself before being force stopped")]
+        public float maximumFadeout;
 
         [Header("Vowel-level configs")]
         [Range(0.5f, 2f), Tooltip("FMOD param: Pitch")]
