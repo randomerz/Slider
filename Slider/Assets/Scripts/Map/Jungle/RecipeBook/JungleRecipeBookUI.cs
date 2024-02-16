@@ -27,6 +27,16 @@ public class JungleRecipeBookUI : MonoBehaviour
 
     private const float BUMP_DELAY = 1f / 16f;
 
+    private void OnEnable() 
+    {
+        Bin.OnBinRecieveShape += CheckOnBinRecieveShape;
+    }
+
+    private void OnDisable() 
+    {
+        Bin.OnBinRecieveShape -= CheckOnBinRecieveShape;
+    }
+
     public void SetCurrentShape(int index, bool withSound = true)
     {
         StartCoroutine(_SetCurrentShape(index, withSound));
@@ -132,6 +142,16 @@ public class JungleRecipeBookUI : MonoBehaviour
             }
         }
         recipeCompletionText.text = $"{completedRecipes}/{totalRecipes}";
+
+        for (int i = 0; i < recipeWidgets.Count; i++)
+        {
+            Recipe.Shapes shapes = null;
+            if (i < recipeList.list[currentShapeIndex].combinations.Count)
+            {
+                shapes = recipeList.list[currentShapeIndex].combinations[currentRecipePageIndex + i];
+            }
+            recipeWidgets[i].SetIngredientsOrNull(shapes, recipeList.list[currentShapeIndex].result);
+        }
     }
 
     public void IncrementCurrentShape()
@@ -166,5 +186,12 @@ public class JungleRecipeBookUI : MonoBehaviour
             
         int index = (currentRecipePageIndex + count - 1) % count;
         SetCurrentRecipeDisplay(currentShapeIndex, index);
+    }
+
+
+
+    public void CheckOnBinRecieveShape(object sender, Bin.JungleBinArgs e)
+    {
+        SetCurrentShapeImmediate(currentShapeIndex);
     }
 }

@@ -6,6 +6,13 @@ using UnityEngine;
 
 public class Bin : Box
 { 
+    public static System.EventHandler<JungleBinArgs> OnBinRecieveShape;
+
+    public class JungleBinArgs : System.EventArgs
+    {
+        public Shape shape;
+    }
+
     public Dictionary<Path, Shape> recievedShapes = new Dictionary<Path, Shape>();
     public ShapePlacer shapePlacer1;
     public ShapePlacer shapePlacer2;
@@ -35,11 +42,8 @@ public class Bin : Box
         recievedShapes[path] = shape;
 
         JungleRecipeBookSave.IncrementNumberCreated(shape);
-/*        if( shape != null)
-        {
-            //broadcast a shape has been made
-            //print("bin: " + shape.name);
-        }*/
+
+        OnBinRecieveShape?.Invoke(this, new JungleBinArgs { shape = shape });
 
         shapePlacer1.stop();
         shapePlacer2.stop();
