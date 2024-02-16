@@ -23,6 +23,8 @@ public class JungleRecipeBookUI : MonoBehaviour
     private int currentRecipePageIndex; // Vertical
     private Shape currentShape;
 
+    private int isUpdatingCounter;
+
     private const float BUMP_DELAY = 1f / 16f;
 
     public void SetCurrentShape(int index, bool withSound = true)
@@ -32,6 +34,8 @@ public class JungleRecipeBookUI : MonoBehaviour
 
     private IEnumerator _SetCurrentShape(int index, bool withSound = true)
     {
+        isUpdatingCounter += 1;
+
         currentShapeIndex = index;
         currentShape = recipeList.list[index].result;
         
@@ -99,6 +103,35 @@ public class JungleRecipeBookUI : MonoBehaviour
         {
             n.RefreshNumber();
         }
+
+        isUpdatingCounter -= 1;
+    }
+
+    public void SetCurrentShapeImmediate(int index)
+    {
+        // There is a coroutine running, so don't interfere!
+        if (isUpdatingCounter > 0)
+        {
+            return;
+        }
+
+        currentShapeIndex = index;
+        currentShape = recipeList.list[index].result;
+        
+        displayImage.sprite = currentShape.GetDisplaySprite();
+        displayNameText.text = currentShape.GetDisplayName();
+        displayNumberText.text = (index + 1).ToString().PadLeft(2, '0');
+
+        int totalRecipes = recipeList.list[index].combinations.Count;
+        int completedRecipes = 0;
+        foreach (Recipe.Shapes s in recipeList.list[index].combinations)
+        {
+            if (s.numberOfTimesCreated > 0)
+            {
+                completedRecipes += 1;
+            }
+        }
+        recipeCompletionText.text = $"{completedRecipes}/{totalRecipes}";
     }
 
     public void IncrementCurrentShape()
