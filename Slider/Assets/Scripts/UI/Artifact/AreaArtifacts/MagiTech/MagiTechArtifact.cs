@@ -11,10 +11,10 @@ public class MagiTechArtifact : UIArtifact
     *   the corresponding location in the past, since this is the location we need
     *   to compare against to check for move possibility
     */
-    public static Vector2Int desyncLocation = new Vector2Int(-1, -1);
+    public Vector2Int desyncLocation = new Vector2Int(-1, -1);
 
     //C: likewise this is the ID of the *opposite* Stile
-    public static int desyncIslandId = -1;
+    public int desyncIslandId = -1;
 
     public UnityEvent onDesyncStart;
     public UnityEvent onDesyncEnd;

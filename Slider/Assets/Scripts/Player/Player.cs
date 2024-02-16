@@ -313,8 +313,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         {
             transform.SetParent(null);
             transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
-            STile stileUnderneath = GetSTileUnderneath();
-            transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
+            UpdateSTileUnderneath();
         }
 
         // PlayerInventory
@@ -332,6 +331,12 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             profile.SetBool("playerSpawnWithAnchorEquipped", false);
             PlayerInventory.NextItem();
         }
+    }
+
+    public void UpdateSTileUnderneath()
+    {
+        STile stileUnderneath = GetSTileUnderneath();
+        transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
     }
 
     private void UpdateMove(Vector2 moveDir) 
