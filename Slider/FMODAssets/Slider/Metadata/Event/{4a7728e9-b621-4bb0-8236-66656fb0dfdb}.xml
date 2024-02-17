@@ -124,7 +124,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{f040c5c2-a12d-46f5-9b33-53cd6fa634c9}">
 		<property name="volume">
-			<value>-6</value>
+			<value>-14.5</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -154,6 +154,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{a5a12a93-3d68-4368-a77f-39eea7478f64}">
+		<property name="volume">
+			<value>-10.5</value>
+		</property>
 		<property name="name">
 			<value>Audio 3</value>
 		</property>
@@ -185,7 +188,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{bca8304a-8465-488b-9943-41f3c2a7eb38}">
 		<property name="volume">
-			<value>-5</value>
+			<value>-11.5</value>
 		</property>
 		<property name="name">
 			<value>Audio 2</value>
@@ -337,7 +340,7 @@
 			<value>-4.5</value>
 		</property>
 		<property name="highGain">
-			<value>-16.5</value>
+			<value>-55</value>
 		</property>
 		<property name="lowCrossover">
 			<value>65</value>
