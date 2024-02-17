@@ -25,7 +25,7 @@ public class MagiLaserFlash : MonoBehaviour
             // 0-90-180-270 bounce
             animator.SetBool("is45Degrees", false);
             transform.rotation = Quaternion.Euler(0, 0, degrees);
-            spriteRenderer.sortingOrder = 2;
+            spriteRenderer.sortingOrder = degrees == 90 ? 0 : 2;
         }
         else
         {

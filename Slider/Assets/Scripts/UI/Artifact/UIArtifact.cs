@@ -35,7 +35,7 @@ public class UIArtifact : Singleton<UIArtifact>
     private ArtifactTileButton lastHovered;
 
     // Moves are sped up when a lot are done in a row with this buffer (helps w/ factory conveyor consecutives)
-    private float consecutiveQueueSpeedBuffer = 0.1f;
+    private float consecutiveQueueSpeedBuffer = 0.15f;
     private float consecutiveQueueSpeedTimer;
 
     protected void Awake()

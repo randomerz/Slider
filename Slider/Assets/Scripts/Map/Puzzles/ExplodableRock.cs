@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ExplodableRock : MonoBehaviour, ISavable
 {
@@ -22,6 +23,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
     public Collectible collectible;
     [SerializeField] private Transform collectibleStart;
     [SerializeField] private Transform collectibleTarget;
+    public UnityEvent OnCollectibleFall;
     [SerializeField] private float animationDuration;
     [SerializeField] private AnimationCurve xPickUpMotion;
     [SerializeField] private AnimationCurve yPickUpMotion;
@@ -77,7 +79,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
 
         if (tryingToExplode)
         {
-            Explode();
+            ExplodeRock();
         }
     }
 
@@ -154,6 +156,8 @@ public class ExplodableRock : MonoBehaviour, ISavable
         collectible.GetComponent<Collider2D>().enabled = true;
         collectible.getSpriteRenderer().sortingLayerName = "Entity";
         collectible.getSpriteRenderer().sortingOrder = 0;
+
+        OnCollectibleFall?.Invoke();
     }
 
     public virtual void FinishExploding()

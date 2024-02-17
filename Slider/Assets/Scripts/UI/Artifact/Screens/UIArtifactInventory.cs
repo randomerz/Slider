@@ -48,7 +48,7 @@ public class UIArtifactInventory : MonoBehaviour
             c.SetVisible(PlayerInventory.Contains(c.collectibleName));
         }
 
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 4; i++)
         {
             // Collectibles are called "Oil #1", "Oil #2", "Oil #3"
             if (PlayerInventory.Contains($"{oilCollectible.collectibleName} #{i}"))
@@ -84,7 +84,7 @@ public class UIArtifactInventory : MonoBehaviour
                 numSunglasses += 1;
         }
 
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 4; i++)
         {
             if (PlayerInventory.Contains($"Oil #{i}"))
                 numOil += 1;

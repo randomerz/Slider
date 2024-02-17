@@ -21,8 +21,10 @@ public class Anchor : Item
     public Sprite trackerSprite;
     private STile currentSTile; //C: used so it can be passed as a parameter in OnAnchorDrop
 
-    public void Start()
+    public override void Start()
     {
+        base.Start();
+
         if (!SaveSystem.Current.GetBool("playerHasCollectedAnchor"))
         {
             currentSTile = GetComponentInParent<STile>();
