@@ -93,7 +93,7 @@ public class JungleRecipeBookUI : MonoBehaviour
             {
                 shapes = recipeList.list[currentShapeIndex].combinations[recipeIndex + i];
             }
-            recipeWidgets[i].SetIngredientsOrNull(shapes, recipeList.list[currentShapeIndex].result);
+            recipeWidgets[i].SetIngredientsOrNull(shapes, recipeList.list[currentShapeIndex]);
 
             bumps[i + 4].DoBump(withSound: withSound && shapes != null && currentRecipePageIndex == recipeIndex);
 
@@ -150,7 +150,7 @@ public class JungleRecipeBookUI : MonoBehaviour
             {
                 shapes = recipeList.list[currentShapeIndex].combinations[currentRecipePageIndex + i];
             }
-            recipeWidgets[i].SetIngredientsOrNull(shapes, recipeList.list[currentShapeIndex].result);
+            recipeWidgets[i].SetIngredientsOrNull(shapes, recipeList.list[currentShapeIndex]);
         }
     }
 
