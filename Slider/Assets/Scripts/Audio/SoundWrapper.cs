@@ -164,4 +164,17 @@ public static class SoundExtension
             return null;
         }
     }
+
+    public static FMOD.Studio.EventDescription? ToFmodEventDescription(this Sound sound)
+    {
+        try
+        {
+            return FMODUnity.RuntimeManager.GetEventDescription(sound.fmodEvent);
+        }
+        catch (FMODUnity.EventNotFoundException e)
+        {
+            Debug.LogWarning(e);
+            return null;
+        }
+    }
 }
