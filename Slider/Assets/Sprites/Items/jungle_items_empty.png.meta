@@ -656,7 +656,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -664,6 +664,27 @@ TextureImporter:
       bones: []
       spriteID: 63136127e0fbbd647aff29b1ee422157
       internalID: 459425285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_items_empty_question_mark
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05ca681185cc6984bba8673fa6b01b46
+      internalID: 531114269
       vertices: []
       indices: 
       edges: []
@@ -705,6 +726,7 @@ TextureImporter:
       jungle_items_empty_7: -1779811961
       jungle_items_empty_8: 909886041
       jungle_items_empty_9: -2091002975
+      jungle_items_empty_question_mark: 531114269
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

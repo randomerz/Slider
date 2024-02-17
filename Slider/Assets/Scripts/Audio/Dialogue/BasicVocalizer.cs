@@ -71,6 +71,83 @@ namespace SliderVocalization
         }
     }
 
+    public class FixedLengthSoundVocalizer : BaseVocalizer
+    {
+        #region RANDOMIZED PARAMS
+        // float duration;
+        float totalDuration;
+        // float wordIntonationMultiplier;
+        // float initialPitch;
+        // float middlePitch;
+        // float finalPitch;
+        float volumeAdjustmentDB;
+        #endregion
+        AudioManager.ManagedInstance playingInstance;
+        
+        public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context)
+        {
+            /* AT: it is safe to assume FixedLengthSound only ever plays with other FixLengthSounds and not PhonemeClusters
+                   for this reason the following parameters won't actually be used...
+            */
+            // finalPitch = context.wordPitchBase * wordIntonationMultiplier * (1 + (preset.isPronouncedSyllables ? 0f : (Random.value - 0.5f) * 0.1f));
+            // context.lastWordFinalPitch = finalPitch;
+            volumeAdjustmentDB = preset.volumeAdjustmentDb;
+            
+            var description = preset.synth.ToFmodEventDescription();
+
+            if (description.HasValue)
+            {
+                description.Value.getLength(out int miliseconds);
+                totalDuration = miliseconds / 1000.0f;
+            }
+            else
+            {
+                totalDuration = 0;
+            }
+
+            return totalDuration;
+        }
+
+        public override IEnumerator Vocalize(VocalizerParameters preset, VocalizationContext context, int idx, int lengthOfComposite)
+        {
+            ClearProgress();
+
+            SoundWrapper wrapper = preset.synth
+                .WithAttachmentToTransform(context.root)
+                .WithFixedDuration(totalDuration + preset.maximumFadeout)
+                .WithVolume(preset.volume)
+                .WithParameter("VolumeAdjustmentDB", volumeAdjustmentDB)
+                .WithPriorityOverDucking(true);
+
+            wrapper.dialogueParent = context.topLevelParent;
+
+            playingInstance = AudioManager.Play(
+                ref wrapper
+            );
+
+            if (playingInstance == null) yield break;
+
+            float t = 0;
+            while (t < totalDuration)
+            {
+                t += Time.deltaTime;
+                yield return null;
+            }
+            
+            Stop();
+        }
+        public override string ToString()
+        {
+            return "[fixed length sound]";
+        }
+
+        public override void Stop()
+        {
+            // send soft stop signal
+            playingInstance?.SoftStop();
+        }
+    }
+
     public class PhonemeClusterVocalizer : BaseVocalizer
     {
         public bool isVowelCluster;
@@ -108,7 +185,7 @@ namespace SliderVocalization
 
             SoundWrapper wrapper = preset.synth
                 .WithAttachmentToTransform(context.root)
-                .WithFixedDuration(totalDuration)
+                .WithFixedDuration(totalDuration + preset.maximumFadeout)
                 .WithVolume(preset.volume)
                 .WithParameter("Pitch", initialPitch)
                 .WithParameter("VolumeAdjustmentDB", volumeAdjustmentDB)
@@ -155,9 +232,10 @@ namespace SliderVocalization
                     
                     t += Time.deltaTime;
                     totalT += Time.deltaTime;
-                    yield return new WaitForFixedUpdate();
+                    yield return null;
                 }
             }
+            
             Stop();
         }
         public override string ToString()
@@ -175,13 +253,8 @@ namespace SliderVocalization
 
         public override void Stop()
         {
-            // AT: commenting this out prevents stopping mid-word even if a stop signal is issued
-            // TODO: please uncomment if stopping mid-word is intended!
-            
-            // if (playingInstance != null)
-            // {
-            //     playingInstance.Stop();
-            // }
+            // send soft stop signal
+            playingInstance?.SoftStop();
         }
     }
 }

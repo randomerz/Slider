@@ -24,7 +24,9 @@ MonoBehaviour:
         Path: event:/Dialogue/Sign_Vocal
       canPause: 0
       dopplerScale: 1
+    isPronouncePerClause: 0
     isPronouncedSyllables: 0
+    maximumFadeout: 0.5
     pitch: 1
     duration: 0.2
     volume: 0

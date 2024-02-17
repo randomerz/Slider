@@ -13,8 +13,16 @@ public class Recipe : ScriptableObject
         [HideInInspector] public int numberOfTimesCreated; // Serialized in JungleRecipeBookSave.cs
     }
 
+    public enum Difficulty
+    {
+        easy,
+        medium_placeholder,
+        hard,
+    }
+
     public Shape result;
     public List<Shapes> combinations = new List<Shapes>();
+    public Difficulty difficulty = Difficulty.hard;
 
     public Shape Check(List<Shape> shapes)
     {
