@@ -185,12 +185,13 @@ public class CaveGrid : SGrid
     // Puzzle 8 - light  up caves
     public void FinishCaves()
     {
-        GivePlayerTheCollectible("Slider 9");
-
         int[,] completedPuzzle = new int[3, 3] { { 9, 1, 5 },
                                                  { 6, 3, 4 },
                                                  { 8, 7, 2 } };
         SetGrid(completedPuzzle);
+
+        GivePlayerTheCollectible("Slider 9");
+
         StartCoroutine(CheckCompletionsAfterDelay(1.1f));
         SaveSystem.Current.SetBool("forceAutoMove", false);
 
@@ -232,11 +233,11 @@ public class CaveGrid : SGrid
         {
             magicRocksIcon.SetActive(true);
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
             
             magicRocksIcon.SetActive(false);
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 

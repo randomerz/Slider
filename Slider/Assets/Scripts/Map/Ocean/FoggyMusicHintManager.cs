@@ -51,16 +51,16 @@ public class FoggyMusicHintManager : Singleton<FoggyMusicHintManager>
             return true;
         }
 
-        // After you have entered foggy seas for the first time
-        if (SaveSystem.Current.GetBool("OceanEnteredFoggy") && !SaveSystem.Current.GetBool("OceanFoggyHintsOn"))
-        {
-            SaveSystem.Current.SetBool("OceanFoggyHintsOn", true);
-            wasOnLastFrame = true;
-            SetIkeHint(true);
-            SetBobHint(true);
-            SetCoconutHint(true);
-            return true;
-        }
+        // // After you have entered foggy seas for the first time
+        // if (SaveSystem.Current.GetBool("OceanEnteredFoggy") && !SaveSystem.Current.GetBool("OceanFoggyHintsOn"))
+        // {
+        //     SaveSystem.Current.SetBool("OceanFoggyHintsOn", true);
+        //     wasOnLastFrame = true;
+        //     SetIkeHint(true);
+        //     SetBobHint(true);
+        //     SetCoconutHint(true);
+        //     return true;
+        // }
 
         return false;
     }

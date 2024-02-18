@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 public class RatAI : MonoBehaviour, ISavable
@@ -43,7 +44,7 @@ public class RatAI : MonoBehaviour, ISavable
 
     [Header("External References")]
     [SerializeField]
-    internal GameObject objectToSteal;
+    internal Collectible collectibleToSteal;
     [SerializeField]
     internal Transform player;
     [SerializeField]
@@ -94,7 +95,7 @@ public class RatAI : MonoBehaviour, ISavable
     private void Awake()
     {
 
-        if (objectToSteal == null)
+        if (collectibleToSteal == null)
         {
             Debug.LogWarning("Rat does not have reference to slider piece");
         }
@@ -118,8 +119,8 @@ public class RatAI : MonoBehaviour, ISavable
     private void Start()
     {
         ConstructBehaviourTree();
-        if (objectToSteal == null)
-            Debug.LogWarning("ObjectToSteal is null!");
+        if (collectibleToSteal == null)
+            Debug.LogWarning("collectibleToSteal is null!");
         else
             StealPiece();
 
@@ -206,9 +207,18 @@ public class RatAI : MonoBehaviour, ISavable
         anim.SetBool("dead", true);
         AudioManager.Play("Hurt");
 
-        if (holdingObject && objectToSteal != null)
+        if (holdingObject && collectibleToSteal != null)
         {
-            objectToSteal.transform.parent = transform.parent;  //"Unparent" The Rat from the object so the Rat "Drops" it
+            collectibleToSteal.transform.parent = transform.parent;  //"Unparent" The Rat from the object so the Rat "Drops" it
+            BoxCollider2D boxCollider2D = collectibleToSteal.GetComponent<BoxCollider2D>();
+            if (boxCollider2D != null)
+            {
+                boxCollider2D.size = new Vector2(1, 1);
+            }
+            else
+            {
+                Debug.LogError("Couldn't get collider on rat's collectible");
+            }
         }
         
         visitedTiles.Clear();
@@ -221,8 +231,8 @@ public class RatAI : MonoBehaviour, ISavable
     {
         //L: Reparent Slider piece to be child of Rat
         holdingObject = true;
-        objectToSteal.transform.parent = transform;
-        objectToSteal.transform.localPosition = mouth.localPosition;
+        collectibleToSteal.transform.parent = transform;
+        collectibleToSteal.transform.localPosition = mouth.localPosition;
     }
 
     private void ConstructBehaviourTree()

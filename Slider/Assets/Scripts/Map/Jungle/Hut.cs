@@ -44,6 +44,7 @@ public class Hut : Box
         currParents = new List<Box>();
         CreateShape();
     }
+    
     protected override void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
         foreach (Direction d in paths.Keys)

@@ -243,6 +243,11 @@ public class ArtifactTileButton : MonoBehaviour
         buttonAnimator.SetHighlighted(v);
     }
 
+    public void SetForceHighlighted(bool v)
+    {
+        buttonAnimator.SetForceHighlighted(v);
+    }
+
     public void SetPushedDown(bool v)
     {
         buttonAnimator.SetPushedDown(v);
