@@ -339,13 +339,13 @@ public class OceanGrid : SGrid
                     int abid = artifactButton.islandId;
                     bool isLand = landTiles.Contains(abid);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, !isLand);
-                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetHighlighted(isLand);
+                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetForceHighlighted(isLand);
                 }
                 else
                 {
                     int tid = Converter.CharToInt(tids);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
-                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetHighlighted(artifactButton.islandId != tid);
+                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetForceHighlighted(artifactButton.islandId != tid);
                 }
             }
         }

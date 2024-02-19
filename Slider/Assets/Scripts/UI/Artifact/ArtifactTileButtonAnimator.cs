@@ -13,12 +13,13 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     //The button is pushed down, regardless of the method
     private bool isPushedDown;
     //The button is selected by the user to be able to make a move.
-    [SerializeField] private bool isSelected;
+    private bool isSelected;
     //The button is forced down because it is still being moved or is anchored.
-    [SerializeField] private bool isForcedDown;
+    private bool isForcedDown;
     private bool isHighlighted;
+    private bool isForcedHighlighted;
     //Button has lightning highlight and pusheddown and has lightning effect around it
-    [SerializeField] private bool isLightning;
+    private bool isLightning;
     //Button is highlighted by desert scroll
     private bool isScrollHighlighted;
 
@@ -62,8 +63,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             {
                 i.gameObject.SetActive(false);
             }
-            SetHighlighted(isLightning); //Edge case where you set lightning while tile is moving. Needed for desert frag
-            SetHighlighted(isScrollHighlighted); //needed for desert frag?
+            SetHighlighted(isLightning || isScrollHighlighted); //Edge case where you set lightning while tile is moving. Needed for desert frag
         }
     }
 
@@ -97,7 +97,8 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             isHighlighted = true;
             highlightedFrame.gameObject.SetActive(true);
         }
-        else if (isHighlighted && !value && !isLightning && !isScrollHighlighted) //If lightning is active, tile should never be unhighlighted
+        // If lightning is active, tile should never be unhighlighted
+        else if (isHighlighted && !value && !isLightning && !isScrollHighlighted && !isForcedHighlighted)
         {
             isHighlighted = false;
             foreach (Image i in borders)
@@ -105,6 +106,12 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
                 i.gameObject.SetActive(false);
             }
         }
+    }
+
+    public void SetForceHighlighted(bool value)
+    {
+        isForcedHighlighted = value;
+        SetHighlighted(value);
     }
 
     public void SetLightning(bool value)

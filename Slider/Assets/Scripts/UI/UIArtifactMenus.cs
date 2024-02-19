@@ -130,6 +130,8 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         return _instance != null && _instance.isArtifactOpen;
     }
 
+    public void IsArtifactOpen(Condition c) => c.SetSpec(IsArtifactOpen());
+
     public static void TurnInArtifact()
     {
         _instance.hasArtifact = false;

@@ -67,6 +67,10 @@ public class JungleRecipeWidget : MonoBehaviour
         {
             return questionMarkShape.GetDisplaySprite(displayStatus);
         }
+        if (displayStatus == JungleRecipeBookSave.ShapeStatus.Full)
+        {
+            return shape.GetDisplaySprite(displayStatus);
+        }
         if (notQuestionMark)
         {
             return shape.GetDisplaySprite(displayStatus);
