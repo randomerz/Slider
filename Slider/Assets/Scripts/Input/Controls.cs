@@ -241,7 +241,7 @@ public class Controls : Singleton<Controls>
 
     public static void StopCoroutineOnInstance(Coroutine coroutine)
     {
-        if (coroutine != null)
+        if (coroutine != null && _instance != null)
             _instance.StopCoroutine(coroutine);
     }
 
