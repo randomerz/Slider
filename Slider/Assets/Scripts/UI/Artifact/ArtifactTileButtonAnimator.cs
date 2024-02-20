@@ -24,6 +24,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     private bool isScrollHighlighted;
 
     private Coroutine positionAnimatorCoroutine;
+    private Vector2 positionAnimationFinalPosition;
     [SerializeField] private float positionAnimationDuration;
     [SerializeField] private AnimationCurve positionAnimationCurve;
 
@@ -40,6 +41,20 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         private set
         {
             isPushedDown = value;
+        }
+    }
+
+    private void Start() 
+    {
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        positionAnimationFinalPosition = rectTransform.anchoredPosition;
+    }
+
+    private void OnDisable() 
+    {
+        if (positionAnimationCurve != null)
+        {
+            AnimatePositionEnd();
         }
     }
 
@@ -198,6 +213,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     private IEnumerator AnimatePosition(Vector2 from, Vector2 to)
     {
         RectTransform rectTransform = GetComponent<RectTransform>();
+        positionAnimationFinalPosition = to;
 
         float t = 0;
         while (t < positionAnimationDuration)
@@ -211,7 +227,14 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             t += Time.deltaTime;
         }
 
-        rectTransform.anchoredPosition = to;
+        rectTransform.anchoredPosition = positionAnimationFinalPosition;
+        positionAnimatorCoroutine = null;
+    }
+
+    private void AnimatePositionEnd()
+    {
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = positionAnimationFinalPosition;
         positionAnimatorCoroutine = null;
     }
 }

@@ -238,22 +238,52 @@ public class MagiTechArtifact : UIArtifact
 
     protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        SMove move;
-        if (buttonCurrent.islandId == desyncIslandId)
+        bool shouldSync;
+        int altIslandId1, altIslandId2;
+
+        if (desyncIslandId == -1)
         {
-            move = new SMoveMagiTechMove(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, shouldSync: false);
+            // Should sync bc there is no desync
+            altIslandId1 = FindAltId(buttonCurrent.islandId);
+            altIslandId2 = FindAltId(buttonEmpty.islandId);
+            shouldSync = true;
         }
         else
         {
-            move = new SMoveMagiTechMove(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, shouldSync: true);
+            // If opposite of buttonCurrent (x, y) is the other desync, then we just started a desync
+            // If opposite of buttonEmpty (x, y)   is the other desync, then we just ended a desync
+            Vector2Int oppositeButtonCurrentPos = FindAltCoords(buttonCurrent.x, buttonCurrent.y);
+            ArtifactTileButton oppositeCurrentButton = GetButton(oppositeButtonCurrentPos.x, oppositeButtonCurrentPos.y);
+            bool isButtonCurrentPartOfDesync = oppositeCurrentButton.islandId == FindAltId(desyncIslandId);
+            Vector2Int oppositeButtonEmptyPos = FindAltCoords(buttonEmpty.x, buttonEmpty.y);
+            ArtifactTileButton oppositeEmptyButton = GetButton(oppositeButtonEmptyPos.x, oppositeButtonEmptyPos.y);
+            bool isButtonEmptyPartOfDesync = oppositeEmptyButton.islandId == FindAltId(desyncIslandId);
+
+            altIslandId1 = oppositeCurrentButton.islandId;
+            altIslandId2 = oppositeEmptyButton.islandId;
+
+            // Move should NOT be synced if either the start/end opposites are involved in desync
+            shouldSync = !(isButtonCurrentPartOfDesync || isButtonEmptyPartOfDesync);
         }
+
+        SMove move = new SMoveMagiTechMove(
+            buttonCurrent.x, 
+            buttonCurrent.y, 
+            buttonEmpty.x, 
+            buttonEmpty.y, 
+            buttonCurrent.islandId, 
+            buttonEmpty.islandId, 
+            altIslandId1,
+            altIslandId2,
+            shouldSync: shouldSync
+        );
         return move;
     }
 
     protected override void QueueMoveFromButtonPair(SMove move, ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        ArtifactTileButton currAlt = GetButton(FindAltId(buttonCurrent.islandId));
-        ArtifactTileButton emptyAlt = GetButton(FindAltId(buttonEmpty.islandId));
+        ArtifactTileButton currAlt = GetButton((move as SMoveMagiTechMove).altIslandId1);
+        ArtifactTileButton emptyAlt = GetButton((move as SMoveMagiTechMove).altIslandId2);
 
         // If Not a desync, swap both pairs of buttons
         if ((move as SMoveMagiTechMove).shouldSync)
@@ -291,7 +321,9 @@ public class MagiTechArtifact : UIArtifact
                 b.gameObject.SetActive(true);             
             }
             else
+            {
                 b.gameObject.SetActive(false);
+            }
         }
         background.sprite = past ? pastBackgroundSprite : presentBackgroundSprite;
     }
