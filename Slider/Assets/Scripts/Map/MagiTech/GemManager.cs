@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GemManager : MonoBehaviour, ISavable
 {
     private const string NUM_REMAINING_GEMS_STRING = "magiTechNumRemainingGems";
+    private const string GEM_FUEL_HINT_STRING = "MagitechGemFuelHint";
 
     private Dictionary<Area, bool> gems = new Dictionary<Area, bool>();
     private Dictionary<Area, GameObject> gemSprites = new();
@@ -96,18 +98,19 @@ public class GemManager : MonoBehaviour, ISavable
     public void HasJungleGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.Jungle, false));
     public void HasMagiTechGem(Condition c) => c.SetSpec(gems.GetValueOrDefault(Area.MagiTech, false));
 
-    public bool HasAreaGem(Area area)
+    public void HasEightGems(Condition c)
     {
-        return gems.GetValueOrDefault(area, false);
-    }
+        int num = 0;
 
-    public void BuildSpriteDictionary()
-    {
-        for(int i = 1; i <= sprites.Count; i++)
+        foreach (bool b in gems.Values)
         {
-            GameObject sprite = sprites[i-1];
-            gemSprites.Add((Area)(i), sprite);
+            if (!b)
+            {
+                num += 1;
+            }
         }
+
+        c.SetSpec(num >= 8);
     }
 
     public void HasAllGems(Condition c)
@@ -121,6 +124,20 @@ public class GemManager : MonoBehaviour, ISavable
             }
         }
         c.SetSpec(true);
+    }
+
+    public bool HasAreaGem(Area area)
+    {
+        return gems.GetValueOrDefault(area, false);
+    }
+
+    public void BuildSpriteDictionary()
+    {
+        for(int i = 1; i <= sprites.Count; i++)
+        {
+            GameObject sprite = sprites[i-1];
+            gemSprites.Add((Area)(i), sprite);
+        }
     }
 
     public void TurnInGem()
@@ -195,7 +212,10 @@ public class GemManager : MonoBehaviour, ISavable
     {
         if(gemSprites == null || gemSprites.Keys.Count != 9)
             BuildSpriteDictionary();
+
         UpdateNumRemainingGems();
+        UpdateGemHint();
+
         foreach(Area a in gems.Keys)
         {
             gemSprites[a].SetActive(gems[a]);
@@ -231,6 +251,63 @@ public class GemManager : MonoBehaviour, ISavable
             }
         }
         return true;
+    }
+
+    public void UpdateGemHint()
+    {
+        string specific = "Uh oh, something went wrong! Make sure to get all the gems and let a dev know.";
+        List<string> all = new();
+        int num = 0;
+
+        foreach (Area a in gems.Keys)
+        {
+            if (a == Area.MagiTech)
+            {
+                continue;
+            }
+
+            if (!gems[a])
+            {
+                num += 1;
+
+                all.Add(a.ToString());
+
+                switch (a)
+                {
+                    case Area.Village:
+                        specific = "I heard the Village Gem was spotted near the laser.";
+                        break;
+                    case Area.Caves:
+                        specific = "You don't have the Cave Gem yet? It was on one of the large rocks in the past.";
+                        break;
+                    case Area.Ocean:
+                        specific = "The Ocean gem..? Uh... something is wrong.";
+                        break;
+                    case Area.Jungle:
+                        specific = "The Jungle gem was owned by the same wizard who made this recipe!";
+                        break;
+                    case Area.Desert:
+                        specific = "I heard the Desert gem was lost in the ancient temple in the Impact Zone.";
+                        break;
+                    case Area.Factory:
+                        specific = "The Factory gem should be in the museum.";
+                        break;
+                    case Area.Mountain:
+                        specific = "The Mountain gem should be in the museum.";
+                        break;
+                    case Area.Military:
+                        specific = "I heard the Military gem was spotted behind one of the rocks in the past.";
+                        break;
+                    case Area.MagiTech:
+                        specific = "The magitech gem... is on the tile I haven't given you! Something went wrong!";
+                        break;
+                };
+            }
+        }
+
+        string combined = $"Hmmm... we're missing multiple gems. Can you get me: {String.Join(", ", all)}?";
+
+        SaveSystem.Current.SetString(GEM_FUEL_HINT_STRING, num >= 2 ? combined : specific);
     }
 
     public void TakeOutOceanGem()

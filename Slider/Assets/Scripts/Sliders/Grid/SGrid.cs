@@ -130,7 +130,10 @@ public class SGrid : Singleton<SGrid>, ISavable
         myArea = area;
         foreach (Collectible c in collectibles)
         {
-            c.SetArea(area);
+            if (c.GetArea() == Area.None)
+            {
+                c.SetArea(area);
+            }
         }
     }
 

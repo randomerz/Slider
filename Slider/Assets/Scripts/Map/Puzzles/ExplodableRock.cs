@@ -18,6 +18,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
     public List<ParticleSystem> explosionDecalParticles = new List<ParticleSystem>();
     public List<ParticleSystem> explosionParticles = new List<ParticleSystem>();
     public List<GameObject> raycastColliderObjects = new List<GameObject>();
+    public UnityEvent OnExplosionFinish;
 
     [Header("Collectible Fall Arc")]
     public Collectible collectible;
@@ -170,6 +171,8 @@ public class ExplodableRock : MonoBehaviour, ISavable
         {
             go.SetActive(false);
         }
+
+        OnExplosionFinish?.Invoke();
     }
 
     // Exposed for the animation events
