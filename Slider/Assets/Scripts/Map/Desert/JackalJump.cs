@@ -5,10 +5,11 @@ using UnityEngine;
 public class JackalJump : MonoBehaviour
 {
     private const string JUMP_SAVE_STRING = "desertJackalDidJump";
-    private const string TALKED_TO_JACKAL_SAVE_STRING = "DesertTalkedToJackal";
+    //private const string TALKED_TO_JACKAL_SAVE_STRING = "DesertTalkedToJackal";
+    private const string JACKAL_READY_FOR_JUMP_SAVE_STRING = "DesertJackalReadyForJump";
     // desertJackalOasis
     // desertJackalSeenBone
-    
+
     public Transform jumpMidTransform;
     public Transform jumpEndTransform;
     public AnimationCurve jumpAnimationCurve;
@@ -53,7 +54,7 @@ public class JackalJump : MonoBehaviour
     
     private void OnSTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (SaveSystem.Current.GetBool(JUMP_SAVE_STRING) || !SaveSystem.Current.GetBool(TALKED_TO_JACKAL_SAVE_STRING))
+        if (SaveSystem.Current.GetBool(JUMP_SAVE_STRING) || !SaveSystem.Current.GetBool(JACKAL_READY_FOR_JUMP_SAVE_STRING))
             return;
         if (e.stile.islandId != 4)
             return;
