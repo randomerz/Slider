@@ -109,6 +109,12 @@ namespace SliderVocalization
             {
                 case '?':
                     intonation = Intonation.up;
+
+                    if (words[0].characters == null)
+                    {
+                        break;
+                    }
+                    
                     foreach (var keyword in questionNegation)
                     {
                         // most questions starting from the 6 W's tend downward
