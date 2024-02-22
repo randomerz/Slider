@@ -20,7 +20,7 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
     public SpriteRenderer sr;
     [SerializeField] private DialogueDisplay dialogueDisplay;
     [Tooltip("This is for NPC walks")]
-    [SerializeField] private bool spriteDefaultFacingLeft;
+    public bool spriteDefaultFacingLeft;
 
     private int currCondIndex;
     private NPCDialogueContext dialogueCtx;
@@ -150,6 +150,11 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         {
             walkingCtx.CancelWalk();
         }
+    }
+
+    public bool IsWalking()
+    {
+        return walkingCtx.isWalking;
     }
     #endregion
 
