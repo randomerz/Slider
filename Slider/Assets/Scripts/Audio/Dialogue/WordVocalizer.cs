@@ -106,6 +106,7 @@ namespace SliderVocalization
             WordVocalizer result = new();
             result.m_Vocalizers = new();
             result.m_Vocalizers.Add(new FixedLengthSoundVocalizer());
+            result.characters = null;
             return result;
         }
 
