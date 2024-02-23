@@ -16,6 +16,14 @@ public class DesertSafe : MonoBehaviour
     private bool laseredLastUpdate = false;
     private float laseredStartTime;
 
+    private void Start() 
+    {
+        if (SaveSystem.Current.GetBool("desertSafeMelted"))
+        {
+            MeltSafe();
+        }
+    }
+
     public void OnLasered()
     {
         //Debug.Log("Safe lasered!");
@@ -59,9 +67,9 @@ public class DesertSafe : MonoBehaviour
 
         mirageSpriteRenderer.sprite = meltedMirageSprite;
 
-        VarManager.instance.SetBoolOn("desertSafeMelted");
+        SaveSystem.Current.SetBool("desertSafeMelted", true);
 
         dinoLasersManager.RemoveAllLasersPermanently();
-        MirageSTileManager.GetInstance().DisableMirage();
+        // MirageSTileManager.GetInstance().DisableMirage();
     }
 }

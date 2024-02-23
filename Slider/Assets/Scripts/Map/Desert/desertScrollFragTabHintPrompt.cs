@@ -10,7 +10,7 @@ public class DesertScrollFragTabHintPrompt : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!promptedPreviously)
+        if (!promptedPreviously && PlayerInventory.Contains("Scroll Frag"))
         {
             playerActionHints.TriggerHint("scrollscrap");
             promptedPreviously = true;

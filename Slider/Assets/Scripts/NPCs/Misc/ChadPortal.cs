@@ -31,7 +31,7 @@ public class ChadPortal : MonoBehaviour
 
     public void DebugOnStileEnable(object sender, SGrid.OnSTileEnabledArgs e)
     {
-        if (e.stile.islandId >= 2 && !SaveSystem.Current.GetBool("magitechDesertPortal"))
+        if (e.stile.islandId == 2 && !SaveSystem.Current.GetBool("magitechDesertPortal"))
         {
             portalTease.EnableRealPortal(fromSave: true);
         }

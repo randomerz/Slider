@@ -33,7 +33,9 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
 
     public void Init()
     {
-        if(init) return;
+        if (init) 
+            return;
+        
         init = true;
         button = GetComponentInParent<ArtifactTileButton>(includeInactive:true);
         button.plugins.Add(this);

@@ -11,8 +11,11 @@ public class PlaySound : MonoBehaviour
         AudioManager.PickSound(soundName).AndPlay();
     }
 
-    public void Play(string s)
+    public void PlayString(string s)
     {
+        if (s == null)
+            return;
+
         AudioManager.Play(s);
     }
 }

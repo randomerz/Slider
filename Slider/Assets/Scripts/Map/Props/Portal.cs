@@ -92,6 +92,7 @@ public class Portal : MonoBehaviour
     public void EnableDesertUIPortal()
     {
         desertPortalUI.UIPortalIcon.SetActive(true);
+        desertPortalUI.laserPlugin.Init();
         uILaserManager.AddSource(desertPortalUI.laserPlugin.laserUIData);
         uILaserManager.UpdateSpritesFromSource();
     }

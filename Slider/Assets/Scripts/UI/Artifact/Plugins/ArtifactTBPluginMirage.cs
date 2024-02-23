@@ -70,7 +70,7 @@ public class ArtifactTBPluginMirage : ArtifactTBPlugin
         mirageIslandId = 0;
         stile.sliderCollider.isTrigger = false;
         buttonMirage.SetMirageEnabled(false);
-        myLaserPlugin.laserUIData.ClearDataOnMirageDisable();
+        myLaserPlugin.laserUIData?.ClearDataOnMirageDisable();
 
         DesertArtifact.MirageDisappeared?.Invoke(this, new System.EventArgs());
     }

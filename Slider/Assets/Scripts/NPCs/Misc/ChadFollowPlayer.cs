@@ -6,6 +6,7 @@ using UnityEngine;
 /// TODO
 /// - Make follow path better (have waypoints that are sampled as player moves so it makes 
 ///   a path, rather than just following the player)
+/// - Make sure he tries to approach you if he is on a different slider than you
 /// - Chirps
 /// - Work in Desert + Factory scenes
 public class ChadFollowPlayer : MonoBehaviour

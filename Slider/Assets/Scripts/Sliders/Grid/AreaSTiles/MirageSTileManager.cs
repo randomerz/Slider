@@ -69,7 +69,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     public void Load(SaveProfile profile)
     {
         mirageEnabled = profile.GetBool(MIRAGE_ENABLED_SAVE_STRING);
-        if(mirageEnabled)
+        if (mirageEnabled)
         {
             EnableMirage();
         }
