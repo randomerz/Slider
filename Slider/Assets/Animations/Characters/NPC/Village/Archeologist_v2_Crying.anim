@@ -7,7 +7,7 @@ AnimationClip:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Archeologist_v2_Crying
-  serializedVersion: 6
+  serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -18,7 +18,8 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
       value: {fileID: -487138987834798504, guid: c218d50f9d3f19d4bbe87806c5d2ea41, type: 3}
     - time: 1
@@ -29,6 +30,7 @@ AnimationClip:
     path: 
     classID: 212
     script: {fileID: 0}
+    flags: 2
   m_SampleRate: 60
   m_WrapMode: 2
   m_Bounds:
@@ -43,6 +45,8 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: -487138987834798504, guid: c218d50f9d3f19d4bbe87806c5d2ea41, type: 3}
     - {fileID: 2527648519808521140, guid: c218d50f9d3f19d4bbe87806c5d2ea41, type: 3}

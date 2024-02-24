@@ -188,6 +188,7 @@ public class GemManager : MonoBehaviour, ISavable
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)Area.Factory - 1].position);
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)Area.Mountain - 1].position);
         }
+        Save();
         UpdateGemSprites();
     }
 

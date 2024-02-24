@@ -37,6 +37,12 @@ public class ChadPortal : MonoBehaviour
         }
     }
 
+    public void FlashScreen()
+    {
+        // This should last 0.5 sec
+        UIEffects.FlashWhite(speed: 2);
+    }
+
     public void OpenPortal()
     {
         portalTease.EnableRealPortal();
