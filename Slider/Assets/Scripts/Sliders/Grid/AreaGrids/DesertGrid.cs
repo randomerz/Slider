@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 
@@ -17,7 +16,7 @@ public class DesertGrid : SGrid
     private Coroutine placeTile9Coroutine;
 
     public Animator playerAnimator;
-    public AnimatorController playerShadesController;
+    public RuntimeAnimatorController playerShadesController;
 
     private const string DESERT_PARTY_STARTED = "desertPartyStarted";
     private const string DESERT_PARTY_FINISHED = "desertPartyFinished";

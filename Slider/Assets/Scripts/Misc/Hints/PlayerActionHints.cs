@@ -25,12 +25,12 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     }
 
     public void Save() {
-        foreach(Hint h in hintsList)
+        foreach (Hint h in hintsList)
             h.Save();
     }
 
     public void Load(SaveProfile profile) {
-        foreach(Hint h in hintsList)
+        foreach (Hint h in hintsList)
         {
             h.Load(profile);
         }
@@ -43,12 +43,12 @@ public class PlayerActionHints : MonoBehaviour, ISavable
 
     void Update()
     {
-       foreach(Hint h in hintsList)
+       foreach (Hint h in hintsList)
        {
-            if(h.isInCountdown && h.shouldDisplay)
+            if (h.isInCountdown && h.shouldDisplay)
             {
                 h.timeUntilTrigger -= Time.deltaTime;
-                if(h.timeUntilTrigger < 0)
+                if (h.timeUntilTrigger < 0)
                 {
                     h.Display();
                 }
@@ -59,16 +59,16 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     //C: triggers the countdown for the given hint to begin
     public void TriggerHint(string hint)
     {
-        foreach(Hint h in hintsList)
-            if(string.Equals(h.hintData.hintName, hint))
+        foreach (Hint h in hintsList)
+            if (string.Equals(h.hintData.hintName, hint))
                 h.TriggerHint();
     }
 
     //C: Disables the given hint (if the hint can be disabled)
     public void DisableHint(string hint) 
     {
-        foreach(Hint h in hintsList)
-            if(string.Equals(h.hintData.hintName, hint) && h.canDisableHint)
+        foreach (Hint h in hintsList)
+            if (string.Equals(h.hintData.hintName, hint) && h.canDisableHint)
                 h.DisableHint();
     }
 
@@ -79,8 +79,8 @@ public class PlayerActionHints : MonoBehaviour, ISavable
     // This is almost always just for convienience for repeat playthroughs
     public void EnableDisabling(string hint) 
     {
-        foreach(Hint h in hintsList)
-            if(string.Equals(h.hintData.hintName, hint))
+        foreach (Hint h in hintsList)
+            if (string.Equals(h.hintData.hintName, hint))
                h.canDisableHint = true;
     }
 
@@ -172,18 +172,18 @@ public class Hint
     
     public void SetBools()
     {
-        if(triggerOnLoad)
+        if (triggerOnLoad)
             isInCountdown = true;
-        if(isInCountdown)
+        if (isInCountdown)
             canDisableHint = true;
-        if(hasBeenCompleted)
+        if (hasBeenCompleted)
             shouldDisplay = false;
     }
 
     public void TriggerHint()
     {
         canDisableHint = true;
-        if(shouldDisplay && !hasBeenCompleted)
+        if (shouldDisplay && !hasBeenCompleted)
             isInCountdown = true;
     }
 
@@ -196,7 +196,7 @@ public class Hint
     }
 
     public void Display() {
-        if(shouldDisplay && !hasBeenCompleted && !hasBeenAddedToDisplay)
+        if (shouldDisplay && !hasBeenCompleted && !hasBeenAddedToDisplay)
         {
             UIHints.AddHint(hintData);
             hasBeenAddedToDisplay = true;
