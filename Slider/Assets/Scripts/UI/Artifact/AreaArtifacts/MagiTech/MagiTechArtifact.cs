@@ -56,9 +56,20 @@ public class MagiTechArtifact : UIArtifact
     protected override void Start()
     {
         base.Start();
-        foreach(ArtifactTileButton b in buttons)
+        foreach (ArtifactTileButton b in buttons)
         {
             b.UpdateTileActive();
+        }
+    }
+
+    public override void Init()
+    {
+        base.Init();
+
+        foreach (ArtifactTileButton b in buttons)
+        {
+            // The past half of tiles is not active by default, so Awake() doesnt get called on them
+            b.Init();
         }
     }
 

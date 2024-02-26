@@ -34,6 +34,8 @@ public class ArtifactTileButton : MonoBehaviour
     private FlashWhiteImage[] buttonIcons; // power lines, minecarft junctions, etc
     private bool dontUpdateDefaultSpriteOnAwake;
 
+    private bool didInit;
+
     public STile MyStile {
         get
         {
@@ -76,6 +78,10 @@ public class ArtifactTileButton : MonoBehaviour
 
     public void Init()
     {
+        if (didInit)
+            return;
+        didInit = true;
+
         LinkButton = null;
         completedSpriteDefault = completedSprite;
         foreach (ArtifactTileButton b in buttonManager.buttons)
@@ -86,6 +92,19 @@ public class ArtifactTileButton : MonoBehaviour
                 b.LinkButton = this;
             }
         }
+
+        foreach (ArtifactTBPlugin p in gameObject.GetComponentsInChildren<ArtifactTBPlugin>(includeInactive: true))
+        {
+            if (!plugins.Contains(p))
+            {
+                plugins.Add(p);
+            }
+        }
+
+        plugins.ForEach(plugin =>
+        {
+            plugin.Init(this);
+        });
     }
 
     protected virtual void Start()

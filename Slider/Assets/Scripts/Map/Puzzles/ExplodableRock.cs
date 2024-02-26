@@ -39,7 +39,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
     
     public virtual void Load(SaveProfile profile)
     {
-        isExploded = profile.GetBool(saveString, false);
+        isExploded = profile.GetBool(saveString);
         if (isExploded)
         {
             FinishExploding();

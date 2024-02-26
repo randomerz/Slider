@@ -62,7 +62,7 @@ public class UIArtifact : Singleton<UIArtifact>
         OnButtonInteract += UpdatePushedDowns;
     }
 
-    public void Init()
+    public virtual void Init()
     {
         didInit = true;
         InitializeSingleton();
