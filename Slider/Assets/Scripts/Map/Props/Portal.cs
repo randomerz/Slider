@@ -85,8 +85,8 @@ public class Portal : MonoBehaviour
 
     public void OnPlayerNear(bool enter)
     {
-        if(playerInPortal) return;
-        Player.GetInstance().ToggleLightning(enter);
+        if (playerInPortal) return;
+        // Player.GetInstance().ToggleLightning(enter);
     }
 
     public void EnableDesertUIPortal()

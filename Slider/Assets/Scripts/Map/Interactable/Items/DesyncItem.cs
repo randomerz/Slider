@@ -7,6 +7,7 @@ public class DesyncItem : Item
     [SerializeField] private DesyncItem itemPair;
     [SerializeField] private GameObject lightning;
     [SerializeField] private Sprite trackerSprite;
+    [SerializeField] private LayerMask noDropItemsMask;
 
     private bool isItemInPast;
     private bool fromPast;
@@ -16,6 +17,8 @@ public class DesyncItem : Item
     private DesyncItem pastItem;
     private bool isTracked;
     private bool itemDoesNotExist;
+
+    private bool didInit;
 
 
     public override void Start()
@@ -28,14 +31,29 @@ public class DesyncItem : Item
         {
             Debug.LogWarning("Save string for item was empty, but tracker sprite was not. Is this intended?");
         }
+
+        StartCoroutine(LateStart());
+    }
+
+    // The position/collider updates in Load() don't register until the end of frame
+    private IEnumerator LateStart()
+    {
+        yield return new WaitForEndOfFrame();
+
+        // For checking if item spawns in a portal bc of save/load or scene change
+        MoveIfInIllegalBounds();
     }
 
     private void Init()
     {
+        if (didInit)
+            return;
+
+        didInit = true;
         isItemInPast = MagiTechGrid.IsInPast(transform);
         fromPast = isItemInPast;
         currentTile = SGrid.GetSTileUnderneath(gameObject);
-        if(fromPast)
+        if (fromPast)
         {
             pastItem = this;
             presentItem = itemPair;
@@ -44,6 +62,25 @@ public class DesyncItem : Item
         {
             pastItem = itemPair;
             presentItem = this;
+        }
+    }
+
+    public override void Save()
+    {
+        base.Save();
+        if (saveString != null && saveString != "")
+        {
+            SaveSystem.Current.SetBool($"{saveString}_IsTracked", isTracked);
+        }
+    }
+
+    public override void Load(SaveProfile profile)
+    {
+        Init();
+        base.Load(profile);
+        if (saveString != null && saveString != "" && profile.GetBool($"{saveString}_IsTracked"))
+        {
+            AddTracker();
         }
     }
 
@@ -89,21 +126,25 @@ public class DesyncItem : Item
         }
     }
 
-    public override void Save()
+    public void MoveIfInIllegalBounds()
     {
-        base.Save();
-        if (saveString != null && saveString != "")
-        {
-            SaveSystem.Current.SetBool($"{saveString}_IsTracked", isTracked);
-        }
-    }
+        // May want to change this to handle multiple collisions
+        Collider2D otherCollider = Physics2D.OverlapCircle(transform.position, itemRadius, noDropItemsMask);
 
-    public override void Load(SaveProfile profile)
-    {
-        base.Load(profile);
-        if (saveString != null && saveString != "" && profile.GetBool($"{saveString}_IsTracked"))
+        if (otherCollider != null)
         {
-            AddTracker();
+            bool wasColliderOn = myCollider.enabled;
+            SetCollider(true);
+            ColliderDistance2D colliderDistance = myCollider.Distance(otherCollider);
+            SetCollider(wasColliderOn);
+
+            if (colliderDistance.isValid && colliderDistance.isOverlapped)
+            {
+                Vector3 offset = colliderDistance.normal * colliderDistance.distance;
+                Debug.Log($"Collider was in illegal bounds. Moving from {myCollider.gameObject.transform.position} in direction {offset}");
+                myCollider.gameObject.transform.position += offset;
+                return;
+            }
         }
     }
 

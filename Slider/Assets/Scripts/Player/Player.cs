@@ -37,8 +37,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     
     // [SerializeField] private Rigidbody2D rb;
     [SerializeField] private List<Material> ppMaterials;
-    [SerializeField] private GameObject lightningEffect;
-
 
     private float moveSpeedMultiplier = 1;
     private Vector2 directionalMoveSpeedMultiplier = Vector2.one;
@@ -541,11 +539,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         boatGameObject.SetActive(isOnWater);
 
         UpdatePlayerSpeed();
-    }
-
-    public void ToggleLightning(bool val)
-    {
-        lightningEffect.SetActive(val);
     }
 
     Tilemap ISTileLocatable.GetCurrentMaterialTilemap()
