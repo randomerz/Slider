@@ -504,7 +504,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3272267516742497482}
   - component: {fileID: 2059465956558630152}
-  - component: {fileID: 6435434582804767855}
   m_Layer: 0
   m_Name: GiantRockTop
   m_TagString: Untagged
@@ -579,27 +578,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!95 &6435434582804767855
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1564187307846778669}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 53780478995121a44bb81a99a75c724b, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4662185850346254933
 GameObject:
   m_ObjectHideFlags: 0
@@ -922,9 +900,15 @@ MonoBehaviour:
   - {fileID: 3361298863975870174}
   - {fileID: 7687370506203018050}
   - {fileID: 8925876840345608211}
+  OnExplosionFinish:
+    m_PersistentCalls:
+      m_Calls: []
   collectible: {fileID: 0}
   collectibleStart: {fileID: 0}
   collectibleTarget: {fileID: 0}
+  OnCollectibleFall:
+    m_PersistentCalls:
+      m_Calls: []
   animationDuration: 1
   xPickUpMotion:
     serializedVersion: 2
