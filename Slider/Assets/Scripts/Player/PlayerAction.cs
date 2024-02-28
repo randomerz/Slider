@@ -247,8 +247,12 @@ public class PlayerAction : Singleton<PlayerAction>
     private void FinishPicking()
     {
         isPicking = false;
-        pickedItem.transform.SetParent(pickedItemLocation);
-        pickedItem.SetLayer(LayerMask.NameToLayer("ItemRT"));
+        // If item is destroyed while being picked up
+        if (pickedItem != null && !pickedItem.isQueuedForDestruction)
+        {
+            pickedItem.transform.SetParent(pickedItemLocation);
+            pickedItem.SetLayer(LayerMask.NameToLayer("ItemRT"));
+        }
     }
 
     private void FinishDropping()

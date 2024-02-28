@@ -383,7 +383,7 @@ public void SetGrid(int[,] puzzle)
     
 
     // DC: This will prefer an GameObjs parented STile if it has one
-    public static STile GetSTileUnderneath(Transform entity, STile currentStileUnderneath)
+    public static STile GetSTileUnderneath(Transform entity, STile currentStileUnderneath, bool includeInactive=false)
     {
         STile[,] grid = SGrid.Current.GetGrid();
         float offset = grid[0, 0].STILE_WIDTH / 2f;
@@ -391,7 +391,7 @@ public void SetGrid(int[,] puzzle)
         STile stileUnderneath = null;
         foreach (STile s in grid)
         {
-            if (s.isTileActive && PosInSTileBounds(entity.position, s.transform.position, offset))
+            if ((s.isTileActive || includeInactive) && PosInSTileBounds(entity.position, s.transform.position, offset))
             {
                 if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
                 {
@@ -412,9 +412,9 @@ public void SetGrid(int[,] puzzle)
     // C: result of consolidating 2 versions of this method
     // and i don't wanna rewrite method calls
     // DC: try to use the other one if possible
-    public static STile GetSTileUnderneath(GameObject target)
+    public static STile GetSTileUnderneath(GameObject target, bool includeInactive=false)
     {
-        return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>());
+        return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>(), includeInactive);
     }
 
     public virtual STileTilemap GetWorldGridTilemaps()

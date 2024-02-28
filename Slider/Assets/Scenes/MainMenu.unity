@@ -1726,6 +1726,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4825906815256576580, guid: ef906d029e77d314393f8bd174ad4991, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4293125605
+      objectReference: {fileID: 0}
     - target: {fileID: 6231720964866008364, guid: ef906d029e77d314393f8bd174ad4991, type: 3}
       propertyPath: m_Name
       value: ConventionMode

@@ -52,7 +52,7 @@ public class DesyncItem : Item
         didInit = true;
         isItemInPast = MagiTechGrid.IsInPast(transform);
         fromPast = isItemInPast;
-        currentTile = SGrid.GetSTileUnderneath(gameObject);
+        currentTile = SGrid.GetSTileUnderneath(gameObject, includeInactive: true);
         if (fromPast)
         {
             pastItem = this;

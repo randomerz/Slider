@@ -25,6 +25,9 @@ public class Item : MonoBehaviour, ISavable
 
     [SerializeField] protected GameObject[] enableOnDrop;
 
+    public bool isQueuedForDestruction;
+    private System.Action callbackIfDestroyed;
+
     // events
     public UnityEvent OnPickUp;
     public UnityEvent OnDrop;
@@ -68,6 +71,12 @@ public class Item : MonoBehaviour, ISavable
         }
         if (shouldDisableAtStart)
             gameObject.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        isQueuedForDestruction = true;
+        callbackIfDestroyed?.Invoke();
     }
 
     public virtual void Save()
@@ -193,6 +202,7 @@ public class Item : MonoBehaviour, ISavable
         }
 
         float t = 0;
+        callbackIfDestroyed = callback;
 
         Vector3 start = new Vector3(transform.position.x, transform.position.y);
 
@@ -244,6 +254,7 @@ public class Item : MonoBehaviour, ISavable
         }
 
         AnimatePickUpEnd(target.position);
+        callbackIfDestroyed = null;
         callback();
     }
 
@@ -258,6 +269,7 @@ public class Item : MonoBehaviour, ISavable
     protected IEnumerator AnimateDrop(Vector3 target, System.Action callback = null)
     {
         float t = pickUpDuration;
+        callbackIfDestroyed = callback;
        
         //Create 2 dummy transforms for the animation.
         GameObject start = new GameObject("ItemDropStart");
@@ -307,6 +319,7 @@ public class Item : MonoBehaviour, ISavable
 
         spriteRenderer.transform.position = end.transform.position + spriteOffset;
         OnDrop?.Invoke();
+        callbackIfDestroyed = null;
         callback();
         Destroy(start);
         Destroy(end);
