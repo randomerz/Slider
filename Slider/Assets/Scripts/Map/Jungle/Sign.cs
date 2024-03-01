@@ -83,6 +83,7 @@ public class Sign : Box
         }
         CreateShape();
     }
+    
     public void MergeShapes()
     {
         List<Shape> shapesRecieved = new List<Shape>();

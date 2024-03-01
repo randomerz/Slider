@@ -11,6 +11,14 @@ public enum Direction
 
 public class DirectionUtil
 {
+    public static Direction[] Directions =
+    {
+        Direction.RIGHT,
+        Direction.UP,
+        Direction.LEFT,
+        Direction.DOWN
+    };
+
     public static Vector2Int[] Cardinal4 =
     {
         Vector2Int.up,
@@ -71,5 +79,37 @@ public class DirectionUtil
         else if (direction.y < 0)
             return Direction.DOWN;
         return 0;
+    }
+
+    public static Direction Inv(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.RIGHT:
+                return Direction.LEFT;
+            case Direction.UP:
+                return Direction.DOWN;
+            case Direction.LEFT:
+                return Direction.RIGHT;
+            case Direction.DOWN:
+            default:
+                return Direction.UP;
+        }
+    }
+
+    public static Direction Next(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.RIGHT:
+                return Direction.UP;
+            case Direction.UP:
+                return Direction.LEFT;
+            case Direction.LEFT:
+                return Direction.DOWN;
+            case Direction.DOWN:
+            default:
+                return Direction.RIGHT;
+        }
     }
 }

@@ -25,6 +25,9 @@ public class JungleSignAnimator : MonoBehaviour
     /// <param name="direction">Must be unit vector in the cardinal direction</param>
     public void SetDirection(Vector2 direction)
     {
+        if (this.direction == direction)
+            return;
+            
         if (bumpCoroutine != null)
             StopCoroutine(bumpCoroutine);
         
