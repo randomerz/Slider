@@ -288,6 +288,9 @@
 		<property name="overlap">
 			<value>1</value>
 		</property>
+		<relationship name="modulators">
+			<destination>{939b7ed1-5c64-49ea-a74f-c10a11ce5dd0}</destination>
+		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{578c50ca-ddcd-4e6f-b77d-e57bc29e1155}" />
 	<object class="ThreeEQEffect" id="{b957bcd7-6177-4d5e-a90f-c27854a6f726}">
@@ -405,6 +408,14 @@
 		<relationship name="automationCurves">
 			<destination>{d22f06a7-b3a4-4994-8848-8eb22359714b}</destination>
 		</relationship>
+	</object>
+	<object class="RandomizerModulator" id="{939b7ed1-5c64-49ea-a74f-c10a11ce5dd0}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>pitch</value>
+		</property>
+		<property name="amount">
+			<value>19.5</value>
+		</property>
 	</object>
 	<object class="AutomationCurve" id="{48292e39-5899-4398-bd54-1a8e2baf57a0}">
 		<relationship name="parameter">
