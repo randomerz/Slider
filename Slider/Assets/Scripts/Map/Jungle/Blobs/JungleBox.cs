@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.IO.LowLevel.Unsafe;
@@ -12,11 +13,13 @@ public abstract class JungleBox : MonoBehaviour
 
     public Shape ProducedShape { get; protected set; }
     public List<int> UsedSourceIds { get; protected set; }
+    public STile ParentSTile { get; protected set; }
     
     protected bool isSending;
 
     protected static int numSourceIds; // Used to generate source ids
     protected const int DEPTH_LIMIT = 30;
+    protected const string WORLD_COLLIDER_TAG = "WorldMapCollider"; // Does not include collider tilemap, etc
 
     [Header("References")]
     public SpriteRenderer TEMP_SPRITE;
@@ -35,12 +38,37 @@ public abstract class JungleBox : MonoBehaviour
         {
             Debug.LogWarning("Warning: Jungle Box's layer mask has nothing selected. It should probably have 'Default' and 'JungleSigns'.");
         }
+
+        if (ParentSTile == null)
+        {
+            ParentSTile = GetComponentInParent<STile>();
+            if (ParentSTile == null)
+            {
+                Debug.LogError("Jungle Box couldn't find parent STile.");
+            }
+        }
     }
 
     private void Start()
     {
         SetDirection(direction);
         // UpdateBox();
+    }
+
+    private void OnEnable()
+    {
+        SGridAnimator.OnSTileMoveStart += CheckDirectionEndOfFrame;
+        SGridAnimator.OnSTileMoveEnd += CheckDirectionEndOfFrame;
+        SGrid.OnSTileEnabled += CheckDirectionEndOfFrame;
+        SGrid.OnGridSet += CheckDirectionEndOfFrame;
+    }
+
+    private void OnDisable()
+    {
+        SGridAnimator.OnSTileMoveStart -= CheckDirectionEndOfFrame;
+        SGridAnimator.OnSTileMoveEnd -= CheckDirectionEndOfFrame;
+        SGrid.OnSTileEnabled -= CheckDirectionEndOfFrame;
+        SGrid.OnGridSet -= CheckDirectionEndOfFrame;
     }
 
     private void OnDestroy()
@@ -126,6 +154,39 @@ public abstract class JungleBox : MonoBehaviour
         }
     }
 
+    protected void CheckDirectionEndOfFrame(object sender, SGridAnimator.OnTileMoveArgs e) => StartCoroutine(CheckDirectionEndOfFrame());
+    protected void CheckDirectionEndOfFrame(object sender, SGrid.OnSTileEnabledArgs e) => StartCoroutine(CheckDirectionEndOfFrame());
+    protected void CheckDirectionEndOfFrame(object sender, SGrid.OnGridMoveArgs e) => StartCoroutine(CheckDirectionEndOfFrame());
+    
+    public IEnumerator CheckDirectionEndOfFrame()
+    {
+        // TileMoveEnd is invoked when the move ends, but before colliders are restored, 
+        // so we are waiting until the end of the frame.
+        yield return new WaitForEndOfFrame();
+
+        CheckDirectionOnMove();
+    }
+
+    public void CheckDirectionOnMove()
+    {
+        if (targetBox != null)
+        {
+            // If neither is moving do nothing
+            if (!ParentSTile.IsMoving() && !targetBox.ParentSTile.IsMoving())
+            {
+                return;
+            }
+
+            // If both on the same tile do nothing
+            if (ParentSTile.islandId == targetBox.ParentSTile.islandId)
+            {
+                return; 
+            }
+        }
+
+        SetDirection(direction);
+    }
+
 
     public void IncrementDirection()
     {
@@ -162,13 +223,28 @@ public abstract class JungleBox : MonoBehaviour
         {
             RaycastHit2D hit = hits[i];
             JungleBox box = hit.collider.GetComponent<JungleBox>();
-            if (box != null && box != this)
+            // float dist = Vector2.Distance(hit.centroid, transform.position);
+            float dist = hit.distance;
+
+            if (box != null)
             {
-                float dist = Vector2.Distance(hit.centroid, transform.position);
+                if (box == this)
+                {
+                    continue;
+                }
+
                 if (dist < closestBoxDist)
                 {
                     closestBoxDist = dist;
                     closestBox = box;
+                }
+            }
+            else if (hit.collider.CompareTag(WORLD_COLLIDER_TAG)) // hit something else
+            {
+                if (dist < closestBoxDist)
+                {
+                    closestBoxDist = dist;
+                    closestBox = null;
                 }
             }
         }
