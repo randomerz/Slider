@@ -37,12 +37,12 @@ public class JungleBin : JungleBox
         inputs[fromDirection] = null;
     }
 
-    public override void UpdateBox(int depth = 0)
+    public override bool UpdateBox(int depth = 0)
     {
         if (depth >= DEPTH_LIMIT)
         {
             Debug.LogError("Jungle Box depth limit exceeded!");
-            return;
+            return false;
         }
 
         foreach (ShapePlacer sp in shapePlacers)
@@ -74,6 +74,8 @@ public class JungleBin : JungleBox
         }
 
         UpdateSprites();
+
+        return false;
     }
 
     protected override void UpdateSprites()

@@ -102,7 +102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2655301140884828775, guid: 660303684b780f64a8afa94169d07067, type: 3}
       propertyPath: m_Name
-      value: FairyHouse Variant
+      value: JungleSpawner Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2655301140884828776, guid: 660303684b780f64a8afa94169d07067, type: 3}
       propertyPath: m_RootOrder
@@ -225,6 +225,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 524289
   signAnimator: {fileID: 683664444918905601}
+  shapeSignAnimator: {fileID: 8743614850289192806}
   INSIGNIA_SHAPES:
   - {fileID: 11400000, guid: 76675a2db3290714f95b9c4099fbdd50, type: 2}
   - {fileID: 11400000, guid: e295e8226b4a9e1438a7ce1cda3ecc64, type: 2}
@@ -244,3 +245,14 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 2655301141477459161, guid: 660303684b780f64a8afa94169d07067, type: 3}
   m_PrefabInstance: {fileID: 136269709378627029}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8743614850289192806 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8697488773551352499, guid: 660303684b780f64a8afa94169d07067, type: 3}
+  m_PrefabInstance: {fileID: 136269709378627029}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d08130671c4bf4182554e4ca0f2dfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

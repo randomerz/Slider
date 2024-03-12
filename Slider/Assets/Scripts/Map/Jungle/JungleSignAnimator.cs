@@ -7,17 +7,27 @@ public class JungleSignAnimator : MonoBehaviour
     public SpriteRenderer spriteRenderer;
 
     private Vector2 direction;
+    private int shapeIndex;
     private Coroutine bumpCoroutine;
+    private Sprite newSprite;
 
     [Header("Set references")]
     public Sprite[] signDirectionsSprites; // right up left down
     public Sprite[] bumpAnimationSprites; // bump1 bump2 -> normal sprite
-    public Sprite[] signShapeSprites; //triangle, circle, stick
+    public Sprite[] signShapeSprites; // triangle, circle, stick
     [SerializeField] private Sign sign;
     [SerializeField] private Hut hut;
 
 
     private const float ANIMATION_DELAY = 0.06125f;
+
+    private void OnDisable()
+    {
+        if (bumpCoroutine != null)
+        {
+            FinishBumpAnimation();
+        }
+    }
 
     /// <summary>
     /// Set's the sign sprites direction with a small sprite animation.
@@ -25,6 +35,7 @@ public class JungleSignAnimator : MonoBehaviour
     /// <param name="direction">Must be unit vector in the cardinal direction</param>
     public void SetDirection(Vector2 direction)
     {
+
         if (this.direction == direction)
             return;
             
@@ -32,11 +43,24 @@ public class JungleSignAnimator : MonoBehaviour
             StopCoroutine(bumpCoroutine);
         
         this.direction = direction;
-        bumpCoroutine = StartCoroutine(BumpAnimation(direction));
+        bumpCoroutine = StartCoroutine(BumpAnimation(DirectionToSprite(direction)));
     }
 
-    private IEnumerator BumpAnimation(Vector2 direction)
+    public void SetShapeIndex(int index)
+    {       
+        if (this.shapeIndex == index)
+            return;
+            
+        if (bumpCoroutine != null)
+            StopCoroutine(bumpCoroutine);
+
+        this.shapeIndex = index;
+        bumpCoroutine = StartCoroutine(BumpAnimation(signShapeSprites[index]));
+    }
+
+    private IEnumerator BumpAnimation(Sprite newSprite)
     {
+        this.newSprite = newSprite;
         spriteRenderer.sprite = bumpAnimationSprites[0];
         AudioManager.Play("UI Click");
 
@@ -46,28 +70,18 @@ public class JungleSignAnimator : MonoBehaviour
 
         yield return new WaitForSeconds(ANIMATION_DELAY);
 
-        spriteRenderer.sprite = DirectionToSprite(direction);
-        bumpCoroutine = null;
+        FinishBumpAnimation();
     }
-    private IEnumerator BumpAnimation(int shapeIndex)
+
+    private void FinishBumpAnimation()
     {
-        spriteRenderer.sprite = bumpAnimationSprites[0];
-        AudioManager.Play("UI Click");
-
-        yield return new WaitForSeconds(ANIMATION_DELAY);
-
-        spriteRenderer.sprite = bumpAnimationSprites[1];
-
-        yield return new WaitForSeconds(ANIMATION_DELAY);
-
-        spriteRenderer.sprite = signShapeSprites[shapeIndex];
+        spriteRenderer.sprite = newSprite;
         bumpCoroutine = null;
     }
+    
     private Sprite DirectionToSprite(Vector2 direction)
     {
         int index = (int)(Mathf.Atan2(direction.y, direction.x) / (Mathf.PI / 2) + 4) % 4;
-        // Debug.Log(index + " " + Mathf.Atan2(direction.y, direction.x));
-       // print(direction + " : " + index);
         return signDirectionsSprites[index];
     }
 
@@ -77,6 +91,20 @@ public class JungleSignAnimator : MonoBehaviour
         SetDirection(new Vector2[] {Vector2.right, Vector2.up, Vector2.left, Vector2.down}[Random.Range(0, 4)]);
     }
 
+
+
+    // Deprecated
+    public void UpdateShape()
+    {       
+        if (hut != null)
+        {
+            if (bumpCoroutine != null)
+                StopCoroutine(bumpCoroutine);
+            bumpCoroutine = StartCoroutine(BumpAnimation(signShapeSprites[hut.currentShapeIndex]));
+        }
+    }
+
+    // unused? deprecated i guess
     public void UpdateDirection()
     {
         if (hut != null)
@@ -91,16 +119,6 @@ public class JungleSignAnimator : MonoBehaviour
         } else
         {
             SetRandomDirection();
-        }
-    }
-
-    public void UpdateShape()
-    {       
-        if (hut != null)
-        {
-            if (bumpCoroutine != null)
-                StopCoroutine(bumpCoroutine);
-            bumpCoroutine = StartCoroutine(BumpAnimation(hut.currentShapeIndex));
         }
     }
 }

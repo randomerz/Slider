@@ -12,7 +12,7 @@ public abstract class JungleBox : MonoBehaviour
     protected JungleBox targetBox;
 
     public Shape ProducedShape { get; protected set; }
-    public List<int> UsedSourceIds { get; protected set; }
+    protected List<int> usedSourceIds;
     public STile ParentSTile { get; protected set; }
     
     protected bool isSending;
@@ -32,7 +32,7 @@ public abstract class JungleBox : MonoBehaviour
         {
             inputs[d] = null;
         }
-        UsedSourceIds = new();
+        usedSourceIds = new();
 
         if (raycastLayerMask == 0)
         {
@@ -104,12 +104,13 @@ public abstract class JungleBox : MonoBehaviour
     /// Update and propogate the box graph. Signs will craft, Spawners 
     /// send, etc.
     /// </summary>
-    public abstract void UpdateBox(int depth=0);
+    /// <returns>If the update should keep propogating</returns>
+    public abstract bool UpdateBox(int depth=0);
 
     /// <summary>
     /// Called whenever the direction of this JungleBox should be updated.
     /// </summary>
-    public void SetDirection(Direction direction)
+    public virtual void SetDirection(Direction direction)
     {
         JungleBox oldBox = targetBox;
         Direction oldDirection = this.direction;
@@ -132,18 +133,23 @@ public abstract class JungleBox : MonoBehaviour
         // Raycast to find new box
         JungleBox other = GetBoxInDirection(direction);
         targetBox = other;
-        
-        if (targetBox == null)
+
+        TrySendAfterUpdateDirection(direction, targetBox);
+    }
+
+    protected void TrySendAfterUpdateDirection(Direction myDirection, JungleBox myTargetBox)
+    {
+        if (myTargetBox == null)
         {
             SetIsSending(false);
             return;
         }
 
-        bool canSend = targetBox.IsValidInput(this, DirectionUtil.Inv(direction));
+        bool canSend = myTargetBox.IsValidInput(this, DirectionUtil.Inv(myDirection));
         if (canSend)
         {
-            targetBox.AddInput(this, DirectionUtil.Inv(direction));
-            targetBox.UpdateBox();
+            myTargetBox.AddInput(this, DirectionUtil.Inv(myDirection));
+            myTargetBox.UpdateBox();
             SetIsSending(true);
         }
         else
@@ -167,24 +173,31 @@ public abstract class JungleBox : MonoBehaviour
         CheckDirectionOnMove();
     }
 
-    public void CheckDirectionOnMove()
+    public virtual void CheckDirectionOnMove()
     {
-        if (targetBox != null)
+        if (CanSkipCheckDirection(targetBox))
+            return;
+
+        SetDirection(direction);
+    }
+
+    protected bool CanSkipCheckDirection(JungleBox myTargetBox)
+    {
+        if (myTargetBox != null)
         {
             // If neither is moving do nothing
-            if (!ParentSTile.IsMoving() && !targetBox.ParentSTile.IsMoving())
+            if (!ParentSTile.IsMoving() && !myTargetBox.ParentSTile.IsMoving())
             {
-                return;
+                return true;
             }
 
             // If both on the same tile do nothing
-            if (ParentSTile.islandId == targetBox.ParentSTile.islandId)
+            if (ParentSTile.islandId == myTargetBox.ParentSTile.islandId)
             {
-                return; 
+                return true; 
             }
         }
-
-        SetDirection(direction);
+        return false;
     }
 
 
@@ -193,9 +206,21 @@ public abstract class JungleBox : MonoBehaviour
         SetDirection(DirectionUtil.Next(direction));
     }
 
+    /// <summary>
+    /// Get the list of shape ids that are a part of the produced shape.
+    /// The ids are tracked from where they source from, and usedful to
+    /// make sure there are no loops in the graph.
+    /// </summary>
+    /// <param name="outputDirection">The output direction of my box. Used for duplicator.</param>
+    /// <returns>List of shape ids.</returns>
+    public virtual List<int> GetUsedSourceIds(Direction outputDirection)
+    {
+        return usedSourceIds;
+    }
+
     protected void SetIsSending(bool isSending)
     {
-        this.isSending = isSending;
+        // this.isSending = isSending;
         UpdateSprites();
     }
 

@@ -9,14 +9,18 @@ public class JungleSign : JungleBox
 
     public override bool IsValidInput(JungleBox other, Direction fromDirection)
     {
+        return IsValidInDirection(other, fromDirection, direction);
+    }
+
+    protected bool IsValidInDirection(JungleBox other, Direction fromDirection, Direction myDirection)
+    {
         // Cannot receive in a direction I am sending
-        if (direction == fromDirection)
+        if (myDirection == fromDirection)
         {
             return false;
         }
 
         // If the incoming and my other ids overlap, there is a loop
-        
         List<int> idsExceptIncoming = new();
 
         foreach (Direction d in DirectionUtil.Directions)
@@ -25,11 +29,13 @@ public class JungleSign : JungleBox
                 inputs[d] != null && 
                 inputs[d].ProducedShape != null)
             {
-                idsExceptIncoming.AddRange(inputs[d].UsedSourceIds);
+                List<int> sourceIds = inputs[d].GetUsedSourceIds(DirectionUtil.Inv(d));
+                idsExceptIncoming.AddRange(sourceIds);
             }
         }
 
-        if (idsExceptIncoming.Intersect(other.UsedSourceIds).Count() != 0)
+        List<int> otherSourceIds = other.GetUsedSourceIds(DirectionUtil.Inv(fromDirection));
+        if (idsExceptIncoming.Intersect(otherSourceIds).Count() != 0)
         {
             return false;
         }
@@ -54,20 +60,26 @@ public class JungleSign : JungleBox
     {
         inputs[fromDirection] = null;
 
-        if (direction == fromDirection && targetBox != null)
-        {
-            // The other box should already have this as an input, but is not using it
-            targetBox.AddInput(this, DirectionUtil.Inv(fromDirection));
-            targetBox.UpdateBox();
-        }
+        TryRestoreOnRemove(fromDirection, direction, targetBox);
     }
 
-    public override void UpdateBox(int depth = 0)
+    protected void TryRestoreOnRemove(Direction fromDirection, Direction myDirection, JungleBox myTargetBox)
+    {
+        if (myDirection == fromDirection && myTargetBox != null)
+        {
+            // The other box should already have this as an input, but is not using it
+            myTargetBox.AddInput(this, DirectionUtil.Inv(fromDirection));
+            myTargetBox.UpdateBox();
+        }
+
+    }
+
+    public override bool UpdateBox(int depth = 0)
     {
         if (depth >= DEPTH_LIMIT)
         {
             Debug.LogError("Jungle Box depth limit exceeded!");
-            return;
+            return false;
         }
 
         // Collect shapes and ids
@@ -79,7 +91,7 @@ public class JungleSign : JungleBox
             if (inputs[d] != null && inputs[d].ProducedShape != null)
             {
                 shapes.Add(inputs[d].ProducedShape);
-                ids.AddRange(inputs[d].UsedSourceIds);
+                ids.AddRange(inputs[d].GetUsedSourceIds(DirectionUtil.Inv(d)));
             }
         }
 
@@ -89,34 +101,40 @@ public class JungleSign : JungleBox
 
         // Set my shape
         ProducedShape = newShape;
-        UsedSourceIds = ids;
+        usedSourceIds = ids;
 
         if (newShape == oldShape)
         {
             // Nothing changed! Don't keep propogating
-            return;
+            return false;
         }
 
         // Update sprites
         UpdateSprites();
 
+        UpdatePropogateInDirection(direction, targetBox, depth);
+        return true;
+    }
+
+    protected void UpdatePropogateInDirection(Direction myDirection, JungleBox myTargetBox, int depth)
+    {
         // Update next box
-        // if (ProducedShape != null && targetBox != null)
-        Direction invDirection = DirectionUtil.Inv(direction);
-        if (targetBox != null)
+        // if (ProducedShape != null && myTargetBox != null)
+        Direction invDirection = DirectionUtil.Inv(myDirection);
+        if (myTargetBox != null)
         {
-            if (targetBox.IsValidInput(this, invDirection))
+            if (myTargetBox.IsValidInput(this, invDirection))
             {
                 // For cases where boxes are in a loop and one of the loop
                 // inputs gets removed, so the loop needs to re-propogate.
-                targetBox.AddInput(this, invDirection);
+                myTargetBox.AddInput(this, invDirection);
 
-                targetBox.UpdateBox(depth + 1);
+                myTargetBox.UpdateBox(depth + 1);
             }
             else
             {
                 // Same loop case as above
-                targetBox.RemoveInput(invDirection);
+                myTargetBox.RemoveInput(invDirection);
             }
         }
     }

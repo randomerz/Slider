@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class JungleSpawner : JungleBox
 {
+    [SerializeField] private JungleSignAnimator shapeSignAnimator;
     [SerializeField] private Shape[] INSIGNIA_SHAPES;
     [SerializeField] private SpriteRenderer INSIGNIA_SPRITE_RENDERER;
     [SerializeField] private Sprite[] INSIGNIA_SPRITES;
@@ -21,7 +22,7 @@ public class JungleSpawner : JungleBox
     private void AssignSourceId()
     {
         mySourceId = numSourceIds;
-        UsedSourceIds.Add(mySourceId);
+        usedSourceIds.Add(mySourceId);
         numSourceIds += 1;
     }
 
@@ -45,13 +46,15 @@ public class JungleSpawner : JungleBox
         }
     }
 
-    public override void UpdateBox(int depth = 0)
+    public override bool UpdateBox(int depth = 0)
     {
         // Update next box
         if (ProducedShape != null && targetBox != null)
         {
             targetBox.UpdateBox(depth + 1);
         }
+
+        return true;
     }
 
     public void IncrementInsignia()
@@ -73,6 +76,7 @@ public class JungleSpawner : JungleBox
     {
         base.UpdateSprites();
         
+        shapeSignAnimator.SetShapeIndex(currentShapeIndex);
         INSIGNIA_SPRITE_RENDERER.sprite = INSIGNIA_SPRITES[currentShapeIndex];
     }
 

@@ -99,17 +99,23 @@ public class DirectionUtil
 
     public static Direction Next(Direction direction)
     {
-        switch (direction)
+        return direction switch
         {
-            case Direction.RIGHT:
-                return Direction.UP;
-            case Direction.UP:
-                return Direction.LEFT;
-            case Direction.LEFT:
-                return Direction.DOWN;
-            case Direction.DOWN:
-            default:
-                return Direction.RIGHT;
-        }
+            Direction.RIGHT => Direction.UP,
+            Direction.UP => Direction.LEFT,
+            Direction.LEFT => Direction.DOWN,
+            _ => Direction.RIGHT,
+        };
+    }
+
+    public static Direction Prev(Direction direction)
+    {
+        return direction switch
+        {
+            Direction.RIGHT => Direction.DOWN,
+            Direction.UP => Direction.RIGHT,
+            Direction.LEFT => Direction.UP,
+            _ => Direction.LEFT,
+        };
     }
 }
