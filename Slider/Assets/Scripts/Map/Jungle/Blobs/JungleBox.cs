@@ -257,6 +257,9 @@ public abstract class JungleBox : MonoBehaviour
     {
         TEMP_SPRITE.sprite = ProducedShape != null ? ProducedShape.fullSprite : null;
 
-        signAnimator.SetDirection(DirectionUtil.D2V(direction));
+        if (signAnimator != null)
+        {
+            signAnimator.SetDirection(DirectionUtil.D2V(direction));
+        }
     }
 }

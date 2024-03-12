@@ -53,7 +53,6 @@ public class JungleSign : JungleBox
     public override void RemoveInput(Direction fromDirection)
     {
         inputs[fromDirection] = null;
-        // isUsingInput[fromDirection] = false;
 
         if (direction == fromDirection && targetBox != null)
         {

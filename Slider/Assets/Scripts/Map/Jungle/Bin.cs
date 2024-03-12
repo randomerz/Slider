@@ -31,8 +31,8 @@ public class Bin : Box
     {
         //remove all shapes
         currentShape = null;
-        shapePlacer1.stop();
-        shapePlacer2.stop();
+        shapePlacer1.Stop();
+        shapePlacer2.Stop();
         //print("no shape");
     }
 
@@ -45,8 +45,8 @@ public class Bin : Box
 
         OnBinRecieveShape?.Invoke(this, new JungleBinArgs { shape = shape });
 
-        shapePlacer1.stop();
-        shapePlacer2.stop();
+        shapePlacer1.Stop();
+        shapePlacer2.Stop();
 
         int numShapes = 0;
         foreach (Path p in recievedShapes.Keys)
@@ -56,12 +56,12 @@ public class Bin : Box
                 if (numShapes == 0)
                 {
                     shapePlacer1.gameObject.SetActive(true);
-                    shapePlacer1.place(recievedShapes[p]);
+                    shapePlacer1.Place(recievedShapes[p]);
                     numShapes++;
                 } else
                 {
                     shapePlacer2.gameObject.SetActive(true);
-                    shapePlacer2.place(recievedShapes[p]);
+                    shapePlacer2.Place(recievedShapes[p]);
                 }
             } 
         }
