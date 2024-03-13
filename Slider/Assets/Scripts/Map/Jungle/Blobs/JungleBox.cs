@@ -14,6 +14,7 @@ public abstract class JungleBox : MonoBehaviour
     public Shape ProducedShape { get; protected set; }
     protected List<int> usedSourceIds;
     public STile ParentSTile { get; protected set; }
+    public Direction CurrentDirection { get { return direction; } }
     
     protected bool isSending;
 

@@ -6,6 +6,7 @@ public class JungleDuplicator : JungleSign
 {
     private Direction alternateDirection;
     private JungleBox alternateTargetBox;
+    public Direction CurrentAlternateDirection { get { return alternateDirection; } }
     
     [SerializeField]
     protected JungleSignAnimator alternateSignAnimator;

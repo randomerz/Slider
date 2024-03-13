@@ -7,14 +7,14 @@ public class JungleSpawner : JungleBox
     [SerializeField] private SpriteRenderer INSIGNIA_SPRITE_RENDERER;
     [SerializeField] private Sprite[] INSIGNIA_SPRITES;
 
-    private int currentShapeIndex = 0;
+    public int CurrentShapeIndex { get; protected set; }
     private int mySourceId = 0;
 
     protected override void Awake()
     {
         base.Awake();
 
-        SetInsignia(currentShapeIndex);
+        SetInsignia(CurrentShapeIndex);
 
         AssignSourceId();
     }
@@ -59,12 +59,12 @@ public class JungleSpawner : JungleBox
 
     public void IncrementInsignia()
     {
-        SetInsignia((currentShapeIndex + 1) % 3);
+        SetInsignia((CurrentShapeIndex + 1) % 3);
     }
 
     private void SetInsignia(int index)
     {
-        currentShapeIndex = index;
+        CurrentShapeIndex = index;
 
         ProducedShape = INSIGNIA_SHAPES[index];
 
@@ -76,8 +76,8 @@ public class JungleSpawner : JungleBox
     {
         base.UpdateSprites();
         
-        shapeSignAnimator.SetShapeIndex(currentShapeIndex);
-        INSIGNIA_SPRITE_RENDERER.sprite = INSIGNIA_SPRITES[currentShapeIndex];
+        shapeSignAnimator.SetShapeIndex(CurrentShapeIndex);
+        INSIGNIA_SPRITE_RENDERER.sprite = INSIGNIA_SPRITES[CurrentShapeIndex];
     }
 
     public void IsShapeTriangle(Condition c) => c.SetSpec(ProducedShape.shapeName == "Triangle");
