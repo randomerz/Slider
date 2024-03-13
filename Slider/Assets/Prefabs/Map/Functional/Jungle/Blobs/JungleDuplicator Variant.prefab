@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2453578291286502651}
   - component: {fileID: 3900353787230897267}
-  m_Layer: 19
+  m_Layer: 0
   m_Name: TEMPSpriyre
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,6 +92,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3755569027801114494, guid: 6a43970f354a7554ca2b37f3bd2d0e18, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3836653936719209382, guid: 6a43970f354a7554ca2b37f3bd2d0e18, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4331349813765267005, guid: 6a43970f354a7554ca2b37f3bd2d0e18, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4342544427696222470, guid: 6a43970f354a7554ca2b37f3bd2d0e18, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5127759393520628749, guid: 6a43970f354a7554ca2b37f3bd2d0e18, type: 3}
       propertyPath: sign
       value: 
@@ -175,6 +191,14 @@ PrefabInstance:
     - target: {fileID: 7583585716761545919, guid: 6a43970f354a7554ca2b37f3bd2d0e18, type: 3}
       propertyPath: m_Name
       value: JungleDuplicator Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7583585716761545919, guid: 6a43970f354a7554ca2b37f3bd2d0e18, type: 3}
+      propertyPath: m_TagString
+      value: LeaveTriggerEnabled
+      objectReference: {fileID: 0}
+    - target: {fileID: 7583585717565819829, guid: 6a43970f354a7554ca2b37f3bd2d0e18, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3055277890238980590, guid: 6a43970f354a7554ca2b37f3bd2d0e18, type: 3}

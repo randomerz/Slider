@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3693153598149597526}
   - component: {fileID: 1517444172297543187}
-  m_Layer: 19
+  m_Layer: 0
   m_Name: TEMPSpriyre
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,6 +92,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1595776388029333482, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2195770005609884050, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2258572118908104010, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4852848544237912658, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -140,6 +152,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: JungleSign Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4852848544237912659, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
+      propertyPath: m_TagString
+      value: LeaveTriggerEnabled
+      objectReference: {fileID: 0}
     - target: {fileID: 4852848544237912662, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: onSuccess.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -155,6 +171,10 @@ PrefabInstance:
     - target: {fileID: 4852848544237912662, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: onSuccess.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: JungleBox, SliderScripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 4852848545585317209, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7876779314235505377, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
       propertyPath: sign

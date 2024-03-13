@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7574407783840984908}
   - component: {fileID: 7706062888867748913}
-  m_Layer: 19
+  m_Layer: 0
   m_Name: TEMPSpriyre
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,7 +134,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8355923119543386539, guid: efd5c9ea160e7054590ad47644b1b7a8, type: 3}
       propertyPath: m_Name
-      value: Bin Variant
+      value: JungleBin Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 8355923119543386539, guid: efd5c9ea160e7054590ad47644b1b7a8, type: 3}
+      propertyPath: m_TagString
+      value: LeaveTriggerEnabled
+      objectReference: {fileID: 0}
+    - target: {fileID: 8355923119629162385, guid: efd5c9ea160e7054590ad47644b1b7a8, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1889811041812198344, guid: efd5c9ea160e7054590ad47644b1b7a8, type: 3}

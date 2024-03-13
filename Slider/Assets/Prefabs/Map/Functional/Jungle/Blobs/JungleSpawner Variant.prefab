@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2752851076733198047}
   - component: {fileID: 6277578289820009269}
-  m_Layer: 19
+  m_Layer: 0
   m_Name: TEMPSpriyre
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,6 +92,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 277262556457775032, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 415121889236455097, guid: 660303684b780f64a8afa94169d07067, type: 3}
       propertyPath: left
       value: 
@@ -100,9 +104,21 @@ PrefabInstance:
       propertyPath: hut
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 766827553481653528, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 829981570613557696, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2655301140884828775, guid: 660303684b780f64a8afa94169d07067, type: 3}
       propertyPath: m_Name
       value: JungleSpawner Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2655301140884828775, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_TagString
+      value: LeaveTriggerEnabled
       objectReference: {fileID: 0}
     - target: {fileID: 2655301140884828776, guid: 660303684b780f64a8afa94169d07067, type: 3}
       propertyPath: m_RootOrder
@@ -148,6 +164,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2655301141042564133, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2655301141477459158, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778655700251353452, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2778655701061887587, guid: 660303684b780f64a8afa94169d07067, type: 3}
       propertyPath: onSuccess.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -164,6 +192,18 @@ PrefabInstance:
       propertyPath: onSuccess.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: JungleBox, SliderScripts
       objectReference: {fileID: 0}
+    - target: {fileID: 2778655701061887590, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6243280952156312843, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6243280953499554305, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6243280953499554308, guid: 660303684b780f64a8afa94169d07067, type: 3}
       propertyPath: onSuccess.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -176,9 +216,21 @@ PrefabInstance:
       propertyPath: onSuccess.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: JungleSpawner, SliderScripts
       objectReference: {fileID: 0}
+    - target: {fileID: 8354839776599956447, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8697488773551352499, guid: 660303684b780f64a8afa94169d07067, type: 3}
       propertyPath: hut
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8831281557963835775, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8912620943754349991, guid: 660303684b780f64a8afa94169d07067, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 415121889236455097, guid: 660303684b780f64a8afa94169d07067, type: 3}

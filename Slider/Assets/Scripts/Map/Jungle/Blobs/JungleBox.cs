@@ -231,7 +231,7 @@ public abstract class JungleBox : MonoBehaviour
         RaycastHit2D[] hits = new RaycastHit2D[DEPTH_LIMIT];
         ContactFilter2D contactFilter2D = new ContactFilter2D();
         contactFilter2D.SetLayerMask(raycastLayerMask);
-        contactFilter2D.useTriggers = false;
+        contactFilter2D.useTriggers = true;
 
         int numHits = Physics2D.Raycast(
             transform.position,
@@ -264,7 +264,7 @@ public abstract class JungleBox : MonoBehaviour
                     closestBox = box;
                 }
             }
-            else if (hit.collider.CompareTag(WORLD_COLLIDER_TAG)) // hit something else
+            else if (hit.collider.CompareTag(WORLD_COLLIDER_TAG) && !hit.collider.isTrigger) // hit something else
             {
                 if (dist < closestBoxDist)
                 {
