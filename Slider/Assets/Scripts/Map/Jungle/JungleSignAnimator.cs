@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class JungleSignAnimator : MonoBehaviour
 {
-    public SpriteRenderer spriteRenderer;
-
-    private Vector2 direction;
-    private int shapeIndex;
+    private int currentDirectionIndex = -1;
+    private int currentShapeIndex = -1;
+    private bool isGray;
     private Coroutine bumpCoroutine;
-    private Sprite newSprite;
+    private Sprite newSpriteBuffer;
 
     [Header("Set references")]
-    public Sprite[] signDirectionsSprites; // right up left down
-    public Sprite[] bumpAnimationSprites; // bump1 bump2 -> normal sprite
-    public Sprite[] signShapeSprites; // triangle, circle, stick
+    [SerializeField] private Sprite[] signDirectionsSprites; // right up left down
+    [SerializeField] private Sprite[] signDirectionsSpritesGray; // right up left down
+    [SerializeField] private Sprite[] bumpAnimationSprites; // bump1 bump2 -> normal sprite
+    [SerializeField] private Sprite[] bumpAnimationSpritesGray; // bump1 bump2 -> normal sprite
+    [SerializeField] private Sprite[] signShapeSprites; // triangle, circle, stick
+    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Sign sign;
     [SerializeField] private Hut hut;
 
@@ -35,38 +37,68 @@ public class JungleSignAnimator : MonoBehaviour
     /// <param name="direction">Must be unit vector in the cardinal direction</param>
     public void SetDirection(Vector2 direction)
     {
-
-        if (this.direction == direction)
+        int index = DirectionToSpriteIndex(direction);
+        if (index == currentDirectionIndex)
             return;
             
         if (bumpCoroutine != null)
             StopCoroutine(bumpCoroutine);
         
-        this.direction = direction;
-        bumpCoroutine = StartCoroutine(BumpAnimation(DirectionToSprite(direction)));
+        currentDirectionIndex = index;
+        Sprite newSprite = isGray ? signDirectionsSpritesGray[index] : 
+                                    signDirectionsSprites[index];
+
+        bumpCoroutine = StartCoroutine(BumpAnimation(newSprite));
+    }
+
+    // Only for direction arrows
+    public void SetIsGray(bool value)
+    {
+        if (isGray != value)
+        {
+            isGray = value;
+
+            if (currentDirectionIndex == -1)
+            {
+                Debug.LogWarning("Couldn't find index of jungle sign sprite.");
+                return;
+            }
+
+            Sprite newSprite = isGray ? signDirectionsSpritesGray[currentDirectionIndex] : 
+                                        signDirectionsSprites[currentDirectionIndex];
+
+            newSpriteBuffer = newSprite;
+            if (bumpCoroutine == null)
+            {
+                spriteRenderer.sprite = newSprite;
+                // ParticleManager.SpawnParticle(ParticleType.MiniSparkle, transform.position, transform);
+            }
+        }
     }
 
     public void SetShapeIndex(int index)
     {       
-        if (this.shapeIndex == index)
+        if (currentShapeIndex == index)
             return;
             
         if (bumpCoroutine != null)
             StopCoroutine(bumpCoroutine);
 
-        this.shapeIndex = index;
+        currentShapeIndex = index;
         bumpCoroutine = StartCoroutine(BumpAnimation(signShapeSprites[index]));
     }
 
     private IEnumerator BumpAnimation(Sprite newSprite)
     {
-        this.newSprite = newSprite;
-        spriteRenderer.sprite = bumpAnimationSprites[0];
+        newSpriteBuffer = newSprite;
+        spriteRenderer.sprite = isGray ? bumpAnimationSpritesGray[0] :
+                                         bumpAnimationSprites[0];
         AudioManager.Play("UI Click");
 
         yield return new WaitForSeconds(ANIMATION_DELAY);
 
-        spriteRenderer.sprite = bumpAnimationSprites[1];
+        spriteRenderer.sprite = isGray ? bumpAnimationSpritesGray[1] :
+                                         bumpAnimationSprites[1];
 
         yield return new WaitForSeconds(ANIMATION_DELAY);
 
@@ -75,14 +107,13 @@ public class JungleSignAnimator : MonoBehaviour
 
     private void FinishBumpAnimation()
     {
-        spriteRenderer.sprite = newSprite;
+        spriteRenderer.sprite = newSpriteBuffer;
         bumpCoroutine = null;
     }
     
-    private Sprite DirectionToSprite(Vector2 direction)
+    private int DirectionToSpriteIndex(Vector2 direction)
     {
-        int index = (int)(Mathf.Atan2(direction.y, direction.x) / (Mathf.PI / 2) + 4) % 4;
-        return signDirectionsSprites[index];
+        return (int)(Mathf.Atan2(direction.y, direction.x) / (Mathf.PI / 2) + 4) % 4;
     }
 
     // for debug

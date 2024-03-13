@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3693153598149597526}
   - component: {fileID: 1517444172297543187}
   m_Layer: 0
-  m_Name: TEMPSpriyre
+  m_Name: DebugSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,7 +185,7 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4852848544237912658, guid: 820cf020bb8d36840be9285e897a461e, type: 3}
-      insertIndex: 1
+      insertIndex: -1
       addedObject: {fileID: 3693153598149597526}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4852848544237912659, guid: 820cf020bb8d36840be9285e897a461e, type: 3}

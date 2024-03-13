@@ -47,6 +47,11 @@ public abstract class JungleBox : MonoBehaviour
                 Debug.LogError("Jungle Box couldn't find parent STile.");
             }
         }
+
+        if (signAnimator != null)
+        {
+            signAnimator.SetIsGray(true);
+        }
     }
 
     private void Start()
@@ -126,6 +131,7 @@ public abstract class JungleBox : MonoBehaviour
         {
             oldBox.RemoveInput(DirectionUtil.Inv(oldDirection));
             oldBox.UpdateBox();
+            oldBox.UpdateSendingSprites(propogate: false);
         }
 
         UpdateBox();
@@ -135,9 +141,16 @@ public abstract class JungleBox : MonoBehaviour
         targetBox = other;
 
         TrySendAfterUpdateDirection(direction, targetBox);
+
+        UpdateSprites();
     }
 
-    protected void TrySendAfterUpdateDirection(Direction myDirection, JungleBox myTargetBox)
+    protected void UpdateSendingSprites(bool propogate=true)
+    {
+        TrySendAfterUpdateDirection(direction, targetBox, propogate);
+    }
+
+    protected void TrySendAfterUpdateDirection(Direction myDirection, JungleBox myTargetBox, bool propogate=true)
     {
         if (myTargetBox == null)
         {
@@ -148,15 +161,23 @@ public abstract class JungleBox : MonoBehaviour
         bool canSend = myTargetBox.IsValidInput(this, DirectionUtil.Inv(myDirection));
         if (canSend)
         {
-            myTargetBox.AddInput(this, DirectionUtil.Inv(myDirection));
-            myTargetBox.UpdateBox();
-            SetIsSending(true);
+            if (propogate)
+            {
+                myTargetBox.AddInput(this, DirectionUtil.Inv(myDirection));
+                myTargetBox.UpdateBox();
+            }
+
+            SetIsSending(ProducedShape != null);
         }
         else
         {
             // Could be two signs pointing same direction,
             // a sign pointing towards spawner, etc...
             SetIsSending(false);
+            if (propogate)
+            {
+                targetBox.UpdateSendingSprites(propogate: false);
+            }
         }
     }
 
@@ -203,7 +224,7 @@ public abstract class JungleBox : MonoBehaviour
 
     public void IncrementDirection()
     {
-        SetDirection(DirectionUtil.Next(direction));
+        SetDirection(DirectionUtil.Prev(direction));
     }
 
     /// <summary>
@@ -220,8 +241,11 @@ public abstract class JungleBox : MonoBehaviour
 
     protected void SetIsSending(bool isSending)
     {
-        // this.isSending = isSending;
-        UpdateSprites();
+        if (this.isSending != isSending)
+        {
+            this.isSending = isSending;
+            signAnimator.SetIsGray(!isSending);
+        }
     }
 
     protected JungleBox GetBoxInDirection(Direction direction)

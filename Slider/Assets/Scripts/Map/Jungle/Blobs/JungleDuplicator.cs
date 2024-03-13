@@ -35,7 +35,7 @@ public class JungleDuplicator : JungleSign
         Direction oldAlternateDirection = this.alternateDirection;
         
         this.direction = direction;
-        this.alternateDirection = DirectionUtil.Prev(direction);
+        this.alternateDirection = DirectionUtil.Next(direction);
         targetBox = null;
         alternateTargetBox = null;
 
@@ -65,6 +65,8 @@ public class JungleDuplicator : JungleSign
 
         TrySendAfterUpdateDirection(this.direction, targetBox);
         TrySendAfterUpdateDirection(this.alternateDirection, alternateTargetBox);
+
+        UpdateSprites();
     }
 
     public override void CheckDirectionOnMove()

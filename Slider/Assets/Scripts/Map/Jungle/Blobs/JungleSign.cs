@@ -128,8 +128,9 @@ public class JungleSign : JungleBox
                 // For cases where boxes are in a loop and one of the loop
                 // inputs gets removed, so the loop needs to re-propogate.
                 myTargetBox.AddInput(this, invDirection);
-
                 myTargetBox.UpdateBox(depth + 1);
+
+                SetIsSending(ProducedShape != null);
             }
             else
             {

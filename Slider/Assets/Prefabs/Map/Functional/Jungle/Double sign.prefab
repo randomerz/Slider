@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1478780234738896772}
   - component: {fileID: 3200710402549730476}
   m_Layer: 19
-  m_Name: roof
+  m_Name: RoofSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 6037274342194155046}
   - component: {fileID: 5211927014688448721}
   m_Layer: 19
-  m_Name: room
+  m_Name: FloorSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -265,16 +265,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57d08130671c4bf4182554e4ca0f2dfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 8182159416840317337}
   signDirectionsSprites:
   - {fileID: 1126957954, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
   - {fileID: 1600079017, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
   - {fileID: -126840367, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
   - {fileID: 856556665, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
+  signDirectionsSpritesGray: []
   bumpAnimationSprites:
   - {fileID: 745285067, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
   - {fileID: -1616351788, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
   signShapeSprites: []
+  spriteRenderer: {fileID: 8182159416840317337}
   sign: {fileID: 3055277890238980590}
   hut: {fileID: 0}
 --- !u!1 &4342544427696222470
@@ -288,7 +289,7 @@ GameObject:
   - component: {fileID: 2162605806062183955}
   - component: {fileID: 7104563984819178166}
   m_Layer: 19
-  m_Name: minihut
+  m_Name: HouseSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -394,9 +395,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1478780234738896772}
   - {fileID: 7583585717565819828}
   - {fileID: 2164617776538401047}
+  - {fileID: 1478780234738896772}
   - {fileID: 2162605806062183955}
   - {fileID: 6037274342194155046}
   m_Father: {fileID: 0}
@@ -670,15 +671,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57d08130671c4bf4182554e4ca0f2dfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 7583585717565819831}
   signDirectionsSprites:
   - {fileID: 1600079017, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
   - {fileID: -126840367, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
   - {fileID: 1126957954, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
   - {fileID: 856556665, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
+  signDirectionsSpritesGray: []
   bumpAnimationSprites:
   - {fileID: 745285067, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
   - {fileID: -1616351788, guid: 439e623ef979d3e47be13ad305d4a2ce, type: 3}
   signShapeSprites: []
+  spriteRenderer: {fileID: 7583585717565819831}
   sign: {fileID: 3055277890238980590}
   hut: {fileID: 0}
