@@ -109,6 +109,8 @@ public class JungleSign : JungleBox
             return false;
         }
 
+        JungleRecipeBookSave.IncrementNumberCreated(ProducedShape);
+
         // Update sprites
         UpdateSprites();
         pathController.UpdateMarchingShape(direction, ProducedShape);

@@ -18,8 +18,6 @@ public class JungleSignAnimator : MonoBehaviour
     [SerializeField] private Sprite[] bumpAnimationSpritesGray; // bump1 bump2 -> normal sprite
     [SerializeField] private Sprite[] signShapeSprites; // triangle, circle, stick
     [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private Sign sign;
-    [SerializeField] private Hut hut;
 
 
     private const float ANIMATION_DELAY = 0.06125f;
@@ -142,34 +140,4 @@ public class JungleSignAnimator : MonoBehaviour
         SetDirection(new Vector2[] {Vector2.right, Vector2.up, Vector2.left, Vector2.down}[Random.Range(0, 4)]);
     }
 
-
-
-    // Deprecated
-    public void UpdateShape()
-    {       
-        if (hut != null)
-        {
-            if (bumpCoroutine != null)
-                StopCoroutine(bumpCoroutine);
-            bumpCoroutine = StartCoroutine(BumpAnimation(signShapeSprites[hut.currentShapeIndex]));
-        }
-    }
-
-    // unused? deprecated i guess
-    public void UpdateDirection()
-    {
-        if (hut != null)
-        {
-            Vector2 direction = hut.GetDirection();
-           // print(direction);
-            SetDirection(direction);
-        } else if (sign != null)
-        {
-            Vector2 direction = sign.GetDirection();
-            SetDirection(direction);
-        } else
-        {
-            SetRandomDirection();
-        }
-    }
 }

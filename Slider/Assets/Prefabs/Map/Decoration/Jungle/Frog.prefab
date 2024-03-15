@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4764212722671413645}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ReflectionPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 5258017776539994332}
   - component: {fileID: 7030292573405607972}
   - component: {fileID: 8773864424877845817}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Frog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,9 +149,9 @@ GameObject:
   - component: {fileID: 9044676260861045409}
   - component: {fileID: 5002942821359835655}
   - component: {fileID: 2006064461178112225}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Frog
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -261,6 +261,7 @@ MonoBehaviour:
   isOnlyUsedByPlayer: 1
   reflectionPivot: {fileID: 4764212722671413645}
   enableOnDrop: []
+  isQueuedForDestruction: 0
   OnPickUp:
     m_PersistentCalls:
       m_Calls: []

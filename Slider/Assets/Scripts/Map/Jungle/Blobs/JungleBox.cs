@@ -66,7 +66,7 @@ public abstract class JungleBox : MonoBehaviour
         SGridAnimator.OnSTileMoveStart += CheckDirectionEndOfFrame;
         SGridAnimator.OnSTileMoveEnd += CheckDirectionEndOfFrame;
         SGrid.OnSTileEnabled += CheckDirectionEndOfFrame;
-        SGrid.OnGridSet += CheckDirectionEndOfFrame;
+        SGrid.OnGridSet += UpdateDirectionEndOfFrame;
     }
 
     private void OnDisable()
@@ -74,7 +74,7 @@ public abstract class JungleBox : MonoBehaviour
         SGridAnimator.OnSTileMoveStart -= CheckDirectionEndOfFrame;
         SGridAnimator.OnSTileMoveEnd -= CheckDirectionEndOfFrame;
         SGrid.OnSTileEnabled -= CheckDirectionEndOfFrame;
-        SGrid.OnGridSet -= CheckDirectionEndOfFrame;
+        SGrid.OnGridSet -= UpdateDirectionEndOfFrame;
     }
 
     private void OnDestroy()
@@ -188,7 +188,9 @@ public abstract class JungleBox : MonoBehaviour
     protected void CheckDirectionEndOfFrame(object sender, SGridAnimator.OnTileMoveArgs e) => StartCoroutine(CheckDirectionEndOfFrame());
     protected void CheckDirectionEndOfFrame(object sender, SGrid.OnSTileEnabledArgs e) => StartCoroutine(CheckDirectionEndOfFrame());
     protected void CheckDirectionEndOfFrame(object sender, SGrid.OnGridMoveArgs e) => StartCoroutine(CheckDirectionEndOfFrame());
+    protected void UpdateDirectionEndOfFrame(object sender, SGrid.OnGridMoveArgs e) => StartCoroutine(UpdateDirectionEndOfFrame());
     
+
     public IEnumerator CheckDirectionEndOfFrame()
     {
         // TileMoveEnd is invoked when the move ends, but before colliders are restored, 
@@ -202,6 +204,15 @@ public abstract class JungleBox : MonoBehaviour
     {
         if (CanSkipCheckDirection(targetBox))
             return;
+
+        SetDirection(direction);
+    }
+
+    public IEnumerator UpdateDirectionEndOfFrame()
+    {
+        // For scroll set grid
+        yield return new WaitForEndOfFrame();
+        yield return null;
 
         SetDirection(direction);
     }
@@ -329,4 +340,14 @@ public abstract class JungleBox : MonoBehaviour
             signAnimator.SetDirection(DirectionUtil.D2V(direction));
         }
     }
+
+    public void TurnOnDebugShape()
+    {
+        debugSpriteRenderer.gameObject.SetActive(true);
+    }
+
+    public void IsDirectionRight(Condition c) => c.SetSpec(direction == Direction.RIGHT);
+    public void IsDirectionUp(Condition c) => c.SetSpec(direction == Direction.UP);
+    public void IsDirectionLeft(Condition c) => c.SetSpec(direction == Direction.LEFT);
+    public void IsDirectionDown(Condition c) => c.SetSpec(direction == Direction.DOWN);
 }

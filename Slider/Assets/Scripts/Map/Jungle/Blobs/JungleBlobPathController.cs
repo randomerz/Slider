@@ -53,7 +53,7 @@ public class JungleBlobPathController : MonoBehaviour
         if (transform.position.x != target.transform.position.x &&
             transform.position.y != target.transform.position.y)
         {
-            Debug.LogError("Marching is not along a straight line!");
+            Debug.LogError($"Marching between {transform.parent.name} and {target} is not along a straight line!");
         }
 
         md.shape = shape;
