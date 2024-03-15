@@ -70,6 +70,7 @@ public class JungleSpawner : JungleBox
 
         UpdateBox();
         UpdateSprites();
+        pathController.UpdateMarchingShape(direction, ProducedShape);
     }
 
     protected override void UpdateSprites()

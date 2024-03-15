@@ -8,8 +8,7 @@ public class JungleDuplicator : JungleSign
     private JungleBox alternateTargetBox;
     public Direction CurrentAlternateDirection { get { return alternateDirection; } }
     
-    [SerializeField]
-    protected JungleSignAnimator alternateSignAnimator;
+    [SerializeField] protected JungleSignAnimator alternateSignAnimator;
 
     private int mySourceId = 0;
 
@@ -51,9 +50,17 @@ public class JungleDuplicator : JungleSign
             oldAlternateBox.RemoveInput(DirectionUtil.Inv(oldAlternateDirection));
 
         if (oldBox != null)
+        {
+            SetIsSending(false, oldDirection, oldBox, signAnimator);
             oldBox.UpdateBox();
+            oldBox.UpdateSendingSprites(propogate: false);
+        }
         if (oldAlternateBox != null)
+        {
+            SetIsSending(false, oldAlternateDirection, oldAlternateBox, alternateSignAnimator);
             oldAlternateBox.UpdateBox();
+            oldAlternateBox.UpdateSendingSprites(propogate: false);
+        }
 
 
         UpdateBox();
@@ -64,10 +71,18 @@ public class JungleDuplicator : JungleSign
         JungleBox alternateOther = GetBoxInDirection(this.alternateDirection);
         alternateTargetBox = alternateOther;
 
-        TrySendAfterUpdateDirection(this.direction, targetBox);
-        TrySendAfterUpdateDirection(this.alternateDirection, alternateTargetBox);
+        TrySendAfterUpdateDirection(this.direction, targetBox, signAnimator);
+        TrySendAfterUpdateDirection(this.alternateDirection, alternateTargetBox, alternateSignAnimator);
 
         UpdateSprites();
+        // pathController.UpdateMarchingShape(this.direction, ProducedShape);
+        // pathController.UpdateMarchingShape(this.alternateDirection, ProducedShape);
+    }
+
+    public override void UpdateSendingSprites(bool propogate = true)
+    {
+        TrySendAfterUpdateDirection(direction, targetBox, signAnimator, propogate);
+        TrySendAfterUpdateDirection(alternateDirection, alternateTargetBox, alternateSignAnimator, propogate);
     }
 
     public override void CheckDirectionOnMove()
@@ -121,8 +136,9 @@ public class JungleDuplicator : JungleSign
         {
             return false;
         }
+        pathController.UpdateMarchingShape(alternateDirection, ProducedShape);
         
-        UpdatePropogateInDirection(alternateDirection, alternateTargetBox, depth);
+        UpdatePropogateInDirection(alternateDirection, alternateTargetBox, alternateSignAnimator, depth);
         return true;
     }
 

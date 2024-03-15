@@ -51,6 +51,22 @@ public class DirectionUtil
         return Vector2.zero;
     }
 
+    public static Vector3 D2V3(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.RIGHT:
+                return Vector2.right;
+            case Direction.UP:
+                return Vector2.up;
+            case Direction.LEFT:
+                return Vector2.left;
+            case Direction.DOWN:
+                return Vector2.down;
+        }
+        return Vector2.zero;
+    }
+
     public static Vector2Int D2VInt(Direction direction)
     {
         switch (direction)

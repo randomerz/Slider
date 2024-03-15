@@ -20,7 +20,7 @@ public class Path : MonoBehaviour
     public GameObject blob;
     private Direction direction;
     private float timeBetweenCreation = 3.8f;
-    private float travelDistance = 0;
+    private float targetDistanceTraveled = 0;
 
     private float timeCount = 4f;
 
@@ -44,14 +44,14 @@ public class Path : MonoBehaviour
         new_blob.transform.parent = this.transform;
 
         BoxCollider2D collider = this.GetComponent<BoxCollider2D>();
-        travelDistance = (int)this.transform.localScale.x; // + 0.5f
+        targetDistanceTraveled = (int)this.transform.localScale.x; // + 0.5f
 
         if (pair != null)
         {
-            travelDistance += (int)pair.transform.localScale.x;
+            targetDistanceTraveled += (int)pair.transform.localScale.x;
         }
 
-        new_blob.UpdateBlobOnPath(defaultAnim, direction, travelDistance, pair, currentShape);
+        new_blob.InitializeParameters(direction, targetDistanceTraveled, 0, currentShape);
 
         // set blob to be the correct starting position
         if (direction == Direction.LEFT)
@@ -143,30 +143,32 @@ public class Path : MonoBehaviour
                 Blob new_blob = go.GetComponent<Blob>();
                 new_blob.transform.parent = this.transform;
 
-                travelDistance = length;
-                float traveledDistance = 0.15f * (i * distancebetween);
+                targetDistanceTraveled = length;
+                float distanceTraveled = 0.15f * (i * distancebetween);
 
                 // set blob to be the correct starting position
                 if (direction == Direction.LEFT)
                 {
-                    new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - traveledDistance, 0, 0);
+                    new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - distanceTraveled, 0, 0);
                 }
                 else if (direction == Direction.DOWN)
                 {
-                    new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - 0.1f - traveledDistance, 0, 0);
-                    travelDistance -= 0.1f;
+                    new_blob.transform.localPosition = new Vector3(collider.offset.x + (collider.size.x / 2) - 0.1f - distanceTraveled, 0, 0);
+                    targetDistanceTraveled -= 0.1f;
                 }
                 else
                 {
-                    new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2) + traveledDistance, 0, 0);
+                    new_blob.transform.localPosition = new Vector3(collider.offset.x - (collider.size.x / 2) + distanceTraveled, 0, 0);
                 }
 
-                travelDistance -= (i * distancebetween);
+                targetDistanceTraveled -= (i * distancebetween);
 
-                new_blob.UpdateBlobOnPath(defaultAnim, direction, travelDistance, pair, currentShape);
-                new_blob.setSpeed(0);
-                new_blob.setAlpha(0);
-                new_blob.setTraveledDistance(traveledDistance);
+                // TODO:
+                // - Handle prewarming blobs when they should be jumping in the hole
+                // - We can probably just not spawn them if it is in the hole trigger
+                new_blob.InitializeParameters(direction, targetDistanceTraveled, distanceTraveled, currentShape);
+                // new_blob.SetSpeed(0);
+                new_blob.SetAlpha(0);
             }
         }
 
@@ -174,7 +176,7 @@ public class Path : MonoBehaviour
         //fade in blobs
         foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>())
         {
-            blob.fadeIn();
+            blob.FadeIn();
         }
     }
 
@@ -191,7 +193,7 @@ public class Path : MonoBehaviour
         foreach (Blob blob in this.gameObject.GetComponentsInChildren<Blob>()) {
             if (blob.isActiveAndEnabled)
             {
-                blob.fadeOut();
+                blob.FadeOut();
             }
         }
     }

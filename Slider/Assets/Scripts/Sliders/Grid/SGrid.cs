@@ -427,9 +427,9 @@ public void SetGrid(int[,] puzzle)
 
     public static bool PosInSTileBounds(Vector3 pos, Vector3 stilePos, float offset)
     {
-        if (stilePos.x - offset < pos.x && pos.x < stilePos.x + offset &&
-           (stilePos.y - offset < pos.y && pos.y < stilePos.y + offset ||
-            stilePos.y - offset + Current.housingOffset < pos.y && pos.y < stilePos.y + offset + Current.housingOffset))
+        if (stilePos.x - offset <= pos.x && pos.x < stilePos.x + offset &&
+           (stilePos.y - offset <= pos.y && pos.y < stilePos.y + offset ||
+            stilePos.y - offset + Current.housingOffset <= pos.y && pos.y < stilePos.y + offset + Current.housingOffset))
         {
             return true;
         }

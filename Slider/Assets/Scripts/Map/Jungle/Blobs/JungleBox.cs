@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public abstract class JungleBox : MonoBehaviour
 {
@@ -15,17 +16,16 @@ public abstract class JungleBox : MonoBehaviour
     protected List<int> usedSourceIds;
     public STile ParentSTile { get; protected set; }
     public Direction CurrentDirection { get { return direction; } }
-    
-    protected bool isSending;
 
     protected static int numSourceIds; // Used to generate source ids
     protected const int DEPTH_LIMIT = 30;
     protected const string WORLD_COLLIDER_TAG = "WorldMapCollider"; // Does not include collider tilemap, etc
 
     [Header("References")]
-    public SpriteRenderer TEMP_SPRITE;
+    [SerializeField] protected JungleBlobPathController pathController;
+    [SerializeField] private SpriteRenderer debugSpriteRenderer;
     [SerializeField] private LayerMask raycastLayerMask;
-    [SerializeField] private JungleSignAnimator signAnimator;
+    [SerializeField] protected JungleSignAnimator signAnimator;
 
     protected virtual void Awake()
     {
@@ -115,6 +115,8 @@ public abstract class JungleBox : MonoBehaviour
 
     /// <summary>
     /// Called whenever the direction of this JungleBox should be updated.
+    /// Warning! If you change this method, you may have to apply the same changes 
+    /// to JungleDuplicator.SetDirection() as well! Sorry :(
     /// </summary>
     public virtual void SetDirection(Direction direction)
     {
@@ -131,6 +133,7 @@ public abstract class JungleBox : MonoBehaviour
         if (oldBox != null)
         {
             oldBox.RemoveInput(DirectionUtil.Inv(oldDirection));
+            SetIsSending(false, oldDirection, oldBox, signAnimator);
             oldBox.UpdateBox();
             oldBox.UpdateSendingSprites(propogate: false);
         }
@@ -141,21 +144,21 @@ public abstract class JungleBox : MonoBehaviour
         JungleBox other = GetBoxInDirection(direction);
         targetBox = other;
 
-        TrySendAfterUpdateDirection(direction, targetBox);
+        TrySendAfterUpdateDirection(direction, targetBox, signAnimator);
 
         UpdateSprites();
     }
 
-    protected void UpdateSendingSprites(bool propogate=true)
+    public virtual void UpdateSendingSprites(bool propogate=true)
     {
-        TrySendAfterUpdateDirection(direction, targetBox, propogate);
+        TrySendAfterUpdateDirection(direction, targetBox, signAnimator, propogate);
     }
 
-    protected void TrySendAfterUpdateDirection(Direction myDirection, JungleBox myTargetBox, bool propogate=true)
+    protected void TrySendAfterUpdateDirection(Direction myDirection, JungleBox myTargetBox, JungleSignAnimator mySignAnimator, bool propogate=true)
     {
         if (myTargetBox == null)
         {
-            SetIsSending(false);
+            SetIsSending(false, myDirection, myTargetBox, mySignAnimator);
             return;
         }
 
@@ -168,16 +171,16 @@ public abstract class JungleBox : MonoBehaviour
                 myTargetBox.UpdateBox();
             }
 
-            SetIsSending(ProducedShape != null);
+            SetIsSending(ProducedShape != null, myDirection, myTargetBox, mySignAnimator);
         }
         else
         {
             // Could be two signs pointing same direction,
             // a sign pointing towards spawner, etc...
-            SetIsSending(false);
+            SetIsSending(false, myDirection, myTargetBox, mySignAnimator);
             if (propogate)
             {
-                targetBox.UpdateSendingSprites(propogate: false);
+                myTargetBox.UpdateSendingSprites(propogate: false);
             }
         }
     }
@@ -240,12 +243,20 @@ public abstract class JungleBox : MonoBehaviour
         return usedSourceIds;
     }
 
-    protected void SetIsSending(bool isSending)
+    protected virtual void SetIsSending(bool isSending, Direction sendingDirection, JungleBox target, JungleSignAnimator mySignAnimator)
     {
-        if (this.isSending != isSending)
+        if (mySignAnimator != null)
         {
-            this.isSending = isSending;
-            signAnimator.SetIsGray(!isSending);
+            mySignAnimator.SetIsGray(!isSending);
+        }
+            
+        if (isSending)
+        {
+            pathController.EnableMarching(sendingDirection, ProducedShape, target);
+        }
+        else
+        {
+            pathController.DisableMarching(sendingDirection);
         }
     }
 
@@ -265,6 +276,12 @@ public abstract class JungleBox : MonoBehaviour
             hits,
             100 // Max distance
         );
+
+        if (numHits == DEPTH_LIMIT)
+        {
+            Debug.LogError("Warning: GetBoxInDirection hit the maximum amount of colliders. " +
+                           "This may cause the box to miss another.");
+        }
 
         JungleBox closestBox = null;
         float closestBoxDist = float.MaxValue;
@@ -305,7 +322,7 @@ public abstract class JungleBox : MonoBehaviour
 
     protected virtual void UpdateSprites()
     {
-        TEMP_SPRITE.sprite = ProducedShape != null ? ProducedShape.fullSprite : null;
+        debugSpriteRenderer.sprite = ProducedShape != null ? ProducedShape.fullSprite : null;
 
         if (signAnimator != null)
         {

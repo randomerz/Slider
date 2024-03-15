@@ -111,12 +111,13 @@ public class JungleSign : JungleBox
 
         // Update sprites
         UpdateSprites();
+        pathController.UpdateMarchingShape(direction, ProducedShape);
 
-        UpdatePropogateInDirection(direction, targetBox, depth);
+        UpdatePropogateInDirection(direction, targetBox, signAnimator, depth);
         return true;
     }
 
-    protected void UpdatePropogateInDirection(Direction myDirection, JungleBox myTargetBox, int depth)
+    protected void UpdatePropogateInDirection(Direction myDirection, JungleBox myTargetBox, JungleSignAnimator mySignAnimator, int depth)
     {
         // Update next box
         // if (ProducedShape != null && myTargetBox != null)
@@ -130,12 +131,14 @@ public class JungleSign : JungleBox
                 myTargetBox.AddInput(this, invDirection);
                 myTargetBox.UpdateBox(depth + 1);
 
-                SetIsSending(ProducedShape != null);
+                SetIsSending(ProducedShape != null, myDirection, myTargetBox, mySignAnimator);
             }
             else
             {
                 // Same loop case as above
                 myTargetBox.RemoveInput(invDirection);
+
+                // SetIsSending(false, myDirection, myTargetBox);
             }
         }
     }

@@ -9,6 +9,7 @@ public class JungleSignAnimator : MonoBehaviour
     private bool isGray;
     private Coroutine bumpCoroutine;
     private Sprite newSpriteBuffer;
+    private bool finishedLateStart = false;
 
     [Header("Set references")]
     [SerializeField] private Sprite[] signDirectionsSprites; // right up left down
@@ -22,6 +23,18 @@ public class JungleSignAnimator : MonoBehaviour
 
 
     private const float ANIMATION_DELAY = 0.06125f;
+
+    private void Start()
+    {
+        StartCoroutine(LateStart());
+    }
+
+    private IEnumerator LateStart()
+    {
+        yield return new WaitForEndOfFrame();
+
+        finishedLateStart = true;
+    }
 
     private void OnDisable()
     {
@@ -60,7 +73,10 @@ public class JungleSignAnimator : MonoBehaviour
 
             if (currentDirectionIndex == -1)
             {
-                Debug.LogWarning("Couldn't find index of jungle sign sprite.");
+                if (finishedLateStart)
+                {
+                    Debug.LogWarning("Couldn't find index of jungle sign sprite.");
+                }
                 return;
             }
 
@@ -93,7 +109,11 @@ public class JungleSignAnimator : MonoBehaviour
         newSpriteBuffer = newSprite;
         spriteRenderer.sprite = isGray ? bumpAnimationSpritesGray[0] :
                                          bumpAnimationSprites[0];
-        AudioManager.Play("UI Click");
+
+        if (finishedLateStart)
+        {
+            AudioManager.Play("UI Click");
+        }
 
         yield return new WaitForSeconds(ANIMATION_DELAY);
 

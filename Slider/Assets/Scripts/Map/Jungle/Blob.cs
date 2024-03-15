@@ -1,173 +1,281 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Threading;
 using UnityEngine;
 
 public class Blob : MonoBehaviour
 {
+    public Direction Direction { get; private set; }
 
-    public Animator animator;
-    public SpriteRenderer spriteRenderer;
+    private float targetDistanceTraveled = 10;
+    private float distanceTraveled = 0;
+    private STile currentSTileUnder = null;
+    private float moveSpeed = 1f;
 
-    Direction direction;
-    float travelDistance = 10;
-    public float traveledDistance = 0;
-    private Path pair;
-    bool flip = false;
-    float speed = 0.75f;
-    bool jumping = false;
-    float jumpTime = 1.4f;
-    float timePassed = 0;
+    private bool isJumping = false;
+    private float timeSinceJump = 0;
+    private Vector2 jumpStartPos;
+    private Vector2 jumpTargetPos;
 
-    [Header("shape")]
-    public Shape carry;
-    public SpriteRenderer shapeRenderer;
+    private float targetSpriteAlpha;
+    private Action onTargetAlphaReached;
 
-    [Header("Jump info")]
-    private Vector2 startPos;
-    private Vector2 targetPos;
+    [Header("References")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer shapeSpriteRenderer;
 
-    public void UpdateBlobOnPath(bool defaultAnim, Direction direction, float travelDistance, Path pair, Shape shape)
+    public const float MARCH_SPEED = 0.75f;
+    private const float JUMP_SPEED = 1.25f;
+    private const float JUMP_DURATION = 2.3f;
+
+    public void InitializeParameters(Direction direction, 
+                                     float targetDistanceTraveled, 
+                                     float initDistanceTraveled, 
+                                     Shape shape, 
+                                     JungleBlobPathController owner=null)
     {
-        carry = shape;
-        SpriteRenderer spriteRenderer = shapeRenderer;
-        spriteRenderer.sprite = carry.fullSprite;
-
-        flip = defaultAnim;
-        if (flip)
+        if (direction == Direction.LEFT)
         {
-            GetComponent<SpriteRenderer>().flipX = true;
+            spriteRenderer.flipX = false;
         }
-        this.direction = direction;
-        this.travelDistance = travelDistance;
-        this.pair = pair;
+        else if (direction == Direction.RIGHT)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else
+        {
+            spriteRenderer.flipX = UnityEngine.Random.Range(0f, 1f) > 0.5f;
+        }
 
-        /*        if ((direction == Direction.LEFT || direction == Direction.RIGHT))
-                {
-                    renderer.sortingOrder = -2;
-                    shapeRenderer.sortingOrder = -2;
-                }*/
+        if (shape != null)
+        {
+            shapeSpriteRenderer.sprite = shape.fullSprite;
+        }
+        else
+        {
+            Debug.LogWarning("Tried to start a slime with no shape.");
+        }
+
+        this.Direction = direction;
+        this.distanceTraveled = initDistanceTraveled;
+        this.targetDistanceTraveled = targetDistanceTraveled;
+        moveSpeed = MARCH_SPEED;
+
+        currentSTileUnder = SGrid.GetSTileUnderneath(gameObject);
+        if (currentSTileUnder == null)
+        {
+            Debug.LogError($"Blob was spawned and couldn't find current STile underneath -- {currentSTileUnder}");
+        }
+        
+        ResetJump();
     }
 
-    public void setTraveledDistance(float traveled)
+    private void Update()
     {
-        this.traveledDistance = traveled;
-    }
-
-    public void setSpeed(float speed)
-    {
-        this.speed = speed;
-    }
-
-    public void setAlpha(float alpha)
-    {
-        Color c = spriteRenderer.material.color;
-        c.a = alpha;
-        Color s = shapeRenderer.material.color;
-        s.a = alpha;
-        spriteRenderer.material.color = c;
-        shapeRenderer.material.color = s;
+        HandleAlpha();
     }
 
     void FixedUpdate()
     {
-        if (jumping)
+        if (isJumping)
         {
-            Jump();
+            HandleJump();
         }
         else
         {
-            Vector2 new_distance = DirectionUtil.D2V(direction) * (speed * Time.deltaTime);
-            traveledDistance += Mathf.Abs(new_distance.magnitude);
-            this.transform.position = this.transform.position + new Vector3(new_distance.x, new_distance.y, 0);
+            HandleMarch();
+        }
+    }
 
-            if (traveledDistance >= travelDistance)
+    private void HandleMarch()
+    {
+        Vector3 deltaPosition = DirectionUtil.D2V(Direction) * (MARCH_SPEED * Time.deltaTime);
+        distanceTraveled += Mathf.Abs(deltaPosition.magnitude);
+        transform.position = transform.position + deltaPosition;
+
+        // I made it!
+        if (distanceTraveled >= targetDistanceTraveled)
+        {
+            RemoveBlob();
+        }
+
+        // Check for reparenting
+        STile under = SGrid.GetSTileUnderneath(gameObject);
+
+        // I'm not on a tile? Hopefully it's when tiles are shifting around
+        if (under == null)
+        {
+            // maybe add a check/warning to make sure i am fading away
+
+            // Undo moves
+            distanceTraveled -= Mathf.Abs(deltaPosition.magnitude);
+            transform.position = transform.position - deltaPosition;
+            return;
+        }
+
+        if (currentSTileUnder == null)
+        {
+            Debug.LogWarning("Current STile under was not properly set up for blob!");
+            currentSTileUnder = under;
+            transform.SetParent(currentSTileUnder.transform);
+            return;
+        }
+
+        if (under != currentSTileUnder)
+        {
+            // If either is moving, undo moves
+            if (under.IsMoving() || currentSTileUnder.IsMoving())
             {
-                Destroy(this.gameObject);
-            }
-
-            if (traveledDistance > 2 && traveledDistance < 4)
-            {
-                spriteRenderer.sortingOrder = 0;
-                shapeRenderer.sortingOrder = 0;
-            }
-
-            // check if i need to change parent then if i do, change
-            STile under = SGrid.GetSTileUnderneath(this.gameObject);
-
-            if (under == null)
-            {
-                //Destroy(this.gameObject);
+                // Undo moves
+                distanceTraveled -= Mathf.Abs(deltaPosition.magnitude);
+                transform.position = transform.position - deltaPosition;
                 return;
             }
 
-            GameObject path = this.transform.parent.gameObject;
-            GameObject pathStile = path.transform.parent.transform.parent.transform.parent.gameObject; //bro pls theres a better way right
-            if (under.transform.gameObject != pathStile)
-            {
-                if (pair != null)
-                {
-                    this.transform.SetParent(pair.transform);
-                    Vector2 position = this.transform.localPosition;
-                    position.y = 0;
-                    this.gameObject.transform.localPosition = position;
-                }
-                else
-                {
-                    Destroy(this.gameObject);
-                }
-            }
+            // Otherwise reassign me
+            currentSTileUnder = under;
+            transform.SetParent(currentSTileUnder.transform);
         }
-
     }
 
-    void Jump()
+    private void HandleJump()
     {
-        timePassed += Time.deltaTime;
-        if (direction == Direction.RIGHT)
-        {
-            float dist = targetPos.x - startPos.x;
-            float nextX = Mathf.MoveTowards(transform.position.x, targetPos.x, speed * Time.deltaTime);
-            float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - startPos.x) / dist);
-            float height = 1.5f * (nextX - startPos.x) * (nextX - targetPos.x) / (-0.25f * dist * dist);
+        timeSinceJump += Time.deltaTime;
 
-            Vector3 movePosition = new Vector3(nextX, baseY + height, transform.position.z);
-            transform.position = movePosition;
+        if (Direction == Direction.RIGHT || Direction == Direction.LEFT)
+        {
+            float dist = Mathf.Abs(jumpTargetPos.x - jumpStartPos.x);
+            float nextX = Mathf.MoveTowards(transform.position.x, jumpTargetPos.x, JUMP_SPEED * Time.deltaTime);
+            float nextY = Mathf.Lerp(jumpStartPos.y, jumpTargetPos.y, Mathf.Abs(nextX - jumpStartPos.x) / dist);
+            float heightBonus = -6 * (nextX - jumpStartPos.x) * (nextX - jumpTargetPos.x) / Mathf.Pow(dist, 2);
+
+            transform.position = new Vector3(nextX, nextY + heightBonus);
         }
         else
         {
-            float time = timePassed / jumpTime;
-            float target_Y = startPos.y + -1f * time + 1f * (1 - (Mathf.Abs(0.5f - time) / 0.5f) * (Mathf.Abs(0.5f - time) / 0.5f));
-            this.transform.position = new Vector3(this.transform.position.x, target_Y);
+            float time01 = timeSinceJump / JUMP_DURATION;
+            float nextY = -8 * Mathf.Pow(time01, 2) + 5 * time01 + jumpStartPos.y;
+            transform.position = new Vector3(transform.position.x, nextY);
         }
     }
 
     public void JumpIntoBin()
     {
-        speed = 1.2f;
-        jumping = true;
-        if (direction == Direction.RIGHT)
-        {
-            jumpTime = 2.5f;
-        }
-        StartCoroutine(WaitForJump());
-        startPos = new Vector2(this.transform.position.x, this.transform.position.y);
-        targetPos = new Vector2(this.transform.position.x + 3, this.transform.position.y - 3);
+        if (isJumping)
+            return;
+
+        isJumping = true;
+        animator.SetBool("isJumping", true);
+        timeSinceJump = 0;
+
+        int xOffset = Direction == Direction.RIGHT ? 3 : -3;
+
+        jumpStartPos = transform.position;
+        jumpTargetPos = new Vector2(transform.position.x + xOffset, transform.position.y - 3);
+
+        StartCoroutine(DoJumpCoroutine());
     }
 
-    IEnumerator WaitForJump()
+    private IEnumerator DoJumpCoroutine()
     {
-        animator.SetBool("Right", true);
-        yield return new WaitForSeconds(jumpTime / 2);
+        yield return new WaitForSeconds(JUMP_DURATION / 2);
+
         spriteRenderer.sortingOrder = -2;
-        shapeRenderer.sortingOrder = -2;
-        yield return new WaitForSeconds(jumpTime / 2);
+        shapeSpriteRenderer.sortingOrder = -2;
+
+        yield return new WaitForSeconds(JUMP_DURATION / 2);
+
+        RemoveBlob();
+    }
+
+    private void ResetJump()
+    {
+        isJumping = false;
+        animator.SetBool("isJumping", false);
+        timeSinceJump = 0;
+
+        spriteRenderer.sortingOrder = 0;
+        shapeSpriteRenderer.sortingOrder = 0;
+    }
+
+    private void HandleAlpha()
+    {
+        if (spriteRenderer.color.a != targetSpriteAlpha)
+        {
+            float newAlpha = Mathf.MoveTowards(spriteRenderer.color.a, targetSpriteAlpha, 2 * Time.deltaTime);
+            SetAlpha(newAlpha);
+
+            if (newAlpha == targetSpriteAlpha)
+            {
+                onTargetAlphaReached?.Invoke();
+                onTargetAlphaReached = null;
+            }
+        }
+    }
+
+    public void SetAlpha(float alpha)
+    {
+        Color c = spriteRenderer.color;
+        c.a = alpha;
+        spriteRenderer.color = c;
+        shapeSpriteRenderer.color = c;
+    }
+
+    public bool IsFadingIn()
+    {
+        return targetSpriteAlpha == 1 && spriteRenderer.color.a < 0.1f;
+    }
+
+    public void SetTargetAlpha(float alpha, Action onTargetAlphaReached=null)
+    {
+        targetSpriteAlpha = alpha;
+        if (onTargetAlphaReached != null)
+        {
+            this.onTargetAlphaReached = onTargetAlphaReached;
+        }
+    }
+
+    public void SetShape(Shape shape)
+    {
+        if (shapeSpriteRenderer.sprite != shape.fullSprite)
+        {
+            shapeSpriteRenderer.sprite = shape.fullSprite;
+            Vector3 pos = shapeSpriteRenderer.transform.position + new Vector3(0, 0.5f);
+            ParticleManager.SpawnParticle(ParticleType.MiniSparkle, pos, shapeSpriteRenderer.transform);
+        }
+    }
+
+    public void RemoveBlob()
+    {
         Destroy(this.gameObject);
     }
 
-    //fade in and fade out coroutines
-    public IEnumerator fadeOutAnimation()
+    // todo: deprecate
+    public void FadeIn()
+    {
+        targetSpriteAlpha = 1;
+        // if (!isJumping)
+        // {
+        //     // moveSpeed = 0.75f;
+        //     // StartCoroutine(FadeInAnimation());
+        // }
+    }
+
+    // todo: deprecate
+    public void FadeOut()
+    {
+        targetSpriteAlpha = 0;
+        // if (!isJumping)
+        // {
+        //     // StartCoroutine(FadeOutAnimation());
+        //     // moveSpeed = 0;
+        // }
+    }
+
+    // fade in and fade out coroutines
+    // todo: deprecate
+    private IEnumerator FadeOutAnimation()
     {
         Color c = spriteRenderer.material.color;
 
@@ -180,39 +288,22 @@ public class Blob : MonoBehaviour
 
             c.a = alpha;
             spriteRenderer.material.color = c;
-            shapeRenderer.material.color = c;
+            shapeSpriteRenderer.material.color = c;
             yield return new WaitForSeconds(0.1667f);
         }
         Destroy(this.gameObject);
     }
 
-    public void fadeOut()
-    {
-        if (!jumping)
-        {
-            StartCoroutine(fadeOutAnimation());
-            speed = 0;
-        }
-    }
-
-    public IEnumerator fadeInAnimation()
+    // todo: deprecate
+    private IEnumerator FadeInAnimation()
     {
         Color c = spriteRenderer.material.color;
-        for (float alpha = 0f; alpha <= 1 && speed > 0; alpha += 0.25f)
+        for (float alpha = 0f; alpha <= 1 && moveSpeed > 0; alpha += 0.25f)
         {
             c.a = alpha;
             spriteRenderer.material.color = c;
-            shapeRenderer.material.color = c;
+            shapeSpriteRenderer.material.color = c;
             yield return new WaitForSeconds(0.1667f);
-        }
-    }
-
-    public void fadeIn()
-    {
-        if (!jumping)
-        {
-            speed = 0.75f;
-            StartCoroutine(fadeInAnimation());
         }
     }
 }
