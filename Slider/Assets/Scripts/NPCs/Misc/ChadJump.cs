@@ -124,6 +124,7 @@ public class ChadJump : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         npcAnimator.SetBool("isFallen", true);
+        npcAnimator.SetBool("isTipping", false);
         AudioManager.Play("Fall");
 
         Vector3 start = jumpTransform.localPosition;
@@ -141,7 +142,6 @@ public class ChadJump : MonoBehaviour
         transform.localPosition = target;
 
         jumpState = JumpState.FELL;
-        npcAnimator.SetBool("isTipping", false);
         AudioManager.Play("Hurt");
         npcRenderer.sortingOrder = 0;
 

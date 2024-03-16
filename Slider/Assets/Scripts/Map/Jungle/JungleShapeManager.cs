@@ -39,6 +39,9 @@ public class JungleShapeManager : Singleton<JungleShapeManager>, ISavable
         {
             PlayerInventory.RemoveAndDestroyItem();
             SaveSystem.Current.SetBool(GetSaveString(wanted.shapeName), true);
+
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, held.transform.position);
+
             return true;
         }
 

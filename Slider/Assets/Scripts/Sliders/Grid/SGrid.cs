@@ -16,14 +16,10 @@ public class SGrid : Singleton<SGrid>, ISavable
         public STile stile;
     }
 
-    public class OnSTileCollectedArgs : System.EventArgs
-    {
-        public STile stile;
-    }
-
     public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
+    public static event System.EventHandler<OnGridMoveArgs> OnGridSet;
     public static event System.EventHandler<OnSTileEnabledArgs> OnSTileEnabled;
-    public static event System.EventHandler<OnSTileCollectedArgs> OnSTileCollected;
+    public static event System.EventHandler<OnSTileEnabledArgs> OnSTileCollected;
 
     public static SGrid Current => _instance;
     public int Width => width;
@@ -192,6 +188,7 @@ public void SetGrid(int[,] puzzle)
         STile[,] old = grid;
         grid = newGrid;
         CheckForCompletionOnSetGrid();
+        OnGridSet?.Invoke(this, new OnGridMoveArgs { oldGrid = old, grid = grid });
     }
 
     //C: When we need to check for area completion after setting the grid (such as in areas that can be completed with the scroll)
@@ -430,9 +427,9 @@ public void SetGrid(int[,] puzzle)
 
     public static bool PosInSTileBounds(Vector3 pos, Vector3 stilePos, float offset)
     {
-        if (stilePos.x - offset < pos.x && pos.x < stilePos.x + offset &&
-           (stilePos.y - offset < pos.y && pos.y < stilePos.y + offset ||
-            stilePos.y - offset + Current.housingOffset < pos.y && pos.y < stilePos.y + offset + Current.housingOffset))
+        if (stilePos.x - offset <= pos.x && pos.x < stilePos.x + offset &&
+           (stilePos.y - offset <= pos.y && pos.y < stilePos.y + offset ||
+            stilePos.y - offset + Current.housingOffset <= pos.y && pos.y < stilePos.y + offset + Current.housingOffset))
         {
             return true;
         }
@@ -578,7 +575,7 @@ public void SetGrid(int[,] puzzle)
     {
         stile.isTileCollected = true;
         EnableStile(stile, true);
-        OnSTileCollected?.Invoke(this, new OnSTileCollectedArgs { stile = stile });
+        OnSTileCollected?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
     }
 
     public virtual bool TilesMoving()

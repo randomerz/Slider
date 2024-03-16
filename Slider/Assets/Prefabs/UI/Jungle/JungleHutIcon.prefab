@@ -456,12 +456,12 @@ MonoBehaviour:
   flashTime: 0.25
   mainHutImage: {fileID: 9130186657591475758}
   directionImages:
-  - {fileID: 6282896902488192091}
-  - {fileID: 8868283833091386079}
   - {fileID: 4594694030655571786}
+  - {fileID: 8868283833091386079}
+  - {fileID: 6282896902488192091}
   - {fileID: 752272596998742273}
   mainHutSprites:
   - {fileID: -1835701838, guid: 37928a572363b8c44ba9a4065ac5921a, type: 3}
   - {fileID: 1538362859, guid: 37928a572363b8c44ba9a4065ac5921a, type: 3}
   - {fileID: 1710424264, guid: 37928a572363b8c44ba9a4065ac5921a, type: 3}
-  myHut: {fileID: 0}
+  mySpawner: {fileID: 0}

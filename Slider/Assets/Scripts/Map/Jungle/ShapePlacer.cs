@@ -12,11 +12,11 @@ public class ShapePlacer : MonoBehaviour
     {
         if (this.transform.childCount == 0 && making)
         {
-            place(makeShape);
+            Place(makeShape);
         }
     }
 
-    public void place(Shape shape)
+    public void Place(Shape shape)
     {
         making = true;
         GameObject created = Instantiate(shapeItem);
@@ -28,7 +28,7 @@ public class ShapePlacer : MonoBehaviour
         makeShape = shape;
     }
 
-    public void stop()
+    public void Stop()
     {
         makeShape = null;
         making = false;

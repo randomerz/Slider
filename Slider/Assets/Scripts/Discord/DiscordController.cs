@@ -39,7 +39,7 @@ public class DiscordController : Singleton<DiscordController>
             secondsSinceEpoch = (int)t.TotalSeconds;
 
             // Update activity status whenever a slider is collected or the scene is changed
-            SGrid.OnSTileCollected += (object sender, SGrid.OnSTileCollectedArgs args) => UpdateActivity();
+            SGrid.OnSTileCollected += (object sender, SGrid.OnSTileEnabledArgs args) => UpdateActivity();
             SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => UpdateActivity();
 
             UpdateActivity();

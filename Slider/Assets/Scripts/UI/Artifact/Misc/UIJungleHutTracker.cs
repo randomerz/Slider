@@ -7,23 +7,15 @@ public class UIJungleHutTracker : FlashWhiteImage
     [SerializeField] private Image mainHutImage;
     [SerializeField] private List<Image> directionImages;
     [SerializeField] private List<Sprite> mainHutSprites;
-    [SerializeField] private Box myHut;
+    [SerializeField] private JungleSpawner mySpawner;
 
     private ArtifactTileButton button;
-
-    private readonly Direction[] DIRECTIONS = 
-    {
-        Direction.LEFT,
-        Direction.UP,
-        Direction.RIGHT,
-        Direction.DOWN,
-    };
 
     protected override void Awake()
     {
         base.Awake();
 
-        if (myHut == null)
+        if (mySpawner == null)
         {
             Debug.LogError("UIJungleHutTracker requires hut to track");
         }
@@ -40,25 +32,14 @@ public class UIJungleHutTracker : FlashWhiteImage
         bool nodeOnDisabledButton = (button != null && !button.TileIsActive) || !Player.GetIsInHouse();
 
         mainHutImage.enabled = !nodeOnDisabledButton;
-        mainHutImage.sprite = mainHutSprites[myHut.currentShapeIndex];
+        mainHutImage.sprite = mainHutSprites[mySpawner.CurrentShapeIndex];
 
-        for (int i = 0; i < DIRECTIONS.Length; i++)
+        for (int i = 0; i < DirectionUtil.Directions.Length; i++)
         {
             directionImages[i].enabled = (
                 !nodeOnDisabledButton &&
-                myHut.currentDirection == DIRECTIONS[i]
+                mySpawner.CurrentDirection == DirectionUtil.Directions[i]
             );
-
-            if (myHut is DoubleSign)
-            {
-                directionImages[i].enabled = (
-                    !nodeOnDisabledButton &&
-                    (
-                        myHut.currentDirection == DIRECTIONS[i] ||
-                        (myHut as DoubleSign).secondCurrentDirection == DIRECTIONS[i]
-                    )
-                );
-            }
         }
     }
 }

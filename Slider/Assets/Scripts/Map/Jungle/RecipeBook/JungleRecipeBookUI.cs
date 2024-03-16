@@ -29,12 +29,12 @@ public class JungleRecipeBookUI : MonoBehaviour
 
     private void OnEnable() 
     {
-        Bin.OnBinRecieveShape += CheckOnBinRecieveShape;
+        JungleBin.OnBinRecieveShape += CheckOnBinRecieveShape;
     }
 
     private void OnDisable() 
     {
-        Bin.OnBinRecieveShape -= CheckOnBinRecieveShape;
+        JungleBin.OnBinRecieveShape += CheckOnBinRecieveShape;
     }
 
     public void SetCurrentShape(int index, bool withSound = true)
@@ -189,8 +189,7 @@ public class JungleRecipeBookUI : MonoBehaviour
     }
 
 
-
-    public void CheckOnBinRecieveShape(object sender, Bin.JungleBinArgs e)
+    public void CheckOnBinRecieveShape(object sender, JungleBin.JungleBinArgs e)
     {
         SetCurrentShapeImmediate(currentShapeIndex);
     }

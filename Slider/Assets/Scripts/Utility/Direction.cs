@@ -11,6 +11,14 @@ public enum Direction
 
 public class DirectionUtil
 {
+    public static Direction[] Directions =
+    {
+        Direction.RIGHT,
+        Direction.UP,
+        Direction.LEFT,
+        Direction.DOWN
+    };
+
     public static Vector2Int[] Cardinal4 =
     {
         Vector2Int.up,
@@ -28,6 +36,22 @@ public class DirectionUtil
     };
 
     public static Vector2 D2V(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.RIGHT:
+                return Vector2.right;
+            case Direction.UP:
+                return Vector2.up;
+            case Direction.LEFT:
+                return Vector2.left;
+            case Direction.DOWN:
+                return Vector2.down;
+        }
+        return Vector2.zero;
+    }
+
+    public static Vector3 D2V3(Direction direction)
     {
         switch (direction)
         {
@@ -71,5 +95,43 @@ public class DirectionUtil
         else if (direction.y < 0)
             return Direction.DOWN;
         return 0;
+    }
+
+    public static Direction Inv(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.RIGHT:
+                return Direction.LEFT;
+            case Direction.UP:
+                return Direction.DOWN;
+            case Direction.LEFT:
+                return Direction.RIGHT;
+            case Direction.DOWN:
+            default:
+                return Direction.UP;
+        }
+    }
+
+    public static Direction Next(Direction direction)
+    {
+        return direction switch
+        {
+            Direction.RIGHT => Direction.UP,
+            Direction.UP => Direction.LEFT,
+            Direction.LEFT => Direction.DOWN,
+            _ => Direction.RIGHT,
+        };
+    }
+
+    public static Direction Prev(Direction direction)
+    {
+        return direction switch
+        {
+            Direction.RIGHT => Direction.DOWN,
+            Direction.UP => Direction.RIGHT,
+            Direction.LEFT => Direction.UP,
+            _ => Direction.LEFT,
+        };
     }
 }

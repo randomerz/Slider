@@ -4,20 +4,43 @@ using UnityEngine;
 
 public class JungleSignAnimator : MonoBehaviour
 {
-    public SpriteRenderer spriteRenderer;
-
-    private Vector2 direction;
+    private int currentDirectionIndex = -1;
+    private int currentShapeIndex = -1;
+    private bool isGray;
     private Coroutine bumpCoroutine;
+    private Sprite newSpriteBuffer;
+    private bool finishedLateStart = false;
 
     [Header("Set references")]
-    public Sprite[] signDirectionsSprites; // right up left down
-    public Sprite[] bumpAnimationSprites; // bump1 bump2 -> normal sprite
-    public Sprite[] signShapeSprites; //triangle, circle, stick
-    [SerializeField] private Sign sign;
-    [SerializeField] private Hut hut;
+    [SerializeField] private Sprite[] signDirectionsSprites; // right up left down
+    [SerializeField] private Sprite[] signDirectionsSpritesGray; // right up left down
+    [SerializeField] private Sprite[] bumpAnimationSprites; // bump1 bump2 -> normal sprite
+    [SerializeField] private Sprite[] bumpAnimationSpritesGray; // bump1 bump2 -> normal sprite
+    [SerializeField] private Sprite[] signShapeSprites; // triangle, circle, stick
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
 
     private const float ANIMATION_DELAY = 0.06125f;
+
+    private void Start()
+    {
+        StartCoroutine(LateStart());
+    }
+
+    private IEnumerator LateStart()
+    {
+        yield return new WaitForEndOfFrame();
+
+        finishedLateStart = true;
+    }
+
+    private void OnDisable()
+    {
+        if (bumpCoroutine != null)
+        {
+            FinishBumpAnimation();
+        }
+    }
 
     /// <summary>
     /// Set's the sign sprites direction with a small sprite animation.
@@ -25,47 +48,90 @@ public class JungleSignAnimator : MonoBehaviour
     /// <param name="direction">Must be unit vector in the cardinal direction</param>
     public void SetDirection(Vector2 direction)
     {
+        int index = DirectionToSpriteIndex(direction);
+        if (index == currentDirectionIndex)
+            return;
+            
         if (bumpCoroutine != null)
             StopCoroutine(bumpCoroutine);
         
-        this.direction = direction;
-        bumpCoroutine = StartCoroutine(BumpAnimation(direction));
+        currentDirectionIndex = index;
+        Sprite newSprite = isGray ? signDirectionsSpritesGray[index] : 
+                                    signDirectionsSprites[index];
+
+        bumpCoroutine = StartCoroutine(BumpAnimation(newSprite));
     }
 
-    private IEnumerator BumpAnimation(Vector2 direction)
+    // Only for direction arrows
+    public void SetIsGray(bool value)
     {
-        spriteRenderer.sprite = bumpAnimationSprites[0];
-        AudioManager.Play("UI Click");
+        if (isGray != value)
+        {
+            isGray = value;
+
+            if (currentDirectionIndex == -1)
+            {
+                if (finishedLateStart)
+                {
+                    Debug.LogWarning("Couldn't find index of jungle sign sprite.");
+                }
+                return;
+            }
+
+            Sprite newSprite = isGray ? signDirectionsSpritesGray[currentDirectionIndex] : 
+                                        signDirectionsSprites[currentDirectionIndex];
+
+            newSpriteBuffer = newSprite;
+            if (bumpCoroutine == null)
+            {
+                spriteRenderer.sprite = newSprite;
+                // ParticleManager.SpawnParticle(ParticleType.MiniSparkle, transform.position, transform);
+            }
+        }
+    }
+
+    public void SetShapeIndex(int index)
+    {       
+        if (currentShapeIndex == index)
+            return;
+            
+        if (bumpCoroutine != null)
+            StopCoroutine(bumpCoroutine);
+
+        currentShapeIndex = index;
+        bumpCoroutine = StartCoroutine(BumpAnimation(signShapeSprites[index]));
+    }
+
+    private IEnumerator BumpAnimation(Sprite newSprite)
+    {
+        newSpriteBuffer = newSprite;
+        spriteRenderer.sprite = isGray ? bumpAnimationSpritesGray[0] :
+                                         bumpAnimationSprites[0];
+
+        if (finishedLateStart)
+        {
+            AudioManager.Play("UI Click");
+        }
 
         yield return new WaitForSeconds(ANIMATION_DELAY);
 
-        spriteRenderer.sprite = bumpAnimationSprites[1];
+        spriteRenderer.sprite = isGray ? bumpAnimationSpritesGray[1] :
+                                         bumpAnimationSprites[1];
 
         yield return new WaitForSeconds(ANIMATION_DELAY);
 
-        spriteRenderer.sprite = DirectionToSprite(direction);
+        FinishBumpAnimation();
+    }
+
+    private void FinishBumpAnimation()
+    {
+        spriteRenderer.sprite = newSpriteBuffer;
         bumpCoroutine = null;
     }
-    private IEnumerator BumpAnimation(int shapeIndex)
+    
+    private int DirectionToSpriteIndex(Vector2 direction)
     {
-        spriteRenderer.sprite = bumpAnimationSprites[0];
-        AudioManager.Play("UI Click");
-
-        yield return new WaitForSeconds(ANIMATION_DELAY);
-
-        spriteRenderer.sprite = bumpAnimationSprites[1];
-
-        yield return new WaitForSeconds(ANIMATION_DELAY);
-
-        spriteRenderer.sprite = signShapeSprites[shapeIndex];
-        bumpCoroutine = null;
-    }
-    private Sprite DirectionToSprite(Vector2 direction)
-    {
-        int index = (int)(Mathf.Atan2(direction.y, direction.x) / (Mathf.PI / 2) + 4) % 4;
-        // Debug.Log(index + " " + Mathf.Atan2(direction.y, direction.x));
-       // print(direction + " : " + index);
-        return signDirectionsSprites[index];
+        return (int)(Mathf.Atan2(direction.y, direction.x) / (Mathf.PI / 2) + 4) % 4;
     }
 
     // for debug
@@ -74,30 +140,4 @@ public class JungleSignAnimator : MonoBehaviour
         SetDirection(new Vector2[] {Vector2.right, Vector2.up, Vector2.left, Vector2.down}[Random.Range(0, 4)]);
     }
 
-    public void UpdateDirection()
-    {
-        if (hut != null)
-        {
-            Vector2 direction = hut.GetDirection();
-           // print(direction);
-            SetDirection(direction);
-        } else if (sign != null)
-        {
-            Vector2 direction = sign.GetDirection();
-            SetDirection(direction);
-        } else
-        {
-            SetRandomDirection();
-        }
-    }
-
-    public void UpdateShape()
-    {       
-        if (hut != null)
-        {
-            if (bumpCoroutine != null)
-                StopCoroutine(bumpCoroutine);
-            bumpCoroutine = StartCoroutine(BumpAnimation(hut.currentShapeIndex));
-        }
-    }
 }
