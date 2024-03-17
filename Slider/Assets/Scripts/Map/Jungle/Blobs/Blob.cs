@@ -10,7 +10,6 @@ public class Blob : MonoBehaviour
     private float targetDistanceTraveled = 10;
     private float distanceTraveled = 0;
     private STile currentSTileUnder = null;
-    private float moveSpeed = 1f;
 
     private bool isJumping = false;
     private float timeSinceJump = 0;
@@ -62,13 +61,12 @@ public class Blob : MonoBehaviour
         this.Direction = direction;
         this.distanceTraveled = initDistanceTraveled;
         this.targetDistanceTraveled = targetDistanceTraveled;
-        moveSpeed = MARCH_SPEED;
         parentPath = owner;
 
         currentSTileUnder = SGrid.GetSTileUnderneath(gameObject);
         if (currentSTileUnder == null)
         {
-            Debug.LogError($"Blob was spawned and couldn't find current STile underneath -- {currentSTileUnder}");
+            Debug.LogError($"Blob was spawned at ${transform.position} and couldn't find current STile underneath -- {currentSTileUnder}");
         }
         
         ResetJump();

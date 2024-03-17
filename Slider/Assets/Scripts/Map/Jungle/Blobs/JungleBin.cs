@@ -82,13 +82,4 @@ public class JungleBin : JungleBox
     {
         base.UpdateSprites();
     }
-    
-    // void OnTriggerEnter2D(Collider2D collider)
-    // {
-    //     Blob blob = collider.gameObject.GetComponent<Blob>();
-    //     if (blob != null)
-    //     {
-    //         blob.JumpIntoBin();
-    //     }
-    // }
 }
