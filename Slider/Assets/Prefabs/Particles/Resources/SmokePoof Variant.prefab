@@ -105,6 +105,18 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5119737509937487023, guid: ccfd9ee3ac10db344b881d213eb331a7, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5119737509937487023, guid: ccfd9ee3ac10db344b881d213eb331a7, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5119737509937487023, guid: ccfd9ee3ac10db344b881d213eb331a7, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5119737509937487023, guid: ccfd9ee3ac10db344b881d213eb331a7, type: 3}
       propertyPath: ClampVelocityModule.multiplyDragByParticleSize
       value: 1
       objectReference: {fileID: 0}
