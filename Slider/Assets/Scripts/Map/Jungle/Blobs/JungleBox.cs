@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public abstract class JungleBox : MonoBehaviour
 {

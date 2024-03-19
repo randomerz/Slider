@@ -323,6 +323,16 @@ MonoBehaviour:
       Path: event:/SFX/SFXR/UI Click
     canPause: 0
     dopplerScale: 0
+  - name: UI Click World
+    fmodEvent:
+      Guid:
+        Data1: -1239381948
+        Data2: 1216917189
+        Data3: -98928983
+        Data4: -65885022
+      Path: event:/SFX/SFXR/UI Click World
+    canPause: 0
+    dopplerScale: 1
   - name: Hat Click
     fmodEvent:
       Guid:
