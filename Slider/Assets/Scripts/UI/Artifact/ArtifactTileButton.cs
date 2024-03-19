@@ -281,14 +281,9 @@ public class ArtifactTileButton : MonoBehaviour
         this.LinkButton.SetPushedDown(!this.LinkButton.buttonAnimator.IsPushedDown);
     }
 
-    public void SetLightning(bool v)
+    public void SetLightning(bool v, int styleIndex=1)
     {
-        buttonAnimator.SetLightning(v);
-    }
-
-    public void SetScrollHighlight(bool v)
-    {
-        buttonAnimator.SetScrollHighlight(v);
+        buttonAnimator.SetLightning(v, styleIndex);
     }
 
     public void SetSelected(bool v)

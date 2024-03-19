@@ -43,8 +43,9 @@ public class DesertTabManager : ArtifactTabManager
 
     public override void SetCurrentScreen(int screenIndex)
     {
-        if(realignTab == null)
+        if (realignTab == null)
             InitTabs();
+
         if (PlayerInventory.Contains("Scroll of Realigning", Area.Desert))
         {
             if (IsInRealignMode())
@@ -63,6 +64,12 @@ public class DesertTabManager : ArtifactTabManager
         else
         {
            DisableTabs();
+        }
+
+        // For debug so the hint isnt always there
+        if (PlayerInventory.Contains("Scroll Frag", Area.Desert) && PlayerInventory.Contains("Slider 8", Area.Desert))
+        {
+            playerActionHints.DisableHint("scrollscrap");
         }
     }
 
@@ -96,8 +103,8 @@ public class DesertTabManager : ArtifactTabManager
         loadTab.SetIsVisible(false);
         fragRealignTab.SetIsVisible(false);
         UIArtifact.DisableLightning(true);
-        middle?.SetLightning(false);
-        fragSwapTile?.SetLightning(false);
+        middle?.SetLightning(false, styleIndex: 2);
+        fragSwapTile?.SetLightning(false, styleIndex: 2);
     }
 
     private void Update()
@@ -108,7 +115,7 @@ public class DesertTabManager : ArtifactTabManager
     private void UpdateGrayTab()
     {
         middle = UIArtifact.GetButton(1, 1);
-        if(middle != null && middle.TileIsActive) 
+        if (middle != null && middle.TileIsActive) 
         {
             grayMiddleTab.SetActive(false);
         }
@@ -128,7 +135,7 @@ public class DesertTabManager : ArtifactTabManager
         }
         DesertArtifact artifact = (DesertArtifact)uiArtifactMenus.uiArtifact;
         artifact.TryFragQueueMoveFromButtonPair(middle, fragSwapTile);
-        artifact.UpdatePushedDowns(null, null);
+        // artifact.UpdatePushedDowns(null, null);
         artifact.DeselectSelectedButton();
 
         if (!successfullyUsedOnceBefore)
@@ -150,8 +157,8 @@ public class DesertTabManager : ArtifactTabManager
         if (middle.TileIsActive)
         {
             UpdateFragSwapTile();
-            UIArtifact.SetLightningPos(1, 1);
-            middle.SetScrollHighlight(true);
+            UIArtifact.SetLightningPos(1, 1, styleIndex: 2);
+            // middle.SetLightning(true, styleIndex: 2);
 
             SetFragIconToShowSwapTile(fragSwapTile);
         }
@@ -169,10 +176,10 @@ public class DesertTabManager : ArtifactTabManager
 
         //Reset preview
         UIArtifact.DisableLightning(true);
-        middle.SetScrollHighlight(false);
+        // middle.SetLightning(false, styleIndex: 2);
         if (fragSwapTile != null)
         {
-            fragSwapTile.SetScrollHighlight(false);
+            fragSwapTile.SetLightning(false, styleIndex: 2);
         }
     }
 
@@ -208,14 +215,14 @@ public class DesertTabManager : ArtifactTabManager
                 fragSwapTile = emptyTile;
                 SetFragIconToShowSwapTile(fragSwapTile);
                 yield return new WaitForSeconds(0.5f);
-                fragSwapTile.SetScrollHighlight(false);
+                fragSwapTile.SetLightning(false, styleIndex: 2);
             }
         }
     }
 
     private void SetFragIconToShowSwapTile(ArtifactTileButton tile)
     {
-        tile.SetScrollHighlight(true);
+        tile.SetLightning(true, styleIndex: 2);
         rearrangingFragTabImage.sprite = tabSpritesArray[tile.x, tile.y];
     }
 }

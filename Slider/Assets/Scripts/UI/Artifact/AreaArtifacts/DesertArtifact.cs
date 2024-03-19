@@ -36,6 +36,40 @@ public class DesertArtifact : UIArtifact
         OnButtonInteract -= UpdatePushedDowns;
     }
 
+    public override void ButtonDragged(BaseEventData eventData) 
+    { 
+        if (IsDesertComplete())
+        {
+            return;
+        }
+
+        base.ButtonDragged(eventData);
+    }
+
+    public override void ButtonDragEnd(BaseEventData eventData) 
+    {
+        if (IsDesertComplete())
+        {
+            return;
+        }
+        
+        base.ButtonDragEnd(eventData);
+    }
+    
+    public override void SelectButton(ArtifactTileButton button, bool isDragged = false) 
+    {
+        // Being able to interact with the grid while in the temple looks weird and 
+        // may lead to false assumptions when exploring it
+        if (IsDesertComplete())
+        {
+            return;
+        }
+        
+        base.SelectButton(button, isDragged);
+    }
+
+    private bool IsDesertComplete() => PlayerInventory.Contains("Slider 9", Area.Desert);
+
     //Chen: getMoveOptions will add buttons even if they're active for Desert sliding
     protected override List<ArtifactTileButton> GetMoveOptions(ArtifactTileButton button)
     {
