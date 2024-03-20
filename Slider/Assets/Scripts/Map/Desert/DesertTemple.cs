@@ -7,19 +7,25 @@ public class DesertTemple : MonoBehaviour, ISavable
     [SerializeField] private ArtifactHousingButtonsManager artifactHousingButtonsManager;
     [SerializeField] private GameObject templeTrapBlockingRoom;
     [SerializeField] private GameObject templeTrapBlockingRoomCollider;
+    [SerializeField] private DesertTempleMusic templeMusic;
     private Coroutine shuffleBuildUpCoroutine;
+
+    private bool isInTemple;
+    
 
     public void Save() {}
 
     public void Load(SaveProfile profile)
     {
-        if (profile.GetBool("desertIsInTemple"))
+        isInTemple = profile.GetBool("desertIsInTemple");
+        if (isInTemple)
         {
             SetIsInTemple(true);
         }
     }
 
-    private void OnEnable() {
+    private void OnEnable() 
+    {
         if (SaveSystem.Current.GetBool("desertTempleActivatedTrap") &&
             !SaveSystem.Current.GetBool("desertTempleTrapCleared"))
         {
@@ -27,7 +33,8 @@ public class DesertTemple : MonoBehaviour, ISavable
         }
     }
 
-    private void OnDisable() {
+    private void OnDisable() 
+    {
         if (SaveSystem.Current.GetBool("desertTempleActivatedTrap"))
         {
             ArtifactTabManager.AfterScrollRearrage -= OnScrollRearrage;
@@ -36,12 +43,14 @@ public class DesertTemple : MonoBehaviour, ISavable
     
     public void SetIsInTemple(bool isInTemple)
     {
+        this.isInTemple = isInTemple;
         SaveSystem.Current.SetBool("desertIsInTemple", isInTemple);
         if (isInTemple)
         {
             SaveSystem.Current.SetBool("desertEnteredTemple", true);
         }
         artifactHousingButtonsManager.SetSpritesToHousing(isInTemple);
+        templeMusic.SetIsInTemple(isInTemple);
         Player.GetInstance().SetTracker(!isInTemple);
         Player.GetInstance().SetDontUpdateSTileUnderneath(isInTemple);
     }

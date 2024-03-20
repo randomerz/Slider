@@ -781,7 +781,7 @@ public class UIArtifact : Singleton<UIArtifact>
     }
 
     #region Lightning Crap
-    public static void SetLightningPos(ArtifactTileButton b)
+    public static void SetLightningPos(ArtifactTileButton b, int styleIndex=1)
     {
         if (_instance.lightning == null || _instance.lightningImage == null) 
         {
@@ -791,19 +791,19 @@ public class UIArtifact : Singleton<UIArtifact>
         _instance.lightning.transform.SetParent(b.transform);
         _instance.lightning.transform.position = b.transform.position;
         _instance.lightningImage.gameObject.SetActive(true);
-        b.SetLightning(true);
+        b.SetLightning(true, styleIndex);
     }
 
-    public static void SetLightningPos(int x, int y)
+    public static void SetLightningPos(int x, int y, int styleIndex=1)
     {
         ArtifactTileButton b = GetButton(x, y);
-        SetLightningPos(b);
+        SetLightningPos(b, styleIndex);
     }
 
-    public static void SetLightningPos(int islandId)
+    public static void SetLightningPos(int islandId, int styleIndex=1)
     {
         ArtifactTileButton b = _instance.GetButton(islandId);
-        SetLightningPos(b);
+        SetLightningPos(b, styleIndex);
     }
 
     public static void DisableLightning(bool disableHighlight)

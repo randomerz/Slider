@@ -24,8 +24,7 @@ public class SGridAnimator : MonoBehaviour
 
     private const float MAX_POSSIBLE_MOVE_DURATION = 2.1f;
 
-    //private List<SoundWrapper> audioQueue = new List<SoundWrapper>();
-    private List<(string soundName, Transform soundTransform, float volume)> audioQueue = new List<(string soundName, Transform soundTransform, float volume)>();
+    private List<(string soundName, Transform soundTransform, float volume)> audioQueue = new();
     
     private void LateUpdate()
     {
@@ -144,7 +143,7 @@ public class SGridAnimator : MonoBehaviour
         {
             t += Time.deltaTime;
             
-            if(animate)
+            if (animate)
             {
                 float s = movementCurve.Evaluate(Mathf.Min(t / currMoveDuration, 1));
                 Vector2 pos = Vector2.Lerp(moveCoords.startLoc, moveCoords.endLoc, s);
