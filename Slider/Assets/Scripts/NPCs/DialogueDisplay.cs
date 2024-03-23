@@ -68,7 +68,10 @@ public class DialogueDisplay : MonoBehaviour
 
     public void FadeAwayDialogue()
     {
-        vocalizer.Stop();
+        if (AudioManager.useVocalizer && useVocalizer)
+        {
+            vocalizer.Stop();
+        }
         canvas.SetActive(false);
     }
 

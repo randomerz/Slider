@@ -11,10 +11,9 @@ public class CaveGrid : SGrid
     [SerializeField] private CaveDoor caveDoor;
     [SerializeField] private MountainCaveWall mountainCaveWall;
     [SerializeField] private CaveArtifactLightSim lightSim;
-    [SerializeField] private string cavesMagicParticleName;
 
     private Coroutine magicRocksIconFlashCoroutine;
-    private GameObject cavesMagicParticles;
+    [SerializeField] private GameObject cavesMagicParticles;
     private List<GameObject> particles = new List<GameObject>();
 
     static System.EventHandler<SGridAnimator.OnTileMoveArgs> checkCompletionsOnMoveFunc;
@@ -25,9 +24,6 @@ public class CaveGrid : SGrid
 
         checkCompletionsOnMoveFunc = (sender, e) => { CheckLightingCompletions(); };
         
-        cavesMagicParticles = Resources.Load<GameObject>(cavesMagicParticleName);
-        if (cavesMagicParticles == null)
-            Debug.LogError("Couldn't load particles!");
     }
 
 
