@@ -7,18 +7,9 @@ public class PastLargeCrystal : ElectricalNode
     [Header("Past Large Crystal")]
     [SerializeField] private PlayerPositionChanger ppChanger;
     [SerializeField] private PowerCrystal powerCrystal;
-    [SerializeField] private string crystalBTTFParticleName;
 
-    private GameObject crystalBTTFParticles;
+    [SerializeField] private GameObject crystalBTTFParticles;
     private List<GameObject> particles = new List<GameObject>();
-
-    protected override void Awake() {
-        base.Awake();
-
-        crystalBTTFParticles = Resources.Load<GameObject>(crystalBTTFParticleName);
-        if (crystalBTTFParticles == null)
-            Debug.LogError("Couldn't load particles!");
-    }
 
     public void CheckCrystalHasEnoughPower(Condition cond)
     {
