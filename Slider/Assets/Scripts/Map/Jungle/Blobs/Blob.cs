@@ -66,7 +66,11 @@ public class Blob : MonoBehaviour
         currentSTileUnder = SGrid.GetSTileUnderneath(gameObject);
         if (currentSTileUnder == null)
         {
-            Debug.LogError($"Blob was spawned at ${transform.position} and couldn't find current STile underneath -- {currentSTileUnder}");
+            Debug.LogError($"Blob was spawned at {transform.position} and couldn't find current STile underneath -- {currentSTileUnder}");
+        }
+        else
+        {
+            transform.SetParent(currentSTileUnder.transform);
         }
         
         ResetJump();
@@ -253,6 +257,9 @@ public class Blob : MonoBehaviour
         {
             parentPath.RemoveBlob(this);
         }
-        Destroy(this.gameObject);
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
 }

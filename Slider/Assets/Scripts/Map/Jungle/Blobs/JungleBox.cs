@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class JungleBox : MonoBehaviour
+public abstract class JungleBox : MonoBehaviour, ISavable
 {
     protected Dictionary<Direction, JungleBox> inputs = new();
     protected Direction direction;
@@ -14,9 +14,12 @@ public abstract class JungleBox : MonoBehaviour
     public STile ParentSTile { get; protected set; }
     public Direction CurrentDirection { get { return direction; } }
 
+
     protected static int numSourceIds; // Used to generate source ids
     protected const int DEPTH_LIMIT = 30;
     protected const string WORLD_COLLIDER_TAG = "WorldMapCollider"; // Does not include collider tilemap, etc
+
+    [SerializeField] protected string saveString = "";
 
     [Header("References")]
     [SerializeField] protected JungleBlobPathController pathController;
@@ -52,12 +55,6 @@ public abstract class JungleBox : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        SetDirection(direction);
-        // UpdateBox();
-    }
-
     private void OnEnable()
     {
         SGridAnimator.OnSTileMoveStart += CheckDirectionEndOfFrame;
@@ -77,6 +74,50 @@ public abstract class JungleBox : MonoBehaviour
     private void OnDestroy()
     {
         numSourceIds = 0;
+    }
+
+    private void Start()
+    {
+        // STile movement + colliders aren't refreshed fast enough on scene Load() if we do it in Start()
+        StartCoroutine(LateStart(() => SetDirection(direction)));
+    }
+
+    private IEnumerator LateStart(System.Action action)
+    {
+        yield return new WaitForEndOfFrame();
+
+        action.Invoke();
+    }
+
+    public virtual void Save()
+    {
+        if (!IsSaveStringOkay())
+        {
+            Debug.LogWarning($"Save string was not set for jungle box: {name}. Skipping saving.");
+            return;
+        }
+
+        SaveSystem.Current.SetInt(saveString, (int)direction);
+    }
+
+    protected bool IsSaveStringOkay()
+    {
+        if (saveString == null || saveString == "")
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public virtual void Load(SaveProfile profile)
+    {
+        if (!IsSaveStringOkay())
+        {
+            Debug.LogWarning($"Save string was not set for jungle box: {name}. Skipping loading.");
+            return;
+        }
+
+        direction = (Direction)profile.GetInt(saveString);
     }
 
     /// <summary>

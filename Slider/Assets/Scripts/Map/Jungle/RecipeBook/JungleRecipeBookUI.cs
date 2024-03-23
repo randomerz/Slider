@@ -34,7 +34,7 @@ public class JungleRecipeBookUI : MonoBehaviour
 
     private void OnDisable() 
     {
-        JungleBin.OnBinRecieveShape += CheckOnBinRecieveShape;
+        JungleBin.OnBinRecieveShape -= CheckOnBinRecieveShape;
     }
 
     public void SetCurrentShape(int index, bool withSound = true)
