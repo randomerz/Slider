@@ -24,12 +24,13 @@ public class JungleSignAnimator : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(LateStart());
+        StartCoroutine(LaterStart());
     }
 
-    private IEnumerator LateStart()
+    // Skip audio if sign was set in LateStart() by JungleBox
+    private IEnumerator LaterStart()
     {
-        yield return new WaitForEndOfFrame();
+        yield return null;
 
         finishedLateStart = true;
     }
@@ -111,14 +112,14 @@ public class JungleSignAnimator : MonoBehaviour
         if (finishedLateStart)
         {
             AudioManager.Play("UI Click");
+
+            yield return new WaitForSeconds(ANIMATION_DELAY);
+
+            spriteRenderer.sprite = isGray ? bumpAnimationSpritesGray[1] :
+                                            bumpAnimationSprites[1];
+
+            yield return new WaitForSeconds(ANIMATION_DELAY);
         }
-
-        yield return new WaitForSeconds(ANIMATION_DELAY);
-
-        spriteRenderer.sprite = isGray ? bumpAnimationSpritesGray[1] :
-                                         bumpAnimationSprites[1];
-
-        yield return new WaitForSeconds(ANIMATION_DELAY);
 
         FinishBumpAnimation();
     }

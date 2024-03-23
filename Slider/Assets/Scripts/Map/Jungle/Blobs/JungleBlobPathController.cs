@@ -14,6 +14,7 @@ public class JungleBlobPathController : MonoBehaviour
     }
 
     private Dictionary<Direction, MarchData> marchData = new();
+    private bool didInit;
 
     public GameObject blobPrefab;
 
@@ -21,6 +22,15 @@ public class JungleBlobPathController : MonoBehaviour
 
     private void Awake()
     {
+        InitMarchData();
+    }
+
+    private void InitMarchData()
+    {
+        if (didInit)
+            return;
+        didInit = true;
+
         foreach (Direction d in DirectionUtil.Directions)
         {
             marchData[d] = new MarchData();
@@ -43,9 +53,17 @@ public class JungleBlobPathController : MonoBehaviour
         }
     }
 
+    private MarchData GetMarchData(Direction direction)
+    {
+        if (!marchData.ContainsKey(direction))
+            InitMarchData();
+
+        return marchData[direction];
+    }
+
     public void EnableMarching(Direction direction, Shape shape, JungleBox target)
     {
-        MarchData md = marchData[direction];
+        MarchData md = GetMarchData(direction);
         if (md.isOn)
             return;
         md.isOn = true;
@@ -65,7 +83,7 @@ public class JungleBlobPathController : MonoBehaviour
 
     private void PrewarmMarching(Direction direction)
     {
-        MarchData md = marchData[direction];
+        MarchData md = GetMarchData(direction);
 
         float distanceBetweenSpawns = Blob.MARCH_SPEED * TIME_BETWEEN_SPAWNS;
         float currentDistance = distanceBetweenSpawns;
@@ -82,7 +100,7 @@ public class JungleBlobPathController : MonoBehaviour
 
     public void UpdateMarchingShape(Direction direction, Shape shape)
     {
-        MarchData md = marchData[direction];
+        MarchData md = GetMarchData(direction);
         if (!md.isOn)
             return;
             
@@ -110,7 +128,7 @@ public class JungleBlobPathController : MonoBehaviour
 
     public void DisableMarching(Direction direction)
     {
-        MarchData md = marchData[direction];
+        MarchData md = GetMarchData(direction);
         if (!md.isOn)
             return;
         md.isOn = false;
@@ -133,7 +151,7 @@ public class JungleBlobPathController : MonoBehaviour
 
     private Blob SpawnBlob(Direction direction, float currentDistanceTraveled)
     {
-        MarchData md = marchData[direction];
+        MarchData md = GetMarchData(direction);
 
         md.timeUntilNextSpawn = TIME_BETWEEN_SPAWNS;
 
@@ -166,6 +184,6 @@ public class JungleBlobPathController : MonoBehaviour
     {
         marchData[blob.Direction].blobs.Remove(blob);
 
-        Destroy(blob);
+        Destroy(blob.gameObject);
     }
 }

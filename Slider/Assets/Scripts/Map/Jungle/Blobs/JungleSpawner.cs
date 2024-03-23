@@ -7,6 +7,8 @@ public class JungleSpawner : JungleBox
     [SerializeField] private SpriteRenderer INSIGNIA_SPRITE_RENDERER;
     [SerializeField] private Sprite[] INSIGNIA_SPRITES;
 
+    private const string SHAPE_SAVE_SUFFIX = "_CurrShape";
+
     public int CurrentShapeIndex { get; protected set; }
     private int mySourceId = 0;
 
@@ -17,6 +19,30 @@ public class JungleSpawner : JungleBox
         SetInsignia(CurrentShapeIndex);
 
         AssignSourceId();
+    }
+
+    public override void Save()
+    {
+        base.Save();
+
+        if (!IsSaveStringOkay())
+        {
+            return;
+        }
+
+        SaveSystem.Current.SetInt(saveString + SHAPE_SAVE_SUFFIX, CurrentShapeIndex);
+    }
+
+    public override void Load(SaveProfile profile)
+    {
+        base.Load(profile);
+
+        if (!IsSaveStringOkay())
+        {
+            return;
+        }
+
+        CurrentShapeIndex = profile.GetInt(saveString + SHAPE_SAVE_SUFFIX);
     }
 
     private void AssignSourceId()
