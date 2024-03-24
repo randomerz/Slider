@@ -26,7 +26,7 @@ public class ArtifactTabManager : MonoBehaviour
 
     private int[,] originalGrid;
 
-    private bool inPreview;
+    public bool InPreview { get; private set; }
 
     protected virtual void Awake()
     {
@@ -190,7 +190,7 @@ public class ArtifactTabManager : MonoBehaviour
     private IEnumerator ILoadOnHoverEnter()
     {
         yield return new WaitUntil(() => UIArtifact.GetInstance().MoveQueueEmpty());
-        inPreview = true;
+        InPreview = true;
         uiArtifactMenus.uiArtifact.DeselectSelectedButton();
         originalGrid = new int[SGrid.Current.Width, SGrid.Current.Height];
         for (int x = 0; x < SGrid.Current.Width; x++)
@@ -207,7 +207,7 @@ public class ArtifactTabManager : MonoBehaviour
 
     public void LoadOnHoverExit()
     {
-        if (SGrid.Current.realigningGrid != null && inPreview)
+        if (SGrid.Current.realigningGrid != null && InPreview)
         {
             for (int x = 0; x < SGrid.Current.Width; x++)
             {

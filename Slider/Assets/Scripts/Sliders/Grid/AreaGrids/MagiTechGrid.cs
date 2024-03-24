@@ -301,6 +301,13 @@ public class MagiTechGrid : SGrid
         return transform.position.x > 67;
     }
 
+    public override void LoadRealigningGrid()
+    {
+        base.LoadRealigningGrid();
+
+        EndDesync();
+    }
+
     public void TryEnableHint()
     {
         if (GetNumTilesCollected() >= 1)
