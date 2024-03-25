@@ -83,7 +83,7 @@ public class Item : MonoBehaviour, ISavable
     {
         if (saveString != null && saveString != "")
         {
-            STile stile = SGrid.GetSTileUnderneath(gameObject);
+            STile stile = SGrid.GetSTileUnderneath(gameObject, includeInactive: true);
             if (stile == null)
                 SaveSystem.Current.SetInt($"{saveString}_STile", -1);
             else

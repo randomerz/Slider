@@ -93,7 +93,10 @@ public class MagiTechArtifact : UIArtifact
                 if (!isDesyncSoundPlaying)
                 {
                     isDesyncSoundPlaying = true;
-                    desyncTearLoopSound = AudioManager.Play("Desync Tear Open");
+                    if (isPreview)
+                    {
+                        desyncTearLoopSound = AudioManager.Play("Desync Tear Open");
+                    }
                 }
                 ArtifactTileButton pastButton = desyncIslandId <= 9 ? GetButton(FindAltId(desyncIslandId)) : desyncedButton;
                 if (isInPast != isPreview) SetLightningPos(pastButton);
@@ -106,7 +109,10 @@ public class MagiTechArtifact : UIArtifact
                     // Likely not needed but its good to be safe?
                     isDesyncSoundPlaying = false;
                     desyncTearLoopSound.HardStop();
-                    AudioManager.Play("Desync Tear Close");
+                    if (isPreview)
+                    {
+                        AudioManager.Play("Desync Tear Close");
+                    }
                     StartCoroutine(DelayedDesyncEndTileCrash());
                 }
                 DisableLightning(false);

@@ -53,7 +53,6 @@ public class Anchor : Item
     public override void PickUpItem(Transform pickLocation, System.Action callback = null) // pickLocation may be moving
     {
         base.PickUpItem(pickLocation, callback);
-        OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=false });
 
         RemoveFromTile();
         Player.SetMoveSpeedMultiplier(0.75f);
@@ -62,6 +61,8 @@ public class Anchor : Item
 
     public void RemoveFromTile()
     {
+        OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=false });
+        
         UnanchorTile();
         UITrackerManager.RemoveTracker(gameObject);
     }
