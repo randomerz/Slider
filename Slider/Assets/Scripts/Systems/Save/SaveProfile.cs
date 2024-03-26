@@ -29,6 +29,7 @@ public class SaveProfile
     {
         this.profileName = profileName;
         strings["Cat"] = profileName;
+        strings["CatUpper"] = profileName.ToUpper();
         this.gameVersion = Application.version;
         lastArea = Area.Village;
 

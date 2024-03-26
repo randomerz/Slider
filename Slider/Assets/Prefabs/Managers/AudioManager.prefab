@@ -413,6 +413,16 @@ MonoBehaviour:
       Path: event:/SFX/Magic/TFT Bell
     canPause: 1
     dopplerScale: 0
+  - name: Meow
+    fmodEvent:
+      Guid:
+        Data1: 1835705653
+        Data2: 1279022984
+        Data3: 1694768301
+        Data4: 198535897
+      Path: event:/SFX/Village/Meow
+    canPause: 1
+    dopplerScale: 1
   - name: Cow Moo
     fmodEvent:
       Guid:
