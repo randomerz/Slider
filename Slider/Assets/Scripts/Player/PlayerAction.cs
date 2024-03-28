@@ -260,7 +260,10 @@ public class PlayerAction : Singleton<PlayerAction>
         lastDroppedItem.ResetSortingOrder();
         lastDroppedItem.dropCallback();
         isDropping = false;
-        itemDropIndicator.SetActive(false);
+        if (itemDropIndicator != null) // gets destroyed during scene transitions lol
+        {
+            itemDropIndicator.SetActive(false);
+        }
         pickedItem = null;
     }
 
