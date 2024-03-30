@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditorInternal;
@@ -80,12 +81,15 @@ public class Minecart : Item, ISavable
     {
         SGridAnimator.OnSTileMoveStart += OnSTileMoveStart;
         SGridAnimator.OnSTileMoveEnd += OnSTileMoveEnd;
+        ArtifactTabManager.AfterScrollRearrage += OnScrollRearrange;
     }
+
 
     private void OnDisable()
     {
         SGridAnimator.OnSTileMoveStart -= OnSTileMoveStart;
         SGridAnimator.OnSTileMoveEnd -= OnSTileMoveEnd;
+        ArtifactTabManager.AfterScrollRearrage -= OnScrollRearrange;
     }
 
     private void OnSTileMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
@@ -98,6 +102,13 @@ public class Minecart : Item, ISavable
     {
         if(mcState == MinecartState.Crystal) UpdateState("Empty");
     }
+
+    private void OnScrollRearrange(object sender, EventArgs e)
+    {
+        if(isMoving) Derail();
+        if(mcState == MinecartState.Crystal) UpdateState("Empty");
+    }
+
 
     private void OnDrawGizmos()
     {
