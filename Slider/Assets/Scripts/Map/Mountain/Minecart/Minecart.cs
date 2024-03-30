@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -459,6 +460,7 @@ public class Minecart : Item, ISavable
 
     private void Drop(STile tile)
     {
+        AudioManager.Play("Fall");
         Vector3 checkLoc = transform.position + (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0));
         transform.position = checkLoc;
 
@@ -541,25 +543,21 @@ public class Minecart : Item, ISavable
     #region State
 
     public void UpdateState(string stateName){
-        if(stateName.Equals("Player"))
-            mcState = MinecartState.Player;
-        else if(stateName.Equals("Lava"))
+        if(stateName.Equals("Lava"))
             mcState = MinecartState.Lava;
         else if(stateName.Equals("Crystal"))
             mcState = MinecartState.Crystal;
         else if (stateName.Equals("Empty"))
             mcState = MinecartState.Empty;
-        else if (stateName.Equals("RepairParts"))
-            mcState = MinecartState.RepairParts;
         else
-            Debug.LogWarning("Invalid Minecart State. Should be Player, Lava, Empty, RepairParts, or Crystal");
+            Debug.LogWarning("Invalid Minecart State. Should be Lava, Empty, or Crystal");
         UpdateIcon();
         UpdateContentsSprite();
     }
 
     public bool TryAddCrystals()
     {
-        if(mcState == MinecartState.Empty)
+        if(mcState != MinecartState.Crystal)
         {
             UpdateState("Crystal");
             return true;
@@ -574,20 +572,18 @@ public class Minecart : Item, ISavable
 
     private void UpdateIcon()
     {
-        UITrackerManager.RemoveTracker(this.gameObject);
+        UITrackerManager.RemoveTracker(gameObject);
         AddTracker();
     }
 
     private void AddTracker()
     {
         if(mcState == MinecartState.Lava)
-            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteLava);
+            UITrackerManager.AddNewTracker(gameObject, trackerSpriteLava);
         else if(mcState == MinecartState.Crystal)
-            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteCrystal);
+            UITrackerManager.AddNewTracker(gameObject, trackerSpriteCrystal);
         else if(mcState == MinecartState.Empty)
-            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteEmpty);
-        else if(mcState == MinecartState.RepairParts)
-            UITrackerManager.AddNewTracker(this.gameObject, trackerSpriteRepair);
+            UITrackerManager.AddNewTracker(gameObject, trackerSpriteEmpty);
     }
 
     #endregion

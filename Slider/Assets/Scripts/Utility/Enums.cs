@@ -64,6 +64,4 @@ public enum MinecartState {
     Empty,
     Crystal,
     Lava,
-    RepairParts,
-    Player
 }
