@@ -96,19 +96,18 @@ public class GemMachine : MonoBehaviour, ISavable
             return;
         }
 
-        animator.Play("AbsorbGem");
-        minecart.UpdateState("empty");
-
         switch(gemMachineState)
         {
             case GemMachineState.INITIAL:
-                numGems = 1;
+                IntialGemAbsorb();
                 break;
             case GemMachineState.FIXED:
                 print("add gem");
+                animator.Play("AbsorbGem");
                 break;
             case GemMachineState.FULLY_GOOED:
                 print("idk yet lol");
+                animator.Play("AbsorbGem");
                 break;
         }
         
@@ -120,15 +119,15 @@ public class GemMachine : MonoBehaviour, ISavable
         // }
     }
 
-    // private void IntialGemAbsorb()
-    // {
+    private void IntialGemAbsorb()
+    {
+        if(numGems == 1) return;
+        numGems = 1;
+        minecart.UpdateState("Empty");
+        animator.Play("part1");
+        //TODO: Play absorb crystal sound
+    }
 
-    // }
-
-    // private void AddGemToContainer()
-    // {
-
-    // }
 
     public void RemoveGem(){
         numGems--;
@@ -137,7 +136,7 @@ public class GemMachine : MonoBehaviour, ISavable
     public void ResetGems(){
         if(gemMachineState != GemMachineState.FIXED) return;
 
-        numGems = 0;
+        numGems = 1;
     }
 
     public void OnEndAbsorb(){
@@ -147,22 +146,6 @@ public class GemMachine : MonoBehaviour, ISavable
     public void SetIsPowered(bool value){
         isPowered = value;
     }
-
-    // public void Fix()
-    // {
-    //     isBroken = false;
-    //     if (brokenObj != null)
-    //     {
-    //         brokenObj.SetActive(false);
-    //     }
-    //     if (fixedObj != null)
-    //     {
-    //         fixedObj.SetActive(true);
-    //     }
-    // }
-
-
-
     
     public void EnableGoo(bool fillImmediate = false)
     {
