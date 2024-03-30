@@ -190,11 +190,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4607457495645169288, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.23
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4607457495645169288, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.59
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4607457495645169288, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
       propertyPath: m_LocalPosition.z
@@ -206,15 +206,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4607457495645169288, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4607457495645169288, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4607457495645169288, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4607457495645169288, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -283,8 +283,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Magic Burger
   spriteRenderer: {fileID: 5465351016639169204}
-  reflectedspriteRenderer: {fileID: 4648158249517568408}
-  reflectionParent: {fileID: 8212317576582511280}
   myCollider: {fileID: 1148001556422117512}
   canKeep: 0
   shouldDisableAtStart: 0
@@ -369,14 +367,13 @@ MonoBehaviour:
   saveString: 
   itemPair: {fileID: 0}
   lightning: {fileID: 2009846698}
+  trackerSprite: {fileID: 0}
+  noDropItemsMask:
+    serializedVersion: 2
+    m_Bits: 33554432
 --- !u!4 &2141029324334959499 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3289890148026213770, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
-  m_PrefabInstance: {fileID: 3467348929874947585}
-  m_PrefabAsset: {fileID: 0}
---- !u!212 &4648158249517568408 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 8115464770616639385, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
   m_PrefabInstance: {fileID: 3467348929874947585}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5303304525029731762 stripped
@@ -387,11 +384,6 @@ Transform:
 --- !u!212 &5465351016639169204 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 8919005992056777909, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
-  m_PrefabInstance: {fileID: 3467348929874947585}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8212317576582511280 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4748619368943015089, guid: 4c892c859c62a454b95c66ae6dfd3f53, type: 3}
   m_PrefabInstance: {fileID: 3467348929874947585}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3644487501678521790

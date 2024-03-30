@@ -58,7 +58,7 @@ public class ConductiveElectricalNode : ElectricalNode
 
         if (otherNode != null)
         {
-            if (BothNodesNotMoving(otherNode) && ConductiveItemCheck(otherNode))
+            if (BothNodesMovingOkay(otherNode) && ConductiveItemCheck(otherNode))
             {
                 if (AddConnection(otherNode))
                 {
@@ -92,7 +92,7 @@ public class ConductiveElectricalNode : ElectricalNode
         base.OnPoweredHandler(e);
     }
 
-    protected bool BothNodesNotMoving(ConductiveElectricalNode other)
+    protected bool BothNodesMovingOkay(ConductiveElectricalNode other)
     {
         if (ignoreNotMovingCheck)
         {
@@ -102,6 +102,12 @@ public class ConductiveElectricalNode : ElectricalNode
         STile thisStile = GetComponentInParent<STile>();
         STile otherStile = other.GetComponentInParent<STile>();
 
+        if (thisStile == otherStile)
+        {
+            return true;
+        }
+
+        // For cross stile checks
         bool thisStay = true;
         bool otherStay = true;
         if (thisStile != null)

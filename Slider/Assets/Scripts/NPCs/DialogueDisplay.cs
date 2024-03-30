@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using SliderVocalization;
 using UnityEngine;
 using Paragraph = SliderVocalization.VocalizableParagraph;
@@ -70,7 +68,10 @@ public class DialogueDisplay : MonoBehaviour
 
     public void FadeAwayDialogue()
     {
-        vocalizer.Stop();
+        if (AudioManager.useVocalizer && useVocalizer)
+        {
+            vocalizer.Stop();
+        }
         canvas.SetActive(false);
     }
 

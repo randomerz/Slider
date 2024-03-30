@@ -56,6 +56,11 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
 
         (SGrid.Current as FactoryGrid).factoryMusicController.SetIsInPast(false);
     }
+
+    public static bool ShouldServerScriptBeAvailable()
+    {
+        return !SaveSystem.Current.GetBool("factoryDidBTTF");
+    }
     
     public void SetBobTrackers(bool inPast)
     {
@@ -75,6 +80,14 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
     public void StartSendToPastEvent()
     {
         if (sendingToPast) return;
+
+        if (!ShouldServerScriptBeAvailable())
+        {
+            // Already came back from past
+            SaveSystem.Current.SetBool("factoryGeneTurnedOffScript", true);
+            return;
+        }
+
         StartCoroutine(_instance.SendToPastEvent());
     }
 
@@ -127,5 +140,8 @@ public class FactoryTimeManager : Singleton<FactoryTimeManager>
 
         SaveSystem.Current.SetBool("FactorySentToPast", true);
     }
+    
+    public void ShouldServerScriptBeAvailable(Condition c) => c.SetSpec(ShouldServerScriptBeAvailable());
+    public void IsSendingToPast(Condition c) => c.SetSpec(_instance.sendingToPast);
 }
 

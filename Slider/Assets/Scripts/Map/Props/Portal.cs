@@ -85,13 +85,14 @@ public class Portal : MonoBehaviour
 
     public void OnPlayerNear(bool enter)
     {
-        if(playerInPortal) return;
-        Player.GetInstance().ToggleLightning(enter);
+        if (playerInPortal) return;
+        // Player.GetInstance().ToggleLightning(enter);
     }
 
     public void EnableDesertUIPortal()
     {
         desertPortalUI.UIPortalIcon.SetActive(true);
+        desertPortalUI.laserPlugin.InitAndFindButton();
         uILaserManager.AddSource(desertPortalUI.laserPlugin.laserUIData);
         uILaserManager.UpdateSpritesFromSource();
     }

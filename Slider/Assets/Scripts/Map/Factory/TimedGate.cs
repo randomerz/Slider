@@ -40,6 +40,7 @@ public class TimedGate : ElectricalNode, ISavable
     public bool GateActive => _gateActive;
 
     private const string PROGRESS_SOUND_PREFIX = "FactoryTimedGateProgress";
+    private const float ZERO_GATE_STARTUP_BUFFER = 1.5f;
 
     private new void Awake()
     {
@@ -216,8 +217,25 @@ public class TimedGate : ElectricalNode, ISavable
                 }
             }
 
-            StartCoroutine(BlinkThenShowNext());
+
             OnGateActivated?.Invoke();
+            
+            if (numTurns != 0)
+            {
+                StartCoroutine(BlinkThenShowNext());
+            }
+            else
+            {
+                // '0 Gate' is for the factory while loop
+                // It should blink for ~1 second and then deactivate, or persist if tiles are moving.
+                if (_waitToEndGateCoroutine != null)
+                {
+                    StopCoroutine(_waitToEndGateCoroutine);
+                }
+
+                StartCoroutine(BlinkUntilNextSpriteChange());
+                _waitToEndGateCoroutine = StartCoroutine(WaitAfterMoveOrDelay(CheckFailedToPower));
+            }
         }
     }
 
@@ -311,13 +329,46 @@ public class TimedGate : ElectricalNode, ISavable
                 yield return new WaitForSeconds(0.4f);
 
                 tilesAreMoving = SGrid.Current.TilesMoving();
-            } else
+            } 
+            else
             {
                 yield return null;
             }
         }
 
         callback();
+    }
+
+    /// <summary>
+    /// After ZERO_GATE_STARTUP_BUFFER seconds of inaction, do callback. If at any point a tile is moved,
+    /// wait until all moves resolved instead and then do the callback
+    /// </summary>
+    private IEnumerator WaitAfterMoveOrDelay(System.Action callback)
+    {
+        float timeElapsed = 0;
+
+        while (timeElapsed <= ZERO_GATE_STARTUP_BUFFER)
+        {
+            if (SGrid.Current.TilesMoving())
+            {
+                break;
+            } 
+            else
+            {
+                yield return null;
+                timeElapsed += Time.deltaTime;
+            }
+        }
+
+        // End early if the timer runs out and no moves are ever made
+        if (timeElapsed > ZERO_GATE_STARTUP_BUFFER)
+        {
+            callback();
+            yield break;
+        }
+
+        // Otherwise if a move is made resolve it
+        StartCoroutine(WaitAfterMove(callback));
     }
 
     private IEnumerator BlinkThenShowNext(int numBlinks = 1)
@@ -358,9 +409,12 @@ public class TimedGate : ElectricalNode, ISavable
                 {
                     yield return new WaitForSeconds(0.25f);
                 }
+                AudioManager.PickSound("UI Click World").WithVolume(1f).WithPitch(0.8f).WithAttachmentToTransform(transform).AndPlay();
             }
             sr.sprite = _queuedNextSprite;
             _blinking = false;
         }
     }
+
+    public void IsGateActiveSpec(Condition c) => c.SetSpec(_gateActive);
 }

@@ -22,22 +22,27 @@ public class ArtifactTBPluginLaser : ArtifactTBPlugin
     public LaserUIOffMap laserUIOffMap;
 
     public UILaserManager uILaserManager;
+
     public LaserUIData laserUIData;
  
     private bool init;
 
-    private void Awake()
+    public override void Init(ArtifactTileButton button)
     {
-        Init();
+        if (init) 
+            return;
+        init = true;
+
+        laserUIData = uILaserManager.AddData(this, button);
     }
 
-    public void Init()
+    public void InitAndFindButton()
     {
-        if(init) return;
-        init = true;
+        if (init) 
+            return;
+
         button = GetComponentInParent<ArtifactTileButton>(includeInactive:true);
-        button.plugins.Add(this);
-        laserUIData = uILaserManager.AddData(this, button);
+        Init(button);
     }
 
     public override void OnPosChanged()

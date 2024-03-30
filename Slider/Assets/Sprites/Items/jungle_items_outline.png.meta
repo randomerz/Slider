@@ -656,7 +656,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -664,6 +664,48 @@ TextureImporter:
       bones: []
       spriteID: db3cd4027c9251843a9897a58d4d925e
       internalID: 543197177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_items_outline_question_mark
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69e0e081b0f331a49beedd4ce2036a2a
+      internalID: 1948780198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_items_outline_26
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8024f1c34d0e11b4bac5772b4be56c30
+      internalID: 1139399631
       vertices: []
       indices: 
       edges: []
@@ -698,6 +740,7 @@ TextureImporter:
       jungle_items_outline_23: -1007183762
       jungle_items_outline_24: 1284176938
       jungle_items_outline_25: 543197177
+      jungle_items_outline_26: 1139399631
       jungle_items_outline_3: 861074992
       jungle_items_outline_4: 1231390793
       jungle_items_outline_5: -1417048283
@@ -705,6 +748,7 @@ TextureImporter:
       jungle_items_outline_7: 1536983424
       jungle_items_outline_8: -582113330
       jungle_items_outline_9: -1322296750
+      jungle_items_outline_question_mark: 1948780198
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

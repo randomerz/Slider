@@ -50,7 +50,7 @@ public class Collectible : MonoBehaviour
 
     public void SetArea(Area a) 
     {
-        a = cData.area;
+        cData.area = a;
     }
 
     public Area GetArea() 

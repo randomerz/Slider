@@ -7,14 +7,18 @@ public class JungleRecipeWidget : MonoBehaviour
 {
     public List<Image> recipeImages; // len 3
     public List<Image> plusSignImages; // len 2
+    public Shape questionMarkShape; // constant
 
-    public void SetIngredientsOrNull(Recipe.Shapes shapes, Shape result)
+    public void SetIngredientsOrNull(Recipe.Shapes shapes, Recipe recipe)
     {
         if (shapes == null)
         {
             HideWidget();
             return;
         }
+
+        Shape result = recipe.result;
+        Recipe.Difficulty difficulty = recipe.difficulty;
 
         List<Shape> ingredients = shapes.ingredients;
         
@@ -39,7 +43,7 @@ public class JungleRecipeWidget : MonoBehaviour
             recipeImages[i].enabled = i < ingredients.Count;
             if (i < ingredients.Count)
             {
-                recipeImages[i].sprite = ingredients[i].GetDisplaySprite(displayStatus);
+                recipeImages[i].sprite = GetDisplaySprite(displayStatus, ingredients[i], difficulty, i == 0);
             }
         }
     }
@@ -55,6 +59,27 @@ public class JungleRecipeWidget : MonoBehaviour
             return JungleRecipeBookSave.ShapeStatus.Outline;
         }
         return JungleRecipeBookSave.ShapeStatus.None;
+    }
+
+    private Sprite GetDisplaySprite(JungleRecipeBookSave.ShapeStatus displayStatus, Shape shape, Recipe.Difficulty difficulty, bool notQuestionMark)
+    {
+        if (displayStatus == JungleRecipeBookSave.ShapeStatus.None)
+        {
+            return questionMarkShape.GetDisplaySprite(displayStatus);
+        }
+        if (displayStatus == JungleRecipeBookSave.ShapeStatus.Full)
+        {
+            return shape.GetDisplaySprite(displayStatus);
+        }
+        if (notQuestionMark)
+        {
+            return shape.GetDisplaySprite(displayStatus);
+        }
+        if (difficulty == Recipe.Difficulty.hard)
+        {
+            return questionMarkShape.GetDisplaySprite(displayStatus);
+        }
+        return shape.GetDisplaySprite(displayStatus);
     }
 
     private void HideWidget()

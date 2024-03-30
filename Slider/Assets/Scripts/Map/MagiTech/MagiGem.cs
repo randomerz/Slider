@@ -7,32 +7,32 @@ public class MagiGem : MonoBehaviour, ISavable
 {
     public GemManager gemMachine;
     public Item gemItem;
-    private bool isTransporting;
+    protected bool isTransporting;
     public GameObject particles;
 
     public void Load(SaveProfile profile) {
-        if(gemItem == null)
+        if (gemItem == null)
         {
             Debug.LogError("gem null on " + gameObject.name);
             return;
         }
-        if(!gemItem.shouldDisableAtStart)
+        if (!gemItem.shouldDisableAtStart)
         {
             EnableGem(); //if gem active by default, disable if already collected
         }
     }
 
     //fix edge cases for leaving scene
-    public void Save()
+    public virtual void Save()
     {
-        if(isTransporting)
+        if (isTransporting)
         {
             gemMachine.TransportGem(gemItem);
             gemMachine.Save();
         }
     }
 
-    public void EnableGem()
+    public virtual void EnableGem()
     {
         if (Enum.TryParse(gemItem.itemName, out Area itemNameAsEnum))
         {
@@ -44,14 +44,14 @@ public class MagiGem : MonoBehaviour, ISavable
         }   
     }
 
-    public void TransportGem()
+    public virtual void TransportGem()
     {
-        if(!gemMachine.HasGemTransporter) return;
+        if (!gemMachine.HasGemTransporter) return;
         isTransporting = true;
         StartCoroutine(TransportGemVFXCoroutine());
     }
 
-    private IEnumerator TransportGemVFXCoroutine()
+    protected virtual IEnumerator TransportGemVFXCoroutine()
     {
         CameraShake.ShakeConstant(1f, 0.2f);
         ParticleManager.SpawnParticle(ParticleType.MiniSparkle, transform.position, transform);
@@ -68,17 +68,21 @@ public class MagiGem : MonoBehaviour, ISavable
 
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position);
         Item item = PlayerInventory.GetCurrentItem();
-        if(item == gemItem)
+        if (item == gemItem)
             PlayerInventory.RemoveAndDestroyItem();
         else
             Destroy(gameObject);
 
         //update alchemy machine sprites and poof
-        gemMachine.TransportGem(gemItem);
         AudioManager.Play("Puzzle Complete");
-
         CameraShake.Shake(1f, 0.5f);
-        isTransporting = false;
         
+        FinishTransportGem();
+    }
+
+    protected virtual void FinishTransportGem()
+    {
+        gemMachine.TransportGem(gemItem);
+        isTransporting = false;
     }
 }

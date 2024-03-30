@@ -11,9 +11,9 @@ public class UILaserManager : MonoBehaviour
 
     private void Update()
     {
-        foreach(LaserableRockUIData d in rockData)
+        foreach (LaserableRockUIData d in rockData)
         {
-            if(d.CheckForUpdate())
+            if (d.CheckForUpdate())
             {
                 UpdateSpritesFromSource();
             }
@@ -23,19 +23,19 @@ public class UILaserManager : MonoBehaviour
 
     public LaserUIData AddData(ArtifactTBPluginLaser pluginLaser, ArtifactTileButton button)
     {
-        if(buttonToLaserUI == null)
+        if (buttonToLaserUI == null)
             buttonToLaserUI = new();
         LaserUIData data = new(pluginLaser, this, button);
         data.Init();
         buttonToLaserUI.Add(button, data);
-        if(data.rockdata != null)
+        if (data.rockdata != null)
             rockData.AddRange(data.rockdata);
         return data;
     }
 
     public void AddSource(LaserUIData data)
     {
-        if(sources == null)
+        if (sources == null)
             sources = new();
         sources.Add(data);
         data.UpdateSprites();
@@ -43,15 +43,15 @@ public class UILaserManager : MonoBehaviour
 
     public void RemoveSource(LaserUIData data)
     {
-        if(sources == null) return;
+        if (sources == null) return;
         sources.Remove(data);
     }
 
     public void UpdateSpritesFromSource()
     {
-        if(sources == null) return;
+        if (sources == null) return;
         ResetAllSprites();
-        foreach(LaserUIData source in sources)
+        foreach (LaserUIData source in sources)
         {
             source.UpdateSprites();
         }
@@ -59,8 +59,8 @@ public class UILaserManager : MonoBehaviour
 
     private void ResetAllSprites()
     {
-        if(buttonToLaserUI == null) return;
-        foreach(LaserUIData l in buttonToLaserUI.Values)
+        if (buttonToLaserUI == null) return;
+        foreach (LaserUIData l in buttonToLaserUI.Values)
         {
             l.ResetSprites();
         }
@@ -135,40 +135,40 @@ public class LaserUIData
 
     public void ResetSprites()
     {
-        foreach(GameObject s in sprites)
+        foreach (GameObject s in sprites)
         {
-            if(s!= null)
+            if (s!= null)
                 s.SetActive(false);
         }
-        foreach(GameObject s in emptysprites)
+        foreach (GameObject s in emptysprites)
         {
-            if(s!= null)
+            if (s!= null)
                 s.SetActive(false);
         }
         if(t5RockBS)
         {
-            foreach(GameObject s in t5Sprites)
+            foreach (GameObject s in t5Sprites)
             {
-                if(s!= null)
+                if (s!= null)
                     s.SetActive(false);
             }
         }
-        if(laserUIOffMap != null)
+        if (laserUIOffMap != null)
             laserUIOffMap.HideLaser();
         crossings = 0;
     }
 
     public void UpdateEdgeToCenter(int direction)
     {
-        if(button.TileIsActive || MirageIsActive())
+        if (button.TileIsActive || MirageIsActive())
         {
-            if(t5RockBS && direction == 1)
+            if (t5RockBS && direction == 1)
                 t5Sprites[0].SetActive(true);
             else
             {
                 sprites[direction].SetActive(true);
             }
-            if(edgeblockers[direction])
+            if (edgeblockers[direction])
                 return;
         }
         else
@@ -180,9 +180,9 @@ public class LaserUIData
 
     private bool MirageIsActive()
     {
-        if(MirageSTileManager.GetInstance() == null) return false;
-        if(button == null) return false;
-        return(islandId != button.islandId);
+        if (MirageSTileManager.GetInstance() == null) return false;
+        if (button == null) return false;
+        return (islandId != button.islandId);
     }
 
     public void UpdateCenter(int direction)
@@ -190,13 +190,13 @@ public class LaserUIData
         crossings++;
         int nextDir = (direction + 2) % 4;
 
-        if(!button.TileIsActive && !MirageIsActive())
+        if (!button.TileIsActive && !MirageIsActive())
         {
             UpdateCenterToEdge(nextDir);
             return;
         }
 
-        switch(centerObject)
+        switch (centerObject)
         {
             case LaserCenterObject.BLOCK:
                 return;
@@ -219,23 +219,23 @@ public class LaserUIData
     {
         crossings++;
 
-        if(button != null && (button.TileIsActive || MirageIsActive()))
+        if (button != null && (button.TileIsActive || MirageIsActive()))
         {
-            if(t5RockBS && direction == 1)
+            if (t5RockBS && direction == 1)
                 t5Sprites[1].SetActive(true);
 
-            if(edgeblockers[direction])
+            if (edgeblockers[direction])
                 return;
                 
-            else if(!t5RockBS || direction != 1)
+            else if (!t5RockBS || direction != 1)
             {
                 sprites[direction].SetActive(true);
             }
         }
-        else if(emptysprites != null && emptysprites[direction] != null)
+        else if (emptysprites != null && emptysprites[direction] != null)
             emptysprites[direction].SetActive(true);
 
-        if(crossings > MAX_CROSSINGS)
+        if (crossings > MAX_CROSSINGS)
         {
             Debug.LogError("Laser UI in infinite loop. Terminated to prevent stackoverflow");
             return;
@@ -251,20 +251,20 @@ public class LaserUIData
 
     public void UpdateAdjTile(int direction)
     {
-        if(button == null) return;
+        if (button == null) return;
         int nextX = button.x + GetTileOffsetVector(direction)[0];
         int nextY = button.y + GetTileOffsetVector(direction)[1];
 
-        if(button.y == 2 && button.x == 3 && nextX == 2)
+        if (button.y == 2 && button.x == 3 && nextX == 2)
         {
             laserUIOffMap.ShowLaser();
         }
         
-        if(nextX < 0 || nextY < 0 || nextX > 5 || nextY > 2) return;
-        if(button.x > 2 != nextX > 2) return;
+        if (nextX < 0 || nextY < 0 || nextX > 5 || nextY > 2) return;
+        if (button.x > 2 != nextX > 2) return;
         
         int nextDir = (direction + 2) % 4;
-        foreach(ArtifactTileButton a in uILaserManager.buttonToLaserUI.Keys)
+        foreach (ArtifactTileButton a in uILaserManager.buttonToLaserUI.Keys)
         {
             if(a.x == nextX && a.y == nextY)
             {
@@ -275,7 +275,7 @@ public class LaserUIData
 
     public void UpdateSprites()
     {
-        if(laser.isEnabled)
+        if (laser.isEnabled)
         {
             UpdateCenterToEdge(sourceDir);
         }
@@ -286,7 +286,7 @@ public class LaserUIData
         islandId = original.islandId;
         centerObject = original.centerObject;
         sourceDir = original.sourceDir;
-        if(centerObject == LaserCenterObject.SOURCE)
+        if (centerObject == LaserCenterObject.SOURCE)
         {
             uILaserManager.AddSource(this);
         }
@@ -296,12 +296,12 @@ public class LaserUIData
 
     private void UpdateImages(LaserUIData original)
     {
-        if(original.originalSprites == null) 
+        if (original.originalSprites == null) 
             original.SaveSprites();
-        for(int i = 0 ; i < 4; i++)
+        for (int i = 0 ; i < 4; i++)
         {
             var newSprite = original.originalSprites[i];
-            if(newSprite != null)
+            if (newSprite != null)
                 sprites[i].GetComponent<Image>().sprite = newSprite;
         }
     }
@@ -317,7 +317,7 @@ public class LaserUIData
 
     private void ResetImages()
     {
-        for(int i = 0 ; i < 4; i++)
+        for (int i = 0 ; i < 4; i++)
         {
             sprites[i].GetComponent<Image>().sprite = originalSprites[i];
         }

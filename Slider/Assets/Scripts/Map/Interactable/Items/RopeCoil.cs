@@ -22,6 +22,7 @@ public class RopeCoil : Item
     
     private int distanceIndex; // 0 is closest, 5 is furthest
     private bool isPicked;
+    private bool ignoreDistChecks;
 
 
     private void OnDisable()
@@ -32,8 +33,10 @@ public class RopeCoil : Item
         }
     }
 
-    private void Update() 
+    public override void Update() 
     {
+        base.Update();
+
         // update index
         float distance = Vector3.Distance(transform.position, treeLineRendererTransform.position);
         float unlerp = Mathf.InverseLerp(minDist, maxDist, distance);
@@ -44,7 +47,7 @@ public class RopeCoil : Item
         UpdateSprite();
         UpdatePlayerSpeed();
 
-        if (!isResetting && distance > maxDist)
+        if (!isResetting && !ignoreDistChecks && distance > maxDist)
         {
             ResetItem();
         }
@@ -80,14 +83,22 @@ public class RopeCoil : Item
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null) // pickLocation may be moving
     {
-        base.PickUpItem(pickLocation, callback);
+        ignoreDistChecks = true;
+        base.PickUpItem(pickLocation, () => {
+            ignoreDistChecks = false;
+            callback?.Invoke();
+        });
         isPicked = true;
         UpdatePlayerSpeed();
     }
     
     public override STile DropItem(Vector3 dropLocation, System.Action callback = null)
     {
-        STile hitTile = base.DropItem(dropLocation, callback);
+        ignoreDistChecks = true;
+        STile hitTile = base.DropItem(dropLocation, () => {
+            ignoreDistChecks = false;
+            callback?.Invoke();
+        });
         isPicked = false;
         Player.SetMoveSpeedMultiplier(1f);
 

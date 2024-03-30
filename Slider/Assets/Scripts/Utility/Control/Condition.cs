@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+// ConditionalsEditor
+
 [System.Serializable]
 public class Condition
 {
@@ -15,6 +17,7 @@ public class Condition
         flag,
         playerCarryingSpecItem,
         noGrid, //C: returns true if grid does *not* contain the pattern
+        noFlag,
     }
     [System.Serializable]
     public class ConditionEvent : UnityEvent<Condition>
@@ -89,6 +92,10 @@ public class Condition
                 if (SaveSystem.IsCurrentProfileNull())
                     return false;
                 return SaveSystem.Current.GetBool(flagName);
+            case ConditionType.noFlag:
+                if (SaveSystem.IsCurrentProfileNull())
+                    return false;
+                return !SaveSystem.Current.GetBool(flagName);
             case ConditionType.spec:
             default:
                 checkBool.Invoke(this);

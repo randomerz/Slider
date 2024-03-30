@@ -113,7 +113,7 @@ public class CameraDolly : MonoBehaviour
 
     protected void EndTrack(bool DontReturnToPlayerOnEnd = false)
     {
-        if(!DontReturnToPlayerOnEnd)
+        if (!DontReturnToPlayerOnEnd)
         {
             UIEffects.FadeFromBlack();
             PauseManager.RemovePauseRestriction(owner: gameObject);

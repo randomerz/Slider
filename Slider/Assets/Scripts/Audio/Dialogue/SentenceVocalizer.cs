@@ -39,29 +39,35 @@ namespace SliderVocalization
                 _ => preset.pitch
             };
 
-        public static List<SentenceVocalizer> Parse(string paragraph)
+        public static List<SentenceVocalizer> Parse(string paragraph, VocalizerPreset preset)
         {
             MatchCollection clauses = Regex.Matches(paragraph, @"[^.,!?]+[.,!?\s]+(?=[^.,!?\s]|$)");
             List<SentenceVocalizer> vocalizers = new (clauses.Count);
+
             foreach (Match clause in clauses)
             {
                 if (clause.Length <= 1) continue;
-                else
-                {
-                    SentenceVocalizer sv = new(paragraph.Substring(clause.Index, clause.Length));
-                    if (!sv.GetIsEmpty()) vocalizers.Add(sv);
-                }
+                
+                SentenceVocalizer sv = new(paragraph.Substring(clause.Index, clause.Length), preset.Data.isPronouncePerClause);
+                if (!sv.GetIsEmpty()) vocalizers.Add(sv);
             }
+            
             return vocalizers;
         }
 
         /// <param name="clause">Alphanumeric words separated by space with the last character being one of the characters in "endings"</param>
-        private SentenceVocalizer(string clause)
+        /// <param name="isPronouncedPerClause"></param>
+        private SentenceVocalizer(string clause, bool isPronouncedPerClause)
         {
             words = new List<WordVocalizer>();
             MatchCollection alphaNumeric = Regex.Matches(clause, @"[A-Za-z00-9]+");
 
             if (alphaNumeric.Count == 0) return;
+
+            if (isPronouncedPerClause)
+            {
+                words.Add(WordVocalizer.MakeFixedLengthSoundVocalizer());
+            }
 
             punctuation = default;
             FirstSpokenVocalizer = null;
@@ -88,7 +94,11 @@ namespace SliderVocalization
                 if (!LastSpokenVocalizer.IsEmpty)
                 {
                     FirstSpokenVocalizer ??= LastSpokenVocalizer;
-                    words.Add(LastSpokenVocalizer);
+
+                    if (!isPronouncedPerClause)
+                    {
+                        words.Add(LastSpokenVocalizer);
+                    }
                     // words.Add(WordVocalizer.MakePauseVocalizer(gap));
                 }
             }
@@ -99,6 +109,12 @@ namespace SliderVocalization
             {
                 case '?':
                     intonation = Intonation.up;
+
+                    if (words[0].characters == null)
+                    {
+                        break;
+                    }
+                    
                     foreach (var keyword in questionNegation)
                     {
                         // most questions starting from the 6 W's tend downward

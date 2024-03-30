@@ -4,7 +4,8 @@ public class FactoryTimeCalibratorTurnIn : MonoBehaviour
 {
     public const string CALIBRATOR_SAVE_STRING = "factoryTimeCalibratorTurnedIn";
 
-    [SerializeField] private GameObject timeCalibratorGO;
+    [SerializeField] private Item timeCalibratorItem;
+    [SerializeField] private GameObject timeCalibratorStatic;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform timeCalibratorFinalPosition;
 
@@ -34,8 +35,11 @@ public class FactoryTimeCalibratorTurnIn : MonoBehaviour
 
     private void MoveCalibratorToCorrectPosition()
     {
-        timeCalibratorGO.transform.position = timeCalibratorFinalPosition.position;
-        timeCalibratorGO.transform.parent = timeCalibratorFinalPosition;
+        // timeCalibrator.transform.position = timeCalibratorFinalPosition.position;
+        // timeCalibrator.transform.parent = timeCalibratorFinalPosition;
+        // timeCalibrator.SetCollider(true);
+        timeCalibratorItem.gameObject.SetActive(false);
+        timeCalibratorStatic.SetActive(true);
 
         animator.Play("On");
     }

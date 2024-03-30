@@ -76,7 +76,9 @@ public class FactoryMusicController : MonoBehaviour, ISavable
         }
         else if (musicProgressionParameter == 3 && !meetsThreshold)
         {
-            SetFactoryMusicProgress(2);
+            // Jroo has decreed the following:
+            //   No more downgrading music when it starts pumping
+            // SetFactoryMusicProgress(2);
         }
     }
 

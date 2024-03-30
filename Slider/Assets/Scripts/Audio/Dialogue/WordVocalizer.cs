@@ -100,6 +100,15 @@ namespace SliderVocalization
 
             return result;
         }
+        
+        public static WordVocalizer MakeFixedLengthSoundVocalizer()
+        {
+            WordVocalizer result = new();
+            result.m_Vocalizers = new();
+            result.m_Vocalizers.Add(new FixedLengthSoundVocalizer());
+            result.characters = null;
+            return result;
+        }
 
         /// <summary>
         /// Makes a silent vocalizer that waits for a duration proportional to the length of punctuation

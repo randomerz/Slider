@@ -37,8 +37,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     
     // [SerializeField] private Rigidbody2D rb;
     [SerializeField] private List<Material> ppMaterials;
-    [SerializeField] private GameObject lightningEffect;
-
 
     private float moveSpeedMultiplier = 1;
     private Vector2 directionalMoveSpeedMultiplier = Vector2.one;
@@ -313,8 +311,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         {
             transform.SetParent(null);
             transform.position = new Vector3(sp.position[0], sp.position[1], sp.position[2]);
-            STile stileUnderneath = GetSTileUnderneath();
-            transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
+            UpdateSTileUnderneath();
         }
 
         // PlayerInventory
@@ -332,6 +329,12 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             profile.SetBool("playerSpawnWithAnchorEquipped", false);
             PlayerInventory.NextItem();
         }
+    }
+
+    public void UpdateSTileUnderneath()
+    {
+        STile stileUnderneath = GetSTileUnderneath();
+        transform.SetParent(stileUnderneath != null ? stileUnderneath.transform : null);
     }
 
     private void UpdateMove(Vector2 moveDir) 
@@ -536,11 +539,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         boatGameObject.SetActive(isOnWater);
 
         UpdatePlayerSpeed();
-    }
-
-    public void ToggleLightning(bool val)
-    {
-        lightningEffect.SetActive(val);
     }
 
     Tilemap ISTileLocatable.GetCurrentMaterialTilemap()

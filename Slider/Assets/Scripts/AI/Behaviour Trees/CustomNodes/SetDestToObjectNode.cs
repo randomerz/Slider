@@ -18,7 +18,7 @@ public class SetDestToObjectNode : BehaviourTreeNode
             return NodeState.FAILURE;
         } else
         {
-            RatBlackboard.Instance.destination = ai.objectToSteal.transform.position;
+            RatBlackboard.Instance.destination = ai.collectibleToSteal.transform.position;
             return NodeState.SUCCESS;
         }
     }

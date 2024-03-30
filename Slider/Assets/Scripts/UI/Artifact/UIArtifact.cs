@@ -35,7 +35,7 @@ public class UIArtifact : Singleton<UIArtifact>
     private ArtifactTileButton lastHovered;
 
     // Moves are sped up when a lot are done in a row with this buffer (helps w/ factory conveyor consecutives)
-    private float consecutiveQueueSpeedBuffer = 0.1f;
+    private float consecutiveQueueSpeedBuffer = 0.15f;
     private float consecutiveQueueSpeedTimer;
 
     protected void Awake()
@@ -62,7 +62,7 @@ public class UIArtifact : Singleton<UIArtifact>
         OnButtonInteract += UpdatePushedDowns;
     }
 
-    public void Init()
+    public virtual void Init()
     {
         didInit = true;
         InitializeSingleton();
@@ -781,7 +781,7 @@ public class UIArtifact : Singleton<UIArtifact>
     }
 
     #region Lightning Crap
-    public static void SetLightningPos(ArtifactTileButton b)
+    public static void SetLightningPos(ArtifactTileButton b, int styleIndex=1)
     {
         if (_instance.lightning == null || _instance.lightningImage == null) 
         {
@@ -791,19 +791,19 @@ public class UIArtifact : Singleton<UIArtifact>
         _instance.lightning.transform.SetParent(b.transform);
         _instance.lightning.transform.position = b.transform.position;
         _instance.lightningImage.gameObject.SetActive(true);
-        b.SetLightning(true);
+        b.SetLightning(true, styleIndex);
     }
 
-    public static void SetLightningPos(int x, int y)
+    public static void SetLightningPos(int x, int y, int styleIndex=1)
     {
         ArtifactTileButton b = GetButton(x, y);
-        SetLightningPos(b);
+        SetLightningPos(b, styleIndex);
     }
 
-    public static void SetLightningPos(int islandId)
+    public static void SetLightningPos(int islandId, int styleIndex=1)
     {
         ArtifactTileButton b = _instance.GetButton(islandId);
-        SetLightningPos(b);
+        SetLightningPos(b, styleIndex);
     }
 
     public static void DisableLightning(bool disableHighlight)

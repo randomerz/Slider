@@ -6,14 +6,14 @@ using System.Text;
 
 public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 {
-    [SerializeField] private List<GameObject> mirageSTiles;
-    [SerializeField] private List<ArtifactTBPluginMirage> mirageButtons;
-    //public static Vector2Int mirageTailPos;
-    public static EventHandler OnMirageSTilesEnabled;
-    public List<STileTilemap> MirageMaterialTileMaps;
+    public static EventHandler OnMirageSTilesEnabled; // Also invokes on stile move end late
 
     private bool mirageEnabled;
     public bool MirageEnabled => mirageEnabled;
+    
+    [SerializeField] private List<STileTilemap> MirageMaterialTileMaps;
+    [SerializeField] private List<GameObject> mirageSTiles;
+    [SerializeField] private List<ArtifactTBPluginMirage> mirageButtons;
 
     /// <summary>
     /// The scale factor from the position of a tile on the grid to the transform.position of the tile.
@@ -22,7 +22,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 
     public const string MIRAGE_ENABLED_SAVE_STRING = "DesertMirageEnabled";
     private const string MIRAGE_TILES_SAVE_STRING = "DesertMirageTiles";
-    private List<int> POSSIBLE_MIRAGE_TILES = new() { 8, 9 };
+    private readonly List<int> POSSIBLE_MIRAGE_TILES = new() { 8, 9 };
 
     private List<MirageTileData> enabledMirageTiles = new();
 
@@ -69,7 +69,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     public void Load(SaveProfile profile)
     {
         mirageEnabled = profile.GetBool(MIRAGE_ENABLED_SAVE_STRING);
-        if(mirageEnabled)
+        if (mirageEnabled)
         {
             EnableMirage();
         }

@@ -15,10 +15,14 @@ public class DesertGrid : SGrid
     private Coroutine shuffleBuildUpCoroutine;
     private Coroutine placeTile9Coroutine;
 
+    public Animator playerAnimator;
+    public RuntimeAnimatorController playerShadesController;
+
     private const string DESERT_PARTY_STARTED = "desertPartyStarted";
     private const string DESERT_PARTY_FINISHED = "desertPartyFinished";
 
-    public override void Init() {
+    public override void Init() 
+    {
         InitArea(Area.Desert);
         base.Init();
     }
@@ -26,21 +30,29 @@ public class DesertGrid : SGrid
     protected override void Start()
     {
         base.Start();
+
         AudioManager.PlayMusic("Desert");
         AudioManager.PlayMusic("Desert Casino", false);
+
+        if (PlayerInventory.Contains("Sunglasses"))
+        {
+            EnableSunglassesForPlayer();
+        }
+
         GiveTilesIfFromMagitech();
     }
 
     private void GiveTilesIfFromMagitech()
     {
-        if(PlayerInventory.Contains("Slider 1", Area.MagiTech))
+        if (SaveSystem.Current.GetBool("magitechDesertPortal"))
         {
             for (int i = 1; i <= 9; i++)
             Current.GetCollectible("Slider " + i)?.DoPickUp(true);
         }
     }
     
-    private void OnEnable() {
+    private void OnEnable() 
+    {
         if (checkCompletion) {
             OnGridMove += UpdateButtonCompletions; 
             UIArtifact.OnButtonInteract += UpdateButtonCompletions;
@@ -53,7 +65,8 @@ public class DesertGrid : SGrid
         }
     }
 
-    private void OnDisable() {
+    private void OnDisable() 
+    {
         if (checkCompletion)
         {
             OnGridMove -= UpdateButtonCompletions;
@@ -148,6 +161,11 @@ public class DesertGrid : SGrid
         c.SetSpec(campfireIsLit);
     }
     #endregion
+
+    public void EnableSunglassesForPlayer()
+    {
+        playerAnimator.runtimeAnimatorController = playerShadesController;
+    }
 
     #region Gazelle
     public void CheckGazelleNearOasis(Condition c)

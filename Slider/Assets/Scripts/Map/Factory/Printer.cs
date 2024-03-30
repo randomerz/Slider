@@ -79,6 +79,7 @@ public class Printer : MonoBehaviour
 
         rocketItem.SetActive(false);
         poof.Play();
+        AudioManager.Play("Hat Click", transform);
         tileItem.SetActive(true);
         bodyAnim.speed = 2.5f;
         headAnim.speed = 2.5f;
@@ -86,7 +87,11 @@ public class Printer : MonoBehaviour
         poof2.Play();
         bodyAnim.speed = 4f;
         headAnim.speed = 4f;
-        yield return new WaitForSeconds(3.5f);
+        for (float i = 0; i < 3.5f; i += 0.25f)
+        {
+            AudioManager.PlayWithVolume("Hat Click", 0.25f);
+            yield return new WaitForSeconds(0.25f);
+        }
         poof2.Stop();
         headAnim.speed = 2.5f;
         bodyAnim.speed = 2.5f;

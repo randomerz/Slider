@@ -40,10 +40,7 @@ public class OceanGrid : SGrid
         if (checkCompletion && !isCompleted)
         {
             UpdateButtonCompletions(this, null);
-            OnGridMove += UpdateButtonCompletions; // this is probably not needed
-            UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
-            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletion
-            UIArtifactMenus.OnArtifactOpened += CheckFinalPlacementsOnMove;
+            SubscribeCompletionEvents();
         }
 
         SGridAnimator.OnSTileMoveEnd += CheckShipwreck;
@@ -53,14 +50,19 @@ public class OceanGrid : SGrid
         Anchor.OnAnchorInteract += OnAnchorInteract;
     }
 
+    private void SubscribeCompletionEvents()
+    {
+        OnGridMove += UpdateButtonCompletions; // this is probably not needed
+        UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
+        SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletion
+        UIArtifactMenus.OnArtifactOpened += CheckFinalPlacementsOnMove;
+    }
+
     private void OnDisable()
     {
         if (checkCompletion && !isCompleted)
         {
-            OnGridMove -= UpdateButtonCompletions; // this is probably not needed
-            UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
-            SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
-            UIArtifactMenus.OnArtifactOpened -= CheckFinalPlacementsOnMove;
+            UnsubscribeCompletionEvents();
         }
 
         SGridAnimator.OnSTileMoveEnd -= CheckShipwreck;
@@ -68,6 +70,14 @@ public class OceanGrid : SGrid
         SGridAnimator.OnSTileMoveEnd -= CheckVolcano;
         UIArtifactMenus.OnArtifactOpened -= CheckVolcano;
         Anchor.OnAnchorInteract -= OnAnchorInteract;
+    }
+
+    private void UnsubscribeCompletionEvents()
+    {
+        OnGridMove -= UpdateButtonCompletions; // this is probably not needed
+        UIArtifact.OnButtonInteract -= SGrid.UpdateButtonCompletions;
+        SGridAnimator.OnSTileMoveEnd -= CheckFinalPlacementsOnMove;// SGrid.OnGridMove += SGrid.CheckCompletions
+        UIArtifactMenus.OnArtifactOpened -= CheckFinalPlacementsOnMove;
     }
     
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs e)
@@ -279,12 +289,7 @@ public class OceanGrid : SGrid
         {
             checkCompletion = true;
             SaveSystem.Current.SetBool("oceanCompletion", checkCompletion);
-
-            OnGridMove += UpdateButtonCompletions; // this is probably not needed
-            UIArtifact.OnButtonInteract += SGrid.UpdateButtonCompletions;
-            SGridAnimator.OnSTileMoveEnd += CheckFinalPlacementsOnMove;
-            UIArtifactMenus.OnArtifactOpened += CheckFinalPlacementsOnMove;
-
+            SubscribeCompletionEvents();
             SGrid.UpdateButtonCompletions(this, null);
         }
     }
@@ -294,6 +299,7 @@ public class OceanGrid : SGrid
         if (!isCompleted && IsFinalPuzzleMatching())
         {
             isCompleted = true;
+            UnsubscribeCompletionEvents();
             SaveSystem.Current.SetBool("oceanCompleted", checkCompletion);
             ((OceanArtifact)OceanArtifact._instance).SetCanRotate(false);
 
@@ -333,13 +339,13 @@ public class OceanGrid : SGrid
                     int abid = artifactButton.islandId;
                     bool isLand = landTiles.Contains(abid);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, !isLand);
-                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetHighlighted(isLand);
+                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetForceHighlighted(isLand);
                 }
                 else
                 {
                     int tid = Converter.CharToInt(tids);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
-                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetHighlighted(artifactButton.islandId != tid);
+                    UIArtifact.GetButton(artifactButton.x, artifactButton.y).SetForceHighlighted(artifactButton.islandId != tid);
                 }
             }
         }

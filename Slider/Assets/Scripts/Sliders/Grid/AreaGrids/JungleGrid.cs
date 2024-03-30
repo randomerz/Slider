@@ -266,10 +266,10 @@ public class JungleGrid : SGrid
 
     public void OpenFactoryDoor()
     {
-        factoryDoor.SetActive(false);
+        // if (!SaveSystem.Current.GetBool("jungleTurnedInMinecart"))
+        //     return;
 
-        if (SaveSystem.Current.GetBool("jungleTurnedInMinecart"))
-            return;
+        factoryDoor.SetActive(false);
 
         SaveSystem.Current.SetBool("jungleFactoryDoorOpened", true);
 

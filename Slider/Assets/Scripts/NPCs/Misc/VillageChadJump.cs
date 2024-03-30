@@ -5,6 +5,7 @@ using UnityEngine;
 public class VillageChadJump : MonoBehaviour 
 {
     public float timeTipped = 2;
+    public NPC chadNPC;
     private float timeTillNormal;
     private bool isOnRock;
     private bool isFallen;
@@ -20,7 +21,7 @@ public class VillageChadJump : MonoBehaviour
 
     private void OnEnable() 
     {
-        if (isFallen)
+        if (!isFallen)
         {
             SGridAnimator.OnSTileMoveEnd += TipOnTileMove;
         }
@@ -83,7 +84,7 @@ public class VillageChadJump : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        AudioManager.Play("NPC Blip"); // TODO: put chad sound here
-        
+        // AudioManager.Play("NPC Blip"); // TODO: put chad sound here
+        chadNPC.TypeCurrentDialogue();
     }
 }

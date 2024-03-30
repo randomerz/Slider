@@ -138,7 +138,8 @@ public class FactoryArtifact : UIArtifact
             {
                 b.GetComponent<ArtifactTBPluginPast>().UsePastSprite();
                 b.RestoreDefaultEmptySprite();
-            } else
+            } 
+            else
             {
                 b.RestoreDefaultIslandSprite();
                 b.RestoreDefaultCompletedSprite();

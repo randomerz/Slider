@@ -11,10 +11,10 @@ public class MagiTechArtifact : UIArtifact
     *   the corresponding location in the past, since this is the location we need
     *   to compare against to check for move possibility
     */
-    public static Vector2Int desyncLocation = new Vector2Int(-1, -1);
+    public Vector2Int desyncLocation = new Vector2Int(-1, -1);
 
     //C: likewise this is the ID of the *opposite* Stile
-    public static int desyncIslandId = -1;
+    public int desyncIslandId = -1;
 
     public UnityEvent onDesyncStart;
     public UnityEvent onDesyncEnd;
@@ -56,9 +56,20 @@ public class MagiTechArtifact : UIArtifact
     protected override void Start()
     {
         base.Start();
-        foreach(ArtifactTileButton b in buttons)
+        foreach (ArtifactTileButton b in buttons)
         {
             b.UpdateTileActive();
+        }
+    }
+
+    public override void Init()
+    {
+        base.Init();
+
+        foreach (ArtifactTileButton b in buttons)
+        {
+            // The past half of tiles is not active by default, so Awake() doesnt get called on them
+            b.Init();
         }
     }
 
@@ -82,7 +93,10 @@ public class MagiTechArtifact : UIArtifact
                 if (!isDesyncSoundPlaying)
                 {
                     isDesyncSoundPlaying = true;
-                    desyncTearLoopSound = AudioManager.Play("Desync Tear Open");
+                    if (isPreview)
+                    {
+                        desyncTearLoopSound = AudioManager.Play("Desync Tear Open");
+                    }
                 }
                 ArtifactTileButton pastButton = desyncIslandId <= 9 ? GetButton(FindAltId(desyncIslandId)) : desyncedButton;
                 if (isInPast != isPreview) SetLightningPos(pastButton);
@@ -94,8 +108,11 @@ public class MagiTechArtifact : UIArtifact
                 {
                     // Likely not needed but its good to be safe?
                     isDesyncSoundPlaying = false;
-                    desyncTearLoopSound.Stop();
-                    AudioManager.Play("Desync Tear Close");
+                    desyncTearLoopSound.HardStop();
+                    if (isPreview)
+                    {
+                        AudioManager.Play("Desync Tear Close");
+                    }
                     StartCoroutine(DelayedDesyncEndTileCrash());
                 }
                 DisableLightning(false);
@@ -148,7 +165,7 @@ public class MagiTechArtifact : UIArtifact
                 if (isDesyncSoundPlaying)
                 {
                     isDesyncSoundPlaying = false;
-                    desyncTearLoopSound.Stop();
+                    desyncTearLoopSound.SoftStop();
                     AudioManager.Play("Desync Tear Close");
                     StartCoroutine(DelayedDesyncEndTileCrash());
                 }
@@ -238,22 +255,52 @@ public class MagiTechArtifact : UIArtifact
 
     protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        SMove move;
-        if (buttonCurrent.islandId == desyncIslandId)
+        bool shouldSync;
+        int altIslandId1, altIslandId2;
+
+        if (desyncIslandId == -1)
         {
-            move = new SMoveMagiTechMove(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, shouldSync: false);
+            // Should sync bc there is no desync
+            altIslandId1 = FindAltId(buttonCurrent.islandId);
+            altIslandId2 = FindAltId(buttonEmpty.islandId);
+            shouldSync = true;
         }
         else
         {
-            move = new SMoveMagiTechMove(buttonCurrent.x, buttonCurrent.y, buttonEmpty.x, buttonEmpty.y, buttonCurrent.islandId, buttonEmpty.islandId, shouldSync: true);
+            // If opposite of buttonCurrent (x, y) is the other desync, then we just started a desync
+            // If opposite of buttonEmpty (x, y)   is the other desync, then we just ended a desync
+            Vector2Int oppositeButtonCurrentPos = FindAltCoords(buttonCurrent.x, buttonCurrent.y);
+            ArtifactTileButton oppositeCurrentButton = GetButton(oppositeButtonCurrentPos.x, oppositeButtonCurrentPos.y);
+            bool isButtonCurrentPartOfDesync = oppositeCurrentButton.islandId == FindAltId(desyncIslandId);
+            Vector2Int oppositeButtonEmptyPos = FindAltCoords(buttonEmpty.x, buttonEmpty.y);
+            ArtifactTileButton oppositeEmptyButton = GetButton(oppositeButtonEmptyPos.x, oppositeButtonEmptyPos.y);
+            bool isButtonEmptyPartOfDesync = oppositeEmptyButton.islandId == FindAltId(desyncIslandId);
+
+            altIslandId1 = oppositeCurrentButton.islandId;
+            altIslandId2 = oppositeEmptyButton.islandId;
+
+            // Move should NOT be synced if either the start/end opposites are involved in desync
+            shouldSync = !(isButtonCurrentPartOfDesync || isButtonEmptyPartOfDesync);
         }
+
+        SMove move = new SMoveMagiTechMove(
+            buttonCurrent.x, 
+            buttonCurrent.y, 
+            buttonEmpty.x, 
+            buttonEmpty.y, 
+            buttonCurrent.islandId, 
+            buttonEmpty.islandId, 
+            altIslandId1,
+            altIslandId2,
+            shouldSync: shouldSync
+        );
         return move;
     }
 
     protected override void QueueMoveFromButtonPair(SMove move, ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        ArtifactTileButton currAlt = GetButton(FindAltId(buttonCurrent.islandId));
-        ArtifactTileButton emptyAlt = GetButton(FindAltId(buttonEmpty.islandId));
+        ArtifactTileButton currAlt = GetButton((move as SMoveMagiTechMove).altIslandId1);
+        ArtifactTileButton emptyAlt = GetButton((move as SMoveMagiTechMove).altIslandId2);
 
         // If Not a desync, swap both pairs of buttons
         if ((move as SMoveMagiTechMove).shouldSync)
@@ -291,7 +338,9 @@ public class MagiTechArtifact : UIArtifact
                 b.gameObject.SetActive(true);             
             }
             else
+            {
                 b.gameObject.SetActive(false);
+            }
         }
         background.sprite = past ? pastBackgroundSprite : presentBackgroundSprite;
     }

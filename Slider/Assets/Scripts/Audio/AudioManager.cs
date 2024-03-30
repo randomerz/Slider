@@ -1,13 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using FMODUnity;
 using FMOD.Studio;
 using SliderVocalization;
-using System.Linq;
-using UnityEngine.UIElements;
 
 public class AudioManager : Singleton<AudioManager>
 {
@@ -286,20 +283,14 @@ public class AudioManager : Singleton<AudioManager>
         managedInstances ??= new List<ManagedInstance>(10);
         managedInstances.RemoveAll(delegate (ManagedInstance instance)
         {
-            if (instance.Nullified)
-            {
-                instance.Stop();
-            }
-            bool shouldRemove = instance.Nullified || !instance.Valid || instance.Stopped;
-            if (shouldRemove)
-            {
-                PrioritySounds.Remove(instance);
-                instance.Stop();
-            }
-            return shouldRemove;
+            if (!instance.Nullified && instance.Valid && !instance.Stopped) return false;
+            
+            PrioritySounds.Remove(instance);
+            instance.HardStop();
+            return true;
         });
-        float MaxPriorityVolume01 = 0;
-        float MaxDialogueVolume01 = 0;
+        float maxPriorityVolume01 = 0;
+        float maxDialogueVolume01 = 0;
         foreach (ManagedInstance instance in managedInstances)
         {
             if (!paused || !instance.CanPause)
@@ -309,17 +300,17 @@ public class AudioManager : Singleton<AudioManager>
                     continue;
                 }
                 float vol = instance.MixerVolume01;
-                MaxPriorityVolume01 = Mathf.Max(MaxPriorityVolume01, vol);
+                maxPriorityVolume01 = Mathf.Max(maxPriorityVolume01, vol);
                 if (instance.IsDialogue)
                 {
-                    MaxDialogueVolume01 = Mathf.Max(MaxDialogueVolume01, vol);
+                    maxDialogueVolume01 = Mathf.Max(maxDialogueVolume01, vol);
                 }
             }
         }
-        float dbOverThreshold = Mathf.Approximately(0, MaxPriorityVolume01) ?
-            0 : Mathf.Max(0, 6 * Mathf.Log(MaxPriorityVolume01, 2) - _instance.duckingThreshold);
-        float dialogueDbOverThreshold = Mathf.Approximately(0, MaxDialogueVolume01) ?
-            0 : Mathf.Max(0, 6 * Mathf.Log(MaxDialogueVolume01, 2) - _instance.dialogueDuckingDbFactor);
+        float dbOverThreshold = Mathf.Approximately(0, maxPriorityVolume01) ?
+            0 : Mathf.Max(0, 6 * Mathf.Log(maxPriorityVolume01, 2) - _instance.duckingThreshold);
+        float dialogueDbOverThreshold = Mathf.Approximately(0, maxDialogueVolume01) ?
+            0 : Mathf.Max(0, 6 * Mathf.Log(maxDialogueVolume01, 2) - _instance.dialogueDuckingDbFactor);
         float priorityDuckingDb = dbOverThreshold * _instance.duckingDbFactor;
         float dialogueDuckingDb = dialogueDbOverThreshold * _instance.dialogueDuckingDbFactor;
 
@@ -629,7 +620,7 @@ public class AudioManager : Singleton<AudioManager>
                 {
                     if (!managedInstance.IsIndoor)
                     {
-                        managedInstance.Stop();
+                        managedInstance.SoftStop();
                         PrioritySounds.Remove(managedInstance);
                         return true;
                     }
@@ -647,7 +638,7 @@ public class AudioManager : Singleton<AudioManager>
                 {
                     if (managedInstance.IsIndoor)
                     {
-                        managedInstance.Stop();
+                        managedInstance.SoftStop();
                         return true;
                     }
                     return false;
@@ -712,15 +703,27 @@ public class AudioManager : Singleton<AudioManager>
             bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref position);
             if (indoorStatusDisagree)
             {
-                soundWrapper.fmodInstance.setVolume(Mathf.Pow(2, Mathf.Max(0, 6 * Mathf.Log(soundWrapper.volume, 2) - indoorMuteDb)) / 6);
+                soundWrapper.fmodInstance.setVolume(Mathf.Pow(2, 6 * Mathf.Log(soundWrapper.volume, 2) - indoorMuteDb) / 6);
+            }
+            else
+            {
+                soundWrapper.fmodInstance.setVolume(soundWrapper.volume);
             }
             soundWrapper.fmodInstance.set3DAttributes(position.To3DAttributes());
             soundWrapper.fmodInstance.start();
         }
 
-        public void Stop()
+        public void SoftStop()
         {
             soundWrapper.fmodInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            // soundWrapper.fmodInstance.setVolume(0);
+            soundWrapper.fmodInstance.release();
+        }
+
+        public void HardStop()
+        {
+            soundWrapper.fmodInstance.setVolume(0);
+            soundWrapper.fmodInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
             soundWrapper.fmodInstance.release();
         }
 
@@ -740,7 +743,7 @@ public class AudioManager : Singleton<AudioManager>
             progress += dt;
             if (progress >= soundWrapper.duration)
             {
-                Stop();
+                HardStop();
                 return;
             }
             if (!soundWrapper.useDoppler)
@@ -749,7 +752,8 @@ public class AudioManager : Singleton<AudioManager>
                 bool indoorStatusDisagree = CalculatePositionIncorporateIndoor(ref shiftedPosition);
                 if (indoorStatusDisagree) volumeDb -= indoorMuteDb;
                 soundWrapper.fmodInstance.set3DAttributes(shiftedPosition.To3DAttributes());
-                soundWrapper.fmodInstance.setVolume(Mathf.Pow(2, volumeDb / 6));
+                volumeDb = Mathf.Pow(2, volumeDb / 6);
+                soundWrapper.fmodInstance.setVolume(volumeDb);
             }
             else
             {
@@ -766,7 +770,8 @@ public class AudioManager : Singleton<AudioManager>
                     velocity = (v * soundWrapper.sound.dopplerScale).ToFMODVector()
                 });
                 if (indoorStatusDisagree) volumeDb -= indoorMuteDb;
-                soundWrapper.fmodInstance.setVolume(Mathf.Pow(2, volumeDb / 6));
+                volumeDb = Mathf.Pow(2, volumeDb / 6);
+                soundWrapper.fmodInstance.setVolume(volumeDb);
             }
         }
 
@@ -783,6 +788,13 @@ public class AudioManager : Singleton<AudioManager>
                 original += SGrid.GetHousingOffset() * Vector3.down;
             }
             return true;
+        }
+        
+        public float GetDurationSeconds()
+        {
+            soundWrapper.fmodInstance.getDescription(out EventDescription description);
+            description.getLength(out int fmodMilisecondLength); // https://www.fmod.com/docs/2.01/api/studio-api-eventdescription.html#studio_eventdescription_getlength
+            return fmodMilisecondLength / 1000.0f;
         }
     }
 }

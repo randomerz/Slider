@@ -6,17 +6,9 @@ public class UIJungleSignTracker : FlashWhiteImage
 {
     [SerializeField] private Image mainSignImage;
     [SerializeField] private List<Sprite> directionSprites;
-    [SerializeField] private Sign mySign;
+    [SerializeField] private JungleSign mySign;
 
     private ArtifactTileButton button;
-
-    private readonly Direction[] DIRECTIONS = 
-    {
-        Direction.LEFT,
-        Direction.UP,
-        Direction.RIGHT,
-        Direction.DOWN,
-    };
 
     protected override void Awake()
     {
@@ -40,9 +32,9 @@ public class UIJungleSignTracker : FlashWhiteImage
 
         mainSignImage.enabled = !nodeOnDisabledButton;
 
-        for (int i = 0; i < DIRECTIONS.Length; i++)
+        for (int i = 0; i < DirectionUtil.Directions.Length; i++)
         {
-            if (mySign.currentDirection == DIRECTIONS[i])
+            if (mySign.CurrentDirection == DirectionUtil.Directions[i])
             {
                 mainSignImage.sprite = directionSprites[i];
                 break;

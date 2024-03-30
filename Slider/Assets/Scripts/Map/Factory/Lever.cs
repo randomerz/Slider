@@ -80,6 +80,7 @@ public class Lever : ElectricalNode
     private void HandleBlackoutStarted()
     {
         _pConds.DisableConditionals();
+        _targetVisualOn = false;
         SetState(false);
     }
 

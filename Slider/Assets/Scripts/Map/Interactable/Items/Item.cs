@@ -25,6 +25,9 @@ public class Item : MonoBehaviour, ISavable
 
     [SerializeField] protected GameObject[] enableOnDrop;
 
+    public bool isQueuedForDestruction;
+    private System.Action callbackIfDestroyed;
+
     // events
     public UnityEvent OnPickUp;
     public UnityEvent OnDrop;
@@ -33,7 +36,7 @@ public class Item : MonoBehaviour, ISavable
     private bool shouldLoadSavedDataOnStart;
     private int savedIslandIdBuffer;
     private Vector3 savedPositionBuffer;
-    private bool enableColliderOnTriggerExit;
+    private bool enableColliderWhenPlayerFar;
 
     private int order;
 
@@ -51,7 +54,7 @@ public class Item : MonoBehaviour, ISavable
         order = spriteRenderer.sortingOrder;
     }
 
-    private void Start()
+    public virtual void Start()
     {
         if (shouldLoadSavedDataOnStart)
         {
@@ -70,11 +73,17 @@ public class Item : MonoBehaviour, ISavable
             gameObject.SetActive(false);
     }
 
+    private void OnDestroy()
+    {
+        isQueuedForDestruction = true;
+        callbackIfDestroyed?.Invoke();
+    }
+
     public virtual void Save()
     {
         if (saveString != null && saveString != "")
         {
-            STile stile = SGrid.GetSTileUnderneath(gameObject);
+            STile stile = SGrid.GetSTileUnderneath(gameObject, includeInactive: true);
             if (stile == null)
                 SaveSystem.Current.SetInt($"{saveString}_STile", -1);
             else
@@ -115,19 +124,22 @@ public class Item : MonoBehaviour, ISavable
             if (profile.GetBool($"{saveString}_WasPlayerHolding"))
             {
                 SetCollider(false);
-                enableColliderOnTriggerExit = true;
+                enableColliderWhenPlayerFar = true;
             }
 
             savedPositionBuffer = new Vector3(x, y, z);
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    public virtual void Update() 
     {
-        if (enableColliderOnTriggerExit)
+        if (enableColliderWhenPlayerFar)
         {
-            enableColliderOnTriggerExit = false;
-            SetCollider(true);
+            if (Vector3.Distance(Player.GetPosition(), transform.position) > 0.75f)
+            {
+                enableColliderWhenPlayerFar = false;
+                SetCollider(true);
+            }
         }
     }
 
@@ -190,6 +202,7 @@ public class Item : MonoBehaviour, ISavable
         }
 
         float t = 0;
+        callbackIfDestroyed = callback;
 
         Vector3 start = new Vector3(transform.position.x, transform.position.y);
 
@@ -241,6 +254,7 @@ public class Item : MonoBehaviour, ISavable
         }
 
         AnimatePickUpEnd(target.position);
+        callbackIfDestroyed = null;
         callback();
     }
 
@@ -255,6 +269,7 @@ public class Item : MonoBehaviour, ISavable
     protected IEnumerator AnimateDrop(Vector3 target, System.Action callback = null)
     {
         float t = pickUpDuration;
+        callbackIfDestroyed = callback;
        
         //Create 2 dummy transforms for the animation.
         GameObject start = new GameObject("ItemDropStart");
@@ -304,6 +319,7 @@ public class Item : MonoBehaviour, ISavable
 
         spriteRenderer.transform.position = end.transform.position + spriteOffset;
         OnDrop?.Invoke();
+        callbackIfDestroyed = null;
         callback();
         Destroy(start);
         Destroy(end);

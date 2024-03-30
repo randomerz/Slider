@@ -71,9 +71,8 @@ public class ConditionalsEditor : PropertyDrawer
                     EditorGUI.PropertyField(fieldRect, itemProperty, true);
                     break;
                 case Condition.ConditionType.grid:
-                    EditorGUI.PropertyField(fieldRect, patternProperty);
-                    break;
                 case Condition.ConditionType.noGrid:
+                    EditorGUI.PropertyField(fieldRect, patternProperty);
                     EditorGUI.PropertyField(fieldRect, patternProperty);
                     break;
                 case Condition.ConditionType.gridStationary:
@@ -87,6 +86,7 @@ public class ConditionalsEditor : PropertyDrawer
                     EditorGUI.PropertyField(fieldRect, playerItemNameProperty);
                     break;
                 case Condition.ConditionType.flag:
+                case Condition.ConditionType.noFlag:
                     EditorGUI.PropertyField(fieldRect, flagNameProperty);
                     break;
             }

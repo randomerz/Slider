@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class MagiTechGrid : SGrid
 {
@@ -61,7 +62,8 @@ public class MagiTechGrid : SGrid
 
     private ContactFilter2D contactFilter;
 
-    public List<GameObject> BridgeObjects;
+    public List<GameObject> bridgeObjects;
+    public List<GameObject> bridgeFenceObjects;
 
     /* C: The Magitech grid is a 6 by 3 grid. The left 9 STiles represent the present,
     and the right 9 STiles represent the past. The past tile will have an islandID
@@ -250,8 +252,9 @@ public class MagiTechGrid : SGrid
     {
         if (desyncIslandId != -1)
         {
-            EndDesync();
+            Debug.Log("[Saves] Saved during a desync in magitech.");
         }
+        SaveSystem.Current.SetInt("MagitechSavedDesyncIslandId", desyncIslandId);
         SaveSystem.Current.SetInt("MagitechOilCollected", numOil);
         base.Save();
     }
@@ -259,12 +262,38 @@ public class MagiTechGrid : SGrid
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
-        if(GetNumTilesCollected() >= 1)
+
+        if (GetNumTilesCollected() >= 1)
+        {
             tabManager.EnableTab();
-        if(profile.GetBool("magitechBridgeFixed"))
+        }
+        if (profile.GetBool("magitechBridgeFixed"))
+        {
             LowerDrawbridge(true);
+        }
         numOil = profile.GetInt("MagitechOilCollected");
 
+        if (!IsGridSafeOnLoad())
+        {
+            if (profile.GetInt("MagitechSavedDesyncIslandId", -1) != -1)
+            {
+                // Registered and detected a desync -- fixing!
+                Debug.Log("[Saves] Desync was registered on load. Attempting to fix grid.");
+                RestoreGridFromDesyncFromLoad();
+            }
+            else
+            {
+                Debug.LogError("[Saves] Grid appears to have a desync (or some other problem on load) without it being saved. Attempting to fix.");
+                RestoreGridFromDesyncFromLoad();
+            }
+        }
+        else
+        {
+            if (profile.GetInt("MagitechSavedDesyncIslandId", -1) != -1)
+            {
+                Debug.LogWarning("[Saves] Desync was saved but grid appeared to be okay. Doing nothing.");
+            }
+        }
     }
 
     public static bool IsInPast(Transform transform)
@@ -272,10 +301,19 @@ public class MagiTechGrid : SGrid
         return transform.position.x > 67;
     }
 
+    public override void LoadRealigningGrid()
+    {
+        base.LoadRealigningGrid();
+
+        EndDesync();
+    }
+
     public void TryEnableHint()
     {
-        if(GetNumTilesCollected() >= 1)
+        if (GetNumTilesCollected() >= 1)
+        {
             hints.TriggerHint("altview");
+        }
     }
 
     private void OnAnchorInteract(object sender, Anchor.OnAnchorInteractArgs interactArgs)
@@ -333,6 +371,40 @@ public class MagiTechGrid : SGrid
         Current.SetGrid(newGrid);
     }
 
+    private bool IsGridSafeOnLoad()
+    {
+        for (int x = 0; x < 3; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                Vector2Int altCoords = FindAltCoords(x, y);
+                if (grid[x, y].islandId != FindAltId(grid[altCoords.x, altCoords.y].islandId))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Similar function as above, but will always make past tile match to present tiles
+    private void RestoreGridFromDesyncFromLoad()
+    {
+        // SGrid is initialized before Player is, so we need to make sure the player is properly childed.
+        Player._instance.UpdateSTileUnderneath();
+
+        int[,] newGrid = new int[6, 3];
+        for (int x = 0; x < 3; x++)
+        {
+            for (int y = 0; y < 3; y++)
+            {
+                newGrid[x, y] = grid[x, y].islandId;
+                newGrid[x + 3, y] = FindAltId(newGrid[x, y]);
+            }
+        }
+        Current.SetGrid(newGrid);
+    }
+
     private Vector2Int FindAltCoords(Vector2Int v)
     {
         return new Vector2Int((v.x + 3) % 6, v.y);
@@ -382,20 +454,6 @@ public class MagiTechGrid : SGrid
 
     #endregion
 
-    #region Misc methods
-
-    public void DisableContractorBarrel()
-    {
-        // if (!contractorBarrel.activeSelf)
-        // {
-        //     contractorBarrel.SetActive(false);
-        //     AudioManager.Play("Puzzle Complete");
-        //     ParticleManager.SpawnParticle(ParticleType.SmokePoof, contractorBarrel.transform.position, contractorBarrel.transform.parent);
-        // }
-    }
-
-    #endregion
-
     public void LowerDrawbridge(bool fromSave = false)
     {
         if(!fromSave)
@@ -403,54 +461,47 @@ public class MagiTechGrid : SGrid
             SaveSystem.Current.SetBool("magitechBridgeFixed", true);
             AudioManager.Play("Puzzle Complete");
         }
-        foreach(GameObject g in BridgeObjects)
+        foreach(GameObject g in bridgeObjects)
         {
             g.SetActive(false);
+        }
+        foreach(GameObject g in bridgeFenceObjects)
+        {
+            g.SetActive(true);
         }
     }
 
     #region Conditions
 
-    public void FireHasStool(Condition c)
+    public void FireHasStool(Condition c) => c.SetSpec(FireHasStool());
+    public void LightningHasStool(Condition c) => c.SetSpec(LightningHasStool());
+    
+    public bool FireHasStool()
     {
-        // if (SaveSystem.Current.GetBool("magiTechFactory"))
-        // {
-        //     c.SetSpec(true);
-        //     return;
-        // }
-
         foreach (Collider2D hit in GetCollidingItems(fireStoolZoneCollider))
         {
             Item item = hit.GetComponent<Item>();
             if (item != null && (item.itemName == "Step Stool" || item.itemName == "Past Step Stool"))
             {
-                c.SetSpec(true);
-                return;
+                return true;
             }
         }
         
-        c.SetSpec(false);
+        return false;
     }
 
-    public void LightningHasStool(Condition c)
+    public bool LightningHasStool()
     {
-        // if (SaveSystem.Current.GetBool("magiTechFactory"))
-        // {
-        //     c.SetSpec(true);
-        //     return;
-        // }
-
         foreach (Collider2D hit in GetCollidingItems(lightningStoolZoneCollider))
         {
             Item item = hit.GetComponent<Item>();
             if (item != null && (item.itemName == "Step Stool" || item.itemName == "Past Step Stool"))
             {
-                c.SetSpec(true);
-                return;
+                return true;
             }
         }
-
-        c.SetSpec(false);
+        
+        return false;
     }
 
     private List<Collider2D> GetCollidingItems(Collider2D collider)
@@ -460,24 +511,16 @@ public class MagiTechGrid : SGrid
         return list;
     }
 
-    public void HasOneOil(Condition c)
-    {
-        c.SetSpec(numOil == 1);
-    }
-
-    public void HasTwoOil(Condition c)
-    {
-        c.SetSpec(numOil == 2);
-    }
-    public void HasThreeOil(Condition c)
-    {
-        c.SetSpec(numOil == 3);
-    }
+    public void HasOneOil(Condition c) => c.SetSpec(numOil == 1);
+    public void HasTwoOil(Condition c) => c.SetSpec(numOil == 2);
+    public void HasThreeOil(Condition c) => c.SetSpec(numOil == 3);
+    public void HasFourOil(Condition c) => c.SetSpec(numOil == 4);
 
     public void IncrementOil()
     {
         numOil++;
     }
+    #endregion
 
     public void IsDesyncActive(Condition c)
     {
@@ -491,5 +534,4 @@ public class MagiTechGrid : SGrid
         (Player.GetInstance().GetSTileUnderneath().islandId == desyncIslandId ||
         Player.GetInstance().GetSTileUnderneath().islandId == desyncAnchoredIslandId));
     }
-    #endregion
 }

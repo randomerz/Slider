@@ -10,10 +10,11 @@ public class LaserUIOffMap : MonoBehaviour
 
     void LateUpdate()
     {
-        bool shouldShow = laserOn &&
-        desertPortalUI.activeSelf &&
-        (magiTechArtifact == null
-        || magiTechArtifact.IsDisplayingPast());
+        bool shouldShow = (
+            laserOn &&
+            desertPortalUI.activeSelf &&
+            (magiTechArtifact == null || magiTechArtifact.IsDisplayingPast())
+        );
         laserSprite.enabled = shouldShow;
     }
 

@@ -15,24 +15,24 @@ public class MountainSGridAnimator : SGridAnimator
         if(!onSameLevel && isPlayerOnStile)
         {
             if(diff > 0)
-                CameraZoom.MoveUp(movementDuration);
+                CameraZoom.MoveUp(movementDurationMultiplier);
             else
-                CameraZoom.MoveDown(movementDuration);
+                CameraZoom.MoveDown(movementDurationMultiplier);
         }
         return StartCoroutine(StartMovingAnimation(grid[m.startLoc.x, m.startLoc.y], m, move, animate:onSameLevel, playSound: playSound));
     }
 
-    protected override void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile, bool playSound)
+    protected override void EffectOnMoveStart(SMove move, Movement movement, Transform root, STile tile, float currMoveDuration, bool playSound)
     {
-        base.EffectOnMoveStart(move, movement, root, tile, playSound);
+        base.EffectOnMoveStart(move, movement, root, tile, currMoveDuration, playSound);
         if((move as SMoveMountainSwap).isLayerSwap && tile.isTileActive) {
             if(Player.GetInstance().GetSTileUnderneath() == tile) {
                 //Player on tile, dither world
-                ((MountainSTile) tile).AnimateBorderTileDither(movementDuration * move.duration);
+                ((MountainSTile) tile).AnimateBorderTileDither(movementDurationMultiplier * move.duration);
             }
             else {
                 //Player not on tile, dither tile
-                ((MountainSTile) tile).AnimateTileDither(movementDuration * move.duration);
+                ((MountainSTile) tile).AnimateTileDither(movementDurationMultiplier * move.duration);
             }
         }
     }

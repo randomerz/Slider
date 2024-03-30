@@ -11,10 +11,9 @@ public class CaveGrid : SGrid
     [SerializeField] private CaveDoor caveDoor;
     [SerializeField] private MountainCaveWall mountainCaveWall;
     [SerializeField] private CaveArtifactLightSim lightSim;
-    [SerializeField] private string cavesMagicParticleName;
 
     private Coroutine magicRocksIconFlashCoroutine;
-    private GameObject cavesMagicParticles;
+    [SerializeField] private GameObject cavesMagicParticles;
     private List<GameObject> particles = new List<GameObject>();
 
     static System.EventHandler<SGridAnimator.OnTileMoveArgs> checkCompletionsOnMoveFunc;
@@ -25,9 +24,6 @@ public class CaveGrid : SGrid
 
         checkCompletionsOnMoveFunc = (sender, e) => { CheckLightingCompletions(); };
         
-        cavesMagicParticles = Resources.Load<GameObject>(cavesMagicParticleName);
-        if (cavesMagicParticles == null)
-            Debug.LogError("Couldn't load particles!");
     }
 
 
@@ -176,17 +172,22 @@ public class CaveGrid : SGrid
         CameraShake.Shake(1.5f, 2.5f);
         AudioManager.Play("Slide Explosion");
         UIEffects.FlashWhite();
+
+        yield return new WaitForSeconds(1.0f);
+
+        FinishCaves();
     }
 
     // Puzzle 8 - light  up caves
     public void FinishCaves()
     {
-        GivePlayerTheCollectible("Slider 9");
-
         int[,] completedPuzzle = new int[3, 3] { { 9, 1, 5 },
                                                  { 6, 3, 4 },
                                                  { 8, 7, 2 } };
         SetGrid(completedPuzzle);
+
+        GivePlayerTheCollectible("Slider 9");
+
         StartCoroutine(CheckCompletionsAfterDelay(1.1f));
         SaveSystem.Current.SetBool("forceAutoMove", false);
 
@@ -228,11 +229,11 @@ public class CaveGrid : SGrid
         {
             magicRocksIcon.SetActive(true);
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
             
             magicRocksIcon.SetActive(false);
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 

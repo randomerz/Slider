@@ -57,7 +57,7 @@ namespace SliderVocalization
         public float SetText(string text, NPCEmotes.Emotes emote)
         {
             this.text = text;
-            sentences = SentenceVocalizer.Parse(this.text) ?? new();
+            sentences = SentenceVocalizer.Parse(this.text, preset) ?? new();
             
             return (this as IVocalizer).RandomizeVocalization(
                 ((VocalizerParameters)preset).ModifyWith(modifierLibrary[emote], createClone: true), new()

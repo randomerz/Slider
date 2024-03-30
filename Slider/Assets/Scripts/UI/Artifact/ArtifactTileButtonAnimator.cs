@@ -13,16 +13,16 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     //The button is pushed down, regardless of the method
     private bool isPushedDown;
     //The button is selected by the user to be able to make a move.
-    [SerializeField] private bool isSelected;
+    private bool isSelected;
     //The button is forced down because it is still being moved or is anchored.
-    [SerializeField] private bool isForcedDown;
+    private bool isForcedDown;
     private bool isHighlighted;
+    private bool isForcedHighlighted;
     //Button has lightning highlight and pusheddown and has lightning effect around it
-    [SerializeField] private bool isLightning;
-    //Button is highlighted by desert scroll
-    private bool isScrollHighlighted;
+    private bool isLightning;
 
     private Coroutine positionAnimatorCoroutine;
+    private Vector2 positionAnimationFinalPosition;
     [SerializeField] private float positionAnimationDuration;
     [SerializeField] private AnimationCurve positionAnimationCurve;
 
@@ -32,13 +32,21 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
 
     public bool IsPushedDown
     {
-        get
+        get => isPushedDown;
+        private set { isPushedDown = value; }
+    }
+
+    private void Start() 
+    {
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        positionAnimationFinalPosition = rectTransform.anchoredPosition;
+    }
+
+    private void OnDisable() 
+    {
+        if (positionAnimationCurve != null)
         {
-            return isPushedDown;
-        }
-        private set
-        {
-            isPushedDown = value;
+            AnimatePositionEnd();
         }
     }
 
@@ -49,21 +57,25 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         {
             isPushedDown = true;
             sliderImage.rectTransform.anchoredPosition = new Vector3(0, -1);
-            highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, -1);
+            foreach (Image i in borders)
+            {
+                i.rectTransform.anchoredPosition = new Vector3(0, -1);
+            }
             pushedDownFrame.gameObject.SetActive(true);
-            // if (!isLightning) highlightedFrame.gameObject.SetActive(false); //We don't disable the highlight if lightning
         }
         else if (isPushedDown && !value)
         {
             isPushedDown = false;
             sliderImage.rectTransform.anchoredPosition = new Vector3(0, 0);
-            highlightedFrame.rectTransform.anchoredPosition = new Vector3(0, 0);
+            foreach (Image i in borders)
+            {
+                i.rectTransform.anchoredPosition = new Vector3(0, 0);
+            }
             foreach (Image i in frames)
             {
                 i.gameObject.SetActive(false);
             }
             SetHighlighted(isLightning); //Edge case where you set lightning while tile is moving. Needed for desert frag
-            SetHighlighted(isScrollHighlighted); //needed for desert frag?
         }
     }
 
@@ -97,7 +109,8 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             isHighlighted = true;
             highlightedFrame.gameObject.SetActive(true);
         }
-        else if (isHighlighted && !value && !isLightning && !isScrollHighlighted) //If lightning is active, tile should never be unhighlighted
+        // If lightning is active, tile should never be unhighlighted
+        else if (isHighlighted && !value && !isLightning && !isForcedHighlighted)
         {
             isHighlighted = false;
             foreach (Image i in borders)
@@ -107,14 +120,20 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         }
     }
 
-    public void SetLightning(bool value)
+    public void SetForceHighlighted(bool value)
+    {
+        isForcedHighlighted = value;
+        SetHighlighted(value);
+    }
+
+    public void SetLightning(bool value, int styleIndex=1)
     {
         if (!isLightning && value)
         {
             highlightedFrame.gameObject.SetActive(false);
             pushedDownFrame.gameObject.SetActive(false);
-            Image lightningPushedDown = frames[1];
-            Image lightningHighlight = borders[1];
+            Image lightningPushedDown = frames[styleIndex];
+            Image lightningHighlight = borders[styleIndex];
             pushedDownFrame = lightningPushedDown;
             highlightedFrame = lightningHighlight;
             if (isForcedDown)
@@ -131,46 +150,13 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
         {
             highlightedFrame.gameObject.SetActive(false);
             pushedDownFrame.gameObject.SetActive(false);
-            Image PushedDown = frames[0];
-            Image Highlighted = borders[0];
-            pushedDownFrame = PushedDown;
-            highlightedFrame = Highlighted;
+            Image pushedDown = frames[0];
+            Image highlighted = borders[0];
+            pushedDownFrame = pushedDown;
+            highlightedFrame = highlighted;
             if (isPushedDown) pushedDownFrame.gameObject.SetActive(true);
         }
         isLightning = value;
-    }
-
-    public void SetScrollHighlight(bool value)
-    {
-        if (!isScrollHighlighted && value)
-        {
-            highlightedFrame.gameObject.SetActive(false);
-            pushedDownFrame.gameObject.SetActive(false);
-            Image scrollPushedDown = frames[2];
-            Image scrollHighlight = borders[2];
-            pushedDownFrame = scrollPushedDown;
-            highlightedFrame = scrollHighlight;
-            if (isForcedDown)
-            {
-                pushedDownFrame.gameObject.SetActive(true);
-            }
-            else
-            {
-                pushedDownFrame.gameObject.SetActive(false);
-                highlightedFrame.gameObject.SetActive(true);//When scroll is active, tile should always be highlighted
-            }
-        }
-        else if (isScrollHighlighted && !value)
-        {
-            highlightedFrame.gameObject.SetActive(false);
-            pushedDownFrame.gameObject.SetActive(false);
-            Image PushedDown = frames[0];
-            Image Highlighted = borders[0];
-            pushedDownFrame = PushedDown;
-            highlightedFrame = Highlighted;
-            if (isPushedDown) pushedDownFrame.gameObject.SetActive(true);
-        }
-        isScrollHighlighted = value;
     }
 
     public void AnimatePositionFrom(Vector2 position)
@@ -191,6 +177,7 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
     private IEnumerator AnimatePosition(Vector2 from, Vector2 to)
     {
         RectTransform rectTransform = GetComponent<RectTransform>();
+        positionAnimationFinalPosition = to;
 
         float t = 0;
         while (t < positionAnimationDuration)
@@ -204,7 +191,14 @@ public class ArtifactTileButtonAnimator : MonoBehaviour
             t += Time.deltaTime;
         }
 
-        rectTransform.anchoredPosition = to;
+        rectTransform.anchoredPosition = positionAnimationFinalPosition;
+        positionAnimatorCoroutine = null;
+    }
+
+    private void AnimatePositionEnd()
+    {
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = positionAnimationFinalPosition;
         positionAnimatorCoroutine = null;
     }
 }

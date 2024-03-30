@@ -12,7 +12,7 @@ GameObject:
   m_Layer: 0
   m_Name: emitPos
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -351,6 +351,7 @@ MonoBehaviour:
   presentPortalLaserable: {fileID: 0}
   pastPortalLaserable: {fileID: 0}
   laserUI: {fileID: 0}
+  uILaserManager: {fileID: 0}
 --- !u!114 &3769052434671769430
 MonoBehaviour:
   m_ObjectHideFlags: 0

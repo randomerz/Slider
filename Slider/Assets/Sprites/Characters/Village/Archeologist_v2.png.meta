@@ -20,11 +20,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -63,6 +64,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
   cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
@@ -75,6 +77,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -87,6 +90,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -99,6 +103,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -111,6 +116,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -494,6 +500,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Archeologist_v2_TakingNotes_0
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00000000000000000800000000000000
+      internalID: 0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Archeologist_v2_TakingNotes_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00000000000000000800000000000000
+      internalID: 0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -505,27 +553,28 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Archeologist_v2_Expressionless_0: 1276861757229456158
-      Archeologist_v2_Walk_1: -7022570114954278194
-      Archeologist_v2_Smug_1: 5865461792263492011
+      Archeologist_v2_Crying_0: -487138987834798504
       Archeologist_v2_Crying_1: 2527648519808521140
+      Archeologist_v2_Expressionless_0: 1276861757229456158
+      Archeologist_v2_Expressionless_1: -1898824487782468340
+      Archeologist_v2_Idle_0: 5174337186531716714
+      Archeologist_v2_Idle_1: -8134952769280760933
+      Archeologist_v2_Interested_0: 3079713716336685630
+      Archeologist_v2_Interested_1: 2693761446559297115
+      Archeologist_v2_Shocked_0: 6078401176696399859
+      Archeologist_v2_Shocked_1: 4828125844648705559
+      Archeologist_v2_Skeptical_0: -7087780737042922780
+      Archeologist_v2_Skeptical_1: 6672076279121184786
+      Archeologist_v2_Smug_0: -6772829445336580793
+      Archeologist_v2_Smug_1: 5865461792263492011
+      Archeologist_v2_TakingNotes_0: 0
+      Archeologist_v2_TakingNotes_1: 0
+      Archeologist_v2_Walk_0: -3391103036495315695
+      Archeologist_v2_Walk_1: -7022570114954278194
       Archeologist_v2_Walk_2: -2189680724065127823
       Archeologist_v2_Walk_3: -589724734821982040
-      Archeologist_v2_Skeptical_1: 6672076279121184786
-      Archeologist_v2_Interested_0: 3079713716336685630
-      Archeologist_v2_Shocked_1: 4828125844648705559
-      Archeologist_v2_Idle_0: 5174337186531716714
-      Archeologist_v2_Crying_0: -487138987834798504
-      Archeologist_v2_Expressionless_1: -1898824487782468340
-      Archeologist_v2_Smug_0: -6772829445336580793
-      Archeologist_v2_Idle_1: -8134952769280760933
-      Archeologist_v2_Walk_0: -3391103036495315695
-      Archeologist_v2_Skeptical_0: -7087780737042922780
-      Archeologist_v2_Shocked_0: 6078401176696399859
-      Archeologist_v2_Interested_1: 2693761446559297115
-  spritePackingTag: 
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

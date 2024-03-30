@@ -15,6 +15,7 @@ public class PlayerAction : Singleton<PlayerAction>
     [SerializeField] private LayerMask itemMask;
     [SerializeField] private LayerMask dropCollidingMask;
     [SerializeField] private LayerMask anchorDropCollidingMask;
+    [SerializeField] private LayerMask noDropItemsLayerMask; // we want to pick up, but not drop, ex magitech portals
 
     [SerializeField] private float minimumDropDistance = 0.5f;
     [SerializeField] private float maximumDropDistance = 1.5f;
@@ -68,13 +69,16 @@ public class PlayerAction : Singleton<PlayerAction>
         // we offset where the raycast starts because when you're in the boat, the collider is at the boat not the player
         Vector3 basePosition = GetPlayerTransformRaycastPosition();
 
+        LayerMask lm = pickedItem is Anchor ? anchorDropCollidingMask : dropCollidingMask;
+        lm |= noDropItemsLayerMask;
+
         RaycastHit2D[] hits = Physics2D.BoxCastAll(
             basePosition, 
             new Vector2(dropBoxcastWidth, dropBoxcastHeight), 
             Mathf.Atan2(raycastDirection.y, raycastDirection.x) * Mathf.Rad2Deg,
             raycastDirection, 
             maximumDropDistance,
-            layerMask:(pickedItem is Anchor ? anchorDropCollidingMask : dropCollidingMask)
+            layerMask: lm
         );
 
         Vector2 closestPossibleDropPosition = basePosition + maximumDropDistance * raycastDirection;
@@ -243,8 +247,12 @@ public class PlayerAction : Singleton<PlayerAction>
     private void FinishPicking()
     {
         isPicking = false;
-        pickedItem.transform.SetParent(pickedItemLocation);
-        pickedItem.SetLayer(LayerMask.NameToLayer("ItemRT"));
+        // If item is destroyed while being picked up
+        if (pickedItem != null && !pickedItem.isQueuedForDestruction)
+        {
+            pickedItem.transform.SetParent(pickedItemLocation);
+            pickedItem.SetLayer(LayerMask.NameToLayer("ItemRT"));
+        }
     }
 
     private void FinishDropping()
@@ -252,7 +260,10 @@ public class PlayerAction : Singleton<PlayerAction>
         lastDroppedItem.ResetSortingOrder();
         lastDroppedItem.dropCallback();
         isDropping = false;
-        itemDropIndicator.SetActive(false);
+        if (itemDropIndicator != null) // gets destroyed during scene transitions lol
+        {
+            itemDropIndicator.SetActive(false);
+        }
         pickedItem = null;
     }
 

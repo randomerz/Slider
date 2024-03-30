@@ -16,14 +16,10 @@ public class SGrid : Singleton<SGrid>, ISavable
         public STile stile;
     }
 
-    public class OnSTileCollectedArgs : System.EventArgs
-    {
-        public STile stile;
-    }
-
     public static event System.EventHandler<OnGridMoveArgs> OnGridMove; // IMPORTANT: this is in the background -- you might be looking for SGridAnimator.OnSTileMove
+    public static event System.EventHandler<OnGridMoveArgs> OnGridSet;
     public static event System.EventHandler<OnSTileEnabledArgs> OnSTileEnabled;
-    public static event System.EventHandler<OnSTileCollectedArgs> OnSTileCollected;
+    public static event System.EventHandler<OnSTileEnabledArgs> OnSTileCollected;
 
     public static SGrid Current => _instance;
     public int Width => width;
@@ -112,6 +108,7 @@ public class SGrid : Singleton<SGrid>, ISavable
 
         SaveSystem.Current.SetLastArea(myArea);
 
+        // This is why Load() gets called multiple times when you enter a scene
         Load(SaveSystem.Current); // DC: this won't cause run order issues right :)
         SetBGGrid(bgGridTiles);
 
@@ -129,7 +126,10 @@ public class SGrid : Singleton<SGrid>, ISavable
         myArea = area;
         foreach (Collectible c in collectibles)
         {
-            c.SetArea(area);
+            if (c.GetArea() == Area.None)
+            {
+                c.SetArea(area);
+            }
         }
     }
 
@@ -188,6 +188,7 @@ public void SetGrid(int[,] puzzle)
         STile[,] old = grid;
         grid = newGrid;
         CheckForCompletionOnSetGrid();
+        OnGridSet?.Invoke(this, new OnGridMoveArgs { oldGrid = old, grid = grid });
     }
 
     //C: When we need to check for area completion after setting the grid (such as in areas that can be completed with the scroll)
@@ -379,7 +380,7 @@ public void SetGrid(int[,] puzzle)
     
 
     // DC: This will prefer an GameObjs parented STile if it has one
-    public static STile GetSTileUnderneath(Transform entity, STile currentStileUnderneath)
+    public static STile GetSTileUnderneath(Transform entity, STile currentStileUnderneath, bool includeInactive=false)
     {
         STile[,] grid = SGrid.Current.GetGrid();
         float offset = grid[0, 0].STILE_WIDTH / 2f;
@@ -387,7 +388,7 @@ public void SetGrid(int[,] puzzle)
         STile stileUnderneath = null;
         foreach (STile s in grid)
         {
-            if (s.isTileActive && PosInSTileBounds(entity.position, s.transform.position, offset))
+            if ((s.isTileActive || includeInactive) && PosInSTileBounds(entity.position, s.transform.position, offset))
             {
                 if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
                 {
@@ -408,9 +409,9 @@ public void SetGrid(int[,] puzzle)
     // C: result of consolidating 2 versions of this method
     // and i don't wanna rewrite method calls
     // DC: try to use the other one if possible
-    public static STile GetSTileUnderneath(GameObject target)
+    public static STile GetSTileUnderneath(GameObject target, bool includeInactive=false)
     {
-        return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>());
+        return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>(), includeInactive);
     }
 
     public virtual STileTilemap GetWorldGridTilemaps()
@@ -426,9 +427,9 @@ public void SetGrid(int[,] puzzle)
 
     public static bool PosInSTileBounds(Vector3 pos, Vector3 stilePos, float offset)
     {
-        if (stilePos.x - offset < pos.x && pos.x < stilePos.x + offset &&
-           (stilePos.y - offset < pos.y && pos.y < stilePos.y + offset ||
-            stilePos.y - offset + Current.housingOffset < pos.y && pos.y < stilePos.y + offset + Current.housingOffset))
+        if (stilePos.x - offset <= pos.x && pos.x < stilePos.x + offset &&
+           (stilePos.y - offset <= pos.y && pos.y < stilePos.y + offset ||
+            stilePos.y - offset + Current.housingOffset <= pos.y && pos.y < stilePos.y + offset + Current.housingOffset))
         {
             return true;
         }
@@ -574,7 +575,7 @@ public void SetGrid(int[,] puzzle)
     {
         stile.isTileCollected = true;
         EnableStile(stile, true);
-        OnSTileCollected?.Invoke(this, new OnSTileCollectedArgs { stile = stile });
+        OnSTileCollected?.Invoke(this, new OnSTileEnabledArgs { stile = stile });
     }
 
     public virtual bool TilesMoving()
@@ -599,6 +600,8 @@ public void SetGrid(int[,] puzzle)
     }
 
     //L: Used in the save system to load a grid as opposed to using SetGrid(STile[], STile[]) with default tiles positions.
+    // Warning: This gets called twice when an area is initialized. Once during Awake()/Init() by the scene initializer,
+    //          and again during the general Load() call. Removing the Awake() call will affect magitech desync loading.
     public virtual void Load(SaveProfile profile) 
     { 
         // Default vars

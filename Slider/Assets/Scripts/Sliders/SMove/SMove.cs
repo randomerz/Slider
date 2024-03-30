@@ -200,16 +200,27 @@ public class SMoveMountainSwap: SMove
 public class SMoveMagiTechMove : SMove
 {
     public bool shouldSync;
+    public int altIslandId1;
+    public int altIslandId2;
 
-    public SMoveMagiTechMove(int x1, int y1, int x2, int y2, int islandId1, int islandId2, bool shouldSync=true)
+    public SMoveMagiTechMove(int x1, int y1, int x2, int y2, int islandId1, int islandId2, int altIslandId1, int altIslandId2, bool shouldSync=true)
     {
         this.shouldSync = shouldSync;
+        this.altIslandId1 = altIslandId1;
+        this.altIslandId2 = altIslandId2;
 
         moves.AddRange(new SMoveSwap(x1, y1, x2, y2, islandId1, islandId2).moves);
 
         if (shouldSync)
         {
-            moves.AddRange(new SMoveSwap(FindAlt(x1, 3), y1, FindAlt(x2, 3), y2, FindAlt(islandId1, 9), FindAlt(islandId2, 9)).moves);
+            if (altIslandId1 == -1 || altIslandId2 == -1)
+            {
+                Debug.LogError("Tried making a sync move but alt island ids were not provided!");
+                return;
+            }
+            Vector2Int alt1 = MagiTechArtifact.FindAltCoords(x1, y1);
+            Vector2Int alt2 = MagiTechArtifact.FindAltCoords(x2, y2);
+            moves.AddRange(new SMoveSwap(alt1.x, alt1.y, alt2.x, alt2.y, altIslandId1, altIslandId2).moves);
         }
     }
 

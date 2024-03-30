@@ -31,12 +31,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1302036917528966451}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 6.5, y: 0}
-  m_SizeDelta: {x: 1, y: 11}
+  m_AnchoredPosition: {x: 6.5, y: 0.5}
+  m_SizeDelta: {x: 1, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7101821670484598002
 CanvasRenderer:
@@ -66,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -4027872714659165598, guid: 57383093ed3240843b38f3dd8db5fa52, type: 3}
+  m_Sprite: {fileID: -1044644876, guid: d8a8ccea3ef19634b913487b83058af5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -107,12 +106,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1302036917528966451}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 15, y: 11}
+  m_SizeDelta: {x: 14, y: 11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9071306830604615022
 CanvasRenderer:
@@ -142,7 +140,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 2384347535599915884, guid: 0e4f5a97d285d8443b985283ee825101, type: 3}
+  m_Sprite: {fileID: -1281765255, guid: d8a8ccea3ef19634b913487b83058af5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -186,7 +184,6 @@ RectTransform:
   - {fileID: 46734494506786937}
   - {fileID: 8411507014812952677}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -195,7 +192,7 @@ RectTransform:
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &7509675006745042303
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -212,7 +209,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!225 &2059827180756005024
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -250,6 +248,7 @@ MonoBehaviour:
   isActive: 0
   homeScreen: 0
   tabAnimator: {fileID: 7509675006745042303}
+  controllerSelectedImage: {fileID: 0}
   gate: {fileID: 0}
   countdownSprite:
   - {fileID: -1281765255, guid: d8a8ccea3ef19634b913487b83058af5, type: 3}

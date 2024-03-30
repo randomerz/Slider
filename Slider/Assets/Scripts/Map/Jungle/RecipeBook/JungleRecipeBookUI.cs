@@ -23,7 +23,19 @@ public class JungleRecipeBookUI : MonoBehaviour
     private int currentRecipePageIndex; // Vertical
     private Shape currentShape;
 
+    private int isUpdatingCounter;
+
     private const float BUMP_DELAY = 1f / 16f;
+
+    private void OnEnable() 
+    {
+        JungleBin.OnBinRecieveShape += CheckOnBinRecieveShape;
+    }
+
+    private void OnDisable() 
+    {
+        JungleBin.OnBinRecieveShape -= CheckOnBinRecieveShape;
+    }
 
     public void SetCurrentShape(int index, bool withSound = true)
     {
@@ -32,6 +44,8 @@ public class JungleRecipeBookUI : MonoBehaviour
 
     private IEnumerator _SetCurrentShape(int index, bool withSound = true)
     {
+        isUpdatingCounter += 1;
+
         currentShapeIndex = index;
         currentShape = recipeList.list[index].result;
         
@@ -79,7 +93,7 @@ public class JungleRecipeBookUI : MonoBehaviour
             {
                 shapes = recipeList.list[currentShapeIndex].combinations[recipeIndex + i];
             }
-            recipeWidgets[i].SetIngredientsOrNull(shapes, recipeList.list[currentShapeIndex].result);
+            recipeWidgets[i].SetIngredientsOrNull(shapes, recipeList.list[currentShapeIndex]);
 
             bumps[i + 4].DoBump(withSound: withSound && shapes != null && currentRecipePageIndex == recipeIndex);
 
@@ -98,6 +112,45 @@ public class JungleRecipeBookUI : MonoBehaviour
         foreach (JungleRecipeBookStatNumber n in statNumbers)
         {
             n.RefreshNumber();
+        }
+
+        isUpdatingCounter -= 1;
+    }
+
+    public void SetCurrentShapeImmediate(int index)
+    {
+        // There is a coroutine running, so don't interfere!
+        if (isUpdatingCounter > 0)
+        {
+            return;
+        }
+
+        currentShapeIndex = index;
+        currentShape = recipeList.list[index].result;
+        
+        displayImage.sprite = currentShape.GetDisplaySprite();
+        displayNameText.text = currentShape.GetDisplayName();
+        displayNumberText.text = (index + 1).ToString().PadLeft(2, '0');
+
+        int totalRecipes = recipeList.list[index].combinations.Count;
+        int completedRecipes = 0;
+        foreach (Recipe.Shapes s in recipeList.list[index].combinations)
+        {
+            if (s.numberOfTimesCreated > 0)
+            {
+                completedRecipes += 1;
+            }
+        }
+        recipeCompletionText.text = $"{completedRecipes}/{totalRecipes}";
+
+        for (int i = 0; i < recipeWidgets.Count; i++)
+        {
+            Recipe.Shapes shapes = null;
+            if (i < recipeList.list[currentShapeIndex].combinations.Count)
+            {
+                shapes = recipeList.list[currentShapeIndex].combinations[currentRecipePageIndex + i];
+            }
+            recipeWidgets[i].SetIngredientsOrNull(shapes, recipeList.list[currentShapeIndex]);
         }
     }
 
@@ -133,5 +186,11 @@ public class JungleRecipeBookUI : MonoBehaviour
             
         int index = (currentRecipePageIndex + count - 1) % count;
         SetCurrentRecipeDisplay(currentShapeIndex, index);
+    }
+
+
+    public void CheckOnBinRecieveShape(object sender, JungleBin.JungleBinArgs e)
+    {
+        SetCurrentShapeImmediate(currentShapeIndex);
     }
 }

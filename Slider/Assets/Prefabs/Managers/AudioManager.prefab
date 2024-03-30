@@ -323,6 +323,16 @@ MonoBehaviour:
       Path: event:/SFX/SFXR/UI Click
     canPause: 0
     dopplerScale: 0
+  - name: UI Click World
+    fmodEvent:
+      Guid:
+        Data1: -1239381948
+        Data2: 1216917189
+        Data3: -98928983
+        Data4: -65885022
+      Path: event:/SFX/SFXR/UI Click World
+    canPause: 0
+    dopplerScale: 1
   - name: Hat Click
     fmodEvent:
       Guid:
@@ -403,6 +413,16 @@ MonoBehaviour:
       Path: event:/SFX/Magic/TFT Bell
     canPause: 1
     dopplerScale: 0
+  - name: Meow
+    fmodEvent:
+      Guid:
+        Data1: 1835705653
+        Data2: 1279022984
+        Data3: 1694768301
+        Data4: 198535897
+      Path: event:/SFX/Village/Meow
+    canPause: 1
+    dopplerScale: 1
   - name: Cow Moo
     fmodEvent:
       Guid:
@@ -814,6 +834,15 @@ MonoBehaviour:
         Data3: 1266896305
         Data4: -1869818348
       Path: event:/Music/Casino BGM
+    emitter: {fileID: 0}
+  - name: Desert Snail
+    fmodEvent:
+      Guid:
+        Data1: 2057146727
+        Data2: 1310687117
+        Data3: -1875471215
+        Data4: -932849931
+      Path: event:/Music/Desert Snail BGM
     emitter: {fileID: 0}
   - name: Factory
     fmodEvent:

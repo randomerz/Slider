@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ExplodableRock : MonoBehaviour, ISavable
 {
@@ -17,11 +18,13 @@ public class ExplodableRock : MonoBehaviour, ISavable
     public List<ParticleSystem> explosionDecalParticles = new List<ParticleSystem>();
     public List<ParticleSystem> explosionParticles = new List<ParticleSystem>();
     public List<GameObject> raycastColliderObjects = new List<GameObject>();
+    public UnityEvent OnExplosionFinish;
 
     [Header("Collectible Fall Arc")]
     public Collectible collectible;
     [SerializeField] private Transform collectibleStart;
     [SerializeField] private Transform collectibleTarget;
+    public UnityEvent OnCollectibleFall;
     [SerializeField] private float animationDuration;
     [SerializeField] private AnimationCurve xPickUpMotion;
     [SerializeField] private AnimationCurve yPickUpMotion;
@@ -36,7 +39,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
     
     public virtual void Load(SaveProfile profile)
     {
-        isExploded = profile.GetBool(saveString, false);
+        isExploded = profile.GetBool(saveString);
         if (isExploded)
         {
             FinishExploding();
@@ -77,7 +80,7 @@ public class ExplodableRock : MonoBehaviour, ISavable
 
         if (tryingToExplode)
         {
-            Explode();
+            ExplodeRock();
         }
     }
 
@@ -154,6 +157,8 @@ public class ExplodableRock : MonoBehaviour, ISavable
         collectible.GetComponent<Collider2D>().enabled = true;
         collectible.getSpriteRenderer().sortingLayerName = "Entity";
         collectible.getSpriteRenderer().sortingOrder = 0;
+
+        OnCollectibleFall?.Invoke();
     }
 
     public virtual void FinishExploding()
@@ -166,6 +171,8 @@ public class ExplodableRock : MonoBehaviour, ISavable
         {
             go.SetActive(false);
         }
+
+        OnExplosionFinish?.Invoke();
     }
 
     // Exposed for the animation events

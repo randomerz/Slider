@@ -106,11 +106,13 @@ public class Minecart : Item, ISavable
         Gizmos.DrawSphere(targetTilePos, 0.2f);
     }
 
-    private void Update() 
+    public override void Update() 
     {
-        if(Time.timeScale == 0) return;
+        base.Update();
 
-        if(AllMovingConds())
+        if (Time.timeScale == 0) return;
+
+        if (AllMovingConds())
         {
             Move();
         }
