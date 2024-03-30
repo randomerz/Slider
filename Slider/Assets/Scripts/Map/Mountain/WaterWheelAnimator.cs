@@ -20,6 +20,7 @@ public class WaterWheelAnimator : MonoBehaviour
 
     private bool isGear2Frozen = false;
     private bool isGear4Frozen = false;
+    public bool hasOil = false;
 
     private void Awake() 
     {
@@ -57,7 +58,12 @@ public class WaterWheelAnimator : MonoBehaviour
         }
         
         // Optional: change targetAnimationSpeed to currentAnimationSpeed
-        animatorGenerator.SetBool("isOn", targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen);
+        animatorGenerator.SetBool("isOn", IsGeneratorOn());
+    }
+
+    private bool IsGeneratorOn()
+    {
+        return targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen && hasOil;
     }
 
     private void UpdateAnimationSpeedTarget()
@@ -87,7 +93,7 @@ public class WaterWheelAnimator : MonoBehaviour
 
     private void UpdateGears()
     {
-        if (!isGear2Frozen && !isGear4Frozen)
+        if (!isGear2Frozen && !isGear4Frozen && hasOil)
         {
             // No frozen gears => all move
 
