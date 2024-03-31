@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class MinecartElevator : MonoBehaviour, ISavable
 {
-    // [SerializeField] private bool isFixed;
-    // [SerializeField] private bool isBroken;
+
     public GameObject topPosition;
     public GameObject bottomPosition;
     public Minecart mainMc;
-  //  public RailManager borderRM;
-   // private bool isOpen = true; //C: TODO true if there are tiles in front of the elevator (top and bottom), false otherwise
-    private bool hasGoneDown;
-    private bool hasGoneUp;
+    public bool hasGoneDown;
+    public bool hasGoneUp;
     public ElevatorAnimationManager animationManager;
     public bool isSending = false; //true when minecart being sent;
 
@@ -31,21 +28,6 @@ public class MinecartElevator : MonoBehaviour, ISavable
     }
 
     public ElevatorState elevatorState = ElevatorState.INTIAL;
-
-    // private void OnEnable() {
-    //     SGridAnimator.OnSTileMoveEnd += CheckOpenOnMove;
-    //     SGridAnimator.OnSTileMoveStart += CheckOpenOnMove;
-    // }
-
-    // private void OnDisable() {
-    //     SGridAnimator.OnSTileMoveEnd -= CheckOpenOnMove;
-    //     SGridAnimator.OnSTileMoveStart -= CheckOpenOnMove;
-    // }
-
-    // private void CheckOpenOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
-    // {
-    //     isOpen = CheckIfShouldBeOpen();
-    // }
 
     public void SetIsPowered(bool powered)
     {
@@ -139,8 +121,6 @@ public class MinecartElevator : MonoBehaviour, ISavable
     public void CheckIsBroken(Condition c) => c.SetSpec(!isInBreakingAnimation && elevatorState == ElevatorState.BROKEN);
 
     public void CheckIsFixed(Condition c) => c.SetSpec(elevatorState == ElevatorState.FIXED);
-
-    //public void CheckIsNotOpen(Condition c) => c.SetSpec(!isOpen);
 
     public void CheckHasGoneDown(Condition c) => c.SetSpec(hasGoneDown);
 

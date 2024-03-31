@@ -35,10 +35,6 @@ public class GemMachine : MonoBehaviour, ISavable
         sTile = GetComponentInParent<STile>();
     }
 
-    // private void Update() {
-    //     gemChecker.SetActive(isPowered && !isBroken);
-    // }
-
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
     }
@@ -92,7 +88,6 @@ public class GemMachine : MonoBehaviour, ISavable
     public void AddGem(){
         if(!isPowered || gemMachineState == GemMachineState.BROKEN)
         {
-            Debug.LogWarning("Gem machine took gem when it should not");
             return;
         }
 
@@ -102,12 +97,8 @@ public class GemMachine : MonoBehaviour, ISavable
                 IntialGemAbsorb();
                 break;
             case GemMachineState.FIXED:
-                print("add gem");
-                animator.Play("AbsorbGem");
-                break;
             case GemMachineState.FULLY_GOOED:
-                print("idk yet lol");
-                animator.Play("AbsorbGem");
+                RepairedGemAbsorb();
                 break;
         }
         
@@ -126,6 +117,13 @@ public class GemMachine : MonoBehaviour, ISavable
         minecart.UpdateState("Empty");
         animator.Play("part1");
         //TODO: Play absorb crystal sound
+    }
+
+    private void RepairedGemAbsorb()
+    {
+        numGems++;
+        animator.Play("AbsorbGem");
+        minecart.UpdateState("Empty");
     }
 
 
@@ -177,10 +175,6 @@ public class GemMachine : MonoBehaviour, ISavable
         else if (profile.GetBool("MountainGooFilling"))
             EnableGoo();
     }
-
-    // public void CheckHasCrystals(Condition c){
-    //     c.SetSpec(isDone);
-    // }
 
     public void CheckIsPowered(Condition c){
         c.SetSpec(isPowered);

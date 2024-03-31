@@ -18,6 +18,7 @@ public class WaterWheel : MonoBehaviour, ISavable
     private bool firstLavaPower = false;
     public WaterWheelAnimator animator;
     private bool hasOil;
+    public SpriteSwapper HeaterPipeSpriteSwapper;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
@@ -86,9 +87,10 @@ public class WaterWheel : MonoBehaviour, ISavable
         hasMovedTile = true;
     }
 
-    public void ActivateLavaStage(){
+    public void FixHeater(){
         inLavaStage = true;
-        heaterAnimator.SetBool("Broken",false);
+        HeaterPipeSpriteSwapper.TurnOn();
+        AudioManager.Play("Puzzle Complete");
     }
 
     public void SetLavaComplete()
@@ -176,7 +178,7 @@ public class WaterWheel : MonoBehaviour, ISavable
         firstLavaPower = profile.GetBool("MountainHeaterFirstLavaPower", firstPower);
 
         if(hasOil) AddOil();
-        if(inLavaStage) ActivateLavaStage();
+        if(inLavaStage) FixHeater();
         AddLava(lavaCount);
     }
 
