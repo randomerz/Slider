@@ -22,12 +22,12 @@ public class MinecartElevator : MonoBehaviour, ISavable
     public bool anchorGeneratorPower;
 
     public enum ElevatorState {
-        INTIAL,
+        INITIAL,
         BROKEN,
         FIXED
     }
 
-    public ElevatorState elevatorState = ElevatorState.INTIAL;
+    public ElevatorState elevatorState = ElevatorState.INITIAL;
 
     public void SetIsPowered(bool powered)
     {
@@ -151,7 +151,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
             case ElevatorState.BROKEN:
                 BreakElevator(true);
                 break;
-            case ElevatorState.INTIAL:
+            case ElevatorState.INITIAL:
                 TogglePowerSprites(true);
                 break;
         }
