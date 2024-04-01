@@ -101,13 +101,6 @@ public class GemMachine : MonoBehaviour, ISavable
                 RepairedGemAbsorb();
                 break;
         }
-        
-        // numGems++;
-        // if(numGems == 2){
-        //     AudioManager.Play("Puzzle Complete");
-        //     isDone = true;
-        //     EnableGoo();
-        // }
     }
 
     private void IntialGemAbsorb()
@@ -124,11 +117,7 @@ public class GemMachine : MonoBehaviour, ISavable
         numGems++;
         animator.Play("AbsorbGem");
         minecart.UpdateState("Empty");
-    }
-
-
-    public void RemoveGem(){
-        numGems--;
+        //TODO: Play absorb crystal sound
     }
 
     public void ResetGems(){
@@ -162,14 +151,6 @@ public class GemMachine : MonoBehaviour, ISavable
     public void Load(SaveProfile profile)
     {
         gemMachineState = (GemMachineState) profile.GetInt("mountainGemMachinePhase");
-
-        // numGems = profile.GetInt("mountainNumGems");
-        // if(numGems >= 2)
-        //     isDone = true;
-        // isBroken = profile.GetBool("mountainGemMachineBroken", true);
-        // if(!isBroken)
-        //     Fix();
-        
         if(profile.GetBool("MountainGooFull"))
             EnableGoo(true);
         else if (profile.GetBool("MountainGooFilling"))
@@ -195,6 +176,14 @@ public class GemMachine : MonoBehaviour, ISavable
 
     public void CheckHasFirstCrystal(Condition c){
         c.SetSpec(numGems == 1 && gemMachineState == GemMachineState.INITIAL);
+    }
+
+    public void CheckHasFirstGooCrystal(Condition c){
+        c.SetSpec(numGems == 2 && gemMachineState == GemMachineState.FIXED);
+    }
+
+    public void CheckHasSecondGooCrystal(Condition c){
+        c.SetSpec(numGems >= 3 && gemMachineState == GemMachineState.FIXED);
     }
 
     public void CheckIntialCrystalCutscene(Condition c){
