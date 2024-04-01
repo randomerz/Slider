@@ -460,9 +460,10 @@ public class Minecart : Item, ISavable
         STile tile = null;
         var colliders = Physics2D.OverlapBoxAll(checkloc, Vector2.one * 0.4f, 0);
         foreach(Collider2D c in colliders){
-            if(c.GetComponent<STile>() != null && c.GetComponent<STile>().isTileActive) 
+            STile t = c.GetComponent<STile>();
+            if(t != null && t.isTileActive && !t.IsMoving()) 
             {
-                tile = c.GetComponent<STile>();
+                tile = t;
             }
         }
         return tile;

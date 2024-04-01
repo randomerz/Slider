@@ -21,8 +21,9 @@ public class WaterWheel : MonoBehaviour, ISavable
     private bool hasOil;
     public SpriteSwapper HeaterPipeSpriteSwapper;
     public Minecart mc;
+    public Lava heaterLava;
 
-    public GameObject heaterLava;
+    public GameObject heaterLavaGO;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
@@ -62,10 +63,12 @@ public class WaterWheel : MonoBehaviour, ISavable
         heaterAnimator.Play("Fill");
     }
 
-    public void FillHeaterEnd()
+    public void OnFillHeaterEnd()
     {
         heaterAnimator.Play("On");
-        heaterLava.SetActive(true);
+        heaterLavaGO.SetActive(true);
+        cog1.AddLava(heaterLava);
+        cog2.AddLava(heaterLava);
     }
 
     public void AddLava(int amount = 1)
@@ -164,6 +167,7 @@ public class WaterWheel : MonoBehaviour, ISavable
     public void HasOil(Condition c){
         c.SetSpec(hasOil);
     }
+    
 
     #endregion
 
@@ -190,6 +194,8 @@ public class WaterWheel : MonoBehaviour, ISavable
 
         if(hasOil) AddOil();
         if(heaterFixed) FixHeater();
+
+        //update heater based on lava
     }
 
 }
