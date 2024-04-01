@@ -129,7 +129,10 @@ public class Minecart : Item, ISavable
             Move();
         }
         else if (animator != null)
+        {
             animator.SetSpeed(0);
+            //print("cannot move");
+        }
     }
 
     public override void SetLayer(int layer)
@@ -141,6 +144,7 @@ public class Minecart : Item, ISavable
     //TODO: Use raycasts to figure out if should be paused or not
     private void OnCollisionEnter2D(Collision2D other) 
     {
+        print("collided with" + other.gameObject.name); 
         collidingObjects.Add(other.gameObject);
         collisionPause = true;
     }
@@ -279,6 +283,7 @@ public class Minecart : Item, ISavable
 
     public void StopMoving(bool onTrack = false)
     {
+        print("stop moving");
         isMoving = false;
         if(!onTrack)
             isOnTrack = false;
@@ -339,13 +344,12 @@ public class Minecart : Item, ISavable
         {
             if(TryDrop(true))
             {
-                print("Drop wooo");
                 dropOnNextMove = false;
                 return;
             }
             else
             {
-                print("you can no longer drop. this prob shouldn't happen");
+                Debug.LogWarning("minecart can no longer drop. this prob shouldn't happen");
                 StopMoving();
                 return;
             }
@@ -442,16 +446,12 @@ public class Minecart : Item, ISavable
 
     private bool CheckFreeInFront()
     {
-        Vector3 checkloc = prevWorldPos + GetTileOffsetVector(currentDirection);
-        var colliders = Physics2D.OverlapBoxAll(checkloc, Vector2.one * 0.5f, 0, collidingMask);
-        bool valid = true;
-        foreach(Collider2D c in colliders) {
-            if(c.GetComponent<STile>() == null && c.GetComponentInParent<Minecart>() == null )
-            {
-                valid = false;
-            }
+        //Only the big Ice patch allows for drops now. Must be vertical on tile 4.
+        if(currentSTile == null || currentSTile.islandId != 4 || currentDirection % 2 == 0 || transform.localPosition.y > 7) 
+        {
+            return false;
         }
-        return valid;
+        return true;
     }
 
     private STile CheckDropTileBelow()
