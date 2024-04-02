@@ -39,6 +39,7 @@ public class ChadRace : MonoBehaviour, ISavable
     private State raceState;
     private float startTime;
     private int dialogueCurrentTime;
+    private int numTimesChadWon;
 
     [SerializeField] private ParticleSystem[] speedLinesList;
     private bool speedLinesOn;
@@ -46,6 +47,7 @@ public class ChadRace : MonoBehaviour, ISavable
     private const string SAVE_STRING_CHAD_INTRO = "JungleChadRaceIntroGiven";
     private const string SAVE_STRING_PLAYER_WON = "JungleChadRacePlayerWon";
     private const string SAVE_STRING_RACE_ENDED = "JungleChadRaceRaceEnded";
+    private const string SAVE_STRING_CHAD_SCORE = "JungleChadRaceChadScore";
 
     private void OnEnable()
     {
@@ -140,7 +142,17 @@ public class ChadRace : MonoBehaviour, ISavable
                     // chadEndLocal = transform.localPosition;
                     raceState = State.ChadWon;
                     StartCoroutine(SetParameterTemporary("JungleChadEnd", 1, 0));
-                    DisplayAndTriggerDialogue("Pfft, too easy. Come back when you're fast enough to compete with me.");
+
+                    numTimesChadWon += 1;
+
+                    if (numTimesChadWon >= 10)
+                    {
+                        DisplayAndTriggerDialogue($"Hah, I've won {numTimesChadWon} times now. We can run it back however many times you want.");
+                    }
+                    else
+                    {
+                        DisplayAndTriggerDialogue("Pfft, too easy. Come back when you're fast enough to compete with me.");
+                    }
                 }
 
                 break;
@@ -181,6 +193,7 @@ public class ChadRace : MonoBehaviour, ISavable
             case State.ChadWon:
                 chadimator.SetBool("isWalking", false);
                 transform.position = finishingLine.transform.position;
+                startingFlagRestartNPC.SetActive(true);
 
                 break;
 
@@ -223,6 +236,8 @@ public class ChadRace : MonoBehaviour, ISavable
         {
             SaveSystem.Current.SetBool(SAVE_STRING_RACE_ENDED, true);
         }
+        
+        SaveSystem.Current.SetInt(SAVE_STRING_CHAD_SCORE, numTimesChadWon);
     }
 
     public void Load(SaveProfile profile)
@@ -244,6 +259,8 @@ public class ChadRace : MonoBehaviour, ISavable
         {
             startingFlag.SetActive(false);
         }
+
+        numTimesChadWon = profile.GetInt(SAVE_STRING_CHAD_SCORE);
     }
 
     public void PlaceStartingFlag(bool fromSave=false)

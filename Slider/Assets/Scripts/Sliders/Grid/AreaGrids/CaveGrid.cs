@@ -213,8 +213,8 @@ public class CaveGrid : SGrid
             if (magicRocksIconFlashCoroutine == null)
             {
                 AudioManager.Play("Puzzle Complete");
+                magicRocksIconFlashCoroutine = StartCoroutine(AnimateMagicRockIcon());
             }
-            magicRocksIconFlashCoroutine = StartCoroutine(AnimateMagicRockIcon());
         }
 
         foreach (Animator a in largeMagicRocksAnimators)
