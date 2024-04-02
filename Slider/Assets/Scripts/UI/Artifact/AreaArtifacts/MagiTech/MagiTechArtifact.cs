@@ -333,6 +333,9 @@ public class MagiTechArtifact : UIArtifact
     {
         foreach (ArtifactTileButton b in buttons)
         {
+            b.SetSelected(false);
+            b.SetHighlighted(false);
+            b.SetSpriteToIslandOrEmpty();
             if (b.islandId > 9 && past || b.islandId <= 9 && !past)
             {
                 b.gameObject.SetActive(true);             
