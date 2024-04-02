@@ -21,6 +21,11 @@ public class PipeLiquid : MonoBehaviour
 
     private bool didInit;
 
+    public bool updateRTPos;
+    public Material gooMaterial;
+    public Vector4 rtPos;
+    public Vector3 initialPos;
+    
     private void Awake()
     {
         Init();
@@ -36,6 +41,25 @@ public class PipeLiquid : MonoBehaviour
 
         SavePoints();
         SetPipeEmpty();
+    }
+
+    private void LateUpdate()
+    {
+        if(updateRTPos) 
+            UpdateRTPos();
+    }
+    
+    private void UpdateRTPos()
+    {
+        Vector3 diff = transform.position - initialPos;
+        Vector4 newRtPos = rtPos + new Vector4(diff.x, diff.y);
+        gooMaterial.SetVector("_RTOffset", newRtPos);
+    }
+
+    private void OnDisable()
+    {
+        if(updateRTPos)
+            gooMaterial.SetVector("_RTOffset", rtPos);
     }
 
     private void SavePoints()
