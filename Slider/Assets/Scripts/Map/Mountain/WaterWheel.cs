@@ -10,18 +10,18 @@ public class WaterWheel : MonoBehaviour, ISavable
     private bool powered = false;
     [SerializeField] private ElectricalNode powerNode;
     public Animator heaterAnimator;
-    private bool heaterFixed = false;
-    private bool heaterFull = false;
-    private int lavaCount = 0;
-    //private bool hasAddedLava = false;
+    public bool heaterFixed = false;
+    public bool heaterFull = false;
+    public int lavaCount = 0;
     private bool hasMovedTile = false;
     private bool firstPower = false;
     private bool firstLavaPower = false;
     public WaterWheelAnimator animator;
-    private bool hasOil;
+    public bool hasOil;
     public SpriteSwapper HeaterPipeSpriteSwapper;
     public Minecart mc;
     public Lava heaterLava;
+    public PipeLiquid lavaPipe;
 
     public GameObject heaterLavaGO;
 
@@ -65,20 +65,28 @@ public class WaterWheel : MonoBehaviour, ISavable
 
     public void OnFillHeaterEnd()
     {
+        heaterFull = true;
         heaterAnimator.Play("On");
         heaterLavaGO.SetActive(true);
         cog1.AddLava(heaterLava);
         cog2.AddLava(heaterLava);
+        cog1.SetRefreezeOnTop(false);
+        cog2.SetRefreezeOnTop(false);
     }
 
-    public void AddLava(int amount = 1)
+    public void AddHeaterLava()
     {
         if(!heaterFixed) return;
         
-        lavaCount += amount;
-       // hasAddedLava = true;
-        if(lavaCount >= 2){
-           // SetLavaComplete();
+        lavaCount ++;
+        mc.UpdateState("Empty");
+        //TODO: Play lava extractor animation
+        if(lavaCount == 1)
+        {
+            lavaPipe.FillPipe(Vector2.zero, new Vector2(0, 0.5f), 3f);
+        }
+        if(lavaCount == 2){
+            lavaPipe.FillPipe(new Vector2(0, 0.5f), Vector2.up, 3f);
         }
     }
 
@@ -106,17 +114,6 @@ public class WaterWheel : MonoBehaviour, ISavable
         HeaterPipeSpriteSwapper.TurnOn();
         AudioManager.Play("Puzzle Complete");
     }
-
-    // public void SetLavaComplete()
-    // {
-    //     inLavaStage = false;
-    //     //cog2.AddLava();
-    //     cog2.Melt();
-    //     cog2.SetRefreezeOnTop(false);
-    //    // cog1.AddLava();
-    //     cog1.Melt();
-    //     cog1.SetRefreezeOnTop(false);
-    // }
 
     public bool IsDone(){
         return lavaCount > 1 && powered;
@@ -167,6 +164,10 @@ public class WaterWheel : MonoBehaviour, ISavable
     public void HasOil(Condition c){
         c.SetSpec(hasOil);
     }
+
+    public void IsHeaterFull(Condition c){
+        c.SetSpec(heaterFull);
+    }
     
 
     #endregion
@@ -194,8 +195,12 @@ public class WaterWheel : MonoBehaviour, ISavable
 
         if(hasOil) AddOil();
         if(heaterFixed) FixHeater();
-
-        //update heater based on lava
+        if(lavaCount == 1) lavaPipe.Fill(new(0, 0.5f));
+        if(lavaCount == 2) 
+        {
+            lavaPipe.Fill(new(0, 1f));
+            OnFillHeaterEnd();
+        }
     }
 
 }

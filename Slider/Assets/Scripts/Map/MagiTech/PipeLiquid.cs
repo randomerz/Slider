@@ -93,7 +93,7 @@ public class PipeLiquid : MonoBehaviour
         }
     }
 
-    private void Fill(Vector2 state)
+    public void Fill(Vector2 state)
     {
         Fill(state[0], state[1]);
     }
@@ -162,6 +162,11 @@ public class PipeLiquid : MonoBehaviour
     public void FillPipe(float duration)
     {
         StartCoroutine(AnimateFill(Vector2.zero, Vector2.up, duration));
+    }
+
+    public void FillPipe(Vector2 start, Vector2 end, float duration)
+    {
+        StartCoroutine(AnimateFill(start, end, duration));
     }
 
     public void SetPipeFull()
