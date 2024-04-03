@@ -86,7 +86,7 @@ public class GemMachine : MonoBehaviour, ISavable
     }
 
     public void AddGem(){
-        if(!isPowered || gemMachineState == GemMachineState.BROKEN)
+        if(gemMachineState == GemMachineState.BROKEN)
         {
             return;
         }
