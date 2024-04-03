@@ -337,4 +337,14 @@ public class Item : MonoBehaviour, ISavable
             go.SetActive(true);
         }
     }
+
+    public void SpawnItem()
+    {
+        if(!gameObject.activeSelf)
+        {
+            AudioManager.Play("Puzzle Complete");
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position, transform);
+        }
+        gameObject.SetActive(true);
+    }
 }

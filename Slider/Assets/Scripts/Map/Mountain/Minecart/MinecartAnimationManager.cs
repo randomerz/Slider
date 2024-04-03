@@ -76,9 +76,8 @@ public class MinecartAnimationManager : MonoBehaviour
     public void SetSpeed(int speed)
     {
         mcAnimator.speed = speed;
-       //crystalAnimator.speed = speed;
+        crystalAnimator.speed = speed;
         lavaAnimator.speed = speed;
-      //  repairPartsAnimator.speed = speed;
     }
 
     public void SetLayer(int layer)

@@ -131,7 +131,6 @@ public class Minecart : Item, ISavable
         else if (animator != null)
         {
             animator.SetSpeed(0);
-            //print("cannot move");
         }
     }
 
@@ -144,7 +143,6 @@ public class Minecart : Item, ISavable
     //TODO: Use raycasts to figure out if should be paused or not
     private void OnCollisionEnter2D(Collision2D other) 
     {
-        print("collided with" + other.gameObject.name); 
         collidingObjects.Add(other.gameObject);
         collisionPause = true;
     }
