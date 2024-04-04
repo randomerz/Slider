@@ -14,6 +14,8 @@ public class Rocket : MonoBehaviour
     public AnimationCurve rocketCurve;
     private bool isPlaying;
     private float rocketDuration = 8.0f;
+    private AsyncOperation sceneLoad;
+    private const string END_OF_GAME_SCENE = "EndOfGame";
 
     public void StartRocketCutscene()
     {
@@ -50,11 +52,14 @@ public class Rocket : MonoBehaviour
             yield return null;
         }
 
-        UIEffects.FadeToBlack(LoadEndOfGameScene, disableAtEnd:false);
+        LoadEndOfGameScene();
     }
 
     private void LoadEndOfGameScene()
     {
+        sceneLoad = SceneManager.LoadSceneAsync(END_OF_GAME_SCENE);
+        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
+
         SaveSystem.SaveGame("Ending Game");
         SaveSystem.SetCurrentProfile(-1);
 
@@ -62,6 +67,8 @@ public class Rocket : MonoBehaviour
         if(Player.GetInstance() != null)
             Player.GetInstance().ResetInventory();
 
-        SceneManager.LoadScene("EndOfGame");
+        UIEffects.FadeToBlack(() => {
+            sceneLoad.allowSceneActivation = true;
+        }, disableAtEnd: false);
     }
 }
