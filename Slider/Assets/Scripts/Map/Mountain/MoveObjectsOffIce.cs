@@ -8,16 +8,8 @@ public class MoveObjectsOffIce : MonoBehaviour
 {
     public Transform playerRespawn;
     public LayerMask blocksSpawnMask;
-
-    [Serializable]
-    public class TileRespawn
-    {
-        public int islandid;
-        public Transform respawn;
-    }
-
-    [SerializeField] private TileRespawn[] respawns;
-
+    public Minecart minecart;
+    
     private Tilemap colliders;
     private Transform player;
     private List<Transform> otherObjects = new List<Transform>();
@@ -34,29 +26,13 @@ public class MoveObjectsOffIce : MonoBehaviour
     {
         if(player == null) return;
         TileBase tile = colliders.GetTile(colliders.WorldToCell(player.position));
-        if(tile != null && colliders.ContainsTile(tile))
+        Vector3 checkpos = player.position + new Vector3(0, -100, 0);
+        if(tile != null && colliders.ContainsTile(tile) && SGrid.GetSTileUnderneath(checkpos) != null)
         {
-            if(CheckTileBelow()) 
+            if(!ItemPlacerSolver.TryPlaceItem(checkpos, player.transform, 10, blocksSpawnMask, true))
             {
-                Vector3 checkpos = player.position + new Vector3(0, -100, 0);
-                int tries = 0;
-                do
-                {
-                    var cast = Physics2D.OverlapCircle(checkpos, 0.5f, blocksSpawnMask);
-                    if(cast == null || cast.gameObject.GetComponent<STile>())
-                    {
-                        AudioManager.Play("Hurt");
-                        player.position = checkpos;
-                        return;
-                    }
-                    else {
-                        checkpos += Vector3.right;
-                        tries++;
-                    }
-                }
-                while (tries < 5);
+                player.position = playerRespawn.position;
             }
-            player.position = playerRespawn.position;
             AudioManager.Play("Hurt");
         }
     }
@@ -65,78 +41,35 @@ public class MoveObjectsOffIce : MonoBehaviour
     {
         int objCount = 1;
         foreach(Transform t in otherObjects) {
-            print(t.gameObject.name + " on ice");
             TileBase tile = colliders.GetTile(colliders.WorldToCell(t.position));
-            if(tile != null && colliders.ContainsTile(tile)) 
+            Vector3 checkpos = t.position + new Vector3(0, -100, 0);
+            if(tile != null && colliders.ContainsTile(tile) && SGrid.GetSTileUnderneath(checkpos) != null) 
             {
-                Minecart mc = t.gameObject.GetComponent<Minecart>();
                 bool moved = false;
-                if(CheckTileBelow()) 
+                Minecart mc = t.gameObject.GetComponent<Minecart>();
+                if(mc != null && mc.isMoving)
                 {
-                    if(mc != null && mc.isMoving)
-                    {
-                        moved = mc.TryDrop(true);
-                    }
-                    else if (!moved) {
-                        Vector3 checkpos = t.position + new Vector3(0, -100, 0);
-                        int tries = 0;
-                        do
-                        {
-                            var cast = Physics2D.OverlapCircle(checkpos, 0.5f, blocksSpawnMask);
-                            if(cast == null || cast.gameObject.GetComponent<STile>())
-                            {
-                                mc?.StopMoving();
-                                t.position = checkpos;
-                                moved = true;
-                            }
-                            else {
-                                checkpos += Vector3.right;
-                                tries++;
-                            }
-                        }
-                        while (tries < 5 && !moved);
-                    }
+                    moved = mc.TryDrop(true);
                 }
-                
-                if(!moved) {
-                    mc?.StopMoving();
-                    t.position = playerRespawn.position + (Mathf.Min(objCount,3)) * Vector3.right;
+                if(!moved)
+                {
+                    if(!ItemPlacerSolver.TryPlaceItem(checkpos, t, 10, blocksSpawnMask, true))
+                    {
+                        mc?.StopMoving();
+                        t.position = playerRespawn.position + objCount * Vector3.right;
+                    }
                 }
                 objCount++;
             }
         }
         otherObjects.Clear();
     }
-
-
     private bool CheckTileBelow() => stile.y > 1 && SGrid.Current.GetGrid()[stile.x, stile.y - 2].isTileActive;
-
-    private bool CheckCollidersBelow() => true;
-
-    private Transform GetRespawnByIslandID(int islandid)
-    {
-        foreach(TileRespawn tr in respawns)
-        {
-            if(tr.islandid == islandid)
-            {
-                return(tr.respawn);
-            }
-        }
-        Debug.LogWarning($"No respawn point found for tile {islandid}. Defaulting to upper-level respawn");
-        return playerRespawn;
-    }
-
-    private Vector3 GetDropLocation(Transform t)
-    {
-        return t.position;
-    }
-
 
     private void OnTriggerEnter2D(Collider2D other) {
         Transform t = other.transform;
         if(t != player && (t.GetComponent<Item>())){
             otherObjects.Add(t);
-            print(t.gameObject.name + " added to ice");
         }
     }
 
