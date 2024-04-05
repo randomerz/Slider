@@ -41,6 +41,7 @@ public class DesertGTA : ExplodableRock
     {
         if (!PlayerInventory.Contains("Explosives", Area.Military))
         {
+            AudioManager.Play("Artifact Error");
             return;
         }
 
