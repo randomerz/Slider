@@ -43,6 +43,7 @@ public class ChadRace : MonoBehaviour, ISavable
     [SerializeField] private ParticleSystem[] speedLinesList;
     private bool speedLinesOn;
 
+    private const string SAVE_STRING_CHAD_INTRO = "JungleChadRaceIntroGiven";
     private const string SAVE_STRING_PLAYER_WON = "JungleChadRacePlayerWon";
     private const string SAVE_STRING_RACE_ENDED = "JungleChadRaceRaceEnded";
 
@@ -71,7 +72,7 @@ public class ChadRace : MonoBehaviour, ISavable
         }
         else
         {
-            DisplayAndTriggerDialogue("Race time! Set up a track to the bell.");
+            DisplayAndTriggerDialogue("Race time! Set up the race track to the bell.");
             raceState = State.TrackNotSetup;
         }
         
@@ -96,7 +97,7 @@ public class ChadRace : MonoBehaviour, ISavable
             case State.NotStarted:
                 if (!tilesAdjacent)
                 {
-                    DisplayAndTriggerDialogue("Race time! Set up a track to the bell.");
+                    DisplayAndTriggerDialogue("Race time! Set up the race track to the bell.");
                     raceState = State.TrackNotSetup;
                 }
                 ActivateSpeedLines(false);
@@ -263,7 +264,7 @@ public class ChadRace : MonoBehaviour, ISavable
             }
             else
             {
-                DisplayAndTriggerDialogue("Race time! Set up a track to the bell.");
+                DisplayAndTriggerDialogue("Race time! Set up the race track to the bell.");
                 raceState = State.TrackNotSetup;
             }
         }
@@ -324,6 +325,7 @@ public class ChadRace : MonoBehaviour, ISavable
     public void StartQueued() {
         if (tilesAdjacent && 
             SaveSystem.Current.GetBool(JungleShapeManager.GetSaveString("Flag")) &&
+            SaveSystem.Current.GetBool(SAVE_STRING_CHAD_INTRO) &&
             raceState != State.Started && 
             raceState != State.Running && 
             raceState != State.PlayerWon && 

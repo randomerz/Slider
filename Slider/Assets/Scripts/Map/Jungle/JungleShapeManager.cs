@@ -26,6 +26,11 @@ public class JungleShapeManager : Singleton<JungleShapeManager>, ISavable
 
     public static bool TurnInShape(Shape wanted)
     {
+        if (SaveSystem.Current.GetBool(GetSaveString(wanted.shapeName)))
+        {
+            return false;
+        }
+
         // get teh item the player is holding
         Item held = PlayerInventory.GetCurrentItem();
 
