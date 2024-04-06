@@ -28,7 +28,7 @@ public class Blob : MonoBehaviour
 
     public const float MARCH_SPEED = 0.75f;
     private const float JUMP_SPEED = 1.25f;
-    private const float JUMP_DURATION = 2.3f;
+    private const float JUMP_DURATION = 2.2f;
 
     public void InitializeParameters(Direction direction, 
                                      float targetDistanceTraveled, 
@@ -121,7 +121,7 @@ public class Blob : MonoBehaviour
 
         if (currentSTileUnder == null)
         {
-            Debug.LogWarning("Current STile under was not properly set up for blob!");
+            Debug.LogWarning("Current STile under was not properly set up for blob! Attempting to rectify.");
             currentSTileUnder = under;
             transform.SetParent(currentSTileUnder.transform);
             return;

@@ -17,7 +17,8 @@ public abstract class JungleBox : MonoBehaviour, ISavable
 
     protected static int numSourceIds; // Used to generate source ids
     protected const int DEPTH_LIMIT = 30;
-    protected const string WORLD_COLLIDER_TAG = "WorldMapCollider"; // Does not include collider tilemap, etc
+    // includes BGFrame colliders, stile colliders, collider tilemap, etc
+    protected const string WORLD_COLLIDER_TAG = "WorldMapCollider"; 
 
     [SerializeField] protected string saveString = "";
 

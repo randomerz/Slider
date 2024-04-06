@@ -25,11 +25,13 @@ public class TimedGateDiode : ElectricalNode
         gate.OnGateDeactivated.RemoveListener(GateDeactivatedHandler);
     }
 
-
     public override void OnPoweredHandler(OnPoweredArgs e)
     {
         base.OnPoweredHandler(e);
-        if (e.powered && gate.GateActive)
+        
+        // GateActive means the countdown is happening, gate.Powered is a bit weirder but 
+        // is hopefully true when an area is loaded
+        if (e.powered && (gate.GateActive || gate.Powered))
         {
             //GateActivatedHandler();
             swapper.TurnOn();
@@ -46,10 +48,8 @@ public class TimedGateDiode : ElectricalNode
         {
             swapper.TurnOn();
             batteryProp.SetDiodeEnabled(true);
+            batteryProp?.SetGateEnabled(true);
         }
-
-        batteryProp?.SetGateEnabled(true);
-
     }
 
     public void GateDeactivatedHandler()
