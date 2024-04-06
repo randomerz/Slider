@@ -27,13 +27,23 @@ public class MoveObjectsOffIce : MonoBehaviour
         if(player == null) return;
         TileBase tile = colliders.GetTile(colliders.WorldToCell(player.position));
         Vector3 checkpos = player.position + new Vector3(0, -100, 0);
-        if(tile != null && colliders.ContainsTile(tile) && SGrid.GetSTileUnderneath(checkpos) != null)
+        if(tile != null && colliders.ContainsTile(tile))
         {
-            if(!ItemPlacerSolver.TryPlaceItem(checkpos, player, 10, blocksSpawnMask, true))
+            if(SGrid.GetSTileUnderneath(checkpos) != null)
             {
-                player.position = playerRespawn.position;
+                if(!ItemPlacerSolver.TryPlaceItem(checkpos, player, 10, blocksSpawnMask, true))
+                {
+                    player.position = playerRespawn.position;
+                }
+                AudioManager.Play("Hurt");
             }
-            AudioManager.Play("Hurt");
+            else
+            {    
+                player.position = playerRespawn.position;
+                AudioManager.Play("Hurt");
+                return;
+            }
+           
         }
     }
 
@@ -44,29 +54,36 @@ public class MoveObjectsOffIce : MonoBehaviour
             Transform t = go.transform;
             TileBase tile = colliders.GetTile(colliders.WorldToCell(t.position));
             Vector3 checkpos = t.position + new Vector3(0, -100, 0);
-            if(tile != null && colliders.ContainsTile(tile) && SGrid.GetSTileUnderneath(checkpos) != null) 
+            if(tile != null && colliders.ContainsTile(tile)) 
             {
-                bool moved = false;
-                Minecart mc = t.gameObject.GetComponent<Minecart>();
-                if(mc != null && mc.isMoving)
+                if(SGrid.GetSTileUnderneath(checkpos) != null)
                 {
-                    moved = mc.TryDrop(true);
-                }
-                if(!moved)
-                {
-                    if(ItemPlacerSolver.TryPlaceItem(checkpos, t, 10, blocksSpawnMask, true))
-                    {   
-                        Anchor a;
-                        if(go.TryGetComponent<Anchor>(out a))
+                    bool moved = false;
+                    Minecart mc = t.gameObject.GetComponent<Minecart>();
+                    if(mc != null && mc.isMoving)
+                    {
+                        moved = mc.TryDrop(true);
+                    }
+                    if(!moved)
+                    {
+                        if(ItemPlacerSolver.TryPlaceItem(checkpos, t, 10, blocksSpawnMask, true))
+                        {   
+                            Anchor a;
+                            if(go.TryGetComponent<Anchor>(out a))
+                            {
+                                a.DropThroughIce();
+                            }
+                        }
+                        else
                         {
-                            a.DropThroughIce();
+                            mc?.StopMoving();
+                            t.position = playerRespawn.position + objCount * Vector3.right;
                         }
                     }
-                    else
-                    {
-                        mc?.StopMoving();
-                        t.position = playerRespawn.position + objCount * Vector3.right;
-                    }
+                }
+                else
+                {
+                    t.position = playerRespawn.position + objCount * Vector3.right;
                 }
                 objCount++;
             }
