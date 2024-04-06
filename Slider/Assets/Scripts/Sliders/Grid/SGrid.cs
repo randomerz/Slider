@@ -381,7 +381,7 @@ public void SetGrid(int[,] puzzle)
     //C: Order of preference is transform, object, then position
     public static STile GetSTileUnderneath(Transform entity, STile currentStileUnderneath, bool includeInactive=false)
     {
-        return GetSTileUnderneathHelper(entity.position, null, includeInactive);
+        return GetSTileUnderneathHelper(entity.position, currentStileUnderneath, includeInactive);
     }
     
     public static STile GetSTileUnderneath(GameObject target, bool includeInactive=false)

@@ -9,10 +9,10 @@ public class MoveObjectsOffIce : MonoBehaviour
     public Transform playerRespawn;
     public LayerMask blocksSpawnMask;
     public Minecart minecart;
-    
+
     private Tilemap colliders;
     private Transform player;
-    private List<Transform> otherObjects = new List<Transform>();
+    private List<GameObject> otherObjects = new List<GameObject>();
     private STile stile;
 
     private void Start() 
@@ -29,7 +29,7 @@ public class MoveObjectsOffIce : MonoBehaviour
         Vector3 checkpos = player.position + new Vector3(0, -100, 0);
         if(tile != null && colliders.ContainsTile(tile) && SGrid.GetSTileUnderneath(checkpos) != null)
         {
-            if(!ItemPlacerSolver.TryPlaceItem(checkpos, player.transform, 10, blocksSpawnMask, true))
+            if(!ItemPlacerSolver.TryPlaceItem(checkpos, player, 10, blocksSpawnMask, true))
             {
                 player.position = playerRespawn.position;
             }
@@ -40,7 +40,8 @@ public class MoveObjectsOffIce : MonoBehaviour
     public void CheckObjectsOnIce()
     {
         int objCount = 1;
-        foreach(Transform t in otherObjects) {
+        foreach(GameObject go in otherObjects) {
+            Transform t = go.transform;
             TileBase tile = colliders.GetTile(colliders.WorldToCell(t.position));
             Vector3 checkpos = t.position + new Vector3(0, -100, 0);
             if(tile != null && colliders.ContainsTile(tile) && SGrid.GetSTileUnderneath(checkpos) != null) 
@@ -53,7 +54,15 @@ public class MoveObjectsOffIce : MonoBehaviour
                 }
                 if(!moved)
                 {
-                    if(!ItemPlacerSolver.TryPlaceItem(checkpos, t, 10, blocksSpawnMask, true))
+                    if(ItemPlacerSolver.TryPlaceItem(checkpos, t, 10, blocksSpawnMask, true))
+                    {   
+                        Anchor a;
+                        if(go.TryGetComponent<Anchor>(out a))
+                        {
+                            a.DropThroughIce();
+                        }
+                    }
+                    else
                     {
                         mc?.StopMoving();
                         t.position = playerRespawn.position + objCount * Vector3.right;
@@ -67,17 +76,17 @@ public class MoveObjectsOffIce : MonoBehaviour
     private bool CheckTileBelow() => stile.y > 1 && SGrid.Current.GetGrid()[stile.x, stile.y - 2].isTileActive;
 
     private void OnTriggerEnter2D(Collider2D other) {
-        Transform t = other.transform;
-        if(t != player && (t.GetComponent<Item>())){
-            otherObjects.Add(t);
+        GameObject go = other.gameObject;
+        if(go != player.transform && go.GetComponent<Item>()){
+            otherObjects.Add(go);
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        Transform t = other.transform;
-        if(t != player) {
-            otherObjects.Remove(t);
+        GameObject go = other.gameObject;
+        if(go.transform != player) {
+            otherObjects.Remove(go);
         }
     }
 }

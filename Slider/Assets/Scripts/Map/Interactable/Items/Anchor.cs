@@ -109,4 +109,11 @@ public class Anchor : Item
         
         OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true });
     }
+
+    public void DropThroughIce()
+    {
+        RemoveFromTile();
+        AddToTile(SGrid.GetSTileUnderneath(this.transform, null));
+        OnAnchorInteract?.Invoke(this, new OnAnchorInteractArgs { stile = currentSTile, drop=true });
+    }
 }
