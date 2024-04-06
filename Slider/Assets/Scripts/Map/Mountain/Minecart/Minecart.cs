@@ -63,6 +63,8 @@ public class Minecart : Item, ISavable
     public Sprite trackerSpriteCrystal;
 
     private bool nextTile = false;
+    public LayerMask blocksSpawnMask;
+
 
 
     public override void Awake() 
@@ -281,7 +283,6 @@ public class Minecart : Item, ISavable
 
     public void StopMoving(bool onTrack = false)
     {
-        print("stop moving");
         isMoving = false;
         if(!onTrack)
             isOnTrack = false;
@@ -429,7 +430,7 @@ public class Minecart : Item, ISavable
     public bool TryDrop(bool dropImmediate = false)
     {   
         STile tile = CheckDropTileBelow();
-        bool canDrop = (dropImmediate || CheckFreeInFront()) && tile != null;
+        bool canDrop = tile != null && CheckFreeInFrontAndBelow();
         if(canDrop)
         {
             if(dropImmediate) Drop(tile);
@@ -442,10 +443,18 @@ public class Minecart : Item, ISavable
         return canDrop;
     }
 
-    private bool CheckFreeInFront()
+    private bool CheckFreeInFrontAndBelow()
     {
         //Only the big Ice patch allows for drops now. Must be vertical on tile 4.
         if(currentSTile == null || currentSTile.islandId != 4 || currentDirection % 2 == 0 || transform.localPosition.y > 7) 
+        {
+            return false;
+        }
+
+        //check colliders below
+        Vector3 checkloc = prevWorldPos + (new Vector3Int(0,-1 * MountainGrid.Instance.layerOffset, 0)) + GetTileOffsetVector(currentDirection);
+        Vector3 loc = ItemPlacerSolver.FindItemPlacePosition(checkloc, 0, blocksSpawnMask, true);
+        if( loc.x == float.MaxValue)
         {
             return false;
         }

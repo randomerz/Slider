@@ -73,7 +73,6 @@ public class MoveObjectsOffIce : MonoBehaviour
         }
         otherObjects.Clear();
     }
-    private bool CheckTileBelow() => stile.y > 1 && SGrid.Current.GetGrid()[stile.x, stile.y - 2].isTileActive;
 
     private void OnTriggerEnter2D(Collider2D other) {
         GameObject go = other.gameObject;

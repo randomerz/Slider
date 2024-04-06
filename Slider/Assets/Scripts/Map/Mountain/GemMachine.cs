@@ -114,6 +114,8 @@ public class GemMachine : MonoBehaviour, ISavable
 
     private void RepairedGemAbsorb()
     {
+        if(!isPowered)
+            return;
         numGems++;
         animator.Play("AbsorbGem");
         minecart.UpdateState("Empty");
