@@ -10,7 +10,7 @@ public class UIArtifactInventory : MonoBehaviour
 
     public ArtifactInventoryCollectible anchorCollectible; // the check is player.pickedupanchor
     public ArtifactInventoryCollectible scrollCollectible; 
-    public ArtifactInventoryCollectible scrollFragCollectible;
+    public ArtifactInventoryCollectible scrollScrapCollectible;
 
     public TextMeshProUGUI inventoryText;
 
@@ -61,7 +61,7 @@ public class UIArtifactInventory : MonoBehaviour
         anchorCollectible.SetVisible(PlayerInventory.Instance.GetHasCollectedAnchor());
 
         scrollCollectible.SetVisible(PlayerInventory.Contains("Scroll of Realigning"));
-        scrollFragCollectible.SetVisible(!PlayerInventory.Contains("Scroll of Realigning") && PlayerInventory.Contains("Scroll Frag"));
+        scrollScrapCollectible?.SetVisible(!PlayerInventory.Contains("Scroll of Realigning") && PlayerInventory.Contains("Scroll Scrap"));
     }
 
     public void UpdateText(string text)

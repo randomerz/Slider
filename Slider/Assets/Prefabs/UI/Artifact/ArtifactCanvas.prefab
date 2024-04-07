@@ -313,7 +313,7 @@ MonoBehaviour:
   - {fileID: 9064563641219119316}
   anchorCollectible: {fileID: 8110192408736315213}
   scrollCollectible: {fileID: 4466905745852967446}
-  scrollFragCollectible: {fileID: 780777889991708053}
+  scrollScrapCollectible: {fileID: 780777889991708053}
   inventoryText: {fileID: 6018487552906129439}
   oilCollectible: {fileID: 9182655172357105490}
   sunglassesCount: {fileID: 344556720903910910}
@@ -10936,7 +10936,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4364494320633969430, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: m_Name
-      value: Scroll Frag
+      value: Scroll Scrap
       objectReference: {fileID: 0}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: inventory
@@ -10944,11 +10944,11 @@ PrefabInstance:
       objectReference: {fileID: 4839968679539576888}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: displayName
-      value: Scroll Frag
+      value: Scroll Scap
       objectReference: {fileID: 0}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: collectibleName
-      value: Scroll Frag
+      value: Scroll Scap
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

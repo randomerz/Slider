@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DesertScrollFragTabHintPrompt : MonoBehaviour
+public class DesertScrollScrapTabHintPrompt : MonoBehaviour
 {
     private bool promptedPreviously = false;
 
@@ -10,7 +10,7 @@ public class DesertScrollFragTabHintPrompt : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!promptedPreviously && PlayerInventory.Contains("Scroll Frag"))
+        if (!promptedPreviously && PlayerInventory.Contains("Scroll Scrap"))
         {
             playerActionHints.TriggerHint("scrollscrap");
             promptedPreviously = true;
