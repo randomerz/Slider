@@ -191,7 +191,7 @@ public class MagiTechGrid : SGrid
         SwapTiles(pastTile, pastSwap);
     }
 
-    private STile FindAltStile(STile sTile)
+    public STile FindAltStile(STile sTile)
     {
         int altId = FindAltId(sTile.islandId);
         return GetStile(altId);
