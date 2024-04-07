@@ -84,7 +84,7 @@ public class RuinsArrow : MonoBehaviour
         // check if arrow should be on or not
         if (value)
         {
-            if (!spriteRenderer.enabled && !PlayerInventory.Contains("Slider 7"))
+            if (!spriteRenderer.enabled && !PlayerInventory.Contains("Slider 7", Area.Village))
             {
                 // if was false before
                 arrowParticles.Play();
@@ -95,7 +95,7 @@ public class RuinsArrow : MonoBehaviour
             spriteRenderer.enabled = true;
             UpdateArrowDirection(grid);
 
-            if (!PlayerInventory.Contains("Slider 7"))
+            if (!PlayerInventory.Contains("Slider 7", Area.Village))
             {
                 particleTrail.StopRepeating();
                 particleTrail.SpawnParticleTrail(true);
