@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mirage World
+  m_Name: Mirage World Offset 0
   m_Shader: {fileID: -6465566751694194690, guid: f2b4ad6783ae91d458cf0640dbe07d69, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -55,7 +55,7 @@ Material:
     - _StencilWriteMask: 255
     - _TimeMultiplier: 0
     - _TimeOffsetMultiplier: 1
-    - _YOffset: 0.5
+    - _YOffset: 0
     m_Colors: []
   m_BuildTextureStacks: []
 --- !u!114 &1918100697687701957
