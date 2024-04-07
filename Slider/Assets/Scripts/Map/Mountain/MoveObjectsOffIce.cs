@@ -8,98 +8,82 @@ public class MoveObjectsOffIce : MonoBehaviour
 {
     public Transform playerRespawn;
     public LayerMask blocksSpawnMask;
-
-    [Serializable]
-    public class TileRespawn
-    {
-        public int islandid;
-        public Transform respawn;
-    }
-
-    [SerializeField] private TileRespawn[] respawns;
+    public Minecart minecart;
 
     private Tilemap colliders;
     private Transform player;
-    private List<Transform> otherObjects = new List<Transform>();
+    private List<GameObject> otherObjects = new List<GameObject>();
     private STile stile;
 
     private void Start() 
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        player = Player.GetInstance().transform;
         colliders = GetComponent<Tilemap>();
         stile = GetComponentInParent<STile>();
     }
 
     public void CheckPlayerOnIce()
     {
+        if(player == null) return;
         TileBase tile = colliders.GetTile(colliders.WorldToCell(player.position));
+        Vector3 checkpos = player.position + new Vector3(0, -100, 0);
         if(tile != null && colliders.ContainsTile(tile))
         {
-            if(CheckTileBelow()) 
+            if(SGrid.GetSTileUnderneath(checkpos) != null)
             {
-                Vector3 checkpos = player.position + new Vector3(0, -100, 0);
-                int tries = 0;
-                do
+                if(!ItemPlacerSolver.TryPlaceItem(checkpos, player, 10, blocksSpawnMask, true))
                 {
-                    var cast = Physics2D.OverlapCircle(checkpos, 0.5f, blocksSpawnMask);
-                    if(cast == null || cast.gameObject.GetComponent<STile>())
-                    {
-                        AudioManager.Play("Hurt");
-                        player.position = checkpos;
-                        return;
-                    }
-                    else {
-                        checkpos += Vector3.right;
-                        tries++;
-                    }
+                    player.position = playerRespawn.position;
                 }
-                while (tries < 5);
+                AudioManager.Play("Hurt");
             }
-            player.position = playerRespawn.position;
-            AudioManager.Play("Hurt");
+            else
+            {    
+                player.position = playerRespawn.position;
+                AudioManager.Play("Hurt");
+                return;
+            }
+           
         }
     }
 
     public void CheckObjectsOnIce()
     {
         int objCount = 1;
-        foreach(Transform t in otherObjects) {
-            print(t.gameObject.name + " on ice");
+        foreach(GameObject go in otherObjects) {
+            Transform t = go.transform;
             TileBase tile = colliders.GetTile(colliders.WorldToCell(t.position));
+            Vector3 checkpos = t.position + new Vector3(0, -100, 0);
             if(tile != null && colliders.ContainsTile(tile)) 
             {
-                Minecart mc = t.gameObject.GetComponent<Minecart>();
-                bool moved = false;
-                if(CheckTileBelow()) 
+                if(SGrid.GetSTileUnderneath(checkpos) != null)
                 {
+                    bool moved = false;
+                    Minecart mc = t.gameObject.GetComponent<Minecart>();
                     if(mc != null && mc.isMoving)
                     {
                         moved = mc.TryDrop(true);
                     }
-                    else if (!moved) {
-                        Vector3 checkpos = t.position + new Vector3(0, -100, 0);
-                        int tries = 0;
-                        do
-                        {
-                            var cast = Physics2D.OverlapCircle(checkpos, 0.5f, blocksSpawnMask);
-                            if(cast == null || cast.gameObject.GetComponent<STile>())
+                    if(!moved)
+                    {
+                        if(ItemPlacerSolver.TryPlaceItem(checkpos, t, 10, blocksSpawnMask, true))
+                        {   
+                            Anchor a;
+                            if(go.TryGetComponent<Anchor>(out a))
                             {
-                                mc?.StopMoving();
-                                t.position = checkpos;
-                                moved = true;
-                            }
-                            else {
-                                checkpos += Vector3.right;
-                                tries++;
+                                a.DropThroughIce();
                             }
                         }
-                        while (tries < 5 && !moved);
+                        else
+                        {
+                            mc?.StopMoving();
+                            t.position = playerRespawn.position + objCount * Vector3.right;
+                        }
                     }
                 }
-                
-                if(!moved) {
-                    mc?.StopMoving();
-                    t.position = playerRespawn.position + (Mathf.Min(objCount,3)) * Vector3.right;
+                else
+                {
+                    t.position = playerRespawn.position + objCount * Vector3.right;
                 }
                 objCount++;
             }
@@ -107,43 +91,18 @@ public class MoveObjectsOffIce : MonoBehaviour
         otherObjects.Clear();
     }
 
-
-    private bool CheckTileBelow() => stile.y > 1 && SGrid.Current.GetGrid()[stile.x, stile.y - 2].isTileActive;
-
-    private bool CheckCollidersBelow() => true;
-
-    private Transform GetRespawnByIslandID(int islandid)
-    {
-        foreach(TileRespawn tr in respawns)
-        {
-            if(tr.islandid == islandid)
-            {
-                return(tr.respawn);
-            }
-        }
-        Debug.LogWarning($"No respawn point found for tile {islandid}. Defaulting to upper-level respawn");
-        return playerRespawn;
-    }
-
-    private Vector3 GetDropLocation(Transform t)
-    {
-        return t.position;
-    }
-
-
     private void OnTriggerEnter2D(Collider2D other) {
-        Transform t = other.transform;
-        if(t != player && (t.GetComponent<Item>())){
-            otherObjects.Add(t);
-            print(t.gameObject.name + " added to ice");
+        GameObject go = other.gameObject;
+        if(go != player.transform && go.GetComponent<Item>()){
+            otherObjects.Add(go);
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        Transform t = other.transform;
-        if(t != player) {
-            otherObjects.Remove(t);
+        GameObject go = other.gameObject;
+        if(go.transform != player) {
+            otherObjects.Remove(go);
         }
     }
 }

@@ -11,11 +11,15 @@ public class Lavafall : MonoBehaviour
     private void OnEnable() {
         sTile = GetComponentInParent<STile>();
         SGridAnimator.OnSTileMoveEnd += CheckLava;
+        SGridAnimator.OnSTileMoveStart += CheckLava;
+        SGrid.OnSTileEnabled += CheckLava;
         CheckLava();
     }
 
     private void OnDisable() {
         SGridAnimator.OnSTileMoveEnd -= CheckLava;
+        SGridAnimator.OnSTileMoveStart -= CheckLava;
+        SGrid.OnSTileEnabled -= CheckLava;
     }
 
     public void CheckLava(object sender, SGridAnimator.OnTileMoveArgs e)
@@ -23,11 +27,19 @@ public class Lavafall : MonoBehaviour
         CheckLava();
     }
 
+    public void CheckLava(object sender, SGrid.OnSTileEnabledArgs e)
+    {
+        CheckLava();
+    }
+
     public void CheckLava(){
         bool shouldBeActive = (sTile.y == 3 && !SGrid.Current.GetStileAt(sTile.x, 2).isTileActive);
-        isActive = shouldBeActive;
-        foreach(GameObject go in objects)
-            go.SetActive(isActive);
+        if(shouldBeActive != isActive)
+        {
+            isActive = shouldBeActive;
+            foreach(GameObject go in objects)
+                go.SetActive(isActive);
+        }
     }
 }
 

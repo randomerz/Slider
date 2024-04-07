@@ -9,7 +9,6 @@ public class ElevatorAnimationManager : MonoBehaviour
     [SerializeField] private Animator bottomDispAnimator;
     [SerializeField] private Animator bottomDoorAnimator;
 
-    public List<GameObject> deactivateOnFix;
     public List<GameObject> brokenObj;
     public GameObject bottompos;
 
@@ -84,7 +83,6 @@ public class ElevatorAnimationManager : MonoBehaviour
 
     private IEnumerator BreakAnimation()
     {
-        yield return new WaitForSeconds(2);
         generatorAnimator.Play("Break");
         yield return new WaitForSeconds(1.3f);
         AudioManager.Play("Power Off");

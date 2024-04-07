@@ -19,6 +19,8 @@ public class ParticleManager : Singleton<ParticleManager>
 
     private static Dictionary<ParticleType, GameObject> particleTypeToPrefab = new Dictionary<ParticleType, GameObject>();
     [SerializeField] private List<ParticleTypePrefabPair> particleDefinitions = new List<ParticleTypePrefabPair>();
+
+    public static ParticleManager Instance => _instance;
     
     void Awake()
     {

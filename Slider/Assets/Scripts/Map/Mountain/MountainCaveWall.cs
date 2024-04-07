@@ -46,7 +46,7 @@ public class MountainCaveWall : MonoBehaviour, ISavable
         c.SetSpec(didBlowUp);
     }
 
-    public void Save()
+    public void Save() 
     {
         SaveSystem.Current.SetBool("cavesMCWallExploded", didBlowUp);
     }

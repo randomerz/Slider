@@ -11,7 +11,7 @@ public class ArtifactLavafallPlugin : ArtifactTBPlugin
         UpdateUI();
     }
 
-    public override void OnPosChanged()
+    private void Update()
     {
         UpdateUI();
     }

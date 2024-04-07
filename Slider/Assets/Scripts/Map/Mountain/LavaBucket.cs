@@ -6,13 +6,16 @@ public class LavaBucket : MonoBehaviour, ISavable
 {
     [SerializeField] private SpriteSwapper spriteSwapper;
     [SerializeField] private GameObject particles;
+    [SerializeField] private string saveString;
 
     private STile sTile;
 
-    private bool hasLava = false;
+    [SerializeField] private bool hasLava = false;
 
     private void Awake() {
         sTile = GetComponentInParent<STile>();
+        if(hasLava)
+            FillBucket();
     }
 
     public void FillBucket(bool fromSave = false)
@@ -40,13 +43,15 @@ public class LavaBucket : MonoBehaviour, ISavable
 
     public void Load(SaveProfile profile)
     {
-        hasLava = profile.GetBool("MountainLavaBucket", hasLava);
+        if(saveString == null || saveString == "") return;
+        hasLava = profile.GetBool(saveString, hasLava);
         if(hasLava)
             FillBucket(true);
     }
 
     public void Save()
     {
-        SaveSystem.Current.SetBool("MountainLavaBucket", hasLava);
+        if(saveString == null || saveString == "") return;
+        SaveSystem.Current.SetBool(saveString, hasLava);
     }
 }
