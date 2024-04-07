@@ -19,6 +19,8 @@ public class DesyncItem : Item
     private bool itemDoesNotExist;
 
     private bool didInit;
+    public LayerMask blocksSpawnMask;
+    public GameObject particles;
 
 
     public override void Start()
@@ -114,6 +116,10 @@ public class DesyncItem : Item
         {
             AddTracker();
         }
+        if(ShouldMovePresentItem())
+        {
+            MovePresentItemToPastLocation();
+        }
         return tile;
     }
 
@@ -123,6 +129,34 @@ public class DesyncItem : Item
         if (trackerSprite)
         {
             UITrackerManager.RemoveTracker(gameObject);
+        }
+    }
+
+    private bool ShouldMovePresentItem()
+    {
+        return fromPast && pastItem.isItemInPast && !presentItem.isItemInPast && !presentItem.isDesynced && ! pastItem.isDesynced;
+    }
+
+    private void MovePresentItemToPastLocation()
+    {
+        Vector3 pastLocalLoc = transform.localPosition;
+        STile presentTile = MagiTechGrid.Instance.FindAltStile(currentTile);
+        Vector3 checkPos = presentTile.transform.position + pastLocalLoc;
+        if(presentTile.islandId == 3)
+        {
+            checkPos += new Vector3(0, -150f, 0);
+        }
+        Vector3 targetPos = ItemPlacerSolver.FindItemPlacePosition(checkPos, 9, blocksSpawnMask, true);
+        if(targetPos.x == float.MaxValue)
+        {
+            Debug.Log("Could not find valid position for present item. Moving anyways");
+            presentItem.transform.position = targetPos;
+            presentItem.transform.parent = presentTile.transform;
+        }
+        else
+        {
+            presentItem.transform.position = targetPos;
+            presentItem.transform.parent = presentTile.transform;
         }
     }
 
@@ -268,6 +302,7 @@ public class DesyncItem : Item
         itemDoesNotExist = !active;
         spriteRenderer.enabled = active;
         myCollider.enabled = active;
+        particles.SetActive(active);
         if(isTracked)
         {
             UITrackerManager.RemoveTracker(gameObject);
