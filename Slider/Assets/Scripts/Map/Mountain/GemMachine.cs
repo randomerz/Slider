@@ -80,6 +80,13 @@ public class GemMachine : MonoBehaviour, ISavable
     public void FixGemMachine(bool fromSave = false)
     {
         gemMachineState = GemMachineState.FIXED;
+
+        if (!fromSave)
+        {
+            AudioManager.Play("Hat Click");
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, fixedObj.transform.position, fixedObj.transform);
+        }
+
         brokenObj.SetActive(false);
         fixedObj.SetActive(true);
         gemChecker.SetActive(true);
@@ -153,7 +160,7 @@ public class GemMachine : MonoBehaviour, ISavable
     public void Load(SaveProfile profile)
     {
         gemMachineState = (GemMachineState) profile.GetInt("mountainGemMachinePhase");
-        if(profile.GetBool("MountainGooFull"))
+        if (profile.GetBool("MountainGooFull"))
             EnableGoo(true);
         else if (profile.GetBool("MountainGooFilling"))
             EnableGoo();

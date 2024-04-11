@@ -109,17 +109,27 @@ public class WaterWheel : MonoBehaviour, ISavable
     //     hasMovedTile = true;
     // }
 
-    public void FixHeater(){
+    public void FixHeater() => FixHeater(false);
+
+    public void FixHeater(bool fromSave=false) 
+    {
         heaterFixed = true;
         HeaterPipeSpriteSwapper.TurnOn();
-        AudioManager.Play("Puzzle Complete");
+
+        if (!fromSave)
+        {
+            AudioManager.Play("Hat Click");
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, HeaterPipeSpriteSwapper.transform.position, HeaterPipeSpriteSwapper.transform);
+        }
     }
 
-    public bool IsDone(){
+    public bool IsDone() 
+    {
         return lavaCount > 1 && powered;
     }
 
-    public void AddOil(bool fromSave = false){
+    public void AddOil(bool fromSave = false) 
+    {
         if(hasOil) return;
         if(!fromSave)
             AudioManager.Play("Hat Click");
@@ -193,10 +203,10 @@ public class WaterWheel : MonoBehaviour, ISavable
         firstPower = profile.GetBool("MountainHeaterFirstPower", firstPower);
         firstLavaPower = profile.GetBool("MountainHeaterFirstLavaPower", firstPower);
 
-        if(hasOil) AddOil();
-        if(heaterFixed) FixHeater();
-        if(lavaCount == 1) lavaPipe.Fill(new(0, 0.5f));
-        if(lavaCount == 2) 
+        if (hasOil) AddOil();
+        if (heaterFixed) FixHeater(fromSave: true);
+        if (lavaCount == 1) lavaPipe.Fill(new(0, 0.5f));
+        if (lavaCount == 2) 
         {
             lavaPipe.Fill(new(0, 1f));
             OnFillHeaterEnd();
