@@ -425,7 +425,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -433,6 +433,48 @@ TextureImporter:
       bones: []
       spriteID: c1f88b532d87ab2418f6f26ef9866830
       internalID: -1162476572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: topVar1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 29
+        width: 48
+        height: 19
+      alignment: 9
+      pivot: {x: 0.5, y: 0.57894737}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a0d0e0efb8dc794cbcc1c0bfd39931a
+      internalID: -1194543015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bottomVar1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 48
+        height: 29
+      alignment: 9
+      pivot: {x: 0.5, y: 0.27586207}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc1b01d07d5f3924d98b5bb74fe84b40
+      internalID: 875422705
       vertices: []
       indices: 
       edges: []
@@ -448,6 +490,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      bottomVar1: 875422705
       pipe_0: -1624764171
       pipe_1: -1048288209
       pipe_10: -1162476572
@@ -463,6 +506,7 @@ TextureImporter:
       pipe_horizontal_support_bot: -1080461669
       pipe_vertical_support: -180224754
       pipe_vertical_support_bot: 2101104194
+      topVar1: -1194543015
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

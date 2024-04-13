@@ -11,7 +11,8 @@ public class MilitaryUnitCommander : MonoBehaviour
 
     private void Start()
     {
-        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, (_) => PerformTurn());
+        // This is for debugging purposes
+        Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.AltViewHold, (_) => PerformTurn());
     }
 
     public void PerformTurn()

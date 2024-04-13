@@ -7,14 +7,33 @@ public class GemMachine : MonoBehaviour, ISavable
     private int numGems;
     private STile sTile;
     private bool isPowered;
-    private bool isDone;
-    private bool isBroken = true;
+    // private bool isDone;
+    // private bool isBroken = true;
     public GameObject gemChecker;
     public Animator animator;
 
     public GameObject brokenObj;
     public GameObject fixedObj;
     public PipeLiquid pipeLiquid;
+    
+    public Minecart minecart;
+    public Transform smokeTransform;
+    
+    public enum GemMachineState
+    {
+        INITIAL,
+        BROKEN,
+        FIXED,
+        FULLY_GOOED
+    }
+
+    public GemMachineState gemMachineState = GemMachineState.INITIAL;
+
+    public MinecartElevator elevator;
+
+    private void Start() {
+        sTile = GetComponentInParent<STile>();
+    }
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
@@ -30,32 +49,90 @@ public class GemMachine : MonoBehaviour, ISavable
             ResetGems();
     }
 
-    private void Start() {
-        sTile = GetComponentInParent<STile>();
+    public void BreakGemMachineCutscene()
+    {
+        BreakGemMachine();
     }
 
-    private void Update() {
-        gemChecker.SetActive(isPowered && !isBroken);
-    }
-
-    public void AddGem(){
-        animator.Play("AbsorbGem");
-        if(!isPowered || isBroken)
-            return;
-        numGems++;
-        if(numGems == 2){
-            AudioManager.Play("Puzzle Complete");
-            isDone = true;
-            EnableGoo();
+    public void BreakGemMachine() => BreakGemMachine(false);
+    
+    public void BreakGemMachine(bool fromSave = false)
+    {
+        gemMachineState = GemMachineState.BROKEN;
+        brokenObj.SetActive(true);
+        fixedObj.SetActive(false);
+        gemChecker.SetActive(false);
+        if(!fromSave)
+        {   
+            elevator.BreakElevator();
+            AudioManager.Play("Slide Explosion");
+            CameraShake.Shake(1f, 0.5f);
+            for(int i = 0; i < 10; i++)
+            {
+                Vector3 random = Random.insideUnitCircle;
+                ParticleManager.SpawnParticle(ParticleType.SmokePoof, smokeTransform.position + random);
+            }
         }
     }
 
-    public void RemoveGem(){
-        numGems--;
+    public void FixGemMachine() => FixGemMachine(false);
+
+    public void FixGemMachine(bool fromSave = false)
+    {
+        gemMachineState = GemMachineState.FIXED;
+
+        if (!fromSave)
+        {
+            AudioManager.Play("Hat Click");
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, fixedObj.transform.position, fixedObj.transform);
+        }
+
+        brokenObj.SetActive(false);
+        fixedObj.SetActive(true);
+        gemChecker.SetActive(true);
+    }
+
+    public void AddGem(){
+        if(gemMachineState == GemMachineState.BROKEN)
+        {
+            return;
+        }
+
+        switch(gemMachineState)
+        {
+            case GemMachineState.INITIAL:
+                IntialGemAbsorb();
+                break;
+            case GemMachineState.FIXED:
+            case GemMachineState.FULLY_GOOED:
+                RepairedGemAbsorb();
+                break;
+        }
+    }
+
+    private void IntialGemAbsorb()
+    {
+        if(numGems == 1) return;
+        numGems = 1;
+        minecart.UpdateState("Empty");
+        animator.Play("part1");
+        //TODO: Play absorb crystal sound
+    }
+
+    private void RepairedGemAbsorb()
+    {
+        if(!isPowered)
+            return;
+        numGems++;
+        animator.Play("AbsorbGem");
+        minecart.UpdateState("Empty");
+        //TODO: Play absorb crystal sound
     }
 
     public void ResetGems(){
-        numGems = 0;
+        if(gemMachineState != GemMachineState.FIXED) return;
+
+        numGems = 1;
     }
 
     public void OnEndAbsorb(){
@@ -65,20 +142,6 @@ public class GemMachine : MonoBehaviour, ISavable
     public void SetIsPowered(bool value){
         isPowered = value;
     }
-
-    public void Fix()
-    {
-        isBroken = false;
-        if (brokenObj != null)
-        {
-            brokenObj.SetActive(false);
-        }
-        if (fixedObj != null)
-        {
-            fixedObj.SetActive(true);
-        }
-    }
-
     
     public void EnableGoo(bool fillImmediate = false)
     {
@@ -90,34 +153,58 @@ public class GemMachine : MonoBehaviour, ISavable
 
 
     public void Save(){
-        SaveSystem.Current.SetInt("mountainNumGems", numGems);
-        SaveSystem.Current.SetBool("mountainGemMachineBroken", isBroken);
+        SaveSystem.Current.SetInt("mountainGemMachineNumGems", numGems);        
+        SaveSystem.Current.SetInt("mountainGemMachinePhase", (int)gemMachineState);
     }
 
     public void Load(SaveProfile profile)
     {
-        numGems = profile.GetInt("mountainNumGems");
-        if(numGems >= 2)
-            isDone = true;
-        isBroken = profile.GetBool("mountainGemMachineBroken", true);
-        if(!isBroken)
-            Fix();
-        
-        if(profile.GetBool("MountainGooFull"))
+        gemMachineState = (GemMachineState) profile.GetInt("mountainGemMachinePhase");
+        switch(gemMachineState)
+        {
+            case GemMachineState.BROKEN:
+                BreakGemMachine(true);
+                break;
+            case GemMachineState.FIXED:
+                FixGemMachine(true);
+                break;
+        }
+        if (profile.GetBool("MountainGooFull"))
             EnableGoo(true);
         else if (profile.GetBool("MountainGooFilling"))
             EnableGoo();
-    }
-
-    public void CheckHasCrystals(Condition c){
-        c.SetSpec(isDone);
     }
 
     public void CheckIsPowered(Condition c){
         c.SetSpec(isPowered);
     }
 
+    public void CheckIsBroken(Condition c)
+    {
+        c.SetSpec(gemMachineState == GemMachineState.BROKEN);
+    }
+
     public void CheckIsFixed(Condition c){
-        c.SetSpec(!isBroken);
+        c.SetSpec(gemMachineState == GemMachineState.FIXED);
+    }
+
+    public void CheckIsFixedAndPowered(Condition c){
+        c.SetSpec(gemMachineState == GemMachineState.FIXED && isPowered);
+    }
+
+    public void CheckHasFirstCrystal(Condition c){
+        c.SetSpec(numGems == 1 && gemMachineState == GemMachineState.INITIAL);
+    }
+
+    public void CheckHasFirstGooCrystal(Condition c){
+        c.SetSpec(numGems == 2 && gemMachineState == GemMachineState.FIXED);
+    }
+
+    public void CheckHasSecondGooCrystal(Condition c){
+        c.SetSpec(numGems >= 3 && gemMachineState == GemMachineState.FIXED);
+    }
+
+    public void CheckIntialCrystalCutscene(Condition c){
+        c.SetSpec(isPowered && numGems == 1 && gemMachineState == GemMachineState.INITIAL);
     }
 }

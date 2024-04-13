@@ -15,6 +15,9 @@ public class MCStation : MonoBehaviour
                 mc.StartMoving();
             else if(mc.currentDirection != direction)
                 mc.StopMoving();
+                //chaneg direction
+                //recalculate target
+                //go go go
         }
     }
 }

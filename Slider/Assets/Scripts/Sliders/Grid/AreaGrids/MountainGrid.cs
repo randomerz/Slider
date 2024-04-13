@@ -9,6 +9,7 @@ public class MountainGrid : SGrid
     [SerializeField] private MountainCaveWall mountainCaveWall;
     [SerializeField] private GemMachine gemMachine;
     [SerializeField] private SpriteSwapper crystalSpriteSwapper;
+    public Minecart minecart;
 
     private bool playerOnBottom = true;
 
@@ -122,6 +123,25 @@ public class MountainGrid : SGrid
 
 
     #region Minecart Specs
+
+    public void BurtMinecartAction()
+    {
+        switch(minecart.mcState)
+        {
+            case MinecartState.Crystal:
+                minecart.UpdateState("Empty");
+                SetCrystalDelivered();
+                break;
+            case MinecartState.Lava:
+                SaveSystem.Current.SetBool("MountainBurtLava", true);
+                SaveSystem.Current.SetBool("MountainBurtEmpty", false);
+                break;
+            case MinecartState.Empty:
+                SaveSystem.Current.SetBool("MountainBurtEmpty", true);
+                SaveSystem.Current.SetBool("MountainBurtLava", false);
+                break;
+        }
+    }
     
     public void SetCrystalDeliveredTrue() => SetCrystalDelivered();
 
@@ -130,7 +150,7 @@ public class MountainGrid : SGrid
         crystalDelivered = true;
         if(!fromSave)
             AudioManager.Play("Puzzle Complete");
-        SaveSystem.Current.SetBool("MountainCrystalDelivered", crystalDelivered);
+        SaveSystem.Current.SetBool("MountainCrystalDelivered", true);
         crystalSpriteSwapper.TurnOn();
     }
 

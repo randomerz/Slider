@@ -378,9 +378,25 @@ public void SetGrid(int[,] puzzle)
        return GetNumButtonCompletions() == GetTotalNumTiles();
     }
     
+    //C: Order of preference is transform, object, then position
+    public static STile GetSTileUnderneath(Transform entity, STile currentStileUnderneath, bool includeInactive=false)
+    {
+        return GetSTileUnderneathHelper(entity.position, currentStileUnderneath, includeInactive);
+    }
+    
+    public static STile GetSTileUnderneath(GameObject target, bool includeInactive=false)
+    {
+        return GetSTileUnderneathHelper(target.transform.position, target.GetComponentInParent<STile>(), includeInactive);
+    }
+
+
+    public static STile GetSTileUnderneath(Vector3 pos, bool includeInactive = false)
+    {
+        return GetSTileUnderneathHelper(pos, null, includeInactive);
+    }
 
     // DC: This will prefer an GameObjs parented STile if it has one
-    public static STile GetSTileUnderneath(Transform entity, STile currentStileUnderneath, bool includeInactive=false)
+    private static STile GetSTileUnderneathHelper(Vector3 position, STile currentStileUnderneath, bool includeInactive=false)
     {
         STile[,] grid = SGrid.Current.GetGrid();
         float offset = grid[0, 0].STILE_WIDTH / 2f;
@@ -388,7 +404,7 @@ public void SetGrid(int[,] puzzle)
         STile stileUnderneath = null;
         foreach (STile s in grid)
         {
-            if ((s.isTileActive || includeInactive) && PosInSTileBounds(entity.position, s.transform.position, offset))
+            if ((s.isTileActive || includeInactive) && PosInSTileBounds(position, s.transform.position, offset))
             {
                 if (currentStileUnderneath != null && s.islandId == currentStileUnderneath.islandId)
                 {
@@ -406,13 +422,6 @@ public void SetGrid(int[,] puzzle)
         return stileUnderneath;
     }
 
-    // C: result of consolidating 2 versions of this method
-    // and i don't wanna rewrite method calls
-    // DC: try to use the other one if possible
-    public static STile GetSTileUnderneath(GameObject target, bool includeInactive=false)
-    {
-        return GetSTileUnderneath(target.transform, target.GetComponentInParent<STile>(), includeInactive);
-    }
 
     public virtual STileTilemap GetWorldGridTilemaps()
     {
@@ -428,8 +437,8 @@ public void SetGrid(int[,] puzzle)
     public static bool PosInSTileBounds(Vector3 pos, Vector3 stilePos, float offset)
     {
         if (stilePos.x - offset <= pos.x && pos.x < stilePos.x + offset &&
-           (stilePos.y - offset <= pos.y && pos.y < stilePos.y + offset ||
-            stilePos.y - offset + Current.housingOffset <= pos.y && pos.y < stilePos.y + offset + Current.housingOffset))
+           ((stilePos.y - offset <= pos.y && pos.y < stilePos.y + offset) ||
+            (stilePos.y - offset + Current.housingOffset <= pos.y && pos.y < stilePos.y + offset + Current.housingOffset)))
         {
             return true;
         }

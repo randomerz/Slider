@@ -20,6 +20,7 @@ public class WaterWheelAnimator : MonoBehaviour
 
     private bool isGear2Frozen = false;
     private bool isGear4Frozen = false;
+    public bool usedTools = false;
 
     private void Awake() 
     {
@@ -57,7 +58,12 @@ public class WaterWheelAnimator : MonoBehaviour
         }
         
         // Optional: change targetAnimationSpeed to currentAnimationSpeed
-        animatorGenerator.SetBool("isOn", targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen);
+        animatorGenerator.SetBool("isOn", IsGeneratorOn());
+    }
+
+    private bool IsGeneratorOn()
+    {
+        return targetAnimationSpeed == 1 && !isGear2Frozen && !isGear4Frozen && usedTools;
     }
 
     private void UpdateAnimationSpeedTarget()
@@ -87,7 +93,7 @@ public class WaterWheelAnimator : MonoBehaviour
 
     private void UpdateGears()
     {
-        if (!isGear2Frozen && !isGear4Frozen)
+        if (!isGear2Frozen && !isGear4Frozen && usedTools)
         {
             // No frozen gears => all move
 
@@ -109,14 +115,15 @@ public class WaterWheelAnimator : MonoBehaviour
                 return;
             }
 
-            if (gearAnimators[0].state == WW_GearAnimator.State.Clicking)
-            {
-                return;
-            }
+            // if (gearAnimators[0].state == WW_GearAnimator.State.Clicking)
+            // {
+            //     return;
+            // }
 
             bool passedFrozenGear = false;
             for (int i = 0; i < gearAnimators.Count; i++)
             {
+
                 WW_GearAnimator ga = gearAnimators[i];
 
                 if ((i == 2 && isGear2Frozen) || (i == 4 && isGear4Frozen))
@@ -125,6 +132,11 @@ public class WaterWheelAnimator : MonoBehaviour
                     passedFrozenGear = true;
                     continue;
                 }
+
+                // if (gearAnimators[0].state == WW_GearAnimator.State.Clicking)
+                // {
+                //     continue;
+                // }
 
                 if (!passedFrozenGear)
                 {
