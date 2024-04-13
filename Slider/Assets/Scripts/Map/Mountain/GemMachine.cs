@@ -160,6 +160,15 @@ public class GemMachine : MonoBehaviour, ISavable
     public void Load(SaveProfile profile)
     {
         gemMachineState = (GemMachineState) profile.GetInt("mountainGemMachinePhase");
+        switch(gemMachineState)
+        {
+            case GemMachineState.BROKEN:
+                BreakGemMachine(true);
+                break;
+            case GemMachineState.FIXED:
+                FixGemMachine(true);
+                break;
+        }
         if (profile.GetBool("MountainGooFull"))
             EnableGoo(true);
         else if (profile.GetBool("MountainGooFilling"))

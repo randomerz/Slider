@@ -9,7 +9,7 @@ public class WaterWheel : MonoBehaviour, ISavable
     [SerializeField] private Meltable cog2;
     private bool powered = false;
     [SerializeField] private ElectricalNode powerNode;
-    public Animator heaterAnimator;
+    public List<Animator> heaterAnimators;
     public bool heaterFixed = false;
     public bool heaterFull = false;
     public int lavaCount = 0;
@@ -17,13 +17,13 @@ public class WaterWheel : MonoBehaviour, ISavable
     private bool firstPower = false;
     private bool firstLavaPower = false;
     public WaterWheelAnimator animator;
-    public bool hasOil;
+    public bool hasUsedTools;
     public SpriteSwapper HeaterPipeSpriteSwapper;
     public Minecart mc;
     public Lava heaterLava;
     public PipeLiquid lavaPipe;
 
-    public GameObject heaterLavaGO;
+    public List<GameObject> heaterLavaGO;
 
     private void OnEnable() {
         SGridAnimator.OnSTileMoveStart += CheckMove;
@@ -45,7 +45,7 @@ public class WaterWheel : MonoBehaviour, ISavable
     }
 
     public void UpdatePower() {
-        bool shouldPower = stile.x == 0 && stile.y > 1 && cog1.IsNotFrozenOrBroken() && cog2.IsNotFrozenOrBroken() && hasOil;
+        bool shouldPower = stile.x == 0 && stile.y > 1 && cog1.IsNotFrozenOrBroken() && cog2.IsNotFrozenOrBroken() && hasUsedTools;
         powered = shouldPower;
         powerNode.StartSignal(shouldPower);
         if(!firstPower){
@@ -60,14 +60,17 @@ public class WaterWheel : MonoBehaviour, ISavable
 
     public void FillHeater()
     {
-        heaterAnimator.Play("Fill");
+        foreach(Animator a in heaterAnimators)
+            a.Play("Fill");
     }
 
     public void OnFillHeaterEnd()
     {
         heaterFull = true;
-        heaterAnimator.Play("On");
-        heaterLavaGO.SetActive(true);
+        foreach(Animator a in heaterAnimators)
+            a.Play("On");
+        foreach(GameObject go in heaterLavaGO)
+            go.SetActive(true);
         cog1.AddLava(heaterLava);
         cog2.AddLava(heaterLava);
         cog1.SetRefreezeOnTop(false);
@@ -128,13 +131,13 @@ public class WaterWheel : MonoBehaviour, ISavable
         return lavaCount > 1 && powered;
     }
 
-    public void AddOil(bool fromSave = false) 
+    public void UseTools(bool fromSave = false) 
     {
-        if(hasOil) return;
+        if(hasUsedTools) return;
         if(!fromSave)
             AudioManager.Play("Hat Click");
-        hasOil = true;
-        animator.hasOil = true;
+        hasUsedTools = true;
+        animator.usedTools = true;
     }
 
     #region specs
@@ -148,7 +151,7 @@ public class WaterWheel : MonoBehaviour, ISavable
     }
     
     public void IsWorking(Condition c) {
-        c.SetSpec(stile.x == 0 && stile.y > 1 && cog1.IsNotFrozenOrBroken() && cog2.IsNotFrozenOrBroken() && hasOil);
+        c.SetSpec(stile.x == 0 && stile.y > 1 && cog1.IsNotFrozenOrBroken() && cog2.IsNotFrozenOrBroken() && hasUsedTools);
     }
 
     // public void HasAddedLava(Condition c) {
@@ -171,8 +174,8 @@ public class WaterWheel : MonoBehaviour, ISavable
         c.SetSpec(heaterFixed);
     }
 
-    public void HasOil(Condition c){
-        c.SetSpec(hasOil);
+    public void HasTools(Condition c){
+        c.SetSpec(hasUsedTools);
     }
 
     public void IsHeaterFull(Condition c){
@@ -184,7 +187,7 @@ public class WaterWheel : MonoBehaviour, ISavable
 
     public void Save()
     {
-        SaveSystem.Current.SetBool("MountainWaterwheelHasOil", hasOil);
+        SaveSystem.Current.SetBool("MountainWaterwheelHasUsedTools", hasUsedTools);
         SaveSystem.Current.SetBool("MountainWaterwheelLavaStage", heaterFixed);
         SaveSystem.Current.SetInt("MountainHeaterLavaCount", lavaCount);
       //  SaveSystem.Current.SetBool("MountainHeaterHasAddedLava", hasAddedLava);
@@ -195,7 +198,7 @@ public class WaterWheel : MonoBehaviour, ISavable
 
     public void Load(SaveProfile profile)
     {
-        hasOil = profile.GetBool("MountainWaterwheelHasOil", hasOil);
+        hasUsedTools = profile.GetBool("MountainWaterwheelHasUsedTools", hasUsedTools);
         heaterFixed = profile.GetBool("MountainWaterwheelLavaStage", heaterFixed);
         lavaCount = profile.GetInt("MountainHeaterLavaCount", lavaCount);
        // hasAddedLava = profile.GetBool("MountainHeaterHasAddedLava", hasAddedLava);
@@ -203,7 +206,7 @@ public class WaterWheel : MonoBehaviour, ISavable
         firstPower = profile.GetBool("MountainHeaterFirstPower", firstPower);
         firstLavaPower = profile.GetBool("MountainHeaterFirstLavaPower", firstPower);
 
-        if (hasOil) AddOil();
+        if (hasUsedTools) UseTools();
         if (heaterFixed) FixHeater(fromSave: true);
         if (lavaCount == 1) lavaPipe.Fill(new(0, 0.5f));
         if (lavaCount == 2) 
