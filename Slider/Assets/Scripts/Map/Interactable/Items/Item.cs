@@ -12,6 +12,7 @@ public class Item : MonoBehaviour, ISavable
     public bool shouldDisableAtStart = false;
     public bool doReflectionCalculations;
     public float itemRadius = 0.5f;
+    public LayerMask pickupOverrideLayerMask;
 
     // animation
     

@@ -28,7 +28,7 @@ public class Minecart : Item, ISavable
 
     [Header("Rail Managers")]
     private RailManager railManager;
-    private RailManager borderRM; 
+    public RailManager borderRM; 
 
     [Header("Rail Tiles")]
     private RailTile currentTile;
@@ -70,11 +70,6 @@ public class Minecart : Item, ISavable
     public override void Awake() 
     {
         base.Awake();
-        RailManager[] rms = FindObjectsOfType<RailManager>();
-        foreach (RailManager r in rms) {
-            if(r.isBorderRM)
-                borderRM = r;
-        }
         baseCornerSpeedMultiplier = cornerSpeed / speed;
         AddTracker();
     }
