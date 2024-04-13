@@ -2434,14 +2434,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2620790811287915178, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2620790811287915182, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: c52a6c3e735eba848987c062e3929df3, type: 3}
+      objectReference: {fileID: 21300000, guid: 902c5b25df7206745bf2cbbb6e00fa2c, type: 3}
     - target: {fileID: 2717596572816974888, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_SizeDelta.x
       value: 48
@@ -2584,10 +2580,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8234586541288311979, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
       propertyPath: m_PreserveAspect
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663251323211111892, guid: fd9b6fd4dba7f5745b496cb42e6fe056, type: 3}
-      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
