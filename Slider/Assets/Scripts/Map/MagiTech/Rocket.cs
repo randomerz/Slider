@@ -25,6 +25,9 @@ public class Rocket : MonoBehaviour
 
     private IEnumerator RocketCutscene()
     {
+        sceneLoad = SceneManager.LoadSceneAsync(END_OF_GAME_SCENE);
+        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
+
         rocketSpriteRenderer.sortingOrder = 25; // set to entity 25
         UIEffects.FadeToBlack(disableAtEnd: false);
         yield return new WaitForSeconds(1.1f);
@@ -38,6 +41,7 @@ public class Rocket : MonoBehaviour
         };
         CameraShake.ShakeCustom(shakeData);
         // CameraShake.Shake(rocketDuration, 1);
+        rocketCameraDolly.OnRollercoasterEnd += OnSkipCutscene;
         rocketCameraDolly.StartTrack(true);
 
         float t = 0f;
@@ -57,18 +61,18 @@ public class Rocket : MonoBehaviour
 
     private void LoadEndOfGameScene()
     {
-        sceneLoad = SceneManager.LoadSceneAsync(END_OF_GAME_SCENE);
-        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
-
         SaveSystem.SaveGame("Ending Game");
-        SaveSystem.SetCurrentProfile(-1);
-
+        SaveSystem.Current.SetCompletionStatus(true);
         // Undo lazy singletons
         if(Player.GetInstance() != null)
             Player.GetInstance().ResetInventory();
+        rocketCameraDolly.OnRollercoasterEnd -= OnSkipCutscene;
+        sceneLoad.allowSceneActivation = true;
+    }
 
-        UIEffects.FadeToBlack(() => {
-            sceneLoad.allowSceneActivation = true;
-        }, disableAtEnd: false);
+    private void OnSkipCutscene(object sender, System.EventArgs e)
+    {
+        StopAllCoroutines();
+        LoadEndOfGameScene();
     }
 }
