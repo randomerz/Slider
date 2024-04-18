@@ -61,21 +61,21 @@ public class CameraShake : MonoBehaviour
 
     public static void Shake(float duration, float amount)
     {
-        amount *= SettingsManager.ScreenShake;
+        amount *= SettingsManager.Setting<float>(Settings.ScreenShake).CurrentValue;
         CameraShakeData data = new CameraShakeData(duration, amount, 0, 0);
         shakeData.Add(data);
     }
 
     public static void ShakeConstant(float duration, float amount)
     {
-        amount *= SettingsManager.ScreenShake;
+        amount *= SettingsManager.Setting<float>(Settings.ScreenShake).CurrentValue;
         CameraShakeData data = new CameraShakeData(duration, amount, amount, 0);
         shakeData.Add(data);
     }
 
     public static void ShakeIncrease(float duration, float amount)
     {
-        amount *= SettingsManager.ScreenShake;
+        amount *= SettingsManager.Setting<float>(Settings.ScreenShake).CurrentValue;
         CameraShakeData data = new CameraShakeData(duration, 0, amount, 0);
         shakeData.Add(data);
     }
@@ -90,8 +90,8 @@ public class CameraShake : MonoBehaviour
             float t= points[i].x;
             float end = points[i].y;
 
-            start *= SettingsManager.ScreenShake;
-            end *= SettingsManager.ScreenShake;
+            start *= SettingsManager.Setting<float>(Settings.ScreenShake).CurrentValue;
+            end *= SettingsManager.Setting<float>(Settings.ScreenShake).CurrentValue;
             // print((t - prevT + 0.05f, start, end, prevT));
             CameraShakeData data = new CameraShakeData(t - prevT + 0.05f, start, end, prevT);
             shakeData.Add(data);
