@@ -29,19 +29,19 @@ public class AdvancedOptionsPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        screenShakeSlider.value = SettingsManager.ScreenShake;
-        bigTextToggle.isOn = SettingsManager.BigTextEnabled;
-        highContrastTextToggle.isOn = SettingsManager.HighContrastTextEnabled;
-        hideCursorToggle.isOn = SettingsManager.HideCursor;
-        miniPlayerIconToggle.isOn = SettingsManager.MiniPlayerIcon;
-        autoMoveToggle.isOn = SettingsManager.AutoMove;
-        colorblindToggle.isOn = SettingsManager.Colorblind;
-        devConsoleToggle.isOn = SettingsManager.DevConsole;
+        screenShakeSlider.value = SettingsManager.Setting<float>(Settings.ScreenShake).CurrentValue;
+        bigTextToggle.isOn = SettingsManager.Setting<bool>(Settings.BigTextEnabled).CurrentValue;
+        highContrastTextToggle.isOn = SettingsManager.Setting<bool>(Settings.HighContrastTextEnabled).CurrentValue;
+        hideCursorToggle.isOn = SettingsManager.Setting<bool>(Settings.HideCursor).CurrentValue;
+        miniPlayerIconToggle.isOn = SettingsManager.Setting<bool>(Settings.MiniPlayerIcon).CurrentValue;
+        autoMoveToggle.isOn = SettingsManager.Setting<bool>(Settings.AutoMove).CurrentValue;
+        colorblindToggle.isOn = SettingsManager.Setting<bool>(Settings.Colorblind).CurrentValue;
+        devConsoleToggle.isOn = SettingsManager.Setting<bool>(Settings.DevConsole).CurrentValue;
     }
 
     public void UpdateScreenShake()
     {
-        SettingsManager.ScreenShake = screenShakeSlider.value;
+        SettingsManager.Setting<float>(Settings.ScreenShake).CurrentValue = screenShakeSlider.value;
     }
 
     public void UpdateBigText()
@@ -50,36 +50,36 @@ public class AdvancedOptionsPanel : MonoBehaviour
         //DialogueManager.highContrastMode = value;
         //DialogueManager.doubleSizeMode = value;
 
-        SettingsManager.BigTextEnabled = bigTextToggle.isOn;
+        SettingsManager.Setting<bool>(Settings.BigTextEnabled).CurrentValue = bigTextToggle.isOn;
     }
 
     public void UpdateHighContrastText()
     {
-        SettingsManager.HighContrastTextEnabled = highContrastTextToggle.isOn;
+        SettingsManager.Setting<bool>(Settings.HighContrastTextEnabled).CurrentValue = highContrastTextToggle.isOn;
     }
 
     public void UpdateHideCursor()
     {
-        SettingsManager.HideCursor = hideCursorToggle.isOn;
+        SettingsManager.Setting<bool>(Settings.HideCursor).CurrentValue = hideCursorToggle.isOn;
     }
 
     public void UpdateMiniPlayerIcon()
     {
-        SettingsManager.MiniPlayerIcon = miniPlayerIconToggle.isOn;
+        SettingsManager.Setting<bool>(Settings.MiniPlayerIcon).CurrentValue = miniPlayerIconToggle.isOn;
     }
 
     public void UpdateAutoMove()
     {
-        SettingsManager.AutoMove = autoMoveToggle.isOn;
+        SettingsManager.Setting<bool>(Settings.AutoMove).CurrentValue = autoMoveToggle.isOn;
     }
 
     public void UpdateColorblind()
     {
-        SettingsManager.Colorblind = colorblindToggle.isOn;
+        SettingsManager.Setting<bool>(Settings.Colorblind).CurrentValue = colorblindToggle.isOn;
     }
 
     public void UpdateDevConsole()
     {
-        SettingsManager.DevConsole = devConsoleToggle.isOn;
+        SettingsManager.Setting<bool>(Settings.DevConsole).CurrentValue = devConsoleToggle.isOn;
     }
 }
