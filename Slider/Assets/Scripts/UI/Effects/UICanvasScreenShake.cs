@@ -22,21 +22,21 @@ public class UICanvasScreenShake : MonoBehaviour
 
     public static void Shake(float duration, float amount)
     {
-        amount *= SettingsManager.ScreenShake;
+        amount *= SettingsManager.Setting<float>(Settings.ScreenShake).CurrentValue;
         CameraShake.CameraShakeData data = new CameraShake.CameraShakeData(duration, amount, 0, 0);
         shakeData.Add(data);
     }
 
     public static void ShakeConstant(float duration, float amount)
     {
-        amount *= SettingsManager.ScreenShake;
+        amount *= SettingsManager.Setting<float>(Settings.ScreenShake).CurrentValue;
         CameraShake.CameraShakeData data = new CameraShake.CameraShakeData(duration, amount, amount, 0);
         shakeData.Add(data);
     }
 
     public static void ShakeIncrease(float duration, float amount)
     {
-        amount *= SettingsManager.ScreenShake;
+        amount *= SettingsManager.Setting<float>(Settings.ScreenShake).CurrentValue;
         CameraShake.CameraShakeData data = new CameraShake.CameraShakeData(duration, 0, amount, 0);
         shakeData.Add(data);
     }

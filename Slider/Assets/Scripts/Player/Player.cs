@@ -299,7 +299,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         SetIsInHouse(sp.isInHouse);
 
         // Update position
-        if (SettingsManager.DevConsole && DebugUIManager.justDidSetScene)
+        if (SettingsManager.Setting<bool>(Settings.DevConsole).CurrentValue && DebugUIManager.justDidSetScene)
         {
             // skip setting position if just did SetScene()
             DebugUIManager.justDidSetScene = false;
@@ -466,7 +466,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     {
         if (value)
         {
-            if (SettingsManager.MiniPlayerIcon)
+            if (SettingsManager.Setting<bool>(Settings.MiniPlayerIcon).CurrentValue)
             {
                 UITrackerManager.AddNewTracker(
                     gameObject,

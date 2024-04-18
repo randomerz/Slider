@@ -22,13 +22,13 @@ public class OptionsPanel : MonoBehaviour
 
     public void UpdateSFXVolume()
     {
-        SettingsManager.SFXVolume = sfxSlider.value;
+        SettingsManager.Setting<float>(Settings.SFXVolume).CurrentValue = sfxSlider.value;
         AudioManager.SetSFXVolume(sfxSlider.value);
     }
 
     public void UpdateMusicVolume()
     {
-        SettingsManager.MusicVolume = musicSlider.value;
+        SettingsManager.Setting<float>(Settings.MusicVolume).CurrentValue = musicSlider.value;
         AudioManager.SetMusicVolume(musicSlider.value);
     }
 }
