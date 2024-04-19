@@ -1,10 +1,6 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using TMPro;
-using System.Collections;
 
 public class QuitHandler : MonoBehaviour
 {
