@@ -27,10 +27,14 @@ public class AudioManager : Singleton<AudioManager>
 
     public static bool useVocalizer = true;
 
-    private static float sfxVolume = 0.5f; // [0..1]
+    private static float masterVolume = 0.5f; // [0..1]
+    private static float sfxVolume = 0.5f;
+    private static float ambienceVolume = 0.5f;
     private static float musicVolume = 0.5f;
 
+    private static FMOD.Studio.Bus masterBus;
     private static FMOD.Studio.Bus sfxBus;
+    private static FMOD.Studio.Bus ambienceBus;
     private static FMOD.Studio.Bus musicBus;
 
     [SerializeField]
@@ -147,7 +151,9 @@ public class AudioManager : Singleton<AudioManager>
         parameterDefaults = new Dictionary<string, float>();
         parameterResponsibilityQueue = new Dictionary<string, List<AudioModifier.AudioModifierProperty>>();
 
+        masterBus = FMODUnity.RuntimeManager.GetBus("bus:/Master");
         sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/SFX");
+        ambienceBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/Ambience");
         musicBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/Music");
         SetSFXVolume(sfxVolume);
         SetMusicVolume(musicVolume);
@@ -439,6 +445,12 @@ public class AudioManager : Singleton<AudioManager>
         m.emitter.SetParameter(parameterName, value);
     }
 
+    public static void SetMasterVolume(float value)
+    {
+        masterVolume = Mathf.Clamp(value, 0, 1);
+        masterBus.setVolume(masterVolume);
+    }
+
     public static void SetSFXVolume(float value)
     {
         value = Mathf.Clamp(value, 0, 1);
@@ -448,6 +460,12 @@ public class AudioManager : Singleton<AudioManager>
             return;
 
         sfxBus.setVolume(value);
+    }
+
+    public static void SetAmbienceVolume(float value)
+    {
+        ambienceVolume = Mathf.Clamp(value, 0, 1);
+        ambienceBus.setVolume(ambienceVolume);
     }
 
     public static void SetMusicVolume(float value)
@@ -502,15 +520,10 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    public static float GetSFXVolume()
-    {
-        return sfxVolume;
-    }
-
-    public static float GetMusicVolume()
-    {
-        return musicVolume;
-    }
+    public static float GetMasterVolume() => masterVolume;
+    public static float GetSFXVolume() => sfxVolume;
+    public static float GetAmbienceVolume() => ambienceVolume;
+    public static float GetMusicVolume() => musicVolume;
 
     public static void EnqueueModifier(AudioModifier.ModifierType m)
     {
