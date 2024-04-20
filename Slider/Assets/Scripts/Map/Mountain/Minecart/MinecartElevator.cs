@@ -79,8 +79,7 @@ public class MinecartElevator : MonoBehaviour, ISavable
         if(elevatorState == ElevatorState.BROKEN) return;
         mc.StopMoving();
         animationManager.SendDown();
-        StartCoroutine(WaitThenSend(mc, bottomPosition.transform.position, 3));
-        hasGoneDown = true;
+        StartCoroutine(WaitThenSend(mc, bottomPosition.transform.position, 3, true));
     }
 
     public void SendMinecartUp(Minecart mc)
@@ -92,10 +91,15 @@ public class MinecartElevator : MonoBehaviour, ISavable
         hasGoneUp = true;
     }
     
-    private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir){
+    private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir, bool down = false){
         isSending = true;
         yield return new WaitForSeconds(2f);
         mc.SnapToRail(position, dir);
+        if(down && !hasGoneDown)
+        {
+            hasGoneDown = true;
+            AudioManager.Play("Puzzle Complete");
+        }
         yield return new WaitForSeconds(1.5f);
         mc.StartMoving();
         isSending = false;
