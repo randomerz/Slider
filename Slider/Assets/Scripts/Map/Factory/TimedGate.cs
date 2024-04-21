@@ -64,6 +64,7 @@ public class TimedGate : ElectricalNode, ISavable
         UIArtifact.MoveMadeOnArtifact += MoveMadeOnArtifact;
         PowerCrystal.blackoutStarted += HandleBlackoutStarted;
         PowerCrystal.blackoutEnded += HandleBlackoutEnded;
+        SGrid.OnGridSet += OnGridSet;
     }
 
     private new void OnDisable()
@@ -73,6 +74,7 @@ public class TimedGate : ElectricalNode, ISavable
         UIArtifact.MoveMadeOnArtifact -= MoveMadeOnArtifact;
         PowerCrystal.blackoutStarted -= HandleBlackoutStarted;
         PowerCrystal.blackoutEnded -= HandleBlackoutEnded;
+        SGrid.OnGridSet -= OnGridSet;
     }
 
     public void Save()
@@ -282,6 +284,19 @@ public class TimedGate : ElectricalNode, ISavable
 
                 CheckFailedToPower();
             }
+        }
+    }
+
+    private void OnGridSet(object sender, SGrid.OnGridMoveArgs e)
+    {
+        if (_gateActive && !Powered)
+        {
+            if (_waitToEndGateCoroutine != null)
+            {
+                StopCoroutine(_waitToEndGateCoroutine);
+            }
+
+            CheckFailedToPower();
         }
     }
 
