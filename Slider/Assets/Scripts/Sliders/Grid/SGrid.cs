@@ -83,8 +83,9 @@ public class SGrid : Singleton<SGrid>, ISavable
                 c.gameObject.SetActive(false);
             }
 
+            
         }
-
+        checkCompletion = UIArtifactWorldMap.GetInstance().GetAreaStatus(MyArea) == ArtifactWorldMapArea.AreaStatus.color;
         UIArtifactWorldMap.SetAreaStatus(myArea, ArtifactWorldMapArea.AreaStatus.oneBit);
         
         if (checkCompletion)
@@ -612,7 +613,7 @@ public void SetGrid(int[,] puzzle)
     // Warning: This gets called twice when an area is initialized. Once during Awake()/Init() by the scene initializer,
     //          and again during the general Load() call. Removing the Awake() call will affect magitech desync loading.
     public virtual void Load(SaveProfile profile) 
-    { 
+    {
         // Default vars
         checkCompletion = false;
 
@@ -713,6 +714,7 @@ public void SetGrid(int[,] puzzle)
                 }
                 else if (artifactButton != null) {
                     int tid = Converter.CharToInt(tids);
+                    Debug.Log(tid);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
                 }
             }

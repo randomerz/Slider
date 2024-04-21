@@ -196,6 +196,7 @@ public class PipeLiquid : MonoBehaviour
     public void SetPipeFull()
     {
         Fill(Vector2.up);
+        isFull = true;
         OnIsFull?.Invoke();
     }
 

@@ -101,6 +101,7 @@ public class ReflectionPool : MonoBehaviour
     {
         AudioManager.Play("Puzzle Complete");
         SaveSystem.Current.SetBool("magitechTurnedInArtifact", true);
+        UIArtifactWorldMap.SetAreaStatus(Area.MagiTech, ArtifactWorldMapArea.AreaStatus.color);
         artifact.SetActive(true);
         gem.SetActive(true);
     }

@@ -169,6 +169,17 @@ public class GemManager : MonoBehaviour, ISavable
         UpdateGemSprites();
     }
 
+    public void GiveAllGems()
+    {
+        foreach (Area key in gems.Keys.ToList())
+        {
+            gems[key] = true;
+        }
+        UpdateGemSprites();
+        UpdateNumRemainingGems();
+        UpdateGemHint();
+    }
+
     public void EnableGemTransporter()
     {
         hasGemTransporter = true;
