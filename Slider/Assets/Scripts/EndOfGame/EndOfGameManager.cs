@@ -159,6 +159,7 @@ public class EndOfGameManager : MonoBehaviour
 
     private void GoToMainMenu()
     {
+        SaveSystem.SetCurrentProfile(-1); //We need the current profile to display values
         sceneLoad = SceneManager.LoadSceneAsync(MAIN_MENU_SCENE);
         sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
 
