@@ -714,7 +714,6 @@ public void SetGrid(int[,] puzzle)
                 }
                 else if (artifactButton != null) {
                     int tid = Converter.CharToInt(tids);
-                    Debug.Log(tid);
                     UIArtifact.SetButtonComplete(artifactButton.islandId, artifactButton.islandId == tid);
                 }
             }
