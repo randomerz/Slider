@@ -16,4 +16,9 @@ public class AnimRedirect : MonoBehaviour
     {
         waterWheel.OnFillHeaterEnd();
     }
+
+    public void OnEndAbsorbLava()
+    {
+        waterWheel.OnEndAbsorbLava();
+    }
 }

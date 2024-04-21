@@ -22,6 +22,7 @@ public class WaterWheel : MonoBehaviour, ISavable
     public Minecart mc;
     public Lava heaterLava;
     public PipeLiquid lavaPipe;
+    public Animator lavaExtractorAnimator;
 
     public List<GameObject> heaterLavaGO;
 
@@ -81,9 +82,14 @@ public class WaterWheel : MonoBehaviour, ISavable
     {
         if(!heaterFixed) return;
         
-        lavaCount ++;
+        lavaCount++;
         mc.UpdateState("Empty");
-        //TODO: Play lava extractor animation
+        lavaExtractorAnimator.Play("Fill");
+    }
+
+    public void OnEndAbsorbLava()
+    {
+        lavaExtractorAnimator.Play("Empty");
         if(lavaCount == 1)
         {
             lavaPipe.FillPipe(Vector2.zero, new Vector2(0, 0.5f), 3f);
