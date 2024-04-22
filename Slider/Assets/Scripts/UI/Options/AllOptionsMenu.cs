@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,26 +17,43 @@ public class AllOptionsMenu : MonoBehaviour
 
     public List<GameObject> panels;
 
+    private MenuType currentSubMenu;
+
     private void OnEnable()
     {
         OpenMenu(MenuType.OPTIONS);
     }
 
-    private void CloseAllMenus()
+    // Unity doesn't serialize enums in UnityEvents
+    public void OpenMenu(int menuType) => OpenMenu((MenuType)menuType);
+
+    public void OpenMenu(MenuType menuType)
     {
-        foreach (GameObject menu in panels)
-        {
-            menu.SetActive(false);
-        }
+        SelectableSet currentSubMenuSelectableSet = panels[(int)currentSubMenu].GetComponent<SelectableSet>();
+        currentSubMenuSelectableSet.gameObject.SetActive(false);
+        GetComponent<SelectableSet>().RemoveSubSelectableSet(currentSubMenuSelectableSet);
+
+        currentSubMenu = menuType;
+
+        currentSubMenuSelectableSet = panels[(int)currentSubMenu].GetComponent<SelectableSet>();
+        panels[(int)currentSubMenu].SetActive(true);
+        GetComponent<SelectableSet>().AddSubSelectableSet(currentSubMenuSelectableSet);
     }
 
-
-    public void OpenMenu(MenuType menuType) => OpenMenu((int)menuType);
-
-    // Unity doesn't serialize enums in UnityEvents
-    public void OpenMenu(int menuType)
+    public void SelectBestButtonInCurrentSubMenu()
     {
-        CloseAllMenus();
-        panels[menuType].SetActive(true);
+        SelectableSet currentSubMenuSelectableSet = panels[(int)currentSubMenu].GetComponent<SelectableSet>();
+        Selectable bestSelectableInCurrentMenu = currentSubMenuSelectableSet.Selectables.Where(selectable => selectable.IsInteractable()).First();
+        CoroutineUtils.ExecuteAfterEndOfFrame(() => bestSelectableInCurrentMenu.Select(), this);
+    }
+
+    public void SelectSideNavButtonForCurrentSubMenu()
+    {
+        CoroutineUtils.ExecuteAfterEndOfFrame(() => GetComponent<SelectableSet>().Selectables[(int)currentSubMenu].Select(), this);
+    }
+
+    public void ApplySetting(string settingKey, int value)
+    {
+
     }
 }

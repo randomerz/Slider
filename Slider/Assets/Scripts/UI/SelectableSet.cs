@@ -14,11 +14,24 @@ public class SelectableSet : MonoBehaviour
     [SerializeField] private Selectable[] selectables;
     public Selectable[] Selectables { get => selectables; }
 
+    [SerializeField] private List<SelectableSet> subSelectableSets;
+    public SelectableSet[] SubSelectableSets { get => subSelectableSets.ToArray(); }
+
     private void Awake()
     {
         if (selectables.Length == 0)
         {
             Debug.LogWarning($"A SelectableSet on {gameObject.name} ({gameObject.GetInstanceID()}) contained no selectables. This likely indicates an error.");
         }
+    }
+
+    public void AddSubSelectableSet(SelectableSet selectableSet)
+    {
+        subSelectableSets.Add(selectableSet);
+    }
+
+    public void RemoveSubSelectableSet(SelectableSet selectableSet)
+    {
+        subSelectableSets.Remove(selectableSet);
     }
 }

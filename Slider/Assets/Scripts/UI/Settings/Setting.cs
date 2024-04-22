@@ -2,10 +2,12 @@ using System;
 using UnityEngine;
 
 // This is just to make it so we can make a Dictionary with Settings of different generic types
-interface ISetting
+public interface ISetting
 {
     public void LoadFromPlayerPrefs();
     public void SaveToPlayerPrefs();
+    public void SetCurrentValue(object value);
+    public object GetCurrentValue();
 }
 
 /// <summary>
@@ -42,13 +44,13 @@ public class Setting<T> : ISetting
 
     public void LoadFromPlayerPrefs()
     {
-        T valueFromPlayerPrefs;
+        T valueFromPlayerPrefs = default;
         if (PlayerPrefs.HasKey(PlayerPrefsKey))
         {
             string jsonFromPlayerPrefs = PlayerPrefs.GetString(PlayerPrefsKey);
             valueFromPlayerPrefs = JsonUtility.FromJson<SerializableSettingValue<T>>(jsonFromPlayerPrefs).value;
         }
-        else
+        if (valueFromPlayerPrefs == null)
         {
             valueFromPlayerPrefs = DefaultValue;
         }
@@ -61,6 +63,16 @@ public class Setting<T> : ISetting
     {
         T valueToSave = _currentValue != null ? _currentValue : DefaultValue;
         PlayerPrefs.SetString(PlayerPrefsKey, JsonUtility.ToJson(new SerializableSettingValue<T>(valueToSave)));
+    }
+
+    public void SetCurrentValue(object value)
+    {
+        CurrentValue = (T)value;
+    }
+
+    public object GetCurrentValue()
+    {
+        return CurrentValue;
     }
 
     private class SerializableSettingValue<U>

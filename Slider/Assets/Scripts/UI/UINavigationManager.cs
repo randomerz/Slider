@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Linq;
 
 /// <summary>
 /// Handles everything related to UI keyboard navigation. This should be attached to the EventSystem in every scene.
@@ -13,27 +14,21 @@ public class UINavigationManager : Singleton<UINavigationManager>
 {
     private UnityEngine.EventSystems.EventSystem eventSystem;
 
-    private Dictionary<GameObject, Selectable[]> selectableSetDictionary;
-
     /// <summary>
-    /// This should be set to a GameObject inside of buttonSets or a GameObject which has a SelectableSet component. Make sure this matches the currently active menu panel 
+    /// This should be set to a GameObject inside of buttonSets or a GameObject which has a SelectableSet component. Make sure this matches the currently active menu panel
     /// or navigation won't work properly.
     /// </summary>
-    public static GameObject CurrentMenu 
+    public static GameObject CurrentMenu
     { 
-        get => _instance._currentMenu; 
+        get => _instance._currentMenu;
         set
         {
             _instance._currentMenu = value;
-            if (value != null && !_instance.selectableSetDictionary.ContainsKey(value))
+            if (value != null)
             {
-                SelectableSet selectableSet = value.GetComponent<SelectableSet>();
-                if (selectableSet == null)
+                if (value.GetComponent<SelectableSet>() == null)
                 {
                     LogSelectableNotFoundError();
-                } else
-                {
-                    _instance.selectableSetDictionary[value] = value.GetComponent<SelectableSet>().Selectables;
                 }
             }
         }
@@ -72,7 +67,6 @@ public class UINavigationManager : Singleton<UINavigationManager>
         InitializeSingleton();
 
         _instance.eventSystem = GetComponent<UnityEngine.EventSystems.EventSystem>();
-        selectableSetDictionary = new Dictionary<GameObject, Selectable[]>();
 
         Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Navigate,
             context =>
@@ -145,13 +139,8 @@ public class UINavigationManager : Singleton<UINavigationManager>
         {
             return false;
         }
-        if (!_instance.selectableSetDictionary.ContainsKey(_instance._currentMenu))
-        {
-            LogSelectableNotFoundError();
-            return false;
-        }
 
-        foreach (Selectable selectable in _instance.selectableSetDictionary[_instance._currentMenu])
+        foreach (Selectable selectable in AllSelectablesInCurrentMenu())
         {
             if (selectable != null && _instance.eventSystem.currentSelectedGameObject == selectable.gameObject)
             {
@@ -169,21 +158,15 @@ public class UINavigationManager : Singleton<UINavigationManager>
     /// </summary>
     public static void SelectBestButtonInCurrentMenu()
     {
-
         if (_inMouseControlMode || _instance._currentMenu == null)
         {
             return;
         }
-        if (!_instance.selectableSetDictionary.ContainsKey(_instance._currentMenu))
-        {
-            LogSelectableNotFoundError();
-            return;
-        }
-        foreach (Selectable selectable in _instance.selectableSetDictionary[_instance._currentMenu])
+        foreach (Selectable selectable in AllSelectablesInCurrentMenu())
         {
             if (selectable.interactable)
             {
-                selectable.Select();
+                CoroutineUtils.ExecuteAfterEndOfFrame(() => selectable.Select(), _instance);
                 break;
             }
         }
@@ -209,6 +192,11 @@ public class UINavigationManager : Singleton<UINavigationManager>
         selectable.Select();
     }
 
+    public static GameObject GetCurrentlySelectedGameObject()
+    {
+        return _instance.eventSystem.currentSelectedGameObject;
+    }
+
     private static IEnumerator ILockoutSelectablesInCurrentMenu(System.Action callback, float duration)
     {
         // We need to track all of the ones we disable and then re-enable them, otherwise we would
@@ -216,7 +204,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
         List<Selectable> selectablesToReactivate = new List<Selectable>();
 
         // Disable all interactables in set
-        foreach (Selectable selectable in _instance.selectableSetDictionary[_instance._currentMenu])
+        foreach (Selectable selectable in AllSelectablesInCurrentMenu())
         {
             if (selectable.interactable)
             {
@@ -233,6 +221,26 @@ public class UINavigationManager : Singleton<UINavigationManager>
             selectable.interactable = true;
         }
         callback?.Invoke();
+    }
+
+    private static List<Selectable> AllSelectablesInCurrentMenu()
+    {
+        List<Selectable> allSelectables = new();
+
+        SelectableSet selectableSet = CurrentMenu.GetComponent<SelectableSet>();
+
+        if (selectableSet == null)
+        {
+            LogSelectableNotFoundError();
+        }
+
+        allSelectables.AddRange(selectableSet.Selectables);
+        foreach (SelectableSet subSet in selectableSet.SubSelectableSets)
+        {
+            allSelectables.AddRange(subSet.Selectables);
+        }
+
+        return allSelectables;
     }
 
     private static void LogSelectableNotFoundError()

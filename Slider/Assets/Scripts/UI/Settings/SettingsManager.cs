@@ -22,6 +22,10 @@ public class SettingsManager : MonoBehaviour
 
     void Awake()
     {
+        RegisterAndLoadSetting(Settings.MasterVolume,
+            defaultValue: 0.5f,
+            onValueChanged: value => AudioManager.SetMasterVolume(value)
+        );
         RegisterAndLoadSetting(Settings.SFXVolume,
             defaultValue: 0.5f,
             onValueChanged: value => AudioManager.SetSFXVolume(value)
@@ -29,6 +33,10 @@ public class SettingsManager : MonoBehaviour
         RegisterAndLoadSetting(Settings.MusicVolume,
             defaultValue: 0.5f,
             onValueChanged: value => AudioManager.SetMusicVolume(value)
+        );
+        RegisterAndLoadSetting(Settings.AmbienceVolume,
+            defaultValue: 0.5f,
+            onValueChanged: value => AudioManager.SetAmbienceVolume(value)
         );
         RegisterAndLoadSetting(Settings.ScreenShake,
             defaultValue: 0.5f
@@ -64,9 +72,9 @@ public class SettingsManager : MonoBehaviour
             onValueChanged: (value) => Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, value)
         );
         RegisterAndLoadSetting(Settings.Resolution,
-            defaultValue: Screen.resolutions[0],
+            defaultValue: new Resolution(1920, 1080),
             onValueChanged: (value) => Screen.SetResolution(value.width, value.height, Screen.fullScreenMode)
-        ); ;
+        );
         RegisterAndLoadSetting(Settings.Vsync,
             defaultValue: 1, // Vsync enabled
             onValueChanged: (value) => QualitySettings.vSyncCount = value
@@ -97,5 +105,34 @@ public class SettingsManager : MonoBehaviour
     public static Setting<T> Setting<T>(Settings setting)
     {
         return (Setting<T>)settings[setting];
+    }
+
+    /// <summary>
+    /// Retrieves the Setting data class for the specified Setting. This can be used to access properties such as the CurrentValue, DefaultValue, etc.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="setting"></param>
+    /// <returns></returns>
+    public static ISetting Setting(Settings setting)
+    {
+        return settings[setting];
+    }
+}
+
+[System.Serializable]
+public class Resolution
+{
+    public int width;
+    public int height;
+
+    public Resolution(int width, int height)
+    {
+        this.width = width;
+        this.height = height;
+    }
+
+    public static Resolution FromUnityStruct(UnityEngine.Resolution unityStruct)
+    {
+        return new Resolution(unityStruct.width, unityStruct.height);
     }
 }

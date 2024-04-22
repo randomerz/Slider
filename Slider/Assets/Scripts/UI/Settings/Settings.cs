@@ -1,11 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public enum Settings
 {
+    MasterVolume,
     SFXVolume,
     MusicVolume,
+    AmbienceVolume,
     ScreenShake,
     BigTextEnabled,
     HighContrastTextEnabled,
@@ -26,6 +30,8 @@ static class SettingsMethods
     {
         Settings.HideCursor => "hideCursor",
         Settings.SFXVolume => "sfxVolume",
+        Settings.MasterVolume => "masterVolume",
+        Settings.AmbienceVolume => "ambienceVolume",
         Settings.MusicVolume => "musicVolume",
         Settings.ScreenShake => "screenShake",
         Settings.BigTextEnabled => "bigTextEnabled",
