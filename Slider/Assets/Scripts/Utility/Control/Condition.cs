@@ -15,7 +15,7 @@ public class Condition
         spec,
         playerCarryingItem,
         flag,
-        playerCarryingSpecItem,
+        playerCarryingSpecItem, // unused?
         noGrid, //C: returns true if grid does *not* contain the pattern
         noFlag,
     }

@@ -22,7 +22,7 @@ public class NPCEmotes : MonoBehaviour
 
     private Emotes currentEmote;
 
-    void Start()
+    void Awake()
     {
         xOffset = Mathf.Abs(transform.localPosition.x);
     }
