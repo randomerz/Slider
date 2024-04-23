@@ -6,6 +6,7 @@ public class JungleBigBlobDialogue : MonoBehaviour
 {
     public string DIALOGUE_SAVE_STRING = "JungleShopBlobDialogue";
 
+    public NPC npc;
     public RecipeList recipeList;
 
     public void PlayerCarryingShape(Condition c)
@@ -26,9 +27,14 @@ public class JungleBigBlobDialogue : MonoBehaviour
         }
 
         string message = ShapeNameToSpecialMessage(item.itemName);
-        if (message == null)
+        if (message != null)
+        {
+            npc.Conds[^1].dialogueChain[0].animationOnStart = ShapeNameToSpecialAnimation(item.itemName);
+        }
+        else
         {
             message = ShapeNameToGenericMessage(item.itemName);
+            npc.Conds[^1].dialogueChain[0].animationOnStart = "Idle";
         }
 
         SaveSystem.Current.SetString(DIALOGUE_SAVE_STRING, message);
@@ -45,13 +51,13 @@ public class JungleBigBlobDialogue : MonoBehaviour
         // "Crate" => "",
         // "Crutch" => "",
         // "Female" => "",
-        // "Fish" => "",
-        // "FishBowl" => "",
-        // "Flag" => "",
-        // "Glasses" => "",
+        "Fish" => "Blub blub blub",
+        "FishBowl" => "NOOOO YOU TRAPPED MR. BLUB BLUB",
+        "Flag" => "A race? I hope everyone's a winner!",
+        "Glasses" => "I SEE you've made something cool.",
         "Heart" => "Aww <3",
         // "House" => "",
-        // "Icecream" => "",
+        "Icecream" => "Artificial vanilla, my favorite!",
         // "Line" => "",
         // "Lolipop" => "",
         // "Male" => "",
@@ -64,8 +70,42 @@ public class JungleBigBlobDialogue : MonoBehaviour
         // "SemiCircle" => "",
         // "Ship" => "",
         // "Square" => "",
-        // "Triangle" => "",
+        "Triangle" => "If you were a triangle you'd be acute one!",
         _ => null
+    };
+
+    // Idle, Happy, Disgusted, Smug, Interested, Shocked
+    private string ShapeNameToSpecialAnimation(string shapeName) => shapeName switch
+    {
+        // "Bandage" => "Idle",
+        // "Breadge" => "Idle",
+        // "Camera" => "Idle",
+        // "Chest" => "Idle",
+        "Circle" => "Happy",
+        // "Crate" => "Idle",
+        // "Crutch" => "Idle",
+        // "Female" => "Idle",
+        "Fish" => "Idle",
+        "FishBowl" => "Shocked",
+        "Flag" => "Happy",
+        "Glasses" => "Smug",
+        "Heart" => "Happy",
+        // "House" => "Idle",
+        "Icecream" => "Idle",
+        // "Line" => "Idle",
+        // "Lolipop" => "Idle",
+        // "Male" => "Idle",
+        // "Minecart" => "Idle",
+        // "Mushroom" => "Idle",
+        // "Pickaxe" => "Idle",
+        // "Plus" => "Idle",
+        // "Popsicle" => "Idle",
+        // "Rail" => "Idle",
+        // "SemiCircle" => "Idle",
+        // "Ship" => "Idle",
+        // "Square" => "Idle",
+        "Triangle" => "Smug",
+        _ => "Idle"
     };
 
     private string ShapeNameToGenericMessage(string shapeName)
