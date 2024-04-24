@@ -23,7 +23,7 @@ public class SettingsManager : MonoBehaviour
     void Awake()
     {
         RegisterAndLoadSetting(Settings.MasterVolume,
-            defaultValue: 0.5f,
+            defaultValue: 1f,
             onValueChanged: value => AudioManager.SetMasterVolume(value)
         );
         RegisterAndLoadSetting(Settings.SFXVolume,

@@ -672,6 +672,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectables:
   - {fileID: 196642259}
+  subSelectableSets: []
 --- !u!114 &60457623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1740,7 +1741,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6231720964866008364, guid: ef906d029e77d314393f8bd174ad4991, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7322694294893766236, guid: ef906d029e77d314393f8bd174ad4991, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4435,9 +4436,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.26000002
+    x: 0
     y: 0
-    width: 0.48000002
+    width: 1
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
@@ -6124,6 +6125,7 @@ MonoBehaviour:
   - {fileID: 1299817382}
   - {fileID: 1575932757}
   - {fileID: 526525263}
+  subSelectableSets: []
 --- !u!114 &735139352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17859,6 +17861,7 @@ MonoBehaviour:
   - {fileID: 1689922686}
   - {fileID: 1556059162}
   - {fileID: 2083773582}
+  subSelectableSets: []
 --- !u!114 &1949098312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19242,6 +19245,7 @@ MonoBehaviour:
   - {fileID: 744988402}
   - {fileID: 1627467746}
   - {fileID: 677667027}
+  subSelectableSets: []
 --- !u!222 &5049116214890196647
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class JungleBigBlobDialogue : MonoBehaviour
 {
-    public string DIALOGUE_SAVE_STRING = "JungleShopBlobDialogue";
+    public const string DIALOGUE_SAVE_STRING = "JungleShopBlobDialogue";
 
     public NPC npc;
     public RecipeList recipeList;
@@ -14,14 +14,12 @@ public class JungleBigBlobDialogue : MonoBehaviour
         Item item = PlayerInventory.GetCurrentItem();
         if (item == null)
         {
-            Debug.Log("player not carrying item");
             c.SetSpec(false);
             return;
         }
 
         if (!IsInRecipeList(item.itemName))
         {
-            Debug.Log("recipe not in list");
             c.SetSpec(false);
             return;
         }
@@ -44,12 +42,12 @@ public class JungleBigBlobDialogue : MonoBehaviour
     private string ShapeNameToSpecialMessage(string shapeName) => shapeName switch
     {
         // "Bandage" => "",
-        // "Breadge" => "",
+        // "Bread" => "",
         // "Camera" => "",
         // "Chest" => "",
         "Circle" => "OMG Circle!!! Just like me!!!!",
         // "Crate" => "",
-        // "Crutch" => "",
+        "Crutch" => "Crutch? Isn't that a police baton? Yay!!",
         // "Female" => "",
         "Fish" => "Blub blub blub",
         "FishBowl" => "NOOOO YOU TRAPPED MR. BLUB BLUB",
@@ -58,7 +56,7 @@ public class JungleBigBlobDialogue : MonoBehaviour
         "Heart" => "Aww <3",
         // "House" => "",
         "Icecream" => "Artificial vanilla, my favorite!",
-        // "Line" => "",
+        "Line" => "Does Barron want more lines..?",
         // "Lolipop" => "",
         // "Male" => "",
         // "Minecart" => "",
@@ -78,12 +76,12 @@ public class JungleBigBlobDialogue : MonoBehaviour
     private string ShapeNameToSpecialAnimation(string shapeName) => shapeName switch
     {
         // "Bandage" => "Idle",
-        // "Breadge" => "Idle",
+        // "Bread" => "Idle",
         // "Camera" => "Idle",
         // "Chest" => "Idle",
         "Circle" => "Happy",
         // "Crate" => "Idle",
-        // "Crutch" => "Idle",
+        "Crutch" => "Idle",
         // "Female" => "Idle",
         "Fish" => "Idle",
         "FishBowl" => "Shocked",
@@ -92,7 +90,7 @@ public class JungleBigBlobDialogue : MonoBehaviour
         "Heart" => "Happy",
         // "House" => "Idle",
         "Icecream" => "Idle",
-        // "Line" => "Idle",
+        "Line" => "Idle",
         // "Lolipop" => "Idle",
         // "Male" => "Idle",
         // "Minecart" => "Idle",
