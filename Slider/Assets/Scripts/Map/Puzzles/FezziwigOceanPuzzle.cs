@@ -13,15 +13,16 @@ public class FezziwigOceanPuzzle : MonoBehaviour
     [SerializeField] private RainDropController rainController;
 
 
-    private bool CanStartCast;
+    private bool canStartCast;
     private bool isFirstCast = true;
 
-    private bool Finished;
-    private Coroutine RotateTilesRoutine;
+    private bool finished;
+    private Coroutine rotateTilesRoutine;
 
-    void Start() { 
-        Finished = false;
-        CanStartCast = true;
+    void Start() 
+    { 
+        finished = false;
+        canStartCast = true;
 
         if (PlayerInventory.Contains("Magical Gem"))
         {
@@ -32,12 +33,17 @@ public class FezziwigOceanPuzzle : MonoBehaviour
     /// <summary>
     /// Starts the spell casting process
     /// </summary>
-    public void CastSpell() {
-        RotateTilesRoutine = StartCoroutine(CastRoutine());
+    public void CastSpell() 
+    {
+        if (rotateTilesRoutine == null)
+        {
+            rotateTilesRoutine = StartCoroutine(CastRoutine());
+        }
     }
 
-    private IEnumerator CastRoutine() {
-        CanStartCast = false;
+    private IEnumerator CastRoutine() 
+    {
+        canStartCast = false;
         oceanArtifact.AllowRotate(false);
 
         yield return new WaitUntil(() => oceanArtifact.MoveQueueEmpty());
@@ -55,7 +61,7 @@ public class FezziwigOceanPuzzle : MonoBehaviour
         if (isFirstCast)
         {
             isFirstCast = false;
-        yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(2f);
         }
 
         StartCoroutine(oceanArtifact.RotateAllTiles(CastFinish));
@@ -64,25 +70,27 @@ public class FezziwigOceanPuzzle : MonoBehaviour
     private void CastFinish()
     {
         oceanArtifact.AllowRotate(true);
-        Finished = !jumpScript.ChadFell() && !jumpScript.ChadFalling();
-        CanStartCast = !Finished;
-        if (!Finished) jumpScript.FinishFall();
+        finished = !jumpScript.ChadFell() && !jumpScript.ChadFalling();
+        canStartCast = !finished;
+        if (!finished) jumpScript.FinishFall();
         else npcAnimator.SetBool("isCasting", false);
 
         SetFogStatus(false);
         rainController.SetRainActive(false);
+
+        rotateTilesRoutine = null;
     }
 
     public void CanStartSpell(Condition cond) {
-        cond.SetSpec(CanStartCast);
+        cond.SetSpec(canStartCast);
     }
 
     public void CannotStartSpell(Condition cond) {
-        cond.SetSpec(!CanStartCast);
+        cond.SetSpec(!canStartCast);
     }
 
     public void SpellFinished(Condition cond) {
-        cond.SetSpec(Finished);
+        cond.SetSpec(finished);
     }
 
 
