@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WaterWheel : MonoBehaviour, ISavable
 {
+    private const string HEATERS_ON_SAVE_STRING = "MountainGlobalHeatersOn";
+
     [SerializeField] private STile stile;
     [SerializeField] private Meltable cog1;
     [SerializeField] private Meltable cog2;
@@ -61,6 +63,7 @@ public class WaterWheel : MonoBehaviour, ISavable
 
     public void FillHeater()
     {
+        SaveSystem.Current.SetBool(HEATERS_ON_SAVE_STRING, true);
         foreach(Animator a in heaterAnimators)
             a.Play("Fill");
     }

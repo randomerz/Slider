@@ -49,8 +49,21 @@ public class GemMachine : MonoBehaviour, ISavable
             ResetGems();
     }
 
+    // Called by NPC sara
     public void BreakGemMachineCutscene()
     {
+        StartCoroutine(DoBreakGemMachineCutscene());
+    }
+
+    private IEnumerator DoBreakGemMachineCutscene()
+    {
+        yield return new WaitForSeconds(1);
+
+        AudioManager.PlayWithVolume("Slide Explosion", 0.2f);
+        CameraShake.Shake(0.6f, 0.2f);
+
+        yield return new WaitForSeconds(0.5f);
+
         BreakGemMachine();
     }
 
