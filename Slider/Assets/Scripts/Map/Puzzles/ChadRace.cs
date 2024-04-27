@@ -64,6 +64,9 @@ public class ChadRace : MonoBehaviour, ISavable
     // Start is called before the first frame update
     void Start()
     {
+        if(raceState == State.PlayerWon || raceState == State.RaceEnded)
+            return; 
+
         // Setting all the starting params
         tilesAdjacent = CheckGrid.row(SGrid.GetGridString(), "523");
 
@@ -208,7 +211,7 @@ public class ChadRace : MonoBehaviour, ISavable
                     chadimator.SetBool("isWalking", false);
                     chadimator.SetBool("isSad", true);
 
-                    if (PlayerInventory.Contains("Boots"))
+                    if (PlayerInventory.Contains("Boots") && PlayerInventory.Contains("Slider 6", Area.Jungle))
                     {
                         raceState = State.RaceEnded;
                     }
@@ -245,10 +248,15 @@ public class ChadRace : MonoBehaviour, ISavable
         if (profile.GetBool(SAVE_STRING_PLAYER_WON))
         {
             raceState = State.PlayerWon;
+            transform.localPosition = finishingLine.position;
+            transform.parent =finishingLine.transform.parent;
+            chadimator.SetBool("isWalking", false);
+            chadimator.SetBool("isSad", true);
         }
         if (profile.GetBool(SAVE_STRING_RACE_ENDED))
         {
             raceState = State.RaceEnded;
+
         }
 
         if (profile.GetBool(JungleShapeManager.GetSaveString("Flag")))
