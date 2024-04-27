@@ -79,7 +79,8 @@ public class UIArtifact : Singleton<UIArtifact>
             if (hoverTimer >= hoverBuffer && lastHovered != null)
             {
                 lastHovered.SetSpriteToIslandOrEmpty();
-                lastHovered.SetHighlighted(true);
+                if(moveOptionButtons.Contains(lastHovered))
+                    lastHovered.SetHighlighted(true);
                 lastHovered = null;
             }
         }
