@@ -137,6 +137,7 @@ public class ArtifactTabManager : MonoBehaviour
     {
         yield return new WaitUntil(() => UIArtifact.GetInstance().MoveQueueEmpty());
         SGrid.Current.SaveRealigningGrid();
+        print("1");
         uiArtifactMenus.uiArtifact.FlickerAllOnce();
         SetSaveLoadTabSprites(true);
         isRearranging = false;
@@ -199,8 +200,21 @@ public class ArtifactTabManager : MonoBehaviour
             {
                 int tid = SGrid.Current.GetGrid()[x, y].islandId;
                 originalGrid[x, y] = tid;
-                uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]).SetPosition(x, y, false);
-                uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]).SetHighlighted(true);
+                if(SGrid.Current.realigningGrid == null)
+                {
+                    print("realign gris is null");
+                }
+                var loc = SGrid.Current.realigningGrid[x, y];
+                var button = uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]);
+                if(button != null)
+                {
+                    button.SetPosition(x, y, false);
+                    button.SetHighlighted(true);
+                }
+                else
+                {
+                    print("null button at " + loc);
+                }
             }
         }
     }
