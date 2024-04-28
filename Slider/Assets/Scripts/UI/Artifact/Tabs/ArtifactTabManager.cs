@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 public class ArtifactTabManager : MonoBehaviour 
 {
@@ -27,6 +28,9 @@ public class ArtifactTabManager : MonoBehaviour
     private int[,] originalGrid;
 
     public bool InPreview { get; private set; }
+
+    private Coroutine hoverCoroutine = null;
+    private Coroutine clickCoroutine = null;
 
     protected virtual void Awake()
     {
@@ -130,17 +134,24 @@ public class ArtifactTabManager : MonoBehaviour
         if (isRearranging)
             return;
         isRearranging = true;
-        StartCoroutine(ISaveOnClick());
+        if(hoverCoroutine != null)
+        {
+            StopCoroutine(hoverCoroutine);
+        }
+        if(clickCoroutine == null)
+        {
+            clickCoroutine = StartCoroutine(ISaveOnClick());  
+        }
     }
 
     private IEnumerator ISaveOnClick()
     {
         yield return new WaitUntil(() => UIArtifact.GetInstance().MoveQueueEmpty());
         SGrid.Current.SaveRealigningGrid();
-        print("1");
         uiArtifactMenus.uiArtifact.FlickerAllOnce();
         SetSaveLoadTabSprites(true);
         isRearranging = false;
+        clickCoroutine = null;
     }
 
     // Load tab
@@ -152,7 +163,14 @@ public class ArtifactTabManager : MonoBehaviour
             if (isRearranging)
                 return;
             isRearranging = true;
-            StartCoroutine(ILoadOnClick());  
+            if(hoverCoroutine != null)
+            {
+                StopCoroutine(hoverCoroutine);
+            }
+            if(clickCoroutine == null)
+            {
+                clickCoroutine = StartCoroutine(ILoadOnClick());  
+            }
         }
         else
         {
@@ -178,13 +196,14 @@ public class ArtifactTabManager : MonoBehaviour
 
         SetSaveLoadTabSprites(false);
         isRearranging = false;
+        clickCoroutine = null;
     }
 
     public void LoadOnHoverEnter()
     {
-        if(SGrid.Current.realigningGrid != null)
+        if(SGrid.Current.realigningGrid != null && clickCoroutine == null && hoverCoroutine == null)
         {
-            StartCoroutine(ILoadOnHoverEnter());
+            hoverCoroutine = StartCoroutine(ILoadOnHoverEnter());
         }
     }
 
@@ -202,21 +221,18 @@ public class ArtifactTabManager : MonoBehaviour
                 originalGrid[x, y] = tid;
                 if(SGrid.Current.realigningGrid == null)
                 {
-                    print("realign gris is null");
-                }
-                var loc = SGrid.Current.realigningGrid[x, y];
-                var button = uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]);
-                if(button != null)
-                {
-                    button.SetPosition(x, y, false);
-                    button.SetHighlighted(true);
+                    Debug.LogWarning("realign grid is null. There was an issue with scroll corotutine ecxecution order");
                 }
                 else
                 {
-                    print("null button at " + loc);
+                    var loc = SGrid.Current.realigningGrid[x, y];
+                    var button = uiArtifactMenus.uiArtifact.GetButton(SGrid.Current.realigningGrid[x, y]);
+                    button.SetPosition(x, y, false);
+                    button.SetHighlighted(true);
                 }
             }
         }
+        hoverCoroutine = null;
     }
 
     public void LoadOnHoverExit()
@@ -232,6 +248,11 @@ public class ArtifactTabManager : MonoBehaviour
                     uiArtifactMenus.uiArtifact.GetButton(tid).SetHighlighted(false);
                 }
             }
+        }
+        if(hoverCoroutine != null)
+        {
+            StopCoroutine(hoverCoroutine);
+            hoverCoroutine = null;
         }
     }
 
