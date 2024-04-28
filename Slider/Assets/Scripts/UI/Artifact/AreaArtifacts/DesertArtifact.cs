@@ -167,8 +167,7 @@ public class DesertArtifact : UIArtifact
         return move;
     }
     
-    //Chen: Literally the same thing, except uses base.ConstructMoveFromButtonPair and tosses in a SwapButtons because UI bandaid fixes
-    public bool TryFragQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
+    public bool TryScrollScrapQueueMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
         UpdateMirageGrid();
         SMove move = base.ConstructMoveFromButtonPair(buttonCurrent, buttonEmpty);
@@ -200,7 +199,6 @@ public class DesertArtifact : UIArtifact
             {
                 if (IsStileInActiveMoves(b.islandId))// || IsStileInQueue(b.islandId))
                 {
-                    //Debug.Log(b.islandId);
                     b.SetIsInMove(true);
                 }
                 else if (b.MyStile.hasAnchor)

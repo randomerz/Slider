@@ -482,7 +482,7 @@ public class ShopDialogueManager : MonoBehaviour
                     () => {
                         SetDialogue(new ShopDialogue(
                     null,
-                    "If you fix this island and maybe Catbeard's ship with that tablet of yours, I can help you cross over to Canopy Town.",
+                    "If you fix my island that tablet of yours, I can help you cross over to Canopy Town. Only need the tavern part and the two beaches.",
                     TKSprite.Normal,
                     () => {
                         shopManager.OpenMainPanel();
@@ -509,7 +509,7 @@ public class ShopDialogueManager : MonoBehaviour
                         canOverrideDialogue = false;
                         shopManager.OpenDialoguePanel();
                     },
-                    "If you fix this island and maybe Catbeard's ship with that tablet of yours, I can help you cross over to Canopy Town.",
+                    "If you fix my island with that tablet of yours, I can help you cross over to Canopy Town.",
                     TKSprite.Normal,
                     () => {
                         shopManager.OpenMainPanel();
@@ -779,7 +779,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                 new ShopDialogue(
                     null,
-                    "Maybe others know the rest of the song?",
+                    "Maybe others know the rest of the song? Or it might be written down, eroded away in sand.",
                     TKSprite.Question,
                     () => {
                         FoggyMusicHintManager.Instance.SetBobHint(false);
@@ -966,7 +966,7 @@ public class ShopDialogueManager : MonoBehaviour
 
                         UIArtifactWorldMap.SetAreaStatus(Area.Desert, ArtifactWorldMapArea.AreaStatus.silhouette);
                     },
-                    "The plains to the east, now a hot-zone full our nation's military.",
+                    "The plains to the east, now a hot-zone full of our nation's military.",
                     TKSprite.Normal,
                     () => SetDialogue(new ShopDialogue(
                     null,

@@ -672,6 +672,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectables:
   - {fileID: 196642259}
+  subSelectableSets: []
 --- !u!114 &60457623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1737,6 +1738,10 @@ PrefabInstance:
     - target: {fileID: 6231720964866008364, guid: ef906d029e77d314393f8bd174ad4991, type: 3}
       propertyPath: m_Name
       value: ConventionMode
+      objectReference: {fileID: 0}
+    - target: {fileID: 6231720964866008364, guid: ef906d029e77d314393f8bd174ad4991, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7322694294893766236, guid: ef906d029e77d314393f8bd174ad4991, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4431,10 +4436,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.035937503
-    y: 0.09537037
-    width: 0.16666667
-    height: 0.16666666
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.1
   far clip plane: 5000
   field of view: 40
@@ -4541,7 +4546,7 @@ PrefabInstance:
     - target: {fileID: 3516294938470570099, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 1014698323}
+      objectReference: {fileID: 0}
     - target: {fileID: 3516294938470570099, guid: c55da4bfbd4f0164d8ed29c1b5ad25bb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UIMenu, SliderScripts
@@ -6120,6 +6125,7 @@ MonoBehaviour:
   - {fileID: 1299817382}
   - {fileID: 1575932757}
   - {fileID: 526525263}
+  subSelectableSets: []
 --- !u!114 &735139352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8902,7 +8908,7 @@ PrefabInstance:
     - target: {fileID: 5272394200671067002, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1014698323}
+      objectReference: {fileID: 0}
     - target: {fileID: 5272394200671067002, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: MoveToParentMenu
@@ -9021,17 +9027,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1631032016384002369, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
   m_PrefabInstance: {fileID: 1014698320}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1014698323 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4547627681717567063, guid: 01be6d7a2c18b414cafe008fde6283c5, type: 3}
-  m_PrefabInstance: {fileID: 1014698320}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ba608890f571ba41a7a2b2dfcf74dab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1016617804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17866,6 +17861,7 @@ MonoBehaviour:
   - {fileID: 1689922686}
   - {fileID: 1556059162}
   - {fileID: 2083773582}
+  subSelectableSets: []
 --- !u!114 &1949098312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19249,6 +19245,7 @@ MonoBehaviour:
   - {fileID: 744988402}
   - {fileID: 1627467746}
   - {fileID: 677667027}
+  subSelectableSets: []
 --- !u!222 &5049116214890196647
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -19338,7 +19335,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 32
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 320, y: 180}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96

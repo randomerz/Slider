@@ -4,42 +4,50 @@ using UnityEngine;
 
 public class MinecartElevator : MonoBehaviour, ISavable
 {
-    [SerializeField] private bool isFixed;
-    [SerializeField] private bool isBroken;
+
     public GameObject topPosition;
     public GameObject bottomPosition;
     public Minecart mainMc;
-  //  public RailManager borderRM;
-    private bool isOpen = true; //C: TODO true if there are tiles in front of the elevator (top and bottom), false otherwise
-    private bool hasGoneDown;
-    private bool hasGoneUp;
+    public bool hasGoneDown;
+    public bool hasGoneUp;
     public ElevatorAnimationManager animationManager;
     public bool isSending = false; //true when minecart being sent;
 
+    public List<SpriteSwapper> powerSwappers;
+
     public bool isInBreakingAnimation = false;
     public GameObject crystalchecker;
+    public ElectricalNode powerBox;
+    public GameObject pylon;
 
-    private void OnEnable() {
-        SGridAnimator.OnSTileMoveEnd += CheckOpenOnMove;
-        SGridAnimator.OnSTileMoveStart += CheckOpenOnMove;
+    public bool anchorGeneratorPower;
+
+    public enum ElevatorState {
+        INITIAL,
+        BROKEN,
+        FIXED
     }
 
-    private void OnDisable() {
-        SGridAnimator.OnSTileMoveEnd -= CheckOpenOnMove;
-        SGridAnimator.OnSTileMoveStart -= CheckOpenOnMove;
-    }
+    public ElevatorState elevatorState = ElevatorState.INITIAL;
 
-    private void CheckOpenOnMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    public void SetIsPowered(bool powered)
     {
-        isOpen = CheckIfShouldBeOpen();
+        anchorGeneratorPower = powered;
     }
 
     public void BreakElevator()
     {
+        BreakElevator(false);
+    }
+
+    public void BreakElevator(bool fromSave = false)
+    {
+        elevatorState = ElevatorState.BROKEN;
         crystalchecker.SetActive(true);
         isInBreakingAnimation = true;
-        isBroken = true;
-        animationManager.Break();
+        animationManager.Break(fromSave);
+        powerBox.StartSignal(false);
+        TogglePowerSprites(false);
     }
 
     public void FixElevator()
@@ -47,48 +55,64 @@ public class MinecartElevator : MonoBehaviour, ISavable
         FixElevator(false);
     }
 
-    public void FixElevator(bool fromLoad = false)
+    public void FixElevator(bool fromSave = false)
     {
-        isFixed = true;
-        if(!fromLoad)
+        if(elevatorState != ElevatorState.BROKEN && !fromSave)
+            Debug.LogWarning("Fixed elevator when not in broken state");
+        
+        elevatorState = ElevatorState.FIXED;
+        crystalchecker.SetActive(false);
+        animationManager.Repair();
+        pylon.SetActive(false);
+        powerBox.StartSignal(true);
+        TogglePowerSprites(true);
+
+        if(!fromSave)
         {
             mainMc.UpdateState("Empty");
             AudioManager.Play("Puzzle Complete");
         }
-        crystalchecker.SetActive(false);
-        animationManager.Repair();
     }
 
     public void SendMinecartDown(Minecart mc)
     {
-        if(isBroken && !isFixed)
-            return;
+        if(elevatorState == ElevatorState.BROKEN) return;
         mc.StopMoving();
         animationManager.SendDown();
-        StartCoroutine(WaitThenSend(mc, bottomPosition.transform.position, 3));
-        hasGoneDown = true;
+        StartCoroutine(WaitThenSend(mc, bottomPosition.transform.position, 3, true));
     }
 
     public void SendMinecartUp(Minecart mc)
     {
-        if(isBroken && !isFixed)
-            return;
+        if(elevatorState == ElevatorState.BROKEN) return;
         mc.StopMoving();
         animationManager.SendUp();
         StartCoroutine(WaitThenSend(mc, topPosition.transform.position, 3));
         hasGoneUp = true;
     }
     
-    private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir){
+    private IEnumerator WaitThenSend(Minecart mc, Vector3 position, int dir, bool down = false){
         isSending = true;
         yield return new WaitForSeconds(2f);
         mc.SnapToRail(position, dir);
+        if(down && !hasGoneDown)
+        {
+            hasGoneDown = true;
+            AudioManager.Play("Puzzle Complete");
+        }
         yield return new WaitForSeconds(1.5f);
         mc.StartMoving();
         isSending = false;
-        if(!isBroken && !isFixed)
+    }
+
+    public void TogglePowerSprites(bool val)
+    {
+        foreach(SpriteSwapper ss in powerSwappers)
         {
-            BreakElevator();
+            if(val)
+                ss.TurnOn();
+            else
+                ss.TurnOff();
         }
     }
 
@@ -100,11 +124,9 @@ public class MinecartElevator : MonoBehaviour, ISavable
         && SGrid.Current.GetStileAt(0, 3).isTileActive && !SGrid.Current.GetStileAt(0, 3).IsMoving();
     }
 
-    public void CheckIsBroken(Condition c) => c.SetSpec(!isInBreakingAnimation && isBroken);
+    public void CheckIsBroken(Condition c) => c.SetSpec(!isInBreakingAnimation && elevatorState == ElevatorState.BROKEN);
 
-    public void CheckIsFixed(Condition c) => c.SetSpec(isFixed);
-
-    public void CheckIsNotOpen(Condition c) => c.SetSpec(!isOpen);
+    public void CheckIsFixed(Condition c) => c.SetSpec(elevatorState == ElevatorState.FIXED);
 
     public void CheckHasGoneDown(Condition c) => c.SetSpec(hasGoneDown);
 
@@ -112,26 +134,32 @@ public class MinecartElevator : MonoBehaviour, ISavable
 
     public void CheckHasGoneUp(Condition c) => c.SetSpec(hasGoneUp);
     
+    public void CheckGeneratorPoweringAnchor(Condition c) => c.SetSpec(anchorGeneratorPower);
 
 
     public void Save()
     {
-        SaveSystem.Current.SetBool("MountainElevatorBroken", isBroken);
-        SaveSystem.Current.SetBool("MountainElevatorFixed", isFixed);
+        SaveSystem.Current.SetInt("MountainElevatorState", (int)elevatorState);
         SaveSystem.Current.SetBool("MountainElevatorUp", hasGoneUp);
         SaveSystem.Current.SetBool("MountainElevatorDown", hasGoneDown);
-
     }
 
     public void Load(SaveProfile profile)
     {
         hasGoneUp = profile.GetBool("MountainElevatorUp");
         hasGoneDown = profile.GetBool("MountainElevatorDown");
-        isFixed = profile.GetBool("MountainElevatorFixed");
-        isBroken = isFixed = profile.GetBool("MountainElevatorBroken");
-        if(isFixed)
-            FixElevator(true);
-        else if (isBroken)
-            animationManager.Break(true);
+        elevatorState = (ElevatorState)profile.GetInt("MountainElevatorState");
+        switch (elevatorState)
+        {
+            case ElevatorState.FIXED:
+                FixElevator(true);
+                break;
+            case ElevatorState.BROKEN:
+                BreakElevator(true);
+                break;
+            case ElevatorState.INITIAL:
+                TogglePowerSprites(true);
+                break;
+        }
     }
 }

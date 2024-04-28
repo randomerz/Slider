@@ -7,8 +7,10 @@ public class DesertTemple : MonoBehaviour, ISavable
     [SerializeField] private ArtifactHousingButtonsManager artifactHousingButtonsManager;
     [SerializeField] private GameObject templeTrapBlockingRoom;
     [SerializeField] private GameObject templeTrapBlockingRoomCollider;
+    [SerializeField] private GameObject templeEntranceCollapseRocks;
     [SerializeField] private DesertTempleMusic templeMusic;
     private Coroutine shuffleBuildUpCoroutine;
+    
 
     private bool isInTemple;
     
@@ -21,6 +23,14 @@ public class DesertTemple : MonoBehaviour, ISavable
         if (isInTemple)
         {
             SetIsInTemple(true);
+
+            if (
+                SaveSystem.Current.GetBool("desertTempleEntranceCollapsed") &&
+                !PlayerInventory.Contains("Scroll of Realigning")
+            )
+            {
+                templeEntranceCollapseRocks.SetActive(true);
+            }
         }
     }
 
@@ -53,6 +63,50 @@ public class DesertTemple : MonoBehaviour, ISavable
         templeMusic.SetIsInTemple(isInTemple);
         Player.GetInstance().SetTracker(!isInTemple);
         Player.GetInstance().SetDontUpdateSTileUnderneath(isInTemple);
+    }
+
+    public void CollapseTempleEntrance()
+    {
+        if (!SaveSystem.Current.GetBool("desertTempleEntranceCollapsed"))
+        {
+            StartCoroutine(DoCollapseTempleEntrance());
+        }
+    }
+
+    private IEnumerator DoCollapseTempleEntrance()
+    {
+        SaveSystem.Current.SetBool("desertTempleEntranceCollapsed", true);
+        templeEntranceCollapseRocks.SetActive(true);
+
+        DoCollapseParticles();
+        DoCollapseParticles();
+        CameraShake.Shake(1, 0.75f);
+        AudioManager.PlayWithVolume("Slide Rumble", 0.5f);
+        AudioManager.PlayWithVolume("Hat Click", 0.3f);
+
+        yield return new WaitForSeconds(0.75f);
+
+        DoCollapseParticles();
+        CameraShake.Shake(0.25f, 0.5f);
+        AudioManager.PlayWithVolume("Slide Explosion", 0.25f);
+        AudioManager.PlayWithVolume("Hat Click", 0.3f);
+
+        yield return new WaitForSeconds(0.375f);
+
+        DoCollapseParticles();
+        CameraShake.Shake(0.25f, 0.25f);
+        AudioManager.PlayWithVolume("Slide Explosion", 0.25f);
+        AudioManager.PlayWithVolume("Hat Click", 0.3f);
+    }
+
+    private void DoCollapseParticles()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            Vector3 r = Random.insideUnitCircle;
+            r = templeEntranceCollapseRocks.transform.position + 3 * r;
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, r, templeEntranceCollapseRocks.transform);
+        }
     }
 
     public void ActivateTrap()

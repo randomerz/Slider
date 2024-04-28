@@ -47,7 +47,8 @@ public class RopeCoil : Item
         UpdateSprite();
         UpdatePlayerSpeed();
 
-        if (!isResetting && !ignoreDistChecks && distance > maxDist)
+        if (!isResetting && !ignoreDistChecks && (distance > maxDist || 
+        (PlayerInventory.GetCurrentItem() == this && Player.GetInstance().GetSTileUnderneath().islandId == 5)))
         {
             ResetItem();
         }

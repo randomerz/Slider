@@ -20,11 +20,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -63,6 +64,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
   cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
@@ -75,6 +77,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -87,6 +90,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -99,6 +103,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -111,6 +116,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -121,7 +127,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 3
+        y: 13
         width: 5
         height: 3
       alignment: 0
@@ -138,11 +144,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T1 On
+      name: T1A On
       rect:
         serializedVersion: 2
         x: 5
-        y: 3
+        y: 13
         width: 5
         height: 3
       alignment: 0
@@ -163,7 +169,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 10
-        y: 3
+        y: 13
         width: 5
         height: 3
       alignment: 0
@@ -184,7 +190,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 15
-        y: 3
+        y: 13
         width: 5
         height: 3
       alignment: 0
@@ -205,7 +211,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 20
-        y: 3
+        y: 13
         width: 5
         height: 3
       alignment: 0
@@ -226,7 +232,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 25
-        y: 3
+        y: 13
         width: 5
         height: 3
       alignment: 0
@@ -247,7 +253,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 10
         width: 5
         height: 3
       alignment: 0
@@ -264,11 +270,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T1 Off
+      name: T1A Off
       rect:
         serializedVersion: 2
         x: 5
-        y: 0
+        y: 10
         width: 5
         height: 3
       alignment: 0
@@ -289,7 +295,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 10
-        y: 0
+        y: 10
         width: 5
         height: 3
       alignment: 0
@@ -310,7 +316,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 15
-        y: 0
+        y: 10
         width: 5
         height: 3
       alignment: 0
@@ -331,7 +337,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 20
-        y: 0
+        y: 10
         width: 5
         height: 3
       alignment: 0
@@ -352,7 +358,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 25
-        y: 0
+        y: 10
         width: 5
         height: 3
       alignment: 0
@@ -368,6 +374,132 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: T1B On
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 13
+        width: 5
+        height: 3
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4748bc8e53ac0c4fa81c3ce417b8e99
+      internalID: 952897391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: T1B Off
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 10
+        width: 5
+        height: 3
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41d64299bcf40b14e9ade3f2c1e66877
+      internalID: -897544347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CMA On
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 13
+        width: 5
+        height: 3
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b9ffdeb7bbcbad428206ec829244951
+      internalID: -1726015809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CMA Off
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 10
+        width: 5
+        height: 3
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58074fd09e0eb3345addb9c9100c3150
+      internalID: 1343123656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CMB On
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 13
+        width: 5
+        height: 3
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2ea43233dc28e04d8a799303ef07698
+      internalID: -1694056786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CMB Off
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 10
+        width: 5
+        height: 3
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e33914794c442d40847e6b2c3ea2a20
+      internalID: 453706775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -379,21 +511,26 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      T6 On: -382769523
-      T2B Off: -1039035895
+      CMA Off: 1343123656
+      CMA On: -1726015809
+      CMB Off: 453706775
+      CMB On: -1694056786
+      T1A Off: 1982961024
+      T1A On: -841597049
+      T1B Off: -897544347
+      T1B On: 952897391
       T2A Off: -849257055
-      T7 Off: 1614195723
-      T2B On: -1780123004
       T2A On: -1945801585
-      T1 On: -841597049
-      T6 Off: -1963093224
-      T7 On: -108861238
+      T2B Off: -1039035895
+      T2B On: -1780123004
       T4 Off: -886856846
-      T1 Off: 1982961024
       T4 On: -73170102
-  spritePackingTag: 
+      T6 Off: -1963093224
+      T6 On: -382769523
+      T7 Off: 1614195723
+      T7 On: -108861238
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

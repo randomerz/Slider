@@ -697,8 +697,8 @@ TextureImporter:
         y: 0
         width: 16
         height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -706,6 +706,48 @@ TextureImporter:
       bones: []
       spriteID: d2531a8d176d0be4abf92ff374e57f1a
       internalID: 465946173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_items_empty_27
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7898373cd8342534d9bb5aefa20d5676
+      internalID: -1623465267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jungle_items_empty_28
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c39ff0a6a5abf7f4f81f3b55de228208
+      internalID: 1914053360
       vertices: []
       indices: 
       edges: []
@@ -741,6 +783,8 @@ TextureImporter:
       jungle_items_empty_24: 96311531
       jungle_items_empty_25: 459425285
       jungle_items_empty_26: 465946173
+      jungle_items_empty_27: -1623465267
+      jungle_items_empty_28: 1914053360
       jungle_items_empty_3: 2128233247
       jungle_items_empty_4: 1198867719
       jungle_items_empty_5: -1073623058

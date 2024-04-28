@@ -127,9 +127,19 @@ public class NPC : MonoBehaviourContextSubscriber<NPC>
         dialogueCtx.TypeNextDialogueInChain();
     }
 
+    public void DeactivateDialogueBox()
+    {
+        dialogueCtx.ForceDeactivateDialogueBox();
+    }
+
     public bool IsTypingDialogue()
     {
         return dialogueCtx.IsTypingDialogue;
+    }
+
+    public bool IsDialogueBoxActive()
+    {
+        return dialogueCtx.IsDialogueBoxActive;
     }
     #endregion Dialogue
 

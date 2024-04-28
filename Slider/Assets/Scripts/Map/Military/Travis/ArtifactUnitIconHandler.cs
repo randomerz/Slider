@@ -22,16 +22,21 @@ public class ArtifactUnitIconHandler : MonoBehaviour
         unitTypeToIcon[MilitaryUnit.Type.Rock] = rock;
         unitTypeToIcon[MilitaryUnit.Type.Paper] = paper;
         unitTypeToIcon[MilitaryUnit.Type.Scissors] = scissors;
-
-        // TODO: Make the unit icons lay on top of the tiles and be independent of them so they don't behave weirdly when moving.
-        // For now I'm just making them invisible during the move as a lazy fix
-        SGridAnimator.OnSTileMoveStart += (_, _) => { HideUnitIcon(); };
-        SGridAnimator.OnSTileMoveEnd += (_, _) => { UpdateUnitIcon(); };
     }
 
     private void OnEnable()
     {
+        // TODO: Make the unit icons lay on top of the tiles and be independent of them so they don't behave weirdly when moving.
+        // For now I'm just making them invisible during the move as a lazy fix
+        SGridAnimator.OnSTileMoveStart += (_, _) => { HideUnitIcon(); };
+        SGridAnimator.OnSTileMoveEnd += (_, _) => { UpdateUnitIcon(); };
         UpdateUnitIcon();
+    }
+
+    private void OnDisable()
+    {
+        SGridAnimator.OnSTileMoveStart -= (_, _) => { HideUnitIcon(); };
+        SGridAnimator.OnSTileMoveEnd -= (_, _) => { UpdateUnitIcon(); };
     }
 
     private void UpdateUnitIcon()

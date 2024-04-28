@@ -313,7 +313,7 @@ MonoBehaviour:
   - {fileID: 9064563641219119316}
   anchorCollectible: {fileID: 8110192408736315213}
   scrollCollectible: {fileID: 4466905745852967446}
-  scrollFragCollectible: {fileID: 780777889991708053}
+  scrollScrapCollectible: {fileID: 780777889991708053}
   inventoryText: {fileID: 6018487552906129439}
   oilCollectible: {fileID: 9182655172357105490}
   sunglassesCount: {fileID: 344556720903910910}
@@ -1062,7 +1062,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 32
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 320, y: 180}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -1909,11 +1909,11 @@ RectTransform:
   - {fileID: 4049483288170702743}
   - {fileID: 2264428521622698266}
   - {fileID: 2241745926637749317}
+  - {fileID: 5025294938009259266}
   - {fileID: 250135252667446092}
   - {fileID: 305609148791466710}
   - {fileID: 1050672848306426105}
   - {fileID: 857482229790626668}
-  - {fileID: 5025294938009259266}
   - {fileID: 1066541051966811385}
   m_Father: {fileID: 6180708746785304689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10288,12 +10288,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4364494320633969430, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: m_Name
-      value: ArtifactInventoryItem (21)
+      value: ArtifactInventoryItem Crystal Sample
       objectReference: {fileID: 0}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: inventory
       value: 
       objectReference: {fileID: 4839968679539576888}
+    - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
+      propertyPath: displayName
+      value: Crystal Sample
+      objectReference: {fileID: 0}
+    - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
+      propertyPath: collectibleName
+      value: Crystal Sample
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10936,7 +10944,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4364494320633969430, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: m_Name
-      value: Scroll Frag
+      value: Scroll Scrap
       objectReference: {fileID: 0}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: inventory
@@ -10944,11 +10952,11 @@ PrefabInstance:
       objectReference: {fileID: 4839968679539576888}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: displayName
-      value: Scroll Frag
+      value: Scroll Scap
       objectReference: {fileID: 0}
     - target: {fileID: 7212013910473768290, guid: b1443db5380833d48b886452d308d54c, type: 3}
       propertyPath: collectibleName
-      value: Scroll Frag
+      value: Scroll Scap
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

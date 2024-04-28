@@ -10,7 +10,7 @@ public class OceanGrid : SGrid
     public NPCRotation npcRotation;
     public OceanArtifact oceanArtifact; 
     public GameObject treesToJungle;
-    private List<int> landTiles = new List<int> {1, 2, 4, 8};    
+    private List<int> landTiles = new List<int> {1, 2, 8};    
     private int numAnchorUses;
     [SerializeField] private Volcano volcano;
 
@@ -270,7 +270,7 @@ public class OceanGrid : SGrid
 
     private bool IsFinalPuzzleMatching()
     {
-        return CheckGrid.contains(GetGridString(), "412_[^1248]{2}8_[^1248]{3}");
+        return CheckGrid.contains(GetGridString(), "[^128]12_[^128]{2}8_[^128]{3}");
     }
 
     public bool GetCheckCompletion()

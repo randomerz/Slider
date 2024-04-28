@@ -52,6 +52,11 @@ public class ExplodingBarrel : MonoBehaviour
 
         foreach (Transform location in explosionLocations)
         {
+            if (location == null)
+            {
+                Debug.LogWarning("Barrel was exploded before smoke went off!");
+                continue;
+            }
             Instantiate(explosionEffect, location.position, Quaternion.identity);
         }
 

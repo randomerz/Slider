@@ -26,6 +26,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     private bool isTypingDialogue;
     private bool waitingForPlayerAction;
     public bool IsTypingDialogue { get => isTypingDialogue; }
+    public bool IsDialogueBoxActive { get => dialogueBoxIsActive; }
 
     private Coroutine delayBeforeNextDialogueCoroutine;
 
@@ -177,6 +178,10 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
 
             OnDialogueStart();
         }
+        else if (!DialogueEnabled)
+        {
+            Debug.LogWarning("[NPC] Warning: Called TypeCurrentDialogue() but DialogueEnabled was not true. This may cause some issues with NPC states.");
+        }
     }
 
     public void TypeCurrentDialogueSafe()
@@ -237,6 +242,14 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     private IEnumerator SetNextDialogueInChainAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+
+        // Don't call to start next dialogue if I can't start it -- it might cause issues with the state of this npc
+        while (!DialogueEnabled)
+        {
+            Debug.Log("[NPC] Delaying dialogue start...");
+            yield return new WaitForSeconds(0.25f);
+        }
+
         TypeNextDialogueInChain();
     }
 
@@ -277,6 +290,13 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
         {
             return false;
         }
+    }
+
+    public void ForceDeactivateDialogueBox()
+    {
+        Debug.Log("[NPC] Forcing dialogue deactivation.");
+
+        DeactivateDialogueBox();
     }
 
     private void DeactivateDialogueBox()

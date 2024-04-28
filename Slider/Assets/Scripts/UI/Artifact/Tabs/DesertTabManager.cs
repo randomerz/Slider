@@ -4,14 +4,14 @@ using UnityEngine.UI;
 
 public class DesertTabManager : ArtifactTabManager
 {
-    [Header("Frag Realign Tab")]
-    [SerializeField] private ArtifactTab fragRealignTab;
-    [SerializeField] private Animator rearrangingFragTabAnimator;
-    [SerializeField] private Image rearrangingFragTabImage;
-    private ArtifactTileButton fragSwapTile;
+    [Header("Scroll Scrap Realign Tab")]
+    [SerializeField] private ArtifactTab scrollScrapRealignTab;
+    [SerializeField] private Animator scrollScrapTabAnimator;
+    [SerializeField] private Image scrollScrapTabImage;
+    private ArtifactTileButton scrollScrapSwapTile;
     private ArtifactTileButton middle;
 
-    private Coroutine fragSwapTileCycleRoutine;
+    private Coroutine scrollScrapSwapTileCycleCoroutine;
 
     private bool successfullyUsedOnceBefore = false;
     [SerializeField] private PlayerActionHints playerActionHints;
@@ -57,9 +57,9 @@ public class DesertTabManager : ArtifactTabManager
                 EnableSaveLoadTab(screenIndex);
             }
         }
-        else if (PlayerInventory.Contains("Scroll Frag", Area.Desert) && SGrid.Current.GetActiveTiles().Count != SGrid.Current.GetTotalNumTiles())
+        else if (PlayerInventory.Contains("Scroll Scrap", Area.Desert) && SGrid.Current.GetActiveTiles().Count != SGrid.Current.GetTotalNumTiles())
         {
-            fragRealignTab.SetIsVisible(screenIndex == fragRealignTab.homeScreen);
+            scrollScrapRealignTab.SetIsVisible(screenIndex == scrollScrapRealignTab.homeScreen);
         }
         else
         {
@@ -67,7 +67,7 @@ public class DesertTabManager : ArtifactTabManager
         }
 
         // For debug so the hint isnt always there
-        if (PlayerInventory.Contains("Scroll Frag", Area.Desert) && PlayerInventory.Contains("Slider 8", Area.Desert))
+        if (PlayerInventory.Contains("Scroll Scrap", Area.Desert) && PlayerInventory.Contains("Slider 8", Area.Desert))
         {
             playerActionHints.DisableHint("scrollscrap");
         }
@@ -84,7 +84,7 @@ public class DesertTabManager : ArtifactTabManager
         realignTab.SetIsVisible(screenIndex == realignTab.homeScreen);
         saveTab.SetIsVisible(false);
         loadTab.SetIsVisible(false);
-        fragRealignTab.SetIsVisible(false);
+        scrollScrapRealignTab.SetIsVisible(false);
     }
 
     private void EnableSaveLoadTab(int screenIndex)
@@ -93,7 +93,7 @@ public class DesertTabManager : ArtifactTabManager
         saveTab.SetIsVisible(screenIndex == saveTab.homeScreen);
         loadTab.SetIsVisible(screenIndex == loadTab.homeScreen);
         SetSaveLoadTabSprites(SGrid.Current.HasRealigningGrid());
-        fragRealignTab.SetIsVisible(false);
+        scrollScrapRealignTab.SetIsVisible(false);
     }
 
     private void DisableTabs()
@@ -101,10 +101,10 @@ public class DesertTabManager : ArtifactTabManager
         realignTab.SetIsVisible(false);
         saveTab.SetIsVisible(false);
         loadTab.SetIsVisible(false);
-        fragRealignTab.SetIsVisible(false);
+        scrollScrapRealignTab.SetIsVisible(false);
         UIArtifact.DisableLightning(true);
         middle?.SetLightning(false, styleIndex: 2);
-        fragSwapTile?.SetLightning(false, styleIndex: 2);
+        scrollScrapSwapTile?.SetLightning(false, styleIndex: 2);
     }
 
     private void Update()
@@ -125,16 +125,16 @@ public class DesertTabManager : ArtifactTabManager
         }
     }
 
-    public void FragRearrangeOnClick()
+    public void ScrollScrapRearrangeOnClick()
     {
         middle = UIArtifact.GetButton(1, 1);
-        if (middle == fragSwapTile || !middle.TileIsActive)
+        if (middle == scrollScrapSwapTile || !middle.TileIsActive)
         {
             AudioManager.Play("Artifact Error");
             return;
         }
         DesertArtifact artifact = (DesertArtifact)uiArtifactMenus.uiArtifact;
-        artifact.TryFragQueueMoveFromButtonPair(middle, fragSwapTile);
+        artifact.TryScrollScrapQueueMoveFromButtonPair(middle, scrollScrapSwapTile);
         // artifact.UpdatePushedDowns(null, null);
         artifact.DeselectSelectedButton();
 
@@ -144,67 +144,67 @@ public class DesertTabManager : ArtifactTabManager
             successfullyUsedOnceBefore = true;
         }
 
-        FragRearrangeOnHoverExit();
+        ScrollScrapRearrangeOnHoverExit();
     }
 
-    public void FragRearrangeOnHoverEnter()
+    public void ScrollScrapRearrangeOnHoverEnter()
     {
-        rearrangingFragTabAnimator.enabled = false;
+        scrollScrapTabAnimator.enabled = false;
 
         //Preview!
         middle = UIArtifact.GetButton(1, 1);
         
         if (middle.TileIsActive)
         {
-            UpdateFragSwapTile();
+            UpdateScrollScrapSwapTile();
             UIArtifact.SetLightningPos(1, 1, styleIndex: 2);
             // middle.SetLightning(true, styleIndex: 2);
 
-            SetFragIconToShowSwapTile(fragSwapTile);
+            SetScrollScrapIconToShowSwapTile(scrollScrapSwapTile);
         }
     }
 
-    public void FragRearrangeOnHoverExit()
+    public void ScrollScrapRearrangeOnHoverExit()
     {
         middle = UIArtifact.GetButton(1, 1);
-        if (fragSwapTileCycleRoutine != null)
+        if (scrollScrapSwapTileCycleCoroutine != null)
         {
-            StopCoroutine(fragSwapTileCycleRoutine);
+            StopCoroutine(scrollScrapSwapTileCycleCoroutine);
         }
 
-        rearrangingFragTabAnimator.enabled = true;
+        scrollScrapTabAnimator.enabled = true;
 
         //Reset preview
         UIArtifact.DisableLightning(true);
         // middle.SetLightning(false, styleIndex: 2);
-        if (fragSwapTile != null)
+        if (scrollScrapSwapTile != null)
         {
-            fragSwapTile.SetLightning(false, styleIndex: 2);
+            scrollScrapSwapTile.SetLightning(false, styleIndex: 2);
         }
     }
 
-    private void UpdateFragSwapTile()
+    private void UpdateScrollScrapSwapTile()
     {
-        if (fragSwapTileCycleRoutine != null)
+        if (scrollScrapSwapTileCycleCoroutine != null)
         {
-            StopCoroutine(fragSwapTileCycleRoutine);
+            StopCoroutine(scrollScrapSwapTileCycleCoroutine);
         }
 
         ArtifactTileButton tile8 = uiArtifactMenus.uiArtifact.GetButton(8);
         //do we have a better way to check if there's more than one empty tile?
         if (!tile8.TileIsActive)
         {
-            fragSwapTile = tile8;
-            fragSwapTileCycleRoutine = StartCoroutine(CycleFragSwapTileBetweenEmptyTiles());
+            scrollScrapSwapTile = tile8;
+            scrollScrapSwapTileCycleCoroutine = StartCoroutine(CycleScrollScrapSwapTileBetweenEmptyTiles());
         }
         else
         {
-            fragSwapTile = uiArtifactMenus.uiArtifact.GetButton(9);
-            SetFragIconToShowSwapTile(fragSwapTile);
+            scrollScrapSwapTile = uiArtifactMenus.uiArtifact.GetButton(9);
+            SetScrollScrapIconToShowSwapTile(scrollScrapSwapTile);
         }
     }
 
-    private IEnumerator CycleFragSwapTileBetweenEmptyTiles()
+    private IEnumerator CycleScrollScrapSwapTileBetweenEmptyTiles()
     {
         ArtifactTileButton[] emptyTiles = { uiArtifactMenus.uiArtifact.GetButton(8), uiArtifactMenus.uiArtifact.GetButton(9) };
         
@@ -212,17 +212,17 @@ public class DesertTabManager : ArtifactTabManager
         {
             foreach(ArtifactTileButton emptyTile in emptyTiles)
             {
-                fragSwapTile = emptyTile;
-                SetFragIconToShowSwapTile(fragSwapTile);
+                scrollScrapSwapTile = emptyTile;
+                SetScrollScrapIconToShowSwapTile(scrollScrapSwapTile);
                 yield return new WaitForSeconds(0.5f);
-                fragSwapTile.SetLightning(false, styleIndex: 2);
+                scrollScrapSwapTile.SetLightning(false, styleIndex: 2);
             }
         }
     }
 
-    private void SetFragIconToShowSwapTile(ArtifactTileButton tile)
+    private void SetScrollScrapIconToShowSwapTile(ArtifactTileButton tile)
     {
         tile.SetLightning(true, styleIndex: 2);
-        rearrangingFragTabImage.sprite = tabSpritesArray[tile.x, tile.y];
+        scrollScrapTabImage.sprite = tabSpritesArray[tile.x, tile.y];
     }
 }

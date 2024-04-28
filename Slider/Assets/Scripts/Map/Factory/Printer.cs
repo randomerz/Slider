@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Printer : MonoBehaviour
 {
-    [SerializeField]
     public GameObject wallObject;
     public GameObject floorObject;
     public GameObject wireObject;
@@ -15,6 +14,8 @@ public class Printer : MonoBehaviour
     public ParticleSystem poof2;
     public Animator bodyAnim;
     public Animator headAnim;
+
+    public PlayerConditionals playerConditionals;
 
     private bool startedPrinting;
 
@@ -51,11 +52,19 @@ public class Printer : MonoBehaviour
     void Start()
     {
         CheckParts();
+
+        if (PlayerInventory.Contains("Slider 5", Area.Factory))
+        {
+            playerConditionals.DisableConditionals();
+        }
     }
 
     void Update()
     {
-        CheckParts();
+        if (!PlayerInventory.Contains("Slider 5", Area.Factory))
+        {
+            CheckParts();
+        }
     }
 
     public void StartPoof()
@@ -102,6 +111,7 @@ public class Printer : MonoBehaviour
         poof.Play();
         rocketItem.SetActive(true);
         tileItem.SetActive(false);
+        playerConditionals.DisableConditionals();
     }
 
     public void CheckParts()

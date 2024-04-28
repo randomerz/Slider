@@ -79,7 +79,8 @@ public class UIArtifact : Singleton<UIArtifact>
             if (hoverTimer >= hoverBuffer && lastHovered != null)
             {
                 lastHovered.SetSpriteToIslandOrEmpty();
-                lastHovered.SetHighlighted(true);
+                if(moveOptionButtons.Contains(lastHovered))
+                    lastHovered.SetHighlighted(true);
                 lastHovered = null;
             }
         }
@@ -327,7 +328,7 @@ public class UIArtifact : Singleton<UIArtifact>
         ResetButtonsToEmptyIfInactive(moveOptions);
 
         ArtifactTileButton hoveredButton = GetButtonHovered(data);
-        if(dragged == hoveredButton && SettingsManager.AutoMove)
+        if(dragged == hoveredButton && SettingsManager.Setting<bool>(Settings.AutoMove).CurrentValue)
         {
             SelectButton(dragged);
             return;
@@ -448,7 +449,7 @@ public class UIArtifact : Singleton<UIArtifact>
 
             SetSelectedButton(button);
 
-            bool autoMove = moveOptionButtons.Count == 1 && SettingsManager.AutoMove && !isDragged;
+            bool autoMove = moveOptionButtons.Count == 1 && SettingsManager.Setting<bool>(Settings.AutoMove).CurrentValue && !isDragged;
             if (autoMove)
             {
                 TryQueueMoveFromButtonPair(buttonSelected, moveOptionButtons[0]);
@@ -671,7 +672,7 @@ public class UIArtifact : Singleton<UIArtifact>
         //So this will select the tile you swap to after the move
         if (setCurrentAsSelected && Player.GetInstance().GetCurrentControlScheme() == "Controller")
         {
-            if (!SettingsManager.AutoMove)
+            if (!SettingsManager.Setting<bool>(Settings.AutoMove).CurrentValue)
             {
                 EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
             }
@@ -833,7 +834,7 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         foreach (ArtifactTileButton b in buttons)
         {
-            if (b.gameObject.activeSelf)
+            if (b.gameObject.activeInHierarchy)
                 b.Flicker(1, repeat:false);
         }
     }

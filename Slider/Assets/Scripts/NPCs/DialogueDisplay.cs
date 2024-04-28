@@ -92,13 +92,13 @@ public class DialogueDisplay : MonoBehaviour
 
     private void CheckContrast()
     {
-        bool highContrastMode = SettingsManager.HighContrastTextEnabled;
+        bool highContrastMode = SettingsManager.Setting<bool>(Settings.HighContrastTextEnabled).CurrentValue;
         highContrastBG.SetActive(highContrastMode);
     }
 
     private void CheckSize()
     {
-        bool doubleSizeMode = SettingsManager.BigTextEnabled;
+        bool doubleSizeMode = SettingsManager.Setting<bool>(Settings.BigTextEnabled).CurrentValue;
         canvas.transform.localScale = doubleSizeMode ? new Vector3(1.5f, 1.5f, 1.5f) : Vector3.one;
     }
 }

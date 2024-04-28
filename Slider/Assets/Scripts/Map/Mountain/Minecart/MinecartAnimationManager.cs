@@ -9,8 +9,6 @@ public class MinecartAnimationManager : MonoBehaviour
     private GameObject contentsSprite;
     [SerializeField] private Animator crystalAnimator;
     [SerializeField] private GameObject crystalSprite;
-    [SerializeField] private Animator repairPartsAnimator;
-    [SerializeField] private GameObject repairPartsSprite;
     [SerializeField] private Animator lavaAnimator;
     [SerializeField] private GameObject lavaSprite;
 
@@ -22,7 +20,6 @@ public class MinecartAnimationManager : MonoBehaviour
     private void Awake() 
     {
         objects.Add(crystalSprite);
-        objects.Add(repairPartsSprite);
         objects.Add(lavaSprite);  
     }
 
@@ -54,10 +51,6 @@ public class MinecartAnimationManager : MonoBehaviour
                 contentsAnimator = lavaAnimator;
                 contentsSprite = lavaSprite;
                 break;
-            case MinecartState.RepairParts:
-                //contentsAnimator = repairPartsAnimator;
-                contentsSprite = repairPartsSprite;
-                break;
             case MinecartState.Empty:
             default:
                 contentsAnimator = null;
@@ -83,15 +76,13 @@ public class MinecartAnimationManager : MonoBehaviour
     public void SetSpeed(int speed)
     {
         mcAnimator.speed = speed;
-       //crystalAnimator.speed = speed;
+        crystalAnimator.speed = speed;
         lavaAnimator.speed = speed;
-      //  repairPartsAnimator.speed = speed;
     }
 
     public void SetLayer(int layer)
     {
         lavaAnimator.gameObject.layer = layer;
-        repairPartsAnimator.gameObject.layer = layer;
         crystalAnimator.gameObject.layer = layer;
     }
 }

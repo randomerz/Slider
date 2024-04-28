@@ -12,6 +12,7 @@ public class Item : MonoBehaviour, ISavable
     public bool shouldDisableAtStart = false;
     public bool doReflectionCalculations;
     public float itemRadius = 0.5f;
+    public LayerMask pickupOverrideLayerMask;
 
     // animation
     
@@ -336,5 +337,15 @@ public class Item : MonoBehaviour, ISavable
         {
             go.SetActive(true);
         }
+    }
+
+    public void SpawnItem()
+    {
+        if(!gameObject.activeSelf)
+        {
+            AudioManager.Play("Puzzle Complete");
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, transform.position, transform);
+        }
+        gameObject.SetActive(true);
     }
 }

@@ -121,7 +121,7 @@ public class FactoryArtifact : UIArtifact
         {
             b.SetPosition(buttonToNewPos[b].x, buttonToNewPos[b].y, false);
             
-            if (b.TileIsActive)
+            if (b.TileIsActive && b.gameObject.activeInHierarchy)
             {
                 b.FlickerImmediate(1);
             }

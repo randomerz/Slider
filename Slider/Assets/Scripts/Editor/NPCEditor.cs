@@ -34,13 +34,19 @@ public class NPCEditor : Editor
     {
         foreach (NPCConditionals npcConditional in _target.Conds)
         {
-            for (int i = 0; i < npcConditional.dialogueChain.Count; i++)
+            int count = npcConditional.dialogueChain.Count;
+            for (int i = 0; i < count; i++)
             {
                 DialogueData dialogueData = npcConditional.dialogueChain[i];
-                bool isLast = i == npcConditional.dialogueChain.Count - 1;
-                bool dontInterrupt = dialogueData.dontInterrupt;
-                bool advanceDialogueManually = dialogueData.advanceDialogueManually;
-                npcConditional.dialogueChain[i].waitUntilPlayerAction = !isLast && !dontInterrupt && !advanceDialogueManually;
+                // bool isLast = i == count - 1;
+                // bool dontInterrupt = dialogueData.dontInterrupt;
+                // bool advanceDialogueManually = dialogueData.advanceDialogueManually;
+                // npcConditional.dialogueChain[i].waitUntilPlayerAction = !isLast && !dontInterrupt && !advanceDialogueManually;
+                npcConditional.dialogueChain[i].waitUntilPlayerAction = (
+                        i != count - 1 && 
+                        !dialogueData.dontInterrupt && 
+                        !dialogueData.advanceDialogueManually
+                    );
             }
 
         }

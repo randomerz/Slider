@@ -53,6 +53,12 @@ public class KnotBox : MonoBehaviour
     {
         for (int i = 0; i < knotnodes.Length; i++)
         {
+            // Changing scenes can cause NRE if you are carrying it
+            if (lines[i] == null)
+            {
+                return;
+            }
+
             lines[i].SetPosition(0, Vector3.zero);
             lines[i].SetPosition(1, Vector3.zero);
         }

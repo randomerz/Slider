@@ -25,6 +25,16 @@ public class MilitaryUnit : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// The position where the attached flag should return to when placed at an invalid position.
+    /// </summary>
+    public Vector2 FlagReturnPosition
+    {
+        // At some point we will want to revisit this depending on how the units/flags look
+        // (if the unit is a set of sprites that cluster around the flag or whatever)
+        get => new(transform.position.x, transform.position.y - 2);
+    }
+
     [SerializeField] private MilitaryUnitCommander _commander;
     public MilitaryUnitCommander Commander
     {
@@ -41,7 +51,7 @@ public class MilitaryUnit : MonoBehaviour
     }
 
     [SerializeField] private STile attachedSTile;
-    [SerializeField] private UnityEvent onDeath;
+    public UnityEvent OnDeath;
 
     public static void RegisterUnit(MilitaryUnit unit)
     {
@@ -58,6 +68,11 @@ public class MilitaryUnit : MonoBehaviour
     public static Vector2 GridPositionToWorldPosition(Vector2Int tilePosition)
     {
         return new Vector2(tilePosition.x * 13, tilePosition.y * 13);
+    }
+
+    public static Vector2Int WorldPositionToGridPosition(Vector2 worldPosition)
+    {
+        return new Vector2Int(Mathf.RoundToInt(worldPosition.x / 13), Mathf.RoundToInt(worldPosition.y / 13));
     }
 
     private void Awake()
@@ -87,7 +102,7 @@ public class MilitaryUnit : MonoBehaviour
     public void KillUnit()
     {
         CoroutineUtils.ExecuteAfterEndOfFrame(() => Cleanup(), coroutineOwner: this);
-        onDeath?.Invoke();
+        OnDeath?.Invoke();
     }
 
     private void Cleanup()

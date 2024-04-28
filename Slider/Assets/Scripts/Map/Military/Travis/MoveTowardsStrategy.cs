@@ -34,7 +34,6 @@ public class MoveTowardsStrategy : ICommanderStrategy
 
     private MilitaryUnit ClosestKillableUnitTo(MilitaryUnit unit)
     {
-        Debug.Log(MilitaryUnit.ActiveUnits.Count());
         return MilitaryUnit.ActiveUnits.ToList()
                                        .Where(otherUnit => MilitaryCombat.WinnerOfBattleBetween(unit, otherUnit) == unit)
                                        .OrderBy(otherUnit => Vector2.Distance(unit.GridPosition, otherUnit.GridPosition))
@@ -45,8 +44,6 @@ public class MoveTowardsStrategy : ICommanderStrategy
     {
         int xDirection = Math.Sign(target.GridPosition.x - movingUnit.GridPosition.x);
         int yDirection = Math.Sign(target.GridPosition.y - movingUnit.GridPosition.y);
-
-        Debug.Log($"Direction: {xDirection}, {yDirection}");
 
         // If we could move in either direction, pick one at random
         if (xDirection != 0 && yDirection != 0)
@@ -60,8 +57,6 @@ public class MoveTowardsStrategy : ICommanderStrategy
                 yDirection = 0;
             }
         }
-
-        Debug.Log($"After No Diag: {xDirection}, {yDirection}");
 
         Vector2Int move = new(xDirection, yDirection);
 

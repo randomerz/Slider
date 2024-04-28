@@ -34,8 +34,9 @@ public class ChadJump : MonoBehaviour
 
     private JumpState jumpState;
     
-    void Start()
+    void Awake()
     {
+        // VillageGrid.Start() want to overwrite this to be true in some cases, so we put this in awake
         flashlightItem?.SetCollider(false);
     }
 
@@ -76,6 +77,8 @@ public class ChadJump : MonoBehaviour
     {
         jumpState = JumpState.JUMPING;
         npcAnimator.SetBool("isJumping", true);
+        npcAnimator.SetBool("isFallen", false);
+        npcAnimator.SetBool("isTipping", false);
         npcCollider.enabled = false;
         npcRenderer.sortingOrder = 1;
 
