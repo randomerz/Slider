@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
-
+using UnityEngine.Rendering;
 public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
 {
     public static EventHandler OnMirageSTilesEnabled; // Also invokes on stile move end late
@@ -25,7 +25,6 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
     private readonly List<int> POSSIBLE_MIRAGE_TILES = new() { 8, 9 };
 
     private List<MirageTileData> enabledMirageTiles = new();
-
     private class MirageTileData
     {
         public int orignalTileID;
@@ -41,6 +40,8 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
             this.y = y;
         }
     }
+
+    public Volume volume;
 
     public void Save()
     {
@@ -71,7 +72,7 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
         mirageEnabled = profile.GetBool(MIRAGE_ENABLED_SAVE_STRING);
         if (mirageEnabled)
         {
-            EnableMirage();
+            EnableMirage(true);
         }
         EnableMirageTilesFromSave(profile);
     }
@@ -133,15 +134,25 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
         }  
     }
 
+    public void EnableMirage () => EnableMirage(false);
 
-    public void EnableMirage()
+    public void EnableMirage(bool fromSave)
     {
         mirageEnabled = true;
         SubscibeMirageEvents();
-        EnableMirageVFX();
+        EnableMirageVFX(fromSave);
     }
 
-    public void EnableMirageVFX() {}
+    public void EnableMirageVFX(bool fromSave) 
+    {
+        if(fromSave)
+        {
+            volume.weight = 1;
+        }
+        else
+        StartCoroutine(MirageVFXCoroutine(0, 1));
+
+    }
 
     public void DisableMirage()
     {
@@ -156,7 +167,23 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
         DisableMirageTile(-1);
     }
 
-    public void DisableMirageVFX() {}
+    public void DisableMirageVFX() 
+    {
+        StartCoroutine(MirageVFXCoroutine(1, 0));
+    }
+
+    private IEnumerator MirageVFXCoroutine(float start, float end)
+    {
+        float duration = 1;
+        float t = 0;
+        while(t < duration)
+        {
+            volume.weight = Mathf.Lerp(start, end, t/duration);
+            t += Time.deltaTime;
+            yield return null;
+        }
+        volume.weight = end;
+    }
 
     public void EnableMirageTile(int islandId, int buttonID, int x, int y, bool addData = true)
     {
