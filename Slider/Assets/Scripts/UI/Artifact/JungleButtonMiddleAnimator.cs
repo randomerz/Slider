@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class JungleButtonMiddleAnimator : MonoBehaviour
 {
     [SerializeField] private List<GameObject> gameObjectsToEnable;
+    [SerializeField] private List<GameObject> gameObjectsToDisable;
     [SerializeField] private Image image;
     [SerializeField] private ArtifactTileButton tile2;
 
@@ -25,6 +26,10 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
         {
             go.SetActive(tile2.TileIsActive);
         }
+        foreach (GameObject go in gameObjectsToDisable)
+        {
+            go.SetActive(!tile2.TileIsActive);
+        }
     }
 
     void Update()
@@ -36,7 +41,12 @@ public class JungleButtonMiddleAnimator : MonoBehaviour
             {
                 go.SetActive(true);
             }
+            foreach (GameObject go in gameObjectsToDisable)
+            {
+                go.SetActive(false);
+            }
         }
-        image.sprite = Player.GetIsInHouse() ? housingConnectorSprite : defaultConnectorSprite;
+        if(image != null)
+            image.sprite = Player.GetIsInHouse() ? housingConnectorSprite : defaultConnectorSprite;
     }
 }
