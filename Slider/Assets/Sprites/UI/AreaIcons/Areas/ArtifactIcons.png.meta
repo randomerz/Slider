@@ -548,6 +548,69 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: ArtifactIconsHighlightLeft
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 1
+        width: 28
+        height: 32
+      alignment: 9
+      pivot: {x: 0.6428572, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8a0c1e34b5d478439fb1cbb8cb59e1a
+      internalID: -60722774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ArtifactIconsHighlightRight
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 1
+        width: 28
+        height: 32
+      alignment: 9
+      pivot: {x: 0.42857146, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f22ef5157583764696c21e14fce8276
+      internalID: -1278133445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ArtifactIconsHighlightMiddle
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 1
+        width: 6
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a313998c82bf62d45bb96ae07a117221
+      internalID: -2025843876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -559,6 +622,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      ArtifactIconsHighlightLeft: -60722774
+      ArtifactIconsHighlightMiddle: -2025843876
+      ArtifactIconsHighlightRight: -1278133445
       ArtifactIcons_0: -4322285615285474566
       ArtifactIcons_1: 5195518659922274881
       ArtifactIcons_2: 3937335723690400312

@@ -55,9 +55,6 @@ MonoBehaviour:
   pushedDownFrame: {fileID: 6204213779163962951}
   highlightedFrame: {fileID: 5253961610290396656}
   controllerHoverFrame: {fileID: 6391661760425060956}
-  isSelected: 0
-  isForcedDown: 0
-  isLightning: 0
   positionAnimationDuration: 0.2
   positionAnimationCurve:
     serializedVersion: 2
@@ -91,7 +88,6 @@ MonoBehaviour:
   - {fileID: 5253961610290396656}
   - {fileID: 4916661721205654072}
   - {fileID: 8952063813045899824}
-  jungleButtonMiddleAnimator: {fileID: 0}
 --- !u!1 &3147617879523750666
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,7 +343,7 @@ MonoBehaviour:
   islandId: -1
   x: 0
   y: 0
-  shouldFlicker: 0
+  islandSprite: {fileID: 0}
 --- !u!222 &4368067403399459733
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -699,7 +695,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0784bc42514d99a48beb006617e81434, type: 3}
+  m_Sprite: {fileID: 1320520135, guid: 0784bc42514d99a48beb006617e81434, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
