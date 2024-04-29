@@ -28,7 +28,7 @@ public class EndOfGameManager : MonoBehaviour
     private const float MAXIMUM_SPEEDRUN_TIME_SECONDS = 7200;
     private const float PARALLAX_ANIMATION_DURATION = 5;
     private const float FADE_ANIMATION_DURATION = 1;
-    private const string MAIN_MENU_SCENE = "MainMenu";
+    private const string CREDITS_SCENE = "Credits";
 
     private System.IDisposable listener;
     private AsyncOperation sceneLoad;
@@ -154,13 +154,13 @@ public class EndOfGameManager : MonoBehaviour
     private void OnAnyButtonPress() 
     {
         listener.Dispose();
-        GoToMainMenu();
+        GoToCredits();
     }
 
-    private void GoToMainMenu()
+    private void GoToCredits()
     {
         SaveSystem.SetCurrentProfile(-1); //We need the current profile to display values
-        sceneLoad = SceneManager.LoadSceneAsync(MAIN_MENU_SCENE);
+        sceneLoad = SceneManager.LoadSceneAsync(CREDITS_SCENE);
         sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
 
         UIEffects.FadeToBlack(() => {

@@ -33,7 +33,12 @@ public class MainMenuManager : Singleton<MainMenuManager>
     private System.IDisposable listener;
 
     public static bool KeyboardEnabled { get; set; }
-    
+
+    private bool loadingCredits = false;
+    private AsyncOperation sceneLoad;
+    private const string CREDITS_SCENE = "Credits";
+
+
     private void Awake() {
         InitializeSingleton(this);
     }
@@ -44,7 +49,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
         CheckContinueButton();
 
-        AudioManager.PlayMusic("Main Menu");
+        AudioManager.PlayMusic("Main Menu", restartTrackIfPlaying:false);
         AudioManager.SetGlobalParameter("MainMenuActivated", 0);
 
         // any key listener moved to OpenCutscene()
@@ -155,5 +160,18 @@ public class MainMenuManager : Singleton<MainMenuManager>
     {
         Debug.Log("Quitting game");
         Application.Quit(0);
+    }
+
+    public void GoToCredits()
+    {
+        if(loadingCredits) return;
+        loadingCredits = true;
+
+        sceneLoad = SceneManager.LoadSceneAsync(CREDITS_SCENE);
+        sceneLoad.allowSceneActivation = false; // "Don't initialize the new scene, just have it ready"
+
+        UIEffects.FadeToBlack(() => {
+            sceneLoad.allowSceneActivation = true;
+        }, disableAtEnd: false);
     }
 }
