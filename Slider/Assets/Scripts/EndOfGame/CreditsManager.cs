@@ -61,9 +61,9 @@ public class CreditsManager : MonoBehaviour
             {
                 StartCoroutine(MoveTile(ctm.tiles[j], ctm.directions[j]));
             }
-            AudioManager.Play("Slide Rumble");
+            AudioManager.PlayWithVolume("Slide Rumble", 0.5f);
             yield return new WaitForSeconds(MOVE_DURATION);
-            AudioManager.Play("Slide Explosion");
+            AudioManager.PlayWithVolume("Slide Explosion", 0.5f);
             yield return new WaitForSeconds(REST_DURATION);
         }
         EndCredits();
