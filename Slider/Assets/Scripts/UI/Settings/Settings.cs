@@ -21,7 +21,8 @@ public enum Settings
     ScreenMode,
     Resolution,
     Vsync,
-    TargetFrameRate
+    TargetFrameRate,
+    MuteWhenUnfocused
 }
 
 static class SettingsMethods
@@ -44,6 +45,7 @@ static class SettingsMethods
         Settings.Resolution => "resolution",
         Settings.Vsync => "vsync",
         Settings.TargetFrameRate => "targetFrameRate",
+        Settings.MuteWhenUnfocused => "muteWhenUnfocused",
         _ => ""
     };
 }

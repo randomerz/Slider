@@ -98,8 +98,6 @@ public class ShopDialogueManager : MonoBehaviour
         }
     }
 
-
-
     public void SetDialogue(ShopDialogue dialogue)
     {
         dialogue.onStart?.Invoke();

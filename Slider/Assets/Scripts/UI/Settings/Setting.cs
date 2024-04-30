@@ -1,13 +1,13 @@
 using System;
 using UnityEngine;
 
-// This is just to make it so we can make a Dictionary with Settings of different generic types
 public interface ISetting
 {
     public void LoadFromPlayerPrefs();
     public void SaveToPlayerPrefs();
     public void SetCurrentValue(object value);
     public object GetCurrentValue();
+    public void ResetToDefaultValue();
 }
 
 /// <summary>
@@ -24,12 +24,13 @@ public class Setting<T> : ISetting
         {
             _currentValue = value;
             SaveToPlayerPrefs();
-            onValueChanged?.Invoke(value);
+            OnValueChanged?.Invoke(value);
         }
     }
+
     public readonly T DefaultValue;
     public readonly string PlayerPrefsKey;
-    private readonly Action<T> onValueChanged;
+    public Action<T> OnValueChanged;
 
     /// <param name="playerPrefsKey"></param>
     /// <param name="defaultValue">If the setting value is not found in PlayerPrefs when loading is attempted, this value will be used</param>
@@ -39,24 +40,20 @@ public class Setting<T> : ISetting
         DefaultValue = defaultValue;
         CurrentValue = defaultValue;
         PlayerPrefsKey = playerPrefsKey;
-        this.onValueChanged = onValueChanged;
+        OnValueChanged = onValueChanged;
     }
 
     public void LoadFromPlayerPrefs()
     {
-        T valueFromPlayerPrefs = default;
+        T valueFromPlayerPrefs = DefaultValue;
         if (PlayerPrefs.HasKey(PlayerPrefsKey))
         {
             string jsonFromPlayerPrefs = PlayerPrefs.GetString(PlayerPrefsKey);
             valueFromPlayerPrefs = JsonUtility.FromJson<SerializableSettingValue<T>>(jsonFromPlayerPrefs).value;
         }
-        if (valueFromPlayerPrefs == null)
-        {
-            valueFromPlayerPrefs = DefaultValue;
-        }
 
         _currentValue = valueFromPlayerPrefs;
-        onValueChanged?.Invoke(valueFromPlayerPrefs);
+        OnValueChanged?.Invoke(valueFromPlayerPrefs);
     }
 
     public void SaveToPlayerPrefs()
@@ -73,6 +70,11 @@ public class Setting<T> : ISetting
     public object GetCurrentValue()
     {
         return CurrentValue;
+    }
+
+    public void ResetToDefaultValue()
+    {
+        CurrentValue = DefaultValue;
     }
 
     private class SerializableSettingValue<U>

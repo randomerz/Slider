@@ -327,7 +327,7 @@ public class UIArtifact : Singleton<UIArtifact>
         ResetButtonsToEmptyIfInactive(moveOptions);
 
         ArtifactTileButton hoveredButton = GetButtonHovered(data);
-        if(dragged == hoveredButton && SettingsManager.Setting<bool>(Settings.AutoMove).CurrentValue)
+        if(dragged == hoveredButton)
         {
             SelectButton(dragged);
             return;
@@ -448,7 +448,7 @@ public class UIArtifact : Singleton<UIArtifact>
 
             SetSelectedButton(button);
 
-            bool autoMove = moveOptionButtons.Count == 1 && SettingsManager.Setting<bool>(Settings.AutoMove).CurrentValue && !isDragged;
+            bool autoMove = moveOptionButtons.Count == 1 && !isDragged;
             if (autoMove)
             {
                 TryQueueMoveFromButtonPair(buttonSelected, moveOptionButtons[0]);
@@ -671,16 +671,7 @@ public class UIArtifact : Singleton<UIArtifact>
         //So this will select the tile you swap to after the move
         if (setCurrentAsSelected && Player.GetInstance().GetCurrentControlScheme() == "Controller")
         {
-            if (!SettingsManager.Setting<bool>(Settings.AutoMove).CurrentValue)
-            {
-                EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
-            }
-            // but during the final part though when youre doing 8 puzzle and it auto moves, make cursor stay in place
-            else
-            {
-                EventSystem.current.SetSelectedGameObject(buttonEmpty.gameObject);
-                //buttonEmpty.SetControllerHoverHighlighted(true);
-            }
+            EventSystem.current.SetSelectedGameObject(buttonCurrent.gameObject);
         }
     }
 
