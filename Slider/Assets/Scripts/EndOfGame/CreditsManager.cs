@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Cinemachine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
@@ -75,6 +74,14 @@ public class CreditsManager : MonoBehaviour
         Vector3 endPos = DirectionUtil.D2V3(direction) * TILE_WIDTH + stile.transform.position;
         float t = 0;
         Vector3 pos = stile.transform.position;
+        if(startPos.Equals(Vector3.zero))
+        {
+            stile.OnStartSlideOut?.Invoke();
+        }
+        if(endPos.Equals(Vector3.zero))
+        {
+            stile.OnStartSlideIn?.Invoke();
+        }
         while (t < MOVE_DURATION)
         {
             t += Time.deltaTime;
@@ -85,6 +92,10 @@ public class CreditsManager : MonoBehaviour
             yield return null;
         }
         stile.transform.position = endPos;
+        if(endPos.Equals(Vector3.zero))
+        {
+            stile.OnEndSlideIn?.Invoke();
+        }
     }
 
     private void InitializeSkipPrompt()
