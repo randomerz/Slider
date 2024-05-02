@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class JungleDialogueCutscenes : MonoBehaviour
 {
-    private const float DEFAULT_TIME_BETWEEN_DIALOGUES = 2.25f;
+    // Warning: if you make this value lower, make sure to also decrease
+    // the time between each dcond. It should be less than this value.
+    private const float DEFAULT_TIME_BETWEEN_DIALOGUES = 2.1f;
     [SerializeField] private bool debugMode = false;
 
     public NPC barron;
@@ -61,6 +63,15 @@ public class JungleDialogueCutscenes : MonoBehaviour
         Log("- Justin! How's the R&D on production?");
         SaveSystem.Current.SetBool("JungleBarronIntro1", true);
 
+        if (barron.IsDialogueBoxActive())
+        {
+            barron.DeactivateDialogueBox();
+        }
+        if (justin.IsDialogueBoxActive())
+        {
+            justin.DeactivateDialogueBox();
+        }
+
         yield return null;
 
         barron.TypeCurrentDialogue();
@@ -107,18 +118,30 @@ public class JungleDialogueCutscenes : MonoBehaviour
 
     private IEnumerator StandUpCutscene()
     {
-        Log("- Alright, let's give it 5 minutes for everyone to get here");
         SaveSystem.Current.SetBool("JungleStandUp1", true);
 
+        if (barron.IsDialogueBoxActive())
+        {
+            barron.DeactivateDialogueBox();
+        }
+        if (justin.IsDialogueBoxActive())
+        {
+            justin.DeactivateDialogueBox();
+        }
+        if (joe.IsDialogueBoxActive())
+        {
+            joe.DeactivateDialogueBox();
+        }
+
+        yield return null;
         yield return null;
 
+        Log("- Alright, let's give it 5 minutes for everyone to get here");
         barron.TypeCurrentDialogue();
-
-        yield return new WaitWhile(() => barron.IsTypingDialogue());
-        
-        // awkward timing because of mysterious bug
         justin.TypeCurrentDialogue();
         joe.TypeCurrentDialogue();
+
+        yield return new WaitWhile(() => barron.IsTypingDialogue());
         yield return new WaitForSeconds(DEFAULT_TIME_BETWEEN_DIALOGUES);
         
         Log("- .........");

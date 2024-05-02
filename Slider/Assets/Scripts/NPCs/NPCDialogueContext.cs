@@ -26,6 +26,7 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
     private bool isTypingDialogue;
     private bool waitingForPlayerAction;
     public bool IsTypingDialogue { get => isTypingDialogue; }
+    public bool IsDialogueBoxActive { get => dialogueBoxIsActive; }
 
     private Coroutine delayBeforeNextDialogueCoroutine;
 
@@ -289,6 +290,13 @@ internal class NPCDialogueContext : MonoBehaviourContextProvider<NPC>, IInteract
         {
             return false;
         }
+    }
+
+    public void ForceDeactivateDialogueBox()
+    {
+        Debug.Log("[NPC] Forcing dialogue deactivation.");
+
+        DeactivateDialogueBox();
     }
 
     private void DeactivateDialogueBox()

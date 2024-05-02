@@ -58,7 +58,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 1
+  m_Spacing: 2
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -161,6 +161,7 @@ MonoBehaviour:
   - {fileID: 2854545521066907676}
   - {fileID: 6641521956016764101}
   - {fileID: 3665229635888079946}
+  subSelectableSets: []
 --- !u!1 &1584417467485821243
 GameObject:
   m_ObjectHideFlags: 0

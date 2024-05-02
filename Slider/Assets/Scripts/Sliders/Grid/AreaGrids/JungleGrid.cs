@@ -24,6 +24,11 @@ public class JungleGrid : SGrid
 
         UpdateSecretaryTV();
 
+        if (PlayerInventory.Contains("Slider 6", Area.Jungle))
+        {
+            SpawnChadRewards(); // In case they pick up Slider 6 but not boots
+        }
+
         AudioManager.PlayMusic("Jungle");
     }
 
@@ -145,7 +150,7 @@ public class JungleGrid : SGrid
     // Puzzle 5 - Chad Race
     
 
-    public void SpawnChadRewards() 
+    public void SpawnChadRewards()
     {
         ActivateCollectible("Boots");
         ActivateSliderCollectible(6);

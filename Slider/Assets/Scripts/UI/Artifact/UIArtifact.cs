@@ -79,7 +79,8 @@ public class UIArtifact : Singleton<UIArtifact>
             if (hoverTimer >= hoverBuffer && lastHovered != null)
             {
                 lastHovered.SetSpriteToIslandOrEmpty();
-                lastHovered.SetHighlighted(true);
+                if(moveOptionButtons.Contains(lastHovered))
+                    lastHovered.SetHighlighted(true);
                 lastHovered = null;
             }
         }
@@ -824,7 +825,7 @@ public class UIArtifact : Singleton<UIArtifact>
     {
         foreach (ArtifactTileButton b in buttons)
         {
-            if (b.gameObject.activeSelf)
+            if (b.gameObject.activeInHierarchy)
                 b.Flicker(1, repeat:false);
         }
     }

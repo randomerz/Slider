@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WaterWheel : MonoBehaviour, ISavable
 {
+    private const string HEATERS_ON_SAVE_STRING = "MountainGlobalHeatersOn";
+
     [SerializeField] private STile stile;
     [SerializeField] private Meltable cog1;
     [SerializeField] private Meltable cog2;
@@ -22,6 +24,7 @@ public class WaterWheel : MonoBehaviour, ISavable
     public Minecart mc;
     public Lava heaterLava;
     public PipeLiquid lavaPipe;
+    public Animator lavaExtractorAnimator;
 
     public List<GameObject> heaterLavaGO;
 
@@ -60,6 +63,7 @@ public class WaterWheel : MonoBehaviour, ISavable
 
     public void FillHeater()
     {
+        SaveSystem.Current.SetBool(HEATERS_ON_SAVE_STRING, true);
         foreach(Animator a in heaterAnimators)
             a.Play("Fill");
     }
@@ -81,9 +85,14 @@ public class WaterWheel : MonoBehaviour, ISavable
     {
         if(!heaterFixed) return;
         
-        lavaCount ++;
+        lavaCount++;
         mc.UpdateState("Empty");
-        //TODO: Play lava extractor animation
+        lavaExtractorAnimator.Play("Fill");
+    }
+
+    public void OnEndAbsorbLava()
+    {
+        lavaExtractorAnimator.Play("Empty");
         if(lavaCount == 1)
         {
             lavaPipe.FillPipe(Vector2.zero, new Vector2(0, 0.5f), 3f);

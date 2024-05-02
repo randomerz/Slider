@@ -77,6 +77,8 @@ public class ChadJump : MonoBehaviour
     {
         jumpState = JumpState.JUMPING;
         npcAnimator.SetBool("isJumping", true);
+        npcAnimator.SetBool("isFallen", false);
+        npcAnimator.SetBool("isTipping", false);
         npcCollider.enabled = false;
         npcRenderer.sortingOrder = 1;
 

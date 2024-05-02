@@ -114,7 +114,7 @@ public class MountainGrid : SGrid
     }
 
     public void CheckForMountainCompletion() {
-        if(CheckGrid.contains(GetGridString(), "31_58_76_42")) {
+        if(CheckGrid.contains(GetGridString(), "31_48_76_52")) {
             SaveSystem.Current.SetBool("forceAutoMove", false);
             StartCoroutine(ShowButtonAndMapCompletions());
             AchievementManager.SetAchievementStat("completedMountain", 1);
