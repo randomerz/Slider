@@ -1,17 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SettingRetriever : MonoBehaviour
+public class SettingRetriever : AbstractSettingRetriever
 {
     [SerializeField] private Settings setting;
 
-    public void WriteSettingValue(object value)
+    public override void WriteSettingValue(object value)
     {
         SettingsManager.Setting(setting).SetCurrentValue(value);
     }
 
-    public object ReadSettingValue()
+    public override object ReadSettingValue()
     {
         return SettingsManager.Setting(setting).GetCurrentValue();
     }
