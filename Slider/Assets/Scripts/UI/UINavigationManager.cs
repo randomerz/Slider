@@ -234,10 +234,14 @@ public class UINavigationManager : Singleton<UINavigationManager>
             LogSelectableNotFoundError();
         }
 
-        allSelectables.AddRange(selectableSet.Selectables);
-        foreach (SelectableSet subSet in selectableSet.SubSelectableSets)
+        Queue<SelectableSet> selectableSetsToAdd = new();
+        selectableSetsToAdd.Enqueue(selectableSet);
+
+        while (selectableSetsToAdd.Count > 0)
         {
-            allSelectables.AddRange(subSet.Selectables);
+            SelectableSet current = selectableSetsToAdd.Dequeue();
+            allSelectables.AddRange(current.Selectables);
+            current.SubSelectableSets.ToList().ForEach(subSet => selectableSetsToAdd.Enqueue(subSet));
         }
 
         return allSelectables;

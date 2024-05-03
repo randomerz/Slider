@@ -22,7 +22,7 @@ public enum Settings
     Resolution,
     Vsync,
     TargetFrameRate,
-    MuteWhenUnfocused
+    PlayAudioWhenUnfocused
 }
 
 static class SettingsMethods
@@ -45,7 +45,7 @@ static class SettingsMethods
         Settings.Resolution => "resolution",
         Settings.Vsync => "vsync",
         Settings.TargetFrameRate => "targetFrameRate",
-        Settings.MuteWhenUnfocused => "muteWhenUnfocused",
+        Settings.PlayAudioWhenUnfocused => "playAudioWhenUnfocused",
         _ => ""
     };
 }

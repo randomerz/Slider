@@ -70,12 +70,10 @@ public class SettingsManager : MonoBehaviour
                     SaveSystem.Current.SetBool("forceAutoMove", false);*/
             }
         );
-        RegisterAndLoadSetting(Settings.MuteWhenUnfocused,
+        RegisterAndLoadSetting(Settings.PlayAudioWhenUnfocused,
             defaultValue: false,
             onValueChanged: (value) => Application.runInBackground = value
         );
-
-        OnSettingChanged[Settings.AmbienceVolume] += (val) => { Debug.Log(val); };
     }
 
     public static void RegisterAndLoadSetting<T>(Settings setting, T defaultValue, Action<T> onValueChanged = null)
