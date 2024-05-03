@@ -1014,6 +1014,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Play Audio When Unfocused
       objectReference: {fileID: 0}
+    - target: {fileID: 3107217637005192652, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7772403660993538167, guid: c4aa39a6c9912664aa275c90d6bc674b, type: 3}
       propertyPath: m_SizeDelta.y
       value: 33.8098
