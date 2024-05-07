@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -18,7 +19,8 @@ using UnityEngine;
 /// </summary>
 public class SettingsManager : MonoBehaviour
 {
-    private static Dictionary<Settings, ISetting> settings = new();
+    private static readonly Dictionary<Settings, ISetting> settings = new();
+    public static readonly Dictionary<Settings, Action<object>> OnSettingChanged = new();
 
     void Awake()
     {
@@ -59,41 +61,34 @@ public class SettingsManager : MonoBehaviour
         RegisterAndLoadSetting(Settings.MiniPlayerIcon,
             defaultValue: false
         );
+        // This is not currently used, but may be put back into the UI later
         RegisterAndLoadSetting(Settings.AutoMove,
             defaultValue: false,
-            onValueChanged: (value) => 
+            onValueChanged: (value) =>
             {
-                if (!value && !GameUI.instance.isMenuScene && SaveSystem.Current != null) 
-                    SaveSystem.Current.SetBool("forceAutoMove", false);
+                /*if (!value && !GameUI.instance.isMenuScene && SaveSystem.Current != null) 
+                    SaveSystem.Current.SetBool("forceAutoMove", false);*/
             }
         );
-        RegisterAndLoadSetting(Settings.ScreenMode,
-            defaultValue: FullScreenMode.ExclusiveFullScreen,
-            onValueChanged: (value) => Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, value)
-        );
-        RegisterAndLoadSetting(Settings.Resolution,
-            defaultValue: new Resolution(1920, 1080),
-            onValueChanged: (value) => Screen.SetResolution(value.width, value.height, Screen.fullScreenMode)
-        );
-        RegisterAndLoadSetting(Settings.Vsync,
-            defaultValue: 1, // Vsync enabled
-            onValueChanged: (value) => QualitySettings.vSyncCount = value
-        );
-        RegisterAndLoadSetting(Settings.TargetFrameRate,
-            defaultValue: -1, // Target frame rate disabled
-            onValueChanged: (value) => Application.targetFrameRate = value
+        RegisterAndLoadSetting(Settings.PlayAudioWhenUnfocused,
+            defaultValue: false,
+            onValueChanged: (value) => Application.runInBackground = value
         );
     }
 
     public static void RegisterAndLoadSetting<T>(Settings setting, T defaultValue, Action<T> onValueChanged = null)
     {
-        settings[setting] = new Setting<T>
+        Setting<T> newSetting = new Setting<T>
         (
             playerPrefsKey: setting.PlayerPrefsKey(),
-            defaultValue: defaultValue, 
+            defaultValue: defaultValue,
             onValueChanged: onValueChanged
         );
-        settings[setting].LoadFromPlayerPrefs();
+        settings[setting] = newSetting;
+
+        OnSettingChanged[setting] = new Action<object>((newSettingValue) => { });
+        newSetting.OnValueChanged += newSettingValue => OnSettingChanged[setting]?.Invoke(newSettingValue);
+        newSetting.LoadFromPlayerPrefs();
     }
 
     /// <summary>
@@ -117,22 +112,9 @@ public class SettingsManager : MonoBehaviour
     {
         return settings[setting];
     }
-}
 
-[System.Serializable]
-public class Resolution
-{
-    public int width;
-    public int height;
-
-    public Resolution(int width, int height)
+    public static void ResetAllSettingsToDefaults()
     {
-        this.width = width;
-        this.height = height;
-    }
-
-    public static Resolution FromUnityStruct(UnityEngine.Resolution unityStruct)
-    {
-        return new Resolution(unityStruct.width, unityStruct.height);
+        settings.Values.ToList().ForEach(setting => setting.ResetToDefaultValue());
     }
 }

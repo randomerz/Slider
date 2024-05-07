@@ -6,6 +6,7 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.InputSystem.XInput;
+using System.Linq;
 
 /// <summary>
 /// Handles switching between the various panels available in the controls menu and 
@@ -58,5 +59,14 @@ public class ControlsMenuPanelHandler : MonoBehaviour
             newIndex = panels.Length - 1;
         }
         SetCurrentPanel(newIndex);
+    }
+
+    public void SelectBestButtonInCurrentPanel()
+    {
+        SelectableSet currentSubMenuSelectableSet = panels[currentPanel].GetComponent<SelectableSet>();
+        Selectable bestSelectableInCurrentMenu = currentSubMenuSelectableSet.Selectables.Where(selectable => selectable.IsInteractable()).First();
+        CoroutineUtils.ExecuteAfterEndOfFrame(() => bestSelectableInCurrentMenu.Select(), this);
+
+        Debug.Log(currentSubMenuSelectableSet.gameObject.name);
     }
 }

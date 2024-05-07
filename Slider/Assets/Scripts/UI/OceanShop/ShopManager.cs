@@ -95,6 +95,7 @@ public class ShopManager : Singleton<ShopManager>, ISavable
         bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.OpenArtifact, context => _instance.shopDialogueManager.OnActionPressed(context)));
         bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Click, context => _instance.shopDialogueManager.OnActionPressed(context)));
         bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.Player.Action, context => _instance.shopDialogueManager.OnActionPressed(context)));
+        bindingBehaviors.Add(Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Submit, context => _instance.shopDialogueManager.OnActionPressed(context)));
     }
 
     private void OnEnable()

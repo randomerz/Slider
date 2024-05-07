@@ -96,6 +96,16 @@ public class UIMenu : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Closes the menu, then immediately re-opens it. 
+    /// This can be used to trigger events such as onOpen, onClose, onEnable on menu elements, etc.
+    /// </summary>
+    public void Reopen()
+    {
+        Close();
+        Open();
+    }
+
     private void OpenAllParentMenusNotAlreadyOpen()
     {
         // We want to open the parents starting with the one highest in the hierarchy
