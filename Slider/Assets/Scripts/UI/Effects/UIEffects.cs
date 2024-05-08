@@ -18,6 +18,8 @@ public class UIEffects : Singleton<UIEffects>
     public CanvasGroup screenshotCanvasGroup;
     public Image screenshotImage;
 
+    public UISpotlightEffect uISpotlightEffect;
+
     //private static UIEffects _instance;
 
     // Holds the last flashing/black fade coroutine called so we can end it when starting a new one
@@ -175,4 +177,11 @@ public class UIEffects : Singleton<UIEffects>
         screenshotPanel.SetActive(false);
         callbackEnd?.Invoke();
     }
+
+    public static void StartSpotlight(Vector2 positionPixel, float radiusPixel, float duration=2, System.Action onStart=null, System.Action onFinish=null)
+    {
+        _instance.uISpotlightEffect.StartSpotlight(positionPixel, radiusPixel, duration, onStart, onFinish);
+    }
+
+    public static void EndSpotlightEarly() => _instance.uISpotlightEffect.EndSpotlightEarly();
 }
