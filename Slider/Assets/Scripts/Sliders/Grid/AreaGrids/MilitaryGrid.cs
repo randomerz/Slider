@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MilitaryGrid : SGrid
 {
+    public MilitarySpriteTable militarySpriteTable; // global reference
+
     public override void Init()
     {
         InitArea(Area.Military);
