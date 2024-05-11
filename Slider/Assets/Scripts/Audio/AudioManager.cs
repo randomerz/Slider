@@ -349,11 +349,14 @@ public class AudioManager : Singleton<AudioManager>
 
     public static ManagedInstance PlayWithVolume(string name, float volumeMultiplier) => PickSound(name).WithVolume(volumeMultiplier).AndPlay();
 
-    public static void PlayMusic(string name, bool stopOtherTracks = true)
+    public static void PlayMusic(string name, bool stopOtherTracks = true, bool restartTrackIfPlaying = true)
     {
         Music m = GetMusic(name);
 
         if (m == null)
+            return;
+
+        if(m.emitter.IsPlaying() && !restartTrackIfPlaying)
             return;
 
         if (stopOtherTracks)
@@ -365,6 +368,7 @@ public class AudioManager : Singleton<AudioManager>
         }
 
         m.emitter.Play();
+
     }
 
     public static void StopMusic(string name)

@@ -509,7 +509,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     public static bool GetIsInHouse()
     {
-        return _instance.isInHouse;
+        return _instance !=null && _instance.isInHouse;
     }
 
     public static void SetIsInHouse(bool isInHouse)
