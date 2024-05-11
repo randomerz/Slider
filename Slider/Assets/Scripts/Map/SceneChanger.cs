@@ -11,6 +11,8 @@ public class SceneChanger : MonoBehaviour
 
     public bool isSpawnPosRelative;
 
+    public List<GameObject> deactivateOnTransition;
+
     void Start()
     {
         
@@ -46,6 +48,8 @@ public class SceneChanger : MonoBehaviour
 
     private void StartLoadingScene()
     {
+        foreach(GameObject go in deactivateOnTransition)
+            go.SetActive(false);
         SceneTransitionOverlayManager.ShowOverlay();
 
         // Stop people from opening UI!
