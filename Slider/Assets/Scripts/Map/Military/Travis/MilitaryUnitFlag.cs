@@ -23,11 +23,13 @@ public class MilitaryUnitFlag : Item
 
     public override STile DropItem(Vector3 dropLocation, Action callback = null)
     {
-        StartCoroutine(AnimateDrop(dropLocation, () => AfterDropComplete(callback)));
-        return null;
+        return base.DropItem(dropLocation, () => {
+            AfterDropComplete();
+            callback.Invoke();
+        });
     }
 
-    private void AfterDropComplete(Action callback = null)
+    private void AfterDropComplete()
     {
         STile hitStile = SGrid.GetSTileUnderneath(gameObject);
 
@@ -35,24 +37,17 @@ public class MilitaryUnitFlag : Item
         {
             AudioManager.Play("Hurt");
             transform.position = attachedUnit.FlagReturnPosition;
-        }
-        
-        STile finalSTileLocation = SGrid.GetSTileUnderneath(gameObject);
-        if (finalSTileLocation == null)
-        {
-            gameObject.transform.SetParent(null);
-        }
-        else
-        {
-            gameObject.transform.SetParent(finalSTileLocation.transform);
+            transform.parent = attachedUnit.transform.parent;
+            return;
         }
 
-        Debug.LogError(transform.position);
-        Debug.LogError(MilitaryUnit.WorldPositionToGridPosition(transform.position));
+        // Debug.LogError(transform.position);
+        // Debug.LogError(MilitaryUnit.WorldPositionToGridPosition(transform.position));
 
-        attachedUnit.GridPosition = MilitaryUnit.WorldPositionToGridPosition(transform.position);
-
-        callback?.Invoke();
+        // attachedUnit.GridPosition = MilitaryUnit.WorldPositionToGridPosition(transform.position);
+        Vector2Int newGridPos = new Vector2Int(hitStile.x, hitStile.y);
+        attachedUnit.GridPosition = newGridPos;
+        MilitaryTurnAnimator.AddNewMove(attachedUnit.CreateMove(newGridPos, hitStile));
 
         MilitaryTurnManager.EndPlayerTurn();
     }

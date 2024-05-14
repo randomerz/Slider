@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "MilitarySpriteTable", menuName = "Scriptable Objects/Military Sprite Table")]
