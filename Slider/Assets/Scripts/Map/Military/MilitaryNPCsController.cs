@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MilitaryNPCsController : MonoBehaviour
+public class MilitaryNPCController : MonoBehaviour
 {
     public MilitaryUnit militaryUnit;
     public List<NPC> myNPCs;
@@ -14,10 +14,10 @@ public class MilitaryNPCsController : MonoBehaviour
             Debug.LogWarning($"Did you forget to assign NPCs?");
         }
 
-        SetSprites();
+        UpdateSprites();
     }
 
-    public void SetSprites()
+    public void UpdateSprites()
     {
         MilitarySpriteTable militarySpriteTable = (SGrid.Current as MilitaryGrid).militarySpriteTable;
 
@@ -35,4 +35,14 @@ public class MilitaryNPCsController : MonoBehaviour
             myFlag.spriteRenderer.sprite = militarySpriteTable.GetFlagSpriteForUnit(militaryUnit);
         }
     }
+
+    public void SetPosition(Vector3 position)
+    {
+        transform.position = position;
+    }
+
+    // public void SetParentSTile(STile stile)
+    // {
+    //     militaryUnit.AttachedSTile = stile;
+    // }
 }

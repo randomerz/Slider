@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class MilitaryUnit : MonoBehaviour
 {
+    public const int STILE_WIDTH = 13;
+
     private static readonly List<MilitaryUnit> activeUnits = new();
     public static MilitaryUnit[] ActiveUnits { get => activeUnits.ToArray(); }
 
@@ -13,6 +16,9 @@ public class MilitaryUnit : MonoBehaviour
 
     [SerializeField] private Team _unitTeam;
     public Team UnitTeam { get => _unitTeam; }
+
+    [SerializeField] private MilitaryNPCController _npcController;
+    public MilitaryNPCController NPCController { get => _npcController; }
 
     [SerializeField] private Vector2Int _gridPosition;
     public Vector2Int GridPosition { 
@@ -25,6 +31,17 @@ public class MilitaryUnit : MonoBehaviour
         }
     }
 
+    [FormerlySerializedAs("attachedSTile")]
+    [SerializeField] private STile _attachedSTile;
+    public STile AttachedSTile { 
+        get => _attachedSTile; 
+        set
+        {
+            _attachedSTile = value;
+            transform.SetParent(value == null ? null : value.transform);
+        }
+    }
+
     /// <summary>
     /// The position where the attached flag should return to when placed at an invalid position.
     /// </summary>
@@ -32,7 +49,7 @@ public class MilitaryUnit : MonoBehaviour
     {
         // At some point we will want to revisit this depending on how the units/flags look
         // (if the unit is a set of sprites that cluster around the flag or whatever)
-        get => new(transform.position.x, transform.position.y - 2);
+        get => new(transform.position.x, transform.position.y);
     }
 
     [SerializeField] private MilitaryUnitCommander _commander;
@@ -49,9 +66,37 @@ public class MilitaryUnit : MonoBehaviour
             _commander.AddUnit(this);
         }
     }
-
-    [SerializeField] private STile attachedSTile;
+    
     public UnityEvent OnDeath;
+
+    private void Awake()
+    {
+        RegisterUnit(this);
+        if (Commander != null)
+        {
+            Commander.AddUnit(this);
+        }
+    }
+
+    private void Start()
+    {
+        // TODO: Make this actually work
+        STile parentSTile = SGrid.GetSTileUnderneath(gameObject);
+        if (parentSTile != null)
+        {
+            GridPosition = new Vector2Int(parentSTile.x, parentSTile.y);
+        }
+    }
+
+    private void OnEnable()
+    {
+        SGridAnimator.OnSTileMoveEnd += OnTileMove;
+    }
+
+    private void OnDisable()
+    {
+        SGridAnimator.OnSTileMoveEnd -= OnTileMove;
+    }
 
     public static void RegisterUnit(MilitaryUnit unit)
     {
@@ -67,35 +112,20 @@ public class MilitaryUnit : MonoBehaviour
 
     public static Vector2 GridPositionToWorldPosition(Vector2Int tilePosition)
     {
-        return new Vector2(tilePosition.x * 13, tilePosition.y * 13);
+        return new Vector2(tilePosition.x * STILE_WIDTH, tilePosition.y * STILE_WIDTH);
     }
 
     public static Vector2Int WorldPositionToGridPosition(Vector2 worldPosition)
     {
-        return new Vector2Int(Mathf.RoundToInt(worldPosition.x / 13), Mathf.RoundToInt(worldPosition.y / 13));
+        Debug.LogWarning($"WorldPositionToGridPosition might be unreliable -- try to use an alternative!");
+        return new Vector2Int(Mathf.RoundToInt(worldPosition.x / STILE_WIDTH), Mathf.RoundToInt(worldPosition.y / STILE_WIDTH));
     }
 
-    private void Awake()
+    public void OnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        SGridAnimator.OnSTileMoveEnd += (object sender, SGridAnimator.OnTileMoveArgs e) =>
+        if (AttachedSTile != null && e.stile == AttachedSTile)
         {
-            if (attachedSTile != null && e.stile == attachedSTile)
-            {
-                GridPosition = new Vector2Int(e.stile.x, e.stile.y);
-            }
-        };
-
-        RegisterUnit(this);
-        if (Commander != null)
-        {
-            Commander.AddUnit(this);
-        }
-
-        // TODO: Make this actually work
-        STile parentSTile = SGrid.GetSTileUnderneath(gameObject);
-        if (parentSTile != null)
-        {
-            GridPosition = new Vector2Int(parentSTile.x, parentSTile.y);
+            GridPosition = new Vector2Int(e.stile.x, e.stile.y);
         }
     }
 
@@ -144,9 +174,14 @@ public class MilitaryUnit : MonoBehaviour
     {
         return team switch
         {
-            Team.Player => Color.white,
-            Team.Alien => new Color(1, 0.5f, 0.5f),
+            Team.Player => new Color(230f / 255f, 230f / 255f, 57f / 255f),
+            Team.Alien => new Color(112f / 255f, 48f / 255f, 160f / 255f),
             _ => Color.white,
         };
+    }
+
+    public MGMove CreateMove(Vector2Int endCoords, STile endStile)
+    {
+        return new MGMove(this, GridPosition, endCoords, AttachedSTile, endStile);
     }
 }
