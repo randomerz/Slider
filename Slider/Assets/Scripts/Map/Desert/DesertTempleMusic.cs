@@ -10,8 +10,19 @@ public class DesertTempleMusic : MonoBehaviour
 
     private bool isInTemple;
 
+    private bool didInit;
+
     private void Awake()
     {
+        Init();
+    }
+
+    private void Init()
+    {
+        if (didInit)
+            return;
+        didInit = true;
+
         reverbEmitter = gameObject.AddComponent<FMODUnity.StudioEventEmitter>();
         reverbEmitter.EventReference = reverbSnapshot;
     }
@@ -27,6 +38,9 @@ public class DesertTempleMusic : MonoBehaviour
 
     public void SetIsInTemple(bool isInTemple)
     {
+        if (reverbEmitter == null)
+            Init();
+
         this.isInTemple = isInTemple;
         if (isInTemple)
         {

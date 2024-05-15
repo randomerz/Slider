@@ -2458,10 +2458,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MiscOptionsPanel
       objectReference: {fileID: 0}
-    - target: {fileID: 1285901772815984486, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2516356009623412150, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -2535,23 +2531,11 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3046825858971367794, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3046825858971367794, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3046825858971367794, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3046825858971367794, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3046825858971367794, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
-      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3046825858971367794, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
@@ -2568,14 +2552,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3046825858971367794, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3046825858971367794, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3046825858971367794, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3046825858971367794, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
@@ -2676,19 +2652,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3698760827862262847, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3698760827862262847, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3698760827862262847, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 115
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3698760827862262847, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -44
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3803020554438856913, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -2728,19 +2704,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3832388921904495254, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3832388921904495254, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3832388921904495254, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 115
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3832388921904495254, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -62
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4825194216756218461, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
@@ -2776,19 +2752,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4836552586663436314, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4836552586663436314, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4836552586663436314, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 115
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4836552586663436314, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -26
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7111896866679301791, guid: 4585d9ad81f2d254dad267eb5a802e53, type: 3}
       propertyPath: selectables.Array.size
