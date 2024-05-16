@@ -220,7 +220,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 32
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 320, y: 180}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -1102,7 +1102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6317950202216148918, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 8.4984
+      value: 8.498413
       objectReference: {fileID: 0}
     - target: {fileID: 6317950202216148918, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
       propertyPath: m_AnchoredPosition.y

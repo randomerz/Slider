@@ -72,7 +72,7 @@ public class MoveTowardsStrategy : ICommanderStrategy
 
     private Vector2Int RandomDirection(MilitaryUnit unitToMove)
     {
-        IEnumerable<Vector2Int> validDirections = AllDirections().Where(direction => PositionIsValid(unitToMove, unitToMove.GridPosition + direction));
+        IEnumerable<Vector2Int> validDirections = DirectionUtil.Cardinal4.Where(direction => PositionIsValid(unitToMove, unitToMove.GridPosition + direction));
         if (validDirections.Count() == 0)
         {
             return new Vector2Int(0, 0);
@@ -80,17 +80,6 @@ public class MoveTowardsStrategy : ICommanderStrategy
 
         int randomIndex = UnityEngine.Random.Range(0, validDirections.Count() - 1);
         return validDirections.ToArray()[randomIndex];
-    }
-
-    private List<Vector2Int> AllDirections()
-    {
-        return new List<Vector2Int>()
-        {
-            new Vector2Int(1, 0),
-            new Vector2Int(-1, 0),
-            new Vector2Int(0, 1),
-            new Vector2Int(0, -1),
-        };
     }
 
     private bool PositionIsValid(MilitaryUnit unit, Vector2Int gridPosition)

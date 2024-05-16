@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
+[System.Serializable]
 public enum Direction
 {
     RIGHT,
