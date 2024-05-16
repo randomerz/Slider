@@ -1,13 +1,19 @@
-using System;
 using System.IO;
-using System.Collections.Generic;
-using TMPro;
+using Localization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+using LocalizationFile = Localization.LocalizationFile;
+
 public class LocalizationLoader : Singleton<LocalizationLoader>
 {
-    private LocalizationHelpers.LocalizationFile loadedAsset;
+    [SerializeField] private bool loadDebugAsset;
+    
+    private LocalizationFile loadedAsset;
     
     private void OnEnable()
     {
@@ -16,27 +22,55 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
         // TODO: trigger RefreshLocalization on select locale as well
     }
 
-    private void RefreshLocalization(Scene scene, LoadSceneMode mode)
+    public void RefreshLocalization(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("[LOC] Scene change");
+        bool debugAssetLoaded = false;
 
-        string localizationCtxPath = scene.name;
-        Debug.Log(Application.streamingAssetsPath);
+        LocalizableScene world = new(scene);
+
+        loadedAsset = null;
+
+        if (loadDebugAsset)
+        {
+            string debugLocalizationPath = LocalizationFile.DebugAssetPath;
+            if (File.Exists(debugLocalizationPath))
+            {
+                loadedAsset = new(new StreamReader(File.OpenRead(debugLocalizationPath)));
+                debugAssetLoaded = true;
+            }
+        }
+
+        if (!debugAssetLoaded)
+        {
+            string localizationPath = LocalizationFile.LocaleAssetPath("debug", scene); // TODO: use actual locale
+            if (File.Exists(localizationPath))
+            {
+                loadedAsset = new(new StreamReader(File.OpenRead(localizationPath)));
+            }
+        }
         
-        // TODO: switch to streamingAssetPath/locale/scene.csv
-        var localizationPath = Path.Join(Application.streamingAssetsPath, scene.name + ".csv");
-        loadedAsset = File.Exists(localizationPath) ? new LocalizationHelpers.LocalizationFile(File.ReadAllText(localizationPath)) : null;
-
         if (loadedAsset == null)
         {
             return;
         }
         
-        Dictionary<Type, Action<LocalizationHelpers.Localizable>> localizationMapping = new()
-        {
-            { typeof(TMP_Text), localizable => loadedAsset.AddEntryTmp(localizable) }
-        };
-        
-        LocalizationHelpers.IterateLocalizableTypes(scene, localizationMapping);
+        world.Localize(loadedAsset);
     }
 }
+
+#if UNITY_EDITOR
+
+[CustomEditor(typeof(LocalizationLoader))]
+public class LocalizationLoaderEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        if (Application.isPlaying && GUILayout.Button("Refresh localization"))
+        {
+            (target as LocalizationLoader).RefreshLocalization(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+        }
+    }
+}
+
+#endif
