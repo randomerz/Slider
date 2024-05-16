@@ -33,116 +33,140 @@ be corrupted, these rules may be helpful for debugging purposes...
   - If a separator, \r, or \n is encountered while in an enclosed context,
     it will be preserved
 ",,
-GlobalFontAdjust,-2,
+GlobalFontAdjust,-4,
 Integer value adjusting font size. ex: +4 is 4 points larger, -4 is 4 points smaller, 
 Path,Orig,Translation
-ConventionMode/ConventionCanvas/Alpha Gameplay Label:0,Pre-Alpha Gameplay,准预览版本内容
-ConventionMode/ConventionCanvas/Panel/RestartingText:0,"Game is restarting...
-Press any key to cancel.","正在重启...
-按任意键取消"
-UICanvas/MM Panel/MainMenu Panel/Continue Button/Text:0,Continue,继续
-UICanvas/MM Panel/MainMenu Panel/Credits Button/Text:0,Credits,致谢
-UICanvas/MM Panel/MainMenu Panel/Options Button/Text:0,Options,设置
-UICanvas/MM Panel/MainMenu Panel/Play Button/Text:0,"Play
-","开始
+ConventionMode/ConventionCanvas/Alpha Gameplay Label,Pre-Alpha Gameplay,准内测版本
+ConventionMode/ConventionCanvas/Panel/RestartingText,"Game is restarting...
+Press any key to cancel.","游戏正在重启...
+按任意键取消."
+UICanvas/MM Panel/MainMenu Panel/Continue Button/Text,Continue,继续游玩
+UICanvas/MM Panel/MainMenu Panel/Credits Button/Text,Credits,制作人员与致谢
+UICanvas/MM Panel/MainMenu Panel/Options Button/Text,Options,设置
+UICanvas/MM Panel/MainMenu Panel/Play Button/Text,"Play
+","开始新旅程
 "
-UICanvas/MM Panel/MainMenu Panel/Quit Button/Text:0,Quit,退出
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Caps Button/Text:0,Caps,大写
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Delete Button/Text:0,Del,回车
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Done Button/Text:0,Done,确认
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/E/Text:0,e,e
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/I/Text:0,i,i
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/O/Text:0,o,o
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/P/Text:0,p,p
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/Q/Text:0,q,q
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/R/Text:0,r,r
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/T/Text:0,t,t
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/U/Text:0,u,u
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/W/Text:0,w,w
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/Y/Text:0,y,y
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/A/Text:0,a,a
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/D/Text:0,d,d
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/F/Text:0,f,f
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/G/Text:0,g,g
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/H/Text:0,h,h
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/J/Text:0,j,j
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/K/Text:0,k,k
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/L/Text:0,l,l
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/S/Text:0,s,s
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/B/Text:0,b,b
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/C/Text:0,c,c
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/M/Text:0,m,m
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/N/Text:0,n,n
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/V/Text:0,v,v
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/X/Text:0,x,x
-UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/Z/Text:0,z,z
-UICanvas/NewSavePanel/ProfileNameInput/Text Area/Placeholder:0,Enter name...,输入姓名...
-UICanvas/NewSavePanel/ProfileNameInput/Text Area/Text:0,​,​
-UICanvas/OptionsMenu/Back Button/Text:0,Back,返回
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Back Button/Text:0,Back,返回
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control A:0,(A) Control,(A) Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control B:0,(B) Control,(B) Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control X:0,(X) Control,(X) Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control Y:0,(Y) Control,(Y) Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control:0,Control,控制选项
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Move:0,Move,移动
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Right Aligned/Control:0,"Control
-",控制选项
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Right Aligned/Move:0,Move,移动
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controls Text:0,Keyboard,键盘
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Action/Binding/Text:0,Control,Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Action/Control Label:0,Action,交互
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Alt View/Binding/Text:0,Control,Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Alt View/Control Label:0,Alt View,Alt View
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Cycle Equip/Binding/Text:0,Control,Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Cycle Equip/Control Label:0,Cycle,Cycle
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Down/Binding/Text:0,Control,Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Down/Control Label:0,Down,下
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Left/Binding/Text:0,Control,Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Left/Control Label:0,Left,左
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Right/Binding/Text:0,Control,Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Right/Control Label:0,Right,右
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Up/Binding/Text:0,Control,Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Up/Control Label:0,Up,上
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Open/Close Artifact/Binding/Text:0,Control,Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Open/Close Artifact/Control Label:0,Artifact,遗物
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Pause/Binding/Text:0,Control,Control
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Pause/Control Label:0,Pause,暂停
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Rebinding Overlay/Text (TMP):0,Rebinding Move Left...,Rebinding Move Left...
-UICanvas/OptionsMenu/RightContainer/ControlsPanel/Reset Controls/Text:0,Reset,重设
-UICanvas/OptionsMenu/RightContainer/DisplayPanel/Display Text:0,Display,显示
-UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown/Label:0,Uncapped,无上限
-UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown/Template/Viewport/Content/Item/Item Label:0,Option A,Option A
-UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Label:0,FPS,帧数上限
-UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown/Label:0,1920 x 1080,1920 x 1080
-UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown/Template/Viewport/Content/Item/Item Label:0,Option A,Option A
-UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Label:0,Resolution,分辨率
-UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/VSync/Label:0,VSync,垂直同步
-UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Big Text/Label:0,Bigger Text,大字
-UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Contrast Text/Label:0,Text Background,文字背景
-UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Hide Cursor/Label:0,Hide Cursor,不显示鼠标
-UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Screen Shake Slider/Label:0,Screen Shake,屏幕晃动
-UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/Options Text:0,Options,选项
-UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Auto Move/Label:0,"Auto Move
-",自动移动
-UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Colorblind Mode/Label:0,Colorblind Mode,色弱模式
-UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Dev Console/Label:0,Dev Console,开发员工具
-UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Mini Player Icon/Label:0,Mini Player Icon,Mini Player Icon
-UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Reset to Defaults Button/Text:0,Reset All Settings,重设所有选项
-UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/Misc Options Text:0,Miscellaneous,其他
-UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Ambience Slider/Label:0,Ambience,场景音量
-UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Master Slider/Label:0,Master,总音量
-UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Music Slider/Label:0,Music,音乐音量
-UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Play Audio When Unfocused/Label:0,Play Audio When Unfocused,后台不静音
-UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Sound Slider/Label:0,Sound,声音
-UICanvas/OptionsMenu/RightContainer/SoundPanel/Sound Text:0,Sound,声音
-UICanvas/OptionsMenu/SideNav/Controls Button/Text:0,Controls,控制
-UICanvas/OptionsMenu/SideNav/Display Button/Text:0,Display,显示
-UICanvas/OptionsMenu/SideNav/Misc Button/Text:0,Misc,其他
-UICanvas/OptionsMenu/SideNav/Options Button/Text:0,"Options
-","选项
+UICanvas/MM Panel/MainMenu Panel/Quit Button/Text,Quit,退出游戏
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Caps Button/Text,Caps,大写
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Delete Button/Text,Del,回车
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Done Button/Text,Done,确认
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/E/Text,e,e
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/I/Text,i,i
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/O/Text,o,o
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/P/Text,p,p
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/Q/Text,q,q
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/R/Text,r,r
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/T/Text,t,t
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/U/Text,u,u
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/W/Text,w,w
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/Y/Text,y,y
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/A/Text,a,a
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/D/Text,d,d
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/F/Text,f,f
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/G/Text,g,g
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/H/Text,h,h
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/J/Text,j,j
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/K/Text,k,k
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/L/Text,l,l
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/S/Text,s,s
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/B/Text,b,b
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/C/Text,c,c
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/M/Text,m,m
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/N/Text,n,n
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/V/Text,v,v
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/X/Text,x,x
+UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/Z/Text,z,z
+UICanvas/NewSavePanel/ProfileNameInput/Text Area/Placeholder,Enter name...,你叫什么?
+UICanvas/NewSavePanel/ProfileNameInput/Text Area/Text,​,​
+UICanvas/OptionsMenu/Back Button/Text,Back,返回
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Back Button/Text,Back,返回
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control,Control,(A) Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control A,(A) Control,(B) Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control B,(B) Control,(X) Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control X,(X) Control,(Y) Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control Y,(Y) Control,Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Move,Move,Move
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Right Aligned/Control,"Control
+","Control
 "
-UICanvas/OptionsMenu/SideNav/Sound Button/Text:0,Sound,声音
-UICanvas/SavesPanel/Left Save Button/Text/ProgressText:0,1/9,1/9
-"UICanvas/SavesPanel/L
-",,
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Right Aligned/Move,Move,移动
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controls Text,Keyboard,键盘
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Action/Binding/Text,Control,Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Action/Control Label,Action,交互
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Alt View/Binding/Text,Control,Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Alt View/Control Label,Alt View,Alt View
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Cycle Equip/Binding/Text,Control,Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Cycle Equip/Control Label,Cycle,Cycle
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Down/Binding/Text,Control,Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Down/Control Label,Down,下
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Left/Binding/Text,Control,Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Left/Control Label,Left,左
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Right/Binding/Text,Control,Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Right/Control Label,Right,右
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Up/Binding/Text,Control,Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Up/Control Label,Up,上
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Open/Close Artifact/Binding/Text,Control,Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Open/Close Artifact/Control Label,Artifact,遗物
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Pause/Binding/Text,Control,Control
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Pause/Control Label,Pause,暂停
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Rebinding Overlay/Text (TMP),Rebinding Move Left...,Rebinding Move Left...
+UICanvas/OptionsMenu/RightContainer/ControlsPanel/Reset Controls/Text,Reset,重置
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/Display Text,Display,显示
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@0,30,30
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@1,60,60
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@2,75,75
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@3,120,120
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@4,144,144
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@5,240,240
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@6,Uncapped,无上限
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Label,FPS,帧数上限
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@0,1280 x 720,1280 x 720
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@1,1280 x 800,1280 x 800
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@2,1366 x 768,1366 x 768
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@3,1920 x 1080,1920 x 1080
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@4,2560 x 1440,2560 x 1440
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@5,3840 x 2160,3840 x 2160
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Label,Resolution,分辨率
+UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/VSync/Label,VSync,垂直同步
+UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Big Text/Label,Bigger Text,更大的字体
+UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Contrast Text/Label,Text Background,文字背景
+UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Hide Cursor/Label,Hide Cursor,隐藏光标
+UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Screen Shake Slider/Label,Screen Shake,屏幕晃动
+UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/Options Text,Options,一般选项
+UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Auto Move/Label,"Auto Move
+","自动移动
+"
+UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Colorblind Mode/Label,Colorblind Mode,色弱模式
+UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Dev Console/Label,Dev Console,开发者工具
+UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Mini Player Icon/Label,Mini Player Icon,Mini Player Icon
+UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Reset to Defaults Button/Text,Reset All Settings,重置所有选项
+UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/Misc Options Text,Miscellaneous,其他选项
+UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Ambience Slider/Label,Ambience,背景音量
+UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Master Slider/Label,Master,总音量
+UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Music Slider/Label,Music,音乐音量
+UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Play Audio When Unfocused/Label,Play Audio When Unfocused,后台运行时不静音
+UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Sound Slider/Label,Sound,声音
+UICanvas/OptionsMenu/RightContainer/SoundPanel/Sound Text,Sound,声音
+UICanvas/OptionsMenu/SideNav/Controls Button/Text,Controls,控制
+UICanvas/OptionsMenu/SideNav/Display Button/Text,Display,显示
+UICanvas/OptionsMenu/SideNav/Misc Button/Text,Misc,其他选项
+UICanvas/OptionsMenu/SideNav/Options Button/Text,"Options
+","一般选项
+"
+UICanvas/OptionsMenu/SideNav/Sound Button/Text,Sound,声音
+UICanvas/SavesPanel/Left Save Button/Text,[ Empty ],1/9
+UICanvas/SavesPanel/Left Save Button/Text/ProgressText,1/9,"0h32
+"
+UICanvas/SavesPanel/Left Save Button/Text/TimeText,"0h32
+",[ 空存档 ]
+UICanvas/SavesPanel/Middle Save Button/Text,Cat Name,1/9
+UICanvas/SavesPanel/Middle Save Button/Text/ProgressText,1/9,"0h32
+"
+UICanvas/SavesPanel/Middle Save Button/Text/TimeText,"0h32
+",你的猫叫什么？
+UICanvas/SavesPanel/Right Save Button/Text,[ Empty ],1/9
+UICanvas/SavesPanel/Right Save Button/Text/ProgressText,1/9,"0h32
+"
+UICanvas/SavesPanel/Right Save Button/Text/TimeText,"0h32
+",[ 空存档 ]
+WorldCanvas/Press any Key,[press any key to begin],[按任意键开始]

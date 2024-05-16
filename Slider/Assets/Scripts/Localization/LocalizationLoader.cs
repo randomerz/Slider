@@ -17,16 +17,17 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     
     private void OnEnable()
     {
-        SceneManager.sceneLoaded += RefreshLocalization;
-        
+        SceneManager.activeSceneChanged += (_, scene) => RefreshLocalization(scene);
+
         // TODO: trigger RefreshLocalization on select locale as well
     }
 
-    public void RefreshLocalization(Scene scene, LoadSceneMode mode)
+    public void RefreshLocalization(Scene scene)
     {
         bool debugAssetLoaded = false;
 
-        LocalizableScene world = new(scene);
+        LocalizableScene loaded = new(scene);
+        LocalizableScene persistent = new(gameObject.scene);
 
         loadedAsset = null;
 
@@ -54,7 +55,8 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
             return;
         }
         
-        world.Localize(loadedAsset);
+        loaded.Localize(loadedAsset);
+        persistent.Localize(loadedAsset);
     }
 }
 
@@ -68,7 +70,7 @@ public class LocalizationLoaderEditor : Editor
         base.OnInspectorGUI();
         if (Application.isPlaying && GUILayout.Button("Refresh localization"))
         {
-            (target as LocalizationLoader).RefreshLocalization(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+            (target as LocalizationLoader).RefreshLocalization(SceneManager.GetActiveScene());
         }
     }
 }

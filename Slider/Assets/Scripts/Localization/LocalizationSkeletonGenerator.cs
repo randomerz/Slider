@@ -106,9 +106,10 @@ public class LocalizationSkeletonGenerator : EditorWindow
    {
        var parent = Directory.GetParent(path);
        Directory.CreateDirectory(parent.FullName);
-       var stream = File.Create(path);
+       var stream = File.Exists(path) ? new FileStream(path, FileMode.Truncate) : new FileStream(path, FileMode.CreateNew);
        StreamWriter sw = new(stream);
        sw.Write(content);
+       sw.Flush();
    }
 
    private void DoBuild()

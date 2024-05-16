@@ -11,14 +11,19 @@ namespace Localization
 {
     internal abstract class Localizable
     {
+        private string[] componentPath;
 
-        public string[] ComponentPath => componentPath;
-        protected string[] componentPath;
+        public int? IndexInComponent => index;
+        protected int? index;
 
-        public int IndexInComponent => index;
-        protected int index = 0;
+        public static string indexSeparator = "@";
 
-        public string FullPath => string.Join('/', ComponentPath) + ':' + index;
+        public string FullPath => string.Join('/', componentPath) + (index.HasValue ? indexSeparator + index.Value : "");
+
+        protected Localizable(string[] componentPath)
+        {
+            this.componentPath = componentPath;
+        }
 
         protected static string[] GetComponentPath(Component current)
         {
@@ -35,23 +40,26 @@ namespace Localization
 
     internal sealed class ParsedLocalizable : Localizable
     {
-        public string Translated => translated;
-        private string translated;
-        
-        public ParsedLocalizable(string hierarchyPath, int index, string translated)
+        public string Translated { get; }
+
+        private ParsedLocalizable(string hierarchyPath, int? index, string translated) : base(hierarchyPath.Split('/'))
         {
-            componentPath = hierarchyPath.Split('/');
             this.index = index;
-            this.translated = translated;
+            Translated = translated;
         }
         
         internal static ParsedLocalizable ParsePath(string fullPath, string translated = null)
         {
-            string[] pathAndIndex = fullPath.Split(':');
+            string[] pathAndIndex = fullPath.Split(indexSeparator);
 
-            if (pathAndIndex.Length != 2)
+            if (pathAndIndex.Length < 1)
             {
                 return null;
+            }
+
+            if (pathAndIndex.Length == 1)
+            {
+                return new ParsedLocalizable(pathAndIndex[0], null, translated);
             }
 
             try
@@ -72,14 +80,28 @@ namespace Localization
         // Immediate component that this localizable tracks, several of them can track the same component
         // in the case of different indices (different dialogue numbers of the same NPC, for example)
         public T GetAnchor<T>() where T: Component => (anchor as T);
-        private Component anchor = null;
-        
-        public TrackedLocalizable(TMP_Text tmp)
+        private Component anchor;
+
+        private TrackedLocalizable(Component c) : base(GetComponentPath(c)) {}
+
+        public TrackedLocalizable(TMP_Text tmp) : this(tmp as Component)
         {
             anchor = tmp;
-            componentPath = GetComponentPath(tmp);
+        }
+
+        // Track dropdown option
+        public TrackedLocalizable(TMP_Dropdown dropdown, int idx) : this(dropdown as Component)
+        {
+            anchor = dropdown;
+            index = idx;
         }
         
+        // Track dropdown itself, not particular option
+        public TrackedLocalizable(TMP_Dropdown dropdown) : this(dropdown as Component)
+        {
+            anchor = dropdown;
+            index = null;
+        }
     }
 
     internal readonly struct LocalizationConfig
@@ -228,7 +250,6 @@ be corrupted, these rules may be helpful for debugging purposes...
             ParserState cellState = ParserState.Empty;
 
             string path = null;
-            string orig = null;
             string trans = null;
 
             string property = null;
@@ -285,24 +306,16 @@ be corrupted, these rules may be helpful for debugging purposes...
                 // on new line, commit the last entry
                 if (isNewLineStart)
                 {
-                    if (path != null) // this should always be true but JetBrains kept giving warning, so this check is added
+                    if (path != null && cellState == ParserState.HasTranslation) // this should always be true but JetBrains kept giving warning, so this check is added
                     {
-                        switch (cellState)
+                        var newRecord = ParsedLocalizable.ParsePath(path, trans);
+                        if (newRecord == null)
                         {
-                            case ParserState.Empty:
-                                break;
-                            case ParserState.HasPath:
-                                break;
-                            case ParserState.HasOriginal:
-                                records.Add(path, ParsedLocalizable.ParsePath(path));
-                                break;
-                            case ParserState.HasTranslation:
-                                records.Add(path, ParsedLocalizable.ParsePath(path, trans));
-                                break;
-                            case ParserState.Inval:
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
+                            Debug.LogError($"Null localizable parsed {path}");
+                        }
+                        else
+                        {
+                            records.Add(path, newRecord);
                         }
                     }
 
@@ -322,13 +335,6 @@ be corrupted, these rules may be helpful for debugging purposes...
                         cellState = ParserState.HasPath;
                         break;
                     case ParserState.HasPath:
-                        if (string.IsNullOrWhiteSpace(content))
-                        {
-                            cellState = ParserState.Inval;
-                            break;
-                        }
-
-                        orig = content;
                         cellState = ParserState.HasOriginal;
                         break;
                     case ParserState.HasOriginal:
@@ -351,11 +357,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
         
-        
         private (string content, bool isNewLineStart, bool isEOF) ParseCell(StreamReader reader)
         {
-
-
             bool isNewLineStart = false;
             StringBuilder builder = new();
 
@@ -436,6 +439,11 @@ be corrupted, these rules may be helpful for debugging purposes...
                         // quote of this enclosed context
                         else if (nextAfterQuote == '\r' || nextAfterQuote == '\n' || nextAfterQuote == csvSeparator)
                         {
+                            // only read the next character in if it is a separator, same reasoning as above
+                            if (nextAfterQuote == csvSeparator)
+                            {
+                                reader.Read();
+                            }
                             break;
                         }
                         // otherwise, consider this quote as an escaping quote for the next quote
@@ -477,12 +485,14 @@ be corrupted, these rules may be helpful for debugging purposes...
         private static readonly Dictionary<Type, Func<Component, IEnumerable<TrackedLocalizable>>> SelectorFunctionMap = new()
         {
             { typeof(TMP_Text), component => SelectLocalizablesFromTmp(component as TMP_Text) },
+            { typeof(TMP_Dropdown), component => SelectLocalizablesFromDropdown(component as TMP_Dropdown) },
             { typeof(NPC), component => SelectLocalizablesFromNpc(component as NPC) }
         };
         
         private void PopulateLocalizableInstances(Scene scene)
         {
-            foreach (GameObject rootObj in scene.GetRootGameObjects())
+            var rgos = scene.GetRootGameObjects();
+            foreach (GameObject rootObj in rgos)
             {
                 foreach (Type type in SelectorFunctionMap.Keys)
                 {
@@ -500,13 +510,21 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private static List<TrackedLocalizable> SelectLocalizablesFromTmp(TMP_Text tmp)
         {
-            // skip TMP stuff under NPC, but not other places!
-            if (tmp.gameObject.GetComponentInParent<NPC>(includeInactive: true) != null)
+            // skip TMP stuff under NPC and dropdown
+            if (tmp.gameObject.GetComponentInParent<NPC>(includeInactive: true) != null || tmp.gameObject.GetComponentInParent<TMP_Dropdown>(includeInactive: true) != null)
             {
                 return new List<TrackedLocalizable>() { };
             }
 
             return new List<TrackedLocalizable>() { new TrackedLocalizable(tmp) };
+        }
+        
+        private static List<TrackedLocalizable> SelectLocalizablesFromDropdown(TMP_Dropdown dropdown)
+        {
+            return dropdown.options
+                .Select((_, idx) => new TrackedLocalizable(dropdown, idx))
+                .Append(new TrackedLocalizable(dropdown))
+                .ToList();
         }
 
         private static List<TrackedLocalizable> SelectLocalizablesFromNpc(NPC npc)
@@ -521,6 +539,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         private static readonly Dictionary<Type, Action<TrackedLocalizable, LocalizationFile>> LocalizationFunctionMap = new()
         {
             { typeof(TMP_Text), LocalizeTmp },
+            { typeof(TMP_Dropdown), LocalizeDropdownOption },
             { typeof(NPC), LocalizeNpc }
         };
 
@@ -563,6 +582,42 @@ be corrupted, these rules may be helpful for debugging purposes...
                 Debug.LogWarning($"{path}: NOT FOUND");
             }
         }
+        
+        private static void LocalizeDropdownOption(TrackedLocalizable dropdownOption, LocalizationFile file)
+        {
+            TMP_Dropdown dropdown = dropdownOption.GetAnchor<TMP_Dropdown>();
+
+            // particular option in dropdown
+            if (dropdownOption.IndexInComponent.HasValue)
+            {
+                string path = dropdownOption.FullPath;
+                if (file.records.TryGetValue(path, out var entry))
+                {
+                    dropdown.options[dropdownOption.IndexInComponent.Value].text = entry.Translated;
+                }
+                else
+                {
+                    Debug.LogWarning($"{path}: NOT FOUND");
+                }
+            }
+            // entire dropdown itself
+            else
+            {
+                dropdown.itemText.overflowMode = TextOverflowModes.Overflow; // TODO: compare different overflow modes
+                if (file.configs.ContainsKey(LocalizationFile.globalFontAdjust_name))
+                {
+                    try
+                    {
+                        int adjust = file.configs[LocalizationFile.globalFontAdjust_name].GetInt();
+                        dropdown.itemText.fontSize += adjust;
+                    }
+                    catch (FormatException e)
+                    {
+                        Debug.LogException(e);
+                    }
+                }
+            }
+        }
 
         private static void LocalizeNpc(TrackedLocalizable npc, LocalizationFile file)
         {
@@ -573,6 +628,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         private static readonly Dictionary<Type, Func<TrackedLocalizable, string>> SerializationFunctionMap = new()
         {
             { typeof(TMP_Text), SerializeTmp },
+            { typeof(TMP_Dropdown), SerializeDropdownOption },
             { typeof(NPC), SerializeNpc }
         };
         
@@ -626,13 +682,16 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 serializationMappingAdaptor.Add(type, localizable =>
                 {
-                    string path = localizable.FullPath;
-                    if (result.ContainsKey(path))
+                    string orig = serialize(localizable);
+                    if (string.IsNullOrWhiteSpace(orig))
                     {
-                        Debug.LogError($"Duplicate path: {path}");
                         return;
                     }
-                    result.Add(path, serialize(localizable));
+                    string path = localizable.FullPath;
+                    if (!result.TryAdd(path, orig))
+                    {
+                        Debug.LogError($"Duplicate path: {path}");
+                    }
                 });
             }
 
@@ -652,9 +711,22 @@ be corrupted, these rules may be helpful for debugging purposes...
             return tmp.GetAnchor<TMP_Text>().text;
         }
         
+        private static string SerializeDropdownOption(TrackedLocalizable dropdownOption)
+        {
+            if (dropdownOption.IndexInComponent.HasValue)
+            {
+                return dropdownOption.GetAnchor<TMP_Dropdown>().options[dropdownOption.IndexInComponent.Value].text;
+            }
+            // for dropdown itself, not particular options
+            else
+            {
+                return null;
+            }
+        }
+        
         private static string SerializeNpc(TrackedLocalizable tmp)
         {
-            return "";
+            return null;
         }
     }
 }
