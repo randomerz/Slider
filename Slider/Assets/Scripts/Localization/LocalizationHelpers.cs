@@ -68,8 +68,7 @@ namespace Localization
 
             try
             {
-                int idx = int.Parse(pathAndIndex[1]);
-                return new ParsedLocalizable(pathAndIndex[0], idx.ToString(), translated);
+                return new ParsedLocalizable(pathAndIndex[0], pathAndIndex[1], translated);
             }
             catch (FormatException)
             {

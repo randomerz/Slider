@@ -27,8 +27,6 @@ public class LocaleSelector : MonoBehaviour
         Dropdown.options.AddRange(sortedOptions);
         Dropdown.value = 0;
         Dropdown.RefreshShownValue();
-        
-        LocalizationLoader.RefreshSilent(sortedOptions[0].text); // assume English will always be in there :)
     }
 
     [SerializeField]
@@ -51,7 +49,7 @@ public class LocaleSelector : MonoBehaviour
         
         retriever.WriteSettingValue(Dropdown.options[Dropdown.value].text);
         
-        // Refresh is done 
+        // Refresh is done through SettingsManager
         // LocalizationLoader.Refresh(Dropdown.options[Dropdown.value].text);
     }
 }
