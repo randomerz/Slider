@@ -74,6 +74,11 @@ public class SettingsManager : MonoBehaviour
             defaultValue: false,
             onValueChanged: (value) => Application.runInBackground = value
         );
+        
+        RegisterAndLoadSetting(Settings.Locale,
+            defaultValue: "English",
+            onValueChanged: LocalizationLoader.Refresh
+        );
     }
 
     public static void RegisterAndLoadSetting<T>(Settings setting, T defaultValue, Action<T> onValueChanged = null)

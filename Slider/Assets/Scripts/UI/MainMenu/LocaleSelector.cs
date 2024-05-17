@@ -4,22 +4,31 @@ using Localization;
 using TMPro;
 using UnityEngine;
 
+[RequireComponent(typeof(SettingRetriever))]
 public class LocaleSelector : MonoBehaviour
 {
+    private SettingRetriever retriever;
+    
     private void Start()
     {
+        retriever = GetComponent<SettingRetriever>();
+        
         Dropdown.ClearOptions();
         
-        var sortedOptions = LocalizationFile.LocaleList.Select(locale =>
+        var sortedOptions = LocalizationFile.LocaleList(retriever.ReadSettingValue() as string).Select(locale =>
         {
-            TMP_Dropdown.OptionData data = new();
-            data.text = locale;
+            TMP_Dropdown.OptionData data = new()
+            {
+                text = locale
+            };
             return data;
         }).ToList();
         
         Dropdown.options.AddRange(sortedOptions);
         Dropdown.value = 0;
         Dropdown.RefreshShownValue();
+        
+        LocalizationLoader.RefreshSilent(sortedOptions[0].text); // assume English will always be in there :)
     }
 
     [SerializeField]
@@ -39,6 +48,10 @@ public class LocaleSelector : MonoBehaviour
     {
         Dropdown.gameObject.SetActive(false);
         ShowHide.SetActive(true);
-        LocalizationLoader.Refresh(Dropdown.options[Dropdown.value].text);
+        
+        retriever.WriteSettingValue(Dropdown.options[Dropdown.value].text);
+        
+        // Refresh is done 
+        // LocalizationLoader.Refresh(Dropdown.options[Dropdown.value].text);
     }
 }

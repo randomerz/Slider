@@ -27,6 +27,14 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
         // TODO: trigger RefreshLocalization on select locale as well
     }
 
+    public static void RefreshSilent(string locale)
+    {
+        if (_instance != null)
+        {
+            _instance.locale = locale;
+        }
+    }
+
     public static void Refresh(string locale)
     {
         if (_instance != null)

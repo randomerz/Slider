@@ -134,38 +134,45 @@ namespace Localization
     {
         private static string LocalizationFolderPath => Path.Join(Application.streamingAssetsPath, "Localizations");
 
-        public static List<string> LocaleList
+        public static List<string> LocaleList(string playerPrefLocale)
         {
-            get
+            if (Directory.Exists(LocalizationFolderPath))
             {
-                if (Directory.Exists(LocalizationFolderPath))
-                {
-                    List<string> locales = Directory.GetDirectories(LocalizationFolderPath)
-                        .Select(path => new FileInfo(path).Name).ToList();
+                List<string> locales = Directory.GetDirectories(LocalizationFolderPath)
+                    .Select(path => new FileInfo(path).Name).ToList();
                     
-                    locales.Sort(
-                        (localeA, localeB) =>
+                locales.Sort(
+                    (localeA, localeB) =>
+                    {
+                        if (localeA.Equals(playerPrefLocale))
                         {
-                            if (localeA.Equals(DefaultLocale))
-                            {
-                                return -1;
-                            }
+                            return -1;
+                        }
 
-                            if (localeB.Equals(DefaultLocale))
-                            {
-                                return 1;
-                            }
+                        if (localeB.Equals(playerPrefLocale))
+                        {
+                            return 1;
+                        }
+                        
+                        if (localeA.Equals(DefaultLocale))
+                        {
+                            return -1;
+                        }
 
-                            // ReSharper disable once StringCompareToIsCultureSpecific
-                            return localeA.ToLower().CompareTo(localeB.ToLower());
-                        });
+                        if (localeB.Equals(DefaultLocale))
+                        {
+                            return 1;
+                        }
 
-                    return locales;
-                }
-                else
-                {
-                    return new List<string>();
-                }
+                        // ReSharper disable once StringCompareToIsCultureSpecific
+                        return localeA.ToLower().CompareTo(localeB.ToLower());
+                    });
+
+                return locales;
+            }
+            else
+            {
+                return new List<string>();
             }
         }
 
