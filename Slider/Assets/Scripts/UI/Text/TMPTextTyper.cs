@@ -272,6 +272,11 @@ public class TMPTextTyper : MonoBehaviour
             coroutine = StartCoroutine(TypeString());
         
     }
+
+    public string ReplaceAndStripRichText(string text)
+    {
+        return m_tmpSpecialText.ReplaceAndStripRichText(text);
+    }
     
     /// <summary>
     /// Set's the TMP's text equal to text, and then starts typing

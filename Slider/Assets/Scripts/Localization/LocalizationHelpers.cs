@@ -13,12 +13,16 @@ namespace Localization
     {
         private string[] componentPath;
 
-        public int? IndexInComponent => index;
-        protected int? index;
+        public string IndexInComponent => index;
+        protected string index;
 
-        public static string indexSeparator = "@";
+        // Separates the index string from the hierarchy path
+        public static char indexSeparator = '@';
+        
+        // Separates different digits within an index string
+        public static char indexSeparatorSecondary = ':';
 
-        public string FullPath => string.Join('/', componentPath) + (index.HasValue ? indexSeparator + index.Value : "");
+        public string FullPath => string.Join('/', componentPath) + (index != null ? indexSeparator + index : "");
 
         protected Localizable(string[] componentPath)
         {
@@ -42,7 +46,7 @@ namespace Localization
     {
         public string Translated { get; }
 
-        private ParsedLocalizable(string hierarchyPath, int? index, string translated) : base(hierarchyPath.Split('/'))
+        private ParsedLocalizable(string hierarchyPath, string index, string translated) : base(hierarchyPath.Split('/'))
         {
             this.index = index;
             Translated = translated;
@@ -65,7 +69,7 @@ namespace Localization
             try
             {
                 int idx = int.Parse(pathAndIndex[1]);
-                return new ParsedLocalizable(pathAndIndex[0], idx, translated);
+                return new ParsedLocalizable(pathAndIndex[0], idx.ToString(), translated);
             }
             catch (FormatException)
             {
@@ -82,97 +86,98 @@ namespace Localization
         public T GetAnchor<T>() where T: Component => (anchor as T);
         private Component anchor;
 
-        private TrackedLocalizable(Component c) : base(GetComponentPath(c)) {}
+        private TrackedLocalizable(Component c) : base(GetComponentPath(c))
+        {
+            anchor = c;
+        }
 
         public TrackedLocalizable(TMP_Text tmp) : this(tmp as Component)
         {
-            anchor = tmp;
         }
 
         // Track dropdown option
         public TrackedLocalizable(TMP_Dropdown dropdown, int idx) : this(dropdown as Component)
         {
-            anchor = dropdown;
-            index = idx;
+            index = idx.ToString();
         }
         
         // Track dropdown itself, not particular option
         public TrackedLocalizable(TMP_Dropdown dropdown) : this(dropdown as Component)
         {
-            anchor = dropdown;
             index = null;
+        }
+
+        public TrackedLocalizable(NPC npc, int cond, int diag) : this(npc as Component)
+        {
+            index = cond.ToString() + Localizable.indexSeparatorSecondary + diag.ToString();
         }
     }
 
     internal readonly struct LocalizationConfig
     {
-        internal enum LocalizationConfigValueType
-        {
-            Str,
-            Int,
-            Float
-        }
-        
         public readonly string Comment;
         public readonly string Value;
-        private readonly LocalizationConfigValueType Type;
 
-        internal LocalizationConfig(string comment, string value, LocalizationConfigValueType type)
+        internal LocalizationConfig(string comment, string value)
         {
             Comment = comment;
             Value = value;
-            Type = type;
         }
 
         internal LocalizationConfig Override(string value)
         {
-            return new LocalizationConfig(Comment, value, Type);
-        }
-
-        internal int GetInt()
-        {
-            if (Type == LocalizationConfigValueType.Int)
-            {
-                return int.Parse(Value);
-            }
-            else
-            {
-                throw new FormatException($"Config {Value} is not int");
-            }
-        }
-        
-        internal string GetString()
-        {
-            if (Type == LocalizationConfigValueType.Str)
-            {
-                return Value;
-            }
-            else
-            {
-                throw new FormatException($"Config {Value} is not string");
-            }
-        }
-        
-        internal float GetFloat()
-        {
-            if (Type == LocalizationConfigValueType.Float)
-            {
-                return float.Parse(Value);
-            }
-            else
-            {
-                throw new FormatException($"Config {Value} is not float");
-            }
+            return new LocalizationConfig(Comment, value);
         }
     }
 
     public class LocalizationFile
     {
-        public static string DebugAssetPath =>
-            Path.Join(Application.streamingAssetsPath, "debug", "localization.csv");
+        private static string LocalizationFolderPath => Path.Join(Application.streamingAssetsPath, "Localizations");
+
+        public static List<string> LocaleList
+        {
+            get
+            {
+                if (Directory.Exists(LocalizationFolderPath))
+                {
+                    List<string> locales = Directory.GetDirectories(LocalizationFolderPath)
+                        .Select(path => new FileInfo(path).Name).ToList();
+                    
+                    locales.Sort(
+                        (localeA, localeB) =>
+                        {
+                            if (localeA.Equals(DefaultLocale))
+                            {
+                                return -1;
+                            }
+
+                            if (localeB.Equals(DefaultLocale))
+                            {
+                                return 1;
+                            }
+
+                            // ReSharper disable once StringCompareToIsCultureSpecific
+                            return localeA.ToLower().CompareTo(localeB.ToLower());
+                        });
+
+                    return locales;
+                }
+                else
+                {
+                    return new List<string>();
+                }
+            }
+        }
+
+        public static string LocalizationFileName(Scene scene) => scene.name + "_localization.csv";
+
+        public static string DefaultLocale => "English"; // TODO: set to local computer locale
+        
+        public static string DefaultAssetPath(Scene scene) =>
+            Path.Join(LocalizationFolderPath, DefaultLocale, LocalizationFileName(scene));
 
         public static string LocaleAssetPath(string locale, Scene scene) =>
-            Path.Join(Application.streamingAssetsPath, locale, scene.name + "_localization.csv");
+            Path.Join(LocalizationFolderPath, locale, LocalizationFileName(scene));
         
         // AT: This should really be a variable in LocalizableScene, but I'm placing it here
         //     so I don't have to re-type this whole thing as comments to the LocalizationFile
@@ -215,14 +220,19 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         internal static readonly char csvSeparator = ',';
 
-        internal readonly static string globalFontAdjust_name = "GlobalFontAdjust";
+        internal static readonly string globalFontAdjust_name = "GlobalFontAdjust";
+        internal static readonly string fontOverridePath_name = "FontOverridePath";
 
         internal static Dictionary<string, LocalizationConfig> defaultConfigs = new()
         {
             { globalFontAdjust_name, new LocalizationConfig(
-                "Integer value adjusting font size. ex: +4 is 4 points larger, -4 is 4 points smaller", 
-                "+0",
-                LocalizationConfig.LocalizationConfigValueType.Int) }
+                "String value adjusting font size. ex: +4 is 4 points larger, -4 is 4 points smaller", 
+                "+0")},
+            
+            { fontOverridePath_name, new LocalizationConfig(
+                "Relative path to a ttf font file from the folder containing this file, leave empty if no such font is needed", 
+                "")
+            }
         };
         
         internal Dictionary<string, LocalizationConfig> configs = defaultConfigs.ToDictionary(
@@ -529,8 +539,10 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private static List<TrackedLocalizable> SelectLocalizablesFromNpc(NPC npc)
         {
-            // TODO: complete this
-            return new();
+            return npc.Conds.SelectMany((cond, i) =>
+            {
+                return cond.dialogueChain.Select((dialogue, j) => new TrackedLocalizable(npc, i, j));
+            }).ToList();
         }
         
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -566,14 +578,14 @@ be corrupted, these rules may be helpful for debugging purposes...
 
                 if (file.configs.ContainsKey(LocalizationFile.globalFontAdjust_name))
                 {
-                    try
+                    string adjust = file.configs[LocalizationFile.globalFontAdjust_name].Value;
+
+                    if (int.TryParse(adjust, out int adjInt) && adjInt != 0)
                     {
-                        int adjust = file.configs[LocalizationFile.globalFontAdjust_name].GetInt();
-                        tmpCasted.fontSize += adjust;
-                    }
-                    catch (FormatException e)
-                    {
-                        Debug.LogException(e);
+                        string adjStr = adjInt > 0 ? "+" + adjInt.ToString() : adjInt.ToString();
+                                
+                        tmpCasted.text = 
+                            $"<size={adjStr}>" + tmpCasted.text + $"</size>";
                     }
                 }
             }
@@ -588,12 +600,27 @@ be corrupted, these rules may be helpful for debugging purposes...
             TMP_Dropdown dropdown = dropdownOption.GetAnchor<TMP_Dropdown>();
 
             // particular option in dropdown
-            if (dropdownOption.IndexInComponent.HasValue)
+            if (dropdownOption.IndexInComponent != null)
             {
+                int idx = int.Parse(dropdownOption.IndexInComponent);
+                
                 string path = dropdownOption.FullPath;
                 if (file.records.TryGetValue(path, out var entry))
                 {
-                    dropdown.options[dropdownOption.IndexInComponent.Value].text = entry.Translated;
+                    dropdown.options[idx].text = entry.Translated;
+                    
+                    if (file.configs.ContainsKey(LocalizationFile.globalFontAdjust_name))
+                    {
+                        string adjust = file.configs[LocalizationFile.globalFontAdjust_name].Value;
+
+                        if (int.TryParse(adjust, out int adjInt) && adjInt != 0)
+                        {
+                            string adjStr = adjInt > 0 ? "+" + adjInt.ToString() : adjInt.ToString();
+                                
+                            dropdown.options[idx].text = 
+                                $"<size={adjStr}>" + dropdown.options[idx].text + $"</size>";
+                        }
+                    }
                 }
                 else
                 {
@@ -604,24 +631,26 @@ be corrupted, these rules may be helpful for debugging purposes...
             else
             {
                 dropdown.itemText.overflowMode = TextOverflowModes.Overflow; // TODO: compare different overflow modes
-                if (file.configs.ContainsKey(LocalizationFile.globalFontAdjust_name))
-                {
-                    try
-                    {
-                        int adjust = file.configs[LocalizationFile.globalFontAdjust_name].GetInt();
-                        dropdown.itemText.fontSize += adjust;
-                    }
-                    catch (FormatException e)
-                    {
-                        Debug.LogException(e);
-                    }
-                }
             }
         }
 
         private static void LocalizeNpc(TrackedLocalizable npc, LocalizationFile file)
         {
-            // TODO: complete
+            string path = npc.FullPath;
+            if (file.records.TryGetValue(path, out var entry))
+            {
+                var idx = npc.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
+
+                int idxCond = int.Parse(idx[0]);
+                int idxDiag = int.Parse(idx[1]);
+
+                NPC npcCasted = npc.GetAnchor<NPC>();
+                npcCasted.Conds[idxCond].dialogueChain[idxDiag].DialogueLocalized = entry.Translated;
+            }
+            else
+            {
+                Debug.LogWarning($"{path}: NOT FOUND");
+            }
         }
         
         /////////////////////////// Serialization //////////////////////////////////////////////////////////////////////
@@ -644,14 +673,14 @@ be corrupted, these rules may be helpful for debugging purposes...
             // properties and values
             foreach (var (name, defaults) in LocalizationFile.defaultConfigs)
             {
-                builder.Append($"{name.Replace("\"", "\"\"")}{sep}{defaults.Value.Replace("\"", "\"\"")}{sep}");
+                builder.Append($"\"{name.Replace("\"", "\"\"")}\"{sep}\"{defaults.Value.Replace("\"", "\"\"")}\"{sep}");
             }
             builder.Append("\r\n");
             
             // property comments
             foreach (var (name, defaults) in LocalizationFile.defaultConfigs)
             {
-                builder.Append($"{defaults.Comment.Replace("\"", "\"\"")}{sep} {sep}");
+                builder.Append($"\"{defaults.Comment.Replace("\"", "\"\"")}\"{sep}\" \"{sep}");
             }
             builder.Append("\r\n");
             
@@ -713,9 +742,9 @@ be corrupted, these rules may be helpful for debugging purposes...
         
         private static string SerializeDropdownOption(TrackedLocalizable dropdownOption)
         {
-            if (dropdownOption.IndexInComponent.HasValue)
+            if (dropdownOption.IndexInComponent != null)
             {
-                return dropdownOption.GetAnchor<TMP_Dropdown>().options[dropdownOption.IndexInComponent.Value].text;
+                return dropdownOption.GetAnchor<TMP_Dropdown>().options[int.Parse(dropdownOption.IndexInComponent)].text;
             }
             // for dropdown itself, not particular options
             else
@@ -724,9 +753,16 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
         
-        private static string SerializeNpc(TrackedLocalizable tmp)
+        private static string SerializeNpc(TrackedLocalizable npc)
         {
-            return null;
+            var idx = npc.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
+
+            int idxCond = int.Parse(idx[0]);
+            int idxDiag = int.Parse(idx[1]);
+
+            NPC npcCasted = npc.GetAnchor<NPC>();
+            
+            return npcCasted.Conds[idxCond].dialogueChain[idxDiag].dialogue;
         }
     }
 }

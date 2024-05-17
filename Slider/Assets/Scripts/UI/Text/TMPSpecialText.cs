@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using TMPro;
 
@@ -32,7 +33,7 @@ public class TMPSpecialText : MonoBehaviour
         "type",
     };
     private static int[] commandHashes;
-    private List<CommandArg> commandArgs = new List<CommandArg>();
+    // private List<CommandArg> commandArgs = new List<CommandArg>();
 
     // subscribe to TMP event manager for when text updates
     //bool hasTextChanged; 
@@ -102,11 +103,20 @@ public class TMPSpecialText : MonoBehaviour
     /// </summary>
     public void ParseText()
     {
-        StartCoroutine(IParseText(m_TextMeshPro.text));
+        StartCoroutine(IParseText(ParseTextFirstFrame(m_TextMeshPro.text)));
+    }
+    
+    public string ReplaceAndStripRichText(string text)
+    {
+        var (str, _) = ParseTextFirstFrame(text);
+        return str;
     }
 
-    private IEnumerator IParseText(string text)
+    private (string cleaned, List<CommandArg> cmdArgs) ParseTextFirstFrame(string text)
     {
+        string cleaned = text;
+        List<CommandArg> commandArgs = new();
+        
         int offset = 0;
 
         // Parse text replacement first
@@ -149,7 +159,9 @@ public class TMPSpecialText : MonoBehaviour
                 text = text.Substring(0, i) + 
                        originalText + 
                        text.Substring(closing_tag + command.Length + 3);
-                m_TextMeshPro.text = text;
+
+                cleaned = text;
+                // m_TextMeshPro.text = text;
             }
 
             i++;
@@ -193,7 +205,9 @@ public class TMPSpecialText : MonoBehaviour
                             text = text.Substring(0, i) + 
                                    ot +
                                    text.Substring(closing_color + "</color>".Length + 0);
-                            m_TextMeshPro.text = text;
+                            // m_TextMeshPro.text = text;
+
+                            cleaned = text;
                             continue;
                         }
                         offset += 9;
@@ -224,7 +238,8 @@ public class TMPSpecialText : MonoBehaviour
                 text = text.Substring(0, i) + 
                        originalText + 
                        text.Substring(closing_tag + command.Length + 3);
-                m_TextMeshPro.text = text;
+                // m_TextMeshPro.text = text;
+                cleaned = text;
 
                 //Debug.Log(command + " " + i + " - " + (closing_tag - command.Length - 2));
                 //Debug.Log($"Hash {commandHash}");
@@ -235,9 +250,16 @@ public class TMPSpecialText : MonoBehaviour
             i++;
         }
 
+        return (cleaned, commandArgs);
+    }
+
+    private IEnumerator IParseText((string cleaned, List<CommandArg> cmdArgs) parseResult)
+    {
+        m_TextMeshPro.text = parseResult.cleaned;
+
         yield return null;
 
-        foreach (CommandArg c in commandArgs)
+        foreach (CommandArg c in parseResult.cmdArgs)
         {
             ParseCommand(c.hash, c.start, c.end);
         }
@@ -342,7 +364,7 @@ public class TMPSpecialText : MonoBehaviour
         }
 
         effectCoroutines.Clear();
-        commandArgs.Clear();
+        // commandArgs.Clear();
     }
 
 

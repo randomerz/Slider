@@ -38,8 +38,8 @@ public class LocalizationSkeletonGenerator : EditorWindow
    }
 
    private BuildOptions buildOptions;
-   private bool saveDebug;
-   private string saveDebugSceneName = "";
+   private bool saveLocalizationsElsewhere;
+   private string saveLocalizationDir;
 
    private void OnEnable()
    {
@@ -48,10 +48,12 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
    private void OnGUI()
    {
-       // add your GUI controls to modify the build here
-       saveDebugSceneName = EditorSceneManager.GetSceneAt(0).name;
-       saveDebug = GUILayout.Toggle(saveDebug, $"Save debug localization for currently opened scene { saveDebugSceneName }");
-       GUILayout.Label($"There is at most one debug localization at a time! It will be saved at { LocalizationFile.DebugAssetPath }");
+       var sle = GUILayout.Toggle(saveLocalizationsElsewhere, "Also save localization outside project");
+       if (sle && !saveLocalizationsElsewhere)
+       {
+           saveLocalizationDir = EditorUtility.OpenFolderPanel("Save localizations at", saveLocalizationDir, null);
+       }
+       saveLocalizationsElsewhere = sle;
        
        if (GUILayout.Button("Generate localization"))
        {
@@ -73,13 +75,10 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
    private void GenerateSkeleton()
    {
-       string dir = EditorUtility.OpenFolderPanel("Save Localization Skeleton At Directory", "", "");
-
        string startingScenePath = EditorSceneManager.GetSceneAt(0).path;
        
-       for (int sceneBuildIndex = 0; sceneBuildIndex < EditorBuildSettings.scenes.Length; sceneBuildIndex++)
+       foreach (var editorBuildSettingsScene in EditorBuildSettings.scenes)
        {
-           EditorBuildSettingsScene editorBuildSettingsScene = EditorBuildSettings.scenes[sceneBuildIndex];
            if (!editorBuildSettingsScene.enabled)
            {
                continue;
@@ -90,13 +89,12 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
            string serializedSkeleton = skeleton.Serialize();
            
-           WriteFileAndForceParentPath(Path.Join(dir, scene.name + "_localization.csv"), serializedSkeleton);
+           WriteFileAndForceParentPath(LocalizationFile.DefaultAssetPath(scene), serializedSkeleton);
 
-           if (saveDebug && saveDebugSceneName.Equals(scene.name))
+           if (saveLocalizationsElsewhere)
            {
-               WriteFileAndForceParentPath(LocalizationFile.DebugAssetPath, serializedSkeleton);
+               WriteFileAndForceParentPath(Path.Join(saveLocalizationDir, LocalizationFile.LocalizationFileName(scene)), serializedSkeleton);
            }
-           
        }
 
        EditorSceneManager.OpenScene(startingScenePath);
@@ -110,12 +108,16 @@ public class LocalizationSkeletonGenerator : EditorWindow
        StreamWriter sw = new(stream);
        sw.Write(content);
        sw.Flush();
+       sw.Close();
+       stream.Close();
    }
 
    private void DoBuild()
    {
-       var buildPlayerOptions = new BuildPlayerOptions();
-       buildPlayerOptions.options = buildOptions;
+       var buildPlayerOptions = new BuildPlayerOptions
+       {
+           options = buildOptions
+       };
        try
        {
            // This gets the default scene list and options from Unity's Build Settings window

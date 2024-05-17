@@ -24,7 +24,7 @@ public class DialogueDisplay : MonoBehaviour
         }
     }
 
-    public void DisplaySentence(string message, NPCEmotes.Emotes emote)
+    public void DisplaySentence(string originalMessage, string localizedMessage, NPCEmotes.Emotes emote)
     {
         CheckContrast();
         CheckSize();
@@ -33,15 +33,19 @@ public class DialogueDisplay : MonoBehaviour
 
         StopAllCoroutines();
 
-        message = message.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
+        originalMessage = originalMessage.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
+        localizedMessage = localizedMessage.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
+        
         // message = ConvertVariablesToStrings(message);
 
         textSpecialText.StopEffects();
         textSpecialBG.StopEffects();
 
-        string parsed = textTyperText.StartTyping(message);
-        
-        textTyperBG.StartTyping(message);
+        // narrate english version only, do not start typing english version
+        string toBeVocalized = textTyperText.ReplaceAndStripRichText(originalMessage);
+
+        string toBeTyped = textTyperText.StartTyping(localizedMessage);
+        textTyperBG.StartTyping(localizedMessage);
         
         // in rare cases NaN is used at first iteration and blocks dialogue typing
         
@@ -50,10 +54,10 @@ public class DialogueDisplay : MonoBehaviour
         
         if (AudioManager.useVocalizer && useVocalizer)
         {
-            float totalDuration = vocalizer.SetText(parsed, emote);
+            float totalDuration = vocalizer.SetText(toBeVocalized, emote);
 
-            textTyperText.SetTextSpeed(totalDuration / parsed.Length);
-            textTyperBG.SetTextSpeed(totalDuration / parsed.Length);
+            textTyperText.SetTextSpeed(totalDuration / toBeTyped.Length);
+            textTyperBG.SetTextSpeed(totalDuration / toBeTyped.Length);
 
             AudioManager.DampenMusic(this, 0.6f, totalDuration + 0.2f);
 
