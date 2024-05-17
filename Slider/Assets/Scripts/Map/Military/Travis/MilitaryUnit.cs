@@ -129,6 +129,12 @@ public class MilitaryUnit : MonoBehaviour
         }
     }
 
+    public void InitializeNewUnit(Type type)
+    {
+        _unitType = type;
+        _npcController.UpdateSprites();
+    }
+
     public void KillUnit()
     {
         CoroutineUtils.ExecuteAfterEndOfFrame(() => Cleanup(), coroutineOwner: this);
@@ -143,6 +149,24 @@ public class MilitaryUnit : MonoBehaviour
             Commander.RemoveUnit(this);
         }
         gameObject.SetActive(false);
+    }
+
+    public void OnEnemyDeath()
+    {
+        // Tell wave manager i died or whatever
+        SpawnSliderReward();
+    }
+
+    private void SpawnSliderReward()
+    {
+        // Dropped when enemies die
+        if (SGrid.Current.GetStileAt(GridPosition) == null)
+        {
+            Debug.LogError($"Couldn't find a stile at {GridPosition}!");
+        }
+        MilitarySTile stile = (MilitarySTile)SGrid.Current.GetStileAt(GridPosition);
+
+        MilitaryCollectibleController.SpawnMilitaryCollectible(transform, stile);
     }
 
     private void StartCombatWithOverlappingEnemyUnit()
