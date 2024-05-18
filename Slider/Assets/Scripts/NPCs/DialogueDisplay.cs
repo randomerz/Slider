@@ -1,4 +1,6 @@
+using System;
 using SliderVocalization;
+using TMPro;
 using UnityEngine;
 using Paragraph = SliderVocalization.VocalizableParagraph;
 
@@ -34,18 +36,33 @@ public class DialogueDisplay : MonoBehaviour
         StopAllCoroutines();
 
         originalMessage = originalMessage.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
-        localizedMessage = localizedMessage.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
         
         // message = ConvertVariablesToStrings(message);
 
         textSpecialText.StopEffects();
         textSpecialBG.StopEffects();
 
-        // narrate english version only, do not start typing english version
-        string toBeVocalized = textTyperText.ReplaceAndStripRichText(originalMessage);
+        string toVocalize;
+        string typed;
+        
+        // if translation exists, vocalize the original english version and type out the localized version
+        // shrink the font to 1/3 of original size due to a "Tiny" font being used for English
+        if (localizedMessage != null)
+        {
+            toVocalize = textTyperText.ReplaceAndStripRichText(originalMessage);
+            
+            localizedMessage = localizedMessage.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");
+            
+            typed = textTyperText.StartTyping(localizedMessage);
+            textTyperBG.StartTyping(localizedMessage);
+        }
+        else
+        {
+            typed = textTyperText.StartTyping(originalMessage);
+            textTyperBG.StartTyping(originalMessage);
 
-        string toBeTyped = textTyperText.StartTyping(localizedMessage);
-        textTyperBG.StartTyping(localizedMessage);
+            toVocalize = typed;
+        }
         
         // in rare cases NaN is used at first iteration and blocks dialogue typing
         
@@ -54,10 +71,10 @@ public class DialogueDisplay : MonoBehaviour
         
         if (AudioManager.useVocalizer && useVocalizer)
         {
-            float totalDuration = vocalizer.SetText(toBeVocalized, emote);
+            float totalDuration = vocalizer.SetText(toVocalize, emote);
 
-            textTyperText.SetTextSpeed(totalDuration / toBeTyped.Length);
-            textTyperBG.SetTextSpeed(totalDuration / toBeTyped.Length);
+            textTyperText.SetTextSpeed(totalDuration / typed.Length);
+            textTyperBG.SetTextSpeed(totalDuration / typed.Length);
 
             AudioManager.DampenMusic(this, 0.6f, totalDuration + 0.2f);
 
@@ -98,6 +115,23 @@ public class DialogueDisplay : MonoBehaviour
     {
         bool highContrastMode = SettingsManager.Setting<bool>(Settings.HighContrastTextEnabled).CurrentValue;
         highContrastBG.SetActive(highContrastMode);
+    }
+
+    public void SetFont(TMP_FontAsset font, float scale, bool isDefaultLocale)
+    {
+        textTyperText.SetFont(font, scale);
+        textTyperBG.SetFont(font, scale);
+
+        if (isDefaultLocale)
+        {
+            textTyperText.SetFontWeight(FontWeight.Regular);
+            textTyperBG.SetFontWeight(FontWeight.Black);
+        }
+        else
+        {
+            textTyperText.SetFontWeight(FontWeight.Black);
+            textTyperBG.SetFontWeight(FontWeight.Black);
+        }
     }
 
     private void CheckSize()

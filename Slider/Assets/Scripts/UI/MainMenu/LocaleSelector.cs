@@ -46,8 +46,17 @@ public class LocaleSelector : MonoBehaviour
     {
         Dropdown.gameObject.SetActive(false);
         ShowHide.SetActive(true);
-        
-        retriever.WriteSettingValue(Dropdown.options[Dropdown.value].text);
+
+        string selection = Dropdown.options[Dropdown.value].text;
+        retriever.WriteSettingValue(selection);
+
+        // non English font does not have outline (TMP has outline but it seems to be UI text only)
+        // instead of messing with outlines just force text background to be on, player can toggle
+        // it back if they want to
+        if (!selection.Equals(LocalizationFile.DefaultLocale))
+        {
+            SettingsManager.Setting(Settings.HighContrastTextEnabled).SetCurrentValue(true);
+        }
         
         // Refresh is done through SettingsManager
         // LocalizationLoader.Refresh(Dropdown.options[Dropdown.value].text);

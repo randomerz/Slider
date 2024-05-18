@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Localization;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// <para>
@@ -78,8 +78,10 @@ public class SettingsManager : MonoBehaviour
         
         RegisterAndLoadSetting(Settings.Locale,
             defaultValue: "English",
-            onValueChanged: (locale) => LocalizationLoader.RefreshLocalization(SceneManager.GetActiveScene(), locale)
-        );
+            onValueChanged: (locale) =>
+            {
+                LocalizationLoader.RefreshLocalization();
+            });
     }
 
     public static void RegisterAndLoadSetting<T>(Settings setting, T defaultValue, Action<T> onValueChanged = null)

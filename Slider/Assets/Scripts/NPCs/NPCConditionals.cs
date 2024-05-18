@@ -82,7 +82,7 @@ public class NPCConditionals
         if (dialogueChain[index].waitUntilPlayerAction)
         {
             dialogue = string.Concat(dialogue, "<type> ...</type>");
-            localized = string.Concat(dialogue, "<type> ...</type>");
+            localized = string.Concat(localized, "<type> ...</type>");
         }
 
         return (dialogue, localized);

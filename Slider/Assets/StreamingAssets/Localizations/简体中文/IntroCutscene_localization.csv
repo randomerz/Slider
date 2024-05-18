@@ -33,8 +33,8 @@ be corrupted, these rules may be helpful for debugging purposes...
   - If a separator, \r, or \n is encountered while in an enclosed context,
     it will be preserved
 ",
-"GlobalFontAdjust","+0","FontOverridePath","",
-"String value adjusting font size. ex: +4 is 4 points larger, -4 is 4 points smaller"," ","Relative path to a ttf font file from the folder containing this file, leave empty if no such font is needed"," ",
+"DialogueFontScale","1.0","FontOverridePath","","NonDialogueFontAdjust","+0",
+"Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3."," ","Relative path to a ttf font file from the folder containing this file, leave empty if no such font is needed"," ","String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller"," ",
 "Path","Orig","Translation",
 "Canvas/SkipDialogue","Press any key to skip","Press any key to skip",
 "Canvas/Texts/Text (1)","In ages past, man held the power to remake the world.","In ages past, man held the power to remake the world.",
