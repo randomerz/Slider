@@ -59,7 +59,11 @@ public class SettingsManager : MonoBehaviour
             defaultValue: true
         );
         RegisterAndLoadSetting(Settings.MiniPlayerIcon,
-            defaultValue: false
+            defaultValue: false,
+            onValueChanged: (value) =>
+            {
+                // TODO: redraw player icon!
+            }
         );
         // This is not currently used, but may be put back into the UI later
         RegisterAndLoadSetting(Settings.AutoMove,

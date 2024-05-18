@@ -13,6 +13,11 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
 
     private MilitaryUnit.Type type = MilitaryUnit.Type.Rock;
     
+    private void Start()
+    {
+        SetUnitType((MilitaryUnit.Type)Random.Range(0, 3));
+    }
+    
     public void SetUnitType(MilitaryUnit.Type type)
     {
         this.type = type;
@@ -33,6 +38,7 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
         GameObject go = Instantiate(militaryAllyPrefab, transform.position, Quaternion.identity, transform.parent);
         MilitaryUnit unit = go.GetComponent<MilitaryUnit>();
         unit.InitializeNewUnit(type);
+        unit.AttachedSTile = parentStile;
 
         spawnConfirmer.SetActive(false);
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, spawnConfirmer.transform.position, transform.parent);
@@ -42,18 +48,20 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, g.transform.position, transform.parent);
         }
 
-        StartCoroutine(DoSpawnSound());
+        StartCoroutine(DoSpawnSound(() => gameObject.SetActive(false)));
 
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
     }
 
-    private IEnumerator DoSpawnSound()
+    private IEnumerator DoSpawnSound(System.Action callback)
     {
         for (int i = 0; i < 3; i++)
         {
-            AudioManager.PlayWithVolume("Hat Click", 0.5f);
-            yield return new WaitForSeconds(0.2f);
+            AudioManager.PlayWithVolume("Hat Click", 0.5f - 0.1f * i);
+            yield return new WaitForSeconds(0.1f);
         }
+
+        callback?.Invoke();
     }
 
     public void IsRock(Condition c) => c.SetSpec(type == MilitaryUnit.Type.Rock);

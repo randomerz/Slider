@@ -49,25 +49,14 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
 
     private void ExecuteMove(MGMove move)
     {
-        Vector3 targetPos;
-        if (move.endStile == null)
-        {
-            targetPos = MilitaryUnit.GridPositionToWorldPosition(move.endCoords);
-        }
-        else
-        {
-            targetPos = move.endStile.transform.position;
-        }
-
-        move.unit.NPCController.SetPosition(targetPos);
-        move.unit.AttachedSTile = move.endStile;
-
-        FinishMove(move);
+        status = QueueStatus.Processing;
+        move.unit.NPCController.AnimateMove(move, false, () => FinishMove(move));
     }
 
     private void FinishMove(MGMove move)
     {
         activeMoves.Remove(move);
-        status = moveQueue.Count == 0 ? QueueStatus.Off : QueueStatus.Processing;
+        status = moveQueue.Count == 0 ? QueueStatus.Off : QueueStatus.Ready;
+        CheckQueue();
     }
 }

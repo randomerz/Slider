@@ -26,7 +26,6 @@ public class MilitaryUnit : MonoBehaviour
         set
         {
             _gridPosition = value;
-            transform.position = GridPositionToWorldPosition(value);
             StartCombatWithOverlappingEnemyUnit();
         }
     }
@@ -85,6 +84,7 @@ public class MilitaryUnit : MonoBehaviour
         if (parentSTile != null)
         {
             GridPosition = new Vector2Int(parentSTile.x, parentSTile.y);
+            // AttachedSTile = parentSTile;
         }
     }
 
@@ -132,7 +132,8 @@ public class MilitaryUnit : MonoBehaviour
     public void InitializeNewUnit(Type type)
     {
         _unitType = type;
-        _npcController.UpdateSprites();
+        if (_npcController != null)
+            _npcController.UpdateSpriteTypes();
     }
 
     public void KillUnit()
@@ -148,6 +149,8 @@ public class MilitaryUnit : MonoBehaviour
         {
             Commander.RemoveUnit(this);
         }
+        if (_npcController != null)
+            _npcController.OnDeath();
         gameObject.SetActive(false);
     }
 
