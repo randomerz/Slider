@@ -38,9 +38,11 @@ public class LocalizationSkeletonGenerator : EditorWindow
    }
 
    private BuildOptions buildOptions;
-   private bool saveLocalizationsElsewhere;
-   private string saveLocalizationDir;
-
+   
+   public LocalizationProjectConfiguration Configuration
+   {
+       set => configuration = value;
+   }
    private LocalizationProjectConfiguration configuration;
 
    private void OnEnable()
@@ -50,21 +52,19 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
    private void OnGUI()
    {
-       var sle = GUILayout.Toggle(saveLocalizationsElsewhere, "Save localization outside project");
-       if (sle && !saveLocalizationsElsewhere)
-       {
-           saveLocalizationDir = EditorUtility.OpenFolderPanel("Save localizations at", saveLocalizationDir, null);
-       }
-       saveLocalizationsElsewhere = sle;
-
-       var editor = Editor.CreateEditor(configuration);
-       editor.OnInspectorGUI();
+       configuration = EditorGUILayout.ObjectField(configuration, typeof(LocalizationProjectConfiguration), false) as LocalizationProjectConfiguration;
        
-       if (GUILayout.Button("Generate localization"))
+       if (GUILayout.Button("Generate localization INSIDE project"))
        {
            // Remove this if you don't want to close the window when starting a build
-
            GenerateSkeleton(configuration);
+       }
+       
+       if (GUILayout.Button("Generate localization OUTSIDE project "))
+       {
+           // Remove this if you don't want to close the window when starting a build
+           var saveLocalizationDir = EditorUtility.OpenFolderPanel("Save localizations at", null, null);
+           GenerateSkeleton(configuration, saveLocalizationDir);
        }
        
        // Build button
@@ -78,7 +78,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
        }
    }
 
-   private void GenerateSkeleton(LocalizationProjectConfiguration projectConfiguration)
+   private void GenerateSkeleton(LocalizationProjectConfiguration projectConfiguration, string root = null)
    {
        string startingScenePath = EditorSceneManager.GetSceneAt(0).path;
 
@@ -102,7 +102,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            string serializedSkeleton = skeleton.Serialize(false);
            
            WriteFileAndForceParentPath(
-               LocalizationFile.DefaultLocaleAssetPath(scene, saveLocalizationsElsewhere ? saveLocalizationDir : null), 
+               LocalizationFile.DefaultLocaleAssetPath(scene, root), 
                serializedSkeleton);
        }
 

@@ -4,6 +4,10 @@ using System.Linq;
 using Localization;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 [System.Serializable]
 public struct LocaleConfiguration
 {
@@ -75,3 +79,23 @@ public class LocalizationProjectConfiguration : ScriptableObject
     }
     #endif
 }
+
+#if UNITY_EDITOR
+
+[CustomEditor(typeof(LocalizationProjectConfiguration))]
+public class LocalizationProjectConfigurationEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        if (GUILayout.Button("Generate"))
+        {
+            var window = EditorWindow.GetWindow<LocalizationSkeletonGenerator>();
+            window.Configuration = target as LocalizationProjectConfiguration;
+            window.Show();
+        }
+    }
+}
+
+#endif
