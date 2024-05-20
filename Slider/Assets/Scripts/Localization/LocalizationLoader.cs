@@ -49,8 +49,8 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
             return;
         }
         
-        LocalizableScene loaded = new(scene);
-        LocalizableScene persistent = new(GameManager.instance.gameObject.scene);
+        LocalizableContext loaded = LocalizableContext.ForSingleScene(scene);
+        LocalizableContext persistent = LocalizableContext.ForSingleScene(GameManager.instance.gameObject.scene);
 
         LocalizationFile loadedAsset = null;
 

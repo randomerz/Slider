@@ -136,13 +136,13 @@ namespace Localization
 
     public class LocalizationFile
     {
-        private static string LocalizationFolderPath => Path.Join(Application.streamingAssetsPath, "Localizations");
+        private static string LocalizationFolderPath(string root = null) => Path.Join(root ?? Application.streamingAssetsPath, "Localizations");
 
         public static List<string> LocaleList(string playerPrefLocale)
         {
-            if (Directory.Exists(LocalizationFolderPath))
+            if (Directory.Exists(LocalizationFolderPath()))
             {
-                List<string> locales = Directory.GetDirectories(LocalizationFolderPath)
+                List<string> locales = Directory.GetDirectories(LocalizationFolderPath())
                     .Select(path => new FileInfo(path).Name).ToList();
                     
                 locales.Sort(
@@ -182,13 +182,18 @@ namespace Localization
 
         public static string LocalizationFileName(Scene scene) => scene.name + "_localization.csv";
 
+        public static string LocaleGlobalFileName(string locale) => $"_{locale}_configs_localization.csv";
+
+        public static string LocaleGlobalFilePath(string locale, string root = null) =>
+            Path.Join(LocalizationFolderPath(root), locale, LocaleGlobalFileName(locale));
+        
         public static string DefaultLocale => "English";
         
-        public static string DefaultAssetPath(Scene scene) =>
-            Path.Join(LocalizationFolderPath, DefaultLocale, LocalizationFileName(scene));
+        public static string DefaultLocaleAssetPath(Scene scene, string root = null) =>
+            Path.Join(LocalizationFolderPath(root), DefaultLocale, LocalizationFileName(scene));
 
-        public static string LocaleAssetPath(string locale, Scene scene) =>
-            Path.Join(LocalizationFolderPath, locale, LocalizationFileName(scene));
+        public static string LocaleAssetPath(string locale, Scene scene, string root = null) =>
+            Path.Join(LocalizationFolderPath(root), locale, LocalizationFileName(scene));
         
         // AT: This should really be a variable in LocalizableScene, but I'm placing it here
         //     so I don't have to re-type this whole thing as comments to the LocalizationFile
@@ -237,21 +242,22 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         internal static SortedDictionary<string, LocalizationConfig> defaultConfigs = new()
         {
-            { nonDialogueFontAdjust_name, new LocalizationConfig(
+            {
+                nonDialogueFontAdjust_name, new LocalizationConfig(
                 "String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller", 
                 "+0")
             },
 
             {
                 dialogueFontScale_name, new LocalizationConfig(
-                    "Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3.",
+                    "Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6.",
                     "1.0")
             },
             
-            { fontOverridePath_name, new LocalizationConfig(
-                "Relative path to a ttf font file from the folder containing this file, leave empty if no such font is needed", 
-                "")
-            }
+            // { fontOverridePath_name, new LocalizationConfig(
+            //     "Relative path to a ttf font file from the folder containing this file, leave empty if no such font is needed", 
+            //     "")
+            // }
         };
         
         internal Dictionary<string, LocalizationConfig> configs = defaultConfigs.ToDictionary(
@@ -321,8 +327,11 @@ be corrupted, these rules may be helpful for debugging purposes...
                         {
                             if (configs.ContainsKey(property))
                             {
-                                configs[property] = configs[property].Override(content);
-                                Debug.Log($"Parsed localization config: {property} = {content}");
+                                if (!string.IsNullOrWhiteSpace(content))
+                                {
+                                    configs[property] = configs[property].Override(content);
+                                    Debug.Log($"Parsed localization config: {property} = {content}");
+                                }
                             }
                             else
                             {
@@ -505,14 +514,53 @@ be corrupted, these rules may be helpful for debugging purposes...
         }
     }
 
-    public class LocalizableScene
+    public class LocalizableContext
     {
         Dictionary<Type, List<TrackedLocalizable>> localizables = new();
+
+        private SortedDictionary<string, LocalizationConfig> configs;
+
+        private LocalizableContext()
+        {
+            configs = new();
+            foreach (var (k, v) in LocalizationFile.defaultConfigs)
+            {
+                configs.Add(k, new LocalizationConfig(v.Comment, v.Value));
+            }
+        }
+
+        // Initializes a null localizable scene for global configuration purposes
+        // TODO: add variable substitution support here by passing a list of <var_name>:<var_orig> values here
+        private LocalizableContext(LocaleConfiguration localeConfiguration) : this()
+        {
+            foreach (var option in localeConfiguration.options)
+            {
+                if (configs.ContainsKey(option.name))
+                {
+                    if (!string.IsNullOrWhiteSpace(option.value))
+                    {
+                        configs[option.name] = configs[option.name].Override(option.value);
+                    }
+                }
+                else
+                {
+                    Debug.LogError($"Unknown config called {option.name} overriden for locale {localeConfiguration.name}, not sure how to handle this...");
+                }
+            }
+        }
         
-        public LocalizableScene(Scene scene)
+        private LocalizableContext(Scene scene) : this()
         {
             PopulateLocalizableInstances(scene);
         }
+        
+        /* Following factory methods are just for clearer naming, instead of all uses of this context class being created from same named constructor */
+        public static LocalizableContext ForSingleLocale(LocaleConfiguration localeConfiguration) =>
+            new(localeConfiguration);
+
+        public static LocalizableContext ForSingleScene(Scene scene) => new(scene);
+
+        public static LocalizableContext ForSinglePrefab(GameObject prefab) => null; // TODO: implement
         
         /////////////////////////// Localizable Instance Selection  ////////////////////////////////////////////////////
         
@@ -765,7 +813,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(NPC), SerializeNpc }
         };
         
-        public string Serialize()
+        public string Serialize(bool serializeConfigurationDefaults)
         {
             StringBuilder builder = new StringBuilder();
 
@@ -773,16 +821,23 @@ be corrupted, these rules may be helpful for debugging purposes...
             
             // file format explainer
             builder.Append($"\"{LocalizationFile.explainer.Replace("\"", "\"\"")}\"{sep}\r\n");
-
+            
             // properties and values
-            foreach (var (name, defaults) in LocalizationFile.defaultConfigs)
+            foreach (var (name, defaults) in configs)
             {
-                builder.Append($"\"{name.Replace("\"", "\"\"")}\"{sep}\"{defaults.Value.Replace("\"", "\"\"")}\"{sep}");
+                if (serializeConfigurationDefaults)
+                {
+                    builder.Append($"\"{name.Replace("\"", "\"\"")}\"{sep}\"{defaults.Value.Replace("\"", "\"\"")}\"{sep}");
+                }
+                else
+                {
+                    builder.Append($"\"{name.Replace("\"", "\"\"")}\"{sep}\" \"{sep}");
+                }
             }
             builder.Append("\r\n");
             
             // property comments
-            foreach (var (name, defaults) in LocalizationFile.defaultConfigs)
+            foreach (var (name, defaults) in configs)
             {
                 builder.Append($"\"{defaults.Comment.Replace("\"", "\"\"")}\"{sep}\" \"{sep}");
             }

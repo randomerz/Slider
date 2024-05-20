@@ -41,6 +41,8 @@ public class LocalizationSkeletonGenerator : EditorWindow
    private bool saveLocalizationsElsewhere;
    private string saveLocalizationDir;
 
+   private LocalizationProjectConfiguration configuration;
+
    private void OnEnable()
    {
        titleContent = new GUIContent("Custom Build Settings");
@@ -48,18 +50,21 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
    private void OnGUI()
    {
-       var sle = GUILayout.Toggle(saveLocalizationsElsewhere, "Also save localization outside project");
+       var sle = GUILayout.Toggle(saveLocalizationsElsewhere, "Save localization outside project");
        if (sle && !saveLocalizationsElsewhere)
        {
            saveLocalizationDir = EditorUtility.OpenFolderPanel("Save localizations at", saveLocalizationDir, null);
        }
        saveLocalizationsElsewhere = sle;
+
+       var editor = Editor.CreateEditor(configuration);
+       editor.OnInspectorGUI();
        
        if (GUILayout.Button("Generate localization"))
        {
            // Remove this if you don't want to close the window when starting a build
 
-           GenerateSkeleton();
+           GenerateSkeleton(configuration);
        }
        
        // Build button
@@ -73,9 +78,16 @@ public class LocalizationSkeletonGenerator : EditorWindow
        }
    }
 
-   private void GenerateSkeleton()
+   private void GenerateSkeleton(LocalizationProjectConfiguration projectConfiguration)
    {
        string startingScenePath = EditorSceneManager.GetSceneAt(0).path;
+
+       foreach (var locale in projectConfiguration.InitialLocales)
+       {
+           LocalizableContext localeGlobalConfig = LocalizableContext.ForSingleLocale(locale);
+           
+           
+       }
        
        foreach (var editorBuildSettingsScene in EditorBuildSettings.scenes)
        {
@@ -85,16 +97,13 @@ public class LocalizationSkeletonGenerator : EditorWindow
            }
            
            Scene scene = EditorSceneManager.OpenScene(editorBuildSettingsScene.path);
-           LocalizableScene skeleton = new(scene);
+           LocalizableContext skeleton = LocalizableContext.ForSingleScene(scene);
 
-           string serializedSkeleton = skeleton.Serialize();
+           string serializedSkeleton = skeleton.Serialize(false);
            
-           WriteFileAndForceParentPath(LocalizationFile.DefaultAssetPath(scene), serializedSkeleton);
-
-           if (saveLocalizationsElsewhere)
-           {
-               WriteFileAndForceParentPath(Path.Join(saveLocalizationDir, LocalizationFile.LocalizationFileName(scene)), serializedSkeleton);
-           }
+           WriteFileAndForceParentPath(
+               LocalizationFile.DefaultLocaleAssetPath(scene, saveLocalizationsElsewhere ? saveLocalizationDir : null), 
+               serializedSkeleton);
        }
 
        EditorSceneManager.OpenScene(startingScenePath);
