@@ -449,7 +449,8 @@ public class UIArtifact : Singleton<UIArtifact>
 
             SetSelectedButton(button);
 
-            bool autoMove = moveOptionButtons.Count == 1 && !isDragged;
+            // bool autoMove = moveOptionButtons.Count == 1 && !isDragged;
+            bool autoMove = SaveSystem.Current.GetBool("forceAutoMove");
             if (autoMove)
             {
                 TryQueueMoveFromButtonPair(buttonSelected, moveOptionButtons[0]);
