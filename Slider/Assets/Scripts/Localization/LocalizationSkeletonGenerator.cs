@@ -3,7 +3,6 @@ using Localization;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
 
 // https://forum.unity.com/threads/custom-build-settings-window.1185259/
 public class LocalizationSkeletonGenerator : EditorWindow
@@ -45,6 +44,8 @@ public class LocalizationSkeletonGenerator : EditorWindow
    }
    private LocalizationProjectConfiguration configuration;
 
+   private string referenceLocalizationPath = null;
+
    private void OnEnable()
    {
        titleContent = new GUIContent("Custom Build Settings");
@@ -53,6 +54,18 @@ public class LocalizationSkeletonGenerator : EditorWindow
    private void OnGUI()
    {
        configuration = EditorGUILayout.ObjectField(configuration, typeof(LocalizationProjectConfiguration), false) as LocalizationProjectConfiguration;
+
+       if (GUILayout.Button("Select reference localization path"))
+       {
+           referenceLocalizationPath =
+               EditorUtility.OpenFolderPanel("Reference localization", referenceLocalizationPath, null);
+       }
+
+       if (referenceLocalizationPath != null && Directory.Exists(referenceLocalizationPath))
+       {
+           var subdirs = Directory.EnumerateDirectories(referenceLocalizationPath);
+           GUILayout.Label(string.Join('\n', subdirs));
+       }
        
        if (GUILayout.Button("Generate localization INSIDE project"))
        {
@@ -78,15 +91,15 @@ public class LocalizationSkeletonGenerator : EditorWindow
        }
    }
 
-   private void GenerateSkeleton(LocalizationProjectConfiguration projectConfiguration, string root = null)
+   private void GenerateSkeleton(LocalizationProjectConfiguration projectConfiguration, string root = null, string referenceRoot = null)
    {
-       string startingScenePath = EditorSceneManager.GetSceneAt(0).path;
+       string startingScenePath = EditorSceneManager.GetSceneAt(0).path; // EditorSceneManager always have 1 active scene (the opened scene)
 
        foreach (var locale in projectConfiguration.InitialLocales)
        {
            LocalizableContext localeGlobalConfig = LocalizableContext.ForSingleLocale(locale);
-           
-           
+           string serializedConfigs = localeGlobalConfig.Serialize(serializeConfigurationDefaults: true, referenceFile: null);
+           WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name, root), serializedConfigs);
        }
        
        foreach (var editorBuildSettingsScene in EditorBuildSettings.scenes)
@@ -96,14 +109,32 @@ public class LocalizationSkeletonGenerator : EditorWindow
                continue;
            }
            
-           Scene scene = EditorSceneManager.OpenScene(editorBuildSettingsScene.path);
-           LocalizableContext skeleton = LocalizableContext.ForSingleScene(scene);
-
-           string serializedSkeleton = skeleton.Serialize(false);
+           var scene = EditorSceneManager.OpenScene(editorBuildSettingsScene.path);
+           var skeleton = LocalizableContext.ForSingleScene(scene);
            
-           WriteFileAndForceParentPath(
-               LocalizationFile.DefaultLocaleAssetPath(scene, root), 
-               serializedSkeleton);
+           // Default locale is covered in locale list
+           // WriteFileAndForceParentPath(LocalizationFile.DefaultLocaleAssetPath(scene, root), serializedSkeleton);
+           foreach (var locale in projectConfiguration.InitialLocales)
+           {
+               string serializedSkeleton;
+               // If locale is English, don't bother migrating old translations
+               // Otherwise, if an older translation exists, try migrate it
+               if (
+                   referenceRoot == null
+                   || !locale.name.Equals(LocalizationFile.DefaultLocale)
+                   || !File.Exists(LocalizationFile.LocaleAssetPath(locale.name, scene, referenceRoot)))
+               {
+                   serializedSkeleton = skeleton.Serialize(serializeConfigurationDefaults: false, referenceFile: null);
+               }
+               else
+               {
+                   serializedSkeleton = skeleton.Serialize(serializeConfigurationDefaults: false, referenceFile: new LocalizationFile(
+                       locale.name,
+                       new StreamReader(File.OpenRead(LocalizationFile.LocaleAssetPath(locale.name, scene, referenceRoot)))
+                       ));
+               }
+               WriteFileAndForceParentPath(LocalizationFile.LocaleAssetPath(locale.name, scene, root), serializedSkeleton);
+           }
        }
 
        EditorSceneManager.OpenScene(startingScenePath);

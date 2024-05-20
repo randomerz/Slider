@@ -236,20 +236,33 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         internal static readonly char csvSeparator = ',';
 
-        internal static readonly string nonDialogueFontAdjust_name = "NonDialogueFontAdjust";
-        internal static readonly string dialogueFontScale_name = "DialogueFontScale";
-        internal static readonly string fontOverridePath_name = "FontOverridePath";
+        public enum Config
+        {
+            NonDialogueFontAdjust,
+            DialogueFontScale
+        }
 
-        internal static SortedDictionary<string, LocalizationConfig> defaultConfigs = new()
+        public static readonly Dictionary<Config, string> ConfigToName = 
+            Enum
+                .GetValues(typeof(Config))
+                .Cast<Config>()
+                .ToDictionary(
+                config => config,
+                config => Enum.GetName(typeof(Config), config));
+
+        public static readonly Dictionary<string, Config> ConfigFromName =
+            ConfigToName.ToDictionary(kv => kv.Value, kv => kv.Key);
+
+        internal static SortedDictionary<Config, LocalizationConfig> defaultConfigs = new()
         {
             {
-                nonDialogueFontAdjust_name, new LocalizationConfig(
+                Config.NonDialogueFontAdjust, new LocalizationConfig(
                 "String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller", 
                 "+0")
             },
 
             {
-                dialogueFontScale_name, new LocalizationConfig(
+                Config.DialogueFontScale, new LocalizationConfig(
                     "Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6.",
                     "1.0")
             },
@@ -259,11 +272,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             //     "")
             // }
         };
-        
-        internal Dictionary<string, LocalizationConfig> configs = defaultConfigs.ToDictionary(
-            entry => entry.Key,
-            entry => entry.Value);
-        
+
+        internal SortedDictionary<Config, LocalizationConfig> configs;
         internal SortedDictionary<string, ParsedLocalizable> records;
 
         private string locale;
@@ -278,7 +288,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             Inval
         }
         
-        public LocalizationFile(string locale, StreamReader reader)
+        public LocalizationFile(string locale, StreamReader reader, LocalizationFile localeConfig = null)
         {
             this.locale = locale;
             
@@ -293,6 +303,12 @@ be corrupted, these rules may be helpful for debugging purposes...
             string trans = null;
 
             string property = null;
+
+            configs = new();
+            foreach (var (k, v) in (localeConfig != null ? localeConfig.configs : LocalizationFile.defaultConfigs))
+            {
+                configs.Add(k, new LocalizationConfig(v.Comment, v.Value));
+            }
 
             while (true)
             {
@@ -325,11 +341,11 @@ be corrupted, these rules may be helpful for debugging purposes...
                         }
                         else if (property != null)
                         {
-                            if (configs.ContainsKey(property))
+                            if (ConfigFromName.TryGetValue(property, out var propertyEnum))
                             {
                                 if (!string.IsNullOrWhiteSpace(content))
                                 {
-                                    configs[property] = configs[property].Override(content);
+                                    configs[propertyEnum] = configs[propertyEnum].Override(content);
                                     Debug.Log($"Parsed localization config: {property} = {content}");
                                 }
                             }
@@ -518,7 +534,7 @@ be corrupted, these rules may be helpful for debugging purposes...
     {
         Dictionary<Type, List<TrackedLocalizable>> localizables = new();
 
-        private SortedDictionary<string, LocalizationConfig> configs;
+        private SortedDictionary<LocalizationFile.Config, LocalizationConfig> configs;
 
         private LocalizableContext()
         {
@@ -679,9 +695,9 @@ be corrupted, these rules may be helpful for debugging purposes...
                 }
                 tmpCasted.text = entry.Translated;
 
-                if (file.configs.ContainsKey(LocalizationFile.nonDialogueFontAdjust_name))
+                if (file.configs.ContainsKey(LocalizationFile.Config.NonDialogueFontAdjust))
                 {
-                    string adjust = file.configs[LocalizationFile.nonDialogueFontAdjust_name].Value;
+                    string adjust = file.configs[LocalizationFile.Config.NonDialogueFontAdjust].Value;
 
                     if (int.TryParse(adjust, out int adjInt) && adjInt != 0)
                     {
@@ -728,9 +744,9 @@ be corrupted, these rules may be helpful for debugging purposes...
                 {
                     dropdown.options[idx].text = entry.Translated;
                     
-                    if (file.configs.ContainsKey(LocalizationFile.nonDialogueFontAdjust_name))
+                    if (file.configs.ContainsKey(LocalizationFile.Config.NonDialogueFontAdjust))
                     {
-                        string adjust = file.configs[LocalizationFile.nonDialogueFontAdjust_name].Value;
+                        string adjust = file.configs[LocalizationFile.Config.NonDialogueFontAdjust].Value;
 
                         if (int.TryParse(adjust, out int adjInt) && adjInt != 0)
                         {
@@ -783,7 +799,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private static void LocalizeDialogueDisplay(TrackedLocalizable display, LocalizationFile file)
         {
-            string adjStr = file.configs[LocalizationFile.dialogueFontScale_name].Value;
+            string adjStr = file.configs[LocalizationFile.Config.DialogueFontScale].Value;
             try
             {
                 float adjFlt = float.Parse(adjStr);
@@ -813,7 +829,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(NPC), SerializeNpc }
         };
         
-        public string Serialize(bool serializeConfigurationDefaults)
+        public string Serialize(bool serializeConfigurationDefaults, LocalizationFile referenceFile)
         {
             StringBuilder builder = new StringBuilder();
 
@@ -825,13 +841,15 @@ be corrupted, these rules may be helpful for debugging purposes...
             // properties and values
             foreach (var (name, defaults) in configs)
             {
+                var nameStr = LocalizationFile.ConfigToName[name];
+                
                 if (serializeConfigurationDefaults)
                 {
-                    builder.Append($"\"{name.Replace("\"", "\"\"")}\"{sep}\"{defaults.Value.Replace("\"", "\"\"")}\"{sep}");
+                    builder.Append($"\"{nameStr.Replace("\"", "\"\"")}\"{sep}\"{defaults.Value.Replace("\"", "\"\"")}\"{sep}");
                 }
                 else
                 {
-                    builder.Append($"\"{name.Replace("\"", "\"\"")}\"{sep}\" \"{sep}");
+                    builder.Append($"\"{nameStr.Replace("\"", "\"\"")}\"{sep}\" \"{sep}");
                 }
             }
             builder.Append("\r\n");
@@ -854,8 +872,18 @@ be corrupted, these rules may be helpful for debugging purposes...
 
                 string path = _path.Replace("\"", "\"\"");
                 string orig = _orig.Replace("\"", "\"\"");
+
+                string translated = orig;
+
+                if (referenceFile != null)
+                {
+                    if (referenceFile.records.TryGetValue(_path, out var referenceTranslation))
+                    {
+                        translated = referenceTranslation.Translated;
+                    }
+                }
                 
-                builder.Append($"\"{path}\"{sep}\"{orig}\"{sep}\"{orig}\"{sep}\r\n"); // for skeleton file, just use original as the translation
+                builder.Append($"\"{path}\"{sep}\"{orig}\"{sep}\"{translated}\"{sep}\r\n"); // for skeleton file, just use original as the translation
             }
 
             return builder.ToString();

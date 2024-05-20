@@ -52,12 +52,19 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
         LocalizableContext loaded = LocalizableContext.ForSingleScene(scene);
         LocalizableContext persistent = LocalizableContext.ForSingleScene(GameManager.instance.gameObject.scene);
 
+        LocalizationFile localeConfig = null; // TODO: only load this on locale change?
         LocalizationFile loadedAsset = null;
+
+        string localeConfigsPath = LocalizationFile.LocaleGlobalFilePath(locale);
+        if (File.Exists(localeConfigsPath))
+        {
+            localeConfig = new(locale, new StreamReader(File.OpenRead(localeConfigsPath)));
+        }
 
         string localizationPath = LocalizationFile.LocaleAssetPath(locale, scene); // TODO: use actual locale
         if (File.Exists(localizationPath))
         {
-            loadedAsset = new(locale, new StreamReader(File.OpenRead(localizationPath)));
+            loadedAsset = new(locale, new StreamReader(File.OpenRead(localizationPath)), localeConfig);
         }
         
         if (loadedAsset == null)

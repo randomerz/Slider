@@ -12,10 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0485f879b1aaa7b4aa7035c75a0ad60c, type: 3}
   m_Name: LocalizationProjectConfiguration
   m_EditorClassIdentifier: 
-  RelevantPrefabs:
+  relevantPrefabs:
   - {fileID: 7648707882233313094, guid: 6246f5caa1e6cac46969239c5a944200, type: 3}
   - {fileID: 5049116215420832315, guid: 898b250fe0c06464293cf5013d6eb685, type: 3}
-  InitialAdditionalLocales:
+  initialLocales:
+  - name: English
+    options:
+    - name: DialogueFontScale
+      value: 1.0
+    - name: NonDialogueFontAdjust
+      value: +0
   - name: "\u7B80\u4F53\u4E2D\u6587"
     options:
     - name: DialogueFontScale

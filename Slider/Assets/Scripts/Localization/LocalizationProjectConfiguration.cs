@@ -14,7 +14,7 @@ public struct LocaleConfiguration
     [System.Serializable]
     public struct Option
     {
-        public string name;
+        public LocalizationFile.Config name;
         public string value;
     }
     
@@ -47,18 +47,26 @@ public struct LocaleConfiguration
 [CreateAssetMenu]
 public class LocalizationProjectConfiguration : ScriptableObject
 {
-    public GameObject[] RelevantPrefabs;
+    public GameObject[] relevantPrefabs;
+
+    public IEnumerable<LocaleConfiguration> InitialLocales => initialLocales;
     
     [SerializeField]
-    private LocaleConfiguration[] InitialAdditionalLocales;
-
-    public IEnumerable<LocaleConfiguration> InitialLocales =>
-        InitialAdditionalLocales.Append(LocaleConfiguration.Default);
+    private List<LocaleConfiguration> initialLocales;
 
     #if UNITY_EDITOR
     private void OnValidate()
     {
-        foreach(var locale in InitialAdditionalLocales)
+        if (!initialLocales.Any((loc)=>loc.name.Equals(LocalizationFile.DefaultLocale)))
+        {
+            initialLocales.Insert(0, new LocaleConfiguration
+            {
+                name = LocalizationFile.DefaultLocale,
+                options = new() // will be filled later on!
+            });
+        }
+        
+        foreach(var locale in initialLocales)
         {
             locale.options.RemoveAll(option => !LocalizationFile.defaultConfigs.ContainsKey(option.name));
             var names = locale.options.Select(o => o.name).ToHashSet();
@@ -74,7 +82,7 @@ public class LocalizationProjectConfiguration : ScriptableObject
                 }
             }
             
-            locale.options.Sort((a, b) => string.Compare(a.name, b.name, StringComparison.Ordinal));
+            locale.options.Sort((a, b) => a.name.CompareTo(b.name));
         }
     }
     #endif
