@@ -251,6 +251,7 @@ public class OceanGrid : SGrid
     {
         burriedGuyNPC.SetActive(true);
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, burriedGuyNPC.transform.position, burriedGuyNPC.transform);
+        AudioManager.Play("Hat Click");
     }
 
     public void SpawnFezziwigReward() {

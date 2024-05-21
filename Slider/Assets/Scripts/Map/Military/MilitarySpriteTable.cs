@@ -31,6 +31,11 @@ public class MilitarySpriteTable : ScriptableObject
         return flags[(int)unit.UnitType];
     }
 
+    public Sprite GetFlagSpriteForType(MilitaryUnit.Type type)
+    {
+        return flags[(int)type];
+    }
+
     private int GetIndexForUnit(MilitaryUnit unit)
     {
         int index = 0;

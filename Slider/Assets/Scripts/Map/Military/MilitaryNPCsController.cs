@@ -1,11 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class MilitaryNPCController : MonoBehaviour
 {
+    private const float MOVE_DURATION = 2f;
+    private const string FLAG_ITEM_NAME = "MilitaryFlag";
+
     public MilitaryUnit militaryUnit;
     public List<NPC> myNPCs;
     public MilitaryUnitFlag myFlag;
+    
+    private System.Action moveFinishCallback;
+    private bool isWalking;
+    private bool isFacingRight = true;
     
     private void Start()
     {
@@ -14,10 +22,37 @@ public class MilitaryNPCController : MonoBehaviour
             Debug.LogWarning($"Did you forget to assign NPCs?");
         }
 
-        UpdateSprites();
+        UpdateSpriteTypes();
     }
 
-    public void UpdateSprites()
+    private void Update()
+    {
+        Item held = PlayerInventory.GetCurrentItem();
+        
+        if (held == null || held.itemName != FLAG_ITEM_NAME)
+        {
+            return;
+        }
+
+        if (isWalking)
+        {
+            return;
+        }
+
+        float deltaX = Player.GetPosition().x - transform.position.x;
+        if (isFacingRight && deltaX < -2)
+        {
+            // face left
+            SetNPCFacingDirection(false);
+        }
+        else if (!isFacingRight && deltaX > 2)
+        {
+            // face right
+            SetNPCFacingDirection(true);
+        }
+    }
+
+    public void UpdateSpriteTypes()
     {
         MilitarySpriteTable militarySpriteTable = (SGrid.Current as MilitaryGrid).militarySpriteTable;
 
@@ -45,4 +80,84 @@ public class MilitaryNPCController : MonoBehaviour
     // {
     //     militaryUnit.AttachedSTile = stile;
     // }
+
+    public void AnimateMove(MGMove move, bool skipAnimation, System.Action finishCallback)
+    {
+        if (moveFinishCallback != null)
+        {
+            Debug.LogWarning($"Might have called AnimateMove while another move was animating");
+        }
+        moveFinishCallback = finishCallback;
+        Vector3 startPos, targetPos;
+        startPos = MilitaryUnit.GridPositionToWorldPosition(move.startCoords);
+        targetPos = MilitaryUnit.GridPositionToWorldPosition(move.endCoords);
+
+        if (startPos.x < targetPos.x)
+        {
+            SetNPCFacingDirection(true);
+        }
+        else if (startPos.x > targetPos.x)
+        {
+            SetNPCFacingDirection(false);
+        }
+
+        if (skipAnimation)
+        {
+            FinishAnimation(targetPos, move.endStile);
+        }
+        else
+        {
+            SetNPCWalking(true);
+            CoroutineUtils.ExecuteEachFrame(
+                (x) => {
+                    Vector3 newPos = Vector3.Lerp(startPos, targetPos, x);
+                    SetPosition(newPos);
+                    if (x >= 0.5f && militaryUnit.AttachedSTile != move.endStile)
+                    {
+                        militaryUnit.AttachedSTile = move.endStile;
+                    }
+                },
+                () => {
+                    SetNPCWalking(false);
+                    FinishAnimation(targetPos, move.endStile);
+                },
+                this,
+                MOVE_DURATION,
+                null
+            );
+        }
+    }
+
+    private void FinishAnimation(Vector3 targetPos, STile endStile)
+    {
+        militaryUnit.NPCController.SetPosition(targetPos);
+        militaryUnit.AttachedSTile = endStile;
+        System.Action callback = moveFinishCallback;
+        moveFinishCallback = null;
+        callback?.Invoke(); // this might update moveFinishCallback so we cant change it after this
+    }
+
+    public void OnDeath()
+    {
+        Debug.Log($"on death animator");
+        moveFinishCallback?.Invoke();
+    }
+
+    private void SetNPCFacingDirection(bool faceRight)
+    {
+        isFacingRight = faceRight;
+        foreach (NPC npc in myNPCs)
+        {
+            npc.SetFacingRight(faceRight);
+        }
+    }
+
+    private void SetNPCWalking(bool isWalking)
+    {
+        this.isWalking = isWalking;
+        foreach (NPC npc in myNPCs)
+        {
+            npc.animator.SetBool("isWalking", isWalking);
+        }
+    }
 }

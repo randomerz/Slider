@@ -46,8 +46,9 @@ public class MilitaryUnitFlag : Item
 
         // attachedUnit.GridPosition = MilitaryUnit.WorldPositionToGridPosition(transform.position);
         Vector2Int newGridPos = new Vector2Int(hitStile.x, hitStile.y);
+        MGMove newMove = attachedUnit.CreateMove(newGridPos, hitStile);
         attachedUnit.GridPosition = newGridPos;
-        MilitaryTurnAnimator.AddNewMove(attachedUnit.CreateMove(newGridPos, hitStile));
+        MilitaryTurnAnimator.AddNewMove(newMove);
 
         MilitaryTurnManager.EndPlayerTurn();
     }
