@@ -1,0 +1,251 @@
+"Localization files are formatted like CSV so they can be easily edited,
+however formatting has strict rules for easy parsing. Most of these rules
+are already handled by Excel / Libre / etc., so you don't have to worry
+about them in normal usage. However, if your localization file seems to
+be corrupted, these rules may be helpful for debugging purposes...
+- In general, any consecutive string of \r and \n (in any order) will be
+  treated as one SINGLE line break, except within an enclosed context
+- The first 4 rows can be arbitrarily long
+  - The first cell of first row is used to store this block of instruction
+    text
+  - The first 3 cells of the fourth row is used as headers
+  - All other cells in the first and fourth rows are ignored
+  - Columns in the second row alternate between property and value (ex.
+    ' foo | 1 | bar | 3.5 | ... '
+    - Any whitespaces before and after the property name are ignored
+  - Columns in the third row are exclusively comments for properties in the
+    second row
+- Every following line can include any number of cells, but only the
+  first three will be parsed (you can use the rest as comments if needed)
+- The file must end in a sequence of \r and \n's
+- Every cell containing a ^, \r, or \n must be enclosed in ""
+  - If a "" is encountered right after a non-enclosed separator, \r, or \n,
+    then the parser is said to enter an ""enclosed context"", such context
+    ends immediately when a non-escaped "" that is not followed by \r, \n,
+    or a separator is encountered
+  - "" within each cell should be escaped using another "" in front of it,
+  - If a "" is encountered in a non-enclosed context, and it is not right
+    after a separator, \r, or \n, then it is entirely ignored
+  - If a non-escaped "" is encountered in an enclosed context...
+    - If it is followed by a separator, \r, or \n, then it is considered
+      the closing quote of the current context
+    - Otherwise, it is ignored
+  - If a separator, \r, or \n is encountered while in an enclosed context,
+    it will be preserved
+",
+"NonDialogueFontAdjust"," ","DialogueFontScale"," ",
+"String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
+"Path","Orig","Translation",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Items/ArtifactInventoryItem (12)/Sunglasses Total Text","2","2",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Items/ArtifactInventoryItem Breadge/Breadge Total Text","9","9",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Items/ArtifactInventoryItem Oil/Oil Total Text","4","4",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Text/ItemNameText","Collection","Collection",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/WorldMapPanel/Text/AreaNameText","Map
+","Map
+",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/WorldMapPanel/Text/AreaNameTextBG","Map
+","Map
+",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@0:0","You’re awake! <var>Cat</var> has been acting... <wavy>strange.</wavy>","You’re awake! <var>Cat</var> has been acting... <wavy>strange.</wavy>",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@0:1","It started when they touched that Artifact you brought back.","It started when they touched that Artifact you brought back.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@1:0","Can you check on <var>Cat</var> outside?","Can you check on <var>Cat</var> outside?",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@2:0","Wha- What's happening?","Wha- What's happening?",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@2:1","<var>CatUpper</var> NOOO","<var>CatUpper</var> NOOO",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@2:2","W-who is taking you away?? Why??","W-who is taking you away?? Why??",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@3:0","Oh honey... you have to bring back <var>Cat</var>! I'll research what caused all this...","Oh honey... you have to bring back <var>Cat</var>! I'll research what caused all this...",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@3:1","It's even <var>Cat</var>'s birthday tomorrow.","It's even <var>Cat</var>'s birthday tomorrow.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@4:0","There's some global phenomenon that started last night.","There's some global phenomenon that started last night.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@4:1","Some people online have been calling it the ""Cataclysm"".","Some people online have been calling it the "Cataclysm".",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@4:2","Parts of the world are missing, obviously.","Parts of the world are missing, obviously.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@4:3","There's also some magic barrier that won't let anything fall into these missing parts though.","There's also some magic barrier that won't let anything fall into these missing parts though.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@4:4","I think that it all came from that Artifact you brought back last night...","I think that it all came from that Artifact you brought back last night...",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@4:5","One good thing about this is that everyone is still relatively calm about this.","One good thing about this is that everyone is still relatively calm about this.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@4:6","Maybe another effect of the Artifact...","Maybe another effect of the Artifact...",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@4:7","I'm going to keep investigating here.","I'm going to keep investigating here.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@4:8","You should go find <var>Cat</var>, who knows what's happening to them.","You should go find <var>Cat</var>, who knows what's happening to them.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@5:0","Isn't this ol' Cathy's cat? She has a ton of cats.","Isn't this ol' Cathy's cat? She has a ton of cats.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@5:1","Oh, she might know where <var>Cat</var> is!","Oh, she might know where <var>Cat</var> is!",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@5:2","Sigh... everything reminds me of them.","Sigh... everything reminds me of them.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@6:0","Isn't this ol' Cathy's cat? I think her three cats are out again.","Isn't this ol' Cathy's cat? I think her three cats are out again.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@6:1","Oh, she might know where <var>Cat</var> is!","Oh, she might know where <var>Cat</var> is!",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@6:2","Sigh... everything reminds me of them.","Sigh... everything reminds me of them.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@7:0","I just realized.","I just realized.",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@7:1","Has anyone been feeding <var>Cat</var>?","Has anyone been feeding <var>Cat</var>?",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@8:0","What??","What??",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@8:1","WHAT????","WHAT????",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@8:2","Aliens?? Took <var>Cat</var>??","Aliens?? Took <var>Cat</var>??",
+"Map/Village 8Puzzle/STile (1)/All Tile Maps/House Tile Maps/Decorations/Exploresse@8:3","They exist??","They exist??",
+"Map/Village 8Puzzle/STile (1)/Objects/Romeo@0:0","Juliet, my love, wherefore art thou?!","Juliet, my love, wherefore art thou?!",
+"Map/Village 8Puzzle/STile (1)/Objects/Romeo@1:0","Juliet, my love, wherefore art thou?!","Juliet, my love, wherefore art thou?!",
+"Map/Village 8Puzzle/STile (1)/Objects/Romeo@2:0","Please bring my beloved back, lest I drink this poison!","Please bring my beloved back, lest I drink this poison!",
+"Map/Village 8Puzzle/STile (1)/Objects/Romeo@2:1","Your cat? I care not! Where art thou, Juliet?!","Your cat? I care not! Where art thou, Juliet?!",
+"Map/Village 8Puzzle/STile (1)/Objects/Romeo@3:0","Please bring my beloved back, lest I drink this poison!","Please bring my beloved back, lest I drink this poison!",
+"Map/Village 8Puzzle/STile (1)/Objects/Romeo@4:0","Tybalt, you swine! Where have you taken Juliet?","Tybalt, you swine! Where have you taken Juliet?",
+"Map/Village 8Puzzle/STile (1)/Objects/Romeo@5:0","Oh Juliet! I'll
+never leave
+you again.","Oh Juliet! I'll
+never leave
+you again.",
+"Map/Village 8Puzzle/STile (1)/Objects/Romeo@6:0","Juliet, will you
+be mine?
+","Juliet, will you
+be mine?
+",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@0:0","i wonder what these ruins mean... and where they're from?","i wonder what these ruins mean... and where they're from?",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@0:1","woah! where'd you get that artifact? can i see it?","woah! where'd you get that artifact? can i see it?",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@0:2","omg wait! check if this tile fits in.","omg wait! check if this tile fits in.",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@1:0","it totally does!","it totally does!",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@1:1","can i try it out? :3","can i try it out? :3",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@1:2","no..? finders keepers i guess.","no..? finders keepers i guess.",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@1:3","wait. that tile was mine.","wait. that tile was mine.",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@1:4","sigh...","sigh...",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@10:0","the caves await.","the caves await.",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@10:1","i heard there are more relics in there. im gonna follow the trail to the source.","i heard there are more relics in there. im gonna follow the trail to the source.",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@11:0","...","...",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@2:0","so... what about these ruins.","so... what about these ruins.",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@3:0","aha! it looks like those ruins pieces might connect.","aha! it looks like those ruins pieces might connect.",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@4:0","an arrow? it must lead to a relic!","an arrow? it must lead to a relic!",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@4:1","how do i get there?","how do i get there?",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@4:2","this way? no...","this way? no...",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@4:3","over here?","over here?",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@4:4","aHh im so lost! everything keeps moving!","aHh im so lost! everything keeps moving!",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@4:5","you! follow that arrow!","you! follow that arrow!",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@5:0","now these glyphs... we just need to find the final fragment.","now these glyphs... we just need to find the final fragment.",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@6:0","tyy! now let me take a look...","tyy! now let me take a look...",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@6:1","wOAH! everything is shakingggg","wOAH! everything is shakingggg",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@7:0","aMAZING! did you see that?!","aMAZING! did you see that?!",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@7:1","shoot! i got a bit carried away didn't i","shoot! i got a bit carried away didn't i",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@7:2","we might need your artifact to <wavy>fix the village</wavy>.","we might need your artifact to <wavy>fix the village</wavy>.",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@8:0","wow! you'd make a great assistant!","wow! you'd make a great assistant!",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@8:1","im gonna continue exploring the caves up north. you should come!!","im gonna continue exploring the caves up north. you should come!!",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@8:2","make sure to grab a map from the Mayor!","make sure to grab a map from the Mayor!",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@8:3","make sure to grab a map from the Mayor!","make sure to grab a map from the Mayor!",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@9:0","stand clear!!","stand clear!!",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@9:1","the caves await.","the caves await.",
+"Map/Village 8Puzzle/STile (2)/Objects/Archeologist@9:2","i heard there are more relics in there. im gonna follow the trail to the source.","i heard there are more relics in there. im gonna follow the trail to the source.",
+"Map/Village 8Puzzle/STile (3)/Objects/Archibald@0:0","Not so fast squirt!","Not so fast squirt!",
+"Map/Village 8Puzzle/STile (3)/Objects/Archibald@0:1","Get me some coffee first, damn youngin. Head to the beach...","Get me some coffee first, damn youngin. Head to the beach...",
+"Map/Village 8Puzzle/STile (3)/Objects/Archibald@1:0","Not so fast squirt!","Not so fast squirt!",
+"Map/Village 8Puzzle/STile (3)/Objects/Archibald@1:1","Get me some coffee- Already grabbed it, eh?","Get me some coffee- Already grabbed it, eh?",
+"Map/Village 8Puzzle/STile (3)/Objects/Archibald@1:2","Hmph, already cold.","Hmph, already cold.",
+"Map/Village 8Puzzle/STile (3)/Objects/Archibald@2:0","Finally my damn coffee… Took you long enough.","Finally my damn coffee… Took you long enough.",
+"Map/Village 8Puzzle/STile (3)/Objects/Archibald@3:0","Screw off, kid.","Screw off, kid.",
+"Map/Village 8Puzzle/STile (4)/Objects/Kevin@0:0","Help! My buoys have gotten tangled up. Can you help untangle them?","Help! My buoys have gotten tangled up. Can you help untangle them?",
+"Map/Village 8Puzzle/STile (4)/Objects/Kevin@1:0","Thanks! I'll be at the beach some time soon.","Thanks! I'll be at the beach some time soon.",
+"Map/Village 8Puzzle/STile (4)/Objects/Kevin@1:1","Rumor is there are new fish in the water.","Rumor is there are new fish in the water.",
+"Map/Village 8Puzzle/STile (4)/Objects/Kevin@2:0","Was gonna hit the ocean soon, but my boating license expired.","Was gonna hit the ocean soon, but my boating license expired.",
+"Map/Village 8Puzzle/STile (4)/Objects/Kevin@3:0","You've got your license! Hurry on now, let's set sail!","You've got your license! Hurry on now, let's set sail!",
+"Map/Village 8Puzzle/STile (4)/Objects/Kevin@4:0","...","...",
+"Map/Village 8Puzzle/STile (5)/All Tile Maps/House Tile Maps/Decorations/Dear Player Sign@0:0","Dear Player,","Dear Player,",
+"Map/Village 8Puzzle/STile (5)/All Tile Maps/House Tile Maps/Decorations/Dear Player Sign@0:1","No, this cat is not used in the upcoming puzzles.","No, this cat is not used in the upcoming puzzles.",
+"Map/Village 8Puzzle/STile (5)/All Tile Maps/House Tile Maps/Decorations/Dear Player Sign@0:2","However, we will permit you to keep him for emotional support.","However, we will permit you to keep him for emotional support.",
+"Map/Village 8Puzzle/STile (5)/All Tile Maps/House Tile Maps/Decorations/Dear Player Sign@0:3","Please use him responsibly.","Please use him responsibly.",
+"Map/Village 8Puzzle/STile (5)/All Tile Maps/House Tile Maps/Decorations/Dear Player Sign@0:4","Sincerely, the Devs.","Sincerely, the Devs.",
+"Map/Village 8Puzzle/STile (5)/Objects/Juliet@0:0","My lover, my darling! Please bring him back lest I stab myself!","My lover, my darling! Please bring him back lest I stab myself!",
+"Map/Village 8Puzzle/STile (5)/Objects/Juliet@1:0","Romeo? Wherefore art thou Romeo?","Romeo? Wherefore art thou Romeo?",
+"Map/Village 8Puzzle/STile (5)/Objects/Juliet@2:0","Oh Romeo! You 
+will never 
+leave my 
+sight again.","Oh Romeo! You 
+will never 
+leave my 
+sight again.",
+"Map/Village 8Puzzle/STile (5)/Objects/Juliet@3:0","Yes, oh
+my God, yes!","Yes, oh
+my God, yes!",
+"Map/Village 8Puzzle/STile (6)/Objects/Pierre@0:0","The fish aren't coming upstream anymore, I'll be out a job!","The fish aren't coming upstream anymore, I'll be out a job!",
+"Map/Village 8Puzzle/STile (6)/Objects/Pierre@0:1","I could really use a fish right now, fish right now.","I could really use a fish right now, fish right now.",
+"Map/Village 8Puzzle/STile (6)/Objects/Pierre@1:0","Ah, the ocean! If only I knew how to fish the open seas.","Ah, the ocean! If only I knew how to fish the open seas.",
+"Map/Village 8Puzzle/STile (6)/Objects/Pierre@1:1","But alas, I can only fish the river by the waterfall.","But alas, I can only fish the river by the waterfall.",
+"Map/Village 8Puzzle/STile (6)/Objects/Pierre@2:0","The river's together. Is there a traffic jam downstream?","The river's together. Is there a traffic jam downstream?",
+"Map/Village 8Puzzle/STile (6)/Objects/Pierre@2:1","Something fishy is going on here...","Something fishy is going on here...",
+"Map/Village 8Puzzle/STile (6)/Objects/Pierre@3:0","The fish are coming back! Time to whip out the old pole.","The fish are coming back! Time to whip out the old pole.",
+"Map/Village 8Puzzle/STile (6)/Objects/Pierre@4:0","Heard there was one in the caves, but also pirates. Scary!","Heard there was one in the caves, but also pirates. Scary!",
+"Map/Village 8Puzzle/STile (6)/Objects/Pierre@5:0","Good luck out there, say hi to <var>Cat</var>.","Good luck out there, say hi to <var>Cat</var>.",
+"Map/Village 8Puzzle/STile (6)/Objects/Pierre@5:1","I'm going back to fishing the river.","I'm going back to fishing the river.",
+"Map/Village 8Puzzle/STile (6)/Objects/Pierre@6:0","...","...",
+"Map/Village 8Puzzle/STile (7)/Objects/Nemsy@0:0","Woah! You have one of the relics they've been digging up these days.","Woah! You have one of the relics they've been digging up these days.",
+"Map/Village 8Puzzle/STile (7)/Objects/Nemsy@0:1","They've all been resurfacing ever since the earthquake last night.","They've all been resurfacing ever since the earthquake last night.",
+"Map/Village 8Puzzle/STile (7)/Objects/Nemsy@0:2","I wonder what other relics people have been finding... maybe I should go look for one!","I wonder what other relics people have been finding... maybe I should go look for one!",
+"Map/Village 8Puzzle/STile (7)/Objects/Nemsy@1:0","Wh-where'd you get that?! That Archeologist was looking all over for that fragment.","Wh-where'd you get that?! That Archeologist was looking all over for that fragment.",
+"Map/Village 8Puzzle/STile (7)/Objects/Nemsy@2:0","Did you hear? The railway in the caves was shut down.","Did you hear? The railway in the caves was shut down.",
+"Map/Village 8Puzzle/STile (7)/Objects/Nemsy@2:1","Apparently the bridge was burnt.","Apparently the bridge was burnt.",
+"Map/Village 8Puzzle/STile (7)/Objects/Nemsy@2:2","Those scientists... they should have been more careful with that new crystal research.","Those scientists... they should have been more careful with that new crystal research.",
+"Map/Village 8Puzzle/STile (7)/Objects/Nemsy@3:0","Did you hear? There's fighting at the Lowlands apparently.","Did you hear? There's fighting at the Lowlands apparently.",
+"Map/Village 8Puzzle/STile (7)/Objects/Nemsy@3:1","Like, the deployed the military for it.","Like, the deployed the military for it.",
+"Map/Village 8Puzzle/STile (7)/Objects/Nemsy@3:2","Seems quite worrying to me.","Seems quite worrying to me.",
+"Map/Village 8Puzzle/STile (8)/Objects/Chad@0:0","I… am Chad! And the credit for returning this fragment is mine!","I… am Chad! And the credit for returning this fragment is mine!",
+"Map/Village 8Puzzle/STile (8)/Objects/Chad@0:1","Up here, short stuff. Ha! You can't even jump.","Up here, short stuff. Ha! You can't even jump.",
+"Map/Village 8Puzzle/STile (8)/Objects/Chad@0:2","What are you gonna do? Cry?","What are you gonna do? Cry?",
+"Map/Village 8Puzzle/STile (8)/Objects/Chad@0:3","Nothing can bring me down!","Nothing can bring me down!",
+"Map/Village 8Puzzle/STile (8)/Objects/Chad@1:0","Woah, what's shaking?","Woah, what's shaking?",
+"Map/Village 8Puzzle/STile (8)/Objects/Chad@2:0","My neck! My back! How will I get this to the archeologist now?","My neck! My back! How will I get this to the archeologist now?",
+"Map/Village 8Puzzle/STile (8)/Objects/Chad@2:1","You better not take my credit. I worked hard to become an RA.","You better not take my credit. I worked hard to become an RA.",
+"Map/Village 8Puzzle/STile (8)/Objects/Chad@3:0","What? How dare you take my credit?!","What? How dare you take my credit?!",
+"Map/Village 8Puzzle/STile (8)/Objects/Chad@4:0","You won't beat me again, explorer. Chad never loses twice in a row!","You won't beat me again, explorer. Chad never loses twice in a row!",
+"Map/Village 8Puzzle/STile (8)/Objects/Chad@5:0","You won't beat me again, explorer. Chad never loses twice in a row!","You won't beat me again, explorer. Chad never loses twice in a row!",
+"Map/Village 8Puzzle/STile (8)/Objects/Chad@6:0","...","...",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Boulangerie/Carlton@0:0","You saved us all! I can finally get back to baking... and...","You saved us all! I can finally get back to baking... and...",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Boulangerie/Carlton@0:1","Hunting for all nine of the rarest Breadge... and...","Hunting for all nine of the rarest Breadge... and...",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Boulangerie/Carlton@0:2","Looking for The Legendary Cheeseburger!","Looking for The Legendary Cheeseburger!",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Boulangerie/Carlton@1:0","Woah! You got a piece of Breadge?!","Woah! You got a piece of Breadge?!",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Boulangerie/Carlton@1:1","Rumor says that combining all nine can make something to rival the taste of The Legendary Cheeseburger.","Rumor says that combining all nine can make something to rival the taste of The Legendary Cheeseburger.",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Boulangerie/Carlton@1:2","Good luck on your quest, sous-chef!","Good luck on your quest, sous-chef!",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Boulangerie/Carlton@2:0","WoAH! ALL NINE PIECES!!","WoAH! ALL NINE PIECES!!",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Boulangerie/Carlton@2:1","Maybe you were The Legendary Cheeseburger the whole time...","Maybe you were The Legendary Cheeseburger the whole time...",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@0:0","Goodness, hello! The folks here call me Cathy.","Goodness, hello! The folks here call me Cathy.",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@0:1","I have a bit of a connection with pets.","I have a bit of a connection with pets.",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@0:2","Your cat? <var>Cat</var>..? Let me try and sense where they are.","Your cat? <var>Cat</var>..? Let me try and sense where they are.",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@0:3","Somewhere... to the East... beyond the Ocean...","Somewhere... to the East... beyond the Ocean...",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@0:4","It feels like there are a number of people around <var>Cat</var>. They're being brought somewhere?","It feels like there are a number of people around <var>Cat</var>. They're being brought somewhere?",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@0:5","They're being stuffed in a bag? Thrown into the back of a truck?! Oh dear!","They're being stuffed in a bag? Thrown into the back of a truck?! Oh dear!",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@0:6","This seems awfully concerning to me...","This seems awfully concerning to me...",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@1:0","Autumn and Tofu should still be out somewhere...","Autumn and Tofu should still be out somewhere...",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@10:0","All the cats are back! Here, have some breadge as thanks.","All the cats are back! Here, have some breadge as thanks.",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@11:0","Good luck finding <var>Cat</var> and thanks for the help.","Good luck finding <var>Cat</var> and thanks for the help.",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@2:0","Mittens and Tofu should still be out somewhere...","Mittens and Tofu should still be out somewhere...",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@3:0","Mittens and Autumn should still be out somewhere...","Mittens and Autumn should still be out somewhere...",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@4:0","Tofu likes to hang out with the mayor.","Tofu likes to hang out with the mayor.",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@5:0","Autumn likes to hang out in the storage building a bit south.","Autumn likes to hang out in the storage building a bit south.",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@6:0","Mittens like to poke around the bakery looking for food sometimes.","Mittens like to poke around the bakery looking for food sometimes.",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@7:0","Mittens! Thank you for returning him!","Mittens! Thank you for returning him!",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@8:0","Autumn! Thank you for returning her!","Autumn! Thank you for returning her!",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/Cathy@9:0","Tofu! Thank you for returning him!","Tofu! Thank you for returning him!",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/CatTrick/Canvas/Dialogue","0/3","0/3",
+"Map/Village 8Puzzle/STile (9)/All Tile Maps/House Tile Maps/Decorations/Small House/CatTrick/Canvas/Dialogue BG Font","0/3","0/3",
+"Map/Village 8Puzzle/STile (9)/Objects/Mike@0:0","Thanks for your work partner! There's a map in my house to upgrade your gizmo there.","Thanks for your work partner! There's a map in my house to upgrade your gizmo there.",
+"Map/Village 8Puzzle/STile (9)/Objects/Mike@0:1","If you had one! Can't believe you left it in your house, bozo!","If you had one! Can't believe you left it in your house, bozo!",
+"Map/Village 8Puzzle/STile (9)/Objects/Mike@0:2","Not like it really matters. Just go get your map.","Not like it really matters. Just go get your map.",
+"Map/Village 8Puzzle/STile (9)/Objects/Mike@1:0","Thanks for your work partner! There's a map in my house to upgrade your gizmo there.","Thanks for your work partner! There's a map in my house to upgrade your gizmo there.",
+"Map/Village 8Puzzle/STile (9)/Objects/Mike@2:0","Heard the fishermen east and archeologist up north are still lookin' for help.","Heard the fishermen east and archeologist up north are still lookin' for help.",
+"Map/Village 8Puzzle/STile (9)/Objects/Mike@2:1","Still surprised you did all that without picking up the Artifact.","Still surprised you did all that without picking up the Artifact.",
+"Map/Village 8Puzzle/STile (9)/Objects/Mike@3:0","Heard the fishermen east and archeologist up north are still lookin' for help.","Heard the fishermen east and archeologist up north are still lookin' for help.",
+"Map/Village 8Puzzle/STile (9)/Objects/Mike@4:0","Licensed, eh? Be careful with that thing.","Licensed, eh? Be careful with that thing.",
+"Map/World Grid/Beach/Dock Sign@0:0","Boating license required.","Boating license required.",
+"Map/World Grid/Intro Pan Dolly/DollyCanvas/Skip Prompt/Skip Prompt Text","Skip","Skip",
+"Map/World Grid/Objects/Alien Log Sign@0:0","Operation Log 4: Objective Success.","Operation Log 4: Objective Success.",
+"Map/World Grid/Objects/Alien Log Sign@0:1","We have captured the specimen and are returning to main base beyond the Ocean.","We have captured the specimen and are returning to main base beyond the Ocean.",
+"Map/World Grid/Objects/Face Rocks Sign@0:0","Stonybrook Village's tourist hot spot: 
+""The Face Rocks""","Stonybrook Village's tourist hot spot: 
+"The Face Rocks"",
+"Map/World Grid/Objects/Sam@0:0","I need to get to the waterfall, it’s mating season!","I need to get to the waterfall, it’s mating season!",
+"Map/World Grid/Objects/Sam@1:0","I need to get to the waterfall, it’s mating season!","I need to get to the waterfall, it’s mating season!",
+"Map/World Grid/Objects/Sam@1:1","But... it's so far... I can't wait to get going.","But... it's so far... I can't wait to get going.",
+"Map/World Grid/Objects/Sam@2:0","It's so close! I can't swim on land, though.","It's so close! I can't swim on land, though.",
+"Map/World Grid/Objects/Sam@2:1","If I could swim up the river I could make it.","If I could swim up the river I could make it.",
+"Map/World Grid/Objects/Sam@3:0","No time to lose, gotta blast!","No time to lose, gotta blast!",
+"Map/World Grid/Objects/Sam@4:0","The wife thanks you as well, by the way.","The wife thanks you as well, by the way.",
+"Map/World Grid/OffMap/Fezziwig@0:0","...","...",
+"Map/World Grid/OffMap/Fezziwig@1:0","The Archeologist is missing, huh.","The Archeologist is missing, huh.",
+"Map/World Grid/OffMap/Fezziwig@1:1","I guess I'll have to do her job.","I guess I'll have to do her job.",
+"Map/World Grid/OffMap/Fezziwig@2:0","The ruins... you got a connection!","The ruins... you got a connection!",
+"Map/World Grid/OffMap/Fezziwig@3:0","Woah! The diviner still works.","Woah! The diviner still works.",
+"Map/World Grid/OffMap/Fezziwig@4:0","Now... Just find the final part to this spell.","Now... Just find the final part to this spell.",
+"Map/World Grid/OffMap/Fezziwig@5:0","Great! Now let me cast it...","Great! Now let me cast it...",
+"Map/World Grid/OffMap/Fezziwig@5:1","Fuwaaaaaaaaaa!","Fuwaaaaaaaaaa!",
+"Map/World Grid/OffMap/Fezziwig@5:2","There! Now use The Artifact to reconnect the village.","There! Now use The Artifact to reconnect the village.",
+"Map/World Grid/OffMap/Fezziwig@6:0","There! Now use The Artifact to <wavy>reconnect the village.</wavy>","There! Now use The Artifact to <wavy>reconnect the village.</wavy>",
+"Map/World Grid/OffMap/Fezziwig@7:0","Great! I'll be heading out now, take care.","Great! I'll be heading out now, take care.",
+"Map/World Grid/OffMap/Fezziwig@7:1","...","...",
+"Map/World Grid/OffMap/Fezziwig@8:0","...","...",
+"Map/World Grid/OffMap/Fezziwig@9:0","...","...",

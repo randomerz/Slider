@@ -45,10 +45,13 @@ public class LocalizationSkeletonGenerator : EditorWindow
    private LocalizationProjectConfiguration configuration;
 
    private string referenceLocalizationPath = null;
+   private static string referenceLocalizationPathPreference;
+   private static string saveLocalizationOutsidePathPreference;
 
    private void OnEnable()
    {
        titleContent = new GUIContent("Custom Build Settings");
+       referenceLocalizationPath = EditorPrefs.GetString(referenceLocalizationPathPreference, null);
    }
 
    private void OnGUI()
@@ -59,25 +62,31 @@ public class LocalizationSkeletonGenerator : EditorWindow
        {
            referenceLocalizationPath =
                EditorUtility.OpenFolderPanel("Reference localization", referenceLocalizationPath, null);
+           EditorPrefs.SetString(referenceLocalizationPathPreference, referenceLocalizationPath);
        }
 
-       if (referenceLocalizationPath != null && Directory.Exists(referenceLocalizationPath))
+       if (referenceLocalizationPath != null)
        {
-           var subdirs = Directory.EnumerateDirectories(referenceLocalizationPath);
+           var subdirs = LocalizationFile.LocaleList(referenceLocalizationPath);
            GUILayout.Label(string.Join('\n', subdirs));
        }
        
        if (GUILayout.Button("Generate localization INSIDE project"))
        {
            // Remove this if you don't want to close the window when starting a build
-           GenerateSkeleton(configuration);
+           GenerateSkeleton(configuration, referenceRoot: referenceLocalizationPath);
        }
        
        if (GUILayout.Button("Generate localization OUTSIDE project "))
        {
            // Remove this if you don't want to close the window when starting a build
-           var saveLocalizationDir = EditorUtility.OpenFolderPanel("Save localizations at", null, null);
-           GenerateSkeleton(configuration, saveLocalizationDir);
+           var saveLocalizationDir = EditorUtility.OpenFolderPanel(
+               "Save localizations at", 
+               EditorPrefs.GetString(saveLocalizationOutsidePathPreference), 
+               null);
+           
+           EditorPrefs.SetString(saveLocalizationOutsidePathPreference, saveLocalizationDir);
+           GenerateSkeleton(configuration, saveLocalizationDir, referenceRoot: referenceLocalizationPath);
        }
        
        // Build button
@@ -121,17 +130,18 @@ public class LocalizationSkeletonGenerator : EditorWindow
                // Otherwise, if an older translation exists, try migrate it
                if (
                    referenceRoot == null
-                   || !locale.name.Equals(LocalizationFile.DefaultLocale)
-                   || !File.Exists(LocalizationFile.LocaleAssetPath(locale.name, scene, referenceRoot)))
+                   || locale.name.Equals(LocalizationFile.DefaultLocale)
+                   // || !File.Exists(LocalizationFile.LocaleAssetPath(locale.name, scene, referenceRoot)) // this is checked in factory method!
+                   )
                {
                    serializedSkeleton = skeleton.Serialize(serializeConfigurationDefaults: false, referenceFile: null);
                }
                else
                {
-                   serializedSkeleton = skeleton.Serialize(serializeConfigurationDefaults: false, referenceFile: new LocalizationFile(
-                       locale.name,
-                       new StreamReader(File.OpenRead(LocalizationFile.LocaleAssetPath(locale.name, scene, referenceRoot)))
-                       ));
+                   serializedSkeleton = skeleton.Serialize(serializeConfigurationDefaults: false, referenceFile: LocalizationFile.MakeLocalizationFile(
+                        locale.name,
+                        LocalizationFile.LocaleAssetPath(locale.name, scene, referenceRoot))
+                       );
                }
                WriteFileAndForceParentPath(LocalizationFile.LocaleAssetPath(locale.name, scene, root), serializedSkeleton);
            }
@@ -144,14 +154,15 @@ public class LocalizationSkeletonGenerator : EditorWindow
    {
        var parent = Directory.GetParent(path);
        Directory.CreateDirectory(parent.FullName);
-       var stream = File.Exists(path) ? new FileStream(path, FileMode.Truncate) : new FileStream(path, FileMode.CreateNew);
-       StreamWriter sw = new(stream);
+       using var file = File.Exists(path)
+           ? new FileStream(path, FileMode.Truncate)
+           : new FileStream(path, FileMode.CreateNew);
+       StreamWriter sw = new(file);
        sw.Write(content);
        sw.Flush();
        sw.Close();
-       stream.Close();
    }
-
+   
    private void DoBuild()
    {
        var buildPlayerOptions = new BuildPlayerOptions

@@ -56,16 +56,10 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
         LocalizationFile loadedAsset = null;
 
         string localeConfigsPath = LocalizationFile.LocaleGlobalFilePath(locale);
-        if (File.Exists(localeConfigsPath))
-        {
-            localeConfig = new(locale, new StreamReader(File.OpenRead(localeConfigsPath)));
-        }
+        localeConfig = LocalizationFile.MakeLocalizationFile(locale, localeConfigsPath);
 
         string localizationPath = LocalizationFile.LocaleAssetPath(locale, scene); // TODO: use actual locale
-        if (File.Exists(localizationPath))
-        {
-            loadedAsset = new(locale, new StreamReader(File.OpenRead(localizationPath)), localeConfig);
-        }
+        loadedAsset = LocalizationFile.MakeLocalizationFile(locale, localizationPath, localeConfig);
         
         if (loadedAsset == null)
         {

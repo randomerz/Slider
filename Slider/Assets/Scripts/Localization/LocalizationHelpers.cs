@@ -138,11 +138,11 @@ namespace Localization
     {
         private static string LocalizationFolderPath(string root = null) => Path.Join(root ?? Application.streamingAssetsPath, "Localizations");
 
-        public static List<string> LocaleList(string playerPrefLocale)
+        public static List<string> LocaleList(string playerPrefLocale, string root = null)
         {
-            if (Directory.Exists(LocalizationFolderPath()))
+            if (Directory.Exists(LocalizationFolderPath(root)))
             {
-                List<string> locales = Directory.GetDirectories(LocalizationFolderPath())
+                List<string> locales = Directory.GetDirectories(LocalizationFolderPath(root))
                     .Select(path => new FileInfo(path).Name).ToList();
                     
                 locales.Sort(
@@ -287,8 +287,20 @@ be corrupted, these rules may be helpful for debugging purposes...
             HasTranslation,
             Inval
         }
+
+        public static LocalizationFile MakeLocalizationFile(string locale, string filePath,
+            LocalizationFile localeConfig = null)
+        {
+            if (!File.Exists(filePath))
+            {
+                return null;
+            }
+
+            using var file = File.OpenRead(filePath);
+            return new(locale, new StreamReader(file), localeConfig);
+        }
         
-        public LocalizationFile(string locale, StreamReader reader, LocalizationFile localeConfig = null)
+        private LocalizationFile(string locale, StreamReader reader, LocalizationFile localeConfig = null)
         {
             this.locale = locale;
             
@@ -414,6 +426,8 @@ be corrupted, these rules may be helpful for debugging purposes...
                         throw new ArgumentOutOfRangeException();
                 }
             }
+            
+            reader.Close();
         }
         
         private (string content, bool isNewLineStart, bool isEOF) ParseCell(StreamReader reader)

@@ -33,8 +33,8 @@ be corrupted, these rules may be helpful for debugging purposes...
   - If a separator, \r, or \n is encountered while in an enclosed context,
     it will be preserved
 ",
-"DialogueFontScale","1.0","FontOverridePath","","NonDialogueFontAdjust","+0",
-"Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3."," ","Relative path to a ttf font file from the folder containing this file, leave empty if no such font is needed"," ","String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller"," ",
+"NonDialogueFontAdjust"," ","DialogueFontScale"," ",
+"String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
 "Path","Orig","Translation",
 "Map/EightPuzzle/MountainSTile (1)/Objects/Rock Column/Frozen Guy@0:0","S-s-s-s-so... c-cold...","S-s-s-s-so... c-cold...",
 "Map/EightPuzzle/MountainSTile (1)/Objects/Rock Column/Frozen Guy@1:0","Th-thanks for thawing me out.","Th-thanks for thawing me out.",
