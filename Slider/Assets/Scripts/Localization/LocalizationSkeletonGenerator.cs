@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using Localization;
 using UnityEngine;
@@ -65,10 +67,15 @@ public class LocalizationSkeletonGenerator : EditorWindow
            EditorPrefs.SetString(referenceLocalizationPathPreference, referenceLocalizationPath);
        }
 
+       
        if (referenceLocalizationPath != null)
        {
-           var subdirs = LocalizationFile.LocaleList(referenceLocalizationPath);
-           GUILayout.Label(string.Join('\n', subdirs));
+           GUILayout.Label($"reference localization: [{referenceLocalizationPath}]\nwhich contains...");
+           var subdirs = LocalizationFile.LocaleList(LocalizationFile.DefaultLocale, referenceLocalizationPath);
+           foreach (string subdir in subdirs)
+           {
+               GUILayout.Label($" - {subdir}");
+           }
        }
        
        if (GUILayout.Button("Generate localization INSIDE project"))
@@ -110,6 +117,32 @@ public class LocalizationSkeletonGenerator : EditorWindow
            string serializedConfigs = localeGlobalConfig.Serialize(serializeConfigurationDefaults: true, referenceFile: null);
            WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name, root), serializedConfigs);
        }
+
+       // wtf nested functions exist???
+       LocalizationFile NullifyReferenceRootIfNeeded(LocaleConfiguration locale, string path)
+       {
+           // If locale is English, don't bother migrating old translations
+           // Otherwise, if an older translation exists, try migrate it
+           if (locale.name.Equals(LocalizationFile.DefaultLocale) || !File.Exists(path))
+           {
+               return null;
+           }
+
+           return LocalizationFile.MakeLocalizationFile(locale.name, path);
+       }
+
+       foreach (var prefab in projectConfiguration.RelevantPrefabs)
+       {
+           var skeleton = LocalizableContext.ForSinglePrefab(prefab);
+           foreach (var locale in projectConfiguration.InitialLocales)
+           {
+               var serializedSkeleton = skeleton.Serialize(
+                   serializeConfigurationDefaults: false,
+                   referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, prefab, referenceRoot))
+               );
+               WriteFileAndForceParentPath(LocalizationFile.AssetPath(locale.name, prefab, root), serializedSkeleton);
+           }
+       }
        
        foreach (var editorBuildSettingsScene in EditorBuildSettings.scenes)
        {
@@ -125,25 +158,11 @@ public class LocalizationSkeletonGenerator : EditorWindow
            // WriteFileAndForceParentPath(LocalizationFile.DefaultLocaleAssetPath(scene, root), serializedSkeleton);
            foreach (var locale in projectConfiguration.InitialLocales)
            {
-               string serializedSkeleton;
-               // If locale is English, don't bother migrating old translations
-               // Otherwise, if an older translation exists, try migrate it
-               if (
-                   referenceRoot == null
-                   || locale.name.Equals(LocalizationFile.DefaultLocale)
-                   // || !File.Exists(LocalizationFile.LocaleAssetPath(locale.name, scene, referenceRoot)) // this is checked in factory method!
-                   )
-               {
-                   serializedSkeleton = skeleton.Serialize(serializeConfigurationDefaults: false, referenceFile: null);
-               }
-               else
-               {
-                   serializedSkeleton = skeleton.Serialize(serializeConfigurationDefaults: false, referenceFile: LocalizationFile.MakeLocalizationFile(
-                        locale.name,
-                        LocalizationFile.LocaleAssetPath(locale.name, scene, referenceRoot))
-                       );
-               }
-               WriteFileAndForceParentPath(LocalizationFile.LocaleAssetPath(locale.name, scene, root), serializedSkeleton);
+               var serializedSkeleton = skeleton.Serialize(
+                   serializeConfigurationDefaults: false,
+                   referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, scene, referenceRoot))
+               );
+               WriteFileAndForceParentPath(LocalizationFile.AssetPath(locale.name, scene, root), serializedSkeleton);
            }
        }
 

@@ -1,0 +1,124 @@
+"Localization files are formatted like CSV so they can be easily edited,
+however formatting has strict rules for easy parsing. Most of these rules
+are already handled by Excel / Libre / etc., so you don't have to worry
+about them in normal usage. However, if your localization file seems to
+be corrupted, these rules may be helpful for debugging purposes...
+- In general, any consecutive string of \r and \n (in any order) will be
+  treated as one SINGLE line break, except within an enclosed context
+- The first 4 rows can be arbitrarily long
+  - The first cell of first row is used to store this block of instruction
+    text
+  - The first 3 cells of the fourth row is used as headers
+  - All other cells in the first and fourth rows are ignored
+  - Columns in the second row alternate between property and value (ex.
+    ' foo | 1 | bar | 3.5 | ... '
+    - Any whitespaces before and after the property name are ignored
+  - Columns in the third row are exclusively comments for properties in the
+    second row
+- Every following line can include any number of cells, but only the
+  first three will be parsed (you can use the rest as comments if needed)
+- The file must end in a sequence of \r and \n's
+- Every cell containing a ^, \r, or \n must be enclosed in ""
+  - If a "" is encountered right after a non-enclosed separator, \r, or \n,
+    then the parser is said to enter an ""enclosed context"", such context
+    ends immediately when a non-escaped "" that is not followed by \r, \n,
+    or a separator is encountered
+  - "" within each cell should be escaped using another "" in front of it,
+  - If a "" is encountered in a non-enclosed context, and it is not right
+    after a separator, \r, or \n, then it is entirely ignored
+  - If a non-escaped "" is encountered in an enclosed context...
+    - If it is followed by a separator, \r, or \n, then it is considered
+      the closing quote of the current context
+    - Otherwise, it is ignored
+  - If a separator, \r, or \n is encountered while in an enclosed context,
+    it will be preserved
+",
+"NonDialogueFontAdjust"," ","DialogueFontScale"," ",
+"String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
+"Path","Orig","Translation",
+"UICanvas/OptionsMenu/Back Button/Text","Back","返回",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Back Button/Text","Back","返回",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Control","Coming Soon!","正在施工~",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control A","(A) Control","(A) Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control B","(B) Control","(B) Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control X","(X) Control","(X) Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control Y","(Y) Control","(Y) Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Move","Move","移动",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Right Aligned/Control","Control
+","Control
+",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Right Aligned/Move","Move","移动",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controls Text","Keyboard","键盘",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Action/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Action/Control Label","Action","行动",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Alt View/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Alt View/Control Label","Alt View","Alt View",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Cycle Equip/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Cycle Equip/Control Label","Cycle","Cycle",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Down/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Down/Control Label","Down","下",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Left/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Left/Control Label","Left","左",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Right/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Right/Control Label","Right","右",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Up/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Up/Control Label","Up","上",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Open/Close Artifact/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Open/Close Artifact/Control Label","Artifact","遗物",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Pause/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Pause/Control Label","Pause","暂停",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Rebinding Overlay/Text (TMP)","Rebinding Move Left...","Rebinding Move Left...",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/ResetButtonHolder/Reset to Defaults Button/Text","Reset Keybinds","重置所有键位",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/Display Text","Display","显示",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@0","30","30",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@1","60","60",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@2","75","75",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@3","120","120",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@4","144","144",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@5","240","240",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@6","Uncapped","无上限",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Label","FPS","帧数上限",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@0","1280 x 720","1280 x 720",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@1","1280 x 800","1280 x 800",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@2","1366 x 768","1366 x 768",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@3","1920 x 1080","1920 x 1080",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@4","2560 x 1440","2560 x 1440",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@5","3840 x 2160","3840 x 2160",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Label","Resolution","分辨率",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/VSync/Label","VSync","垂直同步",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Big Text/Label","Bigger Text","大字",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Contrast Text/Label","Text Background","文字背景",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Hide Cursor/Label","Hide Cursor","隐藏鼠标",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Screen Shake Slider/Label","Screen Shake","屏幕晃动",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/Options Text","Options","选项",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Auto Move/Label","Auto Move
+","自动移动",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Colorblind Mode/Label","Colorblind Mode","色弱模式",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Dev Console/Label","Dev Console","开发者工具",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Mini Player Icon/Label","Mini Player Icon","Mini Player Icon",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/Misc Options Text","Miscellaneous","其他",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/ResetButtonHolder/Reset to Defaults Button/Text","Reset All Settings","重置所有选项",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Ambience Slider/Label","Ambience","背景音量",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Master Slider/Label","Master","总音量",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Music Slider/Label","Music","音乐音量",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Play Audio When Unfocused/Label","Audio when
+Unfocused","后台运行
+音量",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Sound Slider/Label","Sound","声音",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/Sound Text","Sound","声音",
+"UICanvas/OptionsMenu/SideNav/Controls Button/Text","Controls","Controls",
+"UICanvas/OptionsMenu/SideNav/Display Button/Text","Display","显示",
+"UICanvas/OptionsMenu/SideNav/Misc Button/Text","Misc","其他",
+"UICanvas/OptionsMenu/SideNav/Options Button/Text","Options
+","选项",
+"UICanvas/OptionsMenu/SideNav/Sound Button/Text","Sound","声音",
+"UICanvas/PausePanel/Guide Button Variant/Text","Hints/Guide","提示/导引",
+"UICanvas/PausePanel/Options Button Variant/Text","Options","选项",
+"UICanvas/PausePanel/Paused Text","Paused","已暂停",
+"UICanvas/PausePanel/Quit Button Variant/Text","Quit","退出",
+"UICanvas/PausePanel/Resume Button Variant/Text","Resume","继续",
+"UICanvas/PausePanel/TEMPORARY FEEDBACK FORM/Text","Feedback Form!","反馈",
+"UICanvas/PausePanel/TEMPORARY GUIDE WARNING","<- opens 
+   web browser","<- opens 
+   web browser",

@@ -47,7 +47,31 @@ public struct LocaleConfiguration
 [CreateAssetMenu]
 public class LocalizationProjectConfiguration : ScriptableObject
 {
-    public GameObject[] relevantPrefabs;
+    #if UNITY_EDITOR
+    public IEnumerable<GameObject> ScanProjectForPrefabs()
+    {
+        return AssetDatabase
+            .FindAssets("t:prefab")
+            .Select(AssetDatabase.GUIDToAssetPath)
+            .Select(AssetDatabase.LoadAssetAtPath<GameObject>)
+            .Where(go => go.GetComponent<LocalizationInjector>() != null);
+    }
+
+    public IEnumerable<GameObject> RelevantPrefabs
+    {
+        get
+        {
+            if (relevantPrefabs == null)
+            {
+                relevantPrefabs = ScanProjectForPrefabs();
+            }
+
+            return relevantPrefabs;
+        }
+    }
+    
+    private IEnumerable<GameObject> relevantPrefabs = null;
+    #endif
 
     public IEnumerable<LocaleConfiguration> InitialLocales => initialLocales;
     
@@ -96,6 +120,12 @@ public class LocalizationProjectConfigurationEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
+
+        GUILayout.Label($"Project contains following prefabs with the LocalizationInjector component");
+        foreach (var prefab in (target as LocalizationProjectConfiguration).RelevantPrefabs)
+        {
+            GUILayout.Label($" - {prefab.name}");
+        }
 
         if (GUILayout.Button("Generate"))
         {

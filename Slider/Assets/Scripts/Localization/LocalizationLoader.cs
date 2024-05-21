@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using Localization;
 using TMPro;
 using UnityEngine;
@@ -18,8 +16,6 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
 
     public static TMP_FontAsset LocalizationFont => _instance.localizationFont;
     public static TMP_FontAsset DefaultUiFont => _instance.defaultUiFont;
-
-    private string locale = LocalizationFile.DefaultLocale;
     
     private void Awake()
     {
@@ -35,39 +31,40 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     {
         if (_instance != null)
         {
-            _instance.RefreshLocalization(SceneManager.GetActiveScene()); // do not use GameObject.Scene since it will return the non destructable scene instead!
+            RefreshLocalization(SceneManager.GetActiveScene()); // do not use GameObject.Scene since it will return the non destructable scene instead!
         }
     }
+    
+    private static string CurrentLocale => _instance == null ? LocalizationFile.DefaultLocale : _instance.GetComponent<SettingRetriever>().ReadSettingValue() as string;
 
-    public void RefreshLocalization(Scene scene)
+    private static LocalizationFile LoadAssetAndConfigureLocaleDefaults(string locale, string assetPath) 
     {
-        string lastLocale = locale;
-        locale = GetComponent<SettingRetriever>().ReadSettingValue() as string;
-
-        if (lastLocale.Equals(locale))
+        string localeConfigsPath = LocalizationFile.LocaleGlobalFilePath(locale);
+        var localeConfig = LocalizationFile.MakeLocalizationFile(locale, localeConfigsPath);
+        if (localeConfig == null)
         {
-            return;
+            Debug.LogError($"{locale} missing global configuration file, check for {localeConfigsPath}");
         }
+        return LocalizationFile.MakeLocalizationFile(locale, assetPath, localeConfig);
+    }
+    
+    private static void RefreshLocalization(Scene scene)
+    {
+        var locale = CurrentLocale;
         
         LocalizableContext loaded = LocalizableContext.ForSingleScene(scene);
         LocalizableContext persistent = LocalizableContext.ForSingleScene(GameManager.instance.gameObject.scene);
 
-        LocalizationFile localeConfig = null; // TODO: only load this on locale change?
-        LocalizationFile loadedAsset = null;
-
-        string localeConfigsPath = LocalizationFile.LocaleGlobalFilePath(locale);
-        localeConfig = LocalizationFile.MakeLocalizationFile(locale, localeConfigsPath);
-
-        string localizationPath = LocalizationFile.LocaleAssetPath(locale, scene); // TODO: use actual locale
-        loadedAsset = LocalizationFile.MakeLocalizationFile(locale, localizationPath, localeConfig);
-        
-        if (loadedAsset == null)
-        {
-            Debug.LogError($"Locale file does not exist {locale}");
-            return;
-        }
-        
+        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, scene));
         loaded.Localize(loadedAsset);
         persistent.Localize(loadedAsset);
+    }
+
+    public static void LocalizePrefab(GameObject prefab)
+    {
+        var locale = CurrentLocale;
+        LocalizableContext ctx = LocalizableContext.ForSinglePrefab(prefab);
+        var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, prefab));
+        ctx.Localize(loadedAsset);
     }
 }

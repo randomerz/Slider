@@ -180,20 +180,20 @@ namespace Localization
             }
         }
 
-        public static string LocalizationFileName(Scene scene) => scene.name + "_localization.csv";
+        private static string LocalizationFileName(Scene scene) => scene.name + "_scene.csv";
+        private static string LocalizationFileName(GameObject prefab) => prefab.name + "_prefab.csv";
 
-        public static string LocaleGlobalFileName(string locale) => $"_{locale}_configs_localization.csv";
+        private static string LocaleGlobalFileName(string locale) => $"_{locale}_configs.csv";
 
         public static string LocaleGlobalFilePath(string locale, string root = null) =>
             Path.Join(LocalizationFolderPath(root), locale, LocaleGlobalFileName(locale));
         
         public static string DefaultLocale => "English";
         
-        public static string DefaultLocaleAssetPath(Scene scene, string root = null) =>
-            Path.Join(LocalizationFolderPath(root), DefaultLocale, LocalizationFileName(scene));
-
-        public static string LocaleAssetPath(string locale, Scene scene, string root = null) =>
+        public static string AssetPath(string locale, Scene scene, string root = null) =>
             Path.Join(LocalizationFolderPath(root), locale, LocalizationFileName(scene));
+        public static string AssetPath(string locale, GameObject prefab, string root = null) =>
+            Path.Join(LocalizationFolderPath(root), locale, LocalizationFileName(prefab));
         
         // AT: This should really be a variable in LocalizableScene, but I'm placing it here
         //     so I don't have to re-type this whole thing as comments to the LocalizationFile
@@ -583,6 +583,11 @@ be corrupted, these rules may be helpful for debugging purposes...
         {
             PopulateLocalizableInstances(scene);
         }
+
+        private LocalizableContext(GameObject prefab) : this()
+        {
+            PopulateLocalizableInstances(prefab);
+        }
         
         /* Following factory methods are just for clearer naming, instead of all uses of this context class being created from same named constructor */
         public static LocalizableContext ForSingleLocale(LocaleConfiguration localeConfiguration) =>
@@ -590,7 +595,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         public static LocalizableContext ForSingleScene(Scene scene) => new(scene);
 
-        public static LocalizableContext ForSinglePrefab(GameObject prefab) => null; // TODO: implement
+        public static LocalizableContext ForSinglePrefab(GameObject prefab) => new(prefab); // TODO: implement
         
         /////////////////////////// Localizable Instance Selection  ////////////////////////////////////////////////////
         
@@ -605,19 +610,25 @@ be corrupted, these rules may be helpful for debugging purposes...
         private void PopulateLocalizableInstances(Scene scene)
         {
             var rgos = scene.GetRootGameObjects();
+            
             foreach (GameObject rootObj in rgos)
             {
-                foreach (Type type in SelectorFunctionMap.Keys)
-                {
-                    Component[] query = rootObj.GetComponentsInChildren(type, includeInactive: true);
-                    if (!localizables.ContainsKey(type))
-                    {
-                        localizables.Add(type, new());
-                    }
+                PopulateLocalizableInstances(rootObj);
+            }
+        }
 
-                    localizables[type]
-                        .AddRange(query.SelectMany(component => SelectorFunctionMap[type](component)));
+        private void PopulateLocalizableInstances(GameObject rootGameObject)
+        {
+            foreach (Type type in SelectorFunctionMap.Keys)
+            {
+                Component[] query = rootGameObject.GetComponentsInChildren(type, includeInactive: true);
+                if (!localizables.ContainsKey(type))
+                {
+                    localizables.Add(type, new());
                 }
+
+                localizables[type]
+                    .AddRange(query.SelectMany(component => SelectorFunctionMap[type](component)));
             }
         }
 
