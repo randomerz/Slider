@@ -11,6 +11,26 @@ public class CoroutineUtils
     /// </summary>
     /// <param name="actionToExecute">The action to execute after the end of the current frame</param>
     /// <param name="coroutineOwner">We need a MonoBehaviour to start the coroutine on</param>
+    public static Coroutine ExecuteAfterDelay(Action actionToExecute, MonoBehaviour coroutineOwner, float seconds)
+    {
+        if (coroutineOwner != null && coroutineOwner.isActiveAndEnabled)
+        {
+            return coroutineOwner.StartCoroutine(IExecuteAfterDelay(actionToExecute, seconds));
+        }
+        return null;
+    }
+
+    private static IEnumerator IExecuteAfterDelay(Action actionToExecute, float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        actionToExecute?.Invoke();
+    }
+
+    /// <summary>
+    /// Wait for the end of the current frame, then invoke the passed in action.
+    /// </summary>
+    /// <param name="actionToExecute">The action to execute after the end of the current frame</param>
+    /// <param name="coroutineOwner">We need a MonoBehaviour to start the coroutine on</param>
     public static Coroutine ExecuteAfterEndOfFrame(Action actionToExecute, MonoBehaviour coroutineOwner)
     {
         if (coroutineOwner != null && coroutineOwner.isActiveAndEnabled)
