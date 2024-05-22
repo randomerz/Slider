@@ -108,6 +108,7 @@ public class DesyncItem : Item
         UpdateCurrentTile();
     }
 
+
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null)
     {
         STile tile = base.DropItem(dropLocation, callback);
@@ -125,6 +126,10 @@ public class DesyncItem : Item
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null) 
     {
+        if(ShouldMovePresentItem())
+        {
+            MovePresentItemToPastLocation();
+        }
         base.PickUpItem(pickLocation, callback);
         if (trackerSprite)
         {
@@ -134,7 +139,7 @@ public class DesyncItem : Item
 
     private bool ShouldMovePresentItem()
     {
-        return fromPast && pastItem.isItemInPast && !presentItem.isItemInPast && !presentItem.isDesynced && ! pastItem.isDesynced;
+        return fromPast && pastItem.isItemInPast && !presentItem.isDesynced && ! pastItem.isDesynced;
     }
 
     private void MovePresentItemToPastLocation()
@@ -147,9 +152,10 @@ public class DesyncItem : Item
             checkPos += new Vector3(0, -150f, 0);
         }
         Vector3 targetPos = ItemPlacerSolver.FindItemPlacePosition(checkPos, 9, blocksSpawnMask, true);
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
         if(targetPos.x == float.MaxValue)
         {
-            Debug.Log("Could not find valid position for present item. Moving anyways");
+            Debug.LogWarning("Could not find valid position for present item. Moving anyways");
             presentItem.transform.position = targetPos;
             presentItem.transform.parent = presentTile.transform;
         }
