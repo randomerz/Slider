@@ -16,26 +16,42 @@ public class MoveTowardsStrategy : ICommanderStrategy
 
     private void PerformMoveForUnit(MilitaryUnit unit)
     {
-        MilitaryUnit closestKillableUnit = ClosestKillableUnitTo(unit);
+        // DC: this strategy should just move towards the closest unit! its dumb!
+        // MilitaryUnit closestKillableUnit = ClosestKillableUnitTo(unit);
+        MilitaryUnit closestUnit = ClosestUnitTo(unit);
 
-        if (closestKillableUnit != null)
+        Vector2Int dir;
+        if (closestUnit != null)
         {
-            Vector2Int move = DirectionTowardsUnit(movingUnit: unit, target: closestKillableUnit);
-            unit.GridPosition += move;
-            Debug.Log($"Moving towards unit: {move}");
+            dir = DirectionTowardsUnit(movingUnit: unit, target: closestUnit);
+            Debug.Log($"Moving towards unit: {dir}");
         }
         else
         {
-            Vector2Int move = RandomDirection(unit);
-            unit.GridPosition += move;
-            Debug.Log($"Moving randomly: {move}");
+            dir = RandomDirection(unit);
+            Debug.Log($"Moving randomly: {dir}");
         }
+
+        // Warning!! The main body of the enemy unit does not get updated but the npc part is animated
+        Vector2Int newGridPos = unit.GridPosition + dir;
+        MGMove move = new MGMove(unit, unit.GridPosition, newGridPos, null, null);
+        unit.GridPosition = newGridPos;
+        MilitaryTurnAnimator.AddNewMove(move);
     }
 
     private MilitaryUnit ClosestKillableUnitTo(MilitaryUnit unit)
     {
         return MilitaryUnit.ActiveUnits.ToList()
+                                       .Where(otherUnit => otherUnit.UnitTeam != unit.UnitTeam)
                                        .Where(otherUnit => MilitaryCombat.WinnerOfBattleBetween(unit, otherUnit) == unit)
+                                       .OrderBy(otherUnit => Vector2.Distance(unit.GridPosition, otherUnit.GridPosition))
+                                       .FirstOrDefault();
+    }
+
+    private MilitaryUnit ClosestUnitTo(MilitaryUnit unit)
+    {
+        return MilitaryUnit.ActiveUnits.ToList()
+                                       .Where(otherUnit => otherUnit.UnitTeam != unit.UnitTeam)
                                        .OrderBy(otherUnit => Vector2.Distance(unit.GridPosition, otherUnit.GridPosition))
                                        .FirstOrDefault();
     }

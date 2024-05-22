@@ -7,7 +7,9 @@ public class MilitaryCollectibleController : Singleton<MilitaryCollectibleContro
 
     // Tile 1 is always spawned by default
     // Tile 16 has four walls and no unit available. always spawned last? can move it earlier if game is too easy
-    private int[] spawnedTileIdsOrder = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+    // private int[] spawnedTileIdsOrder = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+    private int[] oddTileOrder = new int[] { 3, 5, 7, 9, 11, 13 };
+    private int[] evenTileOrder = new int[] { 2, 4, 6, 8, 10, 12, 14 };
     private int numSpawned = 1;
 
     private void Awake()
@@ -18,11 +20,16 @@ public class MilitaryCollectibleController : Singleton<MilitaryCollectibleContro
 
     public static void Reset()
     {
-        // Shuffle order -- keep first and last
-        for (int i = 1; i < 15; i++)
+        // Shuffle order -- keep first and last, only shuffle evens/odds
+        for (int i = 1; i < _instance.oddTileOrder.Length; i += 1)
         {
-            int r = Random.Range(i, 15);
-            (_instance.spawnedTileIdsOrder[i], _instance.spawnedTileIdsOrder[r]) = (_instance.spawnedTileIdsOrder[r], _instance.spawnedTileIdsOrder[i]);
+            int r = Random.Range(i, _instance.oddTileOrder.Length);
+            (_instance.oddTileOrder[i], _instance.oddTileOrder[r]) = (_instance.oddTileOrder[r], _instance.oddTileOrder[i]);
+        }
+        for (int i = 1; i < _instance.evenTileOrder.Length; i += 1)
+        {
+            int r = Random.Range(i, _instance.evenTileOrder.Length);
+            (_instance.evenTileOrder[i], _instance.evenTileOrder[r]) = (_instance.evenTileOrder[r], _instance.evenTileOrder[i]);
         }
         _instance.numSpawned = 1;
     }
@@ -53,12 +60,25 @@ public class MilitaryCollectibleController : Singleton<MilitaryCollectibleContro
 
     private int GetNextSpawnedId()
     {
-        if (numSpawned > spawnedTileIdsOrder.Length - 1)
+        if (numSpawned > 15)
         {
             // Spawned everything!
             return -1;
         }
-        int nextSpawn = spawnedTileIdsOrder[numSpawned];
+        else if (numSpawned == 15)
+        {
+            return 16;
+        }
+
+        int nextSpawn;
+        if (numSpawned % 2 == 0)
+        {
+            nextSpawn = oddTileOrder[(numSpawned - 2) / 2];
+        }
+        else
+        {
+            nextSpawn = evenTileOrder[(numSpawned - 1) / 2];
+        }
         numSpawned += 1;
         return nextSpawn;
     }

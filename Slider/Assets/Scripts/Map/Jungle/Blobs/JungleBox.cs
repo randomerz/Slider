@@ -27,6 +27,7 @@ public abstract class JungleBox : MonoBehaviour, ISavable
     [SerializeField] private SpriteRenderer debugSpriteRenderer;
     [SerializeField] private LayerMask raycastLayerMask;
     [SerializeField] protected JungleSignAnimator signAnimator;
+    [SerializeField] protected ParticleTrail particleTrail;
 
     protected virtual void Awake()
     {
@@ -182,6 +183,11 @@ public abstract class JungleBox : MonoBehaviour, ISavable
         // Raycast to find new box
         JungleBox other = GetBoxInDirection(direction);
         targetBox = other;
+        if (other != null && particleTrail != null)
+        {
+            particleTrail.trailTarget = other.transform;
+            particleTrail.SpawnParticleTrail(shouldRepeat: false);
+        }
 
         TrySendAfterUpdateDirection(direction, targetBox, signAnimator);
 

@@ -8,6 +8,10 @@ public class JungleGrid : SGrid
 
     public List<GameObject> jungleBridgeRails;
     public List<GameObject> jungleBridges;
+    public NPC bridgeRepairNPC;
+    public Transform bridgeRepairTransform;
+    public Transform repairmanOriginalTransform;
+    public List<Transform> bridgeFixSmokeLocations;
     public GameObject minecartProp;
     public Animator secretaryTVAnimator;
     public GameObject factoryDoor;
@@ -172,7 +176,7 @@ public class JungleGrid : SGrid
     {
         if (SaveSystem.Current.GetBool("jungleTurnedInMinecart"))
         {
-            FixBridge();
+            // FixBridge();
         }
         else
         {
@@ -197,11 +201,6 @@ public class JungleGrid : SGrid
     {
         minecartProp.SetActive(true);
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, minecartProp.transform.position, minecartProp.transform);
-
-        if (SaveSystem.Current.GetBool("jungleTurnedInRail"))
-        {
-            FixBridge();
-        }
     }
 
     public void FixBridge()
@@ -214,6 +213,40 @@ public class JungleGrid : SGrid
         {
             g.SetActive(false);
         }
+    }
+
+    public void StartFixBridgeCutscene()
+    {
+        StartCoroutine(DoFixBridgeCutscene());
+    }
+
+    private IEnumerator DoFixBridgeCutscene()
+    {
+        bridgeRepairNPC.Teleport(bridgeRepairTransform);
+        bridgeRepairNPC.SetFacingRight(false);
+
+        AudioManager.Play("Hat Click");
+
+        foreach (Transform t in bridgeFixSmokeLocations)
+        {
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, t.position);
+        }
+
+        FixBridge();
+
+        yield return new WaitForSeconds(0.75f);
+
+        for (int i = 0; i < 3; i++)
+        {
+            AudioManager.Play("Hat Click");
+            yield return new WaitForSeconds(0.25f);
+        }
+        yield return new WaitForSeconds(0.5f);
+
+        bridgeRepairNPC.Teleport(repairmanOriginalTransform);
+        bridgeRepairNPC.SetFacingRight(true);
+
+        AudioManager.Play("Hat Click");
     }
 
     protected override void CheckForCompletionOnSetGrid()

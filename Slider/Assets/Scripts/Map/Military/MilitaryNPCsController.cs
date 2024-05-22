@@ -69,6 +69,9 @@ public class MilitaryNPCController : MonoBehaviour
         {
             myFlag.spriteRenderer.sprite = militarySpriteTable.GetFlagSpriteForUnit(militaryUnit);
         }
+
+        // MilitaryUITrackerManager.RemoveUnitTracker(militaryUnit);
+        // MilitaryUITrackerManager.AddUnitTracker(militaryUnit);
     }
 
     public void SetPosition(Vector3 position)
@@ -130,7 +133,7 @@ public class MilitaryNPCController : MonoBehaviour
 
     private void FinishAnimation(Vector3 targetPos, STile endStile)
     {
-        militaryUnit.NPCController.SetPosition(targetPos);
+        SetPosition(targetPos);
         militaryUnit.AttachedSTile = endStile;
         System.Action callback = moveFinishCallback;
         moveFinishCallback = null;

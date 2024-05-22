@@ -39,6 +39,7 @@ Transform:
   - {fileID: 699102953587681558}
   - {fileID: 7324155990365616923}
   - {fileID: 3693153598149597526}
+  - {fileID: 6689974845696568225}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &3694443104847883145
@@ -177,14 +178,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bce2482012f4aa4db248ce75da6fd7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveString: 
   pathController: {fileID: 2533260285526554634}
   debugSpriteRenderer: {fileID: 1517444172297543187}
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 524289
   signAnimator: {fileID: 2112880271982138173}
+  particleTrail: {fileID: 2093990262879419284}
   RECIPE_LIST: {fileID: 11400000, guid: fc4da6d866679aa4783b5e895f04ad29, type: 2}
   JUNK_SHAPE: {fileID: 11400000, guid: b39209e8376caeb40aa2b36b517e3990, type: 2}
+--- !u!1 &4698946358631409019
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6689974845696568225}
+  - component: {fileID: 2093990262879419284}
+  m_Layer: 0
+  m_Name: ParticleTrail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6689974845696568225
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4698946358631409019}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3694443104847883150}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2093990262879419284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4698946358631409019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39549b7472e95d442b9b6a9b7d7e9f3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceBetweenParticles: 2
+  delayBetweenParticles: 0.025
+  delayBetweenTrailRepeat: 8
+  doAudio: 0
+  particlePrefab: {fileID: 9046147275880471296, guid: 3f5ea05501e286742afaba82772fa924, type: 3}
+  trailStart: {fileID: 3694443104847883150}
+  trailTarget: {fileID: 0}
 --- !u!1 &7365868429896209974
 GameObject:
   m_ObjectHideFlags: 0

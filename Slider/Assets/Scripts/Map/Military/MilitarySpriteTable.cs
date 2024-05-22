@@ -9,6 +9,7 @@ public class MilitarySpriteTable : ScriptableObject
         public MilitaryUnit.Team team;
         public MilitaryUnit.Type type;
         public Sprite sprite;
+        public Sprite uiIcon;
         public RuntimeAnimatorController animatorController;
     }
 
@@ -19,6 +20,11 @@ public class MilitarySpriteTable : ScriptableObject
     public Sprite GetSpriteForUnit(MilitaryUnit unit)
     {
         return spriteData[GetIndexForUnit(unit)].sprite;
+    }
+
+    public Sprite GetUIIconForUnit(MilitaryUnit unit)
+    {
+        return spriteData[GetIndexForUnit(unit)].uiIcon;
     }
 
     public RuntimeAnimatorController GetAnimatorControllerForUnit(MilitaryUnit unit)
