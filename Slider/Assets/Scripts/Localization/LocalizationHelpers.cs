@@ -317,6 +317,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             ParserState cellState = ParserState.Empty;
 
             string path = null;
+            string orig = null;
             string trans = null;
 
             string property = null;
@@ -330,12 +331,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             while (true)
             {
                 var (content, isNewLineStart, isEof) = ParseCell(reader);
-
-                if (isEof)
-                {
-                    break;
-                }
-
+                
                 if (isNewLineStart)
                 {
                     currentRow++;
@@ -347,7 +343,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                     currentCol++;
                 }
 
-                if (currentRow < 4)
+                if (!isEof && currentRow < 4)
                 {
                     // parameter row
                     if (currentRow == 1)
@@ -380,7 +376,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 }
 
                 // on new line, commit the last entry
-                if (isNewLineStart)
+                if (isNewLineStart || isEof)
                 {
                     if (path != null && cellState == ParserState.HasTranslation) // this should always be true but JetBrains kept giving warning, so this check is added
                     {
@@ -394,8 +390,27 @@ be corrupted, these rules may be helpful for debugging purposes...
                             records.Add(path, newRecord);
                         }
                     }
+                    else
+                    {
+                        switch (cellState)
+                        {
+                            case ParserState.HasPath:
+                                Debug.LogError($"Inval: only path {path}");
+                                break;
+                            case ParserState.HasOriginal:
+                                Debug.LogError($"Inval: Only path orig {path} : {orig}");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
 
                     cellState = ParserState.Empty;
+                }
+
+                if (isEof)
+                {
+                    break;
                 }
 
                 switch (cellState)
@@ -412,6 +427,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                         break;
                     case ParserState.HasPath:
                         cellState = ParserState.HasOriginal;
+                        orig = content;
                         break;
                     case ParserState.HasOriginal:
                         if (string.IsNullOrWhiteSpace(content))
@@ -451,7 +467,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 if (reader.EndOfStream)
                 {
-                    return (null, false, true);
+                    return (null, isNewLineStart, true);
                 }
 
                 char c = (char)reader.Peek();
@@ -911,6 +927,10 @@ be corrupted, these rules may be helpful for debugging purposes...
                     if (referenceFile.records.TryGetValue(_path, out var referenceTranslation))
                     {
                         translated = referenceTranslation.Translated;
+                    }
+                    else
+                    {
+                        Debug.LogError($"Could not migrate {_path} with original text {_orig}");
                     }
                 }
                 
