@@ -33,6 +33,6 @@ be corrupted, these rules may be helpful for debugging purposes...
   - If a separator, \r, or \n is encountered while in an enclosed context,
     it will be preserved
 ",
-"NonDialogueFontAdjust","-4","DialogueFontScale","1.0",
+"NonDialogueFontAdjust","-4","DialogueFontScale","0.5",
 "String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
 "Path","Orig","Translation",

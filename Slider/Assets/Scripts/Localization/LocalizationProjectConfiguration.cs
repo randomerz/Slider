@@ -92,19 +92,19 @@ public class LocalizationProjectConfiguration : ScriptableObject
         
         foreach(var locale in initialLocales)
         {
-            locale.options.RemoveAll(option => !LocalizationFile.defaultConfigs.ContainsKey(option.name));
-            var names = locale.options.Select(o => o.name).ToHashSet();
-            foreach (var (defaultConfigName, defaultVal) in LocalizationFile.defaultConfigs)
-            {
-                if (!names.Contains(defaultConfigName))
-                {
-                    locale.options.Add(new LocaleConfiguration.Option
-                    {
-                        name = defaultConfigName,
-                        value = defaultVal.Value
-                    });
-                }
-            }
+            // locale.options.RemoveAll(option => !LocalizationFile.defaultConfigs.ContainsKey(option.name));
+            // var names = locale.options.Select(o => o.name).ToHashSet();
+            // foreach (var (defaultConfigName, defaultVal) in LocalizationFile.defaultConfigs)
+            // {
+            //     if (!names.Contains(defaultConfigName))
+            //     {
+            //         locale.options.Add(new LocaleConfiguration.Option
+            //         {
+            //             name = defaultConfigName,
+            //             value = defaultVal.Value
+            //         });
+            //     }
+            // }
             
             locale.options.Sort((a, b) => a.name.CompareTo(b.name));
         }

@@ -1,11 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LocalizationInjector : MonoBehaviour
 {
+    private string locale = null;
+    
     void Start()
     {
-        LocalizationLoader.LocalizePrefab(gameObject);
+        Refresh();
+    }
+
+    public void Refresh()
+    {
+        if (locale == null || !locale.Equals(LocalizationLoader.CurrentLocale))
+        {
+            LocalizationLoader.LocalizePrefab(gameObject);
+            locale = LocalizationLoader.CurrentLocale;
+        }
     }
 }

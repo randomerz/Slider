@@ -31,11 +31,11 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     {
         if (_instance != null)
         {
-            RefreshLocalization(SceneManager.GetActiveScene()); // do not use GameObject.Scene since it will return the non destructable scene instead!
+            _instance.RefreshLocalization(SceneManager.GetActiveScene()); // do not use GameObject.Scene since it will return the non destructable scene instead!
         }
     }
     
-    private static string CurrentLocale => _instance == null ? LocalizationFile.DefaultLocale : _instance.GetComponent<SettingRetriever>().ReadSettingValue() as string;
+    public static string CurrentLocale => _instance == null ? LocalizationFile.DefaultLocale : _instance.GetComponent<SettingRetriever>().ReadSettingValue() as string;
 
     private static LocalizationFile LoadAssetAndConfigureLocaleDefaults(string locale, string assetPath) 
     {
@@ -48,7 +48,7 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
         return LocalizationFile.MakeLocalizationFile(locale, assetPath, localeConfig);
     }
     
-    private static void RefreshLocalization(Scene scene)
+    private void RefreshLocalization(Scene scene)
     {
         var locale = CurrentLocale;
         

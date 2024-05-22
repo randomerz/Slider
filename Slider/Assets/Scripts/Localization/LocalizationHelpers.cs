@@ -115,6 +115,11 @@ namespace Localization
         {
             index = null;
         }
+
+        public TrackedLocalizable(LocalizationInjector injector) : this(injector as Component)
+        {
+            index = null;
+        }
     }
 
     internal readonly struct LocalizationConfig
@@ -546,6 +551,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
     public class LocalizableContext
     {
+        private HashSet<Type> excludedTypes = new(); // currently only used by prefab localization to prevent infinite loops
         Dictionary<Type, List<TrackedLocalizable>> localizables = new();
 
         private SortedDictionary<LocalizationFile.Config, LocalizationConfig> configs;
@@ -586,6 +592,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private LocalizableContext(GameObject prefab) : this()
         {
+            excludedTypes.Add(typeof(LocalizationInjector));
             PopulateLocalizableInstances(prefab);
         }
         
@@ -604,7 +611,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(TMP_Text), component => SelectLocalizablesFromTmp(component as TMP_Text) },
             { typeof(TMP_Dropdown), component => SelectLocalizablesFromDropdown(component as TMP_Dropdown) },
             { typeof(NPC), component => SelectLocalizablesFromNpc(component as NPC) },
-            { typeof(DialogueDisplay), component => SelectLocalizablesFromDialogueDisplay(component as DialogueDisplay) }
+            { typeof(DialogueDisplay), component => new List<TrackedLocalizable>{ new (component as DialogueDisplay) } },
+            { typeof(LocalizationInjector), component => new List<TrackedLocalizable>{ new (component as LocalizationInjector) }}
         };
         
         private void PopulateLocalizableInstances(Scene scene)
@@ -621,6 +629,11 @@ be corrupted, these rules may be helpful for debugging purposes...
         {
             foreach (Type type in SelectorFunctionMap.Keys)
             {
+                if (excludedTypes.Contains(type))
+                {
+                    continue;
+                }
+                
                 Component[] query = rootGameObject.GetComponentsInChildren(type, includeInactive: true);
                 if (!localizables.ContainsKey(type))
                 {
@@ -657,14 +670,6 @@ be corrupted, these rules may be helpful for debugging purposes...
                 return cond.dialogueChain.Select((_, j) => new TrackedLocalizable(npc, i, j));
             });
         }
-
-        private static IEnumerable<TrackedLocalizable> SelectLocalizablesFromDialogueDisplay(DialogueDisplay display)
-        {
-            return new List<TrackedLocalizable>()
-            {
-                new TrackedLocalizable(display)
-            };
-        }
         
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
@@ -675,6 +680,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(TMP_Dropdown), LocalizeDropdownOption },
             { typeof(NPC), LocalizeNpc },
             { typeof(DialogueDisplay), LocalizeDialogueDisplay },
+            { typeof(LocalizationInjector), (loc, _) => loc.GetAnchor<LocalizationInjector>().Refresh() }
         };
 
         public void Localize(LocalizationFile file)
