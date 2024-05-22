@@ -14,6 +14,9 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
     private List<MGMove> activeMoves = new();
     private QueueStatus status = QueueStatus.Off;
 
+    private float timeLastMoveExecuted;
+    private MGMove lastMoveExecuted;
+
     private void Awake()
     {
         InitializeSingleton();
@@ -43,6 +46,13 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
                 break;
             case QueueStatus.Processing:
                 // Queue is processing -- do nothing!
+                if (Time.time - timeLastMoveExecuted > 2)
+                {
+                    Debug.LogError($"Time in queue took an unexpectedly long time. Last move was made by {lastMoveExecuted.unit.UnitTeam} {lastMoveExecuted.unit.UnitType}");
+                    Debug.Log($"Allowing queue to process more.");
+                    status = QueueStatus.Ready;
+                    CheckQueue();
+                }
                 break;
         }
     }
@@ -50,6 +60,8 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
     private void ExecuteMove(MGMove move)
     {
         status = QueueStatus.Processing;
+        timeLastMoveExecuted = Time.time;
+        lastMoveExecuted = move;
         move.unit.NPCController.AnimateMove(move, false, () => FinishMove(move));
     }
 

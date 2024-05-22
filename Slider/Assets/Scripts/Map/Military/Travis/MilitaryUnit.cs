@@ -6,6 +6,8 @@ using UnityEngine.Serialization;
 
 public class MilitaryUnit : MonoBehaviour
 {
+    public static System.EventHandler<System.EventArgs> OnUnitUnregistered;
+
     public const int STILE_WIDTH = 13;
 
     private static readonly List<MilitaryUnit> activeUnits = new();
@@ -86,6 +88,8 @@ public class MilitaryUnit : MonoBehaviour
             GridPosition = new Vector2Int(parentSTile.x, parentSTile.y);
             // AttachedSTile = parentSTile;
         }
+
+        MilitaryUITrackerManager.AddUnitTracker(this);
     }
 
     private void OnEnable()
@@ -107,7 +111,9 @@ public class MilitaryUnit : MonoBehaviour
     public static void UnregisterUnit(MilitaryUnit unit)
     {
         activeUnits.Remove(unit);
+        MilitaryUITrackerManager.RemoveUnitTracker(unit);
         Debug.Log($"Unregistered Unit '{unit.gameObject.name}'");
+        OnUnitUnregistered?.Invoke(unit, new System.EventArgs());
     }
 
     public static Vector2 GridPositionToWorldPosition(Vector2Int tilePosition)
@@ -156,18 +162,24 @@ public class MilitaryUnit : MonoBehaviour
 
     public void OnEnemyDeath()
     {
-        // Tell wave manager i died or whatever
         SpawnSliderReward();
     }
 
     private void SpawnSliderReward()
     {
+        MilitarySTile stile = (MilitarySTile)SGrid.Current.GetStileAt(GridPosition);
+
         // Dropped when enemies die
-        if (SGrid.Current.GetStileAt(GridPosition) == null)
+        if (stile == null)
         {
             Debug.LogError($"Couldn't find a stile at {GridPosition}!");
         }
-        MilitarySTile stile = (MilitarySTile)SGrid.Current.GetStileAt(GridPosition);
+        
+        if (!stile.isTileActive)
+        {
+            Debug.LogError($"Tried spawning a slider on an inactive STile! (loc: {GridPosition}, island id: {stile.islandId}). Spawning on player's instead");
+            stile = (MilitarySTile)SGrid.GetSTileUnderneath(Player.GetInstance().gameObject);
+        }
 
         MilitaryCollectibleController.SpawnMilitaryCollectible(transform, stile);
     }

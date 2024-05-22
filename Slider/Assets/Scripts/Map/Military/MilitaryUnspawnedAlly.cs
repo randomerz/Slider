@@ -15,7 +15,15 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
     
     private void Start()
     {
+        if (parentStile.islandId % 2 == 0)
+        {
+            spawnConfirmer.SetActive(false);
+            gameObject.SetActive(false);
+        }
+
         SetUnitType((MilitaryUnit.Type)Random.Range(0, 3));
+
+        UITrackerManager.AddNewTracker(gameObject);
     }
     
     public void SetUnitType(MilitaryUnit.Type type)

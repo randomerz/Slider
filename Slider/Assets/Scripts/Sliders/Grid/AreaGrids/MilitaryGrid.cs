@@ -21,12 +21,12 @@ public class MilitaryGrid : SGrid
 
     private void OnEnable()
     {
-        
+        OnGridMove += OnTileMove;
     }
 
     private void OnDisable()
     {
-        
+        OnGridMove -= OnTileMove;
     }
 
     public override void Save()
@@ -41,4 +41,9 @@ public class MilitaryGrid : SGrid
 
 
     // === Military puzzle specific ==
+
+    public void OnTileMove(object sender, OnGridMoveArgs e)
+    {
+        MilitaryTurnManager.EndPlayerTurn();
+    }
 }
