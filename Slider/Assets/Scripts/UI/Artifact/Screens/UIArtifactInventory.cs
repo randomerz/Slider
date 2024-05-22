@@ -9,6 +9,8 @@ public class UIArtifactInventory : MonoBehaviour
     public List<ArtifactInventoryCollectible> collectibles;
 
     public ArtifactInventoryCollectible anchorCollectible; // the check is player.pickedupanchor
+    public ArtifactInventoryCollectible bootsCollectible; 
+    public ArtifactInventoryCollectible bootsUpgradeCollectible; 
     public ArtifactInventoryCollectible scrollCollectible; 
     public ArtifactInventoryCollectible scrollScrapCollectible;
 
@@ -59,6 +61,9 @@ public class UIArtifactInventory : MonoBehaviour
         }
 
         anchorCollectible.SetVisible(PlayerInventory.Instance.GetHasCollectedAnchor());
+
+        bootsCollectible?.SetVisible(!PlayerInventory.Contains("Boots Upgrade") && PlayerInventory.Contains("Boots"));
+        bootsUpgradeCollectible.SetVisible(PlayerInventory.Contains("Boots Upgrade"));
 
         scrollCollectible.SetVisible(PlayerInventory.Contains("Scroll of Realigning"));
         scrollScrapCollectible?.SetVisible(!PlayerInventory.Contains("Scroll of Realigning") && PlayerInventory.Contains("Scroll Scrap"));
