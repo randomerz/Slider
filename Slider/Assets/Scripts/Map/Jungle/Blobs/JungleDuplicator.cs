@@ -9,6 +9,7 @@ public class JungleDuplicator : JungleSign
     public Direction CurrentAlternateDirection { get { return alternateDirection; } }
     
     [SerializeField] protected JungleSignAnimator alternateSignAnimator;
+    [SerializeField] protected ParticleTrail alternateParticleTrail;
 
     private int mySourceId = 0;
 
@@ -70,6 +71,17 @@ public class JungleDuplicator : JungleSign
         targetBox = other;
         JungleBox alternateOther = GetBoxInDirection(this.alternateDirection);
         alternateTargetBox = alternateOther;
+        
+        if (other != null && particleTrail != null)
+        {
+            particleTrail.trailTarget = other.transform;
+            particleTrail.SpawnParticleTrail(shouldRepeat: false);
+        }
+        if (alternateOther != null && particleTrail != null)
+        {
+            alternateParticleTrail.trailTarget = alternateOther.transform;
+            alternateParticleTrail.SpawnParticleTrail(shouldRepeat: false);
+        }
 
         TrySendAfterUpdateDirection(this.direction, targetBox, signAnimator);
         TrySendAfterUpdateDirection(this.alternateDirection, alternateTargetBox, alternateSignAnimator);

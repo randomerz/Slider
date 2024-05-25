@@ -60,12 +60,13 @@ public class VillageChadJump : MonoBehaviour
 
     public void TipOnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if (!isOnRock)
+        if (!isOnRock || isFallen)
             return;
 
         if (e.stile.islandId == 8)
         {
             isFallen = true;
+            SGridAnimator.OnSTileMoveEnd -= TipOnTileMove;
         }
         else
         {

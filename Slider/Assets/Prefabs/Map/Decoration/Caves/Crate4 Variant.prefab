@@ -61,6 +61,14 @@ PrefabInstance:
       value: Crate4 Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4890465857261440607, guid: a51370b5802ebec439a0d399ea94f2e8, type: 3}
+      propertyPath: m_Size.x
+      value: 0.875
+      objectReference: {fileID: 0}
+    - target: {fileID: 4890465857261440607, guid: a51370b5802ebec439a0d399ea94f2e8, type: 3}
+      propertyPath: m_Size.y
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4890465857261440607, guid: a51370b5802ebec439a0d399ea94f2e8, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 1.125
       objectReference: {fileID: 0}

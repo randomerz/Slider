@@ -14,6 +14,9 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
     private List<MGMove> activeMoves = new();
     private QueueStatus status = QueueStatus.Off;
 
+    private float timeLastMoveExecuted;
+    private MGMove lastMoveExecuted;
+
     private void Awake()
     {
         InitializeSingleton();
@@ -43,31 +46,29 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
                 break;
             case QueueStatus.Processing:
                 // Queue is processing -- do nothing!
+                if (Time.time - timeLastMoveExecuted > 2)
+                {
+                    Debug.LogError($"Time in queue took an unexpectedly long time. Last move was made by {lastMoveExecuted.unit.UnitTeam} {lastMoveExecuted.unit.UnitType}");
+                    Debug.Log($"Allowing queue to process more.");
+                    status = QueueStatus.Ready;
+                    CheckQueue();
+                }
                 break;
         }
     }
 
     private void ExecuteMove(MGMove move)
     {
-        Vector3 targetPos;
-        if (move.endStile == null)
-        {
-            targetPos = MilitaryUnit.GridPositionToWorldPosition(move.endCoords);
-        }
-        else
-        {
-            targetPos = move.endStile.transform.position;
-        }
-
-        move.unit.NPCController.SetPosition(targetPos);
-        move.unit.AttachedSTile = move.endStile;
-
-        FinishMove(move);
+        status = QueueStatus.Processing;
+        timeLastMoveExecuted = Time.time;
+        lastMoveExecuted = move;
+        move.unit.NPCController.AnimateMove(move, false, () => FinishMove(move));
     }
 
     private void FinishMove(MGMove move)
     {
         activeMoves.Remove(move);
-        status = moveQueue.Count == 0 ? QueueStatus.Off : QueueStatus.Processing;
+        status = moveQueue.Count == 0 ? QueueStatus.Off : QueueStatus.Ready;
+        CheckQueue();
     }
 }

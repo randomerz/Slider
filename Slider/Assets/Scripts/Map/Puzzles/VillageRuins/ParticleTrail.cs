@@ -7,6 +7,7 @@ public class ParticleTrail : MonoBehaviour
     public float distanceBetweenParticles = 2;
     public float delayBetweenParticles = 0.1f;
     public float delayBetweenTrailRepeat = 8;
+    public bool doAudio = true;
 
     public GameObject particlePrefab;
     public Transform trailStart;
@@ -58,7 +59,10 @@ public class ParticleTrail : MonoBehaviour
         foreach (Vector3 p in positions)
         {
             Instantiate(particlePrefab, p, Quaternion.identity, transform);
-            AudioManager.PlayWithVolume("Hat Click", 0.5f);
+            if (doAudio)
+            {
+                AudioManager.PlayWithVolume("Hat Click", 0.5f);
+            }
 
             yield return new WaitForSeconds(delayBetweenParticles);
         }
