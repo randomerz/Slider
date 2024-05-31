@@ -94,6 +94,10 @@ public class DinoLasersManager : MonoBehaviour
         {
             canFirstTimeActivate = true;
         }
+        else
+        {
+            canFirstTimeActivate = false;
+        }
     }
 
     private void OnMoveStart(object sender, SGridAnimator.OnTileMoveArgs e)
