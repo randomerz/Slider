@@ -9,6 +9,7 @@ public class MilitaryNPCController : MonoBehaviour
 
     public MilitaryUnit militaryUnit;
     public List<NPC> myNPCs;
+    public List<FlashWhiteSprite> myFlashWhites;
     public MilitaryUnitFlag myFlag;
     
     private System.Action moveFinishCallback;
@@ -142,8 +143,20 @@ public class MilitaryNPCController : MonoBehaviour
 
     public void OnDeath()
     {
-        Debug.Log($"on death animator");
-        moveFinishCallback?.Invoke();
+        if (moveFinishCallback != null)
+        {
+            Debug.LogWarning("'MoveFinishCallback' was not null when unit died.");
+            moveFinishCallback?.Invoke();
+        }
+
+        // TODO: on death animator?
+
+        FlashWhite(1);
+        
+        foreach (NPC npc in myNPCs)
+        {
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, npc.transform.position);
+        }
     }
 
     private void SetNPCFacingDirection(bool faceRight)
@@ -161,6 +174,19 @@ public class MilitaryNPCController : MonoBehaviour
         foreach (NPC npc in myNPCs)
         {
             npc.animator.SetBool("isWalking", isWalking);
+        }
+    }
+
+    public void FlashForDuration(float seconds)
+    {
+        FlashWhite((int)(seconds / (myFlashWhites[0].flashTime * 2)));
+    }
+
+    private void FlashWhite(int num, System.Action callback=null)
+    {
+        foreach (FlashWhiteSprite f in myFlashWhites)
+        {
+            f.Flash(num, callback);
         }
     }
 }

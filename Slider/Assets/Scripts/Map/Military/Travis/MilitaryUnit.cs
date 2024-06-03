@@ -19,6 +19,9 @@ public class MilitaryUnit : MonoBehaviour
     [SerializeField] private Team _unitTeam;
     public Team UnitTeam { get => _unitTeam; }
 
+    [SerializeField] private Status _unitStatus;
+    public Status UnitStatus { get => _unitStatus; }
+
     [SerializeField] private MilitaryNPCController _npcController;
     public MilitaryNPCController NPCController { get => _npcController; }
 
@@ -104,12 +107,14 @@ public class MilitaryUnit : MonoBehaviour
 
     public static void RegisterUnit(MilitaryUnit unit)
     {
+        unit._unitStatus = Status.Active;
         activeUnits.Add(unit);
         Debug.Log($"Registered Unit '{unit.gameObject.name}'");
     }
 
     public static void UnregisterUnit(MilitaryUnit unit)
     {
+        unit._unitStatus = Status.Inactive;
         activeUnits.Remove(unit);
         MilitaryUITrackerManager.RemoveUnitTracker(unit);
         Debug.Log($"Unregistered Unit '{unit.gameObject.name}'");
@@ -144,19 +149,33 @@ public class MilitaryUnit : MonoBehaviour
 
     public void KillUnit()
     {
-        CoroutineUtils.ExecuteAfterEndOfFrame(() => Cleanup(), coroutineOwner: this);
-        OnDeath?.Invoke();
+        _unitStatus = Status.Dead;
+        MilitaryTurnAnimator.AddToQueueFront(new MGDeath(this));
+    }
+
+    public void DoDeathAnimation(System.Action resolveMoveAction)
+    {
+        if (_npcController != null)
+        {
+            _npcController.OnDeath();
+        }
+
+        CoroutineUtils.ExecuteAfterDelay(() => {
+            Cleanup();
+            resolveMoveAction?.Invoke();
+        }, this, 0.25f);
     }
 
     private void Cleanup()
-    {
+    {        
         UnregisterUnit(this);
         if (Commander != null)
         {
             Commander.RemoveUnit(this);
         }
-        if (_npcController != null)
-            _npcController.OnDeath();
+
+        OnDeath?.Invoke();
+
         gameObject.SetActive(false);
     }
 
@@ -191,6 +210,7 @@ public class MilitaryUnit : MonoBehaviour
         {
             if (unit.GridPosition == GridPosition && unit.UnitTeam != UnitTeam)
             {
+                MilitaryTurnAnimator.AddToQueueFront(new MGFight(this, unit, AttachedSTile));
                 MilitaryCombat.ResolveBattle(this, unit);
             }
         });
@@ -207,6 +227,13 @@ public class MilitaryUnit : MonoBehaviour
     {
         Player,
         Alien
+    }
+
+    public enum Status
+    {
+        Inactive,
+        Active,
+        Dead, // Killed in backend and in queue to die visually
     }
 
     public static Color ColorForUnitTeam(Team team)
