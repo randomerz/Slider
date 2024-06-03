@@ -60,9 +60,13 @@ public class MoveObjectsOffIce : MonoBehaviour
                 {
                     bool moved = false;
                     Minecart mc = t.gameObject.GetComponent<Minecart>();
-                    if(mc != null && mc.isMoving)
-                    {
-                        moved = mc.TryDrop(true);
+                    if(mc != null)
+                    { 
+                        if(mc.isMoving)
+                            moved = mc.TryDrop(true);
+                        else if(mc.isOnTrack && SGrid.GetSTileUnderneath(checkpos).islandId == 1)
+                            SaveSystem.Current.SetBool("MountainDidIcePatchTech", true);
+
                     }
                     if(!moved)
                     {

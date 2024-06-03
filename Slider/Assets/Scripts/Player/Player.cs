@@ -456,6 +456,11 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
             moveSpeed += 2;
         }
 
+        if (PlayerInventory.Contains("Boots Upgrade"))
+        {
+            moveSpeed += 0.5f;
+        }
+
         if (isOnWater)
         {
             moveSpeed += 1;

@@ -36,7 +36,7 @@ public class MoveTowardsStrategy : ICommanderStrategy
         Vector2Int newGridPos = unit.GridPosition + dir;
         MGMove move = new MGMove(unit, unit.GridPosition, newGridPos, null, null);
         unit.GridPosition = newGridPos;
-        MilitaryTurnAnimator.AddNewMove(move);
+        MilitaryTurnAnimator.AddToQueue(move);
     }
 
     private MilitaryUnit ClosestKillableUnitTo(MilitaryUnit unit)
