@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using Localization;
 using UnityEngine;
+
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
@@ -206,3 +208,5 @@ public class LocalizationSkeletonGenerator : EditorWindow
        BuildPlayerWindow.DefaultBuildMethods.BuildPlayer(buildPlayerOptions);
    }
 }
+
+#endif

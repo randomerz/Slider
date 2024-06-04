@@ -147,10 +147,22 @@ namespace Localization
         {
             if (Directory.Exists(LocalizationFolderPath(root)))
             {
-                List<string> locales = Directory.GetDirectories(LocalizationFolderPath(root))
-                    .Select(path => new FileInfo(path).Name).ToList();
+                var localeNames = Directory.GetDirectories(LocalizationFolderPath(root))
+                    .Select(path => new FileInfo(path).Name)
+                    // very expensive check, makes sure that only the legit locales are selected
+                    .Where(localeName =>
+                    {
+                        #if UNITY_EDITOR
+                        return true;
+                        #else
+                        var filePath = LocalizationFile.LocaleGlobalFilePath(localeName, root);
+                        var parsedGlobalFile = LocalizationFile.MakeLocalizationFile(localeName, filePath);
+                        return parsedGlobalFile != null;
+                        #endif
+                    })
+                    .ToList();
                     
-                locales.Sort(
+                    localeNames.Sort(
                     (localeA, localeB) =>
                     {
                         if (localeA.Equals(playerPrefLocale))
@@ -177,7 +189,7 @@ namespace Localization
                         return localeA.ToLower().CompareTo(localeB.ToLower());
                     });
 
-                return locales;
+                return localeNames;
             }
             else
             {
@@ -243,6 +255,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         public enum Config
         {
+            IsValid,
             NonDialogueFontAdjust,
             DialogueFontScale
         }
@@ -261,6 +274,11 @@ be corrupted, these rules may be helpful for debugging purposes...
         internal static SortedDictionary<Config, LocalizationConfig> defaultConfigs = new()
         {
             {
+                Config.IsValid, new LocalizationConfig(
+                "Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback",
+                "1")
+            },
+            {
                 Config.NonDialogueFontAdjust, new LocalizationConfig(
                 "String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller", 
                 "+0")
@@ -268,8 +286,8 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             {
                 Config.DialogueFontScale, new LocalizationConfig(
-                    "Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6.",
-                    "1.0")
+                "Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6.",
+                "1.0")
             },
             
             // { fontOverridePath_name, new LocalizationConfig(
@@ -302,7 +320,23 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
 
             using var file = File.OpenRead(filePath);
-            return new(locale, new StreamReader(file), localeConfig);
+            LocalizationFile parsed = new(locale, new StreamReader(file), localeConfig);
+            if (parsed.configs.TryGetValue(Config.IsValid, out LocalizationConfig isValid))
+            {
+                if (int.TryParse(isValid.Value, out int isValidFlag))
+                {
+                    if (isValidFlag == 1)
+                    {
+                        return parsed;
+                    }
+                }
+                
+                // if isValid is set but not 1, return null and allow the localization loader to use fallback strategy
+                return null;
+            }
+
+            // if isValid is not set, assume to be true
+            return parsed;
         }
         
         private LocalizationFile(string locale, StreamReader reader, LocalizationFile localeConfig = null)

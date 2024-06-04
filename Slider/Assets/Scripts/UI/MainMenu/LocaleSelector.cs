@@ -27,6 +27,13 @@ public class LocaleSelector : MonoBehaviour
         Dropdown.options.AddRange(sortedOptions);
         Dropdown.value = 0;
         Dropdown.RefreshShownValue();
+
+        // if previously configured locale is no longer valid (not present as a mod, etc.), then the next most prominent
+        // locale will be selected instead. this is just English because of how locales are sorted
+        if (!sortedOptions[0].text.Equals(retriever.ReadSettingValue() as string))
+        {
+            retriever.WriteSettingValue(sortedOptions[0].text);
+        }
     }
 
     [SerializeField]

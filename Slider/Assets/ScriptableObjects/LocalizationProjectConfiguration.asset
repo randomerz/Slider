@@ -16,12 +16,16 @@ MonoBehaviour:
   - name: English
     options:
     - name: 0
-      value: +0
+      value: 1
     - name: 1
+      value: +0
+    - name: 2
       value: 1.0
   - name: "\u7B80\u4F53\u4E2D\u6587"
     options:
     - name: 0
-      value: -4
+      value: 0
     - name: 1
+      value: -4
+    - name: 2
       value: 0.5
