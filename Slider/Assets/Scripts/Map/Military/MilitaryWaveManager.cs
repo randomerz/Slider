@@ -22,20 +22,22 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
     private void Awake()
     {
         InitializeSingleton();
-        Reset();
+        DoReset();
     }
 
     private void OnEnable()
     {
-        MilitaryUnit.OnUnitUnregistered += CheckSpawnWaveConditions;
+        MilitaryUnit.OnAnyUnitDeath += CheckSpawnWaveConditions;
     }
 
     private void OnDisable()
     {
-        MilitaryUnit.OnUnitUnregistered -= CheckSpawnWaveConditions;
+        MilitaryUnit.OnAnyUnitDeath -= CheckSpawnWaveConditions;
     }
 
-    public void Reset()
+    public static void Reset() => _instance.DoReset();
+
+    public void DoReset()
     {
         nextWaveIndex = 0;
         nextSpawnIndex = 0;

@@ -141,7 +141,7 @@ public class MilitaryNPCController : MonoBehaviour
         callback?.Invoke(); // this might update moveFinishCallback so we cant change it after this
     }
 
-    public void OnDeath()
+    public void AnimateDeath()
     {
         if (moveFinishCallback != null)
         {

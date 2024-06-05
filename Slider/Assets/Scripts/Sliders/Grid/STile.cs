@@ -69,14 +69,18 @@ public class STile : MonoBehaviour
         sliderColliderDisableCount = 0;
     }
 
-    public void SetSTile(STile other) {
+    // Unused?
+    public void SetSTile(STile other) 
+    {
         isTileActive = other.isTileActive;
+        isTileCollected = other.isTileCollected;
         x = other.x;
         y = other.y;
         Init();
     }
 
-    public void SetSTile(bool isTileActive, int x, int y) {
+    public void SetSTile(bool isTileActive, int x, int y) 
+    {
         this.isTileActive = isTileActive;
         this.x = x;
         this.y = y;
@@ -86,6 +90,7 @@ public class STile : MonoBehaviour
     public virtual void SetTileActive(bool isTileActive)
     {
         this.isTileActive = isTileActive;
+        this.isTileCollected = isTileActive;
 
         objects.SetActive(isTileActive);
         allTileMaps.SetActive(isTileActive);

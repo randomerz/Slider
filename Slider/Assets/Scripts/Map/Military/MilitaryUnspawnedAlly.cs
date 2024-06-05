@@ -13,8 +13,9 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
 
     private MilitaryUnit.Type type = MilitaryUnit.Type.Rock;
     
-    private void Start()
+    private void OnEnable()
     {
+        
         if (parentStile.islandId % 2 == 0)
         {
             spawnConfirmer.SetActive(false);
@@ -24,6 +25,16 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
         SetUnitType((MilitaryUnit.Type)Random.Range(0, 3));
 
         UITrackerManager.AddNewTracker(gameObject);
+    }
+
+    public void Reset()
+    {
+        gameObject.SetActive(true);
+        spawnConfirmer.SetActive(true);
+        foreach (GameObject g in npcBoxes)
+        {
+            g.SetActive(true);
+        }
     }
     
     public void SetUnitType(MilitaryUnit.Type type)

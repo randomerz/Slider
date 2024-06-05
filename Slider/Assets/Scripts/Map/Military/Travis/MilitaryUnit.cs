@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 public class MilitaryUnit : MonoBehaviour
 {
-    public static System.EventHandler<System.EventArgs> OnUnitUnregistered;
+    public static System.EventHandler<System.EventArgs> OnAnyUnitDeath;
 
     public const int STILE_WIDTH = 13;
 
@@ -118,7 +118,6 @@ public class MilitaryUnit : MonoBehaviour
         activeUnits.Remove(unit);
         MilitaryUITrackerManager.RemoveUnitTracker(unit);
         Debug.Log($"Unregistered Unit '{unit.gameObject.name}'");
-        OnUnitUnregistered?.Invoke(unit, new System.EventArgs());
     }
 
     public static Vector2 GridPositionToWorldPosition(Vector2Int tilePosition)
@@ -153,20 +152,25 @@ public class MilitaryUnit : MonoBehaviour
         MilitaryTurnAnimator.AddToQueueFront(new MGDeath(this));
     }
 
-    public void DoDeathAnimation(System.Action resolveMoveAction)
+    public void DoDeathAnimation(System.Action onAnimationResolved)
     {
         if (_npcController != null)
         {
-            _npcController.OnDeath();
+            _npcController.AnimateDeath();
         }
 
         CoroutineUtils.ExecuteAfterDelay(() => {
             Cleanup();
-            resolveMoveAction?.Invoke();
+            onAnimationResolved?.Invoke();
         }, this, 0.25f);
     }
 
-    private void Cleanup()
+    public void KillImmediate()
+    {
+        Cleanup(immediate: true);
+    }
+
+    private void Cleanup(bool immediate=false)
     {        
         UnregisterUnit(this);
         if (Commander != null)
@@ -174,7 +178,11 @@ public class MilitaryUnit : MonoBehaviour
             Commander.RemoveUnit(this);
         }
 
-        OnDeath?.Invoke();
+        if (!immediate)
+        {
+            OnDeath?.Invoke();
+            OnAnyUnitDeath?.Invoke(this, null);
+        }
 
         gameObject.SetActive(false);
     }
