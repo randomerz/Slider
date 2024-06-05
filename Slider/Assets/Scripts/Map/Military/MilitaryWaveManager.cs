@@ -51,7 +51,7 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
         }
     }
 
-    public void CheckSpawnWaveConditions(object sender, System.EventArgs e)
+    public void CheckSpawnWaveConditions(object sender, MilitaryUnit.UnitArgs e)
     {
         foreach (MilitaryUnit u in MilitaryUnit.ActiveUnits)
         {

@@ -15,16 +15,23 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
     
     private void OnEnable()
     {
-        
+        MilitaryResetChecker.IncrementUnspawnedAlly();
+
         if (parentStile.islandId % 2 == 0)
         {
             spawnConfirmer.SetActive(false);
             gameObject.SetActive(false);
+            return;
         }
 
         SetUnitType((MilitaryUnit.Type)Random.Range(0, 3));
 
         UITrackerManager.AddNewTracker(gameObject);
+    }
+
+    private void OnDisable()
+    {
+        MilitaryResetChecker.DecrementUnspawnedAlly();
     }
 
     public void Reset()
@@ -67,7 +74,9 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, g.transform.position, transform.parent);
         }
 
-        StartCoroutine(DoSpawnSound(() => gameObject.SetActive(false)));
+        StartCoroutine(DoSpawnSound(() => {
+            gameObject.SetActive(false);
+        }));
 
         // gameObject.SetActive(false);
     }

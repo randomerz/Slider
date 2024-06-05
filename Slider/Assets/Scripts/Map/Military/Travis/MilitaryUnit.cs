@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 public class MilitaryUnit : MonoBehaviour
 {
-    public static System.EventHandler<System.EventArgs> OnAnyUnitDeath;
+    public static System.EventHandler<UnitArgs> OnAnyUnitDeath;
 
     public const int STILE_WIDTH = 13;
 
@@ -181,7 +181,7 @@ public class MilitaryUnit : MonoBehaviour
         if (!immediate)
         {
             OnDeath?.Invoke();
-            OnAnyUnitDeath?.Invoke(this, null);
+            OnAnyUnitDeath?.Invoke(this, new UnitArgs { unit = this });
         }
 
         gameObject.SetActive(false);
@@ -242,6 +242,11 @@ public class MilitaryUnit : MonoBehaviour
         Inactive,
         Active,
         Dead, // Killed in backend and in queue to die visually
+    }
+
+    public class UnitArgs : System.EventArgs
+    {
+        public MilitaryUnit unit;
     }
 
     public static Color ColorForUnitTeam(Team team)

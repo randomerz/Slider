@@ -52,10 +52,13 @@ public class MilitaryCollectibleController : Singleton<MilitaryCollectibleContro
 
         collectible.onCollect.RemoveAllListeners();
         collectible.onCollect.AddListener(() => { collectible.ActivateSTile(nextIslandId); });
+        collectible.onCollect.AddListener(() => MilitaryResetChecker.DecrementCollectible());
 
         // TODO: animate from start transform to end
         collectible.transform.position = targetTransform.position;
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, targetTransform.position, targetTransform);
+    
+        MilitaryResetChecker.IncrementCollectible();
     }
 
     private int GetNextSpawnedId()

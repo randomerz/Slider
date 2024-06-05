@@ -54,20 +54,25 @@ public class MilitaryGrid : SGrid
 
     // === Military puzzle specific ==
 
-    public void RestartSimulation()
+    public void RestartSimulation() => RestartSimulation(1);
+
+    public void RestartSimulation(float speed)
     {
         if (isRestarting)
             return;
         isRestarting = true;
 
+        CameraShake.ShakeIncrease(1 / speed, 0.25f);
         UIEffects.FlashWhite(
             () => {
                 DoRestartSimulation();
+                CameraShake.Shake(1 / speed, 0.25f);
+                AudioManager.Play("TFT Bell");
             },
             () => {
                 isRestarting = false;
             }, 
-            1
+            speed
         );
     }
 
@@ -89,6 +94,7 @@ public class MilitaryGrid : SGrid
 
         MilitaryCollectibleController.Reset();
         MilitaryWaveManager.Reset();
+        MilitaryResetChecker.ResetCounters();
 
         SaveSystem.SaveGame("Finished Restarting Military Sim");
     }
@@ -111,8 +117,6 @@ public class MilitaryGrid : SGrid
         
         PlayerInventory.RemoveCollectible(new Collectible.CollectibleData("Slider 1", myArea));
         PlayerInventory.RemoveCollectible(new Collectible.CollectibleData("New Slider", myArea));
-
-        Debug.Log(PlayerInventory.Contains("Slider 1", myArea));
     }
 
     private void RestartTroops()

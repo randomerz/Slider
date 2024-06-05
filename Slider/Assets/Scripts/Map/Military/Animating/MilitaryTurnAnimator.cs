@@ -33,6 +33,9 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
     public static void AddToQueueFront(IMGAnimatable move)
     {
         // TODO: implement
+        // - i dont think we actually want an add to front of queue though
+        //   since all of the actions get put into the queue immediately.
+        //   we want something to attach to after a units move
         _instance.moveQueue.Enqueue(move);
         _instance.CheckQueue();
     }
