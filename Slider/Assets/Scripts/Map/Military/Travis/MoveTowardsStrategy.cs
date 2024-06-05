@@ -35,8 +35,8 @@ public class MoveTowardsStrategy : ICommanderStrategy
         // Warning!! The main body of the enemy unit does not get updated but the npc part is animated
         Vector2Int newGridPos = unit.GridPosition + dir;
         MGMove move = new MGMove(unit, unit.GridPosition, newGridPos, null, null);
-        unit.GridPosition = newGridPos;
-        MilitaryTurnAnimator.AddNewMove(move);
+        MilitaryTurnAnimator.AddToQueue(move);
+        unit.GridPosition = newGridPos; // Will call combat checks
     }
 
     private MilitaryUnit ClosestKillableUnitTo(MilitaryUnit unit)
