@@ -62,7 +62,7 @@ public class SettingsManager : MonoBehaviour
             defaultValue: false,
             onValueChanged: (value) =>
             {
-                Player.GetInstance().AddTrackerOnSettingsChange();
+                Player.AddTrackerOnSettingsChange();
             }
         );
         // This is not currently used, but may be put back into the UI later

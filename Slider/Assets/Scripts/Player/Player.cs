@@ -482,7 +482,14 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         }
     }
 
-    public void AddTrackerOnSettingsChange()
+    public static void AddTrackerOnSettingsChange()
+    {
+        if(_instance == null) 
+            return;
+        _instance.AddTrackerOnSettingsChangeHelper();
+    }
+
+    public void AddTrackerOnSettingsChangeHelper()
     {
         if(trackerEnabled)
         {
