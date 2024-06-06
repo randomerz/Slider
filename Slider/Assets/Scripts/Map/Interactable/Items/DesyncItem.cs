@@ -145,24 +145,33 @@ public class DesyncItem : Item
     private void MovePresentItemToPastLocation()
     {
         Vector3 pastLocalLoc = transform.localPosition;
-        STile presentTile = MagiTechGrid.Instance.FindAltStile(currentTile);
-        Vector3 checkPos = presentTile.transform.position + pastLocalLoc;
-        if(presentTile.islandId == 3)
+        Vector3 checkPos;
+        STile presentTile = null;
+         if(currentTile != null)
         {
-            checkPos += new Vector3(0, -150f, 0);
+            presentTile = MagiTechGrid.Instance.FindAltStile(currentTile);
+            checkPos = presentTile.transform.position + pastLocalLoc;
+            if(presentTile.islandId == 3)
+            {
+                checkPos += new Vector3(0, -150f, 0);
+            }
+        }
+        else
+        {
+            checkPos = transform.localPosition + new Vector3(-100f, 0, 0);
+            checkPos.x = Mathf.Clamp(checkPos.x, -9, 43);
+            checkPos.y = Mathf.Clamp(checkPos.y, -16, 43);
         }
         Vector3 targetPos = ItemPlacerSolver.FindItemPlacePosition(checkPos, 9, blocksSpawnMask, true);
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
         if(targetPos.x == float.MaxValue)
         {
             Debug.LogWarning("Could not find valid position for present item. Moving anyways");
-            presentItem.transform.position = targetPos;
-            presentItem.transform.parent = presentTile.transform;
         }
-        else
+        presentItem.transform.position = targetPos;
+        if(presentTile != null)
         {
-            presentItem.transform.position = targetPos;
-            presentItem.transform.parent = presentTile.transform;
+            presentItem.transform.parent = presentTile.transform;presentItem.transform.parent = presentTile.transform;
         }
     }
 
