@@ -9,12 +9,15 @@ public class MilitaryGrid : SGrid
     private bool isRestarting;
 
     public MilitarySpriteTable militarySpriteTable; // global reference
-
+    
     [SerializeField] private Transform playerRestartSpawnPosition;
     [SerializeField] private List<MilitaryUnspawnedAlly> unspawnedAllies; // dont reset one on #16
 
+    [SerializeField] private MilitaryResetChecker militaryResetChecker; // init order makes me cry
+
     public override void Init()
     {
+        militaryResetChecker.Init(); // set up singleton
         InitArea(Area.Military);
         base.Init();
     }
@@ -33,12 +36,12 @@ public class MilitaryGrid : SGrid
 
     private void OnEnable()
     {
-        OnGridMove += OnTileMove;
+        SGridAnimator.OnSTileMoveEndLate += OnTileMove;
     }
 
     private void OnDisable()
     {
-        OnGridMove -= OnTileMove;
+        SGridAnimator.OnSTileMoveEndLate -= OnTileMove;
     }
 
     public override void Save()
@@ -132,8 +135,10 @@ public class MilitaryGrid : SGrid
         }
     }
 
-    public void OnTileMove(object sender, OnGridMoveArgs e)
+    // We want to end player turn after the units are moved
+    public void OnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
     {
+        // CoroutineUtils.ExecuteAfterEndOfFrame(() => MilitaryTurnManager.EndPlayerTurn(), this);
         MilitaryTurnManager.EndPlayerTurn();
     }
 }

@@ -4,9 +4,20 @@ public class MilitaryResetChecker : Singleton<MilitaryResetChecker>
 {
     private int numSliderCollectiblesActive = 0;
     private int numUnspawnedAlliesActive = 0;
+
+    private bool didInit = false;
     
-    private void Awake()
+    public void Awake()
     {
+        Init();
+    }
+
+    public void Init()
+    {
+        if (didInit)
+            return;
+        didInit = true;
+        
         InitializeSingleton();
     }
 

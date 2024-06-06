@@ -22,17 +22,13 @@ public class MGFight : IMGAnimatable
         {
             t = stile.transform;
         }
-        else 
+        else if (unitOther.AttachedSTile != null)
         {
-            STile s = SGrid.GetSTileUnderneath(unit.gameObject);
-            if (s != null)
-            {
-                t = s.transform;
-            }
-            else
-            {
-                t = unit.transform;
-            }
+            t = unitOther.AttachedSTile.transform;
+        }
+        else
+        {
+            t = unit.NPCController.transform;
         }
 
         unit.NPCController.FlashForDuration(FIGHT_DURATION);

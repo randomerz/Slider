@@ -16,6 +16,11 @@ public class MoveTowardsStrategy : ICommanderStrategy
 
     private void PerformMoveForUnit(MilitaryUnit unit)
     {
+        if (unit.UnitStatus != MilitaryUnit.Status.Active)
+        {
+            return;
+        }
+
         // DC: this strategy should just move towards the closest unit! its dumb!
         // MilitaryUnit closestKillableUnit = ClosestKillableUnitTo(unit);
         MilitaryUnit closestUnit = ClosestUnitTo(unit);
