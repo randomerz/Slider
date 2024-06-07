@@ -55,6 +55,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     private static float houseYThreshold = -75; // below this y value the player must be in a house
 
+    private bool trackerEnabled = true;
+
     protected void Awake()
     {
         if (!didInit)
@@ -77,7 +79,7 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
 
     private void Start() 
     {
-        SetTracker(true);
+        AddTracker();
     }
 
     private void OnDisable() 
@@ -467,11 +469,38 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
         }
     }
 
-    public void SetTracker(bool value)
+    public void SetTrackerEnabled(bool value)
     {
-        if (value)
+        trackerEnabled = value;
+        if(trackerEnabled)
         {
-            if (SettingsManager.Setting<bool>(Settings.MiniPlayerIcon).CurrentValue)
+            AddTracker();
+        }
+        else
+        {
+            UITrackerManager.RemoveTracker(gameObject);
+        }
+    }
+
+    public static void AddTrackerOnSettingsChange()
+    {
+        if(_instance == null) 
+            return;
+        _instance.AddTrackerOnSettingsChangeHelper();
+    }
+
+    public void AddTrackerOnSettingsChangeHelper()
+    {
+        if(trackerEnabled)
+        {
+            UITrackerManager.RemoveTracker(gameObject);
+            AddTracker();
+        }
+    }
+
+    public void AddTracker()
+    {
+        if (SettingsManager.Setting<bool>(Settings.MiniPlayerIcon).CurrentValue)
             {
                 UITrackerManager.AddNewTracker(
                     gameObject,
@@ -495,11 +524,6 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
                     timeUntilBlinkRepeat: 10f
                 );
             }
-        }
-        else
-        {
-            UITrackerManager.RemoveTracker(gameObject);
-        }
     }
 
     // This is a dangerous operation! You should probably only use it when the grid is locked.
