@@ -61,7 +61,7 @@ public class DesertTemple : MonoBehaviour, ISavable
         }
         artifactHousingButtonsManager.SetSpritesToHousing(isInTemple);
         templeMusic.SetIsInTemple(isInTemple);
-        Player.GetInstance().SetTracker(!isInTemple);
+        Player.GetInstance().SetTrackerEnabled(!isInTemple);
         Player.GetInstance().SetDontUpdateSTileUnderneath(isInTemple);
     }
 
