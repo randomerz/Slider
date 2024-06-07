@@ -7,12 +7,14 @@ public class LaserUIOffMap : MonoBehaviour
     [SerializeField] private MagiTechArtifact magiTechArtifact;
     [SerializeField] private Image laserSprite;
     public GameObject desertPortalUI;
+    public UIRockTracker uIRockTracker;
 
     void LateUpdate()
     {
         bool shouldShow = (
             laserOn &&
             desertPortalUI.activeSelf &&
+            (uIRockTracker == null || uIRockTracker.isExploded) &&
             (magiTechArtifact == null || magiTechArtifact.IsDisplayingPast())
         );
         laserSprite.enabled = shouldShow;
