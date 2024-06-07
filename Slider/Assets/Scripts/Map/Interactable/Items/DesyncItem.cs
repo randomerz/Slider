@@ -147,7 +147,7 @@ public class DesyncItem : Item
         Vector3 pastLocalLoc = transform.localPosition;
         Vector3 checkPos;
         STile presentTile = null;
-         if(currentTile != null)
+        if(currentTile != null)
         {
             presentTile = MagiTechGrid.Instance.FindAltStile(currentTile);
             checkPos = presentTile.transform.position + pastLocalLoc;
@@ -159,8 +159,8 @@ public class DesyncItem : Item
         else
         {
             checkPos = transform.localPosition + new Vector3(-100f, 0, 0);
-            checkPos.x = Mathf.Clamp(checkPos.x, -9, 43);
-            checkPos.y = Mathf.Clamp(checkPos.y, -16, 43);
+            checkPos.x = Mathf.Clamp(checkPos.x, -9f, 43f);
+            checkPos.y = Mathf.Clamp(checkPos.y, -16f, 43f);
         }
         Vector3 targetPos = ItemPlacerSolver.FindItemPlacePosition(checkPos, 9, blocksSpawnMask, true);
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
@@ -171,7 +171,11 @@ public class DesyncItem : Item
         presentItem.transform.position = targetPos;
         if(presentTile != null)
         {
-            presentItem.transform.parent = presentTile.transform;presentItem.transform.parent = presentTile.transform;
+            presentItem.transform.parent = presentTile.transform;
+        }
+        else
+        {
+            presentItem.transform.parent = null;
         }
     }
 

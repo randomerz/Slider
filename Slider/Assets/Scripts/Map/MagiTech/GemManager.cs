@@ -164,7 +164,7 @@ public class GemManager : MonoBehaviour, ISavable
         }
         else
         {
-            Debug.LogError("Tried to turn in invalid item: " + item);
+            AudioManager.Play("Artifact Error");
         }
         UpdateGemSprites();
     }
