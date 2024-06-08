@@ -608,7 +608,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -616,6 +616,27 @@ TextureImporter:
       bones: []
       spriteID: 4efc60c12ad06f94884365dbbfbf228e
       internalID: 631522373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Items_boots_upgrade
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a762618e09a08b45a34a772c50faec8
+      internalID: 1399356695
       vertices: []
       indices: 
       edges: []
@@ -652,6 +673,7 @@ TextureImporter:
       Items_7: -6099050445329199328
       Items_8: -7855203551248514480
       Items_9: -2064859774160998932
+      Items_boots_upgrade: 1399356695
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

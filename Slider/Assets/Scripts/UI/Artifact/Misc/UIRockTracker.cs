@@ -11,6 +11,8 @@ public class UIRockTracker : FlashWhiteImage
 
     private ArtifactTileButton button;
 
+    public bool isExploded => myRock.isExploded;
+
     protected override void Awake()
     {
         base.Awake();

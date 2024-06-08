@@ -1,5 +1,56 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &475228885601279618
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8046252033569815418}
+  - component: {fileID: 4520575508315584226}
+  m_Layer: 0
+  m_Name: ParticleTrail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8046252033569815418
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 475228885601279618}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2683484320689657789}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4520575508315584226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 475228885601279618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39549b7472e95d442b9b6a9b7d7e9f3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceBetweenParticles: 2
+  delayBetweenParticles: 0.025
+  delayBetweenTrailRepeat: 8
+  doAudio: 0
+  particlePrefab: {fileID: 9046147275880471296, guid: 3f5ea05501e286742afaba82772fa924, type: 3}
+  trailStart: {fileID: 2683484320689657789}
+  trailTarget: {fileID: 0}
 --- !u!1 &2683484320689657778
 GameObject:
   m_ObjectHideFlags: 0
@@ -37,6 +88,7 @@ Transform:
   - {fileID: 512298388959576628}
   - {fileID: 4315244762395763589}
   - {fileID: 2752851076733198047}
+  - {fileID: 8046252033569815418}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &5277335767376997368
@@ -86,12 +138,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0d0793963d34c749b1b8f9713850bc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveString: 
   pathController: {fileID: 9034651724334653588}
   debugSpriteRenderer: {fileID: 6277578289820009269}
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 524289
   signAnimator: {fileID: 2093836391075880770}
+  particleTrail: {fileID: 4520575508315584226}
   shapeSignAnimator: {fileID: 2957516595023609229}
   INSIGNIA_SHAPES:
   - {fileID: 11400000, guid: 76675a2db3290714f95b9c4099fbdd50, type: 2}

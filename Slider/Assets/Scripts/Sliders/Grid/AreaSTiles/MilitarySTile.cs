@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class MilitarySTile : STile 
 {
-    // public new int STILE_WIDTH = 13;
+    public Transform sliderCollectibleSpawn;
+    public Transform newUnitSelectorSpawn;
 
     private new void Awake() {
         base.Awake();

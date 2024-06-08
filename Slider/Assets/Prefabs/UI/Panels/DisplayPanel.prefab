@@ -29,8 +29,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3007060917427647799}
   - {fileID: 9163514501992633803}
+  - {fileID: 3007060917427647799}
   - {fileID: 352855752421212919}
   m_Father: {fileID: 3046825858971367794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -83,7 +83,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3046825858971367794
 RectTransform:
   m_ObjectHideFlags: 0
@@ -159,6 +159,7 @@ MonoBehaviour:
   - {fileID: 8787898794660201760}
   - {fileID: 3415009998107534812}
   - {fileID: 364213291587807408}
+  subSelectableSets: []
 --- !u!1 &1584417467485821243
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,9 +499,33 @@ PrefabInstance:
       propertyPath: m_text
       value: Resolution
       objectReference: {fileID: 0}
+    - target: {fileID: 4378716235512539280, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4378716235512539280, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280035116876030012, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280035116876030012, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280035116876030012, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6634315279850880283, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_Name
       value: Resolution DropDown
+      objectReference: {fileID: 0}
+    - target: {fileID: 8560774998201678849, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -615,9 +640,21 @@ PrefabInstance:
       propertyPath: m_text
       value: FPS
       objectReference: {fileID: 0}
+    - target: {fileID: 2585387070161331253, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 112
+      objectReference: {fileID: 0}
     - target: {fileID: 4029432248193482832, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_text
       value: Uncapped
+      objectReference: {fileID: 0}
+    - target: {fileID: 4378716235512539280, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4378716235512539280, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4722596178205053231, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_Value
@@ -647,9 +684,25 @@ PrefabInstance:
       propertyPath: m_Options.m_Options.Array.data[5].m_Text
       value: Uncapped
       objectReference: {fileID: 0}
+    - target: {fileID: 5280035116876030012, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280035116876030012, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5280035116876030012, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6634315279850880283, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_Name
       value: FPS DropDown
+      objectReference: {fileID: 0}
+    - target: {fileID: 8560774998201678849, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

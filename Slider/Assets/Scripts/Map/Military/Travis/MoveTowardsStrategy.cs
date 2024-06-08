@@ -16,26 +16,47 @@ public class MoveTowardsStrategy : ICommanderStrategy
 
     private void PerformMoveForUnit(MilitaryUnit unit)
     {
-        MilitaryUnit closestKillableUnit = ClosestKillableUnitTo(unit);
-
-        if (closestKillableUnit != null)
+        if (unit.UnitStatus != MilitaryUnit.Status.Active)
         {
-            Vector2Int move = DirectionTowardsUnit(movingUnit: unit, target: closestKillableUnit);
-            unit.GridPosition += move;
-            Debug.Log($"Moving towards unit: {move}");
+            return;
+        }
+
+        // DC: this strategy should just move towards the closest unit! its dumb!
+        // MilitaryUnit closestKillableUnit = ClosestKillableUnitTo(unit);
+        MilitaryUnit closestUnit = ClosestUnitTo(unit);
+
+        Vector2Int dir;
+        if (closestUnit != null)
+        {
+            dir = DirectionTowardsUnit(movingUnit: unit, target: closestUnit);
+            Debug.Log($"Moving towards unit: {dir}");
         }
         else
         {
-            Vector2Int move = RandomDirection(unit);
-            unit.GridPosition += move;
-            Debug.Log($"Moving randomly: {move}");
+            dir = RandomDirection(unit);
+            Debug.Log($"Moving randomly: {dir}");
         }
+
+        // Warning!! The main body of the enemy unit does not get updated but the npc part is animated
+        Vector2Int newGridPos = unit.GridPosition + dir;
+        MGMove move = new MGMove(unit, unit.GridPosition, newGridPos, null, null);
+        MilitaryTurnAnimator.AddToQueue(move);
+        unit.GridPosition = newGridPos; // Will call combat checks
     }
 
     private MilitaryUnit ClosestKillableUnitTo(MilitaryUnit unit)
     {
         return MilitaryUnit.ActiveUnits.ToList()
+                                       .Where(otherUnit => otherUnit.UnitTeam != unit.UnitTeam)
                                        .Where(otherUnit => MilitaryCombat.WinnerOfBattleBetween(unit, otherUnit) == unit)
+                                       .OrderBy(otherUnit => Vector2.Distance(unit.GridPosition, otherUnit.GridPosition))
+                                       .FirstOrDefault();
+    }
+
+    private MilitaryUnit ClosestUnitTo(MilitaryUnit unit)
+    {
+        return MilitaryUnit.ActiveUnits.ToList()
+                                       .Where(otherUnit => otherUnit.UnitTeam != unit.UnitTeam)
                                        .OrderBy(otherUnit => Vector2.Distance(unit.GridPosition, otherUnit.GridPosition))
                                        .FirstOrDefault();
     }
@@ -72,7 +93,7 @@ public class MoveTowardsStrategy : ICommanderStrategy
 
     private Vector2Int RandomDirection(MilitaryUnit unitToMove)
     {
-        IEnumerable<Vector2Int> validDirections = AllDirections().Where(direction => PositionIsValid(unitToMove, unitToMove.GridPosition + direction));
+        IEnumerable<Vector2Int> validDirections = DirectionUtil.Cardinal4.Where(direction => PositionIsValid(unitToMove, unitToMove.GridPosition + direction));
         if (validDirections.Count() == 0)
         {
             return new Vector2Int(0, 0);
@@ -80,17 +101,6 @@ public class MoveTowardsStrategy : ICommanderStrategy
 
         int randomIndex = UnityEngine.Random.Range(0, validDirections.Count() - 1);
         return validDirections.ToArray()[randomIndex];
-    }
-
-    private List<Vector2Int> AllDirections()
-    {
-        return new List<Vector2Int>()
-        {
-            new Vector2Int(1, 0),
-            new Vector2Int(-1, 0),
-            new Vector2Int(0, 1),
-            new Vector2Int(0, -1),
-        };
     }
 
     private bool PositionIsValid(MilitaryUnit unit, Vector2Int gridPosition)

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "MilitarySpriteTable", menuName = "Scriptable Objects/Military Sprite Table")]
@@ -10,6 +9,7 @@ public class MilitarySpriteTable : ScriptableObject
         public MilitaryUnit.Team team;
         public MilitaryUnit.Type type;
         public Sprite sprite;
+        public Sprite uiIcon;
         public RuntimeAnimatorController animatorController;
     }
 
@@ -22,6 +22,11 @@ public class MilitarySpriteTable : ScriptableObject
         return spriteData[GetIndexForUnit(unit)].sprite;
     }
 
+    public Sprite GetUIIconForUnit(MilitaryUnit unit)
+    {
+        return spriteData[GetIndexForUnit(unit)].uiIcon;
+    }
+
     public RuntimeAnimatorController GetAnimatorControllerForUnit(MilitaryUnit unit)
     {
         return spriteData[GetIndexForUnit(unit)].animatorController;
@@ -30,6 +35,11 @@ public class MilitarySpriteTable : ScriptableObject
     public Sprite GetFlagSpriteForUnit(MilitaryUnit unit)
     {
         return flags[(int)unit.UnitType];
+    }
+
+    public Sprite GetFlagSpriteForType(MilitaryUnit.Type type)
+    {
+        return flags[(int)type];
     }
 
     private int GetIndexForUnit(MilitaryUnit unit)

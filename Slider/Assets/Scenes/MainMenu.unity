@@ -620,15 +620,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4958489146889578412, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578412, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4958489146889578412, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
-      propertyPath: m_AnchorMin.y
+      propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4958489146889578412, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
@@ -723,6 +715,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6317950202216148918, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 8.498413
+      objectReference: {fileID: 0}
     - target: {fileID: 6801176114928656752, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
       propertyPath: parentMenu
       value: 
@@ -766,6 +762,10 @@ PrefabInstance:
     - target: {fileID: 8385831924232455412, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8655275611304606812, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.000022888184
       objectReference: {fileID: 0}
     - target: {fileID: 8748412212251335511, guid: 4acdeb3bce27bda459c54c21d09f3212, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1890,7 +1890,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6231720964866008364, guid: ef906d029e77d314393f8bd174ad4991, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7322694294893766236, guid: ef906d029e77d314393f8bd174ad4991, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4496,10 +4496,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.22460938
-    y: 0.038194444
-    width: 0.125
-    height: 0.125
+    x: 0.020833334
+    y: 0.175
+    width: 0.16666667
+    height: 0.16666666
   near clip plane: 0.1
   far clip plane: 5000
   field of view: 40
@@ -8294,9 +8294,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1003928449}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 938314a781b60cb40ae124e6500c2361, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  A: 0.0625
+  B: 0.65
+  C: 0.15
+  D: 0
+  horizontalVelocity: 0
 --- !u!1001 &1016617804
 PrefabInstance:
   m_ObjectHideFlags: 0

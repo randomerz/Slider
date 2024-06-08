@@ -127,7 +127,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 5
-        y: 21
+        y: 53
         width: 6
         height: 6
       alignment: 0
@@ -148,7 +148,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 5
-        y: 5
+        y: 37
         width: 6
         height: 5
       alignment: 0
@@ -168,8 +168,8 @@ TextureImporter:
       name: magitech_icon_covers_2
       rect:
         serializedVersion: 2
-        x: 17
-        y: 7
+        x: 18
+        y: 39
         width: 14
         height: 18
       alignment: 0
@@ -190,7 +190,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 32
-        y: 0
+        y: 32
         width: 32
         height: 32
       alignment: 0
@@ -211,11 +211,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 0
+        y: 32
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -223,6 +223,27 @@ TextureImporter:
       bones: []
       spriteID: 43f9b14dbb81bfe44bfe46ae4e64d470
       internalID: -977812449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magitech_icon_covers_vert_door
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 22
+        width: 3
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0786dbf4f2aead443aac105916bf267b
+      internalID: -90420719
       vertices: []
       indices: 
       edges: []
@@ -243,6 +264,7 @@ TextureImporter:
       magitech_icon_covers_2: -431329024
       magitech_icon_covers_3: 676374849
       magitech_icon_covers_4: -977812449
+      magitech_icon_covers_vert_door: -90420719
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

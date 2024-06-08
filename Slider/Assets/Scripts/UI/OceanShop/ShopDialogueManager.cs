@@ -15,6 +15,9 @@ public class ShopDialogueManager : MonoBehaviour
     private ShopDialogue currentDialogue;
     // private Coroutine typingCoroutine;
 
+    private float actionPressedBuffer = 0;
+    private const float ACTION_BUFFER_DURATION = 0.1f; // After using action, can't use it for this long
+
     private List<string> mainShopDialgoue = new List<string>{
         "Welcome back sailor!", 
         "Find anything interesting today?",
@@ -80,9 +83,20 @@ public class ShopDialogueManager : MonoBehaviour
         canOverrideDialogue = true;
     }
 
+    private void Update()
+    {
+        actionPressedBuffer -= Time.deltaTime;
+    }
+
     // when the player presses the 'E' key
     public void OnActionPressed(InputAction.CallbackContext context)
     {
+        if (actionPressedBuffer > 0)
+        {
+            return;
+        }
+        actionPressedBuffer = ACTION_BUFFER_DURATION;
+
         // Tr: Ignore event when the key/mouse is released.
         // I thought this was safer than changing the controls to only trigger on press.
         if (context.control.IsPressed())

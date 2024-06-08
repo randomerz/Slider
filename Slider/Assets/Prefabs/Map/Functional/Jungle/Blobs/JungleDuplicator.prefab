@@ -40,6 +40,8 @@ Transform:
   - {fileID: 2453578291286502651}
   - {fileID: 1303641399779833503}
   - {fileID: 5326234805880448405}
+  - {fileID: 3521534639927443094}
+  - {fileID: 6665106098352895110}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1724063635500456201
@@ -178,15 +180,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90636b8100a6f504e82ca62eeedbd6b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveString: 
   pathController: {fileID: 3349536538608209513}
   debugSpriteRenderer: {fileID: 3900353787230897267}
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 524289
   signAnimator: {fileID: 4323543560241154342}
+  particleTrail: {fileID: 7941504144479135449}
   RECIPE_LIST: {fileID: 11400000, guid: fc4da6d866679aa4783b5e895f04ad29, type: 2}
   JUNK_SHAPE: {fileID: 11400000, guid: b39209e8376caeb40aa2b36b517e3990, type: 2}
   alternateSignAnimator: {fileID: 7493338120957975084}
+  alternateParticleTrail: {fileID: 6678036477475427150}
 --- !u!1 &2666226671085442635
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,6 +276,57 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &4468032211697406492
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3521534639927443094}
+  - component: {fileID: 7941504144479135449}
+  m_Layer: 0
+  m_Name: ParticleTrail (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3521534639927443094
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4468032211697406492}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1724063635500456206}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7941504144479135449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4468032211697406492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39549b7472e95d442b9b6a9b7d7e9f3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceBetweenParticles: 2
+  delayBetweenParticles: 0.025
+  delayBetweenTrailRepeat: 8
+  doAudio: 0
+  particlePrefab: {fileID: 9046147275880471296, guid: 3f5ea05501e286742afaba82772fa924, type: 3}
+  trailStart: {fileID: 1724063635500456206}
+  trailTarget: {fileID: 0}
 --- !u!1 &4796479410399044790
 GameObject:
   m_ObjectHideFlags: 0
@@ -523,6 +579,57 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &7505904201826258108
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6665106098352895110}
+  - component: {fileID: 6678036477475427150}
+  m_Layer: 0
+  m_Name: ParticleTrail (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6665106098352895110
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7505904201826258108}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1724063635500456206}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6678036477475427150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7505904201826258108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39549b7472e95d442b9b6a9b7d7e9f3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceBetweenParticles: 2
+  delayBetweenParticles: 0.025
+  delayBetweenTrailRepeat: 8
+  doAudio: 0
+  particlePrefab: {fileID: 9046147275880471296, guid: 3f5ea05501e286742afaba82772fa924, type: 3}
+  trailStart: {fileID: 1724063635500456206}
+  trailTarget: {fileID: 0}
 --- !u!1001 &3255430489623119024
 PrefabInstance:
   m_ObjectHideFlags: 0
