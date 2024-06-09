@@ -311,32 +311,58 @@ be corrupted, these rules may be helpful for debugging purposes...
             Inval
         }
 
-        public static LocalizationFile MakeLocalizationFile(string locale, string filePath,
+        public enum ParserError
+        {
+            NoError,
+            FileNotFound,
+            ExplicitlyDisabled
+        }
+
+        public static void PrintParserError(ParserError error, string path)
+        {
+            switch (error)
+            {
+                case LocalizationFile.ParserError.NoError:
+                    Debug.Log($"Localization file parser: null file without error thrown at {path}");
+                    break;
+                case LocalizationFile.ParserError.FileNotFound:
+                    Debug.Log($"Localization file parser: file not found {path}");
+                    break;
+                case LocalizationFile.ParserError.ExplicitlyDisabled:
+                    Debug.LogWarning($"Localization file parser: localization file at {path} explicitly disabled");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public static (LocalizationFile, ParserError) MakeLocalizationFile(string locale, string filePath,
             LocalizationFile localeConfig = null)
         {
             if (!File.Exists(filePath))
             {
-                return null;
+                return (null, ParserError.FileNotFound);
             }
 
             using var file = File.OpenRead(filePath);
             LocalizationFile parsed = new(locale, new StreamReader(file), localeConfig);
-            if (parsed.configs.TryGetValue(Config.IsValid, out LocalizationConfig isValid))
+            if (!parsed.configs.TryGetValue(Config.IsValid, out LocalizationConfig isValid))
             {
-                if (int.TryParse(isValid.Value, out int isValidFlag))
-                {
-                    if (isValidFlag == 1)
-                    {
-                        return parsed;
-                    }
-                }
-                
-                // if isValid is set but not 1, return null and allow the localization loader to use fallback strategy
-                return null;
+                // if isValid is not set, assume to be true
+                return (parsed, ParserError.NoError);
+            }
+            if (!int.TryParse(isValid.Value, out int isValidFlag))
+            {
+                return (null, ParserError.ExplicitlyDisabled);
+            }
+            if (isValidFlag == 1)
+            {
+                return (parsed, ParserError.NoError);
             }
 
-            // if isValid is not set, assume to be true
-            return parsed;
+            // if isValid is set but not 1, return null and allow the localization loader to use fallback strategy
+            return (null, ParserError.ExplicitlyDisabled);
+
         }
         
         private LocalizationFile(string locale, StreamReader reader, LocalizationFile localeConfig = null)

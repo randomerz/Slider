@@ -1,3 +1,4 @@
+using System;
 using Localization;
 using TMPro;
 using UnityEngine;
@@ -37,15 +38,21 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     
     public static string CurrentLocale => _instance == null ? LocalizationFile.DefaultLocale : _instance.GetComponent<SettingRetriever>().ReadSettingValue() as string;
 
-    private static LocalizationFile LoadAssetAndConfigureLocaleDefaults(string locale, string assetPath) 
+    private static LocalizationFile LoadAssetAndConfigureLocaleDefaults(string locale, string sceneLocalizationFilePath) 
     {
-        string localeConfigsPath = LocalizationFile.LocaleGlobalFilePath(locale);
-        var localeConfig = LocalizationFile.MakeLocalizationFile(locale, localeConfigsPath);
-        if (localeConfig == null)
+        string localeConfigFilePath = LocalizationFile.LocaleGlobalFilePath(locale);
+        var (localeConfigFile, errorLocale) = LocalizationFile.MakeLocalizationFile(locale, localeConfigFilePath);
+        if (localeConfigFile == null)
         {
-            Debug.LogError($"{locale} missing global configuration file, check for {localeConfigsPath}");
+            LocalizationFile.PrintParserError(errorLocale, localeConfigFilePath);
+            return null;
         }
-        return LocalizationFile.MakeLocalizationFile(locale, assetPath, localeConfig);
+        var (sceneLocalizationFile, errorScene) = LocalizationFile.MakeLocalizationFile(locale, sceneLocalizationFilePath, localeConfigFile);
+        if (sceneLocalizationFile == null)
+        {
+            LocalizationFile.PrintParserError(errorScene, sceneLocalizationFilePath);
+        }
+        return sceneLocalizationFile;
     }
     
     private void RefreshLocalization(Scene scene)

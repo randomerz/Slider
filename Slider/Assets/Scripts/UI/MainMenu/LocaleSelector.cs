@@ -34,6 +34,11 @@ public class LocaleSelector : MonoBehaviour
         {
             retriever.WriteSettingValue(sortedOptions[0].text);
         }
+
+        if (sortedOptions.Count == 1)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     [SerializeField]
