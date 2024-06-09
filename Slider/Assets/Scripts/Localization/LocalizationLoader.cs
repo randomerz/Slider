@@ -58,20 +58,27 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     private void RefreshLocalization(Scene scene)
     {
         var locale = CurrentLocale;
-        
-        LocalizableContext loaded = LocalizableContext.ForSingleScene(scene);
-        LocalizableContext persistent = LocalizableContext.ForSingleScene(GameManager.instance.gameObject.scene);
 
         var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, scene));
-        loaded.Localize(loadedAsset);
-        persistent.Localize(loadedAsset);
+
+        if (loadedAsset != null)
+        {
+            LocalizableContext loaded = LocalizableContext.ForSingleScene(scene);
+            LocalizableContext persistent = LocalizableContext.ForSingleScene(GameManager.instance.gameObject.scene);
+            
+            loaded.Localize(loadedAsset);
+            persistent.Localize(loadedAsset);
+        }
     }
 
     public static void LocalizePrefab(GameObject prefab)
     {
         var locale = CurrentLocale;
-        LocalizableContext ctx = LocalizableContext.ForSinglePrefab(prefab);
         var loadedAsset = LoadAssetAndConfigureLocaleDefaults(locale, LocalizationFile.AssetPath(locale, prefab));
-        ctx.Localize(loadedAsset);
+
+        if (loadedAsset != null)
+        {
+            LocalizableContext.ForSinglePrefab(prefab).Localize(loadedAsset);
+        }
     }
 }

@@ -61,14 +61,15 @@ public class LocalizationSkeletonGenerator : EditorWindow
    private void OnGUI()
    {
        configuration = EditorGUILayout.ObjectField(configuration, typeof(LocalizationProjectConfiguration), false) as LocalizationProjectConfiguration;
-
+       GUILayout.Label("You need to select the scriptable object that configures the project's localization, in order to use the localization generation stuff below");
+       
        if (GUILayout.Button("Select reference localization path"))
        {
            referenceLocalizationPath =
                EditorUtility.OpenFolderPanel("Reference localization", referenceLocalizationPath, null);
            EditorPrefs.SetString(referenceLocalizationPathPreference, referenceLocalizationPath);
        }
-
+       GUILayout.Label("^ Reference localization includes old translations that will be migrated into newly generated localization CSV files");
        
        if (referenceLocalizationPath != null)
        {
@@ -85,6 +86,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            // Remove this if you don't want to close the window when starting a build
            GenerateSkeleton(configuration, referenceRoot: referenceLocalizationPath);
        }
+       GUILayout.Label("^ generates a relevant CSV files to the StreamingAssets folder, following configurations set in the localization project configuration object. Such files will be directly copied into the build!");
        
        if (GUILayout.Button("Generate localization OUTSIDE project "))
        {
@@ -97,6 +99,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            EditorPrefs.SetString(saveLocalizationOutsidePathPreference, saveLocalizationDir);
            GenerateSkeleton(configuration, saveLocalizationDir, referenceRoot: referenceLocalizationPath);
        }
+       GUILayout.Label("^ generates a relevant CSV files to any selected folder, following configurations set in the localization project configuration object");
        
        // Build button
        string buildButtonLabel = (buildOptions & BuildOptions.AutoRunPlayer) == 0 ? "Build" : "Build And Run";
@@ -107,6 +110,8 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
            DoBuild();
        }
+       GUILayout.Label("^ builds and runs the project using the current build setting, no localization function associated with it");
+
    }
 
    private void GenerateSkeleton(LocalizationProjectConfiguration projectConfiguration, string root = null, string referenceRoot = null)
@@ -120,6 +125,9 @@ public class LocalizationSkeletonGenerator : EditorWindow
            WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name, root), serializedConfigs);
        }
 
+       // AT: note: reference file = old translations that should be considered for migration into new translations
+       //           for migration to be considered the scene must exactly match (or in the case of locale config, the
+       //           locale has to match
        // wtf nested functions exist???
        LocalizationFile NullifyReferenceRootIfNeeded(LocaleConfiguration locale, string path)
        {
@@ -130,7 +138,13 @@ public class LocalizationSkeletonGenerator : EditorWindow
                return null;
            }
 
-           return LocalizationFile.MakeLocalizationFile(locale.name, path);
+           var (referenceFile, err) = LocalizationFile.MakeLocalizationFile(locale.name, path);
+           if (referenceFile == null)
+           {
+               LocalizationFile.PrintParserError(err, path);
+           }
+
+           return referenceFile;
        }
 
        foreach (var prefab in projectConfiguration.RelevantPrefabs)

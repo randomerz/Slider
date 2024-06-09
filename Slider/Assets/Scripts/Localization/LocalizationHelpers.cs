@@ -152,13 +152,10 @@ namespace Localization
                     // very expensive check, makes sure that only the legit locales are selected
                     .Where(localeName =>
                     {
-                        #if UNITY_EDITOR
-                        return true;
-                        #else
                         var filePath = LocalizationFile.LocaleGlobalFilePath(localeName, root);
-                        var parsedGlobalFile = LocalizationFile.MakeLocalizationFile(localeName, filePath);
+                        var (parsedGlobalFile, err) = LocalizationFile.MakeLocalizationFile(localeName, filePath);
+                        PrintParserError(err, filePath);
                         return parsedGlobalFile != null;
-                        #endif
                     })
                     .ToList();
                     
@@ -346,6 +343,8 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             using var file = File.OpenRead(filePath);
             LocalizationFile parsed = new(locale, new StreamReader(file), localeConfig);
+            
+            #if !UNITY_EDITOR
             if (!parsed.configs.TryGetValue(Config.IsValid, out LocalizationConfig isValid))
             {
                 // if isValid is not set, assume to be true
@@ -362,6 +361,9 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             // if isValid is set but not 1, return null and allow the localization loader to use fallback strategy
             return (null, ParserError.ExplicitlyDisabled);
+            #else
+            return (parsed, ParserError.NoError);
+            #endif
 
         }
         
