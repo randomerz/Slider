@@ -54,9 +54,6 @@ MonoBehaviour:
   shouldDisableAtStart: 0
   doReflectionCalculations: 0
   itemRadius: 0.5
-  pickupOverrideLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
   pickUpDuration: 0.5
   xPickUpMotion:
     serializedVersion: 2
@@ -127,7 +124,6 @@ MonoBehaviour:
   isOnlyUsedByPlayer: 1
   reflectionPivot: {fileID: 0}
   enableOnDrop: []
-  isQueuedForDestruction: 0
   OnPickUp:
     m_PersistentCalls:
       m_Calls: []
@@ -194,7 +190,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.18941963}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -205,7 +201,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.25, y: 0.49426007}
+  m_Size: {x: 1.25, y: 0.5}
   m_EdgeRadius: 0
 --- !u!1 &6869248136028127016
 GameObject:

@@ -705,7 +705,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.2}
+  m_Offset: {x: 0, y: -0.0625}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -716,7 +716,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.2}
+  m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0.125
 --- !u!61 &3512278234758974931
 BoxCollider2D:
@@ -875,7 +875,7 @@ Transform:
   m_GameObject: {fileID: 380634037666542966}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3, y: -14, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -908,10 +908,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.016666668
-    y: 0.15925926
-    width: 0.33333334
-    height: 0.3333333
+    x: 0.025000002
+    y: 0.35462964
+    width: 0.16666667
+    height: 0.16666666
   near clip plane: 0.1
   far clip plane: 5000
   field of view: 40

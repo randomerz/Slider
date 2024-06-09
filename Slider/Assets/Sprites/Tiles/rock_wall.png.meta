@@ -93,7 +93,7 @@ TextureImporter:
       213: -6941701845969068046
     second: rock_wall_34
   externalObjects: {}
-  serializedVersion: 12
+  serializedVersion: 11
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -110,12 +110,11 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
-    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMipmapLimit: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -154,8 +153,6 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
-  swizzle: 50462976
-  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -167,7 +164,6 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -180,20 +176,6 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Server
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -840,38 +822,39 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      rock_wall_0: 4845247228398286562
-      rock_wall_1: -4282311976296740413
       rock_wall_11: -6491460982465327488
-      rock_wall_12: -1701848256779198293
-      rock_wall_13: -7040871370877277034
-      rock_wall_14: -7157731064369133150
-      rock_wall_15: -8446716849853648269
-      rock_wall_16: 1306882527098742608
-      rock_wall_17: -4841449947291725746
-      rock_wall_18: -5062597369392406605
-      rock_wall_19: -3993850445962815405
-      rock_wall_2: 2929173275081331973
-      rock_wall_20: -7094925134971592406
-      rock_wall_21: 4280938559482367059
-      rock_wall_22: -2802475625025387913
-      rock_wall_23: 1241909648196731045
-      rock_wall_24: 8657593615310694964
-      rock_wall_25: -3216240962243860520
-      rock_wall_26: -4782451384494062604
-      rock_wall_27: 978871001752224686
-      rock_wall_28: 8388720426212681729
-      rock_wall_29: -9182603697874239286
-      rock_wall_3: -2312770771525456706
-      rock_wall_30: 6764540822253483094
-      rock_wall_31: -3899151676132775168
-      rock_wall_32: -8143437333952198967
-      rock_wall_33: 4082397269399611362
-      rock_wall_34: -6941701845969068046
-      rock_wall_4: -2059705634696699880
       rock_wall_5: 4995242584044334490
-  mipmapLimitGroupName: 
+      rock_wall_1: -4282311976296740413
+      rock_wall_13: -7040871370877277034
+      rock_wall_4: -2059705634696699880
+      rock_wall_16: 1306882527098742608
+      rock_wall_14: -7157731064369133150
+      rock_wall_31: -3899151676132775168
+      rock_wall_24: 8657593615310694964
+      rock_wall_27: 978871001752224686
+      rock_wall_33: 4082397269399611362
+      rock_wall_28: 8388720426212681729
+      rock_wall_26: -4782451384494062604
+      rock_wall_18: -5062597369392406605
+      rock_wall_2: 2929173275081331973
+      rock_wall_21: 4280938559482367059
+      rock_wall_0: 4845247228398286562
+      rock_wall_32: -8143437333952198967
+      rock_wall_17: -4841449947291725746
+      rock_wall_12: -1701848256779198293
+      rock_wall_3: -2312770771525456706
+      rock_wall_23: 1241909648196731045
+      rock_wall_19: -3993850445962815405
+      rock_wall_15: -8446716849853648269
+      rock_wall_29: -9182603697874239286
+      rock_wall_25: -3216240962243860520
+      rock_wall_34: -6941701845969068046
+      rock_wall_30: 6764540822253483094
+      rock_wall_22: -2802475625025387913
+      rock_wall_20: -7094925134971592406
+  spritePackingTag: 
   pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
