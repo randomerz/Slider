@@ -16,6 +16,11 @@ public class MoveTowardsStrategy : ICommanderStrategy
 
     private void PerformMoveForUnit(MilitaryUnit unit)
     {
+        if (unit.UnitStatus != MilitaryUnit.Status.Active)
+        {
+            return;
+        }
+
         // DC: this strategy should just move towards the closest unit! its dumb!
         // MilitaryUnit closestKillableUnit = ClosestKillableUnitTo(unit);
         MilitaryUnit closestUnit = ClosestUnitTo(unit);
@@ -35,8 +40,8 @@ public class MoveTowardsStrategy : ICommanderStrategy
         // Warning!! The main body of the enemy unit does not get updated but the npc part is animated
         Vector2Int newGridPos = unit.GridPosition + dir;
         MGMove move = new MGMove(unit, unit.GridPosition, newGridPos, null, null);
-        unit.GridPosition = newGridPos;
         MilitaryTurnAnimator.AddToQueue(move);
+        unit.GridPosition = newGridPos; // Will call combat checks
     }
 
     private MilitaryUnit ClosestKillableUnitTo(MilitaryUnit unit)

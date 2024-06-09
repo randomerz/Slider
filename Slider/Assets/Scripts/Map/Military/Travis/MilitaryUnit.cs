@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 public class MilitaryUnit : MonoBehaviour
 {
-    public static System.EventHandler<System.EventArgs> OnUnitUnregistered;
+    public static System.EventHandler<UnitArgs> OnAnyUnitDeath;
 
     public const int STILE_WIDTH = 13;
 
@@ -44,16 +44,6 @@ public class MilitaryUnit : MonoBehaviour
             _attachedSTile = value;
             transform.SetParent(value == null ? null : value.transform);
         }
-    }
-
-    /// <summary>
-    /// The position where the attached flag should return to when placed at an invalid position.
-    /// </summary>
-    public Vector2 FlagReturnPosition
-    {
-        // At some point we will want to revisit this depending on how the units/flags look
-        // (if the unit is a set of sprites that cluster around the flag or whatever)
-        get => new(transform.position.x, transform.position.y);
     }
 
     [SerializeField] private MilitaryUnitCommander _commander;
@@ -118,7 +108,6 @@ public class MilitaryUnit : MonoBehaviour
         activeUnits.Remove(unit);
         MilitaryUITrackerManager.RemoveUnitTracker(unit);
         Debug.Log($"Unregistered Unit '{unit.gameObject.name}'");
-        OnUnitUnregistered?.Invoke(unit, new System.EventArgs());
     }
 
     public static Vector2 GridPositionToWorldPosition(Vector2Int tilePosition)
@@ -153,20 +142,25 @@ public class MilitaryUnit : MonoBehaviour
         MilitaryTurnAnimator.AddToQueueFront(new MGDeath(this));
     }
 
-    public void DoDeathAnimation(System.Action resolveMoveAction)
+    public void DoDeathAnimation(System.Action onAnimationResolved)
     {
         if (_npcController != null)
         {
-            _npcController.OnDeath();
+            _npcController.AnimateDeath();
         }
 
         CoroutineUtils.ExecuteAfterDelay(() => {
             Cleanup();
-            resolveMoveAction?.Invoke();
+            onAnimationResolved?.Invoke();
         }, this, 0.25f);
     }
 
-    private void Cleanup()
+    public void KillImmediate()
+    {
+        Cleanup(immediate: true);
+    }
+
+    private void Cleanup(bool immediate=false)
     {        
         UnregisterUnit(this);
         if (Commander != null)
@@ -174,7 +168,11 @@ public class MilitaryUnit : MonoBehaviour
             Commander.RemoveUnit(this);
         }
 
-        OnDeath?.Invoke();
+        if (!immediate)
+        {
+            OnDeath?.Invoke();
+            OnAnyUnitDeath?.Invoke(this, new UnitArgs { unit = this });
+        }
 
         gameObject.SetActive(false);
     }
@@ -236,6 +234,11 @@ public class MilitaryUnit : MonoBehaviour
         Dead, // Killed in backend and in queue to die visually
     }
 
+    public class UnitArgs : System.EventArgs
+    {
+        public MilitaryUnit unit;
+    }
+
     public static Color ColorForUnitTeam(Team team)
     {
         return team switch
@@ -244,6 +247,13 @@ public class MilitaryUnit : MonoBehaviour
             Team.Alien => new Color(112f / 255f, 48f / 255f, 160f / 255f),
             _ => Color.white,
         };
+    }
+
+    public void CreateAndQueueMove(Vector2Int endCoords, STile endStile)
+    {
+        MGMove move = CreateMove(endCoords, endStile);
+        MilitaryTurnAnimator.AddToQueue(move);
+        NPCController.hasMoveQueuedOrIsExecuting = true;
     }
 
     public MGMove CreateMove(Vector2Int endCoords, STile endStile)

@@ -4,10 +4,20 @@ using UnityEngine;
 
 public class MilitaryGrid : SGrid
 {
+    // public static System.EventHandler<System.EventArgs> OnRestartMilitary;
+
+    private bool isRestarting;
+
     public MilitarySpriteTable militarySpriteTable; // global reference
+    
+    [SerializeField] private Transform playerRestartSpawnPosition;
+    [SerializeField] private List<MilitaryUnspawnedAlly> unspawnedAllies; // dont reset one on #16
+
+    [SerializeField] private MilitaryResetChecker militaryResetChecker; // init order makes me cry
 
     public override void Init()
     {
+        militaryResetChecker.Init(); // set up singleton
         InitArea(Area.Military);
         base.Init();
     }
@@ -17,16 +27,21 @@ public class MilitaryGrid : SGrid
         base.Start();
 
         AudioManager.PlayMusic("Military");
+
+        if (unspawnedAllies.Count != 15)
+        {
+            Debug.LogWarning("Unspawned allies list should be 15 long.");
+        }
     }
 
     private void OnEnable()
     {
-        OnGridMove += OnTileMove;
+        SGridAnimator.OnSTileMoveEndLate += OnTileMove;
     }
 
     private void OnDisable()
     {
-        OnGridMove -= OnTileMove;
+        SGridAnimator.OnSTileMoveEndLate -= OnTileMove;
     }
 
     public override void Save()
@@ -42,8 +57,88 @@ public class MilitaryGrid : SGrid
 
     // === Military puzzle specific ==
 
-    public void OnTileMove(object sender, OnGridMoveArgs e)
+    public void RestartSimulation() => RestartSimulation(1);
+
+    public void RestartSimulation(float speed)
     {
+        if (isRestarting)
+            return;
+        isRestarting = true;
+
+        CameraShake.ShakeIncrease(1 / speed, 0.25f);
+        UIEffects.FlashWhite(
+            () => {
+                DoRestartSimulation();
+                CameraShake.Shake(1 / speed, 0.25f);
+                AudioManager.Play("TFT Bell");
+            },
+            () => {
+                isRestarting = false;
+            }, 
+            speed
+        );
+    }
+
+    private void DoRestartSimulation()
+    {
+        Debug.Log("Restart sim!");
+        SaveSystem.Current.SetBool("militaryFailedOnce", true);
+        SaveSystem.Current.SetInt("militaryAttempts", SaveSystem.Current.GetInt("militaryAttempts", 0) + 1);
+
+        if (Player.GetInstance().GetSTileUnderneath() != null)
+        {
+            Player.SetPosition(playerRestartSpawnPosition.position);
+            Player.SetParent(null);
+        }
+
+        DisableSliders();
+
+        RestartTroops();
+
+        MilitaryCollectibleController.Reset();
+        MilitaryWaveManager.Reset();
+        MilitaryResetChecker.ResetCounters();
+
+        SaveSystem.SaveGame("Finished Restarting Military Sim");
+    }
+
+    private void DisableSliders()
+    {
+        foreach (STile s in grid)
+        {
+            if (s.isTileActive)
+            {
+                s.SetTileActive(false);
+                UIArtifact.GetInstance().RemoveButton(s);
+            }
+        }
+
+        if (GetStileAt(0, 3).islandId != 1)
+        {
+            SwapTiles(GetStileAt(0, 3), GetStile(1));
+        }
+        
+        PlayerInventory.RemoveCollectible(new Collectible.CollectibleData("Slider 1", myArea));
+        PlayerInventory.RemoveCollectible(new Collectible.CollectibleData("New Slider", myArea));
+    }
+
+    private void RestartTroops()
+    {
+        foreach (MilitaryUnit unit in MilitaryUnit.ActiveUnits)
+        {
+            unit.KillImmediate();
+        }
+
+        foreach (MilitaryUnspawnedAlly m in unspawnedAllies)
+        {
+            m.Reset();
+        }
+    }
+
+    // We want to end player turn after the units are moved
+    public void OnTileMove(object sender, SGridAnimator.OnTileMoveArgs e)
+    {
+        // CoroutineUtils.ExecuteAfterEndOfFrame(() => MilitaryTurnManager.EndPlayerTurn(), this);
         MilitaryTurnManager.EndPlayerTurn();
     }
 }

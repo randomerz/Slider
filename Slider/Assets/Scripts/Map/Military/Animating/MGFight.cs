@@ -22,17 +22,13 @@ public class MGFight : IMGAnimatable
         {
             t = stile.transform;
         }
-        else 
+        else if (unitOther.AttachedSTile != null)
         {
-            STile s = SGrid.GetSTileUnderneath(unit.gameObject);
-            if (s != null)
-            {
-                t = s.transform;
-            }
-            else
-            {
-                t = unit.transform;
-            }
+            t = unitOther.AttachedSTile.transform;
+        }
+        else
+        {
+            t = unit.NPCController.transform;
         }
 
         unit.NPCController.FlashForDuration(FIGHT_DURATION);
@@ -44,5 +40,14 @@ public class MGFight : IMGAnimatable
             FIGHT_DURATION
         );
         
+        AudioManager.PickSound("UI Click").WithPitch(0.6f).AndPlay();
+        for (float i = 0.5f; i < FIGHT_DURATION; i += 0.5f)
+        {
+            CoroutineUtils.ExecuteAfterDelay(
+                () => AudioManager.PickSound("UI Click").WithPitch(0.5f).AndPlay(),
+                unit,
+                i
+            );
+        }
     }
 }

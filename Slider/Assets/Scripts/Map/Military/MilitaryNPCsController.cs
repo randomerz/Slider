@@ -13,6 +13,7 @@ public class MilitaryNPCController : MonoBehaviour
     public MilitaryUnitFlag myFlag;
     
     private System.Action moveFinishCallback;
+    public bool hasMoveQueuedOrIsExecuting;
     private bool isWalking;
     private bool isFacingRight = true;
     
@@ -116,10 +117,10 @@ public class MilitaryNPCController : MonoBehaviour
                 (x) => {
                     Vector3 newPos = Vector3.Lerp(startPos, targetPos, x);
                     SetPosition(newPos);
-                    if (x >= 0.5f && militaryUnit.AttachedSTile != move.endStile)
-                    {
-                        militaryUnit.AttachedSTile = move.endStile;
-                    }
+                    // if (x >= 0.5f && militaryUnit.AttachedSTile != move.endStile)
+                    // {
+                    //     militaryUnit.AttachedSTile = move.endStile;
+                    // }
                 },
                 () => {
                     SetNPCWalking(false);
@@ -134,14 +135,15 @@ public class MilitaryNPCController : MonoBehaviour
 
     private void FinishAnimation(Vector3 targetPos, STile endStile)
     {
+        hasMoveQueuedOrIsExecuting = false;
         SetPosition(targetPos);
-        militaryUnit.AttachedSTile = endStile;
+        // militaryUnit.AttachedSTile = endStile;
         System.Action callback = moveFinishCallback;
         moveFinishCallback = null;
         callback?.Invoke(); // this might update moveFinishCallback so we cant change it after this
     }
 
-    public void OnDeath()
+    public void AnimateDeath()
     {
         if (moveFinishCallback != null)
         {

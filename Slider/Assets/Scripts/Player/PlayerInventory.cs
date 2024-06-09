@@ -135,6 +135,11 @@ public class PlayerInventory : MonoBehaviour
         OnPlayerGetCollectible?.Invoke(instance, new InventoryEvent {collectible = collectible});
     }
 
+    public static void RemoveCollectible(Collectible.CollectibleData collectibleData) 
+    {
+        collectibles.Remove(collectibleData);
+    }
+
     public static void AddItem(Item item)
     {
         if (currentItem != null)
