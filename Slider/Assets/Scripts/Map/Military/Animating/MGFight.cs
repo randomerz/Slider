@@ -40,5 +40,14 @@ public class MGFight : IMGAnimatable
             FIGHT_DURATION
         );
         
+        AudioManager.PickSound("UI Click").WithPitch(0.6f).AndPlay();
+        for (float i = 0.5f; i < FIGHT_DURATION; i += 0.5f)
+        {
+            CoroutineUtils.ExecuteAfterDelay(
+                () => AudioManager.PickSound("UI Click").WithPitch(0.5f).AndPlay(),
+                unit,
+                i
+            );
+        }
     }
 }

@@ -20,13 +20,13 @@ public class MilitaryCollectibleController : Singleton<MilitaryCollectibleContro
 
     public static void Reset()
     {
-        // Shuffle order -- keep first and last, only shuffle evens/odds
-        for (int i = 1; i < _instance.oddTileOrder.Length; i += 1)
+        // Shuffle order
+        for (int i = 0; i < _instance.oddTileOrder.Length; i += 1)
         {
             int r = Random.Range(i, _instance.oddTileOrder.Length);
             (_instance.oddTileOrder[i], _instance.oddTileOrder[r]) = (_instance.oddTileOrder[r], _instance.oddTileOrder[i]);
         }
-        for (int i = 1; i < _instance.evenTileOrder.Length; i += 1)
+        for (int i = 0; i < _instance.evenTileOrder.Length; i += 1)
         {
             int r = Random.Range(i, _instance.evenTileOrder.Length);
             (_instance.evenTileOrder[i], _instance.evenTileOrder[r]) = (_instance.evenTileOrder[r], _instance.evenTileOrder[i]);

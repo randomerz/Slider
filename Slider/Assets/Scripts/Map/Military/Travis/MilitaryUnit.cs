@@ -46,16 +46,6 @@ public class MilitaryUnit : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// The position where the attached flag should return to when placed at an invalid position.
-    /// </summary>
-    public Vector2 FlagReturnPosition
-    {
-        // At some point we will want to revisit this depending on how the units/flags look
-        // (if the unit is a set of sprites that cluster around the flag or whatever)
-        get => new(transform.position.x, transform.position.y);
-    }
-
     [SerializeField] private MilitaryUnitCommander _commander;
     public MilitaryUnitCommander Commander
     {
@@ -257,6 +247,13 @@ public class MilitaryUnit : MonoBehaviour
             Team.Alien => new Color(112f / 255f, 48f / 255f, 160f / 255f),
             _ => Color.white,
         };
+    }
+
+    public void CreateAndQueueMove(Vector2Int endCoords, STile endStile)
+    {
+        MGMove move = CreateMove(endCoords, endStile);
+        MilitaryTurnAnimator.AddToQueue(move);
+        NPCController.hasMoveQueuedOrIsExecuting = true;
     }
 
     public MGMove CreateMove(Vector2Int endCoords, STile endStile)
