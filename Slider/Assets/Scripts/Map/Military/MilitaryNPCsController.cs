@@ -90,6 +90,7 @@ public class MilitaryNPCController : MonoBehaviour
     {
         if (moveFinishCallback != null)
         {
+            moveFinishCallback?.Invoke();
             Debug.LogWarning($"Might have called AnimateMove while another move was animating");
         }
         moveFinishCallback = finishCallback;

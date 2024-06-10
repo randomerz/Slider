@@ -4,23 +4,21 @@ public class MGFight : IMGAnimatable
 {
     public MilitaryUnit unit;
     public MilitaryUnit unitOther;
-    public STile stile;
 
     private const float FIGHT_DURATION = 3;
 
-    public MGFight(MilitaryUnit unit, MilitaryUnit unitOther, STile stile) 
+    public MGFight(MilitaryUnit unit, MilitaryUnit unitOther) 
     {
         this.unit = unit;
         this.unitOther = unitOther;
-        this.stile = stile;
     }
-
+    
     public void Execute(System.Action finishedCallback)
     {
         Transform t;
-        if (stile != null)
+        if (unit.AttachedSTile != null)
         {
-            t = stile.transform;
+            t = unit.AttachedSTile.transform;
         }
         else if (unitOther.AttachedSTile != null)
         {
