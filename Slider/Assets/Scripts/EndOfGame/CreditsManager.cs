@@ -32,6 +32,10 @@ public class CreditsManager : MonoBehaviour
 
     private AsyncOperation sceneLoad;
 
+    public JungleBlobPathController blobPathController;
+    public Shape shape;
+    public JungleBox target;
+
     private void Start()
     {
        UIEffects.FadeFromBlack();
@@ -46,7 +50,13 @@ public class CreditsManager : MonoBehaviour
         Controls.RegisterBindingBehavior(dollySkipBindingBehavior);  
         AudioManager.PlayMusic("Main Menu");
         AudioManager.SetGlobalParameter("MainMenuActivated", 1);
+        Setup();
         StartCoroutine(Credits());
+    }
+
+    private void Setup()
+    {
+        blobPathController.EnableMarching(Direction.RIGHT, shape, target);
     }
 
     private IEnumerator Credits()
