@@ -48,6 +48,28 @@ public struct LocaleConfiguration
 public class LocalizationProjectConfiguration : ScriptableObject
 {
     #if UNITY_EDITOR
+    public static LocalizationProjectConfiguration ScriptableObjectSingleton
+    {
+        get
+        {
+            string[] guids = AssetDatabase.FindAssets("t:" + typeof(LocalizationProjectConfiguration).Name);
+            var configs = guids.Select(AssetDatabase.GUIDToAssetPath)
+                .Select(AssetDatabase.LoadAssetAtPath<LocalizationProjectConfiguration>).ToArray();
+            if (configs.Count() > 1)
+            {
+                throw new Exception("Must have exactly 1 project configuration!");
+            }
+            if (configs.Count() == 0)
+            {
+                throw new Exception("No localization project configuration object exists in asset database");
+            }
+
+            return configs.First();
+        }
+    }
+    #endif
+    
+    #if UNITY_EDITOR
     public IEnumerable<GameObject> ScanProjectForPrefabs()
     {
         return AssetDatabase

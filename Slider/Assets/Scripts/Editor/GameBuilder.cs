@@ -29,6 +29,10 @@ public class GameBuilder
     [MenuItem("File/GameBuilder/Build Windows + Mac OSX + Linux")]
     public static void UnityBuildAll()
     {
+        // AT: force refresh English locale files to avoid showing stale text
+        var config = LocalizationProjectConfiguration.ScriptableObjectSingleton;
+        LocalizationSkeletonGenerator.GenerateSkeleton(config, LocalizationSkeletonGenerator.GenerateSkeletonStrategy.OnlyDefaultEnglishLocale);
+        
         string buildRootPath = EditorUtility.SaveFolderPanel(
             "Select the ROOT folder for your builds...",
             GetProjectFolderPath(),

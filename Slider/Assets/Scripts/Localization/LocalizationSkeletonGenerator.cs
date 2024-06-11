@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Localization;
 using UnityEngine;
 
@@ -46,6 +47,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
    {
        set => configuration = value;
    }
+
    private LocalizationProjectConfiguration configuration;
 
    private string referenceLocalizationPath = null;
@@ -97,7 +99,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
                null);
            
            EditorPrefs.SetString(saveLocalizationOutsidePathPreference, saveLocalizationDir);
-           GenerateSkeleton(configuration, saveLocalizationDir, referenceRoot: referenceLocalizationPath);
+           GenerateSkeleton(configuration, root: saveLocalizationDir, referenceRoot: referenceLocalizationPath);
        }
        GUILayout.Label("^ generates a relevant CSV files to any selected folder, following configurations set in the localization project configuration object");
        
@@ -114,7 +116,14 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
    }
 
-   private void GenerateSkeleton(LocalizationProjectConfiguration projectConfiguration, string root = null, string referenceRoot = null)
+   public enum GenerateSkeletonStrategy
+   {
+       AllLocales,
+       OnlyDefaultEnglishLocale
+   }
+
+   public static void GenerateSkeleton(
+       LocalizationProjectConfiguration projectConfiguration, GenerateSkeletonStrategy strategy = GenerateSkeletonStrategy.AllLocales, string root = null, string referenceRoot = null)
    {
        string startingScenePath = EditorSceneManager.GetSceneAt(0).path; // EditorSceneManager always have 1 active scene (the opened scene)
 
@@ -160,6 +169,20 @@ public class LocalizationSkeletonGenerator : EditorWindow
            }
        }
        
+       IEnumerable<LocaleConfiguration> usedLocales;
+       switch (strategy)
+       {
+           case GenerateSkeletonStrategy.AllLocales:
+               usedLocales = projectConfiguration.InitialLocales.Where(_ => true);
+               break;
+           case GenerateSkeletonStrategy.OnlyDefaultEnglishLocale:
+               usedLocales =
+                   projectConfiguration.InitialLocales.Where(loc => loc.name.Equals(LocalizationFile.DefaultLocale));
+               break;
+           default:
+               throw new ArgumentOutOfRangeException(nameof(strategy), strategy, null);
+       }
+
        foreach (var editorBuildSettingsScene in EditorBuildSettings.scenes)
        {
            if (!editorBuildSettingsScene.enabled)
@@ -172,7 +195,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            
            // Default locale is covered in locale list
            // WriteFileAndForceParentPath(LocalizationFile.DefaultLocaleAssetPath(scene, root), serializedSkeleton);
-           foreach (var locale in projectConfiguration.InitialLocales)
+           foreach (var locale in usedLocales)
            {
                var serializedSkeleton = skeleton.Serialize(
                    serializeConfigurationDefaults: false,
