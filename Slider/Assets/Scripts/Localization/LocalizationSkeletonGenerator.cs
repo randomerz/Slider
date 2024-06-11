@@ -184,6 +184,9 @@ public class LocalizationSkeletonGenerator : EditorWindow
                throw new ArgumentOutOfRangeException(nameof(strategy), strategy, null);
        }
 
+       var localeConfigurations = usedLocales.ToList();
+       Debug.Log($"Generating CSV files for locales { string.Join(',', localeConfigurations.Select(loc => loc.name)) }");
+
        foreach (var editorBuildSettingsScene in EditorBuildSettings.scenes)
        {
            if (!editorBuildSettingsScene.enabled)
@@ -196,7 +199,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            
            // Default locale is covered in locale list
            // WriteFileAndForceParentPath(LocalizationFile.DefaultLocaleAssetPath(scene, root), serializedSkeleton);
-           foreach (var locale in usedLocales)
+           foreach (var locale in localeConfigurations)
            {
                var serializedSkeleton = skeleton.Serialize(
                    serializeConfigurationDefaults: false,
