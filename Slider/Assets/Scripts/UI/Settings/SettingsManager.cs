@@ -62,7 +62,7 @@ public class SettingsManager : MonoBehaviour
             defaultValue: false,
             onValueChanged: (value) =>
             {
-                // TODO: redraw player icon!
+                Player.AddTrackerOnSettingsChange();
             }
         );
         // This is not currently used, but may be put back into the UI later

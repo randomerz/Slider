@@ -1,13 +1,14 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MilitaryUnitFlag : Item
 {
-    [SerializeField] private MilitaryUnit attachedUnit;
+    public MilitaryUnit attachedUnit;
+    [SerializeField] private MilitaryUnitFlagResetter resetter;
+    [SerializeField] private NPC representativeNPC;
 
-    Transform locationPriorToLastPickup;
+    private Transform locationPriorToLastPickup;
 
     public override void Awake()
     {
@@ -15,13 +16,13 @@ public class MilitaryUnitFlag : Item
         attachedUnit.OnDeath.AddListener(() => gameObject.SetActive(false));
     }
 
-    public override void PickUpItem(Transform pickLocation, Action callback = null)
+    public override void PickUpItem(Transform pickLocation, System.Action callback = null)
     {
         base.PickUpItem(pickLocation, callback);
         locationPriorToLastPickup = pickLocation;
     }
 
-    public override STile DropItem(Vector3 dropLocation, Action callback = null)
+    public override STile DropItem(Vector3 dropLocation, System.Action callback = null)
     {
         return base.DropItem(dropLocation, () => {
             AfterDropComplete();
@@ -31,30 +32,88 @@ public class MilitaryUnitFlag : Item
 
     private void AfterDropComplete()
     {
-        STile hitStile = SGrid.GetSTileUnderneath(gameObject);
+        bool wasSuccessful = TryFinishMove(out string reason);
 
-        if (!IsOrthogonallyAdjacentToUnitCurrentTile(hitStile))
+        if (representativeNPC != null)
         {
-            AudioManager.Play("Hurt");
-            transform.position = attachedUnit.FlagReturnPosition;
-            transform.parent = attachedUnit.transform.parent;
-            return;
+            representativeNPC.Conds[0].dialogueChain[0].dialogue = reason;
+            representativeNPC.TypeCurrentDialogueSafe();
         }
 
-        // Debug.LogError(transform.position);
-        // Debug.LogError(MilitaryUnit.WorldPositionToGridPosition(transform.position));
-
-        // attachedUnit.GridPosition = MilitaryUnit.WorldPositionToGridPosition(transform.position);
-        Vector2Int newGridPos = new Vector2Int(hitStile.x, hitStile.y);
-        MGMove newMove = attachedUnit.CreateMove(newGridPos, hitStile);
-        attachedUnit.GridPosition = newGridPos;
-        MilitaryTurnAnimator.AddNewMove(newMove);
-
-        MilitaryTurnManager.EndPlayerTurn();
+        if (!wasSuccessful)
+        {
+            if (reason == "Move was cancelled.")
+            {
+                AudioManager.Play("UI Click");
+            }
+            else
+            {
+                AudioManager.Play("Hurt");
+            }
+            resetter.ResetItem(onFinish: null);
+        }
     }
 
-    private bool IsOrthogonallyAdjacentToUnitCurrentTile(STile hitStile)
+    private bool TryFinishMove(out string reason)
     {
-        return attachedUnit != null && Math.Abs(hitStile.x - attachedUnit.GridPosition.x) + Math.Abs(hitStile.y - attachedUnit.GridPosition.y) <= 1;
+        if (attachedUnit == null)
+        {
+            reason = "I am... dead??? Something went wrong!";
+            Debug.LogError($"Attached Unit was null.");
+            return false;
+        }
+
+        STile hitStile = SGrid.GetSTileUnderneath(gameObject);
+
+        if (hitStile == null)
+        {
+            reason = "We cannot leave the battlefield!";
+            return false;
+        }
+        
+        Vector2Int newGridPos = new Vector2Int(hitStile.x, hitStile.y);
+        Vector2Int direction = newGridPos - attachedUnit.GridPosition;
+
+        if (direction.magnitude == 0)
+        {
+            reason = "Move was cancelled.";
+            return false;
+        }
+
+        if (direction.magnitude != 1)
+        {
+            reason = "New location was not one tile away!";
+            return false;
+        }
+
+        STile originalSTile = attachedUnit.AttachedSTile;
+        // If AttachedSTile is null, assume unit is flying
+        if (originalSTile != null)
+        {
+            if (!CanMoveBetweenTiles(originalSTile as MilitarySTile, hitStile as MilitarySTile, direction))
+            {
+                reason = "We cannot move through walls!";
+                return false;
+            }
+        }
+
+        attachedUnit.CreateAndQueueMove(newGridPos, hitStile);
+        attachedUnit.GridPosition = newGridPos;
+        attachedUnit.AttachedSTile = hitStile;
+
+        resetter.SetResetTransform(hitStile.transform);
+        resetter.ResetItem(onFinish: () => { 
+            resetter.SetResetTransform(attachedUnit.NPCController.transform);
+        });
+
+        MilitaryTurnManager.EndPlayerTurn();
+
+        reason = Random.Range(0, 2) == 0 ? "Let's go, soliders!" : "Keep moving forward!";
+        return true;
+    }
+
+    private bool CanMoveBetweenTiles(MilitarySTile stile1, MilitarySTile stile2, Vector2Int direction)
+    {
+        return stile1.CanMoveToDirection(direction) && stile2.CanMoveFromDirection(direction);
     }
 }

@@ -259,6 +259,18 @@ public class UIArtifact : Singleton<UIArtifact>
         }
     }
 
+    public void RemoveButton(STile stile)
+    {
+        foreach (ArtifactTileButton b in buttons)
+        {
+            if (b.MyStile == stile)
+            {
+                b.UpdateTileActive();
+                break;
+            }
+        }
+    }
+
     //This is in case we have situations where the grid is modified without interacting with the artifact (Factory conveyors, Mountain anchor, MagiTech Desyncs)
     public void SetButtonPositionsToMatchGrid()
     {

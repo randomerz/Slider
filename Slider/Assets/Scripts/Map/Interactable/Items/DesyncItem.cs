@@ -108,6 +108,7 @@ public class DesyncItem : Item
         UpdateCurrentTile();
     }
 
+
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null)
     {
         STile tile = base.DropItem(dropLocation, callback);
@@ -125,6 +126,10 @@ public class DesyncItem : Item
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null) 
     {
+        if(ShouldMovePresentItem())
+        {
+            MovePresentItemToPastLocation();
+        }
         base.PickUpItem(pickLocation, callback);
         if (trackerSprite)
         {
@@ -134,29 +139,43 @@ public class DesyncItem : Item
 
     private bool ShouldMovePresentItem()
     {
-        return fromPast && pastItem.isItemInPast && !presentItem.isItemInPast && !presentItem.isDesynced && ! pastItem.isDesynced;
+        return fromPast && pastItem.isItemInPast && !presentItem.isDesynced && ! pastItem.isDesynced;
     }
 
     private void MovePresentItemToPastLocation()
     {
         Vector3 pastLocalLoc = transform.localPosition;
-        STile presentTile = MagiTechGrid.Instance.FindAltStile(currentTile);
-        Vector3 checkPos = presentTile.transform.position + pastLocalLoc;
-        if(presentTile.islandId == 3)
+        Vector3 checkPos;
+        STile presentTile = null;
+        if(currentTile != null)
         {
-            checkPos += new Vector3(0, -150f, 0);
+            presentTile = MagiTechGrid.Instance.FindAltStile(currentTile);
+            checkPos = presentTile.transform.position + pastLocalLoc;
+            if(presentTile.islandId == 3)
+            {
+                checkPos += new Vector3(0, -150f, 0);
+            }
+        }
+        else
+        {
+            checkPos = transform.localPosition + new Vector3(-100f, 0, 0);
+            checkPos.x = Mathf.Clamp(checkPos.x, -9f, 43f);
+            checkPos.y = Mathf.Clamp(checkPos.y, -16f, 43f);
         }
         Vector3 targetPos = ItemPlacerSolver.FindItemPlacePosition(checkPos, 9, blocksSpawnMask, true);
+        ParticleManager.SpawnParticle(ParticleType.SmokePoof, presentItem.transform.position);
         if(targetPos.x == float.MaxValue)
         {
-            Debug.Log("Could not find valid position for present item. Moving anyways");
-            presentItem.transform.position = targetPos;
+            Debug.LogWarning("Could not find valid position for present item. Moving anyways");
+        }
+        presentItem.transform.position = targetPos;
+        if(presentTile != null)
+        {
             presentItem.transform.parent = presentTile.transform;
         }
         else
         {
-            presentItem.transform.position = targetPos;
-            presentItem.transform.parent = presentTile.transform;
+            presentItem.transform.parent = null;
         }
     }
 

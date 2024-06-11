@@ -9,9 +9,11 @@ public class MilitaryNPCController : MonoBehaviour
 
     public MilitaryUnit militaryUnit;
     public List<NPC> myNPCs;
+    public List<FlashWhiteSprite> myFlashWhites;
     public MilitaryUnitFlag myFlag;
     
     private System.Action moveFinishCallback;
+    public bool hasMoveQueuedOrIsExecuting;
     private bool isWalking;
     private bool isFacingRight = true;
     
@@ -88,6 +90,7 @@ public class MilitaryNPCController : MonoBehaviour
     {
         if (moveFinishCallback != null)
         {
+            moveFinishCallback?.Invoke();
             Debug.LogWarning($"Might have called AnimateMove while another move was animating");
         }
         moveFinishCallback = finishCallback;
@@ -115,10 +118,10 @@ public class MilitaryNPCController : MonoBehaviour
                 (x) => {
                     Vector3 newPos = Vector3.Lerp(startPos, targetPos, x);
                     SetPosition(newPos);
-                    if (x >= 0.5f && militaryUnit.AttachedSTile != move.endStile)
-                    {
-                        militaryUnit.AttachedSTile = move.endStile;
-                    }
+                    // if (x >= 0.5f && militaryUnit.AttachedSTile != move.endStile)
+                    // {
+                    //     militaryUnit.AttachedSTile = move.endStile;
+                    // }
                 },
                 () => {
                     SetNPCWalking(false);
@@ -133,17 +136,30 @@ public class MilitaryNPCController : MonoBehaviour
 
     private void FinishAnimation(Vector3 targetPos, STile endStile)
     {
+        hasMoveQueuedOrIsExecuting = false;
         SetPosition(targetPos);
-        militaryUnit.AttachedSTile = endStile;
+        // militaryUnit.AttachedSTile = endStile;
         System.Action callback = moveFinishCallback;
         moveFinishCallback = null;
         callback?.Invoke(); // this might update moveFinishCallback so we cant change it after this
     }
 
-    public void OnDeath()
+    public void AnimateDeath()
     {
-        Debug.Log($"on death animator");
-        moveFinishCallback?.Invoke();
+        if (moveFinishCallback != null)
+        {
+            Debug.LogWarning("'MoveFinishCallback' was not null when unit died.");
+            moveFinishCallback?.Invoke();
+        }
+
+        // TODO: on death animator?
+
+        FlashWhite(1);
+        
+        foreach (NPC npc in myNPCs)
+        {
+            ParticleManager.SpawnParticle(ParticleType.SmokePoof, npc.transform.position);
+        }
     }
 
     private void SetNPCFacingDirection(bool faceRight)
@@ -161,6 +177,19 @@ public class MilitaryNPCController : MonoBehaviour
         foreach (NPC npc in myNPCs)
         {
             npc.animator.SetBool("isWalking", isWalking);
+        }
+    }
+
+    public void FlashForDuration(float seconds)
+    {
+        FlashWhite((int)(seconds / (myFlashWhites[0].flashTime * 2)));
+    }
+
+    private void FlashWhite(int num, System.Action callback=null)
+    {
+        foreach (FlashWhiteSprite f in myFlashWhites)
+        {
+            f.Flash(num, callback);
         }
     }
 }

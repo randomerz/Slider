@@ -16,6 +16,22 @@ public class Collectible : MonoBehaviour
             this.name = name;
             this.area = area;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is not CollectibleData)
+                return false;
+
+            return (
+                this.name == (obj as CollectibleData).name && 
+                this.area == (obj as CollectibleData).area
+            );
+        }
+
+        public override int GetHashCode()
+        {
+            return name.GetHashCode() + area.GetHashCode();
+        }
     }
 
     public UnityEvent onCollect;
