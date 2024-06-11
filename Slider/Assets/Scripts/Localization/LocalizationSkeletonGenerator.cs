@@ -58,6 +58,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
    {
        titleContent = new GUIContent("Custom Build Settings");
        referenceLocalizationPath = EditorPrefs.GetString(referenceLocalizationPathPreference, null);
+       configuration = LocalizationProjectConfiguration.ScriptableObjectSingleton;
    }
 
    private void OnGUI()
@@ -205,7 +206,15 @@ public class LocalizationSkeletonGenerator : EditorWindow
            }
        }
 
-       EditorSceneManager.OpenScene(startingScenePath);
+       try
+       {
+           // AT: patch "scene not found" when running from GameBuilder
+           EditorSceneManager.OpenScene(startingScenePath);
+       }
+       catch (Exception e)
+       {
+           Debug.LogWarning(e);
+       }
    }
 
    private static void WriteFileAndForceParentPath(string path, string content)
