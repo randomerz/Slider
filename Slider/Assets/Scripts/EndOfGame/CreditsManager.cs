@@ -105,6 +105,10 @@ public class CreditsManager : MonoBehaviour
         if(endPos.Equals(Vector3.zero))
         {
             stile.OnEndSlideIn?.Invoke();
+            foreach(CreditsTile.DelayedEvent e in stile.events)
+            {
+                CoroutineUtils.ExecuteAfterDelay(() => e.Event?.Invoke(), stile, e.Delay);
+            }
         }
     }
 
