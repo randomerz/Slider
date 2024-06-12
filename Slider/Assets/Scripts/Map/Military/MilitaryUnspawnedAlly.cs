@@ -26,7 +26,7 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
 
         SetUnitType((MilitaryUnit.Type)Random.Range(0, 3));
 
-        UITrackerManager.AddNewTracker(gameObject);
+        UITrackerManager.AddNewTracker(gameObject, sprite: UITrackerManager.DefaultSprites.pin);
     }
 
     private void OnDisable()

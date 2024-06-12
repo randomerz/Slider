@@ -203,12 +203,12 @@ public class MilitaryUnit : MonoBehaviour
 
     private void StartCombatWithOverlappingEnemyUnit()
     {
-        Debug.Log($"Checking for combat start...");
+        // Debug.Log($"Checking for combat start...");
         activeUnits.ForEach(unit =>
         {
             if (unit.GridPosition == GridPosition && unit.UnitTeam != UnitTeam)
             {
-                MilitaryTurnAnimator.AddToQueueFront(new MGFight(this, unit, AttachedSTile));
+                MilitaryTurnAnimator.AddToQueueFront(new MGFight(this, unit));
                 MilitaryCombat.ResolveBattle(this, unit);
             }
         });
