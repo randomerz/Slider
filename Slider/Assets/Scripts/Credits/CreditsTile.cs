@@ -15,6 +15,6 @@ public class CreditsTile : MonoBehaviour
     public class DelayedEvent
     {
         public UnityEvent Event;
-        public int Delay;
+        public float Delay;
     }
 }
