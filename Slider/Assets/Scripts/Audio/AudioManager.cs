@@ -104,6 +104,11 @@ public class AudioManager : Singleton<AudioManager>
             SetPaused(newPauseState);
         };
 
+        FactoryTimeGlitch.TimeGlitchPauseStateChanged += (bool newPauseState) =>
+        {
+            SetPaused(newPauseState);
+        };
+
         DebugUIManager.OnOpenDebug += delegate (object sender, EventArgs e)
         {
             SetPaused(true);

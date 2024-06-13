@@ -92,6 +92,8 @@ public class Player : Singleton<Player>, ISavable, ISTileLocatable
     
     void Update()
     {
+        if(Time.timeScale == 0) return;
+        
         if (canAnimateMovement)
         {
             if (inputDir.x < 0)
