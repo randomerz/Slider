@@ -85,7 +85,7 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
     {
         if (index >= waveSizes.Length)
         {
-            Debug.LogError($"Tried spawning index {index} that was outside range of waves.");
+            CheckWinCondition();
             return;
         }
 
@@ -120,8 +120,8 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
         }
 
         // Uh oh!
-        Debug.LogError($"There were no valid locations to spawn an enemy! Spawning at (-1, -1)");
-        SpawnEnemy(new Vector2Int(-1, -1));
+        Debug.LogError($"There were no valid locations to spawn an enemy! Spawning at (0, -1)");
+        SpawnEnemy(new Vector2Int(0, -1));
     }
 
     private Vector2Int GetSpawnPosition()
@@ -175,4 +175,19 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
     }
 
 
+    private void CheckWinCondition()
+    {
+        // TODO: Give all Sliders if the player doesn't have them, we prob dont care if its shuffled or not
+
+        AudioManager.Play("Puzzle Complete");
+
+        Debug.Log($"==============");
+        Debug.Log($"   You win!   ");
+        Debug.Log($"==============");
+
+        // Real todo: final military cutscene
+        // - turn on the military commander on the final tile and add a tracker to him
+        // - when you talk to him, he does a cutscene about how hes gonna shoot his meteor gun
+        // - misc aliens swarm him cause theyre tired of this war and you win the area
+    }
 }

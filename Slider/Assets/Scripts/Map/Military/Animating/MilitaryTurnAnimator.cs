@@ -54,10 +54,39 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
                 IMGAnimatable nextMove = moveQueue.Dequeue();
                 activeMoves.Add(nextMove);
                 ExecuteMove(nextMove);
-                status = QueueStatus.Processing;
+
+                // If next move is an alien move, play all alien moves at the front of the queue
+                while (moveQueue.Count > 0 && IsAlienMGMove(nextMove))
+                {
+                    nextMove = moveQueue.Dequeue();
+                    if (nextMove != null && IsAlienMGMove(nextMove))
+                    {
+                        activeMoves.Add(nextMove);
+                        ExecuteMove(nextMove);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
                 break;
+
             case QueueStatus.Processing:
-                // Queue is processing -- do nothing!
+                // Queue is processing!
+
+                // If new and all active moves are alien MGMoves, play the new one too
+                if (moveQueue.Count > 0 && IsAlienMGMove(moveQueue.Peek()))
+                {
+                    if (activeMoves.Count > 0 && AreAllActiveMovesAlienMGMove())
+                    {
+                        IMGAnimatable topMove = moveQueue.Dequeue();
+                        activeMoves.Add(topMove);
+                        ExecuteMove(topMove);
+                    }
+                }
+
+                // if move queue is getting stale then lets just do something about it
                 if (Time.time - timeLastMoveExecuted > 2)
                 {
                     if (lastMoveExecuted is MGMove)
@@ -68,6 +97,7 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
                     status = QueueStatus.Ready;
                     CheckQueue();
                 }
+
                 break;
         }
     }
@@ -79,17 +109,50 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
         lastMoveExecuted = move;
         move.Execute(() => FinishMove(move));
         // move.unit.NPCController.AnimateMove(move, false, () => FinishMove(move));
+
+        CoroutineUtils.ExecuteAfterDelay(
+            () => {
+                if (activeMoves.Contains(move))
+                {
+                    activeMoves.Remove(move);
+                    Debug.LogWarning($"Move was in activemoves for over 10 seconds, removing it...");
+                }
+            },
+            this,
+            10
+        );
     }
 
     private void FinishMove(IMGAnimatable move)
     {
         activeMoves.Remove(move);
         status = moveQueue.Count == 0 ? QueueStatus.Off : QueueStatus.Ready;
-        CheckQueue();
+        if (activeMoves.Count == 0)
+        {
+            CheckQueue();
+        }
     }
 
     public static void SpawnFightParticles(Transform transform)
     {
         Instantiate(_instance.fightParticles, transform.position, Quaternion.identity, transform);
+    }
+
+
+    private bool IsAlienMGMove(IMGAnimatable move)
+    {
+        return move is MGMove && (move as MGMove).unit.UnitTeam == MilitaryUnit.Team.Alien;
+    }
+
+    private bool AreAllActiveMovesAlienMGMove()
+    {
+        foreach (IMGAnimatable m in activeMoves)
+        {
+            if (!IsAlienMGMove(m))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

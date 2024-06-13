@@ -29,7 +29,7 @@ public class MilitaryCombat
 
     public static void ResolveBattle(MilitaryUnit unitA, MilitaryUnit unitB)
     {
-        Debug.Log($"Resolving Battle: '{unitA.gameObject.name}' vs '{unitB.gameObject.name}'");
+        // Debug.Log($"Resolving Battle: '{unitA.gameObject.name}' vs '{unitB.gameObject.name}'");
         MilitaryUnit winner = WinnerOfBattleBetween(unitA, unitB);
         if (unitA != winner)
         {

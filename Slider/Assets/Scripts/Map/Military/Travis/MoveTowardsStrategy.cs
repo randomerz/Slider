@@ -29,12 +29,12 @@ public class MoveTowardsStrategy : ICommanderStrategy
         if (closestUnit != null)
         {
             dir = DirectionTowardsUnit(movingUnit: unit, target: closestUnit);
-            Debug.Log($"Moving towards unit: {dir}");
+            // Debug.Log($"Moving towards unit: {dir}");
         }
         else
         {
             dir = RandomDirection(unit);
-            Debug.Log($"Moving randomly: {dir}");
+            // Debug.Log($"Moving randomly: {dir}");
         }
 
         // Warning!! The main body of the enemy unit does not get updated but the npc part is animated

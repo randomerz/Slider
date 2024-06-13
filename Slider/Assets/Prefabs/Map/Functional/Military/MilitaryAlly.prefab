@@ -208,6 +208,10 @@ PrefabInstance:
       propertyPath: m_Size.y
       value: 0.75
       objectReference: {fileID: 0}
+    - target: {fileID: 6612015175582378595, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6774723380247666992, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -518,6 +522,10 @@ PrefabInstance:
       propertyPath: m_Size.y
       value: 0.75
       objectReference: {fileID: 0}
+    - target: {fileID: 6612015175582378595, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6774723380247666992, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -587,6 +595,10 @@ PrefabInstance:
       propertyPath: attachedUnit
       value: 
       objectReference: {fileID: 5066515251667805866}
+    - target: {fileID: 345858409069772840, guid: 13180426214bf0744b10916556b1c87f, type: 3}
+      propertyPath: representativeNPC
+      value: 
+      objectReference: {fileID: 3814289163833834964}
     - target: {fileID: 786265832092280424, guid: 13180426214bf0744b10916556b1c87f, type: 3}
       propertyPath: m_Name
       value: MilitaryFlag
@@ -631,6 +643,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5476259116096597602, guid: 13180426214bf0744b10916556b1c87f, type: 3}
+      propertyPath: resetTransform
+      value: 
+      objectReference: {fileID: 6167895416867829435}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -743,6 +759,10 @@ PrefabInstance:
     - target: {fileID: 6295134179173694675, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: m_Size.y
       value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6612015175582378595, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6774723380247666992, guid: eb8cd11432469439eb214403b87b5b92, type: 3}
       propertyPath: m_Sprite

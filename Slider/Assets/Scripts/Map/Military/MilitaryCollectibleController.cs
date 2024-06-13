@@ -8,7 +8,7 @@ public class MilitaryCollectibleController : Singleton<MilitaryCollectibleContro
     // Tile 1 is always spawned by default
     // Tile 16 has four walls and no unit available. always spawned last? can move it earlier if game is too easy
     // private int[] spawnedTileIdsOrder = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
-    private int[] oddTileOrder = new int[] { 3, 5, 7, 9, 11, 13 };
+    private int[] oddTileOrder = new int[] { 3, 5, 7, 9, 11, 13, 15 };
     private int[] evenTileOrder = new int[] { 2, 4, 6, 8, 10, 12, 14 };
     private int numSpawned = 1;
 
@@ -20,13 +20,13 @@ public class MilitaryCollectibleController : Singleton<MilitaryCollectibleContro
 
     public static void Reset()
     {
-        // Shuffle order -- keep first and last, only shuffle evens/odds
-        for (int i = 1; i < _instance.oddTileOrder.Length; i += 1)
+        // Shuffle order
+        for (int i = 0; i < _instance.oddTileOrder.Length; i += 1)
         {
             int r = Random.Range(i, _instance.oddTileOrder.Length);
             (_instance.oddTileOrder[i], _instance.oddTileOrder[r]) = (_instance.oddTileOrder[r], _instance.oddTileOrder[i]);
         }
-        for (int i = 1; i < _instance.evenTileOrder.Length; i += 1)
+        for (int i = 0; i < _instance.evenTileOrder.Length; i += 1)
         {
             int r = Random.Range(i, _instance.evenTileOrder.Length);
             (_instance.evenTileOrder[i], _instance.evenTileOrder[r]) = (_instance.evenTileOrder[r], _instance.evenTileOrder[i]);
@@ -57,6 +57,8 @@ public class MilitaryCollectibleController : Singleton<MilitaryCollectibleContro
         // TODO: animate from start transform to end
         collectible.transform.position = targetTransform.position;
         ParticleManager.SpawnParticle(ParticleType.SmokePoof, targetTransform.position, targetTransform);
+
+        UITrackerManager.AddNewTracker(go, sprite: UITrackerManager.DefaultSprites.circle2);
     
         MilitaryResetChecker.IncrementCollectible();
     }
