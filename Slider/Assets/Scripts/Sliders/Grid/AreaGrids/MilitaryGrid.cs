@@ -64,16 +64,18 @@ public class MilitaryGrid : SGrid
         if (isRestarting)
             return;
         isRestarting = true;
-
-        //CameraShake.ShakeIncrease(1 / speed, 0.25f);
+        PauseManager.AddPauseRestriction(gameObject);
+        Player.SetCanMove(false);
+        AudioManager.Play("Slide Rumble"); 
         UIEffects.Pixelize(
             () => {
                 DoRestartSimulation();
-//                CameraShake.Shake(1 / speed, 0.25f);
                 AudioManager.Play("TFT Bell");
             },
             () => {
                 isRestarting = false;
+                PauseManager.RemovePauseRestriction(gameObject);
+                Player.SetCanMove(true);
             }, 
             speed
         );
