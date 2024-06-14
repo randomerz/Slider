@@ -80,7 +80,7 @@ public class LocaleSelector : MonoBehaviour
             SettingsManager.Setting(Settings.HighContrastTextEnabled).SetCurrentValue(true);
         }
 
-        // no need to reload styles (font size, etc.) if switching from engish to non-english
+        // no need to reload styles (font size, etc.) if switching from english to non-english
         // just directly refresh localizations
         if (originalLocale.Equals(LocalizationFile.DefaultLocale))
         {

@@ -124,13 +124,13 @@ public class DialogueDisplay : MonoBehaviour
 
         if (useBoldedFont)
         {
-            textTyperText.SetFontWeight(FontWeight.Regular);
-            textTyperBG.SetFontWeight(FontWeight.Black);
+            textTyperText.SetFontWeight(FontWeight.Medium);
+            // textTyperBG.SetFontWeight(FontWeight.Black);
         }
         else
         {
-            textTyperText.SetFontWeight(FontWeight.Black);
-            textTyperBG.SetFontWeight(FontWeight.Black);
+            textTyperText.SetFontWeight(FontWeight.Regular);
+            // textTyperBG.SetFontWeight(FontWeight.Black);
         }
 
         if (clearWordSpacing)

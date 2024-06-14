@@ -711,7 +711,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         public static LocalizableContext ForSingleScene(Scene scene) => new(scene);
 
-        public static LocalizableContext ForSinglePrefab(GameObject prefab) => new(prefab); // TODO: implement
+        public static LocalizableContext ForSinglePrefab(GameObject prefab) => new(prefab);
         
         /////////////////////////// Localizable Instance Selection  ////////////////////////////////////////////////////
         
@@ -852,6 +852,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             tmpCasted.font = LocalizationLoader.LocalizationFont;
             tmpCasted.overflowMode = TextOverflowModes.Overflow;
             tmpCasted.wordSpacing = 0.0f;
+            tmpCasted.fontWeight = FontWeight.Medium;
             
             if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
             {
@@ -884,13 +885,6 @@ be corrupted, these rules may be helpful for debugging purposes...
                     {
                         Debug.LogWarning($"{path}: NOT FOUND");
                     }
-                    
-                    // if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
-                    // {
-                    //     dropdown.options[idx]. = 
-                    //         $"<size={scale}>" + dropdown.options[idx].text + $"</size>";
-                    // }
-                    
                 }
                 catch (IndexOutOfRangeException)
                 {
@@ -901,12 +895,19 @@ be corrupted, these rules may be helpful for debugging purposes...
             // entire dropdown itself, change font info
             else
             {
-                dropdown.itemText.font = LocalizationLoader.LocalizationFont;
-                dropdown.itemText.overflowMode = TextOverflowModes.Overflow;
-                if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
+                void ApplyStyle(TMP_Text txt)
                 {
-                    dropdown.itemText.fontSize *= scale;
+                    txt.font = LocalizationLoader.LocalizationFont;
+                    txt.overflowMode = TextOverflowModes.Overflow;
+                    if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
+                    {
+                        txt.fontSize *= scale;
+                        txt.fontWeight = FontWeight.Medium;
+                    }
                 }
+                
+                ApplyStyle(dropdown.itemText);
+                ApplyStyle(dropdown.captionText);
             }
         }
 
