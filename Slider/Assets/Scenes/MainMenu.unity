@@ -4657,10 +4657,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.043726236
-    y: 0.04391892
-    width: 0.9125475
-    height: 0.9121622
+    x: 0.15276273
+    y: 0.15221581
+    width: 0.6933911
+    height: 0.6936416
   near clip plane: 0.1
   far clip plane: 5000
   field of view: 40
@@ -15800,6 +15800,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2824224475968117142, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
+      propertyPath: UICanvasPrefab.containsLocalizable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2824224475968117142, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
+      propertyPath: UIEffectsPrefab.containsLocalizable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8091794286791977582, guid: ff17136ea6e710b428dfdf557400a885, type: 3}
       propertyPath: currentControlScheme
       value: Keyboard Mouse

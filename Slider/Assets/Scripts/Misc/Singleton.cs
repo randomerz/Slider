@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,8 @@ public abstract class Singleton<T> : MonoBehaviour
     where T : Singleton<T>
 {
     protected static T _instance;
+    
+    protected virtual bool preferOldInstanceOverNew => true;
 
     /// <summary>
     /// This should be called in Awake inside of all singleton components. This sets up _instance to be the component instance,
@@ -40,8 +43,17 @@ public abstract class Singleton<T> : MonoBehaviour
         {
             if (_instance != null)
             {
-                Debug.LogWarning($"Multiple Singleton components of type {typeof(T)} were detected. The latest one was deleted.");
-                Destroy(this);
+                if (preferOldInstanceOverNew)
+                {
+                    Debug.LogWarning($"Multiple Singleton components of type {typeof(T)} were detected. The latest one was deleted.");
+                    Destroy(this);
+                }
+                else
+                {
+                    Debug.LogWarning($"Multiple Singleton components of type {typeof(T)} were detected. The existing one was deleted.");
+                    Destroy(_instance);
+                    _instance = this as T;
+                }
                 return false;
             }
             else
@@ -82,6 +94,14 @@ public abstract class Singleton<T> : MonoBehaviour
             CheckForAndDestroyDuplicates();
             _instance = FindObjectOfType<T>();
             return false;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (_instance == this as T)
+        {
+            _instance = null;
         }
     }
 

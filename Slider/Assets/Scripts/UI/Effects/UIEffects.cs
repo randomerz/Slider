@@ -25,6 +25,8 @@ public class UIEffects : Singleton<UIEffects>
     // Holds the last flashing/black fade coroutine called so we can end it when starting a new one
     private static Coroutine previousCoroutine;
 
+    protected override bool preferOldInstanceOverNew => false;
+
     private void Awake()
     {
         //_instance = this;

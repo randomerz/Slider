@@ -120,6 +120,11 @@ namespace Localization
         {
             index = null;
         }
+
+        public TrackedLocalizable(PlayerActionHints hint, int idx) : this(hint as Component)
+        {
+            index = idx.ToString();
+        }
     }
 
     // TODO: try add typed parsing cache
@@ -721,7 +726,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(TMP_Dropdown), component => SelectLocalizablesFromDropdown(component as TMP_Dropdown) },
             { typeof(NPC), component => SelectLocalizablesFromNpc(component as NPC) },
             { typeof(DialogueDisplay), component => new List<TrackedLocalizable>{ new (component as DialogueDisplay) } },
-            { typeof(LocalizationInjector), component => new List<TrackedLocalizable>{ new (component as LocalizationInjector) }}
+            { typeof(LocalizationInjector), component => new List<TrackedLocalizable>{ new (component as LocalizationInjector) }},
+            { typeof(PlayerActionHints), component => SelectLocalizablesFromPlayerActionHints(component as PlayerActionHints) }
         };
         
         private void PopulateLocalizableInstances(Scene scene)
@@ -779,6 +785,11 @@ be corrupted, these rules may be helpful for debugging purposes...
                 return cond.dialogueChain.Select((_, j) => new TrackedLocalizable(npc, i, j));
             });
         }
+
+        private static IEnumerable<TrackedLocalizable> SelectLocalizablesFromPlayerActionHints(PlayerActionHints hints)
+        {
+            return hints.hintsList.Select((_, idx) => new TrackedLocalizable(hints, idx));
+        }
         
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
@@ -796,7 +807,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(TMP_Dropdown), LocalizeDropdownOption },
             { typeof(NPC), LocalizeNpc },
             { typeof(DialogueDisplay), LocalizeDialogueDisplay },
-            { typeof(LocalizationInjector), (loc, _, _) => loc.GetAnchor<LocalizationInjector>().Refresh() }
+            { typeof(LocalizationInjector), (loc, _, _) => loc.GetAnchor<LocalizationInjector>().Refresh() },
+            { typeof(PlayerActionHints), LocalizePlayerActionHints }
         };
 
         /// <summary>
@@ -948,13 +960,41 @@ be corrupted, these rules may be helpful for debugging purposes...
                 display.GetAnchor<DialogueDisplay>().SetFont(LocalizationLoader.LocalizationFont, adjFlt, true, true);
             }
         }
+
+        private static void LocalizePlayerActionHints(TrackedLocalizable display, LocalizationFile file,
+            LocalizationStrategy strategy)
+        {
+            if (strategy == LocalizationStrategy.ChangeStyleOnly)
+            {
+                return;
+            }
+
+            var path = display.FullPath;
+            if (file.records.TryGetValue(path, out var entry))
+            {
+                try
+                {
+                    int idx = int.Parse(display.IndexInComponent);
+                    display.GetAnchor<PlayerActionHints>().hintsList[idx].hintData.hintText = entry.Translated;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    Debug.LogError($"{path}: Player action hint out of bounds");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"{path}: NOT FOUND");
+            }
+        }
         
         /////////////////////////// Serialization //////////////////////////////////////////////////////////////////////
         private static readonly Dictionary<Type, Func<TrackedLocalizable, string>> SerializationFunctionMap = new()
         {
             { typeof(TMP_Text), SerializeTmp },
             { typeof(TMP_Dropdown), SerializeDropdownOption },
-            { typeof(NPC), SerializeNpc }
+            { typeof(NPC), SerializeNpc },
+            { typeof(PlayerActionHints), SerializePlayerActionHints }
         };
         
         public string Serialize(bool serializeConfigurationDefaults, LocalizationFile referenceFile)
@@ -1090,6 +1130,23 @@ be corrupted, these rules may be helpful for debugging purposes...
             NPC npcCasted = npc.GetAnchor<NPC>();
             
             return npcCasted.Conds[idxCond].dialogueChain[idxDiag].dialogue;
+        }
+
+        private static string SerializePlayerActionHints(TrackedLocalizable hint)
+        {
+            if (!int.TryParse(hint.IndexInComponent, out int idx))
+            {
+                return null;
+            }
+            try
+            {
+                return hint.GetAnchor<PlayerActionHints>().hintsList[idx].hintData.hintText;
+            }
+            catch (IndexOutOfRangeException)
+            { 
+                Debug.LogError($"{hint.FullPath}: Player action hint out of bounds");
+                return null;
+            }
         }
     }
 }

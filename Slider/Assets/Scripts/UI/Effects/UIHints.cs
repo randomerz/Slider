@@ -1,12 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
-public class UIHints : MonoBehaviour
+public class UIHints : Singleton<UIHints>
 {
-    public static UIHints instance { get; private set; }
- 
+    protected override bool preferOldInstanceOverNew => false;
+
     public List<string> hintRemovalQueue = new List<string>();
     public List<HintData> hintList = new List<HintData>();
 
@@ -20,14 +21,16 @@ public class UIHints : MonoBehaviour
 
     private HintData activeHint;
 
-    private void Awake() 
+    private void Awake()
     {
-        instance = this;
+        InitializeSingleton();
     }
 
+    // AT: entire UIEffect prefab is force respawned on every scene transition, UIHints will be destroyed every time
+    //     and there is no need to clear
     private void OnEnable()
     {
-        SceneManager.activeSceneChanged += Clear;
+        // SceneManager.activeSceneChanged += Clear;
     }
 
     private void Update() 
@@ -47,7 +50,7 @@ public class UIHints : MonoBehaviour
     /// Adds a hint to the list of hints to be displayed, shown in order added
     /// </summary>
     /// <param name="hintData">Hint data to be added</param>
-    public static void AddHint(HintData hintData) { instance._AddHint(hintData); }
+    public static void AddHint(HintData hintData) { _instance._AddHint(hintData); }
 
     public void _AddHint(HintData hintData)
     {
@@ -59,7 +62,7 @@ public class UIHints : MonoBehaviour
     /// Removes a hint from the list of hints
     /// </summary>
     /// <param name="hintID">ID of the hint to be removed</param>
-    public static void RemoveHint(string hintID = "") { instance._RemoveHint(hintID); }
+    public static void RemoveHint(string hintID = "") { _instance._RemoveHint(hintID); }
 
     public void _RemoveHint(string hintID)
     {
