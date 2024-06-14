@@ -56,8 +56,6 @@ public class AudioManager : Singleton<AudioManager>
     private static bool paused;
     private static bool musicPaused;
     private static List<EventInstance> pausedMusic;
-    private static bool ambiencePaused;
-    private static List<EventInstance> pausedAmbience;
 
     [SerializeField]
     private bool IndoorIsolatedFromWorld = false;
