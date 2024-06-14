@@ -54,6 +54,10 @@ public class AudioManager : Singleton<AudioManager>
     private float ZLevel;
 
     private static bool paused;
+    private static bool musicPaused;
+    private static List<EventInstance> pausedMusic;
+    private static bool ambiencePaused;
+    private static List<EventInstance> pausedAmbience;
 
     [SerializeField]
     private bool IndoorIsolatedFromWorld = false;
@@ -107,6 +111,7 @@ public class AudioManager : Singleton<AudioManager>
         FactoryTimeGlitch.TimeGlitchPauseStateChanged += (bool newPauseState) =>
         {
             SetPaused(newPauseState);
+            SetMusicAmbiencePaused(newPauseState);
         };
 
         DebugUIManager.OnOpenDebug += delegate (object sender, EventArgs e)
@@ -376,6 +381,49 @@ public class AudioManager : Singleton<AudioManager>
 
     }
 
+    public static void SetMusicAmbiencePaused(bool paused)
+    {
+        if(paused)
+            PauseMusicAndAmbience();
+        else
+            ResumeMusicAndAmbience();
+    }
+
+    public static void PauseMusicAndAmbience()
+    {
+        musicPaused = true;
+        pausedMusic = new();
+        foreach (Music music in _music)
+        {
+            if(music.emitter.IsPlaying())
+            {
+                var instance = music.emitter.EventInstance;
+                instance.setPaused(true);
+                pausedMusic.Add(instance);
+            }
+        }
+        foreach (Music a in _ambience)
+        {
+            if(a.emitter.IsPlaying())
+            {
+                var instance = a.emitter.EventInstance;
+                instance.setPaused(true);
+                pausedMusic.Add(instance);
+            }
+        }
+    }
+
+    public static void ResumeMusicAndAmbience()
+    {
+        musicPaused = false;
+        foreach (EventInstance instance in pausedMusic)
+        {
+            instance.setPaused(false);
+        }
+        pausedMusic.Clear();
+    }
+    
+
     public static void StopMusic(string name)
     {
         Music m = GetMusic(name);
@@ -405,22 +453,6 @@ public class AudioManager : Singleton<AudioManager>
 
         a.emitter.Stop();
     }
-
-    // Requires instance to stop, need discussion...
-    //public static void StopSound(string name)
-    //{
-    //    if (_sounds == null)
-    //        return;
-    //    Sound s = Array.Find(_sounds, sound => sound.name == name);
-
-    //    if (s == null)
-    //    {
-    //        Debug.LogError("Sound: " + name + " not found!");
-    //        return;
-    //    }
-
-    //    s.emitter.Stop();
-    //}
 
     public static void StopAllSoundAndMusic()
     {

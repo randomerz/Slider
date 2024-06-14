@@ -28,6 +28,7 @@ public class FactoryTimeGlitch : MonoBehaviour
 
     private void Start()
     {
+        errorCanvas.SetActive(false);
         if (SaveSystem.Current.GetBool(TIME_GLITCH_SAVE_STRING))
         {
             UpdateMap();
@@ -55,7 +56,6 @@ public class FactoryTimeGlitch : MonoBehaviour
     {
         TimeGlitchInit();
         yield return new WaitForSecondsRealtime(2f);
-        print("0");
         bool playerClicked = false;
         BindingBehavior clickBehavior = Controls.RegisterBindingBehavior(this, Controls.Bindings.UI.Click, context => {
             if(context.control.IsPressed())
@@ -65,27 +65,21 @@ public class FactoryTimeGlitch : MonoBehaviour
         });
 
         float t = 0;
-        while (t < 5 && !playerClicked)
+        while (t < 3 && !playerClicked)
         {
             t += Time.unscaledDeltaTime;
         }
         Controls.UnregisterBindingBehavior(clickBehavior);      
 
-        UIEffects.FadeToWhite(disableAtEnd: false, speed: 0.5f, alpha: 0.5f, useUnscaledTime:true);
-
-        //show "slider.exe has stoped working"
+        UIEffects.FadeToWhite(callback: () => ShowErrorMessage(), disableAtEnd: false, speed: 0.5f, alpha: 0.5f, useUnscaledTime:true);
         
         yield return new WaitForSecondsRealtime(5);
-        //flash white
-        //screenshot?
-        //cleanup
-        UIEffects.FlashWhite(useUnscaledTime:true);
-        AudioManager.Play("Slide Explosion");
-        AudioManager.Play("Hurt");
 
-        UpdateMap();
+        errorCanvas.SetActive(false);
+        UIEffects.FadeFromScreenshot(callbackEnd: () =>  UpdateMap());
+        UIEffects.FlashWhite(callbackEnd: () => SpawnParticles(), useUnscaledTime:true);
 
-        // TODO: Update UI icons
+        AudioManager.Play("Glass Clink");
 
         SGrid.Current.gridTilesExplored.SetTileExplored(TIME_GLITCH_ISLAND_ID, false);
 
@@ -106,8 +100,21 @@ public class FactoryTimeGlitch : MonoBehaviour
 
     private void ShowErrorMessage()
     {
-        string platform = Application.platform.ToString();
         
+        string platform = Application.platform.ToString();
+        if(platform.Contains("OSX"))
+        {
+            macError.SetActive(true);
+        }
+        else if(platform.Contains("Linux"))
+        {
+            linuxError.SetActive(true);
+        }
+        else
+        {
+            windowsError.SetActive(true);
+        }
+        errorCanvas.SetActive(true);
     }
 
     private void TimeGlitchCleanup()
@@ -117,6 +124,7 @@ public class FactoryTimeGlitch : MonoBehaviour
             PauseManager.RemovePauseRestriction(gameObject);
             Player.SetCanMove(true);
             Time.timeScale = 1;
+            errorCanvas.SetActive(false);
             finishedTimeGlitch = true;
         }, this);
     }
@@ -129,5 +137,21 @@ public class FactoryTimeGlitch : MonoBehaviour
         stileTilemap.materials = newMaterialsTilemap;
 
         housingTracker.enabled = true;
+    }
+
+    private void SpawnParticles()
+    {
+        for(int i = 0; i < 50; i++)
+        {
+            ParticleManager.SpawnParticle(ParticleType.MiniSparkle, GetRandomPosition() + Player.GetPosition());
+        }
+    }
+
+    private Vector3 GetRandomPosition()
+    {
+        float r = UnityEngine.Random.Range(0f, 10f);
+        float t = UnityEngine.Random.Range(0f, 360f);
+
+        return new Vector2(r * Mathf.Cos(t), r * Mathf.Sin(t));
     }
 }
