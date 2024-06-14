@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Localization;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Toggle))]
@@ -43,7 +44,16 @@ public class PixelFontToggleLogic : MonoBehaviour
         // Otherwise, either directly apply the style or notify the player that it will be applied later
         if (toggleIsOn)
         {
-            popup.SetActive(true); // there's no way to just swap out every different pixel font at once, just tell the player to cope
+            // TODO: get rid of this literal
+            if (SceneManager.GetActiveScene().name.Equals("MainMenu"))
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+            else
+            {
+                popup.SetActive(
+                    true); // there's no way to just swap out every different pixel font at once, just tell the player to cope
+            }
         }
         else
         {

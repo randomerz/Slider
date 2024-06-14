@@ -4657,10 +4657,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.079684764
-    y: 0.07943925
-    width: 0.8406305
-    height: 0.8411215
+    x: 0.043726236
+    y: 0.04391892
+    width: 0.9125475
+    height: 0.9121622
   near clip plane: 0.1
   far clip plane: 5000
   field of view: 40
@@ -10506,6 +10506,34 @@ PrefabInstance:
     - target: {fileID: 428663053873522482, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_fontSize
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 966089048354637181, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 4096
       objectReference: {fileID: 0}
     - target: {fileID: 1026447259695625399, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_AnchorMin.y

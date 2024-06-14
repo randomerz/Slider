@@ -143,6 +143,11 @@ public class LocalizationProjectConfigurationEditor : Editor
     {
         base.OnInspectorGUI();
 
+        if (target == null || target is not LocalizationProjectConfiguration)
+        {
+            return;
+        }
+
         GUILayout.Label($"Project contains following prefabs with the LocalizationInjector component");
         foreach (var prefab in (target as LocalizationProjectConfiguration).RelevantPrefabs)
         {

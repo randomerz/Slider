@@ -259,7 +259,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         public enum Config
         {
             IsValid,
-            NonDialogueFontAdjust,
+            NonDialogueFontScale,
             DialogueFontScale
         }
 
@@ -271,7 +271,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 config => config,
                 config => Enum.GetName(typeof(Config), config));
 
-        public static readonly Dictionary<string, Config> ConfigFromName =
+        private static readonly Dictionary<string, Config> ConfigFromName =
             ConfigToName.ToDictionary(kv => kv.Value, kv => kv.Key);
 
         internal static SortedDictionary<Config, LocalizationConfig> defaultConfigs = new()
@@ -282,9 +282,8 @@ be corrupted, these rules may be helpful for debugging purposes...
                 "1")
             },
             {
-                Config.NonDialogueFontAdjust, new LocalizationConfig(
-                "String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller", 
-                "+0")
+                Config.NonDialogueFontScale, new LocalizationConfig(
+                "Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size.","1.0")
             },
 
             {
@@ -854,28 +853,9 @@ be corrupted, these rules may be helpful for debugging purposes...
             tmpCasted.overflowMode = TextOverflowModes.Overflow;
             tmpCasted.wordSpacing = 0.0f;
             
-            if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontAdjust, out int adjInt) && adjInt != 0)
+            if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
             {
-                string adjStr = adjInt > 0 ? "+" + adjInt : adjInt.ToString();
-
-                // typer exists, it will probably crunch the size tag, so the less preferred way of force
-                // changing the TMP font size,
-                // the reason why this is less preferred is that changes compound onto each other when
-                // locales are switched multiple times, and there is currently no undo mechanism
-                //       switch
-                var tmpTextTyper = tmpCasted.gameObject.GetComponent<TMPTextTyper>();
-                if (tmpTextTyper != null)
-                {
-                    tmpCasted.fontSize += adjInt;
-                }
-                // if typer does not exist, use the alternative approach of wrapping everything in a size tag
-                // this is more versatile since if you switch different localities the font adjustments do not
-                // compound on each other
-                else
-                {
-                    tmpCasted.text = 
-                        $"<size={adjStr}>" + tmpCasted.text + $"</size>";
-                }
+                tmpCasted.fontSize *= scale;
             }
         }
         
@@ -905,14 +885,12 @@ be corrupted, these rules may be helpful for debugging purposes...
                         Debug.LogWarning($"{path}: NOT FOUND");
                     }
                     
+                    // if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
+                    // {
+                    //     dropdown.options[idx]. = 
+                    //         $"<size={scale}>" + dropdown.options[idx].text + $"</size>";
+                    // }
                     
-                    if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontAdjust, out int adjInt) && adjInt != 0)
-                    {
-                        string adjStr = adjInt > 0 ? "+" + adjInt.ToString() : adjInt.ToString();
-                            
-                        dropdown.options[idx].text = 
-                            $"<size={adjStr}>" + dropdown.options[idx].text + $"</size>";
-                    }
                 }
                 catch (IndexOutOfRangeException)
                 {
@@ -925,6 +903,10 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 dropdown.itemText.font = LocalizationLoader.LocalizationFont;
                 dropdown.itemText.overflowMode = TextOverflowModes.Overflow;
+                if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
+                {
+                    dropdown.itemText.fontSize *= scale;
+                }
             }
         }
 
