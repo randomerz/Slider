@@ -72,6 +72,7 @@ public class MilitaryCollectibleController : Singleton<MilitaryCollectibleContro
         }
         else if (numSpawned == 15)
         {
+            numSpawned += 1;
             return 16;
         }
 
