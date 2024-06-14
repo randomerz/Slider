@@ -1290,7 +1290,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5192308646639855571, guid: 0d1a372d9b1a6f440ac809696b2335ec, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 8.4984
+      value: 8.498413
       objectReference: {fileID: 0}
     - target: {fileID: 5192308646639855571, guid: 0d1a372d9b1a6f440ac809696b2335ec, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2188,10 +2188,14 @@ PrefabInstance:
       objectReference: {fileID: 3158823993032643201}
     - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
@@ -2199,7 +2203,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5371531525300713055}
     - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 673566932194475447}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
@@ -2207,11 +2219,23 @@ PrefabInstance:
       value: WriteSettingValue
       objectReference: {fileID: 0}
     - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnToggle
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: SettingUIElement`1[[System.Boolean, mscorlib
       objectReference: {fileID: 0}
     - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: PixelFontToggleLogic, SliderScripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8929265766042083729, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
@@ -2320,6 +2344,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &673566932194475447 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3311096147582040162, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+  m_PrefabInstance: {fileID: 2642379232049366485}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5105628287791256239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecd4b41a095ea9e4dbdedb0f82a9b7b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &749829395506687217 stripped

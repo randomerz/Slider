@@ -843,14 +843,16 @@ be corrupted, these rules may be helpful for debugging purposes...
                 if (file.records.TryGetValue(path, out var entry))
                 {
                     tmpCasted.text = entry.Translated;
-                    tmpCasted.font = LocalizationLoader.LocalizationFont;
-                    tmpCasted.overflowMode = TextOverflowModes.Overflow;
                 }
                 else
                 {
                     Debug.LogWarning($"{path}: NOT FOUND");
                 }
             }
+            
+            tmpCasted.font = LocalizationLoader.LocalizationFont;
+            tmpCasted.overflowMode = TextOverflowModes.Overflow;
+            tmpCasted.wordSpacing = 0.0f;
             
             if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontAdjust, out int adjInt) && adjInt != 0)
             {
@@ -912,7 +914,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                             $"<size={adjStr}>" + dropdown.options[idx].text + $"</size>";
                     }
                 }
-                catch (IndexOutOfRangeException _)
+                catch (IndexOutOfRangeException)
                 {
                     Debug.LogError($"{dropdownOption.FullPath}: dropdown option index out of range");
                 }
@@ -945,7 +947,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                     NPC npcCasted = npc.GetAnchor<NPC>();
                     npcCasted.Conds[idxCond].dialogueChain[idxDiag].DialogueLocalized = entry.Translated;
                 }
-                catch (IndexOutOfRangeException e)
+                catch (IndexOutOfRangeException)
                 {
                     Debug.LogError($"{path}: NPC dialogue out of bounds");
                 }
@@ -960,7 +962,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         {
             if (file.TryParseConfigValue(LocalizationFile.Config.DialogueFontScale, out float adjFlt))
             {
-                display.GetAnchor<DialogueDisplay>().SetFont(LocalizationLoader.LocalizationFont, adjFlt, file.IsDefaultLocale);
+                display.GetAnchor<DialogueDisplay>().SetFont(LocalizationLoader.LocalizationFont, adjFlt, true, true);
             }
         }
         

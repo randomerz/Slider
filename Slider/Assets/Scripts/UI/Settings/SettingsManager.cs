@@ -92,28 +92,7 @@ public class SettingsManager : MonoBehaviour
 
         RegisterAndLoadSetting(Settings.PixelFontEnabled,
             defaultValue: true,
-            onValueChanged: (pixelFontEnabled) =>
-            {
-                if (!pixelFontEnabled)
-                {
-                    Setting<bool>(Settings.HighContrastTextEnabled).SetCurrentValue(true);
-                }
-
-                // For locales not using pixel font anyway, don't refresh
-                // Otherwise, refresh to apply styling
-                if (LocalizationFile.SupportsPixelFont(Setting<string>(Settings.Locale).CurrentValue))
-                {
-                    if (pixelFontEnabled)
-                    {
-                        // 
-                    }
-                    else
-                    {
-                        // when switching from pixel font to a uniform fallback font, a simple refresh is ok without reload
-                        LocalizationLoader.RefreshLocalization();
-                    }
-                }
-            });
+            onValueChanged: (pixelFontEnabled) => { });
     }
 
     public static void RegisterAndLoadSetting<T>(Settings setting, T defaultValue, Action<T> onValueChanged = null)

@@ -300,6 +300,11 @@ public class TMPTextTyper : MonoBehaviour
         TextMeshPro.fontWeight = weight;
     }
 
+    public void ClearWordSpacing()
+    {
+        TextMeshPro.wordSpacing = 0;
+    }
+    
     public void SetAlpha(float alpha)
     {
         TextMeshPro.color = new Color(TextMeshPro.color.r, TextMeshPro.color.g, TextMeshPro.color.b, alpha);

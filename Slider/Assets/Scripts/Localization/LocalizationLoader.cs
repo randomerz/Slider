@@ -21,6 +21,11 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
     private void Start()
     {
         RefreshLocalization(SceneManager.GetActiveScene());
+
+        SceneManager.activeSceneChanged += (_, to) =>
+        {
+            RefreshLocalization(to);
+        };
     }
 
     public static void RefreshLocalization()
