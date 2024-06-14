@@ -122,6 +122,7 @@ namespace Localization
         }
     }
 
+    // TODO: try add typed parsing cache
     internal readonly struct LocalizationConfig
     {
         public readonly string Comment;
@@ -344,27 +345,13 @@ be corrupted, these rules may be helpful for debugging purposes...
             using var file = File.OpenRead(filePath);
             LocalizationFile parsed = new(locale, new StreamReader(file), localeConfig);
             
-            #if !UNITY_EDITOR
-            if (!parsed.configs.TryGetValue(Config.IsValid, out LocalizationConfig isValid))
-            {
-                // if isValid is not set, assume to be true
-                return (parsed, ParserError.NoError);
-            }
-            if (!int.TryParse(isValid.Value, out int isValidFlag))
+            #if UNITY_EDITOR
+            if (!parsed.TryParseConfigValue(Config.IsValid, out int isValidFlag) || isValidFlag != 1)
             {
                 return (null, ParserError.ExplicitlyDisabled);
             }
-            if (isValidFlag == 1)
-            {
-                return (parsed, ParserError.NoError);
-            }
-
-            // if isValid is set but not 1, return null and allow the localization loader to use fallback strategy
-            return (null, ParserError.ExplicitlyDisabled);
-            #else
-            return (parsed, ParserError.NoError);
             #endif
-
+            return (parsed, ParserError.NoError);
         }
         
         private LocalizationFile(string locale, StreamReader reader, LocalizationFile localeConfig = null)
@@ -385,7 +372,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             string property = null;
 
             configs = new();
-            foreach (var (k, v) in (localeConfig != null ? localeConfig.configs : LocalizationFile.defaultConfigs))
+            foreach (var (k, v) in (localeConfig != null ? localeConfig.configs : defaultConfigs))
             {
                 configs.Add(k, new LocalizationConfig(v.Comment, v.Value));
             }
@@ -625,6 +612,45 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             return (builder.ToString(), isNewLineStart, false);
         }
+        
+        private Dictionary<Config, int> configParsingCacheInt = new();
+        private Dictionary<Config, float> configParsingCacheFloat = new();
+        
+        internal bool TryParseConfigValue(Config key, out int value)
+        {
+            // don't try to refactor this with T:IParsable<T>, Unity C# doesn't have it :)
+            if (configParsingCacheInt.TryGetValue(key, out var cached))
+            {
+                value = cached;
+                return true;
+            }
+            if (configs.TryGetValue(key, out LocalizationConfig valStr) && int.TryParse(valStr.Value, out var parsed))
+            {
+                value = parsed;
+                return true;
+            }
+
+            value = -1;
+            return false;
+        }
+        
+        internal bool TryParseConfigValue(Config key, out float value)
+        {
+            // don't try to refactor this with T:IParsable<T>, Unity C# doesn't have it :)
+            if (configParsingCacheFloat.TryGetValue(key, out var cached))
+            {
+                value = cached;
+                return true;
+            }
+            if (configs.TryGetValue(key, out LocalizationConfig valStr) && float.TryParse(valStr.Value, out var parsed))
+            {
+                value = parsed;
+                return true;
+            }
+
+            value = -1.0f;
+            return false;
+        }
     }
 
     public class LocalizableContext
@@ -752,153 +778,171 @@ be corrupted, these rules may be helpful for debugging purposes...
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
         ////////////////////////// Applying Localization ///////////////////////////////////////////////////////////////
-        private static readonly Dictionary<Type, Action<TrackedLocalizable, LocalizationFile>> LocalizationFunctionMap = new()
+
+        private enum LocalizationStrategy
+        {
+            ChangeStyleOnly,
+            TranslateTextAndChangeStyle
+        }
+        
+        private static readonly Dictionary<Type, Action<TrackedLocalizable, LocalizationFile, LocalizationStrategy>> LocalizationFunctionMap = new()
         {
             { typeof(TMP_Text), LocalizeTmp },
             { typeof(TMP_Dropdown), LocalizeDropdownOption },
             { typeof(NPC), LocalizeNpc },
             { typeof(DialogueDisplay), LocalizeDialogueDisplay },
-            { typeof(LocalizationInjector), (loc, _) => loc.GetAnchor<LocalizationInjector>().Refresh() }
+            { typeof(LocalizationInjector), (loc, _, _) => loc.GetAnchor<LocalizationInjector>().Refresh() }
         };
 
+        /// <summary>
+        /// No undo, force refresh when text styling needs to be reverted...
+        /// </summary>
+        /// <param name="file"></param>
         public void Localize(LocalizationFile file)
         {
+            bool isEnglish = file.IsDefaultLocale;
+            bool isAccessible = SettingsManager.Setting<bool>(Settings.Accessible).CurrentValue;
+
+            if (isEnglish && !isAccessible)
+            {
+                Debug.Log("Localization strategy: skipping...");
+                return;
+            }
+
+            var strat = isEnglish
+                ? LocalizationStrategy.ChangeStyleOnly
+                : LocalizationStrategy.TranslateTextAndChangeStyle;
+            
+            Debug.Log($"Localization strategy: { Enum.GetName(typeof(LocalizationStrategy), strat) }");
+            
             foreach (var (type, instances) in localizables)
             {
                 foreach (TrackedLocalizable trackedLocalizable in instances)
                 {
                     if (LocalizationFunctionMap.TryGetValue(type, out var localizationFuncion))
                     {
-                        localizationFuncion(trackedLocalizable, file);
+                        localizationFuncion(trackedLocalizable, file, strat);
                     }
                 }
             }
         }
         
-        private static void LocalizeTmp(TrackedLocalizable tmp, LocalizationFile file)
+        private static void LocalizeTmp(TrackedLocalizable tmp, LocalizationFile file, LocalizationStrategy strat)
         {
-            TMP_Text tmpCasted = tmp.GetAnchor<TMP_Text>();
-            string path = tmp.FullPath;
+            var tmpCasted = tmp.GetAnchor<TMP_Text>();
+            var path = tmp.FullPath;
 
-            var tmpTextTyper = tmpCasted.gameObject.GetComponent<TMPTextTyper>();
-            bool tmpTextTyperExists = tmpTextTyper != null;
-
-            if (file.records.TryGetValue(path, out var entry))
+            if (strat == LocalizationStrategy.TranslateTextAndChangeStyle)
             {
-                if (file.IsDefaultLocale)
-                {
-                    if (tmpTextTyperExists)
-                    {
-                        tmpTextTyper.SetFont(null, 1.0f);
-                    }
-                    else
-                    {
-                        tmpCasted.font = LocalizationLoader.DefaultUiFont;
-                    }
-                    // TODO: undo overflow mode
-                }
-                else
-                {
-                    tmpCasted.font = LocalizationLoader.LocalizationFont;
-                    tmpCasted.overflowMode = TextOverflowModes.Overflow; // TODO: compare different overflow modes
-                }
-                tmpCasted.text = entry.Translated;
-
-                if (file.configs.ContainsKey(LocalizationFile.Config.NonDialogueFontAdjust))
-                {
-                    string adjust = file.configs[LocalizationFile.Config.NonDialogueFontAdjust].Value;
-
-                    if (int.TryParse(adjust, out int adjInt) && adjInt != 0)
-                    {
-                        string adjStr = adjInt > 0 ? "+" + adjInt : adjInt.ToString();
-
-                        // typer exists, it will probably crunch the size tag, so the less preferred way of force
-                        // changing the TMP font size,
-                        // the reason why this is less preferred is that changes compound onto each other when
-                        // locales are switched multiple times, and there is currently no undo mechanism
-                        // TODO: fix this, add an "undo localization" option that is called before each localization
-                        //       switch
-                        if (tmpTextTyperExists)
-                        {
-                            tmpCasted.fontSize += adjInt;
-                        }
-                        // if typer does not exist, use the alternative approach of wrapping everything in a size tag
-                        // this is more versatile since if you switch different localities the font adjustments do not
-                        // compound on each other
-                        else
-                        {
-                            tmpCasted.text = 
-                                $"<size={adjStr}>" + tmpCasted.text + $"</size>";
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"{path}: NOT FOUND");
-            }
-        }
-        
-        private static void LocalizeDropdownOption(TrackedLocalizable dropdownOption, LocalizationFile file)
-        {
-            TMP_Dropdown dropdown = dropdownOption.GetAnchor<TMP_Dropdown>();
-
-            // particular option in dropdown
-            if (dropdownOption.IndexInComponent != null)
-            {
-                int idx = int.Parse(dropdownOption.IndexInComponent);
-                
-                string path = dropdownOption.FullPath;
                 if (file.records.TryGetValue(path, out var entry))
                 {
-                    dropdown.options[idx].text = entry.Translated;
-                    
-                    if (file.configs.ContainsKey(LocalizationFile.Config.NonDialogueFontAdjust))
-                    {
-                        string adjust = file.configs[LocalizationFile.Config.NonDialogueFontAdjust].Value;
-
-                        if (int.TryParse(adjust, out int adjInt) && adjInt != 0)
-                        {
-                            string adjStr = adjInt > 0 ? "+" + adjInt.ToString() : adjInt.ToString();
-                                
-                            dropdown.options[idx].text = 
-                                $"<size={adjStr}>" + dropdown.options[idx].text + $"</size>";
-                        }
-                    }
+                    tmpCasted.text = entry.Translated;
+                    tmpCasted.font = LocalizationLoader.LocalizationFont;
+                    tmpCasted.overflowMode = TextOverflowModes.Overflow;
                 }
                 else
                 {
                     Debug.LogWarning($"{path}: NOT FOUND");
                 }
             }
-            // entire dropdown itself
-            else
+            
+            if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontAdjust, out int adjInt) && adjInt != 0)
             {
-                if (!file.IsDefaultLocale)
+                string adjStr = adjInt > 0 ? "+" + adjInt : adjInt.ToString();
+
+                // typer exists, it will probably crunch the size tag, so the less preferred way of force
+                // changing the TMP font size,
+                // the reason why this is less preferred is that changes compound onto each other when
+                // locales are switched multiple times, and there is currently no undo mechanism
+                //       switch
+                var tmpTextTyper = tmpCasted.gameObject.GetComponent<TMPTextTyper>();
+                if (tmpTextTyper != null)
                 {
-                    dropdown.itemText.font = LocalizationLoader.LocalizationFont;
-                    dropdown.itemText.overflowMode = TextOverflowModes.Overflow; // TODO: compare different overflow modes
+                    tmpCasted.fontSize += adjInt;
                 }
+                // if typer does not exist, use the alternative approach of wrapping everything in a size tag
+                // this is more versatile since if you switch different localities the font adjustments do not
+                // compound on each other
                 else
                 {
-                    dropdown.itemText.font = LocalizationLoader.DefaultUiFont;
-                    // TODO: undo overflow mode for default locale
+                    tmpCasted.text = 
+                        $"<size={adjStr}>" + tmpCasted.text + $"</size>";
                 }
             }
         }
-
-        private static void LocalizeNpc(TrackedLocalizable npc, LocalizationFile file)
+        
+        private static void LocalizeDropdownOption(TrackedLocalizable dropdownOption, LocalizationFile file, LocalizationStrategy strat)
         {
+            TMP_Dropdown dropdown = dropdownOption.GetAnchor<TMP_Dropdown>();
+
+            // particular option in dropdown, change text as well as size modifications (using rich text)
+            if (dropdownOption.IndexInComponent != null)
+            {
+                try
+                {
+                    int idx = int.Parse(dropdownOption
+                        .IndexInComponent); // possibly malformed path, consider logging error instead
+
+                    string path = dropdownOption.FullPath;
+
+                    if (strat == LocalizationStrategy.TranslateTextAndChangeStyle)
+                    {
+                        if (file.records.TryGetValue(path, out var entry))
+                        {
+                            dropdown.options[idx].text = entry.Translated;
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"{path}: NOT FOUND");
+                    }
+                    
+                    
+                    if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontAdjust, out int adjInt) && adjInt != 0)
+                    {
+                        string adjStr = adjInt > 0 ? "+" + adjInt.ToString() : adjInt.ToString();
+                            
+                        dropdown.options[idx].text = 
+                            $"<size={adjStr}>" + dropdown.options[idx].text + $"</size>";
+                    }
+                }
+                catch (IndexOutOfRangeException _)
+                {
+                    Debug.LogError($"{dropdownOption.FullPath}: dropdown option index out of range");
+                }
+            }
+            
+            // entire dropdown itself, change font info
+            else
+            {
+                dropdown.itemText.font = LocalizationLoader.LocalizationFont;
+                dropdown.itemText.overflowMode = TextOverflowModes.Overflow;
+            }
+        }
+
+        private static void LocalizeNpc(TrackedLocalizable npc, LocalizationFile file, LocalizationStrategy strat)
+        {
+            if (strat == LocalizationStrategy.ChangeStyleOnly)
+            {
+                return;
+            }
+            
             string path = npc.FullPath;
             if (file.records.TryGetValue(path, out var entry))
             {
-                var idx = npc.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
+                try
+                {
+                    var idx = npc.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
+                    int idxCond = int.Parse(idx[0]);
+                    int idxDiag = int.Parse(idx[1]);
 
-                int idxCond = int.Parse(idx[0]);
-                int idxDiag = int.Parse(idx[1]);
-
-                NPC npcCasted = npc.GetAnchor<NPC>();
-                npcCasted.Conds[idxCond].dialogueChain[idxDiag].DialogueLocalized = entry.Translated;
+                    NPC npcCasted = npc.GetAnchor<NPC>();
+                    npcCasted.Conds[idxCond].dialogueChain[idxDiag].DialogueLocalized = entry.Translated;
+                }
+                catch (IndexOutOfRangeException e)
+                {
+                    Debug.LogError($"{path}: NPC dialogue out of bounds");
+                }
             }
             else
             {
@@ -906,27 +950,11 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
-        private static void LocalizeDialogueDisplay(TrackedLocalizable display, LocalizationFile file)
+        private static void LocalizeDialogueDisplay(TrackedLocalizable display, LocalizationFile file, LocalizationStrategy strat)
         {
-            string adjStr = file.configs[LocalizationFile.Config.DialogueFontScale].Value;
-            try
+            if (file.TryParseConfigValue(LocalizationFile.Config.DialogueFontScale, out float adjFlt))
             {
-                float adjFlt = float.Parse(adjStr);
-
-                DialogueDisplay displayCasted = display.GetAnchor<DialogueDisplay>();
-
-                if (file.IsDefaultLocale)
-                {
-                    displayCasted.SetFont(null, adjFlt, true);
-                }
-                else
-                {
-                    displayCasted.SetFont(LocalizationLoader.LocalizationFont, adjFlt, false);
-                }
-            }
-            catch (FormatException)
-            {
-                Debug.LogError($"Invalid formatted dialogue font scale {adjStr}");
+                display.GetAnchor<DialogueDisplay>().SetFont(LocalizationLoader.LocalizationFont, adjFlt, file.IsDefaultLocale);
             }
         }
         

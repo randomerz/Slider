@@ -11,12 +11,8 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
 {
     [SerializeField]
     private TMP_FontAsset localizationFont;
-    
-    [SerializeField]
-    private TMP_FontAsset defaultUiFont;
 
     public static TMP_FontAsset LocalizationFont => _instance.localizationFont;
-    public static TMP_FontAsset DefaultUiFont => _instance.defaultUiFont;
     
     private void Awake()
     {

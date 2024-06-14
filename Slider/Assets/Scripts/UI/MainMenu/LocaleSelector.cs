@@ -3,6 +3,7 @@ using System.Linq;
 using Localization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(SettingRetriever))]
 public class LocaleSelector : MonoBehaviour
@@ -59,18 +60,33 @@ public class LocaleSelector : MonoBehaviour
         Dropdown.gameObject.SetActive(false);
         ShowHide.SetActive(true);
 
+        string oldLocale = retriever.ReadSettingValue() as string ?? "";
         string selection = Dropdown.options[Dropdown.value].text;
-        retriever.WriteSettingValue(selection);
 
+        // don't change anything if "switching" to the same language
+        if (!oldLocale.Equals(selection))
+        {
+            return;
+        }
+        
+        retriever.WriteSettingValue(selection);
+        
+        bool isEnglish = selection.Equals(LocalizationFile.DefaultLocale);
         // non English font does not have outline (TMP has outline but it seems to be UI text only)
         // instead of messing with outlines just force text background to be on, player can toggle
         // it back if they want to
-        if (!selection.Equals(LocalizationFile.DefaultLocale))
+        if (!isEnglish)
         {
             SettingsManager.Setting(Settings.HighContrastTextEnabled).SetCurrentValue(true);
         }
+
+        // no need to reload stuff if switching from engish to non-english
+        if (!oldLocale.Equals(LocalizationFile.DefaultLocale))
+        {
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            SceneManager.LoadScene(currentSceneName);
+        }
         
-        // Refresh is done through SettingsManager
-        // LocalizationLoader.Refresh(Dropdown.options[Dropdown.value].text);
+        // Don't put anything here... there's a force scene reload in the setting change event (see SettingsManager)
     }
 }

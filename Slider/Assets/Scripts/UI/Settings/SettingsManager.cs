@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Localization;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// <para>
@@ -84,7 +85,9 @@ public class SettingsManager : MonoBehaviour
             defaultValue: "English",
             onValueChanged: (locale) =>
             {
-                LocalizationLoader.RefreshLocalization();
+                // string currentSceneName = SceneManager.GetActiveScene().name;
+                // SceneManager.LoadScene(currentSceneName);
+                // LocalizationLoader.RefreshLocalization();
             });
     }
 

@@ -23,7 +23,8 @@ public enum Settings
     Vsync,
     TargetFrameRate,
     PlayAudioWhenUnfocused,
-    Locale
+    Locale,
+    Accessible,
 }
 
 static class SettingsMethods
@@ -48,6 +49,7 @@ static class SettingsMethods
         Settings.TargetFrameRate => "targetFrameRate",
         Settings.PlayAudioWhenUnfocused => "playAudioWhenUnfocused",
         Settings.Locale => "locale",
+        Settings.Accessible => "accessible",
         _ => ""
     };
 }

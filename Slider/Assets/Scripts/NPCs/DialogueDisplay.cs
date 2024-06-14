@@ -117,12 +117,12 @@ public class DialogueDisplay : MonoBehaviour
         highContrastBG.SetActive(highContrastMode);
     }
 
-    public void SetFont(TMP_FontAsset font, float scale, bool isDefaultLocale)
+    public void SetFont(TMP_FontAsset font, float scale, bool useBoldedFont)
     {
         textTyperText.SetFont(font, scale);
         textTyperBG.SetFont(font, scale);
 
-        if (isDefaultLocale)
+        if (useBoldedFont)
         {
             textTyperText.SetFontWeight(FontWeight.Regular);
             textTyperBG.SetFontWeight(FontWeight.Black);
