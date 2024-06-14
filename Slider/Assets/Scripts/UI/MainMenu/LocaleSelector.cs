@@ -60,11 +60,11 @@ public class LocaleSelector : MonoBehaviour
         Dropdown.gameObject.SetActive(false);
         ShowHide.SetActive(true);
 
-        string oldLocale = retriever.ReadSettingValue() as string ?? "";
+        string originalLocale = retriever.ReadSettingValue() as string ?? LocalizationFile.DefaultLocale;
         string selection = Dropdown.options[Dropdown.value].text;
 
         // don't change anything if "switching" to the same language
-        if (!oldLocale.Equals(selection))
+        if (originalLocale.Equals(selection))
         {
             return;
         }
@@ -80,9 +80,14 @@ public class LocaleSelector : MonoBehaviour
             SettingsManager.Setting(Settings.HighContrastTextEnabled).SetCurrentValue(true);
         }
 
-        // no need to reload stuff if switching from engish to non-english
-        if (!oldLocale.Equals(LocalizationFile.DefaultLocale))
+        // no need to reload styles (font size, etc.) if switching from engish to non-english
+        // just directly refresh localizations
+        if (originalLocale.Equals(LocalizationFile.DefaultLocale))
         {
+            LocalizationLoader.RefreshLocalization();
+        }
+        // otherwise, force start from default styling (font size, etc.) and run localization on scene load
+        else {
             string currentSceneName = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(currentSceneName);
         }

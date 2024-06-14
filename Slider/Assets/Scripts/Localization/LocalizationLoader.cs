@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 using LocalizationFile = Localization.LocalizationFile;
 
-[RequireComponent(typeof(SettingRetriever))]
 public class LocalizationLoader : Singleton<LocalizationLoader>
 {
     [SerializeField]
@@ -32,7 +31,7 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
         }
     }
     
-    public static string CurrentLocale => _instance == null ? LocalizationFile.DefaultLocale : _instance.GetComponent<SettingRetriever>().ReadSettingValue() as string;
+    public static string CurrentLocale => _instance == null ? LocalizationFile.DefaultLocale : SettingsManager.Setting<string>(Settings.Locale).CurrentValue;
 
     private static LocalizationFile LoadAssetAndConfigureLocaleDefaults(string locale, string sceneLocalizationFilePath) 
     {

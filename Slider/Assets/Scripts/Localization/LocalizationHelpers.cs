@@ -153,10 +153,15 @@ namespace Localization
                     // very expensive check, makes sure that only the legit locales are selected
                     .Where(localeName =>
                     {
-                        var filePath = LocalizationFile.LocaleGlobalFilePath(localeName, root);
-                        var (parsedGlobalFile, err) = LocalizationFile.MakeLocalizationFile(localeName, filePath);
-                        PrintParserError(err, filePath);
-                        return parsedGlobalFile != null;
+                        var filePath = LocaleGlobalFilePath(localeName, root);
+                        var (parsedGlobalFile, err) = MakeLocalizationFile(localeName, filePath);
+                        if (parsedGlobalFile != null)
+                        {
+                            return true;
+                        } else {
+                            PrintParserError(err, filePath);
+                            return false;
+                        }
                     })
                     .ToList();
                     
@@ -299,6 +304,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private string locale;
         public bool IsDefaultLocale => locale.Equals(DefaultLocale);
+        public static bool SupportsPixelFont(string locale) => locale.Equals(DefaultLocale); // TODO: change when pixel font adds Spanish supports or something...
         
         enum ParserState
         {
@@ -345,7 +351,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             using var file = File.OpenRead(filePath);
             LocalizationFile parsed = new(locale, new StreamReader(file), localeConfig);
             
-            #if UNITY_EDITOR
+            #if !UNITY_EDITOR
             if (!parsed.TryParseConfigValue(Config.IsValid, out int isValidFlag) || isValidFlag != 1)
             {
                 return (null, ParserError.ExplicitlyDisabled);
@@ -801,19 +807,19 @@ be corrupted, these rules may be helpful for debugging purposes...
         public void Localize(LocalizationFile file)
         {
             bool isEnglish = file.IsDefaultLocale;
-            bool isAccessible = SettingsManager.Setting<bool>(Settings.Accessible).CurrentValue;
+            bool canUsePixelFont = SettingsManager.Setting<bool>(Settings.PixelFontEnabled).CurrentValue;
 
-            if (isEnglish && !isAccessible)
+            if (isEnglish && canUsePixelFont)
             {
                 Debug.Log("Localization strategy: skipping...");
                 return;
             }
 
-            var strat = isEnglish
+            var strategy = isEnglish
                 ? LocalizationStrategy.ChangeStyleOnly
                 : LocalizationStrategy.TranslateTextAndChangeStyle;
             
-            Debug.Log($"Localization strategy: { Enum.GetName(typeof(LocalizationStrategy), strat) }");
+            Debug.Log($"Localization strategy: { Enum.GetName(typeof(LocalizationStrategy), strategy) }");
             
             foreach (var (type, instances) in localizables)
             {
@@ -821,18 +827,18 @@ be corrupted, these rules may be helpful for debugging purposes...
                 {
                     if (LocalizationFunctionMap.TryGetValue(type, out var localizationFuncion))
                     {
-                        localizationFuncion(trackedLocalizable, file, strat);
+                        localizationFuncion(trackedLocalizable, file, strategy);
                     }
                 }
             }
         }
         
-        private static void LocalizeTmp(TrackedLocalizable tmp, LocalizationFile file, LocalizationStrategy strat)
+        private static void LocalizeTmp(TrackedLocalizable tmp, LocalizationFile file, LocalizationStrategy strategy)
         {
             var tmpCasted = tmp.GetAnchor<TMP_Text>();
             var path = tmp.FullPath;
 
-            if (strat == LocalizationStrategy.TranslateTextAndChangeStyle)
+            if (strategy == LocalizationStrategy.TranslateTextAndChangeStyle)
             {
                 if (file.records.TryGetValue(path, out var entry))
                 {
@@ -871,7 +877,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
         
-        private static void LocalizeDropdownOption(TrackedLocalizable dropdownOption, LocalizationFile file, LocalizationStrategy strat)
+        private static void LocalizeDropdownOption(TrackedLocalizable dropdownOption, LocalizationFile file, LocalizationStrategy strategy)
         {
             TMP_Dropdown dropdown = dropdownOption.GetAnchor<TMP_Dropdown>();
 
@@ -885,7 +891,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
                     string path = dropdownOption.FullPath;
 
-                    if (strat == LocalizationStrategy.TranslateTextAndChangeStyle)
+                    if (strategy == LocalizationStrategy.TranslateTextAndChangeStyle)
                     {
                         if (file.records.TryGetValue(path, out var entry))
                         {
@@ -920,9 +926,9 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
-        private static void LocalizeNpc(TrackedLocalizable npc, LocalizationFile file, LocalizationStrategy strat)
+        private static void LocalizeNpc(TrackedLocalizable npc, LocalizationFile file, LocalizationStrategy strategy)
         {
-            if (strat == LocalizationStrategy.ChangeStyleOnly)
+            if (strategy == LocalizationStrategy.ChangeStyleOnly)
             {
                 return;
             }
@@ -950,7 +956,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
-        private static void LocalizeDialogueDisplay(TrackedLocalizable display, LocalizationFile file, LocalizationStrategy strat)
+        private static void LocalizeDialogueDisplay(TrackedLocalizable display, LocalizationFile file, LocalizationStrategy strategy)
         {
             if (file.TryParseConfigValue(LocalizationFile.Config.DialogueFontScale, out float adjFlt))
             {
