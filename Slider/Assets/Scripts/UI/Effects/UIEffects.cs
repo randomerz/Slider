@@ -20,6 +20,8 @@ public class UIEffects : Singleton<UIEffects>
 
     public UISpotlightEffect uISpotlightEffect;
 
+    public PixelizeFeature pixelizeFeature;
+
     //private static UIEffects _instance;
 
     // Holds the last flashing/black fade coroutine called so we can end it when starting a new one
@@ -64,19 +66,24 @@ public class UIEffects : Singleton<UIEffects>
         StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0.9f, 0, callback, speed));
     }
 
-    public static void FadeToWhite(System.Action callback=null, float speed=1, bool disableAtEnd = true, float alpha = 1, bool useUnscaledTime = false)
+    public static void FadeToWhite(System.Action callback=null, float speed=1, bool disableAtEnd = true)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, alpha, callback, speed, disableAtEnd, useUnscaledTime));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, 1, callback, speed, disableAtEnd));
     }
 
-    public static void FlashWhite(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1, bool useUnscaledTime = false)
+    public static void FlashWhite(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1)
     {
-        StartEffectCoroutine(_instance.FlashCoroutine(callbackMiddle, callbackEnd, speed, useUnscaledTime));
+        StartEffectCoroutine(_instance.FlashCoroutine(callbackMiddle, callbackEnd, speed));
     }
 
     public static void FadeFromScreenshot(System.Action screenshotCallback = null, System.Action callbackEnd = null, float speed = 1)
     {
         StartEffectCoroutine(_instance.ScreenshotCoroutine(screenshotCallback, callbackEnd, speed), false);
+    }
+
+    public static void Pixelize(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1)
+    {
+        StartEffectCoroutine(_instance.PixelizeCoroutine(callbackMiddle, callbackEnd, speed));
     }
 
     public static void ClearScreen()
@@ -101,7 +108,7 @@ public class UIEffects : Singleton<UIEffects>
     }
 
 
-    private IEnumerator FadeCoroutine(GameObject gameObject, CanvasGroup group, float startAlpha, float endAlpha, System.Action callback=null, float speed=1, bool disableAtEnd = true, bool useUnscaledTime = false)
+    private IEnumerator FadeCoroutine(GameObject gameObject, CanvasGroup group, float startAlpha, float endAlpha, System.Action callback=null, float speed=1, bool disableAtEnd = true)
     {
         float t = 0;
         gameObject.SetActive(true);
@@ -112,7 +119,7 @@ public class UIEffects : Singleton<UIEffects>
             group.alpha = Mathf.Lerp(startAlpha, endAlpha, t / fadeDuration);
 
             yield return null;
-            t += (useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime * speed);
+            t += (Time.deltaTime * speed);
         }
 
         group.alpha = endAlpha;
@@ -122,7 +129,7 @@ public class UIEffects : Singleton<UIEffects>
         callback?.Invoke();
     }
 
-    private IEnumerator FlashCoroutine(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1, bool useUnscaledTime = false)
+    private IEnumerator FlashCoroutine(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1)
     {
         float t = 0;
         whitePanel.SetActive(true);
@@ -133,7 +140,7 @@ public class UIEffects : Singleton<UIEffects>
             whitePanelCanvasGroup.alpha = Mathf.Lerp(0, 1, t / (flashDuration / 2));
 
             yield return null;
-            t += (useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime * speed);
+            t += (Time.deltaTime * speed);
         }
 
         callbackMiddle?.Invoke();
@@ -143,7 +150,7 @@ public class UIEffects : Singleton<UIEffects>
             whitePanelCanvasGroup.alpha = Mathf.Lerp(0, 1, t / (flashDuration / 2));
 
             yield return null;
-            t -= (useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime * speed);
+            t -= (Time.deltaTime * speed);
         }
 
         whitePanelCanvasGroup.alpha = 0;
@@ -176,6 +183,40 @@ public class UIEffects : Singleton<UIEffects>
         }
         screenshotPanel.SetActive(false);
         callbackEnd?.Invoke();
+    }
+
+    private IEnumerator PixelizeCoroutine(System.Action callbackMiddle = null, System.Action callbackEnd = null, float speed = 1)
+    {   
+        int maxRes = 180;
+        int minRes = 10;
+
+        float t = 0; 
+        pixelizeFeature.SetActive(true);
+
+        while (t < flashDuration / 2)
+        {
+            pixelizeFeature.settings.screenHeight = (int)Mathf.Lerp(maxRes, minRes, t / (flashDuration / 2));
+
+            yield return null;
+            t += (Time.deltaTime * speed);
+        }
+
+        callbackMiddle?.Invoke();
+
+        while (t >= 0)
+        {
+            pixelizeFeature.settings.screenHeight = (int)Mathf.Lerp(maxRes, minRes, t / (flashDuration / 2));
+
+            yield return null;
+            t -= (Time.deltaTime * speed);
+        }
+        callbackEnd?.Invoke();
+        pixelizeFeature.SetActive(false);
+    }
+
+    private void TogglePixel()
+    {
+        pixelizeFeature.SetActive(!pixelizeFeature.isActive);
     }
 
     public static void StartSpotlight(Vector2 positionPixel, float radiusPixel, float duration=2, System.Action onStart=null, System.Action onFinish=null)

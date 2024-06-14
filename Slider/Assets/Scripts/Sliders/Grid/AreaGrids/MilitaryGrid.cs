@@ -57,23 +57,25 @@ public class MilitaryGrid : SGrid
 
     // === Military puzzle specific ==
 
-    public void RestartSimulation() => RestartSimulation(1);
+    public void RestartSimulation() => RestartSimulation(0.25f);
 
     public void RestartSimulation(float speed)
     {
         if (isRestarting)
             return;
         isRestarting = true;
-
-        CameraShake.ShakeIncrease(1 / speed, 0.25f);
-        UIEffects.FlashWhite(
+        PauseManager.AddPauseRestriction(gameObject);
+        Player.SetCanMove(false);
+        AudioManager.Play("Slide Rumble"); 
+        UIEffects.Pixelize(
             () => {
                 DoRestartSimulation();
-                CameraShake.Shake(1 / speed, 0.25f);
                 AudioManager.Play("TFT Bell");
             },
             () => {
                 isRestarting = false;
+                PauseManager.RemovePauseRestriction(gameObject);
+                Player.SetCanMove(true);
             }, 
             speed
         );
