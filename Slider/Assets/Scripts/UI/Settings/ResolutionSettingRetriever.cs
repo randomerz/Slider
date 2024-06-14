@@ -14,7 +14,9 @@ public class ResolutionSettingRetriever : AbstractSettingRetriever
         { 2, new Resolution(1366, 768) },
         { 3, new Resolution(1920, 1080) },
         { 4, new Resolution(2560, 1440) },
-        { 5, new Resolution(3840, 2160) }
+        { 5, new Resolution(3840, 2160) },
+        { 6, new Resolution(0, 0)},
+
     };
     private static readonly Dictionary<Resolution, int> resolutionToDropdownIndex = dropdownIndexToResolution.ToDictionary((i) => i.Value, (i) => i.Key);
 

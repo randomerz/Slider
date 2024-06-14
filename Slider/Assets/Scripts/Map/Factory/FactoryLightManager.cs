@@ -5,6 +5,7 @@ using UnityEngine;
 public class FactoryLightManager : Singleton<FactoryLightManager>
 {
     private const string lightShaderName = "Shader Graphs/FactoryLightShader";
+    private const string pipeShaderName = "Shader Graphs/FactoryLightColorSwapShader";
 
     //RIP SR
 
@@ -24,7 +25,7 @@ public class FactoryLightManager : Singleton<FactoryLightManager>
     {
         foreach (var mat in _instance.lightMaterials)
         {
-            mat.SetInt("_LightOn", on ? 1 : 0);  //L: No set bool? Ya serious?
+            mat.SetInt("_LightOn", on ? 1 : 0);
         }
     }
 
@@ -32,14 +33,14 @@ public class FactoryLightManager : Singleton<FactoryLightManager>
     {
         List<Material> materials = new List<Material>();
         Shader lightShader = Shader.Find(lightShaderName);
+        Shader pipeShader = Shader.Find(pipeShaderName);
 
         Renderer[] allRenderers = FindObjectsOfType<Renderer>(true);
         foreach (Renderer r in allRenderers)
         {
-            if (r.material.shader == lightShader)
+            if (r.material.shader == lightShader || r.material.shader == pipeShader)
             {
                 materials.Add(r.material);
-                //Debug.Log(r.gameObject.name);
             }
         }
 

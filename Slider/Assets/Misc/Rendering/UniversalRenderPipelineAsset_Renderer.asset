@@ -15,7 +15,7 @@ MonoBehaviour:
   m_Active: 0
   settings:
     renderPassEvent: 550
-    screenHeight: 179
+    screenHeight: 90
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32,7 +32,7 @@ MonoBehaviour:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7, type: 3}
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
-  - {fileID: 0}
+  - {fileID: -5006416408243637401}
   m_RendererFeatureMap: 6773f344cda285ba
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
