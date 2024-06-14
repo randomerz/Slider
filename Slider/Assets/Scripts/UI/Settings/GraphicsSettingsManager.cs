@@ -14,11 +14,11 @@ public class GraphicsSettingsManager : MonoBehaviour
     {
         RegisterAndLoadSetting(Settings.ScreenMode,
             defaultValue: FullScreenMode.ExclusiveFullScreen,
-            onValueChanged: (value) => Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, value)
+            onValueChanged: (value) => SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, value)
         );
         RegisterAndLoadSetting(Settings.Resolution,
-            defaultValue: new Resolution(1920, 1080),
-            onValueChanged: (value) => Screen.SetResolution(value.width, value.height, Screen.fullScreenMode)
+            defaultValue: new Resolution(0, 0),
+            onValueChanged: (value) => SetResolution(value.width, value.height, Screen.fullScreenMode)
         );
         RegisterAndLoadSetting(Settings.Vsync,
             defaultValue: VSYNC_ENABLED,
@@ -28,5 +28,17 @@ public class GraphicsSettingsManager : MonoBehaviour
             defaultValue: TARGET_FRAME_RATE_DISABLED,
             onValueChanged: (value) => Application.targetFrameRate = value
         );
+    }
+
+    private void SetResolution(int width, int height, FullScreenMode mode)
+    {
+        if(width == 0)
+        {
+            Screen.SetResolution(Screen.width, Screen.height, mode);
+        }
+        else
+        {
+            Screen.SetResolution(width, height, mode);
+        }
     }
 }
