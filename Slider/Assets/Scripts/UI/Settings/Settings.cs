@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
+// Make sure to add to the end of the list because of how Unity serializes enums!
 public enum Settings
 {
     MasterVolume,
@@ -24,7 +25,7 @@ public enum Settings
     TargetFrameRate,
     PlayAudioWhenUnfocused,
     Locale,
-    Accessible,
+    PixelFontEnabled,
 }
 
 static class SettingsMethods
@@ -49,7 +50,7 @@ static class SettingsMethods
         Settings.TargetFrameRate => "targetFrameRate",
         Settings.PlayAudioWhenUnfocused => "playAudioWhenUnfocused",
         Settings.Locale => "locale",
-        Settings.Accessible => "accessible",
+        Settings.PixelFontEnabled => "pixelFontEnabled",
         _ => ""
     };
 }

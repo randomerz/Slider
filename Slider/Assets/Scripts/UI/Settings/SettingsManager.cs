@@ -51,6 +51,9 @@ public class SettingsManager : MonoBehaviour
         RegisterAndLoadSetting(Settings.HighContrastTextEnabled,
             defaultValue: false
         );
+        RegisterAndLoadSetting(Settings.PixelFontEnabled,
+            defaultValue: true
+        );
         RegisterAndLoadSetting(Settings.Colorblind,
             defaultValue: false
         );
