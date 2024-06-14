@@ -223,4 +223,6 @@ public class BaboonTree : MonoBehaviour
     public void IsBothDirectionsDone(Condition c)  => c.SetSpec(didHorizontal && didVertical); // yes is both directions done
     public void IsFalling(Condition c)             => c.SetSpec(isFalling);
     public void DidShakeAfterWalk(Condition c)     => c.SetSpec(numShakesAfterWalk >= 1);
+    public void ThreeShakeAfterWalk(Condition c)     => c.SetSpec(numShakesAfterWalk >= 3);
+
 }
