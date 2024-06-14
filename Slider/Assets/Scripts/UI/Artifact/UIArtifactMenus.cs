@@ -106,6 +106,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         ItemPickupEffect.OnCutsceneStart += CloseArtifactListener;
         //UIManager.OnCloseAllMenus += CloseArtifactListenerNoOpen;
         PauseManager.PauseStateChanged += OnPauseStateChanged;
+        FactoryTimeGlitch.TimeGlitchPauseStateChanged += OnPauseStateChanged;
         Player.OnControlSchemeChanged += ToggleNavigation;
     }
 
@@ -123,6 +124,7 @@ public class UIArtifactMenus : Singleton<UIArtifactMenus>
         ItemPickupEffect.OnCutsceneStart -= CloseArtifactListener;
         //UIManager.OnCloseAllMenus -= CloseArtifactListenerNoOpen;
         PauseManager.PauseStateChanged -= OnPauseStateChanged;
+        FactoryTimeGlitch.TimeGlitchPauseStateChanged -= OnPauseStateChanged;
         Player.OnControlSchemeChanged -= ToggleNavigation;
     }
 
