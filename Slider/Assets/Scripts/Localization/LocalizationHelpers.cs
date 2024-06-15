@@ -125,6 +125,11 @@ namespace Localization
         {
             index = idx.ToString();
         }
+
+        public TrackedLocalizable(ShopDialogueManager shopDialogueManager, string code, int idx) : this(shopDialogueManager as Component)
+        {
+            index = code + Localizable.indexSeparatorSecondary + idx;
+        }
     }
 
     // TODO: try add typed parsing cache
@@ -727,7 +732,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(NPC), component => SelectLocalizablesFromNpc(component as NPC) },
             { typeof(DialogueDisplay), component => new List<TrackedLocalizable>{ new (component as DialogueDisplay) } },
             { typeof(LocalizationInjector), component => new List<TrackedLocalizable>{ new (component as LocalizationInjector) }},
-            { typeof(PlayerActionHints), component => SelectLocalizablesFromPlayerActionHints(component as PlayerActionHints) }
+            { typeof(PlayerActionHints), component => SelectLocalizablesFromPlayerActionHints(component as PlayerActionHints) },
+            { typeof(ShopDialogueManager), component => SelectLocalizablesFromShop(component as ShopDialogueManager) },
         };
         
         private void PopulateLocalizableInstances(Scene scene)
@@ -790,6 +796,16 @@ be corrupted, these rules may be helpful for debugging purposes...
         {
             return hints.hintsList.Select((_, idx) => new TrackedLocalizable(hints, idx));
         }
+
+        private static IEnumerable<TrackedLocalizable> SelectLocalizablesFromShop(ShopDialogueManager shop)
+        {
+            return shop
+                .dialogueTable.SelectMany((kv) =>
+                {
+                    return kv.Value.Select((str, idx) => new TrackedLocalizable(shop,
+                        Enum.GetName(typeof(ShopDialogueManager.ShopDialogueCode), kv.Key), idx));
+                });
+        }
         
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
@@ -808,7 +824,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(NPC), LocalizeNpc },
             { typeof(DialogueDisplay), LocalizeDialogueDisplay },
             { typeof(LocalizationInjector), (loc, _, _) => loc.GetAnchor<LocalizationInjector>().Refresh() },
-            { typeof(PlayerActionHints), LocalizePlayerActionHints }
+            { typeof(PlayerActionHints), LocalizePlayerActionHints },
+            { typeof(ShopDialogueManager), LocalizeShop },
         };
 
         /// <summary>
@@ -961,7 +978,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
-        private static void LocalizePlayerActionHints(TrackedLocalizable display, LocalizationFile file,
+        private static void LocalizePlayerActionHints(TrackedLocalizable hints, LocalizationFile file,
             LocalizationStrategy strategy)
         {
             if (strategy == LocalizationStrategy.ChangeStyleOnly)
@@ -969,17 +986,61 @@ be corrupted, these rules may be helpful for debugging purposes...
                 return;
             }
 
-            var path = display.FullPath;
+            var path = hints.FullPath;
             if (file.records.TryGetValue(path, out var entry))
             {
                 try
                 {
-                    int idx = int.Parse(display.IndexInComponent);
-                    display.GetAnchor<PlayerActionHints>().hintsList[idx].hintData.hintText = entry.Translated;
+                    int idx = int.Parse(hints.IndexInComponent);
+                    hints.GetAnchor<PlayerActionHints>().hintsList[idx].hintData.hintText = entry.Translated;
                 }
                 catch (IndexOutOfRangeException)
                 {
                     Debug.LogError($"{path}: Player action hint out of bounds");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"{path}: NOT FOUND");
+            }
+        }
+
+        private static void LocalizeShop(TrackedLocalizable shop, LocalizationFile file, LocalizationStrategy strategy)
+        {
+            if (strategy == LocalizationStrategy.ChangeStyleOnly)
+            {
+                return;
+            }
+            
+            var path = shop.FullPath;
+            if (file.records.TryGetValue(path, out var entry))
+            {
+                try
+                {
+                    var s = shop.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
+                    var code = s[0];
+                    var idx = int.Parse(s[1]);
+
+                    try
+                    {
+                        shop.GetAnchor<ShopDialogueManager>()
+                            .dialogueTable[Enum.Parse<ShopDialogueManager.ShopDialogueCode>(code)][idx] = entry.Translated;
+                    } catch (FormatException)
+                    {
+                        Debug.LogError($"{shop.FullPath} corrupted: dialogue code not recognized");
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        Debug.LogError($"{shop.FullPath} corrupted: dialogue code or index out of bounds");
+                    }
+                }
+                catch (FormatException)
+                {
+                    Debug.LogError($"{shop.FullPath} corrupted, requires one shop dialogue code followed by index");
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    Debug.LogError($"{shop.FullPath} corrupted, requires one shop dialogue code followed by index");
                 }
             }
             else
@@ -994,7 +1055,8 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(TMP_Text), SerializeTmp },
             { typeof(TMP_Dropdown), SerializeDropdownOption },
             { typeof(NPC), SerializeNpc },
-            { typeof(PlayerActionHints), SerializePlayerActionHints }
+            { typeof(PlayerActionHints), SerializePlayerActionHints },
+            { typeof(ShopDialogueManager), SerializeShop },
         };
         
         public string Serialize(bool serializeConfigurationDefaults, LocalizationFile referenceFile)
@@ -1051,7 +1113,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                     }
                     else
                     {
-                        Debug.LogError($"Could not migrate {_path} with original text {_orig}");
+                        Debug.LogWarning($"No existsing translation at {_path}");
                     }
                 }
                 
@@ -1124,12 +1186,27 @@ be corrupted, these rules may be helpful for debugging purposes...
             
             var idx = npc.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
 
-            int idxCond = int.Parse(idx[0]);
-            int idxDiag = int.Parse(idx[1]);
+            try
+            {
+                int idxCond = int.Parse(idx[0]);
+                int idxDiag = int.Parse(idx[1]);
 
-            NPC npcCasted = npc.GetAnchor<NPC>();
-            
-            return npcCasted.Conds[idxCond].dialogueChain[idxDiag].dialogue;
+                NPC npcCasted = npc.GetAnchor<NPC>();
+
+                return npcCasted.Conds[idxCond].dialogueChain[idxDiag].dialogue;
+            }
+            catch (FormatException)
+            {
+                Debug.LogError(
+                    $"{npc.FullPath} corrupted: requires one condition index and one dialogue index within condition");
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Debug.LogError(
+                    $"{npc.FullPath} corrupted: requires one condition index and one dialogue index within condition");
+            }
+
+            return null;
         }
 
         private static string SerializePlayerActionHints(TrackedLocalizable hint)
@@ -1147,6 +1224,39 @@ be corrupted, these rules may be helpful for debugging purposes...
                 Debug.LogError($"{hint.FullPath}: Player action hint out of bounds");
                 return null;
             }
+        }
+
+        private static string SerializeShop(TrackedLocalizable shop)
+        {
+            try
+            {
+                var s = shop.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
+                var code = s[0];
+                var idx = int.Parse(s[1]);
+
+                try
+                {
+                    return shop.GetAnchor<ShopDialogueManager>()
+                        .dialogueTable[Enum.Parse<ShopDialogueManager.ShopDialogueCode>(code)][idx];
+                } catch (FormatException)
+                {
+                    Debug.LogError($"{shop.FullPath} corrupted: dialogue code not recognized");
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    Debug.LogError($"{shop.FullPath} corrupted: dialogue code or index out of bounds");
+                }
+            }
+            catch (FormatException)
+            {
+                Debug.LogError($"{shop.FullPath} corrupted, requires one shop dialogue code followed by index");
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Debug.LogError($"{shop.FullPath} corrupted, requires one shop dialogue code followed by index");
+            }
+
+            return null;
         }
     }
 }

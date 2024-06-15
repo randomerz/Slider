@@ -16,8 +16,6 @@ public abstract class Singleton<T> : MonoBehaviour
     where T : Singleton<T>
 {
     protected static T _instance;
-    
-    protected virtual bool preferOldInstanceOverNew => true;
 
     /// <summary>
     /// This should be called in Awake inside of all singleton components. This sets up _instance to be the component instance,
@@ -43,17 +41,8 @@ public abstract class Singleton<T> : MonoBehaviour
         {
             if (_instance != null)
             {
-                if (preferOldInstanceOverNew)
-                {
-                    Debug.LogWarning($"Multiple Singleton components of type {typeof(T)} were detected. The latest one was deleted.");
-                    Destroy(this);
-                }
-                else
-                {
-                    Debug.LogWarning($"Multiple Singleton components of type {typeof(T)} were detected. The existing one was deleted.");
-                    Destroy(_instance);
-                    _instance = this as T;
-                }
+                Debug.LogWarning($"Multiple Singleton components of type {typeof(T)} were detected. The latest one was deleted.");
+                Destroy(this);
                 return false;
             }
             else

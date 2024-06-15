@@ -6,8 +6,6 @@ using TMPro;
 using UnityEngine.SceneManagement;
 public class UIHints : Singleton<UIHints>
 {
-    protected override bool preferOldInstanceOverNew => false;
-
     public List<string> hintRemovalQueue = new List<string>();
     public List<HintData> hintList = new List<HintData>();
 
@@ -23,7 +21,7 @@ public class UIHints : Singleton<UIHints>
 
     private void Awake()
     {
-        InitializeSingleton();
+        InitializeSingleton(this);
     }
 
     // AT: entire UIEffect prefab is force respawned on every scene transition, UIHints will be destroyed every time

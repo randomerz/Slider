@@ -14,8 +14,6 @@ public class UINavigationManager : Singleton<UINavigationManager>
 {
     private UnityEngine.EventSystems.EventSystem eventSystem;
 
-    protected override bool preferOldInstanceOverNew => false;
-
     /// <summary>
     /// This should be set to a GameObject inside of buttonSets or a GameObject which has a SelectableSet component. Make sure this matches the currently active menu panel
     /// or navigation won't work properly.
@@ -66,7 +64,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     private void Awake()
     {
-        InitializeSingleton();
+        InitializeSingleton(this);
 
         _instance.eventSystem = GetComponent<UnityEngine.EventSystems.EventSystem>();
 
