@@ -67,6 +67,7 @@ public class UITrackerManager : MonoBehaviour
 
     private static List<UITrackerData> uiTrackerBuffer = new List<UITrackerData>();
     private static List<UITrackerEnumData> uiTrackerEnumBuffer = new List<UITrackerEnumData>();
+    private static List<UITracker> uiCustomTrackerBuffer = new List<UITracker>();
 
     private static List<GameObject> removeBuffer = new List<GameObject>();
 
@@ -123,6 +124,14 @@ public class UITrackerManager : MonoBehaviour
                 x--;
             }
         }
+        foreach (UITracker uiTracker in uiCustomTrackerBuffer)
+        {
+            uiTracker.transform.SetParent(transform);
+            uiTracker.transform.localScale = Vector3.one; // Canvas auto rescaling prefabs
+            
+            targets.Add(uiTracker);
+        }
+        uiCustomTrackerBuffer.Clear();
     }
 
     void LateUpdate()
@@ -147,7 +156,7 @@ public class UITrackerManager : MonoBehaviour
         }
     }
 
-    private void UpdateTrackerPostion(UITracker tracker)
+    protected virtual void UpdateTrackerPostion(UITracker tracker)
     {
         int islandId;
         currentTile = tracker.GetSTile(out islandId);
@@ -291,6 +300,12 @@ public class UITrackerManager : MonoBehaviour
     public static UITracker AddNewCustomTracker(UITracker tracker, GameObject target)
     {
         tracker.target = target;
+        if (_instance == null)
+        {
+            uiCustomTrackerBuffer.Add(tracker);
+            return tracker;
+        }
+
         tracker.transform.SetParent(_instance.transform);
         tracker.transform.localScale = Vector3.one; // Canvas auto rescaling prefabs
         

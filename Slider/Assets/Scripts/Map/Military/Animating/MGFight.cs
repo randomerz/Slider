@@ -11,6 +11,28 @@ public class MGFight : IMGAnimatable
     {
         this.unit = unit;
         this.unitOther = unitOther;
+
+        AddUITracker();
+    }
+
+    private void AddUITracker()
+    {
+        GameObject go = new GameObject("Fight Tracker Target");
+        if (unit.AttachedSTile != null)
+        {
+            go.transform.SetParent(unit.AttachedSTile.transform);
+            go.transform.position = MilitaryUnit.GridPositionToWorldPosition(unit.GridPosition);
+        }
+        else if (unitOther.AttachedSTile != null)
+        {
+            go.transform.SetParent(unitOther.AttachedSTile.transform);
+            go.transform.position = MilitaryUnit.GridPositionToWorldPosition(unitOther.GridPosition);
+        }
+
+        unit.OnDeath.AddListener(() => GameObject.Destroy(go));
+        unitOther.OnDeath.AddListener(() => GameObject.Destroy(go));
+
+        MilitaryUITrackerManager.AddFightTracker(go);
     }
     
     public void Execute(System.Action finishedCallback)
