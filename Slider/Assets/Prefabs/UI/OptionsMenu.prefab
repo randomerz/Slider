@@ -1817,7 +1817,7 @@ PrefabInstance:
     - target: {fileID: 2854545521066907676, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 2905154067163065431}
+      objectReference: {fileID: 3158823993032643201}
     - target: {fileID: 2854545521066907676, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
@@ -1979,13 +1979,9 @@ PrefabInstance:
       value: SettingUIElement`1[[System.Single, mscorlib
       objectReference: {fileID: 0}
     - target: {fileID: 3665229635888079946, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
-      propertyPath: m_Navigation.m_SelectOnUp
-      value: 
-      objectReference: {fileID: 8683204989725323536}
-    - target: {fileID: 3665229635888079946, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 2905154067163065431}
+      objectReference: {fileID: 3158823993032643201}
     - target: {fileID: 3665229635888079946, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -2121,11 +2117,11 @@ PrefabInstance:
     - target: {fileID: 6641521956016764101, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 1618515227311858079}
+      objectReference: {fileID: 5887971201630471907}
     - target: {fileID: 6641521956016764101, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 2905154067163065431}
+      objectReference: {fileID: 3158823993032643201}
     - target: {fileID: 6641521956016764101, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -2170,6 +2166,54 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8427836982508530033, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8427836982508530033, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8427836982508530033, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8427836982508530033, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 3158823993032643201}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5371531525300713055}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: WriteSettingValue
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SettingUIElement`1[[System.Boolean, mscorlib
+      objectReference: {fileID: 0}
+    - target: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 8929265766042083729, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2208,6 +2252,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5424584084389617801, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3380214575517584393}
+    - targetCorrespondingSourceObject: {fileID: 7093530095349389178, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5371531525300713055}
+    - targetCorrespondingSourceObject: {fileID: 7093530095349389178, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 939412097194962981}
     - targetCorrespondingSourceObject: {fileID: 2715971375272964102, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5391040275169977213}
@@ -2350,6 +2400,63 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1285901772815984486, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
   m_PrefabInstance: {fileID: 2642379232049366485}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5105628287791256239 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7093530095349389178, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+  m_PrefabInstance: {fileID: 2642379232049366485}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5371531525300713055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5105628287791256239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4bb2da948ad9a045a525337d4ff5011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onEnable:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5887971201630471907}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Toggle, UnityEngine.UI
+        m_MethodName: SetIsOnWithoutNotify
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  settingRetriever: {fileID: 939412097194962981}
+--- !u!114 &939412097194962981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5105628287791256239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6ae9b733c2c65d4fb783c870aa751a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setting: 17
+--- !u!114 &5887971201630471907 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8439142575822471990, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
+  m_PrefabInstance: {fileID: 2642379232049366485}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5105628287791256239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7191816928550188738 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5144776044476363543, guid: 7017aa799f538bc418f035f8fc45bc94, type: 3}
