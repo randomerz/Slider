@@ -19,6 +19,8 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private MilitaryUnitCommander enemyCommander;
 
+    private const string BEAT_ALL_ALIENS_STRING = "militaryBeatAllAliens";
+
     private void Awake()
     {
         InitializeSingleton();
@@ -178,6 +180,7 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
     private void CheckWinCondition()
     {
         // TODO: Give all Sliders if the player doesn't have them, we prob dont care if its shuffled or not
+        // - mostly we care about them having tile 6 but maybe it doesnt matter and they can figure it out
 
         AudioManager.Play("Puzzle Complete");
 
@@ -189,5 +192,7 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
         // - turn on the military commander on the final tile and add a tracker to him
         // - when you talk to him, he does a cutscene about how hes gonna shoot his meteor gun
         // - misc aliens swarm him cause theyre tired of this war and you win the area
+
+        SaveSystem.Current.SetBool(BEAT_ALL_ALIENS_STRING, true);
     }
 }

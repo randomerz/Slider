@@ -281,8 +281,8 @@ public class MirageSTileManager : Singleton<MirageSTileManager>, ISavable
             Player.SetParent(realSTile.transform);
             Player.SetPosition(realSTile.transform.position + relativePos);
 
-            AudioManager.Play("Hurt");
-            UIEffects.FadeFromBlack(null, 1.5f);
+            AudioManager.Play("Portal");
+            UIEffects.FadeFromScreenshot(type: UIEffects.ScreenshotEffectType.MIRAGE);
         }
     }
 
