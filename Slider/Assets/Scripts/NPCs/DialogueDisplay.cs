@@ -117,21 +117,10 @@ public class DialogueDisplay : MonoBehaviour
         highContrastBG.SetActive(highContrastMode);
     }
 
-    public void SetFont(TMP_FontAsset font, float scale, bool useBoldedFont, bool clearWordSpacing)
+    public void SetFont(TMP_FontAsset font, float scale, bool clearWordSpacing)
     {
         textTyperText.SetFont(font, scale);
         textTyperBG.SetFont(font, scale);
-
-        if (useBoldedFont)
-        {
-            textTyperText.SetFontWeight(FontWeight.Medium);
-            // textTyperBG.SetFontWeight(FontWeight.Black);
-        }
-        else
-        {
-            textTyperText.SetFontWeight(FontWeight.Regular);
-            // textTyperBG.SetFontWeight(FontWeight.Black);
-        }
 
         if (clearWordSpacing)
         {

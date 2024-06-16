@@ -295,11 +295,6 @@ public class TMPTextTyper : MonoBehaviour
         TextMeshPro.fontSize = scale * originalFontSize;
     }
 
-    public void SetFontWeight(FontWeight weight)
-    {
-        TextMeshPro.fontWeight = weight;
-    }
-
     public void ClearWordSpacing()
     {
         TextMeshPro.wordSpacing = 0;
