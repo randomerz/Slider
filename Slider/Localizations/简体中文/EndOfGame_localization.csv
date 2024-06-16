@@ -1,0 +1,69 @@
+"Localization files are formatted like CSV so they can be easily edited,
+however formatting has strict rules for easy parsing. Most of these rules
+are already handled by Excel / Libre / etc., so you don't have to worry
+about them in normal usage. However, if your localization file seems to
+be corrupted, these rules may be helpful for debugging purposes...
+- In general, any consecutive string of \r and \n (in any order) will be
+  treated as one SINGLE line break, except within an enclosed context
+- The first 4 rows can be arbitrarily long
+  - The first cell of first row is used to store this block of instruction
+    text
+  - The first 3 cells of the fourth row is used as headers
+  - All other cells in the first and fourth rows are ignored
+  - Columns in the second row alternate between property and value (ex.
+    ' foo | 1 | bar | 3.5 | ... '
+    - Any whitespaces before and after the property name are ignored
+  - Columns in the third row are exclusively comments for properties in the
+    second row
+- Every following line can include any number of cells, but only the
+  first three will be parsed (you can use the rest as comments if needed)
+- The file must end in a sequence of \r and \n's
+- Every cell containing a ^, \r, or \n must be enclosed in ""
+  - If a "" is encountered right after a non-enclosed separator, \r, or \n,
+    then the parser is said to enter an ""enclosed context"", such context
+    ends immediately when a non-escaped "" that is not followed by \r, \n,
+    or a separator is encountered
+  - "" within each cell should be escaped using another "" in front of it,
+  - If a "" is encountered in a non-enclosed context, and it is not right
+    after a separator, \r, or \n, then it is entirely ignored
+  - If a non-escaped "" is encountered in an enclosed context...
+    - If it is followed by a separator, \r, or \n, then it is considered
+      the closing quote of the current context
+    - Otherwise, it is ignored
+  - If a separator, \r, or \n is encountered while in an enclosed context,
+    it will be preserved
+",
+"NonDialogueFontAdjust"," ","DialogueFontScale"," ",
+"String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
+"Path","Orig","Translation",
+"Canvas/FadeGroupMain/Boomo Exclamation Point/Text","Boomo!","Boomo!",
+"Canvas/FadeGroupMain/Boomo Exclamation Point/Text Outline (1)","Boomo!","Boomo!",
+"Canvas/FadeGroupMain/Boomo Exclamation Point/Text Outline (2)","Boomo!","Boomo!",
+"Canvas/FadeGroupMain/Boomo Exclamation Point/Text Outline (3)","Boomo!","Boomo!",
+"Canvas/FadeGroupMain/Boomo Exclamation Point/Text Outline (4)","Boomo!","Boomo!",
+"Canvas/FadeGroupMain/DarkPanel/Main Menu Button (1)/Text","Main Menu","Main Menu",
+"Canvas/FadeGroupMain/DarkPanel/Main Menu Button/Text","Main Menu","Main Menu",
+"Canvas/FadeGroupMain/DarkPanel/Text","This is the end of the game. Goodbye.","This is the end of the game. Goodbye.",
+"Canvas/FadeGroupMain/DarkPanel/Text Outline/Text Outline (1)","This is the end of the game. Goodbye.","This is the end of the game. Goodbye.",
+"Canvas/FadeGroupMain/DarkPanel/Text Outline/Text Outline (2)","This is the end of the game. Goodbye.","This is the end of the game. Goodbye.",
+"Canvas/FadeGroupMain/DarkPanel/Text Outline/Text Outline (3)","This is the end of the game. Goodbye.","This is the end of the game. Goodbye.",
+"Canvas/FadeGroupMain/DarkPanel/Text Outline/Text Outline (4)","This is the end of the game. Goodbye.","This is the end of the game. Goodbye.",
+"Canvas/FadeGroupMain/DarkPanel/Wishlist Button/Text","Free Cat","Free Cat",
+"Canvas/FadeGroupMain/Reunited With/Text","Reunited
+with","Reunited
+with",
+"Canvas/FadeGroupMain/Reunited With/Text Outline (1)","Reunited
+with","Reunited
+with",
+"Canvas/FadeGroupMain/Reunited With/Text Outline (2)","Reunited
+with","Reunited
+with",
+"Canvas/FadeGroupMain/Reunited With/Text Outline (3)","Reunited
+with","Reunited
+with",
+"Canvas/FadeGroupMain/Reunited With/Text Outline (4)","Reunited
+with","Reunited
+with",
+"Canvas/FadeGroupMain/Skip Prompt/Skip Prompt Text","Skip","Skip",
+"Canvas/FadeGroupTime/Speedrun Time/Text","01:23:45.567","01:23:45.567",
+"Canvas/FadeGroupTime/Speedrun Time/Text Outline (1)","01:23:45.567","01:23:45.567",

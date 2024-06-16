@@ -1,0 +1,708 @@
+"Localization files are formatted like CSV so they can be easily edited,
+however formatting has strict rules for easy parsing. Most of these rules
+are already handled by Excel / Libre / etc., so you don't have to worry
+about them in normal usage. However, if your localization file seems to
+be corrupted, these rules may be helpful for debugging purposes...
+- In general, any consecutive string of \r and \n (in any order) will be
+  treated as one SINGLE line break, except within an enclosed context
+- The first 4 rows can be arbitrarily long
+  - The first cell of first row is used to store this block of instruction
+    text
+  - The first 3 cells of the fourth row is used as headers
+  - All other cells in the first and fourth rows are ignored
+  - Columns in the second row alternate between property and value (ex.
+    ' foo | 1 | bar | 3.5 | ... '
+    - Any whitespaces before and after the property name are ignored
+  - Columns in the third row are exclusively comments for properties in the
+    second row
+- Every following line can include any number of cells, but only the
+  first three will be parsed (you can use the rest as comments if needed)
+- The file must end in a sequence of \r and \n's
+- Every cell containing a ^, \r, or \n must be enclosed in ""
+  - If a "" is encountered right after a non-enclosed separator, \r, or \n,
+    then the parser is said to enter an ""enclosed context"", such context
+    ends immediately when a non-escaped "" that is not followed by \r, \n,
+    or a separator is encountered
+  - "" within each cell should be escaped using another "" in front of it,
+  - If a "" is encountered in a non-enclosed context, and it is not right
+    after a separator, \r, or \n, then it is entirely ignored
+  - If a non-escaped "" is encountered in an enclosed context...
+    - If it is followed by a separator, \r, or \n, then it is considered
+      the closing quote of the current context
+    - Otherwise, it is ignored
+  - If a separator, \r, or \n is encountered while in an enclosed context,
+    it will be preserved
+",
+"NonDialogueFontAdjust"," ","DialogueFontScale"," ",
+"String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
+"Path","Orig","Translation",
+"BG Text/Text/Text","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev",
+"BG Text/Text/Text Outline (1)","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev",
+"BG Text/Text/Text Outline (2)","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev",
+"BG Text/Text/Text Outline (3)","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev",
+"BG Text/Text/Text Outline (4)","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev",
+"CreditsCanvas/Skip Prompt/Skip Prompt Text","Skip","Skip",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text","Art
+Programming","Art
+Programming",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (1)","Art
+Programming","Art
+Programming",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (2)","Art
+Programming","Art
+Programming",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (3)","Art
+Programming","Art
+Programming",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (4)","Art
+Programming","Art
+Programming",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text","Avery Greer","Avery Greer",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (1)","Avery Greer","Avery Greer",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (2)","Avery Greer","Avery Greer",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (3)","Avery Greer","Avery Greer",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (4)","Avery Greer","Avery Greer",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text","Programming
+Audio","Programming
+Audio",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming
+Audio","Programming
+Audio",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming
+Audio","Programming
+Audio",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming
+Audio","Programming
+Audio",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming
+Audio","Programming
+Audio",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text","Allison Lu","Allison Lu",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (1)","Allison Lu","Allison Lu",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (2)","Allison Lu","Allison Lu",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (3)","Allison Lu","Allison Lu",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (4)","Allison Lu","Allison Lu",
+"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+",
+"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (1)","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+",
+"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (2)","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+",
+"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (3)","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+",
+"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (4)","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text","Additional Art","Additional Art",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (1)","Additional Art","Additional Art",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (2)","Additional Art","Additional Art",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (3)","Additional Art","Additional Art",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (4)","Additional Art","Additional Art",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text","Project Lead","Project Lead",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (1)","Project Lead","Project Lead",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (2)","Project Lead","Project Lead",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (3)","Project Lead","Project Lead",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (4)","Project Lead","Project Lead",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text","Daniel Carr","Daniel Carr",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (1)","Daniel Carr","Daniel Carr",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (2)","Daniel Carr","Daniel Carr",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (3)","Daniel Carr","Daniel Carr",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (4)","Daniel Carr","Daniel Carr",
+"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text","Programming 
+Design
+ Tech Art","Programming 
+Design
+ Tech Art",
+"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming 
+Design
+ Tech Art","Programming 
+Design
+ Tech Art",
+"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming 
+Design
+ Tech Art","Programming 
+Design
+ Tech Art",
+"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming 
+Design
+ Tech Art","Programming 
+Design
+ Tech Art",
+"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming 
+Design
+ Tech Art","Programming 
+Design
+ Tech Art",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text","Chase O'Brien","Chase O'Brien",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (1)","Chase O'Brien","Chase O'Brien",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (2)","Chase O'Brien","Chase O'Brien",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (3)","Chase O'Brien","Chase O'Brien",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (4)","Chase O'Brien","Chase O'Brien",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (1)/Text","Music
+Art","Music
+Art",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (1)/Text Outline (1)","Music
+Art","Music
+Art",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (1)/Text Outline (2)","Music
+Art","Music
+Art",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (1)/Text Outline (3)","Music
+Art","Music
+Art",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (1)/Text Outline (4)","Music
+Art","Music
+Art",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (2)/Text","Nathaniel
+Koehler","Nathaniel
+Koehler",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (2)/Text Outline (1)","Nathaniel
+Koehler","Nathaniel
+Koehler",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (2)/Text Outline (2)","Nathaniel
+Koehler","Nathaniel
+Koehler",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (2)/Text Outline (3)","Nathaniel
+Koehler","Nathaniel
+Koehler",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (2)/Text Outline (4)","Nathaniel
+Koehler","Nathaniel
+Koehler",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (3)/Text","Art","Art",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (3)/Text Outline (1)","Art","Art",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (3)/Text Outline (2)","Art","Art",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (3)/Text Outline (3)","Art","Art",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (3)/Text Outline (4)","Art","Art",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text/Text","Eli Corley","Eli Corley",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text/Text Outline (1)","Eli Corley","Eli Corley",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text/Text Outline (2)","Eli Corley","Eli Corley",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text/Text Outline (3)","Eli Corley","Eli Corley",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text/Text Outline (4)","Eli Corley","Eli Corley",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice/Dice Sprite/Canvas/Dialogue","2","2",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice/Dice Sprite/Canvas/Dialogue BG Font","2","2",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","Something went wrong with my dialogue!",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text","Music","Music",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (1)","Music","Music",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (2)","Music","Music",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (3)","Music","Music",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (4)","Music","Music",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text","Alan Tao","Alan Tao",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (1)","Alan Tao","Alan Tao",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (2)","Alan Tao","Alan Tao",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (3)","Alan Tao","Alan Tao",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (4)","Alan Tao","Alan Tao",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text","Programming
+Audio","Programming
+Audio",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming
+Audio","Programming
+Audio",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming
+Audio","Programming
+Audio",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming
+Audio","Programming
+Audio",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming
+Audio","Programming
+Audio",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text","Ethan 
+Aristanto","Ethan 
+Aristanto",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (1)","Ethan 
+Aristanto","Ethan 
+Aristanto",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (2)","Ethan 
+Aristanto","Ethan 
+Aristanto",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (3)","Ethan 
+Aristanto","Ethan 
+Aristanto",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (4)","Ethan 
+Aristanto","Ethan 
+Aristanto",
+"Map/Tiles/FMOD tile/WorldCanvas/Text/Text","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+",
+"Map/Tiles/FMOD tile/WorldCanvas/Text/Text Outline (1)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+",
+"Map/Tiles/FMOD tile/WorldCanvas/Text/Text Outline (2)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+",
+"Map/Tiles/FMOD tile/WorldCanvas/Text/Text Outline (3)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+",
+"Map/Tiles/FMOD tile/WorldCanvas/Text/Text Outline (4)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text","Programming
+Design
+Music","Programming
+Design
+Music",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming
+Design
+Music","Programming
+Design
+Music",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming
+Design
+Music","Programming
+Design
+Music",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming
+Design
+Music","Programming
+Design
+Music",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming
+Design
+Music","Programming
+Design
+Music",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text","Elliot Chen","Elliot Chen",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (1)","Elliot Chen","Elliot Chen",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (2)","Elliot Chen","Elliot Chen",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (3)","Elliot Chen","Elliot Chen",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (4)","Elliot Chen","Elliot Chen",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text","Programming","Programming",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming","Programming",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming","Programming",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming","Programming",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming","Programming",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text","Drew Busch","Drew Busch",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (1)","Drew Busch","Drew Busch",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (2)","Drew Busch","Drew Busch",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (3)","Drew Busch","Drew Busch",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (4)","Drew Busch","Drew Busch",
+"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text","Programming
+Tech Art","Programming
+Tech Art",
+"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming
+Tech Art","Programming
+Tech Art",
+"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming
+Tech Art","Programming
+Tech Art",
+"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming
+Tech Art","Programming
+Tech Art",
+"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming
+Tech Art","Programming
+Tech Art",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text","Logan Bowers","Logan Bowers",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (1)","Logan Bowers","Logan Bowers",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (2)","Logan Bowers","Logan Bowers",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (3)","Logan Bowers","Logan Bowers",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (4)","Logan Bowers","Logan Bowers",
+"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+",
+"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (1)","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+",
+"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (2)","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+",
+"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (3)","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+",
+"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (4)","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text","Additional Music, 
+Design, Miscellanious","Additional Music, 
+Design, Miscellanious",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (1)","Additional Music, 
+Design, Miscellanious","Additional Music, 
+Design, Miscellanious",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (2)","Additional Music, 
+Design, Miscellanious","Additional Music, 
+Design, Miscellanious",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (3)","Additional Music, 
+Design, Miscellanious","Additional Music, 
+Design, Miscellanious",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (4)","Additional Music, 
+Design, Miscellanious","Additional Music, 
+Design, Miscellanious",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (1)/Text","Programming","Programming",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming","Programming",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming","Programming",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming","Programming",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming","Programming",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (2)/Text","Travis
+Bittel","Travis
+Bittel",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (2)/Text Outline (1)","Travis
+Bittel","Travis
+Bittel",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (2)/Text Outline (2)","Travis
+Bittel","Travis
+Bittel",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (2)/Text Outline (3)","Travis
+Bittel","Travis
+Bittel",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (2)/Text Outline (4)","Travis
+Bittel","Travis
+Bittel",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (3)/Text","Programming","Programming",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming","Programming",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming","Programming",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming","Programming",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming","Programming",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text/Text","Pawan 
+Jayakumar","Pawan 
+Jayakumar",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text/Text Outline (1)","Pawan 
+Jayakumar","Pawan 
+Jayakumar",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text/Text Outline (2)","Pawan 
+Jayakumar","Pawan 
+Jayakumar",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text/Text Outline (3)","Pawan 
+Jayakumar","Pawan 
+Jayakumar",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text/Text Outline (4)","Pawan 
+Jayakumar","Pawan 
+Jayakumar",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text","Additional Programming","Additional Programming",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (1)","Additional Programming","Additional Programming",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (2)","Additional Programming","Additional Programming",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (3)","Additional Programming","Additional Programming",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (4)","Additional Programming","Additional Programming",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (1)","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (2)","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (3)","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (4)","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text","Additional Programming","Additional Programming",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (1)","Additional Programming","Additional Programming",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (2)","Additional Programming","Additional Programming",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (3)","Additional Programming","Additional Programming",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (4)","Additional Programming","Additional Programming",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (1)","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (2)","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (3)","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (4)","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (1)/Text","Art","Art",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (1)/Text Outline (1)","Art","Art",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (1)/Text Outline (2)","Art","Art",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (1)/Text Outline (3)","Art","Art",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (1)/Text Outline (4)","Art","Art",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (2)/Text","Jamie Lee","Jamie Lee",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (2)/Text Outline (1)","Jamie Lee","Jamie Lee",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (2)/Text Outline (2)","Jamie Lee","Jamie Lee",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (2)/Text Outline (3)","Jamie Lee","Jamie Lee",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (2)/Text Outline (4)","Jamie Lee","Jamie Lee",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text/Text","Sara Inani","Sara Inani",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text/Text Outline (1)","Sara Inani","Sara Inani",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text/Text Outline (2)","Sara Inani","Sara Inani",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text/Text Outline (3)","Sara Inani","Sara Inani",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text/Text Outline (4)","Sara Inani","Sara Inani",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text","Mark Brown
+Beth O'Brien
+Playtesters
+","Mark Brown
+Beth O'Brien
+Playtesters
+",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (1)","Mark Brown
+Beth O'Brien
+Playtesters
+","Mark Brown
+Beth O'Brien
+Playtesters
+",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (2)","Mark Brown
+Beth O'Brien
+Playtesters
+","Mark Brown
+Beth O'Brien
+Playtesters
+",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (3)","Mark Brown
+Beth O'Brien
+Playtesters
+","Mark Brown
+Beth O'Brien
+Playtesters
+",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (4)","Mark Brown
+Beth O'Brien
+Playtesters
+","Mark Brown
+Beth O'Brien
+Playtesters
+",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text","Special Thanks","Special Thanks",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (1)","Special Thanks","Special Thanks",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (2)","Special Thanks","Special Thanks",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (3)","Special Thanks","Special Thanks",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (4)","Special Thanks","Special Thanks",

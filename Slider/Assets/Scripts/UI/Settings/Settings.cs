@@ -24,6 +24,7 @@ public enum Settings
     Vsync,
     TargetFrameRate,
     PlayAudioWhenUnfocused,
+    Locale,
     PixelFontEnabled,
 }
 
@@ -48,6 +49,7 @@ static class SettingsMethods
         Settings.Vsync => "vsync",
         Settings.TargetFrameRate => "targetFrameRate",
         Settings.PlayAudioWhenUnfocused => "playAudioWhenUnfocused",
+        Settings.Locale => "locale",
         Settings.PixelFontEnabled => "pixelFontEnabled",
         _ => ""
     };

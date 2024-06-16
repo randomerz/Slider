@@ -4,6 +4,28 @@ using UnityEngine.Events;
 [System.Serializable]
 public class DialogueData
 {
+    public string DialoguePreferLocalized
+    {
+        get
+        {
+            if (dialogueLocalized != null)
+            {
+                return dialogueLocalized;
+            }
+            else
+            {
+                return dialogue;
+            }
+        }
+    }
+
+    public string DialogueLocalized
+    {
+        set => dialogueLocalized = value;
+    }
+    
+    private string dialogueLocalized = null;
+    
     [TextArea(1, 4)]
     public string dialogue;
 

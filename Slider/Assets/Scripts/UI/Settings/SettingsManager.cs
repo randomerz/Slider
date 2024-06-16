@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Localization;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// <para>
@@ -81,6 +83,16 @@ public class SettingsManager : MonoBehaviour
             defaultValue: false,
             onValueChanged: (value) => Application.runInBackground = value
         );
+        
+        RegisterAndLoadSetting(Settings.Locale,
+            defaultValue: LocalizationFile.DefaultLocale,
+            onValueChanged: (locale) =>
+            {
+            });
+
+        RegisterAndLoadSetting(Settings.PixelFontEnabled,
+            defaultValue: true,
+            onValueChanged: (pixelFontEnabled) => { });
     }
 
     public static void RegisterAndLoadSetting<T>(Settings setting, T defaultValue, Action<T> onValueChanged = null)
