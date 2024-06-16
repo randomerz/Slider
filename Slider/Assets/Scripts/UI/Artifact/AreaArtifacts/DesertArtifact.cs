@@ -129,19 +129,20 @@ public class DesertArtifact : UIArtifact
 
     protected override void QueueMoveFromButtonPair(SMove move, ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        QueueAdd(move);
-        UpdateUI();
-        //Debug.Log($"Curr: {buttonCurrent}");
-        AudioManager.Play("Slider Sand");
-        ProcessQueue();
-        UpdatePushedDowns(null, null);
-        DeselectSelectedButton();
-        MoveMadeOnArtifact?.Invoke(this, null);
+        CoroutineUtils.ExecuteAfterEndOfFrame(() => {
+            UIEffects.TakeScreenshot();
+            QueueAdd(move);
+            UpdateUI();
+            AudioManager.Play("Slider Sand");
+            ProcessQueue();
+            UpdatePushedDowns(null, null);
+            DeselectSelectedButton();
+            MoveMadeOnArtifact?.Invoke(this, null);
+        }, this);
     }
 
     protected override SMove ConstructMoveFromButtonPair(ArtifactTileButton buttonCurrent, ArtifactTileButton buttonEmpty)
     {
-        //Chen: Nested logic pain time.
         SSlideSwap move;
         int dx = buttonEmpty.x - buttonCurrent.x;
         int dy = buttonEmpty.y - buttonCurrent.y;
