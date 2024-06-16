@@ -5,12 +5,34 @@ public class MGFight : IMGAnimatable
     public MilitaryUnit unit;
     public MilitaryUnit unitOther;
 
-    private const float FIGHT_DURATION = 3;
+    public const float FIGHT_DURATION = 3;
 
     public MGFight(MilitaryUnit unit, MilitaryUnit unitOther) 
     {
         this.unit = unit;
         this.unitOther = unitOther;
+
+        AddUITracker();
+    }
+
+    private void AddUITracker()
+    {
+        GameObject go = new GameObject("Fight Tracker Target");
+        if (unit.AttachedSTile != null)
+        {
+            go.transform.SetParent(unit.AttachedSTile.transform);
+            go.transform.position = MilitaryUnit.GridPositionToWorldPosition(unit.GridPosition);
+        }
+        else if (unitOther.AttachedSTile != null)
+        {
+            go.transform.SetParent(unitOther.AttachedSTile.transform);
+            go.transform.position = MilitaryUnit.GridPositionToWorldPosition(unitOther.GridPosition);
+        }
+
+        unit.OnDeath.AddListener(() => GameObject.Destroy(go));
+        unitOther.OnDeath.AddListener(() => GameObject.Destroy(go));
+
+        MilitaryUITrackerManager.AddFightTracker(go);
     }
     
     public void Execute(System.Action finishedCallback)

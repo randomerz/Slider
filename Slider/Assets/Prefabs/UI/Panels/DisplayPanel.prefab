@@ -499,6 +499,10 @@ PrefabInstance:
       propertyPath: m_text
       value: Resolution
       objectReference: {fileID: 0}
+    - target: {fileID: 4029432248193482832, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_text
+      value: 1920 x 1080
+      objectReference: {fileID: 0}
     - target: {fileID: 4378716235512539280, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -506,6 +510,38 @@ PrefabInstance:
     - target: {fileID: 4378716235512539280, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4722596178205053231, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_Options.m_Options.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4722596178205053231, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[0].m_Text
+      value: 1280 x 720
+      objectReference: {fileID: 0}
+    - target: {fileID: 4722596178205053231, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[1].m_Text
+      value: 1280 x 800
+      objectReference: {fileID: 0}
+    - target: {fileID: 4722596178205053231, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[2].m_Text
+      value: 1366 x 768
+      objectReference: {fileID: 0}
+    - target: {fileID: 4722596178205053231, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[3].m_Text
+      value: 1920 x 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 4722596178205053231, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[4].m_Text
+      value: 2560 x 1440
+      objectReference: {fileID: 0}
+    - target: {fileID: 4722596178205053231, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[5].m_Text
+      value: 3840 x 2160
+      objectReference: {fileID: 0}
+    - target: {fileID: 4722596178205053231, guid: 39b52053e09450e4486902ba10441f98, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[6].m_Text
+      value: Native
       objectReference: {fileID: 0}
     - target: {fileID: 5280035116876030012, guid: 39b52053e09450e4486902ba10441f98, type: 3}
       propertyPath: m_AnchorMax.x
