@@ -39,16 +39,25 @@ namespace SliderVocalization
                 _ => preset.pitch
             };
 
-        public static List<SentenceVocalizer> Parse(string paragraph, VocalizerPreset preset)
+        public static List<SentenceVocalizer> Parse(string paragraph, VocalizerPreset preset, int maxPhonemes)
         {
             MatchCollection clauses = Regex.Matches(paragraph, @"[^.,!?]+[.,!?\s]+(?=[^.,!?\s]|$)");
             List<SentenceVocalizer> vocalizers = new (clauses.Count);
 
+            int phonemeCount = 0;
+
             foreach (Match clause in clauses)
             {
+                if (phonemeCount > maxPhonemes)
+                {
+                    break;
+                }
+                
                 if (clause.Length <= 1) continue;
                 
                 SentenceVocalizer sv = new(paragraph.Substring(clause.Index, clause.Length), preset.Data.isPronouncePerClause);
+                phonemeCount += sv.GetCount<WordVocalizer, PhonemeClusterVocalizer>(); // first param is just to force C# extensions to recognize the type...
+                
                 if (!sv.GetIsEmpty()) vocalizers.Add(sv);
             }
             

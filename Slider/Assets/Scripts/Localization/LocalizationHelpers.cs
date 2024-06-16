@@ -1024,7 +1024,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                     try
                     {
                         shop.GetAnchor<ShopDialogueManager>()
-                            .dialogueTable[Enum.Parse<ShopDialogueManager.ShopDialogueCode>(code)][idx] = entry.Translated;
+                            .dialogueTable[Enum.Parse<ShopDialogueManager.ShopDialogueCode>(code)][idx].Item2 = entry.Translated;
                     } catch (FormatException)
                     {
                         Debug.LogError($"{shop.FullPath} corrupted: dialogue code not recognized");
@@ -1237,7 +1237,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 try
                 {
                     return shop.GetAnchor<ShopDialogueManager>()
-                        .dialogueTable[Enum.Parse<ShopDialogueManager.ShopDialogueCode>(code)][idx];
+                        .dialogueTable[Enum.Parse<ShopDialogueManager.ShopDialogueCode>(code)][idx].Item1;
                 } catch (FormatException)
                 {
                     Debug.LogError($"{shop.FullPath} corrupted: dialogue code not recognized");

@@ -54,10 +54,10 @@ namespace SliderVocalization
         /// </summary>
         /// <param name="text">Duration of that narration when played uninterrupted</param>
         /// <returns></returns>
-        public float SetText(string text, NPCEmotes.Emotes emote)
+        public float SetText(string text, NPCEmotes.Emotes emote, int maxPhonemes = int.MaxValue)
         {
             this.text = text;
-            sentences = SentenceVocalizer.Parse(this.text, preset) ?? new();
+            sentences = SentenceVocalizer.Parse(this.text, preset, maxPhonemes) ?? new();
             
             return (this as IVocalizer).RandomizeVocalization(
                 ((VocalizerParameters)preset).ModifyWith(modifierLibrary[emote], createClone: true), new()
