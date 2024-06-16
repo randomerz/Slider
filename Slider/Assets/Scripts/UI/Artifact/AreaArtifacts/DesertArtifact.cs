@@ -114,7 +114,6 @@ public class DesertArtifact : UIArtifact
                 latestSwaps.Clear();
                 return false;
             }
-            //Maybe do UI swaps here
             storedSwaps.Enqueue(latestSwaps);
             latestSwaps = new List<ATBPair>();
             QueueMoveFromButtonPair(move, buttonCurrent, buttonEmpty);
