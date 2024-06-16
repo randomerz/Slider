@@ -5,7 +5,7 @@ public class MGFight : IMGAnimatable
     public MilitaryUnit unit;
     public MilitaryUnit unitOther;
 
-    private const float FIGHT_DURATION = 3;
+    public const float FIGHT_DURATION = 3;
 
     public MGFight(MilitaryUnit unit, MilitaryUnit unitOther) 
     {
