@@ -16,7 +16,7 @@ public class MilitaryEndCutsceneController : MonoBehaviour
     private const string COMMANDER_TALKED_STRING = "militaryAlienCommanderTalked";
     private const string START_FIGHT_STRING = "militaryAlienFightStart";
     private const string END_FIGHT_STRING = "militaryAliensAttacked";
-    private const string MILITARY_COMPLETE_STRING = "militaryComplete";
+    private const string MILITARY_COMPLETE_STRING = "militaryCompleted";
 
     private void Start()
     {

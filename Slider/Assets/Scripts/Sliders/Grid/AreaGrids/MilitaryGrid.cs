@@ -67,7 +67,8 @@ public class MilitaryGrid : SGrid
         PauseManager.AddPauseRestriction(gameObject);
         Player.SetCanMove(false);
         AudioManager.Play("Slide Rumble"); 
-        UIEffects.Pixelize(
+        
+        UIEffects.FlashWhite(
             () => {
                 DoRestartSimulation();
                 AudioManager.Play("TFT Bell");
@@ -79,6 +80,18 @@ public class MilitaryGrid : SGrid
             }, 
             speed
         );
+        // UIEffects.Pixelize(
+        //     () => {
+        //         DoRestartSimulation();
+        //         AudioManager.Play("TFT Bell");
+        //     },
+        //     () => {
+        //         isRestarting = false;
+        //         PauseManager.RemovePauseRestriction(gameObject);
+        //         Player.SetCanMove(true);
+        //     }, 
+        //     speed
+        // );
     }
 
     private void DoRestartSimulation()
