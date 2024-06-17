@@ -86,6 +86,15 @@ public class MilitaryUnitFlag : Item
             return false;
         }
 
+        foreach (MilitaryUnit unit in MilitaryUnit.ActiveUnits)
+        {
+            if (unit.GridPosition == newGridPos && unit.UnitStatus == MilitaryUnit.Status.Active && unit.UnitTeam != attachedUnit.UnitTeam)
+            {
+                reason = "Can't move to an occupied tile!";
+                return false;
+            }
+        }
+
         STile originalSTile = attachedUnit.AttachedSTile;
         // If AttachedSTile is null, assume unit is flying
         if (originalSTile != null)
@@ -107,6 +116,12 @@ public class MilitaryUnitFlag : Item
         });
 
         MilitaryTurnManager.EndPlayerTurn();
+
+        AudioManager.PlayWithVolume("Hat Click", 0.75f);
+        CoroutineUtils.ExecuteAfterDelay(
+            () => AudioManager.PlayWithVolume("Hat Click", 0.75f),
+            this, 0.1f
+        );
 
         reason = Random.Range(0, 2) == 0 ? "Let's go, soliders!" : "Keep moving forward!";
         return true;

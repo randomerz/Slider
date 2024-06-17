@@ -336,13 +336,13 @@ be corrupted, these rules may be helpful for debugging purposes...
             switch (error)
             {
                 case LocalizationFile.ParserError.NoError:
-                    Debug.Log($"Localization file parser: null file without error thrown at {path}");
+                    Debug.Log($"[Localization] Localization file parser: null file without error thrown at {path}");
                     break;
                 case LocalizationFile.ParserError.FileNotFound:
-                    Debug.Log($"Localization file parser: file not found {path}");
+                    Debug.Log($"[Localization] Localization file parser: file not found {path}");
                     break;
                 case LocalizationFile.ParserError.ExplicitlyDisabled:
-                    Debug.LogWarning($"Localization file parser: localization file at {path} explicitly disabled");
+                    Debug.LogWarning($"[Localization] Localization file parser: localization file at {path} explicitly disabled");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -423,12 +423,12 @@ be corrupted, these rules may be helpful for debugging purposes...
                                 if (!string.IsNullOrWhiteSpace(content))
                                 {
                                     configs[propertyEnum] = configs[propertyEnum].Override(content);
-                                    Debug.Log($"Parsed localization config: {property} = {content}");
+                                    Debug.Log($"[Localization] Parsed localization config: {property} = {content}");
                                 }
                             }
                             else
                             {
-                                Debug.LogError($"Unrecognized localization config {property} with value {content}");
+                                Debug.LogError($"[Localization] Unrecognized localization config {property} with value {content}");
                             }
                             
                             // reset property
@@ -447,7 +447,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                         var newRecord = ParsedLocalizable.ParsePath(path, trans);
                         if (newRecord == null)
                         {
-                            Debug.LogError($"Null localizable parsed {path}");
+                            Debug.LogError($"[Localization] Null localizable parsed {path}");
                         }
                         else
                         {
@@ -459,10 +459,10 @@ be corrupted, these rules may be helpful for debugging purposes...
                         switch (cellState)
                         {
                             case ParserState.HasPath:
-                                Debug.LogError($"Inval: only path {path}");
+                                Debug.LogError($"[Localization] Inval: only path {path}");
                                 break;
                             case ParserState.HasOriginal:
-                                Debug.LogError($"Inval: Only path orig {path} : {orig}");
+                                Debug.LogError($"[Localization] Inval: Only path orig {path} : {orig}");
                                 break;
                             default:
                                 break;
@@ -699,7 +699,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 }
                 else
                 {
-                    Debug.LogError($"Unknown config called {option.name} overriden for locale {localeConfiguration.name}, not sure how to handle this...");
+                    Debug.LogError($"[Localization] Unknown config called {option.name} overriden for locale {localeConfiguration.name}, not sure how to handle this...");
                 }
             }
         }
@@ -839,7 +839,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             if (isEnglish && canUsePixelFont)
             {
-                Debug.Log("Localization strategy: skipping...");
+                Debug.Log("[Localization] Localization strategy: skipping...");
                 return;
             }
 
@@ -847,7 +847,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 ? LocalizationStrategy.ChangeStyleOnly
                 : LocalizationStrategy.TranslateTextAndChangeStyle;
             
-            Debug.Log($"Localization strategy: { Enum.GetName(typeof(LocalizationStrategy), strategy) }");
+            Debug.Log($"[Localization] Localization strategy: { Enum.GetName(typeof(LocalizationStrategy), strategy) }");
             
             foreach (var (type, instances) in localizables)
             {
@@ -874,7 +874,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 }
                 else
                 {
-                    Debug.LogWarning($"{path}: NOT FOUND");
+                    Debug.LogWarning($"[Localization] {path}: NOT FOUND");
                 }
             }
             
@@ -912,12 +912,12 @@ be corrupted, these rules may be helpful for debugging purposes...
                     }
                     else
                     {
-                        Debug.LogWarning($"{path}: NOT FOUND");
+                        Debug.LogWarning($"[Localization] {path}: NOT FOUND");
                     }
                 }
                 catch (IndexOutOfRangeException)
                 {
-                    Debug.LogError($"{dropdownOption.FullPath}: dropdown option index out of range");
+                    Debug.LogError($"[Localization] {dropdownOption.FullPath}: dropdown option index out of range");
                 }
             }
             
@@ -961,12 +961,12 @@ be corrupted, these rules may be helpful for debugging purposes...
                 }
                 catch (IndexOutOfRangeException)
                 {
-                    Debug.LogError($"{path}: NPC dialogue out of bounds");
+                    Debug.LogError($"[Localization] {path}: NPC dialogue out of bounds");
                 }
             }
             else
             {
-                Debug.LogWarning($"{path}: NOT FOUND");
+                Debug.LogWarning($"[Localization] {path}: NOT FOUND");
             }
         }
 
@@ -996,12 +996,12 @@ be corrupted, these rules may be helpful for debugging purposes...
                 }
                 catch (IndexOutOfRangeException)
                 {
-                    Debug.LogError($"{path}: Player action hint out of bounds");
+                    Debug.LogError($"[Localization] {path}: Player action hint out of bounds");
                 }
             }
             else
             {
-                Debug.LogWarning($"{path}: NOT FOUND");
+                Debug.LogWarning($"[Localization] {path}: NOT FOUND");
             }
         }
 
@@ -1027,25 +1027,25 @@ be corrupted, these rules may be helpful for debugging purposes...
                             .dialogueTable[Enum.Parse<ShopDialogueManager.ShopDialogueCode>(code)][idx].Item2 = entry.Translated;
                     } catch (FormatException)
                     {
-                        Debug.LogError($"{shop.FullPath} corrupted: dialogue code not recognized");
+                        Debug.LogError($"[Localization] {shop.FullPath} corrupted: dialogue code not recognized");
                     }
                     catch (IndexOutOfRangeException)
                     {
-                        Debug.LogError($"{shop.FullPath} corrupted: dialogue code or index out of bounds");
+                        Debug.LogError($"[Localization] {shop.FullPath} corrupted: dialogue code or index out of bounds");
                     }
                 }
                 catch (FormatException)
                 {
-                    Debug.LogError($"{shop.FullPath} corrupted, requires one shop dialogue code followed by index");
+                    Debug.LogError($"[Localization] {shop.FullPath} corrupted, requires one shop dialogue code followed by index");
                 }
                 catch (IndexOutOfRangeException)
                 {
-                    Debug.LogError($"{shop.FullPath} corrupted, requires one shop dialogue code followed by index");
+                    Debug.LogError($"[Localization] {shop.FullPath} corrupted, requires one shop dialogue code followed by index");
                 }
             }
             else
             {
-                Debug.LogWarning($"{path}: NOT FOUND");
+                Debug.LogWarning($"[Localization] {path}: NOT FOUND");
             }
         }
         
@@ -1113,7 +1113,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                     }
                     else
                     {
-                        Debug.LogWarning($"No existsing translation at {_path}");
+                        Debug.LogWarning($"[Localization] No existsing translation at {_path}");
                     }
                 }
                 
@@ -1140,7 +1140,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                     string path = localizable.FullPath;
                     if (!result.TryAdd(path, orig))
                     {
-                        Debug.LogError($"Duplicate path: {path}");
+                        Debug.LogError($"[Localization] Duplicate path: {path}");
                     }
                 });
             }
@@ -1198,12 +1198,12 @@ be corrupted, these rules may be helpful for debugging purposes...
             catch (FormatException)
             {
                 Debug.LogError(
-                    $"{npc.FullPath} corrupted: requires one condition index and one dialogue index within condition");
+                    $"[Localization] {npc.FullPath} corrupted: requires one condition index and one dialogue index within condition");
             }
             catch (IndexOutOfRangeException)
             {
                 Debug.LogError(
-                    $"{npc.FullPath} corrupted: requires one condition index and one dialogue index within condition");
+                    $"[Localization] {npc.FullPath} corrupted: requires one condition index and one dialogue index within condition");
             }
 
             return null;
@@ -1221,7 +1221,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
             catch (IndexOutOfRangeException)
             { 
-                Debug.LogError($"{hint.FullPath}: Player action hint out of bounds");
+                Debug.LogError($"[Localization] {hint.FullPath}: Player action hint out of bounds");
                 return null;
             }
         }
@@ -1240,20 +1240,20 @@ be corrupted, these rules may be helpful for debugging purposes...
                         .dialogueTable[Enum.Parse<ShopDialogueManager.ShopDialogueCode>(code)][idx].Item1;
                 } catch (FormatException)
                 {
-                    Debug.LogError($"{shop.FullPath} corrupted: dialogue code not recognized");
+                    Debug.LogError($"[Localization] {shop.FullPath} corrupted: dialogue code not recognized");
                 }
                 catch (IndexOutOfRangeException)
                 {
-                    Debug.LogError($"{shop.FullPath} corrupted: dialogue code or index out of bounds");
+                    Debug.LogError($"[Localization] {shop.FullPath} corrupted: dialogue code or index out of bounds");
                 }
             }
             catch (FormatException)
             {
-                Debug.LogError($"{shop.FullPath} corrupted, requires one shop dialogue code followed by index");
+                Debug.LogError($"[Localization] {shop.FullPath} corrupted, requires one shop dialogue code followed by index");
             }
             catch (IndexOutOfRangeException)
             {
-                Debug.LogError($"{shop.FullPath} corrupted, requires one shop dialogue code followed by index");
+                Debug.LogError($"[Localization] {shop.FullPath} corrupted, requires one shop dialogue code followed by index");
             }
 
             return null;

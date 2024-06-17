@@ -32,6 +32,15 @@ public class MilitaryGrid : SGrid
         {
             Debug.LogWarning("Unspawned allies list should be 15 long.");
         }
+        
+        if (
+            !SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING) &&
+            PlayerInventory.Contains("Slider 1", Area.Military)
+        )
+        {
+            Debug.LogWarning($"[Military] Joined area without finishing! Resetting Military...");
+            DoRestartSimulation(updatePlayer: false);
+        }
     }
 
     private void OnEnable()
@@ -42,6 +51,13 @@ public class MilitaryGrid : SGrid
     private void OnDisable()
     {
         SGridAnimator.OnSTileMoveEndLate -= OnTileMove;
+        
+        // Can cause some issues with the order things are disabled/destroyed
+        // if (!SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING))
+        // {
+        //     Debug.LogWarning($"[Military] Quit area without finishing! Resetting Military...");
+        //     DoRestartSimulation(updatePlayer: false);
+        // }
     }
 
     public override void Save()
@@ -65,7 +81,7 @@ public class MilitaryGrid : SGrid
             return;
         isRestarting = true;
         PauseManager.AddPauseRestriction(gameObject);
-        Player.SetCanMove(false);
+        // Player.SetCanMove(false);
         AudioManager.Play("Slide Rumble"); 
         
         UIEffects.FlashWhite(
@@ -76,7 +92,7 @@ public class MilitaryGrid : SGrid
             () => {
                 isRestarting = false;
                 PauseManager.RemovePauseRestriction(gameObject);
-                Player.SetCanMove(true);
+                // Player.SetCanMove(true);
             }, 
             speed
         );
@@ -94,13 +110,13 @@ public class MilitaryGrid : SGrid
         // );
     }
 
-    private void DoRestartSimulation()
+    private void DoRestartSimulation(bool updatePlayer=true)
     {
-        Debug.Log("Restart sim!");
+        Debug.Log("[Military] Restart sim!");
         SaveSystem.Current.SetBool("militaryFailedOnce", true);
         SaveSystem.Current.SetInt("militaryAttempts", SaveSystem.Current.GetInt("militaryAttempts", 0) + 1);
 
-        if (Player.GetInstance().GetSTileUnderneath() != null)
+        if (updatePlayer && Player.GetInstance().GetSTileUnderneath() != null)
         {
             Player.SetPosition(playerRestartSpawnPosition.position);
             Player.SetParent(null);
@@ -126,6 +142,7 @@ public class MilitaryGrid : SGrid
                 s.SetTileActive(false);
                 UIArtifact.GetInstance().RemoveButton(s);
             }
+            gridTilesExplored.SetTileExplored(s.islandId, false);
         }
 
         if (GetStileAt(0, 3).islandId != 1)

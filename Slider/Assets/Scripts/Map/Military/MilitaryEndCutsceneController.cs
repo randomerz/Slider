@@ -42,7 +42,12 @@ public class MilitaryEndCutsceneController : MonoBehaviour
 
     public void AddTrackerToCommander()
     {
-        UITrackerManager.AddNewTracker(alienCommander.gameObject, UITrackerManager.DefaultSprites.exclamation);
+        UITrackerManager.AddNewTracker(
+            alienCommander.gameObject, 
+            UITrackerManager.DefaultSprites.exclamation, 
+            UITrackerManager.DefaultSprites.none,
+            blinkTime: 3
+        );
 
         CoroutineUtils.ExecuteAfterDelay(
             () => {

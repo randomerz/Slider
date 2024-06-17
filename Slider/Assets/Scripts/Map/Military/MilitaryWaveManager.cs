@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 // This might not have to be a singleton. Just make sure picking up slider 1 can call the first spawnwave()
@@ -19,7 +20,7 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private MilitaryUnitCommander enemyCommander;
 
-    private const string BEAT_ALL_ALIENS_STRING = "militaryBeatAllAliens";
+    public const string BEAT_ALL_ALIENS_STRING = "militaryBeatAllAliens";
 
     private void Awake()
     {
@@ -95,6 +96,8 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
         {
             TrySpawnEnemy();
         }
+
+        StartCoroutine(DoSpawnSoundEffects(waveSizes[index]));
     }
 
     private void TrySpawnEnemy()
@@ -174,6 +177,18 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
         // lastSpawnedType = (MilitaryUnit.Type)(((int)lastSpawnedType + Random.Range(1, 3)) % 3);
         lastSpawnedType = (MilitaryUnit.Type)(((int)lastSpawnedType + 1) % 3);
         return lastSpawnedType;
+    }
+
+    private IEnumerator DoSpawnSoundEffects(int numSpawns)
+    {
+        AudioManager.PickSound("Portal").WithVolume(1f).WithPitch(0.9f).AndPlay();
+
+        for (int i = 1; i < numSpawns; i++)
+        {
+            yield return new WaitForSeconds(1f);
+    
+            AudioManager.PickSound("Portal").WithVolume(0.8f).WithPitch(0.875f).AndPlay();
+        }
     }
 
 

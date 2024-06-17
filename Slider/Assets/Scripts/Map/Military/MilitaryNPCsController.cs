@@ -155,6 +155,18 @@ public class MilitaryNPCController : MonoBehaviour
         // TODO: on death animator?
 
         FlashWhite(1);
+
+        CameraShake.Shake(0.5f, 0.25f);
+
+        AudioManager.PickSound("Slide Explosion").WithVolume(0.5f).WithAttachmentToTransform(transform).AndPlay();
+        if (militaryUnit.UnitTeam == MilitaryUnit.Team.Player)
+        {
+            AudioManager.PickSound("Hurt").WithVolume(0.5f).WithAttachmentToTransform(transform).AndPlay();
+        }
+        else
+        {
+            AudioManager.PickSound("Slide Rumble").WithVolume(0.3f).WithAttachmentToTransform(transform).AndPlay();
+        }
         
         foreach (NPC npc in myNPCs)
         {
