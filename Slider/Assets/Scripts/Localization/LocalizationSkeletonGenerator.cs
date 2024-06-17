@@ -53,6 +53,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
    private string referenceLocalizationPath = null;
    private static string referenceLocalizationPathPreference;
    private static string saveLocalizationOutsidePathPreference;
+   private IEnumerable<string> referenceLocales = null;
 
    private void OnEnable()
    {
@@ -71,18 +72,29 @@ public class LocalizationSkeletonGenerator : EditorWindow
            referenceLocalizationPath =
                EditorUtility.OpenFolderPanel("Reference localization", referenceLocalizationPath, null);
            EditorPrefs.SetString(referenceLocalizationPathPreference, referenceLocalizationPath);
+
+           referenceLocales = null;
        }
        GUILayout.Label("^ Reference localization includes old translations that will be migrated into newly generated localization CSV files");
-       
+
+       string referenceDescription = "(No reference translation selected)";
        if (referenceLocalizationPath != null)
        {
-           GUILayout.Label($"reference localization: [{referenceLocalizationPath}]\nwhich contains...");
-           var subdirs = LocalizationFile.LocaleList(LocalizationFile.DefaultLocale, referenceLocalizationPath);
-           foreach (string subdir in subdirs)
+           referenceDescription = $"reference localization: [{referenceLocalizationPath}]\nwhich contains...";
+           if (referenceLocales == null)
            {
-               GUILayout.Label($" - {subdir}");
+               referenceLocales =
+                   LocalizationFile.LocaleList(LocalizationFile.DefaultLocale, referenceLocalizationPath);
+           }
+           else
+           {
+               foreach (string subdir in referenceLocales)
+               {
+                   referenceDescription += $"\n - {subdir}";
+               }
            }
        }
+       GUILayout.Label(referenceDescription);
        
        if (GUILayout.Button("Generate localization INSIDE project"))
        {

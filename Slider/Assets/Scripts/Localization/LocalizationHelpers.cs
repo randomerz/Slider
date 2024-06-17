@@ -82,7 +82,7 @@ namespace Localization
     {
         // Immediate component that this localizable tracks, several of them can track the same component
         // in the case of different indices (different dialogue numbers of the same NPC, for example)
-        public T GetAnchor<T>() where T: Component => (anchor as T);
+        public T GetAnchor<T>() where T: class => (anchor as T);
         private Component anchor;
 
         private TrackedLocalizable(Component c) : base(GetComponentPath(c))
@@ -126,9 +126,9 @@ namespace Localization
             index = idx.ToString();
         }
 
-        public TrackedLocalizable(ShopDialogueManager shopDialogueManager, string code, int idx) : this(shopDialogueManager as Component)
+        public TrackedLocalizable(IDialogueTableProvider dialogueTableProvider, string code) : this(dialogueTableProvider as Component)
         {
-            index = code + Localizable.indexSeparatorSecondary + idx;
+            index = code;
         }
     }
 
@@ -733,7 +733,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(DialogueDisplay), component => new List<TrackedLocalizable>{ new (component as DialogueDisplay) } },
             { typeof(LocalizationInjector), component => new List<TrackedLocalizable>{ new (component as LocalizationInjector) }},
             { typeof(PlayerActionHints), component => SelectLocalizablesFromPlayerActionHints(component as PlayerActionHints) },
-            { typeof(ShopDialogueManager), component => SelectLocalizablesFromShop(component as ShopDialogueManager) },
+            { typeof(IDialogueTableProvider), component => SelectLocalizablesFromTableProvider(component as IDialogueTableProvider) },
         };
         
         private void PopulateLocalizableInstances(Scene scene)
@@ -797,14 +797,14 @@ be corrupted, these rules may be helpful for debugging purposes...
             return hints.hintsList.Select((_, idx) => new TrackedLocalizable(hints, idx));
         }
 
-        private static IEnumerable<TrackedLocalizable> SelectLocalizablesFromShop(ShopDialogueManager shop)
+        private static IEnumerable<TrackedLocalizable> SelectLocalizablesFromTableProvider(IDialogueTableProvider tableProvider)
         {
-            return shop
-                .dialogueTable.SelectMany((kv) =>
-                {
-                    return kv.Value.Select((str, idx) => new TrackedLocalizable(shop,
-                        Enum.GetName(typeof(ShopDialogueManager.ShopDialogueCode), kv.Key), idx));
-                });
+            var selected = tableProvider
+                .TranslationTable.Select((kv) =>
+                    new TrackedLocalizable(tableProvider, kv.Key)
+                );
+
+            return selected;
         }
         
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -825,7 +825,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(DialogueDisplay), LocalizeDialogueDisplay },
             { typeof(LocalizationInjector), (loc, _, _) => loc.GetAnchor<LocalizationInjector>().Refresh() },
             { typeof(PlayerActionHints), LocalizePlayerActionHints },
-            { typeof(ShopDialogueManager), LocalizeShop },
+            { typeof(IDialogueTableProvider), LocalizeTableProvider },
         };
 
         /// <summary>
@@ -1005,42 +1005,25 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
-        private static void LocalizeShop(TrackedLocalizable shop, LocalizationFile file, LocalizationStrategy strategy)
+        private static void LocalizeTableProvider(TrackedLocalizable tableProviderEntry, LocalizationFile file, LocalizationStrategy strategy)
         {
             if (strategy == LocalizationStrategy.ChangeStyleOnly)
             {
                 return;
             }
             
-            var path = shop.FullPath;
+            var path = tableProviderEntry.FullPath;
             if (file.records.TryGetValue(path, out var entry))
             {
-                try
-                {
-                    var s = shop.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
-                    var code = s[0];
-                    var idx = int.Parse(s[1]);
+                var provider = (tableProviderEntry.GetAnchor<MonoBehaviour>() as IDialogueTableProvider);
 
-                    try
-                    {
-                        shop.GetAnchor<ShopDialogueManager>()
-                            .dialogueTable[Enum.Parse<ShopDialogueManager.ShopDialogueCode>(code)][idx].Item2 = entry.Translated;
-                    } catch (FormatException)
-                    {
-                        Debug.LogError($"[Localization] {shop.FullPath} corrupted: dialogue code not recognized");
-                    }
-                    catch (IndexOutOfRangeException)
-                    {
-                        Debug.LogError($"[Localization] {shop.FullPath} corrupted: dialogue code or index out of bounds");
-                    }
-                }
-                catch (FormatException)
+                if (provider == null)
                 {
-                    Debug.LogError($"[Localization] {shop.FullPath} corrupted, requires one shop dialogue code followed by index");
+                    Debug.LogError("Could not cast to dialogue table provider");
                 }
-                catch (IndexOutOfRangeException)
+                else
                 {
-                    Debug.LogError($"[Localization] {shop.FullPath} corrupted, requires one shop dialogue code followed by index");
+                    provider.LocalizeEntry(tableProviderEntry.IndexInComponent, entry.Translated);
                 }
             }
             else
@@ -1056,7 +1039,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(TMP_Dropdown), SerializeDropdownOption },
             { typeof(NPC), SerializeNpc },
             { typeof(PlayerActionHints), SerializePlayerActionHints },
-            { typeof(ShopDialogueManager), SerializeShop },
+            { typeof(IDialogueTableProvider), SerializeTableProvider },
         };
         
         public string Serialize(bool serializeConfigurationDefaults, LocalizationFile referenceFile)
@@ -1226,37 +1209,19 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
 
-        private static string SerializeShop(TrackedLocalizable shop)
+        private static string SerializeTableProvider(TrackedLocalizable tableProvider)
         {
-            try
-            {
-                var s = shop.IndexInComponent.Split(Localizable.indexSeparatorSecondary);
-                var code = s[0];
-                var idx = int.Parse(s[1]);
+            var cast1 = tableProvider.GetAnchor<IDialogueTableProvider>();
 
-                try
-                {
-                    return shop.GetAnchor<ShopDialogueManager>()
-                        .dialogueTable[Enum.Parse<ShopDialogueManager.ShopDialogueCode>(code)][idx].Item1;
-                } catch (FormatException)
-                {
-                    Debug.LogError($"[Localization] {shop.FullPath} corrupted: dialogue code not recognized");
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    Debug.LogError($"[Localization] {shop.FullPath} corrupted: dialogue code or index out of bounds");
-                }
-            }
-            catch (FormatException)
+            if (cast1 == null)
             {
-                Debug.LogError($"[Localization] {shop.FullPath} corrupted, requires one shop dialogue code followed by index");
-            }
-            catch (IndexOutOfRangeException)
-            {
-                Debug.LogError($"[Localization] {shop.FullPath} corrupted, requires one shop dialogue code followed by index");
+                Debug.LogError("cast1 error");
+                return null;
             }
 
-            return null;
+            Debug.Log(tableProvider.IndexInComponent);
+
+            return cast1.TranslationTable.First().Value.original;
         }
     }
 }
