@@ -61,8 +61,6 @@ public interface IDialogueTableProvider
         return GetLocalized(index);
     }
 
-    public string GetDefault() => "lmao";
-
     /// <summary>
     /// Retrieves localization from table, translation is inserted by the LocalizationLoader at runtime
     /// </summary>
@@ -70,29 +68,24 @@ public interface IDialogueTableProvider
     /// <returns>Pair of (original, translated) strings</returns>
     public (string original, string translated) GetLocalized(string formattedIndex)
     {
-        return (null, null);
-        // if (TranslationTable == null)
-        // {
-        //     return ("ERROR: NO TRANSLATION TABLE", null);
-        // }
-        //
-        // if (TranslationTable.TryGetValue(formattedIndex, out var val))
-        // {
-        //     return val;
-        // }
-        // return ("ERROR: NOT FOUND", null);
-    }
-
-    public bool LocalizeEntry(string key, string translated)
-    {
-        if (TranslationTable.ContainsKey(key))
+        if (TranslationTable.TryGetValue(formattedIndex, out var val))
         {
-            TranslationTable[key] = (TranslationTable[key].original, translated);
-            return true;
+            return val;
         }
-
-        return false;
+        return ("ERROR: NOT FOUND", null);
     }
+
+    // crashes Unity, idk why...
+    // public bool LocalizeEntry(string key, string translated)
+    // {
+    //     if (TranslationTable.ContainsKey(key))
+    //     {
+    //         TranslationTable[key] = (TranslationTable[key].original, translated);
+    //         return true;
+    //     }
+    //
+    //     return false;
+    // }
 }
 
 public static class DialogueTableProviderExtensions

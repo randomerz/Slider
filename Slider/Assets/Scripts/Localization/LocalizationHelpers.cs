@@ -82,12 +82,12 @@ namespace Localization
     {
         // Immediate component that this localizable tracks, several of them can track the same component
         // in the case of different indices (different dialogue numbers of the same NPC, for example)
-        public T GetAnchor<T>() where T: class => (anchor as T);
-        private Component anchor;
+        public T GetAnchor<T>() where T: class => (_anchor as T);
+        private readonly Component _anchor;
 
         private TrackedLocalizable(Component c) : base(GetComponentPath(c))
         {
-            anchor = c;
+            _anchor = c;
         }
 
         public TrackedLocalizable(TMP_Text tmp) : this(tmp as Component)
@@ -851,9 +851,9 @@ be corrupted, these rules may be helpful for debugging purposes...
             
             foreach (var (type, instances) in localizables)
             {
-                foreach (TrackedLocalizable trackedLocalizable in instances)
+                if (LocalizationFunctionMap.TryGetValue(type, out var localizationFuncion))
                 {
-                    if (LocalizationFunctionMap.TryGetValue(type, out var localizationFuncion))
+                    foreach (var trackedLocalizable in instances)
                     {
                         localizationFuncion(trackedLocalizable, file, strategy);
                     }
@@ -1015,16 +1015,13 @@ be corrupted, these rules may be helpful for debugging purposes...
             var path = tableProviderEntry.FullPath;
             if (file.records.TryGetValue(path, out var entry))
             {
-                var provider = (tableProviderEntry.GetAnchor<MonoBehaviour>() as IDialogueTableProvider);
-
-                if (provider == null)
-                {
-                    Debug.LogError("Could not cast to dialogue table provider");
-                }
-                else
-                {
-                    provider.LocalizeEntry(tableProviderEntry.IndexInComponent, entry.Translated);
-                }
+                var provider = tableProviderEntry.GetAnchor<IDialogueTableProvider>();
+                
+                // For some reason calling a function here will crash Unity, God knows why (calling it in debugger during breakpoint works, just making it stranger...)
+                // For now we just rewrite the intended function
+                provider.TranslationTable[tableProviderEntry.IndexInComponent] = (
+                    provider.TranslationTable[tableProviderEntry.IndexInComponent].original, entry.Translated);
+                // provider.LocalizeEntry(tableProviderEntry.IndexInComponent, entry.Translated);
             }
             else
             {
@@ -1130,9 +1127,9 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             foreach (var (type, instances) in localizables)
             {
-                foreach (TrackedLocalizable localizable in instances)
+                if (serializationMappingAdaptor.TryGetValue(type, out var serializationFunction))
                 {
-                    if (serializationMappingAdaptor.TryGetValue(type, out var serializationFunction))
+                    foreach (TrackedLocalizable localizable in instances)
                     {
                         serializationFunction(localizable);
                     }
@@ -1211,17 +1208,11 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private static string SerializeTableProvider(TrackedLocalizable tableProvider)
         {
-            var cast1 = tableProvider.GetAnchor<IDialogueTableProvider>();
-
-            if (cast1 == null)
-            {
-                Debug.LogError("cast1 error");
-                return null;
-            }
-
-            Debug.Log(tableProvider.IndexInComponent);
-
-            return cast1.TranslationTable.First().Value.original;
+            var provider = tableProvider.GetAnchor<IDialogueTableProvider>();
+            
+            // For some reason calling a function here will crash Unity, God knows why (calling it in debugger during breakpoint works, just making it stranger...)
+            // For now we just rewrite the intended function
+            return provider.TranslationTable[tableProvider.IndexInComponent].original;
         }
     }
 }
