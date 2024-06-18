@@ -1015,13 +1015,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             var path = tableProviderEntry.FullPath;
             if (file.records.TryGetValue(path, out var entry))
             {
-                var provider = tableProviderEntry.GetAnchor<IDialogueTableProvider>();
-                
-                // For some reason calling a function here will crash Unity, God knows why (calling it in debugger during breakpoint works, just making it stranger...)
-                // For now we just rewrite the intended function
-                provider.TranslationTable[tableProviderEntry.IndexInComponent] = (
-                    provider.TranslationTable[tableProviderEntry.IndexInComponent].original, entry.Translated);
-                // provider.LocalizeEntry(tableProviderEntry.IndexInComponent, entry.Translated);
+                tableProviderEntry.GetAnchor<IDialogueTableProvider>().LocalizeEntry(tableProviderEntry.IndexInComponent, entry.Translated);
             }
             else
             {
@@ -1208,11 +1202,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private static string SerializeTableProvider(TrackedLocalizable tableProvider)
         {
-            var provider = tableProvider.GetAnchor<IDialogueTableProvider>();
-            
-            // For some reason calling a function here will crash Unity, God knows why (calling it in debugger during breakpoint works, just making it stranger...)
-            // For now we just rewrite the intended function
-            return provider.TranslationTable[tableProvider.IndexInComponent].original;
+            return tableProvider.GetAnchor<IDialogueTableProvider>().GetLocalized(tableProvider.IndexInComponent).original;
         }
     }
 }

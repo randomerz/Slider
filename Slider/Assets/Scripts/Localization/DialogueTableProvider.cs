@@ -74,18 +74,17 @@ public interface IDialogueTableProvider
         }
         return ("ERROR: NOT FOUND", null);
     }
-
-    // crashes Unity, idk why...
-    // public bool LocalizeEntry(string key, string translated)
-    // {
-    //     if (TranslationTable.ContainsKey(key))
-    //     {
-    //         TranslationTable[key] = (TranslationTable[key].original, translated);
-    //         return true;
-    //     }
-    //
-    //     return false;
-    // }
+    
+    public bool LocalizeEntry(string key, string translated)
+    {
+        if (TranslationTable.ContainsKey(key))
+        {
+            TranslationTable[key] = (TranslationTable[key].original, translated);
+            return true;
+        }
+    
+        return false;
+    }
 }
 
 public static class DialogueTableProviderExtensions
