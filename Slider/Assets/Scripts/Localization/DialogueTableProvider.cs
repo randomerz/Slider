@@ -11,6 +11,12 @@ public interface IDialogueTableProvider
 {
     public Dictionary<string, (string original, string translated)> TranslationTable { get; }
 
+    protected static Dictionary<string, (string original, string translated)> InitializeTable(
+        Dictionary<string, string> input)
+    {
+        return input.ToDictionary(kv => kv.Key, kv=> (kv.Value, null as string));
+    }
+
     /// <summary>
     /// Initialization helper to shorten code size for describing the initial value of the translation table implementation
     /// Supports 1:1 mapping from enum value to string, will contain a default integer index of 0 for each entry
@@ -99,5 +105,11 @@ public static class DialogueTableProviderExtensions
     public static (string original, string translated) GetLocalized<I, T>(this I self,T key, int i = 0) where I: MonoBehaviour, IDialogueTableProvider where T : Enum
     {
         return self.GetLocalized(key, i);
+    }
+    
+    public static string GetLocalizedSingle<I, T>(this I self,T key, int i = 0) where I: MonoBehaviour, IDialogueTableProvider where T : Enum
+    {
+        var (original, translated) = self.GetLocalized(key, i);
+        return translated ?? original;
     }
 }

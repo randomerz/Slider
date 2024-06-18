@@ -1,13 +1,96 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JungleBigBlobDialogue : MonoBehaviour
+public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
 {
     public const string DIALOGUE_SAVE_STRING = "JungleShopBlobDialogue";
 
     public NPC npc;
     public RecipeList recipeList;
+    
+    #region Localization
+
+    enum ShapeStrings
+    {
+        BreadName,
+        CircleName,
+        CrutchName,
+        FishName,
+        FishBowlName,
+        FlagName,
+        GlassesName,
+        HeartName,
+        IcecreamName,
+        LineName,
+        MinecartName,
+        PIckaxeName,
+        PlusName,
+        RailName,
+        SquareName,
+        TriangleName,
+        BreadSpecialMsg,
+        CircleSpecialMsg,
+        CrutchSpecialMsg,
+        FishSpecialMsg,
+        FishBowlSpecialMsg,
+        FlagSpecialMsg,
+        GlassesSpecialMsg,
+        HeartSpecialMsg,
+        IcecreamSpecialMsg,
+        LineSpecialMsg,
+        MinecartSpecialMsg,
+        PIckaxeSpecialMsg,
+        PlusSpecialMsg,
+        RailSpecialMsg,
+        SquareSpecialMsg,
+        TriangleSpecialMsg,
+        ShapeGenericMessageBeginning,
+        ShapeGenericMessagePunctuation
+    }
+    
+    public Dictionary<string, (string original, string translated)> TranslationTable { get; }
+    private Dictionary<string, (string original, string translated)> _translationTable =
+        IDialogueTableProvider.InitializeTable(
+            new Dictionary<ShapeStrings, string>
+            {
+               { ShapeStrings.BreadName, "Bread" },
+               { ShapeStrings.CircleName, "Circle" },
+               { ShapeStrings.CrutchName, "Crutch" },
+               { ShapeStrings.FishName, "Fish" },
+               { ShapeStrings.FishBowlName, "FishBowl" },
+               { ShapeStrings.FlagName, "Flag" },
+               { ShapeStrings.GlassesName, "Glasses" },
+               { ShapeStrings.HeartName,"Heart" },
+               { ShapeStrings.IcecreamName, "Icecream" },
+               { ShapeStrings.LineName, "Line"},
+               { ShapeStrings.MinecartName, "Minecart" },
+               { ShapeStrings.PIckaxeName, "Pickaxe" },
+               { ShapeStrings.PlusName, "Plus" },
+               { ShapeStrings.RailName, "Rail" },
+               { ShapeStrings.SquareName, "Square" },
+               { ShapeStrings.TriangleName, "Triangle" },
+               { ShapeStrings.BreadSpecialMsg, "It's gluten free!" },
+               { ShapeStrings.CircleSpecialMsg, "OMG Circle!!! Just like me!!!!" },
+               { ShapeStrings.CrutchSpecialMsg, "Crutch? Isn't that a police baton? Yay!!" },
+               { ShapeStrings.FishSpecialMsg, "Blub blub blub" },
+               { ShapeStrings.FishBowlSpecialMsg, "NOOOO YOU TRAPPED MR. BLUB BLUB" },
+               { ShapeStrings.FlagSpecialMsg, "A race? I hope everyone's a winner!" },
+               { ShapeStrings.GlassesSpecialMsg, "I SEE you've made something cool." },
+               { ShapeStrings.HeartSpecialMsg, "Aww <3" },
+               { ShapeStrings.IcecreamSpecialMsg, "Artificial vanilla, my favorite!" },
+               { ShapeStrings.LineSpecialMsg, "Does Barron want more lines..?" },
+               { ShapeStrings.MinecartSpecialMsg, "OMG do you think I can fit in it?" },
+               { ShapeStrings.PIckaxeSpecialMsg, "Diggy diggy hole" },
+               { ShapeStrings.PlusSpecialMsg, "Eww... is that... math?" },
+               { ShapeStrings.RailSpecialMsg, "I am going to 'Rail' you!" },
+               { ShapeStrings.SquareSpecialMsg, "Squares are okay... but I like circles more!" },
+               { ShapeStrings.TriangleSpecialMsg, "If you were a triangle you'd be acute one!"},
+               { ShapeStrings.ShapeGenericMessageBeginning, "Woah! Is that a " },
+               { ShapeStrings.ShapeGenericMessagePunctuation, "?!" },
+            });
+    #endregion
 
     public void PlayerCarryingShape(Condition c)
     {
@@ -42,33 +125,33 @@ public class JungleBigBlobDialogue : MonoBehaviour
     private string ShapeNameToSpecialMessage(string shapeName) => shapeName switch
     {
         // "Bandage" => "",
-        "Bread" => "It's gluten free!",
+        "Bread" => this.GetLocalizedSingle(ShapeStrings.BreadSpecialMsg),
         // "Camera" => "",
         // "Chest" => "",
-        "Circle" => "OMG Circle!!! Just like me!!!!",
+        "Circle" =>this.GetLocalizedSingle(ShapeStrings.CircleSpecialMsg),
         // "Crate" => "",
-        "Crutch" => "Crutch? Isn't that a police baton? Yay!!",
+        "Crutch" => this.GetLocalizedSingle(ShapeStrings.CrutchSpecialMsg),
         // "Female" => "",
-        "Fish" => "Blub blub blub",
-        "FishBowl" => "NOOOO YOU TRAPPED MR. BLUB BLUB",
-        "Flag" => "A race? I hope everyone's a winner!",
-        "Glasses" => "I SEE you've made something cool.",
-        "Heart" => "Aww <3",
+        "Fish" => this.GetLocalizedSingle(ShapeStrings.FishSpecialMsg),
+        "FishBowl" => this.GetLocalizedSingle(ShapeStrings.FishBowlSpecialMsg),
+        "Flag" => this.GetLocalizedSingle(ShapeStrings.FlagSpecialMsg),
+        "Glasses" => this.GetLocalizedSingle(ShapeStrings.GlassesSpecialMsg),
+        "Heart" => this.GetLocalizedSingle(ShapeStrings.HeartSpecialMsg),
         // "House" => "",
-        "Icecream" => "Artificial vanilla, my favorite!",
-        "Line" => "Does Barron want more lines..?",
+        "Icecream" => this.GetLocalizedSingle(ShapeStrings.IcecreamSpecialMsg),
+        "Line" => this.GetLocalizedSingle(ShapeStrings.LineSpecialMsg),
         // "Lolipop" => "",
         // "Male" => "",
-        "Minecart" => "OMG do you think I can fit in it?",
+        "Minecart" => this.GetLocalizedSingle(ShapeStrings.MinecartSpecialMsg),
         // "Mushroom" => "",
-        "Pickaxe" => "Diggy diggy hole",
-        "Plus" => "Eww... is that... math?",
+        "Pickaxe" => this.GetLocalizedSingle(ShapeStrings.PIckaxeSpecialMsg),
+        "Plus" => this.GetLocalizedSingle(ShapeStrings.PlusSpecialMsg),
         // "Popsicle" => "",
-        "Rail" => "I am going to 'Rail' you!",
+        "Rail" => this.GetLocalizedSingle(ShapeStrings.RailSpecialMsg),
         // "SemiCircle" => "",
         // "Ship" => "",
-        "Square" => "Squares are okay... but I like circles more!",
-        "Triangle" => "If you were a triangle you'd be acute one!",
+        "Square" => this.GetLocalizedSingle(ShapeStrings.SquareSpecialMsg),
+        "Triangle" => this.GetLocalizedSingle(ShapeStrings.TriangleSpecialMsg),
         _ => null
     };
 
@@ -108,7 +191,15 @@ public class JungleBigBlobDialogue : MonoBehaviour
 
     private string ShapeNameToGenericMessage(string shapeName)
     {
-        return $"Woah! Is that a {shapeName}?!";
+        string shapeNameLocalized = shapeName; // fallback just use english...
+        if (Enum.TryParse<ShapeStrings>(shapeName+"Name", out var shapeNameEnum))
+        {
+            shapeNameLocalized = this.GetLocalizedSingle(shapeNameEnum);
+        }
+        return this.GetLocalizedSingle(ShapeStrings.ShapeGenericMessageBeginning)
+               + shapeNameLocalized
+               + this.GetLocalizedSingle(ShapeStrings.ShapeGenericMessagePunctuation);
+        // return $"Woah! Is that a {shapeName}?!";
     }
 
     private bool IsInRecipeList(string shapeName)

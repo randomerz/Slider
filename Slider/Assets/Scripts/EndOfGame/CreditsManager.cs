@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
-public class CreditsManager : MonoBehaviour
+public class CreditsManager : MonoBehaviour, IDialogueTableProvider
 {
     [System.Serializable]
     public class CreditsTileMove
@@ -31,6 +31,22 @@ public class CreditsManager : MonoBehaviour
     public List<CreditsTileMove> creditsTileMoves;
 
     private AsyncOperation sceneLoad;
+    
+    #region Localization
+
+    enum SkipType
+    {
+        Default
+    }
+    public Dictionary<string, (string original, string translated)> TranslationTable { get; }
+
+    private Dictionary<string, (string original, string translated)> _translationTable =
+        IDialogueTableProvider.InitializeTable(
+            new Dictionary<SkipType, string>
+            {
+                { SkipType.Default, "Skip" }
+            });
+    #endregion
 
     private void Start()
     {
@@ -100,7 +116,7 @@ public class CreditsManager : MonoBehaviour
 
     private void InitializeSkipPrompt()
     {
-        skipPromptText.text = $"Skip";
+        skipPromptText.text = this.GetLocalizedSingle(SkipType.Default);
         skipPromptSlider.value = 0;
         skipPromptSlider.gameObject.SetActive(true);
     }
