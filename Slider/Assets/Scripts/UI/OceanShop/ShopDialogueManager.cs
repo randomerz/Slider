@@ -112,7 +112,7 @@ public class ShopDialogueManager : MonoBehaviour
                     null as string),
                 ("You'd better keep yourself safe - military was deployed there. Even blocked off access from the Shifting Seas. If you really want to go, I reckon you ought to go around the long way, through Canopy Town and the Factory.",
                     null as string),
-                ("But don't worry, I've got something perfect for you! Look pal, we're trying a new, \"Business\", null as string),model. Remember that tavern pass I mentioned?",
+                ("But don't worry, I've got something perfect for you! Look pal, we're trying a new, \"Business\" model. Remember that tavern pass I mentioned?",
                     null as string),
                 ("How it works is, YOU bring me treasures from around the sea, and I'LL give you some points. Get enough points and you'll get a reward! For the last reward, I can even help you reach your cat.",
                     null as string),
