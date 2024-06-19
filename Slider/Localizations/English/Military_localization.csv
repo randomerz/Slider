@@ -1,0 +1,79 @@
+"Localization files are formatted like CSV so they can be easily edited,
+however formatting has strict rules for easy parsing. Most of these rules
+are already handled by Excel / Libre / etc., so you don't have to worry
+about them in normal usage. However, if your localization file seems to
+be corrupted, these rules may be helpful for debugging purposes...
+- In general, any consecutive string of \r and \n (in any order) will be
+  treated as one SINGLE line break, except within an enclosed context
+- The first 4 rows can be arbitrarily long
+  - The first cell of first row is used to store this block of instruction
+    text
+  - The first 3 cells of the fourth row is used as headers
+  - All other cells in the first and fourth rows are ignored
+  - Columns in the second row alternate between property and value (ex.
+    ' foo | 1 | bar | 3.5 | ... '
+    - Any whitespaces before and after the property name are ignored
+  - Columns in the third row are exclusively comments for properties in the
+    second row
+- Every following line can include any number of cells, but only the
+  first three will be parsed (you can use the rest as comments if needed)
+- The file must end in a sequence of \r and \n's
+- Every cell containing a ^, \r, or \n must be enclosed in ""
+  - If a "" is encountered right after a non-enclosed separator, \r, or \n,
+    then the parser is said to enter an ""enclosed context"", such context
+    ends immediately when a non-escaped "" that is not followed by \r, \n,
+    or a separator is encountered
+  - "" within each cell should be escaped using another "" in front of it,
+  - If a "" is encountered in a non-enclosed context, and it is not right
+    after a separator, \r, or \n, then it is entirely ignored
+  - If a non-escaped "" is encountered in an enclosed context...
+    - If it is followed by a separator, \r, or \n, then it is considered
+      the closing quote of the current context
+    - Otherwise, it is ignored
+  - If a separator, \r, or \n is encountered while in an enclosed context,
+    it will be preserved
+",
+"NonDialogueFontAdjust"," ","DialogueFontScale"," ",
+"String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
+"Path","Orig","Translation",
+"AlienCommander/MilitaryAlien/NPCs/Flying Saucer@0:0","Baboom!","Baboom!",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Items/ArtifactInventoryItem (12)/Sunglasses Total Text","2","2",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Items/ArtifactInventoryItem Breadge/Breadge Total Text","9","9",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Items/ArtifactInventoryItem Oil/Oil Total Text","4","4",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Text/ItemNameText","Collection","Collection",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/WorldMapPanel/Text/AreaNameText","Map
+","Map
+",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/WorldMapPanel/Text/AreaNameTextBG","Map
+","Map
+",
+"Map/Military 16Puzzle/Military STile (1)/Objects/MilitaryAlly/NPCs/Ally Robot (1)@0:0","Use that flag to move us around!","Use that flag to move us around!",
+"Map/Military 16Puzzle/Military STile (1)/Objects/MilitaryAlly/NPCs/Ally Robot (2)@0:0","Defend our land!","Defend our land!",
+"Map/Military 16Puzzle/Military STile (1)/Objects/MilitaryAlly/NPCs/Ally Robot (3)@0:0","Defend our land!","Defend our land!",
+"Map/Military 16Puzzle/Military STile (1)/Objects/MilitaryAlly/NPCs/Ally Robot (4)@0:0","Defend our land!","Defend our land!",
+"Map/Military 16Puzzle/Military STile (4)/Objects/Off Duty Alien 1@0:0","I wish the Commander would just give up already.","I wish the Commander would just give up already.",
+"Map/Military 16Puzzle/Military STile (4)/Objects/Off Duty Alien 1@0:1","3 times is a bit excessive don't you think?","3 times is a bit excessive don't you think?",
+"Map/Military 16Puzzle/Military STile (4)/Objects/Off Duty Alien 2@0:0","You got that right. I missed my kid's graduation from Shlarmbok the other week.","You got that right. I missed my kid's graduation from Shlarmbok the other week.",
+"Map/Military 16Puzzle/Military STile (6)/Objects/Alien Commander@0:0","Rahh I'm gonna shoot you with my meteor gun.","Rahh I'm gonna shoot you with my meteor gun.",
+"Map/Military 16Puzzle/Military STile (6)/Objects/Alien Commander@0:1","This should be the very last thing but this cut scene hasn't been done yet.","This should be the very last thing but this cut scene hasn't been done yet.",
+"Map/Military 16Puzzle/Military STile (6)/Objects/Alien Commander@0:2","Don't worry about me for now","Don't worry about me for now",
+"Map/Military 16Puzzle/Military STile (6)/Objects/Alien Commander@0:3","also todo decorate this tile","also todo decorate this tile",
+"Map/World Grid/Objects/Commander@0:0","What? You want our <#e6e639>explosives</color>?","What? You want our <#e6e639>explosives</color>?",
+"Map/World Grid/Objects/Commander@0:1","Son, we need to WIN. These no good aliens are trying to take our land, and I WILL NOT LET THAT HAPPEN.","Son, we need to WIN. These no good aliens are trying to take our land, and I WILL NOT LET THAT HAPPEN.",
+"Map/World Grid/Objects/Commander@0:2","Ahem.","Ahem.",
+"Map/World Grid/Objects/Commander@0:3","Son, come look at this table here. It's where we plan our attacks.","Son, come look at this table here. It's where we plan our attacks.",
+"Map/World Grid/Objects/Commander@0:4","Is what I would say if the devs had finished this area. Here, you go, have fun kiddo.","Is what I would say if the devs had finished this area. Here, you go, have fun kiddo.",
+"Map/World Grid/Objects/Commander@1:0","You done playing with that toy? We have a war to win!","You done playing with that toy? We have a war to win!",
+"Map/World Grid/Objects/Commander@2:0","Great work kiddo! You can have the extra munitions.","Great work kiddo! You can have the extra munitions.",
+"Map/World Grid/Objects/Fixer@0:0","Rats...","Rats...",
+"Map/World Grid/Objects/Fixer@1:0","Rats...","Rats...",
+"Map/World Grid/Objects/Fixer@1:1","You wouldn't know how to fix these wires, would you?","You wouldn't know how to fix these wires, would you?",
+"Map/World Grid/Objects/Private@0:0","We've only got enough supplies for one shot.","We've only got enough supplies for one shot.",
+"Map/World Grid/Objects/Private@0:1","Don't mess it up!","Don't mess it up!",
+"Map/World Grid/Objects/Private@1:0","Phew, I thought we were left for dead there.","Phew, I thought we were left for dead there.",
+"Map/World Grid/Objects/Robot (1)@0:0","Hands off. Supplies reuired for military conflict.","Hands off. Supplies reuired for military conflict.",
+"Map/World Grid/Objects/Robot (1)@1:0","Orders remain: protect excess supplies.","Orders remain: protect excess supplies.",
+"Map/World Grid/Objects/Robot@0:0","You got it, no pressure! :)","You got it, no pressure! :)",
+"Map/World Grid/Objects/Robot@1:0","Nice job! I knew you could do it. :D","Nice job! I knew you could do it. :D",
+"Map/World Grid/Objects/Sergeant@0:0","If we run the simulation a few more times, success is inevitable!","If we run the simulation a few more times, success is inevitable!",
+"Map/World Grid/Objects/Sergeant@0:1","Even if it takes 14 million simulations, there has to be one!","Even if it takes 14 million simulations, there has to be one!",

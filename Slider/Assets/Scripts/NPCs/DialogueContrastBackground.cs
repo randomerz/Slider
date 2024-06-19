@@ -7,7 +7,7 @@ using TMPro;
 public class DialogueContrastBackground : MonoBehaviour
 {
     public float borderWidth = 0.5f;
-    private Vector3 offset = new Vector3(0, 1.5f);
+    private Vector3 offset = new Vector3(0, 0.6f);
 
     public TextMeshProUGUI text;
     public RectTransform backgroundRectTransform;

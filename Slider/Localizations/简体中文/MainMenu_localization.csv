@@ -1,0 +1,172 @@
+"Localization files are formatted like CSV so they can be easily edited,
+however formatting has strict rules for easy parsing. Most of these rules
+are already handled by Excel / Libre / etc., so you don't have to worry
+about them in normal usage. However, if your localization file seems to
+be corrupted, these rules may be helpful for debugging purposes...
+- In general, any consecutive string of \r and \n (in any order) will be
+  treated as one SINGLE line break, except within an enclosed context
+- The first 4 rows can be arbitrarily long
+  - The first cell of first row is used to store this block of instruction
+    text
+  - The first 3 cells of the fourth row is used as headers
+  - All other cells in the first and fourth rows are ignored
+  - Columns in the second row alternate between property and value (ex.
+    ' foo | 1 | bar | 3.5 | ... '
+    - Any whitespaces before and after the property name are ignored
+  - Columns in the third row are exclusively comments for properties in the
+    second row
+- Every following line can include any number of cells, but only the
+  first three will be parsed (you can use the rest as comments if needed)
+- The file must end in a sequence of \r and \n's
+- Every cell containing a ^, \r, or \n must be enclosed in ""
+  - If a "" is encountered right after a non-enclosed separator, \r, or \n,
+    then the parser is said to enter an ""enclosed context"", such context
+    ends immediately when a non-escaped "" that is not followed by \r, \n,
+    or a separator is encountered
+  - "" within each cell should be escaped using another "" in front of it,
+  - If a "" is encountered in a non-enclosed context, and it is not right
+    after a separator, \r, or \n, then it is entirely ignored
+  - If a non-escaped "" is encountered in an enclosed context...
+    - If it is followed by a separator, \r, or \n, then it is considered
+      the closing quote of the current context
+    - Otherwise, it is ignored
+  - If a separator, \r, or \n is encountered while in an enclosed context,
+    it will be preserved
+",
+"NonDialogueFontAdjust"," ","DialogueFontScale"," ",
+"String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
+"Path","Orig","Translation",
+"ConventionMode/ConventionCanvas/Alpha Gameplay Label","Pre-Alpha Gameplay","Pre-Alpha Gameplay",
+"ConventionMode/ConventionCanvas/Panel/RestartingText","Game is restarting...
+Press any key to cancel.","Game is restarting...
+Press any key to cancel.",
+"UICanvas/MM Panel/MainMenu Panel/Continue Button/Text","Continue","Continue",
+"UICanvas/MM Panel/MainMenu Panel/Credits Button/Text","Credits","Credits",
+"UICanvas/MM Panel/MainMenu Panel/Options Button/Text","Options","Options",
+"UICanvas/MM Panel/MainMenu Panel/Play Button/Text","Play
+","Play
+",
+"UICanvas/MM Panel/MainMenu Panel/Quit Button/Text","Quit","Quit",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Caps Button/Text","Caps","Caps",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Delete Button/Text","Del","Del",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Done Button/Text","Done","Done",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/E/Text","e","e",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/I/Text","i","i",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/O/Text","o","o",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/P/Text","p","p",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/Q/Text","q","q",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/R/Text","r","r",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/T/Text","t","t",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/U/Text","u","u",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/W/Text","w","w",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/Y/Text","y","y",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/A/Text","a","a",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/D/Text","d","d",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/F/Text","f","f",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/G/Text","g","g",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/H/Text","h","h",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/J/Text","j","j",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/K/Text","k","k",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/L/Text","l","l",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/S/Text","s","s",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/B/Text","b","b",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/C/Text","c","c",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/M/Text","m","m",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/N/Text","n","n",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/V/Text","v","v",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/X/Text","x","x",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/Z/Text","z","z",
+"UICanvas/NewSavePanel/ProfileNameInput/Text Area/Placeholder","Enter name...","Enter name...",
+"UICanvas/NewSavePanel/ProfileNameInput/Text Area/Text","​","​",
+"UICanvas/OptionsMenu/Back Button/Text","Back","Back",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Back Button/Text","Back","Back",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control A","(A) Control","(A) Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control B","(B) Control","(B) Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control X","(X) Control","(X) Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control Y","(Y) Control","(Y) Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Move","Move","Move",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Right Aligned/Control","Control
+","Control
+",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Right Aligned/Move","Move","Move",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controls Text","Keyboard","Keyboard",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Action/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Action/Control Label","Action","Action",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Alt View/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Alt View/Control Label","Alt View","Alt View",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Cycle Equip/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Cycle Equip/Control Label","Cycle","Cycle",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Down/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Down/Control Label","Down","Down",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Left/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Left/Control Label","Left","Left",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Right/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Right/Control Label","Right","Right",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Up/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Up/Control Label","Up","Up",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Open/Close Artifact/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Open/Close Artifact/Control Label","Artifact","Artifact",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Pause/Binding/Text","Control","Control",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Pause/Control Label","Pause","Pause",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Rebinding Overlay/Text (TMP)","Rebinding Move Left...","Rebinding Move Left...",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Reset Controls/Text","Reset","Reset",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/Display Text","Display","Display",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@0","30","30",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@1","60","60",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@2","75","75",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@3","120","120",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@4","144","144",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@5","240","240",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@6","Uncapped","Uncapped",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Label","FPS","FPS",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@0","1280 x 720","1280 x 720",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@1","1280 x 800","1280 x 800",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@2","1366 x 768","1366 x 768",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@3","1920 x 1080","1920 x 1080",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@4","2560 x 1440","2560 x 1440",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@5","3840 x 2160","3840 x 2160",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Label","Resolution","Resolution",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/VSync/Label","VSync","VSync",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Big Text/Label","Bigger Text","Bigger Text",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Contrast Text/Label","Text Background","Text Background",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Hide Cursor/Label","Hide Cursor","Hide Cursor",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Screen Shake Slider/Label","Screen Shake","Screen Shake",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/Options Text","Options","Options",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Auto Move/Label","Auto Move
+","Auto Move
+",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Colorblind Mode/Label","Colorblind Mode","Colorblind Mode",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Dev Console/Label","Dev Console","Dev Console",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Mini Player Icon/Label","Mini Player Icon","Mini Player Icon",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Reset to Defaults Button/Text","Reset All Settings","Reset All Settings",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/Misc Options Text","Miscellaneous","Miscellaneous",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Ambience Slider/Label","Ambience","Ambience",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Master Slider/Label","Master","Master",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Music Slider/Label","Music","Music",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Play Audio When Unfocused/Label","Play Audio When Unfocused","Play Audio When Unfocused",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Sound Slider/Label","Sound","Sound",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/Sound Text","Sound","Sound",
+"UICanvas/OptionsMenu/SideNav/Controls Button/Text","Controls","Controls",
+"UICanvas/OptionsMenu/SideNav/Display Button/Text","Display","Display",
+"UICanvas/OptionsMenu/SideNav/Misc Button/Text","Misc","Misc",
+"UICanvas/OptionsMenu/SideNav/Options Button/Text","Options
+","Options
+",
+"UICanvas/OptionsMenu/SideNav/Sound Button/Text","Sound","Sound",
+"UICanvas/SavesPanel/Left Save Button/Text","[ Empty ]","[ Empty ]",
+"UICanvas/SavesPanel/Left Save Button/Text/ProgressText","1/9","1/9",
+"UICanvas/SavesPanel/Left Save Button/Text/TimeText","0h32
+","0h32
+",
+"UICanvas/SavesPanel/Middle Save Button/Text","Cat Name","Cat Name",
+"UICanvas/SavesPanel/Middle Save Button/Text/ProgressText","1/9","1/9",
+"UICanvas/SavesPanel/Middle Save Button/Text/TimeText","0h32
+","0h32
+",
+"UICanvas/SavesPanel/Right Save Button/Text","[ Empty ]","[ Empty ]",
+"UICanvas/SavesPanel/Right Save Button/Text/ProgressText","1/9","1/9",
+"UICanvas/SavesPanel/Right Save Button/Text/TimeText","0h32
+","0h32
+",
+"WorldCanvas/Press any Key","[press any key to begin]","[press any key to begin]",

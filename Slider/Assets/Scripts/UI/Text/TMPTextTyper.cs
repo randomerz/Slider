@@ -22,6 +22,20 @@ public class TMPTextTyper : MonoBehaviour
 
     private static float textSpeed;
 
+    private TextMeshProUGUI TextMeshPro
+    {
+        get
+        {
+            if (m_TextMeshPro == null)
+            {
+                m_TextMeshPro = GetComponent<TextMeshProUGUI>();
+                originalFontSize = m_TextMeshPro.fontSize;
+                originalFont = m_TextMeshPro.font;
+            }
+
+            return m_TextMeshPro;
+        }
+    }
     private TextMeshProUGUI m_TextMeshPro;
     private int charIndex = 0;
     private int startingCharacterIndex = 0; // for fade in
@@ -31,17 +45,19 @@ public class TMPTextTyper : MonoBehaviour
     private Coroutine coroutine;
     [HideInInspector] public bool finishedTyping;
 
+    private float originalFontSize;
+    private TMP_FontAsset originalFont;
+
     void Awake()
     {
-        m_TextMeshPro = GetComponent<TextMeshProUGUI>();
-        if (m_TextMeshPro == null)
+        if (TextMeshPro == null)
             Debug.LogError("TextMeshPro script not found!");
         
         // sometimtes we will have special tags
         m_tmpSpecialText = GetComponent<TMPSpecialText>();
 
         // force characters to load
-        m_TextMeshPro.ForceMeshUpdate();
+        TextMeshPro.ForceMeshUpdate();
 
         textSpeed = GameSettings.textSpeed;
     }
@@ -50,7 +66,7 @@ public class TMPTextTyper : MonoBehaviour
     {
         if (invisibleAtStart)
         {
-            m_TextMeshPro.ForceMeshUpdate();
+            TextMeshPro.ForceMeshUpdate();
             SetTextAlphaZero();
         }
 
@@ -64,8 +80,8 @@ public class TMPTextTyper : MonoBehaviour
     /// </summary>
     private void SetTextAlphaZero()
     {
-        m_TextMeshPro.ForceMeshUpdate();
-        TMP_TextInfo textInfo = m_TextMeshPro.textInfo;
+        TextMeshPro.ForceMeshUpdate();
+        TMP_TextInfo textInfo = TextMeshPro.textInfo;
 
         for (int i = 0; i < textInfo.characterCount; i++)
         {
@@ -75,7 +91,7 @@ public class TMPTextTyper : MonoBehaviour
 
             textInfo.characterInfo[i].color.a = 0;
 
-            SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
+            SetCharacterColor(TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
         }
     }
 
@@ -87,9 +103,9 @@ public class TMPTextTyper : MonoBehaviour
     {
         finishedTyping = false;
 
-        TMP_TextInfo textInfo = m_TextMeshPro.textInfo;
+        TMP_TextInfo textInfo = TextMeshPro.textInfo;
 
-        while (charIndex < m_TextMeshPro.text.Length)
+        while (charIndex < TextMeshPro.text.Length)
         {
 
             // // If No Characters then just yield and wait for some text to be added
@@ -109,7 +125,7 @@ public class TMPTextTyper : MonoBehaviour
             {
                 textInfo.characterInfo[charIndex].color.a = 255;
 
-                SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[charIndex].color, charIndex);
+                SetCharacterColor(TextMeshPro, textInfo, textInfo.characterInfo[charIndex].color, charIndex);
 
             }
 
@@ -138,7 +154,7 @@ public class TMPTextTyper : MonoBehaviour
     {
         finishedTyping = false;
 
-        TMP_TextInfo textInfo = m_TextMeshPro.textInfo;
+        TMP_TextInfo textInfo = TextMeshPro.textInfo;
 
         startingCharacterIndex = charIndex;
         bool isRangeMax = false;
@@ -170,7 +186,7 @@ public class TMPTextTyper : MonoBehaviour
                 {
                     byte alpha = (byte)Mathf.Clamp(textInfo.characterInfo[i].color.a + fadeSteps, 0, 255);
                     textInfo.characterInfo[i].color.a = alpha;
-                    SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
+                    SetCharacterColor(TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
                     if (alpha == 255)
                     {
                         startingCharacterIndex += 1;
@@ -181,12 +197,12 @@ public class TMPTextTyper : MonoBehaviour
                 if (startingCharacterIndex == characterCount)
                 {
                     // Update mesh vertex data one last time.
-                    m_TextMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
+                    TextMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
                     isRangeMax = true;
                 }
             }
 
-            m_TextMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
+            TextMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
             if (charIndex + 1 < characterCount) charIndex += 1;
 
             if (float.IsNormal(textSpeed) && !float.IsNegative(textSpeed))
@@ -228,7 +244,7 @@ public class TMPTextTyper : MonoBehaviour
         //Debug.Log("Skipping string");
         if (coroutine != null)
         {
-            TMP_TextInfo textInfo = m_TextMeshPro.textInfo;
+            TMP_TextInfo textInfo = TextMeshPro.textInfo;
 
             for (int i = startingCharacterIndex; i < textInfo.characterCount; i++)
             {
@@ -238,7 +254,7 @@ public class TMPTextTyper : MonoBehaviour
 
                 textInfo.characterInfo[i].color.a = 255;
 
-                SetCharacterColor(m_TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
+                SetCharacterColor(TextMeshPro, textInfo, textInfo.characterInfo[i].color, i);
             }
 
             StopCoroutine(coroutine);
@@ -272,6 +288,27 @@ public class TMPTextTyper : MonoBehaviour
             coroutine = StartCoroutine(TypeString());
         
     }
+
+    public void SetFont(TMP_FontAsset font, float scale)
+    {
+        TextMeshPro.font = font == null ? originalFont : font;
+        TextMeshPro.fontSize = scale * originalFontSize;
+    }
+
+    public void ClearWordSpacing()
+    {
+        TextMeshPro.wordSpacing = 0;
+    }
+    
+    public void SetAlpha(float alpha)
+    {
+        TextMeshPro.color = new Color(TextMeshPro.color.r, TextMeshPro.color.g, TextMeshPro.color.b, alpha);
+    }
+
+    public string ReplaceAndStripRichText(string text)
+    {
+        return m_tmpSpecialText.ReplaceAndStripRichText(text);
+    }
     
     /// <summary>
     /// Set's the TMP's text equal to text, and then starts typing
@@ -280,11 +317,10 @@ public class TMPTextTyper : MonoBehaviour
     public string StartTyping(string text)
     {
         if (coroutine != null) StopCoroutine(coroutine);
-
-        m_TextMeshPro.text = text;
+        TextMeshPro.text = text;
         m_tmpSpecialText.ParseText();
         StartTyping();
-        return m_TextMeshPro.text;
+        return TextMeshPro.text;
     }
 
     public static void UpdateTextSpeed(float charDelay)

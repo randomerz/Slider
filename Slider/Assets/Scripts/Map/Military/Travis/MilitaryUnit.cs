@@ -88,26 +88,31 @@ public class MilitaryUnit : MonoBehaviour
     private void OnEnable()
     {
         SGridAnimator.OnSTileMoveEnd += OnTileMove;
+        SGrid.OnGridSet += OnGridSet;
     }
 
     private void OnDisable()
     {
         SGridAnimator.OnSTileMoveEnd -= OnTileMove;
+        SGrid.OnGridSet -= OnGridSet;
     }
 
     public static void RegisterUnit(MilitaryUnit unit)
     {
         unit._unitStatus = Status.Active;
         activeUnits.Add(unit);
-        Debug.Log($"Registered Unit '{unit.gameObject.name}'");
+        // Debug.Log($"Registered Unit '{unit.gameObject.name}'");
     }
 
     public static void UnregisterUnit(MilitaryUnit unit)
     {
         unit._unitStatus = Status.Inactive;
         activeUnits.Remove(unit);
-        MilitaryUITrackerManager.RemoveUnitTracker(unit);
-        Debug.Log($"Unregistered Unit '{unit.gameObject.name}'");
+        if (unit != null)
+        {
+            MilitaryUITrackerManager.RemoveUnitTracker(unit);
+        }
+        // Debug.Log($"Unregistered Unit '{unit.gameObject.name}'");
     }
 
     public static Vector2 GridPositionToWorldPosition(Vector2Int tilePosition)
@@ -126,6 +131,14 @@ public class MilitaryUnit : MonoBehaviour
         if (AttachedSTile != null && e.stile == AttachedSTile)
         {
             GridPosition = new Vector2Int(e.stile.x, e.stile.y);
+        }
+    }
+
+    public void OnGridSet(object sender, SGrid.OnGridMoveArgs e)
+    {
+        if (AttachedSTile != null)
+        {
+            GridPosition = new Vector2Int(AttachedSTile.x, AttachedSTile.y);
         }
     }
 
@@ -163,6 +176,13 @@ public class MilitaryUnit : MonoBehaviour
     private void Cleanup(bool immediate=false)
     {        
         UnregisterUnit(this);
+
+        if (this == null)
+        {
+            // If i am cleaned up during scene transition bc progress isn't saved in military
+            return;
+        }
+
         if (Commander != null)
         {
             Commander.RemoveUnit(this);

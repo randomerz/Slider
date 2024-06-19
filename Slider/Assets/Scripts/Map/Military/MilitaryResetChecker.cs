@@ -98,6 +98,9 @@ public class MilitaryResetChecker : Singleton<MilitaryResetChecker>
 
     public static void DecrementUnspawnedAlly()
     {
-        _instance.numUnspawnedAlliesActive -= 1;
+        if (_instance != null)
+        {
+            _instance.numUnspawnedAlliesActive -= 1;
+        }
     }
 }

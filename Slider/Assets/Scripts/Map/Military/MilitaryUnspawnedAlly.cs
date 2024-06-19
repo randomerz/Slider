@@ -17,7 +17,7 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
     {
         MilitaryResetChecker.IncrementUnspawnedAlly();
 
-        if (parentStile.islandId % 2 == 0)
+        if (parentStile.islandId % 2 == 0 && parentStile.islandId != 10)
         {
             spawnConfirmer.SetActive(false);
             gameObject.SetActive(false);

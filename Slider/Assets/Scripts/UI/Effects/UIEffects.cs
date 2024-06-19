@@ -38,7 +38,7 @@ public class UIEffects : Singleton<UIEffects>
     private void Awake()
     {
         //_instance = this;
-        InitializeSingleton();
+        InitializeSingleton(this);
     }
 
     private void OnEnable()
