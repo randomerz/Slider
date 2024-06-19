@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine.Serialization;
 
 // Chad race should be attatched to chad
-public class ChadRace : MonoBehaviour, ISavable
+public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
 {
     enum State {
         TrackNotSetup,
@@ -48,6 +48,27 @@ public class ChadRace : MonoBehaviour, ISavable
     private const string SAVE_STRING_PLAYER_WON = "JungleChadRacePlayerWon";
     private const string SAVE_STRING_RACE_ENDED = "JungleChadRaceRaceEnded";
     private const string SAVE_STRING_CHAD_SCORE = "JungleChadRaceChadScore";
+    
+    #region Localization
+    
+    public Dictionary<string, (string original, string translated)> TranslationTable { get; }
+    private Dictionary<string, (string original, string translated)> _translationTable =
+        IDialogueTableProvider.InitializeTable(
+            new Dictionary<State, string[]>
+            {
+                { State.TrackNotSetup, new[] { "Ready to race?" } },
+                { State.NotStarted, new[] { "Race time! Set up the race track to the bell."} },
+                { State.Started, new[] { "Hey, no changing the track before the race is done!"} },
+                { State.Running, new[]
+                {
+                    "Hah, I've won ",
+                    " times now. We can run it back however many times you want.",
+                    "Pfft, too easy. Come back when you're fast enough to compete with me."
+                }},
+                { State.Cheated, new[] { "Wanna try again, bozo?" } },
+                { State.CheatedTrackFixed, new[] { "Reset the track to the bell." } }
+            });
+    #endregion
 
     private void OnEnable()
     {
@@ -72,12 +93,12 @@ public class ChadRace : MonoBehaviour, ISavable
 
         if (tilesAdjacent)
         {
-            DisplayAndTriggerDialogue("Ready to race?");
+            DisplayAndTriggerDialogue(this.GetLocalizedSingle(State.TrackNotSetup));
             raceState = State.NotStarted;
         }
         else
         {
-            DisplayAndTriggerDialogue("Race time! Set up the race track to the bell.");
+            DisplayAndTriggerDialogue(this.GetLocalizedSingle(State.NotStarted));
             raceState = State.TrackNotSetup;
         }
         
@@ -94,7 +115,7 @@ public class ChadRace : MonoBehaviour, ISavable
             case State.TrackNotSetup:
                 if (tilesAdjacent)
                 {
-                    DisplayAndTriggerDialogue("Ready to race?");
+                    DisplayAndTriggerDialogue(this.GetLocalizedSingle(State.TrackNotSetup));
                     raceState = State.NotStarted;
                 }
                 break;
@@ -102,7 +123,7 @@ public class ChadRace : MonoBehaviour, ISavable
             case State.NotStarted:
                 if (!tilesAdjacent)
                 {
-                    DisplayAndTriggerDialogue("Race time! Set up the race track to the bell.");
+                    DisplayAndTriggerDialogue(this.GetLocalizedSingle(State.NotStarted));
                     raceState = State.TrackNotSetup;
                 }
                 ActivateSpeedLines(false);
@@ -116,7 +137,7 @@ public class ChadRace : MonoBehaviour, ISavable
                     // The player has cheated
                     AudioManager.Play("Record Scratch");
                     StartCoroutine(SetParameterTemporary("JungleChadEnd", 1, 0));
-                    DisplayAndTriggerDialogue("Hey, no changing the track before the race is done!");
+                    DisplayAndTriggerDialogue(this.GetLocalizedSingle(State.Started));
                     ActivateSpeedLines(false);
                     raceState = State.Cheated;
                 } 
@@ -130,7 +151,7 @@ public class ChadRace : MonoBehaviour, ISavable
                     // The player has cheated
                     AudioManager.Play("Record Scratch");
                     StartCoroutine(SetParameterTemporary("JungleChadEnd", 1, 0));
-                    DisplayAndTriggerDialogue("Hey, no changing the track before the race is done!");
+                    DisplayAndTriggerDialogue(this.GetLocalizedSingle(State.Started));
                     ActivateSpeedLines(false);
                     raceState = State.Cheated;
                 } 
@@ -150,11 +171,11 @@ public class ChadRace : MonoBehaviour, ISavable
 
                     if (numTimesChadWon >= 10)
                     {
-                        DisplayAndTriggerDialogue($"Hah, I've won {numTimesChadWon} times now. We can run it back however many times you want.");
+                        DisplayAndTriggerDialogue($"{this.GetLocalizedSingle(State.Running, 0)}{numTimesChadWon}{this.GetLocalizedSingle(State.Running, 1)}");
                     }
                     else
                     {
-                        DisplayAndTriggerDialogue("Pfft, too easy. Come back when you're fast enough to compete with me.");
+                        DisplayAndTriggerDialogue(this.GetLocalizedSingle(State.Running, 2));
                     }
                 }
 
@@ -166,7 +187,7 @@ public class ChadRace : MonoBehaviour, ISavable
                 if (tilesAdjacent)
                 {
                     startingFlagRestartNPC.SetActive(true);
-                    DisplayAndTriggerDialogue("Wanna try again, bozo?");
+                    DisplayAndTriggerDialogue(this.GetLocalizedSingle(State.Cheated));
                     raceState = State.CheatedTrackFixed;
                 }
                 else
@@ -179,7 +200,7 @@ public class ChadRace : MonoBehaviour, ISavable
                 if (tilesAdjacent)
                 {
                     startingFlagRestartNPC.SetActive(true);
-                    DisplayAndTriggerDialogue("Wanna try again, bozo?");
+                    DisplayAndTriggerDialogue(this.GetLocalizedSingle(State.Cheated));
                     raceState = State.CheatedTrackFixed;
                 }
                 break;
@@ -188,7 +209,7 @@ public class ChadRace : MonoBehaviour, ISavable
                 if (!tilesAdjacent)
                 {
                     startingFlagRestartNPC.SetActive(false);
-                    DisplayAndTriggerDialogue("Reset the track to the bell.");
+                    DisplayAndTriggerDialogue(this.GetLocalizedSingle(State.CheatedTrackFixed));
                     raceState = State.CheatedTrackBroken;
                 }
                 break;
@@ -284,12 +305,12 @@ public class ChadRace : MonoBehaviour, ISavable
 
             if (tilesAdjacent)
             {
-                DisplayAndTriggerDialogue("Ready to race?");
+                DisplayAndTriggerDialogue(this.GetLocalizedSingle(State.TrackNotSetup));
                 raceState = State.NotStarted;
             }
             else
             {
-                DisplayAndTriggerDialogue("Race time! Set up the race track to the bell.");
+                DisplayAndTriggerDialogue(this.GetLocalizedSingle(State.NotStarted));
                 raceState = State.TrackNotSetup;
             }
         }
@@ -421,10 +442,10 @@ public class ChadRace : MonoBehaviour, ISavable
 
     private void DisplayAndTriggerDialogue(string message) 
     {
-        if (SaveSystem.Current.GetString("jungleChadSpeak") == message)
-        {
-            return;
-        }
+        // if (SaveSystem.Current.GetString("jungleChadSpeak") == message)
+        // {
+        //     return;
+        // }
 
         SaveSystem.Current.SetString("jungleChadSpeak", message);
         npcScript.TypeCurrentDialogueSafe();
