@@ -1075,7 +1075,15 @@ be corrupted, these rules may be helpful for debugging purposes...
             var path = tableProviderEntry.FullPath;
             if (file.records.TryGetValue(path, out var entry))
             {
-                tableProviderEntry.GetAnchor<IDialogueTableProvider>().LocalizeEntry(tableProviderEntry.IndexInComponent, entry.Translated);
+                // AT: cursed Unity editor crashing bug if I call any interface function,
+                // so instead just rewrite the function here...
+                // For some reason running during play mode is fine, but non-play mode won't
+                // allow it. Probably some Unity Mono issue...
+                var table = tableProviderEntry.GetAnchor<IDialogueTableProvider>().TranslationTable;
+                table[tableProviderEntry.IndexInComponent] = new LocalizationPair() {
+                    original = table[tableProviderEntry.IndexInComponent].original,
+                    translated = entry.Translated
+                };
             }
             else
             {
@@ -1262,7 +1270,11 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private static string SerializeTableProvider(TrackedLocalizable tableProvider)
         {
-            return ""; // tableProvider.GetAnchor<IDialogueTableProvider>().GetLocalized(tableProvider.IndexInComponent).original;
+            // AT: cursed Unity editor crashing bug if I call any interface function,
+            // so instead just rewrite the function here...
+            // For some reason running during play mode is fine, but non-play mode won't
+            // allow it. Probably some Unity Mono issue...
+            return tableProvider.GetAnchor<IDialogueTableProvider>().TranslationTable[tableProvider.IndexInComponent].original;
         }
     }
 }

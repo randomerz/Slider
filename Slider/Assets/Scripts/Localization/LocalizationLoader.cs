@@ -52,7 +52,7 @@ public class LocalizationLoader : Singleton<LocalizationLoader>
         {
             LocalizationFile.PrintParserError(errorScene, sceneLocalizationFilePath);
         }
-        return sceneLocalizationFile;
+        return sceneLocalizationFile ?? localeConfigFile; // AT: this is purely for stylistics like non-pixel in dev scenes, won't be hit since all build scenes will have CSV
     }
     
     private void RefreshLocalization(Scene scene)
