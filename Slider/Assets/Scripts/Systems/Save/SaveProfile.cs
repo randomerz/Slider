@@ -312,6 +312,11 @@ public class SaveProfile
     public string GetStringIgnoreLocalization(string name, string defaultValue = null)
         => GetString(name, defaultValue).original;
 
+    public void SetStringWithoutLocalization(string name, string value)
+    {
+        strings[name] = value;
+    }
+    
     public void SetString(string name, LocalizationPair pair) => SetString(name, pair.original, pair.translated);
 
     public void SetString(string name, string value, string localized)

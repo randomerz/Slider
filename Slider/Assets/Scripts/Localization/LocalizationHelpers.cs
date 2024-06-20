@@ -11,7 +11,7 @@ namespace Localization
 {
     public struct LocalizationPair
     {
-        public static implicit operator LocalizationPair(string input)
+        public static explicit operator LocalizationPair(string input)
         {
             return new LocalizationPair
             {
@@ -19,6 +19,7 @@ namespace Localization
                 translated = input
             };
         }
+        
         //
         // public static implicit operator LocalizationPair((string, string) input)
         // {

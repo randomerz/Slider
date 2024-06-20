@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
 
-public class JungleRecipeBookHints : MonoBehaviour 
+public class JungleRecipeBookHints : MonoBehaviour, IDialogueTableProvider
 {
     private Coroutine hintCoroutine;
 
@@ -14,7 +16,7 @@ public class JungleRecipeBookHints : MonoBehaviour
     private const string JUNGLE_UI_HINT_TEXT = "jungleUIHintText";
 
     private const string HINT_CONTROLS = "You can move the screen left/right to view different recipes.";
-    private readonly string[] HINTS_GENERAL = {
+    private static readonly string[] HINTS_GENERAL = {
         "The hints will fill up as you create more shapes.",
         "The business stuff? Oh don't worry about it, it's all made up anyway.",
         "Hope this helps!",
@@ -23,6 +25,23 @@ public class JungleRecipeBookHints : MonoBehaviour
     private bool hasScreenChanged;
     private bool hasControlsHintBeenUsed;
     private bool[] hasGeneralHintBeenUsed;
+    
+    #region localization
+
+    enum RecipeHints
+    {
+        General,
+        Controls,
+    }
+
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<RecipeHints, string[]>
+        {
+            { RecipeHints.General, HINTS_GENERAL },
+            { RecipeHints.Controls, new[] { HINT_CONTROLS }}
+        });
+
+    #endregion
     
     private void Awake() 
     {
@@ -79,7 +98,7 @@ public class JungleRecipeBookHints : MonoBehaviour
                 }
             }
             
-            DisplayAndTriggerDialogue(HINT_CONTROLS);
+            DisplayAndTriggerDialogue(this.GetLocalized(RecipeHints.Controls));
             hasControlsHintBeenUsed = true;
             hintCoroutine = null;
             yield break;
@@ -95,12 +114,12 @@ public class JungleRecipeBookHints : MonoBehaviour
 
         yield return new WaitForSeconds(HINT_DELAY);
 
-        DisplayAndTriggerDialogue(HINTS_GENERAL[hintIndex]);
+        DisplayAndTriggerDialogue(this.GetLocalized(RecipeHints.General, hintIndex));
         hasGeneralHintBeenUsed[hintIndex] = true;
         hintCoroutine = null;
     }
 
-    private void DisplayAndTriggerDialogue(string message) 
+    private void DisplayAndTriggerDialogue(LocalizationPair message) 
     {
         if (SaveSystem.Current.GetString(JUNGLE_UI_HINT_TEXT) == message)
         {

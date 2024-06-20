@@ -89,7 +89,7 @@ public class TavernJukebox : MonoBehaviour, ISavable
 
     private void SetSong(int index)
     {
-        SaveSystem.Current.SetString("oceanTavernJukeboxString", $"{index + 1} / {NUMBER_OF_SONGS}");
+        SaveSystem.Current.SetStringWithoutLocalization("oceanTavernJukeboxString", $"{index + 1} / {NUMBER_OF_SONGS}");
         npc.TypeCurrentDialogue();
         AudioManager.SetMusicParameter("Ocean Tavern", "OceanTrackNumber", index);
 

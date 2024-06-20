@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
 /// 
@@ -9,7 +10,7 @@ using UnityEngine;
 /// - Make sure he tries to approach you if he is on a different slider than you
 /// - Chirps
 /// - Work in Desert + Factory scenes
-public class ChadFollowPlayer : MonoBehaviour
+public class ChadFollowPlayer : MonoBehaviour, IDialogueTableProvider
 {
     public enum FollowState
     {
@@ -38,11 +39,26 @@ public class ChadFollowPlayer : MonoBehaviour
     public Collider2D npcTrigger;
     public Transform walkEnd;
 
+    #region MyRegion
+
+    enum ChadFollowPlayerStrings
+    {
+        Onwards
+    }
+
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<ChadFollowPlayerStrings, string>
+        {
+            { ChadFollowPlayerStrings.Onwards, "Onwards!" }
+        });
+
+    #endregion
+
     private void Start() 
     {
         playerTransform = Player.GetInstance().transform;
 
-        SaveSystem.Current.SetString(CHIRP_SAVE_STRING, "Onwards!");
+        SaveSystem.Current.SetString(CHIRP_SAVE_STRING, this.GetLocalized(ChadFollowPlayerStrings.Onwards));
 
         // for dev
         if (!PlayerInventory.Contains("Boots", Area.Jungle))

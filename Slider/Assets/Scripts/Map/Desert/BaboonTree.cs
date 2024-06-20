@@ -165,7 +165,7 @@ public class BaboonTree : MonoBehaviour, IDialogueTableProvider
         }
 
         SaveSystem.Current.SetString("desertRemainingShakeDirection",
-            didHorizontal ? this.GetLocalizedSingle(BaboonStrings.Vertical) : this.GetLocalizedSingle(BaboonStrings.Horizontal)
+            didHorizontal ? this.GetLocalized(BaboonStrings.Vertical) : this.GetLocalized(BaboonStrings.Horizontal)
         );
 
         if (isWalking && !isFalling)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
@@ -288,7 +289,7 @@ public class RatAI : MonoBehaviour, ISavable
 
     public void Save()
     {
-        SaveSystem.Current.SetString("cavesRatTiles", SetToString(visitedTiles));
+        SaveSystem.Current.SetStringWithoutLocalization("cavesRatTiles", SetToString(visitedTiles));
     }
 
     public void Load(SaveProfile profile)

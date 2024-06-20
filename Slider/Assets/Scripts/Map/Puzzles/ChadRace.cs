@@ -177,8 +177,8 @@ public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
                     {
                         DisplayAndTriggerDialogue(
                             this.GetLocalized(State.Running, 0)
-                            + numTimesChadWon.ToString()
-                            + this.GetLocalizedSingle(State.Running, 1));
+                            + (LocalizationPair) numTimesChadWon.ToString()
+                            + this.GetLocalized(State.Running, 1));
                     }
                     else
                     {

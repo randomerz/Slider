@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Localization;
 using UnityEngine;
 
-public class GemManager : MonoBehaviour, ISavable
+public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
 {
     private const string NUM_REMAINING_GEMS_STRING = "magiTechNumRemainingGems";
     private const string GEM_FUEL_HINT_STRING = "MagitechGemFuelHint";
@@ -14,17 +15,87 @@ public class GemManager : MonoBehaviour, ISavable
 
     public List<GameObject> sprites = new();
     public List<Transform> poofTransforms = new();
+
     [Tooltip("Put in world progression order (Village->Caves)")]
     public List<Item> gemItems = new();
+
     public Item oceanDuplicateItem;
 
     private bool hasGemTransporter;
     public bool HasGemTransporter => hasGemTransporter;
-    
+
     public PipeLiquid pipeLiquid;
     public Animator animator;
 
-    private void Start() 
+    #region localization
+
+    enum GemStrings
+    {
+        Village,
+        Caves,
+        Ocean,
+        Jungle,
+        Desert,
+        Factory,
+        Mountain,
+        Military,
+        Magitech,
+
+        SpecificDefault,
+        SpecificVillage,
+        SpecificCaves,
+        SpecificOcean,
+        SpecificJungle,
+        SpecificDesert,
+        SpecificFactory,
+        SpecificMountain,
+        SpecificMilitary,
+        SpecificMagitech,
+        CombinedBeginning,
+        CombinedEnding,
+    }
+
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<GemStrings, string>
+        {
+            { GemStrings.Village, "Village" },
+            { GemStrings.Caves, "Caves" },
+            { GemStrings.Ocean, "Ocean" },
+            { GemStrings.Jungle, "Jungle" },
+            { GemStrings.Desert, "Desert" },
+            { GemStrings.Factory, "Factory" },
+            { GemStrings.Mountain, "Mountain" },
+            { GemStrings.Military, "Military" },
+            { GemStrings.Magitech, "Magitech" },
+
+            {
+                GemStrings.SpecificDefault,
+                "Uh oh, something went wrong! Make sure to get all the gems and let a dev know."
+            },
+            { GemStrings.SpecificVillage, "I heard the Village Gem was spotted near the laser." },
+            {
+                GemStrings.SpecificCaves,
+                "You don't have the Cave Gem yet? It was on one of the large rocks in the past."
+            },
+            { GemStrings.SpecificOcean, "The Ocean gem..? Uh... something is wrong." },
+            { GemStrings.SpecificJungle, "The Jungle gem was owned by the same wizard who made this recipe!" },
+            { GemStrings.SpecificDesert, "I heard the Desert gem was lost in the ancient temple in the Impact Zone." },
+            { GemStrings.SpecificFactory, "The Factory gem should be in the museum." },
+            { GemStrings.SpecificMountain, "The Mountain gem should be in the museum." },
+            {
+                GemStrings.SpecificMilitary, "I heard the Military gem was spotted behind one of the rocks in the past."
+            },
+            {
+                GemStrings.SpecificMagitech,
+                "The magitech gem... is on the tile I haven't given you! Something went wrong!"
+            },
+            { GemStrings.CombinedBeginning, "Hmmm... we're missing multiple gems. Can you get me: " },
+            { GemStrings.CombinedEnding, "?" },
+        });
+
+    #endregion
+
+    private void Start()
     {
         oceanDuplicateItem.gameObject.SetActive(false);
         if (SaveSystem.Current.GetBool("MagiTechRemovedOceanGemAsExample"))
@@ -79,10 +150,10 @@ public class GemManager : MonoBehaviour, ISavable
         BuildSpriteDictionary();
         UpdateGemSprites();
 
-        if(profile.GetBool("MagitechHasGemTransporter"))
+        if (profile.GetBool("MagitechHasGemTransporter"))
             EnableGemTransporter();
-        
-        if(profile.GetBool("MagitechGFuelFull"))
+
+        if (profile.GetBool("MagitechGFuelFull"))
             EnableGFuel(true);
         else if (profile.GetBool("MagitechGFuelFilling"))
             EnableGFuel(false);
@@ -123,6 +194,7 @@ public class GemManager : MonoBehaviour, ISavable
                 return;
             }
         }
+
         c.SetSpec(true);
     }
 
@@ -133,9 +205,9 @@ public class GemManager : MonoBehaviour, ISavable
 
     public void BuildSpriteDictionary()
     {
-        for(int i = 1; i <= sprites.Count; i++)
+        for (int i = 1; i <= sprites.Count; i++)
         {
-            GameObject sprite = sprites[i-1];
+            GameObject sprite = sprites[i - 1];
             gemSprites.Add((Area)(i), sprite);
         }
     }
@@ -148,6 +220,7 @@ public class GemManager : MonoBehaviour, ISavable
             AudioManager.Play("Artifact Error");
             return;
         }
+
         if (Enum.TryParse(item.itemName, out Area itemNameAsEnum))
         {
             gems[itemNameAsEnum] = true;
@@ -166,6 +239,7 @@ public class GemManager : MonoBehaviour, ISavable
         {
             AudioManager.Play("Artifact Error");
         }
+
         UpdateGemSprites();
     }
 
@@ -175,6 +249,7 @@ public class GemManager : MonoBehaviour, ISavable
         {
             gems[key] = true;
         }
+
         UpdateGemSprites();
         UpdateNumRemainingGems();
         UpdateGemHint();
@@ -199,6 +274,7 @@ public class GemManager : MonoBehaviour, ISavable
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)Area.Factory - 1].position);
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)Area.Mountain - 1].position);
         }
+
         Save();
         UpdateGemSprites();
     }
@@ -217,27 +293,29 @@ public class GemManager : MonoBehaviour, ISavable
             gems[area] = false;
             ParticleManager.SpawnParticle(ParticleType.SmokePoof, poofTransforms[(int)area - 1].position);
         }
+
         UpdateGemSprites();
     }
 
     public void UpdateGemSprites()
     {
-        if(gemSprites == null || gemSprites.Keys.Count != 9)
+        if (gemSprites == null || gemSprites.Keys.Count != 9)
             BuildSpriteDictionary();
 
         UpdateNumRemainingGems();
         UpdateGemHint();
 
-        foreach(Area a in gems.Keys)
+        foreach (Area a in gems.Keys)
         {
             gemSprites[a].SetActive(gems[a]);
         }
+
         if (HasAllGems())
         {
             animator.Play("Active");
         }
     }
-    
+
     private void UpdateNumRemainingGems()
     {
         int num = 0;
@@ -250,7 +328,7 @@ public class GemManager : MonoBehaviour, ISavable
             }
         }
 
-        SaveSystem.Current.SetString(NUM_REMAINING_GEMS_STRING, num.ToString());
+        SaveSystem.Current.SetStringWithoutLocalization(NUM_REMAINING_GEMS_STRING, num.ToString());
     }
 
     private bool HasAllGems()
@@ -262,13 +340,27 @@ public class GemManager : MonoBehaviour, ISavable
                 return false;
             }
         }
+
         return true;
     }
 
+    private GemStrings AreaLocalizationRemap(Area a) => a switch {
+        Area.Village => GemStrings.Village,
+        Area.Caves => GemStrings.Caves,
+        Area.Ocean => GemStrings.Ocean,
+        Area.Jungle => GemStrings.Jungle,
+        Area.Desert => GemStrings.Desert,
+        Area.Factory => GemStrings.Factory,
+        Area.Mountain => GemStrings.Mountain,
+        Area.Military => GemStrings.Military,
+        Area.MagiTech => GemStrings.Magitech,
+        _ => GemStrings.SpecificDefault
+    };
+
     public void UpdateGemHint()
     {
-        string specific = "Uh oh, something went wrong! Make sure to get all the gems and let a dev know.";
-        List<string> all = new();
+        LocalizationPair specific = this.GetLocalized(GemStrings.SpecificDefault);
+        List<LocalizationPair> all = new();
         int num = 0;
 
         foreach (Area a in gems.Keys)
@@ -282,42 +374,44 @@ public class GemManager : MonoBehaviour, ISavable
             {
                 num += 1;
 
-                all.Add(a.ToString());
+                all.Add(this.GetLocalized(AreaLocalizationRemap(a)));
 
                 switch (a)
                 {
                     case Area.Village:
-                        specific = "I heard the Village Gem was spotted near the laser.";
+                        specific = this.GetLocalized(GemStrings.SpecificVillage);
                         break;
                     case Area.Caves:
-                        specific = "You don't have the Cave Gem yet? It was on one of the large rocks in the past.";
+                        specific = this.GetLocalized(GemStrings.SpecificCaves);
                         break;
                     case Area.Ocean:
-                        specific = "The Ocean gem..? Uh... something is wrong.";
+                        specific = this.GetLocalized(GemStrings.SpecificOcean);
                         break;
                     case Area.Jungle:
-                        specific = "The Jungle gem was owned by the same wizard who made this recipe!";
+                        specific = this.GetLocalized(GemStrings.SpecificJungle);
                         break;
                     case Area.Desert:
-                        specific = "I heard the Desert gem was lost in the ancient temple in the Impact Zone.";
+                        specific = this.GetLocalized(GemStrings.SpecificDesert);
                         break;
                     case Area.Factory:
-                        specific = "The Factory gem should be in the museum.";
+                        specific = this.GetLocalized(GemStrings.SpecificFactory);
                         break;
                     case Area.Mountain:
-                        specific = "The Mountain gem should be in the museum.";
+                        specific = this.GetLocalized(GemStrings.SpecificMountain);
                         break;
                     case Area.Military:
-                        specific = "I heard the Military gem was spotted behind one of the rocks in the past.";
+                        specific = this.GetLocalized(GemStrings.SpecificMilitary);
                         break;
                     case Area.MagiTech:
-                        specific = "The magitech gem... is on the tile I haven't given you! Something went wrong!";
+                        specific = this.GetLocalized(GemStrings.SpecificMagitech);
                         break;
                 };
             }
         }
 
-        string combined = $"Hmmm... we're missing multiple gems. Can you get me: {String.Join(", ", all)}?";
+        LocalizationPair combined = this.GetLocalized(GemStrings.CombinedBeginning) 
+                                    + LocalizationPair.Join(", ", all) 
+                                    + this.GetLocalized(GemStrings.CombinedEnding);
 
         SaveSystem.Current.SetString(GEM_FUEL_HINT_STRING, num >= 2 ? combined : specific);
     }
