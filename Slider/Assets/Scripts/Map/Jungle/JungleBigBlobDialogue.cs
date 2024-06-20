@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
 public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
@@ -50,8 +51,7 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
         ShapeGenericMessagePunctuation
     }
     
-    public Dictionary<string, (string original, string translated)> TranslationTable { get; }
-    private Dictionary<string, (string original, string translated)> _translationTable =
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } =
         IDialogueTableProvider.InitializeTable(
             new Dictionary<ShapeStrings, string>
             {
@@ -107,7 +107,7 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
             return;
         }
 
-        string message = ShapeNameToSpecialMessage(item.itemName);
+        LocalizationPair? message = ShapeNameToSpecialMessage(item.itemName);
         if (message != null)
         {
             npc.Conds[^1].dialogueChain[0].animationOnStart = ShapeNameToSpecialAnimation(item.itemName);
@@ -118,40 +118,44 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
             npc.Conds[^1].dialogueChain[0].animationOnStart = "Idle";
         }
 
-        SaveSystem.Current.SetString(DIALOGUE_SAVE_STRING, message);
+        SaveSystem.Current.SetString(DIALOGUE_SAVE_STRING, message ?? new LocalizationPair
+        {
+            original = "",
+            translated = ""
+        });
         c.SetSpec(true);
     }
 
-    private string ShapeNameToSpecialMessage(string shapeName) => shapeName switch
+    private LocalizationPair? ShapeNameToSpecialMessage(string shapeName) => shapeName switch
     {
         // "Bandage" => "",
-        "Bread" => this.GetLocalizedSingle(ShapeStrings.BreadSpecialMsg),
+        "Bread" => this.GetLocalized(ShapeStrings.BreadSpecialMsg),
         // "Camera" => "",
         // "Chest" => "",
-        "Circle" =>this.GetLocalizedSingle(ShapeStrings.CircleSpecialMsg),
+        "Circle" =>this.GetLocalized(ShapeStrings.CircleSpecialMsg),
         // "Crate" => "",
-        "Crutch" => this.GetLocalizedSingle(ShapeStrings.CrutchSpecialMsg),
+        "Crutch" => this.GetLocalized(ShapeStrings.CrutchSpecialMsg),
         // "Female" => "",
-        "Fish" => this.GetLocalizedSingle(ShapeStrings.FishSpecialMsg),
-        "FishBowl" => this.GetLocalizedSingle(ShapeStrings.FishBowlSpecialMsg),
-        "Flag" => this.GetLocalizedSingle(ShapeStrings.FlagSpecialMsg),
-        "Glasses" => this.GetLocalizedSingle(ShapeStrings.GlassesSpecialMsg),
-        "Heart" => this.GetLocalizedSingle(ShapeStrings.HeartSpecialMsg),
+        "Fish" => this.GetLocalized(ShapeStrings.FishSpecialMsg),
+        "FishBowl" => this.GetLocalized(ShapeStrings.FishBowlSpecialMsg),
+        "Flag" => this.GetLocalized(ShapeStrings.FlagSpecialMsg),
+        "Glasses" => this.GetLocalized(ShapeStrings.GlassesSpecialMsg),
+        "Heart" => this.GetLocalized(ShapeStrings.HeartSpecialMsg),
         // "House" => "",
-        "Icecream" => this.GetLocalizedSingle(ShapeStrings.IcecreamSpecialMsg),
-        "Line" => this.GetLocalizedSingle(ShapeStrings.LineSpecialMsg),
+        "Icecream" => this.GetLocalized(ShapeStrings.IcecreamSpecialMsg),
+        "Line" => this.GetLocalized(ShapeStrings.LineSpecialMsg),
         // "Lolipop" => "",
         // "Male" => "",
-        "Minecart" => this.GetLocalizedSingle(ShapeStrings.MinecartSpecialMsg),
+        "Minecart" => this.GetLocalized(ShapeStrings.MinecartSpecialMsg),
         // "Mushroom" => "",
-        "Pickaxe" => this.GetLocalizedSingle(ShapeStrings.PIckaxeSpecialMsg),
-        "Plus" => this.GetLocalizedSingle(ShapeStrings.PlusSpecialMsg),
+        "Pickaxe" => this.GetLocalized(ShapeStrings.PIckaxeSpecialMsg),
+        "Plus" => this.GetLocalized(ShapeStrings.PlusSpecialMsg),
         // "Popsicle" => "",
-        "Rail" => this.GetLocalizedSingle(ShapeStrings.RailSpecialMsg),
+        "Rail" => this.GetLocalized(ShapeStrings.RailSpecialMsg),
         // "SemiCircle" => "",
         // "Ship" => "",
-        "Square" => this.GetLocalizedSingle(ShapeStrings.SquareSpecialMsg),
-        "Triangle" => this.GetLocalizedSingle(ShapeStrings.TriangleSpecialMsg),
+        "Square" => this.GetLocalized(ShapeStrings.SquareSpecialMsg),
+        "Triangle" => this.GetLocalized(ShapeStrings.TriangleSpecialMsg),
         _ => null
     };
 
@@ -189,16 +193,20 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
         _ => "Idle"
     };
 
-    private string ShapeNameToGenericMessage(string shapeName)
+    private LocalizationPair ShapeNameToGenericMessage(string shapeName)
     {
-        string shapeNameLocalized = shapeName; // fallback just use english...
+        var shapeNameLocalized = new LocalizationPair
+        {
+            original = shapeName,
+            translated = shapeName
+        }; // fallback just use english...
         if (Enum.TryParse<ShapeStrings>(shapeName+"Name", out var shapeNameEnum))
         {
-            shapeNameLocalized = this.GetLocalizedSingle(shapeNameEnum);
+            shapeNameLocalized = this.GetLocalized(shapeNameEnum);
         }
-        return this.GetLocalizedSingle(ShapeStrings.ShapeGenericMessageBeginning)
+        return this.GetLocalized(ShapeStrings.ShapeGenericMessageBeginning)
                + shapeNameLocalized
-               + this.GetLocalizedSingle(ShapeStrings.ShapeGenericMessagePunctuation);
+               + this.GetLocalized(ShapeStrings.ShapeGenericMessagePunctuation);
         // return $"Woah! Is that a {shapeName}?!";
     }
 

@@ -9,12 +9,16 @@ using FuckCSharpWhyDoIHaveToRelayEverything = DialogueTableProviderExtensions;
 
 public interface IDialogueTableProvider
 {
-    public Dictionary<string, (string original, string translated)> TranslationTable { get; }
+    public Dictionary<string, LocalizationPair> TranslationTable { get; }
 
-    protected static Dictionary<string, (string original, string translated)> InitializeTable(
+    protected static Dictionary<string, LocalizationPair> InitializeTable(
         Dictionary<string, string> input)
     {
-        return input.ToDictionary(kv => kv.Key, kv=> (kv.Value, null as string));
+        return input.ToDictionary(kv => kv.Key, kv => new LocalizationPair()
+        {
+            original = kv.Value,
+            translated = null
+        });
     }
 
     /// <summary>
@@ -23,9 +27,13 @@ public interface IDialogueTableProvider
     /// </summary>
     /// <typeparam name="T">Enum type to be used by the implementer</typeparam>
     /// <returns></returns>
-    protected static Dictionary<string, (string original, string translated)> InitializeTable<T>(Dictionary<T, string> input) where T: Enum
+    protected static Dictionary<string, LocalizationPair> InitializeTable<T>(Dictionary<T, string> input) where T: Enum
     {
-        return input.ToDictionary(kv => LocalizationKey(kv.Key) , kv => (kv.Value, null as string) );
+        return input.ToDictionary(kv => LocalizationKey(kv.Key) , kv => new LocalizationPair
+        {
+            original = kv.Value,
+            translated = null
+        } );
     }
     
     /// <summary>
@@ -35,11 +43,15 @@ public interface IDialogueTableProvider
     /// <typeparam name="T">Enum type to be used by the implementer</typeparam>
     /// <typeparam name="V">Any enumerable string container, such as array, list, etc.</typeparam>
     /// <returns></returns>
-    protected static Dictionary<string, (string original, string translated)> InitializeTable<T, V>(Dictionary<T, V> input) where T: Enum where V: IEnumerable<string>
+    protected static Dictionary<string, LocalizationPair> InitializeTable<T, V>(Dictionary<T, V> input) where T: Enum where V: IEnumerable<string>
     {
         return input
             .SelectMany(kv => kv.Value.Select((str, idx) => new KeyValuePair<string, string>(LocalizationKey(kv.Key, idx), str)))
-            .ToDictionary(kv => kv.Key, kv => (kv.Value, null as string) );
+            .ToDictionary(kv => kv.Key, kv => new LocalizationPair
+            {
+                original = kv.Value,
+                translated = null
+            });
     }
     
     /// <summary>
@@ -61,7 +73,7 @@ public interface IDialogueTableProvider
     /// <param name="i">Integer index in case enum value is mapped to multiple consecutive entries</param>
     /// <typeparam name="T">Enum type to be used by the implementer</typeparam>
     /// <returns>Pair of (original, translated) strings</returns>
-    public (string original, string translated) GetLocalized<T>(T key, int i = 0) where T: Enum
+    public LocalizationPair GetLocalized<T>(T key, int i = 0) where T: Enum
     {
         string index = LocalizationKey(key, i);
         return GetLocalized(index);
@@ -72,20 +84,28 @@ public interface IDialogueTableProvider
     /// </summary>
     /// <param name="formattedIndex">Serialized result of LocalizationKey, please do not come up with your own string to put here :)</param>
     /// <returns>Pair of (original, translated) strings</returns>
-    public (string original, string translated) GetLocalized(string formattedIndex)
+    public LocalizationPair GetLocalized(string formattedIndex)
     {
         if (TranslationTable.TryGetValue(formattedIndex, out var val))
         {
             return val;
         }
-        return ("ERROR: NOT FOUND", null);
+
+        return new LocalizationPair
+        {
+            original = "ERROR: NOT FOUND",
+            translated = null
+        };
     }
     
     public bool LocalizeEntry(string key, string translated)
     {
         if (TranslationTable.ContainsKey(key))
         {
-            TranslationTable[key] = (TranslationTable[key].original, translated);
+            TranslationTable[key] = new LocalizationPair {
+                original = TranslationTable[key].original,
+                translated = translated
+            };
             return true;
         }
     
@@ -102,14 +122,14 @@ public static class DialogueTableProviderExtensions
     /// <param name="i">Integer index in case enum value is mapped to multiple consecutive entries</param>
     /// <typeparam name="T">Enum type to be used by the implementer</typeparam>
     /// <returns>Pair of (original, translated) strings</returns>
-    public static (string original, string translated) GetLocalized<I, T>(this I self,T key, int i = 0) where I: MonoBehaviour, IDialogueTableProvider where T : Enum
+    public static LocalizationPair GetLocalized<I, T>(this I self,T key, int i = 0) where I: MonoBehaviour, IDialogueTableProvider where T : Enum
     {
         return self.GetLocalized(key, i);
     }
     
     public static string GetLocalizedSingle<I, T>(this I self,T key, int i = 0) where I: MonoBehaviour, IDialogueTableProvider where T : Enum
     {
-        var (original, translated) = self.GetLocalized(key, i);
-        return translated ?? original;
+        var pair = self.GetLocalized(key, i);
+        return pair.translated ?? pair.original;
     }
 }

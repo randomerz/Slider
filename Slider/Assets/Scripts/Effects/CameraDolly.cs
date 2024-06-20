@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using Localization;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
@@ -30,9 +31,7 @@ public class CameraDolly : MonoBehaviour, IDialogueTableProvider
     {
         Default
     }
-    public Dictionary<string, (string original, string translated)> TranslationTable { get; }
-
-    private Dictionary<string, (string original, string translated)> _translationTable =
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } =
         IDialogueTableProvider.InitializeTable(
             new Dictionary<SkipType, string>
             {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using SliderVocalization;
 using UnityEngine;
 using UnityEngine.UI;
@@ -57,9 +58,7 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
         Space,
     }
 
-    public Dictionary<string, (string original, string translated)> TranslationTable => _translationTable;
-
-    private Dictionary<string, (string original, string translated)> _translationTable =
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } =
         IDialogueTableProvider.InitializeTable(new Dictionary<ShopDialogueCode, string[]>
         {
             {
@@ -361,11 +360,11 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
         public TKSprite tkSprite;
         public Action onFinishAndAction; // this is for functions to call when done typing + press e, mostly for dialogue panel
 
-        public ShopDialogue(Action onStart, (string, string) text, TKSprite tkSprite, Action onFinishAndAction)
+        public ShopDialogue(Action onStart, LocalizationPair text, TKSprite tkSprite, Action onFinishAndAction)
         {
             this.onStart = onStart;
-            this.text = text.Item1;
-            this.textTranslated = text.Item2;
+            this.text = text.original;
+            this.textTranslated = text.translated;
             this.tkSprite = tkSprite;
             this.onFinishAndAction = onFinishAndAction;
         }
@@ -451,7 +450,7 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
         // shrink the font to 1/3 of original size due to a "Tiny" font being used for English
         if (dialogue.textTranslated != null)
         {
-            toVocalize = currentTyperText.ReplaceAndStripRichText(dialogue.text);
+            toVocalize = currentTyperText.ReplaceAndStripRichText(dialogue.text, true);
             
             // AT: not sure if do the same replacement here...
             // localizedMessage = localizedMessage.Replace('‘', '\'').Replace('’', '\'').Replace("…", "...");

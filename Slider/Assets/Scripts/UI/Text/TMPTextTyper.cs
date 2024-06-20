@@ -305,9 +305,9 @@ public class TMPTextTyper : MonoBehaviour
         TextMeshPro.color = new Color(TextMeshPro.color.r, TextMeshPro.color.g, TextMeshPro.color.b, alpha);
     }
 
-    public string ReplaceAndStripRichText(string text)
+    public string ReplaceAndStripRichText(string text, bool forceEnglishText)
     {
-        return m_tmpSpecialText.ReplaceAndStripRichText(text);
+        return m_tmpSpecialText.ReplaceAndStripRichText(text, forceEnglishText);
     }
     
     /// <summary>

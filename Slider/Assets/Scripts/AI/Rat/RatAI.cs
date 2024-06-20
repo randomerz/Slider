@@ -293,6 +293,6 @@ public class RatAI : MonoBehaviour, ISavable
 
     public void Load(SaveProfile profile)
     {
-        visitedTiles = StringToSet(profile.GetString("cavesRatTiles"));
+        visitedTiles = StringToSet(profile.GetStringIgnoreLocalization("cavesRatTiles"));
     }
 }

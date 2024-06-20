@@ -9,6 +9,66 @@ using UnityEngine.SceneManagement;
 
 namespace Localization
 {
+    public struct LocalizationPair
+    {
+        public static implicit operator LocalizationPair(string input)
+        {
+            return new LocalizationPair
+            {
+                original = input,
+                translated = input
+            };
+        }
+        //
+        // public static implicit operator LocalizationPair((string, string) input)
+        // {
+        //     return new LocalizationPair
+        //     {
+        //         original = input.Item1,
+        //         translated = input.Item2
+        //     };
+        // }
+
+        public static implicit operator (string, string)(LocalizationPair self)
+        {
+            return (self.original, self.translated);
+        }
+
+        public string original;
+        public string translated;
+
+        public static LocalizationPair operator +(LocalizationPair a, LocalizationPair b)
+            => new LocalizationPair
+            {
+                original = a.original + b.original,
+                translated = a.translated + b.translated
+            };
+
+        public static bool operator ==(LocalizationPair a, LocalizationPair b) => a.original == b.original;
+
+        public static bool operator !=(LocalizationPair a, LocalizationPair b) => !(a == b);
+
+        public static LocalizationPair Join(string separator, IEnumerable<LocalizationPair> pairs)
+        {
+            var localizationPairs = pairs as LocalizationPair[] ?? pairs.ToArray();
+            return new LocalizationPair
+            {
+                original = string.Join(separator, localizationPairs.Select(pair => pair.original)),
+                translated = string.Join(separator, localizationPairs.Select(pair => pair.translated))
+            };
+        }
+        
+        public static LocalizationPair Join(char separator, IEnumerable<LocalizationPair> pairs)
+        {
+            var localizationPairs = pairs as LocalizationPair[] ?? pairs.ToArray();
+            return new LocalizationPair
+            {
+                original = string.Join(separator, localizationPairs.Select(pair => pair.original)),
+                translated = string.Join(separator, localizationPairs.Select(pair => pair.translated))
+            };
+        }
+    }
+    
     internal abstract class Localizable
     {
         private string[] componentPath;
@@ -1202,7 +1262,7 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private static string SerializeTableProvider(TrackedLocalizable tableProvider)
         {
-            return tableProvider.GetAnchor<IDialogueTableProvider>().GetLocalized(tableProvider.IndexInComponent).original;
+            return ""; // tableProvider.GetAnchor<IDialogueTableProvider>().GetLocalized(tableProvider.IndexInComponent).original;
         }
     }
 }

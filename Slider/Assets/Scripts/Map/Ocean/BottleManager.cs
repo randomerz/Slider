@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
 public class BottleManager : MonoBehaviour, ISavable, IDialogueTableProvider
@@ -41,9 +42,7 @@ public class BottleManager : MonoBehaviour, ISavable, IDialogueTableProvider
         Volcano,
         SpaceEmpty
     }
-    public Dictionary<string, (string original, string translated)> TranslationTable { get; }
-
-    private Dictionary<string, (string original, string translated)> _translationTable =
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } =
         IDialogueTableProvider.InitializeTable(
             new Dictionary<RomeoReason, string>
             {
@@ -90,31 +89,31 @@ public class BottleManager : MonoBehaviour, ISavable, IDialogueTableProvider
 
     private void UpdateRomeoReason()
     {
-        string reason = this.GetLocalizedSingle(RomeoReason.Default);
+        var reason = this.GetLocalized(RomeoReason.Default);
         string gridString = SGrid.GetGridString();
         if(SGrid.Current.GetNumTilesCollected() < 4)
         {
-            reason = this.GetLocalizedSingle(RomeoReason.NotEnoughTiles);
+            reason = this.GetLocalized(RomeoReason.NotEnoughTiles);
         }
         else if (gridString[0] == '2' || gridString[0] == '8')
         {
-            reason = this.GetLocalizedSingle(RomeoReason.Land);
+            reason = this.GetLocalized(RomeoReason.Land);
         }
         else if (gridString[0] == '4')
         {
-            reason = this.GetLocalizedSingle(RomeoReason.Shipwreck);
+            reason = this.GetLocalized(RomeoReason.Shipwreck);
         }
         else if (gridString[0] == '5')
         {
-            reason = this.GetLocalizedSingle(RomeoReason.Island);
+            reason = this.GetLocalized(RomeoReason.Island);
         }
         else if (gridString[0] == '9')
         {
-            reason = this.GetLocalizedSingle(RomeoReason.Volcano);
+            reason = this.GetLocalized(RomeoReason.Volcano);
         }
         else if (gridString[0] == '.')
         {
-            reason = this.GetLocalizedSingle(RomeoReason.SpaceEmpty);
+            reason = this.GetLocalized(RomeoReason.SpaceEmpty);
         }
 
         SaveSystem.Current.SetString("oceanRomeoReason", reason);

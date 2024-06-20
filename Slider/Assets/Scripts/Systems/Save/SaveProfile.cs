@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Localization;
 
 public class SaveProfile
 {
@@ -22,6 +23,8 @@ public class SaveProfile
     private Dictionary<string, float> floats = new Dictionary<string, float>();
     public AchievementStatistic[] AchievementData { get; set; }
 
+    public static string LocalizedStringPostfix => "_" + LocalizationLoader.CurrentLocale;
+    
     // Cached stuff
     // nothing bc i dont know what to do bc scenes exist
 
@@ -290,14 +293,31 @@ public class SaveProfile
     /// </summary>
     /// <param name="name">The name of the string in the dictionary. Generally, try to follow: "areaBooleanName"</param>
     /// <returns></returns>
-    public string GetString(string name, string defaultValue = null)
+    public LocalizationPair GetString(string name, string defaultValue = null)
     {
-        return strings.GetValueOrDefault(name, defaultValue == null ? name : defaultValue);
+        var orig = strings.GetValueOrDefault(name, defaultValue == null ? name : defaultValue);
+        var translated = strings.GetValueOrDefault(name + LocalizedStringPostfix, orig);
+        return new LocalizationPair
+        {
+            original = orig,
+            translated = translated
+        };
     }
 
-    public void SetString(string name, string value)
+    /// <summary>
+    /// Returns "name" if strings dictionary doesn't contain "name" in keys.
+    /// </summary>
+    /// <param name="name">The name of the string in the dictionary. Generally, try to follow: "areaBooleanName"</param>
+    /// <returns></returns>
+    public string GetStringIgnoreLocalization(string name, string defaultValue = null)
+        => GetString(name, defaultValue).original;
+
+    public void SetString(string name, LocalizationPair pair) => SetString(name, pair.original, pair.translated);
+
+    public void SetString(string name, string value, string localized)
     {
         strings[name] = value;
+        strings[name + LocalizedStringPostfix] = localized;
     }
 
     public int GetInt(string name, int defaultValue = 0)

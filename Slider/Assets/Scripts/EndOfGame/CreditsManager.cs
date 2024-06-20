@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
@@ -38,9 +39,7 @@ public class CreditsManager : MonoBehaviour, IDialogueTableProvider
     {
         Default
     }
-    public Dictionary<string, (string original, string translated)> TranslationTable { get; }
-
-    private Dictionary<string, (string original, string translated)> _translationTable =
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = 
         IDialogueTableProvider.InitializeTable(
             new Dictionary<SkipType, string>
             {
