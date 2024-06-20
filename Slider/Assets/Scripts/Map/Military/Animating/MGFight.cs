@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class MGFight : IMGAnimatable
 {
-    public MilitaryUnit unit;
     public MilitaryUnit unitOther;
 
     public const float FIGHT_DURATION = 3;
@@ -29,13 +28,19 @@ public class MGFight : IMGAnimatable
             go.transform.position = MilitaryUnit.GridPositionToWorldPosition(unitOther.GridPosition);
         }
 
-        unit.OnDeath.AddListener(() => GameObject.Destroy(go));
-        unitOther.OnDeath.AddListener(() => GameObject.Destroy(go));
-
         MilitaryUITrackerManager.AddFightTracker(go);
+
+        unit.OnDeath.AddListener(() => {
+            MilitaryUITrackerManager.RemoveTracker(go);
+            GameObject.Destroy(go);
+        });
+        unitOther.OnDeath.AddListener(() => {
+            MilitaryUITrackerManager.RemoveTracker(go);
+            GameObject.Destroy(go);
+        });
     }
     
-    public void Execute(System.Action finishedCallback)
+    public override void Execute(System.Action finishedCallback)
     {
         Transform t;
         if (unit.AttachedSTile != null)

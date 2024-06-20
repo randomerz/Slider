@@ -56,7 +56,7 @@ public class MilitaryResetChecker : Singleton<MilitaryResetChecker>
                 if (AreResetConditionsMet())
                 {
                     // Ideally use the glitch post-process effect from the fezziwig time loop
-                    Debug.Log("Do an auto Reset!!!!");
+                    // Debug.Log("Do an auto Reset!!!!");
                     (MilitaryGrid.Current as MilitaryGrid).RestartSimulation(0.25f);
                 }
             }, this, 2);
