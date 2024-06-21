@@ -100,7 +100,16 @@ public class MilitaryUnitFlag : Item
 
         foreach (MilitaryUnit unit in MilitaryUnit.ActiveUnits)
         {
-            if (unit.GridPosition == newGridPos && unit.UnitStatus == MilitaryUnit.Status.Active && unit.UnitTeam != attachedUnit.UnitTeam)
+            if (unit.GridPosition == newGridPos && unit.UnitStatus == MilitaryUnit.Status.Active && unit.UnitTeam == attachedUnit.UnitTeam)
+            {
+                reason = "Can't move to an occupied tile!";
+                return false;
+            }
+        }
+
+        foreach (MilitaryUnspawnedAlly unspawnedAlly in MilitaryUnspawnedAlly.AllUnspawnedAllies)
+        {
+            if (unspawnedAlly.parentStile == hitStile)
             {
                 reason = "Can't move to an occupied tile!";
                 return false;

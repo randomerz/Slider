@@ -101,7 +101,8 @@ public class OceanGrid : SGrid
         isCompleted = profile.GetBool("oceanCompleted");
         if (isCompleted) ((OceanArtifact)OceanArtifact._instance).SetCanRotate(false);
 
-        treesToJungle.SetActive(!profile.GetBool("oceanTreesRemoved"));
+        bool treesRemoved = profile.GetBool("oceanTreesRemoved") || PlayerInventory.Contains("Slider 2 & 3", Area.Jungle);
+        treesToJungle.SetActive(!treesRemoved);
 
         npcRotation.unlockedAllSliders = profile.GetBool("oceanUnlockedAllSliders");
         npcRotation.gotBreadge = profile.GetBool("oceanBreadgeCollected");

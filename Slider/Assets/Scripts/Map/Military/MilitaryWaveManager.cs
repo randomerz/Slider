@@ -181,13 +181,13 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
 
     private IEnumerator DoSpawnSoundEffects(int numSpawns)
     {
-        AudioManager.PickSound("Portal").WithVolume(1f).WithPitch(0.9f).AndPlay();
+        AudioManager.PickSound("Portal").WithVolume(0.8f).WithPitch(0.9f).AndPlay();
 
         for (int i = 1; i < numSpawns; i++)
         {
             yield return new WaitForSeconds(1f);
     
-            AudioManager.PickSound("Portal").WithVolume(0.8f).WithPitch(0.875f).AndPlay();
+            AudioManager.PickSound("Portal").WithVolume(0.5f).WithPitch(0.875f).AndPlay();
         }
     }
 
@@ -198,15 +198,6 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
         // - mostly we care about them having tile 6 but maybe it doesnt matter and they can figure it out
 
         AudioManager.Play("Puzzle Complete");
-
-        Debug.Log($"==============");
-        Debug.Log($"   You win!   ");
-        Debug.Log($"==============");
-
-        // Real todo: final military cutscene
-        // - turn on the military commander on the final tile and add a tracker to him
-        // - when you talk to him, he does a cutscene about how hes gonna shoot his meteor gun
-        // - misc aliens swarm him cause theyre tired of this war and you win the area
 
         SaveSystem.Current.SetBool(BEAT_ALL_ALIENS_STRING, true);
     }

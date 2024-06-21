@@ -11,8 +11,11 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
     }
 
     private Queue<IMGAnimatable> moveQueue = new();
+
     private Queue<IMGAnimatable> moveBuffer = new();
-    private Queue<IMGAnimatable> otherBuffer = new();
+    private Queue<IMGAnimatable> fightBuffer = new();
+    private Queue<IMGAnimatable> deathBuffer = new();
+
     private Coroutine updateBuffersCoroutine;
     private List<IMGAnimatable> activeMoves = new();
     private QueueStatus status = QueueStatus.Off;
@@ -37,9 +40,13 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
         {
             moveBuffer.Enqueue(move);
         }
+        else if (move is MGFight)
+        {
+            fightBuffer.Enqueue(move);
+        }
         else
         {
-            otherBuffer.Enqueue(move);
+            deathBuffer.Enqueue(move);
         }
 
         if (updateBuffersCoroutine == null)
@@ -50,9 +57,13 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
                     {
                         moveQueue.Enqueue(moveBuffer.Dequeue());
                     }
-                    while (otherBuffer.Count > 0)
+                    while (fightBuffer.Count > 0)
                     {
-                        moveQueue.Enqueue(otherBuffer.Dequeue());
+                        moveQueue.Enqueue(fightBuffer.Dequeue());
+                    }
+                    while (deathBuffer.Count > 0)
+                    {
+                        moveQueue.Enqueue(deathBuffer.Dequeue());
                     }
                     CheckQueue();
                     updateBuffersCoroutine = null;
