@@ -134,7 +134,7 @@ public class MountainGrid : SGrid
         switch(minecart.mcState)
         {
             case MinecartState.Crystal:
-                minecart.UpdateState("Empty");
+                minecart.UpdateState(MinecartState.Empty);
                 SetCrystalDelivered();
                 break;
             case MinecartState.Lava:

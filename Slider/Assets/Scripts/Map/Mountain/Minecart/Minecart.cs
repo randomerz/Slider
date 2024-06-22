@@ -59,7 +59,6 @@ public class Minecart : Item, ISavable
 
     [Header("UI")]
     public Sprite trackerSpriteEmpty;
-    public Sprite trackerSpriteRepair;
     public Sprite trackerSpriteLava;
     public Sprite trackerSpriteCrystal;
 
@@ -98,13 +97,13 @@ public class Minecart : Item, ISavable
 
     private void OnSTileMoveEnd(object sender, SGridAnimator.OnTileMoveArgs e)
     {
-        if(mcState == MinecartState.Crystal) UpdateState("Empty");
+        if(mcState == MinecartState.Crystal) UpdateState(MinecartState.Empty);
     }
 
     private void OnScrollRearrange(object sender, EventArgs e)
     {
         if(isMoving) Derail();
-        if(mcState == MinecartState.Crystal) UpdateState("Empty");
+        if(mcState == MinecartState.Crystal) UpdateState(MinecartState.Empty);
     }
 
 
@@ -204,11 +203,12 @@ public class Minecart : Item, ISavable
     public override void PickUpItem(Transform pickLocation, System.Action callback = null)
     {
         base.PickUpItem(pickLocation, callback);
+        numberOfPickups++;
         VarManager.instance.SetBoolOn("MountainHasPickedUpMinecart");
-        UITrackerManager.RemoveTracker(this.gameObject);
+        UITrackerManager.RemoveTracker(gameObject);
         animator.ChangeAnimationState("IDLE");
         if(mcState == MinecartState.Crystal || mcState == MinecartState.Lava)
-            UpdateState("Empty");
+            UpdateState(MinecartState.Empty, addTracker: false);
     }
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback=null) 
@@ -557,16 +557,10 @@ public class Minecart : Item, ISavable
 
     #region State
 
-    public void UpdateState(string stateName){
-        if(stateName.Equals("Lava"))
-            mcState = MinecartState.Lava;
-        else if(stateName.Equals("Crystal"))
-            mcState = MinecartState.Crystal;
-        else if (stateName.Equals("Empty"))
-            mcState = MinecartState.Empty;
-        else
-            Debug.LogWarning("Invalid Minecart State. Should be Lava, Empty, or Crystal");
-        UpdateIcon();
+    public void UpdateState(MinecartState state, bool addTracker = true){
+        mcState = state;
+        if(addTracker)
+            UpdateIcon();
         UpdateContentsSprite();
     }
 
@@ -574,7 +568,7 @@ public class Minecart : Item, ISavable
     {
         if(mcState != MinecartState.Crystal)
         {
-            UpdateState("Crystal");
+            UpdateState(MinecartState.Crystal); 
             return true;
         }
         return false;
@@ -593,6 +587,7 @@ public class Minecart : Item, ISavable
 
     private void AddTracker()
     {
+        print("adding tracker");
         if(mcState == MinecartState.Lava)
             UITrackerManager.AddNewTracker(gameObject, trackerSpriteLava);
         else if(mcState == MinecartState.Crystal)
@@ -703,19 +698,13 @@ public class Minecart : Item, ISavable
     public override void Save()
     {
         base.Save();
-
-        SaveSystem.Current.SetInt("mountainMCState", (int)mcState);
         SaveSystem.Current.SetInt("mountainMCNumPickups", numberOfPickups);
     }
 
     public override void Load(SaveProfile profile)
     {
         base.Load(profile);
-
-        int state = profile.GetInt("mountainMCState");
-        mcState = (MinecartState)state;
         numberOfPickups = SaveSystem.Current.GetInt("mountainMCNumPickups");
-        UpdateIcon();
     }
 
     #endregion

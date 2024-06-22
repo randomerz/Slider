@@ -127,7 +127,7 @@ public class GemMachine : MonoBehaviour, ISavable
     {
         if(numGems == 1) return;
         numGems = 1;
-        minecart.UpdateState("Empty");
+        minecart.UpdateState(MinecartState.Empty);
         animator.Play("part1");
         //TODO: Play absorb crystal sound
     }
@@ -138,7 +138,7 @@ public class GemMachine : MonoBehaviour, ISavable
             return;
         numGems++;
         animator.Play("AbsorbGem");
-        minecart.UpdateState("Empty");
+        minecart.UpdateState(MinecartState.Empty);
         //TODO: Play absorb crystal sound
     }
 
@@ -199,6 +199,10 @@ public class GemMachine : MonoBehaviour, ISavable
 
     public void CheckIsFixed(Condition c){
         c.SetSpec(gemMachineState == GemMachineState.FIXED);
+    }
+
+    public void CheckIsBrokenAndPowered(Condition c){
+        c.SetSpec(gemMachineState == GemMachineState.BROKEN && isPowered);
     }
 
     public void CheckIsFixedAndPowered(Condition c){
