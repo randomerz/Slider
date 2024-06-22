@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Unity.IO.LowLevel.Unsafe;
 
 public class UIArtifact : Singleton<UIArtifact>
 {
