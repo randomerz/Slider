@@ -269,6 +269,50 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 7019485687949755058}
+          m_TargetAssemblyTypeName: UIButtonTextEffect, SliderScripts
+          m_MethodName: SetUnderlined
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7019485687949755058}
+          m_TargetAssemblyTypeName: UIButtonTextEffect, SliderScripts
+          m_MethodName: SetUnderlined
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7019485687949755058}
+          m_TargetAssemblyTypeName: UIButtonTextEffect, SliderScripts
+          m_MethodName: SetUnderlined
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &7019485687949755058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,6 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7403e8fd7b2096247bd852aa371433a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textMeshPro: {fileID: 7019485688240672876}
   target: {fileID: 7019485688240672879}
   amount: 0
 --- !u!114 &7083269306223281142

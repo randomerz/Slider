@@ -500,7 +500,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                                 if (!string.IsNullOrWhiteSpace(content))
                                 {
                                     configs[propertyEnum] = configs[propertyEnum].Override(content);
-                                    Debug.Log($"[Localization] Parsed localization config: {property} = {content}");
+                                    // Debug.Log($"[Localization] Parsed localization config: {property} = {content}");
                                 }
                             }
                             else

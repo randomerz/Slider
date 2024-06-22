@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class MGMove : IMGAnimatable
 {
-    public MilitaryUnit unit;
     public Vector2Int startCoords;
     public Vector2Int endCoords;
     public STile startStile;
@@ -22,7 +21,7 @@ public class MGMove : IMGAnimatable
         this.endStile = endStile;
     }
 
-    public void Execute(System.Action finishedCallback)
+    public override void Execute(System.Action finishedCallback)
     {
         unit.NPCController.AnimateMove(this, false, finishedCallback);
     }

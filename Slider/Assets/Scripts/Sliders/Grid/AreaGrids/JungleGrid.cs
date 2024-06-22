@@ -75,6 +75,11 @@ public class JungleGrid : SGrid
 
         chadRace.CheckChad(this, null);
         UpdateSecretaryTV();
+
+        if(stile.islandId == 9)
+        {
+            AchievementManager.SetAchievementStat("jungleAllTiles", 1);
+        }
     }
 
     private void HandleSTile3Placement(STile stile)
