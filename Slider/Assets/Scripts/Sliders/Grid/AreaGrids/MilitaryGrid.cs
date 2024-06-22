@@ -58,6 +58,8 @@ public class MilitaryGrid : SGrid
         //     Debug.LogWarning($"[Military] Quit area without finishing! Resetting Military...");
         //     DoRestartSimulation(updatePlayer: false);
         // }
+
+        UIEffects.DisablePixel();
     }
 
     public override void Save()
@@ -84,7 +86,7 @@ public class MilitaryGrid : SGrid
         // Player.SetCanMove(false);
         AudioManager.Play("Slide Rumble"); 
         
-        UIEffects.FlashWhite(
+        UIEffects.Pixelize(
             () => {
                 DoRestartSimulation();
                 AudioManager.Play("TFT Bell");
@@ -92,22 +94,10 @@ public class MilitaryGrid : SGrid
             () => {
                 isRestarting = false;
                 PauseManager.RemovePauseRestriction(gameObject);
-                // Player.SetCanMove(true);
+                Player.SetCanMove(true);
             }, 
             speed
         );
-        // UIEffects.Pixelize(
-        //     () => {
-        //         DoRestartSimulation();
-        //         AudioManager.Play("TFT Bell");
-        //     },
-        //     () => {
-        //         isRestarting = false;
-        //         PauseManager.RemovePauseRestriction(gameObject);
-        //         Player.SetCanMove(true);
-        //     }, 
-        //     speed
-        // );
     }
 
     private void DoRestartSimulation(bool updatePlayer=true)

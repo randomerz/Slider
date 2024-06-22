@@ -36,7 +36,7 @@ Shader "Hidden/Pixelize"
         float4 _MainTex_TexelSize;
         float4 _MainTex_ST;
 
-        //SAMPLER(sampler_MainTex);
+        SAMPLER(sampler_MainTex);
         //Texture2D _MainTex;
         //SamplerState sampler_MainTex;
 
@@ -64,10 +64,11 @@ Shader "Hidden/Pixelize"
             HLSLPROGRAM
             half4 frag(Varyings IN) : SV_TARGET
             {
+
                 float2 blockPos = floor(IN.uv * _BlockCount);
                 float2 blockCenter = blockPos * _BlockSize + _HalfBlockSize;
 
-                float4 tex = SAMPLE_TEXTURE2D(_MainTex, sampler_point_clamp, blockCenter);
+                float4 tex = SAMPLE_TEXTURE2D(_MainTex, sampler_point_clamp, IN.uv);
 				//return float4(IN.uv,1,1);
 
                 return tex;

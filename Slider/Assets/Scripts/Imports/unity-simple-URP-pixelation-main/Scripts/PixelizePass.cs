@@ -25,6 +25,7 @@ public class PixelizePass : ScriptableRenderPass
 
     public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
     {
+        //if(!settings.enabled) return;
         colorBuffer = renderingData.cameraData.renderer.cameraColorTarget;
         RenderTextureDescriptor descriptor = renderingData.cameraData.cameraTargetDescriptor;
 
@@ -38,9 +39,16 @@ public class PixelizePass : ScriptableRenderPass
         material.SetVector("_BlockSize", new Vector2(1.0f / pixelScreenWidth, 1.0f / pixelScreenHeight));
         material.SetVector("_HalfBlockSize", new Vector2(0.5f / pixelScreenWidth, 0.5f / pixelScreenHeight));
 
-        descriptor.height = pixelScreenHeight;
-        descriptor.width = pixelScreenWidth;
-
+        if(settings.enabled)
+        {
+            descriptor.height = pixelScreenHeight;
+            descriptor.width = pixelScreenWidth;
+        }
+        else
+        {
+            descriptor.height = Screen.height;
+            descriptor.width = Screen.width;
+        }
         cmd.GetTemporaryRT(pixelBufferID, descriptor, FilterMode.Point);
         pixelBuffer = new RenderTargetIdentifier(pixelBufferID);
     }
@@ -54,9 +62,8 @@ public class PixelizePass : ScriptableRenderPass
             //Blit(cmd, colorBuffer, pointBuffer);
             //Blit(cmd, pointBuffer, pixelBuffer);
             //Blit(cmd, pixelBuffer, colorBuffer);
-
-            Blit(cmd, colorBuffer, pixelBuffer, material);
-            Blit(cmd, pixelBuffer, colorBuffer);
+            cmd.Blit(colorBuffer, pixelBuffer, material);
+            cmd.Blit(pixelBuffer, colorBuffer);
         }
 
         context.ExecuteCommandBuffer(cmd);

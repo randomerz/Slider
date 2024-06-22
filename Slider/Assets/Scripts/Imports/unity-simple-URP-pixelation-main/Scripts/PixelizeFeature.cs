@@ -11,6 +11,7 @@ public class PixelizeFeature : ScriptableRendererFeature
     {
         public RenderPassEvent renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
         public int screenHeight = 144;
+        public bool enabled = false;
     }
 
     [SerializeField] public CustomPassSettings settings;
