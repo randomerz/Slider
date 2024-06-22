@@ -76,7 +76,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            referenceLocales = null;
        }
        GUILayout.Label("^ Reference localization includes old translations that will be migrated into newly generated localization CSV files");
-
+       
        string referenceDescription = "(No reference translation selected)";
        if (referenceLocalizationPath != null)
        {
@@ -140,11 +140,45 @@ public class LocalizationSkeletonGenerator : EditorWindow
    {
        string startingScenePath = EditorSceneManager.GetSceneAt(0).path; // EditorSceneManager always have 1 active scene (the opened scene)
 
-       foreach (var locale in projectConfiguration.InitialLocales)
+       Dictionary<string, string> globalStrings = new();
+       
+       var shapes = AssetDatabase.FindAssets("t:Shape")
+           .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
+           .Select(path => AssetDatabase.LoadAssetAtPath<Shape>(path));
+
+       foreach (var s in shapes)
        {
-           LocalizableContext localeGlobalConfig = LocalizableContext.ForSingleLocale(locale);
-           string serializedConfigs = localeGlobalConfig.Serialize(serializeConfigurationDefaults: true, referenceFile: null);
-           WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name, root), serializedConfigs);
+           globalStrings.Add(SpecificTypeHelpers.JungleShapeToPath(s.shapeName), s.shapeName);
+       }
+       
+       var collectibles = AssetDatabase
+           .FindAssets("t:prefab")
+           .Select(AssetDatabase.GUIDToAssetPath)
+           .Select(AssetDatabase.LoadAssetAtPath<GameObject>)
+           .Where(go => go.GetComponent<Collectible>() != null);
+
+       foreach (var c in collectibles)
+       {
+           var collectible = c.GetComponent<Collectible>();
+           var cname = collectible.GetCollectibleData().name;
+           
+           // this is true only for variant roots
+           if (string.IsNullOrWhiteSpace(cname))
+           {
+               continue;
+           }
+           
+           globalStrings.Add(SpecificTypeHelpers.CollectibleToPath(cname, collectible.GetCollectibleData().area), cname);
+       }
+
+       foreach (var kv in Areas.DiscordNames)
+       {
+           globalStrings.Add(SpecificTypeHelpers.AreaToDiscordNamePath(kv.Key), kv.Value);
+       }
+
+       foreach (var kv in Areas.DisplayNames)
+       {
+           globalStrings.Add(SpecificTypeHelpers.AreaToDisplayNamePath(kv.Key), kv.Value);
        }
 
        // AT: note: reference file = old translations that should be considered for migration into new translations
@@ -208,6 +242,14 @@ public class LocalizationSkeletonGenerator : EditorWindow
            
            var scene = EditorSceneManager.OpenScene(editorBuildSettingsScene.path);
            var skeleton = LocalizableContext.ForSingleScene(scene);
+
+           foreach (var kv in skeleton.AdditionalExportedStrings)
+           {
+               if (!globalStrings.TryAdd(kv.Key, kv.Value))
+               {
+                   Debug.LogError($"Duplicate global export string {kv.Key}: {kv.Value}");
+               }
+           }
            
            // Default locale is covered in locale list
            // WriteFileAndForceParentPath(LocalizationFile.DefaultLocaleAssetPath(scene, root), serializedSkeleton);
@@ -219,6 +261,14 @@ public class LocalizationSkeletonGenerator : EditorWindow
                );
                WriteFileAndForceParentPath(LocalizationFile.AssetPath(locale.name, scene, root), serializedSkeleton);
            }
+       }
+       
+       // Write locale global files at last due to global strings being accumulated over the scan...
+       foreach (var locale in projectConfiguration.InitialLocales)
+       {
+           LocalizableContext localeGlobalConfig = LocalizableContext.ForSingleLocale(locale, globalStrings);
+           string serializedConfigs = localeGlobalConfig.Serialize(serializeConfigurationDefaults: true, referenceFile: null);
+           WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name, root), serializedConfigs);
        }
 
        try

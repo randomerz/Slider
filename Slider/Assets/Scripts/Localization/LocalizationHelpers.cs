@@ -9,6 +9,16 @@ using UnityEngine.SceneManagement;
 
 namespace Localization
 {
+    public static class SpecificTypeHelpers
+    {
+        public static string JungleShapeToPath(string shapeName) => $"__JungleShapes/{shapeName}";
+        public static string CollectibleToPath(string collectible, Area area) => $"__Collectibles/{area.ToString()}/{collectible}";
+
+        public static string AreaToDiscordNamePath(Area area) => $"__DiscordMessages/{area.ToString()}";
+
+        public static string AreaToDisplayNamePath(Area area) => $"__AreaDisplayName/{area.ToString()}";
+    }
+    
     public struct LocalizationPair
     {
         public static explicit operator LocalizationPair(string input)
@@ -191,6 +201,11 @@ namespace Localization
         {
             index = code;
         }
+        
+        public TrackedLocalizable(ArtifactInventoryCollectible collectibleUI) : this(collectibleUI as Component)
+        {
+            index = null;
+        }
     }
 
     // TODO: try add typed parsing cache
@@ -372,6 +387,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         internal SortedDictionary<Config, LocalizationConfig> configs;
         internal SortedDictionary<string, ParsedLocalizable> records;
 
+        public string LocaleName => locale;
         private string locale;
         public bool IsDefaultLocale => locale.Equals(DefaultLocale);
         public static bool SupportsPixelFont(string locale) => locale.Equals(DefaultLocale); // TODO: change when pixel font adds Spanish supports or something...
@@ -733,6 +749,8 @@ be corrupted, these rules may be helpful for debugging purposes...
     {
         private HashSet<Type> excludedTypes = new(); // currently only used by prefab localization to prevent infinite loops
         Dictionary<Type, List<TrackedLocalizable>> localizables = new();
+        private Dictionary<string, string> AdditionalStrings = new();
+        public Dictionary<string, string> AdditionalExportedStrings = new(); // strings encountered during the context parsing process, but won't be used within the context (rather, for a locale global file)
 
         private SortedDictionary<LocalizationFile.Config, LocalizationConfig> configs;
 
@@ -743,12 +761,19 @@ be corrupted, these rules may be helpful for debugging purposes...
             {
                 configs.Add(k, new LocalizationConfig(v.Comment, v.Value));
             }
+            
+            ////////////////////// STRING EXPORT FUNCTIONS /////////////////////////////////////////////////////////////
+            SelectorFunctionMap.Add(typeof(Collectible), c => ExportCollectibleString(c as Collectible));
+            
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
 
         // Initializes a null localizable scene for global configuration purposes
         // TODO: add variable substitution support here by passing a list of <var_name>:<var_orig> values here
-        private LocalizableContext(LocaleConfiguration localeConfiguration) : this()
+        private LocalizableContext(LocaleConfiguration localeConfiguration, Dictionary<string, string> globalStrings) : this()
         {
+            AdditionalStrings = globalStrings;
+            
             foreach (var option in localeConfiguration.options)
             {
                 if (configs.ContainsKey(option.name))
@@ -777,8 +802,8 @@ be corrupted, these rules may be helpful for debugging purposes...
         }
         
         /* Following factory methods are just for clearer naming, instead of all uses of this context class being created from same named constructor */
-        public static LocalizableContext ForSingleLocale(LocaleConfiguration localeConfiguration) =>
-            new(localeConfiguration);
+        public static LocalizableContext ForSingleLocale(LocaleConfiguration localeConfiguration, Dictionary<string, string> globalStrings) =>
+            new(localeConfiguration, globalStrings);
 
         public static LocalizableContext ForSingleScene(Scene scene) => new(scene);
 
@@ -786,7 +811,7 @@ be corrupted, these rules may be helpful for debugging purposes...
         
         /////////////////////////// Localizable Instance Selection  ////////////////////////////////////////////////////
         
-        private static readonly Dictionary<Type, Func<Component, IEnumerable<TrackedLocalizable>>> SelectorFunctionMap = new()
+        private Dictionary<Type, Func<Component, IEnumerable<TrackedLocalizable>>> SelectorFunctionMap = new()
         {
             { typeof(TMP_Text), component => SelectLocalizablesFromTmp(component as TMP_Text) },
             { typeof(TMP_Dropdown), component => SelectLocalizablesFromDropdown(component as TMP_Dropdown) },
@@ -795,6 +820,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(LocalizationInjector), component => new List<TrackedLocalizable>{ new (component as LocalizationInjector) }},
             { typeof(PlayerActionHints), component => SelectLocalizablesFromPlayerActionHints(component as PlayerActionHints) },
             { typeof(IDialogueTableProvider), component => SelectLocalizablesFromTableProvider(component as IDialogueTableProvider) },
+            { typeof(ArtifactInventoryCollectible), component => new List<TrackedLocalizable>{ new (component as ArtifactInventoryCollectible) }},
         };
         
         private void PopulateLocalizableInstances(Scene scene)
@@ -867,6 +893,19 @@ be corrupted, these rules may be helpful for debugging purposes...
 
             return selected;
         }
+
+        private IEnumerable<TrackedLocalizable> ExportCollectibleString(Collectible collectible)
+        {
+            if (!AdditionalExportedStrings.TryAdd(
+                    SpecificTypeHelpers.CollectibleToPath(collectible.GetCollectibleData().name,
+                        collectible.GetCollectibleData().area),
+                    collectible.GetCollectibleData().name))
+            {
+               Debug.LogWarning($"Duplicate collectible: {SpecificTypeHelpers.CollectibleToPath(collectible.GetCollectibleData().name, collectible.GetCollectibleData().area)}"); 
+            }
+
+            return new TrackedLocalizable[] { };
+        }
         
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
@@ -887,6 +926,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(LocalizationInjector), (loc, _, _) => loc.GetAnchor<LocalizationInjector>().Refresh() },
             { typeof(PlayerActionHints), LocalizePlayerActionHints },
             { typeof(IDialogueTableProvider), LocalizeTableProvider },
+            { typeof(ArtifactInventoryCollectible), LocalizeCollectibleUI },
         };
 
         /// <summary>
@@ -1092,6 +1132,24 @@ be corrupted, these rules may be helpful for debugging purposes...
             }
         }
         
+        private static void LocalizeCollectibleUI(TrackedLocalizable collectible, LocalizationFile file, LocalizationStrategy strategy)
+        {
+            if (strategy == LocalizationStrategy.ChangeStyleOnly)
+            {
+                return;
+            }
+            
+            var path = collectible.FullPath;
+            if (file.records.TryGetValue(path, out var entry))
+            {
+                collectible.GetAnchor<ArtifactInventoryCollectible>().displayName = entry.Translated;
+            }
+            else
+            {
+                Debug.LogWarning($"[Localization] {path}: NOT FOUND");
+            }
+        }
+        
         /////////////////////////// Serialization //////////////////////////////////////////////////////////////////////
         private static readonly Dictionary<Type, Func<TrackedLocalizable, string>> SerializationFunctionMap = new()
         {
@@ -1138,6 +1196,11 @@ be corrupted, these rules may be helpful for debugging purposes...
             builder.Append($"\"Path\"{sep}\"Orig\"{sep}\"Translation\"{sep}\r\n");
 
             SortedDictionary<string, string> data = SerializeTrackedLocalizables();
+
+            foreach (var kv in AdditionalStrings)
+            {
+                data.Add(kv.Key, kv.Value);
+            }
             
             foreach (var (_path, _orig) in data)
             {
