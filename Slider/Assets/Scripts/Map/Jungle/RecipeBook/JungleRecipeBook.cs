@@ -81,8 +81,7 @@ public class JungleRecipeBook : MonoBehaviour
 
         if (JungleRecipeBookSave.AllRecipesCompleted())
         {
-            // idk if we need to check if it's been given already
-            Debug.Log("Give jungle achievement!");
+            AchievementManager.SetAchievementStat("completedAllJungleRecipes", 1);
         }
     }
 

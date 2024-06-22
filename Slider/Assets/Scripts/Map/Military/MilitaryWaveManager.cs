@@ -200,5 +200,15 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
         AudioManager.Play("Puzzle Complete");
 
         SaveSystem.Current.SetBool(BEAT_ALL_ALIENS_STRING, true);
+        GiveAchievements();
+    }
+
+    private void GiveAchievements()
+    {
+        AchievementManager.SetAchievementStat("completedMilitary", 1);
+        if(MilitaryResetChecker._instance.NumUnspawnedAlliesActive > 0)
+        {
+            AchievementManager.SetAchievementStat("militaryExtraAlly", 1);
+        }
     }
 }
