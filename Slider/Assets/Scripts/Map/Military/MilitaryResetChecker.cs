@@ -4,6 +4,7 @@ public class MilitaryResetChecker : Singleton<MilitaryResetChecker>
 {
     private int numSliderCollectiblesActive = 0;
     private int numUnspawnedAlliesActive = 0;
+    public int NumUnspawnedAlliesActive => numUnspawnedAlliesActive;
 
     private bool didInit = false;
     

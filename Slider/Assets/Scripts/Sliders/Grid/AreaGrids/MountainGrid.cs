@@ -119,6 +119,10 @@ public class MountainGrid : SGrid
             StartCoroutine(ShowButtonAndMapCompletions());
             SaveSystem.Current.SetBool("completedMountain", true);
             AchievementManager.SetAchievementStat("completedMountain", 1);
+            if(minecart.NumPickups <= 2)
+            {
+                AchievementManager.SetAchievementStat("mountainMinMinecart", 1);
+            }
         }
     }
 
