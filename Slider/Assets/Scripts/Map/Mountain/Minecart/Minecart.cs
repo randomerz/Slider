@@ -244,12 +244,23 @@ public class Minecart : Item, ISavable
         return null;
     }
 
-    private void DropMinecart(Tilemap railmap, RailManager railManager, Vector3 dropLocation, System.Action callback)
+    private void DropMinecart(Tilemap railmap, RailManager railManager, Vector3 dropLocation, System.Action callback, int count = 0)
     {
+        if(count > 2)
+        {
+            Debug.LogError("infinite recursion!");
+            return;
+        }
         if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
         {
             StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
             SnapToRail(railmap.WorldToCell(dropLocation));
+        }
+        else if(railManager.otherRMOnTile != null 
+                && railManager.otherRMOnTile.railLocations.Contains(railmap.WorldToCell(dropLocation)))
+        {
+            this.railManager = railManager.otherRMOnTile;
+            DropMinecart(railManager.railMap, railManager.otherRMOnTile, dropLocation, callback, count + 1);
         }
         else
             StartCoroutine(AnimateDrop(dropLocation, callback));
@@ -305,6 +316,8 @@ public class Minecart : Item, ISavable
         currentTile = railManager.railMap.GetTile(pos) as RailTile;
         currentTilePos = pos;
         prevWorldPos = railManager.railMap.layoutGrid.CellToWorld(currentTilePos) + offSet;
+        if(currentTile == null)
+            print("current tile null");
         currentDirection = direction == -1? currentTile.defaultDir: direction;
         if(railManager.railLocations.Contains(pos))
         {
@@ -587,7 +600,6 @@ public class Minecart : Item, ISavable
 
     private void AddTracker()
     {
-        print("adding tracker");
         if(mcState == MinecartState.Lava)
             UITrackerManager.AddNewTracker(gameObject, trackerSpriteLava);
         else if(mcState == MinecartState.Crystal)
@@ -614,8 +626,7 @@ public class Minecart : Item, ISavable
 
     private void PlayCurveAnimation()
     {
-        //magic number based on enum order, better than 8 case switch
-        // dc: no way :sob:
+        //magic number based on enum order
         int animationNum = 5 + (currentDirection * 2) + (nextDirection / 2);
         animator.ChangeAnimationState(animationNum);
     }
@@ -624,14 +635,6 @@ public class Minecart : Item, ISavable
     {
         animator.ChangeAnimationState(currentDirection + 1);
     }
-
-    private void PlayStoppedAnimation()
-    {
-
-    }
-
-    
-
 
     #endregion
 
