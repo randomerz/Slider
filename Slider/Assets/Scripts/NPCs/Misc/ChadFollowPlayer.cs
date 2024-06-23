@@ -8,7 +8,7 @@ using UnityEngine;
 ///     > its convincing enough right now prob not worth the time to further improve
 /// - Chirps
 /// - Work in Desert + Factory scenes
-public class ChadFollowPlayer : MonoBehaviour
+public class ChadFollowPlayer : MonoBehaviour, ISavable
 {
     public enum FollowState
     {
@@ -17,12 +17,13 @@ public class ChadFollowPlayer : MonoBehaviour
     }
 
     private const string CHIRP_SAVE_STRING = "MiscChadFollowPlayerChirp";
+    private const string FOLLOW_SAVE_STRING = "MiscChadIsFollowingPlayer";
 
     private FollowState state;
     private bool isFollowingEnabled;
     private STile currentSTileUnderneath = null;
 
-    [SerializeField] private float CloseFollowDist { // Stop if this close
+    private float CloseFollowDist { // Stop if this close
         get {
             if (OnDifferentSTileThanPlayer())
             {
@@ -35,7 +36,7 @@ public class ChadFollowPlayer : MonoBehaviour
             return 1.5f;
         }
     }
-    [SerializeField] private float FarFollowDist { // Start walking if this far
+    private float FarFollowDist { // Start walking if this far
         get {
             if (OnDifferentSTileThanPlayer())
             {
@@ -48,11 +49,14 @@ public class ChadFollowPlayer : MonoBehaviour
             return 2.5f;
         }
     }
-    [SerializeField] private float closeSpeed = 6.5f;
-    [SerializeField] private float farSpeed = 7.5f;
+    [SerializeField] private float closeSpeed = 6.25f;
+    [SerializeField] private float farSpeed = 7.75f;
 
     private Transform playerTransform;
     [SerializeField] private LayerMask obstaclesLayerMask;
+    private ContactFilter2D contactFilter2D;
+
+    [SerializeField] private bool doDebugLog;
 
     [Header("References")]
     public NPC npc;
@@ -67,6 +71,10 @@ public class ChadFollowPlayer : MonoBehaviour
     {
         playerTransform = Player.GetInstance().transform;
 
+        contactFilter2D = new ContactFilter2D();
+        contactFilter2D.SetLayerMask(obstaclesLayerMask);
+        contactFilter2D.useTriggers = false;
+
         SaveSystem.Current.SetString(CHIRP_SAVE_STRING, "Onwards!");
 
         // for dev
@@ -74,6 +82,13 @@ public class ChadFollowPlayer : MonoBehaviour
         {
             closeSpeed -= 2;
             farSpeed -= 2;
+        }
+
+        if (isFollowingEnabled)
+        {
+            SetFollowingPlayer(true);
+            TeleportToPlayer();
+            HandleChangeScene();
         }
     }
 
@@ -102,12 +117,46 @@ public class ChadFollowPlayer : MonoBehaviour
         Player.OnHousingChanged -= CheckOnHousingChange;
     }
 
+    public void Save()
+    {
+        SaveSystem.Current.SetBool(FOLLOW_SAVE_STRING, isFollowingEnabled);
+    }
+
+    public void Load(SaveProfile profile)
+    {
+        isFollowingEnabled = profile.GetBool(FOLLOW_SAVE_STRING);
+    }
+
+    private void HandleChangeScene()
+    {
+        Area lastArea = SceneSpawns.lastArea;
+        // yap yap yap
+    }
+
     private void Update() 
     {
         if (isFollowingEnabled)
         {
             UpdateCurrentSTileUnderneath();
             HandleFollow();
+        }
+    }
+    
+    public void SetFollowingPlayer(bool value)
+    {
+        isFollowingEnabled = value;
+        npcCollider.enabled = !value;
+        npcTrigger.enabled = !value;
+        if (npcPingSpriteRenderer != null)
+            npcPingSpriteRenderer.enabled = !value;
+
+        if (isFollowingEnabled)
+        {
+            SubscribeEvents();
+        }
+        else
+        {
+            UnsubscribeEvents();
         }
     }
 
@@ -219,33 +268,25 @@ public class ChadFollowPlayer : MonoBehaviour
         UpdateWalkTransforms();
         UpdateSpeed();
         transform.position = playerTransform.position;
+        UpdateCurrentSTileUnderneath();
         SetState(FollowState.Idle);
-    }
-    
-    public void SetFollowingPlayer(bool value)
-    {
-        isFollowingEnabled = value;
-        npcCollider.enabled = !value;
-        npcTrigger.enabled = !value;
-        if (npcPingSpriteRenderer != null)
-            npcPingSpriteRenderer.enabled = !value;
-
-        if (isFollowingEnabled)
-        {
-            SubscribeEvents();
-        }
-        else
-        {
-            UnsubscribeEvents();
-        }
     }
 
     private bool AreObstaclesNearPlayer()
     {
-        // Collider2D[] hits = Physics2D.OverlapCircleAll(playerTransform.position, 1.5f, obstaclesLayerMask);
+        Collider2D[] hits = new Collider2D[5];
+        int numHits = Physics2D.OverlapCircle(playerTransform.position, 1.5f, contactFilter2D, hits);
 
-        // return hits.Length > 0;
-        return Physics2D.OverlapCircle(playerTransform.position, 1.5f, obstaclesLayerMask) != null;
+        if (doDebugLog)
+        {
+            Debug.Log($"[ChadFollowPlayer] Hit {hits.Length} objects near player.");
+            if (hits.Length > 0)
+            {
+                Debug.Log($"[ChadFollowPlayer] First object hit: {hits[0].gameObject.name}");
+            }
+        }
+
+        return numHits > 0;
     }
 
     private void UpdateCurrentSTileUnderneath()
