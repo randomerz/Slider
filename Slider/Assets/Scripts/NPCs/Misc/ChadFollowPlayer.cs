@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// 
 /// TODO
 /// - Make follow path better (have waypoints that are sampled as player moves so it makes 
 ///   a path, rather than just following the player)
-/// - Make sure he tries to approach you if he is on a different slider than you
+///     > its convincing enough right now prob not worth the time to further improve
 /// - Chirps
 /// - Work in Desert + Factory scenes
 public class ChadFollowPlayer : MonoBehaviour
@@ -21,13 +20,39 @@ public class ChadFollowPlayer : MonoBehaviour
 
     private FollowState state;
     private bool isFollowingEnabled;
+    private STile currentSTileUnderneath = null;
 
-    [SerializeField] private float closeFollowDist = 1.5f; // Stop if this close
-    [SerializeField] private float farFollowDist = 2.5f; // Start walking if this far
+    [SerializeField] private float CloseFollowDist { // Stop if this close
+        get {
+            if (OnDifferentSTileThanPlayer())
+            {
+                return 0.25f;
+            }
+            if (AreObstaclesNearPlayer())
+            {
+                return 0.75f;
+            }
+            return 1.5f;
+        }
+    }
+    [SerializeField] private float FarFollowDist { // Start walking if this far
+        get {
+            if (OnDifferentSTileThanPlayer())
+            {
+                return 0.5f;
+            }
+            if (AreObstaclesNearPlayer())
+            {
+                return 1.75f;
+            }
+            return 2.5f;
+        }
+    }
     [SerializeField] private float closeSpeed = 6.5f;
     [SerializeField] private float farSpeed = 7.5f;
 
     private Transform playerTransform;
+    [SerializeField] private LayerMask obstaclesLayerMask;
 
     [Header("References")]
     public NPC npc;
@@ -81,13 +106,9 @@ public class ChadFollowPlayer : MonoBehaviour
     {
         if (isFollowingEnabled)
         {
+            UpdateCurrentSTileUnderneath();
             HandleFollow();
         }
-    }
-
-    private bool IsWithinDistance(float distance)
-    {
-        return Vector3.Distance(transform.position, playerTransform.position) <= distance;
     }
 
     private void HandleFollow()
@@ -96,7 +117,7 @@ public class ChadFollowPlayer : MonoBehaviour
         {
             case FollowState.Idle:
                 // Check if player is too far, then follow
-                if (!IsWithinDistance(farFollowDist))
+                if (!IsWithinDistance(FarFollowDist))
                 {
                     SetState(FollowState.Following);
                     break;
@@ -106,7 +127,7 @@ public class ChadFollowPlayer : MonoBehaviour
 
             case FollowState.Following:
                 // Check if close enough, then stop
-                if (IsWithinDistance(closeFollowDist))
+                if (IsWithinDistance(CloseFollowDist))
                 {
                     SetState(FollowState.Idle);
                     break;
@@ -118,6 +139,11 @@ public class ChadFollowPlayer : MonoBehaviour
 
                 break;
         }
+    }
+
+    private bool IsWithinDistance(float distance)
+    {
+        return Vector3.Distance(transform.position, playerTransform.position) <= distance;
     }
 
     private void SetState(FollowState state)
@@ -150,13 +176,13 @@ public class ChadFollowPlayer : MonoBehaviour
         // walkStart.position = transform.position;
         Vector3 dirPlayerToMe = (transform.position - playerTransform.position).normalized;
         float distToPlayer = Vector3.Distance(transform.position, playerTransform.position);
-        walkEnd.position = playerTransform.position + Mathf.Min(distToPlayer, closeFollowDist / 2) * dirPlayerToMe;
+        walkEnd.position = playerTransform.position + Mathf.Min(distToPlayer, CloseFollowDist / 2) * dirPlayerToMe;
     }
 
     private void UpdateSpeed()
     {
         float distToPlayer = Vector3.Distance(transform.position, playerTransform.position);
-        float newSpeed = Map(closeFollowDist, farFollowDist, closeSpeed, farSpeed, distToPlayer);
+        float newSpeed = Map(CloseFollowDist, FarFollowDist, closeSpeed, farSpeed, distToPlayer);
         npc.speed = newSpeed;
     }
 
@@ -212,6 +238,29 @@ public class ChadFollowPlayer : MonoBehaviour
         {
             UnsubscribeEvents();
         }
+    }
+
+    private bool AreObstaclesNearPlayer()
+    {
+        // Collider2D[] hits = Physics2D.OverlapCircleAll(playerTransform.position, 1.5f, obstaclesLayerMask);
+
+        // return hits.Length > 0;
+        return Physics2D.OverlapCircle(playerTransform.position, 1.5f, obstaclesLayerMask) != null;
+    }
+
+    private void UpdateCurrentSTileUnderneath()
+    {
+        STile stileUnderneath = SGrid.GetSTileUnderneath(transform, currentSTileUnderneath);
+        if (stileUnderneath != currentSTileUnderneath)
+        {
+            currentSTileUnderneath = stileUnderneath;
+            transform.SetParent(stileUnderneath.transform);
+        }
+    }
+
+    private bool OnDifferentSTileThanPlayer()
+    {
+        return currentSTileUnderneath != Player.GetInstance().GetSTileUnderneath();
     }
 
     public void IsFollowingPlayerEnabled(Condition c) => c.SetSpec(isFollowingEnabled);
