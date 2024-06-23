@@ -104,7 +104,7 @@ public class GemManager : MonoBehaviour, ISavable
 
         foreach (bool b in gems.Values)
         {
-            if (!b)
+            if (b)
             {
                 num += 1;
             }
