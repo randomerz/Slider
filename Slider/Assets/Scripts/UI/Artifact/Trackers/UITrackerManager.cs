@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UITrackerManager : MonoBehaviour
 {
     protected static UITrackerManager _instance;
+    public static UITrackerManager Instance => _instance;
 
     public bool trackHousingAccurately = false;
     
@@ -67,6 +68,7 @@ public class UITrackerManager : MonoBehaviour
 
     private static List<UITrackerData> uiTrackerBuffer = new List<UITrackerData>();
     private static List<UITrackerEnumData> uiTrackerEnumBuffer = new List<UITrackerEnumData>();
+    private static List<UITracker> uiCustomTrackerBuffer = new List<UITracker>();
 
     private static List<GameObject> removeBuffer = new List<GameObject>();
 
@@ -123,6 +125,15 @@ public class UITrackerManager : MonoBehaviour
                 x--;
             }
         }
+        foreach (UITracker uiTracker in uiCustomTrackerBuffer)
+        {
+            uiTracker.transform.SetParent(transform);
+            uiTracker.transform.localScale = Vector3.one; // Canvas auto rescaling prefabs
+            
+            targets.Add(uiTracker);
+        }
+        uiCustomTrackerBuffer.Clear();
+        Player.GetInstance().AddTracker();
     }
 
     void LateUpdate()
@@ -147,7 +158,7 @@ public class UITrackerManager : MonoBehaviour
         }
     }
 
-    private void UpdateTrackerPostion(UITracker tracker)
+    protected virtual void UpdateTrackerPostion(UITracker tracker)
     {
         int islandId;
         currentTile = tracker.GetSTile(out islandId);
@@ -269,7 +280,6 @@ public class UITrackerManager : MonoBehaviour
             uiTrackerBuffer.Add(new UITrackerData(target, sprite, blinkSprite, offMapSprite, offMapBlinkSprite, blinkTime, timeUntilBlinkRepeat));
             return;
         }
-
         GameObject tracker = GameObject.Instantiate(_instance.uiTrackerPrefab, _instance.transform);
         UITracker uiTracker = tracker.GetComponent<UITracker>();
         uiTracker.target = target;
@@ -291,6 +301,12 @@ public class UITrackerManager : MonoBehaviour
     public static UITracker AddNewCustomTracker(UITracker tracker, GameObject target)
     {
         tracker.target = target;
+        if (_instance == null)
+        {
+            uiCustomTrackerBuffer.Add(tracker);
+            return tracker;
+        }
+
         tracker.transform.SetParent(_instance.transform);
         tracker.transform.localScale = Vector3.one; // Canvas auto rescaling prefabs
         

@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &159552219181901345
 RectTransform:
   m_ObjectHideFlags: 0
@@ -442,7 +442,7 @@ MonoBehaviour:
   islandId: -1
   x: 0
   y: 0
-  shouldFlicker: 0
+  islandSprite: {fileID: 0}
 --- !u!114 &4925336959465173633 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6878940786512727234, guid: c404cdc18d76e6f4881b5879fefffb33, type: 3}

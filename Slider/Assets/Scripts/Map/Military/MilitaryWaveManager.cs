@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 // This might not have to be a singleton. Just make sure picking up slider 1 can call the first spawnwave()
@@ -18,6 +19,8 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
 
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private MilitaryUnitCommander enemyCommander;
+
+    public const string BEAT_ALL_ALIENS_STRING = "militaryBeatAllAliens";
 
     private void Awake()
     {
@@ -83,6 +86,12 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
 
     private void SpawnWave(int index)
     {
+        if (index == 2)
+        {
+            // Let's speed things up!
+            MilitaryTurnAnimator.SetBaseAnimationSpeedToMedium();
+        }
+
         if (index >= waveSizes.Length)
         {
             CheckWinCondition();
@@ -93,6 +102,8 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
         {
             TrySpawnEnemy();
         }
+
+        StartCoroutine(DoSpawnSoundEffects(waveSizes[index]));
     }
 
     private void TrySpawnEnemy()
@@ -174,20 +185,36 @@ public class MilitaryWaveManager : Singleton<MilitaryWaveManager>
         return lastSpawnedType;
     }
 
+    private IEnumerator DoSpawnSoundEffects(int numSpawns)
+    {
+        AudioManager.PickSound("Portal").WithVolume(0.8f).WithPitch(0.9f).AndPlay();
+
+        for (int i = 1; i < numSpawns; i++)
+        {
+            yield return new WaitForSeconds(1f);
+    
+            AudioManager.PickSound("Portal").WithVolume(0.5f).WithPitch(0.875f).AndPlay();
+        }
+    }
+
 
     private void CheckWinCondition()
     {
         // TODO: Give all Sliders if the player doesn't have them, we prob dont care if its shuffled or not
+        // - mostly we care about them having tile 6 but maybe it doesnt matter and they can figure it out
 
         AudioManager.Play("Puzzle Complete");
 
-        Debug.Log($"==============");
-        Debug.Log($"   You win!   ");
-        Debug.Log($"==============");
+        SaveSystem.Current.SetBool(BEAT_ALL_ALIENS_STRING, true);
+        GiveAchievements();
+    }
 
-        // Real todo: final military cutscene
-        // - turn on the military commander on the final tile and add a tracker to him
-        // - when you talk to him, he does a cutscene about how hes gonna shoot his meteor gun
-        // - misc aliens swarm him cause theyre tired of this war and you win the area
+    private void GiveAchievements()
+    {
+        AchievementManager.SetAchievementStat("completedMilitary", 1);
+        if(MilitaryResetChecker._instance.NumUnspawnedAlliesActive > 0)
+        {
+            AchievementManager.SetAchievementStat("militaryExtraAlly", 1);
+        }
     }
 }

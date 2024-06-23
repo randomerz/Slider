@@ -1,6 +1,8 @@
 
 
-public interface IMGAnimatable
+public abstract class IMGAnimatable
 {
-    public void Execute(System.Action finishedCallback);
+    public MilitaryUnit unit;
+
+    public abstract void Execute(System.Action finishedCallback);
 }

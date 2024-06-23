@@ -152,6 +152,7 @@ GameObject:
   - component: {fileID: 5049116215420832317}
   - component: {fileID: 6307161178468185161}
   - component: {fileID: 2853154143696395536}
+  - component: {fileID: 3091367290081046116}
   m_Layer: 5
   m_Name: UICanvas
   m_TagString: GameUI
@@ -279,6 +280,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38d51616465cfdf4291a04ee90fd627c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3091367290081046116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5049116215420832315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d40ccac8adb15d34d8009e04d2c9fd85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5049116215467832722

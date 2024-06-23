@@ -43,6 +43,8 @@ public class Minecart : Item, ISavable
 
     private bool dropOnNextMove = false;
 
+    private int numberOfPickups = 0;
+    public int NumPickups => numberOfPickups;
 
     [Header("State")]
     public MinecartState mcState;
@@ -703,6 +705,7 @@ public class Minecart : Item, ISavable
         base.Save();
 
         SaveSystem.Current.SetInt("mountainMCState", (int)mcState);
+        SaveSystem.Current.SetInt("mountainMCNumPickups", numberOfPickups);
     }
 
     public override void Load(SaveProfile profile)
@@ -711,6 +714,7 @@ public class Minecart : Item, ISavable
 
         int state = profile.GetInt("mountainMCState");
         mcState = (MinecartState)state;
+        numberOfPickups = SaveSystem.Current.GetInt("mountainMCNumPickups");
         UpdateIcon();
     }
 

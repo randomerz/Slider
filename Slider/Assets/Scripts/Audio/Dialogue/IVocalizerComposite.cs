@@ -17,6 +17,21 @@ namespace SliderVocalization
 
         bool IVocalizer.IsEmpty => Vocalizers.Count == 0;
 
+        int IVocalizer.Count<V>()
+        {
+            if (this is V)
+            {
+                return 1;
+            }
+            
+            int count = 0;
+            foreach (var voc in Vocalizers)
+            {
+                count += voc.Count<V>();
+            }
+            return count;
+        }
+
         internal void PreRandomize(VocalizerParameters preset, VocalRandomizationContext context, T upcoming);
         
         public VocalizerCompositeState GetVocalizationState();
@@ -124,6 +139,9 @@ namespace SliderVocalization
 }
 public static class VocalizerCompositeExtensions
 {
+    public static int GetCount<T, V>(this IVocalizerComposite<T> composite) where T : IVocalizer where V: IVocalizer
+        => composite.Count<V>();
+    
     public static bool GetIsEmpty<T>(this IVocalizerComposite<T> composite) where T : IVocalizer
         => composite.IsEmpty;
 

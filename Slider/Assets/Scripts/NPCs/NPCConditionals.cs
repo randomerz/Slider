@@ -68,20 +68,24 @@ public class NPCConditionals
 
     }
 
-    public string GetDialogueString(int index)
+    public (string original, string localized) GetDialogueString(int index)
     {
         if (index < 0 || index >= dialogueChain.Count)
         {
             Debug.LogError("Attempted to access nonexistent dialogue in chain.");
         }
 
-        string dialogue = dialogueChain[index].dialogue;
+        var data = dialogueChain[index];
+        string dialogue = data.dialogue;
+        string localized = data.DialoguePreferLocalized;
+        
         if (dialogueChain[index].waitUntilPlayerAction)
         {
             dialogue = string.Concat(dialogue, "<type> ...</type>");
+            localized = string.Concat(localized, "<type> ...</type>");
         }
 
-        return dialogue;
+        return (dialogue, localized);
     }
 
     public int GetPrio()

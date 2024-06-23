@@ -9,8 +9,23 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
         Ready, // Might still be processing but send the next
         Processing, // Proccessing animations
     }
+    public enum Speed 
+    {
+        Slow,
+        Medium,
+        Fast,
+    }
+
+    public static Speed CurrentGlobalAnimationsSpeed = Speed.Slow;
+    public static Speed BaseGlobalAnimationsSpeed = Speed.Slow;
 
     private Queue<IMGAnimatable> moveQueue = new();
+
+    private Queue<IMGAnimatable> moveBuffer = new();
+    private Queue<IMGAnimatable> fightBuffer = new();
+    private Queue<IMGAnimatable> deathBuffer = new();
+    private Coroutine updateBuffersCoroutine;
+
     private List<IMGAnimatable> activeMoves = new();
     private QueueStatus status = QueueStatus.Off;
 
@@ -22,22 +37,54 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
     private void Awake()
     {
         InitializeSingleton();
+        CurrentGlobalAnimationsSpeed = Speed.Slow;
+        BaseGlobalAnimationsSpeed = Speed.Slow;
     }
 
-    public static void AddToQueue(IMGAnimatable move)
-    {
-        _instance.moveQueue.Enqueue(move);
-        _instance.CheckQueue();
-    }
+    public static void AddToQueue(IMGAnimatable move) => _instance._AddToQueue(move);
 
-    public static void AddToQueueFront(IMGAnimatable move)
+    public void _AddToQueue(IMGAnimatable move)
     {
-        // TODO: implement
-        // - i dont think we actually want an add to front of queue though
-        //   since all of the actions get put into the queue immediately.
-        //   we want something to attach to after a units move
-        _instance.moveQueue.Enqueue(move);
-        _instance.CheckQueue();
+        if (move is MGMove)
+        {
+            moveBuffer.Enqueue(move);
+        }
+        else if (move is MGFight)
+        {
+            fightBuffer.Enqueue(move);
+        }
+        else
+        {
+            deathBuffer.Enqueue(move);
+        }
+        
+        // Speed up animations if there were already moves in before
+        if (moveQueue.Count > 0)
+        {
+            SpeedUpAnimations();
+        }
+
+        if (updateBuffersCoroutine == null)
+        {
+            updateBuffersCoroutine = CoroutineUtils.ExecuteAfterEndOfFrame(
+                () => {
+                    while (moveBuffer.Count > 0)
+                    {
+                        moveQueue.Enqueue(moveBuffer.Dequeue());
+                    }
+                    while (fightBuffer.Count > 0)
+                    {
+                        moveQueue.Enqueue(fightBuffer.Dequeue());
+                    }
+                    while (deathBuffer.Count > 0)
+                    {
+                        moveQueue.Enqueue(deathBuffer.Dequeue());
+                    }
+                    CheckQueue();
+                    updateBuffersCoroutine = null;
+                }, this
+            );
+        }
     }
 
     private void CheckQueue()
@@ -55,14 +102,15 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
                 activeMoves.Add(nextMove);
                 ExecuteMove(nextMove);
 
-                // If next move is an alien move, play all alien moves at the front of the queue
-                while (moveQueue.Count > 0 && IsAlienMGMove(nextMove))
+                // If next move is not player movement, try to play all of the same type at same time
+                while (moveQueue.Count > 0 && IsNotPlayerMGMove(nextMove))
                 {
-                    nextMove = moveQueue.Dequeue();
-                    if (nextMove != null && IsAlienMGMove(nextMove))
+                    IMGAnimatable newestMove = moveQueue.Peek();
+                    if (AreSameType(newestMove, nextMove))
                     {
-                        activeMoves.Add(nextMove);
-                        ExecuteMove(nextMove);
+                        moveQueue.Dequeue();
+                        activeMoves.Add(newestMove);
+                        ExecuteMove(newestMove);
                     }
                     else
                     {
@@ -75,15 +123,12 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
             case QueueStatus.Processing:
                 // Queue is processing!
 
-                // If new and all active moves are alien MGMoves, play the new one too
-                if (moveQueue.Count > 0 && IsAlienMGMove(moveQueue.Peek()))
+                // Try to play all of the same type at same time
+                if (moveQueue.Count > 0 && AreSameType(moveQueue.Peek(), lastMoveExecuted) && IsNotPlayerMGMove(moveQueue.Peek()))
                 {
-                    if (activeMoves.Count > 0 && AreAllActiveMovesAlienMGMove())
-                    {
-                        IMGAnimatable topMove = moveQueue.Dequeue();
-                        activeMoves.Add(topMove);
-                        ExecuteMove(topMove);
-                    }
+                    IMGAnimatable topMove = moveQueue.Dequeue();
+                    activeMoves.Add(topMove);
+                    ExecuteMove(topMove);
                 }
 
                 // if move queue is getting stale then lets just do something about it
@@ -131,6 +176,10 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
         {
             CheckQueue();
         }
+        if (status == QueueStatus.Off)
+        { 
+            CurrentGlobalAnimationsSpeed = BaseGlobalAnimationsSpeed;
+        }
     }
 
     public static void SpawnFightParticles(Transform transform)
@@ -138,21 +187,41 @@ public class MilitaryTurnAnimator : Singleton<MilitaryTurnAnimator>
         Instantiate(_instance.fightParticles, transform.position, Quaternion.identity, transform);
     }
 
-
-    private bool IsAlienMGMove(IMGAnimatable move)
+    
+    public static void SpeedUpAnimations()
     {
-        return move is MGMove && (move as MGMove).unit.UnitTeam == MilitaryUnit.Team.Alien;
+        if (BaseGlobalAnimationsSpeed == Speed.Medium)
+        {
+            CurrentGlobalAnimationsSpeed = Speed.Fast;
+        }
+        else
+        {
+            CurrentGlobalAnimationsSpeed = Speed.Medium;
+        }
     }
 
-    private bool AreAllActiveMovesAlienMGMove()
+    public static void SetBaseAnimationSpeedToMedium()
     {
-        foreach (IMGAnimatable m in activeMoves)
+        BaseGlobalAnimationsSpeed = Speed.Medium;
+        if (CurrentGlobalAnimationsSpeed == Speed.Slow)
         {
-            if (!IsAlienMGMove(m))
-            {
-                return false;
-            }
+            CurrentGlobalAnimationsSpeed = BaseGlobalAnimationsSpeed;
         }
-        return true;
+    }
+
+
+
+    private bool IsNotPlayerMGMove(IMGAnimatable move)
+    {
+        return !(move is MGMove && move.unit.UnitTeam == MilitaryUnit.Team.Player);
+    }
+
+    private bool AreSameType(IMGAnimatable move1, IMGAnimatable move2)
+    {
+        return (
+            (move1 is MGMove && move2 is MGMove) ||
+            (move1 is MGFight && move2 is MGFight) ||
+            (move1 is MGDeath && move2 is MGDeath)
+        );
     }
 }

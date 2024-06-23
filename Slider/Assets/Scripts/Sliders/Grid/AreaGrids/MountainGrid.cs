@@ -117,7 +117,12 @@ public class MountainGrid : SGrid
         if(CheckGrid.contains(GetGridString(), "31_48_76_52")) {
             SaveSystem.Current.SetBool("forceAutoMove", false);
             StartCoroutine(ShowButtonAndMapCompletions());
+            SaveSystem.Current.SetBool("completedMountain", true);
             AchievementManager.SetAchievementStat("completedMountain", 1);
+            if(minecart.NumPickups <= 2)
+            {
+                AchievementManager.SetAchievementStat("mountainMinMinecart", 1);
+            }
         }
     }
 

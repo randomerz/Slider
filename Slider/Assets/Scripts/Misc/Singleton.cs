@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -82,6 +83,14 @@ public abstract class Singleton<T> : MonoBehaviour
             CheckForAndDestroyDuplicates();
             _instance = FindObjectOfType<T>();
             return false;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (_instance == this as T)
+        {
+            _instance = null;
         }
     }
 

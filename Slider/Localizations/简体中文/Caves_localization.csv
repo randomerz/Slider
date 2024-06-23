@@ -1,0 +1,154 @@
+"Localization files are formatted like CSV so they can be easily edited,
+however formatting has strict rules for easy parsing. Most of these rules
+are already handled by Excel / Libre / etc., so you don't have to worry
+about them in normal usage. However, if your localization file seems to
+be corrupted, these rules may be helpful for debugging purposes...
+- In general, any consecutive string of \r and \n (in any order) will be
+  treated as one SINGLE line break, except within an enclosed context
+- The first 4 rows can be arbitrarily long
+  - The first cell of first row is used to store this block of instruction
+    text
+  - The first 3 cells of the fourth row is used as headers
+  - All other cells in the first and fourth rows are ignored
+  - Columns in the second row alternate between property and value (ex.
+    ' foo | 1 | bar | 3.5 | ... '
+    - Any whitespaces before and after the property name are ignored
+  - Columns in the third row are exclusively comments for properties in the
+    second row
+- Every following line can include any number of cells, but only the
+  first three will be parsed (you can use the rest as comments if needed)
+- The file must end in a sequence of \r and \n's
+- Every cell containing a ^, \r, or \n must be enclosed in ""
+  - If a "" is encountered right after a non-enclosed separator, \r, or \n,
+    then the parser is said to enter an ""enclosed context"", such context
+    ends immediately when a non-escaped "" that is not followed by \r, \n,
+    or a separator is encountered
+  - "" within each cell should be escaped using another "" in front of it,
+  - If a "" is encountered in a non-enclosed context, and it is not right
+    after a separator, \r, or \n, then it is entirely ignored
+  - If a non-escaped "" is encountered in an enclosed context...
+    - If it is followed by a separator, \r, or \n, then it is considered
+      the closing quote of the current context
+    - Otherwise, it is ignored
+  - If a separator, \r, or \n is encountered while in an enclosed context,
+    it will be preserved
+",
+"NonDialogueFontAdjust"," ","DialogueFontScale"," ",
+"String value adjusting font size for everything *except* dialogue. ex: +4 is 4 points larger, -4 is 4 points smaller"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
+"Path","Orig","Translation",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Items/ArtifactInventoryItem (12)/Sunglasses Total Text","2","2",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Items/ArtifactInventoryItem Breadge/Breadge Total Text","9","9",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Items/ArtifactInventoryItem Oil/Oil Total Text","4","4",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Text/ItemNameText","Collection","Collection",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/WorldMapPanel/Text/AreaNameText","Map
+","Map
+",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/WorldMapPanel/Text/AreaNameTextBG","Map
+","Map
+",
+"Map/EightPuzzle/Cave STile (1)/Objects/Warning Sign@0:0","DANGER: Light
+Sensitive Fungi.","DANGER: Light
+Sensitive Fungi.",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Chad@0:0","Hey uh... the devs haven't put this puzzle in yet...","Hey uh... the devs haven't put this puzzle in yet...",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Chad@0:1","One day the computer will work though. Fear that day!","One day the computer will work though. Fear that day!",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Chad@1:0","Just... just one more round! I'm starting to get good with dice.","Just... just one more round! I'm starting to get good with dice.",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Chad@2:0","...","...",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@0:0","Heyo! So funny story.","Heyo! So funny story.",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@0:1","I was doing maintenance on the power cause the line got chewed out. When a RAT showed up and started squeakin' about. Gave me a lil' jump and I tripped. Flipped the switch and doors shut, and dropped my keys. Then that darn RAT took 'em! And now here I am. In a bit of a tickle one might say.","I was doing maintenance on the power cause the line got chewed out. When a RAT showed up and started squeakin' about. Gave me a lil' jump and I tripped. Flipped the switch and doors shut, and dropped my keys. Then that darn RAT took 'em! And now here I am. In a bit of a tickle one might say.",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@0:2","Sorry I meant pickle.","Sorry I meant pickle.",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@0:3","Anyways I'd owe you a lunch if you got me my keys back.","Anyways I'd owe you a lunch if you got me my keys back.",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@1:0","Heyo, you got the key!","Heyo, you got the key!",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@2:0","Thanks for grabbing it, don't know what I would do without ya.","Thanks for grabbing it, don't know what I would do without ya.",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@2:1","No really, thanks a lot.","No really, thanks a lot.",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@2:2","I mean it.","I mean it.",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@3:0","Heyo thanks a ton, really.","Heyo thanks a ton, really.",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@3:1","The Factory foreman would've been ON ME if it wasn't fixed.","The Factory foreman would've been ON ME if it wasn't fixed.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@0:0","Someone there? Welcome to the Cavern Station!","Someone there? Welcome to the Cavern Station!",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@0:1","I'd show you in, but I can't quite see the door.","I'd show you in, but I can't quite see the door.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@1:0","Ah... so dark again.","Ah... so dark again.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@2:0","There's the door! And my work bench!","There's the door! And my work bench!",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@3:0","Thanks for getting things up and running again.","Thanks for getting things up and running again.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@3:1","Ever since they put me on fungus removal duty it's been hard to see.","Ever since they put me on fungus removal duty it's been hard to see.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@3:2","These 10 kilowatt lights are so convenient though!","These 10 kilowatt lights are so convenient though!",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@4:0","Why do people write so small... what do these labels even say?","Why do people write so small... what do these labels even say?",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@0:0","The minecart is broken!","The minecart is broken!",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@0:1","We'll need supplies from the jungle to fix it.","We'll need supplies from the jungle to fix it.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@0:2","What? The bridge is broken??","What? The bridge is broken??",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@0:3","Ugh... this is never getting fixed.","Ugh... this is never getting fixed.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@1:0","Is the bridge fixed yet?","Is the bridge fixed yet?",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@1:1","There's a path to Canopy Town behind Bob's Tavern but... that's way too far for us.","There's a path to Canopy Town behind Bob's Tavern but... that's way too far for us.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@2:0","Oh man you fixed it! We can finally work on fixing the transport from the Crystal Mines.","Oh man you fixed it! We can finally work on fixing the transport from the Crystal Mines.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@2:1","The Mines? They're shipping materials to MRI.","The Mines? They're shipping materials to MRI.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@2:2","Something about them holds a lot of power. Good for fuel and whatever.","Something about them holds a lot of power. Good for fuel and whatever.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@3:0","Oh man you fixed it! We can finally work on fixing the transport from the Crystal Mines.","Oh man you fixed it! We can finally work on fixing the transport from the Crystal Mines.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@3:1","The Mines? They're shipping materials to MRI.","The Mines? They're shipping materials to MRI.",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@3:2","Something about them holds a lot of power. Good for fuel and whatever.","Something about them holds a lot of power. Good for fuel and whatever.",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@0:0","woah, you checked out behind the waterfall too?","woah, you checked out behind the waterfall too?",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@0:1","i seem to have lost my flashlight in these strange mushrooms","i seem to have lost my flashlight in these strange mushrooms",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@0:2","try turning on the power station, the key should be nearby","try turning on the power station, the key should be nearby",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@0:3","i wonder how the moss came to be... ive never seen anything like it!","i wonder how the moss came to be... ive never seen anything like it!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@0:4","i wonder what happens if i... touch it?","i wonder what happens if i... touch it?",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@1:0","you again! i seem to have lost my flashlight in these strange mushrooms","you again! i seem to have lost my flashlight in these strange mushrooms",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@1:1","try turning on the power station, the key should be nearby","try turning on the power station, the key should be nearby",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@1:2","i wonder how the moss came to be... I've never seen anything like it!","i wonder how the moss came to be... I've never seen anything like it!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@1:3","i wonder what happens if i... touch it?","i wonder what happens if i... touch it?",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@2:0","the station's back on! think itll help find my flashlight?","the station's back on! think itll help find my flashlight?",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@2:1","this light here should help with the mushrooms around it","this light here should help with the mushrooms around it",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@3:0","woah!! where did you found my flashlight?!","woah!! where did you found my flashlight?!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@3:1","wait... it doesn't look like it works...","wait... it doesn't look like it works...",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@3:2","theres fungi inside the light. the bulb looks... shattered?","theres fungi inside the light. the bulb looks... shattered?",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@3:3","oh well! make sure to turn on the station light!","oh well! make sure to turn on the station light!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@3:4","im looking for some ruins deeper in these caves, keep an eye out.","im looking for some ruins deeper in these caves, keep an eye out.",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@4:0","the flashlight doesn't look like it works...","the flashlight doesn't look like it works...",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@4:1","woah, theres fungi inside the light. the bulb looks... shattered?","woah, theres fungi inside the light. the bulb looks... shattered?",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@4:2","oh well! im looking for some ruins deeper in these caves, keep an eye out.","oh well! im looking for some ruins deeper in these caves, keep an eye out.",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@5:0","i lost my backup light too (sorry) and now I can't study these ruins..","i lost my backup light too (sorry) and now I can't study these ruins..",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@5:1","could you light up <wavy>the ENTIRE cavern</wavy> for me?","could you light up <wavy>the ENTIRE cavern</wavy> for me?",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@6:0","now! what do these say...","now! what do these say...",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@6:1","the ancient civilization's notes...","the ancient civilization's notes...",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@6:2"," rearranging..."," rearranging...",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@6:3"," a <#ff9040>scroll</color>?!"," a <#ff9040>scroll</color>?!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@7:0","this is all so fascinating! i wonder how the ancient civilization created these tools.","this is all so fascinating! i wonder how the ancient civilization created these tools.",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@7:1","i... i have to find the source of this magic!","i... i have to find the source of this magic!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@7:2","im going to the desert! who knows what might be afoot.","im going to the desert! who knows what might be afoot.",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@7:3","chad..? where are you chaaddddd","chad..? where are you chaaddddd",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@8:0","chad c'mon lets go!","chad c'mon lets go!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@8:1","a-are you gambling?? im not paying you for this lets go get the <#ff9040>scroll</color>","a-are you gambling?? im not paying you for this lets go get the <#ff9040>scroll</color>",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@9:0","...","...",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@0:0","Rats! The power line's been chewed up again.","Rats! The power line's been chewed up again.",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@0:1","Jimbobby is stuck behind the door to the Crystal Caves!","Jimbobby is stuck behind the door to the Crystal Caves!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@0:2","Gah! That power line can't even be fixed!","Gah! That power line can't even be fixed!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@1:0","Is that the rat?! Kill it! Git!","Is that the rat?! Kill it! Git!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@1:1","Gah! It's so fast!","Gah! It's so fast!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@2:0","The rats done! But so is the wire.","The rats done! But so is the wire.",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@2:1","And I pray Jimbobby stays strong.","And I pray Jimbobby stays strong.",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@3:0","Stranger! Please, help Jimbobby if you can!","Stranger! Please, help Jimbobby if you can!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@4:0","Jimbobby is saved!","Jimbobby is saved!",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@5:0","And the rail line's fixed?! You, sir, are a miracle worker!","And the rail line's fixed?! You, sir, are a miracle worker!",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@0:0","Gah, what was the protocol for this?","Gah, what was the protocol for this?",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@0:1","I know it could be done with only two lights, but how?","I know it could be done with only two lights, but how?",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@0:2","It's probably easier with more...","It's probably easier with more...",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@1:0","Woah!! You got it!","Woah!! You got it!",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@1:1","Sorry would you mind telling me again, I wasn't paying attention...","Sorry would you mind telling me again, I wasn't paying attention...",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@2:0","Sigh... Ever since we started digging up those crystals.","Sigh... Ever since we started digging up those crystals.",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@2:1","I can't believe this fungi is so obtrusive. It's unwordly.","I can't believe this fungi is so obtrusive. It's unwordly.",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@2:2","What are the MRI execs up to...","What are the MRI execs up to...",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@3:0","Hm... it looks like this light is going to run out of battery soon.","Hm... it looks like this light is going to run out of battery soon.",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@3:1","Oh well, I'm sure someone will fix it.","Oh well, I'm sure someone will fix it.",
+"Map/EightPuzzle/Cave STile (9)/Objects/Pirate Dropout@0:0","I knew I shouldn't have dropped out of school...","I knew I shouldn't have dropped out of school...",
+"Map/EightPuzzle/Cave STile (9)/Objects/Pirate Dropout@1:0","...","...",
+"Map/EightPuzzle/Cave STile (9)/Objects/Treasure Hunter@0:0","Yar... the treasure here be a sham...","Yar... the treasure here be a sham...",
+"Map/EightPuzzle/Cave STile (9)/Objects/Treasure Hunter@0:1","Never shoulda trusted Catbeard, that drunkard.","Never shoulda trusted Catbeard, that drunkard.",
+"Map/EightPuzzle/Cave STile (9)/Objects/Treasure Hunter@1:0","...","...",
+"Map/World Grid/BaseObjects/(temp) explosives soign@0:0","boom goes here (not working)","boom goes here (not working)",
+"Map/World Grid/BaseObjects/Jimbobby@0:0","thank you... ive been stuck there for days...","thank you... ive been stuck there for days...",
+"Map/World Grid/BaseObjects/Jimbobby@1:0","...","...",
+"Map/World Grid/BaseObjects/Repairman@0:0","This light seems to be broken... Can you get me my cutters and wrench?","This light seems to be broken... Can you get me my cutters and wrench?",
+"Map/World Grid/BaseObjects/Repairman@1:0","Woah, you found my wrench and wire cutters already! Let me fix this real quick...","Woah, you found my wrench and wire cutters already! Let me fix this real quick...",
+"Map/World Grid/BaseObjects/Repairman@1:1","Let there be light!","Let there be light!",
+"Map/World Grid/BaseObjects/Repairman@1:2","I'm gonna take a break now.","I'm gonna take a break now.",
+"Map/World Grid/BaseObjects/Repairman@1:3","I got commissioned to fix this bridge too... must have broke in that earth quake.","I got commissioned to fix this bridge too... must have broke in that earth quake.",
+"Map/World Grid/BaseObjects/Repairman@2:0","Let there be light!","Let there be light!",
+"Map/World Grid/BaseObjects/Repairman@2:1","I'm gonna take a break now.","I'm gonna take a break now.",
+"Map/World Grid/BaseObjects/Repairman@2:2","I got commissioned to fix this bridge too... must have broke in that earth quake.","I got commissioned to fix this bridge too... must have broke in that earth quake.",
+"Map/World Grid/BaseObjects/Repairman@3:0","...","...",
