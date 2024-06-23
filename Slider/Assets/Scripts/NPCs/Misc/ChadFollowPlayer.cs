@@ -222,6 +222,7 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
 
     private void UpdateWalkTransforms()
     {
+        if(playerTransform == null) return;
         // walkStart.position = transform.position;
         Vector3 dirPlayerToMe = (transform.position - playerTransform.position).normalized;
         float distToPlayer = Vector3.Distance(transform.position, playerTransform.position);
@@ -230,6 +231,7 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
 
     private void UpdateSpeed()
     {
+        if(playerTransform == null) return;
         float distToPlayer = Vector3.Distance(transform.position, playerTransform.position);
         float newSpeed = Map(CloseFollowDist, FarFollowDist, closeSpeed, farSpeed, distToPlayer);
         npc.speed = newSpeed;
@@ -265,6 +267,7 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
 
     private void TeleportToPlayer()
     {
+        if(playerTransform == null) return;
         UpdateWalkTransforms();
         UpdateSpeed();
         transform.position = playerTransform.position;
@@ -295,7 +298,10 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
         if (stileUnderneath != currentSTileUnderneath)
         {
             currentSTileUnderneath = stileUnderneath;
-            transform.SetParent(stileUnderneath.transform);
+            if(stileUnderneath == null)
+                transform.SetParent(null);
+            else
+                transform.SetParent(stileUnderneath.transform);
         }
     }
 
