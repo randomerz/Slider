@@ -211,10 +211,10 @@ public class UIEffects : Singleton<UIEffects>
     private IEnumerator PixelizeCoroutine(System.Action callbackMiddle = null, System.Action callbackEnd = null, float speed = 1)
     {   
         int maxRes = 180;
-        int minRes = 10;
+        int minRes = 1;
 
         float t = 0; 
-        pixelizeFeature.SetActive(true);
+        pixelizeFeature.settings.enabled = true;
 
         while (t < flashDuration / 2)
         {
@@ -234,12 +234,12 @@ public class UIEffects : Singleton<UIEffects>
             t -= (Time.deltaTime * speed);
         }
         callbackEnd?.Invoke();
-        pixelizeFeature.SetActive(false);
+        pixelizeFeature.settings.enabled = false;
     }
 
-    private void TogglePixel()
+    public static void DisablePixel()
     {
-        pixelizeFeature.SetActive(!pixelizeFeature.isActive);
+        _instance.pixelizeFeature.settings.enabled = false;
     }
 
     public static void StartSpotlight(Vector2 positionPixel, float radiusPixel, float duration=2, System.Action onStart=null, System.Action onFinish=null)

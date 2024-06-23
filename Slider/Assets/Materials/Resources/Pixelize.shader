@@ -1,6 +1,6 @@
 
 
-Shader "Hidden/Pixelize"
+Shader "Imports/Pixelize"
 {
     Properties
     {
@@ -64,6 +64,7 @@ Shader "Hidden/Pixelize"
             HLSLPROGRAM
             half4 frag(Varyings IN) : SV_TARGET
             {
+
                 float2 blockPos = floor(IN.uv * _BlockCount);
                 float2 blockCenter = blockPos * _BlockSize + _HalfBlockSize;
 
