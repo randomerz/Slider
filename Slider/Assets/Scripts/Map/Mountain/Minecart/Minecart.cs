@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -248,13 +249,17 @@ public class Minecart : Item, ISavable
     {
         if(count > 2)
         {
-            Debug.LogError("infinite recursion!");
+            Debug.LogError("infinite recursion in minecart drop. This should never happen!");
+            StartCoroutine(AnimateDrop(dropLocation, callback));
             return;
         }
         if(railManager.railLocations.Contains(railmap.WorldToCell(dropLocation)))
         {
-            StartCoroutine(AnimateDrop(railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet, callback));
-            SnapToRail(railmap.WorldToCell(dropLocation));
+            bool snap;
+            Vector3 loc = GetDropLocation(dropLocation, railmap, out snap);
+            StartCoroutine(AnimateDrop(loc, callback));
+            if(snap)
+                SnapToRail(railmap.WorldToCell(dropLocation));
         }
         else if(railManager.otherRMOnTile != null 
                 && railManager.otherRMOnTile.railLocations.Contains(railmap.WorldToCell(dropLocation)))
@@ -264,6 +269,19 @@ public class Minecart : Item, ISavable
         }
         else
             StartCoroutine(AnimateDrop(dropLocation, callback));
+    }
+    
+    private Vector3 GetDropLocation(Vector3 dropLocation, Tilemap railmap, out bool snap)
+    {
+        snap = false;
+        Vector3 targetSnapLoc = railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet;
+        LayerMask mask = LayerMask.GetMask(new string[]{"Item"});
+        if(Physics2D.OverlapCircleAll(targetSnapLoc, 1, mask).Count() == 0)
+        {
+            snap = true;
+            return railmap.CellToWorld(railmap.WorldToCell(dropLocation)) + offSet;
+        }
+        return dropLocation;
     }
 
     public override void OnEquip()
