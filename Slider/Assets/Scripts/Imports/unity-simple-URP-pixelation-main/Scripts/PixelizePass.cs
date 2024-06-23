@@ -39,16 +39,16 @@ public class PixelizePass : ScriptableRenderPass
         material.SetVector("_BlockSize", new Vector2(1.0f / pixelScreenWidth, 1.0f / pixelScreenHeight));
         material.SetVector("_HalfBlockSize", new Vector2(0.5f / pixelScreenWidth, 0.5f / pixelScreenHeight));
 
-        if(settings.enabled)
-        {
-            descriptor.height = pixelScreenHeight;
-            descriptor.width = pixelScreenWidth;
-        }
-        else
-        {
+        // if(settings.enabled)
+        // {
+        //     descriptor.height = pixelScreenHeight;
+        //     descriptor.width = pixelScreenWidth;
+        // }
+        // else
+        // {
             descriptor.height = Screen.height;
             descriptor.width = Screen.width;
-        }
+       // }
         cmd.GetTemporaryRT(pixelBufferID, descriptor, FilterMode.Point);
         pixelBuffer = new RenderTargetIdentifier(pixelBufferID);
     }

@@ -83,7 +83,6 @@ public class MilitaryGrid : SGrid
             return;
         isRestarting = true;
         PauseManager.AddPauseRestriction(gameObject);
-        // Player.SetCanMove(false);
         AudioManager.Play("Slide Rumble"); 
         
         UIEffects.Pixelize(
@@ -94,7 +93,6 @@ public class MilitaryGrid : SGrid
             () => {
                 isRestarting = false;
                 PauseManager.RemovePauseRestriction(gameObject);
-                Player.SetCanMove(true);
             }, 
             speed
         );
