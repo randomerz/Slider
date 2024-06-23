@@ -255,7 +255,7 @@ public class ArtifactTileButton : MonoBehaviour
     public void SetControllerHoverHighlighted(bool v)
     {
         buttonAnimator.SetControllerHoverHighlight(v);
-        if (this.LinkButton != null)
+        if (this.LinkButton != null && this.TileIsActive)
         {
             this.LinkButton.buttonAnimator.SetControllerHoverHighlight(v);
         }
