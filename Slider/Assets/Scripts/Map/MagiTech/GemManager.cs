@@ -175,7 +175,7 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
 
         foreach (bool b in gems.Values)
         {
-            if (!b)
+            if (b)
             {
                 num += 1;
             }

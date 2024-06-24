@@ -13,24 +13,11 @@ public class SceneChanger : MonoBehaviour
 
     public List<GameObject> deactivateOnTransition;
 
-    void Start()
-    {
-        
-    }
-
-    // void Update()
-    // {
-    //     Keyboard kb = InputSystem.GetDevice<Keyboard>();
-    //     if (kb.pKey.wasPressedThisFrame) 
-    //     { // temporary
-    //         ChangeScenes();
-    //     }
-    // }
-
     public void ChangeScenes() 
     {
         SaveSystem.Current.Save();
         SceneSpawns.nextSpawn = sceneSpawnName;
+        SceneSpawns.lastArea = SGrid.Current.GetArea();
 
         if (isSpawnPosRelative)
             SceneSpawns.relativePos = Player.GetPosition() - transform.position;

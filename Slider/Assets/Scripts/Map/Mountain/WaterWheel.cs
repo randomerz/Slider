@@ -86,7 +86,7 @@ public class WaterWheel : MonoBehaviour, ISavable
         if(!heaterFixed) return;
         
         lavaCount++;
-        mc.UpdateState("Empty");
+        mc.UpdateState(MinecartState.Empty);
         lavaExtractorAnimator.Play("Fill");
     }
 

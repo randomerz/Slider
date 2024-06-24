@@ -313,7 +313,10 @@ public class DebugUIManager : MonoBehaviour
         p.toggleCollision();
     }
 
-    public void EnableScroll() => PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Scroll of Realigning", Area.Desert));
+    public void EnableScroll()
+    {
+        PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Scroll of Realigning", Area.Desert));
+    }
 
     public void GiveBoots()
     {
