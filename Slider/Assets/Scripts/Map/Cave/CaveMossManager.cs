@@ -7,6 +7,7 @@ using UnityEngine.Tilemaps;
 public class CaveMossManager : MonoBehaviour
 {
     private const float colliderForgiveness = 0.35f;
+    private const float mossUpdateTimerBuffer = 0.5f;
 
     [SerializeField] private Tilemap mossMap;
     [SerializeField] private Tilemap recededMossMap;
@@ -18,14 +19,6 @@ public class CaveMossManager : MonoBehaviour
     private PlayerMoveOffMoss _playerMoveOffMoss;
     private float _updateMossTimer;
     private List<Vector3Int> _cachedMossTilePositions;
-
-    public class MossIsGrowingArgs : System.EventArgs
-    {
-        public STile stile;
-        public Tilemap mossMap;
-        public Vector3Int cellPos;
-        public bool isGrowing;
-    }
 
     public class MossUpdatedArgs : System.EventArgs
     {
@@ -70,7 +63,7 @@ public class CaveMossManager : MonoBehaviour
 
     private void HandleLightingUpdate(object sender, System.EventArgs e)
     {
-        _updateMossTimer = mossFadeSpeed;
+        _updateMossTimer = (1+mossUpdateTimerBuffer) * mossFadeSpeed;
     }
 
     private void InitMoss()
@@ -178,7 +171,6 @@ public class CaveMossManager : MonoBehaviour
         return false;
     }
 
-    // TODO: cache tiles
     private void ForEachMossTileIn(Action<Vector3Int> func)
     {
         foreach (Vector3Int pos in GetCachedMossTilePositions())
