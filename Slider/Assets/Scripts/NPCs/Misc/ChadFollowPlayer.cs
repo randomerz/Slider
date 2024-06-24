@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 /// TODO
@@ -16,11 +17,10 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
         Following,
     }
 
-    private const string CHIRP_SAVE_STRING = "MiscChadFollowPlayerChirp";
     private const string FOLLOW_SAVE_STRING = "MiscChadIsFollowingPlayer";
 
+    public bool isFollowingEnabled;
     private FollowState state;
-    private bool isFollowingEnabled;
     private STile currentSTileUnderneath = null;
 
     private float CloseFollowDist { // Stop if this close
@@ -75,8 +75,6 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
         contactFilter2D.SetLayerMask(obstaclesLayerMask);
         contactFilter2D.useTriggers = false;
 
-        SaveSystem.Current.SetString(CHIRP_SAVE_STRING, "Onwards!");
-
         // for dev
         if (!PlayerInventory.Contains("Boots", Area.Jungle))
         {
@@ -88,7 +86,11 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
         {
             SetFollowingPlayer(true);
             TeleportToPlayer();
-            HandleChangeScene();
+        }
+
+        if (walkEnd == null)
+        {
+            Debug.LogError($"walkEnd is not assigned! Why don't we just create it? I don't know probably something to do with execution order.");
         }
     }
 
@@ -127,11 +129,6 @@ public class ChadFollowPlayer : MonoBehaviour, ISavable
         isFollowingEnabled = profile.GetBool(FOLLOW_SAVE_STRING);
     }
 
-    private void HandleChangeScene()
-    {
-        Area lastArea = SceneSpawns.lastArea;
-        // yap yap yap
-    }
 
     private void Update() 
     {
