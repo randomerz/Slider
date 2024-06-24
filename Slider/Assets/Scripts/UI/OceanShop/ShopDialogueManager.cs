@@ -364,7 +364,7 @@ public class ShopDialogueManager : MonoBehaviour, IDialogueTableProvider
         {
             this.onStart = onStart;
             this.text = text.original;
-            this.textTranslated = text.translated;
+            this.textTranslated = text.TranslatedFallbackToOriginal;
             this.tkSprite = tkSprite;
             this.onFinishAndAction = onFinishAndAction;
         }

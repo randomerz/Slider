@@ -130,6 +130,6 @@ public static class DialogueTableProviderExtensions
     public static string GetLocalizedSingle<I, T>(this I self,T key, int i = 0) where I: MonoBehaviour, IDialogueTableProvider where T : Enum
     {
         var pair = self.GetLocalized(key, i);
-        return pair.translated ?? pair.original;
+        return pair.TranslatedFallbackToOriginal;
     }
 }

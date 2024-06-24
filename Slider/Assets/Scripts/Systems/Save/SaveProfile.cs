@@ -319,7 +319,7 @@ public class SaveProfile
         strings[name] = value;
     }
     
-    public void SetLocalizedString(string name, LocalizationPair pair) => SetLocalizedString(name, pair.original, pair.translated);
+    public void SetLocalizedString(string name, LocalizationPair pair) => SetLocalizedString(name, pair.original, pair.TranslatedFallbackToOriginal);
 
     public void SetLocalizedString(string name, string value, string localized)
     {

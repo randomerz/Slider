@@ -1,7 +1,50 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Localization;
 
 public partial class ChadChirp
 {
+    #region Localization
+
+    enum ChadChirpStrings
+    {
+        Onwards,
+        CameFromJungle,
+        CameFromMilitary,
+        ArrivedInDesert,
+        ArrivedInFactoryPresent,
+        ArrivedInMagiTechPresent,
+        UsedAnchor,
+        WentThroughPortal,
+        LeftGreedyWizard,
+        WalkNearLaser,
+        WalkNearRocker,
+        WalkNearCastle,
+        EnteredMuseum,
+        WalkNearGemFuelMachine,
+        WalkNearCasinoTable,
+        WalkNearCasinoExplosives,
+        EnteredDesertTemple,
+        EnteredDesertTempleSnail,
+        WalkedInDinoMouth,
+        WalkNearChadSr,
+        WalkNearPresentMegaCrystal,
+        WalkNearPastMegaCrystal,
+        RandomSmallTalk1,
+        RandomSmallTalk2,
+        RandomSmallTalk3,
+    }
+    
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        ChadChirpData.chirpDataList.ToDictionary(
+            cData => Enum.Parse<ChadChirpStrings>(cData.id),
+            cData => cData.text
+            )
+        );
+
+    #endregion
+    
     public class ChadChirpData
     {
         public string id;
@@ -9,6 +52,15 @@ public partial class ChadChirp
         public int priority; // 2 for "CanChirps", 1 for "WantChirps"
         public bool canBeRepeated; // If can be repeated, then priority also goes from 2 -> 1
         public bool hasBeenUsed;
+
+        public LocalizationPair GetLocalized(ChadChirp context)
+        {
+            if (!Enum.TryParse<ChadChirpStrings>(id, out var key))
+            {
+                return (LocalizationPair) text;
+            }
+            return context.GetLocalized(key);
+        }
 
         public static string GetChirpUsedSaveString(ChadChirpData data) => $"MiscChadChirpUsed_{data.id}";
 
