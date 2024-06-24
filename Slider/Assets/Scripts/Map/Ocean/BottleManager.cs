@@ -116,7 +116,7 @@ public class BottleManager : MonoBehaviour, ISavable, IDialogueTableProvider
             reason = this.GetLocalized(RomeoReason.SpaceEmpty);
         }
 
-        SaveSystem.Current.SetString("oceanRomeoReason", reason);
+        SaveSystem.Current.SetLocalizedString("oceanRomeoReason", reason);
     }
 
     private IEnumerator StartBottleMovementAnimation(Vector3 start, Vector3 end, float moveDuration)

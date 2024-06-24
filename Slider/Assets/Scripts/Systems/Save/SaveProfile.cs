@@ -292,10 +292,11 @@ public class SaveProfile
     /// Returns "name" if strings dictionary doesn't contain "name" in keys.
     /// </summary>
     /// <param name="name">The name of the string in the dictionary. Generally, try to follow: "areaBooleanName"</param>
+    /// <param name="defaultValue"></param>
     /// <returns></returns>
-    public LocalizationPair GetString(string name, string defaultValue = null)
+    public LocalizationPair GetLocalizedString(string name, string defaultValue = null)
     {
-        var orig = strings.GetValueOrDefault(name, defaultValue == null ? name : defaultValue);
+        var orig = strings.GetValueOrDefault(name, defaultValue ?? name);
         var translated = strings.GetValueOrDefault(name + LocalizedStringPostfix, orig);
         return new LocalizationPair
         {
@@ -308,18 +309,19 @@ public class SaveProfile
     /// Returns "name" if strings dictionary doesn't contain "name" in keys.
     /// </summary>
     /// <param name="name">The name of the string in the dictionary. Generally, try to follow: "areaBooleanName"</param>
+    /// <param name="defaultValue"></param>
     /// <returns></returns>
-    public string GetStringIgnoreLocalization(string name, string defaultValue = null)
-        => GetString(name, defaultValue).original;
+    public string GetString(string name, string defaultValue = null)
+        => strings.GetValueOrDefault(name, defaultValue ?? name);
 
-    public void SetStringWithoutLocalization(string name, string value)
+    public void SetString(string name, string value)
     {
         strings[name] = value;
     }
     
-    public void SetString(string name, LocalizationPair pair) => SetString(name, pair.original, pair.translated);
+    public void SetLocalizedString(string name, LocalizationPair pair) => SetLocalizedString(name, pair.original, pair.translated);
 
-    public void SetString(string name, string value, string localized)
+    public void SetLocalizedString(string name, string value, string localized)
     {
         strings[name] = value;
         strings[name + LocalizedStringPostfix] = localized;

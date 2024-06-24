@@ -164,7 +164,7 @@ public class BaboonTree : MonoBehaviour, IDialogueTableProvider
             didVertical = true;
         }
 
-        SaveSystem.Current.SetString("desertRemainingShakeDirection",
+        SaveSystem.Current.SetLocalizedString("desertRemainingShakeDirection",
             didHorizontal ? this.GetLocalized(BaboonStrings.Vertical) : this.GetLocalized(BaboonStrings.Horizontal)
         );
 

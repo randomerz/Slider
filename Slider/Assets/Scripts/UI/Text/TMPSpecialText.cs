@@ -656,7 +656,7 @@ public class TMPSpecialText : MonoBehaviour
 
     private string GetString(string stringName, bool forceEnglishText)
     {
-        var pair = SaveSystem.Current.GetString(stringName);
+        var pair = SaveSystem.Current.GetLocalizedString(stringName);
         return forceEnglishText ? pair.original : pair.translated;
     }
 

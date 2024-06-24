@@ -62,7 +62,7 @@ public class ScavengerHuntBoard : MonoBehaviour, IDialogueTableProvider
             this.tasks_available = this.GetLocalized(TaskStrings.ListScavengingsBegin) + (LocalizationPair)(" \n") + LocalizationPair.Join(", ", this.available_tasks);
         else if(tasks_available != this.GetLocalized(TaskStrings.TalkToBob) && SGrid.Current.GetNumTilesCollected() == 9)
             this.tasks_available = this.GetLocalized(TaskStrings.Done);
-        SaveSystem.Current.SetString("OceanTavernBoardAvailable", tasks_available);
+        SaveSystem.Current.SetLocalizedString("OceanTavernBoardAvailable", tasks_available);
     }
 
 

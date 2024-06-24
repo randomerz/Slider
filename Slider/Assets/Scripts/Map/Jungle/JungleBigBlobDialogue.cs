@@ -118,7 +118,7 @@ public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
             npc.Conds[^1].dialogueChain[0].animationOnStart = "Idle";
         }
 
-        SaveSystem.Current.SetString(DIALOGUE_SAVE_STRING, message ?? new LocalizationPair
+        SaveSystem.Current.SetLocalizedString(DIALOGUE_SAVE_STRING, message ?? new LocalizationPair
         {
             original = "",
             translated = ""

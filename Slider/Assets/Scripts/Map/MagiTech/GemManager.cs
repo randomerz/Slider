@@ -328,7 +328,7 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
             }
         }
 
-        SaveSystem.Current.SetStringWithoutLocalization(NUM_REMAINING_GEMS_STRING, num.ToString());
+        SaveSystem.Current.SetString(NUM_REMAINING_GEMS_STRING, num.ToString());
     }
 
     private bool HasAllGems()
@@ -413,7 +413,7 @@ public class GemManager : MonoBehaviour, ISavable, IDialogueTableProvider
                                     + LocalizationPair.Join(", ", all) 
                                     + this.GetLocalized(GemStrings.CombinedEnding);
 
-        SaveSystem.Current.SetString(GEM_FUEL_HINT_STRING, num >= 2 ? combined : specific);
+        SaveSystem.Current.SetLocalizedString(GEM_FUEL_HINT_STRING, num >= 2 ? combined : specific);
     }
 
     public void TakeOutOceanGem()

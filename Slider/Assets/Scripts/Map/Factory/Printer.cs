@@ -198,8 +198,8 @@ public class Printer : MonoBehaviour, IDialogueTableProvider
                 + this.GetLocalized(OperatorText.ListMaterialMsgPunctuation);
         }
         
-        SaveSystem.Current.SetString("FactoryPrinterParts", operatorMessage);
-        SaveSystem.Current.SetString("FactoryPrinterPartsHint", operatorHint);
+        SaveSystem.Current.SetLocalizedString("FactoryPrinterParts", operatorMessage);
+        SaveSystem.Current.SetLocalizedString("FactoryPrinterPartsHint", operatorHint);
 
         // if only one left
         if ((!floor && walls && wires) ||

@@ -455,7 +455,7 @@ public class ChadRace : MonoBehaviour, ISavable, IDialogueTableProvider
         //     return;
         // }
 
-        SaveSystem.Current.SetString("jungleChadSpeak", input.message, input.messageLocalized);
+        SaveSystem.Current.SetLocalizedString("jungleChadSpeak", input.message, input.messageLocalized);
         npcScript.TypeCurrentDialogueSafe();
     }
 

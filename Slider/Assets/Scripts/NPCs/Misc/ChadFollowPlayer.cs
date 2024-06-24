@@ -58,7 +58,7 @@ public class ChadFollowPlayer : MonoBehaviour, IDialogueTableProvider
     {
         playerTransform = Player.GetInstance().transform;
 
-        SaveSystem.Current.SetString(CHIRP_SAVE_STRING, this.GetLocalized(ChadFollowPlayerStrings.Onwards));
+        SaveSystem.Current.SetLocalizedString(CHIRP_SAVE_STRING, this.GetLocalized(ChadFollowPlayerStrings.Onwards));
 
         // for dev
         if (!PlayerInventory.Contains("Boots", Area.Jungle))

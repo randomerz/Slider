@@ -121,12 +121,12 @@ public class JungleRecipeBookHints : MonoBehaviour, IDialogueTableProvider
 
     private void DisplayAndTriggerDialogue(LocalizationPair message) 
     {
-        if (SaveSystem.Current.GetString(JUNGLE_UI_HINT_TEXT) == message)
+        if (SaveSystem.Current.GetLocalizedString(JUNGLE_UI_HINT_TEXT) == message)
         {
             return;
         }
 
-        SaveSystem.Current.SetString(JUNGLE_UI_HINT_TEXT, message);
+        SaveSystem.Current.SetLocalizedString(JUNGLE_UI_HINT_TEXT, message);
         hintNPC.TypeCurrentDialogue();
     }
     
