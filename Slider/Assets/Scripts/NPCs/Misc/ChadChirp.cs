@@ -91,6 +91,7 @@ public partial class ChadChirp : MonoBehaviour, ISavable
         if (data == null)
         {
             Debug.LogError($"Could not find '{id}' in list of available chirps!");
+            return;
         }
 
         if (!data.canBeRepeated && data.hasBeenUsed)

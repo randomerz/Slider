@@ -37,10 +37,10 @@ public class MilitaryUnitFlagResetter : MonoBehaviour
             },
             () => {
                 StartCoroutine(HoldInNewPosition(() => {
+                    item.SetCollider(true);
                     onFinish?.Invoke();
                     transform.position = resetTransform.position;
                     transform.SetParent(resetTransform);
-                    item.SetCollider(true);
                     particles.Stop();
                     coroutine = null;
                 }));

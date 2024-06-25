@@ -78,6 +78,11 @@ public class Item : MonoBehaviour, ISavable
     {
         isQueuedForDestruction = true;
         callbackIfDestroyed?.Invoke();
+
+        if (PlayerInventory.GetCurrentItem() == this)
+        {
+            PlayerInventory.RemoveItem();
+        }
     }
 
     public virtual void Save()
