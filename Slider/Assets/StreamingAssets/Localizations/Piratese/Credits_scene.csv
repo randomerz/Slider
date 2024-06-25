@@ -1,0 +1,594 @@
+"Localization files are formatted like CSV so they can be easily edited,
+however formatting has strict rules for easy parsing. Most of these rules
+are already handled by Excel / Libre / etc., so you don't have to worry
+about them in normal usage. However, if your localization file seems to
+be corrupted, these rules may be helpful for debugging purposes...
+- In general, any consecutive string of \r and \n (in any order) will be
+  treated as one SINGLE line break, except within an enclosed context
+- The first 4 rows can be arbitrarily long
+  - The first cell of first row is used to store this block of instruction
+    text
+  - The first 3 cells of the fourth row is used as headers
+  - All other cells in the first and fourth rows are ignored
+  - Columns in the second row alternate between property and value (ex.
+    ' foo | 1 | bar | 3.5 | ... '
+    - Any whitespaces before and after the property name are ignored
+  - Columns in the third row are exclusively comments for properties in the
+    second row
+- Every following line can include any number of cells, but only the
+  first three will be parsed (you can use the rest as comments if needed)
+- The file must end in a sequence of \r and \n's
+- Every cell containing a ^, \r, or \n must be enclosed in ""
+  - If a "" is encountered right after a non-enclosed separator, \r, or \n,
+    then the parser is said to enter an ""enclosed context"", such context
+    ends immediately when a non-escaped "" that is not followed by \r, \n,
+    or a separator is encountered
+  - "" within each cell should be escaped using another "" in front of it,
+  - If a "" is encountered in a non-enclosed context, and it is not right
+    after a separator, \r, or \n, then it is entirely ignored
+  - If a non-escaped "" is encountered in an enclosed context...
+    - If it is followed by a separator, \r, or \n, then it is considered
+      the closing quote of the current context
+    - Otherwise, it is ignored
+  - If a separator, \r, or \n is encountered while in an enclosed context,
+    it will be preserved
+",
+"IsValid"," ","NonDialogueFontScale"," ","DialogueFontScale"," ",
+"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size."," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
+"Path","Orig","Translation",
+"BG Text/Text/Text","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev","_arrr_A Game by 
+
+Daniel C_arrr_",
+"BG Text/Text/Text Outline (1)","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev","_arrr_A Game by 
+
+Daniel C_arrr_",
+"BG Text/Text/Text Outline (2)","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev","_yar_A Game by 
+
+Daniel C_yar_",
+"BG Text/Text/Text Outline (3)","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev","_ho_A Game by 
+
+Daniel C_ho_",
+"BG Text/Text/Text Outline (4)","A Game by 
+
+Daniel Carr 
+
+and 
+
+VGDev","_arrr_A Game by 
+
+Daniel C_arrr_",
+"Credits Manager@Default:0","Skip","_yar_Skip_yar_",
+"CreditsCanvas/Skip Prompt/Skip Prompt Text","Skip","_yar_Skip_yar_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text","Art
+Programming","_ho_Art
+Programming_ho_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (1)","Art
+Programming","_arrr_Art
+Programming_arrr_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (2)","Art
+Programming","_ho_Art
+Programming_ho_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (3)","Art
+Programming","_yar_Art
+Programming_yar_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (1)/Text Outline (4)","Art
+Programming","_yar_Art
+Programming_yar_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text","Avery Greer","_ho_Avery Greer_ho_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (1)","Avery Greer","_yar_Avery Greer_yar_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (2)","Avery Greer","_yar_Avery Greer_yar_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (3)","Avery Greer","_arrr_Avery Greer_arrr_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (2)/Text Outline (4)","Avery Greer","_ho_Avery Greer_ho_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text","Programming
+Audio","_arrr_Programming
+Audio_arrr_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming
+Audio","_ho_Programming
+Audio_ho_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming
+Audio","_yar_Programming
+Audio_yar_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming
+Audio","_yar_Programming
+Audio_yar_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming
+Audio","_yar_Programming
+Audio_yar_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text","Allison Lu","_yar_Allison Lu_yar_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (1)","Allison Lu","_yar_Allison Lu_yar_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (2)","Allison Lu","_yar_Allison Lu_yar_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (3)","Allison Lu","_ho_Allison Lu_ho_",
+"Map/Tiles/Allison Avery Tile/WorldCanvas/Text/Text Outline (4)","Allison Lu","_yar_Allison Lu_yar_",
+"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+","_yar_Elizabeth Liu
+Cynthi_yar_",
+"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (1)","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+","_yar_Elizabeth Liu
+Cynthi_yar_",
+"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (2)","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+","_arrr_Elizabeth Liu
+Cynthi_arrr_",
+"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (3)","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+","_ho_Elizabeth Liu
+Cynthi_ho_",
+"Map/Tiles/Art TIle/WorldCanvas/Text (1)/Text Outline (4)","Elizabeth Liu
+Cynthia Peng
+Gazal Mathur
+Mike Wang
+Esther Moon
+Nia Bellamy
+","_ho_Elizabeth Liu
+Cynthi_ho_",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text","Additional Art","_ho_Additional Art_ho_",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (1)","Additional Art","_ho_Additional Art_ho_",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (2)","Additional Art","_arrr_Additional Art_arrr_",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (3)","Additional Art","_yar_Additional Art_yar_",
+"Map/Tiles/Art TIle/WorldCanvas/Text/Text Outline (4)","Additional Art","_ho_Additional Art_ho_",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text","Project Lead","_arrr_Project Lead_arrr_",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (1)","Project Lead","_yar_Project Lead_yar_",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (2)","Project Lead","_ho_Project Lead_ho_",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (3)","Project Lead","_yar_Project Lead_yar_",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text (1)/Text Outline (4)","Project Lead","_yar_Project Lead_yar_",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text","Daniel Carr","_yar_Daniel Carr_yar_",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (1)","Daniel Carr","_arrr_Daniel Carr_arrr_",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (2)","Daniel Carr","_ho_Daniel Carr_ho_",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (3)","Daniel Carr","_ho_Daniel Carr_ho_",
+"Map/Tiles/Boomo Tile/WorldCanvas/Text/Text Outline (4)","Daniel Carr","_ho_Daniel Carr_ho_",
+"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text","Programming 
+Design
+ Tech Art","_ho_Programming 
+Design
+_ho_",
+"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming 
+Design
+ Tech Art","_ho_Programming 
+Design
+_ho_",
+"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming 
+Design
+ Tech Art","_arrr_Programming 
+Design
+_arrr_",
+"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming 
+Design
+ Tech Art","_yar_Programming 
+Design
+_yar_",
+"Map/Tiles/Chase Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming 
+Design
+ Tech Art","_ho_Programming 
+Design
+_ho_",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text","Chase O'Brien","_yar_Chase O'Brien_yar_",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (1)","Chase O'Brien","_yar_Chase O'Brien_yar_",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (2)","Chase O'Brien","_yar_Chase O'Brien_yar_",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (3)","Chase O'Brien","_yar_Chase O'Brien_yar_",
+"Map/Tiles/Chase Tile/WorldCanvas/Text/Text Outline (4)","Chase O'Brien","_arrr_Chase O'Brien_arrr_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (1)/Text","Music
+Art","_ho_Music
+Art_ho_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (1)/Text Outline (1)","Music
+Art","_yar_Music
+Art_yar_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (1)/Text Outline (2)","Music
+Art","_yar_Music
+Art_yar_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (1)/Text Outline (3)","Music
+Art","_ho_Music
+Art_ho_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (1)/Text Outline (4)","Music
+Art","_ho_Music
+Art_ho_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (2)/Text","Nathaniel
+Koehler","_arrr_Nathaniel
+Koehler_arrr_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (2)/Text Outline (1)","Nathaniel
+Koehler","_ho_Nathaniel
+Koehler_ho_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (2)/Text Outline (2)","Nathaniel
+Koehler","_ho_Nathaniel
+Koehler_ho_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (2)/Text Outline (3)","Nathaniel
+Koehler","_ho_Nathaniel
+Koehler_ho_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (2)/Text Outline (4)","Nathaniel
+Koehler","_arrr_Nathaniel
+Koehler_arrr_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (3)/Text","Art","_arrr_Art_arrr_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (3)/Text Outline (1)","Art","_arrr_Art_arrr_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (3)/Text Outline (2)","Art","_arrr_Art_arrr_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (3)/Text Outline (3)","Art","_yar_Art_yar_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text (3)/Text Outline (4)","Art","_yar_Art_yar_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text/Text","Eli Corley","_yar_Eli Corley_yar_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text/Text Outline (1)","Eli Corley","_yar_Eli Corley_yar_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text/Text Outline (2)","Eli Corley","_arrr_Eli Corley_arrr_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text/Text Outline (3)","Eli Corley","_arrr_Eli Corley_arrr_",
+"Map/Tiles/Eli Nathan Tile/WorldCanvas/Text/Text Outline (4)","Eli Corley","_yar_Eli Corley_yar_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue","Something went wrong with my dialogue!","_arrr_Something went wrong_arrr_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Bruce/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","_ho_Something went wrong_ho_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue","Something went wrong with my dialogue!","_yar_Something went wrong_yar_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Ike/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","_arrr_Something went wrong_arrr_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue","Something went wrong with my dialogue!","_yar_Something went wrong_yar_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Porker/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","_yar_Something went wrong_yar_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue","Something went wrong with my dialogue!","_ho_Something went wrong_ho_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","_arrr_Something went wrong_arrr_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard@Anchor:0","A Trusty Anchor","_ho_A Trusty Anchor_ho_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard@Cat:0","Cat Beard's Treasure","_yar_Cat Beard's Treasure_yar_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard@Done:0","You've scavenged the whole sea!","_yar_You've scavenged the_yar_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard@Gem:0","A Magical Gem","_arrr_A Magical Gem_arrr_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard@GoldenFish:0","A Golden Fish","_ho_A Golden Fish_ho_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard@ListScavengingsBegin:0","Scavengings to Acquire: ","_yar_Scavengings to Acqui_yar_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard@Mushroom:0","A Funky Mushroom","_yar_A Funky Mushroom_yar_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard@Rock:0","A Peculiar Rock","_arrr_A Peculiar Rock_arrr_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard@Rose:0","A Delicate Rose","_ho_A Delicate Rose_ho_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Questboard@TalkToBob:0","Want to be a legend? Talk to Bob.","_ho_Want to be a legend?_ho_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice/Dice Sprite/Canvas/Dialogue","2","_yar_2_yar_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Tavern Deco/round_table (2)/Dice/Dice Sprite/Canvas/Dialogue BG Font","2","_yar_2_yar_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue","Something went wrong with my dialogue!","_yar_Something went wrong_yar_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Traveling Merchant/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","_ho_Something went wrong_ho_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue","Something went wrong with my dialogue!","_arrr_Something went wrong_arrr_",
+"Map/Tiles/Ethan Alan Tile/All Tile Maps/House Tile Maps/Decorations/Vanessa/Canvas/Dialogue BG Font","Something went wrong with my dialogue!","_ho_Something went wrong_ho_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text","Music","_ho_Music_ho_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (1)","Music","_yar_Music_yar_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (2)","Music","_arrr_Music_arrr_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (3)","Music","_ho_Music_ho_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (1)/Text Outline (4)","Music","_yar_Music_yar_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text","Alan Tao","_ho_Alan Tao_ho_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (1)","Alan Tao","_ho_Alan Tao_ho_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (2)","Alan Tao","_yar_Alan Tao_yar_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (3)","Alan Tao","_ho_Alan Tao_ho_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (2)/Text Outline (4)","Alan Tao","_yar_Alan Tao_yar_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text","Programming
+Audio","_arrr_Programming
+Audio_arrr_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming
+Audio","_ho_Programming
+Audio_ho_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming
+Audio","_yar_Programming
+Audio_yar_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming
+Audio","_arrr_Programming
+Audio_arrr_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming
+Audio","_yar_Programming
+Audio_yar_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text","Ethan 
+Aristanto","_yar_Ethan 
+Aristanto_yar_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (1)","Ethan 
+Aristanto","_arrr_Ethan 
+Aristanto_arrr_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (2)","Ethan 
+Aristanto","_yar_Ethan 
+Aristanto_yar_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (3)","Ethan 
+Aristanto","_arrr_Ethan 
+Aristanto_arrr_",
+"Map/Tiles/Ethan Alan Tile/WorldCanvas/Text/Text Outline (4)","Ethan 
+Aristanto","_arrr_Ethan 
+Aristanto_arrr_",
+"Map/Tiles/FMOD tile/WorldCanvas/Text/Text","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","_arrr_Made using FMOD Stud_arrr_",
+"Map/Tiles/FMOD tile/WorldCanvas/Text/Text Outline (1)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","_yar_Made using FMOD Stud_yar_",
+"Map/Tiles/FMOD tile/WorldCanvas/Text/Text Outline (2)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","_ho_Made using FMOD Stud_ho_",
+"Map/Tiles/FMOD tile/WorldCanvas/Text/Text Outline (3)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","_ho_Made using FMOD Stud_ho_",
+"Map/Tiles/FMOD tile/WorldCanvas/Text/Text Outline (4)","Made using FMOD Studio by Firelight Technologies Pty Ltd.
+","_ho_Made using FMOD Stud_ho_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text","Programming
+Design
+Music","_arrr_Programming
+Design
+M_arrr_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming
+Design
+Music","_yar_Programming
+Design
+M_yar_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming
+Design
+Music","_arrr_Programming
+Design
+M_arrr_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming
+Design
+Music","_arrr_Programming
+Design
+M_arrr_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming
+Design
+Music","_ho_Programming
+Design
+M_ho_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text","Elliot Chen","_ho_Elliot Chen_ho_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (1)","Elliot Chen","_yar_Elliot Chen_yar_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (2)","Elliot Chen","_yar_Elliot Chen_yar_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (3)","Elliot Chen","_arrr_Elliot Chen_arrr_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (2)/Text Outline (4)","Elliot Chen","_arrr_Elliot Chen_arrr_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text","Programming","_ho_Programming_ho_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming","_arrr_Programming_arrr_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming","_arrr_Programming_arrr_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming","_ho_Programming_ho_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming","_yar_Programming_yar_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text","Drew Busch","_yar_Drew Busch_yar_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (1)","Drew Busch","_yar_Drew Busch_yar_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (2)","Drew Busch","_yar_Drew Busch_yar_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (3)","Drew Busch","_arrr_Drew Busch_arrr_",
+"Map/Tiles/Jroo Elliot Tile/WorldCanvas/Text/Text Outline (4)","Drew Busch","_yar_Drew Busch_yar_",
+"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text","Programming
+Tech Art","_arrr_Programming
+Tech Art_arrr_",
+"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming
+Tech Art","_ho_Programming
+Tech Art_ho_",
+"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming
+Tech Art","_yar_Programming
+Tech Art_yar_",
+"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming
+Tech Art","_ho_Programming
+Tech Art_ho_",
+"Map/Tiles/Logan Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming
+Tech Art","_yar_Programming
+Tech Art_yar_",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text","Logan Bowers","_arrr_Logan Bowers_arrr_",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (1)","Logan Bowers","_yar_Logan Bowers_yar_",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (2)","Logan Bowers","_ho_Logan Bowers_ho_",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (3)","Logan Bowers","_arrr_Logan Bowers_arrr_",
+"Map/Tiles/Logan Tile/WorldCanvas/Text/Text Outline (4)","Logan Bowers","_ho_Logan Bowers_ho_",
+"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+","_ho_Kate Tran 
+Jimmy Hu_ho_",
+"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (1)","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+","_arrr_Kate Tran 
+Jimmy Hu_arrr_",
+"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (2)","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+","_yar_Kate Tran 
+Jimmy Hu_yar_",
+"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (3)","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+","_arrr_Kate Tran 
+Jimmy Hu_arrr_",
+"Map/Tiles/Other Tile/WorldCanvas/Text (1)/Text Outline (4)","Kate Tran 
+Jimmy Huang
+Maddie King
+Sudarshan Srinivasan
+Vu Nguyen
+Rithvik Maladi
+","_arrr_Kate Tran 
+Jimmy Hu_arrr_",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text","Additional Music, 
+Design, Miscellanious","_arrr_Additional Music, 
+D_arrr_",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (1)","Additional Music, 
+Design, Miscellanious","_yar_Additional Music, 
+D_yar_",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (2)","Additional Music, 
+Design, Miscellanious","_arrr_Additional Music, 
+D_arrr_",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (3)","Additional Music, 
+Design, Miscellanious","_yar_Additional Music, 
+D_yar_",
+"Map/Tiles/Other Tile/WorldCanvas/Text/Text Outline (4)","Additional Music, 
+Design, Miscellanious","_yar_Additional Music, 
+D_yar_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (1)/Text","Programming","_ho_Programming_ho_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (1)/Text Outline (1)","Programming","_ho_Programming_ho_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (1)/Text Outline (2)","Programming","_arrr_Programming_arrr_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (1)/Text Outline (3)","Programming","_arrr_Programming_arrr_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (1)/Text Outline (4)","Programming","_yar_Programming_yar_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (2)/Text","Travis
+Bittel","_arrr_Travis
+Bittel_arrr_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (2)/Text Outline (1)","Travis
+Bittel","_yar_Travis
+Bittel_yar_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (2)/Text Outline (2)","Travis
+Bittel","_yar_Travis
+Bittel_yar_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (2)/Text Outline (3)","Travis
+Bittel","_arrr_Travis
+Bittel_arrr_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (2)/Text Outline (4)","Travis
+Bittel","_arrr_Travis
+Bittel_arrr_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (3)/Text","Programming","_arrr_Programming_arrr_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (3)/Text Outline (1)","Programming","_yar_Programming_yar_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (3)/Text Outline (2)","Programming","_yar_Programming_yar_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (3)/Text Outline (3)","Programming","_arrr_Programming_arrr_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text (3)/Text Outline (4)","Programming","_yar_Programming_yar_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text/Text","Pawan 
+Jayakumar","_ho_Pawan 
+Jayakumar_ho_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text/Text Outline (1)","Pawan 
+Jayakumar","_arrr_Pawan 
+Jayakumar_arrr_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text/Text Outline (2)","Pawan 
+Jayakumar","_arrr_Pawan 
+Jayakumar_arrr_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text/Text Outline (3)","Pawan 
+Jayakumar","_ho_Pawan 
+Jayakumar_ho_",
+"Map/Tiles/Pawan Travis Tile/WorldCanvas/Text/Text Outline (4)","Pawan 
+Jayakumar","_yar_Pawan 
+Jayakumar_yar_",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text","Additional Programming","_yar_Additional Programmi_yar_",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (1)","Additional Programming","_arrr_Additional Programmi_arrr_",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (2)","Additional Programming","_ho_Additional Programmi_ho_",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (3)","Additional Programming","_yar_Additional Programmi_yar_",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text (1)/Text Outline (4)","Additional Programming","_arrr_Additional Programmi_arrr_",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta","_ho_Koushik Thiyagarajan_ho_",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (1)","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta","_ho_Koushik Thiyagarajan_ho_",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (2)","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta","_yar_Koushik Thiyagarajan_yar_",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (3)","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta","_yar_Koushik Thiyagarajan_yar_",
+"Map/Tiles/Programming Tile 1/WorldCanvas/Text/Text Outline (4)","Koushik Thiyagarajan
+Kristian Chappell
+Aneesh Boreda
+Kenneth Wang
+Muskaan Gupta","_yar_Koushik Thiyagarajan_yar_",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text","Additional Programming","_yar_Additional Programmi_yar_",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (1)","Additional Programming","_ho_Additional Programmi_ho_",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (2)","Additional Programming","_ho_Additional Programmi_ho_",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (3)","Additional Programming","_ho_Additional Programmi_ho_",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text (1)/Text Outline (4)","Additional Programming","_arrr_Additional Programmi_arrr_",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia","_arrr_Reinart Realina
+Thom_arrr_",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (1)","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia","_yar_Reinart Realina
+Thom_yar_",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (2)","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia","_ho_Reinart Realina
+Thom_ho_",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (3)","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia","_arrr_Reinart Realina
+Thom_arrr_",
+"Map/Tiles/Programming Tile 2/WorldCanvas/Text/Text Outline (4)","Reinart Realina
+Thomas Dayton
+Nicolas Cai
+Tristian Ziegler
+Zhenyu Wu
+Steven Jia","_arrr_Reinart Realina
+Thom_arrr_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (1)/Text","Art","_yar_Art_yar_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (1)/Text Outline (1)","Art","_arrr_Art_arrr_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (1)/Text Outline (2)","Art","_ho_Art_ho_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (1)/Text Outline (3)","Art","_yar_Art_yar_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (1)/Text Outline (4)","Art","_arrr_Art_arrr_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (2)/Text","Jamie Lee","_ho_Jamie Lee_ho_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (2)/Text Outline (1)","Jamie Lee","_yar_Jamie Lee_yar_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (2)/Text Outline (2)","Jamie Lee","_ho_Jamie Lee_ho_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (2)/Text Outline (3)","Jamie Lee","_yar_Jamie Lee_yar_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text (2)/Text Outline (4)","Jamie Lee","_arrr_Jamie Lee_arrr_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text/Text","Sara Inani","_yar_Sara Inani_yar_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text/Text Outline (1)","Sara Inani","_arrr_Sara Inani_arrr_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text/Text Outline (2)","Sara Inani","_yar_Sara Inani_yar_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text/Text Outline (3)","Sara Inani","_ho_Sara Inani_ho_",
+"Map/Tiles/Sara Jamie Tile/WorldCanvas/Text/Text Outline (4)","Sara Inani","_arrr_Sara Inani_arrr_",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text","Mark Brown
+Beth O'Brien
+Playtesters
+","_ho_Mark Brown
+Beth O'Br_ho_",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (1)","Mark Brown
+Beth O'Brien
+Playtesters
+","_arrr_Mark Brown
+Beth O'Br_arrr_",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (2)","Mark Brown
+Beth O'Brien
+Playtesters
+","_yar_Mark Brown
+Beth O'Br_yar_",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (3)","Mark Brown
+Beth O'Brien
+Playtesters
+","_arrr_Mark Brown
+Beth O'Br_arrr_",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text (1)/Text Outline (4)","Mark Brown
+Beth O'Brien
+Playtesters
+","_ho_Mark Brown
+Beth O'Br_ho_",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text","Special Thanks","_ho_Special Thanks_ho_",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (1)","Special Thanks","_arrr_Special Thanks_arrr_",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (2)","Special Thanks","_yar_Special Thanks_yar_",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (3)","Special Thanks","_arrr_Special Thanks_arrr_",
+"Map/Tiles/Special Thanks Tile/WorldCanvas/Text/Text Outline (4)","Special Thanks","_ho_Special Thanks_ho_",

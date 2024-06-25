@@ -1,0 +1,154 @@
+"Localization files are formatted like CSV so they can be easily edited,
+however formatting has strict rules for easy parsing. Most of these rules
+are already handled by Excel / Libre / etc., so you don't have to worry
+about them in normal usage. However, if your localization file seems to
+be corrupted, these rules may be helpful for debugging purposes...
+- In general, any consecutive string of \r and \n (in any order) will be
+  treated as one SINGLE line break, except within an enclosed context
+- The first 4 rows can be arbitrarily long
+  - The first cell of first row is used to store this block of instruction
+    text
+  - The first 3 cells of the fourth row is used as headers
+  - All other cells in the first and fourth rows are ignored
+  - Columns in the second row alternate between property and value (ex.
+    ' foo | 1 | bar | 3.5 | ... '
+    - Any whitespaces before and after the property name are ignored
+  - Columns in the third row are exclusively comments for properties in the
+    second row
+- Every following line can include any number of cells, but only the
+  first three will be parsed (you can use the rest as comments if needed)
+- The file must end in a sequence of \r and \n's
+- Every cell containing a ^, \r, or \n must be enclosed in ""
+  - If a "" is encountered right after a non-enclosed separator, \r, or \n,
+    then the parser is said to enter an ""enclosed context"", such context
+    ends immediately when a non-escaped "" that is not followed by \r, \n,
+    or a separator is encountered
+  - "" within each cell should be escaped using another "" in front of it,
+  - If a "" is encountered in a non-enclosed context, and it is not right
+    after a separator, \r, or \n, then it is entirely ignored
+  - If a non-escaped "" is encountered in an enclosed context...
+    - If it is followed by a separator, \r, or \n, then it is considered
+      the closing quote of the current context
+    - Otherwise, it is ignored
+  - If a separator, \r, or \n is encountered while in an enclosed context,
+    it will be preserved
+",
+"IsValid"," ","NonDialogueFontScale"," ","DialogueFontScale"," ",
+"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size."," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
+"Path","Orig","Translation",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Items/ArtifactInventoryItem (12)/Sunglasses Total Text","2","_ho_2_ho_",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Items/ArtifactInventoryItem Breadge/Breadge Total Text","9","_ho_9_ho_",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Items/ArtifactInventoryItem Oil/Oil Total Text","4","_yar_4_yar_",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/InventoryPanel/Text/ItemNameText","Collection","_ho_Collection_ho_",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/WorldMapPanel/Text/AreaNameText","Map
+","_arrr_Map
+_arrr_",
+"ArtifactCanvas/ArtifactFrame/ScreenMask/WorldMapPanel/Text/AreaNameTextBG","Map
+","_yar_Map
+_yar_",
+"Map/EightPuzzle/Cave STile (1)/Objects/Warning Sign@0:0","DANGER: Light
+Sensitive Fungi.","_arrr_DANGER: Light
+Sensit_arrr_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Chad@0:0","Hey uh... the devs haven't put this puzzle in yet...","_arrr_Hey uh... the devs h_arrr_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Chad@0:1","One day the computer will work though. Fear that day!","_ho_One day the computer_ho_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Chad@1:0","Just... just one more round! I'm starting to get good with dice.","_arrr_Just... just one mor_arrr_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Chad@2:0","...","_ho_..._ho_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@0:0","Heyo! So funny story.","_yar_Heyo! So funny story_yar_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@0:1","I was doing maintenance on the power cause the line got chewed out. When a RAT showed up and started squeakin' about. Gave me a lil' jump and I tripped. Flipped the switch and doors shut, and dropped my keys. Then that darn RAT took 'em! And now here I am. In a bit of a tickle one might say.","_arrr_I was doing maintena_arrr_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@0:2","Sorry I meant pickle.","_arrr_Sorry I meant pickle_arrr_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@0:3","Anyways I'd owe you a lunch if you got me my keys back.","_arrr_Anyways I'd owe you _arrr_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@1:0","Heyo, you got the key!","_yar_Heyo, you got the ke_yar_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@2:0","Thanks for grabbing it, don't know what I would do without ya.","_ho_Thanks for grabbing _ho_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@2:1","No really, thanks a lot.","_ho_No really, thanks a _ho_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@2:2","I mean it.","_ho_I mean it._ho_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@3:0","Heyo thanks a ton, really.","_arrr_Heyo thanks a ton, r_arrr_",
+"Map/EightPuzzle/Cave STile (4)/All Tile Maps/House Tile Maps/Decorations/Switch Operator@3:1","The Factory foreman would've been ON ME if it wasn't fixed.","_arrr_The Factory foreman _arrr_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@0:0","Someone there? Welcome to the Cavern Station!","_arrr_Someone there? Welco_arrr_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@0:1","I'd show you in, but I can't quite see the door.","_yar_I'd show you in, but_yar_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@1:0","Ah... so dark again.","_arrr_Ah... so dark again._arrr_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@2:0","There's the door! And my work bench!","_yar_There's the door! An_yar_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@3:0","Thanks for getting things up and running again.","_yar_Thanks for getting t_yar_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@3:1","Ever since they put me on fungus removal duty it's been hard to see.","_yar_Ever since they put _yar_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@3:2","These 10 kilowatt lights are so convenient though!","_ho_These 10 kilowatt li_ho_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Blind Worker@4:0","Why do people write so small... what do these labels even say?","_ho_Why do people write _ho_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@0:0","The minecart is broken!","_yar_The minecart is brok_yar_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@0:1","We'll need supplies from the jungle to fix it.","_arrr_We'll need supplies _arrr_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@0:2","What? The bridge is broken??","_arrr_What? The bridge is _arrr_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@0:3","Ugh... this is never getting fixed.","_arrr_Ugh... this is never_arrr_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@1:0","Is the bridge fixed yet?","_arrr_Is the bridge fixed _arrr_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@1:1","There's a path to Canopy Town behind Bob's Tavern but... that's way too far for us.","_yar_There's a path to Ca_yar_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@2:0","Oh man you fixed it! We can finally work on fixing the transport from the Crystal Mines.","_yar_Oh man you fixed it!_yar_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@2:1","The Mines? They're shipping materials to MRI.","_ho_The Mines? They're s_ho_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@2:2","Something about them holds a lot of power. Good for fuel and whatever.","_yar_Something about them_yar_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@3:0","Oh man you fixed it! We can finally work on fixing the transport from the Crystal Mines.","_ho_Oh man you fixed it!_ho_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@3:1","The Mines? They're shipping materials to MRI.","_arrr_The Mines? They're s_arrr_",
+"Map/EightPuzzle/Cave STile (4)/Objects/Minecart Operator@3:2","Something about them holds a lot of power. Good for fuel and whatever.","_arrr_Something about them_arrr_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@0:0","woah, you checked out behind the waterfall too?","_arrr_woah, you checked ou_arrr_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@0:1","i seem to have lost my flashlight in these strange mushrooms","_yar_i seem to have lost _yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@0:2","try turning on the power station, the key should be nearby","_ho_try turning on the p_ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@0:3","i wonder how the moss came to be... ive never seen anything like it!","_arrr_i wonder how the mos_arrr_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@0:4","i wonder what happens if i... touch it?","_ho_i wonder what happen_ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@1:0","you again! i seem to have lost my flashlight in these strange mushrooms","_yar_you again! i seem to_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@1:1","try turning on the power station, the key should be nearby","_yar_try turning on the p_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@1:2","i wonder how the moss came to be... I've never seen anything like it!","_arrr_i wonder how the mos_arrr_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@1:3","i wonder what happens if i... touch it?","_arrr_i wonder what happen_arrr_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@2:0","the station's back on! think itll help find my flashlight?","_ho_the station's back o_ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@2:1","this light here should help with the mushrooms around it","_yar_this light here shou_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@3:0","woah!! where did you found my flashlight?!","_yar_woah!! where did you_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@3:1","wait... it doesn't look like it works...","_arrr_wait... it doesn't l_arrr_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@3:2","theres fungi inside the light. the bulb looks... shattered?","_ho_theres fungi inside _ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@3:3","oh well! make sure to turn on the station light!","_yar_oh well! make sure t_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@3:4","im looking for some ruins deeper in these caves, keep an eye out.","_yar_im looking for some _yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@4:0","the flashlight doesn't look like it works...","_arrr_the flashlight doesn_arrr_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@4:1","woah, theres fungi inside the light. the bulb looks... shattered?","_ho_woah, theres fungi i_ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@4:2","oh well! im looking for some ruins deeper in these caves, keep an eye out.","_yar_oh well! im looking _yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@5:0","i lost my backup light too (sorry) and now I can't study these ruins..","_yar_i lost my backup lig_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@5:1","could you light up <wavy>the ENTIRE cavern</wavy> for me?","_ho_could you light up <_ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@6:0","now! what do these say...","_ho_now! what do these s_ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@6:1","the ancient civilization's notes...","_yar_the ancient civiliza_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@6:2"," rearranging...","_ho_ rearranging..._ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@6:3"," a <#ff9040>scroll</color>?!","_yar_ a <#ff9040>scroll</_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@7:0","this is all so fascinating! i wonder how the ancient civilization created these tools.","_ho_this is all so fasci_ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@7:1","i... i have to find the source of this magic!","_arrr_i... i have to find _arrr_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@7:2","im going to the desert! who knows what might be afoot.","_yar_im going to the dese_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@7:3","chad..? where are you chaaddddd","_ho_chad..? where are yo_ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@8:0","chad c'mon lets go!","_yar_chad c'mon lets go!_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@8:1","a-are you gambling?? im not paying you for this lets go get the <#ff9040>scroll</color>","_ho_a-are you gambling??_ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Archeologist@9:0","...","_ho_..._ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@0:0","Rats! The power line's been chewed up again.","_arrr_Rats! The power line_arrr_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@0:1","Jimbobby is stuck behind the door to the Crystal Caves!","_yar_Jimbobby is stuck be_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@0:2","Gah! That power line can't even be fixed!","_arrr_Gah! That power line_arrr_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@1:0","Is that the rat?! Kill it! Git!","_yar_Is that the rat?! Ki_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@1:1","Gah! It's so fast!","_arrr_Gah! It's so fast!_arrr_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@2:0","The rats done! But so is the wire.","_arrr_The rats done! But s_arrr_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@2:1","And I pray Jimbobby stays strong.","_yar_And I pray Jimbobby _yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@3:0","Stranger! Please, help Jimbobby if you can!","_yar_Stranger! Please, he_yar_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@4:0","Jimbobby is saved!","_ho_Jimbobby is saved!_ho_",
+"Map/EightPuzzle/Cave STile (5)/Objects/Door Worker@5:0","And the rail line's fixed?! You, sir, are a miracle worker!","_yar_And the rail line's _yar_",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@0:0","Gah, what was the protocol for this?","_ho_Gah, what was the pr_ho_",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@0:1","I know it could be done with only two lights, but how?","_yar_I know it could be d_yar_",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@0:2","It's probably easier with more...","_yar_It's probably easier_yar_",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@1:0","Woah!! You got it!","_ho_Woah!! You got it!_ho_",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@1:1","Sorry would you mind telling me again, I wasn't paying attention...","_yar_Sorry would you mind_yar_",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@2:0","Sigh... Ever since we started digging up those crystals.","_ho_Sigh... Ever since w_ho_",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@2:1","I can't believe this fungi is so obtrusive. It's unwordly.","_arrr_I can't believe this_arrr_",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@2:2","What are the MRI execs up to...","_yar_What are the MRI exe_yar_",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@3:0","Hm... it looks like this light is going to run out of battery soon.","_ho_Hm... it looks like _ho_",
+"Map/EightPuzzle/Cave STile (6)/Objects/Nerd Emoji@3:1","Oh well, I'm sure someone will fix it.","_yar_Oh well, I'm sure so_yar_",
+"Map/EightPuzzle/Cave STile (9)/Objects/Pirate Dropout@0:0","I knew I shouldn't have dropped out of school...","_ho_I knew I shouldn't h_ho_",
+"Map/EightPuzzle/Cave STile (9)/Objects/Pirate Dropout@1:0","...","_yar_..._yar_",
+"Map/EightPuzzle/Cave STile (9)/Objects/Treasure Hunter@0:0","Yar... the treasure here be a sham...","_arrr_Yar... the treasure _arrr_",
+"Map/EightPuzzle/Cave STile (9)/Objects/Treasure Hunter@0:1","Never shoulda trusted Catbeard, that drunkard.","_ho_Never shoulda truste_ho_",
+"Map/EightPuzzle/Cave STile (9)/Objects/Treasure Hunter@1:0","...","_arrr_..._arrr_",
+"Map/World Grid/BaseObjects/(temp) explosives soign@0:0","boom goes here (not working)","_yar_boom goes here (not _yar_",
+"Map/World Grid/BaseObjects/Jimbobby@0:0","thank you... ive been stuck there for days...","_ho_thank you... ive bee_ho_",
+"Map/World Grid/BaseObjects/Jimbobby@1:0","...","_ho_..._ho_",
+"Map/World Grid/BaseObjects/Repairman@0:0","This light seems to be broken... Can you get me my cutters and wrench?","_yar_This light seems to _yar_",
+"Map/World Grid/BaseObjects/Repairman@1:0","Woah, you found my wrench and wire cutters already! Let me fix this real quick...","_ho_Woah, you found my w_ho_",
+"Map/World Grid/BaseObjects/Repairman@1:1","Let there be light!","_yar_Let there be light!_yar_",
+"Map/World Grid/BaseObjects/Repairman@1:2","I'm gonna take a break now.","_arrr_I'm gonna take a bre_arrr_",
+"Map/World Grid/BaseObjects/Repairman@1:3","I got commissioned to fix this bridge too... must have broke in that earth quake.","_ho_I got commissioned t_ho_",
+"Map/World Grid/BaseObjects/Repairman@2:0","Let there be light!","_ho_Let there be light!_ho_",
+"Map/World Grid/BaseObjects/Repairman@2:1","I'm gonna take a break now.","_ho_I'm gonna take a bre_ho_",
+"Map/World Grid/BaseObjects/Repairman@2:2","I got commissioned to fix this bridge too... must have broke in that earth quake.","_ho_I got commissioned t_ho_",
+"Map/World Grid/BaseObjects/Repairman@3:0","...","_ho_..._ho_",

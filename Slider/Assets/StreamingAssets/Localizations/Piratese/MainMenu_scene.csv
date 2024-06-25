@@ -1,0 +1,177 @@
+"Localization files are formatted like CSV so they can be easily edited,
+however formatting has strict rules for easy parsing. Most of these rules
+are already handled by Excel / Libre / etc., so you don't have to worry
+about them in normal usage. However, if your localization file seems to
+be corrupted, these rules may be helpful for debugging purposes...
+- In general, any consecutive string of \r and \n (in any order) will be
+  treated as one SINGLE line break, except within an enclosed context
+- The first 4 rows can be arbitrarily long
+  - The first cell of first row is used to store this block of instruction
+    text
+  - The first 3 cells of the fourth row is used as headers
+  - All other cells in the first and fourth rows are ignored
+  - Columns in the second row alternate between property and value (ex.
+    ' foo | 1 | bar | 3.5 | ... '
+    - Any whitespaces before and after the property name are ignored
+  - Columns in the third row are exclusively comments for properties in the
+    second row
+- Every following line can include any number of cells, but only the
+  first three will be parsed (you can use the rest as comments if needed)
+- The file must end in a sequence of \r and \n's
+- Every cell containing a ^, \r, or \n must be enclosed in ""
+  - If a "" is encountered right after a non-enclosed separator, \r, or \n,
+    then the parser is said to enter an ""enclosed context"", such context
+    ends immediately when a non-escaped "" that is not followed by \r, \n,
+    or a separator is encountered
+  - "" within each cell should be escaped using another "" in front of it,
+  - If a "" is encountered in a non-enclosed context, and it is not right
+    after a separator, \r, or \n, then it is entirely ignored
+  - If a non-escaped "" is encountered in an enclosed context...
+    - If it is followed by a separator, \r, or \n, then it is considered
+      the closing quote of the current context
+    - Otherwise, it is ignored
+  - If a separator, \r, or \n is encountered while in an enclosed context,
+    it will be preserved
+",
+"IsValid"," ","NonDialogueFontScale"," ","DialogueFontScale"," ",
+"Set to 1 allow the parser to read this file, otherwise it will be skipped and the default English localization will be used as fallback"," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size."," ","Float value that scales font size of all dialogue text, this is an option separate because the English font of this game is *really* tiny, like about 1/3 of regular font when under the same font size. Recommended setting is around 0.3~0.6."," ",
+"Path","Orig","Translation",
+"ConventionMode/ConventionCanvas/Alpha Gameplay Label","Pre-Alpha Gameplay","_ho_Pre-Alpha Gameplay_ho_",
+"ConventionMode/ConventionCanvas/Panel/RestartingText","Game is restarting...
+Press any key to cancel.","_yar_Game is restarting.._yar_",
+"UICanvas/MM Panel/MainMenu Panel/Continue Button/Text","Continue","_ho_Continue_ho_",
+"UICanvas/MM Panel/MainMenu Panel/Credits Button/Text","Credits","_yar_Credits_yar_",
+"UICanvas/MM Panel/MainMenu Panel/Options Button/Text","Options","_ho_Options_ho_",
+"UICanvas/MM Panel/MainMenu Panel/Play Button/Text","Play
+","_ho_Play
+_ho_",
+"UICanvas/MM Panel/MainMenu Panel/Quit Button/Text","Quit","_arrr_Quit_arrr_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Caps Button/Text","Caps","_ho_Caps_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Delete Button/Text","Del","_yar_Del_yar_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Done Button/Text","Done","_arrr_Done_arrr_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/E/Text","e","_yar_e_yar_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/I/Text","i","_ho_i_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/O/Text","o","_ho_o_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/P/Text","p","_arrr_p_arrr_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/Q/Text","q","_ho_q_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/R/Text","r","_yar_r_yar_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/T/Text","t","_arrr_t_arrr_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/U/Text","u","_arrr_u_arrr_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/W/Text","w","_yar_w_yar_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 1/Y/Text","y","_arrr_y_arrr_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/A/Text","a","_ho_a_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/D/Text","d","_ho_d_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/F/Text","f","_ho_f_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/G/Text","g","_ho_g_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/H/Text","h","_ho_h_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/J/Text","j","_ho_j_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/K/Text","k","_yar_k_yar_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/L/Text","l","_ho_l_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 2/S/Text","s","_ho_s_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/B/Text","b","_arrr_b_arrr_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/C/Text","c","_ho_c_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/M/Text","m","_arrr_m_arrr_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/N/Text","n","_ho_n_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/V/Text","v","_arrr_v_arrr_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/X/Text","x","_arrr_x_arrr_",
+"UICanvas/NewSavePanel/ProfileNameInput/Keyboard/Letter Keys/Row 3/Z/Text","z","_ho_z_ho_",
+"UICanvas/NewSavePanel/ProfileNameInput/Text Area/Placeholder","Enter name...","_yar_Enter name..._yar_",
+"UICanvas/NewSavePanel/ProfileNameInput/Text Area/Text","​","_yar_​_yar_",
+"UICanvas/OptionsMenu/Back Button/Text","Back","_yar_Back_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Back Button/Text","Back","_arrr_Back_arrr_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Control","Coming Soon!","_ho_Coming Soon!_ho_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control","Alt View","_yar_Alt View_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control (1)","Pause","_yar_Pause_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control A","(A) Action","_arrr_(A) Action_arrr_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control B","(B) Back","_arrr_(B) Back_arrr_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control X","(X) Action","_arrr_(X) Action_arrr_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Control Y","(Y) Cycle","_yar_(Y) Cycle_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Left Aligned/Move","Move","_yar_Move_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Right Aligned/Artifact","Artifact","_arrr_Artifact_arrr_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Right Aligned/Move","Move","_yar_Move_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controller Panel/Text/Right Aligned/Pause","Pause","_arrr_Pause_arrr_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Controls Text","Keyboard","_yar_Keyboard_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Action/Binding/Text","Control","_ho_Control_ho_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Action/Control Label","Action","_ho_Action_ho_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Alt View/Binding/Text","Control","_arrr_Control_arrr_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Alt View/Control Label","Alt View","_yar_Alt View_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Cycle Equip/Binding/Text","Control","_arrr_Control_arrr_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Cycle Equip/Control Label","Cycle","_ho_Cycle_ho_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Down/Binding/Text","Control","_yar_Control_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Down/Control Label","Down","_yar_Down_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Left/Binding/Text","Control","_arrr_Control_arrr_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Left/Control Label","Left","_ho_Left_ho_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Right/Binding/Text","Control","_ho_Control_ho_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Right/Control Label","Right","_yar_Right_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Up/Binding/Text","Control","_yar_Control_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Move Up/Control Label","Up","_ho_Up_ho_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Open/Close Artifact/Binding/Text","Control","_arrr_Control_arrr_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Open/Close Artifact/Control Label","Artifact","_ho_Artifact_ho_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Pause/Binding/Text","Control","_yar_Control_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Keyboard Panel/Pause/Control Label","Pause","_yar_Pause_yar_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/Rebinding Overlay/Text (TMP)","Rebinding Move Left...","_arrr_Rebinding Move Left._arrr_",
+"UICanvas/OptionsMenu/RightContainer/ControlsPanel/ResetButtonHolder/Reset to Defaults Button/Text","Reset Keybinds","_yar_Reset Keybinds_yar_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/Display Text","Display","_yar_Display_yar_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@0","30","_yar_30_yar_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@1","60","_arrr_60_arrr_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@2","75","_ho_75_ho_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@3","120","_ho_120_ho_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@4","144","_ho_144_ho_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@5","240","_ho_240_ho_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Dropdown@6","Uncapped","_yar_Uncapped_yar_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/FPS DropDown/Label","FPS","_yar_FPS_yar_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@0","1280 x 720","_ho_1280 x 720_ho_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@1","1280 x 800","_arrr_1280 x 800_arrr_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@2","1366 x 768","_ho_1366 x 768_ho_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@3","1920 x 1080","_ho_1920 x 1080_ho_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@4","2560 x 1440","_yar_2560 x 1440_yar_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Dropdown@5","Native","_ho_Native_ho_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/Resolution DropDown/Label","Resolution","_arrr_Resolution_arrr_",
+"UICanvas/OptionsMenu/RightContainer/DisplayPanel/List/VSync/Label","VSync","_arrr_VSync_arrr_",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Big Text/Label","Bigger Text","_ho_Bigger Text_ho_",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Contrast Text/Label","Text Background","_yar_Text Background_yar_",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Hide Cursor/Label","Hide Cursor","_yar_Hide Cursor_yar_",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Pixel Font Alert/Label","Setting will be applied once you restart or return to main menu...
+","_arrr_Setting will be appl_arrr_",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Pixel Font/Label","Pixel Font","_arrr_Pixel Font_arrr_",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/List/Screen Shake Slider/Label","Screen Shake","_arrr_Screen Shake_arrr_",
+"UICanvas/OptionsMenu/RightContainer/GeneralOptionsPanel/Options Text","Options","_arrr_Options_arrr_",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Auto Move/Label","Auto Move
+","_ho_Auto Move
+_ho_",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Colorblind Mode/Label","Colorblind Mode","_yar_Colorblind Mode_yar_",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Dev Console/Label","Dev Console","_ho_Dev Console_ho_",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/List/Mini Player Icon/Label","Mini Player Icon","_arrr_Mini Player Icon_arrr_",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/Misc Options Text","Miscellaneous","_yar_Miscellaneous_yar_",
+"UICanvas/OptionsMenu/RightContainer/MiscOptionsPanel/ResetButtonHolder/Reset to Defaults Button/Text","Reset All Settings","_yar_Reset All Settings_yar_",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Ambience Slider/Label","Ambience","_arrr_Ambience_arrr_",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Master Slider/Label","Master","_yar_Master_yar_",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Music Slider/Label","Music","_ho_Music_ho_",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Play Audio When Unfocused/Label","Audio when
+Unfocused","_yar_Audio when
+Unfocused_yar_",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/List/Sound Slider/Label","Sound","_ho_Sound_ho_",
+"UICanvas/OptionsMenu/RightContainer/SoundPanel/Sound Text","Sound","_ho_Sound_ho_",
+"UICanvas/OptionsMenu/SideNav/Controls Button/Text","Controls","_yar_Controls_yar_",
+"UICanvas/OptionsMenu/SideNav/Display Button/Text","Display","_yar_Display_yar_",
+"UICanvas/OptionsMenu/SideNav/Misc Button/Text","Misc","_yar_Misc_yar_",
+"UICanvas/OptionsMenu/SideNav/Options Button/Text","Options
+","_arrr_Options
+_arrr_",
+"UICanvas/OptionsMenu/SideNav/Sound Button/Text","Sound","_ho_Sound_ho_",
+"UICanvas/SavesPanel/Left Save Button/Text","[ Empty ]","_arrr_[ Empty ]_arrr_",
+"UICanvas/SavesPanel/Left Save Button/Text/ProgressText","1/9","_ho_1/9_ho_",
+"UICanvas/SavesPanel/Left Save Button/Text/TimeText","0h32
+","_ho_0h32
+_ho_",
+"UICanvas/SavesPanel/Middle Save Button/Text","Cat Name","_yar_Cat Name_yar_",
+"UICanvas/SavesPanel/Middle Save Button/Text/ProgressText","1/9","_ho_1/9_ho_",
+"UICanvas/SavesPanel/Middle Save Button/Text/TimeText","0h32
+","_yar_0h32
+_yar_",
+"UICanvas/SavesPanel/Right Save Button/Text","[ Empty ]","_ho_[ Empty ]_ho_",
+"UICanvas/SavesPanel/Right Save Button/Text/ProgressText","1/9","_yar_1/9_yar_",
+"UICanvas/SavesPanel/Right Save Button/Text/TimeText","0h32
+","_ho_0h32
+_ho_",
+"WorldCanvas/Press any Key","[press any key to begin]","_arrr_[press any key to be_arrr_",

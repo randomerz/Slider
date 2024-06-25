@@ -297,6 +297,7 @@ namespace Localization
             Path.Join(LocalizationFolderPath(root), locale, LocaleGlobalFileName(locale));
         
         public static string DefaultLocale => "English";
+        public static string GoofyAhLanguage => "Piratese";
         
         public static string AssetPath(string locale, Scene scene, string root = null) =>
             Path.Join(LocalizationFolderPath(root), locale, LocalizationFileName(scene));
@@ -1162,7 +1163,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             { typeof(IDialogueTableProvider), SerializeTableProvider },
         };
         
-        public string Serialize(bool serializeConfigurationDefaults, LocalizationFile referenceFile)
+        public string Serialize(bool serializeConfigurationDefaults, LocalizationFile referenceFile, Func<string> autoPadTranslated = null)
         {
             StringBuilder builder = new StringBuilder();
 
@@ -1212,7 +1213,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 string orig = _orig.Replace("\"", "\"\"");
 
                 string translated = orig;
-
+                
                 if (referenceFile != null)
                 {
                     if (referenceFile.records.TryGetValue(_path, out var referenceTranslation))
@@ -1223,6 +1224,12 @@ be corrupted, these rules may be helpful for debugging purposes...
                     {
                         Debug.LogWarning($"[Localization] No existsing translation at {_path}");
                     }
+                }
+
+                if (autoPadTranslated != null)
+                {
+                    string pad = autoPadTranslated();
+                    translated = pad + translated.Substring(0, Mathf.Min(translated.Length, 20)) + pad;
                 }
                 
                 builder.Append($"\"{path}\"{sep}\"{orig}\"{sep}\"{translated}\"{sep}\r\n"); // for skeleton file, just use original as the translation
