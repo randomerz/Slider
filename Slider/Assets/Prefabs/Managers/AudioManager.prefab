@@ -753,6 +753,96 @@ MonoBehaviour:
       Path: event:/SFX/Footsteps/player_footstep_wood
     canPause: 1
     dopplerScale: 1
+  - name: Mountain Elevator
+    fmodEvent:
+      Guid:
+        Data1: -881019166
+        Data2: 1294186805
+        Data3: 1343572899
+        Data4: 330862246
+      Path: event:/SFX/Mountain/Elevator Combined
+    canPause: 1
+    dopplerScale: 1
+  - name: Gear Broken
+    fmodEvent:
+      Guid:
+        Data1: 1345957030
+        Data2: 1109695666
+        Data3: -791405156
+        Data4: 412299415
+      Path: event:/SFX/Mountain/Gear Broken
+    canPause: 1
+    dopplerScale: 1
+  - name: Gear Normal
+    fmodEvent:
+      Guid:
+        Data1: 1470445256
+        Data2: 1313843504
+        Data3: 221609628
+        Data4: 1362399444
+      Path: event:/SFX/Mountain/Gear Normal
+    canPause: 1
+    dopplerScale: 1
+  - name: Gem Dispenser
+    fmodEvent:
+      Guid:
+        Data1: 1249323241
+        Data2: 1269872161
+        Data3: 1701197442
+        Data4: -606097297
+      Path: event:/SFX/Mountain/Gem Dispenser
+    canPause: 1
+    dopplerScale: 1
+  - name: Gem Sucker
+    fmodEvent:
+      Guid:
+        Data1: 1791969112
+        Data2: 1326203270
+        Data3: 1052095145
+        Data4: -678476088
+      Path: event:/SFX/Mountain/Gem Sucker Combined
+    canPause: 1
+    dopplerScale: 1
+  - name: Waterwheel Click
+    fmodEvent:
+      Guid:
+        Data1: -1110061029
+        Data2: 1142005405
+        Data3: 2037914017
+        Data4: -123553937
+      Path: event:/SFX/Mountain/Ice Freeze Combined
+    canPause: 1
+    dopplerScale: 1
+  - name: Ice Break
+    fmodEvent:
+      Guid:
+        Data1: 1372051354
+        Data2: 1144223496
+        Data3: 668972688
+        Data4: -932103813
+      Path: event:/SFX/Mountain/Ice Break
+    canPause: 1
+    dopplerScale: 1
+  - name: Ice Freeze
+    fmodEvent:
+      Guid:
+        Data1: -1110061029
+        Data2: 1142005405
+        Data3: 2037914017
+        Data4: -123553937
+      Path: event:/SFX/Mountain/Ice Freeze Combined
+    canPause: 1
+    dopplerScale: 1
+  - name: Minecart Corner
+    fmodEvent:
+      Guid:
+        Data1: 1187539897
+        Data2: 1212163520
+        Data3: 1596107655
+        Data4: 1491869152
+      Path: event:/SFX/Mountain/Minecart Corner
+    canPause: 1
+    dopplerScale: 1
   music:
   - name: Main Menu
     fmodEvent:
@@ -881,6 +971,78 @@ MonoBehaviour:
       Path: event:/Music/MagiTech BGM
     emitter: {fileID: 0}
   ambience:
+  - name: Campfire
+    fmodEvent:
+      Guid:
+        Data1: -1389724339
+        Data2: 1096560050
+        Data3: 1150475672
+        Data4: 1755165757
+      Path: event:/Ambience/Campfire
+    emitter: {fileID: 0}
+  - name: Electricity Ambience
+    fmodEvent:
+      Guid:
+        Data1: -1021225431
+        Data2: 1283700488
+        Data3: -1207084662
+        Data4: -1894469130
+      Path: event:/Ambience/Electricity Ambience
+    emitter: {fileID: 0}
+  - name: Forest Ambience
+    fmodEvent:
+      Guid:
+        Data1: 1355750639
+        Data2: 1190431554
+        Data3: -1960262746
+        Data4: 1288741103
+      Path: event:/Ambience/Forest Ambience
+    emitter: {fileID: 0}
+  - name: Gem Ambience
+    fmodEvent:
+      Guid:
+        Data1: -320554550
+        Data2: 1141466373
+        Data3: 1395523715
+        Data4: 981422767
+      Path: event:/Ambience/Mountain/Gem Ambience
+    emitter: {fileID: 0}
+  - name: Laser Ambience
+    fmodEvent:
+      Guid:
+        Data1: -268719974
+        Data2: 1210375164
+        Data3: 1937589907
+        Data4: -1284581935
+      Path: event:/Ambience/Laser Ambience
+    emitter: {fileID: 0}
+  - name: Lava Ambience
+    fmodEvent:
+      Guid:
+        Data1: 2002110272
+        Data2: 1087352959
+        Data3: 177102507
+        Data4: 865687615
+      Path: event:/Ambience/Mountain/Lava
+    emitter: {fileID: 0}
+  - name: Minecart Ambience
+    fmodEvent:
+      Guid:
+        Data1: 1465748197
+        Data2: 1254049805
+        Data3: -301586019
+        Data4: -750450934
+      Path: event:/Ambience/Mountain/Minecart Ambience
+    emitter: {fileID: 0}
+  - name: Portal Ambience
+    fmodEvent:
+      Guid:
+        Data1: -268719974
+        Data2: 1210375164
+        Data3: 1937589907
+        Data4: -1284581935
+      Path: event:/Ambience/Laser Ambience
+    emitter: {fileID: 0}
   - name: Waterfall
     fmodEvent:
       Guid:
@@ -899,32 +1061,14 @@ MonoBehaviour:
         Data4: -410703076
       Path: event:/Ambience/Waterfall Caves
     emitter: {fileID: 0}
-  - name: Campfire
+  - name: Waterwheel Ambience
     fmodEvent:
       Guid:
-        Data1: -1389724339
-        Data2: 1096560050
-        Data3: 1150475672
-        Data4: 1755165757
-      Path: event:/Ambience/Campfire
-    emitter: {fileID: 0}
-  - name: Forest Ambience
-    fmodEvent:
-      Guid:
-        Data1: 1355750639
-        Data2: 1190431554
-        Data3: -1960262746
-        Data4: 1288741103
-      Path: event:/Ambience/Forest Ambience
-    emitter: {fileID: 0}
-  - name: Laser Ambience
-    fmodEvent:
-      Guid:
-        Data1: -268719974
-        Data2: 1210375164
-        Data3: 1937589907
-        Data4: -1284581935
-      Path: event:/Ambience/Laser Ambience
+        Data1: -189242726
+        Data2: 1227907376
+        Data3: -1523523706
+        Data4: -1247538484
+      Path: event:/Ambience/Mountain/Waterwheel Ambience
     emitter: {fileID: 0}
   soundDampenCurve:
     serializedVersion: 2
