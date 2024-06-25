@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;

@@ -1,13 +1,96 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
-public class JungleBigBlobDialogue : MonoBehaviour
+public class JungleBigBlobDialogue : MonoBehaviour, IDialogueTableProvider
 {
     public const string DIALOGUE_SAVE_STRING = "JungleShopBlobDialogue";
 
     public NPC npc;
     public RecipeList recipeList;
+    
+    #region Localization
+
+    enum ShapeStrings
+    {
+        BreadName,
+        CircleName,
+        CrutchName,
+        FishName,
+        FishBowlName,
+        FlagName,
+        GlassesName,
+        HeartName,
+        IcecreamName,
+        LineName,
+        MinecartName,
+        PIckaxeName,
+        PlusName,
+        RailName,
+        SquareName,
+        TriangleName,
+        BreadSpecialMsg,
+        CircleSpecialMsg,
+        CrutchSpecialMsg,
+        FishSpecialMsg,
+        FishBowlSpecialMsg,
+        FlagSpecialMsg,
+        GlassesSpecialMsg,
+        HeartSpecialMsg,
+        IcecreamSpecialMsg,
+        LineSpecialMsg,
+        MinecartSpecialMsg,
+        PIckaxeSpecialMsg,
+        PlusSpecialMsg,
+        RailSpecialMsg,
+        SquareSpecialMsg,
+        TriangleSpecialMsg,
+        ShapeGenericMessageBeginning,
+        ShapeGenericMessagePunctuation
+    }
+    
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } =
+        IDialogueTableProvider.InitializeTable(
+            new Dictionary<ShapeStrings, string>
+            {
+               { ShapeStrings.BreadName, "Bread" },
+               { ShapeStrings.CircleName, "Circle" },
+               { ShapeStrings.CrutchName, "Crutch" },
+               { ShapeStrings.FishName, "Fish" },
+               { ShapeStrings.FishBowlName, "FishBowl" },
+               { ShapeStrings.FlagName, "Flag" },
+               { ShapeStrings.GlassesName, "Glasses" },
+               { ShapeStrings.HeartName,"Heart" },
+               { ShapeStrings.IcecreamName, "Icecream" },
+               { ShapeStrings.LineName, "Line"},
+               { ShapeStrings.MinecartName, "Minecart" },
+               { ShapeStrings.PIckaxeName, "Pickaxe" },
+               { ShapeStrings.PlusName, "Plus" },
+               { ShapeStrings.RailName, "Rail" },
+               { ShapeStrings.SquareName, "Square" },
+               { ShapeStrings.TriangleName, "Triangle" },
+               { ShapeStrings.BreadSpecialMsg, "It's gluten free!" },
+               { ShapeStrings.CircleSpecialMsg, "OMG Circle!!! Just like me!!!!" },
+               { ShapeStrings.CrutchSpecialMsg, "Crutch? Isn't that a police baton? Yay!!" },
+               { ShapeStrings.FishSpecialMsg, "Blub blub blub" },
+               { ShapeStrings.FishBowlSpecialMsg, "NOOOO YOU TRAPPED MR. BLUB BLUB" },
+               { ShapeStrings.FlagSpecialMsg, "A race? I hope everyone's a winner!" },
+               { ShapeStrings.GlassesSpecialMsg, "I SEE you've made something cool." },
+               { ShapeStrings.HeartSpecialMsg, "Aww <3" },
+               { ShapeStrings.IcecreamSpecialMsg, "Artificial vanilla, my favorite!" },
+               { ShapeStrings.LineSpecialMsg, "Does Barron want more lines..?" },
+               { ShapeStrings.MinecartSpecialMsg, "OMG do you think I can fit in it?" },
+               { ShapeStrings.PIckaxeSpecialMsg, "Diggy diggy hole" },
+               { ShapeStrings.PlusSpecialMsg, "Eww... is that... math?" },
+               { ShapeStrings.RailSpecialMsg, "I am going to 'Rail' you!" },
+               { ShapeStrings.SquareSpecialMsg, "Squares are okay... but I like circles more!" },
+               { ShapeStrings.TriangleSpecialMsg, "If you were a triangle you'd be acute one!"},
+               { ShapeStrings.ShapeGenericMessageBeginning, "Woah! Is that a " },
+               { ShapeStrings.ShapeGenericMessagePunctuation, "?!" },
+            });
+    #endregion
 
     public void PlayerCarryingShape(Condition c)
     {
@@ -24,7 +107,7 @@ public class JungleBigBlobDialogue : MonoBehaviour
             return;
         }
 
-        string message = ShapeNameToSpecialMessage(item.itemName);
+        LocalizationPair? message = ShapeNameToSpecialMessage(item.itemName);
         if (message != null)
         {
             npc.Conds[^1].dialogueChain[0].animationOnStart = ShapeNameToSpecialAnimation(item.itemName);
@@ -35,40 +118,40 @@ public class JungleBigBlobDialogue : MonoBehaviour
             npc.Conds[^1].dialogueChain[0].animationOnStart = "Idle";
         }
 
-        SaveSystem.Current.SetString(DIALOGUE_SAVE_STRING, message);
+        SaveSystem.Current.SetLocalizedString(DIALOGUE_SAVE_STRING, (LocalizationPair) message);
         c.SetSpec(true);
     }
 
-    private string ShapeNameToSpecialMessage(string shapeName) => shapeName switch
+    private LocalizationPair? ShapeNameToSpecialMessage(string shapeName) => shapeName switch
     {
         // "Bandage" => "",
-        "Bread" => "It's gluten free!",
+        "Bread" => this.GetLocalized(ShapeStrings.BreadSpecialMsg),
         // "Camera" => "",
         // "Chest" => "",
-        "Circle" => "OMG Circle!!! Just like me!!!!",
+        "Circle" =>this.GetLocalized(ShapeStrings.CircleSpecialMsg),
         // "Crate" => "",
-        "Crutch" => "Crutch? Isn't that a police baton? Yay!!",
+        "Crutch" => this.GetLocalized(ShapeStrings.CrutchSpecialMsg),
         // "Female" => "",
-        "Fish" => "Blub blub blub",
-        "FishBowl" => "NOOOO YOU TRAPPED MR. BLUB BLUB",
-        "Flag" => "A race? I hope everyone's a winner!",
-        "Glasses" => "I SEE you've made something cool.",
-        "Heart" => "Aww <3",
+        "Fish" => this.GetLocalized(ShapeStrings.FishSpecialMsg),
+        "FishBowl" => this.GetLocalized(ShapeStrings.FishBowlSpecialMsg),
+        "Flag" => this.GetLocalized(ShapeStrings.FlagSpecialMsg),
+        "Glasses" => this.GetLocalized(ShapeStrings.GlassesSpecialMsg),
+        "Heart" => this.GetLocalized(ShapeStrings.HeartSpecialMsg),
         // "House" => "",
-        "Icecream" => "Artificial vanilla, my favorite!",
-        "Line" => "Does Barron want more lines..?",
+        "Icecream" => this.GetLocalized(ShapeStrings.IcecreamSpecialMsg),
+        "Line" => this.GetLocalized(ShapeStrings.LineSpecialMsg),
         // "Lolipop" => "",
         // "Male" => "",
-        "Minecart" => "OMG do you think I can fit in it?",
+        "Minecart" => this.GetLocalized(ShapeStrings.MinecartSpecialMsg),
         // "Mushroom" => "",
-        "Pickaxe" => "Diggy diggy hole",
-        "Plus" => "Eww... is that... math?",
+        "Pickaxe" => this.GetLocalized(ShapeStrings.PIckaxeSpecialMsg),
+        "Plus" => this.GetLocalized(ShapeStrings.PlusSpecialMsg),
         // "Popsicle" => "",
-        "Rail" => "I am going to 'Rail' you!",
+        "Rail" => this.GetLocalized(ShapeStrings.RailSpecialMsg),
         // "SemiCircle" => "",
         // "Ship" => "",
-        "Square" => "Squares are okay... but I like circles more!",
-        "Triangle" => "If you were a triangle you'd be acute one!",
+        "Square" => this.GetLocalized(ShapeStrings.SquareSpecialMsg),
+        "Triangle" => this.GetLocalized(ShapeStrings.TriangleSpecialMsg),
         _ => null
     };
 
@@ -106,9 +189,21 @@ public class JungleBigBlobDialogue : MonoBehaviour
         _ => "Idle"
     };
 
-    private string ShapeNameToGenericMessage(string shapeName)
+    private LocalizationPair ShapeNameToGenericMessage(string shapeName)
     {
-        return $"Woah! Is that a {shapeName}?!";
+        var shapeNameLocalized = new LocalizationPair
+        {
+            original = shapeName,
+            translated = shapeName
+        }; // fallback just use english...
+        if (Enum.TryParse<ShapeStrings>(shapeName+"Name", out var shapeNameEnum))
+        {
+            shapeNameLocalized = this.GetLocalized(shapeNameEnum);
+        }
+        return this.GetLocalized(ShapeStrings.ShapeGenericMessageBeginning)
+               + shapeNameLocalized
+               + this.GetLocalized(ShapeStrings.ShapeGenericMessagePunctuation);
+        // return $"Woah! Is that a {shapeName}?!";
     }
 
     private bool IsInRecipeList(string shapeName)

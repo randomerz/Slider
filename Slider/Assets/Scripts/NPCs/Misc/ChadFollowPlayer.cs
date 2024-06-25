@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 

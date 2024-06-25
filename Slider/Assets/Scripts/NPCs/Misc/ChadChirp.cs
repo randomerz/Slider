@@ -1,7 +1,10 @@
+using System;
 using System.Linq;
+using Localization;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public partial class ChadChirp : MonoBehaviour, ISavable
+public partial class ChadChirp : MonoBehaviour, ISavable, IDialogueTableProvider
 {
     public class ChadChirpArgs : System.EventArgs
     {
@@ -85,12 +88,13 @@ public partial class ChadChirp : MonoBehaviour, ISavable
         {
             return;
         }
-
-        ChadChirpData data = ChadChirpData.chirpDataList.FirstOrDefault(d => d.id == id);
+        
+        var data = ChadChirpData.chirpDataList.FirstOrDefault(d => d.id == id);
 
         if (data == null)
         {
             Debug.LogError($"Could not find '{id}' in list of available chirps!");
+            return;
         }
 
         if (!data.canBeRepeated && data.hasBeenUsed)
@@ -130,12 +134,12 @@ public partial class ChadChirp : MonoBehaviour, ISavable
         timeUntilCanChirp = CAN_CHIRP_COOLDOWN;
         timeUntilWantsToChirp = WANT_CHIRP_COOLDOWN;
         RestartSmallTalk();
-        TypeDialogue(data.text);
+        TypeDialogue(data.GetLocalized(this));
     }
 
-    public void TypeDialogue(string text)
+    private void TypeDialogue(LocalizationPair text)
     {
-        SaveSystem.Current.SetString(CHIRP_SAVE_STRING, text);
+        SaveSystem.Current.SetLocalizedString(CHIRP_SAVE_STRING, text);
         npc.TypeCurrentDialogue();
     }
 

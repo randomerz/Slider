@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
-public class MilitaryUnitFlag : Item
+public class MilitaryUnitFlag : Item, IDialogueTableProvider
 {
     public MilitaryUnit attachedUnit;
     [SerializeField] private MilitaryUnitFlagResetter resetter;
@@ -10,6 +11,35 @@ public class MilitaryUnitFlag : Item
 
     private bool isDropping;
     private bool cancelOnAfterDropComplete;
+    
+    #region Localization
+
+    enum MUFStrings
+    {
+        Canceled,
+        Bug,
+        CannotLeave,
+        NewLocationDistance,
+        TileOccupied,
+        Walls,
+        RandomA,
+        RandomB
+    }
+
+    public Dictionary<string, LocalizationPair> TranslationTable { get; } = IDialogueTableProvider.InitializeTable(
+        new Dictionary<MUFStrings, string>
+        {
+            { MUFStrings.Canceled, "Move was cancelled." },
+            { MUFStrings.Bug, "I am... dead??? Something went wrong!" },
+            { MUFStrings.CannotLeave, "We cannot leave the battlefield!" },
+            { MUFStrings.NewLocationDistance, "New location was not one tile away!" },
+            { MUFStrings.TileOccupied, "Can't move to an occupied tile!" },
+            { MUFStrings.Walls, "We cannot move through walls!" },
+            { MUFStrings.RandomA, "Let's go, soldiers!" },
+            { MUFStrings.RandomB, "Keep moving forward!" }
+        });
+
+    #endregion
 
     public override void Awake()
     {
@@ -37,17 +67,21 @@ public class MilitaryUnitFlag : Item
 
     private void AfterDropComplete()
     {
-        bool wasSuccessful = TryFinishMove(out string reason);
+        bool wasSuccessful = TryFinishMove(out LocalizationPair reason);
 
         if (representativeNPC != null)
         {
-            representativeNPC.Conds[0].dialogueChain[0].dialogue = reason;
+            var dialogue = representativeNPC.Conds[0].dialogueChain[0];
+            
+            dialogue.dialogue = reason.original;
+            dialogue.DialogueLocalized = reason.TranslatedFallbackToOriginal;
+            
             representativeNPC.TypeCurrentDialogueSafe();
         }
 
         if (!wasSuccessful)
         {
-            if (reason == "Move was cancelled.")
+            if (reason == this.GetLocalized(MUFStrings.Canceled))
             {
                 AudioManager.Play("UI Click");
             }
@@ -59,17 +93,17 @@ public class MilitaryUnitFlag : Item
         }
     }
 
-    private bool TryFinishMove(out string reason)
+    private bool TryFinishMove(out LocalizationPair reason)
     {
         if (cancelOnAfterDropComplete)
         {
-            reason = "Move was cancelled.";
+            reason = this.GetLocalized(MUFStrings.Canceled);
             return false;
         }
 
         if (attachedUnit == null)
         {
-            reason = "I am... dead??? Something went wrong!";
+            reason = this.GetLocalized(MUFStrings.Bug);
             Debug.LogError($"Attached Unit was null.");
             return false;
         }
@@ -78,7 +112,7 @@ public class MilitaryUnitFlag : Item
 
         if (hitStile == null)
         {
-            reason = "We cannot leave the battlefield!";
+            reason = this.GetLocalized(MUFStrings.CannotLeave);
             return false;
         }
         
@@ -87,13 +121,13 @@ public class MilitaryUnitFlag : Item
 
         if (direction.magnitude == 0)
         {
-            reason = "Move was cancelled.";
+            reason = this.GetLocalized(MUFStrings.Canceled);
             return false;
         }
 
         if (direction.magnitude != 1)
         {
-            reason = "New location was not one tile away!";
+            reason = this.GetLocalized(MUFStrings.NewLocationDistance);
             return false;
         }
 
@@ -101,7 +135,7 @@ public class MilitaryUnitFlag : Item
         {
             if (unit.GridPosition == newGridPos && unit.UnitStatus == MilitaryUnit.Status.Active && unit.UnitTeam == attachedUnit.UnitTeam)
             {
-                reason = "Can't move to an occupied tile!";
+                reason = this.GetLocalized(MUFStrings.TileOccupied);
                 return false;
             }
         }
@@ -110,7 +144,7 @@ public class MilitaryUnitFlag : Item
         {
             if (unspawnedAlly.parentStile == hitStile)
             {
-                reason = "Can't move to an occupied tile!";
+                reason = this.GetLocalized(MUFStrings.TileOccupied);
                 return false;
             }
         }
@@ -121,7 +155,7 @@ public class MilitaryUnitFlag : Item
         {
             if (!CanMoveBetweenTiles(originalSTile as MilitarySTile, hitStile as MilitarySTile, direction))
             {
-                reason = "We cannot move through walls!";
+                reason = this.GetLocalized(MUFStrings.Walls);
                 return false;
             }
         }
@@ -143,7 +177,9 @@ public class MilitaryUnitFlag : Item
             this, 0.1f
         );
 
-        reason = Random.Range(0, 2) == 0 ? "Let's go, soliders!" : "Keep moving forward!";
+        reason = Random.Range(0, 2) == 0 ? 
+            this.GetLocalized(MUFStrings.RandomA)
+            : this.GetLocalized(MUFStrings.RandomB);
         return true;
     }
 

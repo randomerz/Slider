@@ -45,10 +45,10 @@ public class Shape : ScriptableObject
         {
             case JungleRecipeBookSave.ShapeStatus.Full:
             case JungleRecipeBookSave.ShapeStatus.PendingFull:
-                return shapeName;
+                return LocalizationLoader.LoadJungleShapeTranslation(shapeName);
             case JungleRecipeBookSave.ShapeStatus.Outline:
             case JungleRecipeBookSave.ShapeStatus.PendingOutline:
-                return Regex.Replace(shapeName, "[a-zA-Z]", "_");
+                return Regex.Replace(shapeName, ".", "_");
             case JungleRecipeBookSave.ShapeStatus.None:
             default:
                 return "???";
