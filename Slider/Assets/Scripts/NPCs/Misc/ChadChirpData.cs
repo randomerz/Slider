@@ -19,7 +19,7 @@ public partial class ChadChirp
         WentThroughPortal,
         LeftGreedyWizard,
         WalkNearLaser,
-        WalkNearRocker,
+        WalkNearRocket,
         WalkNearCastle,
         EnteredMuseum,
         WalkNearGemFuelMachine,

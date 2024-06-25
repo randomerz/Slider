@@ -59,7 +59,7 @@ public class LocalizationProjectConfiguration : ScriptableObject
             {
                 throw new Exception("Must have exactly 1 project configuration!");
             }
-            if (configs.Count() == 0)
+            if (!configs.Any())
             {
                 throw new Exception("No localization project configuration object exists in asset database");
             }
@@ -70,7 +70,7 @@ public class LocalizationProjectConfiguration : ScriptableObject
     #endif
     
     #if UNITY_EDITOR
-    public IEnumerable<GameObject> ScanProjectForPrefabs()
+    private IEnumerable<GameObject> ScanProjectForPrefabs()
     {
         return AssetDatabase
             .FindAssets("t:prefab")
@@ -108,26 +108,12 @@ public class LocalizationProjectConfiguration : ScriptableObject
             initialLocales.Insert(0, new LocaleConfiguration
             {
                 name = LocalizationFile.DefaultLocale,
-                options = new() // will be filled later on!
+                options = new List<LocaleConfiguration.Option>() // will be filled later on!
             });
         }
         
         foreach(var locale in initialLocales)
         {
-            // locale.options.RemoveAll(option => !LocalizationFile.defaultConfigs.ContainsKey(option.name));
-            // var names = locale.options.Select(o => o.name).ToHashSet();
-            // foreach (var (defaultConfigName, defaultVal) in LocalizationFile.defaultConfigs)
-            // {
-            //     if (!names.Contains(defaultConfigName))
-            //     {
-            //         locale.options.Add(new LocaleConfiguration.Option
-            //         {
-            //             name = defaultConfigName,
-            //             value = defaultVal.Value
-            //         });
-            //     }
-            // }
-            
             locale.options.Sort((a, b) => a.name.CompareTo(b.name));
         }
     }
