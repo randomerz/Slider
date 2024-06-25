@@ -461,8 +461,8 @@ public class UIArtifact : Singleton<UIArtifact>
 
             SetSelectedButton(button);
 
-            // bool autoMove = moveOptionButtons.Count == 1 && !isDragged;
-            bool autoMove = SaveSystem.Current.GetBool("forceAutoMove");
+            bool autoMove = GetAutoMoveActive();
+            autoMove &= moveOptionButtons.Count == 1 && !isDragged;
             if (autoMove)
             {
                 TryQueueMoveFromButtonPair(buttonSelected, moveOptionButtons[0]);
@@ -475,6 +475,20 @@ public class UIArtifact : Singleton<UIArtifact>
         }
 
         OnButtonInteract?.Invoke(this, null);
+    }
+
+    private bool GetAutoMoveActive()
+    {
+        switch (SGrid.Current.GetArea()) {
+            case Area.Village:
+                return SaveSystem.Current.GetBool("forceAutoMoveVillage");
+            case Area.Caves:
+                return SaveSystem.Current.GetBool("forceAutoMoveCaves");
+            case Area.Mountain:
+                return SaveSystem.Current.GetBool("forceAutoMoveMountain");
+            default:
+                return false;
+        }
     }
 
     public void DeselectSelectedButton()
