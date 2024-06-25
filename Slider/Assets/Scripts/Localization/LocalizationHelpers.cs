@@ -1229,7 +1229,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                 if (autoPadTranslated != null)
                 {
                     string pad = autoPadTranslated();
-                    translated = pad + translated.Substring(0, Mathf.Min(translated.Length, 20)) + pad;
+                    translated = pad + translated + pad;
                 }
                 
                 builder.Append($"\"{path}\"{sep}\"{orig}\"{sep}\"{translated}\"{sep}\r\n"); // for skeleton file, just use original as the translation
