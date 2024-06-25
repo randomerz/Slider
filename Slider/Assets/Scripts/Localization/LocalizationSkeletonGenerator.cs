@@ -233,15 +233,6 @@ public class LocalizationSkeletonGenerator : EditorWindow
 
        var localeConfigurations = usedLocales.ToList();
        Debug.Log($"Generating CSV files for locales { string.Join(',', localeConfigurations.Select(loc => loc.name)) }");
-
-       // lol
-       string[] goofyAhhPirateSounds =
-       {
-           "_arrr_",
-           "_ho_",
-           "_yar_",
-           "_ahoy_"
-       };
        
        foreach (var editorBuildSettingsScene in EditorBuildSettings.scenes)
        {
@@ -257,7 +248,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            {
                if (!globalStrings.TryAdd(kv.Key, kv.Value))
                {
-                   Debug.LogError($"Duplicate global export string {kv.Key}: {kv.Value}");
+                   Debug.LogWarning($"Duplicate global export string {kv.Key}: {kv.Value}, all occurrences will use shared translation");
                }
            }
            
@@ -268,7 +259,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
                var serializedSkeleton = skeleton.Serialize(
                    serializeConfigurationDefaults: false,
                    referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.AssetPath(locale.name, scene, referenceRoot)),
-                   autoPadTranslated: locale.name == LocalizationFile.GoofyAhLanguage ? () => goofyAhhPirateSounds[Random.Range(0, goofyAhhPirateSounds.Length-1)]  : null
+                   autoPadTranslated: locale.name == LocalizationFile.GoofyAhLanguage ? () => "_ho_"  : null
                );
                WriteFileAndForceParentPath(LocalizationFile.AssetPath(locale.name, scene, root), serializedSkeleton);
            }
@@ -281,7 +272,7 @@ public class LocalizationSkeletonGenerator : EditorWindow
            string serializedConfigs = localeGlobalConfig.Serialize(
                serializeConfigurationDefaults: true, 
                referenceFile: NullifyReferenceRootIfNeeded(locale, LocalizationFile.LocaleGlobalFilePath(locale.name, referenceRoot)),
-               autoPadTranslated: locale.name == LocalizationFile.GoofyAhLanguage ? () => goofyAhhPirateSounds[Random.Range(0, goofyAhhPirateSounds.Length-1)] : null);
+               autoPadTranslated: locale.name == LocalizationFile.GoofyAhLanguage ? () => "_yarr_" : null);
            WriteFileAndForceParentPath(LocalizationFile.LocaleGlobalFilePath(locale.name, root), serializedConfigs);
        }
 

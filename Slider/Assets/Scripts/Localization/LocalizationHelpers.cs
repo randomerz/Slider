@@ -1222,7 +1222,7 @@ be corrupted, these rules may be helpful for debugging purposes...
                     }
                     else
                     {
-                        Debug.LogWarning($"[Localization] No existsing translation at {_path}");
+                        Debug.LogWarning($"[Localization] No existing translation at {_path}");
                     }
                 }
 
