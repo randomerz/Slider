@@ -838,6 +838,11 @@ be corrupted, these rules may be helpful for debugging purposes...
 
         private void PopulateLocalizableInstances(GameObject rootGameObject)
         {
+            if (rootGameObject.GetComponent<ExcludeFromLocalization>() != null)
+            {
+                return;
+            }
+            
             foreach (Type type in SelectorFunctionMap.Keys)
             {
                 if (excludedTypes.Contains(type))
@@ -853,7 +858,6 @@ be corrupted, these rules may be helpful for debugging purposes...
 
                 localizables[type]
                     .AddRange(query
-                        .Where(c => c.GetComponentInParent<ExcludeFromLocalization>() == null)
                         .SelectMany(component => SelectorFunctionMap[type](component)));
             }
         }
