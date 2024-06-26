@@ -852,7 +852,9 @@ be corrupted, these rules may be helpful for debugging purposes...
                 }
 
                 localizables[type]
-                    .AddRange(query.SelectMany(component => SelectorFunctionMap[type](component)));
+                    .AddRange(query
+                        .Where(c => c.GetComponentInParent<ExcludeFromLocalization>() == null)
+                        .SelectMany(component => SelectorFunctionMap[type](component)));
             }
         }
 
@@ -985,6 +987,7 @@ be corrupted, these rules may be helpful for debugging purposes...
             tmpCasted.font = LocalizationLoader.LocalizationFont;
             tmpCasted.overflowMode = TextOverflowModes.Overflow;
             tmpCasted.wordSpacing = 0.0f;
+            
             // tmpCasted.fontWeight = FontWeight.Medium; // for some reason some characters aren't bolded
             
             if (file.TryParseConfigValue(LocalizationFile.Config.NonDialogueFontScale, out float scale))
