@@ -12,6 +12,12 @@ namespace SliderVocalization
     {
         public StringBuilder characters;
         public bool IsEmpty => characters.Length == 0;
+
+        int IVocalizer.Count<V>()
+        {
+            return this is V ? 1 : 0;
+        }
+        
         public int Progress => _progress;
         protected int _progress = 0;
         public void ClearProgress() => _progress = 0;
@@ -165,7 +171,7 @@ namespace SliderVocalization
 
         public override float RandomizeVocalization(VocalizerParameters preset, VocalRandomizationContext context)
         {
-            duration = preset.duration * (context.isCurrentWordLow ? (1 - preset.energeticWordSpeedup) : (1 + preset.energeticWordSpeedup));
+            duration = preset.duration * (context.isCurrentWordLow ? 1 : (1 - preset.energeticWordSpeedup));
             totalDuration = duration * characters.Length;
             wordIntonationMultiplier = context.isCurrentWordLow ? (1 - preset.wordIntonation) : (1 + preset.wordIntonation);
             initialPitch = context.lastWordFinalPitch;

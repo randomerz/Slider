@@ -13,6 +13,7 @@ namespace SliderVocalization
         public IEnumerator Vocalize(VocalizerParameters preset, VocalizationContext context, int idx = 0, int lengthOfComposite = 1);
         public void Stop();
         public bool IsEmpty { get; }
+        public int Count<T>() where T: IVocalizer;
         public void ClearProgress();
     }
 }

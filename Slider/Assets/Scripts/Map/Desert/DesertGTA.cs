@@ -14,15 +14,16 @@ public class DesertGTA : ExplodableRock
     public List<GameObject> gameObjectsDoorToEnable = new();
     public List<GameObject> gameObjectsDoorToDisable = new();
     public List<Animator> animators = new();
+    public DesertChadGTA desertChadGTA;
 
     public float duckingDuration;
 
     private void Awake()
     {
-        foreach (GameObject go in raycastColliderObjects)
-        {
-            go.SetActive(false);
-        }
+        // foreach (GameObject go in raycastColliderObjects)
+        // {
+        //     go.SetActive(false);
+        // }
     }
 
     public override void Load(SaveProfile profile)
@@ -61,6 +62,8 @@ public class DesertGTA : ExplodableRock
         isExploded = true;
         Save();
 
+        desertChadGTA.StartCasinoHeist();
+
         AudioManager.DampenMusic(this, 0.2f, duckingDuration);
         director.Play();
     }
@@ -68,6 +71,7 @@ public class DesertGTA : ExplodableRock
     public override void FinishExploding()
     {
         finishedExploding = true;
+        SaveSystem.Current.SetBool("DesertBlewUpCasinoWall", true);
 
         foreach (GameObject go in raycastColliderObjects)
         {
@@ -78,6 +82,8 @@ public class DesertGTA : ExplodableRock
     // Exposed for director
     public void DisableMagitechLaser()
     {
+        FinishExploding();
+        
         Debug.Log("TODO: Disable laser!");
     }
 

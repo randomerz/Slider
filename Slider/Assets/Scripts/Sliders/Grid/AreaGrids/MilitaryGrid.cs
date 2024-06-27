@@ -32,6 +32,15 @@ public class MilitaryGrid : SGrid
         {
             Debug.LogWarning("Unspawned allies list should be 15 long.");
         }
+        
+        if (
+            !SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING) &&
+            PlayerInventory.Contains("Slider 1", Area.Military)
+        )
+        {
+            Debug.LogWarning($"[Military] Joined area without finishing! Resetting Military...");
+            DoRestartSimulation(updatePlayer: false);
+        }
     }
 
     private void OnEnable()
@@ -42,6 +51,15 @@ public class MilitaryGrid : SGrid
     private void OnDisable()
     {
         SGridAnimator.OnSTileMoveEndLate -= OnTileMove;
+        
+        // Can cause some issues with the order things are disabled/destroyed
+        // if (!SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING))
+        // {
+        //     Debug.LogWarning($"[Military] Quit area without finishing! Resetting Military...");
+        //     DoRestartSimulation(updatePlayer: false);
+        // }
+
+        UIEffects.DisablePixel();
     }
 
     public override void Save()
@@ -57,35 +75,36 @@ public class MilitaryGrid : SGrid
 
     // === Military puzzle specific ==
 
-    public void RestartSimulation() => RestartSimulation(1);
+    public void RestartSimulation() => RestartSimulation(0.25f);
 
     public void RestartSimulation(float speed)
     {
         if (isRestarting)
             return;
         isRestarting = true;
-
-        CameraShake.ShakeIncrease(1 / speed, 0.25f);
-        UIEffects.FlashWhite(
+        PauseManager.AddPauseRestriction(gameObject);
+        AudioManager.Play("Slide Rumble"); 
+        
+        UIEffects.Pixelize(
             () => {
                 DoRestartSimulation();
-                CameraShake.Shake(1 / speed, 0.25f);
                 AudioManager.Play("TFT Bell");
             },
             () => {
                 isRestarting = false;
+                PauseManager.RemovePauseRestriction(gameObject);
             }, 
             speed
         );
     }
 
-    private void DoRestartSimulation()
+    private void DoRestartSimulation(bool updatePlayer=true)
     {
-        Debug.Log("Restart sim!");
+        Debug.Log("[Military] Restart sim!");
         SaveSystem.Current.SetBool("militaryFailedOnce", true);
         SaveSystem.Current.SetInt("militaryAttempts", SaveSystem.Current.GetInt("militaryAttempts", 0) + 1);
 
-        if (Player.GetInstance().GetSTileUnderneath() != null)
+        if (updatePlayer && Player.GetInstance().GetSTileUnderneath() != null)
         {
             Player.SetPosition(playerRestartSpawnPosition.position);
             Player.SetParent(null);
@@ -111,6 +130,7 @@ public class MilitaryGrid : SGrid
                 s.SetTileActive(false);
                 UIArtifact.GetInstance().RemoveButton(s);
             }
+            gridTilesExplored.SetTileExplored(s.islandId, false);
         }
 
         if (GetStileAt(0, 3).islandId != 1)

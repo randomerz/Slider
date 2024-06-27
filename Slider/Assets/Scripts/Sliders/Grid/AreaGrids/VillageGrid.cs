@@ -269,7 +269,7 @@ public class VillageGrid : SGrid
         gridAnimator.ChangeMovementDuration(0.5f);
 
         checkCompletion = true;
-        SaveSystem.Current.SetBool("forceAutoMove", true);
+        SaveSystem.Current.SetBool("forceAutoMoveVillage", true);
         SaveSystem.Current.SetBool("villageCompletion", checkCompletion);
 
         OnGridMove += UpdateButtonCompletions; // this is probably not needed
@@ -291,7 +291,7 @@ public class VillageGrid : SGrid
 
             // Disable artifact movement
             UIArtifact.DisableMovement(false);
-            SaveSystem.Current.SetBool("forceAutoMove", false);
+            SaveSystem.Current.SetBool("forceAutoMoveVillage", false);
 
             placeTile9Coroutine = StartCoroutine(PlaceTile9());
 

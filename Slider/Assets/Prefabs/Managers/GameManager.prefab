@@ -117,6 +117,8 @@ GameObject:
   - component: {fileID: 6531386949380389835}
   - component: {fileID: 8091794286791977582}
   - component: {fileID: 7750866608286493436}
+  - component: {fileID: 2520141723752669032}
+  - component: {fileID: 5852722716209220533}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -178,15 +180,19 @@ MonoBehaviour:
   UICanvasPrefab:
     prefab: {fileID: 5049116215420832315, guid: 898b250fe0c06464293cf5013d6eb685, type: 3}
     activeInMenuScenes: 0
+    containsLocalizable: 0
   UIEffectsPrefab:
     prefab: {fileID: 7648707882233313094, guid: 6246f5caa1e6cac46969239c5a944200, type: 3}
     activeInMenuScenes: 1
+    containsLocalizable: 0
   DebugCanvasPrefab:
     prefab: {fileID: 3240447105416965922, guid: 7b22cac93615c8d499abd3230c906356, type: 3}
     activeInMenuScenes: 1
+    containsLocalizable: 0
   SceneTransitionOverlayPrefab:
     prefab: {fileID: 3600424238744718540, guid: 59e7490e38c44a74886316dac45c29fd, type: 3}
     activeInMenuScenes: 1
+    containsLocalizable: 0
 --- !u!114 &7033424637333634368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,3 +261,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c890204abde65dd40851211a0945ddc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2520141723752669032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8750917147391358172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 533831353c096c84aaebe0eb7b42f175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationFont: {fileID: 11400000, guid: 7d692a08c71f59f4f9199623c9376bfd, type: 2}
+--- !u!114 &5852722716209220533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8750917147391358172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6ae9b733c2c65d4fb783c870aa751a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setting: 17

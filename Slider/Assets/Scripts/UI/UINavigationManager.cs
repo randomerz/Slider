@@ -64,7 +64,7 @@ public class UINavigationManager : Singleton<UINavigationManager>
 
     private void Awake()
     {
-        InitializeSingleton();
+        InitializeSingleton(this);
 
         _instance.eventSystem = GetComponent<UnityEngine.EventSystems.EventSystem>();
 

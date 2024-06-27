@@ -201,7 +201,8 @@ public class DebugUIManager : MonoBehaviour
         int[,] grid = new int[sgrid.Width, sgrid.Height];
 
         // dc: if there's a * in the TargetGrid, then we just set them all on and are done w it lol
-        if (target.Contains("*"))
+        // idk why the code below doesnt work for military
+        if (target.Contains("*") || sgrid is MilitaryGrid)
         {
             for (int j = 1; j <= sgrid.Width * sgrid.Height; j++)
             {
@@ -312,7 +313,10 @@ public class DebugUIManager : MonoBehaviour
         p.toggleCollision();
     }
 
-    public void EnableScroll() => PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Scroll of Realigning", Area.Desert));
+    public void EnableScroll()
+    {
+        PlayerInventory.AddCollectibleFromData(new Collectible.CollectibleData("Scroll of Realigning", Area.Desert));
+    }
 
     public void GiveBoots()
     {

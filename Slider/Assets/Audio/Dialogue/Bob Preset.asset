@@ -26,24 +26,24 @@ MonoBehaviour:
       dopplerScale: 0
     isPronouncePerClause: 0
     isPronouncedSyllables: 1
-    maximumFadeout: 0.5
-    pitch: 1.11
-    duration: 0.221
+    maximumFadeout: 1
+    pitch: 0.828
+    duration: 0.1655
     volume: 1
     volumeAdjustmentDb: 0
     stressedVowelModifiers:
-      pitchAddition: 0.145
-      volumeAdjustmentDb: 9.9
-      durationAddition: 0
+      pitchAddition: 0.187
+      volumeAdjustmentDb: 7.1
+      durationAddition: -0.077
       overrideIntonation: 0
       intonationOverride: 0
-    lerpSmoothnessInverted: 4.17
-    wordIntonation: 0.103
-    energeticWordSpeedup: 0.354
-    pLowToHigh: 0.303
-    pHighToLow: 0.807
-    clauseGap: 0.111
-    sentenceIntonationUp: 0.221
-    sentenceIntonationDown: 0.257
+    lerpSmoothnessInverted: 10
+    wordIntonation: 0.544
+    energeticWordSpeedup: 0
+    pLowToHigh: 0.383
+    pHighToLow: 0.733
+    clauseGap: 0.186
+    sentenceIntonationUp: 0.786
+    sentenceIntonationDown: 0.379
     overrideIntonation: 0
     intonationOverride: 0
