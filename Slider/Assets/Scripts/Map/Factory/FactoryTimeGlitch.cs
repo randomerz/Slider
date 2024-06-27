@@ -76,7 +76,7 @@ public class FactoryTimeGlitch : MonoBehaviour
         yield return new WaitForSecondsRealtime(5);
 
         errorCanvas.SetActive(false);
-        UIEffects.FadeFromScreenshot(callbackEnd: () =>  UpdateMap());
+        UIEffects.FadeFromScreenshot(callbackEnd: () =>  UpdateMap(), type: UIEffects.ScreenshotEffectType.PORTAL);
         UIEffects.FlashWhite(callbackEnd: () => SpawnParticles(), useUnscaledTime:true);
 
         AudioManager.Play("Glass Clink");
