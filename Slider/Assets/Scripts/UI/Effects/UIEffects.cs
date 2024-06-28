@@ -239,6 +239,7 @@ public class UIEffects : Singleton<UIEffects>
 
     public static void DisablePixel()
     {
+        if(_instance == null) return;
         _instance.pixelizeFeature.settings.enabled = false;
     }
 
