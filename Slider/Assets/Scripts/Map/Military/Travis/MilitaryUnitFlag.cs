@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using SliderVocalization;
 using UnityEngine;
 
 public class MilitaryUnitFlag : Item
@@ -8,7 +9,8 @@ public class MilitaryUnitFlag : Item
     [SerializeField] private MilitaryUnitFlagResetter resetter;
     [SerializeField] private NPC representativeNPC;
 
-    private Transform locationPriorToLastPickup;
+    private bool isDropping;
+    private bool cancelOnAfterDropComplete;
 
     public override void Awake()
     {
@@ -18,13 +20,17 @@ public class MilitaryUnitFlag : Item
 
     public override void PickUpItem(Transform pickLocation, System.Action callback = null)
     {
+        MilitaryTurnManager.OnPlayerEndTurn += ResetOnPlayerEndTurn;
         base.PickUpItem(pickLocation, callback);
-        locationPriorToLastPickup = pickLocation;
     }
 
     public override STile DropItem(Vector3 dropLocation, System.Action callback = null)
     {
+        isDropping = true;
+
         return base.DropItem(dropLocation, () => {
+            isDropping = false;
+            MilitaryTurnManager.OnPlayerEndTurn -= ResetOnPlayerEndTurn;
             AfterDropComplete();
             callback.Invoke();
         });
@@ -56,6 +62,12 @@ public class MilitaryUnitFlag : Item
 
     private bool TryFinishMove(out string reason)
     {
+        if (cancelOnAfterDropComplete)
+        {
+            reason = "Move was cancelled.";
+            return false;
+        }
+
         if (attachedUnit == null)
         {
             reason = "I am... dead??? Something went wrong!";
@@ -88,7 +100,16 @@ public class MilitaryUnitFlag : Item
 
         foreach (MilitaryUnit unit in MilitaryUnit.ActiveUnits)
         {
-            if (unit.GridPosition == newGridPos && unit.UnitStatus == MilitaryUnit.Status.Active && unit.UnitTeam != attachedUnit.UnitTeam)
+            if (unit.GridPosition == newGridPos && unit.UnitStatus == MilitaryUnit.Status.Active && unit.UnitTeam == attachedUnit.UnitTeam)
+            {
+                reason = "Can't move to an occupied tile!";
+                return false;
+            }
+        }
+
+        foreach (MilitaryUnspawnedAlly unspawnedAlly in MilitaryUnspawnedAlly.AllUnspawnedAllies)
+        {
+            if (unspawnedAlly.parentStile == hitStile)
             {
                 reason = "Can't move to an occupied tile!";
                 return false;
@@ -130,5 +151,17 @@ public class MilitaryUnitFlag : Item
     private bool CanMoveBetweenTiles(MilitarySTile stile1, MilitarySTile stile2, Vector2Int direction)
     {
         return stile1.CanMoveToDirection(direction) && stile2.CanMoveFromDirection(direction);
+    }
+
+    private void ResetOnPlayerEndTurn(object sender, System.EventArgs e)
+    {
+        if (isDropping)
+        {
+            cancelOnAfterDropComplete = true;
+            return;
+        }
+
+        // Reset the flag
+        resetter.ResetItem(onFinish: null);
     }
 }

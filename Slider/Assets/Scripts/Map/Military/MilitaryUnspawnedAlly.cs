@@ -5,6 +5,8 @@ using UnityEngine;
 // TODO: serialize
 public class MilitaryUnspawnedAlly : MonoBehaviour
 {
+    public static List<MilitaryUnspawnedAlly> AllUnspawnedAllies = new();
+
     public SpriteRenderer spriteRenderer;
     public List<GameObject> npcBoxes = new();
     public GameObject spawnConfirmer;
@@ -16,6 +18,14 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
     private void OnEnable()
     {
         MilitaryResetChecker.IncrementUnspawnedAlly();
+        AllUnspawnedAllies.Add(this);
+
+        if (SaveSystem.Current.GetBool(MilitaryWaveManager.BEAT_ALL_ALIENS_STRING))
+        {
+            spawnConfirmer.SetActive(false);
+            gameObject.SetActive(false);
+            return;
+        }
 
         if (parentStile.islandId % 2 == 0 && parentStile.islandId != 10)
         {
@@ -32,6 +42,7 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
     private void OnDisable()
     {
         MilitaryResetChecker.DecrementUnspawnedAlly();
+        AllUnspawnedAllies.Remove(this);
     }
 
     public void Reset()

@@ -152,7 +152,7 @@ public class MilitaryUnit : MonoBehaviour
     public void KillUnit()
     {
         _unitStatus = Status.Dead;
-        MilitaryTurnAnimator.AddToQueueFront(new MGDeath(this));
+        MilitaryTurnAnimator.AddToQueue(new MGDeath(this));
     }
 
     public void DoDeathAnimation(System.Action onAnimationResolved)
@@ -228,7 +228,7 @@ public class MilitaryUnit : MonoBehaviour
         {
             if (unit.GridPosition == GridPosition && unit.UnitTeam != UnitTeam)
             {
-                MilitaryTurnAnimator.AddToQueueFront(new MGFight(this, unit));
+                MilitaryTurnAnimator.AddToQueue(new MGFight(this, unit));
                 MilitaryCombat.ResolveBattle(this, unit);
             }
         });

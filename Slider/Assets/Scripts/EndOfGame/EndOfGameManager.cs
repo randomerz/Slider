@@ -25,7 +25,8 @@ public class EndOfGameManager : MonoBehaviour
     public CanvasGroup canvasGroup;
     public CanvasGroup timeCanvasGroup;
 
-    private const float MAXIMUM_SPEEDRUN_TIME_SECONDS = 7200;
+    private const float MAXIMUM_TIME_DISPLAY_SECONDS = 7200;
+    private const float MAXIMUM_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS = 3600;
     private const float PARALLAX_ANIMATION_DURATION = 5;
     private const float FADE_ANIMATION_DURATION = 1;
     private const string CREDITS_SCENE = "Credits";
@@ -42,6 +43,15 @@ public class EndOfGameManager : MonoBehaviour
     {
         UpdateTexts();
         StartCoroutine(AnimateEndScene());
+    }
+
+    private void GiveAchievements()
+    {
+        AchievementManager.SetAchievementStat("savedCat", 1);
+        if(SaveSystem.Current.GetPlayTimeInSeconds() < MAXIMUM_SPEEDRUN_ACHIEVEMENT_TIME_SECONDS)
+        {
+            AchievementManager.SetAchievementStat("completedGame1Hour", 1);
+        }
     }
 
     public void UpdateTexts()
@@ -62,7 +72,7 @@ public class EndOfGameManager : MonoBehaviour
             ts.Milliseconds
         ));
 
-        bool enableTimeText = SaveSystem.Current.GetPlayTimeInSeconds() <= MAXIMUM_SPEEDRUN_TIME_SECONDS;
+        bool enableTimeText = SaveSystem.Current.GetPlayTimeInSeconds() <= MAXIMUM_TIME_DISPLAY_SECONDS;
         timeText.gameObject.SetActive(enableTimeText);
     }
 
