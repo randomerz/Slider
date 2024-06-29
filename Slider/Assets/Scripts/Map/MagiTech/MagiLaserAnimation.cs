@@ -10,8 +10,6 @@ public class MagiLaserAnimation : MonoBehaviour
     public ParticleSystem particlesSuck;
     public ParticleSystem particlesBoom;
 
-    public DistanceBasedAmbience ambience;
-
     private void OnDestroy() 
     {
         laserBeamMaterial.SetFloat("_TimeOffset", 0);
@@ -41,13 +39,11 @@ public class MagiLaserAnimation : MonoBehaviour
         laserBeamMaterial.SetFloat("_TimeOffset", Time.time);
         
         magiLaser.SetEnabled(true);
-        ambience.SetParameterEnabled(true);
     }
 
     public void SetEnabledFalse()
     {
         magiLaser.SetEnabled(false);
-        ambience.SetParameterEnabled(false);
     }
 
     public void PowerFromLoad()

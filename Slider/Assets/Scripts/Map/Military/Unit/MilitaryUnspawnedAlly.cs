@@ -27,7 +27,7 @@ public class MilitaryUnspawnedAlly : MonoBehaviour
             return;
         }
 
-        if (parentStile.islandId % 2 == 0 && parentStile.islandId != 10)
+        if ((parentStile.islandId % 2 == 0 && parentStile.islandId != 10) || parentStile.islandId == 11)
         {
             spawnConfirmer.SetActive(false);
             gameObject.SetActive(false);
