@@ -74,14 +74,14 @@ public class UIEffects : Singleton<UIEffects>
         StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0.9f, 0, callback, speed));
     }
 
-    public static void FadeToWhite(System.Action callback=null, float speed=1, bool disableAtEnd = true)
+    public static void FadeToWhite(System.Action callback=null, float speed=1, bool disableAtEnd = true, float alpha = 1, bool useUnscaledTime = false)
     {
-        StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, 1, callback, speed, disableAtEnd));
+        StartEffectCoroutine(_instance.FadeCoroutine(_instance.whitePanel, _instance.whitePanelCanvasGroup, 0, alpha, callback, speed, disableAtEnd, useUnscaledTime));
     }
 
-    public static void FlashWhite(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1)
+    public static void FlashWhite(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1, bool useUnscaledTime = false)
     {
-        StartEffectCoroutine(_instance.FlashCoroutine(callbackMiddle, callbackEnd, speed));
+        StartEffectCoroutine(_instance.FlashCoroutine(callbackMiddle, callbackEnd, speed, useUnscaledTime));
     }
 
     public static void FadeFromScreenshot(ScreenshotEffectType type, System.Action screenshotCallback = null, System.Action callbackEnd = null, float speed = 1)
@@ -116,7 +116,7 @@ public class UIEffects : Singleton<UIEffects>
     }
 
 
-    private IEnumerator FadeCoroutine(GameObject gameObject, CanvasGroup group, float startAlpha, float endAlpha, System.Action callback=null, float speed=1, bool disableAtEnd = true)
+    private IEnumerator FadeCoroutine(GameObject gameObject, CanvasGroup group, float startAlpha, float endAlpha, System.Action callback=null, float speed=1, bool disableAtEnd = true, bool useUnscaledTime = false)
     {
         float t = 0;
         gameObject.SetActive(true);
@@ -127,7 +127,7 @@ public class UIEffects : Singleton<UIEffects>
             group.alpha = Mathf.Lerp(startAlpha, endAlpha, t / fadeDuration);
 
             yield return null;
-            t += (Time.deltaTime * speed);
+            t += (useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime * speed);
         }
 
         group.alpha = endAlpha;
@@ -137,7 +137,7 @@ public class UIEffects : Singleton<UIEffects>
         callback?.Invoke();
     }
 
-    private IEnumerator FlashCoroutine(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1)
+    private IEnumerator FlashCoroutine(System.Action callbackMiddle=null, System.Action callbackEnd=null, float speed=1, bool useUnscaledTime = false)
     {
         float t = 0;
         whitePanel.SetActive(true);
@@ -148,7 +148,7 @@ public class UIEffects : Singleton<UIEffects>
             whitePanelCanvasGroup.alpha = Mathf.Lerp(0, 1, t / (flashDuration / 2));
 
             yield return null;
-            t += (Time.deltaTime * speed);
+            t += (useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime * speed);
         }
 
         callbackMiddle?.Invoke();
@@ -158,7 +158,7 @@ public class UIEffects : Singleton<UIEffects>
             whitePanelCanvasGroup.alpha = Mathf.Lerp(0, 1, t / (flashDuration / 2));
 
             yield return null;
-            t -= (Time.deltaTime * speed);
+            t -= (useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime * speed);
         }
 
         whitePanelCanvasGroup.alpha = 0;
@@ -239,6 +239,7 @@ public class UIEffects : Singleton<UIEffects>
 
     public static void DisablePixel()
     {
+        if(_instance == null) return;
         _instance.pixelizeFeature.settings.enabled = false;
     }
 

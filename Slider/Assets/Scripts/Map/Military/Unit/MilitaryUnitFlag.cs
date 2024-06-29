@@ -47,6 +47,16 @@ public class MilitaryUnitFlag : Item, IDialogueTableProvider
         attachedUnit.OnDeath.AddListener(() => gameObject.SetActive(false));
     }
 
+    private void OnEnable()
+    {
+        MilitaryTurnAnimator.AfterCheckQueue += DoFightChecks;
+    }
+
+    private void OnDisable()
+    {
+        MilitaryTurnAnimator.AfterCheckQueue -= DoFightChecks;
+    }
+
     public override void PickUpItem(Transform pickLocation, System.Action callback = null)
     {
         MilitaryTurnManager.OnPlayerEndTurn += ResetOnPlayerEndTurn;
@@ -198,5 +208,23 @@ public class MilitaryUnitFlag : Item, IDialogueTableProvider
 
         // Reset the flag
         resetter.ResetItem(onFinish: null);
+    }
+
+    private void DoFightChecks(object sender, System.EventArgs e) => DoFightChecks();
+
+    private void DoFightChecks()
+    {
+        if (MilitaryTurnAnimator.IsUnitInActiveOrQueue(attachedUnit))
+        {
+            if (PlayerInventory.GetCurrentItem() == this)
+            {
+                resetter.ResetItem(onFinish: null);
+            }
+            SetCollider(false);
+        }
+        else
+        {
+            SetCollider(true);
+        }
     }
 }
