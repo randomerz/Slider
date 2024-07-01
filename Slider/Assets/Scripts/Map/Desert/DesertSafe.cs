@@ -15,6 +15,7 @@ public class DesertSafe : MonoBehaviour
 
     private bool laseredLastUpdate = false;
     private float laseredStartTime;
+    public GameObject laseredSafeUI;
 
     private void Start() 
     {
@@ -62,7 +63,6 @@ public class DesertSafe : MonoBehaviour
 
     private void MeltSafe()
     {
-        //Debug.Log("Safe Melted!");
         melted = true;
 
         mirageSpriteRenderer.sprite = meltedMirageSprite;
@@ -70,6 +70,6 @@ public class DesertSafe : MonoBehaviour
         SaveSystem.Current.SetBool("desertSafeMelted", true);
 
         dinoLasersManager.RemoveAllLasersPermanently();
-        // MirageSTileManager.GetInstance().DisableMirage();
+        laseredSafeUI.SetActive(true);
     }
 }
